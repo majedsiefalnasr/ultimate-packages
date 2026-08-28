@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-This package will incorporate source derived from `@primeuix/motion@0.0.10`.
+This package incorporates source derived from `@primeuix/motion@0.0.10`.
 
 ## @primeuix/motion
 
