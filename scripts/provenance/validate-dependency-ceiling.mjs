@@ -77,7 +77,15 @@ for (const path of pkgJsonPaths) {
 
   for (const [pkgName, ceiling] of Object.entries(CEILINGS)) {
     const declared = deps[pkgName];
-    if (declared && exceedsCeiling(declared, ceiling)) {
+    if (!declared) continue;
+
+    const parsed = parseVersion(declared);
+    if (!parsed) {
+      console.error(
+        `[ceiling:validate] VIOLATION: ${path} declares ${pkgName}@${declared} — version string could not be parsed as semver; cannot verify it is within the MIT ceiling ${ceiling}, blocking to be safe`
+      );
+      violations++;
+    } else if (exceedsCeiling(declared, ceiling)) {
       console.error(
         `[ceiling:validate] VIOLATION: ${path} declares ${pkgName}@${declared}, exceeds MIT ceiling ${ceiling}`
       );
