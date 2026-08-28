@@ -70,7 +70,9 @@ for (const path of pkgJsonPaths) {
 
   for (const forbidden of FORBIDDEN_DIRECT_DEPS) {
     if (deps[forbidden]) {
-      console.error(`[ceiling:validate] VIOLATION: ${path} declares forbidden runtime dependency "${forbidden}"`);
+      console.error(
+        `[ceiling:validate] VIOLATION: ${path} declares forbidden runtime dependency "${forbidden}"`
+      );
       violations++;
     }
   }

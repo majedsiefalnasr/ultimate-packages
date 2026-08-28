@@ -19,12 +19,7 @@ const REQUIRED_HEADINGS = [
   "@primeuix/styles",
   "@primeuix/motion",
 ];
-const WATCHED_PATH_PREFIXES = [
-  "packages/uix",
-  "packages/ng",
-  "packages/react",
-  "packages/vue",
-];
+const WATCHED_PATH_PREFIXES = ["packages/uix", "packages/ng", "packages/react", "packages/vue"];
 
 function fail(message) {
   console.error(`[provenance:validate] FAIL: ${message}`);
@@ -70,9 +65,7 @@ if (baseRef) {
   const touchesProvenance = changedFiles.includes(PROVENANCE_PATH);
 
   if (touchesWatchedPath && !touchesProvenance) {
-    fail(
-      `diff touches a Prime-derived package path but does not update ${PROVENANCE_PATH}`
-    );
+    fail(`diff touches a Prime-derived package path but does not update ${PROVENANCE_PATH}`);
   }
   pass(`diff check against ${baseRef} passed`);
 }

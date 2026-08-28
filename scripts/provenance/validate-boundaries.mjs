@@ -75,7 +75,7 @@ for (const dir of uixDirs) {
 }
 
 if (violations > 0) {
-  fail(`${violations} framework-specific import(s) found in packages/uix*`);
+  fail(`${violations} framework-specific import(s) found in ${UIX_PREFIX}*`);
 }
 
 pass(`scanned ${uixDirs.length} uix package(s), zero framework-specific imports found`);

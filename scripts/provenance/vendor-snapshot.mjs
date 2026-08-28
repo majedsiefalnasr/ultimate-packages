@@ -11,7 +11,7 @@
 // Phase 1+ component migration work, out of scope here.
 
 import { createHash } from "node:crypto";
-import { mkdirSync, writeFileSync, createWriteStream, existsSync } from "node:fs";
+import { mkdirSync, writeFileSync, createWriteStream } from "node:fs";
 import { pipeline } from "node:stream/promises";
 
 const CACHE_DIR = ".vendor-cache";
@@ -111,7 +111,10 @@ async function main() {
     });
   }
 
-  writeFileSync(OUTPUT_PATH, JSON.stringify({ generatedAt: new Date().toISOString(), artifacts: results }, null, 2) + "\n");
+  writeFileSync(
+    OUTPUT_PATH,
+    JSON.stringify({ generatedAt: new Date().toISOString(), artifacts: results }, null, 2) + "\n"
+  );
   console.log(`[vendor-snapshot] wrote ${OUTPUT_PATH} with ${results.length} artifacts`);
 }
 
