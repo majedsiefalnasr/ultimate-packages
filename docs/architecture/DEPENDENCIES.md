@@ -4,23 +4,23 @@ Classification model and direct-dependency facts established in Phase 0. Full tr
 
 ## Runtime — retained, legitimate framework ecosystem (never vendor)
 
-| Package | Version range | Framework line |
-|---|---|---|
-| `@angular/core`, `common`, `forms`, `cdk`, `router`, `platform-browser` | `^21.x` | Angular (per PrimeNG 21.1.9 peer range) |
-| `rxjs` | per Angular 21 peer range | Angular |
-| `tslib` | per Angular 21 peer range | Angular |
-| Vue 3.x | `^3.5.0` line | Vue (per PrimeVue 4.5.5 peer range) |
-| `react`, `react-dom` | `^17.0.0 \|\| ^18.0.0 \|\| ^19.0.0` | React |
-| `react-transition-group` | per PrimeReact 10.9.9 | React (PrimeReact's only non-framework runtime dep) |
+| Package                                                                 | Version range                       | Framework line                                      |
+| ----------------------------------------------------------------------- | ----------------------------------- | --------------------------------------------------- |
+| `@angular/core`, `common`, `forms`, `cdk`, `router`, `platform-browser` | `^21.x`                             | Angular (per PrimeNG 21.1.9 peer range)             |
+| `rxjs`                                                                  | per Angular 21 peer range           | Angular                                             |
+| `tslib`                                                                 | per Angular 21 peer range           | Angular                                             |
+| Vue 3.x                                                                 | `^3.5.0` line                       | Vue (per PrimeVue 4.5.5 peer range)                 |
+| `react`, `react-dom`                                                    | `^17.0.0 \|\| ^18.0.0 \|\| ^19.0.0` | React                                               |
+| `react-transition-group`                                                | per PrimeReact 10.9.9               | React (PrimeReact's only non-framework runtime dep) |
 
 ## UIX — candidates for Ultimate-owned adaptation (seed for `UltimateUIX`, not permanent external deps)
 
-| Package | Pinned version | Ceiling (never exceed without license review) |
-|---|---|---|
-| `@primeuix/utils` | `0.7.2` | `0.7.2` |
-| `@primeuix/styled` | `0.7.4` | `0.7.4` |
-| `@primeuix/styles` | `2.0.3` | `2.0.3` |
-| `@primeuix/motion` | `0.0.10` | `0.0.10` |
+| Package            | Pinned version | Ceiling (never exceed without license review) |
+| ------------------ | -------------- | --------------------------------------------- |
+| `@primeuix/utils`  | `0.7.2`        | `0.7.2`                                       |
+| `@primeuix/styled` | `0.7.4`        | `0.7.4`                                       |
+| `@primeuix/styles` | `2.0.3`        | `2.0.3`                                       |
+| `@primeuix/motion` | `0.0.10`       | `0.0.10`                                      |
 
 ## Build-time only — not shipped
 
