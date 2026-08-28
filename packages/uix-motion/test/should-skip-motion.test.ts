@@ -15,18 +15,12 @@ describe("shouldSkipMotion", () => {
   });
 
   it("returns true when options.safe is true and prefers-reduced-motion is set", () => {
-    vi.stubGlobal(
-      "matchMedia",
-      vi.fn().mockReturnValue({ matches: true })
-    );
+    vi.stubGlobal("matchMedia", vi.fn().mockReturnValue({ matches: true }));
     expect(shouldSkipMotion({ safe: true })).toBe(true);
   });
 
   it("returns false when options.safe is true but prefers-reduced-motion is not set", () => {
-    vi.stubGlobal(
-      "matchMedia",
-      vi.fn().mockReturnValue({ matches: false })
-    );
+    vi.stubGlobal("matchMedia", vi.fn().mockReturnValue({ matches: false }));
     expect(shouldSkipMotion({ safe: true })).toBe(false);
   });
 });

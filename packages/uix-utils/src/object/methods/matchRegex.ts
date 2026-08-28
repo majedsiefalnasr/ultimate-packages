@@ -1,11 +1,11 @@
 export default function matchRegex(str: string, regex?: RegExp): boolean {
-    if (regex) {
-        const match = regex.test(str);
+  if (regex) {
+    const match = regex.test(str);
 
-        regex.lastIndex = 0;
+    regex.lastIndex = 0;
 
-        return match;
-    }
+    return match;
+  }
 
-    return false;
+  return false;
 }

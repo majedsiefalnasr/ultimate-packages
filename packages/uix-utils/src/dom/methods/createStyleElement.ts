@@ -1,9 +1,13 @@
-import createElement from './createElement';
+import createElement from "./createElement";
 
-export default function createStyleElement(css: string, attributes: Record<string, unknown> = {}, container?: Element): HTMLStyleElement {
-    const element = createElement('style', attributes, css)! as HTMLStyleElement;
+export default function createStyleElement(
+  css: string,
+  attributes: Record<string, unknown> = {},
+  container?: Element
+): HTMLStyleElement {
+  const element = createElement("style", attributes, css)! as HTMLStyleElement;
 
-    container?.appendChild(element);
+  container?.appendChild(element);
 
-    return element;
+  return element;
 }

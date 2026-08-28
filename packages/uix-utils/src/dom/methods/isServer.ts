@@ -1,5 +1,5 @@
-import isClient from './isClient';
+import isClient from "./isClient";
 
 export default function isServer(): boolean {
-    return !isClient();
+  return !isClient();
 }

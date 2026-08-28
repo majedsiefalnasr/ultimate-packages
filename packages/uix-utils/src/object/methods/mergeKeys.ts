@@ -1,4 +1,4 @@
-import deepMerge from './deepMerge';
+import deepMerge from "./deepMerge";
 
 /**
  * @deprecated Use `deepMerge` instead.
@@ -8,5 +8,5 @@ import deepMerge from './deepMerge';
  * @returns Merged object.
  */
 export default function mergeKeys(...args: Record<string, unknown>[]): Record<string, unknown> {
-    return deepMerge(...args);
+  return deepMerge(...args);
 }

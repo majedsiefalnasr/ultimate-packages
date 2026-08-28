@@ -100,6 +100,7 @@ Every package task (2-5) consumes both scripts via these exact CLI signatures.
 ## Task 1: Provenance extraction and adaptation tooling
 
 **Files:**
+
 - Create: `scripts/provenance/extract-source.mjs`
 - Create: `scripts/provenance/adapt-imports.mjs`
 - Create: `scripts/provenance/extract-source.test.mjs`
@@ -108,6 +109,7 @@ Every package task (2-5) consumes both scripts via these exact CLI signatures.
 - Modify: `package.json` (add `devDependencies.tsup`, `devDependencies.vitest`)
 
 **Interfaces:**
+
 - Produces: `extract-source.mjs` and `adapt-imports.mjs` CLI signatures as specified above — every later task invokes these exact commands.
 
 - [ ] **Step 1: Add `.vendor-extracted/` to `.gitignore`**
@@ -217,7 +219,15 @@ Create `scripts/provenance/extract-source.mjs`:
 //
 // Usage: node extract-source.mjs <tarball-path> <output-dir>
 
-import { mkdirSync, writeFileSync, readdirSync, statSync, readFileSync, mkdtempSync, rmSync } from "node:fs";
+import {
+  mkdirSync,
+  writeFileSync,
+  readdirSync,
+  statSync,
+  readFileSync,
+  mkdtempSync,
+  rmSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname, normalize } from "node:path";
 import { execFileSync } from "node:child_process";
@@ -245,7 +255,9 @@ function findMapFiles(dir, files = []) {
 // recorded relative to the .mjs.map file's own directory) down to a path rooted at "src/",
 // discarding any leading ../ segments that merely walk back up to the package root.
 function resolveToSrcRelative(sourcePath) {
-  const normalized = normalize(sourcePath).split("/").filter((seg) => seg !== "..");
+  const normalized = normalize(sourcePath)
+    .split("/")
+    .filter((seg) => seg !== "..");
   const srcIndex = normalized.indexOf("src");
   if (srcIndex === -1) {
     throw new Error(`sourcemap source path does not contain a "src" segment: ${sourcePath}`);
@@ -287,7 +299,9 @@ try {
     }
   }
 
-  console.log(`[extract-source] wrote ${written} file(s) from ${mapFiles.length} sourcemap(s) to ${outputDir}`);
+  console.log(
+    `[extract-source] wrote ${written} file(s) from ${mapFiles.length} sourcemap(s) to ${outputDir}`
+  );
 } finally {
   rmSync(extractDir, { recursive: true, force: true });
 }
@@ -500,6 +514,7 @@ these exact versions, but sourcemaps embed the full original source."
 ## Task 2: `@ultimate/uix-utils` package
 
 **Files:**
+
 - Create: `packages/uix-utils/package.json`
 - Create: `packages/uix-utils/tsup.config.ts`
 - Create: `packages/uix-utils/vitest.config.ts`
@@ -511,6 +526,7 @@ these exact versions, but sourcemaps embed the full original source."
 - Create: `packages/uix-utils/README.md`
 
 **Interfaces:**
+
 - Consumes: `scripts/provenance/extract-source.mjs`, `scripts/provenance/adapt-imports.mjs` (Task 1).
 - Produces: `@ultimate/uix-utils` package, importable as `@ultimate/uix-utils` (barrel) or `@ultimate/uix-utils/{classnames,dom,eventbus,mergeprops,object,uuid,zindex}` (subpaths). Exported function names are unchanged from upstream (e.g. `hasClass`, `deepMerge`, `EventBus`, `classNames`) — Tasks 3 and 4 import from `@ultimate/uix-utils` using these exact names.
 
@@ -711,11 +727,13 @@ Expected: PASS (3 tests)
 - [ ] **Step 15: Write and run tests for the remaining 6 submodules**
 
 Repeat the pattern from Steps 12-14 for `dom`, `eventbus`, `mergeprops`, `object`, `uuid`, `zindex`. For each:
+
 1. Read the extracted `src/<module>/` files to determine exact exported names/signatures.
 2. Write `test/<module>.test.ts` covering: at least one happy-path case, at least one edge case (empty input, falsy input, or the module's most common misuse).
 3. Run `npx vitest run test/<module>.test.ts` and confirm PASS before moving to the next module.
 
 Minimum coverage per module (adjust exact assertions to match real extracted signatures):
+
 - `dom`: test `hasClass`/`addClass`/`removeClass` round-trip on a jsdom element.
 - `eventbus`: test `EventBus`'s `on`/`emit`/`off` lifecycle.
 - `mergeprops`: test that later arguments override earlier ones, and that `class`/`className` keys are merged via `classNames` rather than overwritten.
@@ -839,6 +857,7 @@ Note: `.vendor-extracted/` is gitignored (Task 1, Step 1) — this `git add` pic
 ## Task 3: `@ultimate/uix-styled` package
 
 **Files:**
+
 - Create: `packages/uix-styled/package.json`
 - Create: `packages/uix-styled/tsup.config.ts`
 - Create: `packages/uix-styled/vitest.config.ts`
@@ -849,6 +868,7 @@ Note: `.vendor-extracted/` is gitignored (Task 1, Step 1) — this `git add` pic
 - Create: `packages/uix-styled/README.md`
 
 **Interfaces:**
+
 - Consumes: `scripts/provenance/extract-source.mjs`, `scripts/provenance/adapt-imports.mjs` (Task 1). Consumes `@ultimate/uix-utils` (Task 2) — exact functions used: `EventBus` (from `eventbus`), `createStyleMarkup`, `isNotEmpty`, `deepMerge`, `getKeyValue`, `isArray`, `isNumber`, `isObject`, `isString`, `matchRegex`, `toKebabCase`, `isEmpty`, `minifyCSS`, `resolve`, `mergeKeys` (all from `object`).
 - Produces: `@ultimate/uix-styled` package, single entry point. Exports (confirmed via investigation): `definePreset`, `updatePreset`, `usePreset`, `useTheme`, `updatePrimaryPalette`, `updateSurfacePalette`, `dt`, `t`, `toVariables`, plus palette helpers (`mix`, `shade`, `tint`) and a stylesheet registration service.
 
@@ -1083,7 +1103,10 @@ describe("stylesheet registration service", () => {
   it("does not duplicate an already-registered style", () => {
     StyleService.add("test-style", ".foo { color: red; }");
     StyleService.add("test-style", ".foo { color: red; }");
-    expect(document.head.querySelectorAll("style[data-primevue-style-id='test-style'], style#test-style").length).toBeLessThanOrEqual(1);
+    expect(
+      document.head.querySelectorAll("style[data-primevue-style-id='test-style'], style#test-style")
+        .length
+    ).toBeLessThanOrEqual(1);
   });
 });
 ```
@@ -1145,7 +1168,7 @@ Theme/preset resolution engine for the Ultimate Platform UI foundation: design-t
 
 **Status:** unstable (pre-1.0). No semver guarantee yet.
 
-This package is styling *infrastructure* — the mechanism that turns a theme's tokens into usable CSS. It does not define what tokens exist or what values they hold (that is a theme's responsibility, deferred to Phase 5), and it does not contain any component's styles (deferred to each component's own migration phase).
+This package is styling _infrastructure_ — the mechanism that turns a theme's tokens into usable CSS. It does not define what tokens exist or what values they hold (that is a theme's responsibility, deferred to Phase 5), and it does not contain any component's styles (deferred to each component's own migration phase).
 
 ## Provenance
 
@@ -1187,6 +1210,7 @@ registration) per the Phase 1 spec's RETAIN classification."
 ## Task 4: `@ultimate/uix-motion` package
 
 **Files:**
+
 - Create: `packages/uix-motion/package.json`
 - Create: `packages/uix-motion/tsup.config.ts`
 - Create: `packages/uix-motion/vitest.config.ts`
@@ -1197,6 +1221,7 @@ registration) per the Phase 1 spec's RETAIN classification."
 - Create: `packages/uix-motion/README.md`
 
 **Interfaces:**
+
 - Consumes: `scripts/provenance/extract-source.mjs`, `scripts/provenance/adapt-imports.mjs` (Task 1). Consumes `@ultimate/uix-utils` (Task 2) — exact functions used: `addClass`, `removeClass` (from `dom`), `getHiddenElementDimensions`, `isPrefersReducedMotion`, `setCSSProperty`, `toMs` (from `dom`/`object` — confirm exact submodule per function when reading extracted source).
 - Produces: `@ultimate/uix-motion` package, single entry point. Exports: `createMotion(element: Element, options?: MotionOptions): MotionInstance`, `DEFAULT_MOTION_OPTIONS`, `shouldSkipMotion`.
 
@@ -1364,7 +1389,9 @@ describe("shouldSkipMotion", () => {
   it("returns true when options.safe is true and prefers-reduced-motion is set", () => {
     vi.stubGlobal(
       "matchMedia",
-      vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+      vi
+        .fn()
+        .mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })
     );
     expect(shouldSkipMotion({ safe: true })).toBe(true);
   });
@@ -1372,7 +1399,11 @@ describe("shouldSkipMotion", () => {
   it("returns false when options.safe is true but prefers-reduced-motion is not set", () => {
     vi.stubGlobal(
       "matchMedia",
-      vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+      vi.fn().mockReturnValue({
+        matches: false,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      })
     );
     expect(shouldSkipMotion({ safe: true })).toBe(false);
   });
@@ -1462,7 +1493,7 @@ Class-based enter/leave transition orchestration for the Ultimate Platform UI fo
 
 **Status:** unstable (pre-1.0). No semver guarantee yet.
 
-CSS keyframe/transition definitions live in each component's own style module (deferred to Phase 2+, alongside the owning component) — this package only orchestrates *when* those classes are applied, not what they animate.
+CSS keyframe/transition definitions live in each component's own style module (deferred to Phase 2+, alongside the owning component) — this package only orchestrates _when_ those classes are applied, not what they animate.
 
 ## Provenance
 
@@ -1509,6 +1540,7 @@ carries over unchanged."
 ## Task 5: `@ultimate/uix-styles` package (base module only)
 
 **Files:**
+
 - Create: `packages/uix-styles/package.json`
 - Create: `packages/uix-styles/tsup.config.ts`
 - Create: `packages/uix-styles/vitest.config.ts`
@@ -1520,6 +1552,7 @@ carries over unchanged."
 - Create: `packages/uix-styles/README.md`
 
 **Interfaces:**
+
 - Consumes: `scripts/provenance/extract-source.mjs` (Task 1). No dependency on `uix-utils` (confirmed during investigation: `base` module is pure CSS template strings, zero imports).
 - Produces: `@ultimate/uix-styles` package, exports `base` (a CSS string constant) and shared style-module `types` via subpath `./base` and barrel `.`. Later phases (2+) add per-component subpaths to this same package — Task 5 establishes only the `base`/`types` subset.
 
@@ -1531,7 +1564,7 @@ The full `@primeuix/styles@2.0.3` tarball contains ~90 component style modules' 
 node scripts/provenance/extract-source.mjs .vendor-cache/@primeuix__styles-2.0.3.tar.gz .vendor-extracted/uix-styles-full
 ```
 
-Expected: `[extract-source] wrote N file(s) from ~91 sourcemap(s) to .vendor-extracted/uix-styles-full` (N is large — this is expected and correct; the *filtering* happens in the next step, not by limiting extraction).
+Expected: `[extract-source] wrote N file(s) from ~91 sourcemap(s) to .vendor-extracted/uix-styles-full` (N is large — this is expected and correct; the _filtering_ happens in the next step, not by limiting extraction).
 
 - [ ] **Step 2: Verify the base module extracted correctly**
 
@@ -1698,7 +1731,13 @@ This is the Phase 1 scope boundary enforcement test specified in the spec's Test
 import { describe, it, expect } from "vitest";
 import { base } from "../src/base";
 
-const ALLOWED_SELECTOR_PREFIXES = [".p-disabled", ".p-icon", ".p-overlay-mask", ".p-collapsible", ".pi"];
+const ALLOWED_SELECTOR_PREFIXES = [
+  ".p-disabled",
+  ".p-icon",
+  ".p-overlay-mask",
+  ".p-collapsible",
+  ".pi",
+];
 
 // Matches any ".p-xxxx" class selector token in the CSS string.
 const CLASS_SELECTOR_PATTERN = /\.p-[a-z][a-z0-9-]*/gi;
@@ -1805,10 +1844,12 @@ kept verbatim, no renaming. Scope-guard test enforces this boundary."
 ## Task 6: Extend CI validators for the four new packages
 
 **Files:**
+
 - Modify: `scripts/provenance/validate-dependency-ceiling.mjs`
 - Modify: `scripts/provenance/validate-dependency-ceiling.test.mjs` (new test file)
 
 **Interfaces:**
+
 - Consumes: nothing new — modifies existing script's `WATCHED_PREFIXES` constant.
 - Produces: `validate-dependency-ceiling.mjs` now also scans `packages/uix*/package.json`, closing the gap identified in the spec's Dependency Rules section.
 
@@ -1833,12 +1874,20 @@ test("validate-dependency-ceiling.mjs catches a forbidden @primeuix dependency i
     JSON.stringify({ name: "@ultimate/uix-fake", dependencies: { "@primeuix/utils": "0.8.1" } })
   );
 
-  const result = spawnSync("node", [join(process.cwd(), "scripts/provenance/validate-dependency-ceiling.mjs")], {
-    cwd: workDir,
-    encoding: "utf8",
-  });
+  const result = spawnSync(
+    "node",
+    [join(process.cwd(), "scripts/provenance/validate-dependency-ceiling.mjs")],
+    {
+      cwd: workDir,
+      encoding: "utf8",
+    }
+  );
 
-  assert.equal(result.status, 1, "expected the script to fail (exit code 1) on a ceiling violation");
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on a ceiling violation"
+  );
   assert.match(result.stderr, /VIOLATION/);
 
   rmSync(workDir, { recursive: true, force: true });
@@ -1891,6 +1940,7 @@ Phase 1 spec review."
 ## Task 7: File-level provenance manifests and `validate-provenance.mjs` extension
 
 **Files:**
+
 - Create: `docs/architecture/provenance/uix-utils.json`
 - Create: `docs/architecture/provenance/uix-styled.json`
 - Create: `docs/architecture/provenance/uix-styles.json`
@@ -1900,6 +1950,7 @@ Phase 1 spec review."
 - Create: `scripts/provenance/validate-provenance-manifest.test.mjs`
 
 **Interfaces:**
+
 - Consumes: the real `packages/uix-*/src/` trees built in Tasks 2-5.
 - Produces: `docs/architecture/provenance/<package>.json` — array of `{ originalPath, ultimateDestination, modificationStatus, modificationDescription }`. `validate-provenance.mjs` gains a check that every `.ts` file under each `packages/uix-*/src/` has a corresponding manifest entry.
 
@@ -2014,12 +2065,19 @@ test("validate-provenance.mjs fails when a source file has no manifest entry", (
   writeFileSync(join(workDir, "docs", "architecture", "provenance", "uix-utils.json"), "[]\n");
 
   mkdirSync(join(workDir, "packages", "uix-utils", "src"), { recursive: true });
-  writeFileSync(join(workDir, "packages", "uix-utils", "src", "orphan.ts"), "export const x = 1;\n");
+  writeFileSync(
+    join(workDir, "packages", "uix-utils", "src", "orphan.ts"),
+    "export const x = 1;\n"
+  );
 
-  const result = spawnSync("node", [join(process.cwd(), "scripts/provenance/validate-provenance.mjs")], {
-    cwd: workDir,
-    encoding: "utf8",
-  });
+  const result = spawnSync(
+    "node",
+    [join(process.cwd(), "scripts/provenance/validate-provenance.mjs")],
+    {
+      cwd: workDir,
+      encoding: "utf8",
+    }
+  );
 
   assert.equal(result.status, 1, "expected failure: orphan.ts has no manifest entry");
 
@@ -2116,10 +2174,12 @@ if any packages/uix-*/src/*.ts file lacks a manifest entry."
 ## Task 8: Update `PROVENANCE.md`, `DECISIONS.md`, and package-level docs
 
 **Files:**
+
 - Modify: `docs/architecture/PROVENANCE.md`
 - Modify: `docs/architecture/DECISIONS.md`
 
 **Interfaces:**
+
 - Consumes: nothing new — this task only updates prose/status fields to reflect Tasks 1-7's real state.
 
 - [ ] **Step 1: Update the four PrimeUIX entries in `PROVENANCE.md`**
@@ -2151,7 +2211,6 @@ For `@primeuix/styles` specifically, add a note that only the `base` module was 
 Read the current `docs/architecture/DECISIONS.md` in full, then append after ADR-015:
 
 ```markdown
-
 ## ADR-016 — Sourcemap extraction as the Phase 1 vendoring mechanism
 
 Status: Accepted (Phase 1 spec, `docs/superpowers/specs/2026-08-28-phase-1-uix-foundation-design.md`). The four pinned `@primeuix/*` npm tarballs ship only compiled dist output (`.mjs`/`.d.mts`), no `src/` directory, and the upstream `primefaces/primeuix` GitHub repository's history never reached these exact pinned versions (confirmed gap, Phase 0 Finding 3). Investigation found that every pinned tarball's published `.mjs.map` sourcemaps embed a complete `sourcesContent` array — the original per-file TypeScript source at the exact pinned MIT baseline. `scripts/provenance/extract-source.mjs` recovers this source deterministically from the same checksummed tarballs Phase 0 already pinned (`docs/architecture/checksums.json`), with no network access required at extraction time. This is the official Phase 1+ vendoring mechanism for these four packages.
@@ -2178,10 +2237,12 @@ and ADR-017 (uix-styles base-only Phase 1 scope)."
 ## Task 9: Performance baseline and CI verification
 
 **Files:**
+
 - Create: `docs/architecture/PERFORMANCE.md`
 - Create: `scripts/provenance/measure-package-size.mjs`
 
 **Interfaces:**
+
 - Consumes: the built `dist/` output of all four packages (Tasks 2-5).
 - Produces: `docs/architecture/PERFORMANCE.md` with recorded baseline numbers per the spec's Performance Requirements.
 
@@ -2239,7 +2300,9 @@ for (const pkgPath of findUixPackages()) {
   const distDir = join(pkgPath, "dist");
   const { bytes, fileCount } = dirSizeBytes(distDir);
   const gzip = barrelGzipSize(distDir);
-  console.log(`| ${pkgPath} | ${(bytes / 1024).toFixed(1)} KB | ${fileCount} | ${(gzip / 1024).toFixed(2)} KB |`);
+  console.log(
+    `| ${pkgPath} | ${(bytes / 1024).toFixed(1)} KB | ${fileCount} | ${(gzip / 1024).toFixed(2)} KB |`
+  );
 }
 ```
 

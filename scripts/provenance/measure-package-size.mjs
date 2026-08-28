@@ -47,5 +47,7 @@ for (const pkgPath of findUixPackages()) {
   const distDir = join(pkgPath, "dist");
   const { bytes, fileCount } = dirSizeBytes(distDir);
   const gzip = barrelGzipSize(distDir);
-  console.log(`| ${pkgPath} | ${(bytes / 1024).toFixed(1)} KB | ${fileCount} | ${(gzip / 1024).toFixed(2)} KB |`);
+  console.log(
+    `| ${pkgPath} | ${(bytes / 1024).toFixed(1)} KB | ${fileCount} | ${(gzip / 1024).toFixed(2)} KB |`
+  );
 }

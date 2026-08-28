@@ -20,7 +20,11 @@
       "default": "./dist/base/index.mjs"
     }
   },
-  "files": ["dist", "README.md", "THIRD-PARTY-NOTICES.md"],
+  "files": [
+    "dist",
+    "README.md",
+    "THIRD-PARTY-NOTICES.md"
+  ],
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs",
     "test": "vitest run",

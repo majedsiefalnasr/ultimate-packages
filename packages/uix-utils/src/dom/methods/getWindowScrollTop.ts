@@ -1,5 +1,5 @@
 export default function getWindowScrollTop(): number {
-    const doc = document.documentElement;
+  const doc = document.documentElement;
 
-    return (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
+  return (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
 }

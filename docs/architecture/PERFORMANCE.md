@@ -4,12 +4,12 @@ Phase 1 (`UltimateUIX Foundation`) baseline measurements, recorded once at Phase
 
 ## Package size
 
-| Package | dist/ size | dist/ file count | index.mjs gzip size |
-|---|---|---|---|
-| packages/uix-motion | 33.3 KB | 3 | 2.05 KB |
-| packages/uix-styled | 111.0 KB | 3 | 8.10 KB |
-| packages/uix-styles | 14.3 KB | 6 | 0.65 KB |
-| packages/uix-utils | 371.7 KB | 24 | 13.30 KB |
+| Package             | dist/ size | dist/ file count | index.mjs gzip size |
+| ------------------- | ---------- | ---------------- | ------------------- |
+| packages/uix-motion | 33.3 KB    | 3                | 2.05 KB             |
+| packages/uix-styled | 111.0 KB   | 3                | 8.10 KB             |
+| packages/uix-styles | 14.3 KB    | 6                | 0.65 KB             |
+| packages/uix-utils  | 371.7 KB   | 24               | 13.30 KB            |
 
 Measured with `node scripts/provenance/measure-package-size.mjs` against a fresh `pnpm run build` (Node v24.15.0, pnpm 9.6.0).
 

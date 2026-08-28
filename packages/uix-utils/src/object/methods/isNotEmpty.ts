@@ -1,5 +1,5 @@
-import isEmpty from './isEmpty';
+import isEmpty from "./isEmpty";
 
 export default function isNotEmpty(value: any): boolean {
-    return !isEmpty(value);
+  return !isEmpty(value);
 }

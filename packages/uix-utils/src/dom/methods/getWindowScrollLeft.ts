@@ -1,7 +1,7 @@
-import getScrollLeft from './getScrollLeft';
+import getScrollLeft from "./getScrollLeft";
 
 export default function getWindowScrollLeft(): number {
-    const doc = document.documentElement;
+  const doc = document.documentElement;
 
-    return (window.pageXOffset || getScrollLeft(doc)) - (doc.clientLeft || 0);
+  return (window.pageXOffset || getScrollLeft(doc)) - (doc.clientLeft || 0);
 }

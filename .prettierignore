@@ -2,3 +2,5 @@ pnpm-lock.yaml
 dist/
 node_modules/
 *.gitkeep
+.vendor-extracted/
+.superpowers/

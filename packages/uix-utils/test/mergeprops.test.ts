@@ -21,7 +21,10 @@ describe("mergeProps", () => {
   });
 
   it("merges style objects instead of overwriting", () => {
-    const result: any = mergeProps({ style: { color: "red" } }, { style: { background: "blue" } });
+    const result = mergeProps(
+      { style: { color: "red" } },
+      { style: { background: "blue" } }
+    ) as Record<string, unknown>;
 
     expect(result.style).toEqual({ color: "red", background: "blue" });
   });

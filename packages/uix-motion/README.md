@@ -4,7 +4,7 @@ Class-based enter/leave transition orchestration for the Ultimate Platform UI fo
 
 **Status:** unstable (pre-1.0). No semver guarantee yet.
 
-CSS keyframe/transition definitions live in each component's own style module (deferred to Phase 2+, alongside the owning component) — this package only orchestrates *when* those classes are applied, not what they animate.
+CSS keyframe/transition definitions live in each component's own style module (deferred to Phase 2+, alongside the owning component) — this package only orchestrates _when_ those classes are applied, not what they animate.
 
 ## Provenance
 

@@ -10,7 +10,7 @@
 //
 // Usage: node adapt-imports.mjs <dir> --from <old-prefix> --to <new-prefix>
 
-import { readdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const args = process.argv.slice(2);

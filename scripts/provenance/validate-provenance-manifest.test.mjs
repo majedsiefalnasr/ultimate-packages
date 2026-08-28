@@ -25,12 +25,19 @@ test("validate-provenance.mjs fails when a source file has no manifest entry", (
   writeFileSync(join(workDir, "docs", "architecture", "provenance", "uix-utils.json"), "[]\n");
 
   mkdirSync(join(workDir, "packages", "uix-utils", "src"), { recursive: true });
-  writeFileSync(join(workDir, "packages", "uix-utils", "src", "orphan.ts"), "export const x = 1;\n");
+  writeFileSync(
+    join(workDir, "packages", "uix-utils", "src", "orphan.ts"),
+    "export const x = 1;\n"
+  );
 
-  const result = spawnSync("node", [join(process.cwd(), "scripts/provenance/validate-provenance.mjs")], {
-    cwd: workDir,
-    encoding: "utf8",
-  });
+  const result = spawnSync(
+    "node",
+    [join(process.cwd(), "scripts/provenance/validate-provenance.mjs")],
+    {
+      cwd: workDir,
+      encoding: "utf8",
+    }
+  );
 
   assert.equal(result.status, 1, "expected failure: orphan.ts has no manifest entry");
 

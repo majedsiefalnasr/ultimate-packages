@@ -11,7 +11,7 @@
 //
 // Usage: node extract-source.mjs <tarball-path> <output-dir>
 
-import { mkdirSync, writeFileSync, readdirSync, statSync, readFileSync, mkdtempSync, rmSync } from "node:fs";
+import { mkdirSync, writeFileSync, readdirSync, readFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname, normalize } from "node:path";
 import { execFileSync } from "node:child_process";
@@ -39,7 +39,9 @@ function findMapFiles(dir, files = []) {
 // recorded relative to the .mjs.map file's own directory) down to a path rooted at "src/",
 // discarding any leading ../ segments that merely walk back up to the package root.
 function resolveToSrcRelative(sourcePath) {
-  const normalized = normalize(sourcePath).split("/").filter((seg) => seg !== "..");
+  const normalized = normalize(sourcePath)
+    .split("/")
+    .filter((seg) => seg !== "..");
   const srcIndex = normalized.indexOf("src");
   if (srcIndex === -1) {
     throw new Error(`sourcemap source path does not contain a "src" segment: ${sourcePath}`);
@@ -81,7 +83,9 @@ try {
     }
   }
 
-  console.log(`[extract-source] wrote ${written} file(s) from ${mapFiles.length} sourcemap(s) to ${outputDir}`);
+  console.log(
+    `[extract-source] wrote ${written} file(s) from ${mapFiles.length} sourcemap(s) to ${outputDir}`
+  );
 } finally {
   rmSync(extractDir, { recursive: true, force: true });
 }

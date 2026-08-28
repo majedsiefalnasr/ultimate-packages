@@ -67,7 +67,7 @@ Investigated all four packages by extracting `.vendor-cache/*.tar.gz` and readin
 - **TypeScript configuration:** strict, per-file source (each function typically its own `.ts` file under `src/<module>/methods/*.ts` or `src/<module>/helpers/*.ts`).
 - **Exports:** `exports` map in `package.json` maps `.` and `./*` to `dist/*/index.d.mts` + `dist/*/index.mjs` — genuine subpath exports, not a single flattened bundle.
 - **Side effects:** none declared (`sideEffects: false`); confirmed no top-level `document`/`window` access outside function bodies (guards exist, e.g. `isClient()`/`isServer()` helpers used internally elsewhere).
-- **Browser/runtime assumptions:** `dom` module functions assume `Element`/`document` exist when *called*, but do not touch them at module load time — safe to import under Node/SSR, unsafe only if a DOM function is *invoked* server-side (expected, standard behavior).
+- **Browser/runtime assumptions:** `dom` module functions assume `Element`/`document` exist when _called_, but do not touch them at module load time — safe to import under Node/SSR, unsafe only if a DOM function is _invoked_ server-side (expected, standard behavior).
 - **SSR implications:** none at import time. Framework packages calling `dom` functions server-side is a framework-package concern (Phase 2+), not a `uix-utils` concern.
 - **Test strategy (upstream):** not shipped in the tarball (no test files in `dist`); Ultimate must author its own.
 - **Generated artifacts:** `dist/**/*.mjs`, `dist/**/*.d.mts`, `.mjs.map` (with embedded `sourcesContent` — the extraction source for Phase 1).
@@ -89,7 +89,7 @@ Investigated all four packages by extracting `.vendor-cache/*.tar.gz` and readin
 - **SSR implications:** token resolution is SSR-safe; stylesheet injection is a runtime/client concern, same pattern as any CSS-in-JS style-injection API — framework packages will need to guard actual injection calls, not `uix-styled` itself.
 - **Test strategy:** author new (Vitest) — token resolution determinism, preset merge correctness.
 - **Source provenance:** MIT, tarball shasum `d2108a7fad297dea60d549b2c10ed744dc0cbc0e`.
-- **Classification: RETAIN**, entire package. This is genuine styling *infrastructure* — the mechanism by which a theme's tokens become usable CSS — distinct from any specific theme's token values (which remain out of scope, Phase 5) and distinct from any component's styles (which remain out of scope, Phase 2+).
+- **Classification: RETAIN**, entire package. This is genuine styling _infrastructure_ — the mechanism by which a theme's tokens become usable CSS — distinct from any specific theme's token values (which remain out of scope, Phase 5) and distinct from any component's styles (which remain out of scope, Phase 2+).
 
 ### `@primeuix/styles@2.0.3`
 
@@ -115,7 +115,7 @@ Investigated all four packages by extracting `.vendor-cache/*.tar.gz` and readin
 - **Framework coupling:** none.
 - **Reduced-motion handling:** `shouldSkipMotion()` returns `true` when `options.disabled` or (`options.safe && isPrefersReducedMotion()`) — and `DEFAULT_MOTION_OPTIONS.safe` is `true` by default. **Motion respects `prefers-reduced-motion` out of the box**, satisfying the accessibility requirement without Ultimate-side changes.
 - **CSS vs JS responsibilities:** JS orchestrates class toggling and phase timing (enter/leave/appear); actual animation/transition definitions live in CSS (component style modules — out of Phase 1 scope, consistent with `uix-styles` classification above).
-- **SSR:** `createMotion` requires a real `Element` argument (throws if absent) — inherently a client-side/runtime API, not called at module load time, so importing the package is SSR-safe; *using* it server-side is a framework-package concern.
+- **SSR:** `createMotion` requires a real `Element` argument (throws if absent) — inherently a client-side/runtime API, not called at module load time, so importing the package is SSR-safe; _using_ it server-side is a framework-package concern.
 - **API stability:** small surface (one factory function + options), low churn risk.
 - **Source provenance:** MIT, tarball shasum `9af4238226042d80518dd343c6481d03582e374a`.
 - **Classification: RETAIN**, entire package.
@@ -140,68 +140,68 @@ packages/
 
 ### `@ultimate/uix-utils`
 
-| | |
-|---|---|
-| Purpose | Framework-neutral utility functions (classnames, DOM helpers, event bus, prop merging, object helpers, UUID, z-index management) |
-| Public API | `classnames`, `dom`, `eventbus`, `mergeprops`, `object`, `uuid`, `zindex` submodules + barrel |
-| Internal API | none |
-| Dependencies | none |
-| Peer dependencies | none |
-| Build output | ESM (`dist/**/*.mjs`), `.d.mts` declarations, source maps, per-submodule |
-| Exports | `.` and `./*` subpath map (mirrors upstream shape) |
-| Side effects | `sideEffects: false` |
-| Tests | Vitest, per-module unit tests; `dom` module tests run under jsdom |
-| Consumers (Phase 2+) | `uix-styled`, `uix-motion`, all framework-core packages |
-| Ownership | Ultimate — MIT-derived, RETAIN classification, file-level provenance tracked |
+|                      |                                                                                                                                  |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Purpose              | Framework-neutral utility functions (classnames, DOM helpers, event bus, prop merging, object helpers, UUID, z-index management) |
+| Public API           | `classnames`, `dom`, `eventbus`, `mergeprops`, `object`, `uuid`, `zindex` submodules + barrel                                    |
+| Internal API         | none                                                                                                                             |
+| Dependencies         | none                                                                                                                             |
+| Peer dependencies    | none                                                                                                                             |
+| Build output         | ESM (`dist/**/*.mjs`), `.d.mts` declarations, source maps, per-submodule                                                         |
+| Exports              | `.` and `./*` subpath map (mirrors upstream shape)                                                                               |
+| Side effects         | `sideEffects: false`                                                                                                             |
+| Tests                | Vitest, per-module unit tests; `dom` module tests run under jsdom                                                                |
+| Consumers (Phase 2+) | `uix-styled`, `uix-motion`, all framework-core packages                                                                          |
+| Ownership            | Ultimate — MIT-derived, RETAIN classification, file-level provenance tracked                                                     |
 
 ### `@ultimate/uix-styled`
 
-| | |
-|---|---|
-| Purpose | Theme/preset resolution engine — token resolution (`dt`/`t`), preset merging, stylesheet registration |
-| Public API | `definePreset`, `updatePreset`, `usePreset`, `useTheme`, `updatePrimaryPalette`, `updateSurfacePalette`, palette helpers, `dt`, `t`, `toVariables`, stylesheet service |
-| Internal API | `sharedUtils`, `themeUtils`, `helpers/css` (not re-exported) |
-| Dependencies | `@ultimate/uix-utils` |
-| Peer dependencies | none |
-| Build output | ESM, single entry, `.d.mts`, source maps |
-| Exports | `.` only |
-| Side effects | `sideEffects: false` for tree-shaking; runtime stylesheet injection is a called-function effect, not a module-load effect |
-| Tests | Vitest — token resolution determinism, preset merge correctness, stylesheet registration lifecycle |
-| Consumers (Phase 2+) | Framework-core packages (theme consumption), later theme packages (Phase 5) |
-| Ownership | Ultimate — MIT-derived, RETAIN classification, file-level provenance tracked |
+|                      |                                                                                                                                                                        |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Purpose              | Theme/preset resolution engine — token resolution (`dt`/`t`), preset merging, stylesheet registration                                                                  |
+| Public API           | `definePreset`, `updatePreset`, `usePreset`, `useTheme`, `updatePrimaryPalette`, `updateSurfacePalette`, palette helpers, `dt`, `t`, `toVariables`, stylesheet service |
+| Internal API         | `sharedUtils`, `themeUtils`, `helpers/css` (not re-exported)                                                                                                           |
+| Dependencies         | `@ultimate/uix-utils`                                                                                                                                                  |
+| Peer dependencies    | none                                                                                                                                                                   |
+| Build output         | ESM, single entry, `.d.mts`, source maps                                                                                                                               |
+| Exports              | `.` only                                                                                                                                                               |
+| Side effects         | `sideEffects: false` for tree-shaking; runtime stylesheet injection is a called-function effect, not a module-load effect                                              |
+| Tests                | Vitest — token resolution determinism, preset merge correctness, stylesheet registration lifecycle                                                                     |
+| Consumers (Phase 2+) | Framework-core packages (theme consumption), later theme packages (Phase 5)                                                                                            |
+| Ownership            | Ultimate — MIT-derived, RETAIN classification, file-level provenance tracked                                                                                           |
 
 ### `@ultimate/uix-styles`
 
-| | |
-|---|---|
-| Purpose | Global/base CSS infrastructure shared across all future components |
-| Public API (Phase 1) | `base` module only, plus shared `types` |
-| Internal API | none |
-| Dependencies | none |
-| Peer dependencies | none |
-| Build output | ESM, subpath exports (`./base`), `.d.mts`, source maps |
-| Exports | `.` (barrel, re-exports `base` only in Phase 1) and `./base` |
-| Side effects | none — static string exports |
-| Tests | Vitest — snapshot test on generated `base` CSS output; a **scope guard test** asserting no `.p-{componentname}`-style selector patterns appear outside the whitelisted base selectors (`.p-disabled`, `.p-icon`, `.p-overlay-mask`, `.p-collapsible-*`, `.pi`) |
-| Consumers (Phase 2+) | Framework-core packages (global reset/base styles), later theme packages |
-| Ownership | Ultimate — MIT-derived, RETAIN (base only) classification, file-level provenance tracked |
-| Deferred | ~90 per-component style modules — classified LATER PHASE, migrated alongside each component (Phase 2/3/4) |
+|                      |                                                                                                                                                                                                                                                                |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Purpose              | Global/base CSS infrastructure shared across all future components                                                                                                                                                                                             |
+| Public API (Phase 1) | `base` module only, plus shared `types`                                                                                                                                                                                                                        |
+| Internal API         | none                                                                                                                                                                                                                                                           |
+| Dependencies         | none                                                                                                                                                                                                                                                           |
+| Peer dependencies    | none                                                                                                                                                                                                                                                           |
+| Build output         | ESM, subpath exports (`./base`), `.d.mts`, source maps                                                                                                                                                                                                         |
+| Exports              | `.` (barrel, re-exports `base` only in Phase 1) and `./base`                                                                                                                                                                                                   |
+| Side effects         | none — static string exports                                                                                                                                                                                                                                   |
+| Tests                | Vitest — snapshot test on generated `base` CSS output; a **scope guard test** asserting no `.p-{componentname}`-style selector patterns appear outside the whitelisted base selectors (`.p-disabled`, `.p-icon`, `.p-overlay-mask`, `.p-collapsible-*`, `.pi`) |
+| Consumers (Phase 2+) | Framework-core packages (global reset/base styles), later theme packages                                                                                                                                                                                       |
+| Ownership            | Ultimate — MIT-derived, RETAIN (base only) classification, file-level provenance tracked                                                                                                                                                                       |
+| Deferred             | ~90 per-component style modules — classified LATER PHASE, migrated alongside each component (Phase 2/3/4)                                                                                                                                                      |
 
 ### `@ultimate/uix-motion`
 
-| | |
-|---|---|
-| Purpose | Class-based enter/leave transition orchestration respecting `prefers-reduced-motion` |
-| Public API | `createMotion(element, options): MotionInstance`, `DEFAULT_MOTION_OPTIONS` |
-| Internal API | `shouldSkipMotion`, `mergeOptions`, `resolveClassNames`, `resolveDuration` (re-exported, effectively public) |
-| Dependencies | `@ultimate/uix-utils` |
-| Peer dependencies | none |
-| Build output | ESM, single entry, `.d.mts`, source maps |
-| Exports | `.` only |
-| Side effects | `sideEffects: false`; DOM class mutation is a called-function effect |
-| Tests | Vitest — `shouldSkipMotion` behavior (incl. `prefers-reduced-motion` simulation), hook/phase lifecycle correctness under jsdom |
-| Consumers (Phase 2+) | Framework-core packages implementing overlay/transition components |
-| Ownership | Ultimate — MIT-derived, RETAIN classification, file-level provenance tracked |
+|                      |                                                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Purpose              | Class-based enter/leave transition orchestration respecting `prefers-reduced-motion`                                           |
+| Public API           | `createMotion(element, options): MotionInstance`, `DEFAULT_MOTION_OPTIONS`                                                     |
+| Internal API         | `shouldSkipMotion`, `mergeOptions`, `resolveClassNames`, `resolveDuration` (re-exported, effectively public)                   |
+| Dependencies         | `@ultimate/uix-utils`                                                                                                          |
+| Peer dependencies    | none                                                                                                                           |
+| Build output         | ESM, single entry, `.d.mts`, source maps                                                                                       |
+| Exports              | `.` only                                                                                                                       |
+| Side effects         | `sideEffects: false`; DOM class mutation is a called-function effect                                                           |
+| Tests                | Vitest — `shouldSkipMotion` behavior (incl. `prefers-reduced-motion` simulation), hook/phase lifecycle correctness under jsdom |
+| Consumers (Phase 2+) | Framework-core packages implementing overlay/transition components                                                             |
+| Ownership            | Ultimate — MIT-derived, RETAIN classification, file-level provenance tracked                                                   |
 
 ---
 
@@ -210,7 +210,7 @@ packages/
 - **Belongs in UIX:** framework-neutral utilities, theme/token resolution infrastructure, global/base CSS, motion orchestration — all four packages above.
 - **Belongs in framework core (Phase 2+):** component lifecycle integration, framework-native event binding, calling into `uix-motion`/`uix-styled`/`uix-utils` from Angular/React/Vue-specific code.
 - **Belongs in framework components (Phase 2+):** actual rendered components, their own per-component style modules (the ~90 deferred `uix-styles` modules migrate here, alongside the owning component, not into UIX).
-- **Belongs in themes (Phase 5):** actual token *values* (a specific palette, a specific corporate design language). UIX provides the resolution *mechanism* (`uix-styled`), never a concrete theme.
+- **Belongs in themes (Phase 5):** actual token _values_ (a specific palette, a specific corporate design language). UIX provides the resolution _mechanism_ (`uix-styled`), never a concrete theme.
 - **Belongs in developer tooling (Phase 7+):** none of this phase's work — `packages/{cli,mcp,ai}` remain untouched scaffolding.
 - **Must remain external:** Angular/React/Vue themselves, current `@primeuix/*`/`primeng`/`primevue`/`primereact` packages.
 
@@ -254,7 +254,7 @@ Within UIX: `uix-styled` → `uix-utils`; `uix-motion` → `uix-utils`; `uix-sty
 - **Module format:** ESM only — no CJS output. Matches upstream, matches `tsconfig.base.json`'s `module: ESNext`.
 - **Tree-shaking:** `sideEffects: false` in every package's `package.json`; subpath exports preserved (`uix-utils`, `uix-styles`) so consumers can import a single submodule without pulling in the rest.
 - **Browser compatibility:** target `ES2022` (matches `tsconfig.base.json`); no additional transpilation/polyfill requirement identified — all four packages already assume this target upstream.
-- **SSR compatibility:** confirmed safe at *import* time for all four packages (no top-level `document`/`window` access). Runtime calls into DOM-touching functions (`uix-utils/dom`, `uix-styled`'s stylesheet injection, `uix-motion`'s `createMotion`) are a framework-package SSR-guarding responsibility, not a UIX-package one — UIX does not attempt to solve framework-specific SSR/hydration itself (task non-goal §19).
+- **SSR compatibility:** confirmed safe at _import_ time for all four packages (no top-level `document`/`window` access). Runtime calls into DOM-touching functions (`uix-utils/dom`, `uix-styled`'s stylesheet injection, `uix-motion`'s `createMotion`) are a framework-package SSR-guarding responsibility, not a UIX-package one — UIX does not attempt to solve framework-specific SSR/hydration itself (task non-goal §19).
 - **Package exports validation:** a Vitest suite per package asserts every declared export subpath resolves and imports without throwing, catching `package.json`/`tsup` config drift.
 - **Source maps:** shipped in every package's `dist/`, `.mjs.map` alongside `.mjs`.
 
@@ -269,7 +269,7 @@ Within UIX: `uix-styled` → `uix-utils`; `uix-motion` → `uix-utils`; `uix-sty
 - **Style registration / CSS generation:** `uix-styled`'s stylesheet service, retained as-is.
 - **SSR / CSP considerations:** stylesheet injection uses `<style>` tag insertion — no `eval`/inline `on*` attribute usage found in the investigated source; no CSP-unsafe pattern identified. Framework packages doing actual SSR style extraction is out of scope here (non-goal §19).
 - **Style ordering / isolation:** unchanged from upstream mechanism — `uix-styled`'s service already handles registration ordering; no Ultimate-specific change proposed without a demonstrated need.
-- **Boundary:** styling *infrastructure* (`uix-styled` + `uix-styles/base`) is fully separated from theme *definitions* (Phase 5, not built) and component *implementation* (Phase 2+, not built) — confirmed by the package scope above.
+- **Boundary:** styling _infrastructure_ (`uix-styled` + `uix-styles/base`) is fully separated from theme _definitions_ (Phase 5, not built) and component _implementation_ (Phase 2+, not built) — confirmed by the package scope above.
 
 ---
 
@@ -344,7 +344,7 @@ All four packages use **Vitest** (chosen for native ESM/TS support with no extra
 ## AI/Metadata Constraints
 
 - No AI system, CLI, MCP, or Skills work in Phase 1 (non-goal, unchanged from Blueprint/Phase 0).
-- Package architecture must not *prevent* future metadata generation: each package's TSDoc comments on exported symbols (added as part of Documentation Requirements above) are structured enough to later feed a metadata generator without rework — no dedicated metadata schema or generator is built now.
+- Package architecture must not _prevent_ future metadata generation: each package's TSDoc comments on exported symbols (added as part of Documentation Requirements above) are structured enough to later feed a metadata generator without rework — no dedicated metadata schema or generator is built now.
 - No AI/tooling runtime dependency is added to any `packages/uix-*` package.json (already implied by the zero-new-runtime-dependency finding above).
 
 ---
@@ -405,15 +405,15 @@ Migration classification: recorded in this spec's PrimeUIX Findings section (RET
 
 ## Risks
 
-| Risk | Impact | Likelihood | Mitigation | Decision point |
-|---|---|---|---|---|
-| Sourcemap `sourcesContent` is present for the 4 packages investigated in this spec but a specific submodule/file is later found missing it during actual extraction | Medium — would block file-level provenance for that file, forcing a decompiled-source fallback | Low (spot-checked across all 4 packages, all submodules, in this investigation) | If found, decompile from `.mjs` instead and mark that file's manifest entry `modificationStatus: "reconstructed-from-compiled-output"`, flagged for extra review | Phase 1 implementation, `extract-source.mjs` first run |
-| `ceiling:validate`'s `WATCHED_PREFIXES` gap (doesn't currently watch `packages/uix*`) ships unfixed | High if unfixed — a stray `@primeuix/*` runtime dependency in a `uix-*` package.json would go undetected by CI | Low once flagged (this spec flags it explicitly) | Implementation plan must include the one-line `WATCHED_PREFIXES` extension as an early task, verified by a negative test (intentionally-bad package.json should fail CI) | Phase 1 implementation, before first `uix-*` package.json is committed |
-| `uix-styles`' base/component boundary is violated later (someone adds a component selector to `base` without noticing) | Medium — quietly breaks the Phase 1 scope decision, extra component CSS ships before its owning component exists | Low with the scope-guard test in place; higher without it | Scope-guard test (Testing Requirements) must ship in Phase 1, not deferred | Phase 1 implementation |
-| Upstream `primeuix` repo is archived (Phase 0 Finding 3) — zero future patches for any bug found in the 4 pinned packages | Medium — Ultimate is sole maintainer from day one | Confirmed (Phase 0) | Already a known, accepted constraint; Phase 1 changes nothing here, just inherits it | Ongoing, not a Phase 1 blocker |
-| `uix-styled`'s stylesheet-injection side effect is miscategorized and a bundler drops it despite `sideEffects: false` | Low-Medium — functions still work when called explicitly; risk is theoretical bundler over-aggressiveness, not a logic bug | Low | Package/export tests (Testing Requirements) explicitly call every exported function including stylesheet registration, catching accidental dead-code elimination in CI | Phase 1 implementation, package test authoring |
-| Performance baseline numbers become stale/misleading once Phase 2 adds real consumers | Low — baseline is explicitly framed as "for later comparison," not a hard budget | Expected/accepted | Re-baseline at Phase 2 exit, not a Phase 1 concern | Phase 2 planning |
-| File-level provenance manifest JSON schema (proposed inline in this spec) turns out insufficient once real extraction begins | Low-Medium — could need a schema revision mid-implementation | Low-Medium (schema is new, not yet validated against real bulk data) | Schema is intentionally simple (5 fields); implementation plan may refine field names/structure without needing a new spec, as long as the required facts (original path, destination, modification status) are preserved | Phase 1 implementation |
+| Risk                                                                                                                                                                | Impact                                                                                                                     | Likelihood                                                                      | Mitigation                                                                                                                                                                                                                | Decision point                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Sourcemap `sourcesContent` is present for the 4 packages investigated in this spec but a specific submodule/file is later found missing it during actual extraction | Medium — would block file-level provenance for that file, forcing a decompiled-source fallback                             | Low (spot-checked across all 4 packages, all submodules, in this investigation) | If found, decompile from `.mjs` instead and mark that file's manifest entry `modificationStatus: "reconstructed-from-compiled-output"`, flagged for extra review                                                          | Phase 1 implementation, `extract-source.mjs` first run                 |
+| `ceiling:validate`'s `WATCHED_PREFIXES` gap (doesn't currently watch `packages/uix*`) ships unfixed                                                                 | High if unfixed — a stray `@primeuix/*` runtime dependency in a `uix-*` package.json would go undetected by CI             | Low once flagged (this spec flags it explicitly)                                | Implementation plan must include the one-line `WATCHED_PREFIXES` extension as an early task, verified by a negative test (intentionally-bad package.json should fail CI)                                                  | Phase 1 implementation, before first `uix-*` package.json is committed |
+| `uix-styles`' base/component boundary is violated later (someone adds a component selector to `base` without noticing)                                              | Medium — quietly breaks the Phase 1 scope decision, extra component CSS ships before its owning component exists           | Low with the scope-guard test in place; higher without it                       | Scope-guard test (Testing Requirements) must ship in Phase 1, not deferred                                                                                                                                                | Phase 1 implementation                                                 |
+| Upstream `primeuix` repo is archived (Phase 0 Finding 3) — zero future patches for any bug found in the 4 pinned packages                                           | Medium — Ultimate is sole maintainer from day one                                                                          | Confirmed (Phase 0)                                                             | Already a known, accepted constraint; Phase 1 changes nothing here, just inherits it                                                                                                                                      | Ongoing, not a Phase 1 blocker                                         |
+| `uix-styled`'s stylesheet-injection side effect is miscategorized and a bundler drops it despite `sideEffects: false`                                               | Low-Medium — functions still work when called explicitly; risk is theoretical bundler over-aggressiveness, not a logic bug | Low                                                                             | Package/export tests (Testing Requirements) explicitly call every exported function including stylesheet registration, catching accidental dead-code elimination in CI                                                    | Phase 1 implementation, package test authoring                         |
+| Performance baseline numbers become stale/misleading once Phase 2 adds real consumers                                                                               | Low — baseline is explicitly framed as "for later comparison," not a hard budget                                           | Expected/accepted                                                               | Re-baseline at Phase 2 exit, not a Phase 1 concern                                                                                                                                                                        | Phase 2 planning                                                       |
+| File-level provenance manifest JSON schema (proposed inline in this spec) turns out insufficient once real extraction begins                                        | Low-Medium — could need a schema revision mid-implementation                                                               | Low-Medium (schema is new, not yet validated against real bulk data)            | Schema is intentionally simple (5 fields); implementation plan may refine field names/structure without needing a new spec, as long as the required facts (original path, destination, modification status) are preserved | Phase 1 implementation                                                 |
 
 ---
 

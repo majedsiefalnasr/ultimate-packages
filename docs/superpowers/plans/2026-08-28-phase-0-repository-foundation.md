@@ -554,7 +554,7 @@ All package names remain provisional per Blueprint §34 until npm availability, 
 
 - [ ] **Step 3: Write `docs/architecture/AI_ARCHITECTURE.md`**
 
-`````markdown
+````markdown
 # AI/Tooling Architecture Constraints
 
 Restated from Blueprint §14/§2.6/§2.7/§6. Phase 0 preserves these constraints architecturally without implementing them.
@@ -582,29 +582,29 @@ Prohibited direction: `Ultimate Components -> CLI -> MCP -> AI`. AI and develope
 ## Prior art noted for later phases
 
 PrimeVue 4.5.5 already ships its own `mcp` and `metadata` sibling packages — useful prior art to review during Phase 6/8 planning. No action taken in Phase 0.
-`````
+````
 
 - [ ] **Step 4: Write `docs/architecture/ROADMAP.md`**
 
-````markdown
+```markdown
 # Phase Roadmap
 
 Restated from Blueprint §35. See individual phase specs (`docs/superpowers/specs/`) for implementation-ready detail as each phase begins.
 
-| Phase | Name | Status |
-|---|---|---|
-| 0 | Repository Foundation, Provenance & Baseline Verification | In progress (this plan) |
-| 1 | UltimateUIX Foundation | Not started |
-| 2 | UltimateNG | Not started |
-| 3 | UltimateReact | Not started |
-| 4 | UltimateVue | Not started |
-| 5 | Themes | Not started |
-| 6 | Component Metadata | Not started |
-| 7 | CLI | Not started |
-| 8 | MCP | Not started |
-| 9 | AI Skills and LLM Context | Not started |
-| 10 | Production Hardening | Not started |
-````
+| Phase | Name                                                      | Status                  |
+| ----- | --------------------------------------------------------- | ----------------------- |
+| 0     | Repository Foundation, Provenance & Baseline Verification | In progress (this plan) |
+| 1     | UltimateUIX Foundation                                    | Not started             |
+| 2     | UltimateNG                                                | Not started             |
+| 3     | UltimateReact                                             | Not started             |
+| 4     | UltimateVue                                               | Not started             |
+| 5     | Themes                                                    | Not started             |
+| 6     | Component Metadata                                        | Not started             |
+| 7     | CLI                                                       | Not started             |
+| 8     | MCP                                                       | Not started             |
+| 9     | AI Skills and LLM Context                                 | Not started             |
+| 10    | Production Hardening                                      | Not started             |
+```
 
 - [ ] **Step 5: Verify all four files exist**
 

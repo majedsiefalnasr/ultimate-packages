@@ -5,7 +5,10 @@
  * @param value - CSS value string
  * @returns True if supported, false otherwise
  */
-export function isCssSupported(property: keyof CSSStyleDeclaration | string, value: string): boolean;
+export function isCssSupported(
+  property: keyof CSSStyleDeclaration | string,
+  value: string
+): boolean;
 
 /**
  * Checks if a given CSS condition is supported by the browser.
@@ -22,16 +25,19 @@ export function isCssSupported(condition: string): boolean;
  * @param value - CSS value (optional)
  * @returns True if supported, false otherwise
  */
-export default function isCssSupported(input: keyof CSSStyleDeclaration | string, value?: string): boolean {
-    if (typeof CSS === 'undefined' || !CSS.supports) {
-        return false;
-    }
+export default function isCssSupported(
+  input: keyof CSSStyleDeclaration | string,
+  value?: string
+): boolean {
+  if (typeof CSS === "undefined" || !CSS.supports) {
+    return false;
+  }
 
-    if (value !== undefined) {
-        const prop = input.toString().replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+  if (value !== undefined) {
+    const prop = input.toString().replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
 
-        return CSS.supports(prop, value);
-    }
+    return CSS.supports(prop, value);
+  }
 
-    return CSS.supports(input.toString());
+  return CSS.supports(input.toString());
 }

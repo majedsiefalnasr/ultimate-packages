@@ -1,15 +1,30 @@
-import { addClass, removeClass } from '@ultimate/uix-utils';
-import type { MotionClassNamesWithPhase, MotionHooksWithPhase, MotionInstance, MotionOptions, MotionPhase, MotionType } from '../types';
-import { getMotionHooks, getMotionMetadata, mergeOptions, resolveClassNames, resolveDuration, setAutoDimensionVariables, shouldSkipMotion } from '../utils';
+import { addClass, removeClass } from "@ultimate/uix-utils";
+import type {
+  MotionClassNamesWithPhase,
+  MotionHooksWithPhase,
+  MotionInstance,
+  MotionOptions,
+  MotionPhase,
+  MotionType,
+} from "../types";
+import {
+  getMotionHooks,
+  getMotionMetadata,
+  mergeOptions,
+  resolveClassNames,
+  resolveDuration,
+  setAutoDimensionVariables,
+  shouldSkipMotion,
+} from "../utils";
 
 export const DEFAULT_MOTION_OPTIONS: MotionOptions = {
-    name: 'p',
-    safe: true,
-    disabled: false,
-    enter: true,
-    leave: true,
-    autoHeight: true,
-    autoWidth: false
+  name: "p",
+  safe: true,
+  disabled: false,
+  enter: true,
+  leave: true,
+  autoHeight: true,
+  autoWidth: false,
 };
 
 /**
@@ -19,106 +34,106 @@ export const DEFAULT_MOTION_OPTIONS: MotionOptions = {
  * @returns A MotionInstance that can be used to control the motion.
  */
 export function createMotion(element: Element, options?: MotionOptions): MotionInstance {
-    if (!element) throw new Error('Element is required.');
+  if (!element) throw new Error("Element is required.");
 
-    const opts: MotionOptions = {};
-    let skipMotion = false;
-    let classNames: MotionClassNamesWithPhase = {} as MotionClassNamesWithPhase;
-    let cancelCurrent: (() => void) | null = null;
-    let hooks: MotionHooksWithPhase = {};
+  const opts: MotionOptions = {};
+  let skipMotion = false;
+  let classNames: MotionClassNamesWithPhase = {} as MotionClassNamesWithPhase;
+  let cancelCurrent: (() => void) | null = null;
+  let hooks: MotionHooksWithPhase = {};
 
-    const init = (newOpts?: MotionOptions) => {
-        Object.assign(opts, mergeOptions(newOpts, DEFAULT_MOTION_OPTIONS));
-        if (!opts.enter && !opts.leave) throw new Error('Enter or leave must be true.');
+  const init = (newOpts?: MotionOptions) => {
+    Object.assign(opts, mergeOptions(newOpts, DEFAULT_MOTION_OPTIONS));
+    if (!opts.enter && !opts.leave) throw new Error("Enter or leave must be true.");
 
-        hooks = getMotionHooks(opts);
-        skipMotion = shouldSkipMotion(opts);
-        classNames = resolveClassNames(opts);
+    hooks = getMotionHooks(opts);
+    skipMotion = shouldSkipMotion(opts);
+    classNames = resolveClassNames(opts);
+    cancelCurrent = null;
+  };
+
+  const run = async (phase: MotionPhase): Promise<void> => {
+    cancelCurrent?.();
+
+    const { onBefore, onStart, onAfter, onCancelled } = hooks[phase] || {};
+    const event = { element };
+
+    if (skipMotion) {
+      onBefore?.(event);
+      onStart?.(event);
+      onAfter?.(event);
+
+      return;
+    }
+
+    const { from: fromClass, active: activeClass, to: toClass } = classNames[phase] || {};
+
+    setAutoDimensionVariables(element as HTMLElement, opts.autoHeight, opts.autoWidth);
+
+    onBefore?.(event);
+    addClass(element, fromClass);
+    addClass(element, activeClass);
+
+    //await nextFrame();
+    void (element as HTMLElement).offsetHeight; // force reflow
+
+    removeClass(element, fromClass);
+    addClass(element, toClass);
+    onStart?.(event);
+
+    return new Promise((resolve) => {
+      const duration = resolveDuration(opts.duration, phase);
+
+      const cleanup = () => {
+        removeClass(element, [toClass, activeClass]);
         cancelCurrent = null;
-    };
+      };
 
-    const run = async (phase: MotionPhase): Promise<void> => {
-        cancelCurrent?.();
+      const onDone = () => {
+        cleanup();
+        onAfter?.(event);
+        resolve();
+      };
 
-        const { onBefore, onStart, onAfter, onCancelled } = hooks[phase] || {};
-        const event = { element };
+      cancelCurrent = () => {
+        cleanup();
+        onCancelled?.(event);
+        resolve();
+      };
 
-        if (skipMotion) {
-            onBefore?.(event);
-            onStart?.(event);
-            onAfter?.(event);
+      whenEnd(element, opts.type, duration, onDone);
+    });
+  };
 
-            return;
-        }
+  init(options);
 
-        const { from: fromClass, active: activeClass, to: toClass } = classNames[phase] || {};
+  const instance: MotionInstance = {
+    enter: () => {
+      if (!opts.enter) return Promise.resolve();
 
-        setAutoDimensionVariables(element as HTMLElement, opts.autoHeight, opts.autoWidth);
+      return run("enter");
+    },
+    leave: () => {
+      if (!opts.leave) return Promise.resolve();
 
-        onBefore?.(event);
-        addClass(element, fromClass);
-        addClass(element, activeClass);
+      return run("leave");
+    },
+    cancel: () => {
+      cancelCurrent?.();
+      cancelCurrent = null;
+    },
+    update: (newElement?: Element, newOptions?: MotionOptions) => {
+      if (!newElement) throw new Error("Element is required.");
 
-        //await nextFrame();
-        void (element as HTMLElement).offsetHeight; // force reflow
+      element = newElement as HTMLElement;
+      instance.cancel();
+      init(newOptions);
+    },
+  };
 
-        removeClass(element, fromClass);
-        addClass(element, toClass);
-        onStart?.(event);
+  if (opts.appear) instance.enter();
 
-        return new Promise((resolve) => {
-            const duration = resolveDuration(opts.duration, phase);
-
-            const cleanup = () => {
-                removeClass(element, [toClass, activeClass]);
-                cancelCurrent = null;
-            };
-
-            const onDone = () => {
-                cleanup();
-                onAfter?.(event);
-                resolve();
-            };
-
-            cancelCurrent = () => {
-                cleanup();
-                onCancelled?.(event);
-                resolve();
-            };
-
-            whenEnd(element, opts.type, duration, onDone);
-        });
-    };
-
-    init(options);
-
-    const instance: MotionInstance = {
-        enter: () => {
-            if (!opts.enter) return Promise.resolve();
-
-            return run('enter');
-        },
-        leave: () => {
-            if (!opts.leave) return Promise.resolve();
-
-            return run('leave');
-        },
-        cancel: () => {
-            cancelCurrent?.();
-            cancelCurrent = null;
-        },
-        update: (newElement?: Element, newOptions?: MotionOptions) => {
-            if (!newElement) throw new Error('Element is required.');
-
-            element = newElement as HTMLElement;
-            instance.cancel();
-            init(newOptions);
-        }
-    };
-
-    if (opts.appear) instance.enter();
-
-    return instance;
+  return instance;
 }
 
 let endId = 0;
@@ -134,45 +149,50 @@ let endId = 0;
  * @param resolve - A function to call when the motion ends.
  * @returns A timeout ID if an explicit timeout is provided, otherwise undefined.
  */
-function whenEnd(element: Element & { _motionEndId?: number }, expectedType: MotionType | undefined, explicitTimeout: number | null, resolve: () => void) {
-    const id = (element._motionEndId = ++endId);
+function whenEnd(
+  element: Element & { _motionEndId?: number },
+  expectedType: MotionType | undefined,
+  explicitTimeout: number | null,
+  resolve: () => void
+) {
+  const id = (element._motionEndId = ++endId);
 
-    const resolveIfNotStale = () => {
-        if (id === element._motionEndId) {
-            resolve();
-        }
-    };
-
-    if (explicitTimeout != null) {
-        return setTimeout(resolveIfNotStale, explicitTimeout);
+  const resolveIfNotStale = () => {
+    if (id === element._motionEndId) {
+      resolve();
     }
+  };
 
-    const { type, timeout, count } = getMotionMetadata(element, expectedType);
+  if (explicitTimeout != null) {
+    return setTimeout(resolveIfNotStale, explicitTimeout);
+  }
 
-    if (!type) {
-        resolve();
+  const { type, timeout, count } = getMotionMetadata(element, expectedType);
 
-        return;
+  if (!type) {
+    resolve();
+
+    return;
+  }
+
+  const endEvent = type + "end";
+  let ended = 0;
+
+  const end = () => {
+    element.removeEventListener(endEvent, onEnd, true);
+    resolveIfNotStale();
+  };
+
+  const onEnd = (event: Event) => {
+    if (event.target === element && ++ended >= count) {
+      end();
     }
+  };
 
-    const endEvent = type + 'end';
-    let ended = 0;
-
-    const end = () => {
-        element.removeEventListener(endEvent, onEnd, true);
-        resolveIfNotStale();
-    };
-
-    const onEnd = (event: Event) => {
-        if (event.target === element && ++ended >= count) {
-            end();
-        }
-    };
-
-    element.addEventListener(endEvent, onEnd, { capture: true, once: true });
-    setTimeout(() => {
-        if (ended < count) {
-            end();
-        }
-    }, timeout + 1);
+  element.addEventListener(endEvent, onEnd, { capture: true, once: true });
+  setTimeout(() => {
+    if (ended < count) {
+      end();
+    }
+  }, timeout + 1);
 }

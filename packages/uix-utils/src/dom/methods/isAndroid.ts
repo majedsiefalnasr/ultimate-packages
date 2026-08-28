@@ -1,3 +1,3 @@
 export default function isAndroid(): boolean {
-    return /(android)/i.test(navigator.userAgent);
+  return /(android)/i.test(navigator.userAgent);
 }
