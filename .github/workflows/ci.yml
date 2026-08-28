@@ -15,6 +15,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Fetch base ref
+        run: git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
