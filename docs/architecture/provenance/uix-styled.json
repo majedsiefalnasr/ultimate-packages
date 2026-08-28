@@ -80,8 +80,8 @@
   {
     "originalPath": "src/helpers/index.ts",
     "ultimateDestination": "packages/uix-styled/src/helpers/index.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "reconstructed",
+    "modificationDescription": "Barrel re-export hand-rebuilt by cross-referencing the built .d.mts/.mjs output; the original upstream barrel was a pure re-export the sourcemap does not capture as a separately-mapped file."
   },
   {
     "originalPath": "src/helpers/t.ts",
@@ -98,8 +98,8 @@
   {
     "originalPath": "src/index.ts",
     "ultimateDestination": "packages/uix-styled/src/index.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "reconstructed",
+    "modificationDescription": "Top-level barrel hand-rebuilt by cross-referencing the built .d.mts/.mjs output (not one of the 19 sourcemap-extracted files); also adds ~40 lines of hand-written JSDoc and manually-declared types (StyleOptions, StyleType, ThemeOptions, ColorScale) absent from any extracted source file."
   },
   {
     "originalPath": "src/service/index.ts",
@@ -116,8 +116,8 @@
   {
     "originalPath": "src/utils/index.ts",
     "ultimateDestination": "packages/uix-styled/src/utils/index.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "reconstructed",
+    "modificationDescription": "Barrel re-export hand-rebuilt by cross-referencing the built .d.mts/.mjs output; the original upstream barrel was a pure re-export the sourcemap does not capture as a separately-mapped file."
   },
   {
     "originalPath": "src/utils/sharedUtils.ts",

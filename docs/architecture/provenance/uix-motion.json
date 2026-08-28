@@ -8,14 +8,14 @@
   {
     "originalPath": "src/index.ts",
     "ultimateDestination": "packages/uix-motion/src/index.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "reconstructed",
+    "modificationDescription": "Barrel re-export hand-rebuilt (new barrel, not sourcemap-extracted); the original upstream barrel was a pure re-export the sourcemap does not capture as a separately-mapped file."
   },
   {
     "originalPath": "src/types.ts",
     "ultimateDestination": "packages/uix-motion/src/types.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "transcribed",
+    "modificationDescription": "Manually transcribed from the tarball's dist/index.d.mts declaration file (the sourcemap extraction genuinely skipped it — no src path segment in its sourcemap entry)."
   },
   {
     "originalPath": "src/utils/index.ts",

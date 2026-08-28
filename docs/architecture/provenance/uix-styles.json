@@ -8,13 +8,13 @@
   {
     "originalPath": "src/index.ts",
     "ultimateDestination": "packages/uix-styles/src/index.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "reconstructed",
+    "modificationDescription": "Barrel re-export hand-rebuilt by cross-referencing the built .d.mts/.mjs output; the original upstream barrel was a pure re-export the sourcemap does not capture as a separately-mapped file."
   },
   {
     "originalPath": "src/types.ts",
     "ultimateDestination": "packages/uix-styles/src/types.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "transcribed",
+    "modificationDescription": "Manually transcribed from the tarball's dist/types.d.mts declaration file (dist/types.mjs.map has empty sources, so extract-source.mjs recovers nothing for it); StyleType was deliberately narrowed from upstream's real union type and the @primeuix/styled import was stripped, per this file's own header comment."
   }
 ]
