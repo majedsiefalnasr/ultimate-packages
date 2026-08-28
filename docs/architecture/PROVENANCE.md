@@ -1,0 +1,134 @@
+# Provenance Record
+
+This file records the exact origin of every Prime-derived source area incorporated into Ultimate Platform. Phase 0 populates baseline-level entries only; component-level entries are added during Phase 1+ migration.
+
+Field template (per Blueprint §6/§8):
+
+```text
+Source repository       Source package         Source version
+Source commit SHA       Source path             Original license
+Copyright holder         Third-party notices     Ultimate destination
+Modification status      Modification description  Date incorporated
+```
+
+---
+
+## PrimeNG
+
+- **Source repository:** https://github.com/primefaces/primeng
+- **Source package:** `primeng`
+- **Source version:** `21.1.9`
+- **Source commit SHA:** `c493b1c6d9f7cdffbe1c4dc195493dd73d733593`
+- **Source path:** `packages/primeng` (monorepo subdirectory)
+- **Original license:** MIT (community/non-`-lts` section of the dual-license `LICENSE.md`)
+- **Copyright holder:** PrimeTek, 2016-2026
+- **Third-party notices:** none found upstream (no root-level `NOTICE` file at this tag)
+- **Ultimate destination:** `packages/ng`, `packages/ng-core` (Phase 2)
+- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
+- **Modification description:** n/a
+- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 2)
+
+## PrimeVue
+
+- **Source repository:** https://github.com/primefaces/primevue
+- **Source package:** `primevue`
+- **Source version:** `4.5.5`
+- **Source commit SHA:** `66dde6788220fc9e6822342919d1ceb0e3460ece`
+- **Source path:** `packages/primevue` (monorepo subdirectory)
+- **Original license:** MIT
+- **Copyright holder:** PrimeTek, 2018-2025
+- **Third-party notices:** none found upstream
+- **Ultimate destination:** `packages/vue`, `packages/vue-core` (Phase 4)
+- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
+- **Modification description:** n/a
+- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 4)
+
+## PrimeReact
+
+- **Source repository:** https://github.com/primefaces/primereact
+- **Source package:** `primereact`
+- **Source version:** `10.9.9`
+- **Source commit SHA:** `d0f574e39122668292fc7a740f081bae1b93b1e9`
+- **Source path:** `components/lib` (library source only — repo root is the Next.js showcase app and must never be treated as library source)
+- **Original license:** MIT
+- **Copyright holder:** PrimeTek, 2016-2025
+- **Third-party notices:** none found upstream
+- **Ultimate destination:** `packages/react`, `packages/react-core` (Phase 3)
+- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
+- **Modification description:** n/a
+- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 3)
+- **Architectural reference only (not incorporated):** PrimeReact `11.1.0` — commercial "PrimeUI License", not MIT. Its `@primereact/{core,headless}` package-split pattern is useful prior art for Ultimate's React package boundaries, but no source is incorporated from it.
+
+## @primeuix/utils
+
+- **Source repository:** https://github.com/primefaces/primeuix
+- **Source package:** `@primeuix/utils`
+- **Source version:** `0.7.2`
+- **Source commit SHA:** none — confirmed provenance gap (repo's `main` branch history stops at `utils@0.6.4`; npm registry `gitHead` is `null` for this release). Pinned instead by npm tarball integrity hash.
+- **Tarball shasum:** `0ded7f74bddf191f0e16aea34b593a7fcffa94b5`
+- **Tarball integrity:** `sha512-pmEbSfP0Phf9W9RweiM66zXnkn73ZeKyYINElbX3uZ2+stzzaba2svLAl3B1pHVcRw5t43O0VciaGe4ye2EXKw==`
+- **Source path:** `packages/utils` (monorepo subdirectory)
+- **Original license:** MIT (verified from `LICENSE` file inside the published npm tarball)
+- **Copyright holder:** PrimeTek, 2026
+- **Third-party notices:** none found upstream
+- **Ultimate destination:** `packages/uix-utils` (Phase 1)
+- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
+- **Modification description:** n/a
+- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 1)
+
+## @primeuix/styled
+
+- **Source repository:** https://github.com/primefaces/primeuix
+- **Source package:** `@primeuix/styled`
+- **Source version:** `0.7.4`
+- **Source commit SHA:** none — confirmed provenance gap (same cause as `@primeuix/utils` above). Pinned instead by npm tarball integrity hash.
+- **Tarball shasum:** `d2108a7fad297dea60d549b2c10ed744dc0cbc0e`
+- **Tarball integrity:** `sha512-QSO/NpOQg8e9BONWRBx9y8VGMCMYz0J/uKfNJEya/RGEu7ARx0oYW0ugI1N3/KB1AAvyGxzKBzGImbwg0KUiOQ==`
+- **Source path:** `packages/styled` (monorepo subdirectory)
+- **Original license:** MIT (verified from `LICENSE` file inside the published npm tarball)
+- **Copyright holder:** PrimeTek, 2025
+- **Third-party notices:** none found upstream
+- **Ultimate destination:** `packages/uix-styled` (Phase 1)
+- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
+- **Modification description:** n/a
+- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 1)
+
+## @primeuix/styles
+
+- **Source repository:** https://github.com/primefaces/primeuix
+- **Source package:** `@primeuix/styles`
+- **Source version:** `2.0.3`
+- **Source commit SHA:** none — confirmed provenance gap (same cause as above). Pinned instead by npm tarball integrity hash.
+- **Tarball shasum:** `e42d14c138fe092683228d65a3f6de17de70d6a0`
+- **Tarball integrity:** `sha512-2ykAB6BaHzR/6TwF8ShpJTsZrid6cVIEBVlookSdvOdmlWuevGu5vWOScgIwqWwlZcvkFYAGR/SUV3OHCTBMdw==`
+- **Source path:** `packages/styles` (monorepo subdirectory)
+- **Original license:** MIT (verified from `LICENSE` file inside the published npm tarball)
+- **Copyright holder:** PrimeTek, 2025
+- **Third-party notices:** none found upstream
+- **Ultimate destination:** `packages/uix-styles` (Phase 1)
+- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
+- **Modification description:** n/a
+- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 1)
+
+## @primeuix/motion
+
+- **Source repository:** https://github.com/primefaces/primeuix
+- **Source package:** `@primeuix/motion`
+- **Source version:** `0.0.10`
+- **Source commit SHA:** none — confirmed provenance gap (same cause as above). Pinned instead by npm tarball integrity hash.
+- **Tarball shasum:** `9af4238226042d80518dd343c6481d03582e374a`
+- **Tarball integrity:** `sha512-PsZwOPq79Scp7/ionshRcQ5xKVf9+zuLcyY5mf6onK8chHT5C9JGphmcIZ4CzcqxuGEpsm8AIbTGy+zS3RtzLA==`
+- **Source path:** `packages/motion` (monorepo subdirectory)
+- **Original license:** MIT (verified from `LICENSE` file inside the published npm tarball)
+- **Copyright holder:** PrimeTek, 2025
+- **Third-party notices:** none found upstream
+- **Ultimate destination:** `packages/uix-motion` (Phase 1)
+- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
+- **Modification description:** n/a
+- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 1)
+
+---
+
+**Excluded from Phase 0 core (not runtime dependencies of any confirmed baseline):** `@primeuix/forms`, `@primeuix/themes`, `@primeuix/mcp`. See `docs/architecture/DEPENDENCIES.md` for exclusion rationale.
+
+**Upstream provenance gap note:** the `primefaces/primeuix` GitHub repository has exactly one branch (`main`) and 17 lightweight tags, none reaching past bare version `0.6.0`. All four `@primeuix/*` packages above were published to npm with `gitHead: null`. This is PrimeTek's own upstream gap (repo archived mid-history), not a verification failure — see spec Finding 3 for full detail.
