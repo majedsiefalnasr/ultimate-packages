@@ -72,9 +72,9 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2026
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/uix-utils` (Phase 1)
-- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
-- **Modification description:** n/a
-- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 1)
+- **Modification status:** incorporated (Phase 1) — cross-package `@primeuix/*` import specifiers adapted to `@ultimate/uix-*` via `scripts/provenance/adapt-imports.mjs`; all other source retained verbatim. File-level detail: `docs/architecture/provenance/uix-utils.json`.
+- **Modification description:** see file-level manifest at `docs/architecture/provenance/uix-utils.json` for per-file status.
+- **Date incorporated:** 2026-08-29
 
 ## @primeuix/styled
 
@@ -89,9 +89,9 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2025
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/uix-styled` (Phase 1)
-- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
-- **Modification description:** n/a
-- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 1)
+- **Modification status:** incorporated (Phase 1) — cross-package `@primeuix/*` import specifiers adapted to `@ultimate/uix-*` via `scripts/provenance/adapt-imports.mjs`; all other source retained verbatim. File-level detail: `docs/architecture/provenance/uix-styled.json`.
+- **Modification description:** see file-level manifest at `docs/architecture/provenance/uix-styled.json` for per-file status.
+- **Date incorporated:** 2026-08-29
 
 ## @primeuix/styles
 
@@ -106,9 +106,9 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2025
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/uix-styles` (Phase 1)
-- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
-- **Modification description:** n/a
-- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 1)
+- **Modification status:** incorporated (Phase 1) — `base` module only; ~90 per-component style modules remain classified LATER PHASE per the Phase 1 spec, deferred to each component's own migration phase (2/3/4). No import adaptation needed (zero dependencies). File-level detail: `docs/architecture/provenance/uix-styles.json`.
+- **Modification description:** see file-level manifest at `docs/architecture/provenance/uix-styles.json` for per-file status.
+- **Date incorporated:** 2026-08-29
 
 ## @primeuix/motion
 
@@ -123,9 +123,9 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2025
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/uix-motion` (Phase 1)
-- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
-- **Modification description:** n/a
-- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 1)
+- **Modification status:** incorporated (Phase 1) — cross-package `@primeuix/*` import specifiers adapted to `@ultimate/uix-*` via `scripts/provenance/adapt-imports.mjs`; all other source retained verbatim. File-level detail: `docs/architecture/provenance/uix-motion.json`.
+- **Modification description:** see file-level manifest at `docs/architecture/provenance/uix-motion.json` for per-file status.
+- **Date incorporated:** 2026-08-29
 
 ---
 
