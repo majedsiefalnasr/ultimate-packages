@@ -6,8 +6,9 @@
 // also checks that any PR touching packages/{uix,ng,react,vue}* includes
 // a PROVENANCE.md update in the same diff.
 
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { execSync } from "node:child_process";
+import { join } from "node:path";
 
 const PROVENANCE_PATH = "docs/architecture/PROVENANCE.md";
 const REQUIRED_HEADINGS = [
@@ -68,6 +69,51 @@ if (baseRef) {
     fail(`diff touches a Prime-derived package path but does not update ${PROVENANCE_PATH}`);
   }
   pass(`diff check against ${baseRef} passed`);
+}
+
+// Manifest completeness: every .ts file under packages/uix-*/src/ must have
+// a corresponding entry in docs/architecture/provenance/<package-name>.json.
+function findUixPackageDirs(root = "packages") {
+  if (!existsSync(root)) return [];
+  return readdirSync(root)
+    .filter((name) => name.startsWith("uix"))
+    .map((name) => ({ name, path: join(root, name) }))
+    .filter(({ path }) => statSync(path).isDirectory());
+}
+
+function walkTsFiles(dir, files = []) {
+  if (!existsSync(dir)) return files;
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walkTsFiles(full, files);
+    } else if (entry.name.endsWith(".ts")) {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
+const uixPackages = findUixPackageDirs();
+for (const { name, path } of uixPackages) {
+  const manifestPath = join("docs/architecture/provenance", `${name}.json`);
+  const srcFiles = walkTsFiles(join(path, "src"));
+
+  if (srcFiles.length === 0) continue;
+
+  if (!existsSync(manifestPath)) {
+    fail(`${path} has source files but no manifest at ${manifestPath}`);
+  }
+
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  const manifestPaths = new Set(manifest.map((entry) => entry.ultimateDestination));
+
+  for (const file of srcFiles) {
+    if (!manifestPaths.has(file)) {
+      fail(`${file} has no entry in ${manifestPath}`);
+    }
+  }
+  pass(`${name}: all ${srcFiles.length} source file(s) have manifest entries`);
 }
 
 console.log("[provenance:validate] all checks passed");

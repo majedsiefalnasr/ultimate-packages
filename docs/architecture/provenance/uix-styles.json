@@ -1,0 +1,20 @@
+[
+  {
+    "originalPath": "src/base/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/base/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/types.ts",
+    "ultimateDestination": "packages/uix-styles/src/types.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  }
+]

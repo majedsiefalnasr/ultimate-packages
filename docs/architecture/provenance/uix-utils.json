@@ -1,0 +1,836 @@
+[
+  {
+    "originalPath": "src/classnames/index.ts",
+    "ultimateDestination": "packages/uix-utils/src/classnames/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/helpers/blockBodyScroll.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/helpers/blockBodyScroll.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/helpers/exportCSV.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/helpers/exportCSV.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/helpers/saveAs.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/helpers/saveAs.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/helpers/unblockBodyScroll.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/helpers/unblockBodyScroll.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/index.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/absolutePosition.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/absolutePosition.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/addClass.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/addClass.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/addStyle.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/addStyle.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/alignOverlay.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/alignOverlay.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/appendChild.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/appendChild.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/calculateBodyScrollbarWidth.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/calculateBodyScrollbarWidth.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/calculateScrollbarHeight.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/calculateScrollbarHeight.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/calculateScrollbarWidth.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/calculateScrollbarWidth.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/clearSelection.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/clearSelection.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/createElement.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/createElement.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/createStyleAsString.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/createStyleAsString.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/createStyleElement.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/createStyleElement.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/createStyleMarkup.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/createStyleMarkup.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/createStyleTag.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/createStyleTag.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/fadeIn.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/fadeIn.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/fadeOut.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/fadeOut.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/find.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/find.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/findSingle.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/findSingle.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/focus.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/focus.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getAttribute.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getAttribute.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getBrowser.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getBrowser.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getBrowserLanguage.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getBrowserLanguage.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getCSSProperty.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getCSSProperty.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getCSSVariableByRegex.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getCSSVariableByRegex.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getCursorOffset.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getCursorOffset.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getFirstFocusableElement.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getFirstFocusableElement.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getFocusableElements.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getFocusableElements.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getHeight.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getHeight.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getHiddenElementDimensions.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getHiddenElementDimensions.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getHiddenElementOuterHeight.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getHiddenElementOuterHeight.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getHiddenElementOuterWidth.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getHiddenElementOuterWidth.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getIndex.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getIndex.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getInnerWidth.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getInnerWidth.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getLastFocusableElement.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getLastFocusableElement.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getNextElementSibling.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getNextElementSibling.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getNextFocusableElement.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getNextFocusableElement.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getOffset.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getOffset.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getOuterHeight.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getOuterHeight.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getOuterWidth.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getOuterWidth.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getParentNode.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getParentNode.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getParents.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getParents.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getPreviousElementSibling.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getPreviousElementSibling.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getScrollLeft.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getScrollLeft.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getScrollableParents.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getScrollableParents.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getSelection.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getSelection.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getTargetElement.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getTargetElement.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getUserAgent.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getUserAgent.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getViewport.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getViewport.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getWidth.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getWidth.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getWindowScrollLeft.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getWindowScrollLeft.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/getWindowScrollTop.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/getWindowScrollTop.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/hasCSSAnimation.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/hasCSSAnimation.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/hasCSSTransition.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/hasCSSTransition.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/hasClass.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/hasClass.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/invokeElementMethod.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/invokeElementMethod.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isAndroid.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isAndroid.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isAttributeEquals.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isAttributeEquals.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isAttributeNotEquals.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isAttributeNotEquals.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isClickable.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isClickable.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isClient.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isClient.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isCssSupported.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isCssSupported.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isElement.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isElement.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isExist.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isExist.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isFocusableElement.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isFocusableElement.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isHidden.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isHidden.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isIOS.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isIOS.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isPrefersReducedMotion.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isPrefersReducedMotion.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isRTL.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isRTL.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isServer.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isServer.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isTouchDevice.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isTouchDevice.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/isVisible.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/isVisible.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/nestedPosition.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/nestedPosition.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/nextFrame.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/nextFrame.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/relativePosition.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/relativePosition.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/remove.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/remove.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/removeChild.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/removeChild.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/removeClass.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/removeClass.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/removeStyleTag.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/removeStyleTag.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/resolveUserAgent.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/resolveUserAgent.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/scrollInView.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/scrollInView.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/setAttribute.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/setAttribute.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/setAttributes.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/setAttributes.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/setCSSProperty.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/setCSSProperty.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/dom/methods/toElement.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/methods/toElement.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/eventbus/index.ts",
+    "ultimateDestination": "packages/uix-utils/src/eventbus/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/index.ts",
+    "ultimateDestination": "packages/uix-utils/src/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/mergeprops/index.ts",
+    "ultimateDestination": "packages/uix-utils/src/mergeprops/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/index.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/compare.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/compare.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/contains.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/contains.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/deepEquals.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/deepEquals.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/deepMerge.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/deepMerge.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/equals.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/equals.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/filter.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/filter.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/findIndexInList.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/findIndexInList.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/findLast.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/findLast.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/findLastIndex.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/findLastIndex.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/getKeyValue.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/getKeyValue.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/insertIntoOrderedArray.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/insertIntoOrderedArray.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isArray.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isArray.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isDate.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isDate.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isEmpty.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isEmpty.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isFunction.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isFunction.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isLetter.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isLetter.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isNotEmpty.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isNotEmpty.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isNumber.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isNumber.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isObject.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isObject.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isPrintableCharacter.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isPrintableCharacter.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isScalar.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isScalar.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/isString.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/isString.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/localeComparator.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/localeComparator.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/matchRegex.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/matchRegex.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/mergeKeys.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/mergeKeys.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/minifyCSS.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/minifyCSS.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/nestedKeys.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/nestedKeys.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/omit.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/omit.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/removeAccents.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/removeAccents.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/reorderArray.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/reorderArray.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/resolve.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/resolve.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/resolveFieldData.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/resolveFieldData.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/shallowEqualProps.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/shallowEqualProps.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/shallowEquals.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/shallowEquals.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/sort.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/sort.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/stringify.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/stringify.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/toCamelCase.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/toCamelCase.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/toCapitalCase.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/toCapitalCase.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/toFlatCase.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/toFlatCase.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/toKebabCase.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/toKebabCase.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/toMs.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/toMs.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/toTokenKey.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/toTokenKey.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/object/methods/toValue.ts",
+    "ultimateDestination": "packages/uix-utils/src/object/methods/toValue.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/uuid/index.ts",
+    "ultimateDestination": "packages/uix-utils/src/uuid/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/zindex/index.ts",
+    "ultimateDestination": "packages/uix-utils/src/zindex/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  }
+]

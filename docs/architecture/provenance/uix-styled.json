@@ -1,0 +1,134 @@
+[
+  {
+    "originalPath": "src/actions/definePreset.ts",
+    "ultimateDestination": "packages/uix-styled/src/actions/definePreset.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/actions/updatePreset.ts",
+    "ultimateDestination": "packages/uix-styled/src/actions/updatePreset.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/actions/updatePrimaryPalette.ts",
+    "ultimateDestination": "packages/uix-styled/src/actions/updatePrimaryPalette.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/actions/updateSurfacePalette.ts",
+    "ultimateDestination": "packages/uix-styled/src/actions/updateSurfacePalette.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/actions/usePreset.ts",
+    "ultimateDestination": "packages/uix-styled/src/actions/usePreset.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/actions/useTheme.ts",
+    "ultimateDestination": "packages/uix-styled/src/actions/useTheme.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/config/index.ts",
+    "ultimateDestination": "packages/uix-styled/src/config/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/helpers/color/mix.ts",
+    "ultimateDestination": "packages/uix-styled/src/helpers/color/mix.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/helpers/color/palette.ts",
+    "ultimateDestination": "packages/uix-styled/src/helpers/color/palette.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/helpers/color/shade.ts",
+    "ultimateDestination": "packages/uix-styled/src/helpers/color/shade.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/helpers/color/tint.ts",
+    "ultimateDestination": "packages/uix-styled/src/helpers/color/tint.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/helpers/css.ts",
+    "ultimateDestination": "packages/uix-styled/src/helpers/css.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/helpers/dt.ts",
+    "ultimateDestination": "packages/uix-styled/src/helpers/dt.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/helpers/index.ts",
+    "ultimateDestination": "packages/uix-styled/src/helpers/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/helpers/t.ts",
+    "ultimateDestination": "packages/uix-styled/src/helpers/t.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/helpers/toVariables.ts",
+    "ultimateDestination": "packages/uix-styled/src/helpers/toVariables.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/index.ts",
+    "ultimateDestination": "packages/uix-styled/src/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/service/index.ts",
+    "ultimateDestination": "packages/uix-styled/src/service/index.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/stylesheet/index.ts",
+    "ultimateDestination": "packages/uix-styled/src/stylesheet/index.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/utils/index.ts",
+    "ultimateDestination": "packages/uix-styled/src/utils/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/utils/sharedUtils.ts",
+    "ultimateDestination": "packages/uix-styled/src/utils/sharedUtils.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/utils/themeUtils.ts",
+    "ultimateDestination": "packages/uix-styled/src/utils/themeUtils.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  }
+]

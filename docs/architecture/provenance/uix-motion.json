@@ -1,0 +1,26 @@
+[
+  {
+    "originalPath": "src/config/index.ts",
+    "ultimateDestination": "packages/uix-motion/src/config/index.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/index.ts",
+    "ultimateDestination": "packages/uix-motion/src/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/types.ts",
+    "ultimateDestination": "packages/uix-motion/src/types.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/utils/index.ts",
+    "ultimateDestination": "packages/uix-motion/src/utils/index.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  }
+]
