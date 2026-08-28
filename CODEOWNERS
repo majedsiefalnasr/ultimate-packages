@@ -1,0 +1,11 @@
+# CODEOWNERS
+#
+# Phase 0: no packages or team ownership assignments exist yet.
+# This stub is populated once package ownership is decided
+# (spec: Git/GitHub Requirements, "CODEOWNERS: deferred").
+#
+# Example format for future reference:
+# /packages/uix-*/  @ultimate-platform/uix-team
+# /packages/ng*/    @ultimate-platform/angular-team
+# /packages/react*/ @ultimate-platform/react-team
+# /packages/vue*/   @ultimate-platform/vue-team
