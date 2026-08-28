@@ -45,6 +45,9 @@ jobs:
       - name: Test
         run: pnpm run test
 
+      - name: Provenance scripts self-tests
+        run: pnpm run test:scripts
+
       - name: Provenance validation
         run: pnpm run provenance:validate -- --base-ref origin/main
 
