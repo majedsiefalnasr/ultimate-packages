@@ -1,0 +1,21 @@
+{
+  "name": "ultimate-platform",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.6.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "pnpm -r --if-present run build",
+    "test": "pnpm -r --if-present run test",
+    "lint": "eslint .",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "provenance:validate": "node scripts/provenance/validate-provenance.mjs",
+    "boundary:validate": "node scripts/provenance/validate-boundaries.mjs",
+    "ceiling:validate": "node scripts/provenance/validate-dependency-ceiling.mjs"
+  },
+  "devDependencies": {}
+}
