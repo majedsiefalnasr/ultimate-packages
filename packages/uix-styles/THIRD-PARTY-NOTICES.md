@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-This package will incorporate source derived from `@primeuix/styles@2.0.3`.
+This package incorporates source derived from `@primeuix/styles@2.0.3`.
 
 ## @primeuix/styles
 
