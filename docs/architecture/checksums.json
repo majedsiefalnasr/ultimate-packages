@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-08-28T13:47:06.836Z",
+  "artifacts": [
+    {
+      "name": "PrimeNG",
+      "package": "primeng",
+      "version": "21.1.9",
+      "sourceUrl": "https://codeload.github.com/primefaces/primeng/tar.gz/c493b1c6d9f7cdffbe1c4dc195493dd73d733593",
+      "identifierType": "git-commit",
+      "identifier": "c493b1c6d9f7cdffbe1c4dc195493dd73d733593",
+      "cachedAt": ".vendor-cache/primeng-21.1.9.tar.gz",
+      "sha256": "1e8c92cd663d5e36b0edd967177eb0a1302b760403d51d6c9ad3492a8c0a640c"
+    },
+    {
+      "name": "PrimeVue",
+      "package": "primevue",
+      "version": "4.5.5",
+      "sourceUrl": "https://codeload.github.com/primefaces/primevue/tar.gz/66dde6788220fc9e6822342919d1ceb0e3460ece",
+      "identifierType": "git-commit",
+      "identifier": "66dde6788220fc9e6822342919d1ceb0e3460ece",
+      "cachedAt": ".vendor-cache/primevue-4.5.5.tar.gz",
+      "sha256": "f34c320efa3cab3f4f5dc2ace0e6159b61d4dda3af9176ee090da4ef199b546d"
+    },
+    {
+      "name": "PrimeReact",
+      "package": "primereact",
+      "version": "10.9.9",
+      "sourceUrl": "https://codeload.github.com/primefaces/primereact/tar.gz/d0f574e39122668292fc7a740f081bae1b93b1e9",
+      "identifierType": "git-commit",
+      "identifier": "d0f574e39122668292fc7a740f081bae1b93b1e9",
+      "cachedAt": ".vendor-cache/primereact-10.9.9.tar.gz",
+      "sha256": "9598e1e3709641b13111a0b222db1430160ae47c08277d2037520482e0e78ecf"
+    },
+    {
+      "name": "@primeuix/utils",
+      "package": "@primeuix/utils",
+      "version": "0.7.2",
+      "sourceUrl": "https://registry.npmjs.org/@primeuix/utils/-/utils-0.7.2.tgz",
+      "identifierType": "npm-tarball-shasum",
+      "identifier": "0ded7f74bddf191f0e16aea34b593a7fcffa94b5",
+      "cachedAt": ".vendor-cache/@primeuix__utils-0.7.2.tar.gz",
+      "sha256": "ed1e149a417156fc2a670fdd206609c2a48f7df050fdb75e4d9684a4d5adda9b"
+    },
+    {
+      "name": "@primeuix/styled",
+      "package": "@primeuix/styled",
+      "version": "0.7.4",
+      "sourceUrl": "https://registry.npmjs.org/@primeuix/styled/-/styled-0.7.4.tgz",
+      "identifierType": "npm-tarball-shasum",
+      "identifier": "d2108a7fad297dea60d549b2c10ed744dc0cbc0e",
+      "cachedAt": ".vendor-cache/@primeuix__styled-0.7.4.tar.gz",
+      "sha256": "d2c73f64b0cdb7a9f4f3374fd2ae388f2f5a966757e3b891b4e7ccc57fbef43d"
+    },
+    {
+      "name": "@primeuix/styles",
+      "package": "@primeuix/styles",
+      "version": "2.0.3",
+      "sourceUrl": "https://registry.npmjs.org/@primeuix/styles/-/styles-2.0.3.tgz",
+      "identifierType": "npm-tarball-shasum",
+      "identifier": "e42d14c138fe092683228d65a3f6de17de70d6a0",
+      "cachedAt": ".vendor-cache/@primeuix__styles-2.0.3.tar.gz",
+      "sha256": "e4f6ef614d2412c223560403c8b0c1bebe6ab07d8242470572310f3e23423403"
+    },
+    {
+      "name": "@primeuix/motion",
+      "package": "@primeuix/motion",
+      "version": "0.0.10",
+      "sourceUrl": "https://registry.npmjs.org/@primeuix/motion/-/motion-0.0.10.tgz",
+      "identifierType": "npm-tarball-shasum",
+      "identifier": "9af4238226042d80518dd343c6481d03582e374a",
+      "cachedAt": ".vendor-cache/@primeuix__motion-0.0.10.tar.gz",
+      "sha256": "24f98f141735c0d8835e2027ea87c42bfc2757d9940992c594583fbc549c62d3"
+    }
+  ]
+}
