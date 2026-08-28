@@ -66,7 +66,7 @@ if (pkgJsonPaths.length === 0) {
 let violations = 0;
 for (const path of pkgJsonPaths) {
   const pkg = JSON.parse(readFileSync(path, "utf8"));
-  const deps = { ...pkg.dependencies, ...pkg.peerDependencies };
+  const deps = { ...pkg.dependencies, ...pkg.peerDependencies, ...pkg.optionalDependencies };
 
   for (const forbidden of FORBIDDEN_DIRECT_DEPS) {
     if (deps[forbidden]) {
@@ -80,6 +80,14 @@ for (const path of pkgJsonPaths) {
   for (const [pkgName, ceiling] of Object.entries(CEILINGS)) {
     const declared = deps[pkgName];
     if (!declared) continue;
+
+    if (/[\s|]/.test(declared)) {
+      console.error(
+        `[ceiling:validate] VIOLATION: ${path} declares ${pkgName}@${declared} — compound/range version string cannot be verified against the MIT ceiling ${ceiling}, blocking to be safe`
+      );
+      violations++;
+      continue;
+    }
 
     const parsed = parseVersion(declared);
     if (!parsed) {

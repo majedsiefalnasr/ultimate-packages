@@ -17,10 +17,16 @@ const FRAMEWORK_IMPORT_PATTERNS = [
   /from\s+["']vue(["'/])/,
   /require\(["']@angular\//,
   /require\(["']react(["'/])/,
+  /require\(["']react-dom(["'/])/,
   /require\(["']vue(["'/])/,
   /import\(["']@angular\//,
   /import\(["']react(["'/])/,
+  /import\(["']react-dom(["'/])/,
   /import\(["']vue(["'/])/,
+  /^\s*import\s+["']@angular\//m,
+  /^\s*import\s+["']react(["'/])/m,
+  /^\s*import\s+["']react-dom(["'/])/m,
+  /^\s*import\s+["']vue(["'/])/m,
 ];
 const SOURCE_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"];
 
