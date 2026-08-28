@@ -12,12 +12,15 @@ import { join } from "node:path";
 const UIX_PREFIX = "packages/uix";
 const FRAMEWORK_IMPORT_PATTERNS = [
   /from\s+["']@angular\//,
-  /from\s+["']react["']/,
-  /from\s+["']react-dom["']/,
-  /from\s+["']vue["']/,
+  /from\s+["']react(["'/])/,
+  /from\s+["']react-dom(["'/])/,
+  /from\s+["']vue(["'/])/,
   /require\(["']@angular\//,
-  /require\(["']react["']\)/,
-  /require\(["']vue["']\)/,
+  /require\(["']react(["'/])/,
+  /require\(["']vue(["'/])/,
+  /import\(["']@angular\//,
+  /import\(["']react(["'/])/,
+  /import\(["']vue(["'/])/,
 ];
 const SOURCE_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"];
 
