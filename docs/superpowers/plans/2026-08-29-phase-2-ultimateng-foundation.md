@@ -1251,7 +1251,7 @@ git commit -m "feat(ng-core): add UBind attribute-binding directive"
 - Modify: `packages/ng-core/src/index.ts`
 
 **Interfaces:**
-- Produces: `USpinnerIcon`, `UTimesIcon`, `UWindowMaximizeIcon`, `UWindowMinimizeIcon` — standalone Angular components, each rendering one inline SVG icon, sharing a `UBaseIcon` base for common inputs (`label` for `aria-label`, sizing). Consumed by Task 10 (`UButton`, loading spinner) and Task 14 (`UDialog`, maximize/minimize/close icons — note: Dialog's close icon is `TimesIcon`, already covered).
+- Produces: `USpinnerIcon`, `UTimesIcon`, `UWindowMaximizeIcon`, `UWindowMinimizeIcon` — standalone Angular components, each rendering one inline SVG icon, sharing a `UBaseIcon` directive base for the `label` (aliased to `aria-label`) and `spin` inputs. (No `size` input — confirmed absent from real PrimeNG icon source; not invented.) Consumed by Task 12 (`UButton`, loading spinner) and Task 15 (`UDialog`, maximize/minimize/close icons — note: Dialog's close icon is `TimesIcon`, already covered). **Architecture note (found during Task 9):** real PrimeNG icons are `[data-p-icon]` attribute-selector directives whose host IS the consumer-written `<svg>` element, with no `role`/`aria-label` anywhere upstream — this task's actual output is instead element-selector components (`<u-spinner-icon aria-label="..." />`) with a nested accessible `<svg role="img">`, since Angular component inheritance cannot share a template across a `@Component` subclass and the task's own test contract required this shape. Tasks 12/15 consume these as ordinary standalone elements in their `imports` array — this works with either architecture and requires no further change.
 
 - [ ] **Step 1: Extract the 5 icon source files**
 
