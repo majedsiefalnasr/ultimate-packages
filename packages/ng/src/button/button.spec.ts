@@ -46,6 +46,27 @@ describe("UButton", () => {
     expect(fixture.nativeElement.querySelector("button").disabled).toBe(true);
   });
 
+  it("renders the icon input's value as a class on the icon span", () => {
+    const fixture = TestBed.createComponent(UButton);
+    fixture.componentRef.setInput("icon", "pi pi-check");
+    fixture.detectChanges();
+    const iconSpan = fixture.nativeElement.querySelector("span.u-button-icon");
+    expect(iconSpan).not.toBeNull();
+    expect(iconSpan.classList.contains("pi")).toBe(true);
+    expect(iconSpan.classList.contains("pi-check")).toBe(true);
+    expect(iconSpan.classList.contains("u-button-icon")).toBe(true);
+  });
+
+  it("does not render an icon span when icon is unset", () => {
+    // uRipple (applied to the native <button>) creates its own <span> for
+    // the ink effect, so this asserts no *icon-classed* span exists, not
+    // "no span at all" — a bare span-count check would be a false positive
+    // against Ripple's unrelated internal DOM.
+    const fixture = TestBed.createComponent(UButton);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("span.u-button-icon")).toBeNull();
+  });
+
   it("has aria-label reflecting the label input when no explicit ariaLabel is set", () => {
     const fixture = TestBed.createComponent(UButton);
     fixture.componentRef.setInput("label", "Save");

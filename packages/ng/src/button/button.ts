@@ -76,7 +76,7 @@ import { buttonStyleModule } from "./button-style";
       @if (loading()) {
         <u-spinner-icon [class]="cx('loadingIcon')" spin aria-hidden="true" />
       } @else if (icon()) {
-        <span [class]="cx('icon', classesParams())" [class.u-button-icon]="true"></span>
+        <span [class]="icon() + ' ' + cx('icon', classesParams())"></span>
       }
       @if (label()) {
         <span [class]="cx('label')">{{ label() }}</span>
