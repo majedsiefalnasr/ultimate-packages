@@ -9,3 +9,5 @@ dist/
 .env.local
 .vendor-cache/
 .vendor-extracted/
+.angular/
+out-tsc/

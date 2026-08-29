@@ -1,0 +1,33 @@
+{
+  "name": "@ultimate/ng-core",
+  "version": "0.1.0",
+  "description": "Angular-specific foundation for the Ultimate Platform: base component hierarchy, overlay/focus-trap infrastructure, icons, minimal config.",
+  "license": "MIT",
+  "dependencies": {
+    "@ultimate/uix-utils": "workspace:*",
+    "@ultimate/uix-styled": "workspace:*",
+    "@ultimate/uix-motion": "workspace:*",
+    "@ultimate/uix-styles": "workspace:*",
+    "tslib": "^2.8.1"
+  },
+  "peerDependencies": {
+    "@angular/core": "^21.2.22",
+    "@angular/common": "^21.2.22",
+    "@angular/forms": "^21.2.22",
+    "@angular/platform-browser": "^21.2.22",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@angular/cli": "21.2.22",
+    "ng-packagr": "21.2.7",
+    "@angular/build": "21.2.22",
+    "@angular/compiler-cli": "21.2.22",
+    "typescript": "5.9.3",
+    "vitest": "4.0.8"
+  },
+  "scripts": {
+    "build": "ng-packagr -p ng-package.json",
+    "test": "ng test --project=ng-core",
+    "typecheck": "tsc --noEmit"
+  }
+}
