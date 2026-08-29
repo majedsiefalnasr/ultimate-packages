@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-This package will incorporate source derived from `primeng@21.1.9`.
+This package incorporates source derived from `primeng@21.1.9`.
 
 ## PrimeNG
 

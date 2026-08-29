@@ -18,6 +18,12 @@
     "modificationDescription": "Manually transcribed from the tarball's dist/types.d.mts declaration file (dist/types.mjs.map has empty sources, so extract-source.mjs recovers nothing for it); StyleType was deliberately narrowed from upstream's real union type and the @primeuix/styled import was stripped, per this file's own header comment."
   },
   {
+    "originalPath": "src/badge/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/badge/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via sourcemap recovery from @primeuix/styles@2.0.3 (Task 11, following Task 3's same extraction mechanism since Badge's own uix-styles module was not part of Task 3's original 5-module set); .p-badge* class-name string literals renamed to .u-badge* to match Phase 2's Ultimate namespace decision."
+  },
+  {
     "originalPath": "src/button/index.ts",
     "ultimateDestination": "packages/uix-styles/src/button/index.ts",
     "modificationStatus": "adapted",

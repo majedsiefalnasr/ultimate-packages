@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "experimentalDecorators": true,
+    "target": "ES2022",
+    "useDefineForClassFields": false
+  },
+  "include": ["src"],
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  }
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "originalPath": "packages/primeng/src/ripple/ripple.ts",
+    "ultimateDestination": "packages/ng/src/ripple/ripple.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Ripple→URipple, selector [pRipple]→[uRipple], .p-ink/.p-ink-active class names renamed to .u-ink/.u-ink-active, @primeuix/utils DOM helper imports rewritten to @ultimate/uix-utils/dom equivalents. Deliberately excludes upstream's BaseComponent/RippleStyle DI-styling registration and UltimateConfig ripple-toggle gating (not required by this task's brief or test; the ripple effect is applied unconditionally) — see UBaseComponent's doc comment for the same Option B architectural exclusion pattern."
+  },
+  {
+    "originalPath": "packages/ng/src/ripple/ripple.spec.ts",
+    "ultimateDestination": "packages/ng/src/ripple/ripple.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream's ripple.spec.ts. Verifies a .u-ink span is created on mousedown (real upstream Ripple listens for the 'mousedown' DOM event via Renderer2, not 'pointerdown' as this task's brief illustratively described — confirmed against the extracted source before finalizing)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/ripple/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/autofocus/autofocus.ts",
+    "ultimateDestination": "packages/ng/src/autofocus/auto-focus.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. AutoFocus→UAutoFocus, selector/Input [pAutoFocus]→[uAutoFocus], DomHandler.getFocusableElements(...) rewritten to @ultimate/uix-utils/dom's getFocusableElements(...). Unused DOCUMENT injection (dead in upstream too) dropped."
+  },
+  {
+    "originalPath": "packages/ng/src/autofocus/auto-focus.spec.ts",
+    "ultimateDestination": "packages/ng/src/autofocus/auto-focus.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream's autofocus.spec.ts. Uses a real setTimeout(0) flush rather than fixture.whenStable() to observe the directive's deferred focus() call, since this project's zoneless TestBed does not track raw setTimeout macrotasks via whenStable()."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/autofocus/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/fluid/fluid.ts",
+    "ultimateDestination": "packages/ng/src/fluid/fluid.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Fluid→UFluid, selector p-fluid→u-fluid, host class .p-fluid→.u-fluid. Real upstream Fluid is a component with an <ng-content> template and a `p-fluid` element selector, NOT an attribute directive with a [pFluid] selector as this task's brief illustratively described — no [pFluid] selector exists anywhere in upstream source; adapted to match the real mechanism per the brief's own instruction to verify against extracted source. Deliberately excludes upstream's Bind/passthrough hostDirectives wiring and FLUID_INSTANCE/PARENT_INSTANCE injection-token parent lookup — see UBaseComponent's doc comment for the same Option B architectural exclusion pattern."
+  },
+  {
+    "originalPath": "packages/ng/src/fluid/fluid.spec.ts",
+    "ultimateDestination": "packages/ng/src/fluid/fluid.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream's fluid.spec.ts. Tests UFluid as a component (TestBed.createComponent(UFluid)) rather than as an attribute directive, matching the real upstream mechanism."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/fluid/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/badge/badge.ts",
+    "ultimateDestination": "packages/ng/src/badge/badge.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Badge→UBadge, selector p-badge→u-badge, extends UBaseComponent (Task 4). Deliberately excludes upstream's BadgeDirective ([pBadge] attribute form — this Phase 2 proof set only needs the component form), Bind/passthrough hostDirectives wiring, and BADGE_INSTANCE/PARENT_INSTANCE injection-token parent lookup — see UBaseComponent's doc comment for the same Option B architectural exclusion pattern."
+  },
+  {
+    "originalPath": "packages/primeng/src/badge/style/badgestyle.ts",
+    "ultimateDestination": "packages/ng/src/badge/badge-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Ported from the extracted BadgeStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts — no @Injectable DI service, unlike upstream's own @Injectable BadgeStyle extends BaseStyle, and this task's brief's illustrative description). `style` is imported from @ultimate/uix-styles/badge (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes.root` ported locally with .p-badge*→.u-badge* renaming, and reshaped to take a plain params object directly (value/size/badgeSize/severity) rather than upstream's `{ instance }`-wrapped signature, matching UBaseComponent.cx(key, params)'s actual call contract."
+  },
+  {
+    "originalPath": "packages/ng/src/badge/badge.spec.ts",
+    "ultimateDestination": "packages/ng/src/badge/badge.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Test taken verbatim from this task's brief (Step 9) — not derived from upstream's own badge.spec.ts."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/badge/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored root barrel re-export, no upstream equivalent file."
+  }
+]

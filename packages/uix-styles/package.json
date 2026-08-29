@@ -19,6 +19,11 @@
       "import": "./dist/base/index.mjs",
       "default": "./dist/base/index.mjs"
     },
+    "./badge": {
+      "types": "./dist/badge/index.d.mts",
+      "import": "./dist/badge/index.mjs",
+      "default": "./dist/badge/index.mjs"
+    },
     "./button": {
       "types": "./dist/button/index.d.mts",
       "import": "./dist/button/index.mjs",

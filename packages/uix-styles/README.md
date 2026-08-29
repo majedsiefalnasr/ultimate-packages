@@ -6,7 +6,7 @@ Global/base CSS infrastructure for the Ultimate Platform UI foundation.
 
 **Phase 1 scope:** shipped the `base` module (global box-sizing reset, disabled-state opacity, icon sizing, overlay-mask positioning, collapsible-panel animation keyframes) — the shared, framework-level CSS every component depends on. CSS class selectors in `base` (`.p-disabled`, `.p-icon`, etc.) are kept exactly as upstream — no renaming in Phase 1.
 
-**Phase 2 scope:** added the `button`, `checkbox`, `dialog`, `menu`, and `tooltip` per-component style modules, each exporting a `style` string only (matching upstream `@primeuix/styles@2.0.3`'s own shape — there is no `classes` export in this package). Remaining per-component style modules (datatable, etc. — ~90 modules in the upstream `@primeuix/styles` package) are deferred: each migrates alongside its owning component when that component is built, not speculatively now. Component-specific `.p-<name>*` selectors are renamed to `.u-<name>*` to match Phase 2's Ultimate namespace decision; shared framework-level selectors (`.p-disabled`, `.p-focus`, `.p-invalid`, etc.) are left as upstream, consistent with `base`.
+**Phase 2 scope:** added the `button`, `checkbox`, `dialog`, `menu`, and `tooltip` per-component style modules (Task 3), plus `badge` (Task 11, needed by `@ultimate/ng`'s `UBadge` component), each exporting a `style` string only (matching upstream `@primeuix/styles@2.0.3`'s own shape — there is no `classes` export in this package). Remaining per-component style modules (datatable, etc. — ~90 modules in the upstream `@primeuix/styles` package) are deferred: each migrates alongside its owning component when that component is built, not speculatively now. Component-specific `.p-<name>*` selectors are renamed to `.u-<name>*` to match Phase 2's Ultimate namespace decision; shared framework-level selectors (`.p-disabled`, `.p-focus`, `.p-invalid`, etc.) are left as upstream, consistent with `base`.
 
 ## Provenance
 
@@ -16,6 +16,7 @@ Adapted from `@primeuix/styles@2.0.3` (MIT, PrimeTek). See `docs/architecture/PR
 
 ```typescript
 import { base } from "@ultimate/uix-styles/base";
+import { style as badgeStyle } from "@ultimate/uix-styles/badge";
 import { style as buttonStyle } from "@ultimate/uix-styles/button";
 import { style as checkboxStyle } from "@ultimate/uix-styles/checkbox";
 import { style as dialogStyle } from "@ultimate/uix-styles/dialog";

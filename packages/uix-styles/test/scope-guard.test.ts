@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { style as base } from "../src/base";
+import { style as badgeStyle } from "../src/badge";
 import { style as buttonStyle } from "../src/button";
 import { style as checkboxStyle } from "../src/checkbox";
 import { style as dialogStyle } from "../src/dialog";
@@ -37,13 +38,19 @@ describe("base module scope guard", () => {
   });
 });
 
-describe("component style modules — exactly 5 exist alongside base", () => {
-  it("uix-styles/src/ contains only base + the 5 Phase 2 component modules, no unexpected 6th", () => {
+describe("component style modules — exactly 6 exist alongside base", () => {
+  it("uix-styles/src/ contains only base + the 6 Phase 2 component modules (5 from Task 3 + badge from Task 11), no unexpected 7th", () => {
     const actualModules = readdirSync(join(__dirname, "..", "src"), { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
       .sort();
-    expect(actualModules).toEqual(["base", "button", "checkbox", "dialog", "menu", "tooltip"].sort());
+    expect(actualModules).toEqual(
+      ["base", "badge", "button", "checkbox", "dialog", "menu", "tooltip"].sort()
+    );
+  });
+
+  it("badge style uses only .u-badge* selectors", () => {
+    expect(badgeStyle).not.toMatch(/\.p-badge/);
   });
 
   it("button style uses only .u-button* selectors", () => {
