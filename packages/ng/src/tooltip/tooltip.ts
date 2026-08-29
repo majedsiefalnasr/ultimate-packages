@@ -37,10 +37,13 @@ import { tooltipStyleModule } from "./tooltip-style";
  * fallback search — and `UTooltipOptions` (Task 10) only has a plain
  * `position` field with no fallback-order concept. Adapted to the brief's
  * simpler, explicit single-position contract rather than porting upstream's
- * 4-way fallback search; `getViewport()` is still used (per this task's
- * Interfaces section) to keep the tooltip from rendering fully outside the
- * viewport is NOT implemented, since that clamping logic is inseparable from
- * upstream's fallback-search mechanism this task deliberately excludes.
+ * 4-way fallback search. `getViewport()` is still used (per this task's
+ * Interfaces section) for a horizontal clamp only — `align()` never lets the
+ * tooltip render left of `0` or past the viewport's right edge. Vertical
+ * clamping/repositioning (upstream's true out-of-bounds fallback, e.g.
+ * flipping `top` to `bottom` when there's no room above the host) is NOT
+ * implemented, since that reposition logic is inseparable from upstream's
+ * fallback-search mechanism this task deliberately excludes.
  *
  * Z-index: upstream calls `ZIndexUtils.set('tooltip', this.container,
  * this.config.zIndex.tooltip)` (a global-config-driven base). This project's

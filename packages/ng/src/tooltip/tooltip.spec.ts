@@ -39,6 +39,37 @@ describe("UTooltip", () => {
     expect(document.querySelector('[role="tooltip"]')).toBeNull();
   });
 
+  it("sets numeric left/top pixel styles on the tooltip container after positioning", () => {
+    // Regression guard for align(): jsdom returns zeroed
+    // getBoundingClientRect()/offsetWidth/offsetHeight, so this can't assert
+    // exact coordinates, but it does prove align() actually ran and applied
+    // real numeric styles rather than silently no-oping or throwing (which
+    // would leave these unset).
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector("button");
+    button.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
+    fixture.detectChanges();
+    const tooltip = document.querySelector('[role="tooltip"]') as HTMLElement;
+    expect(tooltip.style.left).toMatch(/^-?\d+(\.\d+)?px$/);
+    expect(tooltip.style.top).toMatch(/^-?\d+(\.\d+)?px$/);
+  });
+
+  it("applies a position-specific class matching uTooltipPosition", () => {
+    TestBed.overrideComponent(TestHostComponent, {
+      set: {
+        template: `<button [uTooltip]="'Save changes'" uTooltipPosition="right">Save</button>`,
+      },
+    });
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector("button");
+    button.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
+    fixture.detectChanges();
+    const tooltip = document.querySelector('[role="tooltip"]') as HTMLElement;
+    expect(tooltip.classList.contains("u-tooltip-right")).toBe(true);
+  });
+
   it("does not show a tooltip when uTooltipDisabled is true", () => {
     TestBed.overrideComponent(TestHostComponent, {
       set: {
