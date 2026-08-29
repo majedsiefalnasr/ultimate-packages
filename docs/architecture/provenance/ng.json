@@ -106,5 +106,35 @@
     "ultimateDestination": "packages/ng/src/button/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/tooltip/tooltip.ts",
+    "ultimateDestination": "packages/ng/src/tooltip/tooltip.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Tooltip→UTooltip, selector [pTooltip]→[uTooltip], extends UBaseComponent (Task 4). Deliberately excludes upstream's much larger prop surface (tooltipEvent/positionStyle/tooltipStyleClass/tooltipZIndex/escape/showDelay/hideDelay/life/positionTop/positionLeft/autoHide/fitContent/hideOnEscape/showOnEllipsis/tooltipOptions/appendTo), its TemplateRef content type, its touch/click/document-escape/scroll/resize listener wiring, its ConnectedOverlayScrollHandler, its p-dialog ancestor special-case, and its ellipsis-detection gate — none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface (uTooltip/uTooltipPosition/uTooltipDisabled). DISCREPANCY: upstream's align() tries up to 4 positions in a priority-fallback order via isOutOfBounds()/getHostOffset()/preAlign(); this task's brief only asks to position the tooltip per the single uTooltipPosition input (matching UTooltipOptions' plain `position` field, which has no fallback-order concept), so a single fixed-position alignment was implemented instead of porting the 4-way fallback search, with a horizontal-only viewport clamp using getViewport() (per this task's Interfaces section) rather than upstream's full out-of-bounds re-alignment. Z-index: upstream calls ZIndexUtils.set('tooltip', el, this.config.zIndex.tooltip) (a global-config-driven base); this project's UltimateConfig (Task 4's scoped-down config) has no zIndex sub-config, so a literal base of 1100 is used via @ultimate/uix-utils's ZIndex singleton (ZIndex.set(key, element, baseZIndex) — matching packages/ng-core/src/overlay/overlay.ts's established call pattern), placed above UOverlay's 1000 base."
+  },
+  {
+    "originalPath": "packages/primeng/src/tooltip/style/tooltipstyle.ts",
+    "ultimateDestination": "packages/ng/src/tooltip/tooltip-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Ported from the extracted TooltipStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts — no @Injectable DI service, unlike upstream's own @Injectable TooltipStyle extends BaseStyle). `style` is imported from @ultimate/uix-styles/tooltip (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes` (root/arrow/text, all plain strings, no resolver functions in upstream either) ported locally with .p-tooltip*→.u-tooltip* renaming."
+  },
+  {
+    "originalPath": "packages/ng/src/tooltip/tooltip.spec.ts",
+    "ultimateDestination": "packages/ng/src/tooltip/tooltip.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Test taken from this task's brief (Step 2), with one addition: `import { describe, expect, it } from \"vitest\";` (the brief's snippet omitted it, unlike every other spec file in this package — vitest globals are not enabled in this project's tsconfig, so the snippet as given fails to compile; confirmed by running it verbatim first per TDD Step 3)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/tooltip/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored root barrel re-export, no upstream equivalent file. Updated in Task 13 to add `export * from './tooltip';`."
   }
 ]
