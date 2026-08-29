@@ -13,6 +13,15 @@ import { equals } from "@ultimate/uix-utils/object";
  * component wires it in directly (PrimeNG's own usage of `Bind` in
  * Button/Dialog/Menu is exclusively through the `pt`/`ptm(...)` passthrough
  * call sites, which `UBaseComponent` excludes).
+ *
+ * Security note (accepted, not a defect — see `bind.spec.ts`): this
+ * directive applies whatever attributes/properties/listeners its bound
+ * object contains via `Renderer2`, with no sanitization of keys or values.
+ * This is inherited unchanged from PrimeNG's own verified `Bind` source and
+ * is inherent to a passthrough directive's purpose. A future consumer
+ * choosing what object to bind is responsible for not passing untrusted
+ * data through it; restricting accepted keys/values is a separate
+ * architectural decision, not made in Phase 2.
  */
 @Directive({
   standalone: true,
