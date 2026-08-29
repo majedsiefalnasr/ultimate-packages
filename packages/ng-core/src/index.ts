@@ -3,3 +3,4 @@ export * from "./base-editable-holder";
 export * from "./overlay";
 export * from "./focus-trap";
 export * from "./config";
+export * from "./bind";
