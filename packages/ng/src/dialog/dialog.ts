@@ -5,10 +5,10 @@ import {
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
-  computed,
   effect,
   input,
   output,
+  signal,
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { UBaseComponent, UFocusTrap, UOverlay, UTimesIcon } from "@ultimate/ng-core";
@@ -112,7 +112,7 @@ let dialogIdCounter = 0;
           [class]="cx('root')"
           role="dialog"
           [attr.aria-modal]="modal()"
-          [attr.aria-labelledby]="ariaLabelledBy"
+          [attr.aria-labelledby]="header() ? ariaLabelledBy : null"
         >
           <div uFocusTrap [uFocusTrapDisabled]="!modal()">
             @if (header()) {
@@ -177,16 +177,19 @@ export class UDialog extends UBaseComponent {
   protected readonly ariaLabelledBy = `u_dialog_${++dialogIdCounter}_header`;
 
   /**
-   * Renders the mask/dialog DOM only while `visible()` is `true`. Upstream
-   * additionally keeps rendering through the leave motion via a separate
-   * `renderMask`/`maskVisible`/`onMaskAfterLeave` tri-state so the closing
-   * animation has an element to animate before removal — dropped here
-   * since this task's spec-mandated test (`does not render dialog content
-   * when visible is false`) only asserts the element is absent once
-   * `visible` is `false`, with no assertion on animate-then-remove timing;
-   * the simpler direct binding satisfies the tested contract.
+   * Gates the mask/dialog DOM's presence in the template. Unlike a direct
+   * mirror of `visible()`, this stays `true` through the leave animation:
+   * flipping it to `false` immediately on `visible() → false` would tear
+   * the element out of the DOM in the same tick `runLeaveMotion()` starts
+   * the transition, giving `.leave()` no element left to animate (found
+   * during review — `@ultimate/uix-motion`'s `.leave()` is a real `async`
+   * transition, confirmed in `packages/uix-motion/src/config/index.ts`, not
+   * instantaneous). Set `true` synchronously on open; set `false` only
+   * after `runLeaveMotion()`'s promise resolves on close, matching
+   * upstream's own `maskVisible`/`onMaskAfterLeave` tri-state intent without
+   * porting its exact mechanism.
    */
-  protected readonly renderMask = computed(() => this.visible());
+  protected readonly renderMask = signal(false);
 
   /** The element focus should return to once the dialog closes. */
   private triggerElement: HTMLElement | null = null;
@@ -199,11 +202,13 @@ export class UDialog extends UBaseComponent {
       const visible = this.visible();
       if (!isPlatformBrowser(this.platformId)) {
         this.wasVisible = visible;
+        this.renderMask.set(visible);
         return;
       }
 
       if (visible && !this.wasVisible) {
         this.triggerElement = (this.document.activeElement as HTMLElement) ?? null;
+        this.renderMask.set(true);
         this.runEnterMotion();
       } else if (!visible && this.wasVisible) {
         this.runLeaveMotion();
@@ -254,9 +259,12 @@ export class UDialog extends UBaseComponent {
   private runLeaveMotion(): void {
     const el = this.rootRef?.nativeElement;
     if (!el || !this.motion) {
+      this.renderMask.set(false);
       return;
     }
-    void this.motion.leave();
+    void this.motion.leave().then(() => {
+      this.renderMask.set(false);
+    });
   }
 
   private restoreFocus(): void {

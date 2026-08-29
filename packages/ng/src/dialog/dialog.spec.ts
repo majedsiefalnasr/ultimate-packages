@@ -55,12 +55,58 @@ describe("UDialog", () => {
     expect(fixture.componentInstance.visible).toBe(true);
   });
 
+  it("does not set aria-labelledby when header is unset (avoiding a dangling id reference)", () => {
+    // UOverlay appends each dialog directly to document.body, and TestBed
+    // does not tear that down between tests, so prior tests' dialog
+    // elements can still be present in the document here. Querying the
+    // *last* [role="dialog"] scopes this assertion to the one this test
+    // itself just created.
+    @Component({
+      standalone: true,
+      imports: [UDialog],
+      template: `<u-dialog [(visible)]="visible" [modal]="true">Body</u-dialog>`,
+    })
+    class NoHeaderHostComponent {
+      visible = false;
+    }
+    const fixture = TestBed.createComponent(NoHeaderHostComponent);
+    fixture.componentInstance.visible = true;
+    fixture.detectChanges();
+    const allDialogs = document.querySelectorAll('[role="dialog"]');
+    const thisRunsDialog = allDialogs[allDialogs.length - 1];
+    expect(thisRunsDialog.hasAttribute("aria-labelledby")).toBe(false);
+  });
+
   it("traps focus within the dialog while open", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.componentInstance.visible = true;
     fixture.detectChanges();
     const dialogEl = document.querySelector('[role="dialog"]') as HTMLElement;
     expect(dialogEl.querySelector("[uFocusTrap]")).not.toBeNull();
+  });
+
+  it("keeps the dialog DOM present through the same tick the leave animation starts in", () => {
+    // Regression guard: renderMask must not flip to false in the same tick
+    // visible() does, or the leave motion has no element left to animate
+    // (found during review — @ultimate/uix-motion's .leave() is a real
+    // async transition, not instantaneous).
+    // UOverlay appends the dialog to document.body, so it's queried via the
+    // global document, not fixture.nativeElement (matching the established
+    // pattern in the "renders with role=dialog" test above).
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.visible = true;
+    fixture.detectChanges();
+    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+
+    fixture.componentInstance.visible = false;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges(false);
+    // Immediately after the visible→false transition, in the very same
+    // change-detection pass the leave motion starts in, the dialog must
+    // still be in the DOM — this is exactly the window the pre-fix code
+    // skipped (renderMask flipping false in lockstep with visible() would
+    // have already removed it here, leaving .leave() nothing to animate).
+    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
   });
 
   it("returns focus to the triggering element when closed", async () => {
