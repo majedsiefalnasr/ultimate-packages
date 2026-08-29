@@ -106,11 +106,5 @@
     "ultimateDestination": "packages/ng/src/button/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
-  },
-  {
-    "originalPath": "n/a",
-    "ultimateDestination": "packages/ng/src/button/ng-package.json",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored secondary-entry-point config ({\"lib\":{\"entryFile\":\"index.ts\"}}), no upstream equivalent file. Note: this is the first per-component ng-package.json in this package — prior components (ripple, autofocus, fluid, badge) have none, and the package currently builds via a single root ng-package.json with no secondary-entry-point wiring in angular.json/package.json consuming this file yet, so it is currently inert but added per this task's explicit Step 7 instruction."
   }
 ]
