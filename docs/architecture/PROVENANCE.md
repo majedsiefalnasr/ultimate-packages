@@ -24,7 +24,7 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2016-2026
 - **Third-party notices:** none found upstream (no root-level `NOTICE` file at this tag)
 - **Ultimate destination:** `packages/ng`, `packages/ng-core` (Phase 2)
-- **Modification status:** incorporated (Phase 2) — foundation tier reimplemented with PrimeNG as design reference, not copied verbatim (Option B); Button/Checkbox/Dialog/Menu/Tooltip and their direct primitive dependencies (Ripple/AutoFocus/Fluid/Badge) adapted with full Ultimate namespace rename (selectors, class names, CSS classes). Remaining ~112 source areas classified but not incorporated — see `docs/architecture/COMPONENT_INVENTORY.md`.
+- **Modification status:** incorporated (Phase 2) — foundation tier reimplemented with PrimeNG as design reference, not copied verbatim (Option B); Button/Checkbox/Dialog/Menu/Tooltip and their direct primitive dependencies (Ripple/AutoFocus/Fluid/Badge/Bind) adapted with full Ultimate namespace rename (selectors, class names, CSS classes). Remaining ~112 source areas classified but not incorporated — see `docs/architecture/COMPONENT_INVENTORY.md`.
 - **Modification description:** see file-level manifests at `docs/architecture/provenance/ng-core.json` and `docs/architecture/provenance/ng.json` for per-file status.
 - **Date incorporated:** 2026-08-29
 
