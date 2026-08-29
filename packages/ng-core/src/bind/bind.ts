@@ -51,7 +51,8 @@ export class UBind {
     private renderer: Renderer2
   ) {
     effect(() => {
-      const { style, class: className, ...rest } = this.attrs() || {};
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- excluded from the attr/prop loop below; already applied via the [style]/[class] host bindings above
+      const { style: _style, class: _className, ...rest } = this.attrs() || {};
 
       for (const [key, value] of Object.entries(rest)) {
         if (key.startsWith("on") && typeof value === "function") {
