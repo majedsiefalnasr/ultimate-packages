@@ -2,10 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Injector,
   ViewChild,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   effect,
+  inject,
   input,
   output,
   signal,
@@ -173,6 +176,7 @@ export class UDialog extends UBaseComponent {
   onHide = output<void>();
 
   @ViewChild("root") private rootRef?: ElementRef<HTMLElement>;
+  private readonly injector = inject(Injector);
 
   protected readonly ariaLabelledBy = `u_dialog_${++dialogIdCounter}_header`;
 
@@ -209,7 +213,19 @@ export class UDialog extends UBaseComponent {
       if (visible && !this.wasVisible) {
         this.triggerElement = (this.document.activeElement as HTMLElement) ?? null;
         this.renderMask.set(true);
-        this.runEnterMotion();
+        // #root only exists in the DOM once Angular has processed this
+        // renderMask flip, so runEnterMotion (which reads @ViewChild("root"))
+        // must wait for the next render, not run synchronously in this same
+        // effect tick — found during review: without this, this.rootRef is
+        // undefined here, this.motion never gets set, and runLeaveMotion's
+        // "no motion instance" fallback always fires on close, undermining
+        // both enter and leave animation, not just leave.
+        afterNextRender(
+          () => {
+            this.runEnterMotion();
+          },
+          { injector: this.injector }
+        );
       } else if (!visible && this.wasVisible) {
         this.runLeaveMotion();
         this.restoreFocus();

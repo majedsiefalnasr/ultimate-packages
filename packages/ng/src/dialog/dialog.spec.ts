@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { UDialog } from "./dialog";
 
 @Component({
@@ -15,6 +15,16 @@ class TestHostComponent {
 }
 
 describe("UDialog", () => {
+  // UOverlay appends each dialog's DOM directly to document.body via
+  // Renderer2, and Angular's TestBed does not remove those elements when a
+  // fixture is destroyed — clean them up explicitly so later tests in this
+  // file don't observe a leftover dialog from an earlier one (found during
+  // Task 15's review; see the header-input test below for the workaround
+  // needed before this cleanup existed).
+  afterEach(() => {
+    document.querySelectorAll('[role="dialog"]').forEach((el) => el.remove());
+  });
+
   it("does not render dialog content when visible is false", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
