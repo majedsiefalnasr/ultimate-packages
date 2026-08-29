@@ -151,18 +151,21 @@ export abstract class UBaseComponent {
 ```
 This is deliberately smaller than PrimeNG's `BaseComponent`: no `pt`/`ptOptions` inputs, no `$parentInstance` DI-token lookup, no passthrough machinery (`ptm`/`ptms`/`ptmo`) — all explicitly DEFERRED by the spec (Needs Architecture Decision). Style loading is delegated entirely to `@ultimate/uix-styled`'s `StyleSheet` service, not reimplemented.
 
-**`UBaseEditableHolder`** (Task 5, `packages/ng-core/src/base-editable-holder/base-editable-holder.ts`):
+**`UBaseEditableHolder`** (Task 5, `packages/ng-core/src/base-editable-holder/base-editable-holder.ts`) — confirmed against PrimeNG's real, extracted `baseeditableholder/baseeditableholder.ts` source, which uses a split read/write pattern for `disabled` because Angular's `input()` returns a read-only `InputSignal` with no `.set()`: the template-bindable `disabled` input and `setDisabledState`'s CVA-driven value are two different signals, combined via a computed:
 ```typescript
 @Directive({ standalone: true })
 export abstract class UBaseEditableHolder extends UBaseComponent implements ControlValueAccessor {
-  disabled = input<boolean | undefined>(false, { transform: booleanAttribute });
-  protected onModelChange: (value: unknown) => void;
-  protected onModelTouched: () => void;
+  disabled = input<boolean | undefined>(undefined, { transform: booleanAttribute });
+  protected readonly _disabled = signal(false);
+  readonly $disabled = computed(() => this.disabled() || this._disabled());
+
+  protected onModelChange: (value: unknown) => void = () => {};
+  protected onModelTouched: () => void = () => {};
 
   writeValue(value: unknown): void;          // abstract-ish: base stores into a `value` signal subclasses read
   registerOnChange(fn: (value: unknown) => void): void;
   registerOnTouched(fn: () => void): void;
-  setDisabledState(isDisabled: boolean): void;
+  setDisabledState(isDisabled: boolean): void;  // writes to `_disabled`, NOT to `disabled` — `disabled` is a read-only input, never written by CVA
 }
 ```
 
@@ -826,6 +829,7 @@ Create `packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts`:
 ```typescript
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { UBaseEditableHolder } from './base-editable-holder';
 
@@ -854,12 +858,33 @@ describe('UBaseEditableHolder', () => {
     expect(received).toBe('new-value');
   });
 
-  it('setDisabledState updates the disabled input signal', () => {
+  it('setDisabledState writes to the internal _disabled signal, reflected via $disabled', () => {
+    // disabled() itself is a read-only InputSignal (Angular's input() has no
+    // .set()) — it only reflects a template [disabled] binding. CVA's
+    // setDisabledState writes to the separate _disabled signal instead;
+    // $disabled = computed(() => disabled() || _disabled()) is the value
+    // components actually read. Matches PrimeNG's own confirmed
+    // baseeditableholder.ts split-signal pattern exactly.
     const fixture = TestBed.createComponent(TestEditableComponent);
     const instance = fixture.componentInstance;
+    expect(instance.$disabled()).toBe(false);
     instance.setDisabledState(true);
     fixture.detectChanges();
-    expect(instance.disabled()).toBe(true);
+    expect(instance.$disabled()).toBe(true);
+  });
+
+  it('$disabled is true when the disabled input is bound, even if setDisabledState was never called', () => {
+    @Component({
+      standalone: true,
+      imports: [TestEditableComponent],
+      template: `<u-test-editable [disabled]="true" />`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const editable = fixture.debugElement.query(By.directive(TestEditableComponent))
+      .componentInstance as TestEditableComponent;
+    expect(editable.$disabled()).toBe(true);
   });
 
   it('integrates with a real FormControl via [formControl] binding', () => {
@@ -879,7 +904,14 @@ Expected: FAIL — `./base-editable-holder` does not exist.
 
 - [ ] **Step 3: Write `UBaseEditableHolder`**
 
-Create `packages/ng-core/src/base-editable-holder/base-editable-holder.ts` implementing `ControlValueAccessor` exactly per the interface above — `disabled` as a signal `input()` with `booleanAttribute` transform (matching PrimeNG's confirmed `baseeditableholder` pattern from the spec), `onModelChange`/`onModelTouched` as protected fields defaulting to no-op functions, replaced by `registerOnChange`/`registerOnTouched`. Provide `NG_VALUE_ACCESSOR` via the class's own `providers` array pointing `useExisting` at itself — subclasses (Task 11's `UCheckbox`) inherit this provider automatically since Angular DI providers on a base `@Directive` apply to the derived `@Component` too only if the derived class also declares the provider (verify this during implementation: if inheritance doesn't propagate the `providers` array automatically, `UCheckbox`'s own `@Component` decorator must redeclare `providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UCheckbox, multi: true }]`).
+Create `packages/ng-core/src/base-editable-holder/base-editable-holder.ts` implementing `ControlValueAccessor` exactly per the interface above, confirmed against PrimeNG's real `baseeditableholder.ts`:
+- `disabled = input<boolean | undefined>(undefined, { transform: booleanAttribute })` — read-only, template-bindable, never written to directly.
+- `protected readonly _disabled = signal(false)` — the writable half.
+- `readonly $disabled = computed(() => this.disabled() || this._disabled())` — the value every consumer (including Task 14's `UCheckbox` template/host bindings) reads; never read `disabled()` alone for actual disabled-state logic.
+- `setDisabledState(isDisabled: boolean): void { this._disabled.set(isDisabled); }` — writes to `_disabled`, never to `disabled`.
+- `onModelChange`/`onModelTouched` as protected fields defaulting to no-op functions (`() => {}`), replaced by `registerOnChange`/`registerOnTouched`.
+
+**Do NOT provide `NG_VALUE_ACCESSOR` on `UBaseEditableHolder` itself.** Confirmed against PrimeNG's real source: `BaseEditableHolder` declares no `providers` array at all — every leaf component (`Checkbox` confirmed directly) declares its own `NG_VALUE_ACCESSOR` provider in its own `@Component.providers`, with `useExisting` pointing at the concrete leaf class. This settles the open verification question from this task's original brief: Angular DI providers on a base `@Directive` do NOT propagate to a derived `@Component` — each leaf must redeclare. Task 14's `UCheckbox` therefore must declare `providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UCheckbox, multi: true }]` on its own `@Component` decorator; `UBaseEditableHolder` provides none.
 
 - [ ] **Step 4: Run the test to verify it passes**
 
@@ -1890,7 +1922,7 @@ Create `packages/ng/src/checkbox/checkbox-style.ts` — same shape as `ButtonSty
 
 - [ ] **Step 5: Write `UCheckbox`**
 
-Create `packages/ng/src/checkbox/checkbox.ts`, extending `UBaseEditableHolder`, `standalone: true`, `changeDetection: ChangeDetectionStrategy.OnPush`, `selector: 'u-checkbox'`, `providers: [{provide: NG_VALUE_ACCESSOR, useExisting: UCheckbox, multi: true}]` (per Task 5's note — redeclare explicitly here if inheritance doesn't propagate it), template rendering a real `<input type="checkbox">` bound to `disabled()`/a local `checked` signal, `(change)` handler calling `writeValue`+`onModelChange`, `(keydown.space)` handler toggling and preventing default space-scroll behavior.
+Create `packages/ng/src/checkbox/checkbox.ts`, extending `UBaseEditableHolder`, `standalone: true`, `changeDetection: ChangeDetectionStrategy.OnPush`, `selector: 'u-checkbox'`, `providers: [{provide: NG_VALUE_ACCESSOR, useExisting: UCheckbox, multi: true}]` (required here — confirmed during Task 5 against PrimeNG's real source that `UBaseEditableHolder` provides no `NG_VALUE_ACCESSOR` of its own; every leaf component must declare its own), template rendering a real `<input type="checkbox">` bound to `$disabled()` (the combined computed value — never bind to the base `disabled()` input alone, since it doesn't reflect `setDisabledState`'s CVA-driven value) and a local `checked` signal, `(change)` handler calling `writeValue`+`onModelChange`, `(keydown.space)` handler toggling and preventing default space-scroll behavior.
 
 - [ ] **Step 6: Run the test, verify it passes**
 
