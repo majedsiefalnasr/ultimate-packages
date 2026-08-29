@@ -5,3 +5,4 @@ export * from "./focus-trap";
 export * from "./config";
 export * from "./bind";
 export * from "./icons";
+export * from "./api";
