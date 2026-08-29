@@ -81,6 +81,36 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/index.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored root barrel re-export, no upstream equivalent file."
+    "modificationDescription": "Ultimate-authored root barrel re-export, no upstream equivalent file. Updated in Task 12 to add `export * from './button';`."
+  },
+  {
+    "originalPath": "packages/primeng/src/button/button.ts",
+    "ultimateDestination": "packages/ng/src/button/button.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Adapts only upstream's `Button` component class (lines 576-917 of the extracted file) — not the same file's `ButtonDirective`/`ButtonLabel`/`ButtonIcon` directives, which are out of scope for this task's file list. Button→UButton, selector p-button→u-button, extends UBaseComponent (Task 4), renders a native <button> (matching upstream's own template, not a <div> with ARIA role). Deliberately excludes upstream's passthrough (pt/ptm/Bind) system, buttonProps bulk-props input, badge/badgeSeverity/badgeClass inputs, type/style/styleClass/tabindex/variant/link/plain inputs, autofocus input, ariaLabel input, and content-template (contentTemplate/iconTemplate/loadingIconTemplate) support — none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface. DISCREPANCY: Step 5 instructs importing URipple/UAutoFocus/UFluid/UBadge/USpinnerIcon into the component's `imports` array; only URipple/USpinnerIcon are imported here. UAutoFocus, UFluid, and UBadge are excluded because none can be applied in the template without inputs this task's own Interfaces section omits (no autofocus or badge input is listed for UButton) — an Angular standalone component with an unused `imports` entry fails compilation with NG8113 (confirmed by actually adding all 5 and rebuilding), and applying UAutoFocus's bare `uAutoFocus` selector to silence that warning is not inert (its aliased @Input reads the bare attribute as a truthy string, unconditionally triggering focus() on init — a real behavior change, confirmed against UAutoFocus's own spec). Upstream's real Button never renders a <p-fluid> element itself either — it DI-injects Fluid purely to detect an ancestor <p-fluid> wrapper, a host-DI-lookup mechanism UBaseComponent's scoped-down Option B architecture has no equivalent for; UButton's own `fluid` input already drives `.u-button-fluid` directly via ButtonStyle's classes.root. Upstream's <p-badge> is likewise rendered only conditionally on a `badge` input this task's Interfaces section doesn't define."
+  },
+  {
+    "originalPath": "packages/primeng/src/button/style/buttonstyle.ts",
+    "ultimateDestination": "packages/ng/src/button/button-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Ported from the extracted ButtonStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts — no @Injectable DI service, unlike upstream's own @Injectable ButtonStyle extends BaseStyle, and unlike this task's brief's illustrative ButtonStyle sample, which also used an @Injectable service). `style` is imported from @ultimate/uix-styles/button (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes.root`/`classes.icon` ported locally with .p-button*→.u-button* renaming and buttonProps? passthrough-fallbacks dropped (no pt system per UBaseComponent), reshaped to take a plain params object directly rather than upstream's (and the brief's illustrative sample's) `{ instance }`-wrapped signature — confirmed against UBaseComponent.cx(key, params)'s actual call contract (packages/ng-core/src/basecomponent/base-component.ts), which invokes `styleModule.classes[key](params)` with flat params, matching the same pattern already established by UBadge's badge-style.ts. classes.spinnerIcon (upstream computes it from instance.cx('icon') entries) and classes.root's p-button-vertical/p-button-link/p-button-plain/p-button-icon-only badge-aware variant are dropped: no vertical/link/plain input exists on UButton per this task's Interfaces section, and this task's spec-mandated tests only require the u-button-loading root class plus a rendered <u-spinner-icon>, delegates loaded-style tracking to @ultimate/uix-styled via UBaseComponent's ngOnInit per the spec's Styling Strategy, unlike PrimeNG's own BaseStyle."
+  },
+  {
+    "originalPath": "packages/ng/src/button/button.spec.ts",
+    "ultimateDestination": "packages/ng/src/button/button.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Test taken verbatim from this task's brief (Step 2) — not derived from upstream's own button.spec.ts."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/button/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/button/ng-package.json",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored secondary-entry-point config ({\"lib\":{\"entryFile\":\"index.ts\"}}), no upstream equivalent file. Note: this is the first per-component ng-package.json in this package — prior components (ripple, autofocus, fluid, badge) have none, and the package currently builds via a single root ng-package.json with no secondary-entry-point wiring in angular.json/package.json consuming this file yet, so it is currently inert but added per this task's explicit Step 7 instruction."
   }
 ]
