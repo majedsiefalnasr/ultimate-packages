@@ -8,6 +8,7 @@
   "module": "./dist/fesm2022/ultimate-ng-core.mjs",
   "types": "./dist/types/ultimate-ng-core.d.ts",
   "files": ["dist", "README.md", "THIRD-PARTY-NOTICES.md"],
+  "sideEffects": true,
   "dependencies": {
     "@ultimate/uix-utils": "workspace:*",
     "@ultimate/uix-styled": "workspace:*",
