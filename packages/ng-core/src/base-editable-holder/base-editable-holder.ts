@@ -1,0 +1,55 @@
+import { Directive, booleanAttribute, computed, input, signal } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
+import { UBaseComponent } from "../basecomponent/base-component";
+
+/**
+ * Ultimate-owned reimplementation of PrimeNG's `BaseEditableHolder`.
+ *
+ * Extends {@link UBaseComponent} with the `ControlValueAccessor` contract
+ * shared by every editable/form-bindable component (e.g. Task 11's
+ * `UCheckbox`): a `disabled` signal `input()`, `writeValue()` left abstract
+ * for subclasses to implement, and the `onModelChange`/`onModelTouched`
+ * no-op fields that `registerOnChange`/`registerOnTouched` replace per the
+ * Angular Forms API contract.
+ *
+ * `disabled` is a read-only `input()` — Angular's `input()` has no `.set()`
+ * — that only reflects a template `[disabled]` binding. CVA's
+ * `setDisabledState` instead writes to the separate `_disabled` signal;
+ * `$disabled` is the computed value every consumer should read. This
+ * matches PrimeNG's own confirmed `baseeditableholder.ts` split-signal
+ * pattern exactly.
+ *
+ * Provides no `NG_VALUE_ACCESSOR` here — confirmed against PrimeNG's real
+ * source, DI providers on a base `@Directive` do not propagate to a
+ * derived `@Component`, so every leaf component (e.g. `UCheckbox`) must
+ * declare its own `NG_VALUE_ACCESSOR` provider with `useExisting` pointing
+ * at the concrete leaf class.
+ */
+@Directive({ standalone: true })
+export abstract class UBaseEditableHolder extends UBaseComponent implements ControlValueAccessor {
+  /** Whether the control is disabled (`disabled` attribute/binding). Read-only. */
+  disabled = input<boolean | undefined>(undefined, { transform: booleanAttribute });
+
+  /** Writable half of the disabled state, set via `setDisabledState`. */
+  protected readonly _disabled = signal(false);
+
+  /** The disabled value every consumer should read. */
+  readonly $disabled = computed(() => this.disabled() || this._disabled());
+
+  protected onModelChange: (value: unknown) => void = () => {};
+  protected onModelTouched: () => void = () => {};
+
+  abstract writeValue(value: unknown): void;
+
+  registerOnChange(fn: (value: unknown) => void): void {
+    this.onModelChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onModelTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this._disabled.set(isDisabled);
+  }
+}
