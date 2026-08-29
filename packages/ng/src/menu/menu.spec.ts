@@ -40,6 +40,24 @@ describe("UMenu", () => {
     expect(document.activeElement).toBe(menuItems[1]);
   });
 
+  it("skips disabled items when navigating with ArrowDown (roving tabindex)", () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(UMenu);
+    fixture.componentRef.setInput("model", [
+      { label: "Home" },
+      { label: "Disabled", disabled: true },
+      { label: "Settings" },
+    ]);
+    fixture.detectChanges();
+    const menuItems = fixture.nativeElement.querySelectorAll('[role="menuitem"]');
+    menuItems[0].focus();
+    menuItems[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    fixture.detectChanges();
+    // The disabled "Disabled" item (index 1) must be skipped — focus should
+    // land on "Settings" (index 2), not on the disabled item in between.
+    expect(document.activeElement).toBe(menuItems[2]);
+  });
+
   it("applies routerLink navigation to items with a routerLink field", () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([{ path: "settings", children: [] }])],

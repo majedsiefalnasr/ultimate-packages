@@ -177,8 +177,24 @@ export class UMenu extends UBaseComponent {
       return;
     }
 
-    const nextIndex = (currentIndex + direction + links.length) % links.length;
+    // Skip disabled items: aria-disabled is rendered on every anchor per the
+    // model's own item.disabled value (see template), so checking it here
+    // (rather than threading model data through this method) keeps the skip
+    // logic DOM-local and correct even if links and model() ever diverge in
+    // order. Bounded by links.length so an all-disabled menu can't loop
+    // forever.
+    let nextIndex = currentIndex;
+    for (let i = 0; i < links.length; i++) {
+      nextIndex = (nextIndex + direction + links.length) % links.length;
+      if (links[nextIndex].getAttribute("aria-disabled") !== "true") {
+        break;
+      }
+    }
+
     const nextLink = links[nextIndex];
+    if (nextLink === links[currentIndex]) {
+      return;
+    }
 
     links[currentIndex].setAttribute("tabindex", "-1");
     nextLink.setAttribute("tabindex", "0");
