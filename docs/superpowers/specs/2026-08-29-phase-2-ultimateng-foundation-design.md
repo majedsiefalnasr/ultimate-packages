@@ -69,7 +69,9 @@ Verified by direct extraction of `.vendor-cache/primeng-21.1.9.tar.gz` (a full g
 | `menu` | `basecomponent`, `bind`, `ripple`, `badge`, **`tooltip`**, `RouterModule`(external Angular), `api` | **Non-obvious finding, below.** |
 | `tooltip` | `basecomponent`, `bind`, `dom`(`ConnectedOverlayScrollHandler`), `utils`(`ZIndexUtils`), `api` | Own lightweight positioning; no cascade beyond this. |
 
-**Non-obvious finding — Menu genuinely depends on Tooltip:** Direct inspection of `menu.ts` found `import { TooltipModule } from 'primeng/tooltip'` in the component's own `imports` array (`menu.ts:71,164`), with `pTooltip` actually applied in the template to menu-item labels (`menu.ts:209,234,259`) — this is load-bearing (truncated-label tooltips), not incidental. None of this session's initial research passes caught this; it was found by directly reading Menu's source rather than assuming its dependency shape. This is why **Tooltip is included in the Phase 2 proof set** rather than deferred — Menu's real behavior cannot be preserved without it, and Tooltip's own dependency closure (confirmed above) adds no further cascade. `RouterModule`'s `routerLink` support (`menu.ts:89-96`) remains available since `@angular/router` is an external peer dependency requiring no Prime source adaptation.
+**Non-obvious finding — Menu genuinely depends on Tooltip:** Direct inspection of `menu.ts` found `import { TooltipModule } from 'primeng/tooltip'` in the component's own `imports` array (`menu.ts:71,164`), with `pTooltip` actually applied in the template to menu-item labels (`menu.ts:209,234,259`) — this is load-bearing (truncated-label tooltips), not incidental. None of this session's initial research passes caught this; it was found by directly reading Menu's source rather than assuming its dependency shape. This is why **Tooltip is included in the Phase 2 proof set** rather than deferred — Menu's real behavior cannot be preserved without it, and Tooltip's own dependency closure (confirmed above) adds no further cascade.
+
+**Router dependency — resolved, not deferred:** `menu.ts` also imports `RouterModule` directly (`menu.ts:31`) and its template genuinely uses `routerLink`/`routerLinkActive` on nav items (`menu.ts:89-96`). This is a real, load-bearing dependency, not optional template functionality. `@angular/router` is therefore a **peer dependency of `@ultimate/ng` in Phase 2** because `Menu` directly consumes it. Menu retains its verified `routerLink` behavior unchanged. No Ultimate router abstraction is introduced in Phase 2 — Angular's own `RouterModule` is consumed directly, exactly as PrimeNG's Menu does. `@angular/router` remains external and is never vendored, consistent with the treatment of every other Angular peer dependency in this spec.
 
 **Full foundation-tier closure required for the 5-component proof set:** `basecomponent`, `base`, `bind`, `baseeditableholder`, `api` (subset: types referenced by the 5 components), `ripple`, `autofocus`, `badge`, `fluid`, `focustrap`, `overlay` (underlies `focustrap`/Dialog positioning), plus 5 icon components (`SpinnerIcon`, `TimesIcon`, `WindowMaximizeIcon`, `WindowMinimizeIcon`, `BaseIcon`).
 
@@ -117,7 +119,7 @@ This matches the Blueprint's ownership principle. The cost is real and accepted:
 | `button`, `checkbox`, `dialog`, `menu`, `tooltip` (proof set) | **ADAPT** | Behavior/logic retained and validated against Prime's own `.spec.ts` files as a correctness reference; internal base-class architecture and public API are Ultimate's own (Option B). |
 | `basecomponent`, `baseeditableholder`, `baseinput` | **REFACTOR** | Reimplemented as Ultimate's own base-directive hierarchy; PrimeNG's DI-token parent-linkage and theme-service wiring are design references, not copy targets. New manifest status `"reimplemented-with-reference"` applies here (see Provenance). |
 | `overlay`, `focustrap` | **ADAPT** | Genuinely Angular-specific concerns (positioning, focus-trap lifecycle) — exactly what `ng-core` exists for. Not replaced with `@angular/cdk` Overlay (see Overlay Architecture — no defect found motivating a rewrite). |
-| `ripple`, `autofocus`, `fluid`, `badge` | **ADAPT** | Migrated because a proof-set component genuinely imports each, not speculatively. |
+| `ripple`, `autofocus`, `fluid`, `badge` | **ADAPT** | Migrated because a proof-set component genuinely imports each, not speculatively. These are Angular-facing primitives directly consumed by proof-set components — they live in `@ultimate/ng`, alongside the components that use them, not in `ng-core`. |
 | `icons` (5 needed: Spinner, Times, WindowMaximize, WindowMinimize, BaseIcon) | **ADAPT (partial)** | Only the icons the proof set actually imports. Remaining ~85+ icon components are **DEFER**, migrated per-consuming-component in later phases — avoids importing an unused icon catalog. |
 | `api` (shared types, subset referenced by proof set) | **ADAPT (partial)** | Type-only interfaces (`MenuItem`, `TooltipOptions`, `PrimeTemplate`, etc.) needed by the 5 components; the rest of `api`'s surface is inventoried but not incorporated. `SharedModule`-style NgModule export within `api` is **REMOVE** (no NgModule support). |
 | `bind` | **ADAPT** | Small, proven attribute/class-binding directive; adapted with Ultimate naming. |
@@ -135,7 +137,7 @@ This matches the Blueprint's ownership principle. The cost is real and accepted:
 | `dom`, `classnames`, `utils`, `ts-helpers` | REMOVE (use `@ultimate/uix-utils` directly) |
 | `motion` (Angular wrapper) | REPLACE WITH UIX (`@ultimate/uix-motion`) |
 | `usestyle`, `BaseStyle`'s loaded-style tracking | REPLACE WITH UIX (`@ultimate/uix-styled`'s `StyleSheet`/`ThemeService`) |
-| `overlay`, `focustrap`, `ripple`, `icons`, `bind`, `config`, base-class hierarchy, `ControlValueAccessor` wiring | RETAIN FOR ANGULAR-SPECIFIC REASONS (genuine Angular lifecycle/DI/Forms concerns, no framework-neutral equivalent possible) |
+| `overlay`, `focustrap`, `ripple`, `icons`, `bind`, `config`, base-class hierarchy, `ControlValueAccessor` wiring | RETAIN FOR ANGULAR-SPECIFIC REASONS (genuine Angular lifecycle/DI/Forms concerns, no framework-neutral equivalent possible) — `ripple` specifically lives in `@ultimate/ng` (Angular-facing primitive consumed directly by Button/Menu), not `ng-core` |
 
 ---
 
@@ -150,17 +152,17 @@ Dependency direction is strictly one-way: `ng-core`/`ng` → `@ultimate/uix-{uti
 ## Ownership Boundaries
 
 ```text
-@ultimate/ng component (e.g. UButton)
+@ultimate/ng component (e.g. UButton, and its directly consumed Ripple/AutoFocus/Fluid/Badge primitives)
         ↓ consumes
-@ultimate/ng-core (base classes, Overlay, FocusTrap, Ripple, icons, config)
+@ultimate/ng-core (base classes, Overlay, FocusTrap, shared icons, config)
         ↓ consumes
 @ultimate/uix-{utils,styled,styles,motion} (framework-neutral, Phase 1)
 ```
 
-- **Belongs in `ng-core`:** Ultimate's base-component hierarchy, overlay/focus-trap/ripple directives, icon components, global config service (minimal subset), shared DI tokens.
-- **Belongs in `ng`:** the 5 rendered components, their per-component style registration (`XStyle` adapter classes).
+- **Belongs in `ng-core`:** Ultimate's base-component hierarchy (`BaseComponent`/`BaseEditableHolder`/`BaseInput`), `Bind` directive, shared API types/interfaces, DI tokens, minimal config service, `Overlay`/`FocusTrap` infrastructure, required icon infrastructure.
+- **Belongs in `ng`:** the 5 rendered components (Button, Checkbox, Dialog, Menu, Tooltip), their per-component style registration (`XStyle` adapter classes), and their Angular-facing/directly-consumed directives and primitives — **`Ripple`, `AutoFocus`, `Fluid`, and `Badge`**.
 - **Belongs in UIX (already built):** framework-neutral utilities, token resolution, motion orchestration, base/global CSS, and now the 5 new per-component style modules.
-- **Must remain external:** `@angular/*`, `primeng`, `@primeuix/*`, `rxjs`, `tslib`.
+- **Must remain external:** `@angular/*` (including `@angular/router`, a peer dependency of `@ultimate/ng` because Menu directly consumes it), `primeng`, `@primeuix/*`, `rxjs`, `tslib`.
 
 ---
 
@@ -176,13 +178,13 @@ packages/
 
 | | |
 |---|---|
-| Purpose | Angular-specific foundation: base component/directive hierarchy, overlay + focus-trap + ripple infrastructure, icon component set (5 needed), global config service (minimal subset), shared DI tokens |
-| Public API | `UBaseComponent`, `UBaseEditableHolder`, `UBaseInput` (Ultimate-owned base classes — exact naming finalized in implementation), `Overlay`, `FocusTrap`, `Ripple` directives, `SpinnerIcon`/`TimesIcon`/`WindowMaximizeIcon`/`WindowMinimizeIcon`/`BaseIcon`, `UltimateConfig` service |
+| Purpose | Angular-specific foundation: base component/directive hierarchy, `Bind` directive, shared API types/interfaces, DI tokens, minimal config service, `Overlay`/`FocusTrap` infrastructure, required icon infrastructure |
+| Public API | `UBaseComponent`, `UBaseEditableHolder`, `UBaseInput` (Ultimate-owned base classes — exact naming finalized in implementation), `Overlay`, `FocusTrap` directives, `SpinnerIcon`/`TimesIcon`/`WindowMaximizeIcon`/`WindowMinimizeIcon`/`BaseIcon`, `UltimateConfig` service, `Bind` directive, shared API types |
 | Internal API | Parent-instance DI-token linkage pattern (internal wiring, not re-exported as public contract) |
 | Dependencies | `@ultimate/uix-utils`, `@ultimate/uix-styled`, `@ultimate/uix-motion`, `@ultimate/uix-styles` |
 | Peer dependencies | `@angular/{core,common,forms,platform-browser}` `^21.0.7`, `rxjs` |
 | Build output | Angular Package Format via `ng-packagr` (ESM, `.d.ts`, partial-compilation metadata) |
-| Side effects | `sideEffects: false` |
+| Side effects | Not mandated in this spec — `sideEffects` must be verified during implementation against actual Angular/APF tree-shaking behavior together with UIX style-registration side effects (see Build Strategy and Performance). `false` may be adopted only if proven safe; otherwise the package declares whatever `sideEffects` configuration preserves required style-registration behavior while still allowing safe tree-shaking of unused exports. |
 | Tests | Angular CLI + Vitest builder, `TestBed`-based |
 | Consumers | `@ultimate/ng` |
 | Ownership | Ultimate — REFACTOR/ADAPT classification, file-level provenance tracked, `"reimplemented-with-reference"` status for genuinely rewritten base-class files |
@@ -191,15 +193,15 @@ packages/
 
 | | |
 |---|---|
-| Purpose | Angular components: Button, Checkbox, Dialog, Menu, Tooltip (Phase 2 foundation set) |
-| Public API | `UButton`, `UCheckbox`, `UDialog`, `UMenu`, `UTooltip` standalone components/directives + their public Inputs/Outputs |
+| Purpose | Angular components: Button, Checkbox, Dialog, Menu, Tooltip (Phase 2 foundation set), plus their Angular-facing/directly-consumed directives and primitives — `Ripple`, `AutoFocus`, `Fluid`, `Badge` |
+| Public API | `UButton`, `UCheckbox`, `UDialog`, `UMenu`, `UTooltip` standalone components/directives + their public Inputs/Outputs; `Ripple`, `AutoFocus`, `Fluid`, `Badge` directives/components |
 | Internal API | Per-component internal helpers not intended for direct external use |
 | Dependencies | `@ultimate/ng-core`, `@ultimate/uix-*` |
-| Peer dependencies | `@angular/{core,common,forms,platform-browser}` `^21.0.7`, `rxjs` |
-| Exports | Secondary entry points per component: `@ultimate/ng/button`, `/checkbox`, `/dialog`, `/menu`, `/tooltip` — matching PrimeNG's own proven per-component APF shape, enabling real tree-shaking |
+| Peer dependencies | `@angular/{core,common,forms,platform-browser,router}` `^21.0.7`, `rxjs`. `@angular/router` is a genuine peer dependency in Phase 2 — not optional — because `Menu` directly imports `RouterModule` and uses `routerLink`/`routerLinkActive` in its template. |
+| Exports | Secondary entry points per component: `@ultimate/ng/button`, `/checkbox`, `/dialog`, `/menu`, `/tooltip`, `/ripple`, `/autofocus`, `/fluid`, `/badge` — matching PrimeNG's own proven per-component APF shape, enabling real tree-shaking |
 | Build output | Angular Package Format via `ng-packagr` |
-| Side effects | `sideEffects: false` |
-| Tests | Angular CLI + Vitest builder — rendering, inputs/outputs, a11y, CVA (Checkbox), overlay/focus/dismissal/motion (Dialog), keyboard nav (Menu), positioning/dismissal (Tooltip) |
+| Side effects | Not mandated in this spec — same implementation-time verification requirement as `ng-core` (see Build Strategy and Performance). Style registration for each component (Ripple's own style module included) must remain reliable regardless of the final `sideEffects` setting. |
+| Tests | Angular CLI + Vitest builder — rendering, inputs/outputs, a11y, CVA (Checkbox), overlay/focus/dismissal/motion (Dialog), keyboard nav and `routerLink`/Tooltip integration (Menu), positioning/dismissal (Tooltip) |
 | Consumers | none yet (Phase 2 is foundation only) |
 | Ownership | Ultimate — ADAPT classification, file-level provenance tracked per component |
 
@@ -230,9 +232,9 @@ Dependency-graph-derived sequence, based on the verified import relationships ab
 ```text
 Foundation (ng-core: base, basecomponent, baseeditableholder, bind, api-subset, config-subset)
     ↓
-Overlay/focus infrastructure (ng-core: overlay, focustrap, ripple, autofocus, icons)
+Overlay/focus infrastructure (ng-core: overlay, focustrap, icons)
     ↓
-Primitive components (ng: button — needs ripple/autofocus/badge/fluid, all foundation-tier)
+Primitive components (ng: ripple, autofocus, badge, fluid — Angular-facing primitives, then button, which consumes them)
     ↓
 Form component (ng: checkbox — needs baseeditableholder, the CVA tier)
     ↓
@@ -258,9 +260,10 @@ Full ~117-directory inventory is a required Phase 2 deliverable artifact (`docs/
 | Button | Primitive | basecomponent, bind, ripple, autofocus, badge, fluid, icons(Spinner), api | uix-utils, uix-styled | `uix-styles/button` | disabled state, loading state | ADAPT | **Phase 2** |
 | Checkbox | Form | baseeditableholder, bind, api | uix-utils, uix-styled | `uix-styles/checkbox` | `role="checkbox"`, `aria-checked`, keyboard space-toggle, CVA | ADAPT | **Phase 2** |
 | Dialog | Overlay | basecomponent, bind, button, focustrap, motion, dom, utils, icons(Times/WindowMax/WindowMin), api | uix-utils, uix-styled, uix-motion | `uix-styles/dialog` | `aria-modal`, `aria-labelledby`, focus trap, Escape dismissal, focus-return-on-close (**needs implementation-time verification**) | ADAPT | **Phase 2** |
-| Menu | Navigation | basecomponent, bind, ripple, badge, tooltip, RouterModule(external), api | uix-utils, uix-styled | `uix-styles/menu` | `role="menu"`/`role="menuitem"`/`role="separator"`, roving tabindex (**needs implementation-time verification**) | ADAPT | **Phase 2** |
+| Menu | Navigation | basecomponent, bind, ripple, badge, tooltip, `@angular/router`(RouterModule — peer dependency, genuinely consumed), api | uix-utils, uix-styled | `uix-styles/menu` | `role="menu"`/`role="menuitem"`/`role="separator"`, roving tabindex (**needs implementation-time verification**) | ADAPT | **Phase 2** |
 | Tooltip | Overlay | basecomponent, bind, dom(ConnectedOverlayScrollHandler), utils(ZIndexUtils), api | uix-utils, uix-styled | `uix-styles/tooltip` | `role="tooltip"` | ADAPT | **Phase 2** |
-| Ripple, AutoFocus, Fluid, Badge, FocusTrap (transitive foundation) | Foundation/directive | basecomponent (mostly) | uix-utils | own `uix-styles` module where applicable | inherited from host component | ADAPT | **Phase 2** (as dependencies, not independently prioritized) |
+| Ripple, AutoFocus, Fluid, Badge (Angular-facing primitives, live in `@ultimate/ng`) | Primitive/directive | basecomponent (mostly) | uix-utils | own `uix-styles` module where applicable | inherited from host component | ADAPT | **Phase 2** (as dependencies, not independently prioritized) |
+| FocusTrap (foundation infrastructure, lives in `ng-core`) | Foundation/directive | basecomponent | uix-utils | n/a | focus containment, tab-cycling | ADAPT | **Phase 2** |
 | InputText, Password, Textarea, InputNumber, InputMask, InputOTP, RadioButton, ToggleSwitch, Select, DatePicker, etc. (~25 remaining form components) | Form | basemodelholder/baseeditableholder tier (established this phase) | uix-utils, uix-styled | per-component | label association, validation state | ADAPT | Later Phase |
 | Popover, Drawer, ConfirmDialog, ConfirmPopup, ContextMenu, DynamicDialog | Overlay | overlay/dialog groundwork (established this phase) | uix-utils, uix-styled, uix-motion | per-component | dismissal, modal semantics | ADAPT | Later Phase |
 | Menubar, TieredMenu, MegaMenu, PanelMenu, Breadcrumb, Steps, Stepper, Tabs | Navigation | menu groundwork (established this phase) | uix-utils, uix-styled, uix-motion | per-component | nested `aria-*`, keyboard nav | ADAPT | Later Phase |
@@ -317,6 +320,8 @@ Representative pattern, confirmed via direct source inspection of `button.ts`, `
 
 ## Accessibility
 
+"Evidence" below is source-level (confirmed present in PrimeNG 21.1.9's source, by file:line). "RETAIN" is a migration-intent classification, not a runtime guarantee — the Testing Strategy's accessibility test coverage must runtime-verify each RETAIN row on the Ultimate-adapted component, since adaptation (renaming, base-class restructuring under Option B) can introduce a regression a source-only comparison would not catch.
+
 | Behavior | Classification | Evidence |
 |---|---|---|
 | Dialog: `aria-modal="true"`, `aria-labelledby` | RETAIN | Confirmed present at `dialog.ts:88-89` |
@@ -338,7 +343,7 @@ No accessibility defect is confirmed and silently dropped — the "needs verific
 
 **Decision: retain PrimeNG's homegrown overlay/focus-trap system, adapted into `ng-core`, not replaced with `@angular/cdk` Overlay.**
 
-Rationale: `@angular/cdk` is a peer dependency at the whole-PrimeNG-package level but is confirmed unused anywhere in the 5-component proof-set's dependency closure. The homegrown overlay/focus-trap/positioning system is deliberately used instead, and this investigation found no defect in it — Dialog's Escape/focus-trap/`aria-modal` behavior and Tooltip's positioning/z-index/dismissal all confirmed present and functioning as designed in source. Replacing a working, already-accessible system with CDK Overlay would be an unmotivated rewrite.
+Rationale: `@angular/cdk` is a peer dependency at the whole-PrimeNG-package level but is confirmed unused anywhere in the 5-component proof-set's dependency closure. The homegrown overlay/focus-trap/positioning system is deliberately used instead, and this investigation found no defect in it at the source level — Dialog's Escape/focus-trap/`aria-modal` markup and Tooltip's positioning/z-index/dismissal logic are all source-confirmed present. Actual runtime behavior (does the focus trap correctly cycle, does Escape correctly dismiss, does Tooltip correctly reposition on scroll) is not verified by source inspection alone and must be confirmed by the Testing Strategy's runtime test suite during implementation. Replacing a working, already-accessible system with CDK Overlay would be an unmotivated rewrite with no source- or runtime-confirmed defect driving it.
 
 Responsibility split:
 
@@ -370,7 +375,7 @@ Not built in Phase 2. Table/TreeTable/Tree/Scroller/Paginator/OrderList/PickList
 
 - **Forbidden runtime dependencies:** `primeng`, `primevue`, `primereact`, any `@primeuix/*` package — already enforced by `scripts/provenance/validate-dependency-ceiling.mjs:19`'s `WATCHED_PREFIXES = ["uix", "ng", "react", "vue"]`, confirmed by direct read of the script. **No CI script change needed** — `packages/ng*` is already covered.
 - **Required dependencies:** `@ultimate/uix-{utils,styled,styles,motion}` via pnpm workspace protocol.
-- **Peer dependencies:** `@angular/{core,common,forms,platform-browser}` at `^21.0.7`, `rxjs` — external, never vendored. `@angular/cdk`/`@angular/router` are not required by the Phase 2 proof set's own source (Menu's `RouterModule` usage is optional template functionality, not a hard compile-time dependency of the package itself — to confirm exact peer declaration during implementation).
+- **Peer dependencies:** `@angular/{core,common,forms,platform-browser}` at `^21.0.7`, `rxjs` — external, never vendored, for both `ng-core` and `ng`. `@ultimate/ng` additionally declares `@angular/router` `^21.0.7` as a peer dependency — not optional — because `Menu` directly imports `RouterModule` and uses `routerLink`/`routerLinkActive` in its template (confirmed via direct source inspection). `@angular/router` remains external, is never vendored, and no Ultimate router abstraction is introduced in Phase 2. `@angular/cdk` is not required by the Phase 2 proof set's own source (confirmed unused across the entire dependency closure) and is not declared as a peer dependency of either package.
 - **`validate-boundaries.mjs` scope:** unchanged — protects `packages/uix*` from framework imports; does not need to (and should not) scan `packages/ng*` for the opposite direction.
 
 ---
@@ -390,7 +395,7 @@ Same model as Phase 1 (`PROVENANCE.md` package-level entries + `docs/architectur
 
 - PrimeNG's `LICENSE.md`: confirmed (per Phase 0's existing record) to contain both the MIT "Community Versions" section (applies to `21.1.9`) and a separate commercial `-lts` section. `packages/ng/THIRD-PARTY-NOTICES.md` already correctly warns future maintainers to re-verify the absence of `-lts` before any version bump.
 - Icons: the 5 needed icon components are PrimeNG's own Angular source (MIT, same license as the rest of `packages/primeng`) — no separate font/asset license concern.
-- `@angular/cdk`, `@angular/router`: MIT-licensed, external peer dependencies, not vendored — ordinary peer-dependency license awareness only.
+- `@angular/router`: MIT-licensed, a genuine peer dependency of `@ultimate/ng` in Phase 2 (Menu consumes it directly), external, never vendored — ordinary peer-dependency license awareness only. `@angular/cdk`: MIT-licensed, not required by the Phase 2 proof set and not declared as a peer dependency.
 - Attribution: `packages/ng/THIRD-PARTY-NOTICES.md` and a new `packages/ng-core/THIRD-PARTY-NOTICES.md` both get the verbatim MIT community-license text + PrimeTek copyright line, matching the Phase 1 pattern.
 - `@ultimate/uix-styles`'s 5 new modules are covered by the existing `packages/uix-styles/THIRD-PARTY-NOTICES.md` and `PROVENANCE.md`'s `@primeuix/styles` entry — an addition to an already-covered package, no new licensing question.
 
@@ -400,10 +405,11 @@ Same model as Phase 1 (`PROVENANCE.md` package-level entries + `docs/architectur
 
 **`ng-packagr`**, not `tsup`. Angular Package Format output requires understanding Angular decorators, templates, and partial-compilation metadata — `ng-packagr` (which PrimeNG itself uses, confirmed via its `build` script) already solves this correctly; forcing `tsup` onto Angular source would mean reimplementing what `ng-packagr` provides for free.
 
-- **Per-package `ng-package.json`:** one per package (`ng-core`, `ng`), with `ng`'s config declaring 5 secondary entry points (`button`, `checkbox`, `dialog`, `menu`, `tooltip`), matching the reference source's own per-component `ng-package.json` shape.
+- **Per-package `ng-package.json`:** one per package (`ng-core`, `ng`), with `ng`'s config declaring 9 secondary entry points (`button`, `checkbox`, `dialog`, `menu`, `tooltip`, `ripple`, `autofocus`, `fluid`, `badge`), matching the reference source's own per-component `ng-package.json` shape.
 - **Output:** FESM2022 + `.d.ts`, matching modern Angular Package Format defaults.
 - **TypeScript:** extends the repo's existing `tsconfig.base.json`, plus Angular's own required compiler options — implementation verifies the exact flag set Angular 21's compiler needs.
 - **Orchestration:** `pnpm -r --if-present run build` (unchanged) — `ng`/`ng-core` slot into the existing plain-pnpm model the same way `uix-styled`/`uix-motion` already depend on `uix-utils`.
+- **`sideEffects` determination:** neither package's `sideEffects` value is fixed by this spec. Each component's `XStyle` adapter registers with `@ultimate/uix-styled`'s stylesheet service as a side effect of module evaluation or construction (mechanism to be finalized during implementation) — if `sideEffects: false` is declared without verifying that this registration still runs correctly under a bundler's tree-shaking pass, style injection can silently break for components a consumer imports without also importing something else that happens to trigger registration. Implementation must verify actual Angular/APF tree-shaking behavior together with UIX style registration (see Performance's tree-shaking spot-check and Testing Strategy) before choosing between `sideEffects: false`, `sideEffects: true`, or an array of specific side-effectful paths (e.g. each component's style-registration module). Whichever value is chosen must preserve correct style registration for every component while still allowing safe tree-shaking of genuinely unused exports.
 
 ---
 
@@ -445,11 +451,13 @@ No compatibility tooling (codemods, selector aliases, automated migration script
 
 ## Security
 
-- **DOM manipulation:** `Renderer2`-based (confirmed in Dialog's Escape-key handler), standard sanitizer-respecting Angular API, not raw `document` manipulation. No `innerHTML` usage identified in the 5 inspected components.
-- **Dynamic component creation:** not used by the Phase 2 set (all 5 are template-declared, not `ComponentRef`-instantiated). `dynamicdialog`-style programmatic instantiation is explicitly deferred, and its security review (a more sensitive pattern) is correctly deferred alongside it.
-- **User-provided content:** none of the 5 components render arbitrary user HTML directly via string injection — Menu's `SafeHtmlPipe` (confirmed present in `menu.ts`) explicitly routes through Angular's `DomSanitizer`, not raw `innerHTML`. No XSS-shaped pattern identified requiring dedicated new tests beyond ordinary Angular template-binding safety.
-- **No `eval`/`Function` constructor usage** identified in any inspected source file.
-- **Dependency-vulnerability scanning:** no new external dependency introduced beyond `@ultimate/uix-*` (internal) and `@angular/*` (already-accepted peer ecosystem).
+The findings below are **source-confirmed** (verified by direct inspection of PrimeNG 21.1.9's source), not runtime-verified. Absence of a risky pattern in source is not a complete security guarantee — the Testing Strategy's security-relevant test coverage (template-binding sanitization, `SafeHtmlPipe` routing, absence of injectable passthrough attributes) must still runtime-verify these properties on the actual Ultimate-adapted components, not merely rely on this source review.
+
+- **DOM manipulation:** source-confirmed `Renderer2`-based (Dialog's Escape-key handler uses `renderer.listen`), a standard sanitizer-respecting Angular API, not raw `document` manipulation. No `innerHTML` usage identified in the 5 inspected components' source — implementation must confirm the Ultimate-adapted versions introduce none either, via test, not assumption.
+- **Dynamic component creation:** not used by the Phase 2 set (all 5 are template-declared, not `ComponentRef`-instantiated, per source inspection). `dynamicdialog`-style programmatic instantiation is explicitly deferred, and its security review (a more sensitive pattern) is correctly deferred alongside it.
+- **User-provided content:** source inspection found none of the 5 components render arbitrary user HTML directly via string injection — Menu's `SafeHtmlPipe` (source-confirmed present in `menu.ts`) routes through Angular's `DomSanitizer`, not raw `innerHTML`. This routing behavior must be runtime-tested on the Ultimate-adapted `UMenu`, not assumed to carry over unchanged from the source finding alone.
+- **No `eval`/`Function` constructor usage** identified in any inspected source file — implementation-time review of the adapted files must confirm none is introduced during adaptation.
+- **Dependency-vulnerability scanning:** no new external dependency introduced beyond `@ultimate/uix-*` (internal) and `@angular/*` (already-accepted peer ecosystem, now including `@angular/router` for `@ultimate/ng`).
 
 ---
 
@@ -460,7 +468,7 @@ Baseline-recording only (not a budget, matching Phase 1's framing):
 - `dist/` size + gzip size for `ng-core` and `ng`, using `measure-package-size.mjs`'s existing methodology.
 - Dialog open/close timing and Tooltip show/hide timing (representative overlay-operation costs) via a throwaway benchmark harness, not a permanent gate.
 - Component-creation-cost spot-check for Button (cheapest) vs. Dialog (most complex of the five).
-- Tree-shaking spot-check: confirm importing only `Button` does not pull in Dialog's overlay/focus-trap/motion dependencies into the bundle.
+- Tree-shaking spot-check: confirm importing only `Button` does not pull in Dialog's overlay/focus-trap/motion dependencies into the bundle, **and** confirm this holds under whichever `sideEffects` configuration implementation settles on for `ng`/`ng-core` (see Build Strategy) — this spot-check is the concrete verification step that determines whether `sideEffects: false` is actually safe, or whether style registration requires a different declaration.
 
 ---
 
@@ -479,10 +487,12 @@ Packages (source + config):
 
 Foundation components (in packages/ng/src/):
   button/, checkbox/, dialog/, menu/, tooltip/ — each with component + spec (Vitest/TestBed) + style registration
+  ripple/, autofocus/, fluid/, badge/ — Angular-facing primitives directly consumed by the above, each with directive/component + spec + style registration
 
 ng-core contents:
   base-component hierarchy (UBaseComponent/UBaseEditableHolder/UBaseInput)
-  overlay/, focustrap/, ripple/, autofocus/ directives
+  bind/ directive, shared api/ types (subset)
+  overlay/, focustrap/ directives
   icons/ (5: Spinner, Times, WindowMaximize, WindowMinimize, BaseIcon)
   config service (minimal subset)
 
@@ -559,11 +569,14 @@ Documentation: per-package + per-component READMEs
 - Build via `ng-packagr`, not `tsup`.
 - Testing via Angular CLI + Vitest builder, not Karma/Jasmine.
 - Angular upgrade strategy: independent tracking with deliberate lag.
+- `@angular/router` is a peer dependency of `@ultimate/ng` in Phase 2 (Menu directly consumes it) — resolved, not open.
+- `Ripple`, `AutoFocus`, `Fluid`, `Badge` are Angular-facing primitives owned by `@ultimate/ng`, not `@ultimate/ng-core` — resolved, not open.
+- `sideEffects` for both packages is not fixed by this spec; it is an implementation-time verification requirement (see Build Strategy, Performance) — resolved as policy, exact value not open as an architectural question.
 
 ### Open questions (requiring resolution during implementation)
 
 - Exact final class/selector naming strings within the fixed `u-*` policy (e.g. `UButton` vs `UltimateButton`).
-- Exact peer-dependency declaration for `@angular/router` given Menu's optional `routerLink` template usage — hard peer or documented optional integration.
+- Exact `sideEffects` value for `ng-core` and `ng` `package.json` — determined by verifying actual Angular/APF tree-shaking behavior together with UIX style-registration side effects (policy fixed above; the specific boolean/array value is an implementation-time finding).
 - `config`'s full surface, `passthrough`, remaining `api` surface, remaining ~85+ icons — all flagged Needs Architecture Decision, not resolved here.
 - Whether `validate-provenance.mjs`'s file-discovery logic needs extension to generically find any `docs/architecture/provenance/*.json` or is hardcoded to Phase 1's four filenames.
 
@@ -588,6 +601,8 @@ Documentation: per-package + per-component READMEs
 - Package/export tests pass for both packages.
 - Dependency-boundary tests pass (`ceiling:validate`, `boundary:validate`).
 - Build passes from a clean checkout.
+- `@ultimate/ng`'s `package.json` declares `@angular/router` as a peer dependency, and Menu's `routerLink`/`routerLinkActive` behavior is runtime-tested, not merely declared.
+- `sideEffects` for `ng-core` and `ng` has been determined by verified tree-shaking behavior (not left as an unverified default), and style registration is confirmed working for every component under that configuration.
 - Full ~117-area component inventory classification documented (`COMPONENT_INVENTORY.md`), even though only ~11 areas are implemented (5 components + foundation-tier dependencies).
 - Performance baseline recorded (not assumed).
 - Documentation exists for all 5 migrated components.
