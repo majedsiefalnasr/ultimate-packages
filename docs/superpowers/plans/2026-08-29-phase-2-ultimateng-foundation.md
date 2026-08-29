@@ -197,7 +197,7 @@ export class UltimateConfig {
 }
 ```
 
-**`@ultimate/uix-styles/<component>`** (Task 3): each module exports `{ style: string, classes: Record<string, (params: { instance: unknown }) => unknown> }` per the Phase 1 `base` module's precedent — `style` is CSS/token content, `classes` is the per-slot class-name resolver, class strings renamed `.p-*`→`.u-*`.
+**`@ultimate/uix-styles/<component>`** (Task 3): each module exports `{ style: string }` only, matching the Phase 1 `base` module's actual precedent and the real pinned `@primeuix/styles@2.0.3` tarball's content (confirmed: it contains no `classes` export — that concept does not exist in this package). `style` is the CSS/token content, class strings renamed `.p-*`→`.u-*`. The per-slot `classes` resolver (a `{ instance } => [...]` function object) is genuinely PrimeNG-component-authored logic, not `@primeuix/styles` content — it lives inside PrimeNG's own `<component>/style/<component>style.ts` wrapper files (e.g. `primeng/button/style/buttonstyle.ts`'s local `const classes = {...}`), and each Phase 2 component's own `*-style.ts` adapter in `packages/ng` (Tasks 12-16) defines its own `classes` object, ported from that PrimeNG reference file with `.p-*`→`.u-*` renamed — it is not imported from `uix-styles`.
 
 ---
 
@@ -440,7 +440,7 @@ git commit -m "fix(provenance): extend manifest-completeness check to packages/n
 - Create: `docs/architecture/provenance/uix-styles.json` entries for the 5 new files (append to existing array)
 
 **Interfaces:**
-- Produces: `@ultimate/uix-styles/button`, `/checkbox`, `/dialog`, `/menu`, `/tooltip` — each exporting `{ style: string, classes: Record<string, unknown> }`. Consumed by Task 8 (`ButtonStyle`), Task 11 (`CheckboxStyle`), Task 13 (`TooltipStyle`), Task 14 (`DialogStyle`), Task 15 (`MenuStyle`).
+- Produces: `@ultimate/uix-styles/button`, `/checkbox`, `/dialog`, `/menu`, `/tooltip` — each exporting `{ style: string }` only (no `classes` export — confirmed absent from the real pinned `@primeuix/styles@2.0.3` tarball; matches the `base` module's own existing shape). Consumed by Task 12 (`ButtonStyle`), Task 14 (`CheckboxStyle`), Task 13 (`TooltipStyle`), Task 15 (`DialogStyle`), Task 16 (`MenuStyle`) for the `style` value only — each of those tasks defines its own `classes` object locally, ported from PrimeNG's corresponding `<component>style.ts` reference file.
 
 - [ ] **Step 1: Extract the 5 style modules from the pinned `@primeuix/styles@2.0.3` tarball**
 
@@ -457,19 +457,16 @@ Create `packages/uix-styles/test/button.test.ts`:
 
 ```typescript
 import { describe, it, expect } from "vitest";
-import { style, classes } from "../src/button";
+import { style } from "../src/button";
 
 describe("uix-styles/button", () => {
   it("exports a style string with Ultimate-renamed classes, no leftover .p-button", () => {
     expect(style).toContain(".u-button");
     expect(style).not.toContain(".p-button");
   });
-
-  it("exports a classes resolver map with a root entry", () => {
-    expect(classes).toHaveProperty("root");
-  });
 });
 ```
+(Only `style` is exported — the real pinned `@primeuix/styles@2.0.3` tarball has no `classes` export in any module, confirmed by inspecting the actual extracted source before writing this task. The per-slot `classes` resolver is PrimeNG-component-authored logic living in PrimeNG's own `<component>style.ts` wrapper, not `@primeuix/styles` — it belongs in each Phase 2 component's own `*-style.ts` adapter in `packages/ng`, not here.)
 
 - [ ] **Step 2b: Write the equivalent test file for checkbox, dialog, menu, tooltip**
 
@@ -551,11 +548,11 @@ Expected: `dist/button/`, `dist/checkbox/`, `dist/dialog/`, `dist/menu/`, `dist/
 Read `packages/uix-styles/test/scope-guard.test.ts` in full first (its current form only checks the `base` module against an allow-list of framework-level selectors). Add a second `describe` block:
 
 ```typescript
-import { classes as buttonClasses, style as buttonStyle } from "../src/button";
-import { classes as checkboxClasses, style as checkboxStyle } from "../src/checkbox";
-import { classes as dialogClasses, style as dialogStyle } from "../src/dialog";
-import { classes as menuClasses, style as menuStyle } from "../src/menu";
-import { classes as tooltipClasses, style as tooltipStyle } from "../src/tooltip";
+import { style as buttonStyle } from "../src/button";
+import { style as checkboxStyle } from "../src/checkbox";
+import { style as dialogStyle } from "../src/dialog";
+import { style as menuStyle } from "../src/menu";
+import { style as tooltipStyle } from "../src/tooltip";
 
 describe("component style modules — exactly 5 exist alongside base", () => {
   it("uix-styles/src/ contains only base + the 5 Phase 2 component modules, no unexpected 6th", () => {
@@ -1497,7 +1494,7 @@ Expected: FAIL
 
 - [ ] **Step 11: Extract and write `UBadge` + `BadgeStyle`**
 
-Run: `node scripts/provenance/extract-primeng-source.mjs .vendor-cache/primeng-21.1.9.tar.gz badge .vendor-extracted/ng/badge`. Read the extracted `badge.ts` and `style/badgestyle.ts` in full. Create `packages/ng/src/badge/badge.ts` (`Badge`→`UBadge`, extends `UBaseComponent`, selector `p-badge`→`u-badge`) and `packages/ng/src/badge/badge-style.ts` (the Angular-side style adapter — `@Injectable`, imports `style`/`classes` from `@ultimate/uix-styles`... **note:** the spec's Phase 2 proof set does not include a dedicated `uix-styles/badge` module in Task 3's list of 5 — Task 3 only covers `button/checkbox/dialog/menu/tooltip`. Before writing `badge-style.ts`, extract `@primeuix/styles/badge` the same way Task 3 did for the 5 named components (same mechanism: `node scripts/provenance/extract-source.mjs .vendor-cache/@primeuix__styles-2.0.3.tar.gz .vendor-extracted/uix-styles-components` if not already extracted, then copy `badge/index.ts` into `packages/uix-styles/src/badge/index.ts` with `.p-badge`→`.u-badge` renaming, add its `package.json` subpath export and provenance entry — this is additional necessary work this task must also perform, matching Task 3's pattern exactly, since `UBadge` cannot be styled without it).
+Run: `node scripts/provenance/extract-primeng-source.mjs .vendor-cache/primeng-21.1.9.tar.gz badge .vendor-extracted/ng/badge`. Read the extracted `badge.ts` and `style/badgestyle.ts` in full. Create `packages/ng/src/badge/badge.ts` (`Badge`→`UBadge`, extends `UBaseComponent`, selector `p-badge`→`u-badge`) and `packages/ng/src/badge/badge-style.ts` (the Angular-side style adapter — `@Injectable`, imports only `style` from `@ultimate/uix-styles/badge`, per Task 3's corrected finding that `@primeuix/styles` exports no `classes`; define `classes` locally in `badge-style.ts`, ported from the extracted `style/badgestyle.ts` reference file's own `const classes = {...}` object with `.p-*`→`.u-*` renamed). **Note:** the spec's Phase 2 proof set does not include a dedicated `uix-styles/badge` module in Task 3's list of 5 — Task 3 only covers `button/checkbox/dialog/menu/tooltip`. Before writing `badge-style.ts`, extract `@primeuix/styles/badge` the same way Task 3 did for the 5 named components (same mechanism: `node scripts/provenance/extract-source.mjs .vendor-cache/@primeuix__styles-2.0.3.tar.gz .vendor-extracted/uix-styles-components` if not already extracted, then copy `badge/index.ts` into `packages/uix-styles/src/badge/index.ts` — it too exports only `style`, no `classes` — with `.p-badge`→`.u-badge` renaming, add its `package.json` subpath export and provenance entry — this is additional necessary work this task must also perform, matching Task 3's corrected pattern exactly, since `UBadge` cannot be styled without it).
 
 - [ ] **Step 12: Run the test, verify it passes**
 
@@ -1616,22 +1613,48 @@ Expected: FAIL
 
 - [ ] **Step 4: Write `ButtonStyle` adapter**
 
+Extract PrimeNG's own `button/style/buttonstyle.ts` reference file (via `node scripts/provenance/extract-primeng-source.mjs .vendor-cache/primeng-21.1.9.tar.gz button/style .vendor-extracted/ng/button-style` if not already covered by Step 1's `button` extraction) and read its `const classes = {...}` object in full — this is the design reference for the `classes` object below, not something imported from `uix-styles` (confirmed during Task 3: `@primeuix/styles` exports only raw CSS, no `classes`).
+
 Create `packages/ng/src/button/button-style.ts`:
 ```typescript
 import { Injectable } from '@angular/core';
-import { style, classes } from '@ultimate/uix-styles/button';
+import { style } from '@ultimate/uix-styles/button';
 
 @Injectable()
 export class ButtonStyle {
   readonly style = style;
-  readonly classes = classes;
+  readonly classes = {
+    root: ({ instance }: { instance: any }) => [
+      'u-button u-component',
+      {
+        'u-button-icon-only': instance.hasIcon && !instance.label,
+        'u-button-loading': instance.loading,
+        [`u-button-${instance.severity}`]: instance.severity,
+        'u-button-raised': instance.raised,
+        'u-button-rounded': instance.rounded,
+        'u-button-text': instance.text,
+        'u-button-outlined': instance.outlined,
+        'u-button-sm': instance.size === 'small',
+        'u-button-lg': instance.size === 'large',
+        'u-button-fluid': instance.fluid,
+      },
+    ],
+    loadingIcon: 'u-button-loading-icon',
+    icon: ({ instance }: { instance: any }) => [
+      'u-button-icon',
+      {
+        [`u-button-icon-${instance.iconPos}`]: instance.label,
+      },
+    ],
+    label: 'u-button-label',
+  };
 }
 ```
-(This is the "thin Angular `@Injectable` adapter" the spec's Styling Strategy describes — no loaded-style-name bookkeeping reimplemented here, that responsibility stays in `UBaseComponent`'s `ngOnInit`/`uix-styled` registration call.)
+(Ported from PrimeNG's own `buttonstyle.ts` `const classes = {...}` object — the extracted reference file, above — with `.p-*`→`.u-*` renamed and PrimeNG's `instance.buttonProps?.x` passthrough-fallback pattern dropped, since Phase 2's `UButton` has no passthrough/`pt` system per Task 4's scoped-down `UBaseComponent`. This is the "thin Angular `@Injectable` adapter" the spec's Styling Strategy describes — `style` still comes from `@ultimate/uix-styles/button`, `classes` is genuinely component-authored and lives here, not upstream. No loaded-style-name bookkeeping reimplemented here, that responsibility stays in `UBaseComponent`'s `ngOnInit`/`uix-styled` registration call.)
 
 - [ ] **Step 5: Write `UButton`**
 
-Create `packages/ng/src/button/button.ts`, extending `UBaseComponent`, `standalone: true`, `changeDetection: ChangeDetectionStrategy.OnPush`, `selector: 'u-button'`, importing `URipple`/`UAutoFocus`/`UFluid`/`UBadge`/`USpinnerIcon` in its `imports` array, with the inline template rendering a native `<button>` element (matching PrimeNG's confirmed pattern of a real `<button>`, not a `<div>` with ARIA role), all inputs/outputs exactly per this task's Interfaces section, `cx('root')`/`cx('label')`/`cx('icon')`/`cx('loadingIcon')` calls (inherited from `UBaseComponent`) resolving classes from the injected `ButtonStyle`, disabled/loading state driving both the native `disabled` attribute and the `.u-button-loading`/`.u-button-icon-only` conditional classes (per the confirmed `buttonstyle.ts` `classes.root` resolver logic from the spec).
+Create `packages/ng/src/button/button.ts`, extending `UBaseComponent`, `standalone: true`, `changeDetection: ChangeDetectionStrategy.OnPush`, `selector: 'u-button'`, importing `URipple`/`UAutoFocus`/`UFluid`/`UBadge`/`USpinnerIcon` in its `imports` array, with the inline template rendering a native `<button>` element (matching PrimeNG's confirmed pattern of a real `<button>`, not a `<div>` with ARIA role), all inputs/outputs exactly per this task's Interfaces section, `cx('root')`/`cx('label')`/`cx('icon')`/`cx('loadingIcon')` calls (inherited from `UBaseComponent`) resolving classes from the injected `ButtonStyle`'s locally-defined `classes` object above, disabled/loading state driving both the native `disabled` attribute and the `.u-button-loading`/`.u-button-icon-only` conditional classes.
 
 - [ ] **Step 6: Run the test, verify it passes**
 
@@ -1743,7 +1766,7 @@ Expected: FAIL
 
 - [ ] **Step 4: Write `TooltipStyle` adapter**
 
-Create `packages/ng/src/tooltip/tooltip-style.ts` — same shape as `ButtonStyle` (Task 12, Step 4), importing from `@ultimate/uix-styles/tooltip`.
+Create `packages/ng/src/tooltip/tooltip-style.ts` — same shape as `ButtonStyle` (Task 12, Step 4): import only `style` from `@ultimate/uix-styles/tooltip` (it exports no `classes`), define `classes` locally in this file, ported from PrimeNG's own extracted `tooltip/style/tooltipstyle.ts` reference file with `.p-*`→`.u-*` renamed.
 
 - [ ] **Step 5: Write `UTooltip`**
 
@@ -1863,7 +1886,7 @@ Expected: FAIL
 
 - [ ] **Step 4: Write `CheckboxStyle` adapter**
 
-Create `packages/ng/src/checkbox/checkbox-style.ts` — same shape as `ButtonStyle`, importing from `@ultimate/uix-styles/checkbox`.
+Create `packages/ng/src/checkbox/checkbox-style.ts` — same shape as `ButtonStyle` (Task 12, Step 4): import only `style` from `@ultimate/uix-styles/checkbox` (it exports no `classes`), define `classes` locally in this file, ported from PrimeNG's own extracted `checkbox/style/checkboxstyle.ts` reference file with `.p-*`→`.u-*` renamed.
 
 - [ ] **Step 5: Write `UCheckbox`**
 
@@ -2003,7 +2026,7 @@ Expected: FAIL
 
 - [ ] **Step 4: Write `DialogStyle` adapter**
 
-Create `packages/ng/src/dialog/dialog-style.ts` — same shape as `ButtonStyle`, importing from `@ultimate/uix-styles/dialog`.
+Create `packages/ng/src/dialog/dialog-style.ts` — same shape as `ButtonStyle` (Task 12, Step 4): import only `style` from `@ultimate/uix-styles/dialog` (it exports no `classes`), define `classes` locally in this file, ported from PrimeNG's own extracted `dialog/style/dialogstyle.ts` reference file with `.p-*`→`.u-*` renamed.
 
 - [ ] **Step 5: Write `UDialog`**
 
@@ -2135,7 +2158,7 @@ Expected: FAIL
 
 - [ ] **Step 4: Write `MenuStyle` adapter**
 
-Create `packages/ng/src/menu/menu-style.ts` — same shape as `ButtonStyle`, importing from `@ultimate/uix-styles/menu`.
+Create `packages/ng/src/menu/menu-style.ts` — same shape as `ButtonStyle` (Task 12, Step 4): import only `style` from `@ultimate/uix-styles/menu` (it exports no `classes`), define `classes` locally in this file, ported from PrimeNG's own extracted `menu/style/menustyle.ts` reference file with `.p-*`→`.u-*` renamed.
 
 - [ ] **Step 5: Write `UMenu`**
 
