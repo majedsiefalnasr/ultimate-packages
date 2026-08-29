@@ -71,12 +71,14 @@ if (baseRef) {
   pass(`diff check against ${baseRef} passed`);
 }
 
-// Manifest completeness: every .ts file under packages/uix-*/src/ must have
+// Manifest completeness: every .ts file under packages/{uix,ng}-*/src/ must have
 // a corresponding entry in docs/architecture/provenance/<package-name>.json.
-function findUixPackageDirs(root = "packages") {
+const MANIFEST_WATCHED_PREFIXES = ["uix", "ng"];
+
+function findWatchedPackageDirs(root = "packages") {
   if (!existsSync(root)) return [];
   return readdirSync(root)
-    .filter((name) => name.startsWith("uix"))
+    .filter((name) => MANIFEST_WATCHED_PREFIXES.some((prefix) => name.startsWith(prefix)))
     .map((name) => ({ name, path: join(root, name) }))
     .filter(({ path }) => statSync(path).isDirectory());
 }
@@ -94,8 +96,8 @@ function walkTsFiles(dir, files = []) {
   return files;
 }
 
-const uixPackages = findUixPackageDirs();
-for (const { name, path } of uixPackages) {
+const watchedPackages = findWatchedPackageDirs();
+for (const { name, path } of watchedPackages) {
   const manifestPath = join("docs/architecture/provenance", `${name}.json`);
   const srcFiles = walkTsFiles(join(path, "src"));
 
