@@ -1,1 +1,1 @@
-export { UltimateConfig } from './ultimate-config';
+export { UltimateConfig } from "./ultimate-config";
