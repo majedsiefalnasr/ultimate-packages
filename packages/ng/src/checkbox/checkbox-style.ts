@@ -69,6 +69,7 @@ const classes = {
   box: "u-checkbox-box",
   input: "u-checkbox-input",
   icon: "u-checkbox-icon",
+  label: "u-checkbox-label",
 };
 
 /** `UBaseComponent`-shaped style module for `UCheckbox`. */

@@ -54,4 +54,27 @@ describe("UCheckbox", () => {
     const input = fixture.nativeElement.querySelector('input[type="checkbox"]');
     expect(input.disabled).toBe(true);
   });
+
+  it("respects CVA setDisabledState by disabling the native input, independent of the disabled input", () => {
+    // Distinct from the input-bound test above: this exercises the
+    // $disabled = disabled() || _disabled() split directly via the CVA
+    // method, not a template [disabled] binding — the two are backed by
+    // different signals in UBaseEditableHolder.
+    const fixture = TestBed.createComponent(UCheckbox);
+    fixture.detectChanges();
+    fixture.componentInstance.setDisabledState(true);
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('input[type="checkbox"]');
+    expect(input.disabled).toBe(true);
+  });
+
+  it("renders the label input with a real u-checkbox-label class, not an empty class list", () => {
+    const fixture = TestBed.createComponent(UCheckbox);
+    fixture.componentRef.setInput("label", "Accept terms");
+    fixture.detectChanges();
+    const label = fixture.nativeElement.querySelector("span");
+    expect(label).not.toBeNull();
+    expect(label.classList.contains("u-checkbox-label")).toBe(true);
+    expect(label.textContent).toContain("Accept terms");
+  });
 });
