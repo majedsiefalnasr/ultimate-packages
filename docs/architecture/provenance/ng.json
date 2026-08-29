@@ -189,6 +189,30 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/index.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored root barrel re-export, no upstream equivalent file. Updated in Task 15 to add `export * from './dialog';`."
+    "modificationDescription": "Ultimate-authored root barrel re-export, no upstream equivalent file. Updated in Task 16 to add `export * from './menu';` (previously updated in Task 15 for `./dialog`)."
+  },
+  {
+    "originalPath": "packages/primeng/src/menu/menu.ts",
+    "ultimateDestination": "packages/ng/src/menu/menu.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Menu→UMenu, renders a flat <ul role=\"menu\"> of UMenuItem entries as <li role=\"none\"><a role=\"menuitem\"> or <li role=\"separator\">. Deliberately excludes upstream's much larger surface (popup overlay positioning/show()/hide()/toggle(), appendTo/z-index stacking, motion, submenu nesting, TemplateRef content-projection slots, styleClass/style inputs, ariaLabel/ariaLabelledBy, document click/resize/scroll listeners, the separate MenuItemContent child-component split, and the Home/End/Enter/Space/Escape/Tab key handlers upstream's onListKeyDown() implements) — none of these appear in this task's Interfaces section (model, popup only). Roving tabindex: real PrimeNG uses a virtual-focus/aria-activedescendant pattern (focusedOptionIndex signal, no native DOM focus movement between items), confirmed by reading menu.ts lines 698-761; this task's own brief and spec test (asserting document.activeElement moves) give an explicit, different resolution — a literal roving-tabindex pattern (move tabindex 0/-1 between anchors, call .focus()) — followed here per the brief's explicit override of the default 'adapt to real source' rule. Tooltip/Router wiring: real PrimeNG applies pTooltip/routerLink via a separate MenuItemContent child component; adapted here as direct [uTooltip]/[routerLink] bindings on this component's own <a>, same load-bearing behavior (truncated-label tooltips confirmed genuinely used by real Menu — this is the Menu→Tooltip dependency the Phase 2 spec's own research surfaced), same @angular/router peer dependency. UBadge deliberately excluded from imports: UMenuItem (Task 10) has no badge field, so no template element can bind one — matches UButton's (Task 12) and UDialog's (Task 15) documented NG8113 precedent for unused imports."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/menu/menu.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream's menu.spec.ts. Covers role=\"menu\"/role=\"menuitem\"/role=\"separator\" rendering, roving-tabindex ArrowDown navigation, routerLink navigation (via provideRouter), and [uTooltip] integration on menu item labels."
+  },
+  {
+    "originalPath": "packages/primeng/src/menu/style/menustyle.ts",
+    "ultimateDestination": "packages/ng/src/menu/menu-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Ported from the extracted MenuStyle's own style/classes shape, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, unlike upstream's own @Injectable MenuStyle). style is imported from @ultimate/uix-styles/menu (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). classes ported locally with .p-menu*→.u-menu* renaming, reshaped to take a plain params object directly rather than upstream's {instance, item, id}-wrapped signature, matching UBaseComponent.cx(key, params)'s actual call contract — same pattern as ButtonStyle/CheckboxStyle/TooltipStyle/DialogStyle/BadgeStyle."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/menu/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   }
 ]
