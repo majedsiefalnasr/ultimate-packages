@@ -3,4 +3,5 @@ export * from "./autofocus";
 export * from "./fluid";
 export * from "./badge";
 export * from "./button";
+export * from "./checkbox";
 export * from "./tooltip";

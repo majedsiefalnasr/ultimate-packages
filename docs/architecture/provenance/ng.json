@@ -136,5 +136,35 @@
     "ultimateDestination": "packages/ng/src/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored root barrel re-export, no upstream equivalent file. Updated in Task 13 to add `export * from './tooltip';`."
+  },
+  {
+    "originalPath": "packages/primeng/src/checkbox/checkbox.ts",
+    "ultimateDestination": "packages/ng/src/checkbox/checkbox.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Checkbox→UCheckbox, selector p-checkbox→u-checkbox, extends UBaseEditableHolder (Task 5). Deliberately excludes upstream's much larger prop surface: value/trueValue/falseValue (multi-value/group-checkbox mode — this task's Interfaces section defines only binary; UCheckbox only implements upstream's boolean/binary mode, writeValue always coerces to a plain boolean rather than upstream's array-membership contains() check for multi-value mode), ariaLabelledBy/ariaLabel/tabindex/inputId/inputStyle/styleClass/inputClass/readonly/autofocus/variant/size/checkboxIcon/formControl inputs, indeterminate state, the icon <ng-template>/ContentChild template-override system, and the onChange/onFocus/onBlur output()s — none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface (binary, label, inherited disabled) with 'no UCheckbox-specific outputs beyond the CVA contract.' Renders no check/minus icon: upstream's CheckIcon/MinusIcon has no equivalent yet in @ultimate/ng-core's icon set (spinner/times/window-maximize/window-minimize only so far per Task 9's finding) and no icon-related input is listed in this task's Interfaces section; checked state is instead conveyed via .u-checkbox-checked on the root and the native input's own checked state. providers: [NG_VALUE_ACCESSOR] is declared directly on UCheckbox (not inherited) — confirmed during Task 5 that UBaseEditableHolder provides no NG_VALUE_ACCESSOR of its own, matching upstream's own CHECKBOX_VALUE_ACCESSOR constant redeclared on Checkbox rather than inherited from BaseEditableHolder. Template binds the native input's [disabled] to $disabled() (the combined computed signal), never to the base disabled() input alone — empirically verified: binding to disabled() alone fails a test asserting setDisabledState (CVA path, with the disabled input never bound) disables the rendered input, while binding to $disabled() passes it."
+  },
+  {
+    "originalPath": "packages/primeng/src/checkbox/style/checkboxstyle.ts",
+    "ultimateDestination": "packages/ng/src/checkbox/checkbox-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Ported from the extracted CheckboxStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts — no @Injectable DI service, unlike upstream's own @Injectable CheckboxStyle extends BaseStyle). `style` is imported from @ultimate/uix-styles/checkbox (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes` (root/box/input/icon) ported locally with .p-checkbox*→.u-checkbox* renaming, reshaped to take a plain params object directly rather than upstream's `{ instance }`-wrapped signature — confirmed against UBaseComponent.cx(key, params)'s actual call contract, matching the same pattern already established by ButtonStyle/BadgeStyle/TooltipStyle. classes.root's `p-highlight`/`p-disabled` modifier classes are deliberately kept unrenamed (not u-highlight/u-disabled): confirmed against @ultimate/uix-styles/checkbox's own CSS export, whose selectors (`.p-disabled`, `.p-invalid`, `.p-variant-filled`) reference these PrimeNG-wide structural/shared modifier classes literally, unrenamed — the style module must emit matching literal class names for those CSS selectors to apply. `invalid`/`$variant`/`size` params dropped from classes.root's resolver: no invalid, variant, or size input exists on UCheckbox per this task's Interfaces section."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/checkbox/checkbox.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Test taken verbatim from this task's brief (Step 2), with one addition: `import { describe, expect, it } from \"vitest\";` (the brief's snippet omitted it, unlike every other spec file in this package — vitest globals are not enabled in this project's tsconfig, so the snippet as given fails to compile; confirmed by running it verbatim first per TDD Step 3, matching the same discrepancy already documented for tooltip.spec.ts)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/checkbox/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored root barrel re-export, no upstream equivalent file. Updated in Task 14 to add `export * from './checkbox';`."
   }
 ]
