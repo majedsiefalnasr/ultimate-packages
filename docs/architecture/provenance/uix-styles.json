@@ -16,5 +16,35 @@
     "ultimateDestination": "packages/uix-styles/src/types.ts",
     "modificationStatus": "transcribed",
     "modificationDescription": "Manually transcribed from the tarball's dist/types.d.mts declaration file (dist/types.mjs.map has empty sources, so extract-source.mjs recovers nothing for it); StyleType was deliberately narrowed from upstream's real union type and the @primeuix/styled import was stripped, per this file's own header comment."
+  },
+  {
+    "originalPath": "src/button/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/button/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via sourcemap recovery from @primeuix/styles@2.0.3; .p-button* class-name string literals renamed to .u-button* (including the sibling .p-badge reference used for button badges, renamed to .u-badge) to match Phase 2's Ultimate namespace decision."
+  },
+  {
+    "originalPath": "src/checkbox/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/checkbox/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via sourcemap recovery from @primeuix/styles@2.0.3; .p-checkbox* class-name string literals renamed to .u-checkbox* to match Phase 2's Ultimate namespace decision. Generic shared-state selectors (.p-disabled, .p-invalid, .p-variant-filled) left unrenamed, consistent with the base module's own treatment of framework-level classes."
+  },
+  {
+    "originalPath": "src/dialog/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/dialog/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via sourcemap recovery from @primeuix/styles@2.0.3; .p-dialog* class-name string literals renamed to .u-dialog* to match Phase 2's Ultimate namespace decision. Generic shared selector (.p-resizable-handle) and @keyframes identifiers left unrenamed, consistent with the base module's own treatment of framework-level classes."
+  },
+  {
+    "originalPath": "src/menu/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/menu/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via sourcemap recovery from @primeuix/styles@2.0.3; .p-menu* class-name string literals renamed to .u-menu* to match Phase 2's Ultimate namespace decision. Generic shared-state selectors (.p-disabled, .p-focus) left unrenamed, consistent with the base module's own treatment of framework-level classes."
+  },
+  {
+    "originalPath": "src/tooltip/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/tooltip/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via sourcemap recovery from @primeuix/styles@2.0.3; .p-tooltip* class-name string literals renamed to .u-tooltip* to match Phase 2's Ultimate namespace decision."
   }
 ]

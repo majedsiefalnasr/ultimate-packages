@@ -18,6 +18,31 @@
       "types": "./dist/base/index.d.mts",
       "import": "./dist/base/index.mjs",
       "default": "./dist/base/index.mjs"
+    },
+    "./button": {
+      "types": "./dist/button/index.d.mts",
+      "import": "./dist/button/index.mjs",
+      "default": "./dist/button/index.mjs"
+    },
+    "./checkbox": {
+      "types": "./dist/checkbox/index.d.mts",
+      "import": "./dist/checkbox/index.mjs",
+      "default": "./dist/checkbox/index.mjs"
+    },
+    "./dialog": {
+      "types": "./dist/dialog/index.d.mts",
+      "import": "./dist/dialog/index.mjs",
+      "default": "./dist/dialog/index.mjs"
+    },
+    "./menu": {
+      "types": "./dist/menu/index.d.mts",
+      "import": "./dist/menu/index.mjs",
+      "default": "./dist/menu/index.mjs"
+    },
+    "./tooltip": {
+      "types": "./dist/tooltip/index.d.mts",
+      "import": "./dist/tooltip/index.mjs",
+      "default": "./dist/tooltip/index.mjs"
     }
   },
   "files": [

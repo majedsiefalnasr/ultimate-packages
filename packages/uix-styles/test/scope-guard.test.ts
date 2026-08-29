@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 import { style as base } from "../src/base";
+import { style as buttonStyle } from "../src/button";
+import { style as checkboxStyle } from "../src/checkbox";
+import { style as dialogStyle } from "../src/dialog";
+import { style as menuStyle } from "../src/menu";
+import { style as tooltipStyle } from "../src/tooltip";
 
 const ALLOWED_SELECTOR_PREFIXES = [
   ".p-disabled",
@@ -27,5 +34,31 @@ describe("base module scope guard", () => {
       (selector) => !ALLOWED_SELECTOR_PREFIXES.some((allowed) => selector.startsWith(allowed))
     );
     expect(unexpected).toEqual([]);
+  });
+});
+
+describe("component style modules — exactly 5 exist alongside base", () => {
+  it("uix-styles/src/ contains only base + the 5 Phase 2 component modules, no unexpected 6th", () => {
+    const actualModules = readdirSync(join(__dirname, "..", "src"), { withFileTypes: true })
+      .filter((e) => e.isDirectory())
+      .map((e) => e.name)
+      .sort();
+    expect(actualModules).toEqual(["base", "button", "checkbox", "dialog", "menu", "tooltip"].sort());
+  });
+
+  it("button style uses only .u-button* selectors", () => {
+    expect(buttonStyle).not.toMatch(/\.p-button/);
+  });
+  it("checkbox style uses only .u-checkbox* selectors", () => {
+    expect(checkboxStyle).not.toMatch(/\.p-checkbox/);
+  });
+  it("dialog style uses only .u-dialog* selectors", () => {
+    expect(dialogStyle).not.toMatch(/\.p-dialog/);
+  });
+  it("menu style uses only .u-menu* selectors", () => {
+    expect(menuStyle).not.toMatch(/\.p-menu/);
+  });
+  it("tooltip style uses only .u-tooltip* selectors", () => {
+    expect(tooltipStyle).not.toMatch(/\.p-tooltip/);
   });
 });
