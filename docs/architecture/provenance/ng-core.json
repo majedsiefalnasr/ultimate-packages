@@ -1,0 +1,182 @@
+[
+  {
+    "originalPath": "packages/primeng/src/basecomponent/basecomponent.ts",
+    "ultimateDestination": "packages/ng-core/src/basecomponent/base-component.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeNG's BaseComponent (Option B). Covers DI wiring (document/platformId/el/renderer/config), the dt/unstyled input pair, a cx() class-name-slot resolver, and @ultimate/uix-styled-backed style registration on init. Deliberately excludes PrimeNG's full passthrough (pt/ptOptions/ptm/ptms/ptmo) system, $parentInstance DI-token lookup, and full global-config surface — all explicitly deferred per the approved Phase 2 spec (Needs Architecture Decision)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/basecomponent/base-component.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies cx() class-name-slot resolution and idempotent style registration via a spy on the real @ultimate/uix-styled StyleSheet.add method."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/basecomponent/style-sheet.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored module-level StyleSheet singleton wrapper. @ultimate/uix-styled's StyleSheet is a plain class, not an Angular-injectable providedIn:'root' service, so ng-core owns a single shared instance here for all UBaseComponent subclasses to register against."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/basecomponent/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/baseeditableholder/baseeditableholder.ts",
+    "ultimateDestination": "packages/ng-core/src/base-editable-holder/base-editable-holder.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate-owned reimplementation of PrimeNG's BaseEditableHolder, extending UBaseComponent. Preserves the confirmed split-signal pattern for disabled state (disabled is a read-only input(), setDisabledState writes to a separate writable _disabled signal, $disabled computed combines both) since Angular's input() has no .set(). Does not provide NG_VALUE_ACCESSOR on the base class — confirmed against real PrimeNG source that every leaf component (e.g. Checkbox) redeclares its own provider rather than inheriting one."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the CVA contract, the disabled/_disabled/$disabled split-signal pattern, and that a template-bound disabled input alone drives $disabled."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/base-editable-holder/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/overlay/overlay.ts",
+    "ultimateDestination": "packages/ng-core/src/overlay/overlay.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Overlay→UOverlay, adapted to append/restore the host element relative to document.body or a configurable target, assign z-index via @ultimate/uix-utils/zindex's real ZIndex object (.set/.clear, not a plain function as an early plan draft assumed), and guard all DOM manipulation behind isPlatformBrowser() for SSR safety."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/overlay/overlay.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies body-append behavior and z-index assignment under this project's zoneless TestBed."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/overlay/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/focustrap/focustrap.ts",
+    "ultimateDestination": "packages/ng-core/src/focus-trap/focus-trap.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. FocusTrap→UFocusTrap, selector [pFocusTrap]→[uFocusTrap], Tab/Shift+Tab cycling implemented via @ultimate/uix-utils/dom's existing getFocusableElements helper (reused, not duplicated), respecting a uFocusTrapDisabled input."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/focus-trap/focus-trap.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies Tab-key focus wrapping between first/last focusable descendants and the disabled-input escape hatch."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/focus-trap/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/config/ultimate-config.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored minimal global configuration service (unstyled, ripple signals only). Not a port of PrimeNG's much larger PrimeNG config service — full config surface is explicitly deferred (spec: Needs Architecture Decision)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/config/ultimate-config.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies default values and singleton (providedIn:'root') behavior."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/config/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/bind/bind.ts",
+    "ultimateDestination": "packages/ng-core/src/bind/bind.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Bind→UBind, selector [pBind]→[uBind], @primeuix/utils cn/equals imports rewritten to @ultimate/uix-utils/classnames and @ultimate/uix-utils/object equivalents. Foundation infrastructure only in Phase 2 — no Phase 2 component wires it in directly (PrimeNG's own usage of Bind in Button/Dialog/Menu is exclusively through the pt/passthrough call sites, which UBaseComponent excludes). Applies arbitrary attributes/properties/listeners from a bound object via Renderer2 with no sanitization, inherited unchanged from upstream — an accepted risk, documented and tested (see bind.spec.ts), not a defect."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/bind/bind.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Includes explicit security-boundary tests documenting the accepted attribute-injection risk (verbatim href with an unsafe scheme, confirmation no innerHTML sink exists)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/bind/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/icons/baseicon/baseicon.ts",
+    "ultimateDestination": "packages/ng-core/src/icons/base-icon.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Real PrimeNG BaseIcon/icons are [data-p-icon] attribute-selector directives whose host is the consumer's own <svg> element, with no role/aria-label anywhere upstream (accessibility left to the consumer). This task's own non-negotiable test contract required element-selector components with a nested accessible <svg role=\"img\">, and Angular does not allow a subclass @Component to reuse a parent @Component's template — so UBaseIcon is instead a Directive (matching UBaseComponent's own pattern) providing shared label (aliased aria-label) and spin inputs; each leaf icon renders its own <svg> wrapper. Documented departure, not a silent invention."
+  },
+  {
+    "originalPath": "packages/primeng/src/icons/spinner/spinnericon.ts",
+    "ultimateDestination": "packages/ng-core/src/icons/spinner-icon.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "SVG path data and clipPath/defs wrapper copied verbatim (confirmed byte-for-byte against extracted source). Selector p-spinner-icon→u-spinner-icon. Unique clip-path id generated via crypto.randomUUID() instead of upstream's @primeuix/utils uuid() helper, since ng-core does not depend on @primeuix/utils."
+  },
+  {
+    "originalPath": "packages/primeng/src/icons/times/timesicon.ts",
+    "ultimateDestination": "packages/ng-core/src/icons/times-icon.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "SVG path data copied verbatim (confirmed byte-for-byte against extracted source). Selector p-times-icon→u-times-icon. No clipPath/defs wrapper, matching real upstream's own asymmetry versus the other 3 icons (not an omission)."
+  },
+  {
+    "originalPath": "packages/primeng/src/icons/windowmaximize/windowmaximizeicon.ts",
+    "ultimateDestination": "packages/ng-core/src/icons/window-maximize-icon.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "SVG path/fill-rule/clip-rule data and clipPath/defs wrapper copied verbatim (confirmed byte-for-byte against extracted source). Selector p-window-maximize-icon→u-window-maximize-icon. crypto.randomUUID() replaces upstream's uuid() helper as above."
+  },
+  {
+    "originalPath": "packages/primeng/src/icons/windowminimize/windowminimizeicon.ts",
+    "ultimateDestination": "packages/ng-core/src/icons/window-minimize-icon.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "SVG path/fill-rule/clip-rule data and clipPath/defs wrapper copied verbatim (confirmed byte-for-byte against extracted source). Selector p-window-minimize-icon→u-window-minimize-icon. crypto.randomUUID() replaces upstream's uuid() helper as above."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/icons/icons.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies each icon renders exactly one accessible <svg role=\"img\"> reflecting its aria-label input."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/icons/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/menu/menu.ts",
+    "ultimateDestination": "packages/ng-core/src/api/types.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "UMenuItem interface is a minimal 7-field subset (label, icon, routerLink, command, items, separator, disabled) of PrimeNG's much larger MenuItem type, scoped to exactly the fields real menu.ts's template bindings use. Not a full port of MenuItem's ~15+ field public surface."
+  },
+  {
+    "originalPath": "packages/primeng/src/tooltip/tooltipoptions.ts",
+    "ultimateDestination": "packages/ng-core/src/api/types.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "UTooltipOptions interface is a minimal 3-field subset (value, position, disabled) of PrimeNG's larger TooltipOptions type (16 fields), scoped to exactly what real tooltip.ts's template bindings use."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/api/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored root barrel re-exporting all ng-core submodules, no upstream equivalent file."
+  }
+]
