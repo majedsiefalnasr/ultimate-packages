@@ -127,31 +127,34 @@ docs/architecture/
 These are the exact signatures every later task depends on. A task's own section lists which of these it consumes.
 
 **`UBaseComponent`** (Task 4, `packages/ng-core/src/basecomponent/base-component.ts`):
+
 ```typescript
 @Directive({ standalone: true })
 export abstract class UBaseComponent {
-  protected readonly document: Document;              // inject(DOCUMENT)
-  protected readonly platformId: object;               // inject(PLATFORM_ID)
-  protected readonly el: ElementRef;                    // inject(ElementRef)
-  protected readonly renderer: Renderer2;               // inject(Renderer2)
-  protected readonly config: UltimateConfig;            // inject(UltimateConfig)
+  protected readonly document: Document; // inject(DOCUMENT)
+  protected readonly platformId: object; // inject(PLATFORM_ID)
+  protected readonly el: ElementRef; // inject(ElementRef)
+  protected readonly renderer: Renderer2; // inject(Renderer2)
+  protected readonly config: UltimateConfig; // inject(UltimateConfig)
 
-  dt = input<Record<string, unknown> | undefined>();    // scoped design tokens (per-instance token override)
+  dt = input<Record<string, unknown> | undefined>(); // scoped design tokens (per-instance token override)
   unstyled = input<boolean | undefined>();
 
-  protected abstract readonly componentName: string;    // e.g. "button" — used as the uix-styled registration key
+  protected abstract readonly componentName: string; // e.g. "button" — used as the uix-styled registration key
   protected abstract readonly styleModule: { css: string; classes: Record<string, unknown> };
 
   protected cx(key: string, params?: Record<string, unknown>): string | undefined;
   // Resolves a class-name slot from styleModule.classes via @ultimate/uix-utils's cn(),
   // matching PrimeNG's own cx() contract but without the pt/passthrough merge layer.
 
-  ngOnInit(): void;   // registers styleModule with @ultimate/uix-styled's StyleSheet service (once per componentName)
+  ngOnInit(): void; // registers styleModule with @ultimate/uix-styled's StyleSheet service (once per componentName)
 }
 ```
+
 This is deliberately smaller than PrimeNG's `BaseComponent`: no `pt`/`ptOptions` inputs, no `$parentInstance` DI-token lookup, no passthrough machinery (`ptm`/`ptms`/`ptmo`) — all explicitly DEFERRED by the spec (Needs Architecture Decision). Style loading is delegated entirely to `@ultimate/uix-styled`'s `StyleSheet` service, not reimplemented.
 
 **`UBaseEditableHolder`** (Task 5, `packages/ng-core/src/base-editable-holder/base-editable-holder.ts`) — confirmed against PrimeNG's real, extracted `baseeditableholder/baseeditableholder.ts` source, which uses a split read/write pattern for `disabled` because Angular's `input()` returns a read-only `InputSignal` with no `.set()`: the template-bindable `disabled` input and `setDisabledState`'s CVA-driven value are two different signals, combined via a computed:
+
 ```typescript
 @Directive({ standalone: true })
 export abstract class UBaseEditableHolder extends UBaseComponent implements ControlValueAccessor {
@@ -162,19 +165,20 @@ export abstract class UBaseEditableHolder extends UBaseComponent implements Cont
   protected onModelChange: (value: unknown) => void = () => {};
   protected onModelTouched: () => void = () => {};
 
-  writeValue(value: unknown): void;          // abstract-ish: base stores into a `value` signal subclasses read
+  writeValue(value: unknown): void; // abstract-ish: base stores into a `value` signal subclasses read
   registerOnChange(fn: (value: unknown) => void): void;
   registerOnTouched(fn: () => void): void;
-  setDisabledState(isDisabled: boolean): void;  // writes to `_disabled`, NOT to `disabled` — `disabled` is a read-only input, never written by CVA
+  setDisabledState(isDisabled: boolean): void; // writes to `_disabled`, NOT to `disabled` — `disabled` is a read-only input, never written by CVA
 }
 ```
 
 **`UOverlay`** (Task 6, `packages/ng-core/src/overlay/overlay.ts`):
+
 ```typescript
-@Directive({ selector: '[uOverlay]', standalone: true })
+@Directive({ selector: "[uOverlay]", standalone: true })
 export class UOverlay {
-  target = input<HTMLElement | undefined>();          // element to position against
-  appendTo = input<'body' | HTMLElement | undefined>('body');
+  target = input<HTMLElement | undefined>(); // element to position against
+  appendTo = input<"body" | HTMLElement | undefined>("body");
   visible = input<boolean>(false);
   visibleChange = output<boolean>();
   // Exposes: position(), appendOverlay(), destroyOverlay() — called by consuming components (UDialog, UTooltip)
@@ -182,8 +186,9 @@ export class UOverlay {
 ```
 
 **`UFocusTrap`** (Task 6, `packages/ng-core/src/focus-trap/focus-trap.ts`):
+
 ```typescript
-@Directive({ selector: '[uFocusTrap]', standalone: true })
+@Directive({ selector: "[uFocusTrap]", standalone: true })
 export class UFocusTrap {
   uFocusTrapDisabled = input<boolean>(false, { transform: booleanAttribute });
   // Traps Tab/Shift+Tab cycling within the host element while active.
@@ -191,8 +196,9 @@ export class UFocusTrap {
 ```
 
 **`UltimateConfig`** (Task 7, `packages/ng-core/src/config/ultimate-config.ts`):
+
 ```typescript
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class UltimateConfig {
   unstyled = signal(false);
   ripple = signal(true);
@@ -207,11 +213,13 @@ export class UltimateConfig {
 ## Task 1: Vendoring script for PrimeNG source
 
 **Files:**
+
 - Create: `scripts/provenance/extract-primeng-source.mjs`
 - Create: `scripts/provenance/extract-primeng-source.test.mjs`
 - Modify: `.gitignore` (add `.vendor-extracted/` if not already present)
 
 **Interfaces:**
+
 - Produces: `extract-primeng-source.mjs <tarball-path> <src-relative-path> <output-dir>` — CLI script. Untars `<tarball-path>` to a temp dir, copies everything under `<extracted-root>/packages/primeng/src/<src-relative-path>` into `<output-dir>`, preserving relative structure. Every later extraction task invokes this exact signature. Unlike Phase 1's `extract-source.mjs` (sourcemap recovery), this is a direct copy — the PrimeNG tarball is a real git-archive with full original `.ts` source, no sourcemap step needed.
 
 - [ ] **Step 1: Check `.gitignore` for `.vendor-extracted/`**
@@ -271,8 +279,18 @@ test("is idempotent — re-running overwrites with identical content", () => {
   const outputDir = join(workDir, "out");
   try {
     const tarballPath = makeFixtureTarball(workDir);
-    execFileSync("node", ["scripts/provenance/extract-primeng-source.mjs", tarballPath, "button", outputDir]);
-    execFileSync("node", ["scripts/provenance/extract-primeng-source.mjs", tarballPath, "button", outputDir]);
+    execFileSync("node", [
+      "scripts/provenance/extract-primeng-source.mjs",
+      tarballPath,
+      "button",
+      outputDir,
+    ]);
+    execFileSync("node", [
+      "scripts/provenance/extract-primeng-source.mjs",
+      tarballPath,
+      "button",
+      outputDir,
+    ]);
 
     const extracted = readFileSync(join(outputDir, "button.ts"), "utf8");
     assert.equal(extracted, "export class Button {}\n");
@@ -312,14 +330,18 @@ import { execFileSync } from "node:child_process";
 const [, , tarballPath, srcRelativePath, outputDir] = process.argv;
 
 if (!tarballPath || !srcRelativePath || !outputDir) {
-  console.error("Usage: extract-primeng-source.mjs <tarball-path> <src-relative-path> <output-dir>");
+  console.error(
+    "Usage: extract-primeng-source.mjs <tarball-path> <src-relative-path> <output-dir>"
+  );
   process.exit(1);
 }
 
 function findExtractedRoot(dir) {
   const entries = readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory());
   if (entries.length !== 1) {
-    throw new Error(`expected exactly one top-level directory in extracted tarball, found ${entries.length}`);
+    throw new Error(
+      `expected exactly one top-level directory in extracted tarball, found ${entries.length}`
+    );
   }
   return join(dir, entries[0].name);
 }
@@ -345,11 +367,15 @@ try {
   const sourceDir = join(extractedRoot, "packages", "primeng", "src", srcRelativePath);
 
   if (!statSync(sourceDir, { throwIfNoEntry: false })?.isDirectory()) {
-    throw new Error(`source directory not found in tarball: packages/primeng/src/${srcRelativePath}`);
+    throw new Error(
+      `source directory not found in tarball: packages/primeng/src/${srcRelativePath}`
+    );
   }
 
   copyRecursive(sourceDir, outputDir);
-  console.log(`[extract-primeng-source] copied packages/primeng/src/${srcRelativePath} to ${outputDir}`);
+  console.log(
+    `[extract-primeng-source] copied packages/primeng/src/${srcRelativePath} to ${outputDir}`
+  );
 } finally {
   rmSync(extractDir, { recursive: true, force: true });
 }
@@ -374,9 +400,11 @@ git commit -m "feat(provenance): add PrimeNG source extraction script for Phase 
 **Context:** research confirmed `validate-provenance.mjs`'s manifest-completeness check (`findUixPackageDirs`) is hardcoded to discover only directories starting with `"uix"` — it will silently skip `packages/ng` and `packages/ng-core` entirely unless extended. This is a real gap, not automatically covered.
 
 **Files:**
+
 - Modify: `scripts/provenance/validate-provenance.mjs`
 
 **Interfaces:**
+
 - Consumes: none new.
 - Produces: `findWatchedPackageDirs()` (renamed from `findUixPackageDirs()`) — generalizes the prefix filter to `["uix", "ng"]`, used by every subsequent manifest-completeness check.
 
@@ -432,6 +460,7 @@ git commit -m "fix(provenance): extend manifest-completeness check to packages/n
 ## Task 3: `@ultimate/uix-styles` gains 5 component style modules
 
 **Files:**
+
 - Create: `packages/uix-styles/src/button/index.ts`
 - Create: `packages/uix-styles/src/checkbox/index.ts`
 - Create: `packages/uix-styles/src/dialog/index.ts`
@@ -443,15 +472,18 @@ git commit -m "fix(provenance): extend manifest-completeness check to packages/n
 - Create: `docs/architecture/provenance/uix-styles.json` entries for the 5 new files (append to existing array)
 
 **Interfaces:**
+
 - Produces: `@ultimate/uix-styles/button`, `/checkbox`, `/dialog`, `/menu`, `/tooltip` — each exporting `{ style: string }` only (no `classes` export — confirmed absent from the real pinned `@primeuix/styles@2.0.3` tarball; matches the `base` module's own existing shape). Consumed by Task 12 (`ButtonStyle`), Task 14 (`CheckboxStyle`), Task 13 (`TooltipStyle`), Task 15 (`DialogStyle`), Task 16 (`MenuStyle`) for the `style` value only — each of those tasks defines its own `classes` object locally, ported from PrimeNG's corresponding `<component>style.ts` reference file.
 
 - [ ] **Step 1: Extract the 5 style modules from the pinned `@primeuix/styles@2.0.3` tarball**
 
 Run:
+
 ```bash
 mkdir -p .vendor-extracted/uix-styles-components
 node scripts/provenance/extract-source.mjs .vendor-cache/@primeuix__styles-2.0.3.tar.gz .vendor-extracted/uix-styles-components
 ```
+
 This recovers all of `@primeuix/styles`'s original source (same sourcemap-recovery mechanism Phase 1 used for the `base` module) into the staging tree, including `button/`, `checkbox/`, `dialog/`, `menu/`, `tooltip/` subdirectories alongside `base/`.
 
 - [ ] **Step 2: Write the failing test for one module (button), establishing the pattern the other 4 follow**
@@ -469,6 +501,7 @@ describe("uix-styles/button", () => {
   });
 });
 ```
+
 (Only `style` is exported — the real pinned `@primeuix/styles@2.0.3` tarball has no `classes` export in any module, confirmed by inspecting the actual extracted source before writing this task. The per-slot `classes` resolver is PrimeNG-component-authored logic living in PrimeNG's own `<component>style.ts` wrapper, not `@primeuix/styles` — it belongs in each Phase 2 component's own `*-style.ts` adapter in `packages/ng`, not here.)
 
 - [ ] **Step 2b: Write the equivalent test file for checkbox, dialog, menu, tooltip**
@@ -563,7 +596,9 @@ describe("component style modules — exactly 5 exist alongside base", () => {
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
       .sort();
-    expect(actualModules).toEqual(["base", "button", "checkbox", "dialog", "menu", "tooltip"].sort());
+    expect(actualModules).toEqual(
+      ["base", "button", "checkbox", "dialog", "menu", "tooltip"].sort()
+    );
   });
 
   it("button style uses only .u-button* selectors", () => {
@@ -603,6 +638,7 @@ Append to `docs/architecture/provenance/uix-styles.json`'s existing JSON array (
   "modificationDescription": "Extracted via sourcemap recovery from @primeuix/styles@2.0.3; .p-button* class-name string literals renamed to .u-button* to match Phase 2's Ultimate namespace decision."
 }
 ```
+
 (repeat for `checkbox`, `dialog`, `menu`, `tooltip`, adjusting the path and class-name prefix each time)
 
 - [ ] **Step 11: Commit**
@@ -620,6 +656,7 @@ Class names renamed .p-*→.u-* per Phase 2's Ultimate namespace decision."
 ## Task 4: `@ultimate/ng-core` package scaffold + `UBaseComponent`
 
 **Files:**
+
 - Create: `packages/ng-core/package.json`
 - Create: `packages/ng-core/ng-package.json`
 - Create: `packages/ng-core/tsconfig.json`
@@ -632,6 +669,7 @@ Class names renamed .p-*→.u-* per Phase 2's Ultimate namespace decision."
 - Delete: `packages/ng-core/.gitkeep`
 
 **Interfaces:**
+
 - Consumes: `@ultimate/uix-utils` (`cn` from `classnames`), `@ultimate/uix-styled` (`StyleSheet` service — exact import path and method names TBD by reading `packages/uix-styled/src/stylesheet/index.ts`'s public exports before writing Step 4 below; if the service's registration method is not literally named `register`, use its actual exported name).
 - Produces: `UBaseComponent` exactly as specified in "Interfaces produced by shared/foundation infrastructure" above. `UltimateConfig` is a forward reference used here (injected) but implemented in Task 7 — for this task, stub `UltimateConfig` as a minimal local `@Injectable({providedIn: 'root'}) class UltimateConfig { unstyled = signal(false); }` placeholder in `base-component.ts` itself, then Task 7 replaces the import with the real `packages/ng-core/src/config/` module and deletes the stub. (This ordering exists so `UBaseComponent`'s test suite doesn't block on Task 7; Task 7's own step list includes removing the stub.)
 
@@ -676,11 +714,13 @@ Create `packages/ng-core/package.json` (modeled on `packages/uix-utils/package.j
   }
 }
 ```
+
 (`sideEffects` field intentionally omitted here — Task 21 determines and adds it after verification, per the Global Constraints rule.)
 
 - [ ] **Step 3: Scaffold `ng-package.json`, `tsconfig.json`, delete `.gitkeep`**
 
 Create `packages/ng-core/ng-package.json`:
+
 ```json
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
@@ -692,6 +732,7 @@ Create `packages/ng-core/ng-package.json`:
 ```
 
 Create `packages/ng-core/tsconfig.json`:
+
 ```json
 {
   "extends": "../../tsconfig.base.json",
@@ -708,6 +749,7 @@ Create `packages/ng-core/tsconfig.json`:
   }
 }
 ```
+
 (Angular 21's decorator handling and the exact `angularCompilerOptions` flag set must be verified against the installed `@angular/compiler-cli` version's own schema — run `npx ng-packagr --help` and check `node_modules/@angular/compiler-cli/package.json`'s peer requirements before finalizing; if `experimentalDecorators: false` causes a compile error, Angular 21 may require `true` — this is exactly the kind of "implementation verifies the exact flag set" item the spec flags as not pre-decided.)
 
 Delete `packages/ng-core/.gitkeep` (run `git rm packages/ng-core/.gitkeep`).
@@ -717,33 +759,33 @@ Delete `packages/ng-core/.gitkeep` (run `git rm packages/ng-core/.gitkeep`).
 Create `packages/ng-core/src/basecomponent/base-component.spec.ts`:
 
 ```typescript
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { UBaseComponent } from './base-component';
+import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { UBaseComponent } from "./base-component";
 
 @Component({
   standalone: true,
-  selector: 'u-test-component',
-  template: '<div [class]="cx(\'root\')"></div>',
+  selector: "u-test-component",
+  template: "<div [class]=\"cx('root')\"></div>",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class TestHostComponent extends UBaseComponent {
-  protected override readonly componentName = 'test-component';
+  protected override readonly componentName = "test-component";
   protected override readonly styleModule = {
-    css: '.u-test-component-root { color: red; }',
-    classes: { root: () => 'u-test-component-root' },
+    css: ".u-test-component-root { color: red; }",
+    classes: { root: () => "u-test-component-root" },
   };
 }
 
-describe('UBaseComponent', () => {
-  it('resolves a class-name slot via cx()', () => {
+describe("UBaseComponent", () => {
+  it("resolves a class-name slot via cx()", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const div = fixture.nativeElement.querySelector('div');
-    expect(div.className).toBe('u-test-component-root');
+    const div = fixture.nativeElement.querySelector("div");
+    expect(div.className).toBe("u-test-component-root");
   });
 
-  it('registers its style module on init (registration call happens exactly once per componentName)', () => {
+  it("registers its style module on init (registration call happens exactly once per componentName)", () => {
     const fixtureA = TestBed.createComponent(TestHostComponent);
     fixtureA.detectChanges();
     const fixtureB = TestBed.createComponent(TestHostComponent);
@@ -766,6 +808,7 @@ Expected: FAIL — `./base-component` module does not exist.
 - [ ] **Step 6: Write `UBaseComponent`**
 
 Create `packages/ng-core/src/basecomponent/base-component.ts` implementing exactly the interface specified in "Interfaces produced by shared/foundation infrastructure" above, using:
+
 - `inject(DOCUMENT)`, `inject(PLATFORM_ID)`, `inject(ElementRef)`, `inject(Renderer2)` at field-initializer level (matching PrimeNG's own confirmed pattern — see spec's Angular Component Architecture section).
 - `cn` imported from `@ultimate/uix-utils/classnames` for the `cx()` implementation.
 - The real `StyleSheet` service import/method name from Step 1's findings for `ngOnInit()`'s registration call.
@@ -779,13 +822,15 @@ Expected: PASS
 - [ ] **Step 8: Create the barrel files**
 
 `packages/ng-core/src/basecomponent/index.ts`:
+
 ```typescript
-export { UBaseComponent } from './base-component';
+export { UBaseComponent } from "./base-component";
 ```
 
 `packages/ng-core/src/index.ts`:
+
 ```typescript
-export * from './basecomponent';
+export * from "./basecomponent";
 ```
 
 - [ ] **Step 9: Write `README.md`**
@@ -813,12 +858,14 @@ global-config surface are explicitly deferred per spec."
 ## Task 5: `UBaseEditableHolder` (CVA base for Checkbox)
 
 **Files:**
+
 - Create: `packages/ng-core/src/base-editable-holder/base-editable-holder.ts`
 - Create: `packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts`
 - Create: `packages/ng-core/src/base-editable-holder/index.ts`
 - Modify: `packages/ng-core/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseComponent` (Task 4).
 - Produces: `UBaseEditableHolder` exactly as specified above — consumed by Task 11 (`UCheckbox`).
 
@@ -827,38 +874,38 @@ global-config surface are explicitly deferred per spec."
 Create `packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts`:
 
 ```typescript
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { UBaseEditableHolder } from './base-editable-holder';
+import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { UBaseEditableHolder } from "./base-editable-holder";
 
 @Component({
   standalone: true,
-  selector: 'u-test-editable',
-  template: '',
+  selector: "u-test-editable",
+  template: "",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class TestEditableComponent extends UBaseEditableHolder {
-  protected override readonly componentName = 'test-editable';
-  protected override readonly styleModule = { css: '', classes: {} };
+  protected override readonly componentName = "test-editable";
+  protected override readonly styleModule = { css: "", classes: {} };
   value: unknown;
   override writeValue(value: unknown): void {
     this.value = value;
   }
 }
 
-describe('UBaseEditableHolder', () => {
-  it('calls registerOnChange callback when onModelChange is invoked', () => {
+describe("UBaseEditableHolder", () => {
+  it("calls registerOnChange callback when onModelChange is invoked", () => {
     const fixture = TestBed.createComponent(TestEditableComponent);
     const instance = fixture.componentInstance;
     let received: unknown;
     instance.registerOnChange((v) => (received = v));
-    (instance as unknown as { onModelChange: (v: unknown) => void }).onModelChange('new-value');
-    expect(received).toBe('new-value');
+    (instance as unknown as { onModelChange: (v: unknown) => void }).onModelChange("new-value");
+    expect(received).toBe("new-value");
   });
 
-  it('setDisabledState writes to the internal _disabled signal, reflected via $disabled', () => {
+  it("setDisabledState writes to the internal _disabled signal, reflected via $disabled", () => {
     // disabled() itself is a read-only InputSignal (Angular's input() has no
     // .set()) — it only reflects a template [disabled] binding. CVA's
     // setDisabledState writes to the separate _disabled signal instead;
@@ -873,7 +920,7 @@ describe('UBaseEditableHolder', () => {
     expect(instance.$disabled()).toBe(true);
   });
 
-  it('$disabled is true when the disabled input is bound, even if setDisabledState was never called', () => {
+  it("$disabled is true when the disabled input is bound, even if setDisabledState was never called", () => {
     @Component({
       standalone: true,
       imports: [TestEditableComponent],
@@ -887,12 +934,12 @@ describe('UBaseEditableHolder', () => {
     expect(editable.$disabled()).toBe(true);
   });
 
-  it('integrates with a real FormControl via [formControl] binding', () => {
+  it("integrates with a real FormControl via [formControl] binding", () => {
     TestBed.configureTestingModule({ imports: [ReactiveFormsModule] });
-    const control = new FormControl('initial');
+    const control = new FormControl("initial");
     const fixture = TestBed.createComponent(TestEditableComponent);
     fixture.componentInstance.writeValue(control.value);
-    expect(fixture.componentInstance.value).toBe('initial');
+    expect(fixture.componentInstance.value).toBe("initial");
   });
 });
 ```
@@ -905,6 +952,7 @@ Expected: FAIL — `./base-editable-holder` does not exist.
 - [ ] **Step 3: Write `UBaseEditableHolder`**
 
 Create `packages/ng-core/src/base-editable-holder/base-editable-holder.ts` implementing `ControlValueAccessor` exactly per the interface above, confirmed against PrimeNG's real `baseeditableholder.ts`:
+
 - `disabled = input<boolean | undefined>(undefined, { transform: booleanAttribute })` — read-only, template-bindable, never written to directly.
 - `protected readonly _disabled = signal(false)` — the writable half.
 - `readonly $disabled = computed(() => this.disabled() || this._disabled())` — the value every consumer (including Task 14's `UCheckbox` template/host bindings) reads; never read `disabled()` alone for actual disabled-state logic.
@@ -921,8 +969,9 @@ Expected: PASS
 - [ ] **Step 5: Create barrel and update root index**
 
 `packages/ng-core/src/base-editable-holder/index.ts`:
+
 ```typescript
-export { UBaseEditableHolder } from './base-editable-holder';
+export { UBaseEditableHolder } from "./base-editable-holder";
 ```
 
 Update `packages/ng-core/src/index.ts`, adding: `export * from './base-editable-holder';`
@@ -939,6 +988,7 @@ git commit -m "feat(ng-core): add UBaseEditableHolder CVA base for form componen
 ## Task 6: `UOverlay` and `UFocusTrap` directives
 
 **Files:**
+
 - Create: `packages/ng-core/src/overlay/overlay.ts`
 - Create: `packages/ng-core/src/overlay/overlay.spec.ts`
 - Create: `packages/ng-core/src/overlay/index.ts`
@@ -948,6 +998,7 @@ git commit -m "feat(ng-core): add UBaseEditableHolder CVA base for form componen
 - Modify: `packages/ng-core/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `@ultimate/uix-utils`'s `zindex` submodule (for `UOverlay`'s z-index assignment), `@ultimate/uix-motion` (for `UOverlay`'s enter/leave hooks — exposed as `output()`s the consuming component wires to `uix-motion`'s `createMotion`, not internally called by `UOverlay` itself, keeping motion orchestration in the component per the spec's Overlay Architecture responsibility split).
 - Produces: `UOverlay`, `UFocusTrap` exactly as specified above — consumed by Task 14 (`UDialog`).
 
@@ -960,9 +1011,9 @@ Run: `grep -n "^export" packages/uix-utils/src/zindex/index.ts`
 Create `packages/ng-core/src/focus-trap/focus-trap.spec.ts`:
 
 ```typescript
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { UFocusTrap } from './focus-trap';
+import { Component } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { UFocusTrap } from "./focus-trap";
 
 @Component({
   standalone: true,
@@ -976,25 +1027,25 @@ import { UFocusTrap } from './focus-trap';
 })
 class TestHostComponent {}
 
-describe('UFocusTrap', () => {
-  it('wraps focus from the last focusable element back to the first on Tab', () => {
+describe("UFocusTrap", () => {
+  it("wraps focus from the last focusable element back to the first on Tab", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const last = fixture.nativeElement.querySelector('#last') as HTMLElement;
-    const first = fixture.nativeElement.querySelector('#first') as HTMLElement;
+    const last = fixture.nativeElement.querySelector("#last") as HTMLElement;
+    const first = fixture.nativeElement.querySelector("#first") as HTMLElement;
     last.focus();
-    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
+    const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true });
     last.dispatchEvent(event);
     expect(document.activeElement).toBe(first);
   });
 
-  it('does nothing when uFocusTrapDisabled is true', () => {
+  it("does nothing when uFocusTrapDisabled is true", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
-    fixture.componentRef.setInput('uFocusTrapDisabled', true);
+    fixture.componentRef.setInput("uFocusTrapDisabled", true);
     fixture.detectChanges();
-    const last = fixture.nativeElement.querySelector('#last') as HTMLElement;
+    const last = fixture.nativeElement.querySelector("#last") as HTMLElement;
     last.focus();
-    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
+    const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true });
     last.dispatchEvent(event);
     expect(document.activeElement).toBe(last);
   });
@@ -1020,9 +1071,9 @@ Expected: PASS
 Create `packages/ng-core/src/overlay/overlay.spec.ts`:
 
 ```typescript
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { UOverlay } from './overlay';
+import { Component } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { UOverlay } from "./overlay";
 
 @Component({
   standalone: true,
@@ -1033,21 +1084,21 @@ class TestHostComponent {
   visible = false;
 }
 
-describe('UOverlay', () => {
+describe("UOverlay", () => {
   it('appends the host element to document.body when visible becomes true and appendTo is "body"', () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
     fixture.componentInstance.visible = true;
     fixture.detectChanges();
-    const overlayEl = fixture.nativeElement.querySelector('div');
+    const overlayEl = fixture.nativeElement.querySelector("div");
     expect(overlayEl.parentElement).toBe(document.body);
   });
 
-  it('assigns a z-index when appended', () => {
+  it("assigns a z-index when appended", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.componentInstance.visible = true;
     fixture.detectChanges();
-    const overlayEl = fixture.nativeElement.querySelector('div') as HTMLElement;
+    const overlayEl = fixture.nativeElement.querySelector("div") as HTMLElement;
     expect(Number(overlayEl.style.zIndex)).toBeGreaterThan(0);
   });
 });
@@ -1085,6 +1136,7 @@ git commit -m "feat(ng-core): add UOverlay and UFocusTrap directives"
 ## Task 7: `UltimateConfig` service + remove `UBaseComponent`'s stub
 
 **Files:**
+
 - Create: `packages/ng-core/src/config/ultimate-config.ts`
 - Create: `packages/ng-core/src/config/ultimate-config.spec.ts`
 - Create: `packages/ng-core/src/config/index.ts`
@@ -1092,6 +1144,7 @@ git commit -m "feat(ng-core): add UOverlay and UFocusTrap directives"
 - Modify: `packages/ng-core/src/index.ts`
 
 **Interfaces:**
+
 - Produces: `UltimateConfig` exactly as specified above.
 
 - [ ] **Step 1: Write the failing test**
@@ -1099,17 +1152,17 @@ git commit -m "feat(ng-core): add UOverlay and UFocusTrap directives"
 Create `packages/ng-core/src/config/ultimate-config.spec.ts`:
 
 ```typescript
-import { TestBed } from '@angular/core/testing';
-import { UltimateConfig } from './ultimate-config';
+import { TestBed } from "@angular/core/testing";
+import { UltimateConfig } from "./ultimate-config";
 
-describe('UltimateConfig', () => {
-  it('defaults unstyled to false and ripple to true', () => {
+describe("UltimateConfig", () => {
+  it("defaults unstyled to false and ripple to true", () => {
     const config = TestBed.inject(UltimateConfig);
     expect(config.unstyled()).toBe(false);
     expect(config.ripple()).toBe(true);
   });
 
-  it('is a singleton across injections (providedIn root)', () => {
+  it("is a singleton across injections (providedIn root)", () => {
     const a = TestBed.inject(UltimateConfig);
     const b = TestBed.inject(UltimateConfig);
     expect(a).toBe(b);
@@ -1157,12 +1210,14 @@ git commit -m "feat(ng-core): add UltimateConfig service, wire into UBaseCompone
 ## Task 8: `UBind` directive
 
 **Files:**
+
 - Create: `packages/ng-core/src/bind/bind.ts`
 - Create: `packages/ng-core/src/bind/bind.spec.ts`
 - Create: `packages/ng-core/src/bind/index.ts`
 - Modify: `packages/ng-core/src/index.ts`
 
 **Interfaces:**
+
 - Produces: `UBind` — a standalone attribute directive, selector `[uBind]`, `input()` accepting `Record<string, unknown> | undefined`, applying arbitrary attribute/style/event-listener bindings to its host element. Not consumed by any Phase 2 proof-set component directly (PrimeNG's `Bind`/passthrough usage inside Button/Dialog/Menu is part of the `pt` machinery this phase's `UBaseComponent` deliberately excludes — see Task 4's interface note) — included because the spec classifies `bind` as ADAPT (foundation infrastructure), not because a Phase 2 component wires it in yet. Confirm this is still true before writing tests: grep the vendored `button.ts`/`dialog.ts`/`menu.ts` for `Bind` usage outside the `pt`/passthrough attribute-injection call sites (`[pBind]="ptm(...)"` pattern) — if none is found outside that pattern, `UBind` is foundation-only in Phase 2, with no direct consumer among the 5 components, and this task still ships it (per spec classification) but its test suite is self-contained, not integration-tested against a Phase 2 component.
 
 - [ ] **Step 1: Write the failing test**
@@ -1170,9 +1225,9 @@ git commit -m "feat(ng-core): add UltimateConfig service, wire into UBaseCompone
 Create `packages/ng-core/src/bind/bind.spec.ts`:
 
 ```typescript
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { UBind } from './bind';
+import { Component } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { UBind } from "./bind";
 
 @Component({
   standalone: true,
@@ -1180,32 +1235,32 @@ import { UBind } from './bind';
   template: `<div [uBind]="attrs"></div>`,
 })
 class TestHostComponent {
-  attrs: Record<string, unknown> = { 'data-testid': 'example', class: 'foo bar' };
+  attrs: Record<string, unknown> = { "data-testid": "example", class: "foo bar" };
 }
 
-describe('UBind', () => {
-  it('applies attributes from the bound object to the host element', () => {
+describe("UBind", () => {
+  it("applies attributes from the bound object to the host element", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const div = fixture.nativeElement.querySelector('div');
-    expect(div.getAttribute('data-testid')).toBe('example');
+    const div = fixture.nativeElement.querySelector("div");
+    expect(div.getAttribute("data-testid")).toBe("example");
   });
 
-  it('applies class strings via the class key', () => {
+  it("applies class strings via the class key", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const div = fixture.nativeElement.querySelector('div');
-    expect(div.classList.contains('foo')).toBe(true);
-    expect(div.classList.contains('bar')).toBe(true);
+    const div = fixture.nativeElement.querySelector("div");
+    expect(div.classList.contains("foo")).toBe(true);
+    expect(div.classList.contains("bar")).toBe(true);
   });
 
-  it('removes an attribute when its value becomes null', () => {
+  it("removes an attribute when its value becomes null", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    fixture.componentInstance.attrs = { 'data-testid': null };
+    fixture.componentInstance.attrs = { "data-testid": null };
     fixture.detectChanges();
-    const div = fixture.nativeElement.querySelector('div');
-    expect(div.hasAttribute('data-testid')).toBe(false);
+    const div = fixture.nativeElement.querySelector("div");
+    expect(div.hasAttribute("data-testid")).toBe(false);
   });
 });
 ```
@@ -1241,6 +1296,7 @@ git commit -m "feat(ng-core): add UBind attribute-binding directive"
 ## Task 9: 5 icon components
 
 **Files:**
+
 - Create: `packages/ng-core/src/icons/base-icon.ts`
 - Create: `packages/ng-core/src/icons/spinner-icon.ts`
 - Create: `packages/ng-core/src/icons/times-icon.ts`
@@ -1251,11 +1307,13 @@ git commit -m "feat(ng-core): add UBind attribute-binding directive"
 - Modify: `packages/ng-core/src/index.ts`
 
 **Interfaces:**
+
 - Produces: `USpinnerIcon`, `UTimesIcon`, `UWindowMaximizeIcon`, `UWindowMinimizeIcon` — standalone Angular components, each rendering one inline SVG icon, sharing a `UBaseIcon` directive base for the `label` (aliased to `aria-label`) and `spin` inputs. (No `size` input — confirmed absent from real PrimeNG icon source; not invented.) Consumed by Task 12 (`UButton`, loading spinner) and Task 15 (`UDialog`, maximize/minimize/close icons — note: Dialog's close icon is `TimesIcon`, already covered). **Architecture note (found during Task 9):** real PrimeNG icons are `[data-p-icon]` attribute-selector directives whose host IS the consumer-written `<svg>` element, with no `role`/`aria-label` anywhere upstream — this task's actual output is instead element-selector components (`<u-spinner-icon aria-label="..." />`) with a nested accessible `<svg role="img">`, since Angular component inheritance cannot share a template across a `@Component` subclass and the task's own test contract required this shape. Tasks 12/15 consume these as ordinary standalone elements in their `imports` array — this works with either architecture and requires no further change.
 
 - [ ] **Step 1: Extract the 5 icon source files**
 
 Run:
+
 ```bash
 mkdir -p .vendor-extracted/ng-core/icons
 for icon in baseicon spinner times windowmaximize windowminimize; do
@@ -1268,9 +1326,9 @@ done
 Create `packages/ng-core/src/icons/icons.spec.ts`:
 
 ```typescript
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { USpinnerIcon, UTimesIcon, UWindowMaximizeIcon, UWindowMinimizeIcon } from '.';
+import { Component } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { USpinnerIcon, UTimesIcon, UWindowMaximizeIcon, UWindowMinimizeIcon } from ".";
 
 @Component({
   standalone: true,
@@ -1284,20 +1342,20 @@ import { USpinnerIcon, UTimesIcon, UWindowMaximizeIcon, UWindowMinimizeIcon } fr
 })
 class TestHostComponent {}
 
-describe('icon components', () => {
-  it('each renders exactly one <svg> element', () => {
+describe("icon components", () => {
+  it("each renders exactly one <svg> element", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const svgs = fixture.nativeElement.querySelectorAll('svg');
+    const svgs = fixture.nativeElement.querySelectorAll("svg");
     expect(svgs.length).toBe(4);
   });
 
   it('each svg has role="img" and reflects the aria-label input', () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const spinnerSvg = fixture.nativeElement.querySelector('u-spinner-icon svg');
-    expect(spinnerSvg.getAttribute('role')).toBe('img');
-    expect(spinnerSvg.getAttribute('aria-label')).toBe('loading');
+    const spinnerSvg = fixture.nativeElement.querySelector("u-spinner-icon svg");
+    expect(spinnerSvg.getAttribute("role")).toBe("img");
+    expect(spinnerSvg.getAttribute("aria-label")).toBe("loading");
   });
 });
 ```
@@ -1319,13 +1377,15 @@ Expected: PASS
 - [ ] **Step 6: Create barrel, update root index**
 
 `packages/ng-core/src/icons/index.ts`:
+
 ```typescript
-export { UBaseIcon } from './base-icon';
-export { USpinnerIcon } from './spinner-icon';
-export { UTimesIcon } from './times-icon';
-export { UWindowMaximizeIcon } from './window-maximize-icon';
-export { UWindowMinimizeIcon } from './window-minimize-icon';
+export { UBaseIcon } from "./base-icon";
+export { USpinnerIcon } from "./spinner-icon";
+export { UTimesIcon } from "./times-icon";
+export { UWindowMaximizeIcon } from "./window-maximize-icon";
+export { UWindowMinimizeIcon } from "./window-minimize-icon";
 ```
+
 Update `packages/ng-core/src/index.ts`, adding `export * from './icons';`.
 
 - [ ] **Step 7: Commit**
@@ -1340,11 +1400,13 @@ git commit -m "feat(ng-core): add 5 icon components (spinner, times, window-maxi
 ## Task 10: shared API types (subset)
 
 **Files:**
+
 - Create: `packages/ng-core/src/api/types.ts`
 - Create: `packages/ng-core/src/api/index.ts`
 - Modify: `packages/ng-core/src/index.ts`
 
 **Interfaces:**
+
 - Produces: `UMenuItem` (interface — fields: `label?: string; icon?: string; routerLink?: string | string[]; command?: (event: unknown) => void; items?: UMenuItem[]; separator?: boolean; disabled?: boolean;` — the subset Task 15's `UMenu` actually renders, confirmed against `menu.ts`'s template bindings, not PrimeNG's full `MenuItem` surface which includes many fields Phase 2's Menu doesn't use), `UTooltipOptions` (interface — fields: `value: string; position?: 'top' | 'bottom' | 'left' | 'right'; disabled?: boolean;` — subset Task 13's `UTooltip` uses). Consumed by Task 13 (`UTooltip`) and Task 15 (`UMenu`).
 
 - [ ] **Step 1: Confirm the exact field subset by reading `menu.ts` and `tooltip.ts`'s template bindings**
@@ -1377,6 +1439,7 @@ git commit -m "feat(ng-core): add shared API type contracts (UMenuItem, UTooltip
 ## Task 11: `@ultimate/ng` package scaffold + `Ripple`, `AutoFocus`, `Fluid`, `Badge`
 
 **Files:**
+
 - Create: `packages/ng/package.json`
 - Create: `packages/ng/ng-package.json`
 - Create: `packages/ng/tsconfig.json`
@@ -1388,6 +1451,7 @@ git commit -m "feat(ng-core): add shared API type contracts (UMenuItem, UTooltip
 - Modify: `packages/ng/THIRD-PARTY-NOTICES.md` (populate existing stub)
 
 **Interfaces:**
+
 - Consumes: `UBaseComponent` (Task 4, for `Badge`, which is a full component with styling), `@ultimate/uix-utils` (DOM helpers for `Ripple`'s pointer-event geometry, `AutoFocus`'s focus call).
 - Produces: `URipple` (`[uRipple]` attribute directive), `UAutoFocus` (`[uAutoFocus]` attribute directive), `UFluid` (`[uFluid]` attribute directive, controls responsive-width behavior of descendant form controls), `UBadge` (`u-badge` component). Consumed by Task 12 (`UButton` uses `URipple`, `UAutoFocus`, `UFluid`, `UBadge`), Task 15 (`UMenu` uses `URipple`, `UBadge`).
 
@@ -1431,6 +1495,7 @@ git commit -m "feat(ng-core): add shared API type contracts (UMenuItem, UTooltip
 - [ ] **Step 2: Scaffold `ng-package.json` (single entry point) and `tsconfig.json`**
 
 Create `packages/ng/ng-package.json`:
+
 ```json
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
@@ -1440,6 +1505,7 @@ Create `packages/ng/ng-package.json`:
   }
 }
 ```
+
 **Correction found during Task 12 (do not add per-directory `ng-package.json` files):** an earlier draft of this plan called for per-directory `ng-package.json` files (one per component/primitive, each pointing at its local `index.ts`), intending PrimeNG's own per-component secondary-entry-point convention. In practice, `ng-packagr` auto-discovers any nested `ng-package.json` as a secondary entry point relative to the package root — a bare `{"lib": {"entryFile": "index.ts"}}` file under `src/<name>/` is not self-consistent with the primary package's own build config (no matching `dest`, no shared compiler context) and fails with `ng-packagr`'s own internal error ("Cannot destructure property 'pos' of 'file.referencedFiles[index]' as it is undefined") the moment one exists — confirmed by adding one and rebuilding. Since `@ultimate/ng` uses a single-entry-point barrel (`packages/ng/src/index.ts`), matching `ng-core`'s own already-approved shape (Task 11's correct deviation from a stricter per-directory reading of this plan), no per-directory `ng-package.json` file is created for any primitive or component in this phase — tree-shaking is still achieved via each module's own barrel export, verified by Task 17's tree-shaking spot-check against the single built package.
 
 Create `packages/ng/tsconfig.json` — identical shape to `packages/ng-core/tsconfig.json` (Task 4, Step 3).
@@ -1449,9 +1515,9 @@ Create `packages/ng/tsconfig.json` — identical shape to `packages/ng-core/tsco
 Create `packages/ng/src/ripple/ripple.spec.ts`:
 
 ```typescript
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { URipple } from './ripple';
+import { Component } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { URipple } from "./ripple";
 
 @Component({
   standalone: true,
@@ -1460,17 +1526,20 @@ import { URipple } from './ripple';
 })
 class TestHostComponent {}
 
-describe('URipple', () => {
-  it('adds a ripple span element on pointerdown', () => {
+describe("URipple", () => {
+  it("adds a ripple span element on pointerdown", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const button = fixture.nativeElement.querySelector('button');
-    button.dispatchEvent(new PointerEvent('pointerdown', { clientX: 5, clientY: 5, bubbles: true }));
+    const button = fixture.nativeElement.querySelector("button");
+    button.dispatchEvent(
+      new PointerEvent("pointerdown", { clientX: 5, clientY: 5, bubbles: true })
+    );
     fixture.detectChanges();
-    expect(button.querySelector('.u-ink')).not.toBeNull();
+    expect(button.querySelector(".u-ink")).not.toBeNull();
   });
 });
 ```
+
 (Confirm the exact ripple element's class name from the extracted `ripple.ts` source before finalizing this assertion — PrimeNG's own convention may use a different class name than `.u-ink`; read `.vendor-extracted/ng/ripple/ripple.ts` — extract it first via `node scripts/provenance/extract-primeng-source.mjs .vendor-cache/primeng-21.1.9.tar.gz ripple .vendor-extracted/ng/ripple` — and use its actual class name, renamed to the `.u-*` equivalent.)
 
 - [ ] **Step 4: Run the test, verify it fails**
@@ -1500,21 +1569,21 @@ Test file `packages/ng/src/fluid/fluid.spec.ts` — asserts `[uFluid]` applies a
 Create `packages/ng/src/badge/badge.spec.ts`:
 
 ```typescript
-import { TestBed } from '@angular/core/testing';
-import { UBadge } from './badge';
+import { TestBed } from "@angular/core/testing";
+import { UBadge } from "./badge";
 
-describe('UBadge', () => {
-  it('renders its value input as text content', () => {
+describe("UBadge", () => {
+  it("renders its value input as text content", () => {
     const fixture = TestBed.createComponent(UBadge);
-    fixture.componentRef.setInput('value', '5');
+    fixture.componentRef.setInput("value", "5");
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent.trim()).toBe('5');
+    expect(fixture.nativeElement.textContent.trim()).toBe("5");
   });
 
-  it('applies the u-badge root class', () => {
+  it("applies the u-badge root class", () => {
     const fixture = TestBed.createComponent(UBadge);
     fixture.detectChanges();
-    expect(fixture.nativeElement.classList.contains('u-badge')).toBe(true);
+    expect(fixture.nativeElement.classList.contains("u-badge")).toBe(true);
   });
 });
 ```
@@ -1540,11 +1609,12 @@ Expected: PASS
 `packages/ng/src/fluid/index.ts`: `export { UFluid } from './fluid';`
 `packages/ng/src/badge/index.ts`: `export { UBadge } from './badge';`
 `packages/ng/src/index.ts`:
+
 ```typescript
-export * from './ripple';
-export * from './autofocus';
-export * from './fluid';
-export * from './badge';
+export * from "./ripple";
+export * from "./autofocus";
+export * from "./fluid";
+export * from "./badge";
 ```
 
 Update `packages/ng/THIRD-PARTY-NOTICES.md`: replace its "will incorporate" placeholder sentence with "incorporates source derived from `primeng@21.1.9`" (same MIT text already present in the file is otherwise correct and needs no other change).
@@ -1561,6 +1631,7 @@ git commit -m "feat(ng): scaffold package, add Ripple/AutoFocus/Fluid/Badge prim
 ## Task 12: `UButton`
 
 **Files:**
+
 - Create: `packages/ng/src/button/button.ts`
 - Create: `packages/ng/src/button/button.spec.ts`
 - Create: `packages/ng/src/button/button-style.ts`
@@ -1568,6 +1639,7 @@ git commit -m "feat(ng): scaffold package, add Ripple/AutoFocus/Fluid/Badge prim
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseComponent` (Task 4), `URipple`/`UAutoFocus`/`UFluid`/`UBadge` (Task 11), `USpinnerIcon` (Task 9), `@ultimate/uix-styles/button` (Task 3).
 - Produces: `UButton` — standalone component, selector `u-button`. Inputs (signal-based, matching confirmed PrimeNG `button.ts` surface, spec-mandated `input()` not `@Input()`): `label = input<string>()`, `icon = input<string>()`, `iconPos = input<'left'|'right'|'top'|'bottom'>('left')`, `loading = input(false, {transform: booleanAttribute})`, `disabled = input(false, {transform: booleanAttribute})`, `severity = input<string>()`, `raised = input(false, {transform: booleanAttribute})`, `rounded = input(false, {transform: booleanAttribute})`, `text = input(false, {transform: booleanAttribute})`, `outlined = input(false, {transform: booleanAttribute})`, `size = input<'small'|'large'>()`, `fluid = input(false, {transform: booleanAttribute})`. Outputs: `onClick = output<MouseEvent>()`, `onFocus = output<FocusEvent>()`, `onBlur = output<FocusEvent>()`. Consumed by Task 14 (`UDialog` uses `UButton` for header/footer buttons).
 
@@ -1582,57 +1654,61 @@ Read `.vendor-extracted/ng/button/button.ts` in full.
 Create `packages/ng/src/button/button.spec.ts`:
 
 ```typescript
-import { TestBed } from '@angular/core/testing';
-import { UButton } from './button';
+import { TestBed } from "@angular/core/testing";
+import { UButton } from "./button";
 
-describe('UButton', () => {
-  it('renders the label input as visible text', () => {
+describe("UButton", () => {
+  it("renders the label input as visible text", () => {
     const fixture = TestBed.createComponent(UButton);
-    fixture.componentRef.setInput('label', 'Save');
+    fixture.componentRef.setInput("label", "Save");
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('Save');
+    expect(fixture.nativeElement.textContent).toContain("Save");
   });
 
-  it('emits onClick when clicked and not disabled', () => {
+  it("emits onClick when clicked and not disabled", () => {
     const fixture = TestBed.createComponent(UButton);
     let emitted: MouseEvent | undefined;
     fixture.componentInstance.onClick.subscribe((e: MouseEvent) => (emitted = e));
     fixture.detectChanges();
-    fixture.nativeElement.querySelector('button').click();
+    fixture.nativeElement.querySelector("button").click();
     expect(emitted).toBeDefined();
   });
 
-  it('does not emit onClick when disabled', () => {
+  it("does not emit onClick when disabled", () => {
     const fixture = TestBed.createComponent(UButton);
-    fixture.componentRef.setInput('disabled', true);
+    fixture.componentRef.setInput("disabled", true);
     let emitted = false;
     fixture.componentInstance.onClick.subscribe(() => (emitted = true));
     fixture.detectChanges();
-    fixture.nativeElement.querySelector('button').click();
+    fixture.nativeElement.querySelector("button").click();
     expect(emitted).toBe(false);
   });
 
-  it('renders u-button-loading class and a spinner icon when loading is true', () => {
+  it("renders u-button-loading class and a spinner icon when loading is true", () => {
     const fixture = TestBed.createComponent(UButton);
-    fixture.componentRef.setInput('loading', true);
+    fixture.componentRef.setInput("loading", true);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('button').classList.contains('u-button-loading')).toBe(true);
-    expect(fixture.nativeElement.querySelector('u-spinner-icon')).not.toBeNull();
+    expect(
+      fixture.nativeElement.querySelector("button").classList.contains("u-button-loading")
+    ).toBe(true);
+    expect(fixture.nativeElement.querySelector("u-spinner-icon")).not.toBeNull();
   });
 
-  it('applies the disabled attribute to the native <button> when disabled input is true', () => {
+  it("applies the disabled attribute to the native <button> when disabled input is true", () => {
     const fixture = TestBed.createComponent(UButton);
-    fixture.componentRef.setInput('disabled', true);
+    fixture.componentRef.setInput("disabled", true);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('button').disabled).toBe(true);
+    expect(fixture.nativeElement.querySelector("button").disabled).toBe(true);
   });
 
-  it('has aria-label reflecting the label input when no explicit ariaLabel is set', () => {
+  it("has aria-label reflecting the label input when no explicit ariaLabel is set", () => {
     const fixture = TestBed.createComponent(UButton);
-    fixture.componentRef.setInput('label', 'Save');
+    fixture.componentRef.setInput("label", "Save");
     fixture.detectChanges();
-    const button = fixture.nativeElement.querySelector('button');
-    expect(button.getAttribute('aria-label') ?? fixture.nativeElement.textContent).toContain('Save');
+    const button = fixture.nativeElement.querySelector("button");
+    expect(button.getAttribute("aria-label") ?? fixture.nativeElement.textContent).toContain(
+      "Save"
+    );
   });
 });
 ```
@@ -1647,40 +1723,42 @@ Expected: FAIL
 Extract PrimeNG's own `button/style/buttonstyle.ts` reference file (via `node scripts/provenance/extract-primeng-source.mjs .vendor-cache/primeng-21.1.9.tar.gz button/style .vendor-extracted/ng/button-style` if not already covered by Step 1's `button` extraction) and read its `const classes = {...}` object in full — this is the design reference for the `classes` object below, not something imported from `uix-styles` (confirmed during Task 3: `@primeuix/styles` exports only raw CSS, no `classes`).
 
 Create `packages/ng/src/button/button-style.ts`:
+
 ```typescript
-import { Injectable } from '@angular/core';
-import { style } from '@ultimate/uix-styles/button';
+import { Injectable } from "@angular/core";
+import { style } from "@ultimate/uix-styles/button";
 
 @Injectable()
 export class ButtonStyle {
   readonly style = style;
   readonly classes = {
     root: ({ instance }: { instance: any }) => [
-      'u-button u-component',
+      "u-button u-component",
       {
-        'u-button-icon-only': instance.hasIcon && !instance.label,
-        'u-button-loading': instance.loading,
+        "u-button-icon-only": instance.hasIcon && !instance.label,
+        "u-button-loading": instance.loading,
         [`u-button-${instance.severity}`]: instance.severity,
-        'u-button-raised': instance.raised,
-        'u-button-rounded': instance.rounded,
-        'u-button-text': instance.text,
-        'u-button-outlined': instance.outlined,
-        'u-button-sm': instance.size === 'small',
-        'u-button-lg': instance.size === 'large',
-        'u-button-fluid': instance.fluid,
+        "u-button-raised": instance.raised,
+        "u-button-rounded": instance.rounded,
+        "u-button-text": instance.text,
+        "u-button-outlined": instance.outlined,
+        "u-button-sm": instance.size === "small",
+        "u-button-lg": instance.size === "large",
+        "u-button-fluid": instance.fluid,
       },
     ],
-    loadingIcon: 'u-button-loading-icon',
+    loadingIcon: "u-button-loading-icon",
     icon: ({ instance }: { instance: any }) => [
-      'u-button-icon',
+      "u-button-icon",
       {
         [`u-button-icon-${instance.iconPos}`]: instance.label,
       },
     ],
-    label: 'u-button-label',
+    label: "u-button-label",
   };
 }
 ```
+
 (Ported from PrimeNG's own `buttonstyle.ts` `const classes = {...}` object — the extracted reference file, above — with `.p-*`→`.u-*` renamed and PrimeNG's `instance.buttonProps?.x` passthrough-fallback pattern dropped, since Phase 2's `UButton` has no passthrough/`pt` system per Task 4's scoped-down `UBaseComponent`. This is the "thin Angular `@Injectable` adapter" the spec's Styling Strategy describes — `style` still comes from `@ultimate/uix-styles/button`, `classes` is genuinely component-authored and lives here, not upstream. No loaded-style-name bookkeeping reimplemented here, that responsibility stays in `UBaseComponent`'s `ngOnInit`/`uix-styled` registration call.)
 
 - [ ] **Step 5: Write `UButton`**
@@ -1713,6 +1791,7 @@ git commit -m "feat(ng): add UButton component"
 ## Task 13: `UTooltip`
 
 **Files:**
+
 - Create: `packages/ng/src/tooltip/tooltip.ts`
 - Create: `packages/ng/src/tooltip/tooltip.spec.ts`
 - Create: `packages/ng/src/tooltip/tooltip-style.ts`
@@ -1720,6 +1799,7 @@ git commit -m "feat(ng): add UButton component"
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseComponent` (Task 4), `UTooltipOptions` (Task 10), `@ultimate/uix-styles/tooltip` (Task 3), `@ultimate/uix-utils`'s `zindex` and DOM-measurement helpers (`getViewport`, `getOuterWidth`, `getOuterHeight`, `getWindowScrollLeft`, `getWindowScrollTop` — confirm exact names via `grep -n "^export" packages/uix-utils/src/dom/index.ts` before writing Step 5).
 - Produces: `UTooltip` — standalone attribute directive, selector `[uTooltip]`. Inputs: `uTooltip = input<string>()` (the tooltip text, matching PrimeNG's `[pTooltip]` binding convention), `uTooltipPosition = input<'top'|'bottom'|'left'|'right'>('top')`, `uTooltipDisabled = input(false, {transform: booleanAttribute})`. Consumed by Task 15 (`UMenu` applies `[uTooltip]` to truncated item labels).
 
@@ -1734,9 +1814,9 @@ Read `.vendor-extracted/ng/tooltip/tooltip.ts` in full.
 Create `packages/ng/src/tooltip/tooltip.spec.ts`:
 
 ```typescript
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { UTooltip } from './tooltip';
+import { Component } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { UTooltip } from "./tooltip";
 
 @Component({
   standalone: true,
@@ -1745,8 +1825,8 @@ import { UTooltip } from './tooltip';
 })
 class TestHostComponent {}
 
-describe('UTooltip', () => {
-  it('does not render a tooltip element before hover/focus', () => {
+describe("UTooltip", () => {
+  it("does not render a tooltip element before hover/focus", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
     expect(document.querySelector('[role="tooltip"]')).toBeNull();
@@ -1755,33 +1835,35 @@ describe('UTooltip', () => {
   it('shows a tooltip element with role="tooltip" and the bound text on mouseenter', () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const button = fixture.nativeElement.querySelector('button');
-    button.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+    const button = fixture.nativeElement.querySelector("button");
+    button.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
     fixture.detectChanges();
     const tooltip = document.querySelector('[role="tooltip"]');
     expect(tooltip).not.toBeNull();
-    expect(tooltip!.textContent).toContain('Save changes');
+    expect(tooltip!.textContent).toContain("Save changes");
   });
 
-  it('hides the tooltip on mouseleave', () => {
+  it("hides the tooltip on mouseleave", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const button = fixture.nativeElement.querySelector('button');
-    button.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+    const button = fixture.nativeElement.querySelector("button");
+    button.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
     fixture.detectChanges();
-    button.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+    button.dispatchEvent(new MouseEvent("mouseleave", { bubbles: true }));
     fixture.detectChanges();
     expect(document.querySelector('[role="tooltip"]')).toBeNull();
   });
 
-  it('does not show a tooltip when uTooltipDisabled is true', () => {
+  it("does not show a tooltip when uTooltipDisabled is true", () => {
     TestBed.overrideComponent(TestHostComponent, {
-      set: { template: `<button [uTooltip]="'Save changes'" [uTooltipDisabled]="true">Save</button>` },
+      set: {
+        template: `<button [uTooltip]="'Save changes'" [uTooltipDisabled]="true">Save</button>`,
+      },
     });
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    const button = fixture.nativeElement.querySelector('button');
-    button.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+    const button = fixture.nativeElement.querySelector("button");
+    button.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
     fixture.detectChanges();
     expect(document.querySelector('[role="tooltip"]')).toBeNull();
   });
@@ -1827,6 +1909,7 @@ git commit -m "feat(ng): add UTooltip directive"
 ## Task 14: `UCheckbox`
 
 **Files:**
+
 - Create: `packages/ng/src/checkbox/checkbox.ts`
 - Create: `packages/ng/src/checkbox/checkbox.spec.ts`
 - Create: `packages/ng/src/checkbox/checkbox-style.ts`
@@ -1834,6 +1917,7 @@ git commit -m "feat(ng): add UTooltip directive"
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseEditableHolder` (Task 5), `@ultimate/uix-styles/checkbox` (Task 3).
 - Produces: `UCheckbox` — standalone component, selector `u-checkbox`, implements `ControlValueAccessor` via inherited `UBaseEditableHolder`. Inputs: `binary = input(false, {transform: booleanAttribute})`, `label = input<string>()`, plus inherited `disabled`. No `UCheckbox`-specific outputs beyond the CVA contract (matching confirmed PrimeNG behavior — value changes flow through `onModelChange`, not a separate `output()`).
 
@@ -1848,20 +1932,20 @@ Read `.vendor-extracted/ng/checkbox/checkbox.ts` in full.
 Create `packages/ng/src/checkbox/checkbox.spec.ts`:
 
 ```typescript
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { UCheckbox } from './checkbox';
+import { Component } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { UCheckbox } from "./checkbox";
 
-describe('UCheckbox', () => {
-  it('renders a native input[type=checkbox] with role reflecting native semantics', () => {
+describe("UCheckbox", () => {
+  it("renders a native input[type=checkbox] with role reflecting native semantics", () => {
     const fixture = TestBed.createComponent(UCheckbox);
     fixture.detectChanges();
     const input = fixture.nativeElement.querySelector('input[type="checkbox"]');
     expect(input).not.toBeNull();
   });
 
-  it('toggles aria-checked / checked state on click', () => {
+  it("toggles aria-checked / checked state on click", () => {
     const fixture = TestBed.createComponent(UCheckbox);
     fixture.detectChanges();
     const input = fixture.nativeElement.querySelector('input[type="checkbox"]');
@@ -1870,16 +1954,16 @@ describe('UCheckbox', () => {
     expect(input.checked).toBe(true);
   });
 
-  it('toggles on Space keypress', () => {
+  it("toggles on Space keypress", () => {
     const fixture = TestBed.createComponent(UCheckbox);
     fixture.detectChanges();
     const input = fixture.nativeElement.querySelector('input[type="checkbox"]');
-    input.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true }));
     fixture.detectChanges();
     expect(input.checked).toBe(true);
   });
 
-  it('integrates with FormControl — writeValue reflects into the checkbox, user interaction propagates back', () => {
+  it("integrates with FormControl — writeValue reflects into the checkbox, user interaction propagates back", () => {
     @Component({
       standalone: true,
       imports: [UCheckbox, ReactiveFormsModule],
@@ -1896,9 +1980,9 @@ describe('UCheckbox', () => {
     expect(fixture.componentInstance.control.value).toBe(true);
   });
 
-  it('respects the disabled input by disabling the native input', () => {
+  it("respects the disabled input by disabling the native input", () => {
     const fixture = TestBed.createComponent(UCheckbox);
-    fixture.componentRef.setInput('disabled', true);
+    fixture.componentRef.setInput("disabled", true);
     fixture.detectChanges();
     const input = fixture.nativeElement.querySelector('input[type="checkbox"]');
     expect(input.disabled).toBe(true);
@@ -1945,6 +2029,7 @@ git commit -m "feat(ng): add UCheckbox component"
 ## Task 15: `UDialog`
 
 **Files:**
+
 - Create: `packages/ng/src/dialog/dialog.ts`
 - Create: `packages/ng/src/dialog/dialog.spec.ts`
 - Create: `packages/ng/src/dialog/dialog-style.ts`
@@ -1952,6 +2037,7 @@ git commit -m "feat(ng): add UCheckbox component"
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseComponent` (Task 4), `UOverlay`/`UFocusTrap` (Task 6), `UButton` (Task 12), `UTimesIcon`/`UWindowMaximizeIcon`/`UWindowMinimizeIcon` (Task 9), `@ultimate/uix-motion` (enter/leave animation), `@ultimate/uix-styles/dialog` (Task 3).
 - Produces: `UDialog` — standalone component, selector `u-dialog`. Inputs: `visible = input(false)`, `header = input<string>()`, `closable = input(true, {transform: booleanAttribute})`, `closeOnEscape = input(true, {transform: booleanAttribute})`, `modal = input(true, {transform: booleanAttribute})`. Outputs: `visibleChange = output<boolean>()`, `onShow = output<void>()`, `onHide = output<void>()`.
 
@@ -1966,21 +2052,23 @@ Read `.vendor-extracted/ng/dialog/dialog.ts` in full (already read once during s
 Create `packages/ng/src/dialog/dialog.spec.ts`:
 
 ```typescript
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { UDialog } from './dialog';
+import { Component } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { UDialog } from "./dialog";
 
 @Component({
   standalone: true,
   imports: [UDialog],
-  template: `<u-dialog [(visible)]="visible" header="Confirm" [modal]="true">Body content</u-dialog>`,
+  template: `<u-dialog [(visible)]="visible" header="Confirm" [modal]="true"
+    >Body content</u-dialog
+  >`,
 })
 class TestHostComponent {
   visible = false;
 }
 
-describe('UDialog', () => {
-  it('does not render dialog content when visible is false', () => {
+describe("UDialog", () => {
+  it("does not render dialog content when visible is false", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeNull();
@@ -1992,21 +2080,21 @@ describe('UDialog', () => {
     fixture.detectChanges();
     const dialogEl = document.querySelector('[role="dialog"]');
     expect(dialogEl).not.toBeNull();
-    expect(dialogEl!.getAttribute('aria-modal')).toBe('true');
-    const labelledBy = dialogEl!.getAttribute('aria-labelledby');
-    expect(document.getElementById(labelledBy!)?.textContent).toContain('Confirm');
+    expect(dialogEl!.getAttribute("aria-modal")).toBe("true");
+    const labelledBy = dialogEl!.getAttribute("aria-labelledby");
+    expect(document.getElementById(labelledBy!)?.textContent).toContain("Confirm");
   });
 
-  it('closes and emits visibleChange(false) on Escape when closeOnEscape is true', () => {
+  it("closes and emits visibleChange(false) on Escape when closeOnEscape is true", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.componentInstance.visible = true;
     fixture.detectChanges();
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     fixture.detectChanges();
     expect(fixture.componentInstance.visible).toBe(false);
   });
 
-  it('does not close on Escape when closeOnEscape is false', () => {
+  it("does not close on Escape when closeOnEscape is false", () => {
     TestBed.overrideComponent(TestHostComponent, {
       set: {
         template: `<u-dialog [(visible)]="visible" header="Confirm" [closeOnEscape]="false">Body</u-dialog>`,
@@ -2015,21 +2103,21 @@ describe('UDialog', () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.componentInstance.visible = true;
     fixture.detectChanges();
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     fixture.detectChanges();
     expect(fixture.componentInstance.visible).toBe(true);
   });
 
-  it('traps focus within the dialog while open', () => {
+  it("traps focus within the dialog while open", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.componentInstance.visible = true;
     fixture.detectChanges();
     const dialogEl = document.querySelector('[role="dialog"]') as HTMLElement;
-    expect(dialogEl.querySelector('[uFocusTrap]')).not.toBeNull();
+    expect(dialogEl.querySelector("[uFocusTrap]")).not.toBeNull();
   });
 
-  it('returns focus to the triggering element when closed', () => {
-    const trigger = document.createElement('button');
+  it("returns focus to the triggering element when closed", () => {
+    const trigger = document.createElement("button");
     document.body.appendChild(trigger);
     trigger.focus();
     const fixture = TestBed.createComponent(TestHostComponent);
@@ -2042,6 +2130,7 @@ describe('UDialog', () => {
   });
 });
 ```
+
 (This last test operationalizes the spec's flagged "needs implementation-time verification" item for Dialog's focus-return-on-close — if it fails, that confirms the spec's flagged gap is real and `UDialog` must implement focus-return explicitly, storing `document.activeElement` on open and restoring it on close, since PrimeNG's own confirmed source did not verify this behavior either way.)
 
 - [ ] **Step 3: Run the test, verify it fails**
@@ -2087,6 +2176,7 @@ own source."
 ## Task 16: `UMenu`
 
 **Files:**
+
 - Create: `packages/ng/src/menu/menu.ts`
 - Create: `packages/ng/src/menu/menu.spec.ts`
 - Create: `packages/ng/src/menu/menu-style.ts`
@@ -2094,6 +2184,7 @@ own source."
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseComponent` (Task 4), `URipple`/`UBadge` (Task 11), `UTooltip` (Task 13), `UMenuItem` (Task 10), `@angular/router`'s `RouterModule` (external peer dep), `@ultimate/uix-styles/menu` (Task 3).
 - Produces: `UMenu` — standalone component, selector `u-menu`. Inputs: `model = input<UMenuItem[]>([])`, `popup = input(false, {transform: booleanAttribute})`.
 
@@ -2108,23 +2199,23 @@ Read `.vendor-extracted/ng/menu/menu.ts` in full (this is the file that revealed
 Create `packages/ng/src/menu/menu.spec.ts`:
 
 ```typescript
-import { TestBed } from '@angular/core/testing';
-import { RouterTestingHarness } from '@angular/router/testing';
-import { provideRouter } from '@angular/router';
-import { UMenu } from './menu';
-import type { UMenuItem } from '@ultimate/ng-core';
+import { TestBed } from "@angular/core/testing";
+import { RouterTestingHarness } from "@angular/router/testing";
+import { provideRouter } from "@angular/router";
+import { UMenu } from "./menu";
+import type { UMenuItem } from "@ultimate/ng-core";
 
-describe('UMenu', () => {
+describe("UMenu", () => {
   const items: UMenuItem[] = [
-    { label: 'Home', icon: 'home' },
+    { label: "Home", icon: "home" },
     { separator: true },
-    { label: 'Settings', routerLink: '/settings' },
+    { label: "Settings", routerLink: "/settings" },
   ];
 
   it('renders role="menu" on the root list and role="menuitem" per item', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(UMenu);
-    fixture.componentRef.setInput('model', items);
+    fixture.componentRef.setInput("model", items);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('[role="menu"]')).not.toBeNull();
     expect(fixture.nativeElement.querySelectorAll('[role="menuitem"]').length).toBe(2);
@@ -2133,41 +2224,45 @@ describe('UMenu', () => {
   it('renders role="separator" for separator items', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(UMenu);
-    fixture.componentRef.setInput('model', items);
+    fixture.componentRef.setInput("model", items);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('[role="separator"]')).not.toBeNull();
   });
 
-  it('moves focus to the next menuitem on ArrowDown (roving tabindex)', () => {
+  it("moves focus to the next menuitem on ArrowDown (roving tabindex)", () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(UMenu);
-    fixture.componentRef.setInput('model', items);
+    fixture.componentRef.setInput("model", items);
     fixture.detectChanges();
     const menuItems = fixture.nativeElement.querySelectorAll('[role="menuitem"]');
     menuItems[0].focus();
-    menuItems[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    menuItems[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
     fixture.detectChanges();
     expect(document.activeElement).toBe(menuItems[1]);
   });
 
-  it('applies routerLink navigation to items with a routerLink field', () => {
-    TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'settings', children: [] }])] });
+  it("applies routerLink navigation to items with a routerLink field", () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([{ path: "settings", children: [] }])],
+    });
     const fixture = TestBed.createComponent(UMenu);
-    fixture.componentRef.setInput('model', items);
+    fixture.componentRef.setInput("model", items);
     fixture.detectChanges();
-    const settingsLink = Array.from(fixture.nativeElement.querySelectorAll('a')).find((a) =>
-      (a as HTMLElement).textContent?.includes('Settings')
+    const settingsLink = Array.from(fixture.nativeElement.querySelectorAll("a")).find((a) =>
+      (a as HTMLElement).textContent?.includes("Settings")
     ) as HTMLAnchorElement;
-    expect(settingsLink.getAttribute('href')).toContain('/settings');
+    expect(settingsLink.getAttribute("href")).toContain("/settings");
   });
 
-  it('applies [uTooltip] to an item label so a tooltip appears on hover for long labels', () => {
+  it("applies [uTooltip] to an item label so a tooltip appears on hover for long labels", () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(UMenu);
-    fixture.componentRef.setInput('model', [{ label: 'A very long menu item label that truncates' }]);
+    fixture.componentRef.setInput("model", [
+      { label: "A very long menu item label that truncates" },
+    ]);
     fixture.detectChanges();
     const label = fixture.nativeElement.querySelector('[role="menuitem"] span, [role="menuitem"]');
-    label.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+    label.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
     fixture.detectChanges();
     expect(document.querySelector('[role="tooltip"]')).not.toBeNull();
   });
@@ -2219,11 +2314,13 @@ and wires the Menu→Tooltip dependency the spec's research surfaced."
 **Context:** the spec explicitly forbids mandating `sideEffects: false` without verification (Global Constraints). This task performs that verification and sets the final value in both `package.json` files.
 
 **Files:**
+
 - Modify: `packages/ng-core/package.json` (add `sideEffects` field)
 - Modify: `packages/ng/package.json` (add `sideEffects` field)
 - Create: `scripts/provenance/verify-tree-shaking.mjs` (throwaway-but-committed verification script, per spec's Performance section)
 
 **Interfaces:**
+
 - Consumes: built `dist/` output of both packages (requires Tasks 4-16 complete and both packages built).
 
 - [ ] **Step 1: Build both packages**
@@ -2233,7 +2330,7 @@ Expected: both succeed, producing a single-entry-point `dist/` for each package 
 
 - [ ] **Step 2: Write `verify-tree-shaking.mjs`**
 
-**Architecture note (from Task 12's correction):** because `@ultimate/ng` is a single-entry-point barrel (no `@ultimate/ng/button`-style subpath exports), a consumer importing `UButton` writes `import { UButton } from "@ultimate/ng"`, not a per-component subpath. This means tree-shaking of `UDialog`'s code out of a `UButton`-only bundle depends entirely on the downstream bundler's ES-module dead-code elimination correctly analyzing the single `ultimate-ng.mjs` file's named exports — it is a materially weaker guarantee than true per-component subpath isolation (which real PrimeNG's per-directory secondary entry points provide, and which an earlier, broken draft of this plan assumed `@ultimate/ng` would also have). This script verifies the weaker, still-real guarantee — that a bundler *can* eliminate unused exports from the single barrel — not file-level isolation. If Task 19's bundle-size measurements show this guarantee is insufficient in practice, revisiting true secondary entry points (via a correctly-configured multi-entry-point `ng-packagr` setup, not per-directory `ng-package.json` files) is a later-phase decision, not resolved here.
+**Architecture note (from Task 12's correction):** because `@ultimate/ng` is a single-entry-point barrel (no `@ultimate/ng/button`-style subpath exports), a consumer importing `UButton` writes `import { UButton } from "@ultimate/ng"`, not a per-component subpath. This means tree-shaking of `UDialog`'s code out of a `UButton`-only bundle depends entirely on the downstream bundler's ES-module dead-code elimination correctly analyzing the single `ultimate-ng.mjs` file's named exports — it is a materially weaker guarantee than true per-component subpath isolation (which real PrimeNG's per-directory secondary entry points provide, and which an earlier, broken draft of this plan assumed `@ultimate/ng` would also have). This script verifies the weaker, still-real guarantee — that a bundler _can_ eliminate unused exports from the single barrel — not file-level isolation. If Task 19's bundle-size measurements show this guarantee is insufficient in practice, revisiting true secondary entry points (via a correctly-configured multi-entry-point `ng-packagr` setup, not per-directory `ng-package.json` files) is a later-phase decision, not resolved here.
 
 Create `scripts/provenance/verify-tree-shaking.mjs`:
 
@@ -2336,6 +2433,7 @@ style-registration behavior together."
 ## Task 18: Provenance documentation updates
 
 **Files:**
+
 - Modify: `docs/architecture/PROVENANCE.md` (PrimeNG entry)
 - Modify: `docs/architecture/PACKAGE_ARCHITECTURE.md`
 - Modify: `docs/architecture/DECISIONS.md` (ADR-018 through ADR-022)
@@ -2398,6 +2496,7 @@ git commit -m "docs(phase-2): update provenance, package architecture, ADRs, com
 ## Task 19: Performance baseline
 
 **Files:**
+
 - Modify: `scripts/provenance/measure-package-size.mjs` (extend `findUixPackages` prefix filter, matching Task 2's pattern)
 - Modify: `docs/architecture/PERFORMANCE.md` (append Phase 2 section)
 
@@ -2430,6 +2529,7 @@ git commit -m "perf(phase-2): record UltimateNG package size and component-creat
 ## Task 20: CI verification and full clean-checkout build
 
 **Files:**
+
 - No file changes expected unless CI fails and reveals a real gap (in which case, fix inline and note the fix).
 
 - [ ] **Step 1: Run the full local pipeline matching `.github/workflows/ci.yml`'s steps**
@@ -2452,6 +2552,7 @@ Expected: every command exits 0.
 - [ ] **Step 2: If any command fails, diagnose and fix**
 
 Common expected friction points to check first if something fails:
+
 - `boundary:validate` should report `packages/ng*` is out of its scan scope (it only scans `packages/uix*`) — if it errors instead, something in Task 2's edit broke it; re-check the diff against the original script.
 - `ceiling:validate` should pass cleanly since neither `ng-core` nor `ng`'s `package.json` declares any forbidden dependency — if it fails, check for an accidentally-added `primeng`/`@primeuix/*` devDependency left over from a copy-paste during extraction-script development.
 - `provenance:validate` should now find both `docs/architecture/provenance/ng-core.json` and `docs/architecture/provenance/ng.json` via Task 2's extended `findWatchedPackageDirs` — if it reports a missing manifest entry, find the specific `.ts` file under `packages/{ng-core,ng}/src/` missing from its manifest and add the entry.
@@ -2467,6 +2568,7 @@ Run a manual smoke check: in a scratch Angular test, call `TestBed.inject` on `@
 ## Task 21: Documentation pass
 
 **Files:**
+
 - Modify: `packages/ng-core/README.md` (finalize if not already complete)
 - Modify: `packages/ng/README.md` (create if not present, or finalize)
 - Create: per-component doc sections (can live in `packages/ng/README.md` as subsections, matching Phase 1's single-README-per-package depth, per spec's Documentation section: "no public documentation site built in Phase 2")

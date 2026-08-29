@@ -1,1 +1,1 @@
-export type { UMenuItem, UTooltipOptions } from './types';
+export type { UMenuItem, UTooltipOptions } from "./types";

@@ -44,7 +44,8 @@ describe("UOverlay", () => {
     // logical view parentage), so `By.directive` still locates this
     // fixture's own overlay element rather than picking up another test's
     // leftover <div> from the shared document.body.
-    const overlayEl = fixture.debugElement.query(By.directive(UOverlay)).nativeElement as HTMLElement;
+    const overlayEl = fixture.debugElement.query(By.directive(UOverlay))
+      .nativeElement as HTMLElement;
     expect(overlayEl.parentElement).toBe(document.body);
   });
 
@@ -53,7 +54,8 @@ describe("UOverlay", () => {
     fixture.componentInstance.visible = true;
     fixture.detectChanges();
     await fixture.whenStable();
-    const overlayEl = fixture.debugElement.query(By.directive(UOverlay)).nativeElement as HTMLElement;
+    const overlayEl = fixture.debugElement.query(By.directive(UOverlay))
+      .nativeElement as HTMLElement;
     expect(Number(overlayEl.style.zIndex)).toBeGreaterThan(0);
   });
 });

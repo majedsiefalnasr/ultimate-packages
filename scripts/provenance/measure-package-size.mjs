@@ -18,9 +18,7 @@ const PACKAGE_PREFIXES = ["uix", "ng"];
 
 function findUixPackages(root = "packages") {
   return readdirSync(root)
-    .filter(
-      (name) => PACKAGE_PREFIXES.some((prefix) => name.startsWith(prefix)) && name !== "uix"
-    )
+    .filter((name) => PACKAGE_PREFIXES.some((prefix) => name.startsWith(prefix)) && name !== "uix")
     .map((name) => join(root, name));
 }
 

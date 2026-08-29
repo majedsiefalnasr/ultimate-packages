@@ -7,7 +7,7 @@ import { ngCoreStyleSheet } from "./style-sheet";
 @Component({
   standalone: true,
   selector: "u-test-component",
-  template: '<div [class]="cx(\'root\')"></div>',
+  template: "<div [class]=\"cx('root')\"></div>",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class TestHostComponent extends UBaseComponent {
@@ -45,10 +45,7 @@ describe("UBaseComponent", () => {
     // ngOnInit, proves ngOnInit checks has() before calling add() rather
     // than unconditionally re-registering.
     expect(addSpy).toHaveBeenCalledTimes(1);
-    expect(addSpy).toHaveBeenCalledWith(
-      "test-component",
-      ".u-test-component-root { color: red; }",
-    );
+    expect(addSpy).toHaveBeenCalledWith("test-component", ".u-test-component-root { color: red; }");
     expect(ngCoreStyleSheet.has("test-component")).toBe(true);
     expect(ngCoreStyleSheet.getStyles().size).toBe(1);
 

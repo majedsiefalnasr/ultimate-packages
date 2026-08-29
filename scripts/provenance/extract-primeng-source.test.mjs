@@ -46,8 +46,18 @@ test("is idempotent — re-running overwrites with identical content", () => {
   const outputDir = join(workDir, "out");
   try {
     const tarballPath = makeFixtureTarball(workDir);
-    execFileSync("node", ["scripts/provenance/extract-primeng-source.mjs", tarballPath, "button", outputDir]);
-    execFileSync("node", ["scripts/provenance/extract-primeng-source.mjs", tarballPath, "button", outputDir]);
+    execFileSync("node", [
+      "scripts/provenance/extract-primeng-source.mjs",
+      tarballPath,
+      "button",
+      outputDir,
+    ]);
+    execFileSync("node", [
+      "scripts/provenance/extract-primeng-source.mjs",
+      tarballPath,
+      "button",
+      outputDir,
+    ]);
 
     const extracted = readFileSync(join(outputDir, "button.ts"), "utf8");
     assert.equal(extracted, "export class Button {}\n");

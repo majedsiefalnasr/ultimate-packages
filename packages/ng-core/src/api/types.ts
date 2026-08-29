@@ -47,7 +47,7 @@ export interface UTooltipOptions {
   /**
    * Position of the tooltip.
    */
-  position?: 'top' | 'bottom' | 'left' | 'right';
+  position?: "top" | "bottom" | "left" | "right";
   /**
    * When present, it specifies that the tooltip should be disabled.
    */

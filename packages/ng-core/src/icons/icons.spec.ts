@@ -1,12 +1,7 @@
 import { Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { describe, expect, it } from "vitest";
-import {
-  USpinnerIcon,
-  UTimesIcon,
-  UWindowMaximizeIcon,
-  UWindowMinimizeIcon,
-} from ".";
+import { USpinnerIcon, UTimesIcon, UWindowMaximizeIcon, UWindowMinimizeIcon } from ".";
 
 @Component({
   standalone: true,

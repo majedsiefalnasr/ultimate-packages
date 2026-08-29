@@ -90,8 +90,12 @@ import { menuStyleModule } from "./menu-style";
   imports: [RouterModule, URipple, UTooltip],
   template: `
     <div [class]="cx('root', classesParams())">
-      <ul role="menu" [class]="cx('list')" (keydown.arrowDown)="onArrowDown($event)"
-        (keydown.arrowUp)="onArrowUp($event)">
+      <ul
+        role="menu"
+        [class]="cx('list')"
+        (keydown.arrowDown)="onArrowDown($event)"
+        (keydown.arrowUp)="onArrowUp($event)"
+      >
         @for (item of model(); track $index) {
           @if (item.separator) {
             <li role="separator" [class]="cx('separator')"></li>

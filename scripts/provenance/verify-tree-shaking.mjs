@@ -65,10 +65,7 @@ const alias = {
 
 const workDir = mkdtempSync(join(tmpdir(), "verify-tree-shaking-"));
 const entryFile = join(workDir, "entry.mjs");
-writeFileSync(
-  entryFile,
-  `import { UButton } from "@ultimate/ng";\nconsole.log(UButton);\n`
-);
+writeFileSync(entryFile, `import { UButton } from "@ultimate/ng";\nconsole.log(UButton);\n`);
 
 try {
   const result = await build({
@@ -95,9 +92,7 @@ try {
     );
     process.exit(1);
   }
-  console.log(
-    "[verify-tree-shaking] OK: importing UButton does not pull in UDialog"
-  );
+  console.log("[verify-tree-shaking] OK: importing UButton does not pull in UDialog");
 
   // Report which of UButton's/UDialog's style modules survived, as
   // corroborating evidence for the pass/fail verdict above.

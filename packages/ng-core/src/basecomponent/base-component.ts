@@ -1,11 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  PLATFORM_ID,
-  Renderer2,
-  inject,
-  input,
-} from "@angular/core";
+import { Directive, ElementRef, PLATFORM_ID, Renderer2, inject, input } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { cn } from "@ultimate/uix-utils/classnames";
 import { UltimateConfig } from "../config/ultimate-config";

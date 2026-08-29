@@ -30,10 +30,10 @@ Phase 2 (`UltimateNG` Angular foundation) baseline measurements, recorded once a
 
 ### Package size
 
-| Package             | dist/ size | dist/ file count | index.mjs gzip size |
-| ------------------- | ---------- | ----------------- | -------------------- |
-| packages/ng-core     | 105.0 KB   | 6                 | 9.91 KB              |
-| packages/ng          | 225.8 KB   | 6                 | 19.67 KB             |
+| Package          | dist/ size | dist/ file count | index.mjs gzip size |
+| ---------------- | ---------- | ---------------- | ------------------- |
+| packages/ng-core | 105.0 KB   | 6                | 9.91 KB             |
+| packages/ng      | 225.8 KB   | 6                | 19.67 KB            |
 
 Measured with `node scripts/provenance/measure-package-size.mjs` against a fresh `pnpm run build` (Node v23.11.0, pnpm 9.6.0). Unlike the tsup-built `uix-*` packages, `ng`/`ng-core` are built by `ng-packagr` in partial-compilation mode and publish their barrel entry as `dist/fesm2022/<package-name>.mjs` (declared via `package.json`'s `module`/`main` fields) rather than `dist/index.mjs`; the script now resolves each package's real entry file from its own `package.json` instead of assuming a fixed path, so both layouts are measured correctly by the same script.
 
@@ -43,8 +43,8 @@ Note: Node v23.11.0 was used for this measurement run (the active environment No
 
 Measured via a throwaway benchmark (not committed, per the Phase 2 spec) that wrapped `TestBed.createComponent(...)` + `detectChanges()` + `destroy()` in `performance.now()` calls, 100 iterations each, for `UButton` (a simple component with no overlay) and `UDialog` (overlay + focus-trap + motion dependencies), run via `pnpm --filter @ultimate/ng test`:
 
-| Component | mean    | median  | min     | max      |
-| --------- | ------- | ------- | ------- | -------- |
+| Component | mean         | median  | min     | max          |
+| --------- | ------------ | ------- | ------- | ------------ |
 | UButton   | 0.58–0.63 ms | 0.28 ms | 0.21 ms | 17.1–24.2 ms |
 | UDialog   | 0.18–0.19 ms | 0.14 ms | 0.11 ms | 2.0–2.4 ms   |
 

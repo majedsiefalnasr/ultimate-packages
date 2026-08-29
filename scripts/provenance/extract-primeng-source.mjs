@@ -18,14 +18,18 @@ import { execFileSync } from "node:child_process";
 const [, , tarballPath, srcRelativePath, outputDir] = process.argv;
 
 if (!tarballPath || !srcRelativePath || !outputDir) {
-  console.error("Usage: extract-primeng-source.mjs <tarball-path> <src-relative-path> <output-dir>");
+  console.error(
+    "Usage: extract-primeng-source.mjs <tarball-path> <src-relative-path> <output-dir>"
+  );
   process.exit(1);
 }
 
 function findExtractedRoot(dir) {
   const entries = readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory());
   if (entries.length !== 1) {
-    throw new Error(`expected exactly one top-level directory in extracted tarball, found ${entries.length}`);
+    throw new Error(
+      `expected exactly one top-level directory in extracted tarball, found ${entries.length}`
+    );
   }
   return join(dir, entries[0].name);
 }
@@ -51,11 +55,15 @@ try {
   const sourceDir = join(extractedRoot, "packages", "primeng", "src", srcRelativePath);
 
   if (!statSync(sourceDir, { throwIfNoEntry: false })?.isDirectory()) {
-    throw new Error(`source directory not found in tarball: packages/primeng/src/${srcRelativePath}`);
+    throw new Error(
+      `source directory not found in tarball: packages/primeng/src/${srcRelativePath}`
+    );
   }
 
   copyRecursive(sourceDir, outputDir);
-  console.log(`[extract-primeng-source] copied packages/primeng/src/${srcRelativePath} to ${outputDir}`);
+  console.log(
+    `[extract-primeng-source] copied packages/primeng/src/${srcRelativePath} to ${outputDir}`
+  );
 } finally {
   rmSync(extractDir, { recursive: true, force: true });
 }
