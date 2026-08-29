@@ -4,7 +4,7 @@
 
 **Goal:** Stand up `@ultimate/ng-core` and `@ultimate/ng` — the first framework-specific Ultimate packages — with an Ultimate-owned Angular foundation (base-class hierarchy, overlay/focus-trap infrastructure, icons, config) and five fully working, provenance-tracked, Ultimate-namespaced components (Button, Checkbox, Dialog, Menu, Tooltip) proving the architecture end-to-end.
 
-**Architecture:** PrimeNG 21.1.9 source (already pinned in `.vendor-cache/primeng-21.1.9.tar.gz`, commit `c493b1c6d9f7cdffbe1c4dc195493dd73d733593`) is extracted per-directory into a gitignored staging tree, then **redesigned, not ported** (Option B): `ng-core` gets a smaller, Ultimate-owned `UBaseComponent`/`UBaseEditableHolder` hierarchy that covers only what the five proof-set components need (DI wiring, lifecycle hooks, `@ultimate/uix-styled` style registration) — PrimeNG's full passthrough (`pt`)/global-config surface is explicitly out of scope this phase (spec: DEFER). Each component's raw CSS/token module is extracted separately into `@ultimate/uix-styles/<name>` with `.p-*` renamed to `.u-*`, following the `base` module's existing Phase 1 pattern. Both packages build with `ng-packagr` (Angular Package Format, one secondary entry point per component/primitive) and test with the Angular CLI's Vitest builder over real `TestBed`.
+**Architecture:** PrimeNG 21.1.9 source (already pinned in `.vendor-cache/primeng-21.1.9.tar.gz`, commit `c493b1c6d9f7cdffbe1c4dc195493dd73d733593`) is extracted per-directory into a gitignored staging tree, then **redesigned, not ported** (Option B): `ng-core` gets a smaller, Ultimate-owned `UBaseComponent`/`UBaseEditableHolder` hierarchy that covers only what the five proof-set components need (DI wiring, lifecycle hooks, `@ultimate/uix-styled` style registration) — PrimeNG's full passthrough (`pt`)/global-config surface is explicitly out of scope this phase (spec: DEFER). Each component's raw CSS/token module is extracted separately into `@ultimate/uix-styles/<name>` with `.p-*` renamed to `.u-*`, following the `base` module's existing Phase 1 pattern. Both packages build with `ng-packagr` (Angular Package Format, single-entry-point barrel — see the correction recorded in Task 12: per-directory secondary entry points are not used, `ng-packagr`'s auto-discovery of nested `ng-package.json` files breaks the build) and test with the Angular CLI's Vitest builder over real `TestBed`.
 
 **Tech Stack:** pnpm workspaces (existing), Angular `^21.0.7`, TypeScript 5.9 strict (existing `tsconfig.base.json` + Angular compiler options), `ng-packagr` (new), Angular CLI Vitest builder + `@angular/core/testing` `TestBed` (new), Node.js built-ins for provenance scripts (matching Phase 1 convention).
 
@@ -91,7 +91,7 @@ packages/
     │   ├── menu/{menu.ts, menu.spec.ts, menu-style.ts, index.ts}
     │   └── index.ts                             (root barrel — re-exports all 9)
     ├── package.json
-    ├── ng-package.json                          (9 secondary entry points)
+    ├── ng-package.json                          (single entry point, packages/ng/src/index.ts barrel)
     ├── tsconfig.json
     ├── README.md
     └── THIRD-PARTY-NOTICES.md                   (populate existing stub)
@@ -118,7 +118,7 @@ docs/architecture/
 .gitignore                                       (modified — add .vendor-extracted/ng/ if not already covered)
 ```
 
-**Why this shape:** `ng-core`'s directory names use kebab-case file names with PascalCase-prefixed exported classes (`base-component.ts` exports `UBaseComponent`), matching Angular's own file-naming convention (Angular CLI/ng-packagr tooling and most Angular style guides expect `kebab-case.ts` file names even though PrimeNG's own source uses flat lowercase like `basecomponent.ts` — Option B means Ultimate is not obligated to mirror PrimeNG's file-naming choice, only its architecture). Each `ng` component gets its own directory containing the component, its spec, and its `*-style.ts` adapter — mirroring the `packages/uix-utils/src/<module>/index.ts` one-directory-per-concern convention already established in Phase 1. `ng`'s 4 primitives (`ripple`, `autofocus`, `fluid`, `badge`) sit alongside the 5 components as peers, not nested under them, since `ng-package.json` needs each as its own secondary entry point for tree-shaking.
+**Why this shape:** `ng-core`'s directory names use kebab-case file names with PascalCase-prefixed exported classes (`base-component.ts` exports `UBaseComponent`), matching Angular's own file-naming convention (Angular CLI/ng-packagr tooling and most Angular style guides expect `kebab-case.ts` file names even though PrimeNG's own source uses flat lowercase like `basecomponent.ts` — Option B means Ultimate is not obligated to mirror PrimeNG's file-naming choice, only its architecture). Each `ng` component gets its own directory containing the component, its spec, and its `*-style.ts` adapter — mirroring the `packages/uix-utils/src/<module>/index.ts` one-directory-per-concern convention already established in Phase 1. `ng`'s 4 primitives (`ripple`, `autofocus`, `fluid`, `badge`) sit alongside the 5 components as peers, not nested under them, for consistency with that one-directory-per-concern layout — tree-shaking is achieved via each module's own barrel export from the single package-level `ng-package.json`, not per-directory secondary entry points (see the correction recorded in Task 12).
 
 ---
 
@@ -1428,7 +1428,7 @@ git commit -m "feat(ng-core): add shared API type contracts (UMenuItem, UTooltip
 }
 ```
 
-- [ ] **Step 2: Scaffold `ng-package.json` with 9 secondary entry points, `tsconfig.json`**
+- [ ] **Step 2: Scaffold `ng-package.json` (single entry point) and `tsconfig.json`**
 
 Create `packages/ng/ng-package.json`:
 ```json
@@ -1440,7 +1440,7 @@ Create `packages/ng/ng-package.json`:
   }
 }
 ```
-(secondary entry points are declared per-directory via each subdirectory's own `ng-package.json` pointing at its local `public_api.ts`/`index.ts`, matching the confirmed PrimeNG convention — add a minimal `packages/ng/src/<name>/ng-package.json` containing `{"lib": {"entryFile": "index.ts"}}` for each of `ripple`, `autofocus`, `fluid`, `badge` now, and for `button`/`checkbox`/`tooltip`/`dialog`/`menu` in their respective later tasks).
+**Correction found during Task 12 (do not add per-directory `ng-package.json` files):** an earlier draft of this plan called for per-directory `ng-package.json` files (one per component/primitive, each pointing at its local `index.ts`), intending PrimeNG's own per-component secondary-entry-point convention. In practice, `ng-packagr` auto-discovers any nested `ng-package.json` as a secondary entry point relative to the package root — a bare `{"lib": {"entryFile": "index.ts"}}` file under `src/<name>/` is not self-consistent with the primary package's own build config (no matching `dest`, no shared compiler context) and fails with `ng-packagr`'s own internal error ("Cannot destructure property 'pos' of 'file.referencedFiles[index]' as it is undefined") the moment one exists — confirmed by adding one and rebuilding. Since `@ultimate/ng` uses a single-entry-point barrel (`packages/ng/src/index.ts`), matching `ng-core`'s own already-approved shape (Task 11's correct deviation from a stricter per-directory reading of this plan), no per-directory `ng-package.json` file is created for any primitive or component in this phase — tree-shaking is still achieved via each module's own barrel export, verified by Task 17's tree-shaking spot-check against the single built package.
 
 Create `packages/ng/tsconfig.json` — identical shape to `packages/ng-core/tsconfig.json` (Task 4, Step 3).
 
@@ -1565,7 +1565,6 @@ git commit -m "feat(ng): scaffold package, add Ripple/AutoFocus/Fluid/Badge prim
 - Create: `packages/ng/src/button/button.spec.ts`
 - Create: `packages/ng/src/button/button-style.ts`
 - Create: `packages/ng/src/button/index.ts`
-- Create: `packages/ng/src/button/ng-package.json`
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
@@ -1696,7 +1695,6 @@ Expected: PASS (all 6 assertions)
 - [ ] **Step 7: Create barrel, secondary entry point config, update root index**
 
 `packages/ng/src/button/index.ts`: `export { UButton } from './button';`
-`packages/ng/src/button/ng-package.json`: `{"lib": {"entryFile": "index.ts"}}`
 Update `packages/ng/src/index.ts`, adding `export * from './button';`
 
 - [ ] **Step 8: Add file-level provenance entries for button**
@@ -1719,7 +1717,6 @@ git commit -m "feat(ng): add UButton component"
 - Create: `packages/ng/src/tooltip/tooltip.spec.ts`
 - Create: `packages/ng/src/tooltip/tooltip-style.ts`
 - Create: `packages/ng/src/tooltip/index.ts`
-- Create: `packages/ng/src/tooltip/ng-package.json`
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
@@ -1812,7 +1809,6 @@ Expected: PASS
 - [ ] **Step 7: Create barrel, secondary entry point config, update root index**
 
 `packages/ng/src/tooltip/index.ts`: `export { UTooltip } from './tooltip';`
-`packages/ng/src/tooltip/ng-package.json`: `{"lib": {"entryFile": "index.ts"}}`
 Update `packages/ng/src/index.ts`, adding `export * from './tooltip';`
 
 - [ ] **Step 8: Append provenance entries to `docs/architecture/provenance/ng.json`**
@@ -1835,7 +1831,6 @@ git commit -m "feat(ng): add UTooltip directive"
 - Create: `packages/ng/src/checkbox/checkbox.spec.ts`
 - Create: `packages/ng/src/checkbox/checkbox-style.ts`
 - Create: `packages/ng/src/checkbox/index.ts`
-- Create: `packages/ng/src/checkbox/ng-package.json`
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
@@ -1932,7 +1927,6 @@ Expected: PASS
 - [ ] **Step 7: Create barrel, secondary entry point config, update root index**
 
 `packages/ng/src/checkbox/index.ts`: `export { UCheckbox } from './checkbox';`
-`packages/ng/src/checkbox/ng-package.json`: `{"lib": {"entryFile": "index.ts"}}`
 Update `packages/ng/src/index.ts`, adding `export * from './checkbox';`
 
 - [ ] **Step 8: Append provenance entries**
@@ -1955,7 +1949,6 @@ git commit -m "feat(ng): add UCheckbox component"
 - Create: `packages/ng/src/dialog/dialog.spec.ts`
 - Create: `packages/ng/src/dialog/dialog-style.ts`
 - Create: `packages/ng/src/dialog/index.ts`
-- Create: `packages/ng/src/dialog/ng-package.json`
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
@@ -2072,7 +2065,6 @@ Expected: PASS (all 6 assertions, including the focus-return test)
 - [ ] **Step 7: Create barrel, secondary entry point config, update root index**
 
 `packages/ng/src/dialog/index.ts`: `export { UDialog } from './dialog';`
-`packages/ng/src/dialog/ng-package.json`: `{"lib": {"entryFile": "index.ts"}}`
 Update `packages/ng/src/index.ts`, adding `export * from './dialog';`
 
 - [ ] **Step 8: Append provenance entries**
@@ -2099,7 +2091,6 @@ own source."
 - Create: `packages/ng/src/menu/menu.spec.ts`
 - Create: `packages/ng/src/menu/menu-style.ts`
 - Create: `packages/ng/src/menu/index.ts`
-- Create: `packages/ng/src/menu/ng-package.json`
 - Modify: `packages/ng/src/index.ts`
 
 **Interfaces:**
@@ -2204,7 +2195,6 @@ Expected: PASS (all 5 assertions)
 - [ ] **Step 7: Create barrel, secondary entry point config, update root index**
 
 `packages/ng/src/menu/index.ts`: `export { UMenu } from './menu';`
-`packages/ng/src/menu/ng-package.json`: `{"lib": {"entryFile": "index.ts"}}`
 Update `packages/ng/src/index.ts`, adding `export * from './menu';`
 
 - [ ] **Step 8: Append provenance entries**
@@ -2239,9 +2229,11 @@ and wires the Menu→Tooltip dependency the spec's research surfaced."
 - [ ] **Step 1: Build both packages**
 
 Run: `pnpm --filter @ultimate/ng-core build && pnpm --filter @ultimate/ng build`
-Expected: both succeed, producing `dist/` with one subdirectory per secondary entry point.
+Expected: both succeed, producing a single-entry-point `dist/` for each package (`fesm2022/ultimate-ng-core.mjs`, `fesm2022/ultimate-ng.mjs`, plus `types/`) — per Task 12's correction, neither package uses per-directory secondary entry points, so there is one bundle per package, not one subdirectory per component.
 
 - [ ] **Step 2: Write `verify-tree-shaking.mjs`**
+
+**Architecture note (from Task 12's correction):** because `@ultimate/ng` is a single-entry-point barrel (no `@ultimate/ng/button`-style subpath exports), a consumer importing `UButton` writes `import { UButton } from "@ultimate/ng"`, not a per-component subpath. This means tree-shaking of `UDialog`'s code out of a `UButton`-only bundle depends entirely on the downstream bundler's ES-module dead-code elimination correctly analyzing the single `ultimate-ng.mjs` file's named exports — it is a materially weaker guarantee than true per-component subpath isolation (which real PrimeNG's per-directory secondary entry points provide, and which an earlier, broken draft of this plan assumed `@ultimate/ng` would also have). This script verifies the weaker, still-real guarantee — that a bundler *can* eliminate unused exports from the single barrel — not file-level isolation. If Task 19's bundle-size measurements show this guarantee is insufficient in practice, revisiting true secondary entry points (via a correctly-configured multi-entry-point `ng-packagr` setup, not per-directory `ng-package.json` files) is a later-phase decision, not resolved here.
 
 Create `scripts/provenance/verify-tree-shaking.mjs`:
 
@@ -2249,12 +2241,17 @@ Create `scripts/provenance/verify-tree-shaking.mjs`:
 #!/usr/bin/env node
 // scripts/provenance/verify-tree-shaking.mjs
 //
-// Confirms that importing only @ultimate/ng/button (via a minimal esbuild
-// bundle) does not pull in UDialog's overlay/focus-trap/motion dependencies,
-// and that style registration still executes when sideEffects is set to
-// false. If style registration silently breaks under sideEffects:false,
-// this script's second check fails, and package.json must instead declare
-// an explicit array of side-effectful paths (each component's style module).
+// Confirms that importing only UButton from the single @ultimate/ng barrel
+// (via a minimal esbuild bundle) does not pull in UDialog's overlay/focus-
+// trap/motion dependencies, and that style registration still executes when
+// sideEffects is set to false. If style registration silently breaks under
+// sideEffects:false, this script's second check fails, and package.json
+// must instead declare an explicit array of side-effectful paths (each
+// component's style module).
+//
+// Verifies bundler-level dead-code elimination within the single barrel
+// export, not per-component file isolation — see this task's own
+// Architecture note for why @ultimate/ng has no per-component subpaths.
 
 import { build } from "esbuild";
 import { writeFileSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
@@ -2263,7 +2260,7 @@ import { join } from "node:path";
 
 const workDir = mkdtempSync(join(tmpdir(), "verify-tree-shaking-"));
 const entryFile = join(workDir, "entry.mjs");
-writeFileSync(entryFile, `import { UButton } from "@ultimate/ng/button";\nconsole.log(UButton);\n`);
+writeFileSync(entryFile, `import { UButton } from "@ultimate/ng";\nconsole.log(UButton);\n`);
 
 try {
   const result = await build({
@@ -2279,7 +2276,7 @@ try {
 
   if (bundleText.includes("u-dialog") || bundleText.includes("UDialog")) {
     console.error(
-      "[verify-tree-shaking] FAIL: importing only UButton pulled in Dialog-related code — tree-shaking is not working across secondary entry points"
+      "[verify-tree-shaking] FAIL: importing only UButton pulled in Dialog-related code — the bundler is not eliminating unused exports from the single @ultimate/ng barrel"
     );
     process.exit(1);
   }
