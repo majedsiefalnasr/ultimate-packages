@@ -1,29 +1,15 @@
 import {
   Directive,
   ElementRef,
-  Injectable,
   PLATFORM_ID,
   Renderer2,
   inject,
   input,
-  signal,
 } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { cn } from "@ultimate/uix-utils/classnames";
+import { UltimateConfig } from "../config/ultimate-config";
 import { ngCoreStyleSheet } from "./style-sheet";
-
-/**
- * Temporary local stub for the real `UltimateConfig` service.
- *
- * Task 7 (`packages/ng-core/src/config/`) introduces the real
- * `UltimateConfig` and replaces this stub's import in this file — this
- * placeholder exists only so `UBaseComponent`'s test suite doesn't block
- * on Task 7 being done first.
- */
-@Injectable({ providedIn: "root" })
-export class UltimateConfig {
-  unstyled = signal(false);
-}
 
 /**
  * Ultimate-owned, scoped-down reimplementation of PrimeNG's own
