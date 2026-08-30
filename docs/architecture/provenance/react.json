@@ -52,5 +52,29 @@
     "ultimateDestination": "packages/react/src/tooltip/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/checkbox/Checkbox.js",
+    "ultimateDestination": "packages/react/src/checkbox/checkbox.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream (Checkbox.js full read both halves, checkbox.d.ts full read): checked: boolean is a required prop (no defaultChecked/uncontrolled mode exists upstream), trueValue/falseValue let checked represent non-boolean values, onChange receives a custom event shape not a raw DOM ChangeEvent, real hidden native <input type=checkbox> plus a separate decorative box rendering the check icon, inputRef targets the native input specifically. No indeterminate prop exists in verified source — confirmed absent, not an oversight. No PrimeReact-authored test file exists for Checkbox (verified absent) — this spec file is entirely Ultimate-authored. Second confirmation (with Button, Task 14) of the ref-target-primitive-plus-prop-sugar Tooltip API decision. Deviation from the brief's literal Step 5 code: `id` is now applied to the root <div> (matching verified upstream's `rootProps.id = props.id`) — the brief's literal code destructured `id` but only used it inside the onChange event's `target` object, never applying it to the DOM, silently dropping a documented prop. Fixed to match upstream and keep the `id` prop functional; no test coverage change needed since no spec asserted the old (broken) behavior."
+  },
+  {
+    "originalPath": "components/lib/checkbox/CheckboxBase.js",
+    "ultimateDestination": "packages/react/src/checkbox/checkbox-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream classes/css shape, .p-*->.u-* renamed."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/checkbox/checkbox.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test — no upstream test file exists to adapt from. Includes an explicit assertion that the component does not manage its own internal checked state (fully-controlled contract regression coverage, spec §23)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/checkbox/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
