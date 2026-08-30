@@ -76,5 +76,29 @@
     "ultimateDestination": "packages/react/src/checkbox/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/dialog/Dialog.js",
+    "ultimateDestination": "packages/react/src/dialog/dialog.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream (Dialog.js, 717 lines, full read): controlled via visible/onHide, already-correct aria-labelledby/aria-describedby/aria-modal/role='dialog' wiring (preserved verbatim, not a gap), composes FocusTrap+CSSTransition(->useMotion here)+Portal directly in its own render body matching the no-shared-orchestration-service pattern already proven by Angular's UDialog (ADR-020). Focus-return-on-close preserved (both frameworks independently converged on this fix), restored via useMotion's onAfterLeave hook rather than a synchronous effect. Deviation from the plan's literal single-state `if (!visible) return null` sketch: implemented upstream's real two-state maskVisibleState/visibleState + onExited model (here: `containerVisible` gating mount/unmount, kept true through the leave phase) because the literal single-state version unmounts the DOM node synchronously on the same render that flips visible to false, before useMotion's effect can ever call .leave() against an attached element — that would make the required useMotion integration a no-op and break the verified upstream focus-return-on-close/onExited contract. This is a react-core-consuming fix scoped entirely to this component (no react-core primitive was changed); useMotion's own contract (enter/leave/cancel against a caller-supplied ref) was used exactly as designed. Explicit boundary (spec §15): draggable/resizable/maximizable behavior verified present upstream but NOT implemented here — no such props, handlers, or UI exist on this component in Phase 3, per an explicit, separately-tracked scope decision. document.primeDialogParams global-mutation scroll-blocking replaced by react-core's private useScrollLock registry (Task 9)."
+  },
+  {
+    "originalPath": "components/lib/dialog/DialogBase.js",
+    "ultimateDestination": "packages/react/src/dialog/dialog-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream classes/css shape, .p-*->.u-* renamed, draggable/resizable/maximizable-specific class slots omitted since those features are not implemented (spec §15)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/dialog/dialog.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test — no PrimeReact-authored test file exists for Dialog (verified absent). Includes an explicit negative regression test asserting no draggable/resizable/maximizable props/UI exist (spec §23, §33's explicit requirement), and a focus-return-on-close test."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/dialog/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
