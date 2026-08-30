@@ -1,0 +1,44 @@
+{
+  "name": "@ultimate/react-core",
+  "version": "0.1.0",
+  "description": "React-specific foundation for the Ultimate Platform: base component architecture, overlay/focus-trap/escape/scroll/motion infrastructure, icons, minimal config.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": ["dist", "README.md", "THIRD-PARTY-NOTICES.md"],
+  "dependencies": {
+    "@ultimate/uix-utils": "workspace:*",
+    "@ultimate/uix-styled": "workspace:*",
+    "@ultimate/uix-motion": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.1.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.0",
+    "jsdom": "^25.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsup": "^8.3.0",
+    "typescript": "5.9.3",
+    "vitest": "^2.1.8"
+  },
+  "scripts": {
+    "build": "tsup && node scripts/rename-dts.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  }
+}

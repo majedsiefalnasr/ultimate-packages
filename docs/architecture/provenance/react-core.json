@@ -1,0 +1,26 @@
+[
+  {
+    "originalPath": "components/lib/componentbase/ComponentBase.js",
+    "ultimateDestination": "packages/react-core/src/base/component-base.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeReact's ComponentBase. Verified source: cx() resolves css.classes[key](params) (ComponentBase.js lines ~511-513). Ultimate decision: excludes the full pt/ptm/ptmo passthrough system (~150 lines of nested-key resolution in the verified source) entirely, per spec §7's Option B posture — no demonstrated Ultimate consumer need, same YAGNI justification as Angular's ADR-018."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/base/component-base.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream (PrimeReact's own ComponentBase.js has no dedicated spec file)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/base/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored root barrel re-exporting all react-core submodules, no upstream equivalent file."
+  }
+]
