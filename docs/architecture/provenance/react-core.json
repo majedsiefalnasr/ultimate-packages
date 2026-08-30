@@ -136,5 +136,23 @@
     "ultimateDestination": "packages/react-core/src/escape/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/api/PrimeReact.js (zIndex bucket defaults)",
+    "ultimateDestination": "packages/react-core/src/zindex/use-z-index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Wraps the already-built, framework-neutral @ultimate/uix-utils/zindex's ZIndex directly — no redesign of that module (confirmed algorithmically identical to PrimeReact's own ZIndexUtils.js by line-by-line comparison during the Real-Source Verification Gate). Default bucket values (modal 1100, overlay 1000, menu 1000, tooltip 1100, toast 1200) adopted verbatim from verified api/PrimeReact.js."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/zindex/zindex.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/zindex/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
