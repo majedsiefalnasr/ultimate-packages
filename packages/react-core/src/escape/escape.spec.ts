@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useDisplayOrder } from "./use-display-order";
 import { useGlobalEscapeKey } from "./use-global-escape-key";
@@ -17,10 +17,6 @@ describe("useDisplayOrder", () => {
 });
 
 describe("useGlobalEscapeKey", () => {
-  afterEach(() => {
-    document.removeEventListener("keydown", () => {});
-  });
-
   it("calls the callback on Escape when when is true", () => {
     const callback = vi.fn();
     renderHook(() => useGlobalEscapeKey({ callback, when: true, priority: [ESCAPE_PRIORITIES.DIALOG, 1] }));
