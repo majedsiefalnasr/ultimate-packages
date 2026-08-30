@@ -1,7 +1,10 @@
 import { classNames } from "@ultimate/uix-utils";
 import { useComponentStyle } from "../styling/use-component-style";
 
-export type ClassValue = string | Record<string, boolean> | (string | Record<string, boolean>)[];
+export type ClassValue =
+  | string
+  | Record<string, boolean | undefined>
+  | (string | Record<string, boolean | undefined>)[];
 
 export interface StyleModule {
   css: string;
