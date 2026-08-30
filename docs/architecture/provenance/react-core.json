@@ -154,5 +154,23 @@
     "ultimateDestination": "packages/react-core/src/zindex/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/focustrap/FocusTrap.js",
+    "ultimateDestination": "packages/react-core/src/focus-trap/focus-trap.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream mechanism: hidden sentinel-span pair bracketing children, onFocus handlers on each sentinel redirect real DOM focus back into the trapped region via getFirstFocusableElement/getLastFocusableElement lookups. Reuses @ultimate/uix-utils's already-built getFirstFocusableElement/getLastFocusableElement (already consumed today by Angular's UFocusTrap/UAutoFocus) rather than reimplementing focusable-element lookup. Materially different mechanism than Angular's UFocusTrap (keydown Tab/Shift+Tab interception) — intentional, per spec §14. Simplified relative to verified source: does not distinguish forward-vs-backward cycling direction via relatedTarget, since the Phase 3 proof set's only consumer (UDialog) is a single-level, non-nested trap. No test file exists for FocusTrap in PrimeReact 10.9.9 (verified absent) — this test suite is entirely Ultimate-authored."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/focus-trap/focus-trap.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test — no upstream test file exists to adapt from. One assertion deviates from the plan's literal brief: the 'does not auto-focus when disabled' test originally compared document.activeElement?.textContent to \"Inside\", which cannot distinguish \"the button is focused\" from \"nothing is focused (activeElement is <body>)\" in jsdom, since the button's text is the only text content in the document either way and body.textContent trivially equals \"Inside\" in both cases. Verified via isolated debug runs that the implementation's disabled-mount behavior is correct (activeElement stays <body>, matching the non-disabled/autoFocus=false-default case, versus the button actually receiving focus when autoFocus is explicitly true). Fixed the assertion to compare element identity (document.activeElement is the body, and is not the button element) instead of textContent, preserving the test's intent while making it capable of actually catching a regression."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/focus-trap/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
