@@ -22,5 +22,59 @@
     "ultimateDestination": "packages/react-core/src/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored root barrel re-exporting all react-core submodules, no upstream equivalent file."
+  },
+  {
+    "originalPath": "components/lib/hooks/useMountEffect.js",
+    "ultimateDestination": "packages/react-core/src/hooks/use-mount-effect.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: runs an effect exactly once on mount via useEffect with an empty dependency array. Authored fresh in TypeScript, not ported line-for-line — trivial enough that the verified behavior fully specifies the implementation."
+  },
+  {
+    "originalPath": "components/lib/hooks/useUnmountEffect.js",
+    "ultimateDestination": "packages/react-core/src/hooks/use-unmount-effect.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: runs a cleanup function once on unmount via useEffect returning that cleanup, empty dependency array."
+  },
+  {
+    "originalPath": "components/lib/hooks/useUpdateEffect.js",
+    "ultimateDestination": "packages/react-core/src/hooks/use-update-effect.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: skips the effect on the first (mount) run, fires on subsequent dependency changes, via a mounted-ref guard."
+  },
+  {
+    "originalPath": "components/lib/hooks/usePrevious.js",
+    "ultimateDestination": "packages/react-core/src/hooks/use-previous.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: returns undefined on first render, the previous value thereafter, via a ref updated in a post-render effect."
+  },
+  {
+    "originalPath": "components/lib/hooks/useMergeProps.js",
+    "ultimateDestination": "packages/react-core/src/hooks/use-merge-props.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior (useMergeProps.js): shallow-merges class names (concatenated) and event handlers (composed, not overwritten) across prop sets, later objects winning for all other keys. Authored fresh, not ported line-for-line."
+  },
+  {
+    "originalPath": "components/lib/hooks/useEventListener.js",
+    "ultimateDestination": "packages/react-core/src/hooks/use-event-listener.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: bind/unbind pair attaching/detaching a listener on a resolved target (supports 'window'/'document' string targets and function-resolved targets), gated by a `when` flag."
+  },
+  {
+    "originalPath": "components/lib/hooks/useResizeListener.js",
+    "ultimateDestination": "packages/react-core/src/hooks/use-resize-listener.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: a window-resize-specific specialization of the event-listener bind/unbind pattern. Implemented here as a thin wrapper over useEventListener rather than a duplicate implementation."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/hooks/hooks.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test suite covering all seven hooks, not derived from upstream (PrimeReact's own hooks have no dedicated per-hook spec files in this version)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/hooks/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
