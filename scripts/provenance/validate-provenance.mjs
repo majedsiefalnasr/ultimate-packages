@@ -71,9 +71,9 @@ if (baseRef) {
   pass(`diff check against ${baseRef} passed`);
 }
 
-// Manifest completeness: every .ts file under packages/{uix,ng}-*/src/ must have
+// Manifest completeness: every .ts/.tsx file under packages/{uix,ng,react}-*/src/ must have
 // a corresponding entry in docs/architecture/provenance/<package-name>.json.
-const MANIFEST_WATCHED_PREFIXES = ["uix", "ng"];
+const MANIFEST_WATCHED_PREFIXES = ["uix", "ng", "react"];
 
 function findWatchedPackageDirs(root = "packages") {
   if (!existsSync(root)) return [];
@@ -89,7 +89,7 @@ function walkTsFiles(dir, files = []) {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
       walkTsFiles(full, files);
-    } else if (entry.name.endsWith(".ts")) {
+    } else if (entry.name.endsWith(".ts") || entry.name.endsWith(".tsx")) {
       files.push(full);
     }
   }
