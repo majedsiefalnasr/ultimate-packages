@@ -76,5 +76,35 @@
     "ultimateDestination": "packages/react-core/src/hooks/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/portal/Portal.js",
+    "ultimateDestination": "packages/react-core/src/overlay/portal.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior (Portal.js): DomHandler.isClient()-guarded mount state, ReactDOM.createPortal to a resolved appendTo target defaulting to document.body, appendTo==='self' renders inline instead of portaling. Reimplemented as isClient()-equivalent check + useMountEffect, not ported line-for-line. Ultimate decision: excludes PrimeReactContext-based appendTo default and onMounted/onUnmounted callback props present in the verified source — no demonstrated Ultimate consumer need, per YAGNI."
+  },
+  {
+    "originalPath": "components/lib/hooks/useOverlayListener.js",
+    "ultimateDestination": "packages/react-core/src/overlay/use-overlay-listener.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: composite outside-click + resize (+ orientationchange + overlay-scroll, not included here) dismissal listener. Ultimate decision: scoped to outside-click + resize only, matching the Phase 3 proof set's actual UMenu popup-mode usage — orientationchange/scroll composition deferred until a real consumer needs it, per YAGNI. Behavioral deviation from verified upstream: the outside-click handler in Portal.js's PrimeReact original always invokes `listener` with a computed `valid` flag, leaving validity checks to the caller; this Ultimate implementation instead gates the call internally and only invokes `listener` when the click is genuinely outside both target and overlay, matching this task's own test contract (a click on the target must not invoke the listener at all, not invoke it with valid:false)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/overlay/portal.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream (Portal.js has no dedicated spec file in this version)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/overlay/use-overlay-listener.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/overlay/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
