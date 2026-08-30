@@ -172,5 +172,23 @@
     "ultimateDestination": "packages/react-core/src/focus-trap/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/dialog/Dialog.js (document.primeDialogParams, updateScrollBlocker)",
+    "ultimateDestination": "packages/react-core/src/scroll-lock/use-scroll-lock.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: document.primeDialogParams tracks {id, hasBlockScroll} per mounted-and-visible Dialog, updateScrollBlocker() checks .some(i => i.hasBlockScroll) across all instances. Ultimate decision (intentional deviation, spec §16): replaced the global document-property mutation with a private module-scoped Set<string> registry — coalesces the same way (scroll blocked while >=1 dialog registered), calls @ultimate/uix-utils/dom's already-built blockBodyScroll/unblockBodyScroll only at the 0->1/1->0 boundary transitions, matching verified behavior without exposing a public global."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/scroll-lock/scroll-lock.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, including explicit multi-dialog 0->1/1->0 transition regression coverage per spec §23 — no upstream test file exists to adapt from (Dialog.js has zero PrimeReact-authored tests, verified during the gate). One deviation from the plan's literal brief: added an afterEach that drains the registry (calls unregister for every id used across this file's tests) via the hook's own public API. Root cause: useScrollLock's blockingIds Set is an intentionally private, module-scoped singleton (not exported, not a document property, by design) that outlives any single renderHook call — without explicit cleanup, an id registered in one test (e.g. 'registering the first dialog blocks body scroll' leaves 'dialog-1' registered) leaked into the next test's initial state, making a later register() see the registry as already non-empty and skip the block call, even though beforeEach reset document.body.className. This is a test-isolation gap, not a hook logic bug: in production, UDialog instances always call unregister on unmount, so the registry self-cleans; the test suite must do the same explicitly since nothing else resets the module singleton between test runs. Confirmed via isolated debug instrumentation before concluding this was a test bug rather than an implementation bug."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/scroll-lock/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
