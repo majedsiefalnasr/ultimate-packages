@@ -27,7 +27,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/react/src/index.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored root barrel re-exporting all @ultimate/react submodules, no upstream equivalent file. Currently re-exports ./button and ./tooltip; checkbox/dialog/menu barrels are added by later tasks in this plan."
+    "modificationDescription": "Ultimate-authored root barrel re-exporting all @ultimate/react submodules, no upstream equivalent file. As of Task 18, re-exports all five proof-set component barrels: ./button, ./tooltip, ./checkbox, ./dialog, ./menu."
   },
   {
     "originalPath": "components/lib/tooltip/Tooltip.js",
@@ -98,6 +98,30 @@
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/react/src/dialog/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/menu/Menu.js",
+    "ultimateDestination": "packages/react/src/menu/menu.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream (Menu.js, 518 lines, full read; MenuBase.js, 89 lines, full read; menu.d.ts full read): dual-mode (popup:false inline role='menu', popup:true Portal-rendered overlay via show/hide/toggle), model-driven, aria-activedescendant virtual focus (line 476, no .focus() call on any <li> — verified and preserved, intentional divergence from Angular's UMenu literal-DOM-focus approach per spec §10, ADR-006), full keyboard set (ArrowDown/Up/Home/End/Enter/NumpadEnter/Space/Escape/Tab), disabled-item filtering via 'li[data-pc-section=\"menuitem\"][data-p-disabled=\"false\"]' upstream (replaced here, see below). Verified negative finding, confirmed and preserved: Menu.js does NOT import Tooltip. closeOnEscape defaults to true, popupAlignment defaults to 'left' — both confirmed against MenuBase.js defaultProps and preserved. PrimeReact's data-pc-*/data-p-*-attribute passthrough-derived selectors NOT ported (pt excluded per spec §7) — replaced with an Ultimate-owned data-u-menuitem/data-u-disabled convention (spec §10). Real conflict investigated with evidence, same defect class as UDialog (Task 17): the plan's literal `if (!visible) return null` single-state sketch unmounts the DOM node synchronously on the same render that flips visible to false, before useMotion's effect can call .leave() against an attached element, defeating the leave animation entirely for popup mode. Verified against upstream Menu.js's real two-state model (visibleState gates the CSSTransition's `in` prop; the DOM stays mounted via CSSTransition's own unmountOnExit until onExited fires after the leave transition genuinely completes, and ZIndexUtils.clear/unbindOverlayListener run in onExit/onExited, not synchronously). Fixed here by reapplying Task 17's proven pattern: a `containerVisible` state (initialized to `visible`) gates mount/unmount and stays true through the leave phase; useMotion's onAfterLeave hook (already part of the existing MotionHooks/MotionOptions type, no react-core or uix-motion change needed) is what actually clears the z-index, unbinds the overlay listener, and flips containerVisible to false, once the leave phase completes. Inline mode (popup:false) never toggles visible after mount, matching upstream's visibleState initializing to !props.popup and never changing for inline menus, so this two-state machinery is popup-mode-relevant only. This is a fix scoped entirely to menu.tsx — no react-core or uix-motion file was changed; useMotion's public contract (enter/leave/cancel, onAfterLeave) was used exactly as designed, matching the identical finding already documented on the Dialog.js provenance entry above."
+  },
+  {
+    "originalPath": "components/lib/menu/MenuBase.js",
+    "ultimateDestination": "packages/react/src/menu/menu-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream classes/css shape, .p-*->.u-* renamed. inputStyle/ripple-conditional root classes and submenuHeader class slot omitted (spec §7 pt-independent styling, submenus out of Phase 3 scope)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/menu/menu.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test — no PrimeReact-authored test file exists for Menu (verified absent). Includes explicit regression coverage for the aria-activedescendant virtual-focus contract and the verified no-Tooltip-dependency finding. Real conflict investigated with evidence and fixed: the plan's literal test used `fireEvent.focus(list)` before asserting `document.activeElement === list` — in jsdom/RTL, fireEvent.focus dispatches only the synthetic React onFocus event and does not call the element's real .focus() method, so document.activeElement never actually changes; the assertion would fail regardless of the component's own focus-handling correctness. Fixed by calling the real `list.focus()` DOM method (wrapped in RTL's act(), since the resulting onFocus handler triggers a genuine React state update outside RTL's own event-dispatch wrapping), matching the identical `openButton.focus()` pattern already established in dialog.spec.tsx. Also fixed a real typecheck error (`tsc --noEmit`) in the popup-mode test: the plan's literal `React.createRef<{ toggle: (e: React.SyntheticEvent) => void }>()` is a narrower ref type than UMenu's actual `React.ForwardedRef<UMenuHandle>` (UMenuHandle also requires show/hide), which tsc correctly rejects as a type mismatch even though the untyped test runner did not catch it; fixed by typing the ref as the real exported `UMenuHandle` type."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/menu/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
