@@ -79,17 +79,23 @@ let dialogIdCounter = 0;
  * `keydown` on the document and additionally guards on the closing
  * dialog's z-index matching the *current* top-of-stack z-index (a
  * nested-dialogs-close-only-the-topmost-one safety check via
- * `ZIndexUtils.getCurrent()`). This task's `UOverlay` hardcodes its z-index
- * registry key to `"overlay"` for every instance (a Minor note carried
- * from Task 6's review), so there is only one stacking bucket in this
- * phase — there is no working multi-dialog stacking order to compare
- * against, and no `getCurrent()`-equivalent is exposed by
- * `@ultimate/uix-utils`'s `ZIndex` singleton. A plain document-level
- * `keydown.escape` host listener (unconditional on z-index, guarded only
- * by `closeOnEscape()` and `visible()`) is used instead, matching this
- * task's brief/spec (Step 5, Step 2's test) — since `UOverlay`'s
- * single-bucket registry means nested `UDialog`s aren't a real usable
- * scenario yet, this is not a regression to fix speculatively.
+ * `ZIndexUtils.getCurrent()`). `@ultimate/uix-utils`'s own `ZIndex`
+ * singleton does expose an equivalent `getCurrent(key)` — but `UOverlay`
+ * hardcodes its registry key to `"overlay"` for every instance (a Minor
+ * note carried from Task 6's review), so `getCurrent("overlay")` would
+ * return the same top-of-stack value regardless of which open `UDialog`'s
+ * Escape handler asked, making it useless as a per-instance guard without
+ * `UOverlay` first assigning a genuinely distinct key/handle per instance —
+ * a real architectural change to `UOverlay`'s registration API, out of
+ * this fix's scope. A plain document-level `keydown.escape` host listener
+ * (unconditional on stacking order, guarded only by `closeOnEscape()` and
+ * `visible()`) is used instead, matching this task's brief/spec (Step 5,
+ * Step 2's test). Known, accepted consequence: with two or more `UDialog`s
+ * open simultaneously (not nested — independent siblings), a single Escape
+ * press closes all of them, since each instance's listener guards only on
+ * its own `visible()`/`closeOnEscape()`, not on stacking position. Fixing
+ * this requires `UOverlay` to expose real per-instance stacking identity
+ * first; deferred to whichever future phase needs multi-dialog support.
  *
  * Focus-return-on-close: PrimeNG's own extracted source has no logic
  * capturing/restoring `document.activeElement` around the visibility
@@ -229,14 +235,11 @@ export class UDialog extends UBaseComponent {
       } else if (!visible && this.wasVisible) {
         this.runLeaveMotion();
         this.restoreFocus();
+        this.onHide.emit();
       }
 
       this.wasVisible = visible;
     });
-  }
-
-  override ngOnInit(): void {
-    super.ngOnInit();
   }
 
   protected close(): void {
@@ -259,7 +262,6 @@ export class UDialog extends UBaseComponent {
 
   private emitClose(): void {
     this.visibleChange.emit(false);
-    this.onHide.emit();
   }
 
   private runEnterMotion(): void {

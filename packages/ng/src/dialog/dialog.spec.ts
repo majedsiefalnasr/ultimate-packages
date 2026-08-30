@@ -147,4 +147,46 @@ describe("UDialog", () => {
     expect(document.activeElement).toBe(trigger);
     trigger.remove();
   });
+
+  it("emits onHide exactly once when visible genuinely transitions true→false", async () => {
+    const fixture = TestBed.createComponent(TestHostComponent);
+    let hideCount = 0;
+    fixture.componentInstance.visible = true;
+    fixture.detectChanges();
+    const dialogInstance = fixture.debugElement.query(
+      (de) => de.name === "u-dialog"
+    ).componentInstance;
+    dialogInstance.onHide.subscribe(() => hideCount++);
+
+    fixture.componentInstance.visible = false;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges(false);
+    await fixture.whenStable();
+
+    expect(hideCount).toBe(1);
+  });
+
+  it("does not emit onHide when visible never actually changes (e.g. a one-way binding that stays true)", async () => {
+    // Regression guard: emitClose() previously called onHide.emit()
+    // unconditionally on Escape/close-button, even when a one-way
+    // [visible]="true" binding meant visible() never actually transitioned
+    // to false — onHide must describe a real state change, not an attempt.
+    @Component({
+      standalone: true,
+      imports: [UDialog],
+      template: `<u-dialog [visible]="true" header="Confirm">Body</u-dialog>`,
+    })
+    class OneWayHostComponent {}
+    const fixture = TestBed.createComponent(OneWayHostComponent);
+    fixture.detectChanges();
+    const dialogDebugEl = fixture.debugElement.query((de) => de.name === "u-dialog");
+    let hideCount = 0;
+    dialogDebugEl.componentInstance.onHide.subscribe(() => hideCount++);
+
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(hideCount).toBe(0);
+  });
 });

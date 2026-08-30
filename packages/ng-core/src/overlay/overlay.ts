@@ -8,7 +8,7 @@ import {
   input,
   output,
 } from "@angular/core";
-import { isPlatformBrowser } from "@angular/common";
+import { DOCUMENT, isPlatformBrowser } from "@angular/common";
 import { ZIndex } from "@ultimate/uix-utils/zindex";
 
 /**
@@ -41,6 +41,7 @@ export class UOverlay {
   private readonly el: ElementRef<HTMLElement> = inject(ElementRef);
   private readonly renderer: Renderer2 = inject(Renderer2);
   private readonly platformId: object = inject(PLATFORM_ID);
+  private readonly document: Document = inject(DOCUMENT);
 
   /** Whether the overlay is currently shown. */
   visible = input(false);
@@ -76,7 +77,7 @@ export class UOverlay {
     this.originalNextSibling = hostEl.nextSibling;
 
     const appendTo = this.appendTo();
-    const target = appendTo === "body" ? document.body : appendTo;
+    const target = appendTo === "body" ? this.document.body : appendTo;
     this.renderer.appendChild(target, hostEl);
     ZIndex.set("overlay", hostEl, 1000);
     this.appended = true;

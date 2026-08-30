@@ -100,7 +100,9 @@ export class UTooltip extends UBaseComponent {
   }
 
   protected hide(): void {
-    ZIndex.clear(this.container as HTMLElement);
+    if (this.container) {
+      ZIndex.clear(this.container);
+    }
     this.remove();
   }
 

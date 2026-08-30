@@ -58,6 +58,52 @@ describe("UMenu", () => {
     expect(document.activeElement).toBe(menuItems[2]);
   });
 
+  it("seeds tabindex=0 on the first non-separator item, not model index 0", () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(UMenu);
+    fixture.componentRef.setInput("model", [
+      { separator: true },
+      { label: "Home" },
+      { label: "Settings" },
+    ]);
+    fixture.detectChanges();
+    const menuItems = fixture.nativeElement.querySelectorAll('[role="menuitem"]');
+    // With a leading separator, the first rendered anchor ("Home") must be
+    // the one reachable by Tab — not the model's index-0 entry, which is
+    // the separator and renders no anchor at all.
+    expect(menuItems[0].getAttribute("tabindex")).toBe("0");
+    expect(menuItems[1].getAttribute("tabindex")).toBe("-1");
+  });
+
+  it("does not apply routerLink to a disabled item, even if routerLink is set", () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([{ path: "settings", children: [] }])],
+    });
+    const fixture = TestBed.createComponent(UMenu);
+    fixture.componentRef.setInput("model", [
+      { label: "Settings", routerLink: "/settings", disabled: true },
+    ]);
+    fixture.detectChanges();
+    const link = fixture.nativeElement.querySelector('[role="menuitem"]') as HTMLAnchorElement;
+    // A disabled item must not be a real navigable link — routerLink being
+    // bound regardless of item.disabled would leave a real href in place,
+    // reachable via middle-click/ctrl-click/screen-reader link lists even
+    // though onItemClick's preventDefault blocks plain mouse clicks.
+    expect(link.getAttribute("href")).toBeNull();
+  });
+
+  it("applies the p-disabled modifier class to a disabled item (matches uix-styles' real selector)", () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(UMenu);
+    fixture.componentRef.setInput("model", [{ label: "Off", disabled: true }]);
+    fixture.detectChanges();
+    const li = fixture.nativeElement.querySelector('[role="none"]') as HTMLElement;
+    // @ultimate/uix-styles/menu's CSS selects .p-disabled (a PrimeNG-wide
+    // shared modifier, kept unrenamed like checkbox-style.ts's p-highlight/
+    // p-disabled) — a u-disabled class here would match no selector at all.
+    expect(li.classList.contains("p-disabled")).toBe(true);
+  });
+
   it("applies routerLink navigation to items with a routerLink field", () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([{ path: "settings", children: [] }])],
@@ -71,16 +117,29 @@ describe("UMenu", () => {
     expect(settingsLink.getAttribute("href")).toContain("/settings");
   });
 
-  it("applies [uTooltip] to an item label so a tooltip appears on hover for long labels", () => {
+  it("shows a tooltip on hover when an item opts in via item.tooltip", () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(UMenu);
     fixture.componentRef.setInput("model", [
-      { label: "A very long menu item label that truncates" },
+      { label: "Long label", tooltip: "A very long menu item label that truncates" },
     ]);
     fixture.detectChanges();
     const label = fixture.nativeElement.querySelector('[role="menuitem"] span, [role="menuitem"]');
     label.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
     fixture.detectChanges();
     expect(document.querySelector('[role="tooltip"]')).not.toBeNull();
+  });
+
+  it("shows no tooltip when item.tooltip is unset, even on hover", () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(UMenu);
+    fixture.componentRef.setInput("model", [{ label: "Plain item" }]);
+    fixture.detectChanges();
+    const label = fixture.nativeElement.querySelector('[role="menuitem"] span, [role="menuitem"]');
+    label.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
+    fixture.detectChanges();
+    // Regression guard: [uTooltip]="item.label" previously showed a
+    // redundant tooltip duplicating the visible label on every item.
+    expect(document.querySelector('[role="tooltip"]')).toBeNull();
   });
 });

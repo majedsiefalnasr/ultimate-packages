@@ -21,6 +21,11 @@ import { style as menuStyle } from "@ultimate/uix-styles/menu";
  * `styleModule.classes[key](params)` with a plain flat params object, no
  * `{ instance }` wrapper — matching `ButtonStyle`'s already-established,
  * real working contract rather than the brief's illustrative shape.
+ *
+ * `p-focus`/`p-disabled` kept unrenamed (same precedent as `CheckboxStyle`,
+ * `packages/ng/src/checkbox/checkbox-style.ts`) to match the literal
+ * `.p-focus`/`.p-disabled` selectors in `@ultimate/uix-styles/menu`'s CSS —
+ * these are PrimeNG-wide shared modifier classes, not `u-menu`-scoped ones.
  */
 const css = /*css*/ `
     ${menuStyle}
@@ -58,8 +63,8 @@ const classes = {
     return [
       "u-menu-item",
       {
-        "u-focus": focused,
-        "u-disabled": disabled,
+        "p-focus": focused,
+        "p-disabled": disabled,
       },
     ];
   },

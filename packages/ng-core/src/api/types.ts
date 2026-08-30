@@ -32,6 +32,15 @@ export interface UMenuItem {
    * When set as true, disables the menuitem.
    */
   disabled?: boolean;
+  /**
+   * Optional tooltip text shown on hover/focus. Real PrimeNG gates its
+   * equivalent behind `showOnEllipsis` (truncation-only), which is out of
+   * `UTooltip`'s scope (Task 13) — this field makes the tooltip explicitly
+   * opt-in per item instead of applying `[uTooltip]="item.label"`
+   * unconditionally, which would show a redundant tooltip duplicating the
+   * visible label on every item regardless of whether it's truncated.
+   */
+  tooltip?: string;
 }
 
 /**

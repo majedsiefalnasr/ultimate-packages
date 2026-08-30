@@ -59,7 +59,11 @@ const classes = {
   root: () => ["u-dialog u-component"],
   header: "u-dialog-header",
   title: "u-dialog-title",
-  resizeHandle: "u-resizable-handle",
+  // Kept unrenamed to match the literal .p-resizable-handle selector in
+  // @ultimate/uix-styles/dialog's CSS (same precedent as CheckboxStyle's
+  // p-highlight/p-disabled) — unused today since UDialog has no resize
+  // support yet, but would otherwise be a live styling bug the moment it does.
+  resizeHandle: "p-resizable-handle",
   headerActions: "u-dialog-header-actions",
   pcMaximizeButton: "u-dialog-maximize-button",
   pcCloseButton: "u-dialog-close-button",

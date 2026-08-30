@@ -6,6 +6,7 @@ import {
   ViewEncapsulation,
   type QueryList,
   booleanAttribute,
+  computed,
   input,
 } from "@angular/core";
 import { RouterModule } from "@angular/router";
@@ -65,8 +66,16 @@ import { menuStyleModule } from "./menu-style";
  * (`.vendor-extracted/ng/menu/menu.ts` lines 74-110). This task's smaller
  * single-component surface applies the equivalent `[uTooltip]`/
  * `[routerLink]` bindings directly on this component's own `<a>` — same
- * dependency, same load-bearing behavior (truncated-label tooltips,
- * internal navigation), adapted to this task's flatter file-list scope.
+ * dependency, same load-bearing behavior (internal navigation), adapted to
+ * this task's flatter file-list scope. Unlike real PrimeNG (which gates its
+ * tooltip behind `showOnEllipsis` truncation-detection, out of `UTooltip`'s
+ * scope), the tooltip here is opt-in via `UMenuItem.tooltip` rather than
+ * bound unconditionally to `item.label` — the latter showed a redundant
+ * tooltip duplicating the visible label on every item, not just truncated
+ * ones. `[routerLink]` is also suppressed when `item.disabled` is set, so a
+ * disabled item is never a real navigable link (middle-click/ctrl-click/
+ * screen-reader link lists would otherwise bypass `onItemClick`'s
+ * `preventDefault`).
  *
  * `@ViewChildren` here (querying rendered `<a role="menuitem">` anchors)
  * is read only inside keydown handlers, which fire strictly after Angular
@@ -105,10 +114,10 @@ import { menuStyleModule } from "./menu-style";
                 role="menuitem"
                 #menuItemLink
                 [class]="cx('itemLink')"
-                [tabindex]="$index === 0 ? 0 : -1"
+                [tabindex]="$index === firstFocusableIndex() ? 0 : -1"
                 [attr.aria-disabled]="item.disabled || null"
-                [routerLink]="item.routerLink ?? null"
-                [uTooltip]="item.label"
+                [routerLink]="item.disabled ? null : (item.routerLink ?? null)"
+                [uTooltip]="item.tooltip"
                 uRipple
                 (click)="onItemClick($event, item)"
               >
@@ -134,6 +143,20 @@ export class UMenu extends UBaseComponent {
   model = input<UMenuItem[]>([]);
   /** Defines if menu would displayed as a popup. */
   popup = input(false, { transform: booleanAttribute });
+
+  /**
+   * Model index of the first rendered `<a role="menuitem">` (i.e. the first
+   * non-separator item), used to seed initial `tabindex="0"` placement.
+   * `$index` in the template counts every model entry including separators
+   * (which render no anchor), so comparing directly against `0` breaks
+   * roving tabindex whenever a menu's first item is a separator — nothing
+   * would ever receive `tabindex="0"`. Falls back to `0` for an all-
+   * separator model (harmless: no anchor exists to receive it either way).
+   */
+  protected readonly firstFocusableIndex = computed(() => {
+    const index = this.model().findIndex((item) => !item.separator);
+    return index === -1 ? 0 : index;
+  });
 
   @ViewChildren("menuItemLink") private menuItemLinks?: QueryList<ElementRef<HTMLAnchorElement>>;
 

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, PLATFORM_ID, inject } from "@angular/core";
+import { Directive, ElementRef, PLATFORM_ID, booleanAttribute, inject, input } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { getFocusableElements } from "@ultimate/uix-utils/dom";
 
@@ -21,14 +21,14 @@ export class UAutoFocus {
    * When present, it specifies that the component should automatically get
    * focus on load.
    */
-  @Input("uAutoFocus") autofocus = false;
+  autofocus = input(false, { alias: "uAutoFocus", transform: booleanAttribute });
 
   private focused = false;
 
   ngAfterContentChecked(): void {
     // This sets the `attr.autofocus` which is different than the Input
     // `autofocus` attribute.
-    if (this.autofocus === false) {
+    if (this.autofocus() === false) {
       this.host.nativeElement.removeAttribute("autofocus");
     } else {
       this.host.nativeElement.setAttribute("autofocus", true);
@@ -46,7 +46,7 @@ export class UAutoFocus {
   }
 
   private autoFocus(): void {
-    if (isPlatformBrowser(this.platformId) && this.autofocus) {
+    if (isPlatformBrowser(this.platformId) && this.autofocus()) {
       setTimeout(() => {
         const focusableElements = getFocusableElements(this.host?.nativeElement);
 

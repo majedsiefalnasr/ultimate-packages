@@ -16,8 +16,6 @@
   "dependencies": {
     "@ultimate/uix-utils": "workspace:*",
     "@ultimate/uix-styled": "workspace:*",
-    "@ultimate/uix-motion": "workspace:*",
-    "@ultimate/uix-styles": "workspace:*",
     "tslib": "^2.8.1"
   },
   "peerDependencies": {
