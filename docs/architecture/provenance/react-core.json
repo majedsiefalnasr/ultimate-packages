@@ -208,5 +208,29 @@
     "ultimateDestination": "packages/react-core/src/motion/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/hooks/useStyle.js",
+    "ultimateDestination": "packages/react-core/src/styling/react-style-sheet.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: creates a real <style data-primereact-style-id> element, dedupes by name, appends to document.head, SSR-safe. Ultimate decision: does NOT port useStyle.js's implementation — instead subclasses the already-built, framework-neutral @ultimate/uix-styled StyleSheet (whose base createStyleElement is a documented no-op, confirmed by an existing uix-styled test), overriding createStyleElement to delegate to the already-built @ultimate/uix-utils/dom createStyleElement. This closes a real, previously-undocumented gap: Angular's ngCoreStyleSheet never overrides this hook either, so no <style> element is currently injected by Angular's style-registration path. Per spec §8's explicit decision, this task fixes it for React only; the Angular-side gap is recorded as a new Phase 2 follow-up (Task 20), not fixed here. Deviation from the plan's literal brief: the brief's sample code imports StyleSheet as a default export (`import StyleSheet, { type StyleMeta } from \"@ultimate/uix-styled\"`), but @ultimate/uix-styled's built package (packages/uix-styled/dist/index.mjs, generated from src/index.ts's `export { default as StyleSheet, ... } from \"./stylesheet/index\"`) only exposes StyleSheet as a named export from the package root — confirmed by inspecting the built dist output directly (a bare default import resolved to `undefined`, causing `class ReactStyleSheet extends StyleSheet` to throw 'Class extends value undefined is not a constructor'). This matches the existing precedent in packages/ng-core/src/basecomponent/style-sheet.ts, which already imports `{ StyleSheet } from \"@ultimate/uix-styled\"` the same way. Fixed to `import { StyleSheet, type StyleMeta } from \"@ultimate/uix-styled\"`; StyleMeta itself is genuinely a named type export in both source and dist, unaffected."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/styling/use-component-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored mount-time registration hook, calling reactCoreStyleSheet.add() once per componentName via useMountEffect — not per-render. No direct upstream equivalent (PrimeReact's useHandleStyle bundles this together with base/common/global style loading and passthrough hook invocation, both excluded per spec §7)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/styling/styling.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, including the specific real-<style>-element-injection regression test that would have caught Angular's silent gap (spec §23, §33)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/styling/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]

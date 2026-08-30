@@ -1,4 +1,5 @@
 import { classNames } from "@ultimate/uix-utils";
+import { useComponentStyle } from "../styling/use-component-style";
 
 export type ClassValue = string | Record<string, boolean> | (string | Record<string, boolean>)[];
 
@@ -21,13 +22,10 @@ function resolveClassValue(
   return Array.isArray(value) ? classNames(...value) : classNames(value);
 }
 
-// `componentName` is retained on the options contract for forward compatibility with
-// Tasks 13-17 (style registration via useComponentStyle); not yet consumed by this
-// task's cx()-only resolver.
-export function useComponentBase(options: ComponentBaseOptions): {
+export function useComponentBase({ componentName, styleModule }: ComponentBaseOptions): {
   cx: (key: string, params?: Record<string, unknown>) => string | undefined;
 } {
-  const { styleModule } = options;
+  useComponentStyle(componentName, styleModule);
 
   const cx = (key: string, params?: Record<string, unknown>) =>
     resolveClassValue(styleModule.classes[key], params);

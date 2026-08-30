@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useComponentBase } from "./component-base";
+import { reactCoreStyleSheet } from "../styling/react-style-sheet";
 
 describe("useComponentBase", () => {
   it("cx() resolves a string class-name slot unchanged", () => {
@@ -35,5 +36,20 @@ describe("useComponentBase", () => {
       })
     );
     expect(result.current.cx("missing")).toBeUndefined();
+  });
+
+  it("registers the component's style with reactCoreStyleSheet on mount, injecting a real <style> element", () => {
+    document.head.querySelectorAll("style").forEach((el) => el.remove());
+    renderHook(() =>
+      useComponentBase({
+        componentName: "test-component-4",
+        styleModule: { css: ".u-test-4 { color: blue; }", classes: {} },
+      })
+    );
+    expect(reactCoreStyleSheet.has("test-component-4")).toBe(true);
+    const matching = [...document.head.querySelectorAll("style")].filter((el) =>
+      el.textContent?.includes(".u-test-4")
+    );
+    expect(matching).toHaveLength(1);
   });
 });
