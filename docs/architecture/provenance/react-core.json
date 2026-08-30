@@ -232,5 +232,47 @@
     "ultimateDestination": "packages/react-core/src/styling/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/icons/spinner/index.js",
+    "ultimateDestination": "packages/react-core/src/icons/spinner-icon.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream: inline <svg> with real path data, React.memo(React.forwardRef(...)) wrapper, IconBase.getPTI passthrough spread. Ultimate decision: path data ported verbatim (pure visual asset, not behavior); passthrough spread excluded per spec §7, replaced with plain label/spin/className props matching Angular's already-built UBaseIcon shape. Verified minimum icon set (5) confirmed via direct import inspection of Button.js/Dialog.js/Checkbox.js during the Real-Source Verification Gate."
+  },
+  {
+    "originalPath": "components/lib/icons/times/index.js",
+    "ultimateDestination": "packages/react-core/src/icons/times-icon.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Same treatment as spinner-icon.tsx above: path data ported verbatim, passthrough spread excluded."
+  },
+  {
+    "originalPath": "components/lib/icons/windowmaximize/index.js",
+    "ultimateDestination": "packages/react-core/src/icons/window-maximize-icon.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Same treatment as spinner-icon.tsx above: path data ported verbatim, passthrough spread excluded. Structural deviation from the Spinner template: the verified upstream <path> here carries fillRule=\"evenodd\" and clipRule=\"evenodd\" attributes (a compound-shape icon: outer window frame plus an inner arrow/corner glyph in one path), which Spinner's single simple path does not have. Ported both attributes verbatim onto the React <path> element (React accepts these as camelCase SVG props) rather than omitting them, since dropping them would change the rendered shape (evenodd fill-rule affects which sub-regions of a self-intersecting path are painted)."
+  },
+  {
+    "originalPath": "components/lib/icons/windowminimize/index.js",
+    "ultimateDestination": "packages/react-core/src/icons/window-minimize-icon.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Same treatment as spinner-icon.tsx above: path data ported verbatim, passthrough spread excluded. Same fillRule/clipRule structural deviation as window-maximize-icon.tsx above, for the same reason (verified in the extracted upstream source)."
+  },
+  {
+    "originalPath": "components/lib/icons/check/index.js",
+    "ultimateDestination": "packages/react-core/src/icons/check-icon.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Same treatment as spinner-icon.tsx above: path data ported verbatim, passthrough spread excluded. New relative to Angular's icon set — UCheckbox styles its native input directly on the Angular side, no icon; React's Checkbox uses a decorative check icon (verified: Checkbox.js's CheckIcon usage)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/icons/icons.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test covering all 5 icons via describe.each, not derived from upstream."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/icons/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent. Exposed only via the single root package entry point — no ./icons subpath export (spec §3, tightened)."
   }
 ]
