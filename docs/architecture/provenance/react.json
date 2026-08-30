@@ -1,0 +1,32 @@
+[
+  {
+    "originalPath": "components/lib/button/Button.js",
+    "ultimateDestination": "packages/react/src/button/button.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream API (Button.js, button.d.ts): label/icon/iconPos/loading/loadingIcon/severity/size/text/raised/rounded/outlined/link/plain/badge/badgeClassName/tooltip/tooltipOptions/disabled/visible, extends native ButtonHTMLAttributes Omit<'disabled'|'ref'>, React.forwardRef with no useImperativeHandle (ref resolves to raw <button>), default aria-label = label + badge. Ultimate decision: preserved verbatim per spec §18's convergent-evidence justification (Angular's already-built UButton independently arrived at the same boolean-modifier prop set, not a variant enum) — no React-native redesign needed. pt/ptm/ptmo excluded per spec §7. Ripple excluded per spec §6 (not a Phase 3 component). tooltip/tooltipOptions props accepted here but wired to a real UTooltip render only in Task 15's Step 9, after UTooltip exists."
+  },
+  {
+    "originalPath": "components/lib/button/ButtonBase.js",
+    "ultimateDestination": "packages/react/src/button/button-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream classes/css object shape, .p-*->.u-* renamed, instance.x passthrough-fallback pattern dropped since pt is excluded. Ported from the extracted reference file's real class-name logic, not invented."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/button/button.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, adapting scenario coverage from verified Button.spec.js (the one PrimeReact-authored test file in the proof set) plus additional Ultimate-specific assertions (ref forwarding, boolean-modifier classes)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/button/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored root barrel re-exporting all @ultimate/react submodules, no upstream equivalent file. Currently re-exports only ./button; checkbox/dialog/menu/tooltip barrels are added by later tasks in this plan."
+  }
+]
