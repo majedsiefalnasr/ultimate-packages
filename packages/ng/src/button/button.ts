@@ -41,12 +41,14 @@ import { buttonStyleModule } from "./button-style";
  *     ("X is not used within the template") — confirmed by actually adding
  *     all 5 and rebuilding (verified in Task 12's test run), not assumed.
  *   - Applying `UAutoFocus`'s bare `uAutoFocus` selector (no `[..]="..."`
- *     binding) to silence that warning is NOT inert: its `@Input("uAutoFocus")
- *     autofocus` reads the bare attribute as the truthy string `""`,
- *     which would call `.focus()` on every `UButton` unconditionally on
- *     init — a real, unintended behavior change, not a documentation nit
- *     (confirmed against `UAutoFocus`'s own spec, which binds `[uAutoFocus]="true"`
- *     explicitly to trigger that same behavior).
+ *     binding) to silence that warning is NOT inert: its
+ *     `autofocus = input(false, { alias: "uAutoFocus", transform:
+ *     booleanAttribute })` reads the bare attribute as the truthy string
+ *     `""`, which `booleanAttribute` coerces to `true` — calling `.focus()`
+ *     on every `UButton` unconditionally on init, a real, unintended
+ *     behavior change, not a documentation nit (confirmed against
+ *     `UAutoFocus`'s own spec, which binds `[uAutoFocus]="true"` explicitly
+ *     to trigger that same behavior).
  *   - PrimeNG's real `Button` never renders a `<p-fluid>` element itself —
  *     it DI-injects `Fluid` (`inject(Fluid, { optional, host, skipSelf })`,
  *     `.vendor-extracted/ng/button/button.ts` line 851) purely to detect an
