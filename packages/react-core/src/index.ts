@@ -2,6 +2,7 @@ export * from "./base";
 export * from "./escape";
 export * from "./focus-trap";
 export * from "./hooks";
+export * from "./motion";
 export * from "./overlay";
 export * from "./scroll-lock";
 export * from "./zindex";

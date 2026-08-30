@@ -190,5 +190,23 @@
     "ultimateDestination": "packages/react-core/src/scroll-lock/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/csstransition/CSSTransition.js",
+    "ultimateDestination": "packages/react-core/src/motion/use-motion.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream: CSSTransition.js is a thin wrapper around the real npm react-transition-group package's CSSTransition component (declarative, JSX-driven: in/classNames/timeout props). Ultimate decision (intentional deviation, spec §17): reuses @ultimate/uix-motion's already-built, framework-agnostic, Promise-based createMotion(element, options).enter()/.leave() instead, called from a React useEffect keyed on the visible flag, .cancel() on cleanup. No react-transition-group dependency added — no functional gap was found during the Real-Source Verification Gate that would require the declarative wrapper PrimeReact needed."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/motion/motion.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/motion/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
