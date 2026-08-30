@@ -3,7 +3,7 @@
     "originalPath": "components/lib/componentbase/ComponentBase.js",
     "ultimateDestination": "packages/react-core/src/base/component-base.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeReact's ComponentBase. Verified source: cx() resolves css.classes[key](params) (ComponentBase.js lines ~511-513). Ultimate decision: excludes the full pt/ptm/ptmo passthrough system (~150 lines of nested-key resolution in the verified source) entirely, per spec §7's Option B posture — no demonstrated Ultimate consumer need, same YAGNI justification as Angular's ADR-018."
+    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeReact's ComponentBase. Verified source: cx() resolves css.classes[key](params) (ComponentBase.js lines ~511-513). Ultimate decision: excludes the full pt/ptm/ptmo passthrough system (~150 lines of nested-key resolution in the verified source) entirely, per spec §7's Option B posture — no demonstrated Ultimate consumer need, same YAGNI justification as Angular's ADR-018. Amended in Task 14 (UButton): ClassValue's Record<string, boolean> widened to Record<string, boolean | undefined>, since a boolean? prop passed straight into a boolean-modifier class-name record position naturally types as boolean | undefined -- resolveClassValue()'s classNames() call already treats undefined and false identically at runtime, so this is a pure type-widening fix with no behavior change, made once here so every future component's style module (checkbox/dialog/menu, Tasks 16-18) doesn't have to locally re-patch around the same gap."
   },
   {
     "originalPath": "n/a",

@@ -9,7 +9,7 @@
     "originalPath": "components/lib/button/ButtonBase.js",
     "ultimateDestination": "packages/react/src/button/button-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Verified upstream classes/css object shape, .p-*->.u-* renamed, instance.x passthrough-fallback pattern dropped since pt is excluded. Ported from the extracted reference file's real class-name logic, not invented."
+    "modificationDescription": "Verified upstream classes/css object shape, .p-*->.u-* renamed, instance.x passthrough-fallback pattern dropped since pt is excluded. Ported from the extracted reference file's real class-name logic, not invented. Two Boolean(...) coercions remain (severity, label) at sites where the boolean-modifier value is a string|undefined, not boolean|undefined -- those two are a real type mismatch unrelated to the ClassValue fix below and stay by design. The other four coercions this file originally carried were removed after packages/react-core/src/base/component-base.ts's ClassValue type was widened from Record<string, boolean> to Record<string, boolean | undefined> (a pure type-widening fix, no runtime change -- classNames() already treated undefined and false identically), which is the correct general-purpose fix for every future boolean-modifier style module (checkbox/dialog/menu, Tasks 16-18) rather than a per-component local workaround."
   },
   {
     "originalPath": "n/a",
