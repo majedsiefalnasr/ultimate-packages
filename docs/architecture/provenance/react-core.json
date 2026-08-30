@@ -106,5 +106,35 @@
     "ultimateDestination": "packages/react-core/src/overlay/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/hooks/useGlobalOnEscapeKey.js",
+    "ultimateDestination": "packages/react-core/src/escape/use-global-escape-key.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: a single shared document keydown listener gated by a two-level [primaryPriority, secondaryPriority] tuple map, only the highest tuple's callback fires, listener attaches/detaches based on whether any registration exists. Independently authored per spec §11 — this is more correct than Angular's existing UDialog Escape handling (ADR-020's documented gap: no multi-dialog stacking), and this reimplementation is what closes that gap for React."
+  },
+  {
+    "originalPath": "components/lib/hooks/useDisplayOrder.js",
+    "ultimateDestination": "packages/react-core/src/escape/use-display-order.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: per-named-group module-level registry assigning each mounted-and-visible instance an incrementing display-order index, cleaned up on unmount with array-tail-trimming. Feeds useGlobalEscapeKey's secondary priority."
+  },
+  {
+    "originalPath": "components/lib/hooks/useGlobalOnEscapeKey.js (ESC_KEY_HANDLING_PRIORITIES constant)",
+    "ultimateDestination": "packages/react-core/src/escape/priorities.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream enum values for DIALOG (300), MENU (500), TOOLTIP (1200) — the three Phase 3 proof-set-relevant tiers only. Upstream's other 8 tiers (SIDEBAR, SLIDE_MENU, IMAGE, OVERLAY_PANEL, PASSWORD, CASCADE_SELECT, SPLIT_BUTTON, SPEED_DIAL) are not declared, per spec's explicit instruction not to speculatively declare priorities for non-Phase-3 components."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/escape/escape.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, including a genuinely new test category (multi-instance priority-tuple stacking) that upstream itself has no dedicated spec file to cover."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/escape/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
