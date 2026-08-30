@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useComponentBase, USpinnerIcon } from "@ultimate/react-core";
+import { UTooltip } from "../tooltip";
 import { buttonStyleModule } from "./button-style";
 
 export interface UButtonProps
@@ -44,6 +45,8 @@ export const UButton = React.forwardRef<HTMLButtonElement, UButtonProps>(functio
     badge,
     badgeClassName,
     visible = true,
+    tooltip,
+    tooltipOptions,
     className,
     children,
     "aria-label": ariaLabel,
@@ -54,6 +57,19 @@ export const UButton = React.forwardRef<HTMLButtonElement, UButtonProps>(functio
   const { cx } = useComponentBase({ componentName: "button", styleModule: buttonStyleModule });
   const isDisabled = disabled || loading;
   const hasIcon = Boolean(icon || loading);
+  const internalRef = React.useRef<HTMLButtonElement | null>(null);
+
+  const setRef = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      internalRef.current = node;
+      if (typeof ref === "function") {
+        ref(node);
+      } else if (ref) {
+        (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
+      }
+    },
+    [ref]
+  );
 
   if (!visible) return null;
 
@@ -70,23 +86,26 @@ export const UButton = React.forwardRef<HTMLButtonElement, UButtonProps>(functio
   };
 
   return (
-    <button
-      ref={ref}
-      type="button"
-      {...rest}
-      disabled={isDisabled}
-      aria-label={defaultAriaLabel}
-      className={[
-        cx("root", { hasIcon, label, loading, severity, raised, rounded, text, outlined, link, plain, size }),
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      {renderIcon()}
-      {label && <span className={cx("label")}>{label}</span>}
-      {children}
-      {badge && <span className={badgeClassName}>{badge}</span>}
-    </button>
+    <>
+      <button
+        ref={setRef}
+        type="button"
+        {...rest}
+        disabled={isDisabled}
+        aria-label={defaultAriaLabel}
+        className={[
+          cx("root", { hasIcon, label, loading, severity, raised, rounded, text, outlined, link, plain, size }),
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {renderIcon()}
+        {label && <span className={cx("label")}>{label}</span>}
+        {children}
+        {badge && <span className={badgeClassName}>{badge}</span>}
+      </button>
+      {tooltip && <UTooltip target={internalRef} content={tooltip} {...tooltipOptions} />}
+    </>
   );
 });

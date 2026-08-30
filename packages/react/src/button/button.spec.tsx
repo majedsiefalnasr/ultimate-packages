@@ -1,7 +1,7 @@
 /// <reference types="@testing-library/jest-dom" />
 import * as React from "react";
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { UButton } from "./button";
 
 describe("UButton", () => {
@@ -53,5 +53,11 @@ describe("UButton", () => {
     expect(button.className).toContain("u-button-danger");
     expect(button.className).toContain("u-button-lg");
     expect(button.className).toContain("u-button-outlined");
+  });
+
+  it("renders a UTooltip targeting itself when the tooltip prop is set", async () => {
+    render(<UButton label="Save" tooltip="Save changes" />);
+    fireEvent.mouseEnter(screen.getByRole("button"));
+    await waitFor(() => expect(screen.getByText("Save changes")).toBeVisible());
   });
 });

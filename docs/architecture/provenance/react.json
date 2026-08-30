@@ -3,7 +3,7 @@
     "originalPath": "components/lib/button/Button.js",
     "ultimateDestination": "packages/react/src/button/button.tsx",
     "modificationStatus": "adapted",
-    "modificationDescription": "Verified upstream API (Button.js, button.d.ts): label/icon/iconPos/loading/loadingIcon/severity/size/text/raised/rounded/outlined/link/plain/badge/badgeClassName/tooltip/tooltipOptions/disabled/visible, extends native ButtonHTMLAttributes Omit<'disabled'|'ref'>, React.forwardRef with no useImperativeHandle (ref resolves to raw <button>), default aria-label = label + badge. Ultimate decision: preserved verbatim per spec §18's convergent-evidence justification (Angular's already-built UButton independently arrived at the same boolean-modifier prop set, not a variant enum) — no React-native redesign needed. pt/ptm/ptmo excluded per spec §7. Ripple excluded per spec §6 (not a Phase 3 component). tooltip/tooltipOptions props accepted here but wired to a real UTooltip render only in Task 15's Step 9, after UTooltip exists."
+    "modificationDescription": "Verified upstream API (Button.js, button.d.ts): label/icon/iconPos/loading/loadingIcon/severity/size/text/raised/rounded/outlined/link/plain/badge/badgeClassName/tooltip/tooltipOptions/disabled/visible, extends native ButtonHTMLAttributes Omit<'disabled'|'ref'>, React.forwardRef with no useImperativeHandle (ref resolves to raw <button>), default aria-label = label + badge. Ultimate decision: preserved verbatim per spec §18's convergent-evidence justification (Angular's already-built UButton independently arrived at the same boolean-modifier prop set, not a variant enum) — no React-native redesign needed. pt/ptm/ptmo excluded per spec §7. Ripple excluded per spec §6 (not a Phase 3 component). tooltip/tooltipOptions props wired to a real `<UTooltip target={internalRef} content={tooltip} {...tooltipOptions}>` render, matching verified Button.js line 136's composition exactly, second confirmation (with Checkbox, Task 16) of the approved ref-target-primitive-plus-prop-sugar Tooltip API decision."
   },
   {
     "originalPath": "components/lib/button/ButtonBase.js",
@@ -27,6 +27,30 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/react/src/index.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored root barrel re-exporting all @ultimate/react submodules, no upstream equivalent file. Currently re-exports only ./button; checkbox/dialog/menu/tooltip barrels are added by later tasks in this plan."
+    "modificationDescription": "Ultimate-authored root barrel re-exporting all @ultimate/react submodules, no upstream equivalent file. Currently re-exports ./button and ./tooltip; checkbox/dialog/menu barrels are added by later tasks in this plan."
+  },
+  {
+    "originalPath": "components/lib/tooltip/Tooltip.js",
+    "ultimateDestination": "packages/react/src/tooltip/tooltip.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream (Tooltip.js, 571 lines, full read; Tooltip.spec.js, all 13 tests read): target-based component, resolves target via ref/HTMLElement/selector, imperatively addEventListener's show/hide events on the resolved node, portal-renders a role='tooltip' panel only while visible. Ultimate decision: intentional accessibility improvement (spec §9) — adds aria-describedby on the target while visible (verified absent upstream), additive to any pre-existing value, removes only its own owned id on cleanup; multi-tooltip-same-target explicitly a non-goal. data-pr-* attribute config channel and mouse-tracking excluded per spec §9 (not React-idiomatic, no Ultimate internal convention needs it)."
+  },
+  {
+    "originalPath": "components/lib/tooltip/TooltipBase.js",
+    "ultimateDestination": "packages/react/src/tooltip/tooltip-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified upstream classes/css shape, .p-*->.u-* renamed."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/tooltip/tooltip.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, adapting scenario coverage from verified Tooltip.spec.js (show/hide on hover, disabled-element non-display) plus new tests specific to the aria-describedby intentional deviation (spec §23's explicit regression-test requirement)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/tooltip/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
