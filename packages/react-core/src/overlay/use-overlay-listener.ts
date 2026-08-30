@@ -31,18 +31,34 @@ export function useOverlayListener({
     [target, overlay]
   );
 
-  const [bindClick, unbindClick] = useEventListener({
-    target: "document",
-    type: "click",
-    listener: (event) => {
+  // Stabilized via useCallback so useEventListener's own bind/unbind memoization
+  // (which keys on this exact listener reference) actually holds across renders.
+  // Without this, a fresh inline arrow function on every render defeats bind/unbind
+  // memoization: addEventListener and the later removeEventListener end up targeting
+  // different function objects, so removeEventListener silently no-ops and the
+  // listener leaks past unbind/unmount (verified regression, see spec file).
+  const onDocumentClick = useCallback(
+    (event: Event) => {
       const valid = isOutsideClicked(event);
       if (valid) listener(event, { type: "outside", valid });
     },
+    [isOutsideClicked, listener]
+  );
+
+  const onWindowResize = useCallback(
+    (event: Event) => listener(event, { type: "resize", valid: true }),
+    [listener]
+  );
+
+  const [bindClick, unbindClick] = useEventListener({
+    target: "document",
+    type: "click",
+    listener: onDocumentClick,
     when,
   });
 
   const [bindResize, unbindResize] = useResizeListener({
-    listener: (event) => listener(event, { type: "resize", valid: true }),
+    listener: onWindowResize,
     when,
   });
 

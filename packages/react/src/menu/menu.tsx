@@ -27,6 +27,11 @@ export interface UMenuItem {
 export interface UMenuProps {
   model: UMenuItem[];
   popup?: boolean;
+  // Accepted for API-surface parity with upstream's real prop (which drives
+  // DomHandler.absolutePosition's overlay-vs-target alignment via imperative JS
+  // measurement). Positioning/placement logic is explicitly deferred — not wired to
+  // any CSS or measurement logic here — since it is a nontrivial, viewport-aware
+  // feature outside this task's brief and its test coverage; see provenance.
   popupAlignment?: "left" | "right";
   id?: string;
   ariaLabel?: string;
@@ -100,11 +105,20 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
 
   const hide = React.useCallback(
     (event?: React.SyntheticEvent) => {
+      // Guard against re-entrancy: hide() can be reached from multiple independent
+      // triggers (Escape, outside click, Tab, item click, Alt+ArrowUp) that can race
+      // (e.g. Escape and an outside click in the same tick) — without this guard a
+      // second call would redundantly call setVisible(false) again. onHide itself is
+      // NOT called here; it fires from useMotion's onAfterLeave below, once the leave
+      // phase genuinely completes, consistent with the two-state model's onShow/onHide
+      // timing (onShow fires at the start of the enter phase in show(), matching
+      // upstream; onHide fires at the end of the leave phase, matching upstream's
+      // onExited-driven ZIndexUtils.clear/unbindOverlayListener timing).
+      if (!visible) return;
       if (event) targetRef.current = event.currentTarget as HTMLElement;
       setVisible(false);
-      onHide?.();
     },
-    [onHide]
+    [visible]
   );
 
   const show = React.useCallback(
@@ -132,15 +146,24 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
     priority: [ESCAPE_PRIORITIES.MENU, displayOrder],
   });
 
-  const [bindOverlay, unbindOverlay] = useOverlayListener({
-    target: targetRef as React.RefObject<HTMLElement>,
-    overlay: menuRef,
-    listener: (_event, meta) => {
+  // Stabilized via useCallback: useOverlayListener's own bind/unbind memoization keys
+  // on this exact listener reference, so a fresh inline arrow function on every render
+  // would defeat that memoization and leak the underlying document click listener past
+  // unbind/unmount (verified regression, see menu.spec.tsx's teardown test).
+  const onOverlayEvent = React.useCallback(
+    (_event: Event, meta: { valid: boolean; type: string }) => {
       if (meta.valid && meta.type === "outside") {
         hide();
         setFocusedId(null);
       }
     },
+    [hide]
+  );
+
+  const [bindOverlay, unbindOverlay] = useOverlayListener({
+    target: targetRef as React.RefObject<HTMLElement>,
+    overlay: menuRef,
+    listener: onOverlayEvent,
     when: visible && popup,
   });
 
@@ -168,6 +191,7 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
       clearZIndex(menuRef.current);
       unbindOverlay();
       setContainerVisible(false);
+      onHide?.();
     },
   });
 
@@ -297,7 +321,6 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
     <div
       ref={menuRef}
       id={popup ? undefined : menuId}
-      data-u-popup-alignment={popup ? popupAlignment : undefined}
       className={[cx("root", { popup }), className].filter(Boolean).join(" ")}
       style={style}
     >

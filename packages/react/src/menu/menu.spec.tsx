@@ -63,19 +63,48 @@ describe("UMenu (inline mode)", () => {
 
 describe("UMenu (popup mode)", () => {
   it("is not rendered until toggled via the imperative ref, then dismisses on outside click", async () => {
+    const onHide = vi.fn();
     const ref = React.createRef<UMenuHandle>();
     render(
       <>
-        <button
-          onClick={(e) => ref.current?.toggle(e)}
-        >
-          Open menu
-        </button>
-        <UMenu ref={ref} model={model} popup />
+        <button onClick={(e) => ref.current?.toggle(e)}>Open menu</button>
+        <div data-testid="outside">outside</div>
+        <UMenu ref={ref} model={model} popup onHide={onHide} />
       </>
     );
     expect(screen.queryByRole("menu")).toBeNull();
     fireEvent.click(screen.getByText("Open menu"));
     expect(await screen.findByRole("menu")).toBeInTheDocument();
+
+    // Actually dismiss via a genuine outside click, and prove the menu is gone —
+    // the previous version of this test never exercised this despite its name.
+    fireEvent.click(screen.getByTestId("outside"));
+    expect(screen.queryByRole("menu")).toBeNull();
+    expect(onHide).toHaveBeenCalledOnce();
+  });
+
+  it("does not leak the outside-click listener past dismissal (regression: onHide must not re-fire for unrelated clicks after the menu is closed)", async () => {
+    const onHide = vi.fn();
+    const ref = React.createRef<UMenuHandle>();
+    render(
+      <>
+        <button onClick={(e) => ref.current?.toggle(e)}>Open menu</button>
+        <div data-testid="outside">outside</div>
+        <UMenu ref={ref} model={model} popup onHide={onHide} />
+      </>
+    );
+    fireEvent.click(screen.getByText("Open menu"));
+    await screen.findByRole("menu");
+
+    fireEvent.click(screen.getByTestId("outside"));
+    expect(onHide).toHaveBeenCalledOnce();
+
+    // Further unrelated clicks after the menu is already closed must not re-invoke
+    // onHide — if the document click listener leaked past unbind (the stale-listener-
+    // reference bug in useOverlayListener), it would still be attached here and fire
+    // again for every subsequent click anywhere on the page.
+    fireEvent.click(screen.getByTestId("outside"));
+    fireEvent.click(document.body);
+    expect(onHide).toHaveBeenCalledOnce();
   });
 });
