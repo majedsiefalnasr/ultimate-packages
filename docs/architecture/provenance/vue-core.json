@@ -22,5 +22,17 @@
     "ultimateDestination": "packages/vue-core/src/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored root barrel re-exporting all vue-core submodules, no upstream equivalent file. Not listed in the Task 3 brief's Step 12 manifest snippet; added to satisfy scripts/provenance/validate-provenance.mjs's manifest-completeness check, matching react-core's identical root-barrel entry."
+  },
+  {
+    "originalPath": "packages/core/src/baseeditableholder/BaseEditableHolder.vue",
+    "ultimateDestination": "packages/vue-core/src/base/base-editable-holder.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream v-model/controlled-uncontrolled contract: modelValue/defaultValue props, d_value internal state, controlled computed detecting whether modelValue was actually passed. Ultimate decision: excludes the live, working @primevue/forms integration ($pcForm/$pcFormField injection, formField.onChange, $formNovalidate/$formValue/$formDefaultValue/$formControl) entirely — a deliberate boundary cut of a real feature, per spec §19/§20's resolved fork (Gate 6 #2), not an absence-of-feature finding. Implementation-time deviation from the task brief's draft: verified BaseEditableHolder.vue's controlled computed uses this.$inProps.hasOwnProperty('modelValue'), where $inProps (Vue-internal, seen in BaseComponent.vue) is itself built from Object.keys(this.$.vnode?.props || {}) filtered against declared prop keys. The brief's draft controlled implementation approximated this via an $attrs/prop-value-presence check; testing (base-editable-holder.spec.ts's __draft-check scratch verification, not committed) proved this draft diverges from real $inProps semantics in a concrete case: modelValue passed explicitly as undefined while defaultValue is also passed with a real value — real PrimeVue says controlled=true (modelValue key present wins), the draft said controlled=false (wrong). Final implementation reads this.$.vnode.props directly (the same public component-instance surface $inProps itself uses, accessible via Options-API `this.$`), checking key presence for both modelValue/model-value and defaultValue/default-value to be resilient to Vue's prop-name normalization. Verified correct against all 4 brief test cases plus the divergence edge case."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/base/base-editable-holder.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream."
   }
 ]
