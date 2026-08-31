@@ -54,9 +54,9 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2016-2025
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/react`, `packages/react-core` (Phase 3)
-- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
-- **Modification description:** n/a
-- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 3)
+- **Modification status:** incorporated (Phase 3) — foundation tier reimplemented with PrimeReact as design reference, not copied verbatim (Option B, same posture as Angular's ADR-018); Button/Checkbox/Dialog/Menu/Tooltip adapted with full Ultimate namespace rename (component names, CSS classes). Remaining ~111 source areas not classified this phase — see spec §30 for why a full inventory was deliberately not pre-committed.
+- **Modification description:** see file-level manifests at `docs/architecture/provenance/react-core.json` and `docs/architecture/provenance/react.json` for per-file status.
+- **Date incorporated:** 2026-08-31
 - **Architectural reference only (not incorporated):** PrimeReact `11.1.0` — commercial "PrimeUI License", not MIT. Its `@primereact/{core,headless}` package-split pattern is useful prior art for Ultimate's React package boundaries, but no source is incorporated from it.
 
 ## @primeuix/utils
