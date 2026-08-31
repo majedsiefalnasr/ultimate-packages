@@ -22,5 +22,35 @@
     "ultimateDestination": "packages/vue/src/ripple/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/button/Button.vue",
+    "ultimateDestination": "packages/vue/src/button/Button.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified real prop surface and rendering order by extracting and reading Button.vue/BaseButton.vue in full (extract-primevue-source.mjs from primevue@4.5.5): loading-icon-or-icon -> label -> children (default slot) -> badge (conditional), root wraps all — matches the task brief's draft. v-ripple applied directly to the root element (unlike React's UButton, which deferred Ripple entirely per ADR-031 — Vue's real Button wires it directly, verified against the real source, and so does this implementation). Default aria-label computed as label + badge, matching verified BaseButton.vue's own defaultAriaLabel computed (upstream falls back to $attrs.ariaLabel; this implementation uses an explicit typed ariaLabel prop instead — see base-button.ts's own provenance entry for that deviation). Badge rendered as a plain span with badge/badgeClass (badgeSeverity accepted but not yet visually differentiated — no UBadge subcomponent exists in this package yet; upstream renders a real Badge subcomponent). First real .vue SFC in this package (everything built in Tasks 3-16 was plain .ts via defineComponent/h()/createDirective) — building it surfaced and required fixing two real, pre-existing defects in the Task 3/15 .vue-SFC esbuild-plugin build shim (packages/vue/tsup.config.ts): (1) the shim's onLoad handler called @vitejs/plugin-vue's transform() without ever running the plugin's buildStart lifecycle hook, leaving its internal `compiler` resolved-option null and crashing template parsing; (2) esbuild had no resolver for the `\\0plugin-vue:export-helper` virtual module the compiled SFC output imports. Both fixed in tsup.config.ts. A third, separate defect was found in tsup's own dts pipeline: `dts: true` bundles declarations via rollup-plugin-dts, a plain Rollup pass with no .vue awareness, which cannot resolve `.vue` imports at all (fails with \"'default' is not exported by 'Button.vue'\") — switched dts generation to a dedicated `vue-tsc --declaration --emitDeclarationOnly` build step (tsconfig.dts.json, package.json's build script), which understands .vue natively and is already a required devDependency. Also added packages/vue/src/shims-vue.d.ts (a standard `declare module \"*.vue\"` ambient shim), needed to keep vue-tsc's own --noEmit typecheck of this SFC reliably clean."
+  },
+  {
+    "originalPath": "packages/primevue/src/button/BaseButton.vue",
+    "ultimateDestination": "packages/vue/src/button/base-button.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream prop surface (label, icon, iconPos, iconClass, badge, badgeClass, badgeSeverity, loading, loadingIcon, as, asChild, link, severity, raised, rounded, text, outlined, size, variant, plain, fluid) against the real extracted BaseButton.vue — matches verbatim, including the odd `fluid: { type: Boolean, default: null }`. Ported via createBaseComponent's extends: mechanism. pcFluid ambient-context injection preserved, matching Angular's UButton Fluid-ancestor-detection wiring (ADR-018). One deliberate deviation from upstream: upstream has no explicit ariaLabel prop (its defaultAriaLabel computed reads the arbitrary $attrs.ariaLabel fallthrough attr instead); this implementation declares ariaLabel as its own explicit, typed prop, consistent with Option B's no-passthrough-system posture and this task's own test contract. Filename is base-button.ts (kebab-case), not BaseButton.ts (PascalCase) as the task brief's draft suggested, matching this codebase's own established naming convention for every other non-SFC .ts file (button-style.ts, spinner-icon.ts, base-component.ts, etc.)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/button/button-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Implementation-time verification finding (this task's Step 2): the brief's draft assumed `@ultimate/uix-styles/button` exports a `buttonStyle` object already shaped as StyleModule's { css, classes } contract. The real file (packages/uix-styles/src/button/index.ts) only exports a plain `style: string` (raw CSS with dt() token references) — no `classes` resolver map exists anywhere in that package (confirmed via its own test/button.test.ts, which only asserts against the style string). StyleModule (packages/vue-core/src/base/base-component.ts) requires both css and a classes map. This file imports the real `style` export for css and authors the classes map locally — following the same adaptation already independently established for Angular's packages/ng/src/button/button-style.ts, which hit the identical mismatch and resolved it the same way."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/button/button.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream (PrimeVue's own Button has a real Button.spec.js, but this suite is independently authored against Ultimate's own API surface, not a port of that file)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/button/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
