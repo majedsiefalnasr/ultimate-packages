@@ -124,5 +124,29 @@
     "ultimateDestination": "packages/vue-core/src/zindex/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/focustrap/FocusTrap.js",
+    "ultimateDestination": "packages/vue-core/src/focus-trap/focus-trap.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream sentinel-span + MutationObserver mechanism (spec §14): two hidden focusable spans bracketing trapped content, each redirecting focus to the first/last real focusable descendant on focus; a MutationObserver redirects focus if lost after a dynamic-content change. disabled=true/false explicit two-state contract matches verified source exactly. Reuses existing @ultimate/uix-utils/dom's getFirstFocusableElement/getLastFocusableElement/focus/createElement (already-built Phase 1 primitives, confirmed present verbatim). Does not restore focus on unmount (verified absent upstream) — UDialog's own responsibility. Implementation-time verification: the sentinel redirect logic (onFirstHiddenFocus/onLastHiddenFocus) depends on the focus event's relatedTarget correctly reflecting the previously-focused element for the wraparound branch to fire — confirmed directly against jsdom (a scratch test, not committed) that native .focus() calls populate relatedTarget from the prior activeElement exactly like a real browser Tab traversal, while a bare `dispatchEvent(new FocusEvent('focus'))` does not carry a relatedTarget and does not exercise the wraparound branch. The MutationObserver's dynamic-content redirect was verified directly by removing a focused element from a mounted component and confirming document.activeElement moved to the next real focusable after a microtask flush — jsdom's MutationObserver behaves synchronously enough for this to be reliably testable."
+  },
+  {
+    "originalPath": "packages/primevue/src/focustrap/BaseFocusTrap.js",
+    "ultimateDestination": "packages/vue-core/src/focus-trap/focus-trap.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream: BaseFocusTrap.extend('focustrap', { style: FocusTrapStyle }) — this file's Ultimate equivalent uses the createDirective factory (Task 6) instead; no separate BaseFocusTrap-equivalent file needed since createDirective already supplies the shared factory shape."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/focus-trap/focus-trap.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream (PrimeVue's own FocusTrap.js has no dedicated spec file). Extends the brief's draft 4-test list with 2 additional tests: a real MutationObserver dynamic-content-redirect test (removing a focused element and verifying document.activeElement moves to the next real focusable after a microtask flush) and a disabled-transitions-to-true unbind test (verifying the observer no longer reacts to DOM mutations after `updated` calls `unbind`). The brief's draft 4th test (Shift+Tab wraparound) used a bare `dispatchEvent(new FocusEvent('focus'))` with no relatedTarget, which does not exercise the real wraparound branch (verified — relatedTarget is null on a bare dispatch, routing to the non-wraparound branch instead); rewritten to focus the first real element then call `.focus()` natively on the first sentinel, letting jsdom populate relatedTarget the way a real browser Tab does."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/focus-trap/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
