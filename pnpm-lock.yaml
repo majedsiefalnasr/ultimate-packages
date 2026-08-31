@@ -302,6 +302,9 @@ importers:
       '@ultimate/uix-styled':
         specifier: workspace:*
         version: link:../uix-styled
+      '@ultimate/uix-styles':
+        specifier: workspace:*
+        version: link:../uix-styles
       '@ultimate/uix-utils':
         specifier: workspace:*
         version: link:../uix-utils
@@ -311,7 +314,7 @@ importers:
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.2.1
-        version: 5.2.4(vite@7.3.6(less@4.9.0)(sass@1.103.1))(vue@3.5.42(typescript@5.9.3))
+        version: 5.2.4(vite@5.4.21(less@4.9.0)(sass@1.103.1))(vue@3.5.42(typescript@5.9.3))
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.5.0(@vue/compiler-dom@3.5.42)(@vue/server-renderer@3.5.42)(vue@3.5.42(typescript@5.9.3))
@@ -324,6 +327,9 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+      vite:
+        specifier: ^5.4.21
+        version: 5.4.21(less@4.9.0)(sass@1.103.1)
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(jsdom@25.0.1)(less@4.9.0)(sass@1.103.1)
@@ -6659,11 +6665,6 @@ snapshots:
   '@vitejs/plugin-vue@5.2.4(vite@5.4.21(less@4.9.0)(sass@1.103.1))(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       vite: 5.4.21(less@4.9.0)(sass@1.103.1)
-      vue: 3.5.42(typescript@5.9.3)
-
-  '@vitejs/plugin-vue@5.2.4(vite@7.3.6(less@4.9.0)(sass@1.103.1))(vue@3.5.42(typescript@5.9.3))':
-    dependencies:
-      vite: 7.3.6(less@4.9.0)(sass@1.103.1)
       vue: 3.5.42(typescript@5.9.3)
 
   '@vitest/expect@2.1.9':
