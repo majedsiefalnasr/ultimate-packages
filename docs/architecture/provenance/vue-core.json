@@ -64,5 +64,23 @@
     "ultimateDestination": "packages/vue-core/src/directive/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/portal/Portal.vue",
+    "ultimateDestination": "packages/vue-core/src/overlay/portal.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream behavior: a thin wrapper around Vue's native <Teleport>, an `inline` escape hatch (disabled || appendTo === 'self') rendering the slot in place instead of teleporting, gated otherwise by a mounted flag set from an isClient()-equivalent check in onMounted — SSR-safe. Authored fresh as a defineComponent (not a .vue SFC — no template complexity warrants one)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/overlay/portal.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/overlay/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
