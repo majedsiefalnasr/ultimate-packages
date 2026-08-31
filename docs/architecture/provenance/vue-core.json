@@ -46,5 +46,23 @@
     "ultimateDestination": "packages/vue-core/src/base/base-input.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored test, not derived from upstream."
+  },
+  {
+    "originalPath": "packages/core/src/basedirective/BaseDirective.js",
+    "ultimateDestination": "packages/vue-core/src/directive/base-directive.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeVue's BaseDirective factory. Verified source: BaseDirective._extend(name, options) returns real directive lifecycle hooks (created/beforeMount/mounted/beforeUpdate/updated/beforeUnmount/unmounted), a mechanism structurally separate from BaseComponent's extends: mixin chain. Ultimate decision: excludes the full pt/ptm/ptmo passthrough system and the PrimeVueService global config-change-event subscription entirely, per spec §7's Option B posture — no demonstrated Ultimate consumer need."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/directive/base-directive.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream (PrimeVue's own BaseDirective.js has no dedicated spec file)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/directive/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
