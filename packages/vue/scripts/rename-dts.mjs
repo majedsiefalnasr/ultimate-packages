@@ -4,10 +4,7 @@
 // (it falls back to `.d.ts`, since `.ts` is unambiguous ESM in that case).
 // Rename the emitted `.d.ts` / `.d.ts.map` files to `.d.mts` / `.d.mts.map`
 // after the build so they match this package's `.mjs` exports map.
-//
-// Identical to react-core's scripts/rename-dts.mjs (Phase 3 precedent for
-// the same tsup limitation) — reused as-is rather than reimplemented.
-import { readdirSync, renameSync } from "node:fs";
+import { readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 function renameDtsToMts(dir) {
@@ -25,3 +22,31 @@ function renameDtsToMts(dir) {
 }
 
 renameDtsToMts("dist");
+
+// This package has multiple tsup entry points (barrel + per-component
+// subpaths). tsup's DTS rollup emits cross-entry re-export specifiers
+// (e.g. `export { UButton } from './button/index.js'`) with a hardcoded
+// `.js` extension, unaffected by `outExtension()`. Under this package's
+// `"type": "module"` + NodeNext resolution, `.js` does not resolve to the
+// actual `.mjs` files on disk, so rewrite relative `./...js` specifiers in
+// the renamed `.d.mts` files to `.mjs`. Bare specifiers (`vue`,
+// `@ultimate/vue-core`, ...) are untouched. Mirrors packages/react's fix
+// for the identical multi-entry cross-reference bug (commit 08568d0).
+function fixCrossEntryDtsExtensions(dir) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      fixCrossEntryDtsExtensions(fullPath);
+    } else if (entry.name.endsWith(".d.mts")) {
+      const original = readFileSync(fullPath, "utf8");
+      const fixed = original.replace(/(from\s+['"]\.[^'"]*?)\.js(['"])/g, "$1.mjs$2");
+
+      if (fixed !== original) {
+        writeFileSync(fullPath, fixed);
+      }
+    }
+  }
+}
+
+fixCrossEntryDtsExtensions("dist");
