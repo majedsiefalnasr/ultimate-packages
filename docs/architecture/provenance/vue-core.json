@@ -82,5 +82,29 @@
     "ultimateDestination": "packages/vue-core/src/overlay/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/escape/use-global-escape-key.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Consumes @ultimate/uix-utils/escape's shared priority-tuple registry (extracted from react-core/src/escape/use-global-escape-key.ts during Phase 4's prerequisite work, Task 1); PrimeVue's own Dialog.vue keydown listener has no equivalent stacking mechanism (verified gap, spec §11). This file supplies only the Vue mixin mounted/updated/beforeUnmount lifecycle wiring — not a react-core dependency. Implementation-time deviation from the task brief's draft: the draft's unregister() re-read the priority getter to determine which secondary value to unregister, which is wrong when the getter's underlying value already changed before updated() fires (Vue evaluates the getter fresh both times within the same synchronous updated() call) — this leaves the OLD tuple registered forever as a stale leak while also registering the NEW one, so both point at the same callback. Final implementation instead tracks the actually-registered secondary value in a closure variable and unregisters exactly that value, unconditionally of what the getter currently returns. Caught by escape.spec.ts's dedicated re-registration test (secondary moving from a high value to a low one, with a competitor in between) — RED against the draft's literal logic, GREEN against the fix."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/escape/use-display-order.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Consumes @ultimate/uix-utils/escape's shared displayOrderRegistry (extracted from react-core/src/escape/use-display-order.ts's registry portion only during Phase 4's prerequisite work, Task 1 — the useState-based reactive contract itself was NOT extracted, staying React-specific). This file supplies Vue's own ref()-based reactive wrapper, independently authored."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/escape/escape.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test suite, test design ported from react-core/src/escape/escape.spec.ts and rewritten for Vue's mixin/ref() shape. Extends the brief's draft test list with a priority-tuple-wins test (matching react-core's test design) and a dedicated updated()-lifecycle re-registration test, since useDisplayOrder and createGlobalEscapeKeyMixin both require an active Vue component instance (onMounted/onUnmounted, and a real re-render to trigger updated()) — bare invocation in a test body without @vue/test-utils mounting silently no-ops rather than throwing."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/escape/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
