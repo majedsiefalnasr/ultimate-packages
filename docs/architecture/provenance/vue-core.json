@@ -202,5 +202,47 @@
     "ultimateDestination": "packages/vue-core/src/styling/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/icons/spinner-icon.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-owned inline <svg role=\"img\"> icon component, matching ng-core's/react-core's established icon pattern — not PrimeVue's own icon-package passthrough-spread shape, since pt is excluded. Visual path data matches react-core's USpinnerIcon exactly (same icon, different component-authoring syntax)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/icons/times-icon.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Same pattern as spinner-icon.ts. Visual path data matches react-core's UTimesIcon exactly."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/icons/window-maximize-icon.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Same pattern. Ported for provenance completeness — verified upstream PrimeVue Dialog.vue imports this icon, but Phase 4's UDialog does not render a maximize toggle (spec §15's excluded scope)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/icons/window-minimize-icon.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Same pattern and same provenance-completeness rationale as window-maximize-icon.ts."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/icons/check-icon.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Same pattern. Used by UCheckbox's checked state (spec §19) — a real Phase 4 consumer, unlike the maximize/minimize icons above."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/icons/icons.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test suite covering all five icons via describe.each, not derived from upstream."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/icons/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
