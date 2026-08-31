@@ -43,6 +43,8 @@ export function createBaseButton(): ComponentOptions {
       plain: { type: Boolean, default: false },
       fluid: { type: Boolean, default: null },
       ariaLabel: { type: String, default: null },
+      tooltip: { type: String, default: null },
+      tooltipOptions: { type: Object, default: null },
     },
     inject: {
       pcFluid: { default: undefined },

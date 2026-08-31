@@ -52,5 +52,41 @@
     "ultimateDestination": "packages/vue/src/button/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/tooltip/Tooltip.js",
+    "ultimateDestination": "packages/vue/src/tooltip/tooltip.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream target-based directive mechanism by extracting and reading Tooltip.js/BaseTooltip.js in full (extract-primevue-source.mjs from primevue@4.5.5): imperative event binding (mouseenter/mouseleave/focus/blur), floating panel created via createElement, ZIndex.set('tooltip', ...). Two-mode content-injection contract preserved exactly, confirmed against real upstream create(): `if (!el.$_ptooltipEscape) { tooltipText.innerHTML = el.$_ptooltipValue } else { tooltipText.textContent/createTextNode(...) }` — escape defaults to true (safe createTextNode path) in both the string-binding and object-binding branches of beforeMount/updated; escape: false is an explicit opt-in raw-innerHTML path only reachable when the caller passes an object binding with escape explicitly set to false (spec §25's verified security-relevant divergence). Intentional deviation: adds aria-describedby wiring absent from verified upstream — additive to any pre-existing value, owned-id-only removal on cleanup (spec §9). Simplified relative to upstream: this implementation always binds mouseenter/mouseleave/focus/blur (upstream's modifiers.focus branches to focus/blur-only OR mouseenter/mouseleave/click-only, plus keydown-Escape and window-resize handling, plus positional align()/alignTop/alignLeft/etc/arrow-element logic) — Option B's scoped-down architecture omits the modifier-driven placement/arrow system and click/keydown/resize handling as unnecessary complexity not required by this task's contract; simple fixed below-target positioning is used instead."
+  },
+  {
+    "originalPath": "packages/primevue/src/tooltip/BaseTooltip.js",
+    "ultimateDestination": "packages/vue/src/tooltip/tooltip.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream: BaseTooltip.extend('tooltip', {...}) registering TooltipStyle — this file's Ultimate equivalent uses vue-core's createDirective factory instead, with style registration performed explicitly via registerComponentStyle('tooltip', tooltipStyleModule) inside showTooltip (a directive has no component mounted() lifecycle point to do this automatically, unlike createBaseComponent's own mounted() hook)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/tooltip/tooltip-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Implementation-time verification finding (this task's Step 2, same mismatch already found for @ultimate/uix-styles/button in Task 17): the brief's draft assumed @ultimate/uix-styles/tooltip exports a `tooltipStyle` object already shaped as StyleModule's { css, classes } contract. The real file (packages/uix-styles/src/tooltip/index.ts) only exports a plain `style: string` (raw CSS with dt() token references, named `style` not `tooltipStyle`) — no `classes` resolver map exists anywhere in that package. StyleModule (packages/vue-core/src/base/base-component.ts) requires both css and a classes map. This file imports the real `style` export (aliased to tooltipCss) for css and authors the classes map (root/text/arrow slots) locally, following the same adaptation already established for button-style.ts (Task 17) and Angular's tooltip-style.ts."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/tooltip/tooltip.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test suite, including explicit regression coverage for the two-mode content-injection security contract (spec §25) and the aria-describedby accessibility deviation (spec §9)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/tooltip/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/button/Button.vue",
+    "ultimateDestination": "packages/vue/src/button/Button.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "This task retrofitted the real, already-reviewed Task 17 Button.vue/base-button.ts (not rebuilt) to add tooltip/tooltipOptions prop sugar over v-tooltip, matching verified Button.vue's own tooltip integration pattern — third independent confirmation of the sugar-prop pattern already established for Angular/React (spec §9). All Task 17 logic (styleParams computed, resolvedAriaLabel, rootAttrs, rendering order) preserved unchanged; only the directives map, tooltipBinding computed, and the root element's v-tooltip binding were added."
   }
 ]

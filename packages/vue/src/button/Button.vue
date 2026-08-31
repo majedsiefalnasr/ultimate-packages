@@ -1,5 +1,12 @@
 <template>
-  <component :is="tag" v-if="!asChild" v-ripple :class="cx('root', styleParams)" v-bind="rootAttrs">
+  <component
+    :is="tag"
+    v-if="!asChild"
+    v-ripple
+    v-tooltip="tooltipBinding"
+    :class="cx('root', styleParams)"
+    v-bind="rootAttrs"
+  >
     <span v-if="loading" :class="cx('loadingIcon')">
       <USpinnerIcon spin />
     </span>
@@ -14,6 +21,7 @@
 <script>
 import { SpinnerIcon as USpinnerIcon } from "@ultimate/vue-core";
 import { rippleDirective } from "../ripple";
+import { tooltipDirective } from "../tooltip";
 import { createBaseButton } from "./base-button";
 
 // First real .vue SFC in @ultimate/vue (Task 17) — everything built so far
@@ -29,7 +37,7 @@ export default {
   extends: createBaseButton(),
   inheritAttrs: false,
   components: { USpinnerIcon },
-  directives: { ripple: rippleDirective },
+  directives: { ripple: rippleDirective, tooltip: tooltipDirective },
   computed: {
     tag() {
       return this.as === "BUTTON" ? "button" : this.as;
@@ -64,6 +72,10 @@ export default {
         type: this.tag === "button" ? "button" : undefined,
       };
       return { ...this.$attrs, ...base };
+    },
+    tooltipBinding() {
+      if (!this.tooltip) return undefined;
+      return { value: this.tooltip, ...this.tooltipOptions };
     },
   },
 };
