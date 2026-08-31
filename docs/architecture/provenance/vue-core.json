@@ -1,0 +1,26 @@
+[
+  {
+    "originalPath": "packages/core/src/basecomponent/BaseComponent.vue",
+    "ultimateDestination": "packages/vue-core/src/base/base-component.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeVue's BaseComponent Options-API mixin. Verified source: cx() resolves this._getOptionValue(this.$style.classes, key, params) (BaseComponent.vue methods block). Ultimate decision: excludes the full pt/ptOptions/ptm/ptmi/ptmo passthrough system (~140 lines of nested-key resolution in the verified source) and inject: { $parentInstance } entirely, per spec §7's Option B posture — no demonstrated Ultimate consumer need, same YAGNI justification as ADR-018/024."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/base/base-component.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream (PrimeVue's own BaseComponent.vue has no dedicated spec file)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/base/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored root barrel re-exporting all vue-core submodules, no upstream equivalent file. Not listed in the Task 3 brief's Step 12 manifest snippet; added to satisfy scripts/provenance/validate-provenance.mjs's manifest-completeness check, matching react-core's identical root-barrel entry."
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "name": "@ultimate/vue-core",
+  "version": "0.1.0",
+  "description": "Vue-specific foundation for the Ultimate Platform: Options-API base architecture, directive infrastructure, overlay/focus-trap/escape/scroll/motion infrastructure, icons, minimal config.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": ["dist", "README.md", "THIRD-PARTY-NOTICES.md"],
+  "dependencies": {
+    "@ultimate/uix-utils": "workspace:*",
+    "@ultimate/uix-styled": "workspace:*",
+    "@ultimate/uix-motion": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^25.0.1",
+    "tsup": "^8.3.0",
+    "typescript": "5.9.3",
+    "vite": "^5.4.21",
+    "vitest": "^2.1.8",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.1.10"
+  },
+  "scripts": {
+    "build": "tsup && node scripts/rename-dts.mjs",
+    "test": "vitest run",
+    "typecheck": "vue-tsc --noEmit"
+  }
+}
