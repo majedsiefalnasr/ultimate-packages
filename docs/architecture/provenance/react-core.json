@@ -111,19 +111,19 @@
     "originalPath": "components/lib/hooks/useGlobalOnEscapeKey.js",
     "ultimateDestination": "packages/react-core/src/escape/use-global-escape-key.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified upstream behavior: a single shared document keydown listener gated by a two-level [primaryPriority, secondaryPriority] tuple map, only the highest tuple's callback fires, listener attaches/detaches based on whether any registration exists. Independently authored per spec §11 — this is more correct than Angular's existing UDialog Escape handling (ADR-020's documented gap: no multi-dialog stacking), and this reimplementation is what closes that gap for React."
+    "modificationDescription": "Verified upstream behavior: a single shared document keydown listener gated by a two-level [primaryPriority, secondaryPriority] tuple map, only the highest tuple's callback fires, listener attaches/detaches based on whether any registration exists. Independently authored per spec §11 — this is more correct than Angular's existing UDialog Escape handling (ADR-020's documented gap: no multi-dialog stacking), and this reimplementation is what closes that gap for React. As of Phase 4's prerequisite extraction, the registry/comparison/listener logic moved to @ultimate/uix-utils/escape's escapeRegistry (framework-neutral, consumed by both react-core and vue-core); this file now delegates to that shared registry, keeping only the useEffect mount/unmount lifecycle trigger. Public signature (useGlobalEscapeKey) unchanged."
   },
   {
     "originalPath": "components/lib/hooks/useDisplayOrder.js",
     "ultimateDestination": "packages/react-core/src/escape/use-display-order.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified upstream behavior: per-named-group module-level registry assigning each mounted-and-visible instance an incrementing display-order index, cleaned up on unmount with array-tail-trimming. Feeds useGlobalEscapeKey's secondary priority."
+    "modificationDescription": "Verified upstream behavior: per-named-group module-level registry assigning each mounted-and-visible instance an incrementing display-order index, cleaned up on unmount with array-tail-trimming. Feeds useGlobalEscapeKey's secondary priority. As of Phase 4's prerequisite extraction, the underlying groupToDisplayedElements registry moved to @ultimate/uix-utils/escape's displayOrderRegistry (framework-neutral, consumed by both react-core and vue-core); this file now delegates to that shared registry, keeping only the useState-based return-and-re-render contract, which is genuinely React-specific. Public signature (useDisplayOrder) unchanged."
   },
   {
     "originalPath": "components/lib/hooks/useGlobalOnEscapeKey.js (ESC_KEY_HANDLING_PRIORITIES constant)",
     "ultimateDestination": "packages/react-core/src/escape/priorities.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Verified upstream enum values for DIALOG (300), MENU (500), TOOLTIP (1200) — the three Phase 3 proof-set-relevant tiers only. Upstream's other 8 tiers (SIDEBAR, SLIDE_MENU, IMAGE, OVERLAY_PANEL, PASSWORD, CASCADE_SELECT, SPLIT_BUTTON, SPEED_DIAL) are not declared, per spec's explicit instruction not to speculatively declare priorities for non-Phase-3 components."
+    "modificationDescription": "Verified upstream enum values for DIALOG (300), MENU (500), TOOLTIP (1200) — the three Phase 3 proof-set-relevant tiers only. Upstream's other 8 tiers (SIDEBAR, SLIDE_MENU, IMAGE, OVERLAY_PANEL, PASSWORD, CASCADE_SELECT, SPLIT_BUTTON, SPEED_DIAL) are not declared, per spec's explicit instruction not to speculatively declare priorities for non-Phase-3 components. As of Phase 4's prerequisite extraction, the values themselves moved to @ultimate/uix-utils/escape's ESCAPE_PRIORITIES (no value change); this file now only re-exports from there to preserve react-core's existing public import path."
   },
   {
     "originalPath": "n/a",
@@ -177,7 +177,7 @@
     "originalPath": "components/lib/dialog/Dialog.js (document.primeDialogParams, updateScrollBlocker)",
     "ultimateDestination": "packages/react-core/src/scroll-lock/use-scroll-lock.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified upstream behavior: document.primeDialogParams tracks {id, hasBlockScroll} per mounted-and-visible Dialog, updateScrollBlocker() checks .some(i => i.hasBlockScroll) across all instances. Ultimate decision (intentional deviation, spec §16): replaced the global document-property mutation with a private module-scoped Set<string> registry — coalesces the same way (scroll blocked while >=1 dialog registered), calls @ultimate/uix-utils/dom's already-built blockBodyScroll/unblockBodyScroll only at the 0->1/1->0 boundary transitions, matching verified behavior without exposing a public global."
+    "modificationDescription": "Verified upstream behavior: document.primeDialogParams tracks {id, hasBlockScroll} per mounted-and-visible Dialog, updateScrollBlocker() checks .some(i => i.hasBlockScroll) across all instances. Ultimate decision (intentional deviation, spec §16): replaced the global document-property mutation with a private module-scoped Set<string> registry — coalesces the same way (scroll blocked while >=1 dialog registered), calls @ultimate/uix-utils/dom's already-built blockBodyScroll/unblockBodyScroll only at the 0->1/1->0 boundary transitions, matching verified behavior without exposing a public global. As of Phase 4's prerequisite extraction, this Set-based registry moved verbatim to @ultimate/uix-utils/scroll-lock's scrollLockRegistry (framework-neutral, consumed by both react-core and vue-core); this file now delegates to that shared registry, keeping only the useCallback wrapper (kept for React's reference-stability convention). Public signature (useScrollLock) unchanged."
   },
   {
     "originalPath": "n/a",
