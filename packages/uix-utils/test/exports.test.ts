@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
-const submodules = ["classnames", "dom", "eventbus", "mergeprops", "object", "uuid", "zindex"];
+const submodules = ["classnames", "dom", "escape", "eventbus", "mergeprops", "object", "scroll-lock", "uuid", "zindex"];
 
 describe("package exports", () => {
   it("barrel entry point builds", () => {
