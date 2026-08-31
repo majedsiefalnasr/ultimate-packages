@@ -73,7 +73,7 @@ if (baseRef) {
 
 // Manifest completeness: every .ts/.tsx file under packages/{uix,ng,react}-*/src/ must have
 // a corresponding entry in docs/architecture/provenance/<package-name>.json.
-const MANIFEST_WATCHED_PREFIXES = ["uix", "ng", "react"];
+const MANIFEST_WATCHED_PREFIXES = ["uix", "ng", "react", "vue"];
 
 function findWatchedPackageDirs(root = "packages") {
   if (!existsSync(root)) return [];
@@ -89,7 +89,11 @@ function walkTsFiles(dir, files = []) {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
       walkTsFiles(full, files);
-    } else if (entry.name.endsWith(".ts") || entry.name.endsWith(".tsx")) {
+    } else if (
+      entry.name.endsWith(".ts") ||
+      entry.name.endsWith(".tsx") ||
+      entry.name.endsWith(".vue")
+    ) {
       files.push(full);
     }
   }
