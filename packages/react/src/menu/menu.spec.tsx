@@ -3,6 +3,34 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
 import { UMenu, type UMenuItem, type UMenuHandle } from "./menu";
 
+// Regression coverage for the Portal/ref-timing defect (final whole-branch review,
+// Finding 1): Portal defers its first real DOM commit by one render pass, and a fresh
+// Portal instance mounts every time a popup UMenu opens (containerVisible gates
+// whether <Portal> even appears in the tree). Mock @ultimate/uix-motion so
+// createMotion(...).enter() can be observed directly — the same module useMotion
+// (packages/react-core) imports. The mock still invokes the real onAfterEnter/
+// onAfterLeave hooks synchronously (mirroring the real createMotion's eventual
+// callback) so existing tests that depend on onAfterLeave-driven teardown (container
+// unmount, listener unbind, onHide) keep passing unchanged.
+const enterSpy = vi.fn();
+const leaveSpy = vi.fn();
+vi.mock("@ultimate/uix-motion", () => ({
+  createMotion: vi.fn((_element: Element, options?: Record<string, unknown>) => ({
+    enter: vi.fn(() => {
+      enterSpy();
+      (options?.onAfterEnter as (() => void) | undefined)?.();
+      return Promise.resolve();
+    }),
+    leave: vi.fn(() => {
+      leaveSpy();
+      (options?.onAfterLeave as (() => void) | undefined)?.();
+      return Promise.resolve();
+    }),
+    cancel: vi.fn(),
+    update: vi.fn(),
+  })),
+}));
+
 const model: UMenuItem[] = [
   { label: "New", command: vi.fn() },
   { label: "Open", command: vi.fn() },
@@ -150,5 +178,76 @@ describe("UMenu (popup mode)", () => {
     // earlier cycle had leaked, later cycles would accumulate extra live listeners and
     // this count would exceed 3 (each stray click firing every leaked listener).
     expect(onHide).toHaveBeenCalledTimes(3);
+  });
+
+  describe("Portal/ref-timing regression (Finding 1)", () => {
+    it("invokes the enter motion and sets a non-empty inline z-index when the popup opens (a fresh Portal instance mounts on every open, not just the first)", async () => {
+      enterSpy.mockClear();
+      const ref = React.createRef<UMenuHandle>();
+      render(
+        <>
+          <button onClick={(e) => ref.current?.toggle(e)}>Open menu</button>
+          <UMenu ref={ref} model={model} popup />
+        </>
+      );
+      fireEvent.click(screen.getByText("Open menu"));
+      // findByRole("menu") returns the inner <ul role="menu">; setZIndex targets the
+      // outer div (menuRef in menu.tsx), which is that <ul>'s direct DOM parent.
+      const menu = await screen.findByRole("menu");
+      const menuRoot = menu.parentElement as HTMLElement;
+
+      await waitFor(() => expect(enterSpy).toHaveBeenCalled());
+      await waitFor(() => expect(menuRoot.style.zIndex).not.toBe(""));
+    });
+
+    it("re-invokes the enter motion and re-sets z-index on a second open/close cycle (portalReady is already true from cycle 1, so the fix must not rely solely on that dependency changing)", async () => {
+      enterSpy.mockClear();
+      const ref = React.createRef<UMenuHandle>();
+      render(
+        <>
+          <button onClick={(e) => ref.current?.toggle(e)}>Open menu</button>
+          <div data-testid="outside">outside</div>
+          <UMenu ref={ref} model={model} popup />
+        </>
+      );
+
+      fireEvent.click(screen.getByText("Open menu"));
+      await screen.findByRole("menu");
+      fireEvent.click(screen.getByTestId("outside"));
+      await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+
+      enterSpy.mockClear();
+      fireEvent.click(screen.getByText("Open menu"));
+      // findByRole("menu") returns the inner <ul role="menu">; setZIndex targets the
+      // outer div (menuRef in menu.tsx), which is that <ul>'s direct DOM parent.
+      const menu = await screen.findByRole("menu");
+      const menuRoot = menu.parentElement as HTMLElement;
+
+      await waitFor(() => expect(enterSpy).toHaveBeenCalled());
+      await waitFor(() => expect(menuRoot.style.zIndex).not.toBe(""));
+    });
+
+    it("mount-time-visible: a popup UMenu shown from a mount-time effect (visible already true on the parent's very first commit) still gets its enter motion and z-index applied", async () => {
+      enterSpy.mockClear();
+      function Harness() {
+        const ref = React.useRef<UMenuHandle>(null);
+        React.useEffect(() => {
+          // Simulates a consumer that opens the popup synchronously as part of mounting
+          // (e.g. a controlled "open on load" menu), so UMenu's own visible/containerVisible
+          // state becomes true in the very first render pass where Portal itself also
+          // exists for the first time — the exact ordering Finding 1 describes.
+          ref.current?.show({ currentTarget: document.body } as unknown as React.SyntheticEvent);
+        }, []);
+        return <UMenu ref={ref} model={model} popup />;
+      }
+      render(<Harness />);
+
+      // findByRole("menu") returns the inner <ul role="menu">; setZIndex targets the
+      // outer div (menuRef in menu.tsx), which is that <ul>'s direct DOM parent.
+      const menu = await screen.findByRole("menu");
+      const menuRoot = menu.parentElement as HTMLElement;
+      await waitFor(() => expect(enterSpy).toHaveBeenCalled());
+      await waitFor(() => expect(menuRoot.style.zIndex).not.toBe(""));
+    });
   });
 });

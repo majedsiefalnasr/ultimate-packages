@@ -27,7 +27,10 @@ export function FocusTrap({
   const setAutoFocus = (target: Element) => {
     const autoFocusEl =
       getFirstFocusableElement(target, `[autofocus]${computedSelector(autoFocusSelector)}`) ??
-      getFirstFocusableElement(target, `[data-u-autofocus='true']${computedSelector(autoFocusSelector)}`);
+      getFirstFocusableElement(
+        target,
+        `[data-u-autofocus='true']${computedSelector(autoFocusSelector)}`
+      );
     let focusable: Element | null = autoFocusEl;
     if (autoFocus && !focusable) {
       focusable = getFirstFocusableElement(target, computedSelector(firstFocusableSelector));

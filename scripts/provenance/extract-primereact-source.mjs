@@ -60,7 +60,9 @@ try {
   }
 
   copyRecursive(sourceDir, outputDir);
-  console.log(`[extract-primereact-source] copied components/lib/${libRelativePath} to ${outputDir}`);
+  console.log(
+    `[extract-primereact-source] copied components/lib/${libRelativePath} to ${outputDir}`
+  );
 } finally {
   rmSync(extractDir, { recursive: true, force: true });
 }

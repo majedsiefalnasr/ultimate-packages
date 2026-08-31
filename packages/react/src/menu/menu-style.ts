@@ -7,7 +7,10 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: { popup?: boolean } = {}) => ["u-menu u-component", { "u-menu-overlay": params.popup }],
+  root: (params: { popup?: boolean } = {}) => [
+    "u-menu u-component",
+    { "u-menu-overlay": params.popup },
+  ],
   menu: "u-menu-list",
   menuitem: (params: { focused?: boolean } = {}) => ["u-menuitem", { "u-focus": params.focused }],
   content: "u-menuitem-content",

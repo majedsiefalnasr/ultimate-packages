@@ -64,7 +64,9 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
   {
     model,
     popup = false,
-    popupAlignment = "left",
+    // popupAlignment: accepted for API-surface parity only (see UMenuProps doc comment
+    // above) — intentionally not destructured here since positioning logic is deferred
+    // and nothing in this component reads it.
     id,
     ariaLabel,
     ariaLabelledBy,
@@ -100,6 +102,14 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
   // `!props.popup` and never changing for inline menus.
   const [containerVisible, setContainerVisible] = React.useState(visible);
 
+  // Portal defers its first real DOM commit by one render pass (SSR-guard mount effect,
+  // see portal.tsx). When `visible` is already `true` on this component's very first
+  // render (popup mode), the z-index and motion effects below would run against a ref
+  // that Portal hasn't attached to the DOM yet. `portalReady` flips true once Portal's
+  // `onMount` callback confirms the portalled content actually committed, giving those
+  // effects a signal to re-run after the ref is populated.
+  const [portalReady, setPortalReady] = React.useState(false);
+
   const isCloseOnEscape = !!(visible && popup && closeOnEscape);
   const displayOrder = useDisplayOrder("menu", isCloseOnEscape);
 
@@ -133,7 +143,11 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
   const toggle = React.useCallback(
     (event: React.SyntheticEvent) => {
       if (!popup) return;
-      visible ? hide(event) : show(event);
+      if (visible) {
+        hide(event);
+      } else {
+        show(event);
+      }
     },
     [popup, visible, hide, show]
   );
@@ -171,7 +185,6 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
     if (visible) setContainerVisible(true);
     // The visible=false case is handled by useMotion's onAfterLeave below, once the
     // leave animation actually completes — see the containerVisible comment above.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   useUpdateEffect(() => {
@@ -181,19 +194,36 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
       setZIndex("menu", menuRef.current, baseZIndex);
       bindOverlay();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, containerVisible]);
+    // `portalReady` is included so this effect also re-runs once Portal's deferred first
+    // commit actually attaches the DOM (mount-time-visible popup case, see portal.tsx/
+    // use-motion.ts) — it adds one extra, already-stable dependency for the normal
+    // toggle-open case.
+  }, [visible, containerVisible, portalReady]);
 
-  useMotion(menuRef, visible && containerVisible, {
-    name: "u-menu",
-    onAfterLeave: () => {
-      if (!popup) return;
-      clearZIndex(menuRef.current);
-      unbindOverlay();
-      setContainerVisible(false);
-      onHide?.();
+  useMotion(
+    menuRef,
+    visible && containerVisible,
+    {
+      name: "u-menu",
+      onAfterLeave: () => {
+        if (!popup) return;
+        clearZIndex(menuRef.current);
+        unbindOverlay();
+        setContainerVisible(false);
+        // Portal fully unmounts whenever containerVisible goes false (the `if
+        // (!containerVisible) return null` above removes it from the tree), so its next
+        // mount will start with a fresh internal `mounted=false` again. Reset
+        // `portalReady` here so the NEXT open's onMount callback produces a real
+        // false→true transition instead of a same-value no-op that React would bail out
+        // of — otherwise the z-index/motion effects would silently no-op on every open
+        // after the first (menuRef.current is still null when they first run post-open,
+        // same defect as Finding 1, just recurring instead of mount-only).
+        setPortalReady(false);
+        onHide?.();
+      },
     },
-  });
+    portalReady
+  );
 
   useUnmountEffect(() => {
     if (!popup) return;
@@ -202,7 +232,9 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
   });
 
   const getMenuItemEls = React.useCallback((): HTMLLIElement[] => {
-    return listRef.current ? [...listRef.current.querySelectorAll<HTMLLIElement>(MENUITEM_SELECTOR)] : [];
+    return listRef.current
+      ? [...listRef.current.querySelectorAll<HTMLLIElement>(MENUITEM_SELECTOR)]
+      : [];
   }, []);
 
   const changeFocusedIndex = (index: number) => {
@@ -332,7 +364,7 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
         tabIndex={0}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
-        aria-activedescendant={focused ? focusedId ?? undefined : undefined}
+        aria-activedescendant={focused ? (focusedId ?? undefined) : undefined}
         onFocus={onListFocus}
         onBlur={onListBlur}
         onKeyDown={onListKeyDown}
@@ -342,5 +374,14 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
     </div>
   );
 
-  return popup ? <Portal element={menuElement} appendTo={appendTo} visible /> : menuElement;
+  return popup ? (
+    <Portal
+      element={menuElement}
+      appendTo={appendTo}
+      visible
+      onMount={() => setPortalReady(true)}
+    />
+  ) : (
+    menuElement
+  );
 });

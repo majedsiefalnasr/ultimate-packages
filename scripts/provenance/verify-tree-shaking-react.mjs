@@ -82,10 +82,7 @@ try {
     "subpath-import",
     `import { UButton } from "@ultimate/react/button";`
   );
-  const barrelOk = await checkImport(
-    "barrel-import",
-    `import { UButton } from "@ultimate/react";`
-  );
+  const barrelOk = await checkImport("barrel-import", `import { UButton } from "@ultimate/react";`);
 
   console.log(
     "[verify-tree-shaking-react] MANUAL/AUTOMATED CHECK REQUIRED (see plan Task 19 Step 4): " +

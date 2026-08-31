@@ -6,17 +6,26 @@ export interface PortalProps {
   element: React.ReactNode;
   appendTo?: HTMLElement | "self" | (() => HTMLElement) | undefined;
   visible?: boolean;
+  onMount?: () => void;
 }
 
 function isClient(): boolean {
   return typeof window !== "undefined" && typeof document !== "undefined";
 }
 
-export function Portal({ element, appendTo, visible = false }: PortalProps): React.ReactNode {
+export function Portal({
+  element,
+  appendTo,
+  visible = false,
+  onMount,
+}: PortalProps): React.ReactNode {
   const [mounted, setMounted] = React.useState(false);
 
   useMountEffect(() => {
-    if (isClient()) setMounted(true);
+    if (isClient()) {
+      setMounted(true);
+      onMount?.();
+    }
   });
 
   if (!visible || !mounted) return null;

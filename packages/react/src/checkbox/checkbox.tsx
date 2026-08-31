@@ -96,7 +96,9 @@ export function UCheckbox({
           aria-invalid={invalid}
           onChange={handleChange}
         />
-        <div className={cx("box", { checked: isChecked })}>{isChecked && <UCheckIcon className={cx("icon")} />}</div>
+        <div className={cx("box", { checked: isChecked })}>
+          {isChecked && <UCheckIcon className={cx("icon")} />}
+        </div>
       </div>
       {tooltip && <UTooltip target={elementRef} content={tooltip} {...tooltipOptions} />}
     </>

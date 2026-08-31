@@ -3,6 +3,35 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { UDialog } from "./dialog";
 
+// Regression coverage for the Portal/ref-timing defect (final whole-branch review,
+// Finding 1): Portal defers its first real DOM commit by one render pass, so a
+// UDialog rendered with visible=true on its very first render must not silently skip
+// the enter motion / z-index / scroll-lock effects that depend on the portalled ref
+// actually being attached. Mock @ultimate/uix-motion so createMotion(...).enter() can
+// be observed directly, the same module useMotion (packages/react-core) imports. The
+// mock still invokes the real onAfterEnter/onAfterLeave hooks synchronously (mirroring
+// the real createMotion's eventual callback) so existing tests that depend on
+// onAfterLeave-driven teardown (z-index clear, scroll unlock, focus restore) keep
+// passing unchanged.
+const enterSpy = vi.fn();
+const leaveSpy = vi.fn();
+vi.mock("@ultimate/uix-motion", () => ({
+  createMotion: vi.fn((_element: Element, options?: Record<string, unknown>) => ({
+    enter: vi.fn(() => {
+      enterSpy();
+      (options?.onAfterEnter as (() => void) | undefined)?.();
+      return Promise.resolve();
+    }),
+    leave: vi.fn(() => {
+      leaveSpy();
+      (options?.onAfterLeave as (() => void) | undefined)?.();
+      return Promise.resolve();
+    }),
+    cancel: vi.fn(),
+    update: vi.fn(),
+  })),
+}));
+
 describe("UDialog", () => {
   it("renders nothing when visible is false", () => {
     render(
@@ -61,8 +90,15 @@ describe("UDialog", () => {
     await waitFor(() => screen.getByRole("dialog"));
     expect(screen.queryByLabelText(/maximize/i)).toBeNull();
     expect(document.querySelector(".u-resizable-handle")).toBeNull();
-    // @ts-expect-error - draggable/resizable/maximizable must not exist on UDialogProps
-    const _typeCheck: import("./dialog").UDialogProps = { visible: true, onHide: () => {}, draggable: true };
+    const _typeCheck: import("./dialog").UDialogProps = {
+      visible: true,
+      onHide: () => {},
+      // @ts-expect-error - draggable must not exist on UDialogProps (resizable/maximizable
+      // covered by the same absent-props contract; a single representative prop keeps this
+      // directive attached to exactly the line TypeScript reports the excess-property error on)
+      draggable: true,
+    };
+    expect(_typeCheck).toBeDefined();
   });
 
   it("returns focus to the previously-focused element after closing", async () => {
@@ -84,5 +120,45 @@ describe("UDialog", () => {
     await waitFor(() => screen.getByText("Inside"));
     fireEvent.click(screen.getByLabelText(/close/i));
     await waitFor(() => expect(document.activeElement).toBe(openButton));
+  });
+
+  describe("mount-time-visible (Portal/ref-timing regression, Finding 1)", () => {
+    it("invokes the enter motion when visible=true on the very first render", async () => {
+      enterSpy.mockClear();
+      render(
+        <UDialog visible onHide={() => {}} header="Title">
+          Content
+        </UDialog>
+      );
+      await waitFor(() => screen.getByRole("dialog"));
+      await waitFor(() => expect(enterSpy).toHaveBeenCalled());
+    });
+
+    it("sets a non-empty inline z-index on the mask when visible=true on the very first render", async () => {
+      render(
+        <UDialog visible onHide={() => {}} header="Title">
+          Content
+        </UDialog>
+      );
+      await waitFor(() => screen.getByRole("dialog"));
+      await waitFor(() => {
+        // FocusTrap renders a fragment (no wrapping element), so the dialog's real DOM
+        // parent is the mask div (maskRef in dialog.tsx) that setZIndex targets.
+        const maskEl = screen.getByRole("dialog").parentElement as HTMLElement;
+        expect(maskEl.style.zIndex).not.toBe("");
+      });
+    });
+
+    it("locks the body scroll when visible=true with blockScroll on the very first render", async () => {
+      document.body.classList.remove("u-overflow-hidden");
+      render(
+        <UDialog visible onHide={() => {}} header="Title" blockScroll>
+          Content
+        </UDialog>
+      );
+      await waitFor(() => screen.getByRole("dialog"));
+      await waitFor(() => expect(document.body.classList.contains("u-overflow-hidden")).toBe(true));
+      document.body.classList.remove("u-overflow-hidden");
+    });
   });
 });

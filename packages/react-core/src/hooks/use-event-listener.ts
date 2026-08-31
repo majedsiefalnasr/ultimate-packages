@@ -7,9 +7,7 @@ export interface UseEventListenerOptions {
   when?: boolean;
 }
 
-function resolveTarget(
-  target: UseEventListenerOptions["target"]
-): EventTarget | null {
+function resolveTarget(target: UseEventListenerOptions["target"]): EventTarget | null {
   if (target === "window") return typeof window !== "undefined" ? window : null;
   if (target === "document") return typeof document !== "undefined" ? document : null;
   if (typeof target === "function") return target();

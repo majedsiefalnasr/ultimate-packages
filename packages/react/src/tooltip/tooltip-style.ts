@@ -6,7 +6,10 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: { position?: string } = {}) => ["u-tooltip u-component", `u-tooltip-${params.position ?? "right"}`],
+  root: (params: { position?: string } = {}) => [
+    "u-tooltip u-component",
+    `u-tooltip-${params.position ?? "right"}`,
+  ],
   text: "u-tooltip-text",
 };
 

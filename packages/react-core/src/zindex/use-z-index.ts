@@ -12,7 +12,11 @@ export const Z_INDEX_BUCKETS = {
 } as const;
 
 export function useZIndex(): {
-  set: (key: keyof typeof Z_INDEX_BUCKETS, element: HTMLElement | null, baseZIndex?: number) => void;
+  set: (
+    key: keyof typeof Z_INDEX_BUCKETS,
+    element: HTMLElement | null,
+    baseZIndex?: number
+  ) => void;
   clear: (element: HTMLElement | null) => void;
 } {
   const set = useCallback(

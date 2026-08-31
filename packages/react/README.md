@@ -32,10 +32,7 @@ function Example() {
     <>
       <UButton label="Open" onClick={() => setVisible(true)} />
       <UDialog visible={visible} onHide={() => setVisible(false)} header="Example">
-        <UCheckbox
-          checked={accepted}
-          onChange={(e) => setAccepted(Boolean(e.checked))}
-        />
+        <UCheckbox checked={accepted} onChange={(e) => setAccepted(Boolean(e.checked))} />
       </UDialog>
     </>
   );
@@ -54,17 +51,17 @@ Naming migration: every component's PrimeReact class-name prefix (`p-*`) is rena
 
 **Key props:**
 
-| Prop             | Type                                                                       | Notes                                                    |
-| ---------------- | --------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `label`           | `string`                                                                   | button text                                              |
-| `icon`            | `React.ReactNode`                                                          | rendered inside a positioned `<span>`                    |
-| `iconPos`         | `"left" \| "right" \| "top" \| "bottom"`                                    | default `"left"`                                         |
-| `loading`         | `boolean`                                                                  | default `false`; renders `<USpinnerIcon spin>` in place of `icon` |
-| `disabled`        | `boolean`                                                                  | default `false`                                          |
-| `severity`        | `"secondary" \| "success" \| "info" \| "warning" \| "danger" \| "help" \| "contrast"` | maps to `u-button-{severity}`                             |
-| `size`            | `"small" \| "large"`                                                       | maps to `u-button-sm`/`u-button-lg`                       |
-| `tooltip`         | `string`                                                                   | rendered via `UTooltip` targeting the button itself       |
-| `tooltipOptions`  | `Record<string, unknown>`                                                  | spread onto the sugar `UTooltip` instance                 |
+| Prop             | Type                                                                                  | Notes                                                             |
+| ---------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `label`          | `string`                                                                              | button text                                                       |
+| `icon`           | `React.ReactNode`                                                                     | rendered inside a positioned `<span>`                             |
+| `iconPos`        | `"left" \| "right" \| "top" \| "bottom"`                                              | default `"left"`                                                  |
+| `loading`        | `boolean`                                                                             | default `false`; renders `<USpinnerIcon spin>` in place of `icon` |
+| `disabled`       | `boolean`                                                                             | default `false`                                                   |
+| `severity`       | `"secondary" \| "success" \| "info" \| "warning" \| "danger" \| "help" \| "contrast"` | maps to `u-button-{severity}`                                     |
+| `size`           | `"small" \| "large"`                                                                  | maps to `u-button-sm`/`u-button-lg`                               |
+| `tooltip`        | `string`                                                                              | rendered via `UTooltip` targeting the button itself               |
+| `tooltipOptions` | `Record<string, unknown>`                                                             | spread onto the sugar `UTooltip` instance                         |
 
 ```tsx
 <UButton label="Save" icon={<SaveIcon />} onClick={handleSave} tooltip="Save changes" />
@@ -80,13 +77,13 @@ Naming migration: every component's PrimeReact class-name prefix (`p-*`) is rena
 
 **Key props:**
 
-| Prop        | Type                                     | Notes                                                        |
-| ----------- | ----------------------------------------- | -------------------------------------------------------------- |
-| `checked`   | `unknown`                                 | compared against `trueValue` to derive the checked state       |
-| `trueValue` / `falseValue` | `unknown`                  | default `true`/`false`                                        |
-| `onChange`  | `(event: UCheckboxChangeEvent) => void`   | `event.checked` is the next `trueValue`/`falseValue`           |
-| `disabled` / `readOnly` | `boolean`                     | default `false`                                                |
-| `tooltip`   | `string`                                  | rendered via `UTooltip` targeting the checkbox's root `<div>`  |
+| Prop                       | Type                                    | Notes                                                         |
+| -------------------------- | --------------------------------------- | ------------------------------------------------------------- |
+| `checked`                  | `unknown`                               | compared against `trueValue` to derive the checked state      |
+| `trueValue` / `falseValue` | `unknown`                               | default `true`/`false`                                        |
+| `onChange`                 | `(event: UCheckboxChangeEvent) => void` | `event.checked` is the next `trueValue`/`falseValue`          |
+| `disabled` / `readOnly`    | `boolean`                               | default `false`                                               |
+| `tooltip`                  | `string`                                | rendered via `UTooltip` targeting the checkbox's root `<div>` |
 
 ```tsx
 <UCheckbox checked={accepted} onChange={(e) => setAccepted(Boolean(e.checked))} />
@@ -98,20 +95,20 @@ Naming migration: every component's PrimeReact class-name prefix (`p-*`) is rena
 
 **PrimeReact foundation:** adapted from `Dialog` in PrimeReact's `dialog/Dialog.js`. **Non-goal:** `UDialog` does not implement draggable, resizable, or maximizable behavior — no such props, handlers, or UI exist on this component. This is an explicit, separately-tracked scope decision (see spec §15, ADR-030), verified by a negative test (`dialog.spec.tsx`'s "exposes no draggable, resizable, or maximizable props or UI") rather than merely by the absence of such code.
 
-**Ultimate behavior:** a modal (or non-modal) overlay rendered via `Portal` (body-append, or a given `appendTo` target) and `FocusTrap` (Tab-cycling within the dialog while `modal`), with a `header`/close-button region, `children` content, and an optional `footer`. Enter/leave is animated via `useMotion`; the actual unmount is deferred until the leave animation's `onAfterLeave` callback fires (a two-state `containerVisible` model, matching verified upstream `Dialog.js`'s `maskVisibleState`/`visibleState`/`onExited` pattern), so a plain `visible=false` doesn't strand the leave animation. Escape dismisses the dialog when `closeOnEscape` is true (via `react-core`'s priority-aware Escape mechanism). Focus returns to the element that had focus before the dialog opened, once the leave phase completes.
+**Ultimate behavior:** a modal (or non-modal) overlay rendered via `Portal` (body-append, or a given `appendTo` target) and `FocusTrap` (Tab-cycling within the dialog; always active regardless of `modal` — `modal` only gates `aria-modal` and whether `dismissableMask` can dismiss via a mask click, not whether `FocusTrap` renders), with a `header`/close-button region, `children` content, and an optional `footer`. Enter/leave is animated via `useMotion`; the actual unmount is deferred until the leave animation's `onAfterLeave` callback fires (a two-state `containerVisible` model, matching verified upstream `Dialog.js`'s `maskVisibleState`/`visibleState`/`onExited` pattern), so a plain `visible=false` doesn't strand the leave animation. Escape dismisses the dialog when `closeOnEscape` is true (via `react-core`'s priority-aware Escape mechanism). Focus returns to the element that had focus before the dialog opened, once the leave phase completes.
 
 **Key props:**
 
-| Prop             | Type                                    | Notes                                                    |
-| ----------------- | ---------------------------------------- | ----------------------------------------------------------- |
-| `visible`         | `boolean`                                | required, controlled                                      |
-| `onHide`          | `(event?: React.SyntheticEvent) => void` | required                                                   |
-| `header`          | `React.ReactNode`                        | title content; drives `aria-labelledby`                    |
-| `closable`        | `boolean`                                | default `true`; shows the close button                     |
-| `closeOnEscape`   | `boolean`                                | default `false`                                            |
-| `modal`           | `boolean`                                | default `true`; gates `aria-modal` and `FocusTrap` activity |
-| `blockScroll`     | `boolean`                                | default `false`; registers with `react-core`'s `useScrollLock` |
-| `appendTo`        | `HTMLElement \| (() => HTMLElement)`      | portal target; defaults to `document.body`                 |
+| Prop            | Type                                     | Notes                                                                                   |
+| --------------- | ---------------------------------------- | --------------------------------------------------------------------------------------- |
+| `visible`       | `boolean`                                | required, controlled                                                                    |
+| `onHide`        | `(event?: React.SyntheticEvent) => void` | required                                                                                |
+| `header`        | `React.ReactNode`                        | title content; drives `aria-labelledby`                                                 |
+| `closable`      | `boolean`                                | default `true`; shows the close button                                                  |
+| `closeOnEscape` | `boolean`                                | default `false`                                                                         |
+| `modal`         | `boolean`                                | default `true`; gates `aria-modal`. `FocusTrap` is always active regardless of `modal`. |
+| `blockScroll`   | `boolean`                                | default `false`; registers with `react-core`'s `useScrollLock`                          |
+| `appendTo`      | `HTMLElement \| (() => HTMLElement)`     | portal target; defaults to `document.body`                                              |
 
 ```tsx
 <UDialog visible={visible} onHide={() => setVisible(false)} header="Confirm" closeOnEscape>
@@ -119,7 +116,7 @@ Naming migration: every component's PrimeReact class-name prefix (`p-*`) is rena
 </UDialog>
 ```
 
-**Accessibility:** root element has `role="dialog"`, `aria-modal={modal}`, `aria-labelledby` pointing at the header, and `aria-describedby` pointing at the content region. Focus is trapped inside the dialog via `FocusTrap` while `modal`, Escape closes it when `closeOnEscape`, and focus returns to the triggering element once the leave animation completes.
+**Accessibility:** root element has `role="dialog"`, `aria-modal={modal}`, `aria-labelledby` pointing at the header, and `aria-describedby` pointing at the content region. Focus is trapped inside the dialog via `FocusTrap`, which is always active regardless of `modal` (`modal` only gates `aria-modal`, not `FocusTrap`), Escape closes it when `closeOnEscape`, and focus returns to the triggering element once the leave animation completes.
 
 ### Menu (`UMenu`)
 
@@ -129,12 +126,12 @@ Naming migration: every component's PrimeReact class-name prefix (`p-*`) is rena
 
 **Key props:**
 
-| Prop      | Type                | Notes                                                          |
-| --------- | -------------------- | ----------------------------------------------------------------- |
-| `model`   | `UMenuItem[]`         | required; `{ label, icon, command, disabled, separator, visible, url, items }` |
-| `popup`   | `boolean`             | default `false`; renders via `Portal` with overlay dismiss/Escape wiring |
-| `closeOnEscape` | `boolean`       | default `true`; popup mode only                                    |
-| `onShow` / `onHide` | `() => void` | fire at the start of the enter phase / end of the leave phase, respectively |
+| Prop                | Type          | Notes                                                                          |
+| ------------------- | ------------- | ------------------------------------------------------------------------------ |
+| `model`             | `UMenuItem[]` | required; `{ label, icon, command, disabled, separator, visible, url, items }` |
+| `popup`             | `boolean`     | default `false`; renders via `Portal` with overlay dismiss/Escape wiring       |
+| `closeOnEscape`     | `boolean`     | default `true`; popup mode only                                                |
+| `onShow` / `onHide` | `() => void`  | fire at the start of the enter phase / end of the leave phase, respectively    |
 
 ```tsx
 const menuRef = useRef<UMenuHandle>(null);
@@ -152,14 +149,14 @@ const menuRef = useRef<UMenuHandle>(null);
 
 **Key props:**
 
-| Prop         | Type                                                                 | Notes                                                    |
-| ------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `target`      | `React.RefObject<HTMLElement> \| HTMLElement \| string \| string[]`     | required                                                   |
-| `content`     | `React.ReactNode`                                                     | required for the tooltip to render at all                  |
-| `position`    | `"top" \| "bottom" \| "left" \| "right"`                                | default `"right"`                                          |
-| `event`       | `"hover" \| "focus" \| "both"`                                          | default `"hover"`                                          |
-| `showDelay` / `hideDelay` | `number`                                                  | milliseconds, default `0`                                  |
-| `closeOnEscape` | `boolean`                                                          | default `false`; wired through `react-core`'s priority-aware Escape mechanism |
+| Prop                      | Type                                                                | Notes                                                                         |
+| ------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `target`                  | `React.RefObject<HTMLElement> \| HTMLElement \| string \| string[]` | required                                                                      |
+| `content`                 | `React.ReactNode`                                                   | required for the tooltip to render at all                                     |
+| `position`                | `"top" \| "bottom" \| "left" \| "right"`                            | default `"right"`                                                             |
+| `event`                   | `"hover" \| "focus" \| "both"`                                      | default `"hover"`                                                             |
+| `showDelay` / `hideDelay` | `number`                                                            | milliseconds, default `0`                                                     |
+| `closeOnEscape`           | `boolean`                                                           | default `false`; wired through `react-core`'s priority-aware Escape mechanism |
 
 ```tsx
 const anchorRef = useRef<HTMLSpanElement>(null);

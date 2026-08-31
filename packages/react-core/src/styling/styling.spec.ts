@@ -26,7 +26,6 @@ describe("useComponentStyle", () => {
   it("registers the style module once per component name on mount", () => {
     renderHook(() => useComponentStyle("test-button", { css: ".u-button {}", classes: {} }));
     expect(reactCoreStyleSheet.has("test-button")).toBe(true);
-    const styleEl = document.head.querySelector('style[data-ultimate-style-id="test-button"], style');
     expect(document.head.querySelector("style")?.textContent).toContain(".u-button");
   });
 

@@ -15,7 +15,11 @@
       "default": "./dist/index.mjs"
     }
   },
-  "files": ["dist", "README.md", "THIRD-PARTY-NOTICES.md"],
+  "files": [
+    "dist",
+    "README.md",
+    "THIRD-PARTY-NOTICES.md"
+  ],
   "dependencies": {
     "@ultimate/uix-utils": "workspace:*",
     "@ultimate/uix-styled": "workspace:*",

@@ -84,8 +84,10 @@ export function UTooltip({
     targetElRef.current = el;
     if (!el) return;
 
-    const showEvents = event === "focus" ? ["focus"] : event === "both" ? ["focus", "mouseenter"] : ["mouseenter"];
-    const hideEvents = event === "focus" ? ["blur"] : event === "both" ? ["blur", "mouseleave"] : ["mouseleave"];
+    const showEvents =
+      event === "focus" ? ["focus"] : event === "both" ? ["focus", "mouseenter"] : ["mouseenter"];
+    const hideEvents =
+      event === "focus" ? ["blur"] : event === "both" ? ["blur", "mouseleave"] : ["mouseleave"];
     showEvents.forEach((e) => el.addEventListener(e, show));
     hideEvents.forEach((e) => el.addEventListener(e, hide));
   });
@@ -136,7 +138,6 @@ export function UTooltip({
       removeDescribedBy();
       clearZIndex(panelRef.current);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   if (!content) return null;

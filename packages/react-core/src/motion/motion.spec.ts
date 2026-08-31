@@ -12,7 +12,9 @@ describe("useMotion", () => {
     const el = document.createElement("div");
     document.body.appendChild(el);
     const ref = { current: el };
-    expect(() => renderHook(() => useMotion(ref, true, { name: "u-test", safe: false }))).not.toThrow();
+    expect(() =>
+      renderHook(() => useMotion(ref, true, { name: "u-test", safe: false }))
+    ).not.toThrow();
     document.body.removeChild(el);
   });
 

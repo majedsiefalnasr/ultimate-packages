@@ -19,14 +19,18 @@ describe("useDisplayOrder", () => {
 describe("useGlobalEscapeKey", () => {
   it("calls the callback on Escape when when is true", () => {
     const callback = vi.fn();
-    renderHook(() => useGlobalEscapeKey({ callback, when: true, priority: [ESCAPE_PRIORITIES.DIALOG, 1] }));
+    renderHook(() =>
+      useGlobalEscapeKey({ callback, when: true, priority: [ESCAPE_PRIORITIES.DIALOG, 1] })
+    );
     fireEscape();
     expect(callback).toHaveBeenCalledOnce();
   });
 
   it("does not call the callback when when is false", () => {
     const callback = vi.fn();
-    renderHook(() => useGlobalEscapeKey({ callback, when: false, priority: [ESCAPE_PRIORITIES.DIALOG, 1] }));
+    renderHook(() =>
+      useGlobalEscapeKey({ callback, when: false, priority: [ESCAPE_PRIORITIES.DIALOG, 1] })
+    );
     fireEscape();
     expect(callback).not.toHaveBeenCalled();
   });
@@ -35,10 +39,18 @@ describe("useGlobalEscapeKey", () => {
     const dialogCallback = vi.fn();
     const menuCallback = vi.fn();
     renderHook(() =>
-      useGlobalEscapeKey({ callback: dialogCallback, when: true, priority: [ESCAPE_PRIORITIES.DIALOG, 1] })
+      useGlobalEscapeKey({
+        callback: dialogCallback,
+        when: true,
+        priority: [ESCAPE_PRIORITIES.DIALOG, 1],
+      })
     );
     renderHook(() =>
-      useGlobalEscapeKey({ callback: menuCallback, when: true, priority: [ESCAPE_PRIORITIES.MENU, 1] })
+      useGlobalEscapeKey({
+        callback: menuCallback,
+        when: true,
+        priority: [ESCAPE_PRIORITIES.MENU, 1],
+      })
     );
     fireEscape();
     // MENU (500) > DIALOG (300) — MENU's tuple wins.

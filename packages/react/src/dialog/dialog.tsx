@@ -71,6 +71,14 @@ export function UDialog({
   // unmount synchronously and never give useMotion's leave phase a chance to run.
   const [containerVisible, setContainerVisible] = React.useState(visible);
 
+  // Portal defers its first real DOM commit by one render pass (SSR-guard mount effect,
+  // see portal.tsx). When `visible` is already `true` on this component's very first
+  // render, the z-index/scroll-lock and motion effects below would run against a ref
+  // that Portal hasn't attached to the DOM yet. `portalReady` flips true once Portal's
+  // `onMount` callback confirms the portalled content actually committed, giving those
+  // effects a signal to re-run after the ref is populated.
+  const [portalReady, setPortalReady] = React.useState(false);
+
   const isCloseOnEscape = closable && closeOnEscape && visible;
   const displayOrder = useDisplayOrder("dialog", isCloseOnEscape);
 
@@ -89,7 +97,6 @@ export function UDialog({
       focusElementOnHide.current = document.activeElement as HTMLElement | null;
       setContainerVisible(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   useUpdateEffect(() => {
@@ -101,21 +108,37 @@ export function UDialog({
     }
     // The visible=false case (leave motion, z-index clear, scroll unlock, focus restore) is
     // handled by useMotion's onAfterLeave below, once the leave animation actually completes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, containerVisible]);
+    // `portalReady` is included so this effect also re-runs once Portal's deferred first
+    // commit actually attaches the DOM (mount-time-visible case, see portal.tsx/use-motion.ts)
+    // — it adds one extra, already-stable dependency for the normal open/close case.
+  }, [visible, containerVisible, portalReady]);
 
-  useMotion(dialogRef, visible && containerVisible, {
-    name: "u-dialog",
-    onAfterLeave: () => {
-      clearZIndex(maskRef.current);
-      if (blockScroll) unregisterScrollLock(dialogId);
-      setContainerVisible(false);
-      if (focusElementOnHide.current) {
-        focusElementOnHide.current.focus();
-        focusElementOnHide.current = null;
-      }
+  useMotion(
+    dialogRef,
+    visible && containerVisible,
+    {
+      name: "u-dialog",
+      onAfterLeave: () => {
+        clearZIndex(maskRef.current);
+        if (blockScroll) unregisterScrollLock(dialogId);
+        setContainerVisible(false);
+        // Portal fully unmounts whenever containerVisible goes false (the `if
+        // (!containerVisible) return null` above removes it from the tree), so its next
+        // mount will start with a fresh internal `mounted=false` again. Reset
+        // `portalReady` here so the NEXT open's onMount callback produces a real
+        // false→true transition instead of a same-value no-op that React would bail out
+        // of — otherwise the z-index/scroll-lock/motion effects would silently no-op on
+        // every open after the first (dialogRef.current is still null when they first
+        // run post-open, same defect as Finding 1, just recurring instead of mount-only).
+        setPortalReady(false);
+        if (focusElementOnHide.current) {
+          focusElementOnHide.current.focus();
+          focusElementOnHide.current = null;
+        }
+      },
     },
-  });
+    portalReady
+  );
 
   useUnmountEffect(() => {
     clearZIndex(maskRef.current);
@@ -169,5 +192,12 @@ export function UDialog({
     </div>
   );
 
-  return <Portal element={rootElement} appendTo={appendTo} visible />;
+  return (
+    <Portal
+      element={rootElement}
+      appendTo={appendTo}
+      visible
+      onMount={() => setPortalReady(true)}
+    />
+  );
 }

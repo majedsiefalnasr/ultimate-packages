@@ -7,8 +7,14 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: { checked?: boolean } = {}) => ["u-checkbox u-component", { "u-checkbox-checked": params.checked }],
-  box: (params: { checked?: boolean } = {}) => ["u-checkbox-box", { "u-checkbox-box-checked": params.checked }],
+  root: (params: { checked?: boolean } = {}) => [
+    "u-checkbox u-component",
+    { "u-checkbox-checked": params.checked },
+  ],
+  box: (params: { checked?: boolean } = {}) => [
+    "u-checkbox-box",
+    { "u-checkbox-box-checked": params.checked },
+  ],
   input: "u-checkbox-input",
   icon: "u-checkbox-icon",
 };

@@ -8,7 +8,8 @@ import { createMotion, type MotionOptions, type MotionInstance } from "@ultimate
 export function useMotion(
   elementRef: React.RefObject<HTMLElement>,
   visible: boolean,
-  options?: MotionOptions
+  options?: MotionOptions,
+  ready = true
 ): void {
   const motionRef = useRef<MotionInstance | null>(null);
 
@@ -26,5 +27,10 @@ export function useMotion(
     return () => {
       motionRef.current?.cancel();
     };
-  }, [visible]);
+    // `ready` is an additional trigger (not a value read in the effect body): it lets a
+    // caller whose ref target is attached asynchronously (e.g. behind a Portal that defers
+    // its first real commit) force this effect to re-evaluate once the ref is actually
+    // populated, without changing `visible`. See portal.tsx's `onMount` and dialog.tsx/
+    // menu.tsx's `portalReady` state for the producer side of this signal.
+  }, [visible, ready]);
 }

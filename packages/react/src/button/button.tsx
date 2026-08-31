@@ -3,8 +3,10 @@ import { useComponentBase, USpinnerIcon } from "@ultimate/react-core";
 import { UTooltip } from "../tooltip";
 import { buttonStyleModule } from "./button-style";
 
-export interface UButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "disabled"> {
+export interface UButtonProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "disabled"
+> {
   label?: string;
   icon?: React.ReactNode;
   iconPos?: "left" | "right" | "top" | "bottom";
@@ -94,7 +96,19 @@ export const UButton = React.forwardRef<HTMLButtonElement, UButtonProps>(functio
         disabled={isDisabled}
         aria-label={defaultAriaLabel}
         className={[
-          cx("root", { hasIcon, label, loading, severity, raised, rounded, text, outlined, link, plain, size }),
+          cx("root", {
+            hasIcon,
+            label,
+            loading,
+            severity,
+            raised,
+            rounded,
+            text,
+            outlined,
+            link,
+            plain,
+            size,
+          }),
           className,
         ]
           .filter(Boolean)
