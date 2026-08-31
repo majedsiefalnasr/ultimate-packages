@@ -34,5 +34,17 @@
     "ultimateDestination": "packages/vue-core/src/base/base-editable-holder.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored test, not derived from upstream."
+  },
+  {
+    "originalPath": "packages/core/src/baseinput/BaseInput.vue",
+    "ultimateDestination": "packages/vue-core/src/base/base-input.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream intermediate tier: size/fluid/variant props, $fluid/$variant computeds, $pcFluid ambient-context injection. Not previously documented in the Phase 4 spec until this Phase's Checkbox verification gap closed — matches the same Fluid-ancestor-detection pattern already confirmed for Button/Angular's UButton (ADR-018)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/base/base-input.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream."
   }
 ]
