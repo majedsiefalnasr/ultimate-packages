@@ -106,5 +106,23 @@
     "ultimateDestination": "packages/vue-core/src/escape/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/zindex/use-z-index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Thin Vue wrapper directly reusing @ultimate/uix-utils/zindex's existing ZIndex singleton — verified algorithmically identical to PrimeVue's real ZIndexUtils behavior (spec §12), no redesign. Z_INDEX_KEYS values verified against real ZIndex.set() call sites in Dialog.vue ('modal'), Menu.vue ('menu'), Tooltip.js ('tooltip')."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/zindex/zindex.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/zindex/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
