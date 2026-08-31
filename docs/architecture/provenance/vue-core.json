@@ -166,5 +166,23 @@
     "ultimateDestination": "packages/vue-core/src/scroll-lock/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/motion/use-motion.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Wires @ultimate/uix-motion's existing createMotion(element, options) into Vue's native <transition> hook-callback shape (@enter/@leave with a done callback) — verified real Dialog.vue <transition> usage confirms no wrapper-library dependency upstream (spec §17). No new runtime dependency; same framework-agnostic primitive Angular's effect() and React's useEffect already call, just a different call-site mechanism."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/motion/motion.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/motion/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
