@@ -41,4 +41,17 @@ describe("createBaseComponent", () => {
     });
     expect(wrapper.text()).toBe("yes");
   });
+
+  it("mounting a component registers its style module, injecting a real <style> element", () => {
+    const Base = createBaseComponent({
+      componentName: "base-component-style-regression",
+      styleModule: { css: ".u-regression-test { color: blue; }", classes: {} },
+    });
+    mount({ extends: Base, template: `<div />` });
+    const styleEl = document.head.querySelector(
+      'style[data-u-style="base-component-style-regression"]'
+    );
+    expect(styleEl).not.toBeNull();
+    expect(styleEl?.textContent).toContain(".u-regression-test");
+  });
 });

@@ -1,5 +1,6 @@
 import { classNames } from "@ultimate/uix-utils";
 import type { ComponentOptions } from "vue";
+import { registerComponentStyle } from "../styling/vue-style-sheet";
 
 export type ClassValue = string | Record<string, boolean> | (string | Record<string, boolean>)[];
 
@@ -36,10 +37,7 @@ export function createBaseComponent(options: BaseComponentOptions): ComponentOpt
       },
     },
     mounted() {
-      // Style registration wiring lands in Task 14 (styling) — this task's
-      // scope is cx() resolution only, matching react-core's Task 3
-      // precedent where useComponentBase and useComponentStyle were also
-      // split across two tasks.
+      registerComponentStyle(componentName, styleModule);
     },
   };
 }

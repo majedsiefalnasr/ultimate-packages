@@ -184,5 +184,23 @@
     "ultimateDestination": "packages/vue-core/src/motion/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/core/src/basecomponent/BaseComponent.vue",
+    "ultimateDestination": "packages/vue-core/src/styling/vue-style-sheet.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream style-registration timing: an immediate: true watcher fires during instance creation, calling _loadCoreStyles()/BaseComponentStyle.loadCSS. Ultimate decision: VueStyleSheet subclasses the already-built @ultimate/uix-styled StyleSheet, delegating actual DOM creation to @ultimate/uix-utils/dom's createStyleElement (already-built Phase 1 primitive) — this closes the same class of gap ADR-023 found on Angular's ngCoreStyleSheet (no real <style> injection), matching React's ADR-029 working-from-day-one posture (spec §8). Registration is wired from Vue's mounted() hook rather than an immediate watcher — a deliberate simplification, documented inline, with no observable behavioral difference for any Phase 4 proof-set component. Implementation-time correction to the task brief's draft: verified StyleSheet.add(key, css?: string) (packages/uix-styled/src/stylesheet/index.ts) takes the CSS string directly and builds the StyleMeta + calls this.createStyleElement(meta) internally — it is NOT add(key, metaObject) as the brief's draft called it. registerComponentStyle calls vueCoreStyleSheet.add(componentName, styleModule.css), matching the identical has()/add(componentName, styleModule.css) call shape already verified in react-core's use-component-style.ts and ng-core's base-component.ts. Confirmed by temporarily reverting to the brief's literal add(key, { css }) call: the real-<style>-injection regression test genuinely fails (styleEl.textContent becomes the string '[object Object]', since StyleSheet.add's isNotEmpty(css) guard treats the object as non-empty and passes it straight through to createStyleMarkup/createStyleElement), then genuinely passes again once corrected to add(key, css)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/styling/styling.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/styling/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
