@@ -307,7 +307,7 @@ importers:
         version: link:../uix-utils
     devDependencies:
       '@vitejs/plugin-vue':
-        specifier: ^5.2.1
+        specifier: 5.2.4
         version: 5.2.4(vite@5.4.21(less@4.9.0)(sass@1.103.1))(vue@3.5.42(typescript@5.9.3))
       '@vue/test-utils':
         specifier: ^2.4.6

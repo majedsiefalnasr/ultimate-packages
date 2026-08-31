@@ -25,6 +25,12 @@ import { createFilter } from "vite";
 const vue = vuePlugin();
 const filter = createFilter(/\.vue$/);
 
+// This runs at module top level (outside defineConfig), mutating the
+// plugin-vue singleton's internal state as a side effect of importing this
+// config module. That only works because tsup evaluates this config file
+// fresh per invocation (single entry, single build, no watch mode); if this
+// file ever needs multiple build targets or watch-mode re-invocation, these
+// calls would need to move into a proper per-build lifecycle scope instead.
 vue.configResolved.call(
   {},
   {
@@ -48,6 +54,22 @@ export default defineConfig({
   clean: true,
   splitting: false,
   outDir: "dist",
+  // The `configResolved` fake config above is minimal/incomplete relative to
+  // Vite's real ResolvedConfig. @vitejs/plugin-vue's internal reads on
+  // config fields this shim doesn't provide return `undefined` silently
+  // (plain JS property access on a missing key) rather than throwing. A
+  // future @vitejs/plugin-vue version that starts reading a new *optional*
+  // config field could silently change SFC-compilation output (e.g.
+  // dev-tools instrumentation, custom-element detection, source-map
+  // fidelity) instead of failing loudly — which is why the version above is
+  // pinned exactly rather than left on a caret range.
+  //
+  // No regression test currently exercises this .vue-compilation shim (the
+  // task's manual verification .vue file was deleted after confirming the
+  // build worked, per plan instructions — no real .vue component ships in
+  // this package yet). This shim will be implicitly exercised the first time
+  // a real .vue file goes through this package's build; re-verify it against
+  // the then-current @vitejs/plugin-vue behavior at that point.
   esbuildPlugins: [
     {
       name: "vue-sfc",
