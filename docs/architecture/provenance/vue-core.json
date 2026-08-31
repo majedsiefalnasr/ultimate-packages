@@ -148,5 +148,23 @@
     "ultimateDestination": "packages/vue-core/src/focus-trap/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/scroll-lock/use-scroll-lock.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Consumes @ultimate/uix-utils/scroll-lock's shared scrollLockRegistry (extracted in full from react-core/src/scroll-lock/use-scroll-lock.ts during Phase 4's prerequisite work, Task 1); Dialog.vue's own blockBodyScroll/unblockBodyScroll calls have no reference-counting (verified gap, spec §16). This file supplies only the register/unregister call-site wrapper — not a react-core dependency."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/scroll-lock/scroll-lock.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, same coverage shape as react-core/src/scroll-lock/scroll-lock.spec.ts since both wrap the identical shared registry."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/scroll-lock/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]

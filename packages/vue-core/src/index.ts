@@ -3,4 +3,5 @@ export * from "./directive";
 export * from "./escape";
 export * from "./focus-trap";
 export * from "./overlay";
+export * from "./scroll-lock";
 export * from "./zindex";
