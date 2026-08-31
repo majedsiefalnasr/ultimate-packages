@@ -23,4 +23,15 @@ describe.each([
     const wrapper = mount(Icon, { props: { class: "u-custom-icon-class" } });
     expect(wrapper.find("svg").classes()).toContain("u-custom-icon-class");
   });
+
+  it("always carries the base u-icon class alongside the class prop", () => {
+    const wrapper = mount(Icon, { props: { class: "u-custom-icon-class" } });
+    expect(wrapper.find("svg").classes()).toContain("u-icon");
+  });
+
+  it("uses currentColor fill for theme parity with react-core", () => {
+    const wrapper = mount(Icon);
+    expect(wrapper.find("svg").attributes("fill")).toBe("none");
+    expect(wrapper.find("path").attributes("fill")).toBe("currentColor");
+  });
 });
