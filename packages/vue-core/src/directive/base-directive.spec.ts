@@ -23,8 +23,7 @@ describe("createDirective", () => {
       { template: `<div v-if="show" v-test-directive-2 />`, data: () => ({ show: true }) },
       { global: { directives: { "test-directive-2": directive } } }
     );
-    wrapper.vm.show = false;
-    return wrapper.vm.$nextTick().then(() => {
+    return wrapper.setData({ show: false }).then(() => {
       expect(unmounted).toHaveBeenCalledOnce();
     });
   });
@@ -36,8 +35,7 @@ describe("createDirective", () => {
       { template: `<div v-test-directive-3="value" />`, data: () => ({ value: "a" }) },
       { global: { directives: { "test-directive-3": directive } } }
     );
-    wrapper.vm.value = "b";
-    return wrapper.vm.$nextTick().then(() => {
+    return wrapper.setData({ value: "b" }).then(() => {
       expect(updated).toHaveBeenCalledOnce();
       const [, binding] = updated.mock.calls[0];
       expect(binding.value).toBe("b");
