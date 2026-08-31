@@ -9,9 +9,7 @@ import { join } from "node:path";
 describe("package exports", () => {
   it("entry point builds", () => {
     expect(existsSync(join(__dirname, "..", "dist", "index.mjs"))).toBe(true);
-    expect(existsSync(join(__dirname, "..", "dist", "index.d.mts"))).toBe(
-      true,
-    );
+    expect(existsSync(join(__dirname, "..", "dist", "index.d.mts"))).toBe(true);
   });
 
   it("every barrel export is callable/defined", async () => {

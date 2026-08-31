@@ -17,9 +17,7 @@ import { join } from "node:path";
 describe("package exports: barrel (.)", () => {
   it("entry point builds", () => {
     expect(existsSync(join(__dirname, "..", "dist", "index.mjs"))).toBe(true);
-    expect(existsSync(join(__dirname, "..", "dist", "index.d.mts"))).toBe(
-      true,
-    );
+    expect(existsSync(join(__dirname, "..", "dist", "index.d.mts"))).toBe(true);
   });
 
   it("every barrel export is callable/defined", async () => {
@@ -34,12 +32,8 @@ describe("package exports: barrel (.)", () => {
 
 describe("package exports: ./button", () => {
   it("entry point builds", () => {
-    expect(
-      existsSync(join(__dirname, "..", "dist", "button", "index.mjs")),
-    ).toBe(true);
-    expect(
-      existsSync(join(__dirname, "..", "dist", "button", "index.d.mts")),
-    ).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "button", "index.mjs"))).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "button", "index.d.mts"))).toBe(true);
   });
 
   it("UButton is callable/defined", async () => {
@@ -50,12 +44,8 @@ describe("package exports: ./button", () => {
 
 describe("package exports: ./checkbox", () => {
   it("entry point builds", () => {
-    expect(
-      existsSync(join(__dirname, "..", "dist", "checkbox", "index.mjs")),
-    ).toBe(true);
-    expect(
-      existsSync(join(__dirname, "..", "dist", "checkbox", "index.d.mts")),
-    ).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "checkbox", "index.mjs"))).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "checkbox", "index.d.mts"))).toBe(true);
   });
 
   it("UCheckbox is callable/defined", async () => {
@@ -66,12 +56,8 @@ describe("package exports: ./checkbox", () => {
 
 describe("package exports: ./dialog", () => {
   it("entry point builds", () => {
-    expect(
-      existsSync(join(__dirname, "..", "dist", "dialog", "index.mjs")),
-    ).toBe(true);
-    expect(
-      existsSync(join(__dirname, "..", "dist", "dialog", "index.d.mts")),
-    ).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "dialog", "index.mjs"))).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "dialog", "index.d.mts"))).toBe(true);
   });
 
   it("UDialog is callable/defined", async () => {
@@ -82,12 +68,8 @@ describe("package exports: ./dialog", () => {
 
 describe("package exports: ./menu", () => {
   it("entry point builds", () => {
-    expect(
-      existsSync(join(__dirname, "..", "dist", "menu", "index.mjs")),
-    ).toBe(true);
-    expect(
-      existsSync(join(__dirname, "..", "dist", "menu", "index.d.mts")),
-    ).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "menu", "index.mjs"))).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "menu", "index.d.mts"))).toBe(true);
   });
 
   it("UMenu is callable/defined", async () => {
@@ -98,12 +80,8 @@ describe("package exports: ./menu", () => {
 
 describe("package exports: ./tooltip", () => {
   it("entry point builds", () => {
-    expect(
-      existsSync(join(__dirname, "..", "dist", "tooltip", "index.mjs")),
-    ).toBe(true);
-    expect(
-      existsSync(join(__dirname, "..", "dist", "tooltip", "index.d.mts")),
-    ).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "tooltip", "index.mjs"))).toBe(true);
+    expect(existsSync(join(__dirname, "..", "dist", "tooltip", "index.d.mts"))).toBe(true);
   });
 
   it("UTooltip is callable/defined", async () => {

@@ -39,10 +39,7 @@ function fixCrossEntryDtsExtensions(dir) {
       fixCrossEntryDtsExtensions(fullPath);
     } else if (entry.name.endsWith(".d.mts")) {
       const original = readFileSync(fullPath, "utf8");
-      const fixed = original.replace(
-        /(from\s+['"]\.[^'"]*?)\.js(['"])/g,
-        "$1.mjs$2",
-      );
+      const fixed = original.replace(/(from\s+['"]\.[^'"]*?)\.js(['"])/g, "$1.mjs$2");
 
       if (fixed !== original) {
         writeFileSync(fullPath, fixed);
