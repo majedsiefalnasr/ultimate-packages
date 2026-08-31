@@ -1,0 +1,26 @@
+[
+  {
+    "originalPath": "packages/primevue/src/ripple/Ripple.js",
+    "ultimateDestination": "packages/vue/src/ripple/ripple.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream mechanism (read in full via extract-primevue-source.mjs from primevue@4.5.5, cross-checked against @primeuix/styles' ripple/index.mjs stylesheet): mousedown listener sets the ink element's width/height/top/left as inline pixel styles computed from the host's offset and outer size (getOffset, getOuterWidth/getOuterHeight, getWidth/getHeight), then toggles a u-ink-active class (renamed from upstream's p-ink-active) which triggers a 0.4s CSS keyframe animation (scale 0->2.5, fade opacity) defined in the theme stylesheet — CSS-driven, not JS-driven. Also ports upstream's animationend listener and 401ms setTimeout fallback that removes the active class after the animation completes. Corrects an earlier task-brief draft that assumed a --ink-size CSS custom property; no such property exists in the real upstream source — sizing/positioning are plain inline styles, confirmed by reading Ripple.js and the ripple stylesheet directly. Standalone directive primitive built via vue-core's createDirective factory, matching Angular's URipple precedent (packages/ng/src/ripple/ripple.ts) both in mechanism fidelity and in the same Option B exclusion: no BaseRipple/RippleStyle DI-styling registration, no UltimateConfig ripple-toggle gating — the ripple effect applies unconditionally. Full Ultimate namespace rename (u-ink/u-ink-active, not p-ink/p-ink-active)."
+  },
+  {
+    "originalPath": "packages/primevue/src/ripple/BaseRipple.js",
+    "ultimateDestination": "packages/vue/src/ripple/ripple.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream: BaseRipple.extend('ripple', { style: RippleStyle }) registers PrimeVue's DI-based BaseDirective/theming plumbing. This file's Ultimate equivalent uses vue-core's createDirective factory instead (Option B — no pt/ptm/ptmo passthrough, no PrimeVueService global config-change subscription); no separate BaseRipple-equivalent file needed."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/ripple/ripple.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, test design confirmed viable via @vue/test-utils's config.global.directives mechanism (verified against PrimeVue's own real Ripple.spec.js during this task's real-source read, which uses the identical mount/global.directives/trigger('mousedown') pattern)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/ripple/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  }
+]

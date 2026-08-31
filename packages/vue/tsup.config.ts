@@ -8,6 +8,7 @@ const filter = createFilter(/\.vue$/);
 export default defineConfig({
   entry: {
     index: "src/index.ts",
+    "ripple/index": "src/ripple/index.ts",
     "button/index": "src/button/index.ts",
     "checkbox/index": "src/checkbox/index.ts",
     "dialog/index": "src/dialog/index.ts",
