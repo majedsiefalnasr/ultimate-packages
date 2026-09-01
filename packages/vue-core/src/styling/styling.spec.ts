@@ -33,4 +33,15 @@ describe("VueStyleSheet adapter", () => {
       globalThis.document = originalDocument;
     }
   });
+
+  it("resolves dt() calls in registered CSS into var(--u-*, ...) references", () => {
+    const styleModule = {
+      css: ".u-test { color: dt('test.token.value'); }",
+      classes: {},
+    };
+    registerComponentStyle("dt-test-component", styleModule);
+    const styleEl = document.head.querySelector('style[data-u-style="dt-test-component"]');
+    expect(styleEl?.textContent).toContain("var(--u-test-token-value");
+    expect(styleEl?.textContent).not.toContain("dt(");
+  });
 });

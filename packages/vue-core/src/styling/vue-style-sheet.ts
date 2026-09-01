@@ -1,4 +1,4 @@
-import { StyleSheet, type StyleMeta } from "@ultimate/uix-styled";
+import { StyleSheet, css, type StyleMeta } from "@ultimate/uix-styled";
 import { createStyleElement } from "@ultimate/uix-utils/dom";
 import type { StyleModule } from "../base/base-component";
 
@@ -27,5 +27,5 @@ export const vueCoreStyleSheet = new VueStyleSheet();
 // styleModule.css) call shape.
 export function registerComponentStyle(componentName: string, styleModule: StyleModule): void {
   if (vueCoreStyleSheet.has(componentName)) return;
-  vueCoreStyleSheet.add(componentName, styleModule.css);
+  vueCoreStyleSheet.add(componentName, css`${styleModule.css}`);
 }
