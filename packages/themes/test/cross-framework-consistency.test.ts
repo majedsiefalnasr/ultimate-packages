@@ -55,6 +55,16 @@
  * implementations already use (see that file's own comment for detail).
  * `packages/ng/src/button/button.spec.ts`'s new test needed this fix to be
  * able to observe Angular's registered CSS via the DOM at all.
+ *
+ * BUILD-FRESHNESS NOTE: this file imports `@ultimate/vue/button` and
+ * `@ultimate/react/button`, both of which resolve through their package's
+ * `exports` map to prebuilt `dist/` output, not `src/`. The workspace root
+ * `test` script (`pnpm -r --if-present run test`) does not enforce a build
+ * step first — on a cold checkout, or after editing `vue`'s/`react`'s
+ * `src/`, this file will silently test stale `dist/` output unless those
+ * packages are rebuilt first (`pnpm --filter @ultimate/vue --filter
+ * @ultimate/react build`). This cost real debugging time while writing this
+ * test; flagging it here so the next person doesn't repeat that.
  */
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import { cleanup, render } from "@testing-library/react";
@@ -122,11 +132,21 @@ describe("cross-framework theme consistency", () => {
       // attribute (its StyleSheet instance is constructed with no `attrs`
       // option, unlike vue-core's explicit `data-u-style`), so the
       // registered element is located by its known, unique `.u-button`
-      // selector rather than by an attribute selector.
-      const styleEl = Array.from(document.head.querySelectorAll("style")).find((el) =>
-        (el.textContent ?? "").includes(".u-button {")
+      // selector rather than by an attribute selector. Vue's element ALSO
+      // contains `.u-button {` (both frameworks style the same class name),
+      // so Vue's `[data-u-style]`-tagged element must be excluded first —
+      // otherwise this lookup silently matches Vue's <style> instead of
+      // React's, since Vue's test runs first in this same describe block
+      // and its element persists in document.head. `.u-button-vertical` is
+      // present only in React's static button-style.ts (not in the real
+      // uix-styles/button CSS Vue/Angular register), so it's used as the
+      // distinguishing content check.
+      const vueStyleEl = document.head.querySelector('style[data-u-style="button"]');
+      const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find(
+        (el) => (el.textContent ?? "").includes(".u-button-vertical")
       );
       expect(styleEl).not.toBeUndefined();
+      expect(styleEl).not.toBe(vueStyleEl); // guards against this lookup silently re-matching Vue's element
       const reactCss = styleEl!.textContent ?? "";
 
       // React's button-style.ts does not currently source dt()-bearing CSS

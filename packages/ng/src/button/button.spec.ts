@@ -1,9 +1,21 @@
 import { TestBed } from "@angular/core/testing";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { UButton } from "./button";
 
 describe("UButton", () => {
+  beforeAll(() => {
+    // Matches packages/themes/test/cross-framework-consistency.test.ts's own
+    // beforeAll — applyUltimateTheme() must run before any UButton renders
+    // so its registration observes a configured Theme, not the module's
+    // untouched default. See the note in the last test below: with today's
+    // defaults this call happens to be a no-op (prefix "u" is already the
+    // uix-styled default), but calling it here keeps the test's intent
+    // structurally true rather than incidentally true.
+    applyUltimateTheme();
+  });
+
+
   it("renders the label input as visible text", () => {
     const fixture = TestBed.createComponent(UButton);
     fixture.componentRef.setInput("label", "Save");
@@ -86,12 +98,11 @@ describe("UButton", () => {
     // that file — it requires TestBed/ng test's own environment, a
     // different vitest major version and CLI entry point than the plain
     // `vitest run` the other two frameworks and @ultimate/themes use). This
-    // test proves the Angular third: applyUltimateTheme() configures the
-    // same uix-styled Theme singleton every *-core package's StyleSheet
-    // reads from, so ng-core's registered CSS for the real UButton must
-    // resolve button.primary.background to the identical var(...) text.
-    applyUltimateTheme();
-
+    // test proves the Angular third: applyUltimateTheme() (called once in
+    // this file's beforeAll, above) configures the same uix-styled Theme
+    // singleton every *-core package's StyleSheet reads from, so ng-core's
+    // registered CSS for the real UButton must resolve
+    // button.primary.background to the identical var(...) text.
     const fixture = TestBed.createComponent(UButton);
     fixture.componentRef.setInput("label", "Save");
     fixture.detectChanges();
