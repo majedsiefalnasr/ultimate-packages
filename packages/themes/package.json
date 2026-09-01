@@ -27,6 +27,7 @@
   "devDependencies": {
     "@testing-library/react": "^14.1.2",
     "@ultimate/react": "workspace:*",
+    "@ultimate/uix-styles": "workspace:*",
     "@ultimate/vue": "workspace:*",
     "@vue/test-utils": "^2.4.6",
     "jsdom": "^25.0.1",

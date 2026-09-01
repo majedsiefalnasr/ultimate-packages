@@ -244,6 +244,9 @@ importers:
       '@ultimate/react':
         specifier: workspace:*
         version: link:../react
+      '@ultimate/uix-styles':
+        specifier: workspace:*
+        version: link:../uix-styles
       '@ultimate/vue':
         specifier: workspace:*
         version: link:../vue
