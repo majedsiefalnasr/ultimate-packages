@@ -144,6 +144,16 @@ Modification status      Modification description  Date incorporated
 - **Modification description:** see file-level manifest at `docs/architecture/provenance/themes.json` for per-file status.
 - **Date incorporated:** 2026-09-01
 
+## @ultimate/uix-data
+
+- **Source repository:** none — no single upstream package. Mixed provenance: one function re-exported from an existing Ultimate package, five modules authored by Ultimate and verified against real pinned Prime source.
+- **Source package:** n/a
+- **Source version:** n/a
+- **Ultimate destination:** `packages/uix-data`
+- **Modification status:** incorporated — `equals` is re-exported unchanged from `@ultimate/uix-utils/object` (see that package's own `PROVENANCE.md` entry and `docs/architecture/provenance/uix-utils.json` for its provenance). The remaining five modules (`SelectionMode`, `SortMeta`/`SortMode`, `FilterMatchMode`/`FilterMetadata`, `PaginationState`/`getPageCount`, `calculateNumItemsInViewport`/`calculateLast`) are Ultimate-authored, each verified against real pinned PrimeNG 21.1.9, PrimeReact 10.9.9, and PrimeVue 4.5.5 source per the approved architecture research (six research passes; see `docs/superpowers/specs/2026-09-01-uix-data-foundation-design.md` Context section for the full research trail). File-level verification basis: `docs/architecture/provenance/uix-data.json`.
+- **Modification description:** see file-level manifest at `docs/architecture/provenance/uix-data.json` for the specific real-source evidence backing each module.
+- **Date incorporated:** 2026-09-01
+
 ---
 
 **Excluded from Phase 0 core (not runtime dependencies of any confirmed baseline):** `@primeuix/forms`, `@primeuix/mcp`. See `docs/architecture/DEPENDENCIES.md` for exclusion rationale.
