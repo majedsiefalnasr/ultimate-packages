@@ -1,0 +1,33 @@
+{
+  "name": "@ultimate/themes",
+  "version": "0.1.0",
+  "description": "Framework-neutral theme contract and baseline preset data for the Ultimate Platform.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": ["dist", "README.md", "THIRD-PARTY-NOTICES.md"],
+  "scripts": {
+    "build": "tsup && node scripts/rename-dts.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ultimate/uix-styled": "workspace:*"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8"
+  }
+}
