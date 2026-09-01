@@ -152,6 +152,16 @@ Preset scope matches the existing five-component proof set (Button, Checkbox, Di
 - No new build step. Preset switching, dark/light, and RTL/LTR all recalculate live via CSS custom properties — zero additional engine work beyond wiring what already exists end-to-end for the first time.
 - **Rejected alternative** (build-time static CSS generation): no evidence anywhere in the Blueprint, prior ADRs, or repository of a CSP/no-inline-style requirement that would justify the added infrastructure (Gate 11 concern, unconfirmed) — rejected per YAGNI, revisit only if a real CSP constraint surfaces later.
 
+### 5.1 Verified defect: `uix-styles`'s component `style` exports are the wrong shape for `dt()` to ever resolve
+
+**Verified this gate** (implementation-plan-writing pass, direct read of `packages/uix-styles/src/{button,checkbox,dialog,menu,tooltip}/index.ts`): every one of the five proof-set components exports `style` as a **plain template-literal string** containing literal, unevaluated `dt('button.primary.color')` text — e.g. `export const style = /*css*/ \`.u-button { color: dt('button.primary.color'); ... }\``. `dt` is never imported into any of these five files; the text is inert.
+
+`uix-styled`'s own `resolve(css, { dt })` call (`themeUtils.ts` `getPreset`/`getCommon`, §1.1) — the mechanism meant to evaluate `dt()` calls embedded in a preset's `css` field — is `@ultimate/uix-utils/object`'s `resolve(obj, ...params) = isFunction(obj) ? obj(...params) : obj`. Since `uix-styles`'s `style` export is a **string, not a function**, `resolve` returns it completely unchanged. `dt()` is only ever evaluated when a `css`/`style` value is authored as a function — `(options) => \`...${options.dt('button.primary.color')}...\``, matching the `StyleType<T> = string | ((options?: T) => string)` union already declared in `uix-styled/src/index.ts` (§1.1) — the shape the engine has always expected, that `uix-styles` never used.
+
+As shipped today, if this component CSS were registered into a real `<style>` element via `StyleSheet.add()` unchanged, the browser would receive literal, invalid `dt('button.primary.color')` text as a CSS value — not a working (if unthemed) fallback. **This is a genuine, verified defect in already-shipped Phase 2-era `uix-styles` code**, not a Phase 5 design question — it must be fixed for token resolution to function at all, addressed as part of this phase's implementation work (not deferred), per user decision.
+
+**UltimateThemes architectural decision**: convert all five proof-set components' `style` exports in `uix-styles` from string literals to functions matching `StyleType`'s existing function-branch shape — `export const style = (options: StyleOptions) => /*css*/ \`...${options.dt('button.primary.color')}...\`;\` — and update each of the three `*-core` `StyleSheet` call sites (`ng-core`'s `ngCoreStyleSheet`, `react-core`'s `useComponentStyle`/`reactCoreStyleSheet`, `vue-core`'s `registerComponentStyle`/`VueStyleSheet`, all §1.4) to invoke `styleModule.style(options)` (passing a `{ dt }` options object, matching `StyleOptions`) rather than passing `styleModule.css` as a raw string directly into `StyleSheet.add()`. This is a mechanical, scoped fix — five `uix-styles` files change shape, three `*-core` call sites gain one resolution step — not a new mechanism; it makes `uix-styles` finally conform to the contract `uix-styled` already declared.
+
 ---
 
 ## 6. Cross-Framework Integration Boundary
@@ -208,6 +218,7 @@ Confirmed dependency direction (verified — matches Blueprint §6's stated arro
 | Density | Out of scope entirely, no stub | Research Gate fork #3, user-approved (YAGNI); zero evidence anywhere in repo or reference source inspected |
 | Motion preference | Stays in `uix-motion`, not promoted to contract | Already verified working, component-scoped (§1.5) |
 | Application timing | Runtime only, via already-vendored `dt()`/`StyleSheet` mechanism | Research Gate fork #4, user-approved; no CSP requirement in evidence |
+| `uix-styles` style-export shape defect | Convert 5 proof-set components' `style` exports from strings to functions (§5.1); update 3 `*-core` `StyleSheet` call sites to invoke `styleModule.style(options)` | Direct read of `uix-styles/src/{button,checkbox,dialog,menu,tooltip}/index.ts` (all string literals) vs. `uix-styled`'s `resolve()`/`StyleType` contract (function-only evaluation) — user-approved fix, verified this gate |
 | Package granularity | Single `packages/themes` package | Research Gate fork #5, user-approved (YAGNI); Blueprint constraint "avoid unnecessary new packages" |
 | Package boundary | `uix-styled`/`uix-styles` unchanged in role; `packages/themes` owns contract types + preset data only | §1.1/§1.2 verified existing responsibilities; Blueprint §6's one-directional theme-to-framework arrow |
 
@@ -216,6 +227,7 @@ Confirmed dependency direction (verified — matches Blueprint §6's stated arro
 ## 10. Exit Criteria
 
 - [ ] `@primeuix/themes@2.0.3` pinned in `.vendor-cache/`, `docs/architecture/PROVENANCE.md` entry added (moved out of the "Excluded" list), `docs/architecture/checksums.json` updated.
+- [ ] `uix-styles`'s five proof-set component `style` exports (§5.1) are converted from string literals to functions; all three `*-core` `StyleSheet` call sites invoke `styleModule.style(options)` instead of passing a raw string — verified by a runtime test asserting a resolved `<style>` element contains a real `var(--u-*, ...)` reference, not literal `dt(...)` text.
 - [ ] `@ultimate/themes` package structure exists, matching §2.
 - [ ] `themes` builds via `tsup` with no errors; ESM output, `.d.mts` declarations.
 - [ ] `uix-styled`'s CSS variable prefix is `'u'`, verified by a runtime assertion test (a resolved token variable is literally named `--u-*`, not `--p-*`).
