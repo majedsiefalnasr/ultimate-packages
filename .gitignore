@@ -11,3 +11,4 @@ dist/
 .vendor-extracted/
 .angular/
 out-tsc/
+.superpowers/
