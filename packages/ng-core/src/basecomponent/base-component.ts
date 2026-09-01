@@ -1,6 +1,7 @@
 import { Directive, ElementRef, PLATFORM_ID, Renderer2, inject, input } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { cn } from "@ultimate/uix-utils/classnames";
+import { css } from "@ultimate/uix-styled";
 import { UltimateConfig } from "../config/ultimate-config";
 import { ngCoreStyleSheet } from "./style-sheet";
 
@@ -47,7 +48,7 @@ export abstract class UBaseComponent {
 
   ngOnInit(): void {
     if (!ngCoreStyleSheet.has(this.componentName)) {
-      ngCoreStyleSheet.add(this.componentName, this.styleModule.css);
+      ngCoreStyleSheet.add(this.componentName, css`${this.styleModule.css}`);
     }
   }
 }

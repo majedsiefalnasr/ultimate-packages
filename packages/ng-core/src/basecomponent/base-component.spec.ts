@@ -3,6 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { describe, expect, it, vi } from "vitest";
 import { UBaseComponent } from "./base-component";
 import { ngCoreStyleSheet } from "./style-sheet";
+import { Theme } from "@ultimate/uix-styled";
 
 @Component({
   standalone: true,
@@ -48,6 +49,41 @@ describe("UBaseComponent", () => {
     expect(addSpy).toHaveBeenCalledWith("test-component", ".u-test-component-root { color: red; }");
     expect(ngCoreStyleSheet.has("test-component")).toBe(true);
     expect(ngCoreStyleSheet.getStyles().size).toBe(1);
+
+    addSpy.mockRestore();
+  });
+
+  it("resolves dt() calls in registered CSS into var(--u-*, ...) references", () => {
+    // Define a test component that uses dt() calls in its CSS
+    @Component({
+      standalone: true,
+      selector: "u-test-dt-component",
+      template: "<div></div>",
+      changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    class TestDtComponent extends UBaseComponent {
+      protected override readonly componentName = "test-dt-component";
+      protected override readonly styleModule = {
+        css: ".u-test { color: dt('test.token.value'); }",
+        classes: {},
+      };
+    }
+
+    // Ensure theme is configured with "u" prefix (Ultimate's branding)
+    Theme.setOptions({ prefix: "u" });
+
+    // Clear any prior registration
+    ngCoreStyleSheet.delete("test-dt-component");
+    const addSpy = vi.spyOn(ngCoreStyleSheet, "add");
+
+    const fixture = TestBed.createComponent(TestDtComponent);
+    fixture.detectChanges();
+
+    // The registered CSS should have dt() calls resolved to var() references
+    expect(addSpy).toHaveBeenCalledTimes(1);
+    const registeredCss = addSpy.mock.calls[0][1];
+    expect(registeredCss).toContain("var(--u-test-token-value");
+    expect(registeredCss).not.toContain("dt(");
 
     addSpy.mockRestore();
   });
