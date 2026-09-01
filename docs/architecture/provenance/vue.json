@@ -118,5 +118,35 @@
     "ultimateDestination": "packages/vue/src/checkbox/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/dialog/Dialog.vue",
+    "ultimateDestination": "packages/vue/src/dialog/Dialog.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified controlled contract: visible prop + emit('update:visible') (Vue's v-model convention, spec §15) — a genuine framework-native API-shape divergence from Angular's [visible]/(visibleChange) and React's visible/onHide. role=dialog/aria-modal/aria-labelledby already correct upstream, preserved. Composes UPortal (Task 7) + v-focustrap (Task 10, {disabled: !modal}) + native <transition> wired to createMotionTransitionHooks (Task 12, name: 'u-dialog') + shared Escape adapter (Task 8's createGlobalEscapeKeyMixin, PRIORITY.DIALOG) + ZIndex 'modal' key (Task 9) + scroll-lock adapter (Task 11) — each piece wired directly in this component's own body, matching the verified 'no shared orchestration service' pattern. Focus-return-on-close and mask-click drag-selection-guard behavior preserved: onEnter captures document.activeElement, onLeave restores it; onMaskMouseDown/onMaskMouseUp both require the mask element itself (a strict superset of upstream's mouseup-only comparison that still passes for a genuine mask click). EXCLUDES draggable and maximizable (verified real upstream features) per spec §15's resolved fork — no such props, handlers, or UI anywhere in this file. Real API-shape finding made and resolved during this task: <transition> without :css=\"false\" would double-apply the same u-dialog-enter-active/leave-active class names createMotionTransitionHooks' own createMotion already self-drives (both derive identical class names from the shared name option) — set :css=\"false\" so Vue's <transition> is a pure JS-hook dispatcher and createMotion owns all actual class toggling/timing, matching Task 12's own design intent. Also found: @vue/test-utils stubs <transition> by default, silently skipping onEnter/onLeave (and therefore all of scroll-lock/z-index/show/hide/mask-dismiss) unless global.stubs.transition is disabled for this component's tests specifically."
+  },
+  {
+    "originalPath": "packages/primevue/src/dialog/BaseDialog.vue",
+    "ultimateDestination": "packages/vue/src/dialog/BaseDialog.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified upstream prop surface (visible/header/footer/modal/closable/closeOnEscape/dismissableMask/blockScroll/baseZIndex/autoZIndex/position/appendTo), scoped to Phase 4's excluded-draggable/maximizable boundary — no draggable/keepInViewport/minX/minY/maximizable/maximizeIcon/minimizeIcon/breakpoints/maximizeButtonProps props declared. showHeader/contentStyle/contentClass/contentProps/closeIcon/closeButtonProps are real upstream props not reproduced here (no demonstrated Ultimate consumer need, YAGNI). ariaCloseLabel is this implementation's own addition, replacing upstream's $primevue.config.locale.aria.close (Option B — no PrimeVueService global config, spec §7). extends createBaseComponent({componentName, styleModule}) directly — Dialog needs no editable-holder/input tier, so createBaseComponent's real parameterized signature threads componentName/styleModule cleanly with no cx()-shadowing workaround (unlike BaseCheckbox.ts's own necessary workaround, Task 19)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/dialog/dialog-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Implementation-time verification finding (same mismatch already found for button/tooltip/checkbox in Tasks 17/18/19): @ultimate/uix-styles/dialog only exports a plain style: string (raw CSS with dt() token references), not a pre-shaped { css, classes } StyleModule. classes map (mask/root/header/title/headerActions/closeButton/content/footer) authored locally here, cross-checked against real Dialog.vue's own cx(...) call sites read during Step 1, adapted to this project's u-dialog* class-name convention and plain-string-array cx() contract."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/dialog/dialog.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test suite (the Task 20 brief's own draft, verified to genuinely exercise real component behavior — not stubbed), including explicit negative regression tests for the draggable/maximizable exclusion (spec §15/§23), multi-dialog Escape-priority stacking (spec §11, verified via direct instrumentation during this task that the two dialogs under test receive genuinely distinct incrementing displayOrder values — 1 and 2 — not a hardcoded/undefined placeholder), and multi-dialog scroll-lock refcounting (spec §16). Adds global.stubs.transition = false for this file's mount() calls (restored after) — a required real-environment fix found during this task: @vue/test-utils stubs <transition> by default, which would otherwise skip the component's real onEnter/onLeave business logic entirely and make every interaction-dependent assertion in this suite pass or fail for the wrong reason."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/dialog/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]

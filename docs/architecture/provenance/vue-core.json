@@ -250,5 +250,17 @@
     "ultimateDestination": "packages/vue-core/src/icons/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent. Extended in Task 19 to export MinusIcon."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/escape/create-display-order-mixin.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Task 20 (UDialog) architectural addendum to Task 8's escape module. useDisplayOrder (use-display-order.ts) is Composition-API-shaped (calls onMounted/onUnmounted internally, returns a Ref) — calling it from inside an Options-API mounted() hook is fragile outside a real setup() context, given this plan's locked Options-API-throughout component-authoring style (spec §7). Resolved per the Task 20 brief's stated preference: added this Options-API-mixin-shaped sibling, matching createGlobalEscapeKeyMixin's (use-global-escape-key.ts) exact shape — real mounted()/beforeUnmount() hooks, plain ComponentOptions return, no Composition-API primitives, calling the shared @ultimate/uix-utils/escape displayOrderRegistry directly (the same registry useDisplayOrder itself delegates to). useDisplayOrder itself is left completely unmodified — still the correct choice for any future Composition-API call site."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/escape/create-display-order-mixin.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, mirroring use-display-order.ts's own spec file's three assertions (increasing order across successive mounts, no registration when not visible on mount, unregister-on-unmount frees the slot for reuse) plus one Options-API-specific addition: updated() does not re-register (mounted() registers once and the value is stable across reactive re-renders, unlike createGlobalEscapeKeyMixin's updated()-driven re-registration, which display-order registration does not need)."
   }
 ]
