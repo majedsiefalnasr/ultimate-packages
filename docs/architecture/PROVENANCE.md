@@ -34,14 +34,14 @@ Modification status      Modification description  Date incorporated
 - **Source package:** `primevue`
 - **Source version:** `4.5.5`
 - **Source commit SHA:** `66dde6788220fc9e6822342919d1ceb0e3460ece`
-- **Source path:** `packages/primevue` (monorepo subdirectory)
+- **Source path:** `packages/primevue`, `packages/core` (dual-root monorepo subdirectories — verified during Phase 4's Real-Source Verification Gate; unlike PrimeReact's single `components/lib/` root, PrimeVue's own repo splits foundation-tier source from components/directives)
 - **Original license:** MIT
 - **Copyright holder:** PrimeTek, 2018-2025
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/vue`, `packages/vue-core` (Phase 4)
-- **Modification status:** not yet incorporated (Phase 0 — baseline pinned only)
-- **Modification description:** n/a
-- **Date incorporated:** n/a (pinned 2026-08-28; incorporation begins Phase 4)
+- **Modification status:** incorporated (Phase 4) — foundation tier reimplemented with PrimeVue as design reference, not copied verbatim (Option B, same posture as ADR-018/024); Button/Checkbox/Dialog/Menu/Tooltip and their direct primitive dependencies (Ripple, Portal, FocusTrap, BaseComponent/BaseDirective/BaseEditableHolder/BaseInput) adapted with full Ultimate namespace rename. Remaining ~145 source areas classified but not incorporated — see `docs/architecture/COMPONENT_INVENTORY.md` if a Vue-native inventory is added in a later phase (not committed this phase, spec §30).
+- **Modification description:** see file-level manifests at `docs/architecture/provenance/vue-core.json` and `docs/architecture/provenance/vue.json` for per-file status.
+- **Date incorporated:** 2026-09-01
 
 ## PrimeReact
 
