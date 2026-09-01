@@ -15,7 +15,6 @@ describe("UButton", () => {
     applyUltimateTheme();
   });
 
-
   it("renders the label input as visible text", () => {
     const fixture = TestBed.createComponent(UButton);
     fixture.componentRef.setInput("label", "Save");

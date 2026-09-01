@@ -130,17 +130,16 @@ describe("cross-framework theme consistency", () => {
 
       // reactCoreStyleSheet's <style> elements carry no identifying
       // attribute (its StyleSheet instance is constructed with no `attrs`
-      // option, unlike vue-core's explicit `data-u-style`), so the
-      // registered element is located by its known, unique `.u-button`
-      // selector rather than by an attribute selector. Vue's element ALSO
-      // contains `.u-button {` (both frameworks style the same class name),
-      // so Vue's `[data-u-style]`-tagged element must be excluded first —
-      // otherwise this lookup silently matches Vue's <style> instead of
-      // React's, since Vue's test runs first in this same describe block
-      // and its element persists in document.head. `.u-button-vertical` is
-      // present only in React's static button-style.ts (not in the real
-      // uix-styles/button CSS Vue/Angular register), so it's used as the
-      // distinguishing content check.
+      // option, unlike vue-core's explicit `data-u-style`). Vue's element
+      // ALSO contains `.u-button {` and `.u-button-vertical` (both
+      // frameworks style the same class names — React's static CSS happens
+      // to duplicate several selectors from the real uix-styles/button CSS
+      // Vue imports), so content alone cannot distinguish them: the
+      // `:not([data-u-style])` attribute exclusion below is what actually
+      // keeps Vue's element out of the candidate pool. The `.u-button-vertical`
+      // content check is kept only as a sanity check that the found element
+      // is really button CSS, not as the distinguishing mechanism — do not
+      // remove the attribute exclusion in favor of content matching alone.
       const vueStyleEl = document.head.querySelector('style[data-u-style="button"]');
       const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find(
         (el) => (el.textContent ?? "").includes(".u-button-vertical")
