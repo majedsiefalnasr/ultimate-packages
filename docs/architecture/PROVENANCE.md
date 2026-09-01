@@ -127,8 +127,25 @@ Modification status      Modification description  Date incorporated
 - **Modification description:** see file-level manifest at `docs/architecture/provenance/uix-motion.json` for per-file status.
 - **Date incorporated:** 2026-08-29
 
+## @primeuix/themes
+
+- **Source repository:** https://github.com/primefaces/primeuix
+- **Source package:** `@primeuix/themes`
+- **Source version:** `2.0.3`
+- **Source commit SHA:** none — confirmed provenance gap (same cause as the other `@primeuix/*` entries above). Pinned instead by npm tarball integrity hash.
+- **Tarball shasum:** `c3919d49e818b3bbac611ab8d89a52d4ffed6815`
+- **Tarball integrity:** `sha512-3fS1883mtCWhgUgNf/feiaaDSOND4EBIOu9tZnzJlJ8QtYyL6eFLcA6V3ymCWqLVXQ1+lTVEZv1gl47FIdXReg==`
+- **Source path:** `packages/themes` (monorepo subdirectory)
+- **Original license:** MIT (verified from `LICENSE` file inside the published npm tarball)
+- **Copyright holder:** PrimeTek, 2025
+- **Third-party notices:** none found upstream
+- **Ultimate destination:** `packages/themes` (Phase 5)
+- **Modification status:** incorporated (Phase 5) — Aura preset token values used as reference (Option B — reference, not verbatim), reimplemented under Ultimate naming/prefix for the five-component proof set (Button, Checkbox, Dialog, Menu, Tooltip) plus the base primitive/semantic tier. Remaining ~88 component preset modules and the Lara/Nora/Material preset families are not incorporated — out of Phase 5 scope.
+- **Modification description:** see file-level manifest at `docs/architecture/provenance/themes.json` for per-file status.
+- **Date incorporated:** 2026-09-01
+
 ---
 
-**Excluded from Phase 0 core (not runtime dependencies of any confirmed baseline):** `@primeuix/forms`, `@primeuix/themes`, `@primeuix/mcp`. See `docs/architecture/DEPENDENCIES.md` for exclusion rationale.
+**Excluded from Phase 0 core (not runtime dependencies of any confirmed baseline):** `@primeuix/forms`, `@primeuix/mcp`. See `docs/architecture/DEPENDENCIES.md` for exclusion rationale.
 
 **Upstream provenance gap note:** the `primefaces/primeuix` GitHub repository has exactly one branch (`main`) and 17 lightweight tags, none reaching past bare version `0.6.0`. All four `@primeuix/*` packages above were published to npm with `gitHead: null`. This is PrimeTek's own upstream gap (repo archived mid-history), not a verification failure — see spec Finding 3 for full detail.

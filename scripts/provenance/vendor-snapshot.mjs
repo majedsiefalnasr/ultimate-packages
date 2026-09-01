@@ -74,6 +74,14 @@ const TARGETS = [
     identifierType: "npm-tarball-shasum",
     identifier: "9af4238226042d80518dd343c6481d03582e374a",
   },
+  {
+    name: "@primeuix/themes",
+    package: "@primeuix/themes",
+    version: "2.0.3",
+    url: "https://registry.npmjs.org/@primeuix/themes/-/themes-2.0.3.tgz",
+    identifierType: "npm-tarball-shasum",
+    identifier: "c3919d49e818b3bbac611ab8d89a52d4ffed6815",
+  },
 ];
 
 async function downloadAndHash(target) {

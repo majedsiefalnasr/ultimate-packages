@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-28T13:47:06.836Z",
+  "generatedAt": "2026-09-01T09:24:15.433Z",
   "artifacts": [
     {
       "name": "PrimeNG",
@@ -70,6 +70,16 @@
       "identifier": "9af4238226042d80518dd343c6481d03582e374a",
       "cachedAt": ".vendor-cache/@primeuix__motion-0.0.10.tar.gz",
       "sha256": "24f98f141735c0d8835e2027ea87c42bfc2757d9940992c594583fbc549c62d3"
+    },
+    {
+      "name": "@primeuix/themes",
+      "package": "@primeuix/themes",
+      "version": "2.0.3",
+      "sourceUrl": "https://registry.npmjs.org/@primeuix/themes/-/themes-2.0.3.tgz",
+      "identifierType": "npm-tarball-shasum",
+      "identifier": "c3919d49e818b3bbac611ab8d89a52d4ffed6815",
+      "cachedAt": ".vendor-cache/@primeuix__themes-2.0.3.tar.gz",
+      "sha256": "e8989698e5f5036767c4fecb93e09c8bb8681d479d95bee86b2254f27fd10e99"
     }
   ]
 }
