@@ -832,5 +832,41 @@
     "ultimateDestination": "packages/uix-utils/src/zindex/index.ts",
     "modificationStatus": "unmodified",
     "modificationDescription": "none"
+  },
+  {
+    "originalPath": "packages/react-core/src/escape/use-global-escape-key.ts (registry/comparison/listener logic, itself verified from PrimeReact's components/lib/hooks/useGlobalOnEscapeKey.js)",
+    "ultimateDestination": "packages/uix-utils/src/escape/registry.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Extracted from react-core/src/escape/use-global-escape-key.ts's non-React portion during Phase 4's prerequisite work (spec §11) — same registry/comparison/document-listener logic (a single shared document keydown listener gated by a two-level [primary, secondary] priority tuple map, only the highest tuple's callback fires), framework-neutral by construction (no React/Vue/Angular API dependency). Both react-core's useGlobalEscapeKey and vue-core's createGlobalEscapeKeyMixin now delegate to this same shared registry instance (ADR-036)."
+  },
+  {
+    "originalPath": "packages/react-core/src/escape/priorities.ts (itself verified from PrimeReact's components/lib/hooks/useGlobalOnEscapeKey.js ESC_KEY_HANDLING_PRIORITIES constant)",
+    "ultimateDestination": "packages/uix-utils/src/escape/priorities.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Moved verbatim from react-core/src/escape/priorities.ts during Phase 4's prerequisite extraction (spec §11) — no value change. Verified upstream enum values for DIALOG (300), MENU (500), TOOLTIP (1200) — the three Phase 3/4 proof-set-relevant tiers only; upstream's other 8 tiers are not declared, per spec's explicit instruction not to speculatively declare priorities for non-proof-set components (ADR-036)."
+  },
+  {
+    "originalPath": "packages/react-core/src/escape/use-display-order.ts (groupToDisplayedElements registry logic, itself verified from PrimeReact's components/lib/hooks/useDisplayOrder.js)",
+    "ultimateDestination": "packages/uix-utils/src/escape/display-order-registry.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Extracted from react-core/src/escape/use-display-order.ts's groupToDisplayedElements registry during Phase 4's prerequisite work (spec §11) — framework-neutral by construction (per-named-group incrementing display-order index, cleaned up on unregister with array-tail-trimming). The React/Vue-specific reactive wrapper (useState vs ref()) stays in each *-core package, NOT here (ADR-036)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/uix-utils/src/escape/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/react-core/src/scroll-lock/use-scroll-lock.ts (blockingIds Set-based registry logic, itself a verified reimplementation of PrimeReact's Dialog.js document.primeDialogParams/updateScrollBlocker pattern)",
+    "ultimateDestination": "packages/uix-utils/src/scroll-lock/registry.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Extracted verbatim in full from react-core/src/scroll-lock/use-scroll-lock.ts during Phase 4's prerequisite work (spec §16) — that file had zero load-bearing React coupling (useCallback was a non-load-bearing memoization wrapper only). Private, module-scoped Set<string> registry, NOT a document property — replaces PrimeReact's verified document.primeDialogParams global-mutation pattern. Coordinates body-scroll blocking across multiple simultaneous overlay instances via @ultimate/uix-utils/dom's blockBodyScroll/unblockBodyScroll, called only at the 0->1/1->0 registration-count boundary transitions (ADR-036)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/uix-utils/src/scroll-lock/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]

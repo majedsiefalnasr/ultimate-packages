@@ -184,5 +184,17 @@
     "ultimateDestination": "packages/vue/src/menu/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored root barrel re-exporting all @ultimate/vue submodules (./ripple, ./button, ./tooltip, ./checkbox, ./dialog, ./menu), no upstream equivalent file."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/shims-vue.d.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored TypeScript ambient module declaration for `*.vue` imports (standard Vue+TypeScript SFC type shim), no upstream equivalent — build-tooling infrastructure, not derived from any Prime source."
   }
 ]
