@@ -4,9 +4,9 @@ Restated from Blueprint §35. See individual phase specs (`docs/superpowers/spec
 
 | Phase | Name                                                      | Status                  |
 | ----- | --------------------------------------------------------- | ----------------------- |
-| 0     | Repository Foundation, Provenance & Baseline Verification | In progress (this plan) |
-| 1     | UltimateUIX Foundation                                    | Not started             |
-| 2     | UltimateNG                                                | Not started             |
+| 0     | Repository Foundation, Provenance & Baseline Verification | Complete                |
+| 1     | UltimateUIX Foundation                                    | Complete                |
+| 2     | UltimateNG                                                | Complete                |
 | 3     | UltimateReact                                             | Complete                |
 | 4     | UltimateVue                                               | Complete                |
 | 5     | Themes                                                    | Not started             |
