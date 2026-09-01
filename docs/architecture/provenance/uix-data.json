@@ -1,0 +1,60 @@
+[
+  {
+    "ultimateDestination": "packages/uix-data/src/identity/index.ts",
+    "modificationStatus": "re-export",
+    "modificationDescription": "Re-exports @ultimate/uix-utils/object's existing equals function unchanged. No new implementation. Provenance for equals itself is tracked in docs/architecture/provenance/uix-utils.json.",
+    "verifiedAgainst": []
+  },
+  {
+    "ultimateDestination": "packages/uix-data/src/selection/index.ts",
+    "modificationStatus": "ultimate-authored",
+    "modificationDescription": "SelectionMode union type, authored by Ultimate, informed by verified cross-framework equivalence of Table's selectionMode prop.",
+    "verifiedAgainst": [
+      "PrimeNG 21.1.9 (commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593): ng-table/table.ts, selectionMode input",
+      "PrimeReact 10.9.9 (commit d0f574e39122668292fc7a740f081bae1b93b1e9): react-datatable/datatable.d.ts, selectionMode field",
+      "PrimeVue 4.5.5 (commit 66dde6788220fc9e6822342919d1ceb0e3460ece): DataTable selectionMode prop"
+    ]
+  },
+  {
+    "ultimateDestination": "packages/uix-data/src/sort/index.ts",
+    "modificationStatus": "ultimate-authored",
+    "modificationDescription": "SortMeta and SortMode types, authored by Ultimate, informed by verified identical field names/types across PrimeNG's SortMeta[] and PrimeReact's DataTableSortMeta. No comparator function included (verified not genuinely shared standalone in real source).",
+    "verifiedAgainst": [
+      "PrimeNG 21.1.9: ng-table/table.ts:810, multiSortMeta: SortMeta[] input",
+      "PrimeReact 10.9.9: react-datatable/datatable.d.ts:72, DataTableSortMeta interface"
+    ]
+  },
+  {
+    "ultimateDestination": "packages/uix-data/src/filter/index.ts",
+    "modificationStatus": "ultimate-authored",
+    "modificationDescription": "FilterMatchMode and FilterMetadata (simple, non-operator shape only) types, authored by Ultimate, informed by the verified common subset of PrimeReact's DataTableFilterMetaData and PrimeNG's FilterMetadata. Operator/constraints variant explicitly deferred, not included.",
+    "verifiedAgainst": [
+      "PrimeNG 21.1.9: ng-table/table.ts:553, filters input",
+      "PrimeReact 10.9.9: react-datatable/datatable.d.ts:86-108, DataTableFilterMetaData/DataTableOperatorFilterMetaData/DataTableFilterMeta interfaces"
+    ]
+  },
+  {
+    "ultimateDestination": "packages/uix-data/src/pagination/index.ts",
+    "modificationStatus": "ultimate-authored",
+    "modificationDescription": "PaginationState type and getPageCount function, authored by Ultimate. PaginationState field shape verified against PrimeNG's real Paginator fields. getPageCount's formula verified as a real (Prime-internal-only, never previously exported) one-line calculation in PrimeNG's paginator.ts, with a zero-guard added that Prime's own inline version lacks.",
+    "verifiedAgainst": [
+      "PrimeNG 21.1.9: ng-paginator/paginator.ts:460-461, totalRecords/rows/rowsPerPageOptions fields and inline page-count calculation"
+    ]
+  },
+  {
+    "ultimateDestination": "packages/uix-data/src/virtualization/index.ts",
+    "modificationStatus": "ultimate-authored",
+    "modificationDescription": "calculateNumItemsInViewport and calculateLast functions, authored by Ultimate, informed by verified tolerance-buffered windowing math present with the same formula across all three frameworks' real Scroller/VirtualScroller source. calculateNumItemsInViewport adopts Angular's real zero-guard, which PrimeReact's and PrimeVue's real implementations verifiably lack. calculateLast omits the separate array-bounds-clamping step performed at real Prime call sites, since that step requires live component state.",
+    "verifiedAgainst": [
+      "PrimeNG 21.1.9: ng-scroller (Scroller component), calculateNumItemsInViewport and calculateLast",
+      "PrimeReact 10.9.9: VirtualScroller.js, calculateNumItemsInViewport (unguarded 0/0 case)",
+      "PrimeVue 4.5.5: VirtualScroller.vue, calculateNumItemsInViewport (unguarded 0/0 case)"
+    ]
+  },
+  {
+    "ultimateDestination": "packages/uix-data/src/index.ts",
+    "modificationStatus": "ultimate-authored",
+    "modificationDescription": "Public barrel re-exporting the six approved concepts from their per-concept modules. No independent logic.",
+    "verifiedAgainst": []
+  }
+]
