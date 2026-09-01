@@ -83,6 +83,15 @@ describe("UDialog — Escape (via the shared uix-utils/escape adapter, spec §11
     first.unmount();
     second.unmount();
   });
+
+  it("closes on Escape after mounting with visible: false then toggling to true (v-model:visible controlled pattern)", async () => {
+    const wrapper = mount(UDialog, { props: { visible: false }, attachTo: document.body });
+    await wrapper.setProps({ visible: true });
+    await new Promise((r) => setTimeout(r, 0));
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    expect(wrapper.emitted("update:visible")?.[0]).toEqual([false]);
+    wrapper.unmount();
+  });
 });
 
 describe("UDialog — scroll locking (spec §16)", () => {

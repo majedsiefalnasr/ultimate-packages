@@ -29,19 +29,39 @@ export function createDisplayOrderMixin({
   isVisible,
 }: CreateDisplayOrderMixinOptions): ComponentOptions {
   const uid = ++uidCounter;
+  let registered = false;
+
+  function register(this: unknown) {
+    if (!isVisible() || registered) return;
+    (this as { displayOrder?: number }).displayOrder = displayOrderRegistry.register(group, uid);
+    registered = true;
+  }
+
+  function unregister(this: unknown) {
+    if (!registered) return;
+    displayOrderRegistry.unregister(group, uid);
+    (this as { displayOrder?: number }).displayOrder = undefined;
+    registered = false;
+  }
 
   return {
     mounted() {
-      if (isVisible()) {
-        (this as unknown as { displayOrder?: number }).displayOrder = displayOrderRegistry.register(
-          group,
-          uid
-        );
-      }
+      register.call(this);
+    },
+    // Mirrors createGlobalEscapeKeyMixin's own updated() retry: a component
+    // mounted while invisible (isVisible() false, e.g. v-model:visible
+    // starting false) never registers at mount time — without this retry,
+    // toggling visible to true later would leave displayOrder permanently
+    // undefined, since register() is only ever called from mounted()/
+    // updated(), never from a reactive watcher. Idempotent (registered
+    // guard) so an already-registered instance doesn't push a duplicate
+    // entry into the shared registry on every subsequent update.
+    updated() {
+      unregister.call(this);
+      register.call(this);
     },
     beforeUnmount() {
-      displayOrderRegistry.unregister(group, uid);
-      (this as unknown as { displayOrder?: number }).displayOrder = undefined;
+      unregister.call(this);
     },
   };
 }

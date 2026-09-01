@@ -30,6 +30,7 @@
             <div :class="cx('headerActions')">
               <button
                 v-if="closable"
+                ref="closeButton"
                 v-ripple
                 type="button"
                 :class="cx('closeButton')"
@@ -151,6 +152,17 @@ export default {
     this.displayOrderMixin.mounted.call(this);
     this.escapeMixin.mounted.call(this);
   },
+  updated() {
+    // Without this, a UDialog mounted with visible: false (the standard
+    // v-model:visible controlled pattern) never (re-)registers its Escape
+    // listener or display order when the parent later sets visible: true —
+    // both mixins only register from mounted()/updated(), never from a
+    // reactive watcher, so a mount-once-then-toggle dialog would silently
+    // never respond to Escape. Both mixins guard their own re-registration
+    // idempotently.
+    this.displayOrderMixin.updated.call(this);
+    this.escapeMixin.updated.call(this);
+  },
   beforeUnmount() {
     this.displayOrderMixin.beforeUnmount.call(this);
     this.escapeMixin.beforeUnmount.call(this);
@@ -172,7 +184,7 @@ export default {
       const footer = this.$refs.footerContainer?.querySelector("[autofocus]");
       const header = this.$refs.headerContainer?.querySelector("[autofocus]");
       const content = this.$refs.content?.querySelector("[autofocus]");
-      const fallback = this.closable ? this.$refs.container?.querySelector('[class*="close-button"]') : null;
+      const fallback = this.closable ? this.$refs.closeButton : null;
       const target = footer || header || content || fallback;
       if (target) focus(target);
     },

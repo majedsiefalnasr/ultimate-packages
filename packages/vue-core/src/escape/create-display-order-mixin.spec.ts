@@ -72,4 +72,25 @@ describe("createDisplayOrderMixin", () => {
 
     wrapper.unmount();
   });
+
+  it("registers on updated() when mounted invisible, then becomes visible later (v-model:visible pattern)", async () => {
+    let visible = false;
+    const wrapper = mount({
+      mixins: [createDisplayOrderMixin({ group: "test-group-vue-mixin-e", isVisible: () => visible })],
+      data() {
+        return { tick: 0 };
+      },
+      template: `<div>{{ tick }}</div>`,
+    });
+
+    expect((wrapper.vm as unknown as { displayOrder?: number }).displayOrder).toBeUndefined();
+
+    visible = true;
+    (wrapper.vm as unknown as { tick: number }).tick = 1;
+    await wrapper.vm.$nextTick();
+
+    expect((wrapper.vm as unknown as { displayOrder?: number }).displayOrder).toBeDefined();
+
+    wrapper.unmount();
+  });
 });
