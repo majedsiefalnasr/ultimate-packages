@@ -129,6 +129,6 @@
     "originalPath": "src/utils/themeUtils.ts",
     "ultimateDestination": "packages/uix-styled/src/utils/themeUtils.ts",
     "modificationStatus": "rebranded",
-    "modificationDescription": "DOM-visible data-primevue-style-id attribute renamed to data-u-style-id (2 occurrences); default @layer name changed from 'primeui' to 'ultimate' in getLayerOrder. No other logic changed — Phase 5 rebrand pass."
+    "modificationDescription": "DOM-visible data-primevue-style-id attribute renamed to data-u-style-id (2 occurrences, in getCommonStyleSheet and getStyleSheet); default @layer name changed from 'primeui' to 'ultimate' in getLayerOrder's fallback and in transformCSS's layerOptions.name/order defaults (2 occurrences). 4 literal string changes across 3 locations total. No other logic changed — Phase 5 rebrand pass."
   }
 ]

@@ -31,4 +31,18 @@ describe("ThemeUtils rebrand", () => {
     expect(result).not.toContain("primeui");
     expect(result).toContain("ultimate");
   });
+
+  it("transformCSS's default @layer name is Ultimate-branded, not primeui, when cssLayer is a plain truthy value", () => {
+    const result = ThemeUtils.transformCSS(
+      "test",
+      "color:red",
+      "light",
+      "variable",
+      { cssLayer: true, darkModeSelector: "system" },
+      { layerNames: () => {} },
+      { options: { darkModeSelector: "system" } }
+    );
+    expect(result).not.toContain("primeui");
+    expect(result).toContain("@layer ultimate");
+  });
 });

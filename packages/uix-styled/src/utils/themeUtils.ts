@@ -510,8 +510,8 @@ export default {
 
       if (cssLayer) {
         const layerOptions = {
-          name: "primeui",
-          order: "primeui",
+          name: "ultimate",
+          order: "ultimate",
         };
 
         isObject(cssLayer) && (layerOptions.name = resolve((cssLayer as any).name, { name, type }));
