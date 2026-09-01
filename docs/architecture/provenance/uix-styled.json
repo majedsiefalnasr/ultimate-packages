@@ -38,8 +38,8 @@
   {
     "originalPath": "src/config/index.ts",
     "ultimateDestination": "packages/uix-styled/src/config/index.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "rebranded",
+    "modificationDescription": "CSS variable prefix changed from 'p' to 'u' in both defaults.variable.prefix and defaults.options.prefix — Phase 5 rebrand pass, distinct from Phase 1's import-path-adaptation pass. No other logic changed."
   },
   {
     "originalPath": "src/helpers/color/mix.ts",
