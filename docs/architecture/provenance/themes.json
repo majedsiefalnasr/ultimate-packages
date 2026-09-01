@@ -1,0 +1,74 @@
+[
+  {
+    "originalPath": "src/contract/direction.ts",
+    "ultimateDestination": "packages/themes/src/contract/direction.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/contract/index.ts",
+    "ultimateDestination": "packages/themes/src/contract/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/contract/mode.ts",
+    "ultimateDestination": "packages/themes/src/contract/mode.ts",
+    "modificationStatus": "import-path-adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+  },
+  {
+    "originalPath": "src/contract/tokens.ts",
+    "ultimateDestination": "packages/themes/src/contract/tokens.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/index.ts",
+    "ultimateDestination": "packages/themes/src/index.ts",
+    "modificationStatus": "unmodified",
+    "modificationDescription": "none"
+  },
+  {
+    "originalPath": "src/presets/aura/base.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/base.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset base module (.vendor-extracted/themes/src/presets/aura/base/index.ts, recovered from the pinned tarball in Task 9); primitive color-ramp and semantic light/dark token values are transcribed as-is, retyped against Ultimate's own PrimitiveTokens/SemanticTokens contract (Task 8) instead of @primeuix/themes' generated .d.ts types."
+  },
+  {
+    "originalPath": "src/presets/aura/button.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/button.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset button module (.vendor-extracted/themes/src/presets/aura/button/index.ts); root sizing tokens and the full colorScheme.light/dark variant matrix are transcribed as-is, retyped against Ultimate's own ComponentTokens<T> contract (Task 8) instead of @primeuix/themes' generated .d.ts types."
+  },
+  {
+    "originalPath": "src/presets/aura/checkbox.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/checkbox.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset checkbox module (.vendor-extracted/themes/src/presets/aura/checkbox/index.ts); root/icon token values are transcribed as-is. Upstream's checkbox module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local CheckboxComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme — using the real contract type here would misrepresent upstream's structure by forcing a fake wrapper."
+  },
+  {
+    "originalPath": "src/presets/aura/dialog.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/dialog.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset dialog module (.vendor-extracted/themes/src/presets/aura/dialog/index.ts); root/header/title/content/footer token values are transcribed as-is. Upstream's dialog module has no colorScheme split (mode-awareness flows transitively through {overlay.modal.*} semantic references resolved in base.ts), so this file defines its own local DialogComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/index.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/index.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "New file assembling the ported base/button/checkbox/dialog/menu/tooltip preset modules via @ultimate/uix-styled's definePreset; the assembly pattern mirrors @primeuix/themes' own preset index.ts shape but is not itself extracted from a single upstream file. Auto-classified as import-path-adapted by generate-manifest.mjs's default heuristic because it imports @ultimate/uix-styled, which is a false positive — corrected here."
+  },
+  {
+    "originalPath": "src/presets/aura/menu.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/menu.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset menu module (.vendor-extracted/themes/src/presets/aura/menu/index.ts); root/list/item/submenuLabel/separator token values are transcribed as-is. Upstream's menu module has no colorScheme split (mode-awareness flows transitively through {content.*}/{navigation.*}/{overlay.navigation.*} semantic references resolved in base.ts), so this file defines its own local MenuComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/tooltip.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/tooltip.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset tooltip module (.vendor-extracted/themes/src/presets/aura/tooltip/index.ts); root sizing tokens and colorScheme.light/dark values are transcribed as-is, including the real upstream finding that light and dark tooltip colors are identical — ported faithfully, not \"corrected\". Retyped against Ultimate's own ComponentTokens<T> contract (Task 8) instead of @primeuix/themes' generated .d.ts types."
+  }
+]
