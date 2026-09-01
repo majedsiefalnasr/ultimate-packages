@@ -1,5 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { describe, expect, it } from "vitest";
+import { applyUltimateTheme } from "@ultimate/themes";
 import { UButton } from "./button";
 
 describe("UButton", () => {
@@ -75,5 +76,38 @@ describe("UButton", () => {
     expect(button.getAttribute("aria-label") ?? fixture.nativeElement.textContent).toContain(
       "Save"
     );
+  });
+
+  it("resolves the same button.primary.background token as the React/Vue cross-framework consistency test (packages/themes/test/cross-framework-consistency.test.ts)", () => {
+    // Part of the Blueprint Phase 5 exit criterion (spec §10, "validate
+    // cross-framework theme consistency"). React's and Vue's halves of this
+    // guarantee are asserted together in packages/themes/test/
+    // cross-framework-consistency.test.ts (Angular's UButton can't run in
+    // that file — it requires TestBed/ng test's own environment, a
+    // different vitest major version and CLI entry point than the plain
+    // `vitest run` the other two frameworks and @ultimate/themes use). This
+    // test proves the Angular third: applyUltimateTheme() configures the
+    // same uix-styled Theme singleton every *-core package's StyleSheet
+    // reads from, so ng-core's registered CSS for the real UButton must
+    // resolve button.primary.background to the identical var(...) text.
+    applyUltimateTheme();
+
+    const fixture = TestBed.createComponent(UButton);
+    fixture.componentRef.setInput("label", "Save");
+    fixture.detectChanges();
+
+    // ngCoreStyleSheet's <style> elements carry no identifying attribute
+    // (its StyleSheet instance is constructed with no `attrs` option), so
+    // the registered element is located by its known, unique `.u-button`
+    // selector — matching the DOM-lookup approach used on the React/Vue
+    // side of this same assertion.
+    const styleEl = Array.from(document.head.querySelectorAll("style")).find((el) =>
+      (el.textContent ?? "").includes(".u-button {")
+    );
+    expect(styleEl).not.toBeUndefined();
+    const ngCss = styleEl!.textContent ?? "";
+
+    expect(ngCss).toContain("var(--u-button-primary-background");
+    expect(ngCss).not.toContain("dt(");
   });
 });
