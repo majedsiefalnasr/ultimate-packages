@@ -40,4 +40,15 @@ describe("useComponentStyle", () => {
     );
     expect(matching).toHaveLength(1);
   });
+
+  it("resolves dt() calls in registered CSS into var(--u-*, ...) references", () => {
+    const styleModule = {
+      css: ".u-test { color: dt('test.token.value'); }",
+      classes: {},
+    };
+    renderHook(() => useComponentStyle("dt-test-component", styleModule));
+    const styleEl = document.head.querySelector("style");
+    expect(styleEl?.textContent).toContain("var(--u-test-token-value");
+    expect(styleEl?.textContent).not.toContain("dt(");
+  });
 });
