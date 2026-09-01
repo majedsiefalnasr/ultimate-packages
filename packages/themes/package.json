@@ -18,7 +18,7 @@
   "files": ["dist", "README.md", "THIRD-PARTY-NOTICES.md"],
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs",
-    "pretest": "npm run build",
+    "pretest": "pnpm --filter \"@ultimate/themes^...\" run --if-present build && npm run build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
