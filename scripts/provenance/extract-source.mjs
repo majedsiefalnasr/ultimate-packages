@@ -59,6 +59,7 @@ try {
   }
 
   let written = 0;
+  let skipped = 0;
   for (const mapFile of mapFiles) {
     const map = JSON.parse(readFileSync(mapFile, "utf8"));
     const sources = map.sources || [];
@@ -75,7 +76,20 @@ try {
           `${mapFile}: sourcesContent[${i}] (${sources[i]}) is missing — cannot recover this file from sourcemap`
         );
       }
-      const relPath = resolveToSrcRelative(sources[i]);
+      // A source path with no "src" segment (e.g. a shared root-level file
+      // sitting outside any package's src/ directory) can't be placed at a
+      // src/-relative destination. Skip it rather than aborting the whole
+      // extraction — the caller only needs the subset of files that do
+      // resolve, and a hard failure here would block recovering every
+      // other file in the tarball over one unrelated path.
+      let relPath;
+      try {
+        relPath = resolveToSrcRelative(sources[i]);
+      } catch (err) {
+        console.warn(`[extract-source] skipping ${mapFile}: ${err.message}`);
+        skipped++;
+        continue;
+      }
       const destPath = join(outputDir, relPath);
       mkdirSync(dirname(destPath), { recursive: true });
       writeFileSync(destPath, content);
@@ -84,7 +98,8 @@ try {
   }
 
   console.log(
-    `[extract-source] wrote ${written} file(s) from ${mapFiles.length} sourcemap(s) to ${outputDir}`
+    `[extract-source] wrote ${written} file(s) from ${mapFiles.length} sourcemap(s) to ${outputDir}` +
+      (skipped > 0 ? ` (${skipped} source(s) skipped — no "src" segment)` : "")
   );
 } finally {
   rmSync(extractDir, { recursive: true, force: true });
