@@ -30,6 +30,12 @@
     "modificationDescription": "none"
   },
   {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/themes/src/apply-theme.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored framework-agnostic entry point (applyUltimateTheme). Not a port of any single @primeuix/themes file — it is a thin wrapper calling @ultimate/uix-styled's own Theme.setTheme() with auraPreset and prefix: 'u' fixed, giving every framework-core package's dt()-resolving StyleSheet a single, framework-neutral call site to configure before any component mounts."
+  },
+  {
     "originalPath": "src/presets/aura/base.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/base.ts",
     "modificationStatus": "reference-derived",

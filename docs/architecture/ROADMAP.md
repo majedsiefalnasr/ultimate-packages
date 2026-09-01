@@ -9,7 +9,7 @@ Restated from Blueprint §35. See individual phase specs (`docs/superpowers/spec
 | 2     | UltimateNG                                                | Complete                |
 | 3     | UltimateReact                                             | Complete                |
 | 4     | UltimateVue                                               | Complete                |
-| 5     | Themes                                                    | Not started             |
+| 5     | Themes                                                    | Complete                |
 | 6     | Component Metadata                                        | Not started             |
 | 7     | CLI                                                       | Not started             |
 | 8     | MCP                                                       | Not started             |
