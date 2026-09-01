@@ -73,6 +73,37 @@ describe("createDisplayOrderMixin", () => {
     wrapper.unmount();
   });
 
+  it("does not reassign displayOrder for an already-visible instance when a SIBLING instance in the same group updates", async () => {
+    const first = mount({
+      mixins: [createDisplayOrderMixin({ group: "test-group-vue-mixin-f", isVisible: () => true })],
+      data() {
+        return { tick: 0 };
+      },
+      template: `<div>{{ tick }}</div>`,
+    });
+    const second = mount({
+      mixins: [createDisplayOrderMixin({ group: "test-group-vue-mixin-f", isVisible: () => true })],
+      template: `<div />`,
+    });
+    const firstOrderBefore = (first.vm as unknown as { displayOrder?: number }).displayOrder;
+    const secondOrder = (second.vm as unknown as { displayOrder?: number }).displayOrder;
+    expect(secondOrder ?? 0).toBeGreaterThan(firstOrderBefore ?? 0);
+
+    // An unrelated reactive update on the FIRST (older, non-topmost)
+    // instance must not reassign its displayOrder to a new, larger value —
+    // doing so would silently make it appear "topmost" ahead of `second`.
+    (first.vm as unknown as { tick: number }).tick = 1;
+    await first.vm.$nextTick();
+
+    expect((first.vm as unknown as { displayOrder?: number }).displayOrder).toBe(firstOrderBefore);
+    expect((second.vm as unknown as { displayOrder?: number }).displayOrder).toBeGreaterThan(
+      (first.vm as unknown as { displayOrder?: number }).displayOrder ?? 0
+    );
+
+    first.unmount();
+    second.unmount();
+  });
+
   it("registers on updated() when mounted invisible, then becomes visible later (v-model:visible pattern)", async () => {
     let visible = false;
     const wrapper = mount({

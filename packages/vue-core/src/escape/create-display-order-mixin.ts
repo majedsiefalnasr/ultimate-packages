@@ -48,16 +48,26 @@ export function createDisplayOrderMixin({
     mounted() {
       register.call(this);
     },
-    // Mirrors createGlobalEscapeKeyMixin's own updated() retry: a component
-    // mounted while invisible (isVisible() false, e.g. v-model:visible
-    // starting false) never registers at mount time — without this retry,
-    // toggling visible to true later would leave displayOrder permanently
-    // undefined, since register() is only ever called from mounted()/
-    // updated(), never from a reactive watcher. Idempotent (registered
-    // guard) so an already-registered instance doesn't push a duplicate
-    // entry into the shared registry on every subsequent update.
+    // A component mounted while invisible (isVisible() false, e.g.
+    // v-model:visible starting false) never registers at mount time —
+    // without this retry, toggling visible to true later would leave
+    // displayOrder permanently undefined, since register() is only ever
+    // called from mounted()/updated(), never from a reactive watcher.
+    //
+    // Unlike createGlobalEscapeKeyMixin's own updated() (unconditional
+    // unregister-then-register), this must NOT unregister an
+    // already-registered, still-visible instance on every update:
+    // escapeRegistry.register() is a Map.set() (idempotent, order-preserving
+    // on a stable key), but displayOrderRegistry.register() is an
+    // array-push (returns a new, larger value every call, not stable) — an
+    // unconditional round-trip here would silently reassign a growing
+    // displayOrder to any already-open dialog on every unrelated re-render,
+    // corrupting multi-instance priority ordering. register()'s own
+    // `registered` guard already makes this call a no-op once registered,
+    // and unregister() only fires when visibility has actually gone false —
+    // so a still-visible instance's slot is left untouched here.
     updated() {
-      unregister.call(this);
+      if (!isVisible()) unregister.call(this);
       register.call(this);
     },
     beforeUnmount() {
