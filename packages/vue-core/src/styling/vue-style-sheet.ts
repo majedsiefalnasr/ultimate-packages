@@ -1,4 +1,4 @@
-import { StyleSheet, css, type StyleMeta } from "@ultimate/uix-styled";
+import { StyleSheet, css, registerThemeVariables, type StyleMeta } from "@ultimate/uix-styled";
 import { createStyleElement } from "@ultimate/uix-utils/dom";
 import type { StyleModule } from "../base/base-component";
 
@@ -26,6 +26,12 @@ export const vueCoreStyleSheet = new VueStyleSheet();
 // matching react-core's/ng-core's identical has()/add(componentName,
 // styleModule.css) call shape.
 export function registerComponentStyle(componentName: string, styleModule: StyleModule): void {
+  // Theme variable DEFINITIONS first — the structural CSS below refers to
+  // them via dt()-resolved var(--u-*) references, which resolve to nothing
+  // unless something also defines the properties. Idempotent per its own
+  // has() guards; see registerThemeVariables' doc comment.
+  registerThemeVariables(vueCoreStyleSheet, componentName);
+
   if (vueCoreStyleSheet.has(componentName)) return;
   vueCoreStyleSheet.add(componentName, css`${styleModule.css}`);
 }

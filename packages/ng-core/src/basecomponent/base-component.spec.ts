@@ -41,14 +41,16 @@ describe("UBaseComponent", () => {
 
     // Both instances share componentName "test-component". uix-styled's
     // StyleSheet.add() is the real registration call (see
-    // packages/uix-styled/src/stylesheet/index.ts) — asserting it was
-    // invoked exactly once, even though two component instances ran
-    // ngOnInit, proves ngOnInit checks has() before calling add() rather
-    // than unconditionally re-registering.
-    expect(addSpy).toHaveBeenCalledTimes(1);
+    // packages/uix-styled/src/stylesheet/index.ts) — asserting the
+    // structural registration for THIS componentName happened exactly once,
+    // even though two component instances ran ngOnInit, proves ngOnInit
+    // checks has() before calling add() rather than unconditionally
+    // re-registering. Filtered by key because ngOnInit also registers theme
+    // variable definitions under their own keys (registerThemeVariables).
+    const structuralCalls = addSpy.mock.calls.filter(([key]) => key === "test-component");
+    expect(structuralCalls).toHaveLength(1);
     expect(addSpy).toHaveBeenCalledWith("test-component", ".u-test-component-root { color: red; }");
     expect(ngCoreStyleSheet.has("test-component")).toBe(true);
-    expect(ngCoreStyleSheet.getStyles().size).toBe(1);
 
     addSpy.mockRestore();
   });
@@ -79,9 +81,15 @@ describe("UBaseComponent", () => {
     const fixture = TestBed.createComponent(TestDtComponent);
     fixture.detectChanges();
 
-    // The registered CSS should have dt() calls resolved to var() references
-    expect(addSpy).toHaveBeenCalledTimes(1);
-    const registeredCss = addSpy.mock.calls[0][1];
+    // ngOnInit now makes several add() calls: the shared theme variable
+    // DEFINITIONS (common + this component's own `<name>-variables` block,
+    // via registerThemeVariables) alongside this component's structural CSS.
+    // Assert on the structural registration specifically — keyed by
+    // componentName — rather than on a bare call count, which only ever
+    // worked as a proxy while add() had a single caller.
+    const structuralCalls = addSpy.mock.calls.filter(([key]) => key === "test-dt-component");
+    expect(structuralCalls).toHaveLength(1);
+    const registeredCss = structuralCalls[0][1];
     expect(registeredCss).toContain("var(--u-test-token-value");
     expect(registeredCss).not.toContain("dt(");
 

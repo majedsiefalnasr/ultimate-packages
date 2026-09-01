@@ -114,6 +114,12 @@
     "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
   },
   {
+    "originalPath": "packages/core/src/basecomponent/BaseComponent.vue",
+    "ultimateDestination": "packages/uix-styled/src/stylesheet/theme-variables.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate-owned, framework-agnostic reimplementation of PrimeVue BaseComponent's _loadThemeStyles() two-tier theme-variable loading (common primitive/semantic/global tier loaded once globally; per-component variable tier loaded once per component name, both idempotently guarded). Reshaped from PrimeVue's Vue-component-method form into a plain function taking a uix-styled StyleSheet, so ng-core/react-core/vue-core can each drive it from their own existing structural-CSS registration call site. Excludes PrimeVue's isUnstyled/$theme==='none' short-circuits and its BaseStyle/$styleOptions indirection."
+  },
+  {
     "originalPath": "src/utils/index.ts",
     "ultimateDestination": "packages/uix-styled/src/utils/index.ts",
     "modificationStatus": "reconstructed",

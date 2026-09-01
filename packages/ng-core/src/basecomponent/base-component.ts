@@ -1,7 +1,7 @@
 import { Directive, ElementRef, PLATFORM_ID, Renderer2, inject, input } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { cn } from "@ultimate/uix-utils/classnames";
-import { css } from "@ultimate/uix-styled";
+import { css, registerThemeVariables } from "@ultimate/uix-styled";
 import { UltimateConfig } from "../config/ultimate-config";
 import { ngCoreStyleSheet } from "./style-sheet";
 
@@ -47,6 +47,12 @@ export abstract class UBaseComponent {
   }
 
   ngOnInit(): void {
+    // Theme variable DEFINITIONS first — the structural CSS below refers to
+    // them via dt()-resolved var(--u-*) references, which resolve to nothing
+    // unless something also defines the properties. Idempotent per its own
+    // has() guards; see registerThemeVariables' doc comment.
+    registerThemeVariables(ngCoreStyleSheet, this.componentName);
+
     if (!ngCoreStyleSheet.has(this.componentName)) {
       ngCoreStyleSheet.add(this.componentName, css`${this.styleModule.css}`);
     }

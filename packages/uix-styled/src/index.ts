@@ -16,6 +16,7 @@ export * from "./helpers/index";
 export { default as ThemeService } from "./service/index";
 
 export { default as StyleSheet, type StyleSheetProps, type StyleMeta } from "./stylesheet/index";
+export { registerThemeVariables } from "./stylesheet/theme-variables";
 
 export * from "./utils/index";
 
@@ -42,7 +43,7 @@ export type StyleType<T = StyleOptions> = string | ((options?: T) => string);
 export interface ThemeOptions {
   /**
    * The prefix for the theme
-   * @default 'p'
+   * @default 'u'
    */
   prefix?: string;
   /**
