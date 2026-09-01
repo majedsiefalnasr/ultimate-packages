@@ -273,7 +273,7 @@ export default {
     const { cssLayer } = options;
 
     if (cssLayer) {
-      const order = resolve(cssLayer.order || cssLayer.name || "primeui", params);
+      const order = resolve(cssLayer.order || cssLayer.name || "ultimate", params);
 
       return `@layer ${order}`;
     }
@@ -293,7 +293,7 @@ export default {
           const id = `${key}-variables`;
 
           acc.push(
-            `<style type="text/css" data-primevue-style-id="${id}" ${_props}>${_css}</style>`
+            `<style type="text/css" data-u-style-id="${id}" ${_props}>${_css}</style>`
           ); // @todo data-primevue -> data-primeui check in primevue usestyle
         }
 
@@ -311,7 +311,7 @@ export default {
       .join(" ");
 
     return preset_css
-      ? `<style type="text/css" data-primevue-style-id="${name}-variables" ${_props}>${minifyCSS(preset_css)}</style>`
+      ? `<style type="text/css" data-u-style-id="${name}-variables" ${_props}>${minifyCSS(preset_css)}</style>`
       : ""; // @todo check
   },
   createTokens(

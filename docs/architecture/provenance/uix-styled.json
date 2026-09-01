@@ -128,7 +128,7 @@
   {
     "originalPath": "src/utils/themeUtils.ts",
     "ultimateDestination": "packages/uix-styled/src/utils/themeUtils.ts",
-    "modificationStatus": "import-path-adapted",
-    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+    "modificationStatus": "rebranded",
+    "modificationDescription": "DOM-visible data-primevue-style-id attribute renamed to data-u-style-id (2 occurrences); default @layer name changed from 'primeui' to 'ultimate' in getLayerOrder. No other logic changed — Phase 5 rebrand pass."
   }
 ]
