@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs",
-    "test": "vitest run",
+    "test": "vitest run --typecheck",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -24,6 +24,5 @@ export function calculateLast(
   numToleratedItems: number,
   isColumns?: boolean
 ): number {
-  void isColumns;
   return first + numItemsInViewport + (first < numToleratedItems ? 2 : 3) * numToleratedItems;
 }

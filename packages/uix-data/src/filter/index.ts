@@ -27,7 +27,7 @@ export type FilterMatchMode =
  * variant (PrimeReact's DataTableOperatorFilterMetaData, PrimeNG's
  * FilterMetadata[]-as-array-of-alternatives) is deferred, not rejected —
  * revisit against real Table implementation requirements (see uix-data
- * spec, Approved Decision — Filter Contract).
+ * spec, Constraints and Deferred Decisions sections).
  */
 export interface FilterMetadata {
   value: unknown;
