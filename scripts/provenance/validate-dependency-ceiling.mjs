@@ -14,9 +14,10 @@ const CEILINGS = {
   "@primeuix/styled": "0.7.4",
   "@primeuix/styles": "2.0.3",
   "@primeuix/motion": "0.0.10",
+  "@primeuix/themes": "2.0.3",
 };
 const FORBIDDEN_DIRECT_DEPS = ["primeng", "primevue", "primereact"];
-const WATCHED_PREFIXES = ["uix", "ng", "react", "vue"];
+const WATCHED_PREFIXES = ["uix", "ng", "react", "vue", "themes"];
 
 function fail(message) {
   console.error(`[ceiling:validate] FAIL: ${message}`);

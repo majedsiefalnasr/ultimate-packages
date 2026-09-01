@@ -32,3 +32,31 @@ test("validate-dependency-ceiling.mjs catches a forbidden @primeuix dependency i
 
   rmSync(workDir, { recursive: true, force: true });
 });
+
+test("fails when a themes package declares @primeuix/themes above the pinned ceiling", () => {
+  const workDir = mkdtempSync(join(tmpdir(), "ceiling-gap-test-"));
+  const pkgDir = join(workDir, "packages", "themes");
+  mkdirSync(pkgDir, { recursive: true });
+  writeFileSync(
+    join(pkgDir, "package.json"),
+    JSON.stringify({ name: "@ultimate/themes", dependencies: { "@primeuix/themes": "^99.0.0" } })
+  );
+
+  const result = spawnSync(
+    "node",
+    [join(process.cwd(), "scripts/provenance/validate-dependency-ceiling.mjs")],
+    {
+      cwd: workDir,
+      encoding: "utf8",
+    }
+  );
+
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on a ceiling violation"
+  );
+  assert.match(result.stderr, /VIOLATION/);
+
+  rmSync(workDir, { recursive: true, force: true });
+});

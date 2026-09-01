@@ -73,7 +73,7 @@ if (baseRef) {
 
 // Manifest completeness: every .ts/.tsx file under packages/{uix,ng,react}-*/src/ must have
 // a corresponding entry in docs/architecture/provenance/<package-name>.json.
-const MANIFEST_WATCHED_PREFIXES = ["uix", "ng", "react", "vue"];
+const MANIFEST_WATCHED_PREFIXES = ["uix", "ng", "react", "vue", "themes"];
 
 function findWatchedPackageDirs(root = "packages") {
   if (!existsSync(root)) return [];
