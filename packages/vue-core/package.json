@@ -4,7 +4,7 @@
   "description": "Vue-specific foundation for the Ultimate Platform: Options-API base architecture, directive infrastructure, overlay/focus-trap/escape/scroll/motion infrastructure, icons, minimal config.",
   "license": "MIT",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": true,
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
