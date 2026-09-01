@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import { SpinnerIcon, TimesIcon, WindowMaximizeIcon, WindowMinimizeIcon, CheckIcon } from "./index";
+import { SpinnerIcon, TimesIcon, WindowMaximizeIcon, WindowMinimizeIcon, CheckIcon, MinusIcon } from "./index";
 
 describe.each([
   ["SpinnerIcon", SpinnerIcon],
@@ -8,6 +8,7 @@ describe.each([
   ["WindowMaximizeIcon", WindowMaximizeIcon],
   ["WindowMinimizeIcon", WindowMinimizeIcon],
   ["CheckIcon", CheckIcon],
+  ["MinusIcon", MinusIcon],
 ])("%s", (_name, Icon) => {
   it("renders an svg with role=img", () => {
     const wrapper = mount(Icon);

@@ -88,5 +88,35 @@
     "ultimateDestination": "packages/vue/src/button/Button.vue",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "This task retrofitted the real, already-reviewed Task 17 Button.vue/base-button.ts (not rebuilt) to add tooltip/tooltipOptions prop sugar over v-tooltip, matching verified Button.vue's own tooltip integration pattern — third independent confirmation of the sugar-prop pattern already established for Angular/React (spec §9). All Task 17 logic (styleParams computed, resolvedAriaLabel, rootAttrs, rendering order) preserved unchanged; only the directives map, tooltipBinding computed, and the root element's v-tooltip binding were added."
+  },
+  {
+    "originalPath": "packages/primevue/src/checkbox/Checkbox.vue",
+    "ultimateDestination": "packages/vue/src/checkbox/Checkbox.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified real rendered DOM (this task's Step 1, read via extract-primevue-source.mjs against primevue@4.5.5): dual-element pattern — a real semantic native input[type=checkbox] plus a decorative box rendering CheckIcon/MinusIcon. indeterminate prop with d_indeterminate/update:indeterminate/updateIndeterminate() DOM-property sync in mounted/updated — verified real, opposite finding from PrimeReact's Checkbox (which has none). binary mode split (true: trueValue/falseValue against a single modelValue; false/default: array-membership mode against this checkbox's own value prop) — a real mode PrimeReact's Checkbox has no equivalent for at all. $pcCheckboxGroup composition, groupName/$formName resolution, and formField.onBlur explicitly excluded — out of Phase 4 proof-set scope. Corrected two brief-draft bugs found during verification: (1) real upstream's array-mode onChange branches on `this.checked || this.d_indeterminate`, not `this.checked` alone — the brief's draft would incorrectly add-instead-of-remove a value when unchecking from an indeterminate array-mode state; fixed to match upstream. (2) MinusIcon is the real, dedicated vue-core icon added as this task's own addendum to Task 14 (packages/vue-core/src/icons/minus-icon.ts), not the brief draft's WindowMinimizeIcon placeholder alias."
+  },
+  {
+    "originalPath": "packages/primevue/src/checkbox/BaseCheckbox.vue",
+    "ultimateDestination": "packages/vue/src/checkbox/BaseCheckbox.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified real chain: Checkbox extends BaseCheckbox extends BaseInput extends BaseEditableHolder extends BaseComponent. formControl prop and its @primevue/forms coupling excluded (spec §20). Real prop surface (value/binary/indeterminate/trueValue/falseValue/readonly/required/tabindex/inputId/inputClass/inputStyle/ariaLabelledby/ariaLabel) verified against BaseCheckbox.vue verbatim, plus invalid/name (declared locally per this project's Option B posture of explicit typed props over PrimeVue's inject/$formName/$attrs-fallthrough resolution for these) and disabled (declared locally after verification found it referenced by real Checkbox.vue's template/onChange and CheckboxStyle.js's classes.root but never actually declared as a prop anywhere in the real BaseComponent/BaseEditableHolder/BaseInput/BaseCheckbox chain read in full — a genuine upstream .d.ts-vs-runtime-mixin discrepancy, not something this project could silently inherit). Implementation-time verification finding (Global Constraints: verify createBaseInput's real API, don't assume): createBaseInput() takes zero parameters and always internally builds createBaseEditableHolder() with that function's own default empty componentName/styleModule — there is no way to thread this component's real componentName/styleModule through createBaseInput() itself, so cx() would silently resolve no real checkbox classes if createBaseInput() were extended bare (the brief's original draft's bug). Fixed by extending createBaseInput() for the real 4-tier prop/computed/inject surface, then shadowing cx()/mounted() locally with closures over the real checkboxStyleModule (Vue's Options API methods-merge is override-by-name, closer to leaf wins) — writeValue/dValue themselves (used by Checkbox.vue) were verified as real, correctly-signatured BaseEditableHolder members needing no fix."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/checkbox/checkbox-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Implementation-time verification finding (this task's Step 2, same mismatch already found for @ultimate/uix-styles/button in Task 17 and @ultimate/uix-styles/tooltip in Task 18): @ultimate/uix-styles/checkbox exports only a plain style: string (raw CSS with dt() token references), not a StyleModule-shaped { css, classes } object. classes authored locally here, root/box/input/icon slot names and checked/disabled/invalid/variant-filled/size root params mirroring real upstream CheckboxStyle.js (.vendor-extracted/vue/checkbox/style/CheckboxStyle.js) verbatim, translated from upstream's p-checkbox* class prefix to this project's u-checkbox* convention (same p- -> u- translation already established for button/tooltip)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/checkbox/checkbox.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test suite, including explicit coverage for both controlled/uncontrolled modes, indeterminate, and binary:false array-membership mode — a materially broader test surface than Phase 3's React UCheckbox needed, since Vue's verified BaseEditableHolder/Checkbox support all of these and PrimeReact's does not."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/checkbox/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
