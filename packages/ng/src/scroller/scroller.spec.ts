@@ -3,6 +3,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 import { applyUltimateTheme } from "@ultimate/themes";
 import { calculateNumItemsInViewport } from "@ultimate/uix-data";
 import { UScroller } from "./scroller";
+import { UScroller as RootExport } from "../index";
 
 describe("UScroller", () => {
   beforeAll(() => {
@@ -236,5 +237,11 @@ describe("UScroller", () => {
     const fixture = TestBed.createComponent(UScroller);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector("[class*=u-scroller]").hasAttribute("aria-busy")).toBe(false);
+  });
+});
+
+describe("package exports", () => {
+  it("is exported from the package root barrel", () => {
+    expect(RootExport).toBe(UScroller);
   });
 });
