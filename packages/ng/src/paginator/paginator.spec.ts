@@ -77,7 +77,7 @@ describe("UPaginator", () => {
       fixture.componentRef.setInput("rows", 10);
       fixture.componentRef.setInput("pageLinkSize", 5);
       fixture.detectChanges();
-      expect(fixture.componentInstance.pageLinks).toEqual([1, 2, 3]);
+      expect(fixture.nativeElement.getAttribute("data-page-links")).toBe("1,2,3");
     });
 
     it("returns a pageLinkSize-wide centered window on a middle page", () => {
@@ -88,7 +88,8 @@ describe("UPaginator", () => {
       fixture.componentRef.setInput("first", 90);
       fixture.detectChanges();
       fixture.componentInstance.changePage(90);
-      expect(fixture.componentInstance.pageLinks).toEqual([8, 9, 10, 11, 12]);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.getAttribute("data-page-links")).toBe("8,9,10,11,12");
     });
 
     it("clamps the window at the last page without shrinking pageLinkSize", () => {
@@ -98,7 +99,8 @@ describe("UPaginator", () => {
       fixture.componentRef.setInput("pageLinkSize", 5);
       fixture.detectChanges();
       fixture.componentInstance.changePage(190);
-      expect(fixture.componentInstance.pageLinks).toEqual([16, 17, 18, 19, 20]);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.getAttribute("data-page-links")).toBe("16,17,18,19,20");
     });
   });
 });

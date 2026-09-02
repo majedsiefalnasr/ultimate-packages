@@ -106,6 +106,7 @@ export interface PaginatorPageChangeEvent {
     "[class]": "cx('root')",
     "[attr.data-page-count]": "pageCount",
     "[attr.data-page]": "page",
+    "[attr.data-page-links]": "pageLinks.join(',')",
   },
 })
 export class UPaginator extends UBaseComponent implements OnChanges {
@@ -178,7 +179,7 @@ export class UPaginator extends UBaseComponent implements OnChanges {
     this.changePage((this.pageCount - 1) * this.rows());
   }
 
-  get pageLinks(): number[] {
+  protected get pageLinks(): number[] {
     const pageCount = this.pageCount;
     const pageLinkSize = this.pageLinkSize();
     const currentPage = this.page;
