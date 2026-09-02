@@ -2,6 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { beforeAll, describe, expect, it } from "vitest";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { UPaginator } from "./paginator";
+import { UPaginator as RootExport } from "../index";
 
 describe("UPaginator", () => {
   beforeAll(() => {
@@ -148,5 +149,9 @@ describe("UPaginator", () => {
     expect(fixture.nativeElement.querySelector("[data-u-paginator-prev]").hasAttribute("aria-label")).toBe(true);
     expect(fixture.nativeElement.querySelector("[data-u-paginator-next]").hasAttribute("aria-label")).toBe(true);
     expect(fixture.nativeElement.querySelector("[data-u-paginator-last]").hasAttribute("aria-label")).toBe(true);
+  });
+
+  it("is exported from the package root barrel", () => {
+    expect(RootExport).toBe(UPaginator);
   });
 });
