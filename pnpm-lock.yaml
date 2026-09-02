@@ -151,6 +151,9 @@ importers:
       '@ultimate/react-core':
         specifier: workspace:*
         version: link:../react-core
+      '@ultimate/uix-data':
+        specifier: workspace:*
+        version: link:../uix-data
       '@ultimate/uix-motion':
         specifier: workspace:*
         version: link:../uix-motion
