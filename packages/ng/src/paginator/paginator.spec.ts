@@ -69,4 +69,36 @@ describe("UPaginator", () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.getAttribute("data-page")).toBe("3");
   });
+
+  describe("pageLinks (Global Constraints page-link algorithm)", () => {
+    it("returns all pages when pageCount <= pageLinkSize", () => {
+      const fixture = TestBed.createComponent(UPaginator);
+      fixture.componentRef.setInput("totalRecords", 30);
+      fixture.componentRef.setInput("rows", 10);
+      fixture.componentRef.setInput("pageLinkSize", 5);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.pageLinks).toEqual([1, 2, 3]);
+    });
+
+    it("returns a pageLinkSize-wide centered window on a middle page", () => {
+      const fixture = TestBed.createComponent(UPaginator);
+      fixture.componentRef.setInput("totalRecords", 200);
+      fixture.componentRef.setInput("rows", 10);
+      fixture.componentRef.setInput("pageLinkSize", 5);
+      fixture.componentRef.setInput("first", 90);
+      fixture.detectChanges();
+      fixture.componentInstance.changePage(90);
+      expect(fixture.componentInstance.pageLinks).toEqual([8, 9, 10, 11, 12]);
+    });
+
+    it("clamps the window at the last page without shrinking pageLinkSize", () => {
+      const fixture = TestBed.createComponent(UPaginator);
+      fixture.componentRef.setInput("totalRecords", 200);
+      fixture.componentRef.setInput("rows", 10);
+      fixture.componentRef.setInput("pageLinkSize", 5);
+      fixture.detectChanges();
+      fixture.componentInstance.changePage(190);
+      expect(fixture.componentInstance.pageLinks).toEqual([16, 17, 18, 19, 20]);
+    });
+  });
 });

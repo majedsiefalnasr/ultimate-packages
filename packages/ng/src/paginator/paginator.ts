@@ -177,4 +177,22 @@ export class UPaginator extends UBaseComponent implements OnChanges {
   protected goLast(): void {
     this.changePage((this.pageCount - 1) * this.rows());
   }
+
+  get pageLinks(): number[] {
+    const pageCount = this.pageCount;
+    const pageLinkSize = this.pageLinkSize();
+    const currentPage = this.page;
+
+    const visiblePages = Math.min(pageLinkSize, pageCount);
+    let start = Math.max(0, Math.ceil(currentPage - visiblePages / 2));
+    const end = Math.min(pageCount - 1, start + visiblePages - 1);
+    const delta = pageLinkSize - (end - start + 1);
+    start = Math.max(0, start - delta);
+
+    const links: number[] = [];
+    for (let i = start; i <= end; i++) {
+      links.push(i + 1);
+    }
+    return links;
+  }
 }
