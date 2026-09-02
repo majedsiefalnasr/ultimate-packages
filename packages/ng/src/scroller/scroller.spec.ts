@@ -1,3 +1,4 @@
+import { Component, ViewChild } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { applyUltimateTheme } from "@ultimate/themes";
@@ -257,5 +258,121 @@ describe("UScroller", () => {
 describe("package exports", () => {
   it("is exported from the package root barrel", () => {
     expect(RootExport).toBe(UScroller);
+  });
+});
+
+@Component({
+  standalone: true,
+  imports: [UScroller],
+  template: `
+    <u-scroller [items]="items" [itemSize]="30" [loading]="loading" [disabled]="disabled">
+      <ng-template #content let-visibleItems let-options="options">
+        <table data-test-content-template>
+          <tbody>
+            @for (item of visibleItems; track item.index) {
+              <tr [attr.data-index]="item.index" [attr.data-first]="options.getItemOptions(item.index).first">
+                <td>{{ item.value }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </ng-template>
+    </u-scroller>
+  `,
+})
+class ContentTemplateHostComponent {
+  items = Array.from({ length: 50 }, (_, i) => `Row ${i}`);
+  loading = false;
+  disabled = false;
+  @ViewChild(UScroller) scroller!: UScroller;
+}
+
+describe("UScroller content template (Task 1)", () => {
+  // ResizeObserver is not implemented in jsdom; UScroller's ngAfterViewInit
+  // constructs one unconditionally (see the top-level "UScroller" describe
+  // block's identical stub above). This describe block is a sibling, not a
+  // nested block, so it needs its own stub rather than inheriting that one.
+  // The callback is captured (not auto-invoked on observe()) so tests can
+  // mock a non-zero offsetHeight first, then re-invoke it — matching the
+  // top-level describe block's own zoneless/signal-update pattern, needed
+  // here because the non-disabled windowed path renders zero rows at the
+  // default zero-height jsdom viewport.
+  let resizeObserverCallback: ResizeObserverCallback | undefined;
+
+  beforeEach(() => {
+    resizeObserverCallback = undefined;
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(cb: ResizeObserverCallback) {
+          resizeObserverCallback = cb;
+        }
+        observe(target: Element) {
+          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        }
+        disconnect() {}
+      }
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  function mockViewportHeight(element: HTMLElement, height: number): void {
+    Object.defineProperty(element, "offsetHeight", { value: height, configurable: true });
+  }
+
+  it("renders the consumer-supplied content template instead of the built-in item divs when #content is provided", () => {
+    const fixture = TestBed.createComponent(ContentTemplateHostComponent);
+    fixture.detectChanges();
+    const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(root, 200);
+    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[data-test-content-template]")).not.toBeNull();
+    expect(fixture.nativeElement.querySelectorAll("[data-u-scroller-item]").length).toBe(0);
+    expect(fixture.nativeElement.querySelectorAll("tr[data-index]").length).toBeGreaterThan(0);
+  });
+
+  it("still renders the built-in item divs when no #content template is supplied (existing behavior unchanged)", () => {
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.componentRef.setInput("items", ["a", "b", "c"]);
+    fixture.componentRef.setInput("itemSize", 30);
+    fixture.detectChanges();
+    const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(root, 200);
+    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("[data-u-scroller-item]").length).toBeGreaterThan(0);
+  });
+
+  it("exposes a real options.getItemOptions(index) returning {index, count, first, last, even, odd} — matching real PrimeNG's getOptions() shape", () => {
+    const fixture = TestBed.createComponent(ContentTemplateHostComponent);
+    fixture.detectChanges();
+    const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(root, 200);
+    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    fixture.detectChanges();
+    const firstRow = fixture.nativeElement.querySelector("tr[data-index='0']");
+    expect(firstRow.getAttribute("data-first")).toBe("true");
+  });
+
+  it("dispatches the content template with the full unwindowed item list when disabled=true, matching UScroller's existing shipped disabled behavior (spec: no reduced/empty list)", () => {
+    const fixture = TestBed.createComponent(ContentTemplateHostComponent);
+    fixture.componentInstance.disabled = true;
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("tr[data-index]").length).toBe(50);
+  });
+
+  it("still renders the existing built-in loader when loading=true, independent of whether a content template is supplied", () => {
+    const fixture = TestBed.createComponent(ContentTemplateHostComponent);
+    fixture.componentInstance.loading = true;
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector(".u-scroller-loader")).not.toBeNull();
+    // The content template itself still renders alongside the loader — this
+    // plan does not suppress one for the other, matching real upstream's
+    // structurally-independent loader/content-dispatch regions.
+    expect(fixture.nativeElement.querySelector("[data-test-content-template]")).not.toBeNull();
   });
 });

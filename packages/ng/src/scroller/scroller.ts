@@ -1,9 +1,12 @@
+import { NgTemplateOutlet } from "@angular/common";
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ContentChild,
   ElementRef,
   OnDestroy,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
   input,
@@ -14,9 +17,31 @@ import { UBaseComponent } from "@ultimate/ng-core";
 import { calculateLast, calculateNumItemsInViewport } from "@ultimate/uix-data";
 import { scrollerStyleModule } from "./scroller-style";
 
+/**
+ * Context object dispatched to a consumer-supplied `#content` template via
+ * `*ngTemplateOutlet`, mirroring real PrimeNG's own `getContentOptions()`
+ * shape (`scroller.ts:1191-1210`/`1213-1224`).
+ */
+export interface UScrollerContentContext {
+  $implicit: { index: number; value: unknown }[];
+  options: {
+    getItemOptions: (index: number) => {
+      index: number;
+      count: number;
+      first: boolean;
+      last: boolean;
+      even: boolean;
+      odd: boolean;
+    };
+    itemSize: number;
+    loading: boolean;
+  };
+}
+
 @Component({
   standalone: true,
   selector: "u-scroller",
+  imports: [NgTemplateOutlet],
   template: `
     <div
       #element
@@ -37,10 +62,26 @@ import { scrollerStyleModule } from "./scroller-style";
         [class]="cx('content')"
         [style.height.px]="items().length * itemSize()"
       >
-        @for (item of visibleItems(); track item.index) {
-          <div data-u-scroller-item [class]="cx('item')" [style.top.px]="item.index * itemSize()">
-            {{ item.value }}
-          </div>
+        @if (contentTemplate) {
+          <ng-container
+            *ngTemplateOutlet="
+              contentTemplate;
+              context: {
+                $implicit: visibleItems(),
+                options: {
+                  getItemOptions: getItemOptions.bind(this),
+                  itemSize: itemSize(),
+                  loading: loading() ?? false,
+                },
+              }
+            "
+          ></ng-container>
+        } @else {
+          @for (item of visibleItems(); track item.index) {
+            <div data-u-scroller-item [class]="cx('item')" [style.top.px]="item.index * itemSize()">
+              {{ item.value }}
+            </div>
+          }
         }
       </div>
     </div>
@@ -62,6 +103,15 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
   onLazyLoad = output<{ first: number; last: number }>();
 
   @ViewChild("element") private elementRef!: ElementRef<HTMLElement>;
+
+  /**
+   * Optional consumer-supplied content template (e.g. `UTable` supplying its
+   * own `<table><tbody><tr><td>` markup instead of the built-in per-item
+   * `<div>` rendering), mirroring real PrimeNG's own `@ContentChild('content')`
+   * + `ngTemplateOutlet` composition mechanism. When absent, the built-in
+   * `@for` rendering runs unchanged.
+   */
+  @ContentChild("content") protected contentTemplate?: TemplateRef<UScrollerContentContext>;
 
   // Plain internal state per Global Constraints (no getter/setter, no
   // Change output). `_contentSize` is a signal rather than a bare field
@@ -147,6 +197,33 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
       result.push({ index: i, value: liveItems[i] });
     }
     return result;
+  }
+
+  /**
+   * Per-item metadata dispatched to a consumer-supplied content template's
+   * `options.getItemOptions(index)`, mirroring real PrimeNG's own
+   * `getOptions(renderedIndex)` (`scroller.ts:1213-1224`). Real PrimeNG's
+   * `index` accounts for the windowed offset (`this.first + renderedIndex`);
+   * `visibleItems()` already returns absolute (not renderedIndex-relative)
+   * indices, so `index` here is used directly with no offset arithmetic.
+   */
+  protected getItemOptions(index: number): {
+    index: number;
+    count: number;
+    first: boolean;
+    last: boolean;
+    even: boolean;
+    odd: boolean;
+  } {
+    const count = this.items().length;
+    return {
+      index,
+      count,
+      first: index === 0,
+      last: index === count - 1,
+      even: index % 2 === 0,
+      odd: index % 2 !== 0,
+    };
   }
 
   private getLast(last = 0, isCols = false): number {
