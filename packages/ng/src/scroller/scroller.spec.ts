@@ -147,4 +147,38 @@ describe("UScroller", () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector(".u-scroller-loader")).toBeNull();
   });
+
+  it("scrollTo calls the native Element.scrollTo with the given options", () => {
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.componentRef.setInput("items", Array.from({ length: 100 }, (_, i) => i));
+    fixture.componentRef.setInput("itemSize", 20);
+    fixture.detectChanges();
+    const root = fixture.nativeElement.querySelector("[data-u-scroller-content]").parentElement as HTMLElement;
+    const scrollToSpy = vi.fn();
+    root.scrollTo = scrollToSpy;
+    fixture.componentInstance.scrollTo({ top: 100 });
+    expect(scrollToSpy).toHaveBeenCalledWith({ top: 100 });
+  });
+
+  it("scrollToIndex computes the target position from index * itemSize", () => {
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.componentRef.setInput("items", Array.from({ length: 100 }, (_, i) => i));
+    fixture.componentRef.setInput("itemSize", 20);
+    fixture.detectChanges();
+    const root = fixture.nativeElement.querySelector("[data-u-scroller-content]").parentElement as HTMLElement;
+    const scrollToSpy = vi.fn();
+    root.scrollTo = scrollToSpy;
+    fixture.componentInstance.scrollToIndex(10);
+    expect(scrollToSpy).toHaveBeenCalledWith({ top: 200, behavior: "auto" });
+  });
+
+  it("disabled mode renders all items with zero virtualization", () => {
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.componentRef.setInput("items", Array.from({ length: 50 }, (_, i) => i));
+    fixture.componentRef.setInput("itemSize", 20);
+    fixture.componentRef.setInput("disabled", true);
+    fixture.detectChanges();
+    const renderedItems = fixture.nativeElement.querySelectorAll("[data-u-scroller-item]");
+    expect(renderedItems.length).toBe(50);
+  });
 });

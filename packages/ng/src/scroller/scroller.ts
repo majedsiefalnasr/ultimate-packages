@@ -54,6 +54,7 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
   itemSize = input(0);
   numToleratedItems = input<number | undefined>(undefined);
   loading = input<boolean | undefined>(undefined);
+  disabled = input(false);
 
   @ViewChild("element") private elementRef!: ElementRef<HTMLElement>;
 
@@ -87,6 +88,14 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
     this.resizeObserver?.disconnect();
   }
 
+  scrollTo(options: ScrollToOptions): void {
+    this.elementRef.nativeElement.scrollTo(options);
+  }
+
+  scrollToIndex(index: number, behavior: ScrollBehavior = "auto"): void {
+    this.scrollTo({ top: index * this.itemSize(), behavior });
+  }
+
   protected onScroll(): void {
     const scrollTop = this.elementRef.nativeElement.scrollTop;
     this._first = Math.floor(scrollTop / (this.itemSize() || 1));
@@ -115,6 +124,9 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
 
   protected visibleItems(): { index: number; value: unknown }[] {
     const liveItems = this.items();
+    if (this.disabled()) {
+      return liveItems.map((value, index) => ({ index, value }));
+    }
     const result: { index: number; value: unknown }[] = [];
     for (let i = this._first; i < this.last; i++) {
       result.push({ index: i, value: liveItems[i] });
