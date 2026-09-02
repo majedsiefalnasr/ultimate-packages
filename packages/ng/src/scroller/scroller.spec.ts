@@ -181,4 +181,60 @@ describe("UScroller", () => {
     const renderedItems = fixture.nativeElement.querySelectorAll("[data-u-scroller-item]");
     expect(renderedItems.length).toBe(50);
   });
+
+  it("fires onLazyLoad with {first, last} after a scroll-triggered window change, when lazy is true", async () => {
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+    fixture.componentRef.setInput("itemSize", 20);
+    fixture.componentRef.setInput("lazy", true);
+    fixture.detectChanges();
+    const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(root, 200);
+    // See the zoneless/signal note above: offsetHeight mutation alone is
+    // invisible to Angular's signal graph, so the mocked ResizeObserver
+    // callback must be re-invoked to actually update _contentSize (and thus
+    // numItemsInViewportComputed, which last/onLazyLoad's payload depends on).
+    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    fixture.detectChanges();
+    let emitted: unknown;
+    fixture.componentInstance.onLazyLoad.subscribe((e: unknown) => (emitted = e));
+    Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
+    root.dispatchEvent(new Event("scroll"));
+    fixture.detectChanges();
+    await Promise.resolve(); // matches the real Promise.resolve().then() deferral, spec §10
+    // first = floor(2000/20) = 100; numItemsInViewport=10, numToleratedItems=5,
+    // calculateLast(100, 10, 5) = 100+10+3*5=125 (first >= numToleratedItems
+    // branch), clamped to items.length (1000) -> 125.
+    expect(emitted).toEqual({ first: 100, last: 125 });
+  });
+
+  it("does not fire onLazyLoad when lazy is false", async () => {
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+    fixture.componentRef.setInput("itemSize", 20);
+    fixture.detectChanges();
+    const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(root, 200);
+    fixture.detectChanges();
+    let emitted: unknown;
+    fixture.componentInstance.onLazyLoad.subscribe((e: unknown) => (emitted = e));
+    Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
+    root.dispatchEvent(new Event("scroll"));
+    fixture.detectChanges();
+    await Promise.resolve();
+    expect(emitted).toBeUndefined();
+  });
+
+  it("sets aria-busy=true on the root while loading is true", () => {
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[class*=u-scroller]").getAttribute("aria-busy")).toBe("true");
+  });
+
+  it("does not set aria-busy when loading is false or unset", () => {
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[class*=u-scroller]").hasAttribute("aria-busy")).toBe(false);
+  });
 });

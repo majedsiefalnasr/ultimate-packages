@@ -7,6 +7,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   input,
+  output,
   signal,
 } from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
@@ -23,6 +24,7 @@ import { scrollerStyleModule } from "./scroller-style";
       [attr.data-num-items-in-viewport]="numItemsInViewportComputed"
       [attr.data-last]="last"
       [attr.data-first]="first"
+      [attr.aria-busy]="loading() ? 'true' : null"
       (scroll)="onScroll()"
     >
       @if (loading()) {
@@ -55,6 +57,9 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
   numToleratedItems = input<number | undefined>(undefined);
   loading = input<boolean | undefined>(undefined);
   disabled = input(false);
+  lazy = input(false);
+
+  onLazyLoad = output<{ first: number; last: number }>();
 
   @ViewChild("element") private elementRef!: ElementRef<HTMLElement>;
 
@@ -98,7 +103,17 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
 
   protected onScroll(): void {
     const scrollTop = this.elementRef.nativeElement.scrollTop;
-    this._first = Math.floor(scrollTop / (this.itemSize() || 1));
+    const newFirst = Math.floor(scrollTop / (this.itemSize() || 1));
+    if (newFirst !== this._first) {
+      this._first = newFirst;
+      if (this.lazy()) {
+        const first = this._first;
+        const last = this.last;
+        Promise.resolve().then(() => {
+          this.onLazyLoad.emit({ first, last });
+        });
+      }
+    }
   }
 
   protected get first(): number {
