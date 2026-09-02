@@ -12,15 +12,17 @@
       <span class="u-scroller-loading-icon"></span>
     </div>
     <div :class="cx('content')" data-u-scroller-content :style="{ height: items.length * itemSize + 'px' }">
-      <div
-        v-for="entry in visibleItems"
-        :key="entry.index"
-        :class="cx('item')"
-        data-u-scroller-item
-        :style="{ top: entry.index * itemSize + 'px' }"
-      >
-        {{ entry.value }}
-      </div>
+      <slot name="content" :items="visibleItems" :get-item-options="getItemOptions" :item-size="itemSize" :loading="loading">
+        <div
+          v-for="entry in visibleItems"
+          :key="entry.index"
+          :class="cx('item')"
+          data-u-scroller-item
+          :style="{ top: entry.index * itemSize + 'px' }"
+        >
+          {{ entry.value }}
+        </div>
+      </slot>
     </div>
   </div>
 </template>
@@ -154,6 +156,16 @@ export default {
     },
     scrollToIndex(index, behavior = "auto") {
       this.scrollTo({ top: index * this.itemSize, behavior });
+    },
+    getItemOptions(index) {
+      return {
+        index,
+        count: this.items.length,
+        first: index === 0,
+        last: index === this.items.length - 1,
+        even: index % 2 === 0,
+        odd: index % 2 !== 0,
+      };
     },
   },
 };

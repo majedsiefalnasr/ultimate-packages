@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
+import { h } from "vue";
 import UScroller from "./Scroller.vue";
 
 let resizeObserverCallback: ResizeObserverCallback | undefined;
@@ -179,5 +180,107 @@ describe("UScroller", () => {
     // test line.
     const { UScroller: SubpathExport } = await import("./index");
     expect(SubpathExport).toBe(UScroller);
+  });
+});
+
+describe("UScroller content template (Task 5)", () => {
+  it("renders the consumer-supplied #content slot instead of the built-in item divs when provided", () => {
+    const wrapper = mount(UScroller, {
+      // disabled:true guarantees a non-empty visibleItems without mocking
+      // the viewport's offsetHeight (jsdom defaults it to 0, which would
+      // otherwise make the windowed `last` compute to 0 for this bare
+      // mount — see the sibling "renders only the windowed subset" test
+      // above, which mocks the viewport instead because it's specifically
+      // testing windowing). This test is about slot composition, not
+      // windowing math, so disabled:true is the more direct fixture.
+      props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30, disabled: true },
+      slots: {
+        content: (slotProps: { items: { index: number; value: unknown }[] }) =>
+          h(
+            "table",
+            { "data-test-content-template": true },
+            [
+              h(
+                "tbody",
+                {},
+                slotProps.items.map((entry) =>
+                  h("tr", { key: entry.index, "data-index": entry.index }, [h("td", {}, String(entry.value))])
+                )
+              ),
+            ]
+          ),
+      },
+    });
+    expect(wrapper.find("[data-test-content-template]").exists()).toBe(true);
+    expect(wrapper.findAll("[data-u-scroller-item]").length).toBe(0);
+    expect(wrapper.findAll("tr[data-index]").length).toBeGreaterThan(0);
+  });
+
+  it("still renders the built-in item divs when no #content slot is supplied (existing behavior unchanged)", () => {
+    // disabled:true for the same reason as above: this test is about the
+    // fallback-content mechanism, not windowing, and a bare mount's
+    // jsdom-default 0 offsetHeight would otherwise make visibleItems empty.
+    const wrapper = mount(UScroller, { props: { items: ["a", "b", "c"], itemSize: 30, disabled: true } });
+    expect(wrapper.findAll("[data-u-scroller-item]").length).toBeGreaterThan(0);
+  });
+
+  it("exposes a real getItemOptions(index) returning {index, count, first, last, even, odd} — matching real PrimeVue's getOptions() shape", () => {
+    const wrapper = mount(UScroller, {
+      props: { items: ["a", "b", "c"], itemSize: 30, disabled: true },
+      slots: {
+        content: (slotProps: {
+          items: { index: number; value: unknown }[];
+          getItemOptions: (index: number) => { first: boolean };
+        }) =>
+          h(
+            "table",
+            { "data-test-content-template": true },
+            [
+              h(
+                "tbody",
+                {},
+                slotProps.items.map((entry) =>
+                  h(
+                    "tr",
+                    { key: entry.index, "data-index": entry.index, "data-first": String(slotProps.getItemOptions(entry.index).first) },
+                    [h("td", {}, String(entry.value))]
+                  )
+                )
+              ),
+            ]
+          ),
+      },
+    });
+    expect(wrapper.find("tr[data-index='0']").attributes("data-first")).toBe("true");
+  });
+
+  it("passes the full unwindowed item list when disabled=true, matching UScroller's existing shipped disabled behavior", () => {
+    const wrapper = mount(UScroller, {
+      props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30, disabled: true },
+      slots: {
+        content: (slotProps: { items: { index: number; value: unknown }[] }) =>
+          h(
+            "table",
+            { "data-test-content-template": true },
+            [
+              h(
+                "tbody",
+                {},
+                slotProps.items.map((entry) => h("tr", { key: entry.index, "data-index": entry.index }, [h("td", {}, String(entry.value))]))
+              ),
+            ]
+          ),
+      },
+    });
+    expect(wrapper.findAll("tr[data-index]").length).toBe(50);
+  });
+
+  it("still renders the existing built-in loader when loading=true, independent of whether #content is supplied", () => {
+    const wrapper = mount(UScroller, {
+      props: { items: ["a", "b"], itemSize: 30, loading: true },
+      slots: { content: () => h("table", { "data-test-content-template": true }) },
+    });
+    expect(wrapper.find(".u-scroller-loader").exists()).toBe(true);
+    expect(wrapper.find("[data-test-content-template]").exists()).toBe(true);
   });
 });
