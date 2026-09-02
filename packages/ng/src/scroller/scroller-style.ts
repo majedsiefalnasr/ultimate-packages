@@ -1,8 +1,12 @@
+import { style as scrollerLoaderStyle } from "@ultimate/uix-styles/virtualscroller";
+
 /**
  * `UBaseComponent`-shaped style module for `UScroller`.
  * Provides minimal styling for the scroller component root.
  */
 const css = /*css*/ `
+    ${scrollerLoaderStyle}
+
     .u-scroller {
         display: flex;
         flex-direction: column;
