@@ -163,6 +163,11 @@ describe("UScroller", () => {
     expect(wrapper.attributes("aria-busy")).toBe("true");
   });
 
+  it("does not set aria-busy when loading is false or unset", () => {
+    const wrapper = mount(UScroller, { props: { items: [], itemSize: 20 } });
+    expect(wrapper.attributes("aria-busy")).toBeUndefined();
+  });
+
   it("is exported from its own subpath index", async () => {
     // The brief's own example test destructures a `default` export from
     // "./index", but this package's own established sibling pattern (see

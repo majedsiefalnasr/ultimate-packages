@@ -129,6 +129,11 @@ describe("UScroller", () => {
     expect((container.firstChild as HTMLElement).getAttribute("aria-busy")).toBe("true");
   });
 
+  it("does not set aria-busy when loading is false or unset", () => {
+    const { container } = render(<UScroller items={[]} itemSize={20} />);
+    expect((container.firstChild as HTMLElement).getAttribute("aria-busy")).toBeNull();
+  });
+
   it("fires onLazyLoad with {first, last} after a scroll-triggered window change, when lazy is true, given a mocked 200px viewport", async () => {
     const onLazyLoad = vi.fn();
     const { container } = render(
@@ -147,7 +152,9 @@ describe("UScroller", () => {
       resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
     });
     Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
-    root.dispatchEvent(new Event("scroll"));
+    act(() => {
+      root.dispatchEvent(new Event("scroll"));
+    });
     await Promise.resolve();
     // first = floor(2000/20) = 100; numItemsInViewport=10, numToleratedItems=5,
     // calculateLast(100, 10, 5) = 100+10+3*5=125, clamped to items.length
@@ -162,9 +169,30 @@ describe("UScroller", () => {
     );
     const root = container.firstChild as HTMLElement;
     Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
-    root.dispatchEvent(new Event("scroll"));
+    act(() => {
+      root.dispatchEvent(new Event("scroll"));
+    });
     await Promise.resolve();
     expect(onLazyLoad).not.toHaveBeenCalled();
+  });
+
+  it("advances first (data-first) on a plain scroll event when lazy is not set, given a mocked 200px viewport", () => {
+    const { container } = render(
+      <UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} />
+    );
+    const root = container.firstChild as HTMLElement;
+    mockViewportHeight(root, 200);
+    act(() => {
+      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    });
+    const initialFirst = root.getAttribute("data-first");
+    Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
+    act(() => {
+      root.dispatchEvent(new Event("scroll"));
+    });
+    // scrollTop=2000, itemSize=20 -> first = floor(2000/20) = 100
+    expect(root.getAttribute("data-first")).toBe("100");
+    expect(root.getAttribute("data-first")).not.toBe(initialFirst);
   });
 
   it("is exported from its own subpath index", async () => {

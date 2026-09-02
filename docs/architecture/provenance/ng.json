@@ -225,7 +225,7 @@
     "originalPath": "packages/primeng/src/scroller/scroller.ts",
     "ultimateDestination": "packages/ng/src/scroller/scroller-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeNG Scroller's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/TooltipStyle/DialogStyle/MenuStyle/BadgeStyle). Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following button-style.ts's established composition pattern. Real PrimeNG loader class names (.p-scroller-loader/.p-scroller-loading-icon) renamed .p-*→.u-*."
+    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeNG Scroller's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/TooltipStyle/DialogStyle/MenuStyle/BadgeStyle). Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following button-style.ts's established composition pattern. Real PrimeNG loader class names (.p-virtualscroller-loader/.p-virtualscroller-loading-icon) renamed .p-*→.u-*."
   },
   {
     "originalPath": "packages/ng/src/scroller/scroller.spec.ts",

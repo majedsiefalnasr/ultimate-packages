@@ -135,7 +135,7 @@
     "originalPath": "components/lib/virtualscroller/VirtualScroller.js",
     "ultimateDestination": "packages/react/src/scroller/scroller-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeReact VirtualScroller's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract. Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following the same composition pattern already established by packages/ng/src/scroller/scroller-style.ts (Angular Task 3). Real PrimeNG/PrimeReact loader class names (.p-scroller-loader/.p-scroller-loading-icon) renamed .p-*→.u-*."
+    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeReact VirtualScroller's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract. Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following the same composition pattern already established by packages/ng/src/scroller/scroller-style.ts (Angular Task 3). Real PrimeNG/PrimeReact loader class names (.p-virtualscroller-loader/.p-virtualscroller-loading-icon) renamed .p-*→.u-*."
   },
   {
     "originalPath": "n/a",

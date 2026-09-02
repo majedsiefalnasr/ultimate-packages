@@ -32,7 +32,8 @@ const css = /*css*/ `
 
 /**
  * Class-name-slot resolver for `UScroller`. Real PrimeNG loader class names
- * (`.p-scroller-loader`/`.p-scroller-loading-icon`) renamed `.p-*`→`.u-*`.
+ * (`.p-virtualscroller-loader`/`.p-virtualscroller-loading-icon`) renamed
+ * `.p-*`→`.u-*`.
  */
 const classes = {
   root: () => "u-scroller u-component",
