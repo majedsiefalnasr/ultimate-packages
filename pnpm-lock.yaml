@@ -56,6 +56,9 @@ importers:
       '@ultimate/ng-core':
         specifier: workspace:*
         version: link:../ng-core
+      '@ultimate/uix-data':
+        specifier: workspace:*
+        version: link:../uix-data
       '@ultimate/uix-motion':
         specifier: workspace:*
         version: link:../uix-motion
