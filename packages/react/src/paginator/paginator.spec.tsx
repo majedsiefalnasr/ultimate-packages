@@ -3,6 +3,7 @@ import * as React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
 import { UPaginator } from "./paginator";
+import { UPaginator as SubpathExport } from "./index";
 
 describe("UPaginator", () => {
   it("computes pageCount via uix-data's getPageCount (10 pages for 95 records / 10 rows)", () => {
@@ -54,5 +55,11 @@ describe("UPaginator", () => {
     expect((container.querySelector("[data-u-paginator-first]") as HTMLButtonElement).disabled).toBe(true);
     expect((container.querySelector("[data-u-paginator-prev]") as HTMLButtonElement).disabled).toBe(true);
     expect((container.querySelector("[data-u-paginator-next]") as HTMLButtonElement).disabled).toBe(false);
+  });
+});
+
+describe("Paginator package export", () => {
+  it("is exported from its own subpath index", () => {
+    expect(SubpathExport).toBe(UPaginator);
   });
 });
