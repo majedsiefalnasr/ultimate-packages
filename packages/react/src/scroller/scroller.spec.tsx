@@ -1,8 +1,10 @@
 /// <reference types="@testing-library/jest-dom" />
 import * as React from "react";
+import { createRef } from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, cleanup, act } from "@testing-library/react";
 import { UScroller } from "./scroller";
+import type { UScrollerHandle } from "./scroller";
 
 describe("UScroller", () => {
   let resizeObserverCallback: ResizeObserverCallback | undefined;
@@ -101,5 +103,67 @@ describe("UScroller", () => {
   it("does not render loader markup when loading is false or unset", () => {
     const { container } = render(<UScroller items={[]} itemSize={20} />);
     expect(container.querySelector(".u-scroller-loader")).toBeNull();
+  });
+
+  it("disabled mode renders all items with zero virtualization", () => {
+    const { container } = render(
+      <UScroller items={Array.from({ length: 50 }, (_, i) => i)} itemSize={20} disabled />
+    );
+    expect(container.querySelectorAll("[data-u-scroller-item]").length).toBe(50);
+  });
+
+  it("exposes scrollTo/scrollToIndex via ref", () => {
+    const ref = createRef<UScrollerHandle>();
+    const { container } = render(
+      <UScroller ref={ref} items={Array.from({ length: 100 }, (_, i) => i)} itemSize={20} />
+    );
+    const root = container.firstChild as HTMLElement;
+    const scrollToSpy = vi.fn();
+    root.scrollTo = scrollToSpy;
+    ref.current?.scrollToIndex(10);
+    expect(scrollToSpy).toHaveBeenCalledWith({ top: 200, behavior: "auto" });
+  });
+
+  it("sets aria-busy=true on the root while loading is true", () => {
+    const { container } = render(<UScroller items={[]} itemSize={20} loading />);
+    expect((container.firstChild as HTMLElement).getAttribute("aria-busy")).toBe("true");
+  });
+
+  it("fires onLazyLoad with {first, last} after a scroll-triggered window change, when lazy is true, given a mocked 200px viewport", async () => {
+    const onLazyLoad = vi.fn();
+    const { container } = render(
+      <UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} lazy onLazyLoad={onLazyLoad} />
+    );
+    const root = container.firstChild as HTMLElement;
+    mockViewportHeight(root, 200);
+    // See the deviation note on the earlier offsetHeight test: constructing a
+    // *new* ResizeObserver(() => {}) here would clobber the module-scope
+    // resizeObserverCallback the mock uses, discarding the component's real
+    // captured callback (same bug class hit in Tasks 3, 7, and 8's briefs).
+    // Re-invoke the already-captured callback directly instead, wrapped in
+    // act() because it synchronously triggers a React state update
+    // (setContentSizeState) outside of React's own event handling.
+    act(() => {
+      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    });
+    Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
+    root.dispatchEvent(new Event("scroll"));
+    await Promise.resolve();
+    // first = floor(2000/20) = 100; numItemsInViewport=10, numToleratedItems=5,
+    // calculateLast(100, 10, 5) = 100+10+3*5=125, clamped to items.length
+    // (1000) -> 125.
+    expect(onLazyLoad).toHaveBeenCalledWith({ first: 100, last: 125 });
+  });
+
+  it("does not fire onLazyLoad when lazy is false", async () => {
+    const onLazyLoad = vi.fn();
+    const { container } = render(
+      <UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} onLazyLoad={onLazyLoad} />
+    );
+    const root = container.firstChild as HTMLElement;
+    Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
+    root.dispatchEvent(new Event("scroll"));
+    await Promise.resolve();
+    expect(onLazyLoad).not.toHaveBeenCalled();
   });
 });

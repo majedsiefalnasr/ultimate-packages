@@ -13,21 +13,39 @@ export interface UScrollerProps {
   onLazyLoad?: (event: { first: number; last: number }) => void;
 }
 
+export interface UScrollerHandle {
+  scrollTo: (options: ScrollToOptions) => void;
+  scrollToIndex: (index: number, behavior?: ScrollBehavior) => void;
+}
+
 function getLast(items: unknown[], last = 0, isCols = false): number {
   if (!items) return 0;
   const liveLength = isCols ? items.length : items.length; // isCols branch unreachable in vertical-only scope (Global Constraints)
   return Math.min(liveLength, last);
 }
 
-export const UScroller = React.forwardRef<HTMLDivElement, UScrollerProps>((props, forwardedRef) => {
-  const { items, itemSize, numToleratedItems: numToleratedItemsProp, disabled = false, loading } = props;
+export const UScroller = React.forwardRef<UScrollerHandle, UScrollerProps>((props, forwardedRef) => {
+  const {
+    items,
+    itemSize,
+    numToleratedItems: numToleratedItemsProp,
+    disabled = false,
+    lazy = false,
+    loading,
+    onLazyLoad,
+  } = props;
   const { cx } = useComponentBase({ componentName: "scroller", styleModule: scrollerStyleModule });
 
   const elementRef = React.useRef<HTMLDivElement>(null);
-  React.useImperativeHandle(forwardedRef, () => elementRef.current as HTMLDivElement);
 
   const [contentSizeState, setContentSizeState] = React.useState(0);
   const [firstState, setFirstState] = React.useState(0);
+
+  React.useImperativeHandle(forwardedRef, () => ({
+    scrollTo: (options: ScrollToOptions) => elementRef.current?.scrollTo(options),
+    scrollToIndex: (index: number, behavior: ScrollBehavior = "auto") =>
+      elementRef.current?.scrollTo({ top: index * itemSize, behavior }),
+  }));
 
   React.useEffect(() => {
     const el = elementRef.current;
@@ -64,6 +82,11 @@ export const UScroller = React.forwardRef<HTMLDivElement, UScrollerProps>((props
     const newFirst = Math.floor(el.scrollTop / (itemSize || 1));
     if (newFirst !== firstState) {
       setFirstState(newFirst);
+      if (lazy && onLazyLoad) {
+        const first = newFirst;
+        const currentLast = getLast(items, calculateLast(first, numItemsInViewport, numToleratedItems));
+        Promise.resolve().then(() => onLazyLoad({ first, last: currentLast }));
+      }
     }
   };
 
@@ -74,6 +97,7 @@ export const UScroller = React.forwardRef<HTMLDivElement, UScrollerProps>((props
       data-num-items-in-viewport={numItemsInViewport}
       data-last={last}
       data-first={firstState}
+      aria-busy={loading ? "true" : undefined}
       onScroll={handleScroll}
     >
       {loading ? (
