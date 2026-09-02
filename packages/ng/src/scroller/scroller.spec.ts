@@ -238,6 +238,20 @@ describe("UScroller", () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector("[class*=u-scroller]").hasAttribute("aria-busy")).toBe(false);
   });
+
+  it("resolves the same virtualscroller.loader.mask.background token as the React/Vue cross-framework consistency test (packages/themes/test/cross-framework-consistency.test.ts)", () => {
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+
+    const styleEl = Array.from(document.head.querySelectorAll("style")).find((el) =>
+      (el.textContent ?? "").includes(".u-scroller-loader {")
+    );
+    expect(styleEl).not.toBeUndefined();
+    const ngCss = styleEl!.textContent ?? "";
+
+    expect(ngCss).toContain("var(--u-virtualscroller-loader-mask-background");
+  });
 });
 
 describe("package exports", () => {
