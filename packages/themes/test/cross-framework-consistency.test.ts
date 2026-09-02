@@ -248,4 +248,61 @@ describe("cross-framework theme consistency", () => {
       expect(reactCss).toContain(resolvedToken);
     });
   });
+
+  describe("React and Vue's real UPaginator renders resolve the same paginator.background token", () => {
+    afterEach(() => {
+      cleanup();
+    });
+
+    it("Vue's real UPaginator registers CSS containing the resolved paginator.background var(...) text, matching dt()'s own resolution", async () => {
+      const { UPaginator } = await import("@ultimate/vue/paginator");
+
+      const wrapper = mount(UPaginator, { props: { first: 0, rows: 10, totalRecords: 95 } });
+
+      const styleEl = document.head.querySelector('style[data-u-style="paginator"]');
+      expect(styleEl).not.toBeNull();
+      const vueCss = styleEl!.textContent ?? "";
+
+      expect(vueCss).toContain("var(--u-paginator-background");
+      expect(vueCss).not.toContain("dt("); // no unresolved dt() calls leaked through
+
+      const resolvedToken = dt("paginator.background");
+      expect(vueCss).toContain(resolvedToken);
+
+      wrapper.unmount();
+    });
+
+    it("React's real UPaginator registers CSS containing the resolved paginator.background var(...) text, matching dt()'s own resolution", async () => {
+      const { UPaginator } = await import("@ultimate/react/paginator");
+
+      render(
+        React.createElement(UPaginator, {
+          first: 0,
+          rows: 10,
+          totalRecords: 95,
+          onPageChange: () => {},
+        })
+      );
+
+      // react-core's StyleSheet, like ng-core's (see the Angular half of this
+      // guarantee in packages/ng/src/paginator/paginator.spec.ts), registers
+      // <style> elements with no identifying attribute — Vue's element is
+      // excluded by its own data-u-style attribute, and the element is then
+      // located by its known, unique .u-paginator selector, matching the
+      // lookup approach already established for UButton's React half.
+      const vueStyleEl = document.head.querySelector('style[data-u-style="paginator"]');
+      const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find(
+        (el) => (el.textContent ?? "").includes(".u-paginator {")
+      );
+      expect(styleEl).not.toBeUndefined();
+      expect(styleEl).not.toBe(vueStyleEl);
+      const reactCss = styleEl!.textContent ?? "";
+
+      expect(reactCss).toContain("var(--u-paginator-background");
+      expect(reactCss).not.toContain("dt(");
+
+      const resolvedToken = dt("paginator.background");
+      expect(reactCss).toContain(resolvedToken);
+    });
+  });
 });

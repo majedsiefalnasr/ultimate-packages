@@ -1,7 +1,7 @@
 {
   "name": "@ultimate/ng",
   "version": "0.1.0",
-  "description": "Ultimate Platform Angular components: Button, Checkbox, Dialog, Menu, Scroller, Tooltip.",
+  "description": "Ultimate Platform Angular components: Button, Checkbox, Dialog, Menu, Paginator, Scroller, Tooltip.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/fesm2022/ultimate-ng.mjs",
