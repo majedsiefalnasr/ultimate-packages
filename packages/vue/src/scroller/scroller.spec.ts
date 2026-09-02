@@ -122,4 +122,57 @@ describe("UScroller", () => {
     const wrapper = mount(UScroller, { props: { items: [], itemSize: 20 } });
     expect(wrapper.find(".u-scroller-loader").exists()).toBe(false);
   });
+
+  it("emits lazy-load with {first, last} after a scroll-triggered window change, when lazy is true, given a mocked 200px viewport", async () => {
+    const wrapper = mount(UScroller, {
+      props: { items: Array.from({ length: 1000 }, (_, i) => i), itemSize: 20, lazy: true },
+    });
+    mockViewportHeight(wrapper.element as HTMLElement, 200);
+    // Re-invoke the component's own captured ResizeObserver callback (rather
+    // than constructing a fresh `new ResizeObserver(...)`, which would
+    // silently overwrite the single module-scope `resizeObserverCallback`
+    // slot and discard the component's real captured callback — see the
+    // deviation note in the task report).
+    resizeObserverCallback?.(
+      [{ target: wrapper.element } as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    await wrapper.vm.$nextTick();
+    Object.defineProperty(wrapper.element, "scrollTop", { value: 2000, writable: true, configurable: true });
+    await wrapper.trigger("scroll");
+    await Promise.resolve(); // matches the real Promise.resolve().then() deferral, spec §10
+    // first = floor(2000/20) = 100; numItemsInViewport=10, numToleratedItems=5,
+    // calculateLast(100, 10, 5) = 100+10+3*5=125, clamped to items.length
+    // (1000) -> 125.
+    expect(wrapper.emitted("lazy-load")).toBeTruthy();
+    expect(wrapper.emitted("lazy-load")![0][0]).toEqual({ first: 100, last: 125 });
+  });
+
+  it("does not emit lazy-load when lazy is false", async () => {
+    const wrapper = mount(UScroller, {
+      props: { items: Array.from({ length: 1000 }, (_, i) => i), itemSize: 20 },
+    });
+    Object.defineProperty(wrapper.element, "scrollTop", { value: 2000, writable: true, configurable: true });
+    await wrapper.trigger("scroll");
+    await Promise.resolve();
+    expect(wrapper.emitted("lazy-load")).toBeFalsy();
+  });
+
+  it("sets aria-busy=true on the root while loading is true", () => {
+    const wrapper = mount(UScroller, { props: { items: [], itemSize: 20, loading: true } });
+    expect(wrapper.attributes("aria-busy")).toBe("true");
+  });
+
+  it("is exported from its own subpath index", async () => {
+    // The brief's own example test destructures a `default` export from
+    // "./index", but this package's own established sibling pattern (see
+    // button/checkbox/dialog/menu's index.ts + spec.ts files) — and the
+    // brief's own Step 3 implementation code
+    // (`export { default as UScroller } from "./Scroller.vue"`) — both use
+    // a *named* export (`UScroller`), not a `default` re-export. Matching
+    // the real, consistent convention here rather than the brief's buggy
+    // test line.
+    const { UScroller: SubpathExport } = await import("./index");
+    expect(SubpathExport).toBe(UScroller);
+  });
 });

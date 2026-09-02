@@ -5,6 +5,7 @@
     :data-num-items-in-viewport="numItemsInViewport"
     :data-last="last"
     :data-first="first"
+    :aria-busy="loading ? 'true' : null"
     @scroll="onScroll"
   >
     <div v-if="loading" :class="cx('loader')">
@@ -54,7 +55,9 @@ export default {
   props: {
     disabled: { type: Boolean, default: false },
     loading: { type: Boolean, default: false },
+    lazy: { type: Boolean, default: false },
   },
+  emits: ["lazy-load"],
   data() {
     return {
       first: 0,
@@ -137,6 +140,13 @@ export default {
       if (newFirst !== this.first) {
         this.first = newFirst;
         this.recompute();
+        if (this.lazy) {
+          const first = this.first;
+          const last = this.last;
+          Promise.resolve().then(() => {
+            this.$emit("lazy-load", { first, last });
+          });
+        }
       }
     },
     scrollTo(options) {
