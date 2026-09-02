@@ -1,9 +1,9 @@
 # Ultimate Platform Blueprint — Gap Registry
 
-**Document:** `ULTIMATE_PLATFORM_BLUEPRINT_GAPS.md`
-**Purpose:** Discovery/audit only. A single authoritative registry of gaps between `ULTIMATE_PLATFORM_BLUEPRINT.md` and the actual repository state, as of Phase 5 completion + the post-Phase-5 `@ultimate/uix-data` work.
+**Document:** `docs/architecture/BLUEPRINT_GAPS.md`
+**Purpose:** Discovery/audit only. A single authoritative registry of gaps between `docs/architecture/BLUEPRINT.md` and the actual repository state, as of Phase 5 completion + the post-Phase-5 `@ultimate/uix-data` work.
 **Status:** Discovery snapshot. Does not commit to sequencing or phase numbers. Does not modify the Blueprint or reopen `@ultimate/uix-data`'s architecture.
-**Method:** Every claim below is sourced from direct repository inspection (file reads, directory walks, `grep`/`find`) performed in this session, cross-referenced against `ULTIMATE_PLATFORM_BLUEPRINT.md`, `docs/architecture/*.md`, `docs/architecture/provenance/*.json`, `docs/superpowers/specs/*` and `docs/superpowers/plans/*`, `scripts/provenance/*`, `.github/workflows/ci.yml`, and every `packages/*/package.json`. Anything not directly verifiable is marked `UNVERIFIED`.
+**Method:** Every claim below is sourced from direct repository inspection (file reads, directory walks, `grep`/`find`) performed in this session, cross-referenced against `docs/architecture/BLUEPRINT.md`, `docs/architecture/*.md`, `docs/architecture/provenance/*.json`, `docs/superpowers/specs/*` and `docs/superpowers/plans/*`, `scripts/provenance/*`, `.github/workflows/ci.yml`, and every `packages/*/package.json`. Anything not directly verifiable is marked `UNVERIFIED`.
 
 ---
 
@@ -54,7 +54,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Framework scope:** N/A (framework-neutral tooling concern).
 - **Existing reusable infrastructure:** N/A.
 - **Recommended resolution direction:** Add a short ADR noting the umbrella package was superseded by the `uix-*` family, then delete the empty directory (or repurpose it as a documented meta-package).
-- **Source/evidence:** `packages/uix/` directory listing; `ULTIMATE_PLATFORM_BLUEPRINT.md` §4.
+- **Source/evidence:** `packages/uix/` directory listing; `docs/architecture/BLUEPRINT.md` §4.
 - **Architectural decision required:** No — clerical.
 
 #### GAP-002 — `README.md` states "Phase 0" while five phases are complete
@@ -469,7 +469,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Framework scope:** Cross-framework by design (metadata schema must represent per-framework availability, per Blueprint §17's "framework availability" field).
 - **Existing reusable infrastructure:** COMPONENT_INVENTORY.md's own 11-column schema (Component/Prime source path/Category/Dependencies/UIX dependencies/Framework-specific responsibilities/Style dependencies/Accessibility responsibilities/Migration classification/Migration phase/Risk) is a strong head start — it already captures much of what Blueprint §17 asks metadata to cover, just not yet in a machine-readable, versioned schema form.
 - **Recommended resolution direction:** Directional only, per operating rules (no implementation plans in this document). Design the schema against the real, already-built 5×3 proof set as ground truth.
-- **Source/evidence:** `packages/component-schema/`, `packages/component-metadata/` (both `.gitkeep`-only); `docs/architecture/ROADMAP.md`; `ULTIMATE_PLATFORM_BLUEPRINT.md` §17/§18.
+- **Source/evidence:** `packages/component-schema/`, `packages/component-metadata/` (both `.gitkeep`-only); `docs/architecture/ROADMAP.md`; `docs/architecture/BLUEPRINT.md` §17/§18.
 - **Architectural decision required:** Not primarily — Blueprint §17/§18 already specify the intent fairly concretely; the remaining decisions are schema-detail-level, not fork-level, and thus out of scope for this document's Open Architectural Decisions section.
 
 #### GAP-028 — CLI does not exist (Phase 7)
@@ -484,7 +484,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Framework scope:** Cross-framework by design (adapters per framework, §19).
 - **Existing reusable infrastructure:** `docs/architecture/COMPATIBILITY.md`'s existing baseline/peer-range table is a partial seed for the compatibility manifest §20 calls for, though it currently covers Prime baselines, not Ultimate's own package/framework/theme/metadata/CLI/MCP/AI version matrix (§20's actual scope).
 - **Recommended resolution direction:** Directional only.
-- **Source/evidence:** `packages/cli/` (`.gitkeep`-only); `ULTIMATE_PLATFORM_BLUEPRINT.md` §19/§20.
+- **Source/evidence:** `packages/cli/` (`.gitkeep`-only); `docs/architecture/BLUEPRINT.md` §19/§20.
 - **Architectural decision required:** No — Blueprint is fairly directive here (§19's non-goals are explicit: never replace framework build tools).
 
 #### GAP-029 — MCP server does not exist (Phase 8)
@@ -514,7 +514,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Framework scope:** Cross-framework, plus framework-specific guidance per skill (§24).
 - **Existing reusable infrastructure:** This very document's Superpowers-workflow discipline (specs → plans → implementation → verification, all recorded in `docs/superpowers/`) is itself a working example of the "operational AI guidance" pattern Blueprint §24 describes — worth studying as a template when Phase 9 begins, though it is process tooling for building Ultimate, not a Skill about using Ultimate's own components.
 - **Recommended resolution direction:** Directional only.
-- **Source/evidence:** `packages/ai/`, `skills/` (both `.gitkeep`-only); `ULTIMATE_PLATFORM_BLUEPRINT.md` §24/§25/§26.
+- **Source/evidence:** `packages/ai/`, `skills/` (both `.gitkeep`-only); `docs/architecture/BLUEPRINT.md` §24/§25/§26.
 - **Architectural decision required:** No — Blueprint is directive; real prerequisite is GAP-027.
 
 ### Production readiness (Phase 10)

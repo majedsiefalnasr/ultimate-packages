@@ -2,7 +2,7 @@
 
 A company-owned, multi-framework UI platform derived from selected MIT-licensed Prime ecosystem source baselines. Targets Angular, React, and Vue, with an architecture that remains extensible to additional frameworks.
 
-See `ULTIMATE_PLATFORM_BLUEPRINT.md` for the full architecture baseline, and `docs/architecture/` for provenance, dependency, compatibility, and decision records.
+See `docs/architecture/BLUEPRINT.md` for the full architecture baseline, and `docs/architecture/` for provenance, dependency, compatibility, and decision records.
 
 ## Status
 
