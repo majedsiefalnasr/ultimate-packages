@@ -128,7 +128,7 @@ export interface PaginatorPageChangeEvent {
           aria-label="Previous Page"
           (click)="goPrev()"
         ></button>
-        @for (link of pageLinks; track link) {
+        @for (link of pageLinks; track $index) {
           <button
             type="button"
             data-u-paginator-page
