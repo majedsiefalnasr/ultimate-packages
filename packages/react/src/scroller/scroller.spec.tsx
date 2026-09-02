@@ -166,4 +166,9 @@ describe("UScroller", () => {
     await Promise.resolve();
     expect(onLazyLoad).not.toHaveBeenCalled();
   });
+
+  it("is exported from its own subpath index", async () => {
+    const { UScroller: SubpathExport } = await import("./index");
+    expect(SubpathExport).toBe(UScroller);
+  });
 });
