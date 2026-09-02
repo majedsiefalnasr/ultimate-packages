@@ -238,5 +238,29 @@
     "ultimateDestination": "packages/ng/src/scroller/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/paginator/paginator.ts",
+    "ultimateDestination": "packages/ng/src/paginator/paginator.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified real PrimeNG 21.1.9 Paginator source (paginator.ts, commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), adapted with full Ultimate namespace rename across Tasks 2-6: internal `_first` signal reconciled from a one-way `first` input via `ngOnChanges` (no `firstChange` output, matching real upstream's internal-with-one-way-input state-ownership model, §8 of the Paginator spec); `pageCount` derived via `@ultimate/uix-data`'s `getPageCount` rather than reimplemented locally (see that package's own provenance entry); first/prev/next/last controls and page-link boundary algorithm (§9 of the spec) adapted from verified upstream behavior. Excludes rows-per-page dropdown, jump-to-page input, and template/slot customization beyond icon overrides — each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 2-6)."
+  },
+  {
+    "originalPath": "packages/primeng/src/paginator/paginator.ts",
+    "ultimateDestination": "packages/ng/src/paginator/paginator-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Structural layout CSS (.u-paginator/.u-paginator-content/.u-paginator-first/.u-paginator-prev/.u-paginator-next/.u-paginator-last/.u-paginator-page slots) adapted from real PrimeNG Paginator's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/ScrollerStyle). Composes Task 1's ported @ultimate/uix-styles/paginator tokens via ${paginatorStyle} interpolation, following scroller-style.ts's established composition pattern. Real PrimeNG root/part class names (.p-paginator*) renamed .p-*→.u-*."
+  },
+  {
+    "originalPath": "packages/ng/src/paginator/paginator.spec.ts",
+    "ultimateDestination": "packages/ng/src/paginator/paginator.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeNG test file. Confirms pageCount is computed via uix-data's getPageCount (not a re-inlined formula, including the zero-rows zero-guard case), asserts internal _first advances on click even before the parent re-binds [first] (state-ownership behavior per spec §8), and covers the page-link boundary algorithm (first page, last page, pageLinkSize larger than pageCount) with known-input/known-output assertions, per the plan's testing matrix (spec §18)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/paginator/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   }
 ]

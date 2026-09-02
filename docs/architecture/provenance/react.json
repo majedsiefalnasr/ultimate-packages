@@ -148,5 +148,29 @@
     "ultimateDestination": "packages/react/src/scroller/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/paginator/Paginator.js",
+    "ultimateDestination": "packages/react/src/paginator/paginator.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified real PrimeReact 10.9.9 Paginator source (Paginator.js and siblings, commit d0f574e39122668292fc7a740f081bae1b93b1e9), adapted with full Ultimate namespace rename across Tasks 7-9: fully-controlled state-ownership model with no uncontrolled fallback (matching real upstream exactly, §8 of the Paginator spec — the UI does NOT advance unless the parent's onPageChange handler updates first/rows); pageCount derived via @ultimate/uix-data's getPageCount rather than reimplemented locally (see that package's own provenance entry); first/prev/next/last controls and page-link boundary algorithm (§9 of the spec) adapted from verified upstream behavior. Excludes rows-per-page dropdown, jump-to-page input, and template prop customization — each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 7-9)."
+  },
+  {
+    "originalPath": "components/lib/paginator/Paginator.js",
+    "ultimateDestination": "packages/react/src/paginator/paginator-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Structural layout CSS (.u-paginator/.u-paginator-content/.u-paginator-first/.u-paginator-prev/.u-paginator-next/.u-paginator-last/.u-paginator-page slots) adapted from real PrimeReact Paginator's own rendered structure, reshaped to a plain {css, classes} object matching StyleModule's contract. Composes Task 1's ported @ultimate/uix-styles/paginator tokens via ${paginatorStyle} interpolation, following the same composition pattern already established by packages/ng/src/paginator/paginator-style.ts (Angular Tasks 2-6) and packages/react/src/scroller/scroller-style.ts. Real PrimeReact root/part class names (.p-paginator*) renamed .p-*→.u-*."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/paginator/paginator.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeReact test file. Confirms pageCount is computed via uix-data's getPageCount (10 pages for 95 records / 10 rows, plus the zero-rows zero-guard case), verifies the UI does NOT advance if onPageChange doesn't update first/rows (confirming the no-uncontrolled-fallback finding, spec §8), and covers the page-link boundary algorithm with known-input/known-output assertions, per the plan's testing matrix (spec §18)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/paginator/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]

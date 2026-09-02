@@ -226,5 +226,35 @@
     "ultimateDestination": "packages/vue/src/scroller/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/paginator/Paginator.vue",
+    "ultimateDestination": "packages/vue/src/paginator/base-paginator.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "props (first/rows/totalRecords/pageLinkSize) adapted from real PrimeVue 4.5.5 Paginator's own prop surface, composed with createBaseComponent (packages/vue-core) matching the same extends: createBase*() pattern already established by Button/Checkbox/Dialog/Menu/Scroller. d_first/d_rows internal data mirrors real upstream's own d_first/d_rows internal-state-with-full-v-model pattern (watchers sync d_first/d_rows when parent changes first/rows externally, per spec §8), and emits page/update:first/update:rows matching real upstream's two-way-binding event surface. Wires in this component's own paginatorStyleModule."
+  },
+  {
+    "originalPath": "packages/primevue/src/paginator/Paginator.vue",
+    "ultimateDestination": "packages/vue/src/paginator/Paginator.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified real PrimeVue 4.5.5 Paginator source (Paginator.vue and siblings, commit 66dde6788220fc9e6822342919d1ceb0e3460ece), adapted with full Ultimate namespace rename across Tasks 10-12: internal-with-full-v-model state-ownership model (v-model:first/v-model:rows round-trip correctly; d_first watcher-syncs when parent changes first externally, matching real upstream exactly per spec §8); pageCount derived via @ultimate/uix-data's getPageCount rather than reimplemented locally (see that package's own provenance entry); first/prev/next/last controls and page-link boundary algorithm (§9 of the spec) adapted from verified upstream behavior, using export default {...} (no nonexistent named export). Excludes rows-per-page dropdown, jump-to-page input, and named-slot template customization beyond icon overrides — each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 10-12)."
+  },
+  {
+    "originalPath": "packages/primevue/src/paginator/Paginator.vue",
+    "ultimateDestination": "packages/vue/src/paginator/paginator-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Structural layout CSS (.u-paginator/.u-paginator-content/.u-paginator-first/.u-paginator-prev/.u-paginator-next/.u-paginator-last/.u-paginator-page slots) adapted from real PrimeVue Paginator's own rendered structure, reshaped to a plain {css, classes} object matching createBaseComponent's styleModule contract (same adaptation already established by button-style.ts/checkbox-style.ts/scroller-style.ts). Composes Task 1's ported @ultimate/uix-styles/paginator tokens via ${paginatorCss} interpolation, following the same composition pattern already established by packages/ng/src/paginator/paginator-style.ts (Angular Tasks 2-6) and packages/react/src/paginator/paginator-style.ts (React Tasks 7-9). Implementation-time finding: the real @ultimate/uix-styles/paginator module (packages/uix-styles/src/paginator/index.ts) exports only a plain style: string, not a pre-shaped {css, classes} object, so the classes map is authored locally here rather than re-exported, matching button-style.ts's own established adaptation. Real PrimeVue root/part class names renamed .p-*→.u-*."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/paginator/paginator.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeVue test file. Confirms pageCount is computed via uix-data's getPageCount (exposed as a data-page-count attribute), verifies v-model:first round-trips correctly and d_first watcher-syncs when parent changes first externally (state-ownership behavior per spec §8), and covers the page-link boundary algorithm with known-input/known-output assertions, per the plan's testing matrix (spec §18)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/paginator/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]

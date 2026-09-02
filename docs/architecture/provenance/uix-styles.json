@@ -58,5 +58,11 @@
     "ultimateDestination": "packages/uix-styles/src/virtualscroller/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 virtualscroller module (loader mask/icon dt() token references only — upstream's virtualscroller style module has no structural/layout CSS of its own, unlike badge/button/checkbox/dialog/menu/tooltip); .p-virtualscroller-loader/.p-virtualscroller-loading-icon class-name string literals renamed to .u-scroller-loader/.u-scroller-loading-icon to match Phase 2's Ultimate namespace decision. Consumed by all three frameworks' scroller-style.ts modules (packages/ng, packages/react, packages/vue) via ${virtualscrollerStyle} interpolation."
+  },
+  {
+    "originalPath": ".vendor-extracted/uix-styles-components/src/paginator/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/paginator/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 paginator module (root/content/first/prev/next/last/page structural CSS with dt() token references); .p-paginator* class-name string literals renamed to .u-paginator* to match Phase 2's Ultimate namespace decision. Consumed by all three frameworks' paginator-style.ts modules (packages/ng, packages/react, packages/vue) via ${paginatorStyle}/${paginatorCss} interpolation. Exports only a plain style: string (no pre-shaped classes resolver), same shape as the base/badge/button/checkbox/dialog/menu/tooltip modules — each consuming framework's own paginator-style.ts authors its own classes map locally, matching button-style.ts's established pattern (see each framework's own provenance entry)."
   }
 ]
