@@ -18,13 +18,19 @@ const css = /*css*/ `
     ${paginatorCss}
 `;
 
-// Only the two slots this task's template actually renders (root, content).
-// Task 11 extends this same object with first/prev/next/last/page slots when
-// it adds those controls — this is the real, final style-source wiring from
-// day one, not a value later thrown away; nothing here is a placeholder.
+// Task 10 shipped only the root/content slots this template rendered at the
+// time. Task 11 extends the same object with the first/prev/next/last/page
+// control slots now that Paginator.vue renders those buttons, matching the
+// identical class-name slots already shipped/approved on Angular (Tasks 3-5)
+// and React (Task 8) for cross-framework parity.
 const classes = {
   root: () => "u-paginator u-component",
   content: () => "u-paginator-content",
+  first: (params: Record<string, unknown> = {}) => ["u-paginator-first", { "u-paginator-first-disabled": !!params.disabled }],
+  prev: (params: Record<string, unknown> = {}) => ["u-paginator-prev", { "u-paginator-prev-disabled": !!params.disabled }],
+  next: (params: Record<string, unknown> = {}) => ["u-paginator-next", { "u-paginator-next-disabled": !!params.disabled }],
+  last: (params: Record<string, unknown> = {}) => ["u-paginator-last", { "u-paginator-last-disabled": !!params.disabled }],
+  page: (params: Record<string, unknown> = {}) => ["u-paginator-page", { "u-paginator-page-selected": !!params.selected }],
 };
 
 export const paginatorStyleModule: StyleModule = { css, classes };

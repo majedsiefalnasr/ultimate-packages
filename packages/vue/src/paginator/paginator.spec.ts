@@ -19,4 +19,32 @@ describe("UPaginator", () => {
     await wrapper.setProps({ first: 30 });
     expect((wrapper.vm as unknown as { d_first: number }).d_first).toBe(30);
   });
+
+  it("renders one button per page-link, matching the shared display algorithm", () => {
+    const wrapper = mount(UPaginator, { props: { first: 0, rows: 10, totalRecords: 30, pageLinkSize: 5 } });
+    expect(wrapper.findAll("[data-u-paginator-page]").length).toBe(3);
+  });
+
+  it("emits page + update:first + update:rows when a page-link is clicked", async () => {
+    const wrapper = mount(UPaginator, { props: { first: 0, rows: 10, totalRecords: 95 } });
+    const pageButtons = wrapper.findAll("[data-u-paginator-page]");
+    await pageButtons[2].trigger("click");
+    expect(wrapper.emitted("page")?.[0]).toEqual([{ page: 2, first: 20, rows: 10, pageCount: 10 }]);
+    expect(wrapper.emitted("update:first")?.[0]).toEqual([20]);
+  });
+
+  it("advances d_first internally even without a v-model consumer (Vue's own internal-state model)", async () => {
+    const wrapper = mount(UPaginator, { props: { first: 0, rows: 10, totalRecords: 95 } });
+    const nextButton = wrapper.find("[data-u-paginator-next]");
+    await nextButton.trigger("click");
+    expect((wrapper.vm as unknown as { d_first: number }).d_first).toBe(10);
+  });
+
+  it("v-model:first round-trips: emitted update:first reflected back as a new first prop advances d_first correctly", async () => {
+    const wrapper = mount(UPaginator, { props: { first: 0, rows: 10, totalRecords: 95 } });
+    await wrapper.find("[data-u-paginator-next]").trigger("click");
+    const emittedFirst = wrapper.emitted("update:first")?.[0]?.[0];
+    await wrapper.setProps({ first: emittedFirst as number });
+    expect((wrapper.vm as unknown as { d_first: number }).d_first).toBe(10);
+  });
 });
