@@ -46,7 +46,8 @@
     "@ultimate/uix-utils": "workspace:*",
     "@ultimate/uix-styled": "workspace:*",
     "@ultimate/uix-motion": "workspace:*",
-    "@ultimate/uix-styles": "workspace:*"
+    "@ultimate/uix-styles": "workspace:*",
+    "@ultimate/uix-data": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
