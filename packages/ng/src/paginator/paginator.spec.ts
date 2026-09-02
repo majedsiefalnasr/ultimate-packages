@@ -140,6 +140,35 @@ describe("UPaginator", () => {
     expect(fixture.nativeElement.querySelector("nav")).not.toBeNull();
   });
 
+  it("the <nav> is the outermost element carrying the root class, with content as a <div> nested inside it (not the reverse)", () => {
+    // Regression test for the final-review finding: the template previously
+    // bound the content slot's class directly onto <nav> (absorbing the
+    // root slot's class onto the <u-paginator> host only), so <nav> ended
+    // up wrapping the buttons without itself being the semantic root
+    // matching React/Vue's shape (root <nav> wrapping a <div class="content">).
+    const fixture = TestBed.createComponent(UPaginator);
+    fixture.detectChanges();
+
+    const navEls = fixture.nativeElement.querySelectorAll("nav");
+    expect(navEls.length).toBe(1);
+    const nav = navEls[0];
+
+    // The content slot must live on a <div>, not on <nav> itself.
+    const contentEl = fixture.nativeElement.querySelector(".u-paginator-content");
+    expect(contentEl).not.toBeNull();
+    expect(contentEl.tagName).toBe("DIV");
+    expect(contentEl.classList.contains("u-paginator-content")).toBe(true);
+    expect(nav.classList.contains("u-paginator-content")).toBe(false);
+
+    // <nav> must be the ancestor of the content <div>, not a descendant of it.
+    expect(nav.contains(contentEl)).toBe(true);
+    expect(contentEl.contains(nav)).toBe(false);
+
+    // <nav> itself carries the root slot's class, for DOM-shape parity with
+    // React/Vue's root <nav class="u-paginator u-component">.
+    expect(nav.classList.contains("u-paginator")).toBe(true);
+  });
+
   it("first/prev/next/last controls have aria-label attributes", () => {
     const fixture = TestBed.createComponent(UPaginator);
     fixture.componentRef.setInput("totalRecords", 95);

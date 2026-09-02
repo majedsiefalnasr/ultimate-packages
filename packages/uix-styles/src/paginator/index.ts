@@ -89,10 +89,6 @@ export const style = /*css*/ `
         gap: dt('paginator.gap');
     }
 
-    .u-paginator-jtp-input .p-inputtext {
-        max-width: dt('paginator.jump.to.page.input.max.width');
-    }
-
     .u-paginator-first:dir(rtl),
     .u-paginator-prev:dir(rtl),
     .u-paginator-next:dir(rtl),

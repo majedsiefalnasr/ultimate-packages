@@ -88,56 +88,73 @@ export interface PaginatorPageChangeEvent {
  * `host`. Verified empirically: running Task 5's 4 new tests against the
  * brief's literal template (before adapting away the redundant root
  * bindings) still passed all 4 — the redundant bindings on `<nav>` are
- * harmless but unnecessary, so they are omitted here, keeping `<nav>` as
- * just the semantic/visual wrapper it already was.
+ * harmless but unnecessary, so they were originally omitted, keeping `<nav>`
+ * as just the semantic/visual wrapper it already was.
+ *
+ * FINAL-REVIEW FIX: that left the template binding `[class]="cx('content')"`
+ * directly onto `<nav>` itself, so `<nav>` carried the *content* slot's
+ * class while the true semantic root (`<u-paginator>`, an unknown custom
+ * element with no implicit ARIA role) carried the `root` class via `host`
+ * above — mismatching React/Vue's DOM shape, where a root `<nav>` (implicit
+ * `role="navigation"`) wraps a `<div class="content">`. The template now
+ * mirrors that shape: `<nav [class]="cx('root')">` is the semantic wrapper,
+ * with a `<div [class]="cx('content')">` inside it wrapping the button row.
+ * `[class]="cx('root')"` is intentionally kept on *both* `host` and this
+ * `<nav>` (not moved off `host`) — `host`'s binding must stay so
+ * `fixture.nativeElement.getAttribute(...)`-based tests (which read the
+ * `<u-paginator>` host) keep working unchanged, and duplicating the same
+ * class selector onto `<nav>` is harmless CSS-wise while giving genuine
+ * DOM-shape parity with React/Vue's single root `<nav class="root">`.
  */
 @Component({
   standalone: true,
   selector: "u-paginator",
   template: `
-    <nav [class]="cx('content')">
-      <button
-        type="button"
-        data-u-paginator-first
-        [class]="cx('first', { disabled: isFirstPage })"
-        [disabled]="isFirstPage"
-        aria-label="First Page"
-        (click)="goFirst()"
-      ></button>
-      <button
-        type="button"
-        data-u-paginator-prev
-        [class]="cx('prev', { disabled: isFirstPage })"
-        [disabled]="isFirstPage"
-        aria-label="Previous Page"
-        (click)="goPrev()"
-      ></button>
-      @for (link of pageLinks; track link) {
+    <nav [class]="cx('root')">
+      <div [class]="cx('content')">
         <button
           type="button"
-          data-u-paginator-page
-          [class]="cx('page', { selected: link - 1 === page })"
-          [attr.aria-current]="link - 1 === page ? 'page' : null"
-          [attr.aria-label]="'Page ' + link"
-          (click)="changePage((link - 1) * rows())"
-        >{{ link }}</button>
-      }
-      <button
-        type="button"
-        data-u-paginator-next
-        [class]="cx('next', { disabled: isLastPage })"
-        [disabled]="isLastPage"
-        aria-label="Next Page"
-        (click)="goNext()"
-      ></button>
-      <button
-        type="button"
-        data-u-paginator-last
-        [class]="cx('last', { disabled: isLastPage })"
-        [disabled]="isLastPage"
-        aria-label="Last Page"
-        (click)="goLast()"
-      ></button>
+          data-u-paginator-first
+          [class]="cx('first', { disabled: isFirstPage })"
+          [disabled]="isFirstPage"
+          aria-label="First Page"
+          (click)="goFirst()"
+        ></button>
+        <button
+          type="button"
+          data-u-paginator-prev
+          [class]="cx('prev', { disabled: isFirstPage })"
+          [disabled]="isFirstPage"
+          aria-label="Previous Page"
+          (click)="goPrev()"
+        ></button>
+        @for (link of pageLinks; track link) {
+          <button
+            type="button"
+            data-u-paginator-page
+            [class]="cx('page', { selected: link - 1 === page })"
+            [attr.aria-current]="link - 1 === page ? 'page' : null"
+            [attr.aria-label]="'Page ' + link"
+            (click)="changePage((link - 1) * rows())"
+          >{{ link }}</button>
+        }
+        <button
+          type="button"
+          data-u-paginator-next
+          [class]="cx('next', { disabled: isLastPage })"
+          [disabled]="isLastPage"
+          aria-label="Next Page"
+          (click)="goNext()"
+        ></button>
+        <button
+          type="button"
+          data-u-paginator-last
+          [class]="cx('last', { disabled: isLastPage })"
+          [disabled]="isLastPage"
+          aria-label="Last Page"
+          (click)="goLast()"
+        ></button>
+      </div>
     </nav>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
