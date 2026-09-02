@@ -184,16 +184,16 @@ describe("UScroller", () => {
 });
 
 describe("UScroller content template (Task 5)", () => {
-  it("renders the consumer-supplied #content slot instead of the built-in item divs when provided", () => {
+  it("renders the consumer-supplied #content slot instead of the built-in item divs when provided", async () => {
     const wrapper = mount(UScroller, {
-      // disabled:true guarantees a non-empty visibleItems without mocking
-      // the viewport's offsetHeight (jsdom defaults it to 0, which would
-      // otherwise make the windowed `last` compute to 0 for this bare
-      // mount — see the sibling "renders only the windowed subset" test
-      // above, which mocks the viewport instead because it's specifically
-      // testing windowing). This test is about slot composition, not
-      // windowing math, so disabled:true is the more direct fixture.
-      props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30, disabled: true },
+      // Uses mockViewportHeight + a resizeObserverCallback re-invocation
+      // (the same pattern as the sibling "renders only the windowed
+      // subset" test above) to exercise the real windowed `visibleItems`
+      // branch, rather than disabled:true's unwindowed full-list branch.
+      // This test is about slot composition receiving the real windowed
+      // data, which is the entire point of Task 5's eventual consumer
+      // (UTable's Task 21b needs the windowed path, not the disabled one).
+      props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30 },
       slots: {
         content: (slotProps: { items: { index: number; value: unknown }[] }) =>
           h(
@@ -211,22 +211,41 @@ describe("UScroller content template (Task 5)", () => {
           ),
       },
     });
+    mockViewportHeight(wrapper.element as HTMLElement, 300);
+    resizeObserverCallback?.(
+      [{ target: wrapper.element } as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    await wrapper.vm.$nextTick();
     expect(wrapper.find("[data-test-content-template]").exists()).toBe(true);
     expect(wrapper.findAll("[data-u-scroller-item]").length).toBe(0);
-    expect(wrapper.findAll("tr[data-index]").length).toBeGreaterThan(0);
+    // numItemsInViewport=300/30=10, numToleratedItems=ceil(10/2)=5,
+    // calculateLast(0, 10, 5)=0+10+2*5=20, clamped to items.length (50) -> 20.
+    // Asserting the exact windowed count (strictly less than the 50-item
+    // total) proves virtualization actually happened, not just that some
+    // rows rendered.
+    const renderedRows = wrapper.findAll("tr[data-index]");
+    expect(renderedRows.length).toBe(20);
+    expect(renderedRows.length).toBeLessThan(50);
   });
 
-  it("still renders the built-in item divs when no #content slot is supplied (existing behavior unchanged)", () => {
-    // disabled:true for the same reason as above: this test is about the
-    // fallback-content mechanism, not windowing, and a bare mount's
-    // jsdom-default 0 offsetHeight would otherwise make visibleItems empty.
-    const wrapper = mount(UScroller, { props: { items: ["a", "b", "c"], itemSize: 30, disabled: true } });
+  it("still renders the built-in item divs when no #content slot is supplied (existing behavior unchanged)", async () => {
+    // Uses mockViewportHeight + a resizeObserverCallback re-invocation (see
+    // above) instead of disabled:true, so this exercises the real windowed
+    // fallback-content path rather than the unwindowed disabled branch.
+    const wrapper = mount(UScroller, { props: { items: ["a", "b", "c"], itemSize: 30 } });
+    mockViewportHeight(wrapper.element as HTMLElement, 90);
+    resizeObserverCallback?.(
+      [{ target: wrapper.element } as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    await wrapper.vm.$nextTick();
     expect(wrapper.findAll("[data-u-scroller-item]").length).toBeGreaterThan(0);
   });
 
-  it("exposes a real getItemOptions(index) returning {index, count, first, last, even, odd} — matching real PrimeVue's getOptions() shape", () => {
+  it("exposes a real getItemOptions(index) returning {index, count, first, last, even, odd} — matching real PrimeVue's getOptions() shape", async () => {
     const wrapper = mount(UScroller, {
-      props: { items: ["a", "b", "c"], itemSize: 30, disabled: true },
+      props: { items: ["a", "b", "c"], itemSize: 30 },
       slots: {
         content: (slotProps: {
           items: { index: number; value: unknown }[];
@@ -251,6 +270,12 @@ describe("UScroller content template (Task 5)", () => {
           ),
       },
     });
+    mockViewportHeight(wrapper.element as HTMLElement, 90);
+    resizeObserverCallback?.(
+      [{ target: wrapper.element } as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    await wrapper.vm.$nextTick();
     expect(wrapper.find("tr[data-index='0']").attributes("data-first")).toBe("true");
   });
 
