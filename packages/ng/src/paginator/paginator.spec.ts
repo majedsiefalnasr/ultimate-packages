@@ -103,4 +103,50 @@ describe("UPaginator", () => {
       expect(fixture.nativeElement.getAttribute("data-page-links")).toBe("16,17,18,19,20");
     });
   });
+
+  it("renders one button per pageLinks entry, marking the current page aria-current=page", () => {
+    const fixture = TestBed.createComponent(UPaginator);
+    fixture.componentRef.setInput("totalRecords", 95);
+    fixture.componentRef.setInput("rows", 10);
+    fixture.detectChanges();
+    const pageButtons = fixture.nativeElement.querySelectorAll("[data-u-paginator-page]");
+    // pageCount is 10 (95 records / 10 rows), but pageLinks (Task 4's approved
+    // getter) windows the rendered links to pageLinkSize (default 5), not
+    // pageCount — so 5 buttons render here, not 10. The plan document and
+    // this task's original brief both asserted toBe(10), which contradicts
+    // Task 4's already-approved windowing algorithm; corrected here per
+    // human-controller decision (see task-5-report.md).
+    expect(pageButtons.length).toBe(5);
+    expect(pageButtons[0].getAttribute("aria-current")).toBe("page");
+    expect(pageButtons[1].getAttribute("aria-current")).toBeNull();
+  });
+
+  it("clicking a page-link button navigates to that page", () => {
+    const fixture = TestBed.createComponent(UPaginator);
+    fixture.componentRef.setInput("totalRecords", 95);
+    fixture.componentRef.setInput("rows", 10);
+    fixture.detectChanges();
+    const pageButtons = fixture.nativeElement.querySelectorAll("[data-u-paginator-page]");
+    pageButtons[2].click();
+    fixture.detectChanges();
+    const updatedPageButtons = fixture.nativeElement.querySelectorAll("[data-u-paginator-page]");
+    expect(updatedPageButtons[2].getAttribute("aria-current")).toBe("page");
+  });
+
+  it("root element is a semantic <nav>", () => {
+    const fixture = TestBed.createComponent(UPaginator);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("nav")).not.toBeNull();
+  });
+
+  it("first/prev/next/last controls have aria-label attributes", () => {
+    const fixture = TestBed.createComponent(UPaginator);
+    fixture.componentRef.setInput("totalRecords", 95);
+    fixture.componentRef.setInput("rows", 10);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[data-u-paginator-first]").hasAttribute("aria-label")).toBe(true);
+    expect(fixture.nativeElement.querySelector("[data-u-paginator-prev]").hasAttribute("aria-label")).toBe(true);
+    expect(fixture.nativeElement.querySelector("[data-u-paginator-next]").hasAttribute("aria-label")).toBe(true);
+    expect(fixture.nativeElement.querySelector("[data-u-paginator-last]").hasAttribute("aria-label")).toBe(true);
+  });
 });

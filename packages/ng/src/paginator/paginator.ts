@@ -68,6 +68,28 @@ export interface PaginatorPageChangeEvent {
  * template below is retained as the purely *visual* wrapper for the
  * first/prev/next/last buttons — its own `[class]`/attribute bindings are
  * for rendering only and are not asserted on directly by any spec.
+ *
+ * Task 5 (page-link buttons + accessibility + `<nav>` root test) re-confirms
+ * and extends this same finding rather than reversing it. Task 5's brief
+ * shows its Step 3 template example re-declaring
+ * `[class]="cx('root')"`/`[attr.data-page-count]`/`[attr.data-page]` on the
+ * template's `<nav>` — but those are already bound via `host` above (Tasks
+ * 2-3) and redeclaring them on a template child would be redundant, not
+ * additive: `fixture.nativeElement.getAttribute(...)` (used by every
+ * existing `data-page*` assertion in this spec) only ever reads the host
+ * element's own attributes, so a duplicate binding on the template `<nav>`
+ * would be invisible to those assertions and would only needlessly bind the
+ * same expression twice. Task 5's own new tests use
+ * `fixture.nativeElement.querySelector(...)`/`querySelectorAll(...)`
+ * instead — those DO search the full DOM subtree under the host, including
+ * template descendants — which is why the new page-link buttons,
+ * `data-u-paginator-{first,prev,page,next,last}` markers, and the `<nav>`
+ * root itself are reachable that way without needing to move anything onto
+ * `host`. Verified empirically: running Task 5's 4 new tests against the
+ * brief's literal template (before adapting away the redundant root
+ * bindings) still passed all 4 — the redundant bindings on `<nav>` are
+ * harmless but unnecessary, so they are omitted here, keeping `<nav>` as
+ * just the semantic/visual wrapper it already was.
  */
 @Component({
   standalone: true,
@@ -76,26 +98,44 @@ export interface PaginatorPageChangeEvent {
     <nav [class]="cx('content')">
       <button
         type="button"
+        data-u-paginator-first
         [class]="cx('first', { disabled: isFirstPage })"
         [disabled]="isFirstPage"
+        aria-label="First Page"
         (click)="goFirst()"
       ></button>
       <button
         type="button"
+        data-u-paginator-prev
         [class]="cx('prev', { disabled: isFirstPage })"
         [disabled]="isFirstPage"
+        aria-label="Previous Page"
         (click)="goPrev()"
       ></button>
+      @for (link of pageLinks; track link) {
+        <button
+          type="button"
+          data-u-paginator-page
+          [class]="cx('page', { selected: link - 1 === page })"
+          [attr.aria-current]="link - 1 === page ? 'page' : null"
+          [attr.aria-label]="'Page ' + link"
+          (click)="changePage((link - 1) * rows())"
+        >{{ link }}</button>
+      }
       <button
         type="button"
+        data-u-paginator-next
         [class]="cx('next', { disabled: isLastPage })"
         [disabled]="isLastPage"
+        aria-label="Next Page"
         (click)="goNext()"
       ></button>
       <button
         type="button"
+        data-u-paginator-last
         [class]="cx('last', { disabled: isLastPage })"
         [disabled]="isLastPage"
+        aria-label="Last Page"
         (click)="goLast()"
       ></button>
     </nav>
