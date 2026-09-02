@@ -10,6 +10,7 @@
     "@ultimate/uix-styled",
     "@ultimate/uix-motion",
     "@ultimate/uix-styles",
+    "@ultimate/uix-data",
     "tslib"
   ]
 }

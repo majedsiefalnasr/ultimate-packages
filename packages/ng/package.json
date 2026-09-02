@@ -19,6 +19,7 @@
     "@ultimate/uix-styled": "workspace:*",
     "@ultimate/uix-motion": "workspace:*",
     "@ultimate/uix-styles": "workspace:*",
+    "@ultimate/uix-data": "workspace:*",
     "tslib": "^2.8.1"
   },
   "peerDependencies": {
