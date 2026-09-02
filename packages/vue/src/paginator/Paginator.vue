@@ -43,6 +43,7 @@
         aria-label="Last Page"
         @click="changePage((pageCount - 1) * d_rows)"
       />
+      <span data-u-paginator-current-report :class="cx('currentPageReport')" aria-live="polite">{{ page + 1 }} of {{ pageCount }}</span>
     </div>
   </nav>
 </template>

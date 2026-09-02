@@ -31,6 +31,7 @@ const classes = {
   next: (params: Record<string, unknown> = {}) => ["u-paginator-next", { "u-paginator-next-disabled": !!params.disabled }],
   last: (params: Record<string, unknown> = {}) => ["u-paginator-last", { "u-paginator-last-disabled": !!params.disabled }],
   page: (params: Record<string, unknown> = {}) => ["u-paginator-page", { "u-paginator-page-selected": !!params.selected }],
+  currentPageReport: () => "u-paginator-current-report",
 };
 
 export const paginatorStyleModule: StyleModule = { css, classes };

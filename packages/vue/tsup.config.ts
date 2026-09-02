@@ -49,6 +49,7 @@ export default defineConfig({
     "checkbox/index": "src/checkbox/index.ts",
     "dialog/index": "src/dialog/index.ts",
     "menu/index": "src/menu/index.ts",
+    "paginator/index": "src/paginator/index.ts",
     "scroller/index": "src/scroller/index.ts",
     "tooltip/index": "src/tooltip/index.ts",
   },

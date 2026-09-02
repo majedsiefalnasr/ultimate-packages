@@ -47,4 +47,17 @@ describe("UPaginator", () => {
     await wrapper.setProps({ first: emittedFirst as number });
     expect((wrapper.vm as unknown as { d_first: number }).d_first).toBe(10);
   });
+
+  it("renders a current-page report region with aria-live=polite", () => {
+    const wrapper = mount(UPaginator, { props: { first: 0, rows: 10, totalRecords: 95 } });
+    const report = wrapper.find("[data-u-paginator-current-report]");
+    expect(report.exists()).toBe(true);
+    expect(report.attributes("aria-live")).toBe("polite");
+  });
+
+  it("root export from index.ts matches the direct component export", async () => {
+    const DirectImport = (await import("./Paginator.vue")).default;
+    const { UPaginator: IndexImport } = await import("./index");
+    expect(IndexImport).toBe(DirectImport);
+  });
 });
