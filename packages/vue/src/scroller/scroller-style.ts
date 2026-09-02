@@ -11,15 +11,24 @@ const css = /*css*/ `
         position: absolute;
         width: 100%;
     }
+    .u-scroller-item {
+        position: absolute;
+        width: 100%;
+    }
+    .u-scroller-loader {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 `;
 
-// Only the two slots this task's template actually renders (root, content).
-// Task 12 extends this same object with an `item` slot when it adds virtual
-// item rendering — this is the real, final style-source wiring from day
-// one, not a value later thrown away; nothing here is a placeholder.
 const classes = {
   root: () => "u-scroller u-component",
   content: () => "u-scroller-content",
+  item: () => "u-scroller-item",
+  loader: () => "u-scroller-loader",
 };
 
 export const scrollerStyleModule = { css, classes };
