@@ -256,5 +256,11 @@
     "ultimateDestination": "packages/vue/src/paginator/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/virtualscroller/VirtualScroller.vue",
+    "ultimateDestination": "packages/vue/src/scroller/Scroller.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "UScroller's optional content-level composition point is informed by real PrimeVue 4.5.5 VirtualScroller's own content-render mechanism (commit 66dde6788220fc9e6822342919d1ceb0e3460ece), specifically the `content` scoped slot and its props (VirtualScroller.vue:4-20), and `getOptions`'s real per-item metadata shape. Ultimate's implementation is informed by this cited upstream mechanism, not copied verbatim — the scoped-slot's props shape, dispatch structure, and getItemOptions naming are Ultimate's own, matching createBaseComponent's existing conventions; only the architectural mechanism (an optional content scoped slot carrying generic per-item metadata) is mirrored."
   }
 ]

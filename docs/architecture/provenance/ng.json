@@ -262,5 +262,11 @@
     "ultimateDestination": "packages/ng/src/paginator/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/scroller/scroller.ts",
+    "ultimateDestination": "packages/ng/src/scroller/scroller.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "UScroller's optional content-level composition point is informed by real PrimeNG 21.1.9 Scroller's own content-projection mechanism (commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), specifically: the `@ContentChild('content', {descendants: false})` template query (scroller.ts:450), the `ngTemplateOutlet` dispatch that renders it in place of the built-in windowed item markup (scroller.ts:54-56), and `getOptions(renderedIndex)`'s real per-item metadata shape (scroller.ts:1213-1224, {index, count, first, last, even, odd}). Ultimate's implementation is informed by this cited upstream mechanism, not copied verbatim — the content-template context type, dispatch structure, and getItemOptions naming are Ultimate's own, matching UBaseComponent's existing conventions; only the architectural mechanism (a named content template query rendered via ngTemplateOutlet, carrying generic per-item metadata) is mirrored."
   }
 ]
