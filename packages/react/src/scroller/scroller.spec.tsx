@@ -270,6 +270,47 @@ describe("UScroller content template (Task 3)", () => {
     expect(container.querySelectorAll("tr[data-index]").length).toBeGreaterThan(0);
   });
 
+  it("renders the actual nested table > tbody > tr > td DOM structure, not just element presence (direct-child scoping, not flat selector counts)", () => {
+    const items = Array.from({ length: 50 }, (_, i) => `Row ${i}`);
+    const { container } = render(
+      <UScroller
+        items={items}
+        itemSize={30}
+        contentTemplate={({ items: visible }) => (
+          <table data-test-content-template>
+            <tbody>
+              {visible.map((entry) => (
+                <tr key={entry.index} data-index={entry.index}>
+                  <td>{String(entry.value)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      />
+    );
+    const root = container.firstChild as HTMLElement;
+    mockViewportHeight(root, 200);
+    act(() => {
+      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    });
+
+    const table = container.querySelector("table[data-test-content-template]") as HTMLTableElement;
+    expect(table).not.toBeNull();
+    const tbody = table.querySelector("tbody");
+    expect(tbody).not.toBeNull();
+    expect(tbody?.parentElement).toBe(table);
+
+    const rows = tbody!.querySelectorAll(":scope > tr");
+    // numItemsInViewport=200/30 rounded=7, numToleratedItems=ceil(7/2)=4,
+    // calculateLast(0, 7, 4)=0+7+2*4=15, clamped to items.length (50) -> 15.
+    expect(rows.length).toBe(15);
+    expect(rows.length).toBeLessThan(50);
+    rows.forEach((row) => {
+      expect(row.querySelector(":scope > td")).not.toBeNull();
+    });
+  });
+
   it("still renders the built-in item divs when no contentTemplate is supplied (existing behavior unchanged)", () => {
     const { container } = render(<UScroller items={["a", "b", "c"]} itemSize={30} />);
     const root = container.firstChild as HTMLElement;

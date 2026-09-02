@@ -335,6 +335,30 @@ describe("UScroller content template (Task 1)", () => {
     expect(fixture.nativeElement.querySelectorAll("tr[data-index]").length).toBeGreaterThan(0);
   });
 
+  it("renders the actual nested table > tbody > tr > td DOM structure, not just element presence (direct-child scoping, not flat selector counts)", () => {
+    const fixture = TestBed.createComponent(ContentTemplateHostComponent);
+    fixture.detectChanges();
+    const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(root, 200);
+    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    fixture.detectChanges();
+
+    const table = fixture.nativeElement.querySelector("table[data-test-content-template]") as HTMLTableElement;
+    expect(table).not.toBeNull();
+    const tbody = table.querySelector("tbody");
+    expect(tbody).not.toBeNull();
+    expect(tbody?.parentElement).toBe(table);
+
+    const rows = tbody!.querySelectorAll(":scope > tr");
+    // numItemsInViewport=200/30=7 (rounded), numToleratedItems=ceil(7/2)=4,
+    // calculateLast(0, 7, 4)=0+7+2*4=15, clamped to items.length (50) -> 15.
+    expect(rows.length).toBe(15);
+    expect(rows.length).toBeLessThan(50);
+    rows.forEach((row) => {
+      expect(row.querySelector(":scope > td")).not.toBeNull();
+    });
+  });
+
   it("still renders the built-in item divs when no #content template is supplied (existing behavior unchanged)", () => {
     const fixture = TestBed.createComponent(UScroller);
     fixture.componentRef.setInput("items", ["a", "b", "c"]);

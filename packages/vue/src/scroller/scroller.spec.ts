@@ -229,6 +229,49 @@ describe("UScroller content template (Task 5)", () => {
     expect(renderedRows.length).toBeLessThan(50);
   });
 
+  it("renders the actual nested table > tbody > tr > td DOM structure, not just element presence (direct-child scoping, not flat selector counts)", async () => {
+    const wrapper = mount(UScroller, {
+      props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30 },
+      slots: {
+        content: (slotProps: { items: { index: number; value: unknown }[] }) =>
+          h(
+            "table",
+            { "data-test-content-template": true },
+            [
+              h(
+                "tbody",
+                {},
+                slotProps.items.map((entry) =>
+                  h("tr", { key: entry.index, "data-index": entry.index }, [h("td", {}, String(entry.value))])
+                )
+              ),
+            ]
+          ),
+      },
+    });
+    mockViewportHeight(wrapper.element as HTMLElement, 300);
+    resizeObserverCallback?.(
+      [{ target: wrapper.element } as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    await wrapper.vm.$nextTick();
+
+    const table = wrapper.element.querySelector("table[data-test-content-template]") as HTMLTableElement;
+    expect(table).not.toBeNull();
+    const tbody = table.querySelector("tbody");
+    expect(tbody).not.toBeNull();
+    expect(tbody?.parentElement).toBe(table);
+
+    // numItemsInViewport=300/30=10, numToleratedItems=ceil(10/2)=5,
+    // calculateLast(0, 10, 5)=0+10+2*5=20, clamped to items.length (50) -> 20.
+    const rows = tbody!.querySelectorAll(":scope > tr");
+    expect(rows.length).toBe(20);
+    expect(rows.length).toBeLessThan(50);
+    rows.forEach((row) => {
+      expect(row.querySelector(":scope > td")).not.toBeNull();
+    });
+  });
+
   it("still renders the built-in item divs when no #content slot is supplied (existing behavior unchanged)", async () => {
     // Uses mockViewportHeight + a resizeObserverCallback re-invocation (see
     // above) instead of disabled:true, so this exercises the real windowed
