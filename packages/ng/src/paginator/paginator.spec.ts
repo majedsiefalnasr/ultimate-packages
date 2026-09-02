@@ -154,4 +154,22 @@ describe("UPaginator", () => {
   it("is exported from the package root barrel", () => {
     expect(RootExport).toBe(UPaginator);
   });
+
+  it("resolves the same paginator.background token as the React/Vue cross-framework consistency test (packages/themes/test/cross-framework-consistency.test.ts)", () => {
+    const fixture = TestBed.createComponent(UPaginator);
+    fixture.componentRef.setInput("totalRecords", 95);
+    fixture.componentRef.setInput("rows", 10);
+    fixture.detectChanges();
+
+    // ngCoreStyleSheet's <style> elements carry no identifying attribute,
+    // matching UButton's own Angular test — located by its known, unique
+    // .u-paginator selector.
+    const styleEl = Array.from(document.head.querySelectorAll("style")).find((el) =>
+      (el.textContent ?? "").includes(".u-paginator {")
+    );
+    expect(styleEl).not.toBeUndefined();
+    const ngCss = styleEl!.textContent ?? "";
+
+    expect(ngCss).toContain("var(--u-paginator-background");
+  });
 });
