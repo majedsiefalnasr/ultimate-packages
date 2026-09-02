@@ -200,3 +200,146 @@ describe("UScroller", () => {
     expect(SubpathExport).toBe(UScroller);
   });
 });
+
+describe("UScroller content template (Task 3)", () => {
+  // Deviation from the brief: this describe block is a sibling of the main
+  // "UScroller" describe above, not nested inside it, so it does not
+  // inherit that block's beforeEach/afterEach ResizeObserver stub — every
+  // UScroller render mounts the offsetHeight-measuring ResizeObserver
+  // effect (scroller.tsx), which throws ReferenceError without a stub.
+  // Mirroring the same stub setup here (rather than restructuring the
+  // existing describe nesting, which the task's additive-only constraint
+  // rules out) is the minimal fix. Also mirrors the main block's
+  // mockViewportHeight helper: jsdom's default offsetHeight is 0, which
+  // (via calculateNumItemsInViewport) makes the non-disabled windowed
+  // visibleItems empty — the brief's literal tests assume a real, non-zero
+  // viewport the way the main describe block's own windowing tests do.
+  let resizeObserverCallback: ResizeObserverCallback | undefined;
+
+  beforeEach(() => {
+    resizeObserverCallback = undefined;
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(cb: ResizeObserverCallback) {
+          resizeObserverCallback = cb;
+        }
+        observe(target: Element) {
+          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        }
+        disconnect() {}
+      }
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    cleanup();
+  });
+
+  function mockViewportHeight(element: HTMLElement, height: number): void {
+    Object.defineProperty(element, "offsetHeight", { value: height, configurable: true });
+  }
+
+  it("renders the consumer-supplied contentTemplate instead of the built-in item divs when provided", () => {
+    const items = Array.from({ length: 50 }, (_, i) => `Row ${i}`);
+    const { container } = render(
+      <UScroller
+        items={items}
+        itemSize={30}
+        contentTemplate={({ items: visible }) => (
+          <table data-test-content-template>
+            <tbody>
+              {visible.map((entry) => (
+                <tr key={entry.index} data-index={entry.index}>
+                  <td>{String(entry.value)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      />
+    );
+    const root = container.firstChild as HTMLElement;
+    mockViewportHeight(root, 200);
+    act(() => {
+      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    });
+    expect(container.querySelector("[data-test-content-template]")).not.toBeNull();
+    expect(container.querySelectorAll("[data-u-scroller-item]").length).toBe(0);
+    expect(container.querySelectorAll("tr[data-index]").length).toBeGreaterThan(0);
+  });
+
+  it("still renders the built-in item divs when no contentTemplate is supplied (existing behavior unchanged)", () => {
+    const { container } = render(<UScroller items={["a", "b", "c"]} itemSize={30} />);
+    const root = container.firstChild as HTMLElement;
+    mockViewportHeight(root, 200);
+    act(() => {
+      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    });
+    expect(container.querySelectorAll("[data-u-scroller-item]").length).toBeGreaterThan(0);
+  });
+
+  it("exposes a real getItemOptions(index) returning {index, count, first, last, even, odd} — matching real PrimeReact's getOptions() shape", () => {
+    const items = ["a", "b", "c"];
+    const { container } = render(
+      <UScroller
+        items={items}
+        itemSize={30}
+        contentTemplate={({ items: visible, getItemOptions }) => (
+          <table data-test-content-template>
+            <tbody>
+              {visible.map((entry) => (
+                <tr key={entry.index} data-index={entry.index} data-first={String(getItemOptions(entry.index).first)}>
+                  <td>{String(entry.value)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      />
+    );
+    const root = container.firstChild as HTMLElement;
+    mockViewportHeight(root, 200);
+    act(() => {
+      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    });
+    expect(container.querySelector("tr[data-index='0']")?.getAttribute("data-first")).toBe("true");
+  });
+
+  it("passes the full unwindowed item list when disabled=true, matching UScroller's existing shipped disabled behavior", () => {
+    const items = Array.from({ length: 50 }, (_, i) => `Row ${i}`);
+    const { container } = render(
+      <UScroller
+        items={items}
+        itemSize={30}
+        disabled
+        contentTemplate={({ items: visible }) => (
+          <table data-test-content-template>
+            <tbody>
+              {visible.map((entry) => (
+                <tr key={entry.index} data-index={entry.index}>
+                  <td>{String(entry.value)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      />
+    );
+    expect(container.querySelectorAll("tr[data-index]").length).toBe(50);
+  });
+
+  it("still renders the existing built-in loader when loading=true, independent of whether contentTemplate is supplied", () => {
+    const { container } = render(
+      <UScroller
+        items={["a", "b"]}
+        itemSize={30}
+        loading
+        contentTemplate={() => <table data-test-content-template />}
+      />
+    );
+    expect(container.querySelector(".u-scroller-loader")).not.toBeNull();
+    expect(container.querySelector("[data-test-content-template]")).not.toBeNull();
+  });
+});

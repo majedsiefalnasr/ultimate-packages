@@ -3,6 +3,20 @@ import { useComponentBase } from "@ultimate/react-core";
 import { calculateLast, calculateNumItemsInViewport } from "@ultimate/uix-data";
 import { scrollerStyleModule } from "./scroller-style";
 
+export interface UScrollerContentOptions {
+  items: { index: number; value: unknown }[];
+  getItemOptions: (index: number) => {
+    index: number;
+    count: number;
+    first: boolean;
+    last: boolean;
+    even: boolean;
+    odd: boolean;
+  };
+  itemSize: number;
+  loading: boolean;
+}
+
 export interface UScrollerProps {
   items: unknown[];
   itemSize: number;
@@ -11,6 +25,11 @@ export interface UScrollerProps {
   lazy?: boolean;
   loading?: boolean;
   onLazyLoad?: (event: { first: number; last: number }) => void;
+  // Optional render-prop mirroring real PrimeReact's own `contentTemplate`
+  // prop mechanism (VirtualScroller.js:729-748): when present, it is called
+  // instead of the built-in per-item `.map()` rendering; when absent,
+  // today's built-in rendering runs unchanged. Consumed by a future UTable.
+  contentTemplate?: (options: UScrollerContentOptions) => React.ReactNode;
 }
 
 export interface UScrollerHandle {
@@ -33,6 +52,7 @@ export const UScroller = React.forwardRef<UScrollerHandle, UScrollerProps>((prop
     lazy = false,
     loading,
     onLazyLoad,
+    contentTemplate,
   } = props;
   const { cx } = useComponentBase({ componentName: "scroller", styleModule: scrollerStyleModule });
 
@@ -76,6 +96,17 @@ export const UScroller = React.forwardRef<UScrollerHandle, UScrollerProps>((prop
         value: items[firstState + i],
       }));
 
+  // Mirrors real PrimeReact's getOptions(index) shape, matching the same
+  // real per-item metadata fields confirmed for Angular's Task 1.
+  const getItemOptions = (index: number) => ({
+    index,
+    count: items.length,
+    first: index === 0,
+    last: index === items.length - 1,
+    even: index % 2 === 0,
+    odd: index % 2 !== 0,
+  });
+
   const handleScroll = () => {
     const el = elementRef.current;
     if (!el) return;
@@ -106,11 +137,18 @@ export const UScroller = React.forwardRef<UScrollerHandle, UScrollerProps>((prop
         </div>
       ) : null}
       <div data-u-scroller-content className={cx("content") as string} style={{ height: items.length * itemSize }}>
-        {visibleItems.map(({ index, value }) => (
-          <div key={index} data-u-scroller-item className={cx("item") as string} style={{ top: index * itemSize }}>
-            {String(value)}
-          </div>
-        ))}
+        {contentTemplate
+          ? contentTemplate({ items: visibleItems, getItemOptions, itemSize, loading: loading ?? false })
+          : visibleItems.map(({ index, value }) => (
+              <div
+                key={index}
+                data-u-scroller-item
+                className={cx("item") as string}
+                style={{ top: index * itemSize }}
+              >
+                {String(value)}
+              </div>
+            ))}
       </div>
     </div>
   );
