@@ -160,6 +160,9 @@ importers:
       '@ultimate/uix-styled':
         specifier: workspace:*
         version: link:../uix-styled
+      '@ultimate/uix-styles':
+        specifier: workspace:*
+        version: link:../uix-styles
       '@ultimate/uix-utils':
         specifier: workspace:*
         version: link:../uix-utils

@@ -50,6 +50,7 @@
     "@ultimate/uix-data": "workspace:*",
     "@ultimate/uix-motion": "workspace:*",
     "@ultimate/uix-styled": "workspace:*",
+    "@ultimate/uix-styles": "workspace:*",
     "@ultimate/uix-utils": "workspace:*"
   },
   "peerDependencies": {
