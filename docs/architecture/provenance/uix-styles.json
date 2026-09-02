@@ -52,5 +52,11 @@
     "ultimateDestination": "packages/uix-styles/src/tooltip/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Extracted via sourcemap recovery from @primeuix/styles@2.0.3; .p-tooltip* class-name string literals renamed to .u-tooltip* to match Phase 2's Ultimate namespace decision."
+  },
+  {
+    "originalPath": ".vendor-extracted/uix-styles-components/src/virtualscroller/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/virtualscroller/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 virtualscroller module (loader mask/icon dt() token references only — upstream's virtualscroller style module has no structural/layout CSS of its own, unlike badge/button/checkbox/dialog/menu/tooltip); .p-scroller-loader/.p-scroller-loading-icon class-name string literals renamed to .u-scroller-loader/.u-scroller-loading-icon to match Phase 2's Ultimate namespace decision. Consumed by all three frameworks' scroller-style.ts modules (packages/ng, packages/react, packages/vue) via ${virtualscrollerStyle} interpolation."
   }
 ]

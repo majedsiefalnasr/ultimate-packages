@@ -196,5 +196,35 @@
     "ultimateDestination": "packages/vue/src/shims-vue.d.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored TypeScript ambient module declaration for `*.vue` imports (standard Vue+TypeScript SFC type shim), no upstream equivalent — build-tooling infrastructure, not derived from any Prime source."
+  },
+  {
+    "originalPath": "packages/primevue/src/virtualscroller/VirtualScroller.vue",
+    "ultimateDestination": "packages/vue/src/scroller/base-scroller.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "props (items/itemSize/numToleratedItems) adapted from real PrimeVue 4.5.5 VirtualScroller's own prop surface, composed with createBaseComponent (packages/vue-core) matching the same extends: createBase*() pattern already established by Button/Checkbox/Dialog/Menu. Wires in this component's own scrollerStyleModule."
+  },
+  {
+    "originalPath": "packages/primevue/src/virtualscroller/VirtualScroller.vue",
+    "ultimateDestination": "packages/vue/src/scroller/Scroller.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Verified real PrimeVue 4.5.5 VirtualScroller measurement/windowing architecture (VirtualScroller.vue:288-289,596-599): this.element.offsetHeight content measurement plus real ResizeObserver usage alongside a window-resize listener — the one framework of the three whose real upstream genuinely already uses ResizeObserver, confirming this plan's choice to use it for all three frameworks is a direct match to real upstream here (and a legitimate modern substitute for Angular/React, per the plan's targeted revision finding #2). calculateNumItemsInViewport/calculateLast consumed from @ultimate/uix-data (see that package's own provenance entry) rather than reimplemented locally. getLast(last, isCols=false) array-bounds clamp ported with isCols declared but unreachable in this vertical-only plan. Loader markup (.u-scroller-loader/.u-scroller-loading-icon), scrollTo/scrollToIndex instance methods, disabled passthrough mode, lazy-load firing via Promise.resolve().then() emitting lazy-load with {first,last} payload, and aria-busy binding all adapted from verified upstream behavior with full Ultimate namespace rename, using export default {...} (no nonexistent named export). Excludes horizontal/both orientation, getRenderedRange() (Vue's exact shape not independently re-verified at the call-site level this planning pass), rich virtualized-grid ARIA (aria-rowcount/aria-setsize) beyond aria-busy, and step-batched lazy-load-page grouping — each a real, confirmed upstream feature deliberately scoped out of this plan (see plan's Explicitly Deferred section)."
+  },
+  {
+    "originalPath": "packages/primevue/src/virtualscroller/VirtualScroller.vue",
+    "ultimateDestination": "packages/vue/src/scroller/scroller-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeVue VirtualScroller's own rendered structure, reshaped to a plain {css, classes} object matching createBaseComponent's styleModule contract (same adaptation already established by button-style.ts/tooltip-style.ts/checkbox-style.ts/dialog-style.ts/menu-style.ts). Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following the same composition pattern already established by packages/ng/src/scroller/scroller-style.ts (Angular Task 3) and packages/react/src/scroller/scroller-style.ts (React Task 8). Real PrimeVue loader class names renamed .p-*→.u-*."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/scroller/scroller.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeVue test file. Mocks concrete offsetHeight/scrollTop values and asserts the exact numeric result calculateNumItemsInViewport/calculateLast/getLast produce from those known inputs, per the plan's revision requiring deterministic numeric assertions over bare hasAttribute/toBeGreaterThan(0) checks."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/scroller/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]
