@@ -1,7 +1,7 @@
 {
   "name": "@ultimate/vue",
   "version": "0.1.0",
-  "description": "Ultimate Platform Vue components: Button, Checkbox, Dialog, Menu, Tooltip.",
+  "description": "Ultimate Platform Vue components: Button, Checkbox, Dialog, Menu, Scroller, Tooltip.",
   "license": "MIT",
   "type": "module",
   "sideEffects": true,
@@ -34,6 +34,11 @@
       "import": "./dist/menu/index.mjs",
       "default": "./dist/menu/index.mjs"
     },
+    "./scroller": {
+      "types": "./dist/scroller/index.d.mts",
+      "import": "./dist/scroller/index.mjs",
+      "default": "./dist/scroller/index.mjs"
+    },
     "./tooltip": {
       "types": "./dist/tooltip/index.d.mts",
       "import": "./dist/tooltip/index.mjs",
@@ -46,7 +51,8 @@
     "@ultimate/uix-utils": "workspace:*",
     "@ultimate/uix-styled": "workspace:*",
     "@ultimate/uix-motion": "workspace:*",
-    "@ultimate/uix-styles": "workspace:*"
+    "@ultimate/uix-styles": "workspace:*",
+    "@ultimate/uix-data": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.5.0"

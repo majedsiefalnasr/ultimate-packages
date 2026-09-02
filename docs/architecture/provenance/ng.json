@@ -214,5 +214,29 @@
     "ultimateDestination": "packages/ng/src/menu/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/scroller/scroller.ts",
+    "ultimateDestination": "packages/ng/src/scroller/scroller.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified real PrimeNG 21.1.9 Scroller measurement/windowing architecture (scroller.ts:682-689,852-856,1142-1152): elementViewChild.nativeElement.offsetHeight/offsetWidth content measurement (zero ResizeObserver usage upstream, window resize/orientationchange listener instead) informed this task's own ResizeObserver-based substitute, a deliberate modern-architecture deviation documented in the plan's Global Constraints and self-review, not a silent divergence. calculateNumItemsInViewport/calculateLast consumed from @ultimate/uix-data (see that package's own provenance entry) rather than reimplemented locally. getLast(last, isCols=false) array-bounds clamp ported with isCols declared but unreachable in this vertical-only plan. Loader markup (.u-scroller-loader/.u-scroller-loading-icon), scrollTo/scrollToIndex public API, disabled passthrough mode, lazy-load firing via Promise.resolve().then() with {first,last} payload, and aria-busy binding all adapted from verified upstream behavior with full Ultimate namespace rename. Excludes horizontal/both orientation, getRenderedRange(), rich virtualized-grid ARIA (aria-rowcount/aria-setsize) beyond aria-busy, and step-batched lazy-load-page grouping — each a real, confirmed upstream feature deliberately scoped out of this plan (see plan's Explicitly Deferred section)."
+  },
+  {
+    "originalPath": "packages/primeng/src/scroller/scroller.ts",
+    "ultimateDestination": "packages/ng/src/scroller/scroller-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeNG Scroller's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/TooltipStyle/DialogStyle/MenuStyle/BadgeStyle). Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following button-style.ts's established composition pattern. Real PrimeNG loader class names (.p-virtualscroller-loader/.p-virtualscroller-loading-icon) renamed .p-*→.u-*."
+  },
+  {
+    "originalPath": "packages/ng/src/scroller/scroller.spec.ts",
+    "ultimateDestination": "packages/ng/src/scroller/scroller.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeNG test file. Mocks concrete offsetHeight/scrollTop values and asserts the exact numeric result calculateNumItemsInViewport/calculateLast/getLast produce from those known inputs (e.g. 200px viewport / 20px items → exactly 10 numItemsInViewport, exactly 20 rendered items; scrollTop=2000 → exactly first=100, onLazyLoad fires with exactly {first:100, last:125}), per the plan's revision requiring deterministic numeric assertions over bare hasAttribute/toBeGreaterThan(0) checks."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/scroller/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   }
 ]

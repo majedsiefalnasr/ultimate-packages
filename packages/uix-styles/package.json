@@ -48,6 +48,11 @@
       "types": "./dist/tooltip/index.d.mts",
       "import": "./dist/tooltip/index.mjs",
       "default": "./dist/tooltip/index.mjs"
+    },
+    "./virtualscroller": {
+      "types": "./dist/virtualscroller/index.d.mts",
+      "import": "./dist/virtualscroller/index.mjs",
+      "default": "./dist/virtualscroller/index.mjs"
     }
   },
   "files": [

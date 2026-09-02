@@ -66,7 +66,7 @@
  * @ultimate/react build`). This cost real debugging time while writing this
  * test; flagging it here so the next person doesn't repeat that.
  */
-import { afterEach, beforeAll, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { mount } from "@vue/test-utils";
 import * as React from "react";
@@ -157,6 +157,95 @@ describe("cross-framework theme consistency", () => {
       // (styling.spec.ts covers the mechanism directly), so nothing here
       // is silently broken or bypassed for React specifically.
       expect(reactCss).not.toContain("dt(");
+    });
+  });
+
+  describe("React and Vue's real UScroller renders resolve the same virtualscroller.loader.mask.background token", () => {
+    // CORRECTION vs. this suite's original task brief: the resolved CSS
+    // variable name for a dt() token is derived from the token's FULL dotted
+    // path (uix-styled's dt() helper dot-to-dash's every segment, prefixed
+    // `--u-`) — for "virtualscroller.loader.mask.background" that is
+    // `--u-virtualscroller-loader-mask-background`, not
+    // `--u-scroller-loader-mask-background` (the brief's assumed string, by
+    // analogy with the `.u-scroller-*` CSS *class* names, which are a
+    // separate, differently-derived naming scheme). Verified empirically:
+    // Vue's real registered CSS (and dt() itself) produce the
+    // `virtualscroller`-prefixed variable name identically, and so does
+    // React's and Angular's once rebuilt — confirming this is a consistent,
+    // correct token-name derivation across all three frameworks, not a bug
+    // in any framework's Task 3/8/12 implementation.
+    //
+    // Unlike UButton/UPaginator, UScroller's mount effect (React's
+    // useEffect/Vue's mounted()) unconditionally constructs a real
+    // ResizeObserver to measure the viewport — every real per-framework
+    // scroller.spec file (packages/react/src/scroller/scroller.spec.tsx,
+    // packages/vue/src/scroller/scroller.spec.ts) stubs this global before
+    // mounting for the same reason: jsdom (this file's own test
+    // environment, packages/themes/vitest.config.ts) does not implement
+    // ResizeObserver at all. This is a test-harness requirement, not a
+    // production code path — the stub only needs to exist and have an
+    // observe()/disconnect() no-op; its callback is never invoked because
+    // this test doesn't need real measurement results.
+    beforeEach(() => {
+      vi.stubGlobal(
+        "ResizeObserver",
+        class {
+          observe() {}
+          disconnect() {}
+        }
+      );
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+      cleanup();
+    });
+
+    it("Vue's real UScroller registers CSS containing the resolved virtualscroller.loader.mask.background var(...) text, matching dt()'s own resolution", async () => {
+      const { UScroller } = await import("@ultimate/vue/scroller");
+
+      const wrapper = mount(UScroller, { props: { items: [], itemSize: 20, loading: true } });
+
+      const styleEl = document.head.querySelector('style[data-u-style="scroller"]');
+      expect(styleEl).not.toBeNull();
+      const vueCss = styleEl!.textContent ?? "";
+
+      expect(vueCss).toContain("var(--u-virtualscroller-loader-mask-background");
+      expect(vueCss).not.toContain("dt("); // no unresolved dt() calls leaked through
+
+      const resolvedToken = dt("virtualscroller.loader.mask.background");
+      expect(vueCss).toContain(resolvedToken);
+
+      wrapper.unmount();
+    });
+
+    it("React's real UScroller registers CSS containing the resolved virtualscroller.loader.mask.background var(...) text, matching dt()'s own resolution", async () => {
+      const { UScroller } = await import("@ultimate/react/scroller");
+
+      render(React.createElement(UScroller, { items: [], itemSize: 20, loading: true }));
+
+      // reactCoreStyleSheet's <style> elements carry no identifying attribute
+      // (same as UButton's/UPaginator's real established pattern, per this
+      // file's own header comment) — Vue's element is excluded by its own
+      // data-u-style attribute, and the element is then located by its known,
+      // unique .u-scroller-loader selector, matching the exact lookup
+      // mechanism already established for UButton's/UPaginator's React halves.
+      // The .not.toBe(vueStyleEl) guard is the actual distinguishing check;
+      // the content match alone is only a sanity check that the found element
+      // is really scroller CSS.
+      const vueStyleEl = document.head.querySelector('style[data-u-style="scroller"]');
+      const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find((el) =>
+        (el.textContent ?? "").includes(".u-scroller-loader {")
+      );
+      expect(styleEl).not.toBeUndefined();
+      expect(styleEl).not.toBe(vueStyleEl);
+      const reactCss = styleEl!.textContent ?? "";
+
+      expect(reactCss).toContain("var(--u-virtualscroller-loader-mask-background");
+      expect(reactCss).not.toContain("dt(");
+
+      const resolvedToken = dt("virtualscroller.loader.mask.background");
+      expect(reactCss).toContain(resolvedToken);
     });
   });
 });

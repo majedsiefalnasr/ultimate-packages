@@ -7,3 +7,4 @@ export * from "./checkbox";
 export * from "./tooltip";
 export * from "./dialog";
 export * from "./menu";
+export * from "./scroller";

@@ -56,6 +56,9 @@ importers:
       '@ultimate/ng-core':
         specifier: workspace:*
         version: link:../ng-core
+      '@ultimate/uix-data':
+        specifier: workspace:*
+        version: link:../uix-data
       '@ultimate/uix-motion':
         specifier: workspace:*
         version: link:../uix-motion
@@ -148,12 +151,18 @@ importers:
       '@ultimate/react-core':
         specifier: workspace:*
         version: link:../react-core
+      '@ultimate/uix-data':
+        specifier: workspace:*
+        version: link:../uix-data
       '@ultimate/uix-motion':
         specifier: workspace:*
         version: link:../uix-motion
       '@ultimate/uix-styled':
         specifier: workspace:*
         version: link:../uix-styled
+      '@ultimate/uix-styles':
+        specifier: workspace:*
+        version: link:../uix-styles
       '@ultimate/uix-utils':
         specifier: workspace:*
         version: link:../uix-utils
@@ -358,6 +367,9 @@ importers:
 
   packages/vue:
     dependencies:
+      '@ultimate/uix-data':
+        specifier: workspace:*
+        version: link:../uix-data
       '@ultimate/uix-motion':
         specifier: workspace:*
         version: link:../uix-motion

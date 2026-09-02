@@ -24,7 +24,7 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2016-2026
 - **Third-party notices:** none found upstream (no root-level `NOTICE` file at this tag)
 - **Ultimate destination:** `packages/ng`, `packages/ng-core` (Phase 2)
-- **Modification status:** incorporated (Phase 2) — foundation tier reimplemented with PrimeNG as design reference, not copied verbatim (Option B); Button/Checkbox/Dialog/Menu/Tooltip and their direct primitive dependencies (Ripple/AutoFocus/Fluid/Badge/Bind) adapted with full Ultimate namespace rename (selectors, class names, CSS classes). Remaining ~112 source areas classified but not incorporated — see `docs/architecture/COMPONENT_INVENTORY.md`.
+- **Modification status:** incorporated (Phase 2) — foundation tier reimplemented with PrimeNG as design reference, not copied verbatim (Option B); Button/Checkbox/Dialog/Menu/Tooltip and their direct primitive dependencies (Ripple/AutoFocus/Fluid/Badge/Bind) adapted with full Ultimate namespace rename (selectors, class names, CSS classes). Scroller (`packages/primeng/src/scroller/scroller.ts`) also adapted with full Ultimate namespace rename — mixed provenance: direct per-framework adaptation of real upstream Scroller measurement/windowing/lazy-load behavior, plus consumption of the `@ultimate/uix-data` shared `calculateNumItemsInViewport`/`calculateLast` primitives (see that package's own entry below). Remaining ~112 source areas classified but not incorporated — see `docs/architecture/COMPONENT_INVENTORY.md`.
 - **Modification description:** see file-level manifests at `docs/architecture/provenance/ng-core.json` and `docs/architecture/provenance/ng.json` for per-file status.
 - **Date incorporated:** 2026-08-29
 
@@ -39,7 +39,7 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2018-2025
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/vue`, `packages/vue-core` (Phase 4)
-- **Modification status:** incorporated (Phase 4) — foundation tier reimplemented with PrimeVue as design reference, not copied verbatim (Option B, same posture as ADR-018/024); Button/Checkbox/Dialog/Menu/Tooltip and their direct primitive dependencies (Ripple, Portal, FocusTrap, BaseComponent/BaseDirective/BaseEditableHolder/BaseInput) adapted with full Ultimate namespace rename. Remaining ~145 source areas classified but not incorporated — see `docs/architecture/COMPONENT_INVENTORY.md` if a Vue-native inventory is added in a later phase (not committed this phase, spec §30).
+- **Modification status:** incorporated (Phase 4) — foundation tier reimplemented with PrimeVue as design reference, not copied verbatim (Option B, same posture as ADR-018/024); Button/Checkbox/Dialog/Menu/Tooltip and their direct primitive dependencies (Ripple, Portal, FocusTrap, BaseComponent/BaseDirective/BaseEditableHolder/BaseInput) adapted with full Ultimate namespace rename. Scroller (`packages/primevue/src/virtualscroller/VirtualScroller.vue`) also reimplemented-with-reference with full Ultimate namespace rename — mixed provenance: direct per-framework adaptation of real upstream VirtualScroller measurement/windowing/lazy-load behavior (including its genuine, verified `ResizeObserver` usage), plus consumption of the `@ultimate/uix-data` shared `calculateNumItemsInViewport`/`calculateLast` primitives (see that package's own entry below). Remaining ~145 source areas classified but not incorporated — see `docs/architecture/COMPONENT_INVENTORY.md` if a Vue-native inventory is added in a later phase (not committed this phase, spec §30).
 - **Modification description:** see file-level manifests at `docs/architecture/provenance/vue-core.json` and `docs/architecture/provenance/vue.json` for per-file status.
 - **Date incorporated:** 2026-09-01
 
@@ -54,7 +54,7 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2016-2025
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/react`, `packages/react-core` (Phase 3)
-- **Modification status:** incorporated (Phase 3) — foundation tier reimplemented with PrimeReact as design reference, not copied verbatim (Option B, same posture as Angular's ADR-018); Button/Checkbox/Dialog/Menu/Tooltip adapted with full Ultimate namespace rename (component names, CSS classes). Remaining ~111 source areas not classified this phase — see spec §30 for why a full inventory was deliberately not pre-committed.
+- **Modification status:** incorporated (Phase 3) — foundation tier reimplemented with PrimeReact as design reference, not copied verbatim (Option B, same posture as Angular's ADR-018); Button/Checkbox/Dialog/Menu/Tooltip adapted with full Ultimate namespace rename (component names, CSS classes). Scroller (`components/lib/virtualscroller/VirtualScroller.js`) also adapted with full Ultimate namespace rename — mixed provenance: direct per-framework adaptation of real upstream VirtualScroller measurement/windowing/lazy-load behavior, plus consumption of the `@ultimate/uix-data` shared `calculateNumItemsInViewport`/`calculateLast` primitives (see that package's own entry below). Remaining ~111 source areas not classified this phase — see spec §30 for why a full inventory was deliberately not pre-committed.
 - **Modification description:** see file-level manifests at `docs/architecture/provenance/react-core.json` and `docs/architecture/provenance/react.json` for per-file status.
 - **Date incorporated:** 2026-08-31
 - **Architectural reference only (not incorporated):** PrimeReact `11.1.0` — commercial "PrimeUI License", not MIT. Its `@primereact/{core,headless}` package-split pattern is useful prior art for Ultimate's React package boundaries, but no source is incorporated from it.
@@ -106,7 +106,7 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2025
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/uix-styles` (Phase 1)
-- **Modification status:** incorporated (Phase 1) — `base` module only; ~90 per-component style modules remain classified LATER PHASE per the Phase 1 spec, deferred to each component's own migration phase (2/3/4). No import adaptation needed (zero dependencies). File-level detail: `docs/architecture/provenance/uix-styles.json`.
+- **Modification status:** incorporated (Phase 1) — `base` module only; ~90 per-component style modules remain classified LATER PHASE per the Phase 1 spec, deferred to each component's own migration phase (2/3/4). `virtualscroller` (Scroller's style-token module) incorporated directly-ported, consumed by all three frameworks' own `packages/{ng,react,vue}/src/scroller/scroller-style.ts` modules. No import adaptation needed (zero dependencies). File-level detail: `docs/architecture/provenance/uix-styles.json`.
 - **Modification description:** see file-level manifest at `docs/architecture/provenance/uix-styles.json` for per-file status.
 - **Date incorporated:** 2026-08-29
 

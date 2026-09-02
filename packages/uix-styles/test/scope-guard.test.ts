@@ -8,6 +8,7 @@ import { style as checkboxStyle } from "../src/checkbox";
 import { style as dialogStyle } from "../src/dialog";
 import { style as menuStyle } from "../src/menu";
 import { style as tooltipStyle } from "../src/tooltip";
+import { style as virtualscrollerStyle } from "../src/virtualscroller";
 
 const ALLOWED_SELECTOR_PREFIXES = [
   ".p-disabled",
@@ -38,14 +39,14 @@ describe("base module scope guard", () => {
   });
 });
 
-describe("component style modules — exactly 6 exist alongside base", () => {
-  it("uix-styles/src/ contains only base + the 6 Phase 2 component modules (5 from Task 3 + badge from Task 11), no unexpected 7th", () => {
+describe("component style modules — exactly 7 exist alongside base", () => {
+  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller", () => {
     const actualModules = readdirSync(join(__dirname, "..", "src"), { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
       .sort();
     expect(actualModules).toEqual(
-      ["base", "badge", "button", "checkbox", "dialog", "menu", "tooltip"].sort()
+      ["base", "badge", "button", "checkbox", "dialog", "menu", "tooltip", "virtualscroller"].sort()
     );
   });
 
@@ -67,5 +68,9 @@ describe("component style modules — exactly 6 exist alongside base", () => {
   });
   it("tooltip style uses only .u-tooltip* selectors", () => {
     expect(tooltipStyle).not.toMatch(/\.p-tooltip/);
+  });
+
+  it("virtualscroller style uses only .u-scroller* selectors", () => {
+    expect(virtualscrollerStyle).not.toMatch(/\.p-virtualscroller/);
   });
 });

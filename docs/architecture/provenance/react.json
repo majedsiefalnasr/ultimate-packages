@@ -124,5 +124,29 @@
     "ultimateDestination": "packages/react/src/menu/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/virtualscroller/VirtualScroller.js",
+    "ultimateDestination": "packages/react/src/scroller/scroller.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified real PrimeReact 10.9.9 VirtualScroller measurement/windowing architecture (VirtualScroller.js:185-186): elementRef.current.offsetHeight content measurement (zero ResizeObserver usage upstream) informed this task's own ResizeObserver-based substitute, a deliberate modern-architecture deviation documented in the plan's Global Constraints and self-review, not a silent divergence. calculateNumItemsInViewport/calculateLast consumed from @ultimate/uix-data (see that package's own provenance entry) rather than reimplemented locally, with numToleratedItems honored from this task onward (not silently hardcoded past its own declaration, per the plan's revision fix). getLast(last, isCols=false) array-bounds clamp ported with isCols declared but unreachable in this vertical-only plan. Loader markup (.u-scroller-loader/.u-scroller-loading-icon), scrollTo/scrollToIndex imperative handle (useImperativeHandle), disabled passthrough mode, lazy-load firing via Promise.resolve().then() with {first,last} payload, and aria-busy binding all adapted from verified upstream behavior with full Ultimate namespace rename. Excludes horizontal/both orientation, getRenderedRange(), rich virtualized-grid ARIA (aria-rowcount/aria-setsize) beyond aria-busy, and step-batched lazy-load-page grouping — each a real, confirmed upstream feature deliberately scoped out of this plan (see plan's Explicitly Deferred section)."
+  },
+  {
+    "originalPath": "components/lib/virtualscroller/VirtualScroller.js",
+    "ultimateDestination": "packages/react/src/scroller/scroller-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeReact VirtualScroller's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract. Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following the same composition pattern already established by packages/ng/src/scroller/scroller-style.ts (Angular Task 3). Real PrimeNG/PrimeReact loader class names (.p-virtualscroller-loader/.p-virtualscroller-loading-icon) renamed .p-*→.u-*."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/scroller/scroller.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeReact test file. Mocks concrete offsetHeight/scrollTop values and asserts the exact numeric result calculateNumItemsInViewport/calculateLast/getLast produce from those known inputs, per the plan's revision requiring deterministic numeric assertions over bare hasAttribute/toBeGreaterThan(0) checks. Also verifies the numToleratedItems prop override is honored (not hardcoded)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/scroller/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]

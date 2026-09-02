@@ -1,7 +1,7 @@
 {
   "name": "@ultimate/react",
   "version": "0.1.0",
-  "description": "Ultimate Platform React components: Button, Checkbox, Dialog, Menu, Tooltip.",
+  "description": "Ultimate Platform React components: Button, Checkbox, Dialog, Menu, Scroller, Tooltip.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -34,6 +34,11 @@
       "import": "./dist/menu/index.mjs",
       "default": "./dist/menu/index.mjs"
     },
+    "./scroller": {
+      "types": "./dist/scroller/index.d.mts",
+      "import": "./dist/scroller/index.mjs",
+      "default": "./dist/scroller/index.mjs"
+    },
     "./tooltip": {
       "types": "./dist/tooltip/index.d.mts",
       "import": "./dist/tooltip/index.mjs",
@@ -47,8 +52,10 @@
   ],
   "dependencies": {
     "@ultimate/react-core": "workspace:*",
+    "@ultimate/uix-data": "workspace:*",
     "@ultimate/uix-motion": "workspace:*",
     "@ultimate/uix-styled": "workspace:*",
+    "@ultimate/uix-styles": "workspace:*",
     "@ultimate/uix-utils": "workspace:*"
   },
   "peerDependencies": {
