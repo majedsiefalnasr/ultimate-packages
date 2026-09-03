@@ -9,6 +9,11 @@ export function createBaseTable(): ComponentOptions {
       value: { type: Array, default: () => [] },
       dataKey: { type: String, default: "" },
       columns: { type: Array, default: () => [] },
+      sortMode: { type: String, default: "single" },
+      sortField: { type: String, default: undefined },
+      sortOrder: { type: Number, default: 0 },
+      multiSortMeta: { type: Array, default: () => [] },
     },
+    emits: ["sort"],
   };
 }

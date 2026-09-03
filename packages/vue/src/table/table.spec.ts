@@ -19,3 +19,28 @@ describe("UTable", () => {
     expect(wrapper.find('[role="table"]').exists()).toBe(true);
   });
 });
+
+describe("sorting", () => {
+  it("renders rows pre-sorted by sortField/sortOrder without mutating the value prop", () => {
+    const original = [
+      { id: 2, name: "Bob" },
+      { id: 1, name: "Alice" },
+    ];
+    const wrapper = mount(UTable, {
+      props: { value: original, columns: [{ field: "name", header: "Name" }], sortField: "name", sortOrder: 1 },
+    });
+    const cells = wrapper.findAll("td");
+    expect(cells[0].text()).toBe("Alice");
+    expect(original[0].name).toBe("Bob");
+  });
+
+  it("sets aria-sort on the active sortField's columnheader and emits sort on click", async () => {
+    const wrapper = mount(UTable, {
+      props: { value: [{ id: 1, name: "Alice" }], columns: [{ field: "name", header: "Name" }], sortField: "name", sortOrder: -1 },
+    });
+    const header = wrapper.find('[role="columnheader"]');
+    expect(header.attributes("aria-sort")).toBe("descending");
+    await header.trigger("click");
+    expect(wrapper.emitted("sort")).toBeTruthy();
+  });
+});
