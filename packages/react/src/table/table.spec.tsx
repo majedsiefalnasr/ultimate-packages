@@ -132,3 +132,20 @@ describe("selection", () => {
     expect(onSelectionChange).toHaveBeenCalledWith({ id: 1, name: "Alice" });
   });
 });
+
+describe("keyboard navigation", () => {
+  it("ArrowDown on a row moves focus to the next row", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        columns={[{ field: "name", header: "Name" }]}
+      />
+    );
+    const rows = container.querySelectorAll('tbody [role="row"]');
+    (rows[0] as HTMLElement).focus();
+    (rows[0] as HTMLElement).dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })
+    );
+    expect(document.activeElement).toBe(rows[1]);
+  });
+});

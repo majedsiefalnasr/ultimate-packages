@@ -223,6 +223,49 @@ export function UTable<T>({
     return sortOrder === 1 ? "ascending" : "descending";
   };
 
+  /**
+   * Keyboard-equivalent path for row navigation (spec §15's confirmed
+   * ArrowDown/ArrowUp/Home/End baseline), matching Angular's Task 7
+   * `onRowKeyDown` vocabulary — the mechanism differs (DOM traversal via
+   * `currentTarget`/`parentElement` here vs. Angular's `@HostListener`),
+   * the vocabulary does not. Only moves `.focus()` between `tbody
+   * [role="row"]` elements — never the header row, since this handler is
+   * bound per data row. Enter/selection-toggle behavior is already covered
+   * by `onClick`, so it is intentionally out of scope here.
+   */
+  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>) => {
+    const row = event.currentTarget;
+    const rowGroup = row.parentElement;
+    if (!rowGroup) return;
+
+    const rows = Array.from(rowGroup.querySelectorAll<HTMLElement>(':scope > [role="row"]'));
+    const index = rows.indexOf(row);
+    if (index === -1) return;
+
+    let target: HTMLElement | undefined;
+    switch (event.key) {
+      case "ArrowDown":
+        target = rows[index + 1];
+        break;
+      case "ArrowUp":
+        target = rows[index - 1];
+        break;
+      case "Home":
+        target = rows[0];
+        break;
+      case "End":
+        target = rows[rows.length - 1];
+        break;
+      default:
+        return;
+    }
+
+    if (target) {
+      event.preventDefault();
+      target.focus();
+    }
+  };
+
   const handleSort = (field: string) => {
     if (!onSort) return;
 
@@ -264,8 +307,10 @@ export function UTable<T>({
               key={index}
               className={cx("row") as string}
               role="row"
+              tabIndex={0}
               aria-selected={isSelected(row)}
               onClick={() => handleRowClick(row)}
+              onKeyDown={handleRowKeyDown}
             >
               {columns.map((col) => (
                 <td key={col.field}>{String(resolveCell(row, col.field))}</td>
