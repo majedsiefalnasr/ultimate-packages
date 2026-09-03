@@ -1,13 +1,24 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, input, output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnChanges,
+  SimpleChanges,
+  ViewEncapsulation,
+  input,
+  output,
+  signal,
+} from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
 import { equals } from "@ultimate/uix-data";
 import type { FilterMetadata, SelectionMode, SortMeta, SortMode } from "@ultimate/uix-data";
 import { deepEquals } from "@ultimate/uix-utils/object";
+import { PaginatorPageChangeEvent, UPaginator } from "../paginator/paginator";
 import { tableStyleModule } from "./table-style";
 
 @Component({
   standalone: true,
   selector: "u-table",
+  imports: [UPaginator],
   template: `
     <div [class]="cx('root')" role="table">
       <table [class]="cx('table')">
@@ -23,7 +34,7 @@ import { tableStyleModule } from "./table-style";
           </tr>
         </thead>
         <tbody [class]="cx('tbody')" role="rowgroup">
-          @for (row of filteredValue; track $index) {
+          @for (row of pagedValue; track $index) {
             <tr
               [class]="cx('row')"
               role="row"
@@ -39,12 +50,20 @@ import { tableStyleModule } from "./table-style";
           }
         </tbody>
       </table>
+      @if (paginator()) {
+        <u-paginator
+          [first]="_first()"
+          [rows]="rows()"
+          [totalRecords]="totalRecords()"
+          (onPageChange)="onPaginatorPageChange($event)"
+        ></u-paginator>
+      }
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class UTable<T> extends UBaseComponent {
+export class UTable<T> extends UBaseComponent implements OnChanges {
   protected override readonly componentName = "table";
   protected override readonly styleModule = tableStyleModule;
 
@@ -67,6 +86,34 @@ export class UTable<T> extends UBaseComponent {
   selection = input<T | T[]>();
   compareSelectionBy = input<"equals" | "deepEquals">("equals");
   selectionChange = output<T | T[]>();
+
+  paginator = input(false);
+  first = input(0);
+  rows = input(0);
+  totalRecords = input(0);
+  rowsPerPageOptions = input<number[]>();
+
+  firstChange = output<number>();
+  rowsChange = output<number>();
+
+  /**
+   * Internal paging cursor, reconciled from the `first` input via
+   * `ngOnChanges` and mutated directly by `onPaginatorPageChange` —
+   * mirrors `UPaginator`'s own `_first`/`ngOnChanges` pattern (see
+   * `../paginator/paginator.ts`). A signal (not a plain field) so
+   * `pagedValue`'s reactive read picks up `onPaginatorPageChange`'s
+   * mutation under `OnPush` without a parent re-binding `first` back in —
+   * required by the second Task 8 test, which clicks the real
+   * `UPaginator`'s own next button directly and asserts the table's
+   * rendered slice updates without the test itself re-setting `first`.
+   */
+  protected readonly _first = signal(0);
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["first"]) {
+      this._first.set(changes["first"].currentValue);
+    }
+  }
 
   protected resolveCell(row: T, field: string): unknown {
     return (row as Record<string, unknown>)[field];
@@ -134,6 +181,34 @@ export class UTable<T> extends UBaseComponent {
       }),
     );
     return this.applySort(filtered);
+  }
+
+  /**
+   * Paginated view of `filteredValue` (filter-then-sort-then-paginate, per
+   * spec §10 and both research reports' consistent pipeline ordering). When
+   * `paginator()` is false, this falls back to the full `filteredValue`
+   * result unsliced — critical for Tasks 2-7's existing tests, none of
+   * which set `paginator`, to keep rendering every filtered/sorted row
+   * unmodified.
+   */
+  protected get pagedValue(): T[] {
+    if (!this.paginator()) return this.filteredValue;
+    const first = this._first();
+    return this.filteredValue.slice(first, first + this.rows());
+  }
+
+  /**
+   * Wired to the real `UPaginator`'s `onPageChange` output. Per spec §4.1's
+   * always-internal-plus-emit convention: `_first` is updated internally
+   * first (so `pagedValue` reflects the new page immediately, matching
+   * `UPaginator`'s own internal-state-first pattern), then `firstChange`/
+   * `rowsChange` are emitted so a parent using two-way/banana-in-a-box
+   * binding (`[(first)]`/`[(rows)]`) stays in sync.
+   */
+  protected onPaginatorPageChange(event: PaginatorPageChangeEvent): void {
+    this._first.set(event.first);
+    this.firstChange.emit(event.first);
+    this.rowsChange.emit(event.rows);
   }
 
   /**

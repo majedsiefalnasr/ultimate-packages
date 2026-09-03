@@ -226,3 +226,36 @@ describe("keyboard navigation", () => {
     expect(fixture.nativeElement.ownerDocument.activeElement).toBe(rows[1]);
   });
 });
+
+describe("Paginator composition (real UPaginator, not a mock)", () => {
+  it("renders a real u-paginator child when paginator=true and slices rows to the current page", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rows = Array.from({ length: 25 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    fixture.componentRef.setInput("value", rows);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("paginator", true);
+    fixture.componentRef.setInput("first", 0);
+    fixture.componentRef.setInput("rows", 10);
+    fixture.componentRef.setInput("totalRecords", 25);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("u-paginator")).not.toBeNull();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(10);
+  });
+
+  it("advancing the real UPaginator's page updates the visible row slice", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rows = Array.from({ length: 25 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    fixture.componentRef.setInput("value", rows);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("paginator", true);
+    fixture.componentRef.setInput("first", 0);
+    fixture.componentRef.setInput("rows", 10);
+    fixture.componentRef.setInput("totalRecords", 25);
+    fixture.detectChanges();
+    const nextButton = fixture.nativeElement.querySelector("[data-u-paginator-next]");
+    nextButton.click();
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells[0].textContent?.trim()).toBe("Row 10");
+  });
+});
