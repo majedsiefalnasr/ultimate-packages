@@ -333,4 +333,53 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll("[data-u-scroller-item]").length).toBe(0);
   });
+
+  it("clicking a virtualized row emits selectionChange with the clicked row (single mode)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rows = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    fixture.componentRef.setInput("value", rows);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "single");
+    fixture.componentRef.setInput("virtualScroll", true);
+    fixture.componentRef.setInput("virtualScrollItemSize", 30);
+    fixture.detectChanges();
+    const scrollerRoot = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    resizeObserverCallback?.(
+      [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    fixture.detectChanges();
+
+    let emitted: unknown;
+    fixture.componentInstance.selectionChange.subscribe((e: unknown) => (emitted = e));
+    const firstRow = fixture.nativeElement.querySelector('table[data-u-table-virtual-body] tbody [role="row"]');
+    firstRow.click();
+    expect(emitted).toEqual(rows[0]);
+  });
+
+  it("ArrowDown on a virtualized row moves focus to the next row within the rendered window", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rows = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    fixture.componentRef.setInput("value", rows);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("virtualScroll", true);
+    fixture.componentRef.setInput("virtualScrollItemSize", 30);
+    fixture.detectChanges();
+    const scrollerRoot = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    resizeObserverCallback?.(
+      [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    fixture.detectChanges();
+
+    const renderedRows = fixture.nativeElement.querySelectorAll('table[data-u-table-virtual-body] tbody [role="row"]');
+    expect(renderedRows.length).toBeGreaterThan(1);
+    renderedRows[0].focus();
+    renderedRows[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.ownerDocument.activeElement).toBe(renderedRows[1]);
+  });
 });

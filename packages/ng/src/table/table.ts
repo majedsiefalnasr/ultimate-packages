@@ -33,6 +33,12 @@ import { tableStyleModule } from "./table-style";
             <table data-u-table-virtual-body [class]="cx('table')">
               <tbody [class]="cx('tbody')" role="rowgroup">
                 @for (item of visibleItems; track item.index) {
+                  <!-- Known limitation: onRowKeyDown walks :scope > [role="row"] within
+                       this tbody, which under virtualization only contains the
+                       currently-rendered window, not the full logical dataset — so
+                       ArrowDown/ArrowUp/Home/End stop at the edges of what's mounted,
+                       not the edges of the full value() dataset. This is intentional
+                       (a row outside the window isn't in the DOM to focus), not a bug. -->
                   <tr
                     [class]="cx('row')"
                     role="row"
