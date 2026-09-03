@@ -6,6 +6,8 @@ describe("uix-styles table", () => {
     expect(typeof style).toBe("string");
     expect(style).toContain(".u-table");
     expect(style).not.toContain(".p-datatable");
+    expect(style).not.toContain(".p-virtualscroller");
+    expect(style).not.toContain(".p-row-odd");
   });
 
   it("uses dt() token references for themeable properties", () => {

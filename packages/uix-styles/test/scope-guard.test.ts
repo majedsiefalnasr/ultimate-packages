@@ -73,6 +73,7 @@ describe("component style modules — exactly 9 exist alongside base", () => {
   });
   it("table style uses only .u-table* selectors", () => {
     expect(tableStyle).not.toMatch(/\.p-datatable/);
+    expect(tableStyle).not.toMatch(/\.p-virtualscroller/);
   });
   it("tooltip style uses only .u-tooltip* selectors", () => {
     expect(tooltipStyle).not.toMatch(/\.p-tooltip/);

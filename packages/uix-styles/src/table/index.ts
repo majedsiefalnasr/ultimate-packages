@@ -42,12 +42,12 @@ export const style = /*css*/ `
     }
 
     .u-table-scrollable > .u-table-table-container > .u-table-table > .u-table-thead,
-    .u-table-scrollable > .u-table-table-container > .p-virtualscroller > .u-table-table > .u-table-thead {
+    .u-table-scrollable > .u-table-table-container > .u-scroller > .u-table-table > .u-table-thead {
         background: dt('datatable.header.cell.background');
     }
 
     .u-table-scrollable > .u-table-table-container > .u-table-table > .u-table-tfoot,
-    .u-table-scrollable > .u-table-table-container > .p-virtualscroller > .u-table-table > .u-table-tfoot {
+    .u-table-scrollable > .u-table-table-container > .u-scroller > .u-table-table > .u-table-tfoot {
         background: dt('datatable.footer.cell.background');
     }
 
@@ -257,7 +257,7 @@ export const style = /*css*/ `
         display: flex;
     }
 
-    .u-table .p-virtualscroller .p-virtualscroller-loading {
+    .u-table .u-scroller .u-scroller-loader {
         transform: none !important;
         min-height: 0;
         position: sticky;
@@ -509,11 +509,11 @@ export const style = /*css*/ `
         border-width: 0 1px 0 1px;
     }
 
-    .u-table.u-table-striped .u-table-tbody > tr.p-row-odd {
+    .u-table.u-table-striped .u-table-tbody > tr.u-table-row-odd {
         background: dt('datatable.row.striped.background');
     }
 
-    .u-table.u-table-striped .u-table-tbody > tr.p-row-odd.u-table-row-selected {
+    .u-table.u-table-striped .u-table-tbody > tr.u-table-row-odd.u-table-row-selected {
         background: dt('datatable.row.selected.background');
         color: dt('datatable.row.selected.color');
     }
