@@ -101,3 +101,63 @@ describe("sorting", () => {
     ]);
   });
 });
+
+describe("filtering (Angular array-of-alternatives operator shape, spec §9 — string match modes only)", () => {
+  it("applies a simple FilterMetadata filter (matchMode: contains)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "ali", matchMode: "contains" } });
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Alice");
+  });
+
+  it("applies matchMode: startsWith", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Alison" },
+      { id: 3, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "Ali", matchMode: "startsWith" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: equals", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Alison" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "Alice", matchMode: "equals" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
+  });
+
+  it("applies an array-of-alternatives filter (FilterMetadata[]) with OR semantics per element", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+      { id: 3, name: "Carol" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", {
+      name: [
+        { value: "ali", matchMode: "contains" },
+        { value: "car", matchMode: "contains" },
+      ],
+    });
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(2);
+  });
+});

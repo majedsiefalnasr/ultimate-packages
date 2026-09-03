@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, input, output } from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
-import type { SortMeta, SortMode } from "@ultimate/uix-data";
+import type { FilterMetadata, SortMeta, SortMode } from "@ultimate/uix-data";
 import { tableStyleModule } from "./table-style";
 
 @Component({
@@ -21,7 +21,7 @@ import { tableStyleModule } from "./table-style";
           </tr>
         </thead>
         <tbody [class]="cx('tbody')" role="rowgroup">
-          @for (row of sortedValue; track $index) {
+          @for (row of filteredValue; track $index) {
             <tr [class]="cx('row')" role="row">
               @for (col of columns(); track col.field) {
                 <td>{{ resolveCell(row, col.field) }}</td>
@@ -52,6 +52,8 @@ export class UTable<T> extends UBaseComponent {
   sortOrderChange = output<1 | 0 | -1>();
   multiSortMetaChange = output<SortMeta[]>();
 
+  filters = input<Record<string, FilterMetadata | FilterMetadata[]>>({});
+
   protected resolveCell(row: T, field: string): unknown {
     return (row as Record<string, unknown>)[field];
   }
@@ -65,14 +67,60 @@ export class UTable<T> extends UBaseComponent {
   }
 
   /**
-   * Clones `value()` (`[...this.value()]`) before sorting so the caller's
-   * input array is never mutated in place, then applies either single-field
+   * Tests one row's field value against a single `FilterMetadata`. Only the
+   * string match modes in this task's scope are dispatched; all other
+   * `FilterMatchMode` values are deferred (see `filteredValue`'s dispatch
+   * comment) and never reach this method.
+   */
+  private matchesFilter(row: T, field: string, filter: FilterMetadata): boolean {
+    const cellValue = String(this.resolveCell(row, field) ?? "").toLowerCase();
+    const filterValue = String(filter.value ?? "").toLowerCase();
+
+    switch (filter.matchMode) {
+      case "contains":
+        return cellValue.includes(filterValue);
+      case "startsWith":
+        return cellValue.startsWith(filterValue);
+      case "equals":
+        return cellValue === filterValue;
+      // NEEDS IMPLEMENTATION-TIME VERIFICATION: notContains, endsWith, notEquals, lt, lte, gt, gte, between, in, notIn, dateIs, dateIsNot, dateBefore, dateAfter, custom
+      default:
+        return true;
+    }
+  }
+
+  /**
+   * Applies `filters()` to `value()`. Each entry is keyed by field; a
+   * single `FilterMetadata` must match, while a `FilterMetadata[]` is an
+   * array-of-alternatives OR'd together (any element matching passes the
+   * row), per spec §9's Angular-specific operator shape.
+   */
+  protected get filteredValue(): T[] {
+    const rows = this.value();
+    const filters = this.filters();
+    const fields = Object.keys(filters);
+    if (fields.length === 0) return this.applySort(rows);
+
+    const filtered = rows.filter((row) =>
+      fields.every((field) => {
+        const filter = filters[field];
+        return Array.isArray(filter)
+          ? filter.some((f) => this.matchesFilter(row, field, f))
+          : this.matchesFilter(row, field, filter);
+      }),
+    );
+    return this.applySort(filtered);
+  }
+
+  /**
+   * Clones `rows` (`[...rows]`) before sorting so the caller's input array
+   * is never mutated in place, then applies either single-field
    * (`sortField`/`sortOrder`) or multi-field (`multiSortMeta`, entries
    * applied in priority order — first entry is primary key) sort depending
    * on `sortMode()`.
    */
-  protected get sortedValue(): T[] {
-    const rows = [...this.value()];
+  private applySort(rows: T[]): T[] {
+    rows = [...rows];
 
     if (this.sortMode() === "multiple") {
       const meta = this.multiSortMeta();
