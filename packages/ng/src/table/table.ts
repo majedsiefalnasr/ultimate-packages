@@ -90,6 +90,16 @@ export class UTable<T> extends UBaseComponent {
   }
 
   /**
+   * Sorted-but-unfiltered view of `value()`. Independent of `filteredValue`
+   * (not derived from it) — the two are separate consumable views per the
+   * plan: `sortedValue` always reflects sort state alone, while
+   * `filteredValue` reflects filter-then-sort.
+   */
+  protected get sortedValue(): T[] {
+    return this.applySort(this.value());
+  }
+
+  /**
    * Applies `filters()` to `value()`. Each entry is keyed by field; a
    * single `FilterMetadata` must match, while a `FilterMetadata[]` is an
    * array-of-alternatives OR'd together (any element matching passes the

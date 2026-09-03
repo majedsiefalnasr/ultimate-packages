@@ -79,6 +79,25 @@ describe("sorting", () => {
     expect(header.getAttribute("aria-sort")).toBe("descending");
   });
 
+  it("exposes sortedValue as a directly accessible, sorted-but-unfiltered getter", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const original = [
+      { id: 2, name: "Bob" },
+      { id: 1, name: "Alice" },
+    ];
+    fixture.componentRef.setInput("value", original);
+    fixture.componentRef.setInput("sortField", "name");
+    fixture.componentRef.setInput("sortOrder", 1);
+    // A filter that would exclude "Bob" if sortedValue were derived from
+    // filteredValue instead of value() directly.
+    fixture.componentRef.setInput("filters", { name: { value: "ali", matchMode: "contains" } });
+    fixture.detectChanges();
+
+    const instance = fixture.componentInstance as unknown as { sortedValue: Row[] };
+    expect(instance.sortedValue.map((r) => r.name)).toEqual(["Alice", "Bob"]);
+    expect(original[0].name).toBe("Bob"); // original array untouched
+  });
+
   it("multi-sort applies multiSortMeta entries in order", () => {
     const fixture = TestBed.createComponent(UTable<{ group: string; name: string }>);
     fixture.componentRef.setInput("value", [
