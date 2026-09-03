@@ -389,6 +389,12 @@ export function UTable<T>({
                     tabIndex={0}
                     aria-selected={isSelected(value as T)}
                     onClick={() => handleRowClick(value as T)}
+                    // Known limitation: handleRowKeyDown walks :scope > [role="row"]
+                    // within this tbody, which under virtualization only contains the
+                    // currently-rendered window, not the full logical dataset — so
+                    // ArrowDown/ArrowUp/Home/End stop at the edges of what's mounted,
+                    // not the edges of the full `value` dataset. This is intentional
+                    // (a row outside the window isn't in the DOM to focus), not a bug.
                     onKeyDown={handleRowKeyDown}
                     style={{ position: "absolute", top: getItemOptions(index).index * itemSize, width: "100%" }}
                   >

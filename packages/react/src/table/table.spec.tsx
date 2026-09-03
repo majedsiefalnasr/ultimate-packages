@@ -266,4 +266,60 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     // first = floor(3000/30) = 100 -> top = 100 * 30 = 3000px
     expect(firstRow.style.top).toBe("3000px");
   });
+
+  it("clicking a virtualized row calls onSelectionChange with the clicked row (single mode)", () => {
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={rowsData}
+        dataKey="id"
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="single"
+        onSelectionChange={onSelectionChange}
+        virtualScrollerOptions={{ itemSize: 30 }}
+      />
+    );
+    const scrollerRoot = container.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    act(() => {
+      resizeObserverCallback?.(
+        [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
+    });
+    const firstRow = container.querySelector(
+      'table[data-u-table-virtual-body] tbody [role="row"]'
+    ) as HTMLElement;
+    firstRow.click();
+    expect(onSelectionChange).toHaveBeenCalledWith(rowsData[0]);
+  });
+
+  it("ArrowDown on a virtualized row moves focus to the next row within the rendered window", () => {
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const { container } = render(
+      <UTable<Row>
+        value={rowsData}
+        columns={[{ field: "name", header: "Name" }]}
+        virtualScrollerOptions={{ itemSize: 30 }}
+      />
+    );
+    const scrollerRoot = container.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    act(() => {
+      resizeObserverCallback?.(
+        [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
+    });
+    const renderedRows = container.querySelectorAll(
+      'table[data-u-table-virtual-body] tbody [role="row"]'
+    );
+    expect(renderedRows.length).toBeGreaterThan(1);
+    (renderedRows[0] as HTMLElement).focus();
+    (renderedRows[0] as HTMLElement).dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })
+    );
+    expect(document.activeElement).toBe(renderedRows[1]);
+  });
 });
