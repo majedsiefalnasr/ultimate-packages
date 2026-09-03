@@ -1,7 +1,7 @@
 /// <reference types="@testing-library/jest-dom" />
 import * as React from "react";
-import { describe, it, expect, vi } from "vitest";
-import { render } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, cleanup, act } from "@testing-library/react";
 import { UTable } from "./table";
 
 interface Row {
@@ -166,5 +166,104 @@ describe("Paginator composition (real UPaginator, not a mock)", () => {
     );
     expect(container.querySelector("nav")).not.toBeNull();
     expect(container.querySelectorAll("tbody td").length).toBe(10);
+  });
+});
+
+describe("Scroller composition (real UScroller content-template mechanism, not a mock)", () => {
+  // UScroller's mount effect constructs a ResizeObserver unconditionally and
+  // jsdom does not implement one; this mirrors the established
+  // ResizeObserver-callback-capture / mockViewportHeight convention from
+  // packages/react/src/scroller/scroller.spec.tsx exactly, needed here
+  // because the real windowed (non-disabled) path renders zero rows at the
+  // default zero-height jsdom viewport (offsetHeight=0 -> numItemsInViewport
+  // = 0 -> last = 0 -> empty visibleItems), matching the same fix Angular's
+  // Task 9 test round required (packages/ng/src/table/table.spec.ts:264).
+  let resizeObserverCallback: ResizeObserverCallback | undefined;
+
+  beforeEach(() => {
+    resizeObserverCallback = undefined;
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(cb: ResizeObserverCallback) {
+          resizeObserverCallback = cb;
+        }
+        observe(target: Element) {
+          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        }
+        disconnect() {}
+      }
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    cleanup();
+  });
+
+  function mockViewportHeight(element: HTMLElement, height: number): void {
+    Object.defineProperty(element, "offsetHeight", { value: height, configurable: true });
+  }
+
+  it("renders a real UScroller child with real table/tbody/tr/td markup via contentTemplate when virtualScrollerOptions is provided", () => {
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const { container } = render(
+      <UTable<Row>
+        value={rowsData}
+        columns={[{ field: "name", header: "Name" }]}
+        virtualScrollerOptions={{ itemSize: 30 }}
+      />
+    );
+    // Real windowing requires a measured viewport: mock ResizeObserver's
+    // captured callback (never construct a second observer) and
+    // offsetHeight, matching the established convention.
+    const scrollerRoot = container.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    act(() => {
+      resizeObserverCallback?.(
+        [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
+    });
+    const table = container.querySelector("table[data-u-table-virtual-body]");
+    expect(table).not.toBeNull();
+    const tbody = table!.querySelector("tbody");
+    expect(tbody?.parentElement).toBe(table);
+    const trs = tbody!.querySelectorAll(":scope > tr");
+    expect(trs.length).toBeGreaterThan(0);
+    expect(trs.length).toBeLessThan(200);
+    trs.forEach((tr) => expect(tr.querySelector(":scope > td")).not.toBeNull());
+    expect(container.querySelectorAll("[data-u-scroller-item]").length).toBe(0);
+  });
+
+  it("applies a top offset to each row using the real absolute index (positioning is not free from UScroller's content wrapper)", () => {
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const { container } = render(
+      <UTable<Row>
+        value={rowsData}
+        columns={[{ field: "name", header: "Name" }]}
+        virtualScrollerOptions={{ itemSize: 30 }}
+      />
+    );
+    const scrollerRoot = container.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    act(() => {
+      resizeObserverCallback?.(
+        [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
+    });
+    // Scroll so the window starts partway through the list, then confirm
+    // rendered rows are positioned at their real absolute index * itemSize,
+    // not stacked at 0 regardless of scroll offset.
+    Object.defineProperty(scrollerRoot, "scrollTop", { value: 3000, writable: true, configurable: true });
+    act(() => {
+      scrollerRoot.dispatchEvent(new Event("scroll"));
+    });
+    const table = container.querySelector("table[data-u-table-virtual-body]");
+    const firstRow = table!.querySelector("tbody > tr") as HTMLElement;
+    expect(firstRow.style.position).toBe("absolute");
+    // first = floor(3000/30) = 100 -> top = 100 * 30 = 3000px
+    expect(firstRow.style.top).toBe("3000px");
   });
 });

@@ -5,6 +5,7 @@ import type { FilterMetadata, SelectionMode, SortMeta, SortMode } from "@ultimat
 import { deepEquals } from "@ultimate/uix-utils/object";
 import { UPaginator } from "../paginator/paginator";
 import type { PaginatorPageChangeEvent } from "../paginator/paginator";
+import { UScroller } from "../scroller/scroller";
 import { tableStyleModule } from "./table-style";
 
 export interface UTableColumn {
@@ -52,6 +53,9 @@ export interface UTableProps<T> {
   rows?: number;
   totalRecords?: number;
   onPage?: (event: PaginatorPageChangeEvent) => void;
+  virtualScrollerOptions?: { itemSize: number };
+  lazy?: boolean;
+  onLazyLoad?: (event: { first: number; last: number }) => void;
 }
 
 function resolveCell<T>(row: T, field: string): unknown {
@@ -151,6 +155,21 @@ function matchesFilterEntry<T>(
  * `DataTable.js`: `props.paginator` checked independently of
  * `isVirtualScrollerDisabled()` at lines 190/283/1498/1768/1857),
  * `paginator` is not gated on virtualization state here either.
+ *
+ * Virtualization (`virtualScrollerOptions`/`lazy`/`onLazyLoad`) composes the
+ * real, already-shipped `UScroller` (not a mock) via its real
+ * `contentTemplate` render-prop mechanism: when `virtualScrollerOptions` is
+ * set, the plain `<tbody>` map used otherwise is replaced by a `<UScroller>`
+ * whose `contentTemplate` supplies Table's own `<table><tbody><tr><td>`
+ * markup for just the windowed subset `UScroller` hands back, mirroring
+ * Angular's Task 9 composition. `UScroller`'s `.u-scroller-content` wrapper
+ * is `position: absolute` with a computed height but no per-row `top` of its
+ * own — only its built-in fallback rendering self-positions each item — so
+ * each `<tr>` here explicitly sets `top: getItemOptions(index).index *
+ * itemSize` using the real absolute index, matching the technique
+ * `UScroller`'s own built-in item rendering uses. Omitting this would render
+ * all visible rows stacked at the top of the scroll container regardless of
+ * actual scroll offset.
  */
 export function UTable<T>({
   value,
@@ -171,6 +190,9 @@ export function UTable<T>({
   rows = 0,
   totalRecords = 0,
   onPage,
+  virtualScrollerOptions,
+  lazy,
+  onLazyLoad,
 }: UTableProps<T>) {
   const { cx } = useComponentBase({ componentName: "table", styleModule: tableStyleModule });
 
@@ -330,24 +352,56 @@ export function UTable<T>({
             ))}
           </tr>
         </thead>
-        <tbody className={cx("tbody") as string} role="rowgroup">
-          {pagedValue.map((row, index) => (
-            <tr
-              key={index}
-              className={cx("row") as string}
-              role="row"
-              tabIndex={0}
-              aria-selected={isSelected(row)}
-              onClick={() => handleRowClick(row)}
-              onKeyDown={handleRowKeyDown}
-            >
-              {columns.map((col) => (
-                <td key={col.field}>{String(resolveCell(row, col.field))}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
+        {!virtualScrollerOptions && (
+          <tbody className={cx("tbody") as string} role="rowgroup">
+            {pagedValue.map((row, index) => (
+              <tr
+                key={index}
+                className={cx("row") as string}
+                role="row"
+                tabIndex={0}
+                aria-selected={isSelected(row)}
+                onClick={() => handleRowClick(row)}
+                onKeyDown={handleRowKeyDown}
+              >
+                {columns.map((col) => (
+                  <td key={col.field}>{String(resolveCell(row, col.field))}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        )}
       </table>
+      {virtualScrollerOptions && (
+        <UScroller
+          items={filteredValue}
+          itemSize={virtualScrollerOptions.itemSize}
+          lazy={lazy}
+          onLazyLoad={onLazyLoad}
+          contentTemplate={({ items: visible, getItemOptions, itemSize }) => (
+            <table data-u-table-virtual-body className={cx("table") as string}>
+              <tbody className={cx("tbody") as string} role="rowgroup">
+                {visible.map(({ index, value }) => (
+                  <tr
+                    key={index}
+                    className={cx("row") as string}
+                    role="row"
+                    tabIndex={0}
+                    aria-selected={isSelected(value as T)}
+                    onClick={() => handleRowClick(value as T)}
+                    onKeyDown={handleRowKeyDown}
+                    style={{ position: "absolute", top: getItemOptions(index).index * itemSize, width: "100%" }}
+                  >
+                    {columns.map((col) => (
+                      <td key={col.field}>{String(resolveCell(value as T, col.field))}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        />
+      )}
       {paginator && (
         <UPaginator
           first={first}
