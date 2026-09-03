@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { UTable } from "./table";
 
@@ -257,5 +257,80 @@ describe("Paginator composition (real UPaginator, not a mock)", () => {
     fixture.detectChanges();
     const cells = fixture.nativeElement.querySelectorAll("td");
     expect(cells[0].textContent?.trim()).toBe("Row 10");
+  });
+});
+
+describe("Scroller composition (real UScroller content-template mechanism, not a mock)", () => {
+  // UScroller's ngAfterViewInit constructs a ResizeObserver unconditionally
+  // and jsdom does not implement one; this mirrors the established
+  // ResizeObserver-callback-capture / mockViewportHeight convention from
+  // packages/ng/src/scroller/scroller.spec.ts exactly, needed here because
+  // the real windowed (non-disabled) path renders zero rows at the default
+  // zero-height jsdom viewport.
+  let resizeObserverCallback: ResizeObserverCallback | undefined;
+
+  beforeEach(() => {
+    resizeObserverCallback = undefined;
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(cb: ResizeObserverCallback) {
+          resizeObserverCallback = cb;
+        }
+        observe(target: Element) {
+          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        }
+        disconnect() {}
+      }
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  function mockViewportHeight(element: HTMLElement, height: number): void {
+    Object.defineProperty(element, "offsetHeight", { value: height, configurable: true });
+  }
+
+  it("renders a real u-scroller child with real table/tbody/tr/td markup via its #content template when virtualScroll=true", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rows = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    fixture.componentRef.setInput("value", rows);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("virtualScroll", true);
+    fixture.componentRef.setInput("virtualScrollItemSize", 30);
+    // Real windowing requires a measured viewport: mock ResizeObserver's
+    // captured callback (never construct a second observer) and offsetHeight,
+    // matching the established convention from the Scroller/Paginator plans.
+    fixture.detectChanges();
+    const scrollerRoot = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    resizeObserverCallback?.(
+      [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    fixture.detectChanges();
+    const scrollerEl = fixture.nativeElement.querySelector("u-scroller");
+    expect(scrollerEl).not.toBeNull();
+    // Real table structure through the content template, not <div> soup:
+    const table = scrollerEl.querySelector("table[data-u-table-virtual-body]");
+    expect(table).not.toBeNull();
+    const tbody = table.querySelector("tbody");
+    expect(tbody?.parentElement).toBe(table);
+    const trs = tbody.querySelectorAll(":scope > tr");
+    expect(trs.length).toBeGreaterThan(0);
+    expect(trs.length).toBeLessThan(200); // genuinely windowed, not the full list
+    trs.forEach((tr: Element) => expect(tr.querySelector(":scope > td")).not.toBeNull());
+  });
+
+  it("does not render the built-in u-scroller-item divs when virtualScroll=true (content template fully replaces them)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` })));
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("virtualScroll", true);
+    fixture.componentRef.setInput("virtualScrollItemSize", 30);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("[data-u-scroller-item]").length).toBe(0);
   });
 });

@@ -13,43 +13,77 @@ import { equals } from "@ultimate/uix-data";
 import type { FilterMetadata, SelectionMode, SortMeta, SortMode } from "@ultimate/uix-data";
 import { deepEquals } from "@ultimate/uix-utils/object";
 import { PaginatorPageChangeEvent, UPaginator } from "../paginator/paginator";
+import { UScroller } from "../scroller/scroller";
 import { tableStyleModule } from "./table-style";
 
 @Component({
   standalone: true,
   selector: "u-table",
-  imports: [UPaginator],
+  imports: [UPaginator, UScroller],
   template: `
     <div [class]="cx('root')" role="table">
-      <table [class]="cx('table')">
-        <thead [class]="cx('thead')" role="rowgroup">
-          <tr role="row">
-            @for (col of columns(); track col.field) {
-              <th
-                role="columnheader"
-                [attr.aria-sort]="ariaSortFor(col.field)"
-                (click)="onSort(col.field)"
-              >{{ col.header }}</th>
-            }
-          </tr>
-        </thead>
-        <tbody [class]="cx('tbody')" role="rowgroup">
-          @for (row of pagedValue; track $index) {
-            <tr
-              [class]="cx('row')"
-              role="row"
-              tabindex="0"
-              [attr.aria-selected]="isSelected(row)"
-              (click)="onRowClick(row)"
-              (keydown)="onRowKeyDown($event)"
-            >
+      @if (virtualScroll()) {
+        <u-scroller
+          [items]="filteredValue"
+          [itemSize]="virtualScrollItemSize()"
+          [lazy]="lazy()"
+          (onLazyLoad)="onScrollerLazyLoad($event)"
+        >
+          <ng-template #content let-visibleItems let-options="options">
+            <table data-u-table-virtual-body [class]="cx('table')">
+              <tbody [class]="cx('tbody')" role="rowgroup">
+                @for (item of visibleItems; track item.index) {
+                  <tr
+                    [class]="cx('row')"
+                    role="row"
+                    tabindex="0"
+                    [attr.aria-selected]="isSelected(item.value)"
+                    [style.position]="'absolute'"
+                    [style.top.px]="options.getItemOptions(item.index).index * options.itemSize"
+                    [style.width]="'100%'"
+                    (click)="onRowClick(item.value)"
+                    (keydown)="onRowKeyDown($event)"
+                  >
+                    @for (col of columns(); track col.field) {
+                      <td>{{ resolveCell(item.value, col.field) }}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </ng-template>
+        </u-scroller>
+      } @else {
+        <table [class]="cx('table')">
+          <thead [class]="cx('thead')" role="rowgroup">
+            <tr role="row">
               @for (col of columns(); track col.field) {
-                <td>{{ resolveCell(row, col.field) }}</td>
+                <th
+                  role="columnheader"
+                  [attr.aria-sort]="ariaSortFor(col.field)"
+                  (click)="onSort(col.field)"
+                >{{ col.header }}</th>
               }
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody [class]="cx('tbody')" role="rowgroup">
+            @for (row of pagedValue; track $index) {
+              <tr
+                [class]="cx('row')"
+                role="row"
+                tabindex="0"
+                [attr.aria-selected]="isSelected(row)"
+                (click)="onRowClick(row)"
+                (keydown)="onRowKeyDown($event)"
+              >
+                @for (col of columns(); track col.field) {
+                  <td>{{ resolveCell(row, col.field) }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
       @if (paginator()) {
         <u-paginator
           [first]="_first()"
@@ -95,6 +129,13 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
 
   firstChange = output<number>();
   rowsChange = output<number>();
+
+  virtualScroll = input(false);
+  virtualScrollItemSize = input(0);
+  lazy = input(false);
+  lazyLoadOnInit = input(false);
+
+  onLazyLoad = output<{ first: number; last: number }>();
 
   /**
    * Internal paging cursor, reconciled from the `first` input via
@@ -209,6 +250,15 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
     this._first.set(event.first);
     this.firstChange.emit(event.first);
     this.rowsChange.emit(event.rows);
+  }
+
+  /**
+   * Re-emits the real `UScroller`'s own `onLazyLoad` payload shape
+   * unchanged, matching Table's own `onLazyLoad` output contract (Interfaces
+   * section: "output `onLazyLoad`").
+   */
+  protected onScrollerLazyLoad(event: { first: number; last: number }): void {
+    this.onLazyLoad.emit(event);
   }
 
   /**
