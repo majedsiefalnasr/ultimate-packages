@@ -13,7 +13,11 @@ export function createBaseTable(): ComponentOptions {
       sortField: { type: String, default: undefined },
       sortOrder: { type: Number, default: 0 },
       multiSortMeta: { type: Array, default: () => [] },
+      filters: { type: Object, default: () => ({}) },
+      selectionMode: { type: String, default: undefined },
+      selection: { type: [Object, Array], default: undefined },
+      compareSelectionBy: { type: String, default: "equals" },
     },
-    emits: ["sort"],
+    emits: ["sort", "filter", "update:selection", "selection-change"],
   };
 }

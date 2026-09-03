@@ -44,3 +44,31 @@ describe("sorting", () => {
     expect(wrapper.emitted("sort")).toBeTruthy();
   });
 });
+
+describe("filtering (Vue object+constraints operator shape, spec §9)", () => {
+  it("applies a simple FilterMetadata filter", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        columns: [{ field: "name", header: "Name" }],
+        filters: { name: { value: "ali", matchMode: "contains" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(1);
+  });
+});
+
+describe("selection", () => {
+  it("emits update:selection with the clicked row in single mode", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "Alice" }],
+        dataKey: "id",
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "single",
+      },
+    });
+    await wrapper.find('tbody [role="row"]').trigger("click");
+    expect(wrapper.emitted("update:selection")?.[0]).toEqual([{ id: 1, name: "Alice" }]);
+  });
+});

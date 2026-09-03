@@ -13,7 +13,14 @@
         </tr>
       </thead>
       <tbody :class="cx('tbody')" role="rowgroup">
-        <tr v-for="(row, index) in sortedValue" :key="index" :class="cx('row')" role="row">
+        <tr
+          v-for="(row, index) in filteredValue"
+          :key="index"
+          :class="cx('row')"
+          role="row"
+          :aria-selected="isSelected(row)"
+          @click="selectRow(row)"
+        >
           <td v-for="col in columns" :key="col.field">{{ row[col.field] }}</td>
         </tr>
       </tbody>
@@ -22,6 +29,8 @@
 </template>
 
 <script>
+import { equals } from "@ultimate/uix-data";
+import { deepEquals } from "@ultimate/uix-utils/object";
 import { createBaseTable } from "./base-table";
 
 /**
@@ -42,6 +51,41 @@ function compareValues(a, b) {
   return String(a).localeCompare(String(b));
 }
 
+/**
+ * Tests one row's field value against a single `FilterMetadata`. Only
+ * `contains` (case-insensitive substring) is dispatched in this task's
+ * scope; all other `FilterMatchMode` values are deferred, matching React's
+ * Task 13 narrowed scope.
+ */
+function matchesFilter(row, field, filter) {
+  const cellValue = String(resolveCell(row, field) ?? "").toLowerCase();
+  const filterValue = String(filter.value ?? "").toLowerCase();
+
+  switch (filter.matchMode) {
+    case "contains":
+      return cellValue.includes(filterValue);
+    // NEEDS IMPLEMENTATION-TIME VERIFICATION: startsWith, notContains, endsWith, equals, notEquals, lt, lte, gt, gte, between, in, notIn, dateIs, dateIsNot, dateBefore, dateAfter, custom
+    default:
+      return true;
+  }
+}
+
+/**
+ * Tests one row's field value against a `filters` entry, which is either a
+ * single `FilterMetadata` (must match) or a `{operator, constraints}` group
+ * (spec §9's object-with-constraints-array shape, same as React's Task 13,
+ * distinct from Angular's array-of-alternatives shape): `constraints` are
+ * combined with AND (every constraint must match) or OR (any constraint
+ * matches) per `operator`.
+ */
+function matchesFilterEntry(row, field, entry) {
+  if (!("constraints" in entry)) return matchesFilter(row, field, entry);
+
+  return entry.operator === "or"
+    ? entry.constraints.some((c) => matchesFilter(row, field, c))
+    : entry.constraints.every((c) => matchesFilter(row, field, c));
+}
+
 export default {
   name: "UTable",
   extends: createBaseTable(),
@@ -54,7 +98,40 @@ export default {
      * key).
      */
     sortedValue() {
-      const rows = [...this.value];
+      return this.applySortTo(this.value);
+    },
+    /**
+     * Applies `filters` (filter-then-sort) via `matchesFilterEntry`/
+     * `matchesFilter`: each `filters` entry is keyed by field and is either
+     * a single `FilterMetadata` (must match) or a `{operator, constraints}`
+     * group (spec §9's object-with-constraints-array shape) whose
+     * `constraints` combine with AND/OR per `operator`. Only `contains`
+     * match mode is dispatched in this task's scope — see `matchesFilter`'s
+     * dispatch comment for the deferred modes. Reuses `sortedValue`'s sort
+     * logic (via `applySortTo`) rather than a parallel comparator so
+     * filtered rows still respect `sortField`/`sortOrder`/`multiSortMeta`.
+     */
+    filteredValue() {
+      const fields = Object.keys(this.filters);
+      if (fields.length === 0) return this.sortedValue;
+
+      const filtered = this.value.filter((row) =>
+        fields.every((field) => matchesFilterEntry(row, field, this.filters[field]))
+      );
+      return this.applySortTo(filtered);
+    },
+  },
+  methods: {
+    /**
+     * Clones `input` (`[...input]`) before sorting so the caller's array is
+     * never mutated, matching Angular's/React's `applySort`. Single mode
+     * uses `sortField`/`sortOrder`; multi mode applies `multiSortMeta`
+     * entries in priority order (first entry is primary key). Factored out
+     * of `sortedValue` so `filteredValue` can sort its already-filtered
+     * subset without duplicating the comparator logic.
+     */
+    applySortTo(input) {
+      const rows = [...input];
 
       if (this.sortMode === "multiple") {
         if (this.multiSortMeta.length === 0) return rows;
@@ -72,8 +149,6 @@ export default {
         (a, b) => compareValues(resolveCell(a, this.sortField), resolveCell(b, this.sortField)) * this.sortOrder
       );
     },
-  },
-  methods: {
     ariaSortFor(field) {
       if (this.sortMode === "multiple") {
         const entry = this.multiSortMeta.find((m) => m.field === field);
@@ -108,6 +183,45 @@ export default {
       }
 
       this.$emit("sort", { sortField: field, sortOrder: 1 });
+    },
+    /**
+     * Dispatches on `compareSelectionBy` between `uix-data`'s `equals`
+     * (default, `dataKey`-based field identity) and `uix-utils`'s
+     * structural `deepEquals`, matching React's `isRowEqual`.
+     */
+    isRowEqual(a, b) {
+      return this.compareSelectionBy === "deepEquals" ? deepEquals(a, b) : equals(a, b, this.dataKey);
+    },
+    isSelected(row) {
+      if (this.selection == null) return false;
+      if (Array.isArray(this.selection)) return this.selection.some((s) => this.isRowEqual(s, row));
+      return this.isRowEqual(this.selection, row);
+    },
+    /**
+     * Computes the next selection value and emits it rather than mutating
+     * `this.selection` directly (Vue props are one-way, same discipline as
+     * `sortColumn`): single mode always emits the clicked row; multiple
+     * mode toggles it in/out of the current selection array. Emits both
+     * `update:selection` (for `v-model:selection`) and the plain
+     * `selection-change` event, mirroring Paginator's `page` +
+     * `update:first`/`update:rows` dual-emit pattern. Inert when
+     * `selectionMode` is unset — no internal selection state, matching
+     * sort's "no uncontrolled fallback" pattern.
+     */
+    selectRow(row) {
+      if (!this.selectionMode) return;
+
+      let next;
+      if (this.selectionMode === "single") {
+        next = row;
+      } else {
+        const current = Array.isArray(this.selection) ? this.selection : [];
+        const index = current.findIndex((s) => this.isRowEqual(s, row));
+        next = index === -1 ? [...current, row] : current.filter((_, i) => i !== index);
+      }
+
+      this.$emit("update:selection", next);
+      this.$emit("selection-change", next);
     },
   },
 };
