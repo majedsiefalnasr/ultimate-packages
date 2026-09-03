@@ -104,6 +104,13 @@ export class UTable<T> extends UBaseComponent {
     return this.sortOrder() === 1 ? "ascending" : "descending";
   }
 
+  /**
+   * Directly sets/replaces sort state for the clicked column rather than
+   * cycling through asc/desc/none (deferred per plan's Global Constraints,
+   * spec §7). Single mode: always sets sortField/sortOrder to this field
+   * ascending. Multi mode: adds or replaces this field's multiSortMeta
+   * entry with order 1 ascending; no removal-on-click affordance.
+   */
   protected onSort(field: string): void {
     if (this.sortMode() === "multiple") {
       const meta = [...this.multiSortMeta()];
@@ -111,25 +118,13 @@ export class UTable<T> extends UBaseComponent {
       if (index === -1) {
         meta.push({ field, order: 1 });
       } else {
-        const nextOrder = this.nextOrder(meta[index].order);
-        if (nextOrder === 0) {
-          meta.splice(index, 1);
-        } else {
-          meta[index] = { field, order: nextOrder };
-        }
+        meta[index] = { field, order: 1 };
       }
       this.multiSortMetaChange.emit(meta);
       return;
     }
 
-    const nextOrder = this.sortField() === field ? this.nextOrder(this.sortOrder()) : 1;
     this.sortFieldChange.emit(field);
-    this.sortOrderChange.emit(nextOrder);
-  }
-
-  private nextOrder(current: 1 | 0 | -1): 1 | 0 | -1 {
-    if (current === 1) return -1;
-    if (current === -1) return 0;
-    return 1;
+    this.sortOrderChange.emit(1);
   }
 }
