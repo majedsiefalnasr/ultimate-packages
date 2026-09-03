@@ -8,9 +8,20 @@ import { tableStyleModule } from "./table-style";
   template: `
     <div [class]="cx('root')" role="table">
       <table [class]="cx('table')">
+        <thead [class]="cx('thead')" role="rowgroup">
+          <tr role="row">
+            @for (col of columns(); track col.field) {
+              <th role="columnheader">{{ col.header }}</th>
+            }
+          </tr>
+        </thead>
         <tbody [class]="cx('tbody')" role="rowgroup">
           @for (row of value(); track $index) {
-            <tr [class]="cx('row')" role="row"></tr>
+            <tr [class]="cx('row')" role="row">
+              @for (col of columns(); track col.field) {
+                <td>{{ $any(row)[col.field] }}</td>
+              }
+            </tr>
           }
         </tbody>
       </table>
@@ -25,4 +36,5 @@ export class UTable<T> extends UBaseComponent {
 
   value = input<T[]>([]);
   dataKey = input<string>("");
+  columns = input<{ field: string; header: string }[]>([]);
 }

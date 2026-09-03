@@ -33,4 +33,20 @@ describe("UTable", () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('[role="table"]')).not.toBeNull();
   });
+
+  it("renders a columnheader per column definition and a data cell per row/column pair", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [
+      { field: "id", header: "ID" },
+      { field: "name", header: "Name" },
+    ]);
+    fixture.detectChanges();
+    const headers = fixture.nativeElement.querySelectorAll('[role="columnheader"]');
+    expect(headers.length).toBe(2);
+    expect(headers[1].textContent?.trim()).toBe("Name");
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(2);
+    expect(cells[1].textContent?.trim()).toBe("Alice");
+  });
 });
