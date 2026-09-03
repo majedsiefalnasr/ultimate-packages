@@ -50,3 +50,54 @@ describe("UTable", () => {
     expect(cells[1].textContent?.trim()).toBe("Alice");
   });
 });
+
+describe("sorting", () => {
+  it("sorts by sortField/sortOrder (single-sort) without mutating the input array", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const original = [
+      { id: 2, name: "Bob" },
+      { id: 1, name: "Alice" },
+    ];
+    fixture.componentRef.setInput("value", original);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("sortField", "name");
+    fixture.componentRef.setInput("sortOrder", 1);
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells[0].textContent?.trim()).toBe("Alice");
+    expect(original[0].name).toBe("Bob"); // original array untouched
+  });
+
+  it("sets aria-sort on the active sortField's columnheader", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("sortField", "name");
+    fixture.componentRef.setInput("sortOrder", -1);
+    fixture.detectChanges();
+    const header = fixture.nativeElement.querySelector('[role="columnheader"]');
+    expect(header.getAttribute("aria-sort")).toBe("descending");
+  });
+
+  it("multi-sort applies multiSortMeta entries in order", () => {
+    const fixture = TestBed.createComponent(UTable<{ group: string; name: string }>);
+    fixture.componentRef.setInput("value", [
+      { group: "b", name: "z" },
+      { group: "a", name: "y" },
+      { group: "a", name: "x" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("sortMode", "multiple");
+    fixture.componentRef.setInput("multiSortMeta", [
+      { field: "group", order: 1 },
+      { field: "name", order: 1 },
+    ]);
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect([cells[0].textContent?.trim(), cells[1].textContent?.trim(), cells[2].textContent?.trim()]).toEqual([
+      "x",
+      "y",
+      "z",
+    ]);
+  });
+});
