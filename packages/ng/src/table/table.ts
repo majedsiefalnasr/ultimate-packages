@@ -19,7 +19,7 @@ import { tableStyleModule } from "./table-style";
           @for (row of value(); track $index) {
             <tr [class]="cx('row')" role="row">
               @for (col of columns(); track col.field) {
-                <td>{{ $any(row)[col.field] }}</td>
+                <td>{{ resolveCell(row, col.field) }}</td>
               }
             </tr>
           }
@@ -37,4 +37,8 @@ export class UTable<T> extends UBaseComponent {
   value = input<T[]>([]);
   dataKey = input<string>("");
   columns = input<{ field: string; header: string }[]>([]);
+
+  protected resolveCell(row: T, field: string): unknown {
+    return (row as Record<string, unknown>)[field];
+  }
 }
