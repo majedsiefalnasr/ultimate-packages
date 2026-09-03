@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, input, output } from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
-import type { FilterMetadata, SortMeta, SortMode } from "@ultimate/uix-data";
+import { equals } from "@ultimate/uix-data";
+import type { FilterMetadata, SelectionMode, SortMeta, SortMode } from "@ultimate/uix-data";
+import { deepEquals } from "@ultimate/uix-utils/object";
 import { tableStyleModule } from "./table-style";
 
 @Component({
@@ -22,7 +24,12 @@ import { tableStyleModule } from "./table-style";
         </thead>
         <tbody [class]="cx('tbody')" role="rowgroup">
           @for (row of filteredValue; track $index) {
-            <tr [class]="cx('row')" role="row">
+            <tr
+              [class]="cx('row')"
+              role="row"
+              [attr.aria-selected]="isSelected(row)"
+              (click)="onRowClick(row)"
+            >
               @for (col of columns(); track col.field) {
                 <td>{{ resolveCell(row, col.field) }}</td>
               }
@@ -53,6 +60,11 @@ export class UTable<T> extends UBaseComponent {
   multiSortMetaChange = output<SortMeta[]>();
 
   filters = input<Record<string, FilterMetadata | FilterMetadata[]>>({});
+
+  selectionMode = input<SelectionMode>();
+  selection = input<T | T[]>();
+  compareSelectionBy = input<"equals" | "deepEquals">("equals");
+  selectionChange = output<T | T[]>();
 
   protected resolveCell(row: T, field: string): unknown {
     return (row as Record<string, unknown>)[field];
@@ -184,5 +196,45 @@ export class UTable<T> extends UBaseComponent {
 
     this.sortFieldChange.emit(field);
     this.sortOrderChange.emit(1);
+  }
+
+  /**
+   * Identity comparison for selection matching, dispatched on
+   * `compareSelectionBy()`: `"equals"` (default) uses `dataKey`-based
+   * field identity via `uix-data`'s shared `equals`, while `"deepEquals"`
+   * uses `uix-utils`'s shared structural `deepEquals` — both are real,
+   * already-shipped comparators (no inline reimplementation needed).
+   */
+  private isRowEqual(a: T, b: T): boolean {
+    return this.compareSelectionBy() === "deepEquals" ? deepEquals(a, b) : equals(a, b, this.dataKey());
+  }
+
+  protected isSelected(row: T): boolean {
+    const selection = this.selection();
+    if (selection == null) return false;
+    if (Array.isArray(selection)) return selection.some((s) => this.isRowEqual(s, row));
+    return this.isRowEqual(selection, row);
+  }
+
+  /**
+   * Single mode: clicking a row always replaces the selection with that
+   * row. Multiple mode: clicking toggles the row into/out of the current
+   * selection array (identity via `isRowEqual`). No selectionMode set:
+   * clicks are inert (no emit) — selection is opt-in per spec §6.
+   */
+  protected onRowClick(row: T): void {
+    const mode = this.selectionMode();
+    if (!mode) return;
+
+    if (mode === "single") {
+      this.selectionChange.emit(row);
+      return;
+    }
+
+    const current = this.selection();
+    const currentArray = Array.isArray(current) ? current : [];
+    const index = currentArray.findIndex((s) => this.isRowEqual(s, row));
+    const next = index === -1 ? [...currentArray, row] : currentArray.filter((_, i) => i !== index);
+    this.selectionChange.emit(next);
   }
 }

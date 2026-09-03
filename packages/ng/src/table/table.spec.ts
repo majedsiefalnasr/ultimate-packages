@@ -180,3 +180,30 @@ describe("filtering (Angular array-of-alternatives operator shape, spec §9 — 
     expect(cells.length).toBe(2);
   });
 });
+
+describe("selection", () => {
+  it("emits selectionChange with the clicked row in single mode", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "single");
+    fixture.detectChanges();
+    let emitted: unknown;
+    fixture.componentInstance.selectionChange.subscribe((e: unknown) => (emitted = e));
+    // tbody-scoped: by this task, Task 3's header row already exists in the
+    // template, so a bare [role="row"] query would resolve the header row
+    // (which has no click-to-select behavior) instead of the data row.
+    fixture.nativeElement.querySelector('tbody [role="row"]').click();
+    expect(emitted).toEqual({ id: 1, name: "Alice" });
+  });
+
+  it("marks the selected row aria-selected=true using dataKey identity (equals)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "single");
+    fixture.componentRef.setInput("selection", { id: 1, name: "Alice" });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('tbody [role="row"]').getAttribute("aria-selected")).toBe("true");
+  });
+});
