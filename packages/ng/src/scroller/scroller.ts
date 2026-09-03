@@ -107,11 +107,16 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
   /**
    * Optional consumer-supplied content template (e.g. `UTable` supplying its
    * own `<table><tbody><tr><td>` markup instead of the built-in per-item
-   * `<div>` rendering), mirroring real PrimeNG's own `@ContentChild('content')`
-   * + `ngTemplateOutlet` composition mechanism. When absent, the built-in
-   * `@for` rendering runs unchanged.
+   * `<div>` rendering), mirroring real PrimeNG's own
+   * `@ContentChild('content', {descendants: false})` + `ngTemplateOutlet`
+   * composition mechanism exactly (scroller.ts:450). `descendants: false` is
+   * load-bearing, not cosmetic: without it the query would match the first
+   * `#content` template anywhere in the projected subtree, including one
+   * belonging to a component a future consumer (e.g. `UTable`) nests inside
+   * its own projected content — silently capturing the wrong template. When
+   * absent, the built-in `@for` rendering runs unchanged.
    */
-  @ContentChild("content") protected contentTemplate?: TemplateRef<UScrollerContentContext>;
+  @ContentChild("content", { descendants: false }) protected contentTemplate?: TemplateRef<UScrollerContentContext>;
 
   // Plain internal state per Global Constraints (no getter/setter, no
   // Change output). `_contentSize` is a signal rather than a bare field

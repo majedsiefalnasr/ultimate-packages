@@ -174,7 +174,7 @@
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   },
   {
-    "originalPath": "packages/primereact/components/lib/virtualscroller/VirtualScroller.js",
+    "originalPath": "components/lib/virtualscroller/VirtualScroller.js",
     "ultimateDestination": "packages/react/src/scroller/scroller.tsx",
     "modificationStatus": "adapted",
     "modificationDescription": "UScroller's optional content-level composition point is informed by real PrimeReact 10.9.9 VirtualScroller's own content-render mechanism (commit d0f574e39122668292fc7a740f081bae1b93b1e9), specifically the `contentTemplate` prop and the `defaultOptions` object it is invoked with (VirtualScroller.js:716-753), and `getOptions`'s real per-item metadata shape. Ultimate's implementation is informed by this cited upstream mechanism, not copied verbatim — the render-prop's context type, dispatch structure, and getItemOptions naming are Ultimate's own, matching useComponentBase's existing conventions; only the architectural mechanism (an optional content render-prop carrying generic per-item metadata) is mirrored."
