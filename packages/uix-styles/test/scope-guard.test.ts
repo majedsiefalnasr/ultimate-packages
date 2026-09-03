@@ -8,6 +8,7 @@ import { style as checkboxStyle } from "../src/checkbox";
 import { style as dialogStyle } from "../src/dialog";
 import { style as menuStyle } from "../src/menu";
 import { style as paginatorStyle } from "../src/paginator";
+import { style as tableStyle } from "../src/table";
 import { style as tooltipStyle } from "../src/tooltip";
 import { style as virtualscrollerStyle } from "../src/virtualscroller";
 
@@ -40,14 +41,14 @@ describe("base module scope guard", () => {
   });
 });
 
-describe("component style modules — exactly 8 exist alongside base", () => {
-  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller", () => {
+describe("component style modules — exactly 9 exist alongside base", () => {
+  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller + table", () => {
     const actualModules = readdirSync(join(__dirname, "..", "src"), { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
       .sort();
     expect(actualModules).toEqual(
-      ["base", "badge", "button", "checkbox", "dialog", "menu", "paginator", "tooltip", "virtualscroller"].sort()
+      ["base", "badge", "button", "checkbox", "dialog", "menu", "paginator", "table", "tooltip", "virtualscroller"].sort()
     );
   });
 
@@ -69,6 +70,9 @@ describe("component style modules — exactly 8 exist alongside base", () => {
   });
   it("paginator style uses only .u-paginator* selectors", () => {
     expect(paginatorStyle).not.toMatch(/\.p-paginator/);
+  });
+  it("table style uses only .u-table* selectors", () => {
+    expect(tableStyle).not.toMatch(/\.p-datatable/);
   });
   it("tooltip style uses only .u-tooltip* selectors", () => {
     expect(tooltipStyle).not.toMatch(/\.p-tooltip/);

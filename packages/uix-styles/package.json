@@ -49,6 +49,11 @@
       "import": "./dist/paginator/index.mjs",
       "default": "./dist/paginator/index.mjs"
     },
+    "./table": {
+      "types": "./dist/table/index.d.mts",
+      "import": "./dist/table/index.mjs",
+      "default": "./dist/table/index.mjs"
+    },
     "./tooltip": {
       "types": "./dist/tooltip/index.d.mts",
       "import": "./dist/tooltip/index.mjs",
