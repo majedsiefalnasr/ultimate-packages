@@ -13,6 +13,7 @@ const classes = {
     "u-table-row",
     { "u-table-row-selected": params.selected },
   ],
+  rowGroupHeader: () => "u-table-row-group-header",
 };
 
 export const tableStyleModule = { css, classes };

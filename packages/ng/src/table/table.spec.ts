@@ -413,6 +413,9 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
     fixture.detectChanges();
     const groupHeaders = fixture.nativeElement.querySelectorAll("[data-u-table-group-header]");
     expect(groupHeaders.length).toBe(2); // one per distinct group boundary
+    for (const header of groupHeaders) {
+      expect(header.classList.contains("u-table-row-group-header")).toBe(true);
+    }
   });
 });
 
