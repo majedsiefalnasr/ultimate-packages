@@ -3,6 +3,8 @@ import { useComponentBase } from "@ultimate/react-core";
 import { equals } from "@ultimate/uix-data";
 import type { FilterMetadata, SelectionMode, SortMeta, SortMode } from "@ultimate/uix-data";
 import { deepEquals } from "@ultimate/uix-utils/object";
+import { UPaginator } from "../paginator/paginator";
+import type { PaginatorPageChangeEvent } from "../paginator/paginator";
 import { tableStyleModule } from "./table-style";
 
 export interface UTableColumn {
@@ -45,6 +47,11 @@ export interface UTableProps<T> {
   selection?: T | T[];
   onSelectionChange?: (selection: T | T[]) => void;
   compareSelectionBy?: "equals" | "deepEquals";
+  paginator?: boolean;
+  first?: number;
+  rows?: number;
+  totalRecords?: number;
+  onPage?: (event: PaginatorPageChangeEvent) => void;
 }
 
 function resolveCell<T>(row: T, field: string): unknown {
@@ -132,6 +139,18 @@ function matchesFilterEntry<T>(
  * computed per row via `isRowEqual`, which dispatches on
  * `compareSelectionBy` between `uix-data`'s `equals` (default, `dataKey`-
  * based field identity) and `uix-utils`'s structural `deepEquals`.
+ *
+ * Pagination (`paginator`/`first`/`rows`/`totalRecords`/`onPage`) composes
+ * the real, already-shipped `UPaginator` (fully controlled, no internal
+ * state of its own — see its own doc comment) rather than a mock: when
+ * `paginator` is true, `<UPaginator>` is rendered beneath the table and
+ * `filteredValue` is sliced to `[first, first + rows)` for display, while
+ * `onPage` simply forwards `UPaginator`'s `onPageChange` callback (Table
+ * itself owns no page state, matching the sort/selection "no uncontrolled
+ * fallback" pattern). Per real upstream evidence (PrimeReact's
+ * `DataTable.js`: `props.paginator` checked independently of
+ * `isVirtualScrollerDisabled()` at lines 190/283/1498/1768/1857),
+ * `paginator` is not gated on virtualization state here either.
  */
 export function UTable<T>({
   value,
@@ -147,6 +166,11 @@ export function UTable<T>({
   selection,
   onSelectionChange,
   compareSelectionBy = "equals",
+  paginator = false,
+  first = 0,
+  rows = 0,
+  totalRecords = 0,
+  onPage,
 }: UTableProps<T>) {
   const { cx } = useComponentBase({ componentName: "table", styleModule: tableStyleModule });
 
@@ -266,6 +290,11 @@ export function UTable<T>({
     }
   };
 
+  const pagedValue = React.useMemo(
+    () => (paginator ? filteredValue.slice(first, first + rows) : filteredValue),
+    [paginator, filteredValue, first, rows]
+  );
+
   const handleSort = (field: string) => {
     if (!onSort) return;
 
@@ -302,7 +331,7 @@ export function UTable<T>({
           </tr>
         </thead>
         <tbody className={cx("tbody") as string} role="rowgroup">
-          {filteredValue.map((row, index) => (
+          {pagedValue.map((row, index) => (
             <tr
               key={index}
               className={cx("row") as string}
@@ -319,6 +348,14 @@ export function UTable<T>({
           ))}
         </tbody>
       </table>
+      {paginator && (
+        <UPaginator
+          first={first}
+          rows={rows}
+          totalRecords={totalRecords}
+          onPageChange={(event) => onPage?.(event)}
+        />
+      )}
     </div>
   );
 }

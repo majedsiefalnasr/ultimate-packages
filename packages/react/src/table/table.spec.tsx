@@ -149,3 +149,22 @@ describe("keyboard navigation", () => {
     expect(document.activeElement).toBe(rows[1]);
   });
 });
+
+describe("Paginator composition (real UPaginator, not a mock)", () => {
+  it("renders a real UPaginator child and slices rows to the current page", () => {
+    const rowsData = Array.from({ length: 25 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const { container } = render(
+      <UTable<Row>
+        value={rowsData}
+        columns={[{ field: "name", header: "Name" }]}
+        paginator
+        first={0}
+        rows={10}
+        totalRecords={25}
+        onPage={vi.fn()}
+      />
+    );
+    expect(container.querySelector("nav")).not.toBeNull();
+    expect(container.querySelectorAll("tbody td").length).toBe(10);
+  });
+});
