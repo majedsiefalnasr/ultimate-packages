@@ -100,6 +100,20 @@ describe("filtering (React object+constraints operator shape, spec §9)", () => 
     expect(cells.length).toBe(1);
     expect(cells[0].textContent).toBe("Alison");
   });
+
+  it("accepts onFilter as a prop without error (interface-contract completeness; not yet invoked — see prop doc comment)", () => {
+    const onFilter = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "ali", matchMode: "contains" } }}
+        onFilter={onFilter}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(1);
+    expect(onFilter).not.toHaveBeenCalled();
+  });
 });
 
 describe("selection", () => {

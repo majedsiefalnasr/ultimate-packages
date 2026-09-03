@@ -26,6 +26,20 @@ export interface UTableProps<T> {
   multiSortMeta?: SortMeta[];
   onSort?: (event: UTableSortEvent) => void;
   filters?: Record<string, FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }>;
+  /**
+   * Accepted for interface-contract completeness (spec §4.2 lists `onFilter`
+   * as part of PrimeReact's real DataTable surface) but not yet invoked.
+   * `filters` is entirely parent-supplied and applied via `filteredValue`
+   * (no filter-editing UI exists in this task's scope), and neither the
+   * plan nor the spec defines a trigger point or payload for `onFilter` —
+   * Angular's Table (spec §16's per-framework event-ownership survey) has
+   * no analogous filter-emit output to mirror, and no later plan task
+   * consumes this callback. Wiring an invented trigger (e.g. firing on
+   * every `filteredValue` recompute) would guess behavior the brief does
+   * not specify. NEEDS IMPLEMENTATION-TIME VERIFICATION: define the real
+   * trigger/payload once a concrete consumer (e.g. a filter-editing UI
+   * task) requires it.
+   */
   onFilter?: (filters: Record<string, FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }>) => void;
   selectionMode?: SelectionMode;
   selection?: T | T[];
