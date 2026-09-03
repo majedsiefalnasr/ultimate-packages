@@ -67,3 +67,54 @@ describe("sorting", () => {
     expect(onSort).toHaveBeenCalled();
   });
 });
+
+describe("filtering (React object+constraints operator shape, spec §9)", () => {
+  it("applies a simple FilterMetadata filter", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "ali", matchMode: "contains" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(1);
+  });
+
+  it("applies an operator+constraints filter with 'and' semantics", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Alison" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{
+          name: {
+            operator: "and",
+            constraints: [
+              { value: "ali", matchMode: "contains" },
+              { value: "son", matchMode: "contains" },
+            ],
+          },
+        }}
+      />
+    );
+    const cells = container.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent).toBe("Alison");
+  });
+});
+
+describe("selection", () => {
+  it("calls onSelectionChange with the clicked row in single mode", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }]}
+        dataKey="id"
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="single"
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    (container.querySelector('tbody [role="row"]') as HTMLElement).click();
+    expect(onSelectionChange).toHaveBeenCalledWith({ id: 1, name: "Alice" });
+  });
+});

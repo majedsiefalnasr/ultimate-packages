@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useComponentBase } from "@ultimate/react-core";
-import type { SortMeta, SortMode } from "@ultimate/uix-data";
+import { equals } from "@ultimate/uix-data";
+import type { FilterMetadata, SelectionMode, SortMeta, SortMode } from "@ultimate/uix-data";
+import { deepEquals } from "@ultimate/uix-utils/object";
 import { tableStyleModule } from "./table-style";
 
 export interface UTableColumn {
@@ -23,6 +25,12 @@ export interface UTableProps<T> {
   sortOrder?: 1 | 0 | -1;
   multiSortMeta?: SortMeta[];
   onSort?: (event: UTableSortEvent) => void;
+  filters?: Record<string, FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }>;
+  onFilter?: (filters: Record<string, FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }>) => void;
+  selectionMode?: SelectionMode;
+  selection?: T | T[];
+  onSelectionChange?: (selection: T | T[]) => void;
+  compareSelectionBy?: "equals" | "deepEquals";
 }
 
 function resolveCell<T>(row: T, field: string): unknown {
@@ -38,16 +46,53 @@ function compareValues(a: unknown, b: unknown): number {
 }
 
 /**
+ * Tests one row's field value against a single `FilterMetadata`. Only
+ * `contains` (case-insensitive substring) is dispatched in this task's
+ * scope; all other `FilterMatchMode` values are deferred.
+ */
+function matchesFilter<T>(row: T, field: string, filter: FilterMetadata): boolean {
+  const cellValue = String(resolveCell(row, field) ?? "").toLowerCase();
+  const filterValue = String(filter.value ?? "").toLowerCase();
+
+  switch (filter.matchMode) {
+    case "contains":
+      return cellValue.includes(filterValue);
+    // NEEDS IMPLEMENTATION-TIME VERIFICATION: startsWith, notContains, endsWith, equals, notEquals, lt, lte, gt, gte, between, in, notIn, dateIs, dateIsNot, dateBefore, dateAfter, custom
+    default:
+      return true;
+  }
+}
+
+/**
+ * Tests one row's field value against a `filters` entry, which is either a
+ * single `FilterMetadata` (must match) or a `{operator, constraints}` group
+ * (spec §9's React object-with-constraints-array shape): `constraints` are
+ * combined with AND (every constraint must match) or OR (any constraint
+ * matches) per `operator`.
+ */
+function matchesFilterEntry<T>(
+  row: T,
+  field: string,
+  entry: FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }
+): boolean {
+  if (!("constraints" in entry)) return matchesFilter(row, field, entry);
+
+  return entry.operator === "or"
+    ? entry.constraints.some((c) => matchesFilter(row, field, c))
+    : entry.constraints.every((c) => matchesFilter(row, field, c));
+}
+
+/**
  * `UTable`: controlled `value`/`columns` render — one `role="row"` per
  * `value` entry and one `role="columnheader"` per column — plus controlled
  * sorting (`sortMode`/`sortField`/`sortOrder`/`multiSortMeta`/`onSort`, all
- * optional per spec §16's React controlled/uncontrolled duality). Matches
- * Angular's Task 2/3 scaffold plus Task 4's sort behavior, but built as
- * dense per-task slices per this package's group design. Filtering and
- * selection are not yet implemented — those land in later tasks.
+ * optional per spec §16's React controlled/uncontrolled duality), filtering,
+ * and selection. Matches Angular's Task 2/3 scaffold plus Task 4/5/6's
+ * sort/filter/selection behavior, but built as dense per-task slices per
+ * this package's group design.
  *
- * `sortedValue` clones `value` (`[...value]`) before sorting so the
- * caller's input array is never mutated, matching Angular's `applySort`.
+ * `applySort` clones its input (`[...input]`) before sorting so the
+ * caller's `value` array is never mutated, matching Angular's `applySort`.
  * Clicking a header directly sets/replaces sort state rather than cycling
  * through asc/desc/none (deferred per the plan's Global Constraints):
  * single mode always emits `{ sortField: field, sortOrder: 1 }`; multi mode
@@ -56,37 +101,103 @@ function compareValues(a: unknown, b: unknown): number {
  * `onSort` is omitted, clicking a header has no visible effect, matching
  * the same "no uncontrolled fallback" pattern already verified for
  * `UPaginator`.
+ *
+ * `filteredValue` applies `filters` (filter-then-sort) via
+ * `matchesFilterEntry`/`matchesFilter`: each `filters` entry is keyed by
+ * field and is either a single `FilterMetadata` (must match) or a
+ * `{operator, constraints}` group (spec §9's React
+ * object-with-constraints-array shape, distinct from Angular's
+ * array-of-alternatives shape) whose `constraints` combine with AND/OR per
+ * `operator`. Only `contains` match mode is dispatched in this task's
+ * scope — see `matchesFilter`'s dispatch comment for the deferred modes.
+ *
+ * Selection (`selectionMode`/`selection`/`onSelectionChange`/
+ * `compareSelectionBy`) is controlled-only, matching sort's pattern: no
+ * internal selection state, so clicking a row is inert unless both
+ * `selectionMode` and `onSelectionChange` are supplied. `aria-selected` is
+ * computed per row via `isRowEqual`, which dispatches on
+ * `compareSelectionBy` between `uix-data`'s `equals` (default, `dataKey`-
+ * based field identity) and `uix-utils`'s structural `deepEquals`.
  */
 export function UTable<T>({
   value,
+  dataKey,
   columns,
   sortMode = "single",
   sortField,
   sortOrder = 0,
   multiSortMeta = [],
   onSort,
+  filters = {},
+  selectionMode,
+  selection,
+  onSelectionChange,
+  compareSelectionBy = "equals",
 }: UTableProps<T>) {
   const { cx } = useComponentBase({ componentName: "table", styleModule: tableStyleModule });
 
-  const sortedValue = React.useMemo(() => {
-    const rows = [...value];
+  const applySort = React.useCallback(
+    (input: T[]): T[] => {
+      const rows = [...input];
 
-    if (sortMode === "multiple") {
-      if (multiSortMeta.length === 0) return rows;
-      return rows.sort((a, b) => {
-        for (const { field, order } of multiSortMeta) {
-          const result = compareValues(resolveCell(a, field), resolveCell(b, field));
-          if (result !== 0) return result * order;
-        }
-        return 0;
-      });
+      if (sortMode === "multiple") {
+        if (multiSortMeta.length === 0) return rows;
+        return rows.sort((a, b) => {
+          for (const { field, order } of multiSortMeta) {
+            const result = compareValues(resolveCell(a, field), resolveCell(b, field));
+            if (result !== 0) return result * order;
+          }
+          return 0;
+        });
+      }
+
+      if (!sortField || sortOrder === 0) return rows;
+      return rows.sort(
+        (a, b) => compareValues(resolveCell(a, sortField), resolveCell(b, sortField)) * sortOrder
+      );
+    },
+    [sortMode, sortField, sortOrder, multiSortMeta]
+  );
+
+  const sortedValue = React.useMemo(() => applySort(value), [value, applySort]);
+
+  const filteredValue = React.useMemo(() => {
+    const fields = Object.keys(filters);
+    if (fields.length === 0) return sortedValue;
+
+    return applySort(
+      value.filter((row) => fields.every((field) => matchesFilterEntry(row, field, filters[field])))
+    );
+  }, [value, filters, applySort, sortedValue]);
+
+  const isRowEqual = React.useCallback(
+    (a: T, b: T): boolean =>
+      compareSelectionBy === "deepEquals" ? deepEquals(a, b) : equals(a, b, dataKey),
+    [compareSelectionBy, dataKey]
+  );
+
+  const isSelected = React.useCallback(
+    (row: T): boolean => {
+      if (selection == null) return false;
+      if (Array.isArray(selection)) return selection.some((s) => isRowEqual(s, row));
+      return isRowEqual(selection, row);
+    },
+    [selection, isRowEqual]
+  );
+
+  const handleRowClick = (row: T) => {
+    if (!selectionMode || !onSelectionChange) return;
+
+    if (selectionMode === "single") {
+      onSelectionChange(row);
+      return;
     }
 
-    if (!sortField || sortOrder === 0) return rows;
-    return rows.sort(
-      (a, b) => compareValues(resolveCell(a, sortField), resolveCell(b, sortField)) * sortOrder
-    );
-  }, [value, sortMode, sortField, sortOrder, multiSortMeta]);
+    const current = Array.isArray(selection) ? selection : [];
+    const index = current.findIndex((s) => isRowEqual(s, row));
+    const next = index === -1 ? [...current, row] : current.filter((_, i) => i !== index);
+    onSelectionChange(next);
+  };
 
   const ariaSortFor = (field: string): "ascending" | "descending" | undefined => {
     if (sortMode === "multiple") {
@@ -134,8 +245,14 @@ export function UTable<T>({
           </tr>
         </thead>
         <tbody className={cx("tbody") as string} role="rowgroup">
-          {sortedValue.map((row, index) => (
-            <tr key={index} className={cx("row") as string} role="row">
+          {filteredValue.map((row, index) => (
+            <tr
+              key={index}
+              className={cx("row") as string}
+              role="row"
+              aria-selected={isSelected(row)}
+              onClick={() => handleRowClick(row)}
+            >
               {columns.map((col) => (
                 <td key={col.field}>{String(resolveCell(row, col.field))}</td>
               ))}
