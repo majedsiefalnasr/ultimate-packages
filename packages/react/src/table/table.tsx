@@ -56,6 +56,25 @@ export interface UTableProps<T> {
   virtualScrollerOptions?: { itemSize: number };
   lazy?: boolean;
   onLazyLoad?: (event: { first: number; last: number }) => void;
+  editMode?: "cell" | "row";
+  editingRows?: Record<string, boolean>;
+  onRowEditChange?: (editingRows: Record<string, boolean>) => void;
+  onRowEditInit?: (row: T) => void;
+  onRowEditSave?: (row: T) => void;
+  onRowEditCancel?: (row: T) => void;
+  /**
+   * Accepted for interface-contract completeness (spec §4.2 lists these as
+   * part of PrimeReact's real DataTable cell-edit surface) but not yet
+   * invoked — `editingMeta`'s full validator-wiring UI is
+   * NEEDS IMPLEMENTATION-TIME VERIFICATION-deferred beyond this task's
+   * row-edit-lifecycle scope, matching Angular Task 10's equivalent scope
+   * decision for symmetry (see class doc comment).
+   */
+  cellEditValidator?: (event: { newValue: unknown; oldValue: unknown }) => boolean;
+  onCellEditComplete?: (event: { newValue: unknown; oldValue: unknown }) => void;
+  onCellEditCancel?: (event: { newValue: unknown; oldValue: unknown }) => void;
+  rowGroupMode?: "subheader" | "rowspan";
+  groupRowsBy?: string;
 }
 
 function resolveCell<T>(row: T, field: string): unknown {
@@ -170,6 +189,40 @@ function matchesFilterEntry<T>(
  * `UScroller`'s own built-in item rendering uses. Omitting this would render
  * all visible rows stacked at the top of the scroll container regardless of
  * actual scroll offset.
+ *
+ * Row editing (`editMode`/`editingRows`/`onRowEditChange` plus the
+ * `onRowEditInit`/`onRowEditSave`/`onRowEditCancel`/`cellEditValidator`/
+ * `onCellEditComplete`/`onCellEditCancel` lifecycle props, spec §4.2)
+ * follows spec §11.2's controlled/uncontrolled duality exactly: when
+ * `onRowEditChange` is supplied, `editingRows` is fully parent-owned (the
+ * `editingRows` prop drives rendering and this component holds no state of
+ * its own for it, matching the sort/selection/pagination "no uncontrolled
+ * fallback unless the callback is present" pattern); when `onRowEditChange`
+ * is omitted, an internal `useState` fallback takes over so the row-edit
+ * affordance still works standalone. A `data-u-table-row-edit-init` button
+ * rendered per row when `editMode === "row"` computes the next
+ * `editingRows` key-map (keyed by `dataKey`-resolved row identity, matching
+ * React's real `BodyRow.js:314-338`-derived rule already documented in spec
+ * §11.2) and calls `onRowEditChange` if supplied, else the internal setter.
+ * Cell-edit dirty-value tracking (`editingMeta`) is scaffolded as
+ * always-internal `useState` keyed by `dataKey`-or-`rowIndex` per spec
+ * §11.2, but its full validator-wiring UI is
+ * NEEDS IMPLEMENTATION-TIME VERIFICATION-deferred beyond this task's
+ * row-edit-lifecycle scope, matching Angular Task 10's equivalent scope
+ * decision for symmetry.
+ *
+ * Row grouping (`rowGroupMode`/`groupRowsBy`, spec §13's confirmed
+ * algorithm) reuses the existing sort machinery rather than a parallel
+ * comparator: `groupRowsBy` is injected as a synthetic leading `SortMeta`
+ * ahead of any existing `multiSortMeta`, so rows sharing the same group
+ * value are always adjacent, then the grouped result is walked once
+ * comparing each row's group value against the previous row's via
+ * `uix-data`'s shared `equals` (2-arg form) to detect group boundaries.
+ * Each boundary renders a `data-u-table-group-header` marker row ahead of
+ * it in `subheader` mode, matching Angular's Task 10 `groupedRows` getter.
+ * When `groupRowsBy` is unset, this degrades to `pagedValue` unchanged (no
+ * boundaries ever detected), preserving every prior task's ungrouped
+ * rendering.
  */
 export function UTable<T>({
   value,
@@ -193,8 +246,26 @@ export function UTable<T>({
   virtualScrollerOptions,
   lazy,
   onLazyLoad,
+  editMode,
+  editingRows,
+  onRowEditChange,
+  onRowEditInit,
+  rowGroupMode,
+  groupRowsBy,
 }: UTableProps<T>) {
   const { cx } = useComponentBase({ componentName: "table", styleModule: tableStyleModule });
+
+  const [internalEditingRows, setInternalEditingRows] = React.useState<Record<string, boolean>>({});
+  const resolvedEditingRows = onRowEditChange ? editingRows ?? {} : editingRows ?? internalEditingRows;
+
+  /**
+   * Always-internal cell-edit dirty-value tracking (spec §11.2), keyed by
+   * `dataKey`-or-`rowIndex`. Scaffolded per the row-edit-lifecycle scope
+   * documented on the class doc comment — no consumer reads this yet.
+   */
+  const [editingMeta, setEditingMeta] = React.useState<Record<string, Record<string, unknown>>>({});
+  void editingMeta;
+  void setEditingMeta;
 
   const applySort = React.useCallback(
     (input: T[]): T[] => {
@@ -317,6 +388,56 @@ export function UTable<T>({
     [paginator, filteredValue, first, rows]
   );
 
+  /**
+   * Row-grouping view (spec §13's confirmed algorithm, matching Angular
+   * Task 10's `groupedRows` getter): reuses the existing multi-field sort
+   * comparator (`compareValues`, the same one `applySort` uses) rather than
+   * a parallel comparator — `groupRowsBy` is injected as a synthetic
+   * leading `SortMeta` ahead of any existing `multiSortMeta`, so rows
+   * sharing the same group value are always adjacent in the result, then
+   * the rows are walked once comparing each row's group value against the
+   * previous row's via `uix-data`'s shared `equals` (2-arg form) to detect
+   * group boundaries. When `groupRowsBy` is unset, this degrades to
+   * `pagedValue` unchanged (no boundaries ever detected).
+   */
+  const groupedRows = React.useMemo((): { row: T; isGroupHeader: boolean }[] => {
+    if (!groupRowsBy) return pagedValue.map((row) => ({ row, isGroupHeader: false }));
+
+    const meta: SortMeta[] = [{ field: groupRowsBy, order: 1 }, ...multiSortMeta];
+    const rows = [...pagedValue].sort((a, b) => {
+      for (const { field, order } of meta) {
+        const result = compareValues(resolveCell(a, field), resolveCell(b, field));
+        if (result !== 0) return result * order;
+      }
+      return 0;
+    });
+
+    return rows.map((row, index) => {
+      const previous = rows[index - 1];
+      const isGroupHeader =
+        index === 0 || !equals(resolveCell(row, groupRowsBy), resolveCell(previous, groupRowsBy));
+      return { row, isGroupHeader };
+    });
+  }, [groupRowsBy, pagedValue, multiSortMeta]);
+
+  /**
+   * Row-editing lifecycle entry point (spec §11.2's key-map idiom, matching
+   * Angular Task 10's `initRowEdit`): marks `row`'s `dataKey`-resolved
+   * identity as editing by adding it to `resolvedEditingRows` and calling
+   * `onRowEditChange` if supplied, else falling back to the internal
+   * `useState` setter (spec §11.2's controlled/uncontrolled duality).
+   */
+  const initRowEdit = (row: T) => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    const next = { ...resolvedEditingRows, [key]: true };
+    onRowEditInit?.(row);
+    if (onRowEditChange) {
+      onRowEditChange(next);
+    } else {
+      setInternalEditingRows(next);
+    }
+  };
+
   const handleSort = (field: string) => {
     if (!onSort) return;
 
@@ -354,20 +475,40 @@ export function UTable<T>({
         </thead>
         {!virtualScrollerOptions && (
           <tbody className={cx("tbody") as string} role="rowgroup">
-            {pagedValue.map((row, index) => (
-              <tr
-                key={index}
-                className={cx("row") as string}
-                role="row"
-                tabIndex={0}
-                aria-selected={isSelected(row)}
-                onClick={() => handleRowClick(row)}
-                onKeyDown={handleRowKeyDown}
-              >
-                {columns.map((col) => (
-                  <td key={col.field}>{String(resolveCell(row, col.field))}</td>
-                ))}
-              </tr>
+            {groupedRows.map(({ row, isGroupHeader }, index) => (
+              <React.Fragment key={index}>
+                {rowGroupMode === "subheader" && isGroupHeader && (
+                  <tr data-u-table-group-header className={cx("rowGroupHeader") as string}>
+                    <td colSpan={columns.length}>{String(resolveCell(row, groupRowsBy ?? ""))}</td>
+                  </tr>
+                )}
+                <tr
+                  className={cx("row") as string}
+                  role="row"
+                  tabIndex={0}
+                  aria-selected={isSelected(row)}
+                  onClick={() => handleRowClick(row)}
+                  onKeyDown={handleRowKeyDown}
+                >
+                  {columns.map((col) => (
+                    <td key={col.field}>{String(resolveCell(row, col.field))}</td>
+                  ))}
+                  {editMode === "row" && (
+                    <td>
+                      <button
+                        type="button"
+                        data-u-table-row-edit-init
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          initRowEdit(row);
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              </React.Fragment>
             ))}
           </tbody>
         )}

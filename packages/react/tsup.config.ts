@@ -9,6 +9,7 @@ export default defineConfig({
     "menu/index": "src/menu/index.ts",
     "paginator/index": "src/paginator/index.ts",
     "scroller/index": "src/scroller/index.ts",
+    "table/index": "src/table/index.ts",
     "tooltip/index": "src/tooltip/index.ts",
   },
   format: ["esm"],

@@ -1,7 +1,7 @@
 {
   "name": "@ultimate/react",
   "version": "0.1.0",
-  "description": "Ultimate Platform React components: Button, Checkbox, Dialog, Menu, Paginator, Scroller, Tooltip.",
+  "description": "Ultimate Platform React components: Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -43,6 +43,11 @@
       "types": "./dist/scroller/index.d.mts",
       "import": "./dist/scroller/index.mjs",
       "default": "./dist/scroller/index.mjs"
+    },
+    "./table": {
+      "types": "./dist/table/index.d.mts",
+      "import": "./dist/table/index.mjs",
+      "default": "./dist/table/index.mjs"
     },
     "./tooltip": {
       "types": "./dist/tooltip/index.d.mts",

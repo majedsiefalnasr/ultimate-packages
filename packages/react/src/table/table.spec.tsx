@@ -3,6 +3,7 @@ import * as React from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, cleanup, act } from "@testing-library/react";
 import { UTable } from "./table";
+import { UTable as SubpathExport } from "./index";
 
 interface Row {
   id: number;
@@ -321,5 +322,47 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
       new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })
     );
     expect(document.activeElement).toBe(renderedRows[1]);
+  });
+});
+
+describe("row editing (controlled editingRows, spec §11.2)", () => {
+  it("calls onRowEditChange with the computed next editingRows when row edit is initiated", () => {
+    const onRowEditChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }]}
+        dataKey="id"
+        columns={[{ field: "name", header: "Name" }]}
+        editMode="row"
+        editingRows={{}}
+        onRowEditChange={onRowEditChange}
+      />
+    );
+    (container.querySelector("[data-u-table-row-edit-init]") as HTMLElement).click();
+    expect(onRowEditChange).toHaveBeenCalledWith({ "1": true });
+  });
+});
+
+describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
+  it("groups adjacent rows sharing the same groupRowsBy value under subheader mode", () => {
+    const { container } = render(
+      <UTable<{ group: string; name: string }>
+        value={[
+          { group: "a", name: "Alice" },
+          { group: "a", name: "Amy" },
+          { group: "b", name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        rowGroupMode="subheader"
+        groupRowsBy="group"
+      />
+    );
+    expect(container.querySelectorAll("[data-u-table-group-header]").length).toBe(2);
+  });
+});
+
+describe("package export", () => {
+  it("is exported from its own subpath index", () => {
+    expect(SubpathExport).toBe(UTable);
   });
 });
