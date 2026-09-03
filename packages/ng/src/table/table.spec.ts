@@ -2,6 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { UTable } from "./table";
+import { UTable as RootExport } from "../index";
 
 interface Row {
   id: number;
@@ -381,5 +382,43 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     renderedRows[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
     fixture.detectChanges();
     expect(fixture.nativeElement.ownerDocument.activeElement).toBe(renderedRows[1]);
+  });
+});
+
+describe("row editing (key-map, spec §11.1)", () => {
+  it("emits editingRowKeysChange with the row's dataKey value added when row edit is initiated", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.detectChanges();
+    let emitted: Record<string, boolean> | undefined;
+    fixture.componentInstance.editingRowKeysChange.subscribe((e: Record<string, boolean>) => (emitted = e));
+    fixture.componentInstance.initRowEdit({ id: 1, name: "Alice" });
+    expect(emitted).toEqual({ "1": true });
+  });
+});
+
+describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
+  it("groups adjacent rows sharing the same groupRowsBy value under subheader mode", () => {
+    const fixture = TestBed.createComponent(UTable<{ group: string; name: string }>);
+    fixture.componentRef.setInput("value", [
+      { group: "a", name: "Alice" },
+      { group: "a", name: "Amy" },
+      { group: "b", name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("rowGroupMode", "subheader");
+    fixture.componentRef.setInput("groupRowsBy", "group");
+    fixture.detectChanges();
+    const groupHeaders = fixture.nativeElement.querySelectorAll("[data-u-table-group-header]");
+    expect(groupHeaders.length).toBe(2); // one per distinct group boundary
+  });
+});
+
+describe("package export", () => {
+  it("is exported from the package root barrel", () => {
+    // import added at top of file: import { UTable as RootExport } from "../index";
+    expect(RootExport).toBe(UTable);
   });
 });

@@ -73,17 +73,22 @@ import { tableStyleModule } from "./table-style";
             </tr>
           </thead>
           <tbody [class]="cx('tbody')" role="rowgroup">
-            @for (row of pagedValue; track $index) {
+            @for (entry of groupedRows; track $index) {
+              @if (entry.isGroupHeader) {
+                <tr data-u-table-group-header [class]="cx('rowGroupHeader')">
+                  <td [attr.colspan]="columns().length">{{ resolveCell(entry.row, groupRowsBy() ?? "") }}</td>
+                </tr>
+              }
               <tr
                 [class]="cx('row')"
                 role="row"
                 tabindex="0"
-                [attr.aria-selected]="isSelected(row)"
-                (click)="onRowClick(row)"
+                [attr.aria-selected]="isSelected(entry.row)"
+                (click)="onRowClick(entry.row)"
                 (keydown)="onRowKeyDown($event)"
               >
                 @for (col of columns(); track col.field) {
-                  <td>{{ resolveCell(row, col.field) }}</td>
+                  <td>{{ resolveCell(entry.row, col.field) }}</td>
                 }
               </tr>
             }
@@ -142,6 +147,13 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
   lazyLoadOnInit = input(false);
 
   onLazyLoad = output<{ first: number; last: number }>();
+
+  editMode = input<"cell" | "row">();
+  editingRowKeys = input<Record<string, boolean>>({});
+  editingRowKeysChange = output<Record<string, boolean>>();
+
+  rowGroupMode = input<"subheader" | "rowspan">();
+  groupRowsBy = input<string>();
 
   /**
    * Internal paging cursor, reconciled from the `first` input via
@@ -245,6 +257,37 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
   }
 
   /**
+   * Row-grouping view (spec §13's confirmed algorithm): reuses the existing
+   * sort machinery (`applySort`, Task 4) rather than a parallel comparator —
+   * `groupRowsBy()` is injected as a synthetic leading `SortMeta` ahead of
+   * any existing multi-sort meta, so rows sharing the same group value are
+   * always adjacent in the result, then the rows are walked once comparing
+   * each row's group value against the previous row's via `uix-data`'s
+   * shared `equals` (2-arg form, i.e. `deepEquals` on the two resolved
+   * scalar values — not the 3-arg `dataKey`-based identity form used for
+   * selection) to detect group boundaries. Each boundary is flagged
+   * `isGroupHeader: true` so the template can render a
+   * `data-u-table-group-header` marker row ahead of it in `subheader` mode.
+   * When `groupRowsBy()` is unset, this degrades to `pagedValue` unchanged
+   * (no boundaries ever detected), preserving every prior task's ungrouped
+   * rendering.
+   */
+  protected get groupedRows(): { row: T; isGroupHeader: boolean }[] {
+    const field = this.groupRowsBy();
+    if (!field) return this.pagedValue.map((row) => ({ row, isGroupHeader: false }));
+
+    const meta: SortMeta[] = [{ field, order: 1 }, ...this.multiSortMeta()];
+    const rows = this.applyMultiFieldSort([...this.pagedValue], meta);
+
+    return rows.map((row, index) => {
+      const previous = rows[index - 1];
+      const isGroupHeader =
+        index === 0 || !equals(this.resolveCell(row, field), this.resolveCell(previous, field));
+      return { row, isGroupHeader };
+    });
+  }
+
+  /**
    * Wired to the real `UPaginator`'s `onPageChange` output. Per spec §4.1's
    * always-internal-plus-emit convention: `_first` is updated internally
    * first (so `pagedValue` reflects the new page immediately, matching
@@ -268,6 +311,21 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
   }
 
   /**
+   * Row-editing lifecycle entry point (spec §11.1's key-map idiom): marks
+   * `row`'s `dataKey()`-resolved identity as editing by adding it to
+   * `editingRowKeys()` and emitting the merged map via
+   * `editingRowKeysChange` — no separate dirty-value store. Cell-level
+   * `.ng-invalid.ng-dirty` DOM-validity checking and a full reactive-forms
+   * cell editor are explicitly out of scope for this task (spec §11.1:
+   * GAP-018/reactive-forms integration is a consumer/example concern, not a
+   * Table core blocker).
+   */
+  initRowEdit(row: T): void {
+    const key = String(this.resolveCell(row, this.dataKey()));
+    this.editingRowKeysChange.emit({ ...this.editingRowKeys(), [key]: true });
+  }
+
+  /**
    * Clones `rows` (`[...rows]`) before sorting so the caller's input array
    * is never mutated in place, then applies either single-field
    * (`sortField`/`sortOrder`) or multi-field (`multiSortMeta`, entries
@@ -280,13 +338,7 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
     if (this.sortMode() === "multiple") {
       const meta = this.multiSortMeta();
       if (meta.length === 0) return rows;
-      return rows.sort((a, b) => {
-        for (const { field, order } of meta) {
-          const result = this.compareValues(this.resolveCell(a, field), this.resolveCell(b, field));
-          if (result !== 0) return result * order;
-        }
-        return 0;
-      });
+      return this.applyMultiFieldSort(rows, meta);
     }
 
     const field = this.sortField();
@@ -295,6 +347,24 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
     return rows.sort(
       (a, b) => this.compareValues(this.resolveCell(a, field), this.resolveCell(b, field)) * order,
     );
+  }
+
+  /**
+   * Shared multi-field comparator, extracted from `applySort`'s
+   * `"multiple"` branch so `groupedRows` can drive the same priority-order
+   * comparison logic with a synthetic leading `SortMeta` (Task 10) without
+   * duplicating it — `applySort` itself still owns reading `multiSortMeta()`
+   * from table state, this helper only owns the comparison given an
+   * explicit `meta` array.
+   */
+  private applyMultiFieldSort(rows: T[], meta: SortMeta[]): T[] {
+    return rows.sort((a, b) => {
+      for (const { field, order } of meta) {
+        const result = this.compareValues(this.resolveCell(a, field), this.resolveCell(b, field));
+        if (result !== 0) return result * order;
+      }
+      return 0;
+    });
   }
 
   protected ariaSortFor(field: string): "ascending" | "descending" | null {
