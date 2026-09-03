@@ -18,8 +18,10 @@
           :key="index"
           :class="cx('row')"
           role="row"
+          tabindex="0"
           :aria-selected="isSelected(row)"
           @click="selectRow(row)"
+          @keydown="onRowKeyDown"
         >
           <td v-for="col in columns" :key="col.field">{{ row[col.field] }}</td>
         </tr>
@@ -222,6 +224,44 @@ export default {
 
       this.$emit("update:selection", next);
       this.$emit("selection-change", next);
+    },
+    /**
+     * Keyboard-equivalent path for row navigation (spec §15's confirmed
+     * ArrowDown/ArrowUp/Home/End baseline), matching Angular's Task 7
+     * `onRowKeyDown` and React's Task 14 `handleRowKeyDown` vocabulary —
+     * the mechanism differs (DOM sibling traversal via
+     * `$el.nextElementSibling`/`previousElementSibling` here vs. Angular's
+     * `@HostListener`/React's `querySelectorAll`), the vocabulary does not.
+     * Only moves `.focus()` between sibling `tbody [role="row"]` elements —
+     * never the header row, since this handler is bound per data row.
+     * Enter/selection-toggle behavior is already covered by `@click`, so it
+     * is intentionally out of scope here.
+     */
+    onRowKeyDown(event) {
+      const row = event.currentTarget;
+
+      let target;
+      switch (event.key) {
+        case "ArrowDown":
+          target = row.nextElementSibling;
+          break;
+        case "ArrowUp":
+          target = row.previousElementSibling;
+          break;
+        case "Home":
+          target = row.parentElement.firstElementChild;
+          break;
+        case "End":
+          target = row.parentElement.lastElementChild;
+          break;
+        default:
+          return;
+      }
+
+      if (target) {
+        event.preventDefault();
+        target.focus();
+      }
     },
   },
 };

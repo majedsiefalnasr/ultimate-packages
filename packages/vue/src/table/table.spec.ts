@@ -72,3 +72,20 @@ describe("selection", () => {
     expect(wrapper.emitted("update:selection")?.[0]).toEqual([{ id: 1, name: "Alice" }]);
   });
 });
+
+describe("keyboard navigation", () => {
+  it("ArrowDown on a row moves focus to the next row", async () => {
+    const wrapper = mount(UTable, {
+      attachTo: document.body,
+      props: {
+        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        columns: [{ field: "name", header: "Name" }],
+      },
+    });
+    const rows = wrapper.findAll('tbody [role="row"]');
+    (rows[0].element as HTMLElement).focus();
+    await rows[0].trigger("keydown", { key: "ArrowDown" });
+    expect(document.activeElement).toBe(rows[1].element);
+    wrapper.unmount();
+  });
+});
