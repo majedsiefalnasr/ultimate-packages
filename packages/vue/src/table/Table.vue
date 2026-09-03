@@ -14,7 +14,7 @@
       </thead>
       <tbody :class="cx('tbody')" role="rowgroup">
         <tr
-          v-for="(row, index) in filteredValue"
+          v-for="(row, index) in pagedValue"
           :key="index"
           :class="cx('row')"
           role="row"
@@ -27,6 +27,13 @@
         </tr>
       </tbody>
     </table>
+    <UPaginator
+      v-if="paginator"
+      :first="first"
+      :rows="rows"
+      :total-records="totalRecords"
+      @page="onPaginatorPage"
+    />
   </div>
 </template>
 
@@ -34,6 +41,7 @@
 import { equals } from "@ultimate/uix-data";
 import { deepEquals } from "@ultimate/uix-utils/object";
 import { createBaseTable } from "./base-table";
+import UPaginator from "../paginator/Paginator.vue";
 
 /**
  * Sort execution is entangled with row-value resolution per uix-data's
@@ -91,6 +99,7 @@ function matchesFilterEntry(row, field, entry) {
 export default {
   name: "UTable",
   extends: createBaseTable(),
+  components: { UPaginator },
   computed: {
     /**
      * Clones `value` (`[...this.value]`) before sorting so the caller's
@@ -122,8 +131,33 @@ export default {
       );
       return this.applySortTo(filtered);
     },
+    /**
+     * Slices `filteredValue` to the current page window (`[first, first +
+     * rows)`) when `paginator` is enabled, matching Angular's/React's
+     * paginator composition (an alternative body-rendering strategy over
+     * the same sorted+filtered data, not a stacked layer). Real upstream
+     * evidence (PrimeVue's `DataTable.vue`: `<DTPaginator v-if="paginatorTop"
+     * .../>`) confirms `paginator` is gated only on its own flag, independent
+     * of virtualization state, so no mutual-exclusivity restriction is
+     * imposed here.
+     */
+    pagedValue() {
+      if (!this.paginator) return this.filteredValue;
+      return this.filteredValue.slice(this.first, this.first + this.rows);
+    },
   },
   methods: {
+    /**
+     * Re-emits UPaginator's own `page` event as Table's `page` event.
+     * UPaginator owns its internal `d_first`/`d_rows` mutate-then-emit
+     * model (its own real upstream behavior) — Table does not mirror that
+     * pattern for its own `first`/`rows` props, which stay one-way like
+     * `sortField`/`sortOrder`/`selection`; the parent feeds new values back
+     * via `first`/`rows` bindings if it wants persistence.
+     */
+    onPaginatorPage(event) {
+      this.$emit("page", event);
+    },
     /**
      * Clones `input` (`[...input]`) before sorting so the caller's array is
      * never mutated, matching Angular's/React's `applySort`. Single mode

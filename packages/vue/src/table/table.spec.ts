@@ -89,3 +89,21 @@ describe("keyboard navigation", () => {
     wrapper.unmount();
   });
 });
+
+describe("Paginator composition (real UPaginator, not a mock)", () => {
+  it("renders a real UPaginator child and slices rows to the current page", () => {
+    const rowsData = Array.from({ length: 25 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const wrapper = mount(UTable, {
+      props: {
+        value: rowsData,
+        columns: [{ field: "name", header: "Name" }],
+        paginator: true,
+        first: 0,
+        rows: 10,
+        totalRecords: 25,
+      },
+    });
+    expect(wrapper.find("nav").exists()).toBe(true);
+    expect(wrapper.findAll("tbody td").length).toBe(10);
+  });
+});

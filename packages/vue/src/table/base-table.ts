@@ -17,7 +17,12 @@ export function createBaseTable(): ComponentOptions {
       selectionMode: { type: String, default: undefined },
       selection: { type: [Object, Array], default: undefined },
       compareSelectionBy: { type: String, default: "equals" },
+      paginator: { type: Boolean, default: false },
+      first: { type: Number, default: 0 },
+      rows: { type: Number, default: 0 },
+      totalRecords: { type: Number, default: 0 },
+      rowsPerPageOptions: { type: Array, default: () => [] },
     },
-    emits: ["sort", "filter", "update:selection", "selection-change"],
+    emits: ["sort", "filter", "update:selection", "selection-change", "page"],
   };
 }
