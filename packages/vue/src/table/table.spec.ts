@@ -1,6 +1,32 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import UTable from "./Table.vue";
+
+let resizeObserverCallback: ResizeObserverCallback | undefined;
+
+beforeEach(() => {
+  resizeObserverCallback = undefined;
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      constructor(cb: ResizeObserverCallback) {
+        resizeObserverCallback = cb;
+      }
+      observe(target: Element) {
+        resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+      }
+      disconnect() {}
+    }
+  );
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+function mockViewportHeight(element: HTMLElement, height: number): void {
+  Object.defineProperty(element, "offsetHeight", { value: height, configurable: true });
+}
 
 describe("UTable", () => {
   it("renders one row per value entry with role=row and a columnheader per column", () => {
@@ -105,5 +131,105 @@ describe("Paginator composition (real UPaginator, not a mock)", () => {
     });
     expect(wrapper.find("nav").exists()).toBe(true);
     expect(wrapper.findAll("tbody td").length).toBe(10);
+  });
+});
+
+describe("Scroller composition (real UScroller content-template mechanism, not a mock)", () => {
+  it("renders a real UScroller child with real table/tbody/tr/td markup via its #content slot when virtualScrollerOptions is provided", async () => {
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const wrapper = mount(UTable, {
+      props: {
+        value: rowsData,
+        columns: [{ field: "name", header: "Name" }],
+        virtualScrollerOptions: { itemSize: 30 },
+      },
+    });
+    // Real windowing requires a measured viewport: UScroller's mounted()
+    // constructs a ResizeObserver unconditionally, and jsdom's default
+    // offsetHeight is 0, which computes numItemsInViewport=0 and renders
+    // zero rows. Mock the viewport and re-invoke the component's own
+    // captured ResizeObserver callback (never construct a second observer,
+    // which would silently overwrite the module-scope callback slot),
+    // matching the established convention from scroller.spec.ts.
+    const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    resizeObserverCallback?.([{ target: scrollerRoot } as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    await wrapper.vm.$nextTick();
+
+    const table = wrapper.find("table[data-u-table-virtual-body]");
+    expect(table.exists()).toBe(true);
+    const tbody = table.find("tbody");
+    expect(tbody.element.parentElement).toBe(table.element);
+    const trs = tbody.element.querySelectorAll(":scope > tr");
+    expect(trs.length).toBeGreaterThan(0);
+    expect(trs.length).toBeLessThan(200);
+    trs.forEach((tr) => expect(tr.querySelector(":scope > td")).not.toBeNull());
+    expect(wrapper.findAll("[data-u-scroller-item]").length).toBe(0);
+  });
+
+  it("positions each virtualized row with an absolute top offset computed from its real absolute index", async () => {
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const wrapper = mount(UTable, {
+      props: {
+        value: rowsData,
+        columns: [{ field: "name", header: "Name" }],
+        virtualScrollerOptions: { itemSize: 30 },
+      },
+    });
+    const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
+    mockViewportHeight(scrollerRoot, 300);
+    resizeObserverCallback?.([{ target: scrollerRoot } as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    await wrapper.vm.$nextTick();
+
+    const rows = wrapper.findAll("table[data-u-table-virtual-body] tbody tr");
+    expect(rows.length).toBeGreaterThan(1);
+    // First rendered row is absolute index 0 -> top 0px.
+    expect((rows[0].element as HTMLElement).style.top).toBe("0px");
+    // Second rendered row is absolute index 1 -> top 30px (index * itemSize).
+    expect((rows[1].element as HTMLElement).style.top).toBe("30px");
+  });
+
+  it("clicking a virtualized row emits update:selection with the clicked row (single mode)", async () => {
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const wrapper = mount(UTable, {
+      props: {
+        value: rowsData,
+        dataKey: "id",
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "single",
+        virtualScrollerOptions: { itemSize: 30 },
+      },
+    });
+    const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    resizeObserverCallback?.([{ target: scrollerRoot } as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    await wrapper.vm.$nextTick();
+
+    const firstRow = wrapper.find('table[data-u-table-virtual-body] tbody [role="row"]');
+    await firstRow.trigger("click");
+    expect(wrapper.emitted("update:selection")?.[0]).toEqual([rowsData[0]]);
+  });
+
+  it("ArrowDown on a virtualized row moves focus to the next row within the rendered window", async () => {
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const wrapper = mount(UTable, {
+      attachTo: document.body,
+      props: {
+        value: rowsData,
+        columns: [{ field: "name", header: "Name" }],
+        virtualScrollerOptions: { itemSize: 30 },
+      },
+    });
+    const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
+    mockViewportHeight(scrollerRoot, 200);
+    resizeObserverCallback?.([{ target: scrollerRoot } as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    await wrapper.vm.$nextTick();
+
+    const rows = wrapper.findAll('table[data-u-table-virtual-body] tbody [role="row"]');
+    expect(rows.length).toBeGreaterThan(1);
+    (rows[0].element as HTMLElement).focus();
+    await rows[0].trigger("keydown", { key: "ArrowDown" });
+    expect(document.activeElement).toBe(rows[1].element);
+    wrapper.unmount();
   });
 });

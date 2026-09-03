@@ -22,7 +22,9 @@ export function createBaseTable(): ComponentOptions {
       rows: { type: Number, default: 0 },
       totalRecords: { type: Number, default: 0 },
       rowsPerPageOptions: { type: Array, default: () => [] },
+      virtualScrollerOptions: { type: Object, default: undefined },
+      lazy: { type: Boolean, default: false },
     },
-    emits: ["sort", "filter", "update:selection", "selection-change", "page"],
+    emits: ["sort", "filter", "update:selection", "selection-change", "page", "lazy-load"],
   };
 }

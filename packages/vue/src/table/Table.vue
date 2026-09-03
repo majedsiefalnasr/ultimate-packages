@@ -12,7 +12,7 @@
           >{{ col.header }}</th>
         </tr>
       </thead>
-      <tbody :class="cx('tbody')" role="rowgroup">
+      <tbody v-if="!virtualScrollerOptions" :class="cx('tbody')" role="rowgroup">
         <tr
           v-for="(row, index) in pagedValue"
           :key="index"
@@ -27,6 +27,47 @@
         </tr>
       </tbody>
     </table>
+    <UScroller
+      v-if="virtualScrollerOptions"
+      :items="filteredValue"
+      :item-size="virtualScrollerOptions.itemSize"
+      :lazy="lazy"
+      @lazy-load="$emit('lazy-load', $event)"
+    >
+      <template #content="slotProps">
+        <table data-u-table-virtual-body :class="cx('table')">
+          <tbody :class="cx('tbody')" role="rowgroup">
+            <tr
+              v-for="entry in slotProps.items"
+              :key="entry.index"
+              :class="cx('row')"
+              role="row"
+              tabindex="0"
+              :aria-selected="isSelected(entry.value)"
+              :style="{
+                position: 'absolute',
+                top: slotProps.getItemOptions(entry.index).index * slotProps.itemSize + 'px',
+                width: '100%',
+              }"
+              @click="selectRow(entry.value)"
+              @keydown="onRowKeyDown"
+            >
+              <!--
+                Known limitation: onRowKeyDown walks nextElementSibling/
+                previousElementSibling/parentElement's first/last child
+                within this tbody, which under virtualization only contains
+                the currently-rendered window, not the full logical
+                dataset — so ArrowDown/ArrowUp/Home/End stop at the edges of
+                what's mounted, not the edges of the full `value` dataset.
+                This is intentional (a row outside the window isn't in the
+                DOM to focus), not a bug.
+              -->
+              <td v-for="col in columns" :key="col.field">{{ entry.value[col.field] }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </template>
+    </UScroller>
     <UPaginator
       v-if="paginator"
       :first="first"
@@ -42,6 +83,7 @@ import { equals } from "@ultimate/uix-data";
 import { deepEquals } from "@ultimate/uix-utils/object";
 import { createBaseTable } from "./base-table";
 import UPaginator from "../paginator/Paginator.vue";
+import UScroller from "../scroller/Scroller.vue";
 
 /**
  * Sort execution is entangled with row-value resolution per uix-data's
@@ -99,7 +141,7 @@ function matchesFilterEntry(row, field, entry) {
 export default {
   name: "UTable",
   extends: createBaseTable(),
-  components: { UPaginator },
+  components: { UPaginator, UScroller },
   computed: {
     /**
      * Clones `value` (`[...this.value]`) before sorting so the caller's
