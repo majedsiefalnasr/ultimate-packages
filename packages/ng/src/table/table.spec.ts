@@ -207,3 +207,22 @@ describe("selection", () => {
     expect(fixture.nativeElement.querySelector('tbody [role="row"]').getAttribute("aria-selected")).toBe("true");
   });
 });
+
+describe("keyboard navigation", () => {
+  it("ArrowDown on a row moves focus to the next row", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.detectChanges();
+    // tbody-scoped: by this task, Task 3's header row exists, so a bare
+    // [role="row"] query would include it — this test must exercise
+    // data-row-to-data-row navigation, not header-to-data-row.
+    const rows = fixture.nativeElement.querySelectorAll('tbody [role="row"]');
+    rows[0].focus();
+    rows[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.ownerDocument.activeElement).toBe(rows[1]);
+  });
+});

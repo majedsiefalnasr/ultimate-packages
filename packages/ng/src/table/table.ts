@@ -27,8 +27,10 @@ import { tableStyleModule } from "./table-style";
             <tr
               [class]="cx('row')"
               role="row"
+              tabindex="0"
               [attr.aria-selected]="isSelected(row)"
               (click)="onRowClick(row)"
+              (keydown)="onRowKeyDown($event)"
             >
               @for (col of columns(); track col.field) {
                 <td>{{ resolveCell(row, col.field) }}</td>
@@ -236,5 +238,48 @@ export class UTable<T> extends UBaseComponent {
     const index = currentArray.findIndex((s) => this.isRowEqual(s, row));
     const next = index === -1 ? [...currentArray, row] : currentArray.filter((_, i) => i !== index);
     this.selectionChange.emit(next);
+  }
+
+  /**
+   * Keyboard-equivalent path for row navigation (spec §15's confirmed
+   * ArrowDown/ArrowUp/Home/End baseline), matching real PrimeNG's
+   * `table.ts:3918-4014` row-keydown convention. Only moves `.focus()`
+   * between `tbody [role="row"]` elements — never the header row, since
+   * this handler is bound per data row, not delegated from a host
+   * listener spanning the whole table. Enter/selection-toggle behavior is
+   * already covered by Task 6's `(click)` handler, so it is intentionally
+   * out of scope here.
+   */
+  protected onRowKeyDown(event: KeyboardEvent): void {
+    const row = event.currentTarget as HTMLElement;
+    const rowGroup = row.parentElement;
+    if (!rowGroup) return;
+
+    const rows = Array.from(rowGroup.querySelectorAll<HTMLElement>(':scope > [role="row"]'));
+    const index = rows.indexOf(row);
+    if (index === -1) return;
+
+    let target: HTMLElement | undefined;
+    switch (event.key) {
+      case "ArrowDown":
+        target = rows[index + 1];
+        break;
+      case "ArrowUp":
+        target = rows[index - 1];
+        break;
+      case "Home":
+        target = rows[0];
+        break;
+      case "End":
+        target = rows[rows.length - 1];
+        break;
+      default:
+        return;
+    }
+
+    if (target) {
+      event.preventDefault();
+      target.focus();
+    }
   }
 }
