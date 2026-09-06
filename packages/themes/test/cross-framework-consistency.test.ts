@@ -305,4 +305,69 @@ describe("cross-framework theme consistency", () => {
       expect(reactCss).toContain(resolvedToken);
     });
   });
+
+  describe("React and Vue's real UTable renders resolve the same datatable.* tokens", () => {
+    // Token names verified directly from packages/uix-styles/src/table/index.ts
+    // (Task 1's ported file): all `dt()` calls there use a `datatable.*`
+    // dotted path (the PrimeUix-inherited token namespace), never a
+    // `table.*` one, even though the CSS *class* names are `.u-table-*`.
+    // Per this file's own UScroller correction above, the resolved CSS
+    // variable name is derived from the token's full dotted path, not the
+    // class-name scheme — so these resolve to `--u-datatable-*`, not
+    // `--u-table-*`. Three representative tokens, chosen for coverage
+    // parity with the brief's background/border/row-selected suggestion:
+    //   - datatable.header.background   (background)
+    //   - datatable.header.border.color (border)
+    //   - datatable.row.selected.background (row-selected)
+    afterEach(() => {
+      cleanup();
+    });
+
+    it("Vue's real UTable registers CSS containing the resolved datatable.* var(...) text, matching dt()'s own resolution", async () => {
+      const { UTable } = await import("@ultimate/vue/table");
+
+      const wrapper = mount(UTable, { props: { value: [], columns: [] } });
+
+      const styleEl = document.head.querySelector('style[data-u-style="table"]');
+      expect(styleEl).not.toBeNull();
+      const vueCss = styleEl!.textContent ?? "";
+
+      expect(vueCss).not.toContain("dt("); // no unresolved dt() calls leaked through
+
+      for (const token of ["datatable.header.background", "datatable.header.border.color", "datatable.row.selected.background"]) {
+        const resolvedToken = dt(token);
+        expect(vueCss).toContain(resolvedToken);
+      }
+
+      wrapper.unmount();
+    });
+
+    it("React's real UTable registers CSS containing the resolved datatable.* var(...) text, matching dt()'s own resolution", async () => {
+      const { UTable } = await import("@ultimate/react/table");
+
+      render(React.createElement(UTable, { value: [], columns: [] }));
+
+      // Same lookup mechanism established for UButton's/UScroller's/
+      // UPaginator's React halves: react-core's <style> elements carry no
+      // identifying attribute, so Vue's element is excluded via its own
+      // data-u-style attribute, and the element is then located by its
+      // known, unique .u-table-table selector (the outer .u-table class
+      // alone would also match Vue's root div class list on some other
+      // component, so the more specific nested selector is used).
+      const vueStyleEl = document.head.querySelector('style[data-u-style="table"]');
+      const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find((el) =>
+        (el.textContent ?? "").includes(".u-table-table {")
+      );
+      expect(styleEl).not.toBeUndefined();
+      expect(styleEl).not.toBe(vueStyleEl);
+      const reactCss = styleEl!.textContent ?? "";
+
+      expect(reactCss).not.toContain("dt(");
+
+      for (const token of ["datatable.header.background", "datatable.header.border.color", "datatable.row.selected.background"]) {
+        const resolvedToken = dt(token);
+        expect(reactCss).toContain(resolvedToken);
+      }
+    });
+  });
 });
