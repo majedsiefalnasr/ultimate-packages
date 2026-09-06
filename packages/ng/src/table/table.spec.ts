@@ -425,3 +425,41 @@ describe("package export", () => {
     expect(RootExport).toBe(UTable);
   });
 });
+
+describe("theme token consistency", () => {
+  it("resolves the same datatable.header.background token as the React/Vue cross-framework consistency test (packages/themes/test/cross-framework-consistency.test.ts)", () => {
+    // Part of the Blueprint Phase 5 exit criterion (spec §10, "validate
+    // cross-framework theme consistency"). React's and Vue's halves of this
+    // guarantee are asserted together in packages/themes/test/
+    // cross-framework-consistency.test.ts (Angular's UTable can't run in
+    // that file — it requires TestBed/ng test's own environment, a
+    // different vitest major version and CLI entry point than the plain
+    // `vitest run` the other two frameworks and @ultimate/themes use). This
+    // test proves the Angular third: applyUltimateTheme() (called once in
+    // this file's beforeAll, above) configures the same uix-styled Theme
+    // singleton every *-core package's StyleSheet reads from, so ng-core's
+    // registered CSS for the real UTable must resolve
+    // datatable.header.background to the identical var(...) text.
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.detectChanges();
+
+    // ngCoreStyleSheet's <style> elements carry no identifying attribute
+    // (its StyleSheet instance is constructed with no `attrs` option), so
+    // the registered element is located by its known, unique `.u-table-table`
+    // selector — matching the DOM-lookup approach used on the React/Vue
+    // side of this same assertion (packages/themes/test/
+    // cross-framework-consistency.test.ts uses the same nested
+    // `.u-table-table {` selector to disambiguate from the outer `.u-table`
+    // class, which also appears on Vue's root div).
+    const styleEl = Array.from(document.head.querySelectorAll("style")).find((el) =>
+      (el.textContent ?? "").includes(".u-table-table {")
+    );
+    expect(styleEl).not.toBeUndefined();
+    const ngCss = styleEl!.textContent ?? "";
+
+    expect(ngCss).toContain("var(--u-datatable-header-background");
+    expect(ngCss).not.toContain("dt(");
+  });
+});
