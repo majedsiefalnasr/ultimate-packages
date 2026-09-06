@@ -1,0 +1,32 @@
+{
+  "name": "@ultimate/component-schema",
+  "version": "0.1.0",
+  "description": "Versioned schema/contract and validator for Ultimate Platform component metadata (Phase 6).",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup && node scripts/rename-dts.mjs",
+    "test": "vitest run --typecheck",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8"
+  }
+}
