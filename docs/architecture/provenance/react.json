@@ -178,5 +178,29 @@
     "ultimateDestination": "packages/react/src/scroller/scroller.tsx",
     "modificationStatus": "adapted",
     "modificationDescription": "UScroller's optional content-level composition point is informed by real PrimeReact 10.9.9 VirtualScroller's own content-render mechanism (commit d0f574e39122668292fc7a740f081bae1b93b1e9), specifically the `contentTemplate` prop and the `defaultOptions` object it is invoked with (VirtualScroller.js:716-753), and `getOptions`'s real per-item metadata shape. Ultimate's implementation is informed by this cited upstream mechanism, not copied verbatim — the render-prop's context type, dispatch structure, and getItemOptions naming are Ultimate's own, matching useComponentBase's existing conventions; only the architectural mechanism (an optional content render-prop carrying generic per-item metadata) is mirrored."
+  },
+  {
+    "originalPath": "components/lib/datatable/DataTable.js",
+    "ultimateDestination": "packages/react/src/table/table.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified real PrimeReact 10.9.9 DataTable source (DataTable.js and siblings, commit d0f574e39122668292fc7a740f081bae1b93b1e9), adapted with full Ultimate namespace rename across Tasks 17-22: sort (single/multi mode, aria-sort, sort emit), filter (operator+constraints per column) and controlled-selection prop/callback surface adapted from verified upstream behavior; row equality for selection uses @ultimate/uix-utils/object's deepEquals rather than reimplementing an object-diff locally; pagination composes the real UPaginator instance (Tasks 7-9) rather than reimplementing paging; virtualization composes the real UScroller instance (Tasks 7-9) via its content-render-prop composition point rather than reimplementing windowing. Excludes column resize/reorder, frozen columns/rows, row expansion, export-to-CSV, and context-menu selection — each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 17-22)."
+  },
+  {
+    "originalPath": "components/lib/datatable/DataTable.js",
+    "ultimateDestination": "packages/react/src/table/table-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Structural layout CSS (.u-table/.u-table-table/.u-table-thead/.u-table-tbody/.u-table-row slots) adapted from real PrimeReact DataTable's own rendered structure, reshaped to a plain {css, classes} object matching StyleModule's contract. Composes Task 1's ported @ultimate/uix-styles/table tokens via ${tableStyle} interpolation, following the same composition pattern already established by packages/react/src/paginator/paginator-style.ts and packages/ng/src/table/table-style.ts. Real PrimeReact root/part class names (.p-datatable*) renamed .p-*→.u-*."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/table/table.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeReact test file. Covers sort (single/multi, aria-sort attribute, sort emit), filter (operator+constraints per column), controlled selection, keyboard row navigation, and composition of the real UPaginator/UScroller instances (rather than reimplemented paging/virtualization), per the plan's testing matrix (spec §18)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/table/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
   }
 ]

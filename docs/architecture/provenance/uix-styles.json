@@ -64,5 +64,11 @@
     "ultimateDestination": "packages/uix-styles/src/paginator/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 paginator module (root/content/first/prev/next/last/page structural CSS with dt() token references); .p-paginator* class-name string literals renamed to .u-paginator* to match Phase 2's Ultimate namespace decision. Consumed by all three frameworks' paginator-style.ts modules (packages/ng, packages/react, packages/vue) via ${paginatorStyle}/${paginatorCss} interpolation. Exports only a plain style: string (no pre-shaped classes resolver), same shape as the base/badge/button/checkbox/dialog/menu/tooltip modules — each consuming framework's own paginator-style.ts authors its own classes map locally, matching button-style.ts's established pattern (see each framework's own provenance entry)."
+  },
+  {
+    "originalPath": ".vendor-extracted/uix-styles-components/src/datatable/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/table/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 datatable module (root/table/thead/tbody/row structural CSS with dt() token references); .p-datatable* class-name string literals renamed to .u-table* to match Phase 2's Ultimate namespace decision. Exports only a plain style: string (no pre-shaped classes resolver), same shape as the base/badge/button/checkbox/dialog/menu/tooltip/paginator modules — each consuming framework's own table-style.ts authors its own classes map locally, matching button-style.ts's/paginator-style.ts's established pattern (see each framework's own provenance entry). Consumed by all three frameworks' table-style.ts modules (packages/ng, packages/react, packages/vue) via ${tableStyle}/${tableCss} interpolation."
   }
 ]

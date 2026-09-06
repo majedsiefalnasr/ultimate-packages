@@ -268,5 +268,29 @@
     "ultimateDestination": "packages/ng/src/scroller/scroller.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "UScroller's optional content-level composition point is informed by real PrimeNG 21.1.9 Scroller's own content-projection mechanism (commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), specifically: the `@ContentChild('content', {descendants: false})` template query (scroller.ts:450), the `ngTemplateOutlet` dispatch that renders it in place of the built-in windowed item markup (scroller.ts:54-56), and `getOptions(renderedIndex)`'s real per-item metadata shape (scroller.ts:1213-1224, {index, count, first, last, even, odd}). Ultimate's implementation is informed by this cited upstream mechanism, not copied verbatim — the content-template context type, dispatch structure, and getItemOptions naming are Ultimate's own, matching UBaseComponent's existing conventions; only the architectural mechanism (a named content template query rendered via ngTemplateOutlet, carrying generic per-item metadata) is mirrored."
+  },
+  {
+    "originalPath": "packages/primeng/src/table/table.ts",
+    "ultimateDestination": "packages/ng/src/table/table.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Verified real PrimeNG 21.1.9 Table source (table.ts, commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), adapted with full Ultimate namespace rename across Tasks 17-22: sort (single/multi mode, aria-sort, sort emit), filter (operator+constraints per column) and v-model-style selection signal-input/output surface adapted from verified upstream behavior; row equality for selection uses @ultimate/uix-utils/object's deepEquals rather than reimplementing an object-diff locally; pagination composes the real UPaginator instance (Tasks 2-6) rather than reimplementing paging; virtualization composes the real UScroller instance (Task 1/Tasks 2-6) via its content-template composition point rather than reimplementing windowing. Excludes column resize/reorder, frozen columns/rows, row expansion, export-to-CSV, and context-menu selection — each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 17-22)."
+  },
+  {
+    "originalPath": "packages/primeng/src/table/table.ts",
+    "ultimateDestination": "packages/ng/src/table/table-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Structural layout CSS (.u-table/.u-table-table/.u-table-thead/.u-table-tbody/.u-table-row/.u-table-row-group-header slots) adapted from real PrimeNG Table's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/ScrollerStyle/PaginatorStyle). Composes Task 1's ported @ultimate/uix-styles/table tokens via ${tableStyle} interpolation, following paginator-style.ts's established composition pattern. Real PrimeNG root/part class names (.p-datatable*) renamed .p-*→.u-*."
+  },
+  {
+    "originalPath": "packages/ng/src/table/table.spec.ts",
+    "ultimateDestination": "packages/ng/src/table/table.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeNG test file. Covers sort (single/multi, aria-sort attribute, sort emit), filter (operator+constraints per column), v-model selection, keyboard row navigation, and composition of the real UPaginator/UScroller instances (rather than reimplemented paging/virtualization), per the plan's testing matrix (spec §18)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/table/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   }
 ]
