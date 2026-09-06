@@ -629,7 +629,13 @@ export function nextMetadataVersion(
   next: Omit<ComponentMetadata, "metadataVersion">
 ): number {
   const { metadataVersion: _currentVersion, schemaVersion: _currentSchema, ...currentContent } = current;
-  const { schemaVersion: _nextSchema, ...nextContent } = next;
+  // `next`'s static type is Omit<ComponentMetadata, "metadataVersion">, but
+  // callers commonly build it by spreading a full ComponentMetadata (e.g.
+  // `{ ...base, description: "..." }`), which copies metadataVersion at
+  // runtime despite the type. Strip it explicitly here too — omitting this
+  // strip caused a real false-increment bug on the no-op-regeneration and
+  // schemaVersion-only-change test scenarios during Task 7's implementation.
+  const { metadataVersion: _nextVersion, schemaVersion: _nextSchema, ...nextContent } = next as ComponentMetadata;
   const changed = JSON.stringify(currentContent) !== JSON.stringify(nextContent);
   return changed ? current.metadataVersion + 1 : current.metadataVersion;
 }
