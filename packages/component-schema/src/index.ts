@@ -6,3 +6,4 @@ export type { StyleIdentity } from "./style";
 export type { Relationships } from "./relationships";
 export type { ProvenanceRef } from "./provenance-ref";
 export type { Guidance } from "./guidance";
+export type { ComponentMetadata } from "./component-metadata";
