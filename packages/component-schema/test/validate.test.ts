@@ -134,4 +134,34 @@ describe("validateComponentMetadata — accepts unknown, proves the shape at run
     const table = { ...(valid() as Record<string, unknown>), name: "Table", relationships: { dependsOn: ["Paginator", "Scroller"] } };
     expect(validateComponentMetadata(table, [paginator, scroller, table]).valid).toBe(true);
   });
+
+  it("rejects an accessibility block with an unrecognized extra key (strict mode)", () => {
+    const record = { ...(valid() as Record<string, unknown>), accessibility: { verifiedRoles: ["row"], bogusKey: "surprise" } };
+    expect(validateComponentMetadata(record, [record]).valid).toBe(false);
+  });
+
+  it("rejects a relationships block with an unrecognized extra key (strict mode)", () => {
+    const record = { ...(valid() as Record<string, unknown>), relationships: { dependsOn: ["Paginator"], bogusKey: "surprise" } };
+    expect(validateComponentMetadata(record, [record]).valid).toBe(false);
+  });
+
+  it("rejects a guidance block with an unrecognized extra key (strict mode)", () => {
+    const record = { ...(valid() as Record<string, unknown>), guidance: { usageNotes: "Use for primary actions.", bogusKey: "surprise" } };
+    expect(validateComponentMetadata(record, [record]).valid).toBe(false);
+  });
+
+  it("rejects a PropFact with a wrong-type optional 'default' or 'description' field", () => {
+    const record = valid() as Record<string, unknown>;
+    (record.api as Record<string, unknown>).ng = { props: [{ name: "loading", type: "boolean", required: false, default: 42 }], events: [] };
+    expect(validateComponentMetadata(record, [record]).valid).toBe(false);
+  });
+
+  it("rejects an EventFact with a wrong-type optional 'payloadDescription' field", () => {
+    const record = valid() as Record<string, unknown>;
+    (record.api as Record<string, unknown>).ng = {
+      props: [],
+      events: [{ semanticId: "sort-changed", frameworkName: "sortFieldChange", mechanism: "output", payloadDescription: 42 }],
+    };
+    expect(validateComponentMetadata(record, [record]).valid).toBe(false);
+  });
 });
