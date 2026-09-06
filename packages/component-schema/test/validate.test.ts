@@ -141,7 +141,7 @@ describe("validateComponentMetadata — accepts unknown, proves the shape at run
   });
 
   it("rejects a relationships block with an unrecognized extra key (strict mode)", () => {
-    const record = { ...(valid() as Record<string, unknown>), relationships: { dependsOn: ["Paginator"], bogusKey: "surprise" } };
+    const record = { ...(valid() as Record<string, unknown>), relationships: { bogusKey: "surprise" } };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
