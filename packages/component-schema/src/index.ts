@@ -8,3 +8,5 @@ export type { ProvenanceRef } from "./provenance-ref";
 export type { Guidance } from "./guidance";
 export type { ComponentMetadata } from "./component-metadata";
 export { nextMetadataVersion } from "./metadata-version";
+export { validateComponentMetadata } from "./validate";
+export type { ValidationResult } from "./validate";
