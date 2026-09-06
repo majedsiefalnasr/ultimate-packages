@@ -3,6 +3,8 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 import { applyUltimateTheme } from "@ultimate/themes";
 import { UTable } from "./table";
 import { UTable as RootExport } from "../index";
+import { UPaginator } from "../paginator/paginator";
+import { UScroller } from "../scroller/scroller";
 
 interface Row {
   id: number;
@@ -461,5 +463,44 @@ describe("theme token consistency", () => {
 
     expect(ngCss).toContain("var(--u-datatable-header-background");
     expect(ngCss).not.toContain("dt(");
+  });
+});
+
+describe("real child-component composition (regression guard, Task 24)", () => {
+  it("composes the real UPaginator class (debugElement query, not a DOM-only check)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("paginator", true);
+    fixture.componentRef.setInput("rows", 10);
+    fixture.componentRef.setInput("totalRecords", 1);
+    fixture.detectChanges();
+    const paginatorDebugEl = fixture.debugElement.query((de) => de.componentInstance instanceof UPaginator);
+    expect(paginatorDebugEl).not.toBeNull();
+  });
+
+  it("composes the real UScroller class (debugElement query, not a DOM-only check)", () => {
+    // UScroller's ngAfterViewInit constructs a ResizeObserver unconditionally
+    // and jsdom does not implement one; stub it exactly like the established
+    // Scroller-composition describe block above in this same file, since
+    // this test also mounts the real (non-mocked) UScroller.
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        observe() {}
+        disconnect() {}
+      }
+    );
+    try {
+      const fixture = TestBed.createComponent(UTable<Row>);
+      fixture.componentRef.setInput("value", Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` })));
+      fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+      fixture.componentRef.setInput("virtualScroll", true);
+      fixture.componentRef.setInput("virtualScrollItemSize", 30);
+      fixture.detectChanges();
+      const scrollerDebugEl = fixture.debugElement.query((de) => de.componentInstance instanceof UScroller);
+      expect(scrollerDebugEl).not.toBeNull();
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

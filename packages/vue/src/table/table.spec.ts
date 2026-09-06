@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import UTable from "./Table.vue";
+import UPaginatorReal from "../paginator/Paginator.vue";
+import UScrollerReal from "../scroller/Scroller.vue";
 
 let resizeObserverCallback: ResizeObserverCallback | undefined;
 
@@ -272,5 +274,28 @@ describe("package export", () => {
   it("is exported from the package root", async () => {
     const { UTable: RootExport } = await import("../index");
     expect(RootExport).toBe(UTable);
+  });
+});
+
+describe("real child-component composition (regression guard, Task 24)", () => {
+  it("mounts the real Paginator.vue component, not a locally re-declared one", () => {
+    const wrapper = mount(UTable, {
+      props: { value: [{ id: 1, name: "Alice" }], paginator: true, rows: 10, totalRecords: 1 },
+    });
+    const paginatorComponent = wrapper.findComponent(UPaginatorReal);
+    expect(paginatorComponent.exists()).toBe(true);
+  });
+
+  it("mounts the real Scroller.vue component (via its content slot), not a locally re-declared one", () => {
+    const rowsData = Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const wrapper = mount(UTable, {
+      props: {
+        value: rowsData,
+        columns: [{ field: "name", header: "Name" }],
+        virtualScrollerOptions: { itemSize: 30 },
+      },
+    });
+    const scrollerComponent = wrapper.findComponent(UScrollerReal);
+    expect(scrollerComponent.exists()).toBe(true);
   });
 });

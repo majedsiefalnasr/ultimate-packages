@@ -4,6 +4,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, cleanup, act } from "@testing-library/react";
 import { UTable } from "./table";
 import { UTable as SubpathExport } from "./index";
+import * as PaginatorModule from "../paginator/paginator";
+import * as ScrollerModule from "../scroller/scroller";
 
 interface Row {
   id: number;
@@ -364,5 +366,54 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
 describe("package export", () => {
   it("is exported from its own subpath index", () => {
     expect(SubpathExport).toBe(UTable);
+  });
+});
+
+describe("real child-component composition (regression guard, Task 24)", () => {
+  it("actually invokes the real UPaginator function during render (spy-based runtime proof)", () => {
+    const paginatorSpy = vi.spyOn(PaginatorModule, "UPaginator");
+    render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        paginator
+        rows={10}
+        totalRecords={1}
+        onPage={vi.fn()}
+      />
+    );
+    expect(paginatorSpy).toHaveBeenCalled();
+  });
+
+  it("actually invokes the real UScroller function during render when virtualScroll is used (spy-based runtime proof)", () => {
+    // UScroller's mount effect constructs a ResizeObserver unconditionally and
+    // jsdom does not implement one; stub it exactly like the established
+    // Scroller-composition describe block above in this same file, since
+    // this test also mounts the real (non-mocked) UScroller.
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        observe() {}
+        disconnect() {}
+      }
+    );
+    try {
+      // UScroller is React.forwardRef(...), an object of shape { $$typeof, render },
+      // not a plain function — vi.spyOn can't wrap the export itself ("cannot spy
+      // on a non-function value"). React actually calls its inner .render during
+      // render, so spy on that instead; this still proves the real component ran.
+      const scrollerSpy = vi.spyOn(ScrollerModule.UScroller, "render");
+      const rowsData = Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+      render(
+        <UTable<Row>
+          value={rowsData}
+          columns={[{ field: "name", header: "Name" }]}
+          virtualScrollerOptions={{ itemSize: 30 }}
+        />
+      );
+      expect(scrollerSpy).toHaveBeenCalled();
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });
