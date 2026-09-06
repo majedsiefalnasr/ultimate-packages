@@ -155,7 +155,7 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     // matching the established convention from scroller.spec.ts.
     const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
     mockViewportHeight(scrollerRoot, 200);
-    resizeObserverCallback?.([{ target: scrollerRoot } as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.([{ target: scrollerRoot } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
     await wrapper.vm.$nextTick();
 
     const table = wrapper.find("table[data-u-table-virtual-body]");
@@ -180,7 +180,7 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     });
     const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
     mockViewportHeight(scrollerRoot, 300);
-    resizeObserverCallback?.([{ target: scrollerRoot } as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.([{ target: scrollerRoot } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
     await wrapper.vm.$nextTick();
 
     const rows = wrapper.findAll("table[data-u-table-virtual-body] tbody tr");
@@ -204,7 +204,7 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     });
     const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
     mockViewportHeight(scrollerRoot, 200);
-    resizeObserverCallback?.([{ target: scrollerRoot } as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.([{ target: scrollerRoot } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
     await wrapper.vm.$nextTick();
 
     const firstRow = wrapper.find('table[data-u-table-virtual-body] tbody [role="row"]');
@@ -224,7 +224,7 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     });
     const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
     mockViewportHeight(scrollerRoot, 200);
-    resizeObserverCallback?.([{ target: scrollerRoot } as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.([{ target: scrollerRoot } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
     await wrapper.vm.$nextTick();
 
     const rows = wrapper.findAll('table[data-u-table-virtual-body] tbody [role="row"]');

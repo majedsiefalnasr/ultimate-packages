@@ -255,7 +255,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** Yes, but explicitly NOT NOW — tracked in Open Architectural Decisions §6 as a "do not open until X" entry.
 
 #### GAP-014 — Filter `operator`/`constraints`/multi-constraint model deferred, no `Table` implementation yet to justify it
-- **Status:** DEFERRED
+- **Status:** RESOLVED
 - **Type:** Data, Architecture
 - **Blocking level:** MEDIUM
 - **Current evidence:** ADR-043: "the operator/constraints variant is verifiably real but differently normalized between PrimeReact and PrimeNG, and is deferred until real Table implementation evidence justifies it." `uix-data`'s `FilterMetadata` currently covers only the simple non-operator shape.
@@ -266,8 +266,8 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Framework scope:** Cross-framework.
 - **Existing reusable infrastructure:** `packages/uix-data/src/filter/index.ts`'s existing simple-shape `FilterMatchMode`/`FilterMetadata` as the starting point.
 - **Recommended resolution direction:** Directional only — do not design in the abstract; let the first real Table spec surface the evidence.
-- **Source/evidence:** `docs/architecture/DECISIONS.md` ADR-043; `packages/uix-data/README.md` "Out of scope" section.
-- **Architectural decision required:** Yes, deferred until Table work begins — see Open Architectural Decisions §6.
+- **Source/evidence:** `docs/architecture/DECISIONS.md` ADR-043; `packages/uix-data/README.md` "Out of scope" section. Resolved by Table implementation plan Tasks 5/13/19 (Angular/React/Vue's respective framework-native filter-operator/constraints implementations), which supplied the real cross-framework evidence this gap was deferred pending.
+- **Architectural decision required:** No — resolved by Table implementation plan Tasks 5/13/19; see Open Architectural Decisions §6.
 
 #### GAP-015 — Sort-toggle/removable-sort cycling not in shared `uix-data` (framework-divergent, confirmed)
 - **Status:** RESOLVED (as "intentionally excluded")

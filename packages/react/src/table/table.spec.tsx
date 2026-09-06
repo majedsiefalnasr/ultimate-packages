@@ -402,7 +402,12 @@ describe("real child-component composition (regression guard, Task 24)", () => {
       // not a plain function — vi.spyOn can't wrap the export itself ("cannot spy
       // on a non-function value"). React actually calls its inner .render during
       // render, so spy on that instead; this still proves the real component ran.
-      const scrollerSpy = vi.spyOn(ScrollerModule.UScroller, "render");
+      // @types/react's ForwardRefExoticComponent type doesn't declare `render`
+      // (it's a runtime-only field), so cast through a minimal shape to spy on it.
+      const scrollerAsRenderable = ScrollerModule.UScroller as unknown as {
+        render: (...args: unknown[]) => unknown;
+      };
+      const scrollerSpy = vi.spyOn(scrollerAsRenderable, "render");
       const rowsData = Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` }));
       render(
         <UTable<Row>
