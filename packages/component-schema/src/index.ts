@@ -7,3 +7,4 @@ export type { Relationships } from "./relationships";
 export type { ProvenanceRef } from "./provenance-ref";
 export type { Guidance } from "./guidance";
 export type { ComponentMetadata } from "./component-metadata";
+export { nextMetadataVersion } from "./metadata-version";
