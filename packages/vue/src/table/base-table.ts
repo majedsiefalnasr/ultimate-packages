@@ -24,7 +24,19 @@ export function createBaseTable(): ComponentOptions {
       rowsPerPageOptions: { type: Array, default: () => [] },
       virtualScrollerOptions: { type: Object, default: undefined },
       lazy: { type: Boolean, default: false },
+      editMode: { type: String, default: undefined },
+      editingRows: { type: Array, default: () => [] },
+      rowGroupMode: { type: String, default: undefined },
+      groupRowsBy: { type: String, default: undefined },
     },
-    emits: ["sort", "filter", "update:selection", "selection-change", "page", "lazy-load"],
+    emits: [
+      "sort",
+      "filter",
+      "update:selection",
+      "selection-change",
+      "page",
+      "lazy-load",
+      "update:editingRows",
+    ],
   };
 }

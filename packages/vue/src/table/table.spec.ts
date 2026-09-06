@@ -233,3 +233,44 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     wrapper.unmount();
   });
 });
+
+describe("row editing (v-model:editingRows array, spec §11.3)", () => {
+  it("emits update:editingRows with the row appended when row edit is initiated", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "Alice" }],
+        dataKey: "id",
+        columns: [{ field: "name", header: "Name" }],
+        editMode: "row",
+        editingRows: [],
+      },
+    });
+    await wrapper.find("[data-u-table-row-edit-init]").trigger("click");
+    expect(wrapper.emitted("update:editingRows")?.[0]).toEqual([[{ id: 1, name: "Alice" }]]);
+  });
+});
+
+describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
+  it("groups adjacent rows sharing the same groupRowsBy value under subheader mode", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { group: "a", name: "Alice" },
+          { group: "a", name: "Amy" },
+          { group: "b", name: "Bob" },
+        ],
+        columns: [{ field: "name", header: "Name" }],
+        rowGroupMode: "subheader",
+        groupRowsBy: "group",
+      },
+    });
+    expect(wrapper.findAll("[data-u-table-group-header]").length).toBe(2);
+  });
+});
+
+describe("package export", () => {
+  it("is exported from the package root", async () => {
+    const { UTable: RootExport } = await import("../index");
+    expect(RootExport).toBe(UTable);
+  });
+});

@@ -13,18 +13,32 @@
         </tr>
       </thead>
       <tbody v-if="!virtualScrollerOptions" :class="cx('tbody')" role="rowgroup">
-        <tr
-          v-for="(row, index) in pagedValue"
-          :key="index"
-          :class="cx('row')"
-          role="row"
-          tabindex="0"
-          :aria-selected="isSelected(row)"
-          @click="selectRow(row)"
-          @keydown="onRowKeyDown"
-        >
-          <td v-for="col in columns" :key="col.field">{{ row[col.field] }}</td>
-        </tr>
+        <template v-for="(entry, index) in groupedRows" :key="index">
+          <tr
+            v-if="rowGroupMode === 'subheader' && entry.isGroupHeader"
+            data-u-table-group-header
+            :class="cx('rowGroupHeader')"
+          >
+            <td :colspan="columns.length">{{ entry.row[groupRowsBy] }}</td>
+          </tr>
+          <tr
+            :class="cx('row')"
+            role="row"
+            tabindex="0"
+            :aria-selected="isSelected(entry.row)"
+            @click="selectRow(entry.row)"
+            @keydown="onRowKeyDown"
+          >
+            <td v-for="col in columns" :key="col.field">{{ entry.row[col.field] }}</td>
+            <td v-if="editMode === 'row'">
+              <button
+                type="button"
+                data-u-table-row-edit-init
+                @click.stop="initRowEdit(entry.row)"
+              >Edit</button>
+            </td>
+          </tr>
+        </template>
       </tbody>
     </table>
     <UScroller
@@ -142,6 +156,19 @@ export default {
   name: "UTable",
   extends: createBaseTable(),
   components: { UPaginator, UScroller },
+  data() {
+    return {
+      /**
+       * Always-internal cell-edit dirty-value tracking (spec §11.3), keyed
+       * by `rowIndex` only — never `dataKey`-resolved, a confirmed
+       * real-source difference from React's `dataKey`-or-`rowIndex` keying.
+       * Scaffolded per this task's row-edit-lifecycle scope (matching
+       * Angular Task 10 / React Task 16's own deferral for cross-framework
+       * symmetry); no consumer reads this yet.
+       */
+      d_editingMeta: {},
+    };
+  },
   computed: {
     /**
      * Clones `value` (`[...this.value]`) before sorting so the caller's
@@ -186,6 +213,42 @@ export default {
     pagedValue() {
       if (!this.paginator) return this.filteredValue;
       return this.filteredValue.slice(this.first, this.first + this.rows);
+    },
+    /**
+     * Row-grouping view (spec §13's confirmed algorithm, matching Angular
+     * Task 10's `groupedRows` getter / React Task 16's `groupedRows` memo):
+     * reuses the existing multi-field sort comparator (`compareValues`, the
+     * same one `applySortTo` uses) rather than a parallel comparator —
+     * `groupRowsBy` is injected as a synthetic leading sort entry ahead of
+     * any existing `multiSortMeta`, so rows sharing the same group value are
+     * always adjacent in the result, then the rows are walked once
+     * comparing each row's group value against the previous row's via
+     * `uix-data`'s shared `equals` (2-arg form) to detect group boundaries.
+     * When `groupRowsBy` is unset, this degrades to `pagedValue` unchanged
+     * (no boundaries ever detected), preserving every prior task's
+     * ungrouped rendering.
+     */
+    groupedRows() {
+      if (!this.groupRowsBy) {
+        return this.pagedValue.map((row) => ({ row, isGroupHeader: false }));
+      }
+
+      const meta = [{ field: this.groupRowsBy, order: 1 }, ...this.multiSortMeta];
+      const rows = [...this.pagedValue].sort((a, b) => {
+        for (const { field, order } of meta) {
+          const result = compareValues(resolveCell(a, field), resolveCell(b, field));
+          if (result !== 0) return result * order;
+        }
+        return 0;
+      });
+
+      return rows.map((row, index) => {
+        const previous = rows[index - 1];
+        const isGroupHeader =
+          index === 0 ||
+          !equals(resolveCell(row, this.groupRowsBy), resolveCell(previous, this.groupRowsBy));
+        return { row, isGroupHeader };
+      });
     },
   },
   methods: {
@@ -338,6 +401,17 @@ export default {
         event.preventDefault();
         target.focus();
       }
+    },
+    /**
+     * Row-editing lifecycle entry point (spec §11.3's Array-append idiom,
+     * distinct from Angular's/React's key-map shape): appends `row` to
+     * `editingRows` and emits `update:editingRows` with the next array
+     * value — never mutates the `editingRows` prop directly, matching the
+     * one-way-prop discipline already established for `sortField`/
+     * `selection`/etc.
+     */
+    initRowEdit(row) {
+      this.$emit("update:editingRows", [...this.editingRows, row]);
     },
   },
 };
