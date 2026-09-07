@@ -49,10 +49,18 @@ export async function runCli(argv: string[], projectDir: string = process.cwd())
       return printResult(result);
     }
     case "add": {
+      if (args[0] === undefined) {
+        console.error("add requires a package name: ultimate add <package>");
+        return 1;
+      }
       const result = await runAdd(projectDir, args[0]);
       return printResult(result);
     }
     case "theme": {
+      if (args[0] === undefined) {
+        console.error("theme requires a preset name: ultimate theme <preset>");
+        return 1;
+      }
       const result = await runTheme(projectDir, args[0]);
       return printResult(result);
     }
@@ -62,6 +70,10 @@ export async function runCli(argv: string[], projectDir: string = process.cwd())
       return result.exitCode;
     }
     case "generate": {
+      if (args[0] === undefined) {
+        console.error("generate requires a component name: ultimate generate <component>");
+        return 1;
+      }
       const result = runGenerate(projectDir, args[0]);
       return result.exitCode;
     }

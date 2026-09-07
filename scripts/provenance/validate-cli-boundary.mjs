@@ -47,11 +47,21 @@ function pass(message) {
 // unanchored so they still match their normal assigned form, e.g.
 // `const x = require("pkg")` or `const m = await import("pkg")`, where the
 // line does not start with `require`/`import`.
+//
+// The `from`-pattern statement body uses a bounded lazy quantifier
+// (`[\s\S]{0,200}?`) rather than `[^;\n]*` so it can span a multi-line
+// import statement (e.g. a Prettier-wrapped `import {\n  Foo,\n} from
+// "pkg";`), and the statement may start with `import` OR bare `export` (to
+// catch re-exports like `export * from "pkg"` / `export { X } from "pkg"`,
+// which are real runtime dependency edges with no `import` keyword at all).
+// The `^\s*` line-start anchor is kept so `theme.ts`'s single-line string
+// literal (which does not start the line with `import`/`export`) still
+// cannot match — see the manual re-verification in the Fix 2 report.
 function importPatternsFor(pkgName) {
   const escaped = pkgName.replace(/[/]/g, "\\/");
   return [
     new RegExp(`^\\s*import\\s+["']${escaped}(["'/])`, "m"),
-    new RegExp(`^\\s*(?:export\\s+)?import\\b[^;\\n]*\\sfrom\\s+["']${escaped}(["'/])`, "m"),
+    new RegExp(`^\\s*(?:import|export)\\b[\\s\\S]{0,200}?\\sfrom\\s+["']${escaped}(["'/])`, "m"),
     new RegExp(`require\\(["']${escaped}(["'/])`),
     new RegExp(`import\\(["']${escaped}(["'/])`),
   ];

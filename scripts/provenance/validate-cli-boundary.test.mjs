@@ -72,6 +72,52 @@ test("fails when a packages/ng*-shaped fixture's src requires @ultimate/cli in a
   rmSync(workDir, { recursive: true, force: true });
 });
 
+test("fails when a packages/ng*-shaped fixture's src imports @ultimate/cli via a multi-line wrapped import", () => {
+  const workDir = makeWorkDir("cli-boundary-check1-fail-multiline-");
+  const srcDir = join(workDir, "packages", "ng", "src");
+  mkdirSync(srcDir, { recursive: true });
+  // Prettier-style wrapped import (3+ named imports) — spans multiple
+  // lines, so `[^;\n]*` (forbids newlines) would never match this, but a
+  // real runtime dependency edge on @ultimate/cli exists here.
+  writeFileSync(
+    join(srcDir, "index.ts"),
+    `import {\n  Foo,\n  Bar,\n  Baz,\n} from "@ultimate/cli";\n`
+  );
+
+  const result = runScript(workDir);
+
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on a multi-line wrapped import reverse-direction violation"
+  );
+  assert.match(result.stderr, /VIOLATION/);
+  assert.match(result.stderr, /reverse-direction/);
+
+  rmSync(workDir, { recursive: true, force: true });
+});
+
+test("fails when a packages/ng*-shaped fixture's src bare re-exports @ultimate/cli", () => {
+  const workDir = makeWorkDir("cli-boundary-check1-fail-reexport-");
+  const srcDir = join(workDir, "packages", "ng", "src");
+  mkdirSync(srcDir, { recursive: true });
+  // Bare re-export — no `import` keyword at all, but a real runtime
+  // dependency edge on @ultimate/cli exists here.
+  writeFileSync(join(srcDir, "index.ts"), `export * from "@ultimate/cli";\n`);
+
+  const result = runScript(workDir);
+
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on a bare re-export reverse-direction violation"
+  );
+  assert.match(result.stderr, /VIOLATION/);
+  assert.match(result.stderr, /reverse-direction/);
+
+  rmSync(workDir, { recursive: true, force: true });
+});
+
 // --- Check 2: reverse-direction, package.json --------------------------
 
 test("passes when packages/react*/package.json has no @ultimate/cli dependency", () => {

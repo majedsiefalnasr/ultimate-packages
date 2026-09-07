@@ -141,6 +141,11 @@ export function runDoctor(projectDir: string): DoctorResult {
 
   const metadataKey = FRAMEWORK_TO_METADATA_KEY[framework];
 
+  // `compatibilityResult` is a single, project-level verdict (one
+  // `matchCompatibility` call above, keyed only on framework/frameworkVersion/
+  // cliVersion) — it is stamped onto every component row identically below,
+  // not recomputed per component. There is no per-component compatibility
+  // check in v1; `installed` is the only field that varies row-to-row.
   const components: DoctorComponentReport[] = ALL_COMPONENTS.map((component) => {
     const packageInfo = component.packages[metadataKey];
     const packageName = packageInfo?.packageName ?? null;

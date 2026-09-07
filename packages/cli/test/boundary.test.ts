@@ -7,8 +7,9 @@ import { fileURLToPath } from "node:url";
  * Orchestrator/build-tool boundary verification (spec §4).
  *
  * `@ultimate/cli` is an orchestrator: it detects a consumer project's
- * framework and package manager, copies/generates component source, and
- * shells out to install a dependency. It must never grow into a build-tool
+ * framework and package manager, prints an import/usage snippet to stdout
+ * (`generate` — never writes files), and shells out to install a
+ * dependency. It must never grow into a build-tool
  * replacement (bundling, transpiling, or otherwise duplicating what
  * webpack/vite/esbuild/rollup/the framework compilers already do for the
  * consumer project), and its one subprocess call site must stay

@@ -81,6 +81,16 @@ describe("runCli", () => {
     expect(code).toBe(0);
   });
 
+  it("`add` with no package name returns non-zero and never calls runAdd", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const code = await runCli(["add"], projectDir);
+
+    expect(code).not.toBe(0);
+    expect(runAdd).not.toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringMatching(/package name/i));
+  });
+
   it("dispatches `theme <preset>` to runTheme with projectDir and the preset name", async () => {
     vi.spyOn(console, "log").mockImplementation(() => {});
 
@@ -88,6 +98,16 @@ describe("runCli", () => {
 
     expect(runTheme).toHaveBeenCalledWith(projectDir, "aura");
     expect(code).toBe(0);
+  });
+
+  it("`theme` with no preset name returns non-zero and never calls runTheme", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const code = await runCli(["theme"], projectDir);
+
+    expect(code).not.toBe(0);
+    expect(runTheme).not.toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringMatching(/preset name/i));
   });
 
   it("dispatches `doctor` to runDoctor, prints the formatted report, and returns its exit code", async () => {
@@ -106,6 +126,16 @@ describe("runCli", () => {
 
     expect(runGenerate).toHaveBeenCalledWith(projectDir, "Button");
     expect(code).toBe(0);
+  });
+
+  it("`generate` with no component name returns non-zero and never calls runGenerate", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const code = await runCli(["generate"], projectDir);
+
+    expect(code).not.toBe(0);
+    expect(runGenerate).not.toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringMatching(/component name/i));
   });
 
   it("dispatches `ai` to runAi (sync, no arguments) and returns its exit code", async () => {
