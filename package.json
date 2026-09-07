@@ -16,6 +16,7 @@
     "format:check": "prettier --check .",
     "provenance:validate": "node scripts/provenance/validate-provenance.mjs",
     "boundary:validate": "node scripts/provenance/validate-boundaries.mjs",
+    "boundary:validate:cli": "node scripts/provenance/validate-cli-boundary.mjs",
     "ceiling:validate": "node scripts/provenance/validate-dependency-ceiling.mjs"
   },
   "devDependencies": {
