@@ -25,7 +25,8 @@
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs",
     "test": "vitest run --typecheck",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate": "node scripts/validate-all.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
