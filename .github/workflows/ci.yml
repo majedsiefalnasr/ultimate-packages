@@ -62,3 +62,6 @@ jobs:
 
       - name: CLI package boundary validation
         run: pnpm run boundary:validate:cli
+
+      - name: MCP package boundary validation
+        run: pnpm run boundary:validate:mcp

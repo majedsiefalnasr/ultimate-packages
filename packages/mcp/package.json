@@ -1,0 +1,42 @@
+{
+  "name": "@ultimate/mcp",
+  "version": "0.1.0",
+  "description": "MCP server exposing Ultimate component metadata and compatibility queries (Phase 8).",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "bin": {
+    "ultimate-mcp": "./dist/bin.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "@ultimate/component-metadata": "workspace:*",
+    "@ultimate/component-schema": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.25.0 || ^4.0.0"
+  },
+  "scripts": {
+    "build": "tsup && node scripts/rename-dts.mjs",
+    "test": "vitest run --typecheck",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8"
+  }
+}
