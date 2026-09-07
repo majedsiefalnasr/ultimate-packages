@@ -1,0 +1,39 @@
+{
+  "name": "@ultimate/cli",
+  "version": "0.1.0",
+  "description": "CLI for Ultimate Platform (Phase 7).",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "bin": {
+    "ultimate": "./dist/bin.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "@ultimate/component-metadata": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsup && node scripts/rename-dts.mjs",
+    "test": "vitest run --typecheck",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8"
+  }
+}
