@@ -94,6 +94,8 @@ describe("runDoctor", () => {
 
     expect(result.framework).toBeNull();
     expect(result.components).toHaveLength(8);
-    expect(result.components.every((component) => component.compatibility === "unknown")).toBe(true);
+    expect(result.components.every((component) => component.compatibility === "unknown")).toBe(
+      true
+    );
   });
 });

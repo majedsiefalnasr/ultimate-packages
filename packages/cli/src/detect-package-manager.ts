@@ -4,7 +4,10 @@ import { join } from "node:path";
 export type PackageManager = "npm" | "yarn" | "pnpm";
 
 /** Lockfiles checked in priority order: the first match wins. */
-const LOCKFILE_PACKAGE_MANAGERS: ReadonlyArray<{ lockfile: string; packageManager: PackageManager }> = [
+const LOCKFILE_PACKAGE_MANAGERS: ReadonlyArray<{
+  lockfile: string;
+  packageManager: PackageManager;
+}> = [
   { lockfile: "pnpm-lock.yaml", packageManager: "pnpm" },
   { lockfile: "yarn.lock", packageManager: "yarn" },
   { lockfile: "package-lock.json", packageManager: "npm" },

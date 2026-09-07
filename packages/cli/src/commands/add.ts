@@ -32,7 +32,14 @@ function findUp(startDir: string, marker: string): string {
 
 const CLI_PACKAGE_ROOT = findUp(__dirname, "package.json");
 const CLI_PACKAGE_JSON_PATH = join(CLI_PACKAGE_ROOT, "package.json");
-const MANIFEST_PATH = join(CLI_PACKAGE_ROOT, "..", "..", "docs", "architecture", "compatibility-manifest.json");
+const MANIFEST_PATH = join(
+  CLI_PACKAGE_ROOT,
+  "..",
+  "..",
+  "docs",
+  "architecture",
+  "compatibility-manifest.json"
+);
 
 export interface AddResult {
   exitCode: number;
@@ -88,9 +95,13 @@ export async function runAdd(projectDir: string, packageName: string): Promise<A
   }
 
   const packageJsonPath = join(projectDir, "package.json");
-  const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as FrameworkPackageJsonShape;
+  const packageJson = JSON.parse(
+    readFileSync(packageJsonPath, "utf-8")
+  ) as FrameworkPackageJsonShape;
   const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
-  const frameworkVersion = toPlainVersion(dependencies[FRAMEWORK_DEPENDENCY_NAMES[framework]] ?? "");
+  const frameworkVersion = toPlainVersion(
+    dependencies[FRAMEWORK_DEPENDENCY_NAMES[framework]] ?? ""
+  );
 
   // Step 2: resolve compatibility (same refusal as init).
   const manifest = readManifest();

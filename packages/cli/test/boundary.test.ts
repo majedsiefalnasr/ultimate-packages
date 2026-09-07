@@ -23,7 +23,14 @@ import { fileURLToPath } from "node:url";
 
 const SRC_DIR = fileURLToPath(new URL("../src", import.meta.url));
 
-const BUNDLER_PACKAGES = ["@angular/compiler", "@babel/core", "vite", "webpack", "rollup", "esbuild"];
+const BUNDLER_PACKAGES = [
+  "@angular/compiler",
+  "@babel/core",
+  "vite",
+  "webpack",
+  "rollup",
+  "esbuild",
+];
 
 function walkTsFiles(dir: string, files: string[] = []): string[] {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -75,7 +82,9 @@ describe("packages/cli boundary (spec §4: orchestrator, not a build-tool replac
     // narrow so it can't accidentally flag `execSync`, `spawn`, or
     // unrelated identifiers ending in "exec".
     const forbiddenCall = ["child_process", ".", "exec", "("].join("");
-    const violations = srcFiles.filter((file) => readFileSync(file, "utf8").includes(forbiddenCall));
+    const violations = srcFiles.filter((file) =>
+      readFileSync(file, "utf8").includes(forbiddenCall)
+    );
 
     expect(violations).toEqual([]);
   });

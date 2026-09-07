@@ -31,7 +31,10 @@ function makeProjectDir(lockfileName?: string): string {
 
 class FakeChildProcess extends EventEmitter {}
 
-function mockSpawn(exitCode: number | null): { spy: typeof childProcess.spawn; child: FakeChildProcess } {
+function mockSpawn(exitCode: number | null): {
+  spy: typeof childProcess.spawn;
+  child: FakeChildProcess;
+} {
   const child = new FakeChildProcess();
   const spy = vi.mocked(childProcess.spawn).mockImplementation(() => {
     queueMicrotask(() => child.emit("close", exitCode));
@@ -57,7 +60,11 @@ describe("installPackage", () => {
 
     const result = await installPackage(dir, "@ultimate/react");
 
-    expect(spy).toHaveBeenCalledWith("npm", ["install", "@ultimate/react"], expect.objectContaining({ cwd: dir }));
+    expect(spy).toHaveBeenCalledWith(
+      "npm",
+      ["install", "@ultimate/react"],
+      expect.objectContaining({ cwd: dir })
+    );
     expect(result).toEqual({ exitCode: 0 });
   });
 
@@ -67,7 +74,11 @@ describe("installPackage", () => {
 
     const result = await installPackage(dir, "@ultimate/vue");
 
-    expect(spy).toHaveBeenCalledWith("yarn", ["add", "@ultimate/vue"], expect.objectContaining({ cwd: dir }));
+    expect(spy).toHaveBeenCalledWith(
+      "yarn",
+      ["add", "@ultimate/vue"],
+      expect.objectContaining({ cwd: dir })
+    );
     expect(result).toEqual({ exitCode: 0 });
   });
 
@@ -77,7 +88,11 @@ describe("installPackage", () => {
 
     const result = await installPackage(dir, "@ultimate/ng");
 
-    expect(spy).toHaveBeenCalledWith("pnpm", ["add", "@ultimate/ng"], expect.objectContaining({ cwd: dir }));
+    expect(spy).toHaveBeenCalledWith(
+      "pnpm",
+      ["add", "@ultimate/ng"],
+      expect.objectContaining({ cwd: dir })
+    );
     expect(result).toEqual({ exitCode: 0 });
   });
 

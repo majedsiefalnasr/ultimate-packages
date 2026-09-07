@@ -26,7 +26,14 @@ function findUp(startDir: string, marker: string): string {
 
 const CLI_PACKAGE_ROOT = findUp(__dirname, "package.json");
 const CLI_PACKAGE_JSON_PATH = join(CLI_PACKAGE_ROOT, "package.json");
-const MANIFEST_PATH = join(CLI_PACKAGE_ROOT, "..", "..", "docs", "architecture", "compatibility-manifest.json");
+const MANIFEST_PATH = join(
+  CLI_PACKAGE_ROOT,
+  "..",
+  "..",
+  "docs",
+  "architecture",
+  "compatibility-manifest.json"
+);
 
 const FRAMEWORK_DEPENDENCY_NAMES: Record<Framework, string> = {
   angular: "@angular/core",
@@ -114,19 +121,23 @@ export function runDoctor(projectDir: string): DoctorResult {
       framework: null,
       components,
       summaryLine,
-      message:
-        `doctor: no supported framework detected (Angular/React/Vue). ${summaryLine}.`,
+      message: `doctor: no supported framework detected (Angular/React/Vue). ${summaryLine}.`,
     };
   }
 
   const packageJsonPath = join(projectDir, "package.json");
   const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as ProjectPackageJsonShape;
   const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
-  const frameworkVersion = toPlainVersion(dependencies[FRAMEWORK_DEPENDENCY_NAMES[framework]] ?? "");
+  const frameworkVersion = toPlainVersion(
+    dependencies[FRAMEWORK_DEPENDENCY_NAMES[framework]] ?? ""
+  );
 
   const manifest = readManifest();
   const cliVersion = readCliVersion();
-  const compatibilityResult = matchCompatibility({ framework, frameworkVersion, cliVersion }, manifest);
+  const compatibilityResult = matchCompatibility(
+    { framework, frameworkVersion, cliVersion },
+    manifest
+  );
 
   const metadataKey = FRAMEWORK_TO_METADATA_KEY[framework];
 
@@ -151,8 +162,7 @@ export function runDoctor(projectDir: string): DoctorResult {
     framework,
     components,
     summaryLine,
-    message:
-      `doctor: ${installedCount} of ${totalComponents} known components installed for ${framework}. ${summaryLine}.`,
+    message: `doctor: ${installedCount} of ${totalComponents} known components installed for ${framework}. ${summaryLine}.`,
   };
 }
 

@@ -54,7 +54,7 @@ const MANIFEST_PATH = join(
   "..",
   "docs",
   "architecture",
-  "compatibility-manifest.json",
+  "compatibility-manifest.json"
 );
 
 export interface InitResult {
@@ -119,9 +119,13 @@ export async function runInit(projectDir: string): Promise<InitResult> {
   }
 
   const packageJsonPath = join(projectDir, "package.json");
-  const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as FrameworkPackageJsonShape;
+  const packageJson = JSON.parse(
+    readFileSync(packageJsonPath, "utf-8")
+  ) as FrameworkPackageJsonShape;
   const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
-  const frameworkVersion = toPlainVersion(dependencies[FRAMEWORK_DEPENDENCY_NAMES[framework]] ?? "");
+  const frameworkVersion = toPlainVersion(
+    dependencies[FRAMEWORK_DEPENDENCY_NAMES[framework]] ?? ""
+  );
 
   // Step 2: resolve the compatible Ultimate framework package.
   const manifest = readManifest();
@@ -152,7 +156,11 @@ export async function runInit(projectDir: string): Promise<InitResult> {
     ultimatePackage: ultimatePackageName,
     themePreset: null,
   };
-  writeFileSync(join(projectDir, "ultimate.config.json"), `${JSON.stringify(config, null, 2)}\n`, "utf-8");
+  writeFileSync(
+    join(projectDir, "ultimate.config.json"),
+    `${JSON.stringify(config, null, 2)}\n`,
+    "utf-8"
+  );
 
   return {
     exitCode: 0,

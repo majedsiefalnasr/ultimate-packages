@@ -71,7 +71,7 @@ export async function runCli(argv: string[], projectDir: string = process.cwd())
     }
     default: {
       console.error(
-        `Unrecognized command "${command}". Known commands: ${KNOWN_COMMANDS.join(", ")}.\n\n${USAGE_MESSAGE}`,
+        `Unrecognized command "${command}". Known commands: ${KNOWN_COMMANDS.join(", ")}.\n\n${USAGE_MESSAGE}`
       );
       return 1;
     }

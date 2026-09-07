@@ -93,11 +93,15 @@ describe("runInit", () => {
     expect(spawnSpy).toHaveBeenCalledWith(
       "npm",
       ["install", "@ultimate/ng"],
-      expect.objectContaining({ cwd: dir }),
+      expect.objectContaining({ cwd: dir })
     );
 
     const config = JSON.parse(readFileSync(join(dir, "ultimate.config.json"), "utf-8"));
-    expect(config).toEqual({ framework: "angular", ultimatePackage: "@ultimate/ng", themePreset: null });
+    expect(config).toEqual({
+      framework: "angular",
+      ultimatePackage: "@ultimate/ng",
+      themePreset: null,
+    });
   });
 
   it("installs @ultimate/react and writes ultimate.config.json for a compatible React project", async () => {
@@ -111,11 +115,15 @@ describe("runInit", () => {
     expect(spawnSpy).toHaveBeenCalledWith(
       "npm",
       ["install", "@ultimate/react"],
-      expect.objectContaining({ cwd: dir }),
+      expect.objectContaining({ cwd: dir })
     );
 
     const config = JSON.parse(readFileSync(join(dir, "ultimate.config.json"), "utf-8"));
-    expect(config).toEqual({ framework: "react", ultimatePackage: "@ultimate/react", themePreset: null });
+    expect(config).toEqual({
+      framework: "react",
+      ultimatePackage: "@ultimate/react",
+      themePreset: null,
+    });
   });
 
   it("installs @ultimate/vue and writes ultimate.config.json for a compatible Vue project", async () => {
@@ -129,11 +137,15 @@ describe("runInit", () => {
     expect(spawnSpy).toHaveBeenCalledWith(
       "npm",
       ["install", "@ultimate/vue"],
-      expect.objectContaining({ cwd: dir }),
+      expect.objectContaining({ cwd: dir })
     );
 
     const config = JSON.parse(readFileSync(join(dir, "ultimate.config.json"), "utf-8"));
-    expect(config).toEqual({ framework: "vue", ultimatePackage: "@ultimate/vue", themePreset: null });
+    expect(config).toEqual({
+      framework: "vue",
+      ultimatePackage: "@ultimate/vue",
+      themePreset: null,
+    });
   });
 
   it("resolves with the install's non-zero exit code and does not write ultimate.config.json on install failure", async () => {
@@ -159,7 +171,7 @@ describe("runInit", () => {
     expect(spawnSpy).toHaveBeenCalledWith(
       "pnpm",
       ["add", "@ultimate/react"],
-      expect.objectContaining({ cwd: dir }),
+      expect.objectContaining({ cwd: dir })
     );
   });
 
@@ -167,7 +179,13 @@ describe("runInit", () => {
     const { runInit } = await import("../../src/commands/init.js");
     const spawnSpy = mockSpawn(0);
 
-    for (const fixture of ["empty-project", "angular-incompatible-project", "angular-project", "react-project", "vue-project"]) {
+    for (const fixture of [
+      "empty-project",
+      "angular-incompatible-project",
+      "angular-project",
+      "react-project",
+      "vue-project",
+    ]) {
       const dir = copyFixture(fixture);
       await runInit(dir);
     }

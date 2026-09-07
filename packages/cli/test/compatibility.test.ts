@@ -37,7 +37,7 @@ describe("matchCompatibility", () => {
         metadataSchemaVersion: "1.0.0",
         cliVersion: "0.1.0",
       },
-      manifest,
+      manifest
     );
 
     expect(result).toEqual({ matched: true, entry: angularEntry });
@@ -54,7 +54,7 @@ describe("matchCompatibility", () => {
         metadataSchemaVersion: "1.0.0",
         cliVersion: "0.1.0",
       },
-      manifest,
+      manifest
     );
 
     expect(result.matched).toBe(false);
@@ -72,7 +72,7 @@ describe("matchCompatibility", () => {
         metadataSchemaVersion: "1.0.1",
         cliVersion: "0.1.0",
       },
-      manifest,
+      manifest
     );
 
     expect(result.matched).toBe(false);
@@ -97,7 +97,7 @@ describe("matchCompatibility", () => {
         metadataSchemaVersion: "^1.0.0",
         cliVersion: "0.1.0",
       },
-      manifest,
+      manifest
     );
 
     expect(result.matched).toBe(false);
@@ -115,7 +115,7 @@ describe("matchCompatibility", () => {
         // ultimateFrameworkPackageVersion, uixVersion, themeVersion,
         // metadataSchemaVersion all omitted - not applicable, not failures.
       },
-      manifest,
+      manifest
     );
 
     expect(result).toEqual({ matched: true, entry: angularEntry });
@@ -128,7 +128,7 @@ describe("matchCompatibility", () => {
         frameworkVersion: "3.5.0",
         cliVersion: "0.1.0",
       },
-      manifest, // manifest here only contains angular/react entries
+      manifest // manifest here only contains angular/react entries
     );
 
     expect(result.matched).toBe(false);
@@ -144,7 +144,7 @@ describe("matchCompatibility", () => {
         frameworkVersion: "18.2.0",
         cliVersion: "0.1.0",
       },
-      manifest,
+      manifest
     );
 
     expect(result).toEqual({ matched: true, entry: reactEntry });
@@ -157,7 +157,7 @@ describe("matchCompatibility", () => {
         frameworkVersion: "16.14.0",
         cliVersion: "0.1.0",
       },
-      manifest,
+      manifest
     );
 
     expect(result.matched).toBe(false);
@@ -174,7 +174,7 @@ describe("matchCompatibility", () => {
         ultimateFrameworkPackageVersion: "0.2.0",
         cliVersion: "0.1.0",
       },
-      manifest,
+      manifest
     );
 
     expect(result.matched).toBe(false);
@@ -190,7 +190,7 @@ describe("matchCompatibility", () => {
         frameworkVersion: "21.0.7",
         cliVersion: "9.9.9",
       },
-      manifest,
+      manifest
     );
 
     expect(result.matched).toBe(false);

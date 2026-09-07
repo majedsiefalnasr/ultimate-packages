@@ -39,7 +39,11 @@ test("fails when a packages/ng*-shaped fixture's src imports @ultimate/cli", () 
 
   const result = runScript(workDir);
 
-  assert.equal(result.status, 1, "expected the script to fail (exit code 1) on a reverse-direction source-import violation");
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on a reverse-direction source-import violation"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /reverse-direction/);
 
@@ -76,7 +80,10 @@ test("passes when packages/react*/package.json has no @ultimate/cli dependency",
   mkdirSync(pkgDir, { recursive: true });
   writeFileSync(
     join(pkgDir, "package.json"),
-    JSON.stringify({ name: "@ultimate/react", dependencies: { "@ultimate/react-core": "workspace:*" } })
+    JSON.stringify({
+      name: "@ultimate/react",
+      dependencies: { "@ultimate/react-core": "workspace:*" },
+    })
   );
 
   const result = runScript(workDir);
@@ -97,7 +104,11 @@ test("fails when a packages/react*-shaped fixture's package.json declares @ultim
 
   const result = runScript(workDir);
 
-  assert.equal(result.status, 1, "expected the script to fail (exit code 1) on a reverse-direction package.json violation");
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on a reverse-direction package.json violation"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /reverse-direction/);
 
@@ -114,7 +125,10 @@ test("passes when packages/cli/package.json has no forbidden framework/themes de
     join(pkgDir, "package.json"),
     JSON.stringify({
       name: "@ultimate/cli",
-      dependencies: { "@ultimate/component-metadata": "workspace:*", "@ultimate/component-schema": "workspace:*" },
+      dependencies: {
+        "@ultimate/component-metadata": "workspace:*",
+        "@ultimate/component-schema": "workspace:*",
+      },
     })
   );
 
@@ -136,7 +150,11 @@ test("fails when a packages/cli-shaped fixture's package.json declares @ultimate
 
   const result = runScript(workDir);
 
-  assert.equal(result.status, 1, "expected the script to fail (exit code 1) on a forward-direction dependencies violation");
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on a forward-direction dependencies violation"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /"dependencies"/);
   assert.match(result.stderr, /forward-direction/);
@@ -150,12 +168,19 @@ test("fails when a packages/cli-shaped fixture's package.json declares @ultimate
   mkdirSync(pkgDir, { recursive: true });
   writeFileSync(
     join(pkgDir, "package.json"),
-    JSON.stringify({ name: "@ultimate/cli", devDependencies: { "@ultimate/themes": "workspace:*" } })
+    JSON.stringify({
+      name: "@ultimate/cli",
+      devDependencies: { "@ultimate/themes": "workspace:*" },
+    })
   );
 
   const result = runScript(workDir);
 
-  assert.equal(result.status, 1, "expected the script to fail (exit code 1) on a forward-direction devDependencies violation");
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on a forward-direction devDependencies violation"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /"devDependencies"/);
   assert.match(result.stderr, /forward-direction/);
@@ -169,7 +194,10 @@ test("passes when packages/cli/src has no forbidden framework/themes import", ()
   const workDir = makeWorkDir("cli-boundary-check4-pass-");
   const srcDir = join(workDir, "packages", "cli", "src");
   mkdirSync(srcDir, { recursive: true });
-  writeFileSync(join(srcDir, "index.ts"), `import { ALL_COMPONENTS } from "@ultimate/component-metadata";\n`);
+  writeFileSync(
+    join(srcDir, "index.ts"),
+    `import { ALL_COMPONENTS } from "@ultimate/component-metadata";\n`
+  );
 
   const result = runScript(workDir);
 
@@ -186,7 +214,11 @@ test("fails when a packages/cli-shaped fixture's src imports @ultimate/vue", () 
 
   const result = runScript(workDir);
 
-  assert.equal(result.status, 1, "expected the script to fail (exit code 1) on a forward-direction source-import violation");
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on a forward-direction source-import violation"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /forward-direction/);
 

@@ -77,7 +77,7 @@ describe("runAdd", () => {
     expect(spawnSpy).toHaveBeenCalledWith(
       "npm",
       ["install", "@ultimate/react-table"],
-      expect.objectContaining({ cwd: dir }),
+      expect.objectContaining({ cwd: dir })
     );
   });
 

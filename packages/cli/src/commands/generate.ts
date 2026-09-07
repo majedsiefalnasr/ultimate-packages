@@ -85,7 +85,7 @@ export function runGenerate(projectDir: string, componentName: string): Generate
   if (framework === null) {
     console.error(
       "generate requires an existing, already-scaffolded Angular/React/Vue project " +
-        "(an angular.json or a recognizable framework dependency in package.json).",
+        "(an angular.json or a recognizable framework dependency in package.json)."
     );
     return { exitCode: 1 };
   }

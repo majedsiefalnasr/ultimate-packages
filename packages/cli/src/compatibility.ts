@@ -43,8 +43,7 @@ export interface MatchCompatibilityInput {
 }
 
 export type MatchCompatibilityResult =
-  | { matched: true; entry: CompatibilityEntry }
-  | { matched: false; reason: string };
+  { matched: true; entry: CompatibilityEntry } | { matched: false; reason: string };
 
 /** A single `x.y.z` version, parsed from a plain (non-range) version string. */
 interface ParsedVersion {
@@ -135,7 +134,7 @@ interface AxisCheck {
  */
 export function matchCompatibility(
   input: MatchCompatibilityInput,
-  manifest: CompatibilityEntry[],
+  manifest: CompatibilityEntry[]
 ): MatchCompatibilityResult {
   const candidates = manifest.filter((entry) => entry.framework === input.framework);
 

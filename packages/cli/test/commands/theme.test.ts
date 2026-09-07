@@ -131,7 +131,7 @@ describe("runTheme", () => {
     expect(spawnSpy).toHaveBeenCalledWith(
       "npm",
       ["install", "@ultimate/themes"],
-      expect.objectContaining({ cwd: dir }),
+      expect.objectContaining({ cwd: dir })
     );
   });
 

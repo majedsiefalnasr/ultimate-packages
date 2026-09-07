@@ -25,7 +25,14 @@ function findUp(startDir: string, marker: string): string {
 
 const CLI_PACKAGE_ROOT = findUp(__dirname, "package.json");
 const CLI_PACKAGE_JSON_PATH = join(CLI_PACKAGE_ROOT, "package.json");
-const MANIFEST_PATH = join(CLI_PACKAGE_ROOT, "..", "..", "docs", "architecture", "compatibility-manifest.json");
+const MANIFEST_PATH = join(
+  CLI_PACKAGE_ROOT,
+  "..",
+  "..",
+  "docs",
+  "architecture",
+  "compatibility-manifest.json"
+);
 
 /**
  * The only currently-valid preset name (spec §7.1 / this task's brief):
@@ -76,7 +83,8 @@ function isValidPreset(preset: string): preset is ValidPreset {
 }
 
 /** The exact snippet `theme` writes/ensures is present in the theme-entry file. */
-const THEME_ENTRY_SNIPPET = 'import { applyUltimateTheme } from "@ultimate/themes";\napplyUltimateTheme();\n';
+const THEME_ENTRY_SNIPPET =
+  'import { applyUltimateTheme } from "@ultimate/themes";\napplyUltimateTheme();\n';
 
 /**
  * Writes (creating if absent) `THEME_ENTRY_SNIPPET` into the theme-entry
@@ -130,7 +138,9 @@ export async function runTheme(projectDir: string, preset: string): Promise<Them
   const packageJsonPath = join(projectDir, "package.json");
   const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8")) as ProjectPackageJsonShape;
   const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
-  const frameworkVersion = toPlainVersion(dependencies[FRAMEWORK_DEPENDENCY_NAMES[framework]] ?? "");
+  const frameworkVersion = toPlainVersion(
+    dependencies[FRAMEWORK_DEPENDENCY_NAMES[framework]] ?? ""
+  );
 
   const manifest = readManifest();
   const cliVersion = readCliVersion();
