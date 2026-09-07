@@ -35,21 +35,25 @@ function pass(message) {
   console.log(`[boundary:validate:cli] OK: ${message}`);
 }
 
-// Each pattern requires the matched import/require expression to start at
-// the beginning of a line (only leading whitespace before it), the same
-// way validate-boundaries.mjs anchors its own bare-`import` pattern. This
-// deliberately does not match an import-shaped substring embedded inside
-// an unrelated string literal (e.g. a code-generation template the CLI
-// writes into a *target* project's file, which starts mid-line inside an
-// enclosing quote) — those are data the CLI emits, not a code dependency
-// of the CLI itself.
+// Only the bare `import "pkg"` and `from "pkg"` patterns are anchored to
+// line-start (only leading whitespace before them), matching
+// validate-boundaries.mjs's own convention for its bare-`import` pattern.
+// This is the minimal fix for the one real false positive found during
+// review: packages/cli/src/commands/theme.ts embeds a `from "@ultimate/
+// themes"`-shaped substring mid-line inside an unrelated string literal (a
+// code-generation template written into a *target* project's file, not a
+// real import of the CLI itself). `require(...)` and dynamic `import(...)`
+// never had that false-positive problem and are deliberately left
+// unanchored so they still match their normal assigned form, e.g.
+// `const x = require("pkg")` or `const m = await import("pkg")`, where the
+// line does not start with `require`/`import`.
 function importPatternsFor(pkgName) {
   const escaped = pkgName.replace(/[/]/g, "\\/");
   return [
     new RegExp(`^\\s*import\\s+["']${escaped}(["'/])`, "m"),
     new RegExp(`^\\s*(?:export\\s+)?import\\b[^;\\n]*\\sfrom\\s+["']${escaped}(["'/])`, "m"),
-    new RegExp(`^\\s*require\\(["']${escaped}(["'/])`, "m"),
-    new RegExp(`^\\s*(?:await\\s+)?import\\(["']${escaped}(["'/])`, "m"),
+    new RegExp(`require\\(["']${escaped}(["'/])`),
+    new RegExp(`import\\(["']${escaped}(["'/])`),
   ];
 }
 

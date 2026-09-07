@@ -46,6 +46,28 @@ test("fails when a packages/ng*-shaped fixture's src imports @ultimate/cli", () 
   rmSync(workDir, { recursive: true, force: true });
 });
 
+test("fails when a packages/ng*-shaped fixture's src requires @ultimate/cli in assigned form", () => {
+  const workDir = makeWorkDir("cli-boundary-check1-fail-require-");
+  const srcDir = join(workDir, "packages", "ng", "src");
+  mkdirSync(srcDir, { recursive: true });
+  // Assigned form ("const x = require(...)") does not start the line with
+  // "require" — this is the exact shape a line-start anchor would miss,
+  // per the review finding that require/dynamic-import must stay unanchored.
+  writeFileSync(join(srcDir, "index.js"), `const doStuff = require("@ultimate/cli");\n`);
+
+  const result = runScript(workDir);
+
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on an assigned-form require() reverse-direction violation"
+  );
+  assert.match(result.stderr, /VIOLATION/);
+  assert.match(result.stderr, /reverse-direction/);
+
+  rmSync(workDir, { recursive: true, force: true });
+});
+
 // --- Check 2: reverse-direction, package.json --------------------------
 
 test("passes when packages/react*/package.json has no @ultimate/cli dependency", () => {
@@ -165,6 +187,29 @@ test("fails when a packages/cli-shaped fixture's src imports @ultimate/vue", () 
   const result = runScript(workDir);
 
   assert.equal(result.status, 1, "expected the script to fail (exit code 1) on a forward-direction source-import violation");
+  assert.match(result.stderr, /VIOLATION/);
+  assert.match(result.stderr, /forward-direction/);
+
+  rmSync(workDir, { recursive: true, force: true });
+});
+
+test("fails when a packages/cli-shaped fixture's src dynamically imports @ultimate/themes in assigned form", () => {
+  const workDir = makeWorkDir("cli-boundary-check4-fail-dynamic-import-");
+  const srcDir = join(workDir, "packages", "cli", "src");
+  mkdirSync(srcDir, { recursive: true });
+  // Assigned form ("const m = await import(...)") does not start the line
+  // with "import" — this is the exact shape a line-start anchor would
+  // miss, per the review finding that require/dynamic-import must stay
+  // unanchored.
+  writeFileSync(join(srcDir, "index.ts"), `const m = await import("@ultimate/themes");\n`);
+
+  const result = runScript(workDir);
+
+  assert.equal(
+    result.status,
+    1,
+    "expected the script to fail (exit code 1) on an assigned-form dynamic import() forward-direction violation"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /forward-direction/);
 
