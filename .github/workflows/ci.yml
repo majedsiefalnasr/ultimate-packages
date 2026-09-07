@@ -56,3 +56,9 @@ jobs:
 
       - name: Prime dependency-ceiling validation
         run: pnpm run ceiling:validate
+
+      - name: Compatibility manifest validation
+        run: pnpm run compatibility-manifest:validate
+
+      - name: CLI package boundary validation
+        run: pnpm run boundary:validate:cli
