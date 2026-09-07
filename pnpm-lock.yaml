@@ -41,6 +41,9 @@ importers:
       '@ultimate/component-metadata':
         specifier: workspace:*
         version: link:../component-metadata
+      '@ultimate/component-schema':
+        specifier: workspace:*
+        version: link:../component-schema
     devDependencies:
       '@types/node':
         specifier: ^22.10.2

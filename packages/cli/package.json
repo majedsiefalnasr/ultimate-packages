@@ -23,7 +23,8 @@
     "README.md"
   ],
   "dependencies": {
-    "@ultimate/component-metadata": "workspace:*"
+    "@ultimate/component-metadata": "workspace:*",
+    "@ultimate/component-schema": "workspace:*"
   },
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs",
