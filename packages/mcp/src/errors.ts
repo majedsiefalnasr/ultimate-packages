@@ -5,6 +5,7 @@
 // McpToolError values constructed only by the five functions below.
 
 export interface McpToolError {
+  // Load-bearing as the tool response discriminant (see toToolResponse) — must not be introduced onto any tool Result type.
   readonly code: "invalid_input" | "not_found" | "manifest_unreadable" | "facet_not_recorded" | "internal_error";
   readonly message: string;
 }

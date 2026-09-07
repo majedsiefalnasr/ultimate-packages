@@ -7,6 +7,5 @@ export default defineConfig({
     typecheck: {
       include: ["test/**/*.test-d.ts"],
     },
-    passWithNoTests: true,
   },
 });
