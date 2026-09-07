@@ -25,7 +25,8 @@
   "dependencies": {
     "@ultimate/component-metadata": "workspace:*",
     "@ultimate/component-schema": "workspace:*",
-    "@modelcontextprotocol/sdk": "^1.30.0"
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.25.0 || ^4.0.0"
   },
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs",
