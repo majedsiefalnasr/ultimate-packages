@@ -488,7 +488,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — Blueprint is fairly directive here (§19's non-goals are explicit: never replace framework build tools).
 
 #### GAP-029 — MCP server does not exist (Phase 8)
-- **Status:** MISSING
+- **Status:** RESOLVED
 - **Type:** MCP, AI
 - **Blocking level:** HIGH
 - **Current evidence:** `packages/mcp` contains only `.gitkeep`. `ROADMAP.md`: "Not started."
@@ -499,7 +499,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Framework scope:** Cross-framework (framework-aware queries, §23).
 - **Existing reusable infrastructure:** `AI_ARCHITECTURE.md` notes PrimeVue 4.5.5 already ships its own `mcp` and `metadata` sibling packages as "useful prior art to review during Phase 6/8 planning" — explicitly flagged, not yet reviewed.
 - **Recommended resolution direction:** Directional only. Review PrimeVue's own `mcp`/`metadata` packages as prior art (already flagged by AI_ARCHITECTURE.md) once GAP-027 is underway.
-- **Source/evidence:** `packages/mcp/` (`.gitkeep`-only); `docs/architecture/AI_ARCHITECTURE.md`.
+- **Source/evidence:** `packages/mcp/` (`.gitkeep`-only); `docs/architecture/AI_ARCHITECTURE.md`. Resolved by Phase 8 MCP implementation plan Tasks 1-8 (`@ultimate/mcp`'s 5 real tools, stdio transport, shared error taxonomy) and Tasks 9-10 (the `boundary:validate:mcp` CI gate proving no dependency on `@ultimate/cli`/`@ultimate/{ng,react,vue,themes}` in either direction).
 - **Architectural decision required:** No — Blueprint §23 is directive; the real prerequisite is GAP-027, not a fork.
 
 #### GAP-030 — AI Skills package, LLM context generation, and agent-instruction conventions do not exist (Phase 9)
