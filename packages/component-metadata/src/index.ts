@@ -4,6 +4,7 @@ import { CHECKBOX_METADATA } from "./records/checkbox";
 import { DIALOG_METADATA } from "./records/dialog";
 import { MENU_METADATA } from "./records/menu";
 import { PAGINATOR_METADATA } from "./records/paginator";
+import { SCROLLER_METADATA } from "./records/scroller";
 import { TOOLTIP_METADATA } from "./records/tooltip";
 
 export const ALL_COMPONENTS: ComponentMetadata[] = [
@@ -12,5 +13,6 @@ export const ALL_COMPONENTS: ComponentMetadata[] = [
   DIALOG_METADATA,
   MENU_METADATA,
   PAGINATOR_METADATA,
+  SCROLLER_METADATA,
   TOOLTIP_METADATA,
 ];
