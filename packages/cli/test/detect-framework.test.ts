@@ -34,4 +34,12 @@ describe("detectFramework", () => {
     // and react to exercise the documented angular -> react -> vue priority.
     expect(detectFramework(join(fixturesDir, "angular-project"))).toBe("angular");
   });
+
+  it("returns null (does not throw) for a package.json containing invalid JSON", () => {
+    // The malformed-project fixture contains syntactically invalid JSON
+    // (trailing commas), exercising the parse-failure branch distinctly from
+    // the "no package.json at all" case above.
+    expect(() => detectFramework(join(fixturesDir, "malformed-project"))).not.toThrow();
+    expect(detectFramework(join(fixturesDir, "malformed-project"))).toBeNull();
+  });
 });
