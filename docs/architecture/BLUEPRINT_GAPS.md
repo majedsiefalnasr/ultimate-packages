@@ -458,7 +458,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Metadata / CLI / MCP / AI (Phases 6-9)
 
 #### GAP-027 — Component metadata schema and metadata do not exist (Phase 6)
-- **Status:** MISSING
+- **Status:** RESOLVED
 - **Type:** Documentation, Component, AI
 - **Blocking level:** BLOCKER
 - **Current evidence:** `packages/component-schema` and `packages/component-metadata` both contain only `.gitkeep`. `ROADMAP.md` marks Phase 6 "Not started."
@@ -469,7 +469,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Framework scope:** Cross-framework by design (metadata schema must represent per-framework availability, per Blueprint §17's "framework availability" field).
 - **Existing reusable infrastructure:** COMPONENT_INVENTORY.md's own 11-column schema (Component/Prime source path/Category/Dependencies/UIX dependencies/Framework-specific responsibilities/Style dependencies/Accessibility responsibilities/Migration classification/Migration phase/Risk) is a strong head start — it already captures much of what Blueprint §17 asks metadata to cover, just not yet in a machine-readable, versioned schema form.
 - **Recommended resolution direction:** Directional only, per operating rules (no implementation plans in this document). Design the schema against the real, already-built 5×3 proof set as ground truth.
-- **Source/evidence:** `packages/component-schema/`, `packages/component-metadata/` (both `.gitkeep`-only); `docs/architecture/ROADMAP.md`; `docs/architecture/BLUEPRINT.md` §17/§18.
+- **Source/evidence:** `packages/component-schema/`, `packages/component-metadata/` (both `.gitkeep`-only); `docs/architecture/ROADMAP.md`; `docs/architecture/BLUEPRINT.md` §17/§18. Resolved by Component Metadata implementation plan Tasks 1-8 (`@ultimate/component-schema`'s versioned `ComponentMetadata` schema, `nextMetadataVersion`, and `validateComponentMetadata` runtime validator), Tasks 9-16 (`@ultimate/component-metadata`'s 8 real, source-verified metadata records for the closed proof set: Button, Checkbox, Dialog, Menu, Tooltip, Paginator, Scroller, Table), and Task 18 (whole-workspace boundary/ceiling/typecheck verification confirming zero regressions).
 - **Architectural decision required:** Not primarily — Blueprint §17/§18 already specify the intent fairly concretely; the remaining decisions are schema-detail-level, not fork-level, and thus out of scope for this document's Open Architectural Decisions section.
 
 #### GAP-028 — CLI does not exist (Phase 7)
