@@ -473,7 +473,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** Not primarily — Blueprint §17/§18 already specify the intent fairly concretely; the remaining decisions are schema-detail-level, not fork-level, and thus out of scope for this document's Open Architectural Decisions section.
 
 #### GAP-028 — CLI does not exist (Phase 7)
-- **Status:** MISSING
+- **Status:** RESOLVED
 - **Type:** CLI, Developer Experience
 - **Blocking level:** HIGH
 - **Current evidence:** `packages/cli` contains only `.gitkeep`. `ROADMAP.md`: "Not started."
@@ -483,8 +483,8 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Dependencies:** Benefits from, but does not strictly require, GAP-027 (metadata) — could start with a minimal orchestration/scaffolding surface (framework detection, package install, theme config) before metadata exists, then add metadata-aware features (`ultimate doctor`/`ultimate ai`) once GAP-027 resolves.
 - **Framework scope:** Cross-framework by design (adapters per framework, §19).
 - **Existing reusable infrastructure:** `docs/architecture/COMPATIBILITY.md`'s existing baseline/peer-range table is a partial seed for the compatibility manifest §20 calls for, though it currently covers Prime baselines, not Ultimate's own package/framework/theme/metadata/CLI/MCP/AI version matrix (§20's actual scope).
-- **Recommended resolution direction:** Directional only.
-- **Source/evidence:** `packages/cli/` (`.gitkeep`-only); `docs/architecture/BLUEPRINT.md` §19/§20.
+- **Recommended resolution direction:** Directional only. Resolved — see `docs/superpowers/plans/2026-09-07-phase-7-cli-implementation.md`.
+- **Source/evidence:** `packages/cli/` (`.gitkeep`-only); `docs/architecture/BLUEPRINT.md` §19/§20. Resolved by Phase 7 CLI implementation plan Tasks 1-11 (`@ultimate/cli`'s five real commands — `init`, `add`, `theme`, `doctor`, `generate` — plus the `ai` stub; the compatibility manifest at `docs/architecture/compatibility-manifest.json` covering 3 frameworks across 6 evaluated axes plus 2 reserved axes; and the `compatibility-manifest:validate`/`boundary:validate:cli` CI gates) and Task 12 (whole-suite verification confirming zero regressions).
 - **Architectural decision required:** No — Blueprint is fairly directive here (§19's non-goals are explicit: never replace framework build tools).
 
 #### GAP-029 — MCP server does not exist (Phase 8)
