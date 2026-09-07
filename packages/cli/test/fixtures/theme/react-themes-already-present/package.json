@@ -1,0 +1,8 @@
+{
+  "name": "theme-react-themes-already-present-fixture",
+  "version": "0.0.0",
+  "dependencies": {
+    "react": "^18.2.0",
+    "@ultimate/themes": "^0.1.0"
+  }
+}

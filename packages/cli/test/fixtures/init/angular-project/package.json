@@ -1,0 +1,7 @@
+{
+  "name": "init-angular-project-fixture",
+  "version": "0.0.0",
+  "dependencies": {
+    "@angular/core": "^21.0.7"
+  }
+}

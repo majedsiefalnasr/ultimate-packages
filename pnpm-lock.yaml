@@ -36,6 +36,28 @@ importers:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.20.1)(jsdom@25.0.1)(less@4.9.0)(sass@1.103.1)
 
+  packages/cli:
+    dependencies:
+      '@ultimate/component-metadata':
+        specifier: workspace:*
+        version: link:../component-metadata
+      '@ultimate/component-schema':
+        specifier: workspace:*
+        version: link:../component-schema
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.1
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(postcss@8.5.26)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@22.20.1)(jsdom@25.0.1)(less@4.9.0)(sass@1.103.1)
+
   packages/component-metadata:
     dependencies:
       '@ultimate/component-schema':

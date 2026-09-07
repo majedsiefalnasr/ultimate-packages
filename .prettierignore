@@ -4,3 +4,4 @@ node_modules/
 *.gitkeep
 .vendor-extracted/
 .superpowers/
+packages/cli/test/fixtures/malformed-project/

@@ -1,0 +1,7 @@
+{
+  "name": "init-vue-project-fixture",
+  "version": "0.0.0",
+  "dependencies": {
+    "vue": "^3.5.0"
+  }
+}

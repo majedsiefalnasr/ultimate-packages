@@ -16,7 +16,9 @@
     "format:check": "prettier --check .",
     "provenance:validate": "node scripts/provenance/validate-provenance.mjs",
     "boundary:validate": "node scripts/provenance/validate-boundaries.mjs",
-    "ceiling:validate": "node scripts/provenance/validate-dependency-ceiling.mjs"
+    "boundary:validate:cli": "node scripts/provenance/validate-cli-boundary.mjs",
+    "ceiling:validate": "node scripts/provenance/validate-dependency-ceiling.mjs",
+    "compatibility-manifest:validate": "node docs/architecture/compatibility-manifest.test.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
