@@ -1,0 +1,29 @@
+[
+  {
+    "framework": "angular",
+    "frameworkVersionRange": "^21.0.7",
+    "ultimateFrameworkPackage": { "name": "@ultimate/ng", "versionRange": "^0.1.0" },
+    "uixVersionRange": "^0.1.0",
+    "themeVersionRange": "^0.1.0",
+    "metadataSchemaVersion": "1.0.0",
+    "cliVersionRange": "^0.1.0"
+  },
+  {
+    "framework": "react",
+    "frameworkVersionRange": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "ultimateFrameworkPackage": { "name": "@ultimate/react", "versionRange": "^0.1.0" },
+    "uixVersionRange": "^0.1.0",
+    "themeVersionRange": "^0.1.0",
+    "metadataSchemaVersion": "1.0.0",
+    "cliVersionRange": "^0.1.0"
+  },
+  {
+    "framework": "vue",
+    "frameworkVersionRange": "^3.5.0",
+    "ultimateFrameworkPackage": { "name": "@ultimate/vue", "versionRange": "^0.1.0" },
+    "uixVersionRange": "^0.1.0",
+    "themeVersionRange": "^0.1.0",
+    "metadataSchemaVersion": "1.0.0",
+    "cliVersionRange": "^0.1.0"
+  }
+]
