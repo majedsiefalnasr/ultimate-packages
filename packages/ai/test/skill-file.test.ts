@@ -175,9 +175,11 @@ describe("regenerateSkillFile", () => {
     expect(parsed?.metadataVersion).toBe(1);
   });
 
-  it("refuses to regenerate a file with a missing required marker, returning a structured error", () => {
+  it("refuses to regenerate a file with a missing required marker (both start and end absent), returning a structured error", () => {
     const original = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
-    const broken = original.replace(startMarker("anti-patterns"), "");
+    const broken = original
+      .replace(startMarker("anti-patterns"), "")
+      .replace(endMarker("anti-patterns"), "");
     const result = regenerateSkillFile(broken, BUTTON, ["ng", "react", "vue"]);
     expect("error" in result).toBe(true);
     if (!("error" in result)) return;
@@ -193,6 +195,48 @@ describe("regenerateSkillFile", () => {
     expect("error" in result).toBe(true);
     if (!("error" in result)) return;
     expect(result.error).toContain("duplicate generated section");
+  });
+
+  it("refuses to regenerate a file with only a start marker (end truly absent), classifying it as unmatched — not missing", () => {
+    const original = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
+    const broken = original.replace(endMarker("anti-patterns"), "");
+    const result = regenerateSkillFile(broken, BUTTON, ["ng", "react", "vue"]);
+    expect("error" in result).toBe(true);
+    if (!("error" in result)) return;
+    expect(result.error).toContain("unmatched marker for section");
+    expect(result.error).not.toContain("missing required generated section");
+  });
+
+  it("refuses to regenerate a file with only an end marker (start truly absent), classifying it as unmatched", () => {
+    const original = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
+    const broken = original.replace(startMarker("anti-patterns"), "");
+    const result = regenerateSkillFile(broken, BUTTON, ["ng", "react", "vue"]);
+    expect("error" in result).toBe(true);
+    if (!("error" in result)) return;
+    expect(result.error).toContain("unmatched marker for section");
+  });
+
+  it("refuses to regenerate a file with a nested marker pair, returning a structured error", () => {
+    const original = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
+    // Relocate the existing preferred-patterns start+end pair (each marker
+    // still occurs exactly once overall) to sit strictly inside
+    // allowed-apis's own start/end range, producing a genuine nesting
+    // violation without duplicating any marker.
+    const ppStart = startMarker("preferred-patterns");
+    const ppEnd = endMarker("preferred-patterns");
+    const ppStartIndex = original.indexOf(ppStart);
+    const ppEndIndex = original.indexOf(ppEnd) + ppEnd.length;
+    const preferredPatternsBlock = original.slice(ppStartIndex, ppEndIndex);
+    const withoutBlock =
+      original.slice(0, ppStartIndex) + original.slice(ppEndIndex);
+    const nested = withoutBlock.replace(
+      startMarker("allowed-apis"),
+      `${startMarker("allowed-apis")}\n${preferredPatternsBlock}\n`
+    );
+    const result = regenerateSkillFile(nested, BUTTON, ["ng", "react", "vue"]);
+    expect("error" in result).toBe(true);
+    if (!("error" in result)) return;
+    expect(result.error).toContain("nested generated block");
   });
 });
 

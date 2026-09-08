@@ -124,11 +124,14 @@ function locateMarkers(
     const startOccurrences = countOccurrences(content, startText);
     const endOccurrences = countOccurrences(content, endText);
 
-    if (startOccurrences === 0 || endOccurrences === 0) {
+    if (startOccurrences === 0 && endOccurrences === 0) {
       return malformedResult(`missing required generated section: ${key}`);
     }
     if (startOccurrences > 1 || endOccurrences > 1) {
       return malformedResult(`duplicate generated section: ${key}`);
+    }
+    if (startOccurrences === 0 || endOccurrences === 0) {
+      return malformedResult(`unmatched marker for section: ${key}`);
     }
 
     const start = content.indexOf(startText) + startText.length;
