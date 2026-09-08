@@ -58,11 +58,11 @@ Two artifacts, per research §8/Fork 1 (user decision):
 
 ### 3.3 Ownership summary
 
-| Artifact | Owns | Does not own |
-|---|---|---|
-| `@ultimate/ai` | Generation/validation code | Component facts, Skill prose content itself |
-| `skills/` | Skill content files | Generation logic, canonical component facts |
-| `@ultimate/component-metadata` (unchanged) | Canonical component facts | Skill prose, LLM-context output |
+| Artifact                                   | Owns                       | Does not own                                |
+| ------------------------------------------ | -------------------------- | ------------------------------------------- |
+| `@ultimate/ai`                             | Generation/validation code | Component facts, Skill prose content itself |
+| `skills/`                                  | Skill content files        | Generation logic, canonical component facts |
+| `@ultimate/component-metadata` (unchanged) | Canonical component facts  | Skill prose, LLM-context output             |
 
 ---
 
@@ -115,16 +115,16 @@ One Skill file per component currently present in `ALL_COMPONENTS` (8 in v1: But
 
 Each Skill file's content sections map directly onto Blueprint §24's named components and their backing data source:
 
-| §24 Skill component | v1 backing source | If source absent |
-|---|---|---|
-| When to use | `identity.description` (required, always present) + hand-authored elaboration | N/A — always populated |
-| Preferred patterns | `guidance.usageNotes` (optional) + hand-authored elaboration | Generated marker pair present, empty content (§6.3.3) |
-| Allowed/recommended APIs | `api.{framework}.props` / `.events` (per framework, required where `api` exists) | Generated marker pair present; a framework with no `api.{framework}` entry contributes nothing to the rendered content |
-| Anti-patterns | `guidance.antiPatterns` (optional) | Generated marker pair present, empty content (§6.3.3) |
-| Accessibility guidance | `accessibility.verifiedRoles` / `.verifiedAriaAttributes` / `.guidance` (optional) | Generated marker pair present, empty content (§6.3.3) |
-| Examples | **Not included in v1** (research §8/Fork 9 — no `examples` field exists; not invented here) | No marker pair at all — the only §6.2 row with no corresponding §6.3.3 generated section |
-| Related components | `relationships.*` (populated per-record) | Generated marker pair present, empty content (§6.3.3) |
-| Framework-specific guidance | `api.{framework}` presence/absence pattern, plus hand-authored per-framework notes | The generated (API-presence) half follows "Allowed/recommended APIs"'s rule; the hand-authored narrative half is never marker-wrapped and is simply left blank by the author until written |
+| §24 Skill component         | v1 backing source                                                                           | If source absent                                                                                                                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| When to use                 | `identity.description` (required, always present) + hand-authored elaboration               | N/A — always populated                                                                                                                                                                     |
+| Preferred patterns          | `guidance.usageNotes` (optional) + hand-authored elaboration                                | Generated marker pair present, empty content (§6.3.3)                                                                                                                                      |
+| Allowed/recommended APIs    | `api.{framework}.props` / `.events` (per framework, required where `api` exists)            | Generated marker pair present; a framework with no `api.{framework}` entry contributes nothing to the rendered content                                                                     |
+| Anti-patterns               | `guidance.antiPatterns` (optional)                                                          | Generated marker pair present, empty content (§6.3.3)                                                                                                                                      |
+| Accessibility guidance      | `accessibility.verifiedRoles` / `.verifiedAriaAttributes` / `.guidance` (optional)          | Generated marker pair present, empty content (§6.3.3)                                                                                                                                      |
+| Examples                    | **Not included in v1** (research §8/Fork 9 — no `examples` field exists; not invented here) | No marker pair at all — the only §6.2 row with no corresponding §6.3.3 generated section                                                                                                   |
+| Related components          | `relationships.*` (populated per-record)                                                    | Generated marker pair present, empty content (§6.3.3)                                                                                                                                      |
+| Framework-specific guidance | `api.{framework}` presence/absence pattern, plus hand-authored per-framework notes          | The generated (API-presence) half follows "Allowed/recommended APIs"'s rule; the hand-authored narrative half is never marker-wrapped and is simply left blank by the author until written |
 
 **Honesty rule (mirrors Phase 8 spec §7.1/§7.2's "degrade honestly, never fabricate" pattern):** a Skill file never presents generated content as populated when its backing metadata field is absent. An unpopulated optional field means the corresponding generated marker pair's content is empty (§6.3.3), never filled with placeholder or invented text — the marker pair itself still exists, per §6.3.3's deterministic-marker-count rule, which is distinct from and takes precedence over this table's earlier "omitted" phrasing.
 
@@ -142,9 +142,9 @@ Every Skill file opens with a structured, machine-parseable frontmatter block (Y
 
 ```yaml
 ---
-component: Button          # exact match to identity.name in ALL_COMPONENTS
-metadataVersion: 3         # exact metadataVersion this Skill was authored/generated against (§6.3.2)
-frameworks: [ng, react, vue]  # subset of api.{framework} keys this Skill's generated sections cover
+component: Button # exact match to identity.name in ALL_COMPONENTS
+metadataVersion: 3 # exact metadataVersion this Skill was authored/generated against (§6.3.2)
+frameworks: [ng, react, vue] # subset of api.{framework} keys this Skill's generated sections cover
 ---
 ```
 
@@ -173,6 +173,7 @@ Every generated section named in §6.2's table is wrapped in an explicit start/e
 
 ```markdown
 <!-- ultimate:generated:start section="preferred-patterns" -->
+
 ...generator-owned content, rendered from ComponentMetadata...
 <!-- ultimate:generated:end section="preferred-patterns" -->
 ```
@@ -183,17 +184,17 @@ Every generated section named in §6.2's table is wrapped in an explicit start/e
 
 **Exact generated section names and order.** v1 defines exactly five generated sections, corresponding to the five backed-by-metadata rows in §6.2's table (the two prose-narrative rows — "When to use," and the hand-authored halves of "Preferred patterns"/"Anti-patterns"/"Framework-specific guidance" — are never marker-wrapped; see Ownership below). In v1 file order:
 
-| Section key | §6.2 table row | Backing field(s) |
-|---|---|---|
-| `preferred-patterns` | Preferred patterns (generated half) | `guidance.usageNotes` |
-| `allowed-apis` | Allowed/recommended APIs | `api.{framework}.props` / `.events`, for each framework in frontmatter's `frameworks` list |
-| `anti-patterns` | Anti-patterns | `guidance.antiPatterns` |
-| `accessibility-guidance` | Accessibility guidance | `accessibility.verifiedRoles` / `.verifiedAriaAttributes` / `.guidance` |
-| `related-components` | Related components | `relationships.*` |
+| Section key              | §6.2 table row                      | Backing field(s)                                                                           |
+| ------------------------ | ----------------------------------- | ------------------------------------------------------------------------------------------ |
+| `preferred-patterns`     | Preferred patterns (generated half) | `guidance.usageNotes`                                                                      |
+| `allowed-apis`           | Allowed/recommended APIs            | `api.{framework}.props` / `.events`, for each framework in frontmatter's `frameworks` list |
+| `anti-patterns`          | Anti-patterns                       | `guidance.antiPatterns`                                                                    |
+| `accessibility-guidance` | Accessibility guidance              | `accessibility.verifiedRoles` / `.verifiedAriaAttributes` / `.guidance`                    |
+| `related-components`     | Related components                  | `relationships.*`                                                                          |
 
 A Skill file's five marker pairs appear in exactly this order in v1. `examples` has no marker (§6.2 — not included in v1); "When to use" and the prose halves of "Framework-specific guidance" have no marker (Ownership, below) — five is the complete v1 count, not a subset.
 
-**A section whose backing field is absent (§6.2's "If source absent" column) still gets an empty marker pair** — `start`/`end` with nothing between them — never an omitted marker pair. This keeps marker presence deterministic (always exactly five pairs, always in order) independent of which optional metadata fields happen to be populated for a given component; §6.2's "omitted, not fabricated" rule governs the *content* between the markers, not whether the markers themselves exist.
+**A section whose backing field is absent (§6.2's "If source absent" column) still gets an empty marker pair** — `start`/`end` with nothing between them — never an omitted marker pair. This keeps marker presence deterministic (always exactly five pairs, always in order) independent of which optional metadata fields happen to be populated for a given component; §6.2's "omitted, not fabricated" rule governs the _content_ between the markers, not whether the markers themselves exist.
 
 **Ownership.**
 
@@ -203,13 +204,13 @@ A Skill file's five marker pairs appear in exactly this order in v1. `examples` 
 
 **Malformed-marker validator behavior.** Validation (§10.2) treats the following as hard failures, each reported with the specific marker/section it found wrong (mirroring MCP's own structured-error, never-fabricate pattern, Phase 8 spec §4.1):
 
-| Condition | Validator outcome |
-|---|---|
-| A required section key (one of the five in the table above) has no marker pair at all | **Validation failure** — "missing required generated section: `{key}`" |
-| A section key's marker pair appears more than once in the file | **Validation failure** — "duplicate generated section: `{key}`" |
-| A `start` marker with no matching `end` marker for the same `section`, or vice versa | **Validation failure** — "unmatched marker for section: `{key}`" |
-| A `start`/`end` pair for one `section` value nested inside another `section`'s `start`/`end` pair | **Validation failure** — "nested generated block: `{outer}` contains `{inner}`" — v1 markers are always flat, never nested, since each section maps to exactly one metadata source with no sub-sections |
-| A marker line present but not an exact syntactic match to the §6.3.3 format (e.g., a typo in `ultimate:generated:start`, a missing `section` attribute, extra trailing text on the marker line) | **Validation failure** — "malformed generated marker" — treated the same as a missing marker, since a validator cannot safely assume a malformed line was intended as a real boundary |
+| Condition                                                                                                                                                                                       | Validator outcome                                                                                                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A required section key (one of the five in the table above) has no marker pair at all                                                                                                           | **Validation failure** — "missing required generated section: `{key}`"                                                                                                                                  |
+| A section key's marker pair appears more than once in the file                                                                                                                                  | **Validation failure** — "duplicate generated section: `{key}`"                                                                                                                                         |
+| A `start` marker with no matching `end` marker for the same `section`, or vice versa                                                                                                            | **Validation failure** — "unmatched marker for section: `{key}`"                                                                                                                                        |
+| A `start`/`end` pair for one `section` value nested inside another `section`'s `start`/`end` pair                                                                                               | **Validation failure** — "nested generated block: `{outer}` contains `{inner}`" — v1 markers are always flat, never nested, since each section maps to exactly one metadata source with no sub-sections |
+| A marker line present but not an exact syntactic match to the §6.3.3 format (e.g., a typo in `ultimate:generated:start`, a missing `section` attribute, extra trailing text on the marker line) | **Validation failure** — "malformed generated marker" — treated the same as a missing marker, since a validator cannot safely assume a malformed line was intended as a real boundary                   |
 
 None of these conditions are warnings in v1 — every one blocks the same way a `metadataVersion` mismatch does (§6.3.2), consistent with §10.1's pattern of hard-enforced, CI-blocking gates rather than advisory ones.
 
@@ -218,7 +219,7 @@ None of these conditions are warnings in v1 — every one blocks the same way a 
 - **First generation for a component** (no Skill file exists yet under `skills/` for that `component`): the generator creates the file with frontmatter (§6.3.1) plus all five marker pairs in order, each populated per §6.2/§6.3.3's content rules, plus placeholder hand-authored sections (e.g., an empty "When to use" heading) for a human author to subsequently fill in. This is scaffolding, not validation — a freshly generated file is expected to still need hand-authored prose before it is a complete Skill.
 - **Regeneration of an existing Skill file:** the generator locates each of the five marker pairs by exact syntactic match (§6.3.3's marker syntax) and replaces only the content strictly between each matched pair, plus the frontmatter's `metadataVersion` (§6.3.2). It does not touch anything else in the file. **If regeneration is run against a Skill file that already fails one of the malformed-marker conditions above** (missing, duplicate, unmatched, nested, or malformed marker), the generator refuses to regenerate that file and reports the same structured error the validator would — the generator never silently "repairs" a malformed file by guessing where a missing marker should go, since that would risk destroying adjacent hand-authored content it cannot safely distinguish from a missing generated block.
 
-**Validator fidelity — operational definition.** "Generated-section fidelity" (as referenced in §10.2) means, precisely: for each of the five marker-delimited sections in a Skill file, the content strictly between its `start`/`end` markers is byte-identical to what running the generator's rendering rule for that `section` key against the referenced component's *current* metadata (per the frontmatter's `component`, matched against `ALL_COMPONENTS`) would produce. This is a deterministic, mechanical comparison — render the section from current metadata, compare bytes to what's checked in between the markers — never a semantic or heuristic judgment about whether the content "looks right." It is exactly analogous to §7.3's determinism check for LLM-context artifacts, applied per-section instead of per-file. Content outside all marker pairs (hand-authored prose) is never included in this comparison and is never fidelity-checked (§10.2, §12 — no semantic prose validation).
+**Validator fidelity — operational definition.** "Generated-section fidelity" (as referenced in §10.2) means, precisely: for each of the five marker-delimited sections in a Skill file, the content strictly between its `start`/`end` markers is byte-identical to what running the generator's rendering rule for that `section` key against the referenced component's _current_ metadata (per the frontmatter's `component`, matched against `ALL_COMPONENTS`) would produce. This is a deterministic, mechanical comparison — render the section from current metadata, compare bytes to what's checked in between the markers — never a semantic or heuristic judgment about whether the content "looks right." It is exactly analogous to §7.3's determinism check for LLM-context artifacts, applied per-section instead of per-file. Content outside all marker pairs (hand-authored prose) is never included in this comparison and is never fidelity-checked (§10.2, §12 — no semantic prose validation).
 
 ### 6.4 What a Skill must never contain
 
@@ -235,15 +236,15 @@ None of these conditions are warnings in v1 — every one blocks the same way a 
 
 Static, generated files (research §8/Fork 3, Fork 7), per Blueprint §25's named potential outputs. v1 defines exactly five output files, all generated into a single deterministic directory relative to the `@ultimate/ai` package root, `dist/context/` (the generator package's own build output directory — no separate publish target is introduced in v1):
 
-| File | Content | Framework scope |
-|---|---|---|
-| `dist/context/llms.txt` | Compact, framework-neutral index: one line per component (`name`, `category`, `identity.description`), drawn from `identity` only. | Neutral |
-| `dist/context/llms-full.txt` | Full structured component context: for every component in `ALL_COMPONENTS`, every populated facet (identity, api for every framework the component has, accessibility, relationships, guidance) rendered as structured text, plus the corresponding `skills/` Skill's generated sections (§6.2) where that Skill file exists. | Neutral (all frameworks included, unfiltered) |
-| `dist/context/llms-ng.txt` | Same structure as `llms-full.txt`, narrowed to `api.ng` only — components with no `api.ng` entry are omitted from the `api` section but still listed via `identity` (mirrors MCP's own `get_component`-with-`framework`-input narrowing rule, Phase 8 spec §7.1). | Angular only |
-| `dist/context/llms-react.txt` | Same as above, narrowed to `api.react`. | React only |
-| `dist/context/llms-vue.txt` | Same as above, narrowed to `api.vue`. | Vue only |
+| File                          | Content                                                                                                                                                                                                                                                                                                                       | Framework scope                               |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `dist/context/llms.txt`       | Compact, framework-neutral index: one line per component (`name`, `category`, `identity.description`), drawn from `identity` only.                                                                                                                                                                                            | Neutral                                       |
+| `dist/context/llms-full.txt`  | Full structured component context: for every component in `ALL_COMPONENTS`, every populated facet (identity, api for every framework the component has, accessibility, relationships, guidance) rendered as structured text, plus the corresponding `skills/` Skill's generated sections (§6.2) where that Skill file exists. | Neutral (all frameworks included, unfiltered) |
+| `dist/context/llms-ng.txt`    | Same structure as `llms-full.txt`, narrowed to `api.ng` only — components with no `api.ng` entry are omitted from the `api` section but still listed via `identity` (mirrors MCP's own `get_component`-with-`framework`-input narrowing rule, Phase 8 spec §7.1).                                                             | Angular only                                  |
+| `dist/context/llms-react.txt` | Same as above, narrowed to `api.react`.                                                                                                                                                                                                                                                                                       | React only                                    |
+| `dist/context/llms-vue.txt`   | Same as above, narrowed to `api.vue`.                                                                                                                                                                                                                                                                                         | Vue only                                      |
 
-File naming is fixed for v1 (no configurable output path, no alternative layout) — the exact five filenames above are the v1 contract. Their distribution and consumption model — where they live relative to *this repository's* build output versus where a *consuming project* actually finds them — is defined precisely in §7.1a, since `dist/` inside this repository is gitignored build output, not something a consuming project outside this monorepo can read directly. Project context (Blueprint §25's fourth named potential output) is **deferred**, not produced in v1 (research §8/Fork 8) — no sixth file is defined for it.
+File naming is fixed for v1 (no configurable output path, no alternative layout) — the exact five filenames above are the v1 contract. Their distribution and consumption model — where they live relative to _this repository's_ build output versus where a _consuming project_ actually finds them — is defined precisely in §7.1a, since `dist/` inside this repository is gitignored build output, not something a consuming project outside this monorepo can read directly. Project context (Blueprint §25's fourth named potential output) is **deferred**, not produced in v1 (research §8/Fork 8) — no sixth file is defined for it.
 
 ### 7.1a Distribution and consumption contract
 
@@ -254,7 +255,7 @@ File naming is fixed for v1 (no configurable output path, no alternative layout)
 - The five files in §7.1's table are build artifacts **owned and generated by `@ultimate/ai`**, exactly as `@ultimate/mcp`'s compiled server code is a build artifact owned by `@ultimate/mcp` — no new distribution concept is introduced.
 - `@ultimate/ai`'s `package.json` **must** declare a `files` field including `dist/context` (mirroring `@ultimate/mcp`'s existing `"files": ["dist", "README.md"]` pattern), so that `npm pack`/`npm publish` includes the five generated `.txt` files in the published tarball. Without this, `npm publish`'s default file-inclusion behavior cannot be assumed to carry non-code `.txt` output — this is a specification-level packaging requirement, not left implicit.
 - A consuming project obtains the five files by installing `@ultimate/ai` as an npm dependency (or devDependency — the choice belongs to the consuming project, not specified here) and reading them from its own `node_modules/@ultimate/ai/dist/context/*.txt` — the same way any npm package's shipped non-code assets are consumed. This is the **only** v1 distribution path. No repository-hosted download, no CDN, no separate publish target, no runtime fetch — a plain installed-package file, consistent with §7.2's "generation, not service" rule.
-- This does **not** require committing `dist/` to this repository. The gitignored status of `dist/` inside *this* repository is orthogonal to whether the *published npm tarball* contains those files — `npm publish` packages `dist/` from the local build output at publish time regardless of `.gitignore`, exactly as every other Ultimate package (`cli`, `mcp`, the framework packages) already does.
+- This does **not** require committing `dist/` to this repository. The gitignored status of `dist/` inside _this_ repository is orthogonal to whether the _published npm tarball_ contains those files — `npm publish` packages `dist/` from the local build output at publish time regardless of `.gitignore`, exactly as every other Ultimate package (`cli`, `mcp`, the framework packages) already does.
 - **§8's agent-instruction convention must reference the installed-package location** — `node_modules/@ultimate/ai/dist/context/*.txt` relative to the consuming project's own root, or equivalently "the `dist/context/` directory of the installed `@ultimate/ai` package" — never `packages/ai/dist/context/` (a path meaningful only inside this monorepo's own source tree, not to an external consuming project). §8 is corrected accordingly, below.
 - **Left to the implementation plan, not this specification:** the exact `files`/`exports` configuration syntax in `@ultimate/ai`'s `package.json`; a build/CI step that verifies the five files actually appear in a real `npm pack` tarball; and a real installed-consumer verification (installing the packed tarball into a scratch project and confirming the five files resolve at the documented `node_modules` path). These are packaging-mechanics verification steps belonging to implementation and its own testing requirements (§10.3's counterpart at implementation-plan time), not architectural decisions this specification needs to make further.
 
@@ -401,7 +402,7 @@ Consolidated, each tied to its research-document justification:
 - **Specification ↔ actual repository reality:** every field name cited (`identity`, `api`, `accessibility`, `style`, `relationships`, `provenanceRef`, `guidance`, `aiSkillsVersionRange`) is a real, verified field in the current `packages/component-schema/src/*.ts` and `packages/cli/src/compatibility.ts` (research §3). The documentation-source claim in §5.1 was independently re-verified against the current tree during this correction pass (`apps/docs/.gitkeep`-only, zero `@description`/`@example` JSDoc tags repo-wide) rather than only cited from the prior research pass. §6.3.1's frontmatter format is now stated as this specification's own decision, not attributed to a repository convention that does not exist (re-verified: no `docs/superpowers/specs/*.md` file, including this one, uses YAML frontmatter). §7.1a's `dist/` gitignore claim and `@ultimate/mcp`'s `files: ["dist", "README.md"]` packaging pattern were both independently re-verified against the current `.gitignore` and `packages/mcp/package.json` during this correction pass.
 - **Dependency graph consistency:** §4's dependency direction introduces no edge contradicting §6's Blueprint diagram or Phase 8 spec §5.2's already-established MCP↔CLI precedent.
 - **No accidental Phase 10 leakage:** no security/performance/production-hardening content appears in this spec; those remain Phase 10's scope per Blueprint §35.
-- **No implementation details presented as requirements:** §10's validation/testing requirements state *what* must be checked, not *how* the checking code is written; §6.3.1's frontmatter schema, §6.3.3's marker syntax, and §7.1's file paths are architectural data contracts (what a consumer/validator can rely on), not implementation code — the marker regex/parsing logic itself is left to the implementation plan, only the exact marker text and matching semantics are specified here.
+- **No implementation details presented as requirements:** §10's validation/testing requirements state _what_ must be checked, not _how_ the checking code is written; §6.3.1's frontmatter schema, §6.3.3's marker syntax, and §7.1's file paths are architectural data contracts (what a consumer/validator can rely on), not implementation code — the marker regex/parsing logic itself is left to the implementation plan, only the exact marker text and matching semantics are specified here.
 - **No invented metadata/data:** no new `ComponentMetadata` schema field is introduced (§12); every data reference in §6/§7 traces to an existing, verified field (research §3, §5). The Skill frontmatter block (§6.3.1) and the generated-section markers (§6.3.3) are new contracts, but both belong to the Skill-file format Phase 9 itself owns (`skills/`), not to `@ultimate/component-schema` — neither reopens Phase 6.
 - **No contradiction with closed Phase 6/7/8 architecture:** §2 explicitly states this spec extends, not modifies, all three; §11's `aiSkillsVersionRange` clarification now explicitly disclaims any schema/resolver change.
 - **No consumer-chain dependency:** §4, §9 explicitly rule out any `@ultimate/ai`↔`@ultimate/cli`/`@ultimate/mcp` edge in either direction.

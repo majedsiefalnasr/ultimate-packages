@@ -43,6 +43,7 @@ These apply to every task below; a task does not restate them, it inherits them.
 ### Task 1: Package scaffolding — `@ultimate/ai`
 
 **Files:**
+
 - Create: `packages/ai/package.json`
 - Create: `packages/ai/tsconfig.json`
 - Create: `packages/ai/tsup.config.ts`
@@ -52,6 +53,7 @@ These apply to every task below; a task does not restate them, it inherits them.
 - Test: none (scaffolding-only task; verified by build/typecheck running clean on an empty barrel)
 
 **Interfaces:**
+
 - Produces: the `@ultimate/ai` package itself, buildable via `pnpm --filter @ultimate/ai run build` and typecheckable via `pnpm --filter @ultimate/ai run typecheck`. Every later task adds files under `packages/ai/src/` and `packages/ai/test/` that this scaffolding makes buildable/testable.
 
 - [ ] **Step 1: Create `packages/ai/package.json`**
@@ -80,10 +82,7 @@ This mirrors `packages/mcp/package.json` exactly in shape, substituting the pack
       "default": "./dist/index.mjs"
     }
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "dependencies": {
     "@ultimate/component-metadata": "workspace:*",
     "@ultimate/component-schema": "workspace:*",
@@ -268,10 +267,12 @@ git commit -m "feat(ai): scaffold @ultimate/ai package"
 ### Task 2: Section renderer — the 5 generated marker-section bodies
 
 **Files:**
+
 - Create: `packages/ai/src/render-section.ts`
 - Test: `packages/ai/test/render-section.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentMetadata` type from `@ultimate/component-schema` (fields: `guidance?.usageNotes: string`, `guidance?.antiPatterns: string[]`, `api?.{ng,react,vue}?.props: PropFact[]`, `api?.{ng,react,vue}?.events: EventFact[]`, `accessibility?.verifiedRoles: string[]`, `accessibility?.verifiedAriaAttributes: string[]`, `accessibility?.guidance: string`, `relationships?.dependsOn: string[]`).
 - Produces: `renderSection(sectionKey: SectionKey, component: ComponentMetadata, frameworks: readonly Framework[]): string` — the exact string to place between a `start`/`end` marker pair for one section key. Empty string (`""`) when the backing field(s) are entirely absent for that component, per spec §6.2/§6.3.3's "marker present, content empty" rule. `Framework = "ng" | "react" | "vue"`; `SectionKey = "preferred-patterns" | "allowed-apis" | "anti-patterns" | "accessibility-guidance" | "related-components"`. Consumed by Task 3 (`skill-file.ts`) and Task 7 (`validate.ts`, for fidelity comparison).
 
@@ -322,7 +323,7 @@ describe("renderSection", () => {
     expect(result).toBe("");
   });
 
-  it("renders non-empty related-components content for Table, whose relationships.dependsOn is [\"Paginator\", \"Scroller\"]", () => {
+  it('renders non-empty related-components content for Table, whose relationships.dependsOn is ["Paginator", "Scroller"]', () => {
     const result = renderSection("related-components", TABLE, ["ng", "react", "vue"]);
     expect(result).toContain("Paginator");
     expect(result).toContain("Scroller");
@@ -464,10 +465,12 @@ git commit -m "feat(ai): render the 5 generated Skill marker sections from Compo
 ### Task 3: Skill-file composer — frontmatter + marker-wrapped body
 
 **Files:**
+
 - Create: `packages/ai/src/skill-file.ts`
 - Test: `packages/ai/test/skill-file.test.ts`
 
 **Interfaces:**
+
 - Consumes: `renderSection` (Task 2), `ComponentMetadata` (`@ultimate/component-schema`), `js-yaml`'s `dump`/`load` functions.
 - Produces:
   - `SECTION_KEYS: readonly SectionKey[]` (the 5 keys in fixed order, re-exported for Task 5/Task 7 to iterate without duplicating the literal array).
@@ -521,7 +524,11 @@ describe("generateSkillFile", () => {
   it("includes a YAML frontmatter block with component/metadataVersion/frameworks", () => {
     const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
     const parsed = parseFrontmatter(content);
-    expect(parsed).toEqual({ component: "Button", metadataVersion: 1, frameworks: ["ng", "react", "vue"] });
+    expect(parsed).toEqual({
+      component: "Button",
+      metadataVersion: 1,
+      frameworks: ["ng", "react", "vue"],
+    });
   });
 
   it("includes exactly 5 marker pairs, each present, in the fixed order", () => {
@@ -538,14 +545,16 @@ describe("generateSkillFile", () => {
 
   it("gets an empty preferred-patterns marker pair for Button (guidance.usageNotes absent)", () => {
     const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
-    const start = content.indexOf(startMarker("preferred-patterns")) + startMarker("preferred-patterns").length;
+    const start =
+      content.indexOf(startMarker("preferred-patterns")) + startMarker("preferred-patterns").length;
     const end = content.indexOf(endMarker("preferred-patterns"));
     expect(content.slice(start, end).trim()).toBe("");
   });
 
   it("gets a non-empty preferred-patterns marker pair for Table (guidance.usageNotes populated)", () => {
     const content = generateSkillFile(TABLE, ["ng", "react", "vue"]);
-    const start = content.indexOf(startMarker("preferred-patterns")) + startMarker("preferred-patterns").length;
+    const start =
+      content.indexOf(startMarker("preferred-patterns")) + startMarker("preferred-patterns").length;
     const end = content.indexOf(endMarker("preferred-patterns"));
     expect(content.slice(start, end).trim().length).toBeGreaterThan(0);
   });
@@ -705,7 +714,11 @@ describe("parseFrontmatter", () => {
   it("accepts a well-formed frontmatter block with a valid positive-integer metadataVersion", () => {
     const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
     const parsed = parseFrontmatter(content);
-    expect(parsed).toEqual({ component: "Button", metadataVersion: 1, frameworks: ["ng", "react", "vue"] });
+    expect(parsed).toEqual({
+      component: "Button",
+      metadataVersion: 1,
+      frameworks: ["ng", "react", "vue"],
+    });
   });
 });
 ```
@@ -801,7 +814,11 @@ export function parseFrontmatter(content: string): Frontmatter | undefined {
 
 function renderFrontmatter(component: ComponentMetadata, frameworks: readonly Framework[]): string {
   const body = dump(
-    { component: component.name, metadataVersion: component.metadataVersion, frameworks: [...frameworks] },
+    {
+      component: component.name,
+      metadataVersion: component.metadataVersion,
+      frameworks: [...frameworks],
+    },
     { flowLevel: 1 }
   );
   return `---\n${body}---\n`;
@@ -816,7 +833,10 @@ function renderFrontmatter(component: ComponentMetadata, frameworks: readonly Fr
  * conditional version misplaced/omitted headings; see Task 3's Step 1
  * tests for the assertions that pin this structure down).
  */
-export function generateSkillFile(component: ComponentMetadata, frameworks: readonly Framework[]): string {
+export function generateSkillFile(
+  component: ComponentMetadata,
+  frameworks: readonly Framework[]
+): string {
   const frontmatter = renderFrontmatter(component, frameworks);
   const parts: string[] = [frontmatter, `# ${component.name}\n`, "## When to use\n"];
 
@@ -906,7 +926,9 @@ export function regenerateSkillFile(
 
   // Rewrite section bodies back-to-front so earlier offsets stay valid.
   let content = existingContent;
-  const orderedByPosition = [...SECTION_KEYS].sort((a, b) => located.positions[b].start - located.positions[a].start);
+  const orderedByPosition = [...SECTION_KEYS].sort(
+    (a, b) => located.positions[b].start - located.positions[a].start
+  );
   for (const key of orderedByPosition) {
     const { start, end } = located.positions[key];
     const newBody = renderSection(key, component, frameworks);
@@ -939,10 +961,12 @@ git commit -m "feat(ai): compose and regenerate Skill files with marker-delimite
 ### Task 4: Skill generation CLI entry point
 
 **Files:**
+
 - Modify: `packages/ai/src/bin-generate.ts` (replace Task 1's stub)
 - Test: `packages/ai/test/bin-generate.test.ts`
 
 **Interfaces:**
+
 - Consumes: `generateSkillFile`/`regenerateSkillFile` (Task 3), `ALL_COMPONENTS` (`@ultimate/component-metadata`), `node:fs`.
 - Produces: a `generateAllSkillFiles(skillsDir: string): { written: string[]; errors: { component: string; error: string }[] }` function, exported from `bin-generate.ts` for direct testing (the file's own `main()`/CLI-invocation wrapper is not unit-tested, matching `@ultimate/mcp`'s own `bin.ts`-is-untested-directly convention — its logic is a two-line dispatch to the tested function).
 
@@ -972,7 +996,16 @@ describe("generateAllSkillFiles", () => {
 
     expect(result.errors).toEqual([]);
     expect(result.written.length).toBe(8);
-    for (const name of ["button", "checkbox", "dialog", "menu", "paginator", "scroller", "table", "tooltip"]) {
+    for (const name of [
+      "button",
+      "checkbox",
+      "dialog",
+      "menu",
+      "paginator",
+      "scroller",
+      "table",
+      "tooltip",
+    ]) {
       expect(existsSync(join(tempDir, `${name}.md`))).toBe(true);
     }
   });
@@ -1014,7 +1047,9 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
 import { generateSkillFile, regenerateSkillFile, type Framework } from "./skill-file";
 
 function frameworksFor(component: ComponentMetadata): Framework[] {
-  return (["ng", "react", "vue"] as const).filter((framework) => component.api?.[framework] !== undefined);
+  return (["ng", "react", "vue"] as const).filter(
+    (framework) => component.api?.[framework] !== undefined
+  );
 }
 
 function skillFileName(component: ComponentMetadata): string {
@@ -1085,11 +1120,13 @@ git commit -m "feat(ai): generate-all-Skill-files CLI entry point"
 ### Task 5: LLM-context file generation
 
 **Files:**
+
 - Create: `packages/ai/src/context-files.ts`
 - Modify: `packages/ai/src/bin-generate.ts` (add context-file generation to `main()`)
 - Test: `packages/ai/test/context-files.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ALL_COMPONENTS` (`@ultimate/component-metadata`), `ComponentMetadata`.
 - Produces: `renderLlmsTxt(): string`, `renderLlmsFullTxt(): string`, `renderFrameworkContext(framework: Framework): string` — three pure rendering functions, each returning the exact text content for one output file (spec §7.1's table). `generateContextFiles(outputDir: string): { written: string[] }` — writes all 5 files (`llms.txt`, `llms-full.txt`, `llms-ng.txt`, `llms-react.txt`, `llms-vue.txt`) to `outputDir`.
 
@@ -1101,12 +1138,26 @@ import { describe, it, expect, afterEach } from "vitest";
 import { mkdtempSync, rmSync, readFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { renderLlmsTxt, renderLlmsFullTxt, renderFrameworkContext, generateContextFiles } from "../src/context-files";
+import {
+  renderLlmsTxt,
+  renderLlmsFullTxt,
+  renderFrameworkContext,
+  generateContextFiles,
+} from "../src/context-files";
 
 describe("renderLlmsTxt", () => {
   it("includes one line per component, all 8 components, each with name/category/description", () => {
     const content = renderLlmsTxt();
-    for (const name of ["Button", "Checkbox", "Dialog", "Menu", "Paginator", "Scroller", "Table", "Tooltip"]) {
+    for (const name of [
+      "Button",
+      "Checkbox",
+      "Dialog",
+      "Menu",
+      "Paginator",
+      "Scroller",
+      "Table",
+      "Tooltip",
+    ]) {
       expect(content).toContain(name);
     }
     expect(content).toContain("Primitive");
@@ -1135,7 +1186,16 @@ describe("renderFrameworkContext", () => {
 
   it("still lists a component via identity even when it has no api entry for that framework — none of the 8 v1 records lack a framework entry, so this exercises the narrowing logic's completeness path rather than a real gap", () => {
     const content = renderFrameworkContext("react");
-    for (const name of ["Button", "Checkbox", "Dialog", "Menu", "Paginator", "Scroller", "Table", "Tooltip"]) {
+    for (const name of [
+      "Button",
+      "Checkbox",
+      "Dialog",
+      "Menu",
+      "Paginator",
+      "Scroller",
+      "Table",
+      "Tooltip",
+    ]) {
       expect(content).toContain(name);
     }
   });
@@ -1156,7 +1216,13 @@ describe("generateContextFiles", () => {
     const result = generateContextFiles(tempDir);
 
     expect(result.written.length).toBe(5);
-    for (const filename of ["llms.txt", "llms-full.txt", "llms-ng.txt", "llms-react.txt", "llms-vue.txt"]) {
+    for (const filename of [
+      "llms.txt",
+      "llms-full.txt",
+      "llms-ng.txt",
+      "llms-react.txt",
+      "llms-vue.txt",
+    ]) {
       expect(existsSync(join(tempDir, filename))).toBe(true);
     }
   });
@@ -1181,7 +1247,13 @@ describe("generateContextFiles", () => {
     try {
       const result = generateContextFiles(nestedOutputDir);
       expect(result.written.length).toBe(5);
-      for (const filename of ["llms.txt", "llms-full.txt", "llms-ng.txt", "llms-react.txt", "llms-vue.txt"]) {
+      for (const filename of [
+        "llms.txt",
+        "llms-full.txt",
+        "llms-ng.txt",
+        "llms-react.txt",
+        "llms-vue.txt",
+      ]) {
         expect(existsSync(join(nestedOutputDir, filename))).toBe(true);
       }
     } finally {
@@ -1211,9 +1283,14 @@ export function renderLlmsTxt(): string {
 }
 
 function renderComponentFull(component: ComponentMetadata, onlyFramework?: Framework): string {
-  const lines: string[] = [`## ${component.name}`, `Category: ${component.category}`, component.description];
+  const lines: string[] = [
+    `## ${component.name}`,
+    `Category: ${component.category}`,
+    component.description,
+  ];
 
-  const frameworksToRender: Framework[] = onlyFramework !== undefined ? [onlyFramework] : ["ng", "react", "vue"];
+  const frameworksToRender: Framework[] =
+    onlyFramework !== undefined ? [onlyFramework] : ["ng", "react", "vue"];
   for (const framework of frameworksToRender) {
     const frameworkApi = component.api?.[framework];
     if (frameworkApi === undefined) {
@@ -1238,7 +1315,10 @@ function renderComponentFull(component: ComponentMetadata, onlyFramework?: Frame
     }
   }
 
-  if (component.relationships?.dependsOn !== undefined && component.relationships.dependsOn.length > 0) {
+  if (
+    component.relationships?.dependsOn !== undefined &&
+    component.relationships.dependsOn.length > 0
+  ) {
     lines.push(`### Related components\n${component.relationships.dependsOn.join(", ")}`);
   }
 
@@ -1306,7 +1386,9 @@ function main(): void {
   console.error(`[@ultimate/ai] generate: wrote ${skillResult.written.length} Skill file(s)`);
 
   const contextResult = generateContextFiles(contextDir);
-  console.error(`[@ultimate/ai] generate: wrote ${contextResult.written.length} LLM-context file(s)`);
+  console.error(
+    `[@ultimate/ai] generate: wrote ${contextResult.written.length} LLM-context file(s)`
+  );
 
   if (skillResult.errors.length > 0) {
     process.exit(1);
@@ -1331,9 +1413,11 @@ git commit -m "feat(ai): generate the 5 deterministic LLM-context files"
 ### Task 6: Determinism integration test (end-to-end)
 
 **Files:**
+
 - Test: `packages/ai/test/determinism.test.ts`
 
 **Interfaces:**
+
 - Consumes: `generateAllSkillFiles` (Task 4), `generateContextFiles` (Task 5).
 - Produces: nothing new — this task is pure verification, satisfying spec §7.3/§10.3's explicit "two generation runs against identical input produce identical output" requirement as its own dedicated, named test (rather than leaving it implicit inside Task 4/5's unit tests).
 
@@ -1372,7 +1456,9 @@ describe("end-to-end determinism (spec §7.3)", () => {
     expect(filesA).toEqual(filesB);
 
     for (const filename of filesA) {
-      expect(readFileSync(join(dirA, filename), "utf8")).toBe(readFileSync(join(dirB, filename), "utf8"));
+      expect(readFileSync(join(dirA, filename), "utf8")).toBe(
+        readFileSync(join(dirB, filename), "utf8")
+      );
     }
   });
 
@@ -1383,8 +1469,16 @@ describe("end-to-end determinism (spec §7.3)", () => {
     generateContextFiles(dirA);
     generateContextFiles(dirB);
 
-    for (const filename of ["llms.txt", "llms-full.txt", "llms-ng.txt", "llms-react.txt", "llms-vue.txt"]) {
-      expect(readFileSync(join(dirA, filename), "utf8")).toBe(readFileSync(join(dirB, filename), "utf8"));
+    for (const filename of [
+      "llms.txt",
+      "llms-full.txt",
+      "llms-ng.txt",
+      "llms-react.txt",
+      "llms-vue.txt",
+    ]) {
+      expect(readFileSync(join(dirA, filename), "utf8")).toBe(
+        readFileSync(join(dirB, filename), "utf8")
+      );
     }
   });
 });
@@ -1409,11 +1503,13 @@ git commit -m "test(ai): end-to-end determinism verification for generated Skill
 **Boundary clarification (Plan Review round 2, finding #1):** this plan previously described `validateSkillFile()` as a "4-stage" flow including LLM-context reproducibility as its 4th stage. That was internally inconsistent with the literal implementation, which only ever ran 3 stages against Skill-file content, and never actually invoked LLM-context reproducibility checking from anywhere executable. Per the approved spec: §10.2's Skill-content validation bullets (frontmatter, marker structure, fidelity) and §10.2's separate LLM-context-artifacts-reproducibility bullet (spec line 328, "Generated LLM-context artifacts... are checked for reproducibility... §7.3") are two different checks against two different artifact types — a Skill file is Markdown-with-frontmatter, an LLM-context file is a `.txt` file with no frontmatter or markers at all. Nothing in the approved spec calls reproducibility a "stage" of Skill-file validation. This task now builds them as two separate, independently-invoked validation operations, both real and both wired into an executable entry point — not one collapsed into the other, and not one left unexecuted.
 
 **Files:**
+
 - Create: `packages/ai/src/validate.ts`
 - Modify: `packages/ai/src/bin-validate.ts` (replace Task 1's stub)
 - Test: `packages/ai/test/validate.test.ts`
 
 **Interfaces:**
+
 - Consumes: `parseFrontmatter`, `SECTION_KEYS`, `startMarker`/`endMarker` (Task 3), `renderSection` (Task 2), `renderLlmsTxt`/`renderLlmsFullTxt`/`renderFrameworkContext` (Task 5), `ALL_COMPONENTS`.
 - Produces:
   - `validateSkillFile(content: string): { valid: true } | { valid: false; errors: string[] }` — the Skill-file validator, running exactly 3 stages in order (frontmatter → marker-structure → fidelity), stopping at the first stage with failures (fidelity is skipped entirely if marker-structure fails, per spec §10.2's explicit ordering rule). Operates only on Skill-file content (frontmatter + marker-delimited Markdown).
@@ -1489,7 +1585,8 @@ describe("validateSkillFile", () => {
         {
           name: "SyntheticGapComponent",
           category: "Test",
-          description: "A synthetic record with no react api entry, used only to exercise the framework-coverage validation path.",
+          description:
+            "A synthetic record with no react api entry, used only to exercise the framework-coverage validation path.",
           schemaVersion: "1.0.0",
           metadataVersion: 1,
           packages: { ng: { packageName: "@ultimate/ng", sourcePath: "n/a" } },
@@ -1529,18 +1626,19 @@ describe("validateSkillFile", () => {
     const result = validateSkillFileWithMock(syntheticContent);
     expect(result.valid).toBe(false);
     if (result.valid) return;
-    expect(
-      result.errors.some(
-        (e) => e.includes("react") && e.includes("no api entry for")
-      )
-    ).toBe(true);
+    expect(result.errors.some((e) => e.includes("react") && e.includes("no api entry for"))).toBe(
+      true
+    );
 
     vi.doUnmock("@ultimate/component-metadata");
     vi.resetModules();
   });
 
   it("fails with a metadataVersion mismatch error when the frontmatter's version is stale", () => {
-    const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]).replace("metadataVersion: 1", "metadataVersion: 999");
+    const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]).replace(
+      "metadataVersion: 1",
+      "metadataVersion: 999"
+    );
     const result = validateSkillFile(content);
     expect(result.valid).toBe(false);
     if (result.valid) return;
@@ -1630,7 +1728,13 @@ Expected: FAIL — `Cannot find module '../src/validate'`.
 // packages/ai/src/validate.ts
 import { ALL_COMPONENTS } from "@ultimate/component-metadata";
 import type { ComponentMetadata } from "@ultimate/component-schema";
-import { parseFrontmatter, SECTION_KEYS, startMarker, endMarker, type Framework } from "./skill-file";
+import {
+  parseFrontmatter,
+  SECTION_KEYS,
+  startMarker,
+  endMarker,
+  type Framework,
+} from "./skill-file";
 import { renderSection } from "./render-section";
 
 const KNOWN_FRAMEWORKS = new Set<string>(["ng", "react", "vue"]);
@@ -1645,7 +1749,9 @@ function countOccurrences(haystack: string, needle: string): number {
   return count;
 }
 
-export function validateSkillFile(content: string): { valid: true } | { valid: false; errors: string[] } {
+export function validateSkillFile(
+  content: string
+): { valid: true } | { valid: false; errors: string[] } {
   const errors: string[] = [];
 
   // Stage 1: frontmatter.
@@ -1701,7 +1807,8 @@ export function validateSkillFile(content: string): { valid: true } | { valid: f
 
 function checkMarkerStructure(content: string): string[] {
   const errors: string[] = [];
-  const positions: Partial<Record<(typeof SECTION_KEYS)[number], { start: number; end: number }>> = {};
+  const positions: Partial<Record<(typeof SECTION_KEYS)[number], { start: number; end: number }>> =
+    {};
 
   for (const key of SECTION_KEYS) {
     const startText = startMarker(key);
@@ -1748,7 +1855,11 @@ function checkMarkerStructure(content: string): string[] {
   return errors;
 }
 
-function checkFidelity(content: string, component: ComponentMetadata, frameworks: readonly Framework[]): string[] {
+function checkFidelity(
+  content: string,
+  component: ComponentMetadata,
+  frameworks: readonly Framework[]
+): string[] {
   const errors: string[] = [];
   for (const key of SECTION_KEYS) {
     const startText = startMarker(key);
@@ -1772,7 +1883,10 @@ export function validateContextFileReproducibility(
   if (actualContent === expected) {
     return { valid: true };
   }
-  return { valid: false, error: "generated LLM-context file does not match its own reproducible rendering" };
+  return {
+    valid: false,
+    error: "generated LLM-context file does not match its own reproducible rendering",
+  };
 }
 ```
 
@@ -1791,7 +1905,9 @@ import { validateSkillFile, validateContextFileReproducibility } from "./validat
 import { renderLlmsTxt, renderLlmsFullTxt, renderFrameworkContext } from "./context-files";
 
 function validateSkillFiles(skillsDir: string): number {
-  const files = readdirSync(skillsDir).filter((f) => f.endsWith(".md") && f !== "AGENT_CONVENTIONS.md" && f !== "README.md");
+  const files = readdirSync(skillsDir).filter(
+    (f) => f.endsWith(".md") && f !== "AGENT_CONVENTIONS.md" && f !== "README.md"
+  );
 
   let failed = 0;
   for (const file of files) {
@@ -1808,7 +1924,9 @@ function validateSkillFiles(skillsDir: string): number {
       console.error(`[@ultimate/ai] validate: OK ${file}`);
     }
   }
-  console.error(`[@ultimate/ai] validate: ${files.length - failed} of ${files.length} Skill file(s) passed`);
+  console.error(
+    `[@ultimate/ai] validate: ${files.length - failed} of ${files.length} Skill file(s) passed`
+  );
   return failed;
 }
 
@@ -1838,7 +1956,9 @@ function validateContextFiles(contextDir: string): number {
       console.error(`[@ultimate/ai] validate: OK ${filename}`);
     }
   }
-  console.error(`[@ultimate/ai] validate: ${checks.length - failed} of ${checks.length} LLM-context file(s) reproducible`);
+  console.error(
+    `[@ultimate/ai] validate: ${checks.length - failed} of ${checks.length} LLM-context file(s) reproducible`
+  );
   return failed;
 }
 
@@ -1876,9 +1996,11 @@ git commit -m "feat(ai): 4-stage Skill file validation (frontmatter, markers, fi
 ### Task 8: Packaging contract — `npm pack` and installed-consumer verification
 
 **Files:**
+
 - Create: `packages/ai/test/packaging.test.ts`
 
 **Interfaces:**
+
 - Consumes: `node:child_process` (`execSync`), the already-built `packages/ai/dist/` output from Task 1-7's builds.
 - Produces: nothing new in `src/` — this task exists purely to satisfy spec §7.1a/§10.4's explicit requirement that CI verify the packaging contract, not merely assume it.
 
@@ -1939,10 +2061,19 @@ describe("npm packaging contract (spec §7.1a)", () => {
       const tarballPath = join(packDir, filename);
 
       execSync("npm init -y", { cwd: consumerDir, stdio: "ignore" });
-      execSync(`npm install ${JSON.stringify(tarballPath)} --no-save`, { cwd: consumerDir, stdio: "ignore" });
+      execSync(`npm install ${JSON.stringify(tarballPath)} --no-save`, {
+        cwd: consumerDir,
+        stdio: "ignore",
+      });
 
       const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "dist", "context");
-      for (const filename of ["llms.txt", "llms-full.txt", "llms-ng.txt", "llms-react.txt", "llms-vue.txt"]) {
+      for (const filename of [
+        "llms.txt",
+        "llms-full.txt",
+        "llms-ng.txt",
+        "llms-react.txt",
+        "llms-vue.txt",
+      ]) {
         expect(existsSync(join(contextDir, filename))).toBe(true);
       }
     } finally {
@@ -1978,11 +2109,13 @@ git commit -m "test(ai): verify npm pack/install packaging contract for dist/con
 ### Task 9: Wire context-file generation into the package build, and populate `skills/` for real
 
 **Files:**
+
 - Modify: `packages/ai/package.json` (`build` script)
 - Create: `skills/button.md`, `skills/checkbox.md`, `skills/dialog.md`, `skills/menu.md`, `skills/paginator.md`, `skills/scroller.md`, `skills/table.md`, `skills/tooltip.md` (all 8, generator-produced)
 - Test: none new (verified by running the generator and asserting the committed files pass `validateSkillFile`)
 
 **Interfaces:**
+
 - Consumes: `generateAllSkillFiles`/`generateContextFiles` (Tasks 4/5), `validateSkillFile` (Task 7).
 - Produces: the 8 real Skill files under `skills/`, and a `build` script that also produces `dist/context/*.txt` on every build (not just via manual invocation, closing the gap Task 8's Step 2 manually worked around).
 
@@ -2006,9 +2139,11 @@ Expected: exits 0; `skills/button.md` through `skills/tooltip.md` (8 files) now 
 - [ ] **Step 3: Verify every generated file passes validation**
 
 Run:
+
 ```bash
 node packages/ai/dist/bin-validate.mjs skills
 ```
+
 Expected: `[@ultimate/ai] validate: all 8 Skill file(s) passed` (the validator's own file-scan excludes `AGENT_CONVENTIONS.md`/`README.md`, per Task 7's `bin-validate.ts` filter — those two files don't exist yet at this point in the plan, added in Task 10, so this run only sees the 8 real Skill files).
 
 - [ ] **Step 4: Commit**
@@ -2023,11 +2158,13 @@ git commit -m "feat(ai): wire context generation into build; generate the 8 v1 S
 ### Task 10: Agent-instruction convention document and package documentation
 
 **Files:**
+
 - Create: `skills/AGENT_CONVENTIONS.md`
 - Create: `skills/README.md`
 - Create: `packages/ai/README.md`
 
 **Interfaces:**
+
 - Consumes: nothing (pure documentation task).
 - Produces: the three documentation artifacts spec §10.5 requires.
 
@@ -2052,13 +2189,14 @@ A project consuming Ultimate should reference two kinds of artifact from its own
 ## Where to find them (installed-package location — spec §7.1a)
 
 Once `@ultimate/ai` is installed as a dependency of a consuming project:
-
 ```
+
 node_modules/@ultimate/ai/dist/context/llms.txt
 node_modules/@ultimate/ai/dist/context/llms-full.txt
 node_modules/@ultimate/ai/dist/context/llms-ng.txt
 node_modules/@ultimate/ai/dist/context/llms-react.txt
 node_modules/@ultimate/ai/dist/context/llms-vue.txt
+
 ```
 
 These are **never** at `packages/ai/dist/context/` from a consuming project's perspective — that path only exists inside the Ultimate monorepo's own source tree. A consuming project reaches the generated files exclusively through its own `node_modules`, per the normal npm package-artifact model (spec §7.1a). No CDN, no separate download, no runtime fetch.
@@ -2070,7 +2208,7 @@ Per Blueprint §25: "Generated outputs should not become the primary source of t
 
 - [ ] **Step 2: Write `skills/README.md`**
 
-```markdown
+````markdown
 # Skills
 
 One Skill file per Ultimate component currently in `@ultimate/component-metadata`'s `ALL_COMPONENTS` set (8 in v1: Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip). See `docs/superpowers/specs/2026-09-07-phase-9-ai-skills-llm-context-design.md` §6 for the full contract; summarized here for contributors authoring or editing a Skill file by hand.
@@ -2086,6 +2224,7 @@ metadataVersion: 1
 frameworks: [ng, react, vue]
 ---
 ```
+````
 
 Below the frontmatter, the file's body has 5 generated, marker-delimited sections — never hand-edit the content between a `<!-- ultimate:generated:start section="..." -->` / `<!-- ultimate:generated:end section="..." -->` pair; it is rewritten on every regeneration (`pnpm --filter @ultimate/ai run build`):
 
@@ -2108,7 +2247,8 @@ node packages/ai/dist/bin-validate.mjs skills
 ```
 
 Checks (in order): frontmatter component/framework/metadataVersion references, marker structure (all 5 present, correctly paired, non-nested), and generated-section fidelity (marker content matches what regeneration would produce). Never checks hand-authored prose for factual accuracy — that is architecturally out of scope (spec §10.2/§12).
-```
+
+````
 
 - [ ] **Step 3: Write `packages/ai/README.md`**
 
@@ -2126,33 +2266,36 @@ v1 — build-time generator + validator. Produces one Skill file per component u
 ```bash
 npx ultimate-ai-generate [skillsDir] [contextDir]
 npx ultimate-ai-validate [skillsDir]
-```
+````
 
 Build-time tooling — not a runtime service, not an MCP-style query interface. See `docs/superpowers/specs/2026-09-07-phase-9-ai-skills-llm-context-design.md` §7.2.
 
 ## Scope
 
 See the spec for the full v1 contract, including explicit non-goals (project-aware context, an `examples` metadata field, any MCP/CLI dependency edge, a runtime service, LLM-generated Skill prose, semantic prose validation — none of which this package implements).
-```
+
+````
 
 - [ ] **Step 4: Commit**
 
 ```bash
 git add skills/AGENT_CONVENTIONS.md skills/README.md packages/ai/README.md
 git commit -m "docs(ai): agent-instruction conventions, skills README, package README"
-```
+````
 
 ---
 
 ### Task 11: CI boundary gate — `boundary:validate:ai`
 
 **Files:**
+
 - Create: `scripts/provenance/validate-ai-boundary.mjs`
 - Create: `scripts/provenance/validate-ai-boundary.test.mjs`
 - Modify: `package.json` (root — add `boundary:validate:ai` script)
 - Modify: `.github/workflows/ci.yml` (add CI step)
 
 **Interfaces:**
+
 - Consumes: none (standalone script, mirrors `validate-mcp-boundary.mjs` exactly).
 - Produces: `boundary:validate:ai` as an executable pnpm script, wired into CI.
 
@@ -2450,11 +2593,11 @@ Modify `package.json` (root), adjacent to the existing `boundary:validate:mcp` e
 Modify `.github/workflows/ci.yml`, adding a new step immediately after the existing "MCP package boundary validation" step:
 
 ```yaml
-      - name: MCP package boundary validation
-        run: pnpm run boundary:validate:mcp
+- name: MCP package boundary validation
+  run: pnpm run boundary:validate:mcp
 
-      - name: AI package boundary validation
-        run: pnpm run boundary:validate:ai
+- name: AI package boundary validation
+  run: pnpm run boundary:validate:ai
 ```
 
 - [ ] **Step 6: Run the real boundary check against the actual repo**
@@ -2485,6 +2628,7 @@ Expected: all exit 0, including `@ultimate/ai`'s own typecheck/build/test alongs
 - [ ] **Step 2: Run every provenance/boundary/ceiling/compatibility script**
 
 Run:
+
 ```bash
 pnpm run test:scripts
 pnpm run provenance:validate -- --base-ref origin/main
@@ -2495,6 +2639,7 @@ pnpm run boundary:validate:cli
 pnpm run boundary:validate:mcp
 pnpm run boundary:validate:ai
 ```
+
 Expected: every command exits 0 — this is the exact sequence `.github/workflows/ci.yml` runs, executed locally end-to-end before considering Phase 9 done.
 
 - [ ] **Step 3: Re-run the packaging integration test one more time against the final build**
@@ -2514,6 +2659,7 @@ Expected: only files this plan's tasks explicitly created or modified — `packa
 ## Self-Review Notes (for the plan author, not a task to execute)
 
 **Spec coverage check:**
+
 - §3 (Package/Artifact Boundaries) → Task 1 (packages/ai scaffolding), Task 9 (skills/ content).
 - §4 (Dependency Direction) → Task 1's Global Constraints, Task 11 (CI enforcement).
 - §5/§5.1 (Input Knowledge Sources, documentation deferral) → Task 2/Task 5 (only reads `ALL_COMPONENTS`; no documentation-system code written anywhere, matching the spec's explicit deferral).
@@ -2545,7 +2691,7 @@ Plan Review round 1 returned **REQUEST CHANGES** with 3 confirmed findings (all 
 
 1. **Task 3 — `generateSkillFile` heading placement was broken.** The original split-conditional logic (`if (key === "preferred-patterns")` before the loop body, a second `if (key === "allowed-apis" || key === "accessibility-guidance")` after) misplaced the `anti-patterns`/`related-components` headings one iteration early and omitted headings for `allowed-apis`/`accessibility-guidance` entirely — confirmed by hand-tracing the loop against `SECTION_KEYS`'s real order. Fixed by replacing it with a single, deterministic one-heading-per-section-per-iteration loop: `parts.push(SECTION_HEADINGS[key])` immediately before every `startMarker(key)`, for every key, no conditionals. Four new tests were added to Task 3's `generateSkillFile` describe block (not left to manual inspection, per the review's explicit instruction): every section has its expected heading; each heading sits immediately before its own start marker with only whitespace between; all 5 heading/marker blocks appear in the approved fixed order; no `Examples` heading is ever emitted.
 2. **Task 4 — `require("node:fs")` inside an ESM test file.** The package is `"type": "module"` (Task 1), so bare `require` has no binding there and the "preserves hand-authored content when run a second time" test would throw `ReferenceError` at that exact line, not pass as the plan originally claimed. Fixed by adding `writeFileSync` to the test file's existing top-of-file `node:fs` import and calling it directly — no `require`, no CommonJS interop needed.
-3. **Task 7 — the framework-coverage validation branch was dead code, and its test didn't prove otherwise.** `validate.ts`'s `continue` after the "unrecognized framework" branch means the api-coverage branch (`component.api?.[framework] === undefined`) is only reachable for a framework value simultaneously in `KNOWN_FRAMEWORKS` (ng/react/vue) and genuinely uncovered by that specific component — a state no real v1 record is in (all 8 have all 3 frameworks populated, research-verified). The original single test injected `"svelte"` into the frontmatter, which only ever trips the *unrecognized-framework* branch, and its loose `.includes("framework")` assertion passed regardless of which branch actually fired, so it never proved the coverage branch worked. Fixed by splitting into two distinct tests: (a) the unrecognized-framework case, now asserting the exact `"unrecognized framework"` substring; (b) a new, genuinely-reachable coverage-branch test using a strictly test-local `vi.doMock("@ultimate/component-metadata", ...)` synthetic fixture — mirroring the exact precedent `packages/mcp/test/tools/get-component-api.test.ts` already sets for this repository (cited in Task 2's own docstring) — that declares a component with `api.ng` populated but no `api.react` key at all, then asserts the frontmatter-coverage error fires with both the framework name and the "no api entry for" message. The mock is `vi.resetModules()`/`vi.doUnmock()`-scoped to that one test and never touches the real `ALL_COMPONENTS` export or any committed metadata record. The implementation-side coverage branch in `validate.ts` is unchanged — the fix corrects test coverage, not the (already-correct) validation logic itself.
+3. **Task 7 — the framework-coverage validation branch was dead code, and its test didn't prove otherwise.** `validate.ts`'s `continue` after the "unrecognized framework" branch means the api-coverage branch (`component.api?.[framework] === undefined`) is only reachable for a framework value simultaneously in `KNOWN_FRAMEWORKS` (ng/react/vue) and genuinely uncovered by that specific component — a state no real v1 record is in (all 8 have all 3 frameworks populated, research-verified). The original single test injected `"svelte"` into the frontmatter, which only ever trips the _unrecognized-framework_ branch, and its loose `.includes("framework")` assertion passed regardless of which branch actually fired, so it never proved the coverage branch worked. Fixed by splitting into two distinct tests: (a) the unrecognized-framework case, now asserting the exact `"unrecognized framework"` substring; (b) a new, genuinely-reachable coverage-branch test using a strictly test-local `vi.doMock("@ultimate/component-metadata", ...)` synthetic fixture — mirroring the exact precedent `packages/mcp/test/tools/get-component-api.test.ts` already sets for this repository (cited in Task 2's own docstring) — that declares a component with `api.ng` populated but no `api.react` key at all, then asserts the frontmatter-coverage error fires with both the framework name and the "no api entry for" message. The mock is `vi.resetModules()`/`vi.doUnmock()`-scoped to that one test and never touches the real `ALL_COMPONENTS` export or any committed metadata record. The implementation-side coverage branch in `validate.ts` is unchanged — the fix corrects test coverage, not the (already-correct) validation logic itself.
 
 **Also updated for consistency:** Task 7's Step 4 "Expected: PASS" count corrected from 7 to 8 tests (the split of the conflated framework test into two distinct tests adds one).
 
@@ -2565,7 +2711,7 @@ Plan Review round 2 returned **REQUEST CHANGES** with 5 required corrections plu
 6. **Task 11 — self-test coverage claimed 4 checks but only tested 2.** Added the 2 missing synthetic tests: a reverse-direction `package.json` dependency (a framework package declaring `@ultimate/ai`) and a forward-direction source import (`@ultimate/ai` importing `@ultimate/cli`) — the self-test now has one test per each of the script's 4 distinct violation checks, plus the real-repo-clean check (5 total, corrected from the prior "3/3" claim).
 7. **Task 1 — Step 7 described an intentionally-failing build inside a step whose own "Expected" said success.** Resequenced: Step 7 now only runs `pnpm install`; the new Step 8 creates both bin stubs (required before any build succeeds, since `tsup.config.ts` already declares both as entries); the new Step 9 runs typecheck/build and expects a clean, real success — no step's literal "Expected" outcome is contradicted by its own prose anymore. Step numbering renumbered through the rest of Task 1 (old Step 8/Commit is now Step 10).
 
-**Post-correction consistency re-check performed:** all 7 fixes are plan-document-only — no `.ts`/`.mjs`/`.json`/CI file was created or modified, since this plan is still pre-implementation. Cross-checked that Task 7's rewritten `bin-validate.ts` still correctly imports from `./validate` and the new `./context-files` re-exports (`renderLlmsTxt`/`renderLlmsFullTxt`/`renderFrameworkContext`, all already defined in Task 5, unchanged by this pass except for the `mkdirSync` addition). Cross-checked that Task 3's stricter `parseFrontmatter` doesn't break any earlier-passing test in `skill-file.test.ts` — every existing test there uses `generateSkillFile`'s own real, well-formed integer `metadataVersion: 1` output, which still parses successfully under the new stricter check. All architectural decisions preserved unchanged: 8-component scope, 5 Skill sections, exact marker syntax, `metadataVersion` exact-equality semantics (only the *type validity* of the value got stricter, not the matching rule itself, which was never in question), documentation deferral, `aiSkillsVersionRange` non-use, project-context deferral, dependency boundaries (Task 11's fixes are test-correctness only, not a boundary-rule change).
+**Post-correction consistency re-check performed:** all 7 fixes are plan-document-only — no `.ts`/`.mjs`/`.json`/CI file was created or modified, since this plan is still pre-implementation. Cross-checked that Task 7's rewritten `bin-validate.ts` still correctly imports from `./validate` and the new `./context-files` re-exports (`renderLlmsTxt`/`renderLlmsFullTxt`/`renderFrameworkContext`, all already defined in Task 5, unchanged by this pass except for the `mkdirSync` addition). Cross-checked that Task 3's stricter `parseFrontmatter` doesn't break any earlier-passing test in `skill-file.test.ts` — every existing test there uses `generateSkillFile`'s own real, well-formed integer `metadataVersion: 1` output, which still parses successfully under the new stricter check. All architectural decisions preserved unchanged: 8-component scope, 5 Skill sections, exact marker syntax, `metadataVersion` exact-equality semantics (only the _type validity_ of the value got stricter, not the matching rule itself, which was never in question), documentation deferral, `aiSkillsVersionRange` non-use, project-context deferral, dependency boundaries (Task 11's fixes are test-correctness only, not a boundary-rule change).
 
 **Files changed in this correction pass:** only this implementation plan document. No source, package, CI, metadata, or schema file was modified; no implementation was started; no subagent was dispatched; no commit was made.
 
