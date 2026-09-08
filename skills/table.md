@@ -17,7 +17,9 @@ frameworks: [ng, react, vue]
 ## Allowed/recommended APIs
 
 <!-- ultimate:generated:start section="allowed-apis" -->
+
 ### ng props
+
 - `value`: T[] (default: [])
 - `dataKey`: string (default: "")
 - `columns`: { field: string; header: string }[] (default: [])
@@ -42,11 +44,15 @@ frameworks: [ng, react, vue]
 - `editingRowKeys`: Record<string, boolean> (default: {})
 - `rowGroupMode`: "subheader" | "rowspan" | undefined
 - `groupRowsBy`: string | undefined
+
 ### ng events
+
 - `sortFieldChange` (output): sort-changed
 - `selectionChange` (output): selection-changed
 - `firstChange` (output): page-changed
+
 ### react props
+
 - `value`: T[] (required)
 - `dataKey`: string
 - `columns`: UTableColumn[] (required)
@@ -68,11 +74,15 @@ frameworks: [ng, react, vue]
 - `editingRows`: Record<string, boolean> | undefined
 - `rowGroupMode`: "subheader" | "rowspan" | undefined
 - `groupRowsBy`: string | undefined
+
 ### react events
+
 - `onSort` (callback-prop): sort-changed
 - `onSelectionChange` (callback-prop): selection-changed
 - `onPage` (callback-prop): page-changed
+
 ### vue props
+
 - `value`: Array (default: [])
 - `dataKey`: String (default: "")
 - `columns`: Array (default: [])
@@ -95,10 +105,13 @@ frameworks: [ng, react, vue]
 - `editingRows`: Array (default: [])
 - `rowGroupMode`: String (default: undefined)
 - `groupRowsBy`: String (default: undefined)
+
 ### vue events
+
 - `sort` (emit): sort-changed
 - `selection-change` (emit): selection-changed
 - `page` (emit): page-changed
+
 <!-- ultimate:generated:end section="allowed-apis" -->
 
 ## Anti-patterns
@@ -110,6 +123,7 @@ frameworks: [ng, react, vue]
 ## Accessibility guidance
 
 <!-- ultimate:generated:start section="accessibility-guidance" -->
+
 Roles: table, rowgroup, row, columnheader
 ARIA attributes: aria-sort, aria-selected
 Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the currently-rendered virtualized window, not the full logical dataset, when virtualScroll/virtualScrollerOptions is active — a row outside the window is not in the DOM to focus. This is a real, intentional, already-shipped limitation of Table's Scroller composition, documented inline at the row-keydown handler in all three frameworks' own source.
@@ -118,8 +132,10 @@ Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the curren
 ## Related components
 
 <!-- ultimate:generated:start section="related-components" -->
+
 - Paginator
 - Scroller
+
 <!-- ultimate:generated:end section="related-components" -->
 
 ## Framework-specific guidance

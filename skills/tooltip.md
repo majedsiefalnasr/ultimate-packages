@@ -17,11 +17,15 @@ frameworks: [ng, react, vue]
 ## Allowed/recommended APIs
 
 <!-- ultimate:generated:start section="allowed-apis" -->
+
 ### ng props
+
 - `uTooltip`: string | undefined
 - `uTooltipPosition`: "top" | "bottom" | "left" | "right" (default: "top")
 - `uTooltipDisabled`: boolean (default: false)
+
 ### react props
+
 - `target`: React.RefObject<HTMLElement> | HTMLElement | string | string[] (required)
 - `content`: React.ReactNode | undefined
 - `position`: "right" | "left" | "top" | "bottom" (default: "right")
@@ -34,7 +38,9 @@ frameworks: [ng, react, vue]
 - `baseZIndex`: number | undefined
 - `id`: string | undefined
 - `className`: string | undefined
+
 ### vue props
+
 - `value`: string (required)
 - `disabled`: boolean | undefined
 - `escape`: boolean (default: true)
@@ -44,6 +50,7 @@ frameworks: [ng, react, vue]
 - `showDelay`: number (default: 0)
 - `hideDelay`: number (default: 0)
 - `autoHide`: boolean (default: true)
+
 <!-- ultimate:generated:end section="allowed-apis" -->
 
 ## Anti-patterns

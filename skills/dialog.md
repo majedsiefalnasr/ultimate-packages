@@ -17,17 +17,23 @@ frameworks: [ng, react, vue]
 ## Allowed/recommended APIs
 
 <!-- ultimate:generated:start section="allowed-apis" -->
+
 ### ng props
+
 - `visible`: boolean (default: false)
 - `header`: string | undefined
 - `closable`: boolean (default: true)
 - `closeOnEscape`: boolean (default: true)
 - `modal`: boolean (default: true)
+
 ### ng events
+
 - `visibleChange` (output): visibleChange
 - `onShow` (output): shown
 - `onHide` (output): hidden
+
 ### react props
+
 - `visible`: boolean (required)
 - `header`: React.ReactNode
 - `footer`: React.ReactNode
@@ -44,9 +50,13 @@ frameworks: [ng, react, vue]
 - `style`: React.CSSProperties | undefined
 - `id`: string | undefined
 - `focusOnShow`: boolean (default: true)
+
 ### react events
+
 - `onHide` (callback-prop): hidden
+
 ### vue props
+
 - `visible`: Boolean (default: false)
 - `header`: String (default: null)
 - `footer`: String (default: null)
@@ -60,10 +70,13 @@ frameworks: [ng, react, vue]
 - `position`: String (default: center)
 - `appendTo`: [String, Object] (default: body)
 - `ariaCloseLabel`: String (default: Close)
+
 ### vue events
+
 - `update:visible` (emit): visibleChange
 - `show` (emit): shown
 - `hide` (emit): hidden
+
 <!-- ultimate:generated:end section="allowed-apis" -->
 
 ## Anti-patterns

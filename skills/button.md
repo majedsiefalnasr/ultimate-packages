@@ -17,7 +17,9 @@ frameworks: [ng, react, vue]
 ## Allowed/recommended APIs
 
 <!-- ultimate:generated:start section="allowed-apis" -->
+
 ### ng props
+
 - `label`: string | undefined
 - `icon`: string | undefined
 - `iconPos`: "left" | "right" | "top" | "bottom" (default: left)
@@ -30,7 +32,9 @@ frameworks: [ng, react, vue]
 - `outlined`: boolean (default: false)
 - `size`: "small" | "large" | undefined
 - `fluid`: boolean (default: false)
+
 ### react props
+
 - `label`: string | undefined
 - `icon`: React.ReactNode
 - `iconPos`: "left" | "right" | "top" | "bottom" (default: left)
@@ -50,7 +54,9 @@ frameworks: [ng, react, vue]
 - `visible`: boolean (default: true)
 - `tooltip`: string | undefined
 - `tooltipOptions`: Record<string, unknown> | undefined
+
 ### vue props
+
 - `label`: String (default: null)
 - `icon`: String (default: null)
 - `iconPos`: String (default: left)
@@ -75,6 +81,7 @@ frameworks: [ng, react, vue]
 - `ariaLabel`: String (default: null)
 - `tooltip`: String (default: null)
 - `tooltipOptions`: Object (default: null)
+
 <!-- ultimate:generated:end section="allowed-apis" -->
 
 ## Anti-patterns

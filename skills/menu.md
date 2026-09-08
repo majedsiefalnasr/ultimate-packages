@@ -17,10 +17,14 @@ frameworks: [ng, react, vue]
 ## Allowed/recommended APIs
 
 <!-- ultimate:generated:start section="allowed-apis" -->
+
 ### ng props
+
 - `model`: UMenuItem[] (default: [])
 - `popup`: boolean (default: false)
+
 ### react props
+
 - `model`: UMenuItem[] (required)
 - `popup`: boolean (default: false)
 - `popupAlignment`: "left" | "right" | undefined
@@ -32,10 +36,14 @@ frameworks: [ng, react, vue]
 - `baseZIndex`: number | undefined
 - `appendTo`: HTMLElement | (() => HTMLElement) | undefined
 - `closeOnEscape`: boolean (default: true)
+
 ### react events
+
 - `onShow` (callback-prop): shown
 - `onHide` (callback-prop): hidden
+
 ### vue props
+
 - `model`: Array (default: [])
 - `popup`: Boolean (default: false)
 - `appendTo`: [String, Object] (default: body)
@@ -44,9 +52,12 @@ frameworks: [ng, react, vue]
 - `tabindex`: Number (default: 0)
 - `ariaLabel`: String (default: null)
 - `ariaLabelledby`: String (default: null)
+
 ### vue events
+
 - `show` (emit): shown
 - `hide` (emit): hidden
+
 <!-- ultimate:generated:end section="allowed-apis" -->
 
 ## Anti-patterns

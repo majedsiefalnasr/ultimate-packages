@@ -17,10 +17,14 @@ frameworks: [ng, react, vue]
 ## Allowed/recommended APIs
 
 <!-- ultimate:generated:start section="allowed-apis" -->
+
 ### ng props
+
 - `binary`: boolean (default: false)
 - `label`: string | undefined
+
 ### react props
+
 - `checked`: unknown (required)
 - `trueValue`: unknown (default: true)
 - `falseValue`: unknown (default: false)
@@ -35,9 +39,13 @@ frameworks: [ng, react, vue]
 - `tooltipOptions`: Record<string, unknown> | undefined
 - `autoFocus`: boolean (default: false)
 - `className`: string | undefined
+
 ### react events
+
 - `onChange` (callback-prop): change
+
 ### vue props
+
 - `value`: any (default: null)
 - `binary`: Boolean (default: false)
 - `indeterminate`: Boolean (default: false)
@@ -54,8 +62,11 @@ frameworks: [ng, react, vue]
 - `ariaLabel`: String (default: null)
 - `invalid`: Boolean (default: false)
 - `name`: String (default: null)
+
 ### vue events
+
 - `change` (emit): change
+
 <!-- ultimate:generated:end section="allowed-apis" -->
 
 ## Anti-patterns
