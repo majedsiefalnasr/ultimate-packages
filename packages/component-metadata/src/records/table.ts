@@ -275,6 +275,11 @@ export const TABLE_METADATA: ComponentMetadata = {
       ],
     },
   },
+  guidance: {
+    usageNotes:
+      "Table is best used for data-rich layouts where row selection, inline editing, and virtualized window operations enhance exploration and bulk operations. Leverage Paginator and Scroller composition for large datasets.",
+    antiPatterns: ["Avoid using Table for simple read-only data display — prefer a plain HTML table.", "Do not render Table without sorting or filtering controls when the dataset exceeds 20 rows."],
+  },
   accessibility: {
     verifiedRoles: ["table", "rowgroup", "row", "columnheader"],
     verifiedAriaAttributes: ["aria-sort", "aria-selected"],
