@@ -1,7 +1,13 @@
 // packages/ai/src/validate.ts
 import { ALL_COMPONENTS } from "@ultimate/component-metadata";
 import type { ComponentMetadata } from "@ultimate/component-schema";
-import { parseFrontmatter, SECTION_KEYS, startMarker, endMarker, type Framework } from "./skill-file";
+import {
+  parseFrontmatter,
+  SECTION_KEYS,
+  startMarker,
+  endMarker,
+  type Framework,
+} from "./skill-file";
 import { renderSection } from "./render-section";
 
 const KNOWN_FRAMEWORKS = new Set<string>(["ng", "react", "vue"]);
@@ -16,7 +22,9 @@ function countOccurrences(haystack: string, needle: string): number {
   return count;
 }
 
-export function validateSkillFile(content: string): { valid: true } | { valid: false; errors: string[] } {
+export function validateSkillFile(
+  content: string
+): { valid: true } | { valid: false; errors: string[] } {
   const errors: string[] = [];
 
   // Stage 1: frontmatter.
@@ -72,7 +80,8 @@ export function validateSkillFile(content: string): { valid: true } | { valid: f
 
 function checkMarkerStructure(content: string): string[] {
   const errors: string[] = [];
-  const positions: Partial<Record<(typeof SECTION_KEYS)[number], { start: number; end: number }>> = {};
+  const positions: Partial<Record<(typeof SECTION_KEYS)[number], { start: number; end: number }>> =
+    {};
 
   for (const key of SECTION_KEYS) {
     const startText = startMarker(key);
@@ -119,7 +128,11 @@ function checkMarkerStructure(content: string): string[] {
   return errors;
 }
 
-function checkFidelity(content: string, component: ComponentMetadata, frameworks: readonly Framework[]): string[] {
+function checkFidelity(
+  content: string,
+  component: ComponentMetadata,
+  frameworks: readonly Framework[]
+): string[] {
   const errors: string[] = [];
   for (const key of SECTION_KEYS) {
     const startText = startMarker(key);
@@ -143,5 +156,8 @@ export function validateContextFileReproducibility(
   if (actualContent === expected) {
     return { valid: true };
   }
-  return { valid: false, error: "generated LLM-context file does not match its own reproducible rendering" };
+  return {
+    valid: false,
+    error: "generated LLM-context file does not match its own reproducible rendering",
+  };
 }

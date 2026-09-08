@@ -9,10 +9,13 @@ frameworks: [ng, react, vue]
 ## When to use
 
 ## Preferred patterns
+
 <!-- ultimate:generated:start section="preferred-patterns" -->
 
 <!-- ultimate:generated:end section="preferred-patterns" -->
+
 ## Allowed/recommended APIs
+
 <!-- ultimate:generated:start section="allowed-apis" -->
 ### ng props
 - `model`: UMenuItem[] (default: [])
@@ -45,17 +48,23 @@ frameworks: [ng, react, vue]
 - `show` (emit): shown
 - `hide` (emit): hidden
 <!-- ultimate:generated:end section="allowed-apis" -->
+
 ## Anti-patterns
+
 <!-- ultimate:generated:start section="anti-patterns" -->
 
 <!-- ultimate:generated:end section="anti-patterns" -->
+
 ## Accessibility guidance
+
 <!-- ultimate:generated:start section="accessibility-guidance" -->
 
 <!-- ultimate:generated:end section="accessibility-guidance" -->
+
 ## Related components
+
 <!-- ultimate:generated:start section="related-components" -->
 
 <!-- ultimate:generated:end section="related-components" -->
-## Framework-specific guidance
 
+## Framework-specific guidance

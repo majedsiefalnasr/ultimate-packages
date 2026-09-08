@@ -3,12 +3,26 @@ import { describe, it, expect, afterEach } from "vitest";
 import { mkdtempSync, rmSync, readFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { renderLlmsTxt, renderLlmsFullTxt, renderFrameworkContext, generateContextFiles } from "../src/context-files";
+import {
+  renderLlmsTxt,
+  renderLlmsFullTxt,
+  renderFrameworkContext,
+  generateContextFiles,
+} from "../src/context-files";
 
 describe("renderLlmsTxt", () => {
   it("includes one line per component, all 8 components, each with name/category/description", () => {
     const content = renderLlmsTxt();
-    for (const name of ["Button", "Checkbox", "Dialog", "Menu", "Paginator", "Scroller", "Table", "Tooltip"]) {
+    for (const name of [
+      "Button",
+      "Checkbox",
+      "Dialog",
+      "Menu",
+      "Paginator",
+      "Scroller",
+      "Table",
+      "Tooltip",
+    ]) {
       expect(content).toContain(name);
     }
     expect(content).toContain("Primitive");
@@ -37,7 +51,16 @@ describe("renderFrameworkContext", () => {
 
   it("still lists a component via identity even when it has no api entry for that framework — none of the 8 v1 records lack a framework entry, so this exercises the narrowing logic's completeness path rather than a real gap", () => {
     const content = renderFrameworkContext("react");
-    for (const name of ["Button", "Checkbox", "Dialog", "Menu", "Paginator", "Scroller", "Table", "Tooltip"]) {
+    for (const name of [
+      "Button",
+      "Checkbox",
+      "Dialog",
+      "Menu",
+      "Paginator",
+      "Scroller",
+      "Table",
+      "Tooltip",
+    ]) {
       expect(content).toContain(name);
     }
   });
@@ -58,7 +81,13 @@ describe("generateContextFiles", () => {
     const result = generateContextFiles(tempDir);
 
     expect(result.written.length).toBe(5);
-    for (const filename of ["llms.txt", "llms-full.txt", "llms-ng.txt", "llms-react.txt", "llms-vue.txt"]) {
+    for (const filename of [
+      "llms.txt",
+      "llms-full.txt",
+      "llms-ng.txt",
+      "llms-react.txt",
+      "llms-vue.txt",
+    ]) {
       expect(existsSync(join(tempDir, filename))).toBe(true);
     }
   });
@@ -83,7 +112,13 @@ describe("generateContextFiles", () => {
     try {
       const result = generateContextFiles(nestedOutputDir);
       expect(result.written.length).toBe(5);
-      for (const filename of ["llms.txt", "llms-full.txt", "llms-ng.txt", "llms-react.txt", "llms-vue.txt"]) {
+      for (const filename of [
+        "llms.txt",
+        "llms-full.txt",
+        "llms-ng.txt",
+        "llms-react.txt",
+        "llms-vue.txt",
+      ]) {
         expect(existsSync(join(nestedOutputDir, filename))).toBe(true);
       }
     } finally {

@@ -64,7 +64,11 @@ describe("generateSkillFile", () => {
   it("includes a YAML frontmatter block with component/metadataVersion/frameworks", () => {
     const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
     const parsed = parseFrontmatter(content);
-    expect(parsed).toEqual({ component: "Button", metadataVersion: 1, frameworks: ["ng", "react", "vue"] });
+    expect(parsed).toEqual({
+      component: "Button",
+      metadataVersion: 1,
+      frameworks: ["ng", "react", "vue"],
+    });
   });
 
   it("includes exactly 5 marker pairs, each present, in the fixed order", () => {
@@ -81,14 +85,16 @@ describe("generateSkillFile", () => {
 
   it("gets an empty preferred-patterns marker pair for Button (guidance.usageNotes absent)", () => {
     const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
-    const start = content.indexOf(startMarker("preferred-patterns")) + startMarker("preferred-patterns").length;
+    const start =
+      content.indexOf(startMarker("preferred-patterns")) + startMarker("preferred-patterns").length;
     const end = content.indexOf(endMarker("preferred-patterns"));
     expect(content.slice(start, end).trim()).toBe("");
   });
 
   it("gets a non-empty preferred-patterns marker pair for a component with guidance.usageNotes populated (synthetic fixture — no real v1 record has this field populated)", () => {
     const content = generateSkillFile(SYNTHETIC_WITH_GUIDANCE, ["ng", "react", "vue"]);
-    const start = content.indexOf(startMarker("preferred-patterns")) + startMarker("preferred-patterns").length;
+    const start =
+      content.indexOf(startMarker("preferred-patterns")) + startMarker("preferred-patterns").length;
     const end = content.indexOf(endMarker("preferred-patterns"));
     expect(content.slice(start, end).trim().length).toBeGreaterThan(0);
   });
@@ -227,8 +233,7 @@ describe("regenerateSkillFile", () => {
     const ppStartIndex = original.indexOf(ppStart);
     const ppEndIndex = original.indexOf(ppEnd) + ppEnd.length;
     const preferredPatternsBlock = original.slice(ppStartIndex, ppEndIndex);
-    const withoutBlock =
-      original.slice(0, ppStartIndex) + original.slice(ppEndIndex);
+    const withoutBlock = original.slice(0, ppStartIndex) + original.slice(ppEndIndex);
     const nested = withoutBlock.replace(
       startMarker("allowed-apis"),
       `${startMarker("allowed-apis")}\n${preferredPatternsBlock}\n`
@@ -292,6 +297,10 @@ describe("parseFrontmatter", () => {
   it("accepts a well-formed frontmatter block with a valid positive-integer metadataVersion", () => {
     const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
     const parsed = parseFrontmatter(content);
-    expect(parsed).toEqual({ component: "Button", metadataVersion: 1, frameworks: ["ng", "react", "vue"] });
+    expect(parsed).toEqual({
+      component: "Button",
+      metadataVersion: 1,
+      frameworks: ["ng", "react", "vue"],
+    });
   });
 });

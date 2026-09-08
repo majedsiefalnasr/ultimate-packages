@@ -9,10 +9,13 @@ frameworks: [ng, react, vue]
 ## When to use
 
 ## Preferred patterns
+
 <!-- ultimate:generated:start section="preferred-patterns" -->
 
 <!-- ultimate:generated:end section="preferred-patterns" -->
+
 ## Allowed/recommended APIs
+
 <!-- ultimate:generated:start section="allowed-apis" -->
 ### ng props
 - `value`: T[] (default: [])
@@ -97,20 +100,26 @@ frameworks: [ng, react, vue]
 - `selection-change` (emit): selection-changed
 - `page` (emit): page-changed
 <!-- ultimate:generated:end section="allowed-apis" -->
+
 ## Anti-patterns
+
 <!-- ultimate:generated:start section="anti-patterns" -->
 
 <!-- ultimate:generated:end section="anti-patterns" -->
+
 ## Accessibility guidance
+
 <!-- ultimate:generated:start section="accessibility-guidance" -->
 Roles: table, rowgroup, row, columnheader
 ARIA attributes: aria-sort, aria-selected
 Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the currently-rendered virtualized window, not the full logical dataset, when virtualScroll/virtualScrollerOptions is active — a row outside the window is not in the DOM to focus. This is a real, intentional, already-shipped limitation of Table's Scroller composition, documented inline at the row-keydown handler in all three frameworks' own source.
 <!-- ultimate:generated:end section="accessibility-guidance" -->
+
 ## Related components
+
 <!-- ultimate:generated:start section="related-components" -->
 - Paginator
 - Scroller
 <!-- ultimate:generated:end section="related-components" -->
-## Framework-specific guidance
 
+## Framework-specific guidance

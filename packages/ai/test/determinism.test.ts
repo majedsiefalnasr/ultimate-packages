@@ -29,7 +29,9 @@ describe("end-to-end determinism (spec §7.3)", () => {
     expect(filesA).toEqual(filesB);
 
     for (const filename of filesA) {
-      expect(readFileSync(join(dirA, filename), "utf8")).toBe(readFileSync(join(dirB, filename), "utf8"));
+      expect(readFileSync(join(dirA, filename), "utf8")).toBe(
+        readFileSync(join(dirB, filename), "utf8")
+      );
     }
   });
 
@@ -40,8 +42,16 @@ describe("end-to-end determinism (spec §7.3)", () => {
     generateContextFiles(dirA);
     generateContextFiles(dirB);
 
-    for (const filename of ["llms.txt", "llms-full.txt", "llms-ng.txt", "llms-react.txt", "llms-vue.txt"]) {
-      expect(readFileSync(join(dirA, filename), "utf8")).toBe(readFileSync(join(dirB, filename), "utf8"));
+    for (const filename of [
+      "llms.txt",
+      "llms-full.txt",
+      "llms-ng.txt",
+      "llms-react.txt",
+      "llms-vue.txt",
+    ]) {
+      expect(readFileSync(join(dirA, filename), "utf8")).toBe(
+        readFileSync(join(dirB, filename), "utf8")
+      );
     }
   });
 });

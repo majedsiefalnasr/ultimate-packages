@@ -65,7 +65,8 @@ describe("validateSkillFile", () => {
         {
           name: "SyntheticGapComponent",
           category: "Test",
-          description: "A synthetic record with no react api entry, used only to exercise the framework-coverage validation path.",
+          description:
+            "A synthetic record with no react api entry, used only to exercise the framework-coverage validation path.",
           schemaVersion: "1.0.0",
           metadataVersion: 1,
           packages: { ng: { packageName: "@ultimate/ng", sourcePath: "n/a" } },
@@ -105,18 +106,19 @@ describe("validateSkillFile", () => {
     const result = validateSkillFileWithMock(syntheticContent);
     expect(result.valid).toBe(false);
     if (result.valid) return;
-    expect(
-      result.errors.some(
-        (e) => e.includes("react") && e.includes("no api entry for")
-      )
-    ).toBe(true);
+    expect(result.errors.some((e) => e.includes("react") && e.includes("no api entry for"))).toBe(
+      true
+    );
 
     vi.doUnmock("@ultimate/component-metadata");
     vi.resetModules();
   });
 
   it("fails with a metadataVersion mismatch error when the frontmatter's version is stale", () => {
-    const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]).replace("metadataVersion: 1", "metadataVersion: 999");
+    const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]).replace(
+      "metadataVersion: 1",
+      "metadataVersion: 999"
+    );
     const result = validateSkillFile(content);
     expect(result.valid).toBe(false);
     if (result.valid) return;

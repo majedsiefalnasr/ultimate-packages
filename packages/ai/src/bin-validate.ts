@@ -5,7 +5,9 @@ import { validateSkillFile, validateContextFileReproducibility } from "./validat
 import { renderLlmsTxt, renderLlmsFullTxt, renderFrameworkContext } from "./context-files";
 
 function validateSkillFiles(skillsDir: string): number {
-  const files = readdirSync(skillsDir).filter((f) => f.endsWith(".md") && f !== "AGENT_CONVENTIONS.md" && f !== "README.md");
+  const files = readdirSync(skillsDir).filter(
+    (f) => f.endsWith(".md") && f !== "AGENT_CONVENTIONS.md" && f !== "README.md"
+  );
 
   let failed = 0;
   for (const file of files) {
@@ -22,7 +24,9 @@ function validateSkillFiles(skillsDir: string): number {
       console.error(`[@ultimate/ai] validate: OK ${file}`);
     }
   }
-  console.error(`[@ultimate/ai] validate: ${files.length - failed} of ${files.length} Skill file(s) passed`);
+  console.error(
+    `[@ultimate/ai] validate: ${files.length - failed} of ${files.length} Skill file(s) passed`
+  );
   return failed;
 }
 
@@ -52,7 +56,9 @@ function validateContextFiles(contextDir: string): number {
       console.error(`[@ultimate/ai] validate: OK ${filename}`);
     }
   }
-  console.error(`[@ultimate/ai] validate: ${checks.length - failed} of ${checks.length} LLM-context file(s) reproducible`);
+  console.error(
+    `[@ultimate/ai] validate: ${checks.length - failed} of ${checks.length} LLM-context file(s) reproducible`
+  );
   return failed;
 }
 

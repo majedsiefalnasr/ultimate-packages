@@ -80,7 +80,11 @@ export function parseFrontmatter(content: string): Frontmatter | undefined {
 
 function renderFrontmatter(component: ComponentMetadata, frameworks: readonly Framework[]): string {
   const body = dump(
-    { component: component.name, metadataVersion: component.metadataVersion, frameworks: [...frameworks] },
+    {
+      component: component.name,
+      metadataVersion: component.metadataVersion,
+      frameworks: [...frameworks],
+    },
     { flowLevel: 1 }
   );
   return `---\n${body}---\n`;
@@ -95,7 +99,10 @@ function renderFrontmatter(component: ComponentMetadata, frameworks: readonly Fr
  * conditional version misplaced/omitted headings; see Task 3's Step 1
  * tests for the assertions that pin this structure down).
  */
-export function generateSkillFile(component: ComponentMetadata, frameworks: readonly Framework[]): string {
+export function generateSkillFile(
+  component: ComponentMetadata,
+  frameworks: readonly Framework[]
+): string {
   const frontmatter = renderFrontmatter(component, frameworks);
   const parts: string[] = [frontmatter, `# ${component.name}\n`, "## When to use\n"];
 
@@ -185,7 +192,9 @@ export function regenerateSkillFile(
 
   // Rewrite section bodies back-to-front so earlier offsets stay valid.
   let content = existingContent;
-  const orderedByPosition = [...SECTION_KEYS].sort((a, b) => located.positions[b].start - located.positions[a].start);
+  const orderedByPosition = [...SECTION_KEYS].sort(
+    (a, b) => located.positions[b].start - located.positions[a].start
+  );
   for (const key of orderedByPosition) {
     const { start, end } = located.positions[key];
     const newBody = renderSection(key, component, frameworks);

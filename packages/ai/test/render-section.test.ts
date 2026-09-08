@@ -9,7 +9,8 @@ const BUTTON = ALL_COMPONENTS.find((c) => c.name === "Button")!;
 const SYNTHETIC_WITH_GUIDANCE: ComponentMetadata = {
   name: "SyntheticComponent",
   category: "Test",
-  description: "A synthetic record with populated guidance, used only to exercise the non-empty preferred-patterns rendering path — no real v1 record has this field populated.",
+  description:
+    "A synthetic record with populated guidance, used only to exercise the non-empty preferred-patterns rendering path — no real v1 record has this field populated.",
   schemaVersion: "1.0.0",
   metadataVersion: 1,
   packages: {},
@@ -22,7 +23,8 @@ const SYNTHETIC_WITH_GUIDANCE: ComponentMetadata = {
 const SYNTHETIC_WITH_ANTI_PATTERNS_ONLY: ComponentMetadata = {
   name: "SyntheticAntiPatternsOnly",
   category: "Test",
-  description: "A synthetic record with only anti-patterns populated, used to test the anti-patterns rendering.",
+  description:
+    "A synthetic record with only anti-patterns populated, used to test the anti-patterns rendering.",
   schemaVersion: "1.0.0",
   metadataVersion: 1,
   packages: {},
@@ -38,7 +40,11 @@ describe("renderSection", () => {
   });
 
   it("renders non-empty preferred-patterns content when guidance.usageNotes IS populated (synthetic fixture, since no real v1 record has this)", () => {
-    const result = renderSection("preferred-patterns", SYNTHETIC_WITH_GUIDANCE, ["ng", "react", "vue"]);
+    const result = renderSection("preferred-patterns", SYNTHETIC_WITH_GUIDANCE, [
+      "ng",
+      "react",
+      "vue",
+    ]);
     expect(result).toBe("Use this component when a synthetic test scenario calls for it.");
   });
 
@@ -53,7 +59,11 @@ describe("renderSection", () => {
   });
 
   it("renders non-empty anti-patterns content as a bulleted list when guidance.antiPatterns IS populated (synthetic fixture, since no real v1 record has this)", () => {
-    const result = renderSection("anti-patterns", SYNTHETIC_WITH_ANTI_PATTERNS_ONLY, ["ng", "react", "vue"]);
+    const result = renderSection("anti-patterns", SYNTHETIC_WITH_ANTI_PATTERNS_ONLY, [
+      "ng",
+      "react",
+      "vue",
+    ]);
     expect(result).toBe("- Never use this pattern.\n- Avoid that pattern too.");
   });
 
@@ -76,7 +86,7 @@ describe("renderSection", () => {
     expect(result).toBe("");
   });
 
-  it("renders non-empty related-components content for Table, whose relationships.dependsOn is [\"Paginator\", \"Scroller\"]", () => {
+  it('renders non-empty related-components content for Table, whose relationships.dependsOn is ["Paginator", "Scroller"]', () => {
     const result = renderSection("related-components", TABLE, ["ng", "react", "vue"]);
     expect(result).toContain("Paginator");
     expect(result).toContain("Scroller");

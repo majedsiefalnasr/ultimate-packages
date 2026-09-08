@@ -10,9 +10,14 @@ export function renderLlmsTxt(): string {
 }
 
 function renderComponentFull(component: ComponentMetadata, onlyFramework?: Framework): string {
-  const lines: string[] = [`## ${component.name}`, `Category: ${component.category}`, component.description];
+  const lines: string[] = [
+    `## ${component.name}`,
+    `Category: ${component.category}`,
+    component.description,
+  ];
 
-  const frameworksToRender: Framework[] = onlyFramework !== undefined ? [onlyFramework] : ["ng", "react", "vue"];
+  const frameworksToRender: Framework[] =
+    onlyFramework !== undefined ? [onlyFramework] : ["ng", "react", "vue"];
   for (const framework of frameworksToRender) {
     const frameworkApi = component.api?.[framework];
     if (frameworkApi === undefined) {
@@ -37,7 +42,10 @@ function renderComponentFull(component: ComponentMetadata, onlyFramework?: Frame
     }
   }
 
-  if (component.relationships?.dependsOn !== undefined && component.relationships.dependsOn.length > 0) {
+  if (
+    component.relationships?.dependsOn !== undefined &&
+    component.relationships.dependsOn.length > 0
+  ) {
     lines.push(`### Related components\n${component.relationships.dependsOn.join(", ")}`);
   }
 

@@ -102,14 +102,20 @@ describe("npm packaging contract (spec §7.1a)", () => {
             },
           },
           null,
-          2,
-        ),
+          2
+        )
       );
 
       execSync("pnpm install --no-lockfile", { cwd: consumerDir, stdio: "ignore" });
 
       const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "dist", "context");
-      for (const filename of ["llms.txt", "llms-full.txt", "llms-ng.txt", "llms-react.txt", "llms-vue.txt"]) {
+      for (const filename of [
+        "llms.txt",
+        "llms-full.txt",
+        "llms-ng.txt",
+        "llms-react.txt",
+        "llms-vue.txt",
+      ]) {
         expect(existsSync(join(contextDir, filename))).toBe(true);
       }
     } finally {

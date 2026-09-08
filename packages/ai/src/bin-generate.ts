@@ -7,7 +7,9 @@ import { generateSkillFile, regenerateSkillFile, type Framework } from "./skill-
 import { generateContextFiles } from "./context-files";
 
 function frameworksFor(component: ComponentMetadata): Framework[] {
-  return (["ng", "react", "vue"] as const).filter((framework) => component.api?.[framework] !== undefined);
+  return (["ng", "react", "vue"] as const).filter(
+    (framework) => component.api?.[framework] !== undefined
+  );
 }
 
 function skillFileName(component: ComponentMetadata): string {
@@ -55,7 +57,9 @@ function main(): void {
   console.error(`[@ultimate/ai] generate: wrote ${skillResult.written.length} Skill file(s)`);
 
   const contextResult = generateContextFiles(contextDir);
-  console.error(`[@ultimate/ai] generate: wrote ${contextResult.written.length} LLM-context file(s)`);
+  console.error(
+    `[@ultimate/ai] generate: wrote ${contextResult.written.length} LLM-context file(s)`
+  );
 
   if (skillResult.errors.length > 0) {
     process.exit(1);

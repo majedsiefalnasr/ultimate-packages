@@ -21,7 +21,16 @@ describe("generateAllSkillFiles", () => {
 
     expect(result.errors).toEqual([]);
     expect(result.written.length).toBe(8);
-    for (const name of ["button", "checkbox", "dialog", "menu", "paginator", "scroller", "table", "tooltip"]) {
+    for (const name of [
+      "button",
+      "checkbox",
+      "dialog",
+      "menu",
+      "paginator",
+      "scroller",
+      "table",
+      "tooltip",
+    ]) {
       expect(existsSync(join(tempDir, `${name}.md`))).toBe(true);
     }
   });
