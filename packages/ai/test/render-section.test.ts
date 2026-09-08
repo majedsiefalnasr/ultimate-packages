@@ -1,15 +1,45 @@
 import { describe, it, expect } from "vitest";
+import type { ComponentMetadata } from "@ultimate/component-schema";
 import { ALL_COMPONENTS } from "@ultimate/component-metadata";
 import { renderSection } from "../src/render-section";
 
 const TABLE = ALL_COMPONENTS.find((c) => c.name === "Table")!;
 const BUTTON = ALL_COMPONENTS.find((c) => c.name === "Button")!;
 
+const SYNTHETIC_WITH_GUIDANCE: ComponentMetadata = {
+  name: "SyntheticComponent",
+  category: "Test",
+  description: "A synthetic record with populated guidance, used only to exercise the non-empty preferred-patterns rendering path — no real v1 record has this field populated.",
+  schemaVersion: "1.0.0",
+  metadataVersion: 1,
+  packages: {},
+  guidance: {
+    usageNotes: "Use this component when a synthetic test scenario calls for it.",
+    antiPatterns: ["Do not use this in production — it is a test fixture."],
+  },
+};
+
+const SYNTHETIC_WITH_ANTI_PATTERNS_ONLY: ComponentMetadata = {
+  name: "SyntheticAntiPatternsOnly",
+  category: "Test",
+  description: "A synthetic record with only anti-patterns populated, used to test the anti-patterns rendering.",
+  schemaVersion: "1.0.0",
+  metadataVersion: 1,
+  packages: {},
+  guidance: {
+    antiPatterns: ["Never use this pattern.", "Avoid that pattern too."],
+  },
+};
+
 describe("renderSection", () => {
-  it("renders non-empty preferred-patterns content for Table, the one record with populated guidance.usageNotes", () => {
+  it("renders empty preferred-patterns content for Table, since no real v1 record has a populated guidance.usageNotes field", () => {
     const result = renderSection("preferred-patterns", TABLE, ["ng", "react", "vue"]);
-    expect(result.length).toBeGreaterThan(0);
-    expect(result).toContain("virtualized window");
+    expect(result).toBe("");
+  });
+
+  it("renders non-empty preferred-patterns content when guidance.usageNotes IS populated (synthetic fixture, since no real v1 record has this)", () => {
+    const result = renderSection("preferred-patterns", SYNTHETIC_WITH_GUIDANCE, ["ng", "react", "vue"]);
+    expect(result).toBe("Use this component when a synthetic test scenario calls for it.");
   });
 
   it("renders empty preferred-patterns content for Button, whose guidance.usageNotes is absent", () => {
@@ -20,6 +50,11 @@ describe("renderSection", () => {
   it("renders empty anti-patterns content for Button, whose guidance.antiPatterns is absent", () => {
     const result = renderSection("anti-patterns", BUTTON, ["ng", "react", "vue"]);
     expect(result).toBe("");
+  });
+
+  it("renders non-empty anti-patterns content as a bulleted list when guidance.antiPatterns IS populated (synthetic fixture, since no real v1 record has this)", () => {
+    const result = renderSection("anti-patterns", SYNTHETIC_WITH_ANTI_PATTERNS_ONLY, ["ng", "react", "vue"]);
+    expect(result).toBe("- Never use this pattern.\n- Avoid that pattern too.");
   });
 
   it("renders allowed-apis content listing every prop name for the requested frameworks, for Button", () => {
