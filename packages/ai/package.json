@@ -29,7 +29,7 @@
     "js-yaml": "^4.1.0"
   },
   "scripts": {
-    "build": "tsup && node scripts/rename-dts.mjs",
+    "build": "tsup && node scripts/rename-dts.mjs && node dist/bin-generate.mjs ../../skills dist/context",
     "test": "vitest run --typecheck",
     "typecheck": "tsc --noEmit"
   },
