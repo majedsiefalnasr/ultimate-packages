@@ -7,6 +7,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
+    "audit:validate": "pnpm audit --audit-level high --prod",
     "build": "pnpm -r --if-present run build",
     "test": "pnpm -r --if-present run test",
     "validate": "pnpm -r --if-present run validate",
