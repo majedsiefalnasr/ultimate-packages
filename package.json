@@ -18,6 +18,7 @@
     "boundary:validate": "node scripts/provenance/validate-boundaries.mjs",
     "boundary:validate:cli": "node scripts/provenance/validate-cli-boundary.mjs",
     "boundary:validate:mcp": "node scripts/provenance/validate-mcp-boundary.mjs",
+    "boundary:validate:ai": "node scripts/provenance/validate-ai-boundary.mjs",
     "ceiling:validate": "node scripts/provenance/validate-dependency-ceiling.mjs",
     "compatibility-manifest:validate": "node docs/architecture/compatibility-manifest.test.mjs"
   },

@@ -65,3 +65,6 @@ jobs:
 
       - name: MCP package boundary validation
         run: pnpm run boundary:validate:mcp
+
+      - name: AI package boundary validation
+        run: pnpm run boundary:validate:ai
