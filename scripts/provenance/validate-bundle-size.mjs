@@ -32,8 +32,11 @@ const PERFORMANCE_MD_PATH = "docs/architecture/PERFORMANCE.md";
 // Simple line-based Markdown table parser, same style as
 // validate-sast-baseline.mjs's parseBaselineFingerprints: finds "|"-led
 // rows in the "### Package size" table under "## Phase 10 — ..." and
-// extracts { packageDirName -> distSizeKB } from the "Package" and
-// "dist/ size" columns. Only the Phase 10 table is parsed — Phase 1/2's
+// extracts { packageDirName -> gzipSizeKB } from the "Package" and
+// "index.mjs gzip size" columns. The gate tracks gzip barrel size (the
+// metric that matters for consumers), not the uncompressed dist/ size
+// column, which includes sourcemaps and type declarations irrelevant to
+// what ships over the wire. Only the Phase 10 table is parsed — Phase 1/2's
 // tables use the same column shape but are a different section, and this
 // gate only tracks the Phase 10 baseline of record.
 export function parsePhase10SizeTable(markdown) {
@@ -52,12 +55,12 @@ export function parsePhase10SizeTable(markdown) {
       .split("|")
       .map((cell) => cell.trim())
       .filter((cell) => cell.length > 0);
-    if (cells.length < 2) continue;
+    if (cells.length < 4) continue; // need Package + dist/ size + file count + gzip size
     if (cells[0].toLowerCase() === "package") continue; // header row
     if (/^-+$/.test(cells[0])) continue; // separator row
 
     const packageDirName = cells[0].replace(/^packages\//, "");
-    const sizeMatch = cells[1].match(/^([\d.]+)\s*KB$/i);
+    const sizeMatch = cells[3].match(/^([\d.]+)\s*KB$/i);
     if (!sizeMatch) continue;
 
     sizesByPackage.set(packageDirName, parseFloat(sizeMatch[1]));
@@ -91,9 +94,13 @@ export function evaluatePackageSize({
   if (isBaselineOnly) {
     // Integrity check: the value this PR writes into PERFORMANCE.md must
     // match reality — a fresh measurement of the package's own, unchanged
-    // dist/ output. Tolerance matches the script's own .toFixed(1)
-    // rounding (0.05 KB half-a-last-digit), not a new invented fudge
-    // factor.
+    // gzip barrel output. Tolerance matches the script's own .toFixed(2)
+    // rounding (0.005 KB half-a-last-digit), not a new invented fudge
+    // factor. This must be tight: measure-package-size.mjs formats the
+    // gzip column with 2 decimal places, so a 0.05 KB tolerance (sized for
+    // the old 1-decimal dist/ size column) would be 100% of a small
+    // package's entire gzip size (e.g. cli at 0.05 KB) and accept a
+    // completely wrong value.
     if (headWrittenSizeKB === undefined) {
       return {
         ok: false,
@@ -101,10 +108,10 @@ export function evaluatePackageSize({
       };
     }
     const diff = Math.abs(headWrittenSizeKB - freshMeasuredSizeKB);
-    if (diff > 0.05) {
+    if (diff > 0.005) {
       return {
         ok: false,
-        message: `${packageName}: INTEGRITY FAIL — PERFORMANCE.md writes ${headWrittenSizeKB} KB but fresh measurement is ${freshMeasuredSizeKB.toFixed(1)} KB`,
+        message: `${packageName}: INTEGRITY FAIL — PERFORMANCE.md writes ${headWrittenSizeKB} KB but fresh measurement is ${freshMeasuredSizeKB.toFixed(2)} KB`,
       };
     }
     return {
@@ -164,8 +171,8 @@ function runCli() {
 
     let freshMeasuredSizeKB;
     try {
-      const { bytes } = measurePackage(pkgPath);
-      freshMeasuredSizeKB = bytes / 1024;
+      const { gzipBytes } = measurePackage(pkgPath);
+      freshMeasuredSizeKB = gzipBytes / 1024;
     } catch (error) {
       fail(
         `${packageName}: could not measure package (${error.message}) — run "pnpm run build" first`

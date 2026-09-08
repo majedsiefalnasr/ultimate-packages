@@ -156,8 +156,16 @@ test("parsePhase10SizeTable extracts package sizes only from the Phase 10 sectio
 
   const sizes = parsePhase10SizeTable(markdown);
 
-  assert.strictEqual(sizes.get("uix-utils"), 100.0);
-  assert.strictEqual(sizes.get("ng"), 225.8);
+  assert.strictEqual(
+    sizes.get("uix-utils"),
+    13.3,
+    "must read the gzip column (index 3), not dist/ size (index 1)"
+  );
+  assert.strictEqual(
+    sizes.get("ng"),
+    19.67,
+    "must read the gzip column (index 3), not dist/ size (index 1)"
+  );
   assert.strictEqual(
     sizes.has("uix-motion"),
     false,
