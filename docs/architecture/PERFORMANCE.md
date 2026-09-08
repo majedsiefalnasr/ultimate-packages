@@ -61,3 +61,14 @@ Re-ran `node scripts/provenance/verify-tree-shaking.mjs` against the fresh Phase
 
 - No app in this monorepo consumes `@ultimate/ng`/`@ultimate/ng-core` via normal `node_modules` resolution yet — both the package-size and tree-shaking measurements above reflect the packages' own published `dist/` output, not an application bundle produced through a real Angular CLI build (which would run the Angular linker and could tree-shake differently; see Task 17's report caveat).
 - Numbers reflect the current single-barrel-export architecture (Task 12's correction — no per-component subpaths). Re-baseline after any future change to the package's entry-point structure.
+
+## Phase 10 — CI/Security/Quality Gates
+
+Phase 10 Track B extends `scripts/provenance/measure-package-size.mjs`'s package-discovery scope from the `uix*`/`ng*` prefix filter to an explicit, exhaustive list of all 17 publishable packages, and adds `scripts/provenance/validate-bundle-size.mjs` as a CI gate (R6) enforcing a merge-base-anchored, two-step baseline acceptance lifecycle (see the spec and `task-6-brief.md` for the full design). This table is the gate's baseline of record: `size:validate` reads each row's value at the merge-base commit and fails a source-changing PR whose fresh measurement regresses more than 15% relative to that value.
+
+This section is populated with real Stage-1 numbers by Task 8; the table below is header-only until then.
+
+### Package size
+
+| Package | dist/ size | dist/ file count | index.mjs gzip size |
+| ------- | ---------- | ---------------- | ------------------- |
