@@ -31,12 +31,14 @@
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs && node dist/bin-generate.mjs ../../skills dist/context",
     "test": "vitest run --typecheck",
+    "test:coverage": "vitest run --coverage --typecheck",
     "typecheck": "tsc --noEmit",
     "validate": "node dist/bin-validate.mjs ../../skills dist/context"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.2",
+    "@vitest/coverage-v8": "^2.1.8",
     "tsup": "^8.3.0",
     "typescript": "^5.9.3",
     "vitest": "^2.1.8"

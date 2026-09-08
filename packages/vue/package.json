@@ -55,20 +55,25 @@
       "default": "./dist/tooltip/index.mjs"
     }
   },
-  "files": ["dist", "README.md", "THIRD-PARTY-NOTICES.md"],
+  "files": [
+    "dist",
+    "README.md",
+    "THIRD-PARTY-NOTICES.md"
+  ],
   "dependencies": {
-    "@ultimate/vue-core": "workspace:*",
-    "@ultimate/uix-utils": "workspace:*",
-    "@ultimate/uix-styled": "workspace:*",
+    "@ultimate/uix-data": "workspace:*",
     "@ultimate/uix-motion": "workspace:*",
+    "@ultimate/uix-styled": "workspace:*",
     "@ultimate/uix-styles": "workspace:*",
-    "@ultimate/uix-data": "workspace:*"
+    "@ultimate/uix-utils": "workspace:*",
+    "@ultimate/vue-core": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
+    "@vitest/coverage-v8": "^2.1.8",
     "@vue/test-utils": "^2.4.6",
     "jsdom": "^25.0.1",
     "tsup": "^8.3.0",
@@ -81,6 +86,7 @@
   "scripts": {
     "build": "tsup && vue-tsc -p tsconfig.dts.json --declaration --emitDeclarationOnly --outDir dist && node scripts/rename-dts.mjs",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "vue-tsc --noEmit"
   }
 }

@@ -72,3 +72,12 @@ This section is populated with real Stage-1 numbers by Task 8; the table below i
 
 | Package | dist/ size | dist/ file count | index.mjs gzip size |
 | ------- | ---------- | ---------------- | ------------------- |
+
+### Coverage
+
+Task 7 adds `@vitest/coverage-v8` to all 15 Vitest-native packages (`coverage: { provider: "v8", reporter: ["text", "json-summary"], reportsDirectory: "./coverage" }` in each `vitest.config.ts`) plus `coverage`/`coverageReporters` on `ng`/`ng-core`'s `angular.json` `test` target (the Angular-idiomatic equivalent, invoked via `ng test --project=<name> --coverage`, using the same underlying Vitest 4.0.8 coverage engine `@angular/build` bundles), and adds `scripts/provenance/validate-coverage.mjs` as a CI gate (R7) enforcing the identical merge-base-anchored, two-step baseline acceptance lifecycle as R6 (see `task-6-brief.md`/`task-7-brief.md`). This table is the gate's baseline of record: `coverage:validate` reads each row's `line-coverage %` value at the merge-base commit and fails a source-changing PR whose fresh measurement drops more than 2 percentage points (absolute delta) below it.
+
+This section is populated with real Stage-1 numbers by Task 8; the table below is header-only until then.
+
+| Package | line-coverage % |
+| ------- | --------------- |

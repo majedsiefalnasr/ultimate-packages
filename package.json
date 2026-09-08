@@ -27,7 +27,9 @@
     "license:validate": "license-checker-rseidelsohn --onlyAllow \"MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;0BSD;CC0-1.0\" --excludePackagesStartingWith \"@ultimate/\" --excludePrivatePackages",
     "sast:validate": "node scripts/provenance/validate-sast-baseline.mjs",
     "size:measure": "node scripts/provenance/measure-package-size.mjs",
-    "size:validate": "node scripts/provenance/validate-bundle-size.mjs --base-ref origin/main"
+    "size:validate": "node scripts/provenance/validate-bundle-size.mjs --base-ref origin/main",
+    "coverage:measure": "pnpm -r --if-present run test:coverage",
+    "coverage:validate": "node scripts/provenance/validate-coverage.mjs --base-ref origin/main"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
