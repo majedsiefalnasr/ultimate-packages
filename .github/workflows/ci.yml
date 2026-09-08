@@ -42,6 +42,9 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Validate generated artifacts
+        run: pnpm run validate
+
       - name: Test
         run: pnpm run test
 
@@ -65,3 +68,6 @@ jobs:
 
       - name: MCP package boundary validation
         run: pnpm run boundary:validate:mcp
+
+      - name: AI package boundary validation
+        run: pnpm run boundary:validate:ai
