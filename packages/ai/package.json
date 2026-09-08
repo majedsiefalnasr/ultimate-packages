@@ -31,7 +31,8 @@
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs && node dist/bin-generate.mjs ../../skills dist/context",
     "test": "vitest run --typecheck",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate": "node dist/bin-validate.mjs ../../skills dist/context"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

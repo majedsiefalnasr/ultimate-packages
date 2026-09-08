@@ -127,6 +127,7 @@ frameworks: [ng, react, vue]
 Roles: table, rowgroup, row, columnheader
 ARIA attributes: aria-sort, aria-selected
 Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the currently-rendered virtualized window, not the full logical dataset, when virtualScroll/virtualScrollerOptions is active — a row outside the window is not in the DOM to focus. This is a real, intentional, already-shipped limitation of Table's Scroller composition, documented inline at the row-keydown handler in all three frameworks' own source.
+
 <!-- ultimate:generated:end section="accessibility-guidance" -->
 
 ## Related components

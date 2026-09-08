@@ -107,10 +107,25 @@ export function generateSkillFile(
   const parts: string[] = [frontmatter, `# ${component.name}\n`, "## When to use\n"];
 
   for (const key of SECTION_KEYS) {
+    const body = renderSection(key, component, frameworks);
     parts.push(SECTION_HEADINGS[key]);
-    parts.push(startMarker(key));
-    parts.push(renderSection(key, component, frameworks));
-    parts.push(endMarker(key));
+    // A blank line always separates the marker comment from its content,
+    // and content from the end marker — Prettier's Markdown formatter
+    // requires a blank line between an HTML comment and a following ATX
+    // heading, and generated section bodies routinely start with one
+    // (e.g. renderAllowedApis's "### <framework> props"). An empty body
+    // gets exactly one blank line between the two markers (Prettier
+    // collapses runs of blank lines to one, so a non-empty body's two
+    // independent blank-line joins would differ from an empty body's
+    // single blank line if not handled explicitly here). Keeping this
+    // generator's own output a fixed point under `pnpm run format` means
+    // regenerating never again produces bytes the repo's own
+    // `format:check` disagrees with.
+    const block =
+      body === ""
+        ? `${startMarker(key)}\n\n${endMarker(key)}`
+        : `${startMarker(key)}\n\n${body}\n\n${endMarker(key)}`;
+    parts.push(block);
   }
 
   parts.push("## Framework-specific guidance\n");
@@ -198,7 +213,14 @@ export function regenerateSkillFile(
   for (const key of orderedByPosition) {
     const { start, end } = located.positions[key];
     const newBody = renderSection(key, component, frameworks);
-    content = content.slice(0, start) + `\n${newBody}\n` + content.slice(end);
+    // Same shape generateSkillFile uses (§ its own comment): a single
+    // blank line for an empty body, or a blank line on both sides of a
+    // non-empty body. Regeneration must produce byte-identical
+    // marker-block content to a fresh generation for the same component,
+    // or the two code paths would silently diverge from each other and
+    // from what `pnpm run format` accepts.
+    const replacement = newBody === "" ? "\n\n" : `\n\n${newBody}\n\n`;
+    content = content.slice(0, start) + replacement + content.slice(end);
   }
 
   const frontmatterMatch = /^---\n([\s\S]*?\n)---\n/.exec(content);

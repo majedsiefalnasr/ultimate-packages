@@ -44,28 +44,37 @@ function renderAntiPatterns(component: ComponentMetadata): string {
 }
 
 function renderAllowedApis(component: ComponentMetadata, frameworks: readonly Framework[]): string {
-  const lines: string[] = [];
+  // Each "### <heading>" block is pushed as its own group and the groups
+  // are joined with a blank line between them — this is what makes the
+  // generator's own output a Prettier-Markdown fixed point (Prettier
+  // requires a blank line between a preceding list and a following ATX
+  // heading). Regenerating must never again produce content the repo's own
+  // `format:check` disagrees with, since that byte content is exactly what
+  // the fidelity validator compares against.
+  const groups: string[] = [];
   for (const framework of frameworks) {
     const frameworkApi = component.api?.[framework];
     if (frameworkApi === undefined) {
       continue;
     }
     if (frameworkApi.props.length > 0) {
-      lines.push(`### ${framework} props`);
-      for (const prop of frameworkApi.props) {
+      const propItems = frameworkApi.props.map((prop) => {
         const requiredLabel = prop.required ? " (required)" : "";
         const defaultLabel = prop.default !== undefined ? ` (default: ${prop.default})` : "";
-        lines.push(`- \`${prop.name}\`: ${prop.type}${requiredLabel}${defaultLabel}`);
-      }
+        return `- \`${prop.name}\`: ${prop.type}${requiredLabel}${defaultLabel}`;
+      });
+      // Blank line between the "### <heading>" and its list — Prettier
+      // requires a blank line between an ATX heading and a following list.
+      groups.push(`### ${framework} props\n\n${propItems.join("\n")}`);
     }
     if (frameworkApi.events.length > 0) {
-      lines.push(`### ${framework} events`);
-      for (const event of frameworkApi.events) {
-        lines.push(`- \`${event.frameworkName}\` (${event.mechanism}): ${event.semanticId}`);
-      }
+      const eventItems = frameworkApi.events.map(
+        (event) => `- \`${event.frameworkName}\` (${event.mechanism}): ${event.semanticId}`
+      );
+      groups.push(`### ${framework} events\n\n${eventItems.join("\n")}`);
     }
   }
-  return lines.join("\n");
+  return groups.join("\n\n");
 }
 
 function renderAccessibilityGuidance(component: ComponentMetadata): string {

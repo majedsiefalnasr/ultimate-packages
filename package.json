@@ -9,6 +9,7 @@
   "scripts": {
     "build": "pnpm -r --if-present run build",
     "test": "pnpm -r --if-present run test",
+    "validate": "pnpm -r --if-present run validate",
     "test:scripts": "node --test scripts/provenance/*.test.mjs",
     "lint": "eslint .",
     "typecheck": "pnpm -r --if-present run typecheck",
