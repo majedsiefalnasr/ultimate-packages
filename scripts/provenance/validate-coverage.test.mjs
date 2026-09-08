@@ -133,29 +133,33 @@ test("baseline-only PR, dishonest value: integrity check fails when the written 
 
 // --- Absolute-not-relative confirmation test ------------------------------
 //
-// baseline 10.0%, current 8.5% — a 1.5-point ABSOLUTE drop (must pass,
-// under the 2-point threshold), which is ALSO a 15% RELATIVE drop
-// ((10.0-8.5)/10.0 = 0.15). If the implementation mistakenly reused R6's
+// baseline 10.0%, current 8.3% — a 1.7-point ABSOLUTE drop (must pass,
+// under the 2-point threshold), which is ALSO a 17% RELATIVE drop
+// ((10.0-8.3)/10.0 = 0.17). If the implementation mistakenly reused R6's
 // relative-percentage formula ((old-new)/old > 0.15) instead of R7's
 // absolute-delta formula (old-new > 2.0), this exact fixture would
-// incorrectly fail (a 15% relative drop hits R6's >15% threshold). This
+// incorrectly fail (a 17% relative drop clears R6's strict >15%
+// threshold with margin — deliberately not the 8.5% boundary case, which
+// sits at exactly 15% relative and would pass even under a relative-
+// formula mutant due to R6's strict `>` comparison, making it a
+// non-discriminating fixture; see Task 7's task-reviewer finding). This
 // is a direct regression test against exactly the terminology bug the
 // spec's Minor review finding fixed for R7 — it must never silently
 // reappear in the implementation.
 
-test("absolute-not-relative confirmation: 10.0% -> 8.5% (1.5-point absolute drop, ALSO a 15% relative drop) passes under the absolute-delta formula", () => {
+test("absolute-not-relative confirmation: 10.0% -> 8.3% (1.7-point absolute drop, ALSO a 17% relative drop) passes under the absolute-delta formula", () => {
   const result = evaluatePackageCoverage({
     packageName: "synthetic-pkg",
     isBaselineOnly: false,
     mergeBasePct: 10.0,
-    freshMeasuredPct: 8.5,
+    freshMeasuredPct: 8.3,
     headWrittenPct: undefined,
   });
 
   assert.strictEqual(
     result.ok,
     true,
-    "a 1.5-point absolute drop must pass R7's 2-point absolute threshold, even though it is also a 15% relative drop that would fail R6's relative formula — proves evaluatePackageCoverage() uses (mergeBasePct - freshMeasuredPct), never a relative ratio"
+    "a 1.7-point absolute drop must pass R7's 2-point absolute threshold, even though it is also a 17% relative drop that would fail R6's relative formula — proves evaluatePackageCoverage() uses (mergeBasePct - freshMeasuredPct), never a relative ratio"
   );
   assert.match(result.message, /OK/);
 });
