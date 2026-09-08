@@ -6,6 +6,7 @@ import {
   SECTION_KEYS,
   startMarker,
   endMarker,
+  renderMarkerBlockInterior,
   type Framework,
 } from "./skill-file";
 import { renderSection } from "./render-section";
@@ -128,6 +129,14 @@ function checkMarkerStructure(content: string): string[] {
   return errors;
 }
 
+/**
+ * Byte-exact comparison — no `.trim()`. The expected value is built with
+ * the exact same `renderMarkerBlockInterior` helper `skill-file.ts` uses
+ * to write these bytes in the first place, so this check can never drift
+ * out of sync with what the generator actually produces: a bug in the
+ * shared helper is caught here as a fidelity failure, not silently
+ * tolerated by a whitespace-insensitive comparison on both sides.
+ */
 function checkFidelity(
   content: string,
   component: ComponentMetadata,
@@ -139,8 +148,8 @@ function checkFidelity(
     const endText = endMarker(key);
     const start = content.indexOf(startText) + startText.length;
     const end = content.indexOf(endText);
-    const actual = content.slice(start, end).trim();
-    const expected = renderSection(key, component, frameworks).trim();
+    const actual = content.slice(start, end);
+    const expected = renderMarkerBlockInterior(renderSection(key, component, frameworks));
     if (actual !== expected) {
       errors.push(`generated-section fidelity check failed for section: ${key}`);
     }

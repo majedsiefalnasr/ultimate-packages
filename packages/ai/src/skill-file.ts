@@ -28,6 +28,26 @@ export function endMarker(section: SectionKey): string {
   return `<!-- ultimate:generated:end section="${section}" -->`;
 }
 
+/**
+ * The exact byte content between a section's start/end markers, for a
+ * given body — i.e. `startMarker(section)` + this function's return value
+ * + `endMarker(section)` is a complete marker block. Exported and used by
+ * BOTH `generateSkillFile`/`regenerateSkillFile` (to write it) and
+ * `validate.ts`'s `checkFidelity` (to compare against it) so the two can
+ * never independently drift out of sync — a bug in this one function is a
+ * single, testable place, not two copies that might disagree. A blank
+ * line always separates the marker comment from its content, and content
+ * from the end marker — Prettier's Markdown formatter requires a blank
+ * line between an HTML comment and a following ATX heading, and generated
+ * section bodies routinely start with one (e.g. renderAllowedApis's
+ * "### <framework> props"). An empty body gets exactly one blank line
+ * between the two markers, not two (Prettier collapses runs of blank
+ * lines to one).
+ */
+export function renderMarkerBlockInterior(body: string): string {
+  return body === "" ? "\n\n" : `\n\n${body}\n\n`;
+}
+
 interface Frontmatter {
   component: string;
   metadataVersion: number;
@@ -108,28 +128,28 @@ export function generateSkillFile(
 
   for (const key of SECTION_KEYS) {
     const body = renderSection(key, component, frameworks);
-    parts.push(SECTION_HEADINGS[key]);
-    // A blank line always separates the marker comment from its content,
-    // and content from the end marker — Prettier's Markdown formatter
-    // requires a blank line between an HTML comment and a following ATX
-    // heading, and generated section bodies routinely start with one
-    // (e.g. renderAllowedApis's "### <framework> props"). An empty body
-    // gets exactly one blank line between the two markers (Prettier
-    // collapses runs of blank lines to one, so a non-empty body's two
-    // independent blank-line joins would differ from an empty body's
-    // single blank line if not handled explicitly here). Keeping this
-    // generator's own output a fixed point under `pnpm run format` means
-    // regenerating never again produces bytes the repo's own
-    // `format:check` disagrees with.
-    const block =
-      body === ""
-        ? `${startMarker(key)}\n\n${endMarker(key)}`
-        : `${startMarker(key)}\n\n${body}\n\n${endMarker(key)}`;
-    parts.push(block);
+    // Every pushed part below carries its OWN trailing "\n" explicitly —
+    // parts.join("\n") only inserts one newline between array elements,
+    // which is not a blank line. Relying on join() alone to produce blank
+    // lines was the exact bug a prior fix pass missed: it corrected the
+    // marker-to-body spacing but left `SECTION_HEADINGS[key]` and `block`
+    // without their own trailing newline, so join()'s single "\n" between
+    // them produced NO blank line between a heading and its marker, or
+    // between an end marker and the next heading — Prettier-dirty output
+    // that the regenerate-path fix never exercised (regenerateSkillFile
+    // never touches headings). Every part here must end in "\n" so this
+    // fresh-generation path is independently a Prettier fixed point, not
+    // dependent on join() to supply spacing it does not supply.
+    parts.push(`${SECTION_HEADINGS[key]}\n`);
+    parts.push(`${startMarker(key)}${renderMarkerBlockInterior(body)}${endMarker(key)}\n`);
   }
 
   parts.push("## Framework-specific guidance\n");
-  return parts.join("\n") + "\n";
+  // parts.join("\n") already ends each pushed part in its own trailing
+  // "\n", so the final "## Framework-specific guidance\n" piece already
+  // supplies the file's own trailing newline — no additional "+ \"\\n\""
+  // here, or the file ends with a blank line Prettier trims away.
+  return parts.join("\n");
 }
 
 const malformedResult = (error: string): { error: string } => ({ error });
@@ -213,14 +233,12 @@ export function regenerateSkillFile(
   for (const key of orderedByPosition) {
     const { start, end } = located.positions[key];
     const newBody = renderSection(key, component, frameworks);
-    // Same shape generateSkillFile uses (§ its own comment): a single
-    // blank line for an empty body, or a blank line on both sides of a
-    // non-empty body. Regeneration must produce byte-identical
-    // marker-block content to a fresh generation for the same component,
-    // or the two code paths would silently diverge from each other and
-    // from what `pnpm run format` accepts.
-    const replacement = newBody === "" ? "\n\n" : `\n\n${newBody}\n\n`;
-    content = content.slice(0, start) + replacement + content.slice(end);
+    // Same `renderMarkerBlockInterior` helper generateSkillFile uses —
+    // regeneration must produce byte-identical marker-block content to a
+    // fresh generation for the same component, or the two code paths
+    // could silently diverge from each other and from what
+    // `pnpm run format` accepts.
+    content = content.slice(0, start) + renderMarkerBlockInterior(newBody) + content.slice(end);
   }
 
   const frontmatterMatch = /^---\n([\s\S]*?\n)---\n/.exec(content);

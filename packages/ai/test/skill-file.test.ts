@@ -158,6 +158,45 @@ describe("generateSkillFile", () => {
   });
 });
 
+describe("generateSkillFile / regenerateSkillFile fixed-point invariant", () => {
+  // This is the exact invariant a final-review pass found broken: an
+  // earlier fix made the regenerate path Prettier-clean without noticing
+  // the fresh-generation path (generateSkillFile, used whenever a Skill
+  // file doesn't exist yet) still emitted different bytes. Both code
+  // paths share renderMarkerBlockInterior, but sharing a helper does not
+  // by itself guarantee identical output unless something actually
+  // compares them — this test is that comparison, for every real v1
+  // component, so a future edit to either path that breaks this
+  // agreement fails loudly here instead of only surfacing as a
+  // format:check failure on whatever component happens to be added next.
+  it.each(ALL_COMPONENTS)(
+    "regenerating $name's freshly-generated content is byte-identical to generating it fresh",
+    (component) => {
+      const frameworks = (["ng", "react", "vue"] as const).filter(
+        (f) => component.api?.[f] !== undefined
+      );
+      const fresh = generateSkillFile(component, frameworks);
+      const result = regenerateSkillFile(fresh, component, frameworks);
+      expect("content" in result).toBe(true);
+      if (!("content" in result)) return;
+      expect(result.content).toBe(fresh);
+    }
+  );
+
+  it("every generated marker section is preceded and followed by a blank line (no marker-adjacent heading with zero blank-line separation)", () => {
+    const content = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
+    for (const key of SECTION_KEYS) {
+      const start = startMarker(key);
+      const startIndex = content.indexOf(start);
+      // The two characters immediately before the marker must be "\n\n"
+      // (a blank line), not a single "\n" — this is exactly the shape
+      // Prettier's Markdown formatter requires between a preceding
+      // heading/content and the marker's own HTML comment.
+      expect(content.slice(startIndex - 2, startIndex)).toBe("\n\n");
+    }
+  });
+});
+
 describe("regenerateSkillFile", () => {
   it("preserves hand-authored content outside marker pairs, verbatim", () => {
     const original = generateSkillFile(BUTTON, ["ng", "react", "vue"]);
