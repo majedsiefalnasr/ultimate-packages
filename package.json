@@ -29,7 +29,8 @@
     "size:measure": "node scripts/provenance/measure-package-size.mjs",
     "size:validate": "node scripts/provenance/validate-bundle-size.mjs --base-ref origin/main",
     "coverage:measure": "pnpm -r --if-present run test:coverage",
-    "coverage:validate": "node scripts/provenance/validate-coverage.mjs --base-ref origin/main"
+    "coverage:validate": "node scripts/provenance/validate-coverage.mjs --base-ref origin/main",
+    "integrity:pack-install": "node scripts/provenance/pack-install-integrity.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
