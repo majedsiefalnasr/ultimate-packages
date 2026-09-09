@@ -78,6 +78,7 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "jsdom": "^25.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -88,6 +89,7 @@
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit"
   }
 }

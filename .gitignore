@@ -12,3 +12,4 @@ dist/
 .angular/
 out-tsc/
 .superpowers/
+coverage/

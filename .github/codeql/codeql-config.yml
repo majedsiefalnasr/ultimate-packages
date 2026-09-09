@@ -1,0 +1,11 @@
+name: "Ultimate Track B SAST config"
+queries:
+  - uses: security-extended
+paths:
+  - packages/*/src
+  - scripts
+paths-ignore:
+  - "**/dist/**"
+  - "**/node_modules/**"
+  - "skills/**"
+  - "docs/**"
