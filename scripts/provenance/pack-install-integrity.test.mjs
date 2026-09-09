@@ -92,11 +92,28 @@ test(
         "@ultimate/uix-utils",
       ]
     );
+    // Genuinely discriminating ordering checks (not "ng-core sorts before
+    // ng-plus-one", which is true for almost any ordering since ng is
+    // always last): ng-core is a direct dependency of ng and must sort
+    // strictly before it; uix-utils is a transitive dependency of every
+    // other member here and must sort before all of them.
+    const index = (name) => result.sortedMembers.indexOf(name);
     assert.ok(
-      result.sortedMembers.indexOf("@ultimate/ng-core") <
-        result.sortedMembers.indexOf("@ultimate/ng") + 1,
-      "topological sort must place @ultimate/ng-core before or as part of packing @ultimate/ng's own dependency closure"
+      index("@ultimate/ng-core") < index("@ultimate/ng"),
+      "@ultimate/ng-core (a direct dependency of @ultimate/ng) must be packed strictly before @ultimate/ng itself"
     );
+    for (const dependent of [
+      "@ultimate/ng-core",
+      "@ultimate/uix-styled",
+      "@ultimate/uix-motion",
+      "@ultimate/uix-data",
+      "@ultimate/ng",
+    ]) {
+      assert.ok(
+        index("@ultimate/uix-utils") < index(dependent),
+        `@ultimate/uix-utils (a transitive dependency of every other member here) must be packed before ${dependent}`
+      );
+    }
   },
   { timeout: 60_000 }
 );

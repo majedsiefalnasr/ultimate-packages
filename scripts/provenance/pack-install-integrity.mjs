@@ -216,9 +216,7 @@ export function runPackInstallIntegrity(targetPkgNameArg) {
   const closure = getTransitiveClosure(targetName);
   const members = [targetName, ...closure];
 
-  const sortedMembers = topologicalSort(members, (m) =>
-    m === targetName ? getPackageDependenciesFromDisk(targetName) : getPackageDependenciesFromDisk(m)
-  );
+  const sortedMembers = topologicalSort(members, getPackageDependenciesFromDisk);
 
   const packDestDir = mkdtempSync(join(tmpdir(), "ultimate-pack-install-pack-"));
   const consumerDir = mkdtempSync(join(tmpdir(), "ultimate-pack-install-consumer-"));
