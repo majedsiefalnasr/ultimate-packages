@@ -6,6 +6,12 @@
 // "warning"-level SARIF result whose partialFingerprints do not match a
 // baseline entry is a new finding and fails the check; "note"-level results
 // are below spec §4 R3's severity threshold and are skipped entirely.
+// Severity resolution falls back from a result's own `level` field to its
+// rule's `defaultConfiguration.level` (see buildRuleLevelLookup below) —
+// required because real `codeql database analyze` output leaves
+// `result.level` unset on every result, encoding severity at the rule
+// level instead; confirmed against a genuine scan of this repository, not
+// assumed from the SARIF spec alone.
 //
 // Usage: node scripts/provenance/validate-sast-baseline.mjs <sarif-path>
 //
@@ -82,6 +88,32 @@ function resultLocation(result) {
   return location || "<unknown location>";
 }
 
+// Real CodeQL CLI output (confirmed empirically against a genuine
+// `codeql database analyze` run, not assumed from the SARIF spec alone)
+// does NOT set `result.level` on individual results — every real result
+// has `level: undefined`. The actual per-rule severity lives at
+// `run.tool.driver.rules[i].defaultConfiguration.level` instead. This
+// function builds a ruleId -> level lookup from the run's declared rules
+// and falls back to it when a result carries no per-result level of its
+// own, so a real scan's genuine error/warning findings are not silently
+// treated as unqualified (which would make every real finding invisible
+// to this validator, defeating its entire purpose). A result's own
+// `level`, when present, still takes precedence — this is additive
+// fallback behavior, not a replacement for the SARIF-spec-correct
+// per-result field.
+function buildRuleLevelLookup(run) {
+  const lookup = new Map();
+  for (const rule of run.tool?.driver?.rules || []) {
+    const level = rule.defaultConfiguration?.level;
+    if (level) lookup.set(rule.id, level);
+  }
+  return lookup;
+}
+
+function resolveResultLevel(result, ruleLevelLookup) {
+  return result.level || ruleLevelLookup.get(result.ruleId);
+}
+
 // `pnpm run sast:validate -- <sarif-path>` (Task 9's CI invocation shape,
 // per task-4-brief.md) forwards the literal "--" separator token itself
 // into argv alongside the real path, rather than stripping it — confirmed
@@ -107,8 +139,10 @@ let qualifyingCount = 0;
 
 for (const run of runs) {
   const results = run.results || [];
+  const ruleLevelLookup = buildRuleLevelLookup(run);
   for (const result of results) {
-    if (!QUALIFYING_LEVELS.has(result.level)) continue;
+    const level = resolveResultLevel(result, ruleLevelLookup);
+    if (!QUALIFYING_LEVELS.has(level)) continue;
     qualifyingCount++;
 
     if (isGrandfathered(result, baselineFingerprints)) continue;
