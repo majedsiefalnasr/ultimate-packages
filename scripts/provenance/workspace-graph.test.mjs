@@ -8,7 +8,12 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { getDirectDependencies, getTransitiveClosure, getAllPackageNames } from "./workspace-graph.mjs";
+import {
+  getDirectDependencies,
+  getTransitiveClosure,
+  getAllPackageNames,
+  getReverseTransitiveClosure,
+} from "./workspace-graph.mjs";
 
 test("getDirectDependencies('@ultimate/uix-utils') returns an empty array (a real leaf package)", () => {
   assert.deepEqual(getDirectDependencies("@ultimate/uix-utils"), []);
@@ -104,6 +109,73 @@ test("getTransitiveClosure('@ultimate/component-schema') is empty (a real leaf w
 
 test("getTransitiveClosure throws for an unknown package name", () => {
   assert.throws(() => getTransitiveClosure("@ultimate/does-not-exist"), /unknown package/);
+});
+
+// --- getReverseTransitiveClosure ----------------------------------------
+//
+// Required by task-9-brief.md: R10's "Determine affected packages" CI step
+// needs the inverse of getTransitiveClosure — "which packages transitively
+// depend on X" rather than "what does X depend on" — so a changed package
+// expands to everything that could break downstream of it. These are real
+// assertions against this repo's actual, current packages/*/package.json
+// files, same convention as every other test in this file.
+
+test("getReverseTransitiveClosure('@ultimate/uix-utils') includes every real downstream package, since uix-utils is a foundational leaf almost everything depends on transitively", () => {
+  const dependents = getReverseTransitiveClosure("@ultimate/uix-utils").sort();
+  const expected = [
+    "@ultimate/ng",
+    "@ultimate/ng-core",
+    "@ultimate/react",
+    "@ultimate/react-core",
+    "@ultimate/themes",
+    "@ultimate/uix-data",
+    "@ultimate/uix-motion",
+    "@ultimate/uix-styled",
+    "@ultimate/vue",
+    "@ultimate/vue-core",
+  ].sort();
+  assert.deepEqual(dependents, expected);
+});
+
+test("getReverseTransitiveClosure is the true inverse of getTransitiveClosure: for every real package pair (a, b), b is in a's reverse closure iff a is in b's forward closure", () => {
+  const allNames = getAllPackageNames();
+  for (const a of allNames) {
+    const reverseOfA = new Set(getReverseTransitiveClosure(a));
+    for (const b of allNames) {
+      if (a === b) continue;
+      const forwardOfB = getTransitiveClosure(b);
+      assert.strictEqual(
+        reverseOfA.has(b),
+        forwardOfB.includes(a),
+        `expected ${b} in getReverseTransitiveClosure(${a}) to match ${a} in getTransitiveClosure(${b})`
+      );
+    }
+  }
+});
+
+test("getReverseTransitiveClosure('@ultimate/cli') is empty when nothing in the real graph depends on it", () => {
+  // cli is a real top-level consumer with zero dependents in the current
+  // graph — nothing else in packages/* declares a workspace:* dep on it
+  // (mirrors the getTransitiveClosure leaf case above, inverted direction).
+  const dependents = getReverseTransitiveClosure("@ultimate/cli");
+  for (const pkgName of getAllPackageNames()) {
+    if (pkgName === "@ultimate/cli") continue;
+    assert.ok(
+      !getTransitiveClosure(pkgName).includes("@ultimate/cli"),
+      `sanity check: ${pkgName} unexpectedly depends on cli in the real graph`
+    );
+  }
+  assert.deepEqual(dependents, []);
+});
+
+test("getReverseTransitiveClosure never includes pkgName itself", () => {
+  for (const pkgName of getAllPackageNames()) {
+    assert.ok(!getReverseTransitiveClosure(pkgName).includes(pkgName));
+  }
+});
+
+test("getReverseTransitiveClosure throws for an unknown package name", () => {
+  assert.throws(() => getReverseTransitiveClosure("@ultimate/does-not-exist"), /unknown package/);
 });
 
 test("getAllPackageNames includes all 17 real publishable packages", () => {

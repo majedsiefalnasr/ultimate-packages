@@ -30,6 +30,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Dependency vulnerability scan
+        run: pnpm run audit:validate
+
+      - name: License scan
+        run: pnpm run license:validate
+
+      - name: Install-script policy check
+        run: pnpm run install-script-policy:validate
+
       - name: Lint
         run: pnpm run lint
 
@@ -47,6 +56,46 @@ jobs:
 
       - name: Test
         run: pnpm run test
+
+      - name: Determine affected packages
+        id: affected
+        run: pnpm run affected:packages -- --base-ref origin/main
+
+      - name: Pack/install integrity (affected)
+        run: |
+          for pkg in ${{ steps.affected.outputs.packages }}; do
+            echo "::group::integrity:pack-install $pkg"
+            pnpm run integrity:pack-install -- "$pkg"
+            echo "::endgroup::"
+          done
+
+      - name: CodeQL init
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - name: CodeQL analyze
+        id: codeql-analyze
+        uses: github/codeql-action/analyze@v3
+
+      - name: Resolve SARIF path
+        run: echo "SARIF_PATH=${{ steps.codeql-analyze.outputs.sarif-output }}/javascript-typescript.sarif" >> "$GITHUB_ENV"
+
+      - name: SAST baseline validation
+        run: pnpm run sast:validate -- "$SARIF_PATH"
+
+      - name: Bundle-size measurement
+        run: pnpm run size:measure
+
+      - name: Bundle-size regression check
+        run: pnpm run size:validate -- --base-ref origin/main
+
+      - name: Coverage measurement
+        run: pnpm run coverage:measure
+
+      - name: Coverage regression check
+        run: pnpm run coverage:validate -- --base-ref origin/main
 
       - name: Provenance scripts self-tests
         run: pnpm run test:scripts

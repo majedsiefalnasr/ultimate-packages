@@ -131,3 +131,25 @@ export function getTransitiveClosure(pkgName) {
 export function getAllPackageNames() {
   return [...loadManifests().keys()];
 }
+
+// Reverse of getTransitiveClosure: every package that transitively depends
+// ON pkgName, rather than what pkgName itself depends on. Required by R10's
+// "Determine affected packages" CI step (Task 9) — a changed package must
+// expand to everything that could break downstream of it, not to its own
+// dependencies. Built by asking, for every other real package, whether
+// pkgName appears in that package's own forward getTransitiveClosure(); this
+// repo's workspace graph (17 packages) is small enough that recomputing the
+// forward closure per candidate is simple and fast enough that a separate
+// memoized reverse-adjacency structure would be premature.
+export function getReverseTransitiveClosure(pkgName) {
+  requireManifest(pkgName); // validates pkgName exists, same error as getDirectDependencies/getTransitiveClosure
+
+  const dependents = [];
+  for (const candidate of getAllPackageNames()) {
+    if (candidate === pkgName) continue;
+    if (getTransitiveClosure(candidate).includes(pkgName)) {
+      dependents.push(candidate);
+    }
+  }
+  return dependents;
+}
