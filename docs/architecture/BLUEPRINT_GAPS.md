@@ -208,10 +208,11 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-011 — No `SECURITY.md`, `CONTRIBUTING.md`, or `CHANGELOG.md` anywhere in the repository
-- **Status:** MISSING
+- **Status:** PARTIALLY RESOLVED
+  - _Rationale:_ SECURITY.md and CHANGELOG.md now exist (Track D, R1/R2), resolving that portion of the gap. Blueprint §21's Changesets-driven release-automation expectation remains genuinely open — Track C's scope, not resolved by Track D. CONTRIBUTING.md is explicitly excluded per DECISION-D4 (not a Blueprint requirement); this is a settled, closed decision, not outstanding work.
 - **Type:** Documentation, Production
 - **Blocking level:** MEDIUM
-- **Current evidence:** Direct `ls` check at repo root: none of the three files exist. `.changeset/config.json` exists and is configured (`changelog: "@changesets/cli/changelog"`), but no changeset has ever been consumed/released (all packages remain at `0.1.0`, no `CHANGELOG.md` generated).
+- **Current evidence:** `SECURITY.md` and `CHANGELOG.md` now exist at repo root (added by Phase 10 Track D); `CONTRIBUTING.md` does not (explicitly excluded, see Status rationale). `.changeset/config.json` exists and is configured (`changelog: "@changesets/cli/changelog"`), but no changeset has ever been consumed/released (all packages remain at `0.1.0`).
 - **Expected state:** Blueprint §29 requires a documented security process ("security advisories, patch releases"); §21 requires Changesets-driven release automation with changelogs.
 - **Why it matters:** Phase 10 (Production Hardening) explicitly lists "release automation," "operational documentation" as Definition-of-Done items (§40).
 - **What it blocks:** Phase 10 exit; any real npm publish workflow.
