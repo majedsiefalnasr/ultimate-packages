@@ -22,6 +22,7 @@
 import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
 import { getAllPackageNames, getReverseTransitiveClosure } from "./workspace-graph.mjs";
+import { getMergeBaseSha } from "./baseline-lib.mjs";
 
 function toShortName(scopedName) {
   return scopedName.replace(/^@ultimate\//, "");
@@ -75,9 +76,7 @@ export function computeAffectedPackages(changedFiles) {
 // --- Git-backed resolution -------------------------------------------------
 
 function getChangedFiles(baseRef) {
-  const mergeBaseSha = execFileSync("git", ["merge-base", baseRef, "HEAD"], {
-    encoding: "utf8",
-  }).trim();
+  const mergeBaseSha = getMergeBaseSha(baseRef);
   return execFileSync("git", ["diff", "--name-only", `${mergeBaseSha}...HEAD`], {
     encoding: "utf8",
   })

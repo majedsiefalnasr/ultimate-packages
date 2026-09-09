@@ -9,6 +9,9 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -93,13 +96,13 @@ jobs:
         run: pnpm run size:measure
 
       - name: Bundle-size regression check
-        run: pnpm run size:validate -- --base-ref origin/main
+        run: pnpm run size:validate
 
       - name: Coverage measurement
         run: pnpm run coverage:measure
 
       - name: Coverage regression check
-        run: pnpm run coverage:validate -- --base-ref origin/main
+        run: pnpm run coverage:validate
 
       - name: Provenance scripts self-tests
         run: pnpm run test:scripts
