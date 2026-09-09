@@ -10,7 +10,7 @@ This repository uses [Changesets](https://github.com/changesets/changesets) to m
 
 **Important:** The five Keep-a-Changelog categories (`Added`, `Changed`, `Fixed`, `Removed`, `Security`) documented in this file represent a manual, human-facing organizational layer. This is **NOT the output shape** of the installed `@changesets/changelog-git` generator, which emits flat per-changeset bullet lines with no category grouping.
 
-Reconciling the manual Keep-a-Changelog category convention with the generator's actual flat-bullet output — whether through manual curation after release, swapping to a different changelog generator (e.g., `@changesets/changelog-github`), or writing a custom changelog function — is a design decision owned by **Track C** of the Phase 10 initiative and is explicitly out of scope for this Task.
+Reconciling the manual Keep-a-Changelog category convention with the generator's actual flat-bullet output — whether through manual curation after release, swapping to a different changelog generator (e.g., `@changesets/changelog-github`), or writing a custom changelog function — is a design decision owned by the project's release-automation work and is explicitly out of scope for this document.
 
 ## Categories (Manual Convention)
 
@@ -28,4 +28,4 @@ No unreleased changes yet.
 
 ---
 
-**Ownership note:** Entries below the `## [Unreleased]` section header are populated exclusively by the Changesets release flow (implemented in Phase 10 Track C) once it is active. Changelog entries must never be added or edited manually outside the Changesets-driven release automation workflow.
+**Ownership note:** Entries below the `## [Unreleased]` section header are populated exclusively by the Changesets release flow once it is active. Changelog entries must never be added or edited manually outside the Changesets-driven release automation workflow.

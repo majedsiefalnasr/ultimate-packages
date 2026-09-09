@@ -67,7 +67,7 @@ There is no automated advisory-publication mechanism. When a confirmed vulnerabi
 
 1. A patch is prepared and submitted as a normal pull request through the repository.
 2. The patch must pass all CI gates, including the security gates mentioned above.
-3. Once merged, the fix is noted in the project's change history (CHANGELOG.md once Track C exists, or in PR and commit history until then).
+3. Once merged, the fix is noted in the project's change history (CHANGELOG.md once release automation is in place, or in PR and commit history until then).
 4. Users are expected to update to the patched version when it is available.
 
 There is no guaranteed response time, SLA, or formal coordination process beyond these steps.
