@@ -6,7 +6,7 @@ This changelog is maintained according to the [Keep a Changelog](https://keepach
 
 ## Changesets Integration
 
-This repository uses [Changesets](https://github.com/changesets/changesets) to manage versioning and changelog updates. The configuration in `.changeset/config.json` specifies `@changesets/changelog-git` as the changelog generator.
+This repository uses [Changesets](https://github.com/changesets/changesets) to manage versioning and changelog updates. The configuration in `.changeset/config.json` specifies `@changesets/cli/changelog` as the changelog generator, which resolves to (re-exports) `@changesets/changelog-git`.
 
 **Important:** The five Keep-a-Changelog categories (`Added`, `Changed`, `Fixed`, `Removed`, `Security`) documented in this file represent a manual, human-facing organizational layer. This is **NOT the output shape** of the installed `@changesets/changelog-git` generator, which emits flat per-changeset bullet lines with no category grouping.
 
