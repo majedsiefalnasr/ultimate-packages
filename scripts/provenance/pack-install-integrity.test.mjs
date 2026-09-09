@@ -31,10 +31,7 @@ test("topologicalSort orders dependencies before dependents", () => {
 test("topologicalSort throws on a cycle", () => {
   const members = ["a", "b"];
   const deps = { a: ["b"], b: ["a"] };
-  assert.throws(
-    () => topologicalSort(members, (m) => deps[m]),
-    /cycle detected/
-  );
+  assert.throws(() => topologicalSort(members, (m) => deps[m]), /cycle detected/);
 });
 
 // --- Real run #1 (required verification case): @ultimate/ai, the
@@ -54,10 +51,10 @@ test(
     const elapsedMs = Date.now() - startedAt;
 
     assert.equal(result.targetName, "@ultimate/ai");
-    assert.deepEqual(
-      [...result.closureMembers].sort(),
-      ["@ultimate/component-metadata", "@ultimate/component-schema"]
-    );
+    assert.deepEqual([...result.closureMembers].sort(), [
+      "@ultimate/component-metadata",
+      "@ultimate/component-schema",
+    ]);
     assert.ok(
       result.checkedPaths.length > 0,
       "must have derived at least one real path from @ultimate/ai's own package.json to check"
@@ -80,18 +77,15 @@ test(
     const result = runPackInstallIntegrity("ng");
 
     assert.equal(result.targetName, "@ultimate/ng");
-    assert.deepEqual(
-      [...result.closureMembers].sort(),
-      [
-        "@ultimate/ng-core",
-        "@ultimate/themes",
-        "@ultimate/uix-data",
-        "@ultimate/uix-motion",
-        "@ultimate/uix-styled",
-        "@ultimate/uix-styles",
-        "@ultimate/uix-utils",
-      ]
-    );
+    assert.deepEqual([...result.closureMembers].sort(), [
+      "@ultimate/ng-core",
+      "@ultimate/themes",
+      "@ultimate/uix-data",
+      "@ultimate/uix-motion",
+      "@ultimate/uix-styled",
+      "@ultimate/uix-styles",
+      "@ultimate/uix-utils",
+    ]);
     // Genuinely discriminating ordering checks (not "ng-core sorts before
     // ng-plus-one", which is true for almost any ordering since ng is
     // always last): ng-core is a direct dependency of ng and must sort
@@ -176,11 +170,10 @@ test(
         )
       );
 
-      const tarballPath = execFileSync(
-        "pnpm",
-        ["pack", "--pack-destination", packDestDir],
-        { cwd: fixtureRoot, encoding: "utf8" }
-      ).trim();
+      const tarballPath = execFileSync("pnpm", ["pack", "--pack-destination", packDestDir], {
+        cwd: fixtureRoot,
+        encoding: "utf8",
+      }).trim();
 
       writeFileSync(
         join(consumerDir, "package.json"),

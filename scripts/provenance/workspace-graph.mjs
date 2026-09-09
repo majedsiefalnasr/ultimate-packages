@@ -52,11 +52,6 @@ function extractWorkspaceDeps(depsObject) {
     .map(([name]) => name);
 }
 
-function readPackageJson(pkgDir) {
-  const pkgJsonPath = join(PACKAGES_DIR, pkgDir, "package.json");
-  return JSON.parse(readFileSync(pkgJsonPath, "utf8"));
-}
-
 // Lazily built, memoized once per process: name -> { dependencies, devDependencies }
 // (each already reduced to just the workspace:* dep-name arrays).
 let manifestsByName = null;
