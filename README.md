@@ -31,6 +31,8 @@ pnpm run build
 pnpm run test
 ```
 
+See `SECURITY.md` for security policies and vulnerability reporting. See `CHANGELOG.md` for release notes and version history.
+
 ## Provenance
 
 Every Prime-derived source area incorporated into this repository is recorded in `docs/architecture/PROVENANCE.md`, including exact source version, commit SHA (or tarball integrity hash where no public commit exists), original license, and copyright holder. See that file before incorporating any new Prime-derived source.
