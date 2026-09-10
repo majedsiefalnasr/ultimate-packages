@@ -393,3 +393,41 @@ test("there is no third CLI mode: an unrecognized flag fails closed instead of w
 
   rmSync(workDir, { recursive: true, force: true });
 });
+
+// --- Absolute glob path (Task 5 review follow-up: resolveGlob previously
+// dropped the leading "/" on an absolute pattern, silently reducing it to a
+// relative path and resolving zero matches — a false-negative risk for a
+// gate whose whole job is to catch violations. Regression-tested here so a
+// future refactor of resolveGlob can't silently reintroduce it.) ----------
+
+test("--check resolves an absolute glob pattern correctly, not just relative ones", () => {
+  const workDir = makeWorkDir("a11y-baseline-absolute-glob-");
+  writeBaseline(workDir, emptyBaselineMarkdown());
+
+  const ngDir = join(workDir, "test-results", "accessibility", "ng", "chromium");
+  writeEnvelope(
+    ngDir,
+    "ng-button--default.json",
+    envelope({
+      componentStoryId: "ng-button--default",
+      framework: "ng",
+      violations: [violation({ id: "color-contrast", targets: [["button.primary"]] })],
+    })
+  );
+
+  const absoluteGlob = join(workDir, "test-results", "accessibility", "**", "*.json");
+  const result = runScript(workDir, ["--check", absoluteGlob]);
+
+  // Must genuinely find and report the real violation, not silently resolve
+  // to zero matches (which would exit 0 and look identical to "no
+  // violations found" — the exact false-negative shape this test guards
+  // against).
+  assert.equal(
+    result.status,
+    1,
+    `expected the absolute glob to resolve and find the real violation, got exit 0 with stdout: ${result.stdout}`
+  );
+  assert.match(result.stderr, /color-contrast/);
+
+  rmSync(workDir, { recursive: true, force: true });
+});
