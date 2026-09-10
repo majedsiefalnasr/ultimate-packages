@@ -127,3 +127,52 @@ jobs:
 
       - name: AI package boundary validation
         run: pnpm run boundary:validate:ai
+
+  track-a-browser-visual-a11y:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        framework: [ng, react, vue]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.15.0"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run Playwright projects (${{ matrix.framework }})
+        run: |
+          npx playwright test \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: Accessibility baseline validation (${{ matrix.framework }})
+        run: node scripts/provenance/validate-accessibility-baseline.mjs --check "test-results/accessibility/${{ matrix.framework }}/**/*.json"
+
+      - name: Upload accessibility reports (${{ matrix.framework }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-reports-${{ matrix.framework }}
+          path: test-results/accessibility/${{ matrix.framework }}/
+
+      - name: Upload Playwright HTML report (${{ matrix.framework }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.framework }}
+          path: playwright-report/
