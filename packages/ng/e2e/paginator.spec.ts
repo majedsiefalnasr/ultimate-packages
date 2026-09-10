@@ -36,6 +36,42 @@ test.describe("Ng/Paginator", () => {
     await expect(pageButtons.first()).toHaveAttribute("aria-current", "page");
   });
 
+  // Cross-framework parity addition (Task 9, R5): Vue's Task 8 suite
+  // (packages/vue/e2e/paginator.spec.ts) has a "real keyboard
+  // Enter-activation of the next control advances the page" scenario that
+  // this file lacked. Unlike React's UPaginator (genuinely controlled-only,
+  // per paginator.tsx's own doc comment -- "no uncontrolled fallback" --
+  // so its Default story's next button has no visible effect and there is
+  // nothing real to assert), Angular's UPaginator reconciles its `first`
+  // signal input into an internal `_first` signal (paginator.ts) that
+  // `changePage()` mutates directly, so this Default story genuinely
+  // advances on its own when the next control is activated -- the same
+  // real, internally-stateful behavior Vue's UPaginator has, just exposed
+  // via `data-page`/`aria-current` instead of Vue's aria-live report span
+  // (Angular's Interfaces section has no current-page-report element).
+  // Reuses this suite's own established zero-size-safe pattern (real
+  // `.focus()` + keyboard `Enter`, not a mouse `.click()`) already proven
+  // in this file's Tab-order test above and in table.spec.ts's composed
+  // "Paginated story" test, since the next/prev/first/last controls render
+  // via the same imported `@ultimate/uix-styles/paginator` icon-button
+  // rules with no icon glyph content in this environment.
+  test("Default story: real keyboard Enter-activation of the next control advances the page", async ({
+    page,
+  }) => {
+    await page.goto(storyUrl("ng-paginator--default"));
+    const host = page.locator("u-paginator");
+    await expect(host).toHaveAttribute("data-page", "0");
+
+    const nextButton = page.locator("[data-u-paginator-next]");
+    await nextButton.focus();
+    await expect(nextButton).toBeFocused();
+    await page.keyboard.press("Enter");
+
+    await expect(host).toHaveAttribute("data-page", "1");
+    const pageButtons = page.locator("[data-u-paginator-page]");
+    await expect(pageButtons.nth(1)).toHaveAttribute("aria-current", "page");
+  });
+
   test("Default story: visual regression", async ({ page }) => {
     await page.goto(storyUrl("ng-paginator--default"));
     await expect(page.getByRole("navigation")).toBeVisible();
