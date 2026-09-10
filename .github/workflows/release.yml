@@ -62,3 +62,36 @@ jobs:
         uses: changesets/action/version@v2.1.2
         with:
           script: pnpm run changeset:version
+
+  publish:
+    name: Publish
+    needs: select-mode
+    if: needs.select-mode.outputs.mode == 'publish'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure npm registry authentication
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+
+      - name: Publish packages
+        uses: changesets/action/publish@v2.1.2
+        with:
+          script: pnpm run changeset:publish
