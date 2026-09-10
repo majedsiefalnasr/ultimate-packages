@@ -34,6 +34,7 @@
     "@angular/build": "21.2.22",
     "@angular/cli": "21.2.22",
     "@angular/compiler-cli": "21.2.22",
+    "@axe-core/playwright": "4.13.0",
     "@storybook/addon-a11y": "10.6.0",
     "@storybook/angular": "10.6.0",
     "@ultimate/themes": "workspace:*",
