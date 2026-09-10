@@ -7,11 +7,11 @@ grandfathers pre-existing CodeQL findings. It is validated by
 scripts/provenance/validate-accessibility-baseline.mjs.
 
 Scanner: axe-core ~4.13.0, run transitively via
-@axe-core/playwright@4.13.0. That package is not yet installed in this
-repo as of this baseline's creation (Phase 10 Track A, Task 5) — Task 5 is
-pure tooling for the baseline mechanism itself; installing the scanner and
-producing real scan envelopes is Task 6/7/8's job. This table starts empty
-because no real scan has run yet.
+@axe-core/playwright@4.13.0. Task 5 built the baseline mechanism itself,
+pure tooling with no scanner installed yet; Tasks 6/7/8 installed the
+scanner in each framework package and populated this table with real scan
+envelopes from @ultimate/ng, @ultimate/react, and @ultimate/vue's own
+component stories.
 
 axe-core's own documented default ruleset runs all rules except those
 tagged `experimental` — it is not scoped to only WCAG 2.0/2.1 A/AA tags.
@@ -105,7 +105,7 @@ its own fingerprint entry).
 | aria-required-children:ng-table--paginated:.u-table | aria-required-children | ng-table--paginated | UTable's root div[role=table] wraps a native <table> element directly; ARIA's table role requires rowgroup/row children, not a nested table element -- real structural ARIA mismatch in ng-core's UTable template, out of Task 6's scope to fix. |
 | landmark-one-main:ng-table--paginated:html | landmark-one-main | ng-table--paginated | Storybook iframe.html shell page has no <main> landmark around the story root; environmental (present for every ng story tested), not a component defect. |
 | page-has-heading-one:ng-table--paginated:html | page-has-heading-one | ng-table--paginated | Storybook iframe.html shell page has no top-level <h1>; environmental (present for every ng story tested), not a component defect. |
-| region:ng-table--paginated:.u-table-table | region | ng-table--paginated |  |
+| region:ng-table--paginated:.u-table-table | region | ng-table--paginated | Storybook's bare iframe shell page has no landmark region at all; environmental, surfaced here on the table's own inner `<table class="u-table-table">` element rather than #storybook-root because the Paginated story's real composed UPaginator adds additional content, not a component defect -- same root cause as React's/Vue's react-table--paginated/vue-table--paginated findings. |
 | aria-required-children:ng-table--sorted:.u-component | aria-required-children | ng-table--sorted | UTable's root div[role=table] wraps a native <table> element directly; ARIA's table role requires rowgroup/row children, not a nested table element -- real structural ARIA mismatch in ng-core's UTable template, out of Task 6's scope to fix. |
 | landmark-one-main:ng-table--sorted:html | landmark-one-main | ng-table--sorted | Storybook iframe.html shell page has no <main> landmark around the story root; environmental (present for every ng story tested), not a component defect. |
 | page-has-heading-one:ng-table--sorted:html | page-has-heading-one | ng-table--sorted | Storybook iframe.html shell page has no top-level <h1>; environmental (present for every ng story tested), not a component defect. |

@@ -26,8 +26,48 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: "html",
 
+  /**
+   * Platform-independent snapshot path (resolves whole-branch-review
+   * Critical finding C1): Playwright's own default snapshot path
+   * template embeds `{platform}` (i.e. `process.platform` -- `darwin`
+   * locally, `linux` in CI), so baselines generated on a macOS
+   * development machine and baselines looked up by the `ubuntu-latest`
+   * CI runner resolve to two different filenames. Since this repository
+   * has exactly one baseline set -- generated once, in a Linux container
+   * matching the real CI runner (see the remediation's own report for
+   * the exact command used), not on this developer's own host OS -- the
+   * template below deliberately omits `{platform}` while preserving
+   * every other identity component (test file directory/name, the
+   * story/assertion `{arg}` title, and `{projectName}`, which already
+   * disambiguates ng/react/vue x chromium/firefox/webkit -- the platform
+   * token was never load-bearing for uniqueness here, only for cross-OS
+   * safety this repository does not need since CI is the only place
+   * these baselines are ever regenerated from).
+   */
+  snapshotPathTemplate: "{testDir}/{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}",
+
   use: {
     trace: "on-first-retry",
+  },
+
+  /**
+   * Explicit resolution of spec OQ-1 (screenshot-diff pixel tolerance):
+   * Playwright's own documented default for `toHaveScreenshot()` is
+   * `threshold: 0.2` (a per-pixel YIQ color-difference tolerance) with
+   * `maxDiffPixelRatio` left unset -- verified directly against
+   * Playwright's official docs during the original Implementation Plan's
+   * own research (see the plan's PD-1). This block makes that choice
+   * explicit in configuration rather than relying on an undocumented
+   * implicit default, per the whole-branch review's Important finding
+   * I1. The value itself is UNCHANGED from what the branch has already
+   * been running against throughout Tasks 6-9 -- this remediation does
+   * not loosen or tighten the gate, only names the number it was always
+   * using.
+   */
+  expect: {
+    toHaveScreenshot: {
+      threshold: 0.2,
+    },
   },
 
   projects: [
