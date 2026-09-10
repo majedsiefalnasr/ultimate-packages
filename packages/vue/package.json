@@ -72,6 +72,7 @@
     "vue": "^3.5.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@storybook/addon-a11y": "10.6.0",
     "@storybook/vue3-vite": "10.6.0",
     "@ultimate/themes": "workspace:*",
