@@ -34,9 +34,13 @@
     "@angular/build": "21.2.22",
     "@angular/cli": "21.2.22",
     "@angular/compiler-cli": "21.2.22",
+    "@axe-core/playwright": "4.13.0",
+    "@storybook/addon-a11y": "10.6.0",
+    "@storybook/angular": "10.6.0",
     "@ultimate/themes": "workspace:*",
     "@vitest/coverage-v8": "4.0.8",
     "ng-packagr": "21.2.7",
+    "storybook": "10.6.0",
     "typescript": "5.9.3",
     "vitest": "4.0.8"
   },
@@ -44,6 +48,8 @@
     "build": "ng-packagr -p ng-package.json",
     "test": "ng test --project=ng",
     "test:coverage": "ng test --project=ng --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "storybook": "ng run ng:storybook",
+    "build-storybook": "ng run ng:build-storybook"
   }
 }

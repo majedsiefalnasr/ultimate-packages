@@ -72,10 +72,15 @@
     "vue": "^3.5.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@storybook/addon-a11y": "10.6.0",
+    "@storybook/vue3-vite": "10.6.0",
+    "@ultimate/themes": "workspace:*",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/coverage-v8": "^2.1.8",
     "@vue/test-utils": "^2.4.6",
     "jsdom": "^25.0.1",
+    "storybook": "10.6.0",
     "tsup": "^8.3.0",
     "typescript": "5.9.3",
     "vite": "^5.4.21",
@@ -87,6 +92,8 @@
     "build": "tsup && vue-tsc -p tsconfig.dts.json --declaration --emitDeclarationOnly --outDir dist && node scripts/rename-dts.mjs",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   }
 }

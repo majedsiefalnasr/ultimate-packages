@@ -13,3 +13,5 @@ dist/
 out-tsc/
 .superpowers/
 coverage/
+storybook-static/
+test-results/
