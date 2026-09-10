@@ -33,7 +33,8 @@
     "integrity:pack-install": "node scripts/provenance/pack-install-integrity.mjs",
     "affected:packages": "node scripts/provenance/affected-packages.mjs",
     "storybook:ng": "pnpm --filter @ultimate/ng exec ng run ng:storybook",
-    "storybook:react": "pnpm --filter @ultimate/react run storybook"
+    "storybook:react": "pnpm --filter @ultimate/react run storybook",
+    "storybook:vue": "pnpm --filter @ultimate/vue run storybook"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
