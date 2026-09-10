@@ -25,7 +25,7 @@ This document covers a different concern from [`docs/architecture/compatibility-
 
 ## 5. CLI migration-tooling non-goals
 
-`@ultimate/cli create`, `@ultimate/cli migrate`, and `@ultimate/cli update` commands do not exist in this repository and are explicitly out of scope. The CLI package currently ships only `init`, `add`, and `ai` commands. No automated codemod, migration script, or migration CLI command is planned as part of this document or this migration strategy — migration is, and is intended to remain, a manual process driven by reading `CHANGELOG.md` and applying its notes by hand.
+`@ultimate/cli create`, `@ultimate/cli migrate`, and `@ultimate/cli update` commands do not exist in this repository and are explicitly out of scope. The CLI package currently ships only `init`, `add`, `theme`, `doctor`, `generate`, and `ai` commands. No automated codemod, migration script, or migration CLI command is planned as part of this document or this migration strategy — migration is, and is intended to remain, a manual process driven by reading `CHANGELOG.md` and applying its notes by hand.
 
 ## 6. Initial state
 
