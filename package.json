@@ -34,11 +34,13 @@
     "affected:packages": "node scripts/provenance/affected-packages.mjs",
     "storybook:ng": "pnpm --filter @ultimate/ng exec ng run ng:storybook",
     "storybook:react": "pnpm --filter @ultimate/react run storybook",
-    "storybook:vue": "pnpm --filter @ultimate/vue run storybook"
+    "storybook:vue": "pnpm --filter @ultimate/vue run storybook",
+    "playwright:install-browsers": "playwright install --with-deps"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
     "@eslint/js": "^9.15.0",
+    "@playwright/test": "1.63.0",
     "esbuild": "^0.28.2",
     "eslint": "^9.15.0",
     "license-checker-rseidelsohn": "^4.4.2",
