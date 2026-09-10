@@ -32,7 +32,8 @@
     "coverage:validate": "node scripts/provenance/validate-coverage.mjs --base-ref origin/main",
     "integrity:pack-install": "node scripts/provenance/pack-install-integrity.mjs",
     "affected:packages": "node scripts/provenance/affected-packages.mjs",
-    "storybook:ng": "pnpm --filter @ultimate/ng exec ng run ng:storybook"
+    "storybook:ng": "pnpm --filter @ultimate/ng exec ng run ng:storybook",
+  "storybook:react": "pnpm --filter @ultimate/react run storybook"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
