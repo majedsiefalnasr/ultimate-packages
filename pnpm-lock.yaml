@@ -146,6 +146,43 @@ importers:
         specifier: ^5.4.21
         version: 5.4.21(@types/node@22.20.1)(less@4.9.0)(lightningcss@1.33.0)(sass@1.103.1)(terser@5.51.2)
 
+  apps/playground-vue:
+    dependencies:
+      '@ultimate/themes':
+        specifier: workspace:*
+        version: link:../../packages/themes
+      '@ultimate/vue':
+        specifier: workspace:*
+        version: link:../../packages/vue
+      '@ultimate/vue-core':
+        specifier: workspace:*
+        version: link:../../packages/vue-core
+      express:
+        specifier: ^5.2.1
+        version: 5.2.1
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.42(typescript@5.9.3)
+    devDependencies:
+      '@types/express':
+        specifier: ^5.0.5
+        version: 5.0.6
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.1
+      '@vitejs/plugin-vue':
+        specifier: ^5.2.1
+        version: 5.2.4(vite@5.4.21(@types/node@22.20.1)(less@4.9.0)(lightningcss@1.33.0)(sass@1.103.1)(terser@5.51.2))(vue@3.5.42(typescript@5.9.3))
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^5.4.21
+        version: 5.4.21(@types/node@22.20.1)(less@4.9.0)(lightningcss@1.33.0)(sass@1.103.1)(terser@5.51.2)
+
   packages/ai:
     dependencies:
       '@ultimate/component-metadata':
