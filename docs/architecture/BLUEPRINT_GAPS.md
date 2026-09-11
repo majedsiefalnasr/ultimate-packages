@@ -175,7 +175,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Existing reusable infrastructure:** All 3 frameworks' component packages are otherwise ready to be imported; `packages/themes` is ready to be applied.
 - **Recommended resolution direction:** Build one playground app per framework (or one showcase app spanning all three) that imports and renders the full proof set.
 - **Source/evidence:** `apps/*/.gitkeep`; `docs/architecture/PERFORMANCE.md` Notes section; `docs/architecture/DECISIONS.md` ADR-023.
-- **Architectural decision required:** No.
+- **Architectural decision required:** Resolved for the SSR/hydration slice only — see ADR-045. GAP-008's fuller consumer-app scope (tree-shaking re-measurement, bundle-size benchmarking, a real demo experience) remains open backlog, not addressed by Phase 10 Track E.
 
 #### GAP-009 — Angular tree-shaking verified broken; `ng` ships a single barrel instead of the originally-planned 9 secondary entry points
 - **Status:** IMPLEMENTED-BUT-NOT-ENFORCED (broken, and known-broken)
