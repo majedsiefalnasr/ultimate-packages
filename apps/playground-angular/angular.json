@@ -1,0 +1,39 @@
+{
+  "$schema": "../../node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "playground-angular": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/playground-angular",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "server": "src/main.server.ts",
+            "ssr": {
+              "entry": "src/server.ts"
+            },
+            "outputMode": "server",
+            "prerender": false,
+            "tsConfig": "tsconfig.json",
+            "polyfills": []
+          },
+          "configurations": {
+            "development": {
+              "optimization": false,
+              "sourceMap": true
+            },
+            "production": {}
+          },
+          "defaultConfiguration": "production"
+        }
+      }
+    }
+  }
+}
