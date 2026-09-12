@@ -16,11 +16,11 @@ interface TrackESsrServer {
  * remain declared unconditionally, exactly as before).
  *
  * The `ng` key (the Angular SSR harness, `apps/playground-angular`, port
- * 6011) and `react` key (the React SSR harness, `apps/playground-react`,
- * port 6012) are populated so far. A later task adds its own `vue` key here
- * — this object and the `TRACK_E_SSR_FRAMEWORK` selection logic below are
- * written generically enough that adding that key never requires touching
- * the selection logic itself.
+ * 6011), `react` key (the React SSR harness, `apps/playground-react`, port
+ * 6012), and `vue` key (the Vue SSR harness, `apps/playground-vue`, port
+ * 6013) are all populated now — this object and the `TRACK_E_SSR_FRAMEWORK`
+ * selection logic below were written generically enough that adding each key
+ * never required touching the selection logic itself.
  */
 const trackESsrServers: Partial<Record<TrackEFramework, TrackESsrServer>> = {
   ng: {
@@ -37,16 +37,23 @@ const trackESsrServers: Partial<Record<TrackEFramework, TrackESsrServer>> = {
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
+  vue: {
+    name: "vue-ssr-server",
+    command: "pnpm --filter playground-vue run start",
+    url: "http://localhost:6013",
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
 };
 
 /**
  * `TRACK_E_SSR_FRAMEWORK`-driven selection: when set to one of the framework
  * keys above, only that framework's Track E `webServer` entry is included in
  * the final array (used to start exactly one SSR server in isolation, e.g.
- * for AC5.6's port-inspection check). When unset, every entry currently in
- * `trackESsrServers` is included — with only `ng` populated so far, unset and
- * `TRACK_E_SSR_FRAMEWORK=ng` behave identically; this is what allows a
- * combined local run across all three frameworks once react/vue keys exist.
+ * for AC5.6/AC6.6/AC7.8's port-inspection checks). When unset, every entry
+ * currently in `trackESsrServers` is included — now that `ng`, `react`, and
+ * `vue` are all populated, this is what allows AC7.6's combined local run
+ * across all three frameworks concurrently.
  */
 const trackESsrFrameworkFilter = process.env.TRACK_E_SSR_FRAMEWORK as TrackEFramework | undefined;
 const trackESsrWebServers: TrackESsrServer[] = trackESsrFrameworkFilter
@@ -184,6 +191,11 @@ export default defineConfig({
     {
       name: "react-ssr-chromium",
       testDir: "./apps/playground-react/e2e",
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "vue-ssr-chromium",
+      testDir: "./apps/playground-vue/e2e",
       use: { ...devices["Desktop Chrome"] },
     },
   ],
