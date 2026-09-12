@@ -6,3 +6,4 @@ export * from "./config";
 export * from "./bind";
 export * from "./icons";
 export * from "./api";
+export * from "./id/component-id-generator";

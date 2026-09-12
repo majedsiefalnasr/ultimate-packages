@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { afterEach, describe, expect, it } from "vitest";
+import { ComponentIdGenerator } from "@ultimate/ng-core";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { UDialog } from "./dialog";
 
 @Component({
@@ -23,6 +24,20 @@ describe("UDialog", () => {
   // needed before this cleanup existed).
   afterEach(() => {
     document.querySelectorAll('[role="dialog"]').forEach((el) => el.remove());
+  });
+
+  // UDialog now injects ComponentIdGenerator (application/SSR-safe
+  // replacement for a module-scope id counter — see dialog.ts's own JSDoc
+  // above ariaLabelledBy). It has no providedIn, so every test in this
+  // describe block that constructs a UDialog needs it provided at the
+  // TestBed/application injector level, exactly as a real application must
+  // provide it at bootstrap. Deliberately provided here — at
+  // configureTestingModule level — rather than on TestHostComponent's own
+  // component-level providers, which would give each host its own isolated
+  // generator instance and silently defeat the one-shared-instance-per-
+  // application-injector design this fix exists to establish.
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [ComponentIdGenerator] });
   });
 
   it("does not render dialog content when visible is false", () => {
@@ -188,5 +203,70 @@ describe("UDialog", () => {
     await fixture.whenStable();
 
     expect(hideCount).toBe(0);
+  });
+
+  it("gives two dialogs sharing one TestBed-provided ComponentIdGenerator distinct, sequential ariaLabelledBy ids", () => {
+    // Proves the application-injector-scoping design itself, not merely
+    // that two ids differ: ComponentIdGenerator is provided exactly once,
+    // at the outer beforeEach's TestBed/application injector level (never
+    // in a component-level `providers` array), so both u-dialog instances
+    // created below must resolve the *same* generator instance. A
+    // component-scoped (incorrect) generator would produce two independent
+    // "u_dialog_1_header" ids instead of the sequential pair asserted here.
+    @Component({
+      standalone: true,
+      imports: [UDialog],
+      template: `
+        <u-dialog [(visible)]="visibleA" header="Dialog A">A body</u-dialog>
+        <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
+      `,
+    })
+    class TwoDialogHostComponent {
+      visibleA = true;
+      visibleB = true;
+    }
+
+    const fixture = TestBed.createComponent(TwoDialogHostComponent);
+    fixture.detectChanges();
+
+    // ariaLabelledBy is a protected field on UDialog (internal detail), so
+    // it is read here via its one public, observable effect: the
+    // rendered aria-labelledby attribute on each dialog's root element.
+    const dialogEls = document.querySelectorAll('[role="dialog"]');
+    expect(dialogEls).toHaveLength(2);
+    const [firstId, secondId] = Array.from(dialogEls).map((el) =>
+      el.getAttribute("aria-labelledby")
+    );
+
+    expect(firstId).not.toBe(secondId);
+    expect(firstId).toBe("u_dialog_1_header");
+    expect(secondId).toBe("u_dialog_2_header");
+  });
+
+  it("renders the header span's id equal to the dialog root's aria-labelledby when open", () => {
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.visible = true;
+    fixture.detectChanges();
+    const dialogEl = document.querySelector('[role="dialog"]') as HTMLElement;
+    const labelledBy = dialogEl.getAttribute("aria-labelledby");
+    expect(labelledBy).toBeTruthy();
+    const headerSpan = dialogEl.querySelector("span");
+    expect(headerSpan!.id).toBe(labelledBy);
+  });
+});
+
+describe("UDialog without ComponentIdGenerator provided", () => {
+  afterEach(() => {
+    document.querySelectorAll('[role="dialog"]').forEach((el) => el.remove());
+  });
+
+  it("throws Angular's no-provider error instead of silently producing a broken id", () => {
+    // Deliberately does NOT configure ComponentIdGenerator on this TestBed,
+    // proving the JSDoc requirement above UDialog's ariaLabelledBy field is
+    // real and enforced by Angular DI, not just documented.
+    expect(() => {
+      const fixture = TestBed.createComponent(TestHostComponent);
+      fixture.detectChanges();
+    }).toThrow(/NG0201|No provider found for `?ComponentIdGenerator`?/);
   });
 });

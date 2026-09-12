@@ -14,12 +14,16 @@ import {
   signal,
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
-import { UBaseComponent, UFocusTrap, UOverlay, UTimesIcon } from "@ultimate/ng-core";
+import {
+  ComponentIdGenerator,
+  UBaseComponent,
+  UFocusTrap,
+  UOverlay,
+  UTimesIcon,
+} from "@ultimate/ng-core";
 import { createMotion, type MotionInstance } from "@ultimate/uix-motion";
 import { UButton } from "../button/button";
 import { dialogStyleModule } from "./dialog-style";
-
-let dialogIdCounter = 0;
 
 /**
  * Ultimate-owned adaptation of PrimeNG's `Dialog` component (see
@@ -183,8 +187,14 @@ export class UDialog extends UBaseComponent {
 
   @ViewChild("root") private rootRef?: ElementRef<HTMLElement>;
   private readonly injector = inject(Injector);
+  private readonly idGenerator = inject(ComponentIdGenerator);
 
-  protected readonly ariaLabelledBy = `u_dialog_${++dialogIdCounter}_header`;
+  /**
+   * Consumers must provide `ComponentIdGenerator` (from `@ultimate/ng-core`)
+   * in their application's bootstrap providers for this component to
+   * function — it has no default provider.
+   */
+  protected readonly ariaLabelledBy = `${this.idGenerator.next("u_dialog")}_header`;
 
   /**
    * Gates the mask/dialog DOM's presence in the template. Unlike a direct
