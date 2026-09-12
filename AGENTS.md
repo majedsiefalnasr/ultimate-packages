@@ -63,16 +63,16 @@ Some architectural decisions are explicitly protected against reopening without 
 
 ## 6. Where to find things
 
-| For... | See |
-|---|---|
-| Current phase/track status | `docs/architecture/ROADMAP.md` |
-| Open gaps and architectural decisions | `docs/architecture/BLUEPRINT_GAPS.md` |
-| Why a past architectural choice was made | `docs/architecture/DECISIONS.md` |
-| Deep evidence for a specific past finding | `docs/architecture/research/` (dated files) |
+| For...                                              | See                                                                           |
+| --------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Current phase/track status                          | `docs/architecture/ROADMAP.md`                                                |
+| Open gaps and architectural decisions               | `docs/architecture/BLUEPRINT_GAPS.md`                                         |
+| Why a past architectural choice was made            | `docs/architecture/DECISIONS.md`                                              |
+| Deep evidence for a specific past finding           | `docs/architecture/research/` (dated files)                                   |
 | Component-level facts (props, accessibility, tests) | `@ultimate/component-metadata` records, MCP tools, or direct component source |
-| Current component coverage | `docs/architecture/COMPONENT_INVENTORY.md` |
-| Performance/bundle-size baselines | `docs/architecture/PERFORMANCE.md` |
-| Release/migration process | `docs/architecture/MIGRATION.md` |
+| Current component coverage                          | `docs/architecture/COMPONENT_INVENTORY.md`                                    |
+| Performance/bundle-size baselines                   | `docs/architecture/PERFORMANCE.md`                                            |
+| Release/migration process                           | `docs/architecture/MIGRATION.md`                                              |
 
 ---
 
