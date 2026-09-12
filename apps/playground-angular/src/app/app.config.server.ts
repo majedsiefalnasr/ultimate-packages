@@ -1,6 +1,7 @@
 import type { ApplicationConfig } from "@angular/core";
 import { provideClientHydration } from "@angular/platform-browser";
 import { provideServerRendering } from "@angular/ssr";
+import { ComponentIdGenerator } from "@ultimate/ng-core";
 import { provideRouterLinkSupport } from "./router-link-support";
 
 /**
@@ -27,5 +28,10 @@ import { provideRouterLinkSupport } from "./router-link-support";
  * and re-rendering the whole tree from scratch on the client.
  */
 export const serverConfig: ApplicationConfig = {
-  providers: [provideServerRendering(), ...provideRouterLinkSupport(), provideClientHydration()],
+  providers: [
+    provideServerRendering(),
+    ...provideRouterLinkSupport(),
+    provideClientHydration(),
+    ComponentIdGenerator,
+  ],
 };

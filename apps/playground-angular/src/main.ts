@@ -1,4 +1,5 @@
 import { bootstrapApplication, provideClientHydration } from "@angular/platform-browser";
+import { ComponentIdGenerator } from "@ultimate/ng-core";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { ProofPageComponent } from "./app/proof-page.component";
 import { provideRouterLinkSupport } from "./app/router-link-support";
@@ -11,7 +12,7 @@ import { provideRouterLinkSupport } from "./app/router-link-support";
 applyUltimateTheme();
 
 bootstrapApplication(ProofPageComponent, {
-  providers: [provideClientHydration(), ...provideRouterLinkSupport()],
+  providers: [provideClientHydration(), ...provideRouterLinkSupport(), ComponentIdGenerator],
 })
   .then(() => {
     // A later Playwright test polls for this attribute on the document's
