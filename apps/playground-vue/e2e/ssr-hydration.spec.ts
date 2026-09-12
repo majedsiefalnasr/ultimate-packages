@@ -125,7 +125,8 @@ import { expect, test } from "@playwright/test";
  */
 const HARNESS_URL = "http://localhost:6013/";
 
-const VUE_HYDRATION_WARNING_PATTERN = /(\[Vue warn\]:\s*Hydration|Hydration completed but contains mismatches)/;
+const VUE_HYDRATION_WARNING_PATTERN =
+  /(\[Vue warn\]:\s*Hydration|Hydration completed but contains mismatches)/;
 
 /** Registers console/pageerror listeners and returns the captured list, to be asserted after the test's interactions. */
 function captureUnexpectedErrors(page: import("@playwright/test").Page): string[] {
@@ -143,7 +144,9 @@ function captureUnexpectedErrors(page: import("@playwright/test").Page): string[
 
 function assertNoHydrationErrors(messages: string[]): void {
   for (const message of messages) {
-    expect(message, `unexpected Vue hydration-mismatch warning: ${message}`).not.toMatch(VUE_HYDRATION_WARNING_PATTERN);
+    expect(message, `unexpected Vue hydration-mismatch warning: ${message}`).not.toMatch(
+      VUE_HYDRATION_WARNING_PATTERN
+    );
   }
   expect(messages, `unexpected console/page errors: ${JSON.stringify(messages)}`).toEqual([]);
 }
@@ -201,7 +204,9 @@ test.describe("Vue SSR/Hydration — Checkbox", () => {
 });
 
 test.describe("Vue SSR/Hydration — Dialog", () => {
-  test("serves SSR content with dialog closed, then opens/closes post-hydration", async ({ page }) => {
+  test("serves SSR content with dialog closed, then opens/closes post-hydration", async ({
+    page,
+  }) => {
     const errors = captureUnexpectedErrors(page);
 
     const response = await page.request.get(HARNESS_URL);
@@ -244,9 +249,13 @@ test.describe("Vue SSR/Hydration — Menu", () => {
     await page.goto(HARNESS_URL);
     await page.waitForSelector('[data-hydrated="true"]');
 
-    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText("Last selected: none");
+    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText(
+      "Last selected: none"
+    );
     await page.getByRole("menuitem", { name: "Second Item" }).click();
-    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText("Last selected: Second Item");
+    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText(
+      "Last selected: Second Item"
+    );
 
     assertNoHydrationErrors(errors);
   });
@@ -284,7 +293,9 @@ test.describe("Vue SSR/Hydration — Paginator", () => {
 });
 
 test.describe("Vue SSR/Hydration — Scroller", () => {
-  test("serves all 5 fixture rows in SSR content and remains stable post-hydration", async ({ page }) => {
+  test("serves all 5 fixture rows in SSR content and remains stable post-hydration", async ({
+    page,
+  }) => {
     const errors = captureUnexpectedErrors(page);
 
     const response = await page.request.get(HARNESS_URL);

@@ -102,7 +102,9 @@ function captureUnexpectedErrors(page: import("@playwright/test").Page): string[
 
 function assertNoHydrationErrors(messages: string[]): void {
   for (const message of messages) {
-    expect(message, `unexpected console/page error: ${message}`).not.toMatch(NG_HYDRATION_ERROR_PATTERN);
+    expect(message, `unexpected console/page error: ${message}`).not.toMatch(
+      NG_HYDRATION_ERROR_PATTERN
+    );
   }
   expect(messages, `unexpected console/page errors: ${JSON.stringify(messages)}`).toEqual([]);
 }
@@ -154,7 +156,9 @@ test.describe("Ng SSR/Hydration — Checkbox", () => {
 });
 
 test.describe("Ng SSR/Hydration — Dialog", () => {
-  test("serves SSR content with dialog closed, then opens/closes post-hydration", async ({ page }) => {
+  test("serves SSR content with dialog closed, then opens/closes post-hydration", async ({
+    page,
+  }) => {
     const errors = captureUnexpectedErrors(page);
 
     const response = await page.request.get(HARNESS_URL);
@@ -196,9 +200,13 @@ test.describe("Ng SSR/Hydration — Menu", () => {
     await page.goto(HARNESS_URL);
     await page.waitForSelector('[data-hydrated="true"]');
 
-    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText("Last selected: none");
+    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText(
+      "Last selected: none"
+    );
     await page.getByRole("menuitem", { name: "Second Item" }).click();
-    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText("Last selected: Second Item");
+    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText(
+      "Last selected: Second Item"
+    );
 
     assertNoHydrationErrors(errors);
   });
@@ -235,7 +243,9 @@ test.describe("Ng SSR/Hydration — Paginator", () => {
 });
 
 test.describe("Ng SSR/Hydration — Scroller", () => {
-  test("serves all 5 fixture rows in SSR content and remains stable post-hydration", async ({ page }) => {
+  test("serves all 5 fixture rows in SSR content and remains stable post-hydration", async ({
+    page,
+  }) => {
     const errors = captureUnexpectedErrors(page);
 
     const response = await page.request.get(HARNESS_URL);

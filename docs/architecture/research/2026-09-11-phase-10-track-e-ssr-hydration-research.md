@@ -19,6 +19,7 @@
 Per the established Phase 10 objective set (Blueprint §35) and this session's brief:
 
 **In scope:**
+
 - SSR/hydration support and verification for all three frameworks (Angular, React, Vue).
 - Minimal per-framework consumer/harness applications — not a full playground or showcase app.
 - Render the existing 8-component proof set (or a representative subset) through each framework's real SSR pipeline.
@@ -26,6 +27,7 @@ Per the established Phase 10 objective set (Blueprint §35) and this session's b
 - Integrate with Track A's Playwright infrastructure where appropriate (new projects/config, not modification of Track A's existing projects).
 
 **Out of scope:**
+
 - Full playground/showcase applications with routing, multiple pages, or a real design/demo experience.
 - Any modification to Track B's CI topology beyond what Track E needs to add for itself.
 - Any modification to Track C's release/migration/provenance scope.
@@ -53,22 +55,27 @@ Per the established Phase 10 objective set (Blueprint §35) and this session's b
 `docs/architecture/research/2026-09-08-phase-10-architecture-discussion.md` §5, "SSR / GAP-008 scope decision" (lines 153–182), already answers the exact question this session was asked to investigate. Quoted in full:
 
 **The question posed (line 157):**
+
 > Whether Phase 10 needs full Angular/React/Vue playground apps, one minimal SSR-capable harness, framework-specific minimal harnesses, or another approach — while identifying which parts of GAP-008 are prerequisites versus merely useful infrastructure.
 
 **Decision (lines 167–171):**
+
 > Phase 10's SSR/hydration verification requirement is satisfied by one minimal, framework-specific SSR-capable harness per framework (Angular Universal / Next.js / Nuxt, or the framework's standard minimal SSR starter) — not full playground/showcase applications. Building out `apps/playground-*`/`apps/showcase` into real, feature-complete consumer applications is explicitly out of scope for Phase 10.
 >
 > Why: the Blueprint requires SSR/hydration to be verified, not a consumer-app experience to exist. A minimal harness — render one or two real Ultimate components through each framework's standard SSR pipeline and confirm hydration succeeds without console errors/mismatches — is the smallest artifact that makes §31's "SSR/hydration behavior" measurement possible and gives Playwright something real to drive.
 
 **Consequences (lines 174–176):**
+
 > Cluster E's scope is: three minimal SSR harnesses (one per framework), each rendering a small number of already-shipped components (the existing 8-component proof set is a natural, ready target — no new component work needed), plus Playwright specs that assert successful hydration.
 >
 > The existing `apps/playground-angular`/`apps/playground-react`/`apps/playground-vue` directories are reasonable homes for these harnesses, but their scope for Phase 10 purposes is the minimal SSR-verification harness, not a full playground... `apps/showcase` and `apps/docs` remain out of Phase 10 scope entirely.
 
 **Explicitly left open, for Specification (line 328):**
+
 > Cluster E (once its GAP-008 scope decision from §5 is accepted): exact minimal-harness framework starters (Angular Universal vs. alternative; Next.js vs. a lighter React SSR setup; Nuxt vs. a lighter Vue SSR setup); which of the 8 proof-set components get exercised in each harness.
 
 **GAP dependency map entry (line 290):**
+
 > GAP-008 (no real consumer app) | MISSING | Partially resolved in scope — Phase 10 requires only minimal SSR harnesses, not full playground apps | §5 decision
 
 ### 3.3 Is this "formally resolved" or does it need a fresh decision?
@@ -76,7 +83,7 @@ Per the established Phase 10 objective set (Blueprint §35) and this session's b
 This is the one genuine gate item in this document (§10 below). Evidence on both sides:
 
 - **For "already sufficient":** §5 is a considered decision with rationale ("Why:"), consequences, and an explicit GAP-dependency-map update — the same documentary form used for DECISION-A in the same file, which **is** cited as an accepted decision in `DECISIONS.md` (ADR-044). ADR-044 (`DECISIONS.md:189-191`) already references "the SSR/GAP-008 scope decision, §5" as settled fact when describing Playwright's future SSR role, treating it as decided, not pending.
-- **For "needs a fresh/promoted decision":** GAP-008's own entry in `BLUEPRINT_GAPS.md` (line ~178) still carries an "Architectural decision required: No" field that was written before §5 existed — stale, but never corrected. And unlike DECISION-A, §5's resolution has never been promoted to its own standalone ADR number in `DECISIONS.md` — it exists only as a cross-reference inside ADR-044's body text. There is no ADR whose *subject* is GAP-008/SSR scope; there is only an ADR (SSR tooling) that *cites* the research doc's §5.
+- **For "needs a fresh/promoted decision":** GAP-008's own entry in `BLUEPRINT_GAPS.md` (line ~178) still carries an "Architectural decision required: No" field that was written before §5 existed — stale, but never corrected. And unlike DECISION-A, §5's resolution has never been promoted to its own standalone ADR number in `DECISIONS.md` — it exists only as a cross-reference inside ADR-044's body text. There is no ADR whose _subject_ is GAP-008/SSR scope; there is only an ADR (SSR tooling) that _cites_ the research doc's §5.
 
 **This session did not silently pick an interpretation.** Both readings are evidence-backed; which one satisfies your gate criteria is the decision requested in §10.
 
@@ -84,7 +91,7 @@ This is the one genuine gate item in this document (§10 below). Evidence on bot
 
 `BLUEPRINT_GAPS.md:568` separately registers **GAP-034 — No SSR/hydration verification anywhere (Angular has an `isPlatformBrowser()` guard; no test proves SSR actually works end-to-end)**, status IMPLEMENTED-BUT-UNVERIFIED, with dependency "GAP-008 (a real consumer app is likely the most realistic way to exercise real SSR/hydration)" (line 576).
 
-GAP-008 is "no consumer app exists"; GAP-034 is "even where code looks SSR-safe, nothing proves it end-to-end." **Track E's actual deliverable closes GAP-034**, using the minimal harnesses that §5 scoped GAP-008 down to as the vehicle. This distinction matters for how Track E's specification should describe its own exit criteria — it should name closing GAP-034, not GAP-008 in full (GAP-008's *fuller* scope — routing, real playground/showcase experience — remains explicitly out of Phase 10 per §5).
+GAP-008 is "no consumer app exists"; GAP-034 is "even where code looks SSR-safe, nothing proves it end-to-end." **Track E's actual deliverable closes GAP-034**, using the minimal harnesses that §5 scoped GAP-008 down to as the vehicle. This distinction matters for how Track E's specification should describe its own exit criteria — it should name closing GAP-034, not GAP-008 in full (GAP-008's _fuller_ scope — routing, real playground/showcase experience — remains explicitly out of Phase 10 per §5).
 
 ## 4. Evidence gathered from the repository
 
@@ -115,6 +122,7 @@ GAP-008 is "no consumer app exists"; GAP-034 is "even where code looks SSR-safe,
 ### 4.5 Component architecture
 
 All three frameworks ship **framework-native components**, not Web Components/Shadow DOM:
+
 - Angular: standalone components (no NgModule), signal-based inputs/outputs (ADR-018/019), built on `ng-core`'s `UBaseComponent`/`UBaseEditableHolder` hierarchy.
 - React: function components with hooks (`useComponentBase`, `useComponentStyle`), plain JSX, no custom elements.
 - Vue: Options-API `extends` mixin architecture (ADR-032), plain SFC/render functions, no custom elements.
@@ -134,6 +142,7 @@ Confirmed identical across `packages/ng/src`, `packages/react/src`, `packages/vu
 ### 5.1 Angular 21
 
 **Upstream (angular.dev, verified via Context7 `/websites/angular_dev`):**
+
 - `ng new --ssr` scaffolds hybrid rendering by default in current Angular tooling.
 - Hydration is enabled via `provideClientHydration()` passed to `bootstrapApplication`'s providers, with the same provider required in the server bootstrap configuration.
 - Server rendering itself is configured via `provideServerRendering()` (from `@angular/ssr`), composable with `withRoutes()` and `withAppShell()`.
@@ -141,6 +150,7 @@ Confirmed identical across `packages/ng/src`, `packages/react/src`, `packages/vu
 - **Zoneless status:** Angular v21+ makes zoneless change detection the default (no `provideZonelessChangeDetection()` call needed unless overriding). The repository's Angular package already follows a zoneless-only posture per ADR-022. No documented incompatibility was found between zoneless change detection and `provideClientHydration()`/`provideServerRendering()` in current Angular docs — both are default/current-generation APIs in Angular 21, not competing eras of the framework.
 
 **Repository evidence (from fork research, confirmed by direct file read for one hook):**
+
 - `isPlatformBrowser()` guards already present at: `packages/ng/src/tooltip/tooltip.ts:87`, `packages/ng/src/autofocus/auto-focus.ts:49`, `packages/ng/src/ripple/ripple.ts:57`, `packages/ng/src/dialog/dialog.ts:213,250`, `packages/ng-core/src/overlay/overlay.ts:60`. Two of these carry doc comments stating "All DOM creation is guarded behind `isPlatformBrowser()` per the SSR..." (tooltip.ts:59, overlay.ts:33).
 - No module-scope (import-time, unconditional) `window.`/`document.` usage was found anywhere in Angular package source.
 - **Conclusion:** Angular's proof-set components already follow the framework's own documented SSR-safety pattern. No known blocking defect. The harness itself (bootstrap wiring, `provideServerRendering`, `provideClientHydration`, Express/Node server entry) does not yet exist — that is Track E's actual deliverable, not a component fix.
@@ -148,12 +158,14 @@ Confirmed identical across `packages/ng/src`, `packages/react/src`, `packages/vu
 ### 5.2 React 18.3
 
 **Upstream (react.dev, verified via Context7 `/reactjs/react.dev`):**
+
 - Server: `renderToString` (synchronous, returns a string; no streaming) or `renderToPipeableStream` (Node streaming, supports abort-on-timeout to flush a fallback and let the client finish). React's own docs recommend the streaming API for Node server environments and reserve `renderToString` for environments without stream support.
 - Client: `hydrateRoot(container, <App />)` makes server-rendered HTML interactive; assumes the DOM already matches what React would render.
 - **Documented failure mode:** `useLayoutEffect` "does nothing on the server" and throws a runtime warning if used in code paths rendered during SSR; React's own guidance is to replace it with `useEffect`, mark the component client-only, defer it past hydration, or use `useSyncExternalStore` if synchronizing with an external store.
 - Server/client content divergence is an explicitly supported pattern via a post-mount `useEffect` that flips state after hydration (React's own "two-pass rendering" example), with the caveat that this pattern slows hydration and should be used sparingly.
 
 **Repository evidence:**
+
 - `packages/react-core/src/hooks/use-mount-effect.ts` (verified directly, full file): wraps `useEffect(effect, [])` — plain `useEffect`, **not** `useLayoutEffect`. This means the SSR warning React documents for `useLayoutEffect` does not apply to this hook.
 - `packages/react-core/src/styling/react-style-sheet.ts`: `createStyleElement` has an explicit `if (typeof document === "undefined") return undefined;` guard (SSR guard, per its own comment). Style registration is invoked through `useComponentStyle` → `useMountEffect`, i.e., a mount-only `useEffect` that never executes during the `renderToString`/`renderToPipeableStream` server pass at all — the explicit `typeof document` guard is defense-in-depth, not load-bearing.
 - Other `document.`/`window.` references (`portal.tsx:35`, `tooltip.tsx:33-34`, `dialog.tsx:97`) sit inside function bodies invoked at render/interaction time in the browser, not module scope. Portal's `document.body` fallback specifically has not been independently verified safe if a harness ever server-renders a Portal-based component directly — flagged as an open item for Specification/implementation, not a known defect.
@@ -162,11 +174,13 @@ Confirmed identical across `packages/ng/src`, `packages/react/src`, `packages/vu
 ### 5.3 Vue 3.5
 
 **Upstream (vuejs.org, verified via Context7 `/websites/vuejs`):**
+
 - Server: `createSSRApp(rootComponent)` + `renderToString(app)` from `vue/server-renderer`, run in Node.
 - Client: `createSSRApp` again with the same app definition, then `app.mount('#app')` — mounting an SSR app on the client assumes the HTML was pre-rendered and performs hydration rather than fresh DOM creation.
 - **Documented lifecycle constraint:** the `mounted()` lifecycle hook is "called after the component is mounted and the DOM tree is created; not triggered during server-side rendering" — i.e., `mounted()` is inherently client-only/post-hydration by Vue's own design, not something that needs an extra guard to be SSR-safe.
 
 **Repository evidence:**
+
 - `packages/vue-core/src/styling/vue-style-sheet.ts`: `createStyleElement` guards with `if (typeof document === "undefined") return undefined;`, with its own doc comment noting it mirrors `react-core`'s identical guard.
 - `packages/vue-core/src/base/base-component.ts:39-40`: style registration (`registerComponentStyle`) is called from the component's **`mounted()`** hook — which, per Vue's own docs above, never fires during `renderToString`. The `typeof document` check is a second layer on top of a lifecycle guarantee Vue already provides.
 - Other `document.`/`window.` references (`focus-trap.ts:74`, `tooltip.ts:82,86-87`, `ripple.ts:68-69`) are inside event handlers/DOM-manipulation functions invoked at interaction time, not module scope or render body.
@@ -189,7 +203,7 @@ All three frameworks converge on the same structural pattern in this codebase: g
 
 - **Hydration-mismatch fragility (Angular-documented, generalizable):** any whitespace, comment-node, or conditional-rendering difference between server and client output breaks hydration. This is a property of SSR generally, not specific to this codebase, but the harnesses must be built with this in mind from the start (e.g., avoid `Math.random()`/`Date.now()`/locale-dependent formatting in initial render paths without explicit two-pass handling).
 - **React API choice affects harness shape:** `renderToString` vs. `renderToPipeableStream` is not just a style choice — streaming changes how the harness's Node server is structured (pipe vs. return-a-string). This must be decided in Specification, not assumed.
-- **Framework-starter choice affects scope and dependency footprint:** Angular Universal, Next.js, and Nuxt each pull in their own routing/build conventions beyond raw SSR — using a framework's full meta-framework (e.g., Next.js) for what's meant to be a *minimal* harness risks quietly reintroducing GAP-008's fuller (out-of-scope) shape. A lighter, hand-built Node server using each framework's raw SSR primitives (as shown in the upstream docs above) may better match the "minimal harness" intent than adopting a full meta-framework — this is a real trade-off for Specification to make explicitly, not silently default into whichever is most familiar.
+- **Framework-starter choice affects scope and dependency footprint:** Angular Universal, Next.js, and Nuxt each pull in their own routing/build conventions beyond raw SSR — using a framework's full meta-framework (e.g., Next.js) for what's meant to be a _minimal_ harness risks quietly reintroducing GAP-008's fuller (out-of-scope) shape. A lighter, hand-built Node server using each framework's raw SSR primitives (as shown in the upstream docs above) may better match the "minimal harness" intent than adopting a full meta-framework — this is a real trade-off for Specification to make explicitly, not silently default into whichever is most familiar.
 - **CI cost:** three more dev/build/preview servers, three more Playwright projects, likely a new CI job — real but bounded incremental cost, consistent with Track A's existing precedent.
 - **Unverified edge case:** React Portal's `document.body` fallback under direct server-side rendering has not been checked; if any proof-set component (or a component it depends on, e.g., Dialog/Tooltip's overlay machinery) renders a Portal during the initial server pass rather than only after mount, this needs explicit verification during implementation, not assumption of safety.
 - **Package-boundary question:** whether harnesses live as private, non-published entries under `apps/*` (implied by §5 and the existing empty scaffolding) needs to be confirmed as fully out of the publishable-package boundary Track B's CI already enforces (bundle-size/provenance/compatibility-manifest gates) — likely yes since `apps/*` is a separate workspace glob from `packages/*`, but Specification should state this explicitly rather than assume it.
@@ -199,22 +213,25 @@ All three frameworks converge on the same structural pattern in this codebase: g
 Three ways to treat GAP-008 in this document, given that §5 already contains a considered decision:
 
 **(a) Treat §5 as sufficient as-is; proceed straight to Specification citing it.**
+
 - Advantages: no new process overhead; §5 already has rationale, consequences, and a GAP-map update in the same documentary form used elsewhere in this repository's decision record; ADR-044 already treats it as settled when describing Playwright's SSR role.
 - Disadvantages: GAP-008's own entry in `BLUEPRINT_GAPS.md` still says "Architectural decision required: No" from before §5 existed, and unlike DECISION-A, §5 was never given its own ADR number — it exists only as a citation inside ADR-044. A future reader auditing `DECISIONS.md` alone (without also reading the research-discussion doc) would not find GAP-008's resolution recorded there as a first-class decision.
 
 **(b) Promote §5 into a new, standalone ADR in `DECISIONS.md` before Specification proceeds.**
+
 - Advantages: closes the documentary gap noted above — `DECISIONS.md` becomes self-sufficient for this decision, matching the treatment DECISION-A (Storybook+Playwright) already received as its own accepted-decision entry. Costs almost nothing (the content already exists in §5; this is a promotion/citation exercise, not new analysis).
 - Disadvantages: minor process overhead; arguably unnecessary if the existing citation chain (Specification → this doc → §5 → ADR-044) is judged sufficient traceability.
 
 **(c) Reopen GAP-008's scope question from scratch in this document.**
+
 - Advantages: none identified — no new repository evidence contradicts §5's reasoning, and the session brief's own instruction ("whether the existing Phase 10 discussion already provides enough evidence to resolve it") is answered yes by §3.2 above.
 - Disadvantages: would re-litigate a decision that is already well-reasoned and already relied upon by an accepted ADR (ADR-044), wasting effort and risking an inconsistent second answer to the same question.
 
 ## 9. Recommended architectural direction
 
-*(Recommendation, clearly separated from the facts above.)*
+_(Recommendation, clearly separated from the facts above.)_
 
-Option (b) is recommended: promote §5's existing decision into a standalone ADR entry in `DECISIONS.md` (an ADR *about* GAP-008/SSR scope, not merely one that cites it), and correct GAP-008's stale "Architectural decision required: No" field to point at that ADR. This is low-cost, brings this decision's documentary weight in line with how DECISION-A was already handled in the same source document, and removes the one loose thread (§3.3) that would otherwise sit underneath every subsequent Track E artifact. It does **not** require re-deciding anything substantive — §5's reasoning and scope already stand on their own evidence and are recommended to be adopted verbatim, just formally promoted.
+Option (b) is recommended: promote §5's existing decision into a standalone ADR entry in `DECISIONS.md` (an ADR _about_ GAP-008/SSR scope, not merely one that cites it), and correct GAP-008's stale "Architectural decision required: No" field to point at that ADR. This is low-cost, brings this decision's documentary weight in line with how DECISION-A was already handled in the same source document, and removes the one loose thread (§3.3) that would otherwise sit underneath every subsequent Track E artifact. It does **not** require re-deciding anything substantive — §5's reasoning and scope already stand on their own evidence and are recommended to be adopted verbatim, just formally promoted.
 
 Recommendation on the SSR-starter sub-question (explicitly left open by §5 itself, not part of GAP-008's resolution): favor each framework's lightest raw SSR primitives (Angular Universal via `provideServerRendering`, a small Node server using React's `renderToPipeableStream` + `hydrateRoot`, and Vue's `createSSRApp`/`renderToString` + client hydrate) over adopting a full meta-framework (Next.js/Nuxt) for the harness, specifically because the session's own constraint is "minimal harness, not full playground" — a meta-framework brings routing/build conventions that exceed that minimal intent. This should be confirmed, not assumed, at Specification.
 

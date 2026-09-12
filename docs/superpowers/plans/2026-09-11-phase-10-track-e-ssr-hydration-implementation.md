@@ -6,6 +6,7 @@
 **Baseline:** `main` at `57772ff`. Tracks A, B, C, D complete and merged.
 
 **Binding decisions carried forward from the approved specification, not reopened by this plan:**
+
 1. GAP-008's SSR/hydration slice is promoted to a standalone ADR (ADR-045) — documentary promotion only, substance already decided.
 2. Raw/minimal per-framework SSR primitives only — Angular `provideServerRendering`/`provideClientHydration`; React `renderToPipeableStream`/`hydrateRoot`; Vue `createSSRApp`/`renderToString`. No Next.js, no Nuxt, no meta-framework.
 3. All 8 proof-set components (Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip) exercised in every harness — not a subset.
@@ -16,11 +17,13 @@
 8. `.github/workflows/ci.yml` is not edited by this plan's task list unless a task explicitly says so (Task 9 is the only such task) — no other task touches CI.
 
 **Canonical build/start contract (binding on Tasks 2–4, 5–7, and 9 — resolves the CI/harness build-command inconsistency found in the first Plan Review):**
+
 - Every harness's `package.json` exposes exactly one script named `build` that produces both the server-side render artifact and the client browser bundle, and exactly one script named `start` that starts the harness's Node SSR server from those already-built artifacts (no on-demand compilation at request time in either local dev-verification or CI).
-- `pnpm --filter playground-angular run build`, `pnpm --filter playground-react run build`, and `pnpm --filter playground-vue run build` are the three canonical build invocations — identical shape across all three frameworks, differing only in the `--filter` package name. No framework-specific build-script name (`build:ssr`, `build:client`, etc.) is exposed at the top level; if a framework's toolchain needs multiple internal steps (e.g., Angular's application builder producing both browser and server output in one invocation, vs. React/Vue needing a separate Vite client build plus a server-file compile/copy step), those steps are composed *inside* that one `build` script (e.g., via `&&`-chained sub-scripts or a single tool invocation that already does both) — never exposed as separate top-level scripts a caller must know to invoke in order.
-- Task 9's CI job step is corrected to call this canonical script directly per framework (see the corrected step below) — no ternary/expression-based name translation is needed for the *script name* (`build` is always `build`); only the `--filter` package name still needs a per-framework value, which Task 9 now resolves via an explicit `include:` matrix mapping instead of an inline expression (see Amendment 2/6 changes to Task 9 below).
+- `pnpm --filter playground-angular run build`, `pnpm --filter playground-react run build`, and `pnpm --filter playground-vue run build` are the three canonical build invocations — identical shape across all three frameworks, differing only in the `--filter` package name. No framework-specific build-script name (`build:ssr`, `build:client`, etc.) is exposed at the top level; if a framework's toolchain needs multiple internal steps (e.g., Angular's application builder producing both browser and server output in one invocation, vs. React/Vue needing a separate Vite client build plus a server-file compile/copy step), those steps are composed _inside_ that one `build` script (e.g., via `&&`-chained sub-scripts or a single tool invocation that already does both) — never exposed as separate top-level scripts a caller must know to invoke in order.
+- Task 9's CI job step is corrected to call this canonical script directly per framework (see the corrected step below) — no ternary/expression-based name translation is needed for the _script name_ (`build` is always `build`); only the `--filter` package name still needs a per-framework value, which Task 9 now resolves via an explicit `include:` matrix mapping instead of an inline expression (see Amendment 2/6 changes to Task 9 below).
 
 **Verification performed before writing this plan (tooling/version reality check, per this repository's established plan-writing convention):**
+
 - `packages/react/tsup.config.ts` exists — `tsup` is the confirmed, already-installed bundler for React's own library build. No `vite.config.ts` exists in `packages/react` or `packages/vue` at the package root (Storybook's own `.storybook/main.ts` supplies Vite config internally for both). This plan uses **Vite** for both React's and Vue's harness client bundles — not `tsup` — because `tsup` is a library-bundler (ESM/CJS output for consumption by other tools) with no dev-server/HMR story, while Vite is already a first-class, already-installed devDependency for both React's and Vue's Storybook tooling and is the standard tool for bundling a browser entry point for an actual running app. This resolves the specification's Open Question 1 (§L.1) with a concrete, evidence-based choice.
 - All three frameworks' `.storybook/preview.*` files call `applyUltimateTheme()` from `@ultimate/themes` as their theme-loading mechanism (`packages/{ng,react,vue}/.storybook/preview.*`, read in full) — this exact call is what every harness's bootstrap/entry mirrors, per spec §C.6. No new theming mechanism is introduced.
 - `packages/ng/package.json` has no `exports` map (single `main`/`module`); `packages/react/package.json` and `packages/vue/package.json` both have `exports` maps with per-component subpaths — confirmed directly. Angular's harness therefore imports from `@ultimate/ng`'s root barrel (its only available entry); React's and Vue's harnesses use per-component subpaths per spec §C.3.
@@ -31,19 +34,19 @@
 
 ## 1. Task List Overview
 
-| # | Task | Depends on | Parallelizable with |
-|---|---|---|---|
-| 1 | Apply ADR-045 + correct GAP-008's stale field | none | 2, 3, 4 |
-| 2 | Angular SSR harness (`apps/playground-angular`) | none | 1, 3, 4 |
-| 3 | React SSR harness (`apps/playground-react`) | none | 1, 2, 4 |
-| 4 | Vue SSR harness (`apps/playground-vue`) | none | 1, 2, 3 |
-| 5 | Angular Playwright SSR spec + `playwright.config.ts` project/webServer | 2 | — |
-| 6 | React Playwright SSR spec + `playwright.config.ts` project/webServer | 3, 5 | — |
-| 7 | Vue Playwright SSR spec + `playwright.config.ts` project/webServer | 4, 6 | — |
-| 8 | Determinism double-fetch check (recommended by spec §K, adopted here) | 5, 6, 7 | — |
-| 9 | CI integration — `track-e-ssr-hydration` job in `.github/workflows/ci.yml` | 5, 6, 7, 8 | — |
-| 10 | GAP-034 registry update + harness READMEs | 5, 6, 7, 8, 9 | — |
-| 11 | Whole-track verification (local, full matrix, CI dry-run reasoning) | 1–10 | — |
+| #   | Task                                                                       | Depends on    | Parallelizable with |
+| --- | -------------------------------------------------------------------------- | ------------- | ------------------- |
+| 1   | Apply ADR-045 + correct GAP-008's stale field                              | none          | 2, 3, 4             |
+| 2   | Angular SSR harness (`apps/playground-angular`)                            | none          | 1, 3, 4             |
+| 3   | React SSR harness (`apps/playground-react`)                                | none          | 1, 2, 4             |
+| 4   | Vue SSR harness (`apps/playground-vue`)                                    | none          | 1, 2, 3             |
+| 5   | Angular Playwright SSR spec + `playwright.config.ts` project/webServer     | 2             | —                   |
+| 6   | React Playwright SSR spec + `playwright.config.ts` project/webServer       | 3, 5          | —                   |
+| 7   | Vue Playwright SSR spec + `playwright.config.ts` project/webServer         | 4, 6          | —                   |
+| 8   | Determinism double-fetch check (recommended by spec §K, adopted here)      | 5, 6, 7       | —                   |
+| 9   | CI integration — `track-e-ssr-hydration` job in `.github/workflows/ci.yml` | 5, 6, 7, 8    | —                   |
+| 10  | GAP-034 registry update + harness READMEs                                  | 5, 6, 7, 8, 9 | —                   |
+| 11  | Whole-track verification (local, full matrix, CI dry-run reasoning)        | 1–10          | —                   |
 
 Task 11 is terminal. Tasks 1–4 have no dependency on each other and may be done in parallel by separate subagents, matching Tracks A/C's own established subagent-driven-development precedent. **Tasks 5, 6, and 7 are no longer mutually parallelizable, corrected from this plan's first draft** — each still depends on its own framework's harness task (2/3/4 respectively) for the harness to exist, but all three also edit the same shared `playwright.config.ts` file, so Task 6 additionally depends on Task 5's edit being complete, and Task 7 additionally depends on Task 6's (see the Sequencing notes under each task) — this avoids a three-way merge conflict on one file and produces a clean, order-preserving diff. Task 8 needs all three Playwright specs to exist so its determinism check pattern is applied uniformly. Task 9 needs 5–7 (and 8, since the CI job runs whatever local verification already proved stable) to be stable and passing locally before being encoded into CI. Task 10 is documentation-closeout, sequenced last before final verification since it describes the real, finished state, not a planned one.
 
@@ -70,11 +73,13 @@ Task 11 is terminal. Tasks 1–4 have no dependency on each other and may be don
    ```
 
 **What NOT to do:**
+
 - Do not reword ADR-045's text — apply it verbatim as the specification drafted it. Any wording change is a Spec-Review-level concern, not this plan's to make.
 - Do not touch any other GAP-008 reference in `BLUEPRINT_GAPS.md` (lines 172, 188, 191, 681, 734–735, 779) — the specification (§B) confirmed none of them require correction.
 - Do not renumber or touch any existing ADR (ADR-001 through ADR-044).
 
 **Acceptance criteria:**
+
 - AC1.1: `grep -c "^## ADR-" docs/architecture/DECISIONS.md` returns 45 (was 44).
 - AC1.2: `git diff docs/architecture/BLUEPRINT_GAPS.md` shows exactly one changed line (the "Architectural decision required" field for GAP-008), no other diff.
 - AC1.3: `git diff --stat` for this task touches only `docs/architecture/DECISIONS.md` and `docs/architecture/BLUEPRINT_GAPS.md`.
@@ -132,11 +137,12 @@ HTTP response  (the real SSR HTML, verified by Task 5's Playwright spec and
    AC2.2's manual curl check below)
 ```
 
-The exact Angular-builder output directory names/export shape (`dist/playground-angular/browser`/`server`, the server artifact's exact function/module name) are confirmed against the actually-installed `@angular/build` version when this task is executed — the *architecture* above (one build, two artifact outputs, `server.ts` as a distinct hand-written consumer of the server artifact) is fixed by this plan and does not require implementation-time invention; only the literal path/export names are.
+The exact Angular-builder output directory names/export shape (`dist/playground-angular/browser`/`server`, the server artifact's exact function/module name) are confirmed against the actually-installed `@angular/build` version when this task is executed — the _architecture_ above (one build, two artifact outputs, `server.ts` as a distinct hand-written consumer of the server artifact) is fixed by this plan and does not require implementation-time invention; only the literal path/export names are.
 
 7. `applyUltimateTheme()` from `@ultimate/themes` — see the cross-cutting placement rule in the "Theme-loading placement" note below (applies identically to Tasks 2, 3, and 4; not repeated per-task).
 
 **What NOT to do:**
+
 - Do not call `provideZoneChangeDetection()` — Angular 21's zoneless default (verified, angular.dev) is what `@ultimate/ng`/`@ultimate/ng-core` already assume (ADR-022); this harness introduces no zone.js dependency.
 - Do not add `withRoutes()`/`withAppShell()` — one page, no routing (spec §C.2, binding out-of-scope §A.3).
 - Do not modify `packages/ng/angular.json` or any file under `packages/ng`/`packages/ng-core` — confirmed by the specification (§C.2) that the library project cannot and should not be reused/extended; this is a wholly new, separate project.
@@ -144,6 +150,7 @@ The exact Angular-builder output directory names/export shape (`dist/playground-
 - Do not have `server.ts` compile or bundle Angular source itself at request time or at server-start time — it only loads and calls the already-built server artifact (per the canonical build/start contract above); `"start"` never triggers a build.
 
 **Acceptance criteria:**
+
 - AC2.1: `pnpm --filter playground-angular run build` completes without error and produces both `dist/playground-angular/browser/**` and `dist/playground-angular/server/**` (or the actual confirmed output paths) as separate, verifiable outputs.
 - AC2.2: `pnpm --filter playground-angular run start` (run only after AC2.1's build, never combined into one command) starts the server from the built artifacts only, and a plain `curl http://localhost:6011/` (or the assigned port) returns HTML containing, at minimum, the literal static fixture text for all 8 components (e.g., the Button's static label string, the Table's static row values) — verified manually before Task 5 writes the automated Playwright assertion for the same thing.
 - AC2.3: `git diff --stat` for this task touches only files under `apps/playground-angular/`.
@@ -187,6 +194,7 @@ HTTP response
 ```
 
 **What NOT to do:**
+
 - Do not use `renderToString` — the binding decision and spec §C.3 name `renderToPipeableStream` specifically.
 - Do not add any Portal special-casing in the harness — Task 2/3/4's own verification (spec §C.3, independently re-confirmed by this session's own direct source read of `packages/react-core/src/overlay/portal.tsx`) already established Portal is server-safe by construction (`mounted` state starts `false`, only flips via a mount-only `useEffect`). If a hydration mismatch traceable to Portal is observed anyway during this task's own manual verification, that is a Task-2/3/4-level finding to report back before proceeding to Task 6, not a harness-side workaround to silently add.
 - Do not add a data-fetching Suspense boundary — fixtures are static; `onShellReady` fires immediately (spec §C.3).
@@ -194,6 +202,7 @@ HTTP response
 - Do not have `dist/server.js` import `.tsx`/`.ts` source directly or invoke `ts-node`/`tsx` at request time — it only imports the already-compiled `dist/entry-server.js`.
 
 **Acceptance criteria:**
+
 - AC3.1: `pnpm --filter playground-react run build` completes without error and produces both `dist/client/**` and `dist/server.js`/`dist/entry-server.js` as separate, verifiable outputs.
 - AC3.2: `pnpm --filter playground-react run start` (run only after AC3.1's build) starts the server from the built artifacts only; `curl http://localhost:6012/` returns HTML containing all 8 components' static SSR-content-requirement text (spec §D.2 column 1); Dialog/Tooltip/Menu's Portal-dependent content is absent from this raw response (expected — spec §D.2/§D.4), and no other error is present in server logs.
 - AC3.3: `git diff --stat` for this task touches only files under `apps/playground-react/`.
@@ -219,12 +228,14 @@ HTTP response
 **Vue artifact flow:** identical shape to Task 3's React flow above (source → `"build"`'s two sub-steps → `dist/client/**` + `dist/server.js` → Node server imports compiled server artifact, serves compiled client artifact as static assets → HTTP response) — substituting Vue's `createSSRApp`/`renderToString`/`.mount()` calls for React's `renderToPipeableStream`/`hydrateRoot`.
 
 **What NOT to do:**
+
 - Do not use Nuxt or any Nuxt convention (file-based routing, auto-imports) — plain `createSSRApp`/`renderToString` only.
 - Do not add Teleport special-casing — already confirmed server-safe by construction (`packages/vue-core/src/overlay/portal.ts`'s `mounted` ref gate, only flipped in `onMounted()`, which Vue's own docs confirm never fires server-side).
 - Do not modify `packages/vue` or `packages/vue-core`.
 - Do not have `dist/server.js` import `.ts` source directly at request time.
 
 **Acceptance criteria:**
+
 - AC4.1: `pnpm --filter playground-vue run build` completes without error and produces both `dist/client/**` and `dist/server.js`/`dist/entry-server.js` as separate, verifiable outputs.
 - AC4.2: `pnpm --filter playground-vue run start` (run only after AC4.1's build) starts the server from built artifacts only; `curl http://localhost:6013/` returns HTML containing all 8 components' static SSR-content-requirement text; Dialog/Menu's Teleport-dependent content is absent from this raw response (expected).
 - AC4.3: `git diff --stat` for this task touches only files under `apps/playground-vue/`.
@@ -239,7 +250,7 @@ HTTP response
 
 **Binding placement rule:** each harness calls `applyUltimateTheme()` exactly once, as early as possible, from a location both the server entry and the client entry execute before any component renders (a shared bootstrap module imported by both `main.ts`/`main.server.ts` (Angular), both `entry-client.tsx`/`entry-server.tsx` (React), or both `entry-client.ts`/`entry-server.ts` (Vue) is the simplest such location, and is what Tasks 2–4 now specify).
 
-**Standing escalation clause (unchanged from this plan's original binding decision 6, restated here for this specific call since the first Plan Review asked for explicit verification language):** if any Task 2–4 implementer's own re-verification at implementation time finds `applyUltimateTheme()` or anything in its call chain to in fact be browser-only or dependent on a browser global that this plan's source read above missed, the fix is to relocate the *call site* to wherever it is technically valid for that specific harness (e.g., client-only, or gated the same way the already-verified `*-core` StyleSheet registrations are gated) — **not** to modify `applyUltimateTheme()`, `Theme.setTheme`, or any file under `packages/themes`/`packages/uix-styled` to accommodate the harness. Any such relocation is documented in that task's own completion notes as a finding, consistent with this plan's existing production-code-change escalation path (binding decision 6, spec Exit Criterion 10) — it is not expected to be needed, given the direct source verification above, but the plan does not assume infallibility of a single read.
+**Standing escalation clause (unchanged from this plan's original binding decision 6, restated here for this specific call since the first Plan Review asked for explicit verification language):** if any Task 2–4 implementer's own re-verification at implementation time finds `applyUltimateTheme()` or anything in its call chain to in fact be browser-only or dependent on a browser global that this plan's source read above missed, the fix is to relocate the _call site_ to wherever it is technically valid for that specific harness (e.g., client-only, or gated the same way the already-verified `*-core` StyleSheet registrations are gated) — **not** to modify `applyUltimateTheme()`, `Theme.setTheme`, or any file under `packages/themes`/`packages/uix-styled` to accommodate the harness. Any such relocation is documented in that task's own completion notes as a finding, consistent with this plan's existing production-code-change escalation path (binding decision 6, spec Exit Criterion 10) — it is not expected to be needed, given the direct source verification above, but the plan does not assume infallibility of a single read.
 
 ---
 
@@ -252,7 +263,8 @@ HTTP response
 3. Playwright's `webServer` entry runs `pnpm --filter <harness> run start` (the canonical `start` script — loads only already-built `dist/` output, per each Task 2–4's own "no compile-at-request-time" rule) and waits on `url` for readiness, exactly like Track A's three existing `webServer` entries already do.
 4. `npx playwright test --project=<framework>-ssr-chromium` runs against the now-running, already-built server.
 
-**Playwright's `webServer.command` is deliberately `start`, never `build && start`, and never a combined dev-mode command:** step 2 (build) is not folded into the `webServer` entry's `command` field, because Playwright's `reuseExistingServer`/`timeout` semantics are designed around *starting a server*, not around *build-then-start* — folding a build into `command` would make Playwright's readiness timeout also have to absorb build time, and would silently re-build on every local test run even when nothing changed. Instead, the build step is a **separate, explicit prerequisite** each environment runs once before invoking Playwright at all:
+**Playwright's `webServer.command` is deliberately `start`, never `build && start`, and never a combined dev-mode command:** step 2 (build) is not folded into the `webServer` entry's `command` field, because Playwright's `reuseExistingServer`/`timeout` semantics are designed around _starting a server_, not around _build-then-start_ — folding a build into `command` would make Playwright's readiness timeout also have to absorb build time, and would silently re-build on every local test run even when nothing changed. Instead, the build step is a **separate, explicit prerequisite** each environment runs once before invoking Playwright at all:
+
 - **Local verification** (Tasks 2–4's own AC2.1–AC4.1, and this task's own manual pre-check before trusting the automated spec): run `pnpm --filter <harness> run build` once, then `npx playwright test --project=<framework>-ssr-chromium` — never skip step 2 and assume stale `dist/` output is current.
 - **CI** (Task 9): the CI job's steps run `build` as its own explicit step, strictly before the `playwright test` step — see Task 9's corrected step list below. Playwright's `webServer.command` in CI is still only `start` — CI's ordering guarantee comes from the job's own linear step sequence, not from anything inside `playwright.config.ts`.
 
@@ -266,22 +278,23 @@ This directly answers the first Plan Review's five sub-questions: build is a har
 
 **The previous plan draft's Tasks 5–7 did not account for this — each described adding "one new `webServer` entry" as if it were scoped to its own project, which Playwright does not do.** This amendment corrects that assumption.
 
-**Chosen mechanism: an environment-variable-gated `webServer` array, built at config-load time inside `playwright.config.ts` — the same pattern this file already uses for `process.env.CI` (`forbidOnly: !!process.env.CI`, `retries: process.env.CI ? 2 : 0`, `reuseExistingServer: !process.env.CI` on all three existing entries, `playwright.config.ts:25-26,158,165,172`).** `playwright.config.ts` is a plain TypeScript module evaluated once at config-load time — before Playwright's internal task pipeline (including the webServer-startup task confirmed above) ever runs — so any array-construction logic in the file (an `if`/ternary/`.filter()` deciding which entries end up in the exported `webServer` array) is exactly as valid and exactly as "real Playwright configuration convention" as the `process.env.CI`-driven values already present. No Playwright API for per-project `webServer` scoping is invented or assumed; instead, the *array Playwright receives* is different per invocation, decided entirely by this repository's own config file, which is the standard, documented way to make a Playwright config file environment-sensitive.
+**Chosen mechanism: an environment-variable-gated `webServer` array, built at config-load time inside `playwright.config.ts` — the same pattern this file already uses for `process.env.CI` (`forbidOnly: !!process.env.CI`, `retries: process.env.CI ? 2 : 0`, `reuseExistingServer: !process.env.CI` on all three existing entries, `playwright.config.ts:25-26,158,165,172`).** `playwright.config.ts` is a plain TypeScript module evaluated once at config-load time — before Playwright's internal task pipeline (including the webServer-startup task confirmed above) ever runs — so any array-construction logic in the file (an `if`/ternary/`.filter()` deciding which entries end up in the exported `webServer` array) is exactly as valid and exactly as "real Playwright configuration convention" as the `process.env.CI`-driven values already present. No Playwright API for per-project `webServer` scoping is invented or assumed; instead, the _array Playwright receives_ is different per invocation, decided entirely by this repository's own config file, which is the standard, documented way to make a Playwright config file environment-sensitive.
 
 **Concrete mechanism:**
+
 - A new environment variable, `TRACK_E_SSR_FRAMEWORK`, optionally set to one of `ng` / `react` / `vue`.
 - In `playwright.config.ts`, the three new Track E `webServer` entries (Angular/React/Vue, ports 6011–6013) are constructed as a small array/lookup (e.g., `const trackESsrServers = { ng: {...}, react: {...}, vue: {...} }`), and the entries actually included in the final exported `webServer` array are selected by:
   ```typescript
   const selectedFramework = process.env.TRACK_E_SSR_FRAMEWORK; // "ng" | "react" | "vue" | undefined
   const trackESsrEntries = selectedFramework
-    ? [trackESsrServers[selectedFramework]]   // CI: exactly one, matching the matrix leg
-    : Object.values(trackESsrServers);         // local (unset): all three, for AC7.6's combined run
+    ? [trackESsrServers[selectedFramework]] // CI: exactly one, matching the matrix leg
+    : Object.values(trackESsrServers); // local (unset): all three, for AC7.6's combined run
   ```
-- The final `webServer` array remains `[...the existing 3 Storybook entries (untouched, unconditional), ...trackESsrEntries]` — Track A's three entries are never touched by this conditional; only the *new* Track E slice is filtered.
+- The final `webServer` array remains `[...the existing 3 Storybook entries (untouched, unconditional), ...trackESsrEntries]` — Track A's three entries are never touched by this conditional; only the _new_ Track E slice is filtered.
 - **Local combined execution (unset `TRACK_E_SSR_FRAMEWORK`):** all three Track E `webServer` entries are included, exactly as the plan's first draft assumed — `npx playwright test --project=ng-ssr-chromium --project=react-ssr-chromium --project=vue-ssr-chromium` (AC7.6) starts all three SSR servers (plus, harmlessly, Track A's three Storybook servers, unchanged current behavior) and runs the three selected projects against them.
 - **CI single-framework execution:** each matrix leg's "Run Playwright SSR project" step sets `TRACK_E_SSR_FRAMEWORK` to that leg's own `matrix.framework` value before invoking `playwright test`, so only that framework's `webServer` entry is in the array Playwright starts — the `ng` matrix job never attempts to start the React or Vue SSR server, and never needs their `dist/` output to exist.
-- **Track A isolation:** Track A's three Storybook `webServer` entries are declared exactly as they are today, unconditionally, with no new environment-variable gate applied to them — this mechanism is additive and scoped only to the three *new* Track E entries; Track A's existing behavior (all three Storybook servers always start) is completely unchanged.
-- **Build/start contract preserved:** each Track E `webServer` entry's `command` remains exactly `pnpm --filter <harness> run start` (never `build`, never a combined command) — this amendment changes only *which entries are included in the array*, not what any individual entry's `command` does. The CI job's own explicit "Build harness" step (Task 9, unchanged by this amendment) still runs before the Playwright step, so whichever single server `TRACK_E_SSR_FRAMEWORK` selects in that leg always has its `dist/` already built by the time `webServer` tries to start it.
+- **Track A isolation:** Track A's three Storybook `webServer` entries are declared exactly as they are today, unconditionally, with no new environment-variable gate applied to them — this mechanism is additive and scoped only to the three _new_ Track E entries; Track A's existing behavior (all three Storybook servers always start) is completely unchanged.
+- **Build/start contract preserved:** each Track E `webServer` entry's `command` remains exactly `pnpm --filter <harness> run start` (never `build`, never a combined command) — this amendment changes only _which entries are included in the array_, not what any individual entry's `command` does. The CI job's own explicit "Build harness" step (Task 9, unchanged by this amendment) still runs before the Playwright step, so whichever single server `TRACK_E_SSR_FRAMEWORK` selects in that leg always has its `dist/` already built by the time `webServer` tries to start it.
 
 **Why this satisfies all seven of the required design points:** (1) local combined execution starts all three servers because `TRACK_E_SSR_FRAMEWORK` is unset locally, so the lookup's `Object.values(...)` branch includes all three; (2) CI isolates to one server because each matrix leg sets the variable to its own framework before running tests; (3) the selected framework is communicated via that one environment variable, read once at config-load time — no other signal (file, CLI flag beyond the existing `--project`, etc.) is needed; (4) Track A's 9 projects/3 webServer entries are declared with no reference to this new variable at all, so they are structurally untouched; (5) every Track E `webServer.command` is still exactly `start`; (6) the build→start→test contract from the prior section is unaffected — this amendment only changes array membership, not command content or step ordering; (7) AC7.6 (local combined run) and Task 9's CI matrix (single-framework run) are both satisfiable because they exercise the two different branches of the same conditional, driven by the same one variable, in the same config file.
 
@@ -300,24 +313,26 @@ This directly answers the first Plan Review's five sub-questions: build is a har
 
 **Concrete per-component post-hydration interaction/assertion table (resolves the first Plan Review's Amendment 4 finding — replaces all "if enabled"/implicit wording; binding on Tasks 5, 6, and 7 identically, one row exercised per framework's own component API):**
 
-| Component | SSR-content assertion | Post-hydration interaction | Post-hydration assertion |
-|---|---|---|---|
-| **Button** | Static label text (e.g., `"Proof Button"`) present in raw HTML | `page.getByRole("button", { name: "Proof Button" }).click()` | A static counter/status element's text changes from its initial value (e.g., `"Clicks: 0"` → `"Clicks: 1"`) |
-| **Checkbox** | Initial `checked`/unchecked state's ARIA/attribute present in raw HTML | `page.getByRole("checkbox").click()` | The checkbox's `aria-checked` (or equivalent DOM state) flips to the opposite of its initial value |
-| **Dialog** | Dialog's trigger button present; dialog content/mask absent from raw HTML (closed by default, per Portal's server-null behavior) | Click the trigger button to open; then press `Escape` (or click a close button) | Dialog content becomes visible (`role="dialog"` element visible) after open; becomes hidden again after close |
-| **Menu** | Menu rendered in its default **inline** mode (not popup) so its items' static labels are present in raw HTML — inline mode is the concrete, binding choice for SSR-content-presence, not left open | Click (or `Enter`/`Space`-activate) one specific, named menu item (e.g., `"Item 2"`) | A static "last selected" display element's text updates to that item's label (e.g., `"Last selected: Item 2"`) |
-| **Paginator** | Static current-page indicator (e.g., `"Page 1"`) present in raw HTML | Click the "next page" control once | The page indicator updates from `"Page 1"` to `"Page 2"` |
-| **Scroller** | A static, fixed-size list of exactly 5 fixture items, each with a literal, distinct label (e.g., `"Row 1"`…`"Row 5"`), all present in raw HTML (small enough that no virtualization windowing hides any item from the initial SSR payload — this specific, concrete fixture size is what makes the SSR-content assertion meaningful rather than vacuous) | Programmatically scroll the Scroller's viewport element by a fixed pixel amount (`element.scrollTop = 100` via `page.evaluate()`, or a keyboard `PageDown` if the component supports it) | The scroll does not throw a console error, and the Scroller's viewport `scrollTop` (read back via `page.evaluate()`) reflects the applied scroll offset — proving the scroll handler attached post-hydration and the component did not silently reset scroll position |
-| **Table** | Static, literal row/column data (e.g., 3 rows × 2 columns with fixed string/number values) present in raw HTML | Click one sortable column's header once | The visible row order changes to match that column's ascending sort of the known, literal fixture values (asserted by reading back the rendered cell text in order, not by trusting an internal sort-state flag) |
-| **Tooltip** | Host element (e.g., a button with a static label) present in raw HTML; tooltip content itself absent (Portal's server-null behavior) | `page.getByRole("button", { name: <host label> }).hover()` (or `.focus()`) | Tooltip content becomes visible (a specific, literal tooltip text string appears in the DOM) |
+| Component     | SSR-content assertion                                                                                                                                                                                                                                                                                                                                    | Post-hydration interaction                                                                                                                                                               | Post-hydration assertion                                                                                                                                                                                                                                              |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Button**    | Static label text (e.g., `"Proof Button"`) present in raw HTML                                                                                                                                                                                                                                                                                           | `page.getByRole("button", { name: "Proof Button" }).click()`                                                                                                                             | A static counter/status element's text changes from its initial value (e.g., `"Clicks: 0"` → `"Clicks: 1"`)                                                                                                                                                           |
+| **Checkbox**  | Initial `checked`/unchecked state's ARIA/attribute present in raw HTML                                                                                                                                                                                                                                                                                   | `page.getByRole("checkbox").click()`                                                                                                                                                     | The checkbox's `aria-checked` (or equivalent DOM state) flips to the opposite of its initial value                                                                                                                                                                    |
+| **Dialog**    | Dialog's trigger button present; dialog content/mask absent from raw HTML (closed by default, per Portal's server-null behavior)                                                                                                                                                                                                                         | Click the trigger button to open; then press `Escape` (or click a close button)                                                                                                          | Dialog content becomes visible (`role="dialog"` element visible) after open; becomes hidden again after close                                                                                                                                                         |
+| **Menu**      | Menu rendered in its default **inline** mode (not popup) so its items' static labels are present in raw HTML — inline mode is the concrete, binding choice for SSR-content-presence, not left open                                                                                                                                                       | Click (or `Enter`/`Space`-activate) one specific, named menu item (e.g., `"Item 2"`)                                                                                                     | A static "last selected" display element's text updates to that item's label (e.g., `"Last selected: Item 2"`)                                                                                                                                                        |
+| **Paginator** | Static current-page indicator (e.g., `"Page 1"`) present in raw HTML                                                                                                                                                                                                                                                                                     | Click the "next page" control once                                                                                                                                                       | The page indicator updates from `"Page 1"` to `"Page 2"`                                                                                                                                                                                                              |
+| **Scroller**  | A static, fixed-size list of exactly 5 fixture items, each with a literal, distinct label (e.g., `"Row 1"`…`"Row 5"`), all present in raw HTML (small enough that no virtualization windowing hides any item from the initial SSR payload — this specific, concrete fixture size is what makes the SSR-content assertion meaningful rather than vacuous) | Programmatically scroll the Scroller's viewport element by a fixed pixel amount (`element.scrollTop = 100` via `page.evaluate()`, or a keyboard `PageDown` if the component supports it) | The scroll does not throw a console error, and the Scroller's viewport `scrollTop` (read back via `page.evaluate()`) reflects the applied scroll offset — proving the scroll handler attached post-hydration and the component did not silently reset scroll position |
+| **Table**     | Static, literal row/column data (e.g., 3 rows × 2 columns with fixed string/number values) present in raw HTML                                                                                                                                                                                                                                           | Click one sortable column's header once                                                                                                                                                  | The visible row order changes to match that column's ascending sort of the known, literal fixture values (asserted by reading back the rendered cell text in order, not by trusting an internal sort-state flag)                                                      |
+| **Tooltip**   | Host element (e.g., a button with a static label) present in raw HTML; tooltip content itself absent (Portal's server-null behavior)                                                                                                                                                                                                                     | `page.getByRole("button", { name: <host label> }).hover()` (or `.focus()`)                                                                                                               | Tooltip content becomes visible (a specific, literal tooltip text string appears in the DOM)                                                                                                                                                                          |
 
 **What NOT to do:**
+
 - Do not modify any of Track A's existing 9 projects or 3 `webServer` entries in `playwright.config.ts` — additive only.
 - Do not add Firefox/WebKit variants — Chromium only (binding decision).
 - Do not assert `<style>` tag presence in the raw SSR HTML response (spec §D.3's explicit non-assertion).
 - Do not begin Task 6's `playwright.config.ts` edit until this task's own edit is complete (see Sequencing above).
 
 **Acceptance criteria:**
+
 - AC5.1: `npx playwright test --project=ng-ssr-chromium` passes locally, using the deterministic build-then-serve workflow above (`build` run once manually beforehand).
 - AC5.2: The spec fails (verified by a deliberate temporary break, then reverted) if the SSR HTML is missing a component's expected content — proving the SSR-content assertion is real, not vacuous.
 - AC5.3: The spec fails (verified the same way) if a post-hydration interaction assertion's expected DOM change does not occur — proving the interaction assertion is real, for all 8 components' specific assertions in the table above (not just a subset).
@@ -338,6 +353,7 @@ This directly answers the first Plan Review's five sub-questions: build is a har
 **What NOT to do:** same category as Task 5 — no modification to Track A's existing projects, Chromium-only, no `<style>`-presence assertion, no reordering of Task 5's already-added entries. Additionally: do not add special Portal-timing waits beyond the standard hydration-complete + interaction wait — Portal's post-hydration appearance (Dialog/Tooltip opening, Menu's popup mode if used) is exercised through the normal interaction assertion (click-to-open, then assert visible), not a separate Portal-specific mechanism.
 
 **Acceptance criteria:** AC6.1–AC6.5 mirror AC5.1–AC5.5 exactly, scoped to `react-ssr-chromium`/`apps/playground-react/e2e`, including AC6.3's full-8-component interaction-table coverage and AC6.5's confirmation that Task 5's Angular entries remain untouched in the diff. Additionally:
+
 - AC6.6: Running `TRACK_E_SSR_FRAMEWORK=react npx playwright test --project=react-ssr-chromium` starts only the React SSR server (port 6012 listening; port 6011's Angular server does **not** start even though its lookup entry now also exists) — proving the isolation mechanism correctly excludes a sibling framework's entry, not just that it includes the selected one (AC5.6 alone couldn't prove exclusion, since only one entry existed yet).
 - AC6.7: Running `TRACK_E_SSR_FRAMEWORK=ng npx playwright test --project=ng-ssr-chromium` (re-run from AC5.6, now with React's entry also present in the lookup) still starts only the Angular server — proving Task 6's addition did not regress Task 5's isolation.
 
@@ -354,6 +370,7 @@ This directly answers the first Plan Review's five sub-questions: build is a har
 **What NOT to do:** same category as Tasks 5–6, scoped to Vue; no special Teleport-timing mechanism beyond the standard interaction wait; no reordering of Tasks 5's/6's already-added entries.
 
 **Acceptance criteria:** AC7.1–AC7.5 mirror AC5.1–AC5.5 exactly, scoped to `vue-ssr-chromium`/`apps/playground-vue/e2e`, including AC7.3's full-8-component interaction-table coverage. Additionally:
+
 - AC7.6 — after Tasks 5, 6, and 7 are all complete, `npx playwright test --project=ng-ssr-chromium --project=react-ssr-chromium --project=vue-ssr-chromium` **with `TRACK_E_SSR_FRAMEWORK` left unset** passes as one combined run, proving all three Track E `webServer` entries (each started via its own `start` script against its own already-built `dist/`) are all included and can run concurrently without port or process conflicts — this is the local combined-execution scenario the isolation mechanism's "unset variable" branch exists to serve.
 - AC7.7 — `git diff playwright.config.ts` against the pre-Task-5 baseline shows Track A's original 9 projects/3 webServer entries fully unchanged, plus exactly 3 new projects, the `trackESsrServers` lookup (all 3 keys), and the `TRACK_E_SSR_FRAMEWORK`-selection logic — confirming the serialized sequencing (Angular's entry/logic first, then React's key, then Vue's key) produced a clean, order-preserving diff.
 - AC7.8 — repeating AC5.6/AC6.6's single-framework isolation check for Vue (`TRACK_E_SSR_FRAMEWORK=vue npx playwright test --project=vue-ssr-chromium` starts only port 6013) confirms all three frameworks are now correctly isolatable, completing the matrix of 3 positive (own server starts) × implied negative (siblings don't) checks across AC5.6/AC6.6/AC6.7/AC7.8.
@@ -368,10 +385,12 @@ This directly answers the first Plan Review's five sub-questions: build is a har
 **What to add:** in each of the three `ssr-hydration.spec.ts` files (Tasks 5–7), one additional test that issues two separate `page.request.get()` calls against the harness's root URL and asserts the two response bodies are byte-identical (excluding, if any exist, legitimately request-scoped values — none are expected per spec §D.3, so the assertion is a plain equality check with no exclusion logic needed unless a task discovers a genuine exception, which would itself be a §D.3 violation to fix, not to exclude).
 
 **What NOT to do:**
+
 - Do not build this as a separate script or CI step — it is one more Playwright test per framework, run as part of the same `ssr-hydration.spec.ts` file and the same CI job (Task 9).
 - Do not add exclusion/normalization logic speculatively — if the two fetches ever differ, that is a §D.3 determinism violation to fix at the source (fixture data), not a difference to launder past the check.
 
 **Acceptance criteria:**
+
 - AC8.1: All three frameworks' double-fetch determinism test passes.
 - AC8.2: Deliberately introducing a `Math.random()` or `Date.now()` call into one harness's fixture data (temporarily, for verification, then reverted) causes that framework's determinism test to fail — proving the check has real detection power, not a vacuous pass.
 
@@ -384,58 +403,59 @@ This directly answers the first Plan Review's five sub-questions: build is a har
 **What to change:** add one new job to `.github/workflows/ci.yml`, appended after the existing `track-a-browser-visual-a11y` job, mirroring its exact structure (verified this plan's header, `.github/workflows/ci.yml:131-178`):
 
 ```yaml
-  track-e-ssr-hydration:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - framework: ng
-            dir: playground-angular
-          - framework: react
-            dir: playground-react
-          - framework: vue
-            dir: playground-vue
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+track-e-ssr-hydration:
+  runs-on: ubuntu-latest
+  strategy:
+    fail-fast: false
+    matrix:
+      include:
+        - framework: ng
+          dir: playground-angular
+        - framework: react
+          dir: playground-react
+        - framework: vue
+          dir: playground-vue
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24.15.0"
-          cache: "pnpm"
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "24.15.0"
+        cache: "pnpm"
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
 
-      - name: Build harness (${{ matrix.dir }})
-        run: pnpm --filter ${{ matrix.dir }} run build
+    - name: Build harness (${{ matrix.dir }})
+      run: pnpm --filter ${{ matrix.dir }} run build
 
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+    - name: Install Playwright Chromium
+      run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright SSR project (${{ matrix.framework }})
-        env:
-          TRACK_E_SSR_FRAMEWORK: ${{ matrix.framework }}
-        run: npx playwright test --project=${{ matrix.framework }}-ssr-chromium
+    - name: Run Playwright SSR project (${{ matrix.framework }})
+      env:
+        TRACK_E_SSR_FRAMEWORK: ${{ matrix.framework }}
+      run: npx playwright test --project=${{ matrix.framework }}-ssr-chromium
 
-      - name: Upload Playwright HTML report (${{ matrix.framework }})
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-ssr-${{ matrix.framework }}
-          path: playwright-report/
+    - name: Upload Playwright HTML report (${{ matrix.framework }})
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report-ssr-${{ matrix.framework }}
+        path: playwright-report/
 ```
 
 **Resolves the first Plan Review's Amendment 1/2 findings for CI specifically:** the matrix now uses an explicit `include:` list (`framework`/`dir` pairs) instead of an inline ternary-style name-translation expression — no expression-syntax risk, and the mapping from Playwright's project-naming convention (`${{ matrix.framework }}-ssr-chromium`, matching Task 5–7's project names exactly) to each harness's actual `apps/playground-*` directory name is explicit and readable. The **Build harness** step runs `pnpm --filter <dir> run build` (the canonical `build` script from every harness's package, per Tasks 2–4) as its own step, strictly before the **Run Playwright SSR project** step — this is what guarantees the prerequisite build in CI: Playwright's `webServer.command` in `playwright.config.ts` (Task 5–7) only ever runs `start`, never `build`, so without this explicit preceding step the `webServer` would fail to find a `dist/` to start from. This is the same build-then-serve contract established in the note preceding Task 5, applied here as CI's own concrete realization of it.
 
-**Resolves the second Plan Review finding (`webServer`/CI-matrix isolation):** the **Run Playwright SSR project** step now sets `TRACK_E_SSR_FRAMEWORK: ${{ matrix.framework }}` as a step-scoped environment variable, read by `playwright.config.ts`'s `trackESsrServers` selection logic (established in Task 5, extended by Tasks 6–7 — see the dedicated section preceding Task 5). This is what makes each CI matrix leg build only its own harness (via the preceding "Build harness" step, already scoped to `matrix.dir`) *and* have Playwright start only its own SSR `webServer` entry — the `ng` leg never attempts to start the React or Vue server, so it never needs their `dist/` output, which this leg never built. Without this environment variable, Playwright's global `webServer` array would attempt to start all three Track E servers in every matrix leg regardless of which one was built, since — confirmed directly against Playwright's own runner source during this amendment — `webServer` startup is not scoped by `--project` selection at all.
+**Resolves the second Plan Review finding (`webServer`/CI-matrix isolation):** the **Run Playwright SSR project** step now sets `TRACK_E_SSR_FRAMEWORK: ${{ matrix.framework }}` as a step-scoped environment variable, read by `playwright.config.ts`'s `trackESsrServers` selection logic (established in Task 5, extended by Tasks 6–7 — see the dedicated section preceding Task 5). This is what makes each CI matrix leg build only its own harness (via the preceding "Build harness" step, already scoped to `matrix.dir`) _and_ have Playwright start only its own SSR `webServer` entry — the `ng` leg never attempts to start the React or Vue server, so it never needs their `dist/` output, which this leg never built. Without this environment variable, Playwright's global `webServer` array would attempt to start all three Track E servers in every matrix leg regardless of which one was built, since — confirmed directly against Playwright's own runner source during this amendment — `webServer` startup is not scoped by `--project` selection at all.
 
 **What NOT to do:**
+
 - Do not modify the existing `track-a-browser-visual-a11y` job or the main `ci` job in any way.
 - Do not install Firefox/WebKit browsers in this job (`--with-deps chromium` only, narrower than Track A's `chromium firefox webkit`, per binding Chromium-only decision).
 - Do not add a `needs:` dependency from this job onto `track-a-browser-visual-a11y` or the main `ci` job — Track E's job runs independently, exactly as Track A's job runs independently of the main `ci` job today (verified: no cross-job `needs:` exists between them currently).
@@ -444,6 +464,7 @@ This directly answers the first Plan Review's five sub-questions: build is a har
 - Do not set `TRACK_E_SSR_FRAMEWORK` at the job level (applying to all steps) — it is scoped to the "Run Playwright SSR project" step specifically, since no earlier step (checkout, install, build) reads or needs it.
 
 **Acceptance criteria:**
+
 - AC9.1: `git diff .github/workflows/ci.yml` shows only one new job appended — no existing job's YAML altered.
 - AC9.2: A CI run (or a local `act`-style dry-run / manual YAML lint, if full CI execution isn't available at this task's verification step) confirms the new job's YAML is syntactically valid, the `include:` matrix correctly maps each `framework` to its `dir`, and its steps reference only scripts/commands that actually exist per Tasks 2–8 (specifically: each harness's `build`/`start` scripts, and each `<framework>-ssr-chromium` Playwright project name from Tasks 5–7).
 - AC9.3: The existing `track-a-browser-visual-a11y` job and main `ci` job's own passing status is unaffected (confirmed by running them, or by the diff-scope check in AC9.1 being sufficient evidence no shared file/script was altered).
@@ -463,10 +484,12 @@ This directly answers the first Plan Review's five sub-questions: build is a har
 2. Add a short `README.md` to each of the three harness directories, documenting: what the harness is (a minimal SSR/hydration verification harness, not a playground/showcase), how to run it locally (`pnpm --filter <harness-name> run build` followed by `pnpm --filter <harness-name> run start` — the two canonical scripts from the binding build/start contract, run as two separate commands, never combined), and the one known, pre-existing, already-tracked limitation noted in spec §C.6 for Angular specifically (styling may appear minimal/unstyled post-hydration due to the pre-existing `ngCoreStyleSheet` gap tracked by ADR-023 follow-up 6/ADR-029 — explicitly not a Track E regression).
 
 **What NOT to do:**
+
 - Do not invent a new GAP-034 status vocabulary word not already used elsewhere in the registry — match the existing convention.
 - Do not write a README implying these are general-purpose demo/playground apps — the wording must match spec §A.2's precise scope framing (closes GAP-034, not GAP-008 in full).
 
 **Acceptance criteria:**
+
 - AC10.1: GAP-034's entry in `BLUEPRINT_GAPS.md` no longer reads `IMPLEMENTED-BUT-UNVERIFIED` and cites the specific harness/test/CI-job evidence.
 - AC10.2: All three `apps/playground-*/README.md` files exist and each explicitly states the harness does not close GAP-008 in full.
 
@@ -481,17 +504,19 @@ This directly answers the first Plan Review's five sub-questions: build is a har
 1. `pnpm install --frozen-lockfile` succeeds at the repo root with all three new `apps/playground-*` packages present in the workspace.
 2. Each harness builds and starts independently (Tasks 2–4's AC2.1/AC3.1/AC4.1 re-confirmed against the final, integrated state — not just each task's own isolated check).
 3. `npx playwright test --project=ng-ssr-chromium --project=react-ssr-chromium --project=vue-ssr-chromium` (with `TRACK_E_SSR_FRAMEWORK` unset) passes as one run (re-confirms AC7.6 against the final state, after Tasks 8–10's changes).
-3a. For each framework, `TRACK_E_SSR_FRAMEWORK=<framework> npx playwright test --project=<framework>-ssr-chromium` is re-run against the final, fully-integrated state with only that framework's `dist/` present (the other two removed/never built in that check) — re-confirming AC9.5's isolation guarantee holds at the end of the whole track, not just when Task 9 first verified it in isolation.
+   3a. For each framework, `TRACK_E_SSR_FRAMEWORK=<framework> npx playwright test --project=<framework>-ssr-chromium` is re-run against the final, fully-integrated state with only that framework's `dist/` present (the other two removed/never built in that check) — re-confirming AC9.5's isolation guarantee holds at the end of the whole track, not just when Task 9 first verified it in isolation.
 4. `npx playwright test` (the full suite, no filter, `TRACK_E_SSR_FRAMEWORK` unset) passes — proving zero regression to Track A's original 9 projects across the whole implementation, not just Task 5's isolated check.
 5. `pnpm run boundary:validate:*` / `pnpm run provenance:validate` / any other Track B gate script that enumerates packages is re-run locally and confirmed to still report exactly 17 publishable packages (or whatever the current true count is at verification time) — proving the three new `apps/playground-*` entries did not leak into Track B's publishable-package graph (spec §H, Exit Criterion 8).
 6. `git diff --stat` against `main` for the whole track is reviewed end-to-end, confirming: no file under any `packages/*/src` (production component code) appears; `.github/workflows/ci.yml`'s diff is exactly the one new job from Task 9; `docs/architecture/DECISIONS.md`/`BLUEPRINT_GAPS.md` diffs are exactly Task 1's and Task 10's changes.
 7. Each of the specification's 11 exit criteria (§J) is checked off explicitly against real, observed evidence from steps 1–6 above — not asserted from memory.
 
 **What NOT to do:**
+
 - Do not mark this task complete on the basis of any individual task's own earlier acceptance-criteria run — re-run against the final, fully-integrated branch state, since later tasks (8, 9, 10) touch files earlier tasks' checks already passed against.
 - Do not commit at the end of this task — per this track's standing constraint (no commits without explicit instruction), Task 11 verifies and reports; committing is a separate, explicitly-requested action.
 
 **Acceptance criteria:**
+
 - AC11.1: All 11 of specification §J's exit criteria are individually confirmed true, each with the specific command/observation that proves it, presented back for review.
 - AC11.2: No regression to Track A/B/C/D's existing passing state is found.
 
@@ -528,12 +553,13 @@ See each task's own AC list above; Task 11 aggregates them against specification
 ## Unresolved implementation-level questions (legitimately deferred to Task-level implementer judgment, not further plan review)
 
 1. Whether Angular's/React's harness server uses Express or an alternative minimal HTTP layer — Express is used as the default choice in this plan for consistency, since Angular's and React's own official SSR examples both use Express-style request handling; Vue's uses plain `http` per its own official example, but either is acceptable there too. (Unaffected by this amendment.)
-2. Exact `"projectType": "application"` builder name/options for Angular 21 at implementation time (`@angular/build:application` or its then-current equivalent), and the exact literal `dist/` subpath names/export shape for its browser/server artifacts — the *architecture* (one build, two artifacts, `server.ts` as a distinct consumer) is now fixed by Task 2's artifact-flow diagram; only the literal path/export names are confirmed against the actually-installed `@angular/build` version when Task 2 is executed.
+2. Exact `"projectType": "application"` builder name/options for Angular 21 at implementation time (`@angular/build:application` or its then-current equivalent), and the exact literal `dist/` subpath names/export shape for its browser/server artifacts — the _architecture_ (one build, two artifacts, `server.ts` as a distinct consumer) is now fixed by Task 2's artifact-flow diagram; only the literal path/export names are confirmed against the actually-installed `@angular/build` version when Task 2 is executed.
 3. Exact internal composition of each harness's two-sub-step `build` script (e.g., whether React/Vue's server-file compilation uses `tsc` or `esbuild`) — non-architectural, implementer's choice, provided both sub-steps land in `dist/` before `build` exits per the canonical contract.
 
 ## Amendment Note (this pass)
 
 This revision resolves six findings from the first Plan Review of this document, none of which reopen any approved architectural or specification decision:
+
 1. **CI build-contract inconsistency** — resolved via the canonical `build`/`start` script contract (new binding decision 8, above the task table) and Task 9's corrected `include:`-matrix CI step.
 2. **Implicit Playwright build/start ordering** — resolved via the new "Deterministic build-then-serve contract" note preceding Task 5, applied identically in Tasks 5–7's `webServer` entries and Task 9's CI steps.
 3. **Angular SSR artifact flow left implicit** — resolved via Task 2's new concrete artifact-flow diagram (source → build → browser+server artifacts → `server.ts` → HTTP response) and matching AC2.5.
@@ -550,6 +576,7 @@ This revision resolves one additional finding raised in the second Plan Review o
 **Resolution:** an environment-variable-gated `webServer` array, built inside `playwright.config.ts` at config-load time — the same `process.env`-driven conditional pattern the file already uses for `CI` (`playwright.config.ts:25-26,158,165,172`, verified unchanged by this amendment). A new `TRACK_E_SSR_FRAMEWORK` variable, left unset locally (all three Track E servers included) and set per-leg in CI (via a step-scoped `env:` on Task 9's "Run Playwright SSR project" step), selects which of the three Track E `webServer` entries Playwright actually starts. Track A's three Storybook `webServer` entries carry no reference to this variable and remain fully unconditional.
 
 **Sections amended in this pass:**
+
 - New section inserted before Task 5 ("`webServer`/CI-matrix isolation — why the global-`webServer` assumption was insufficient, and the mechanism that replaces it"), containing the full mechanism description, the Playwright-internals evidence, and a point-by-point mapping to the second Plan Review's seven required design points.
 - Task 5: `webServer` entry description updated to introduce the `trackESsrServers` lookup and selection logic (this is the task that writes it); new AC5.6.
 - Task 6: description updated to note it only adds a `react` key to the existing lookup, does not duplicate selection logic; new AC6.6/AC6.7 (positive and negative isolation proof, now that two entries coexist).

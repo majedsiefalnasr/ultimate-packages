@@ -30,6 +30,16 @@ import { dialogStyleModule } from "./dialog-style";
  * `.vendor-extracted/ng/dialog/dialog.ts`). Renders content in a modal
  * (or non-modal) overlay window.
  *
+ * BREAKING CHANGE — requires `ComponentIdGenerator`: this component injects
+ * `ComponentIdGenerator` (from `@ultimate/ng-core`) to generate its
+ * `aria-labelledby` id in an SSR-deterministic way. The consuming
+ * application MUST provide `ComponentIdGenerator` at bootstrap (e.g. in
+ * `bootstrapApplication(AppComponent, { providers: [...] })`'s providers
+ * array, or an equivalent root-level `providers` array) — `UDialog` has no
+ * default provider for it. An application that renders `UDialog` without
+ * providing `ComponentIdGenerator` will throw `NullInjectorError` at
+ * construction time.
+ *
  * Deliberately excludes upstream's much larger prop/behavior surface —
  * `draggable`/`resizable`/drag-and-resize listener wiring, `breakpoints`/
  * dynamic `<style>` injection, `dismissableMask`, `position` (`top`/

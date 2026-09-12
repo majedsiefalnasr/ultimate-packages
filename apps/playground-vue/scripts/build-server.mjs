@@ -21,11 +21,11 @@
 // sub-steps contract (server.js and entry-server.js are separate,
 // independently-inspectable artifacts, never combined into one file).
 import { copyFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-await copyFile(
-  fileURLToPath(new URL("../server.js", import.meta.url)),
-  fileURLToPath(new URL("../dist/server.js", import.meta.url)),
-);
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+
+await copyFile(join(scriptDir, "../server.js"), join(scriptDir, "../dist/server.js"));
 
 console.log("Server build complete: dist/entry-server.js, dist/server.js");

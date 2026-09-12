@@ -6,6 +6,7 @@
 **Baseline:** `main` at `57772ff`. Architecture Gate approved (`docs/architecture/research/2026-09-11-phase-10-track-e-ssr-hydration-research.md`). Tracks A, B, C, D complete and merged.
 
 **Binding architectural decisions (not reopened here):**
+
 1. GAP-008's SSR scope is promoted from `docs/architecture/research/2026-09-08-phase-10-architecture-discussion.md` §5 into a standalone ADR (§B below) — documentary promotion only, substance unchanged.
 2. Raw/minimal per-framework SSR primitives — no Next.js, no Nuxt, no meta-framework.
 3. All 8 proof-set components (Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip) exercised in every harness.
@@ -17,6 +18,7 @@
 ### A.1 What Track E delivers
 
 Three minimal, private, non-published consumer applications — `apps/playground-angular`, `apps/playground-react`, `apps/playground-vue` — each of which:
+
 - Server-renders a single deterministic page containing all 8 proof-set components, using that framework's own raw SSR API (not a meta-framework).
 - Hydrates that server-rendered HTML in a real browser with no hydration-mismatch errors and no unexpected console errors.
 - Demonstrates, post-hydration, that at least one interactive behavior per component actually works (event handlers/state are live, not merely painted markup).
@@ -74,6 +76,7 @@ No other GAP-008 reference in `BLUEPRINT_GAPS.md` (lines 172, 188, 191, 681, 734
 ### C.1 Common shape across all three
 
 Each `apps/playground-*` is:
+
 - A new, real `package.json` — the first content ever written under that directory (currently only `.gitkeep`).
 - `"private": true` (Track B's publishable-package discovery in `scripts/provenance/workspace-graph.mjs` is explicitly scoped to `packages/*` only — verified at line 5's comment: "packages/* and its transitive closure" — so `apps/*` is already structurally outside that graph; `"private": true` is still set as defense-in-depth and standard practice for a non-published app).
 - Declares a runtime dependency on exactly its own framework's `@ultimate/*` packages (`@ultimate/ng` + `@ultimate/ng-core` for Angular; `@ultimate/react` + `@ultimate/react-core` for React; `@ultimate/vue` + `@ultimate/vue-core` for Vue) via `workspace:*`, plus `@ultimate/themes` for the theme preset, matching the existing devDependency pattern each framework package already uses for its own Storybook demos.
@@ -87,6 +90,7 @@ Each `apps/playground-*` is:
 **Package/workspace role:** private Angular application (not a library) — the first `application`-type Angular project in this monorepo. `packages/ng/angular.json` is a `"projectType": "library"` project built via `@angular/build:ng-packagr` (verified: no `application` builder anywhere in it) — it cannot be reused or extended for this purpose. `apps/playground-angular` needs its own `angular.json` (or Angular 21's equivalent minimal project config) declaring an `application`-type project.
 
 **Entry points:**
+
 - Server entry: a bootstrap function using `provideServerRendering()` (from `@angular/ssr`), following the pattern verified in official Angular docs (`angular.dev/api/ssr/provideServerRendering`) — no `withRoutes()`/`withAppShell()` needed since Track E has exactly one page, not routing.
 - Client entry: `bootstrapApplication()` with `provideClientHydration()` (from `@angular/platform-browser`), per `angular.dev/guide/hydration`.
 - Both entries bootstrap the same root component/providers list (Angular's hydration contract requires server/client bootstrap consistency — a documented hard constraint, §C.7).
@@ -108,6 +112,7 @@ Each `apps/playground-*` is:
 **Package/workspace role:** private Vite-or-esbuild-bundled React app with a hand-written Node server — no Next.js. React itself does not ship a project scaffold; the harness needs its own minimal build setup (the existing `packages/react` package already uses `tsup` for its library build — the harness can reuse `tsup` or Vite for bundling its client entry, since both are already present in the monorepo's tooling vocabulary; exact choice deferred to Implementation Plan, §L.1).
 
 **Entry points:**
+
 - Server entry: a Node script that imports the root App component and calls `renderToPipeableStream(<App />, { onShellReady, onError })` (per `react.dev/reference/react-dom/server/renderToPipeableStream`), piping the result into an HTTP response wrapped with the page shell (`<html>`/`<head>`/`<div id="root">…</div>`/client `<script>` tag).
 - Client entry: `hydrateRoot(document.getElementById("root"), <App />)` (per `react.dev/reference/react-dom/client/hydrateRoot`).
 
@@ -117,7 +122,7 @@ Each `apps/playground-*` is:
 
 **Rendering the 8 components:** a single root `App` component rendering `<Button>`, `<Checkbox>`, `<Dialog>`, `<Menu>`, `<Paginator>`, `<Scroller>`, `<Table>`, `<Tooltip>`, imported from `@ultimate/react`.
 
-**React Portal — confirmed SSR-safe, no code change needed (resolves the open question the architecture research flagged):** `packages/react-core/src/overlay/portal.tsx` (read in full) returns `null` unless both `visible` is `true` and its internal `mounted` state is `true`; `mounted` starts `false` and is only ever flipped via `useMountEffect` (`packages/react-core/src/hooks/use-mount-effect.ts`, confirmed to wrap plain `useEffect`, not `useLayoutEffect`) — which never executes during `renderToPipeableStream`'s server pass. This means **Portal always renders as `null` server-side, for every consumer** — confirmed by direct grep across `packages/react/src`: Dialog (`dialog.tsx:196`), Menu (`menu.tsx:378`), and Tooltip (`tooltip.tsx:157`) all invoke `<Portal>` unconditionally in their JSX output (Dialog/Menu additionally track a separate `portalReady` state that gates a post-mount *effect callback*, not Portal's presence in the tree — this does not change the SSR path: `mounted` is still `false` server-side regardless of `portalReady`), and all three inherit the same server-safe `null` behavior with zero special-casing needed in the harness. No production code change is required for Portal's SSR behavior — this resolves §K.3 as a non-issue, not a residual risk.
+**React Portal — confirmed SSR-safe, no code change needed (resolves the open question the architecture research flagged):** `packages/react-core/src/overlay/portal.tsx` (read in full) returns `null` unless both `visible` is `true` and its internal `mounted` state is `true`; `mounted` starts `false` and is only ever flipped via `useMountEffect` (`packages/react-core/src/hooks/use-mount-effect.ts`, confirmed to wrap plain `useEffect`, not `useLayoutEffect`) — which never executes during `renderToPipeableStream`'s server pass. This means **Portal always renders as `null` server-side, for every consumer** — confirmed by direct grep across `packages/react/src`: Dialog (`dialog.tsx:196`), Menu (`menu.tsx:378`), and Tooltip (`tooltip.tsx:157`) all invoke `<Portal>` unconditionally in their JSX output (Dialog/Menu additionally track a separate `portalReady` state that gates a post-mount _effect callback_, not Portal's presence in the tree — this does not change the SSR path: `mounted` is still `false` server-side regardless of `portalReady`), and all three inherit the same server-safe `null` behavior with zero special-casing needed in the harness. No production code change is required for Portal's SSR behavior — this resolves §K.3 as a non-issue, not a residual risk.
 
 **Avoiding server execution of browser-only behavior:** already guaranteed by the existing `useMountEffect`/`typeof document === "undefined"` guard pattern verified across `react-style-sheet.ts` and `use-component-style.ts` — no new guard needed in the harness itself.
 
@@ -130,6 +135,7 @@ Each `apps/playground-*` is:
 **Package/workspace role:** private Vite-bundled Vue app with a hand-written Node server — no Nuxt. `packages/vue` already depends on `vite`/`@vitejs/plugin-vue` as devDependencies for its own build/Storybook tooling — the harness reuses the same tool family, consistent with existing monorepo conventions.
 
 **Entry points:**
+
 - Server entry: `createSSRApp(RootComponent)` + `renderToString(app)` from `vue/server-renderer`, run in Node (per `vuejs.org/guide/scaling-up/ssr.html`), producing the initial HTML.
 - Client entry: `createSSRApp(RootComponent)` again, then `app.mount("#app")` — Vue's own documented behavior is that mounting an SSR app on the client "assumes the HTML was pre-rendered and will perform hydration instead of mounting new DOM nodes" (verified, vuejs.org).
 
@@ -150,6 +156,7 @@ Each harness's server entry is started as its own Playwright `webServer` entry (
 ### C.6 Styling/theme loading — cross-framework summary
 
 No new styling mechanism is introduced. Each framework's existing runtime style-registration path (already verified SSR-safe by construction, §C.2–C.4) is reused unchanged:
+
 - Angular: `ngCoreStyleSheet` (existing, verified no-op-for-injection gap per ADR-023 follow-up 6 / ADR-029 — **this is a pre-existing, already-tracked gap independent of Track E, not something Track E introduces or is responsible for fixing**; it does mean Angular's harness may show unstyled or minimally-styled output even post-hydration, a known limitation to document in the harness's own README, not a Track E regression).
 - React: `reactCoreStyleSheet`, client-only via `useMountEffect`.
 - Vue: `vueCoreStyleSheet`, client-only via `mounted()`.
@@ -172,16 +179,16 @@ One page per framework, one deterministic fixture set, minimum interactive behav
 
 ### D.2 Per-component minimum demonstrated behavior
 
-| Component | SSR content requirement | Post-hydration interaction requirement |
-|---|---|---|
-| **Button** | Rendered with static label text present in initial HTML | Click triggers a visible state change (e.g., a click counter or toggled label) |
-| **Checkbox** | Rendered with a static initial checked/unchecked state in initial HTML | Click toggles checked state; state change is visible in the DOM |
-| **Dialog** | Rendered closed (mask/root not in initial HTML per its own `renderMask` gate — Angular's `UDialog` already gates on this; React/Vue equivalent: closed state produces no portal content) | A trigger button opens the dialog; dialog content becomes visible; Escape or close-button closes it |
-| **Menu** | Rendered with static menu items present in initial HTML (or closed, per that framework's default popup/inline mode — inline mode preferred for SSR content-presence, per §D.4) | Clicking/keyboard-activating a menu item fires its handler (e.g., updates a "last selected" display) |
-| **Paginator** | Rendered with a static current-page indicator in initial HTML | Clicking next/previous page updates the displayed page number |
-| **Scroller** | Rendered with a static, small, fixed-size item list in initial HTML | Scrolling (or a keyboard/interaction equivalent) does not throw; virtualized item rendering remains consistent |
-| **Table** | Rendered with static row/column data in initial HTML | Clicking a sortable column header (if enabled) re-orders visible rows, or a row-selection click updates a "selected row" display |
-| **Tooltip** | Host element rendered in initial HTML; tooltip content itself absent from initial HTML (consistent with Portal returning `null` server-side, §C.3/C.4 — this is expected, not a defect) | Hover or focus on the host reveals the tooltip content |
+| Component     | SSR content requirement                                                                                                                                                                  | Post-hydration interaction requirement                                                                                           |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Button**    | Rendered with static label text present in initial HTML                                                                                                                                  | Click triggers a visible state change (e.g., a click counter or toggled label)                                                   |
+| **Checkbox**  | Rendered with a static initial checked/unchecked state in initial HTML                                                                                                                   | Click toggles checked state; state change is visible in the DOM                                                                  |
+| **Dialog**    | Rendered closed (mask/root not in initial HTML per its own `renderMask` gate — Angular's `UDialog` already gates on this; React/Vue equivalent: closed state produces no portal content) | A trigger button opens the dialog; dialog content becomes visible; Escape or close-button closes it                              |
+| **Menu**      | Rendered with static menu items present in initial HTML (or closed, per that framework's default popup/inline mode — inline mode preferred for SSR content-presence, per §D.4)           | Clicking/keyboard-activating a menu item fires its handler (e.g., updates a "last selected" display)                             |
+| **Paginator** | Rendered with a static current-page indicator in initial HTML                                                                                                                            | Clicking next/previous page updates the displayed page number                                                                    |
+| **Scroller**  | Rendered with a static, small, fixed-size item list in initial HTML                                                                                                                      | Scrolling (or a keyboard/interaction equivalent) does not throw; virtualized item rendering remains consistent                   |
+| **Table**     | Rendered with static row/column data in initial HTML                                                                                                                                     | Clicking a sortable column header (if enabled) re-orders visible rows, or a row-selection click updates a "selected row" display |
+| **Tooltip**   | Host element rendered in initial HTML; tooltip content itself absent from initial HTML (consistent with Portal returning `null` server-side, §C.3/C.4 — this is expected, not a defect)  | Hover or focus on the host reveals the tooltip content                                                                           |
 
 ### D.3 Determinism rules (binding)
 
@@ -227,11 +234,11 @@ Three new `webServer` entries, following the exact pattern Track A's three entri
 
 ### F.4 Framework-to-harness mapping
 
-| Framework | Harness directory | Playwright project | Port |
-|---|---|---|---|
-| Angular | `apps/playground-angular` | `ng-ssr-chromium` | 6011 |
-| React | `apps/playground-react` | `react-ssr-chromium` | 6012 |
-| Vue | `apps/playground-vue` | `vue-ssr-chromium` | 6013 |
+| Framework | Harness directory         | Playwright project   | Port |
+| --------- | ------------------------- | -------------------- | ---- |
+| Angular   | `apps/playground-angular` | `ng-ssr-chromium`    | 6011 |
+| React     | `apps/playground-react`   | `react-ssr-chromium` | 6012 |
+| Vue       | `apps/playground-vue`     | `vue-ssr-chromium`   | 6013 |
 
 ### F.5 Browser coverage
 
@@ -268,6 +275,7 @@ No `.github/workflows/ci.yml` edit is made by this specification. The job shape 
 ## H. Package/workspace boundaries
 
 **Verified, not assumed:**
+
 - `pnpm-workspace.yaml:1-3` scopes workspaces to `packages/*` and `apps/*` — both are valid workspace locations; adding real `package.json` files under `apps/playground-*` requires no workspace-config change.
 - Track B's publishable-package/provenance tooling (`scripts/provenance/workspace-graph.mjs:5`, comment verified verbatim: "packages/* and its transitive closure") is **explicitly and only** scoped to `packages/*`. `apps/*` is structurally outside this graph's discovery mechanism — not merely by convention, but because the tool never reads that directory at all.
 - No package in the repository currently sets `"private": true` (verified: no match found in any `packages/*/package.json`) — this is not evidence that private apps are unsupported, only that no precedent yet exists; Track E's harnesses will be the first to set it, which is a correct, standard, additive convention for non-published workspace packages, not a deviation from anything established.
@@ -303,18 +311,18 @@ Track E is complete when all of the following hold:
 
 ## K. Risk / failure handling
 
-| Risk | Blocker or expected limitation? | Handling |
-|---|---|---|
-| Hydration mismatch (any framework) | **Blocker** if triggered by Track E's own harness code (fixture data, page structure) | Fix the harness's markup/fixture determinism; this is squarely Track E's responsibility, not a framework limitation |
-| Hydration mismatch caused by a genuine, reproducible defect in `@ultimate/*` component code | **Blocker**, but resolved via the escalation path in Exit Criterion 10 — not a silent production-code patch | Document the defect with reproduction evidence; escalate to Architecture/Spec review for an explicitly approved fix, scoped as narrowly as possible |
-| Browser-only API access during SSR | **Not expected** — §C.2–C.4 confirm all 8 components' relevant code paths are already guarded or lifecycle-timed safely | If discovered anyway during implementation, treat as the same escalation path as the row above |
-| React Portal SSR behavior | **Resolved, not a residual risk** — confirmed safe by direct source inspection (§C.3) | No action needed; retained in this table only to record that it was investigated and closed, not left open |
-| Vue Teleport SSR behavior | **Resolved, not a residual risk** — confirmed safe by direct source inspection (§C.4) | Same as above |
-| Styling differences between server/client (no `<style>` in initial HTML) | **Expected limitation, not a blocker** — explicitly scoped out of Track E's assertions (§D.3) | Document in each harness's own README; do not add FOUC-prevention infrastructure (out of scope, would be showcase-grade polish) |
-| Server startup failures in CI (port conflicts, missing build step) | **Blocker** if it prevents verification from running at all | Follow Track A's own `webServer` readiness pattern (`url`-based, not `port`-based) exactly, since it already solves this class of problem for Track A's three Storybook servers |
-| Nondeterministic markup (accidental `Date.now()`/`Math.random()`/locale formatting introduced during implementation) | **Blocker** | Code-review gate at Implementation time against §D.3's explicit rules; a Playwright assertion re-running the SSR fetch twice and diffing the two responses (excluding any legitimately-random request-scoped IDs, of which none are expected) can serve as an automated determinism check — recommended for Implementation Plan, not mandated here |
-| Framework-specific hydration warnings that are not true mismatches (e.g., a benign dev-mode-only warning) | **Expected limitation** if verified benign against that framework's own documentation | Document the specific warning text and why it's benign; do not add it to the failing-console-error check's allowlist without that documentation |
-| CI environment differences (Linux runner vs. local dev machine) | **Expected limitation, managed the same way Track A already manages it** | Track A's `playwright.config.ts` already solves the cross-OS snapshot-path problem (`snapshotPathTemplate`, verified) for visual regression; Track E has no visual-regression/screenshot assertions (§F.6 lists only console/hydration/interaction assertions), so this specific cross-OS concern does not apply to Track E's own assertions — flagged here only to confirm it was considered and found not applicable, not overlooked |
+| Risk                                                                                                                 | Blocker or expected limitation?                                                                                         | Handling                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hydration mismatch (any framework)                                                                                   | **Blocker** if triggered by Track E's own harness code (fixture data, page structure)                                   | Fix the harness's markup/fixture determinism; this is squarely Track E's responsibility, not a framework limitation                                                                                                                                                                                                                                                                                                                    |
+| Hydration mismatch caused by a genuine, reproducible defect in `@ultimate/*` component code                          | **Blocker**, but resolved via the escalation path in Exit Criterion 10 — not a silent production-code patch             | Document the defect with reproduction evidence; escalate to Architecture/Spec review for an explicitly approved fix, scoped as narrowly as possible                                                                                                                                                                                                                                                                                    |
+| Browser-only API access during SSR                                                                                   | **Not expected** — §C.2–C.4 confirm all 8 components' relevant code paths are already guarded or lifecycle-timed safely | If discovered anyway during implementation, treat as the same escalation path as the row above                                                                                                                                                                                                                                                                                                                                         |
+| React Portal SSR behavior                                                                                            | **Resolved, not a residual risk** — confirmed safe by direct source inspection (§C.3)                                   | No action needed; retained in this table only to record that it was investigated and closed, not left open                                                                                                                                                                                                                                                                                                                             |
+| Vue Teleport SSR behavior                                                                                            | **Resolved, not a residual risk** — confirmed safe by direct source inspection (§C.4)                                   | Same as above                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Styling differences between server/client (no `<style>` in initial HTML)                                             | **Expected limitation, not a blocker** — explicitly scoped out of Track E's assertions (§D.3)                           | Document in each harness's own README; do not add FOUC-prevention infrastructure (out of scope, would be showcase-grade polish)                                                                                                                                                                                                                                                                                                        |
+| Server startup failures in CI (port conflicts, missing build step)                                                   | **Blocker** if it prevents verification from running at all                                                             | Follow Track A's own `webServer` readiness pattern (`url`-based, not `port`-based) exactly, since it already solves this class of problem for Track A's three Storybook servers                                                                                                                                                                                                                                                        |
+| Nondeterministic markup (accidental `Date.now()`/`Math.random()`/locale formatting introduced during implementation) | **Blocker**                                                                                                             | Code-review gate at Implementation time against §D.3's explicit rules; a Playwright assertion re-running the SSR fetch twice and diffing the two responses (excluding any legitimately-random request-scoped IDs, of which none are expected) can serve as an automated determinism check — recommended for Implementation Plan, not mandated here                                                                                     |
+| Framework-specific hydration warnings that are not true mismatches (e.g., a benign dev-mode-only warning)            | **Expected limitation** if verified benign against that framework's own documentation                                   | Document the specific warning text and why it's benign; do not add it to the failing-console-error check's allowlist without that documentation                                                                                                                                                                                                                                                                                        |
+| CI environment differences (Linux runner vs. local dev machine)                                                      | **Expected limitation, managed the same way Track A already manages it**                                                | Track A's `playwright.config.ts` already solves the cross-OS snapshot-path problem (`snapshotPathTemplate`, verified) for visual regression; Track E has no visual-regression/screenshot assertions (§F.6 lists only console/hydration/interaction assertions), so this specific cross-OS concern does not apply to Track E's own assertions — flagged here only to confirm it was considered and found not applicable, not overlooked |
 
 ---
 

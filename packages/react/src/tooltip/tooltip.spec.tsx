@@ -142,8 +142,9 @@ describe("UTooltip", () => {
       render(<Trigger tooltipContent="Save changes" />);
       fireEvent.mouseEnter(screen.getByText("Hover me"));
       await waitFor(() => {
-        const secondId = (screen.getByText("Save changes").closest('[role="tooltip"]') as HTMLElement)
-          .id;
+        const secondId = (
+          screen.getByText("Save changes").closest('[role="tooltip"]') as HTMLElement
+        ).id;
         expect(secondId).not.toBe(firstId);
       });
       first.unmount();

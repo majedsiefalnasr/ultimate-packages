@@ -41,7 +41,7 @@ app.use(
   express.static(browserDistFolder, {
     index: false,
     redirect: false,
-  }),
+  })
 );
 
 /**
@@ -74,7 +74,7 @@ app.use((req, res, next) => {
 if (isMainModule(import.meta.url)) {
   if (!existsSync(indexHtmlPath)) {
     throw new Error(
-      `SSR document not found at ${indexHtmlPath}. Run the "build" script before "start".`,
+      `SSR document not found at ${indexHtmlPath}. Run the "build" script before "start".`
     );
   }
 

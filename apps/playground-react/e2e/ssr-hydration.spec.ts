@@ -172,7 +172,9 @@ test.describe("React SSR/Hydration — Checkbox", () => {
 });
 
 test.describe("React SSR/Hydration — Dialog", () => {
-  test("serves SSR content with dialog closed, then opens/closes post-hydration", async ({ page }) => {
+  test("serves SSR content with dialog closed, then opens/closes post-hydration", async ({
+    page,
+  }) => {
     const errors = captureUnexpectedErrors(page);
 
     const response = await page.request.get(HARNESS_URL);
@@ -218,9 +220,13 @@ test.describe("React SSR/Hydration — Menu", () => {
     await page.goto(HARNESS_URL);
     await page.waitForSelector('[data-hydrated="true"]');
 
-    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText("Last selected: none");
+    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText(
+      "Last selected: none"
+    );
     await page.getByRole("menuitem", { name: "Second Item" }).click();
-    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText("Last selected: Second Item");
+    await expect(page.locator('[data-testid="menu-last-selected"]')).toHaveText(
+      "Last selected: Second Item"
+    );
 
     assertNoHydrationErrors(errors);
   });
@@ -260,7 +266,9 @@ test.describe("React SSR/Hydration — Paginator", () => {
 });
 
 test.describe("React SSR/Hydration — Scroller", () => {
-  test("serves all 5 fixture rows in SSR content and remains stable post-hydration", async ({ page }) => {
+  test("serves all 5 fixture rows in SSR content and remains stable post-hydration", async ({
+    page,
+  }) => {
     const errors = captureUnexpectedErrors(page);
 
     const response = await page.request.get(HARNESS_URL);

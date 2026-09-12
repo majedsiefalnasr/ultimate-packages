@@ -57,8 +57,12 @@ const trackESsrServers: Partial<Record<TrackEFramework, TrackESsrServer>> = {
  */
 const trackESsrFrameworkFilter = process.env.TRACK_E_SSR_FRAMEWORK as TrackEFramework | undefined;
 const trackESsrWebServers: TrackESsrServer[] = trackESsrFrameworkFilter
-  ? [trackESsrServers[trackESsrFrameworkFilter]].filter((entry): entry is TrackESsrServer => entry !== undefined)
-  : Object.values(trackESsrServers).filter((entry): entry is TrackESsrServer => entry !== undefined);
+  ? [trackESsrServers[trackESsrFrameworkFilter]].filter(
+      (entry): entry is TrackESsrServer => entry !== undefined
+    )
+  : Object.values(trackESsrServers).filter(
+      (entry): entry is TrackESsrServer => entry !== undefined
+    );
 
 /**
  * Root Playwright configuration shared by all three framework packages

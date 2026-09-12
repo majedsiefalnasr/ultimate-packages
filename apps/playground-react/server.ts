@@ -29,12 +29,12 @@ const clientBundlePath = join(clientDistPath, "entry-client.js");
 
 if (!existsSync(entryServerPath)) {
   throw new Error(
-    `Compiled server entry not found at ${entryServerPath}. Run the "build" script before "start".`,
+    `Compiled server entry not found at ${entryServerPath}. Run the "build" script before "start".`
   );
 }
 if (!existsSync(clientBundlePath)) {
   throw new Error(
-    `Compiled client bundle not found at ${clientBundlePath}. Run the "build" script before "start".`,
+    `Compiled client bundle not found at ${clientBundlePath}. Run the "build" script before "start".`
   );
 }
 
@@ -48,12 +48,12 @@ app.use(
   express.static(clientDistPath, {
     index: false,
     redirect: false,
-  }),
+  })
 );
 
 const HTML_HEAD =
   '<!doctype html><html><head><meta charset="utf-8">' +
-  "<title>Ultimate React SSR Proof</title></head><body><div id=\"root\">";
+  '<title>Ultimate React SSR Proof</title></head><body><div id="root">';
 const HTML_TAIL = '</div><script type="module" src="/entry-client.js"></script></body></html>';
 
 app.get("/", (_req, res) => {

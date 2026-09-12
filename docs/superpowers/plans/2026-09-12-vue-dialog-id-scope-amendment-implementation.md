@@ -45,8 +45,8 @@
      return { generatedDialogId: useId() };
    },
    ```
-3. In `data()` (currently lines 122-127), replace `dialogId: \`u-dialog-${++dialogIdCounter}\`,` (line 124) with `dialogId: \`u-dialog-${this.generatedDialogId}\`,` — relying on Vue's confirmed execution order (`setup()` runs before `data()`, already established and unchanged from the completed 5-instance work's own research).
-4. **`ariaLabelledById` (the `computed` property at lines 129-131) is left completely unchanged** — it continues to read `this.dialogId` exactly as before (`` return this.header ? `${this.dialogId}_header` : null; ``). This is the specific point the Scope Amendment's §3 already resolved: `useId()` is called exactly once, in `setup()`, never inside `computed` — Vue's own documented warning against calling `useId()` inside `computed` does not apply here because `ariaLabelledById` never calls `useId()` itself, it only reads a plain data field.
+3. In `data()` (currently lines 122-127), replace `dialogId: \`u-dialog-${++dialogIdCounter}\`,` (line 124) with `dialogId: \`u-dialog-${this.generatedDialogId}\`,` — relying on Vue's confirmed execution order (`setup()`runs before`data()`, already established and unchanged from the completed 5-instance work's own research).
+4. **`ariaLabelledById` (the `computed` property at lines 129-131) is left completely unchanged** — it continues to read `this.dialogId` exactly as before (``return this.header ? `${this.dialogId}_header` : null;``). This is the specific point the Scope Amendment's §3 already resolved: `useId()` is called exactly once, in `setup()`, never inside `computed` — Vue's own documented warning against calling `useId()` inside `computed` does not apply here because `ariaLabelledById` never calls `useId()` itself, it only reads a plain data field.
 5. **The existing `aria-labelledby` ↔ header `id` relationship is left completely unchanged** — both template bindings (`:aria-labelledby="ariaLabelledById"` at line 25, and `:id="ariaLabelledById"` on the header `<span>` at line 29) continue to read the same `ariaLabelledById` computed property, itself unchanged. No template file content beyond the two lines named in items 2/3 above is touched.
 6. **All other `dialogId` consumers are left completely unchanged** — confirmed by source read: `this.dialogId` is also referenced at `Dialog.vue:169,179,207` for scroll-lock registration (`registerScrollLock(this.dialogId)`/`unregisterScrollLock(this.dialogId)`) — these are plain string-key operations against a registry, indifferent to how `dialogId` was produced, exactly the same "downstream usage is plain string operations" reasoning already established for `Menu.vue`'s `itemId(i)`.
 
@@ -78,6 +78,7 @@
 4. **No id-prop-override test** — per this plan's own OQ-2 resolution above, `UDialog` has no such prop; none is fabricated.
 
 **What NOT to do:**
+
 - Do not touch any file beyond `packages/vue/src/dialog/Dialog.vue` and `packages/vue/src/dialog/dialog.spec.ts` — not `BaseDialog.ts`, not any `packages/vue-core/src/base/*` file, not `createDisplayOrderMixin`'s own file, not any Angular/React file, not any Track E file.
 - Do not modify `ariaLabelledById`'s own `computed` definition.
 - Do not modify the existing Escape-priority-stacking test (`dialog.spec.ts:76-85`) or any other existing test in the file beyond appending the new `describe` block.
@@ -88,6 +89,7 @@
 - Do not touch `display-order`/`uidCounter` files, the Vue Tooltip CSS files, or any Track E file.
 
 **Acceptance criteria:**
+
 - AC1.1: `pnpm --filter @ultimate/vue run test` passes, including all new assertions.
 - AC1.2: `git diff --stat` confirms exactly the 2 named files changed, nothing else.
 - AC1.3: Grep confirms zero remaining occurrences of `dialogIdCounter` anywhere in `packages/vue/src/dialog/`.
@@ -119,6 +121,7 @@
 > ## Track E resumption prerequisite
 >
 > `ComponentIdGenerator` (from `@ultimate/ng-core`) must be added to the application bootstrap providers in both:
+>
 > - `apps/playground-angular/src/main.ts`
 > - `apps/playground-angular/src/main.server.ts`
 >
@@ -127,11 +130,13 @@
 This section is not satisfied by a paraphrase or cross-reference — it must be reproduced in Task 2's own final report, verbatim or near-verbatim.
 
 **What NOT to do:**
+
 - Do not commit at the end of this task.
 - Do not attempt to run Track E's own Task 8 (does not exist yet, Track E is paused).
 - Do not wait for or depend on Task 3 — Task 3 is optional and comes after this task, never before or alongside it.
 
 **Acceptance criteria:**
+
 - AC2.1: All checks above return clean/negative results, each explicitly confirmed in this task's own report.
 - AC2.2: The "Track E resumption prerequisite" section is present exactly as specified above.
 - AC2.3: If Task 2's own checks all pass, the implementation is considered fully verified and complete based on Tasks 1 + 2 alone — Task 3 is not required for this task's own success or for the work item's overall completeness.
@@ -151,11 +156,13 @@ This section is not satisfied by a paraphrase or cross-reference — it must be 
 3. This is the complete, exhaustive scope of Task 3 — no other documentation file, and absolutely no production/test file, is touched by it.
 
 **What NOT to do:**
+
 - Do not treat this task as license to edit any file beyond the two documentation files named in item 1.
 - Do not perform this task before Task 2 has succeeded.
 - Do not fold this task's own commit (if performed) into Task 1's commit — keep them separate, exactly mirroring how the completed 5-instance work kept its own docs commit (`db8faea`) separate from each framework's own fix commit.
 
 **Acceptance criteria (only if this task is performed):**
+
 - AC3.1: `git diff --stat` for this task touches only the documentation file(s) named in item 1 — no `packages/*` file, confirming no production/test file was touched by this documentation-only task.
 
 ---

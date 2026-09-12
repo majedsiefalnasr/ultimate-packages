@@ -77,7 +77,12 @@ type SortOrder = 1 | 0 | -1;
       <section aria-labelledby="paginator-heading">
         <h2 id="paginator-heading">Paginator</h2>
         <p data-testid="paginator-page">Page {{ paginatorPage() }}</p>
-        <u-paginator [first]="paginatorFirst()" [rows]="2" [totalRecords]="6" (onPageChange)="onPaginatorPageChange($event)" />
+        <u-paginator
+          [first]="paginatorFirst()"
+          [rows]="2"
+          [totalRecords]="6"
+          (onPageChange)="onPaginatorPageChange($event)"
+        />
       </section>
 
       <section aria-labelledby="scroller-heading">

@@ -14,13 +14,13 @@ Five component-ID usages across three framework packages use a module-scope, pro
 
 ## 2. Every currently affected component and ID path (complete enumeration)
 
-| # | Framework | File | Counter | ID produced | Feeds |
-|---|---|---|---|---|---|
-| 1 | Angular | `packages/ng/src/dialog/dialog.ts:22,187` | `dialogIdCounter` | `u_dialog_<n>_header` | `aria-labelledby` (dialog.ts:124), the header `<span>`'s own `id` (dialog.ts:129) |
-| 2 | React | `packages/react/src/menu/menu.tsx:54,84` | `menuIdCounter` | `u-menu-<n>` (+ `_list`, `_<index>` suffixes) | `aria-labelledby`, `aria-activedescendant` (menu.tsx:365-367), item `id`s (menu.tsx:327,355,361) |
-| 3 | React | `packages/react/src/dialog/dialog.tsx:38,60` | `dialogIdCounter` | `u-dialog-<n>` (+ `_header`, `_content` suffixes) | `aria-labelledby`, `aria-describedby` (dialog.tsx:173-174) |
-| 4 | React | `packages/react/src/tooltip/tooltip.tsx:30,58` | `tooltipIdCounter` | `u-tooltip-<n>` | `aria-describedby` (tooltip.tsx:112-113) |
-| 5 | Vue | `packages/vue/src/menu/Menu.vue:61,97` | `uidCounter` | `u-menu-<n>` (+ `_<index>` via `itemId(i)`, Menu.vue:124) | `aria-activedescendant` (Menu.vue:9) |
+| #   | Framework | File                                           | Counter            | ID produced                                               | Feeds                                                                                            |
+| --- | --------- | ---------------------------------------------- | ------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| 1   | Angular   | `packages/ng/src/dialog/dialog.ts:22,187`      | `dialogIdCounter`  | `u_dialog_<n>_header`                                     | `aria-labelledby` (dialog.ts:124), the header `<span>`'s own `id` (dialog.ts:129)                |
+| 2   | React     | `packages/react/src/menu/menu.tsx:54,84`       | `menuIdCounter`    | `u-menu-<n>` (+ `_list`, `_<index>` suffixes)             | `aria-labelledby`, `aria-activedescendant` (menu.tsx:365-367), item `id`s (menu.tsx:327,355,361) |
+| 3   | React     | `packages/react/src/dialog/dialog.tsx:38,60`   | `dialogIdCounter`  | `u-dialog-<n>` (+ `_header`, `_content` suffixes)         | `aria-labelledby`, `aria-describedby` (dialog.tsx:173-174)                                       |
+| 4   | React     | `packages/react/src/tooltip/tooltip.tsx:30,58` | `tooltipIdCounter` | `u-tooltip-<n>`                                           | `aria-describedby` (tooltip.tsx:112-113)                                                         |
+| 5   | Vue       | `packages/vue/src/menu/Menu.vue:61,97`         | `uidCounter`       | `u-menu-<n>` (+ `_<index>` via `itemId(i)`, Menu.vue:124) | `aria-activedescendant` (Menu.vue:9)                                                             |
 
 No sixth instance exists. Confirmed by a targeted grep for the `let.*Counter\s*=\s*0` / `IdCounter` idiom across all five `*-core`/framework `src` trees during the escalation; not re-run here since the origin document already establishes this as exhaustive at commit `dfc5e97`.
 
@@ -31,7 +31,8 @@ No sixth instance exists. Confirmed by a targeted grep for the `let.*Counter\s*=
 > Generate component IDs in a way that remains stable across server/client hydration and safe across long-running SSR processes, while preserving the existing ARIA relationships and component behavior.
 
 Three sub-goals, all binding:
-- **G1 (cross-request SSR independence):** for each SSR request, generated IDs must be independent of prior SSR requests in the same long-running process — no process-lifetime counter or other shared mutable state may leak across requests. This is the specific defect being closed (module-scope counters persisting across the life of the server process); it does not require that arbitrary repeated *client-side* mounts/renders necessarily produce the same literal ID string — that is a separate property, addressed only where a specific mechanism (e.g. Vue's `useId()`, §5.2) makes an explicit, framework-documented claim about it.
+
+- **G1 (cross-request SSR independence):** for each SSR request, generated IDs must be independent of prior SSR requests in the same long-running process — no process-lifetime counter or other shared mutable state may leak across requests. This is the specific defect being closed (module-scope counters persisting across the life of the server process); it does not require that arbitrary repeated _client-side_ mounts/renders necessarily produce the same literal ID string — that is a separate property, addressed only where a specific mechanism (e.g. Vue's `useId()`, §5.2) makes an explicit, framework-documented claim about it.
 - **G2 (hydration stability):** the ID the server renders for a given request must be the exact ID the client's hydration pass computes for that same request — no silent post-hydration rewrite (closing Vue's confirmed defect).
 - **G3 (no regression):** every existing ARIA relationship (`aria-labelledby`, `aria-describedby`, `aria-activedescendant`) must continue to resolve correctly; the visual/behavioral contract of Dialog, Menu, and Tooltip is otherwise unchanged.
 
@@ -39,7 +40,7 @@ Three sub-goals, all binding:
 
 ### 4.1 What changes
 
-All three affected React files (`menu.tsx`, `dialog.tsx`, `tooltip.tsx`) replace their `useState(() => id ?? \`u-<thing>-${++counterVar}\`)` pattern with React's built-in `useId()`:
+All three affected React files (`menu.tsx`, `dialog.tsx`, `tooltip.tsx`) replace their `useState(() => id ?? \`u-<thing>-${++counterVar}\`)`pattern with React's built-in`useId()`:
 
 ```tsx
 // Before (menu.tsx:84):
@@ -54,7 +55,7 @@ The `menuIdCounter`/`dialogIdCounter`/`tooltipIdCounter` module-scope `let` decl
 
 ### 4.2 Migration implications
 
-- **Format change:** `useId()` produces IDs in React's own internal format (e.g. `:r1:`), not the `u-menu-<n>` string shape the current counter produces. This is fine for ID *uniqueness* and *ARIA-relationship* purposes (nothing in this codebase parses or pattern-matches the ID's contents — confirmed by grep across `packages/react`/`packages/react-core` for any regex or string-parsing of `menuId`/`dialogId`/`panelId` beyond direct equality/interpolation), but any **existing test** that asserts on the literal `u-menu-1`/`u-dialog-1` string shape will need updating (see §9).
+- **Format change:** `useId()` produces IDs in React's own internal format (e.g. `:r1:`), not the `u-menu-<n>` string shape the current counter produces. This is fine for ID _uniqueness_ and _ARIA-relationship_ purposes (nothing in this codebase parses or pattern-matches the ID's contents — confirmed by grep across `packages/react`/`packages/react-core` for any regex or string-parsing of `menuId`/`dialogId`/`panelId` beyond direct equality/interpolation), but any **existing test** that asserts on the literal `u-menu-1`/`u-dialog-1` string shape will need updating (see §9).
 - **Suffix construction unaffected:** `menuId + "_list"`, `menuId + "_" + index`, `dialogId + "_header"` etc. all continue to work identically — `useId()` returns a plain string, and these are simple string concatenations, not dependent on the counter's numeric format.
 - **`id` prop override unaffected:** each component's existing `id ?? <generated>` fallback pattern is preserved exactly — an explicit `id` prop from the consumer still wins; `useId()` is only the fallback source, exactly as the counter was.
 - **G2 (hydration stability) is satisfied by construction:** per React's own documentation (quoted in the origin escalation), `useId()` is generated from the component's position in the render tree ("parent path"), which is identical between server and client renders of the same tree — this is the exact mechanism that prevents the class of mismatch the origin document confirmed does NOT currently manifest for React (React's hydration already tolerated the counter-based mismatch silently in observed testing), but which `useId()` closes structurally rather than accidentally.
@@ -65,7 +66,7 @@ The `menuIdCounter`/`dialogIdCounter`/`tooltipIdCounter` module-scope `let` decl
 
 ### 5.1 What changes
 
-`Menu.vue`'s Options-API `data()` (or equivalent lifecycle hook, matching this repository's existing Options-API `extends` mixin architecture, ADR-032) replaces its `menuId: \`u-menu-${++uidCounter}\`` computation with Vue 3.5's built-in `useId()`:
+`Menu.vue`'s Options-API `data()` (or equivalent lifecycle hook, matching this repository's existing Options-API `extends` mixin architecture, ADR-032) replaces its `menuId: \`u-menu-${++uidCounter}\``computation with Vue 3.5's built-in`useId()`:
 
 ```ts
 // Before (Menu.vue:97):
@@ -83,7 +84,7 @@ The `uidCounter` module-scope `let` declaration (Menu.vue:61) is deleted entirel
 
 - **Format:** Vue's `useId()` produces IDs like `v-0`, `v-1` (or a configured `app.config.idPrefix`) — same category of change as React's, same "no code in this repo parses the ID's contents" conclusion applies (confirmed by the same grep sweep, extended to `packages/vue`/`packages/vue-core`).
 - **G2 (hydration stability) is Vue's own documented purpose for this API** — per Vue's own docs (quoted in the origin escalation): "stable across server and client renders... preventing hydration mismatches." This directly closes the **confirmed, observed** Vue hydration defect (the silent server→client ID rewrite documented in the origin escalation §3.1) — this is the one instance in this proposal where the fix is closing a demonstrated bug, not merely a theoretical determinism gap.
-- **`useId` must be called during setup, not inside a lifecycle hook or computed property** — Vue's own documentation (quoted in the origin escalation) explicitly warns against calling it inside `computed`. `Menu.vue`'s current `data()`-time computation (Options API) needs to become a Composition-API `setup()`-time call (or the equivalent this repository's ADR-032 mixin pattern uses elsewhere, if it already has a bridge for exactly this — see Open Question OQ-1) whose *result* is then exposed to the Options-API instance, not a `data()` function invoking `useId()` directly (since `data()` may be re-invoked in ways Vue does not treat identically to a genuine one-time setup call — this needs implementation-time confirmation against how this repository's existing mixin bridges Composition helpers into Options components, since no other component in this codebase currently does so, per this specification's research — see OQ-1).
+- **`useId` must be called during setup, not inside a lifecycle hook or computed property** — Vue's own documentation (quoted in the origin escalation) explicitly warns against calling it inside `computed`. `Menu.vue`'s current `data()`-time computation (Options API) needs to become a Composition-API `setup()`-time call (or the equivalent this repository's ADR-032 mixin pattern uses elsewhere, if it already has a bridge for exactly this — see Open Question OQ-1) whose _result_ is then exposed to the Options-API instance, not a `data()` function invoking `useId()` directly (since `data()` may be re-invoked in ways Vue does not treat identically to a genuine one-time setup call — this needs implementation-time confirmation against how this repository's existing mixin bridges Composition helpers into Options components, since no other component in this codebase currently does so, per this specification's research — see OQ-1).
 - **Version requirement met:** `useId()` requires Vue 3.5+; this repository pins `vue` at `^3.5.13` (confirmed, `packages/vue/package.json`) — already satisfied, no dependency change needed.
 - **No `app.config.idPrefix` change needed:** this repository's harnesses (and presumably any real consumer) mount exactly one Vue app per page; the multi-app-on-one-page scenario `idPrefix` exists for does not apply here and is not part of this fix's scope.
 
@@ -126,27 +127,28 @@ export class ComponentIdGenerator {
 
 ### 6.4 Why not `providedIn: 'root'`
 
-A `providedIn: 'root'` service is a genuine singleton *per root injector* — and since Angular's own SSR pipeline creates one root injector per `bootstrapApplication()` call (i.e., per request), a `providedIn: 'root'` `ComponentIdGenerator` would actually behave identically to the explicit-provider design above for this specific use case. The explicit (non-`providedIn`) form is specified instead purely for clarity and intent-signaling — it makes the "this must be provided fresh at the application's own bootstrap, not silently available everywhere via tree-shakeable injection" contract visible at the provider-list call site, rather than implicit in a decorator option. This is a stylistic/API-clarity choice, not a functional requirement; the Angular implementer may use `providedIn: 'root'` instead if a later review judges the explicit form unnecessary — flagged as Open Question OQ-2, not decided here.
+A `providedIn: 'root'` service is a genuine singleton _per root injector_ — and since Angular's own SSR pipeline creates one root injector per `bootstrapApplication()` call (i.e., per request), a `providedIn: 'root'` `ComponentIdGenerator` would actually behave identically to the explicit-provider design above for this specific use case. The explicit (non-`providedIn`) form is specified instead purely for clarity and intent-signaling — it makes the "this must be provided fresh at the application's own bootstrap, not silently available everywhere via tree-shakeable injection" contract visible at the provider-list call site, rather than implicit in a decorator option. This is a stylistic/API-clarity choice, not a functional requirement; the Angular implementer may use `providedIn: 'root'` instead if a later review judges the explicit form unnecessary — flagged as Open Question OQ-2, not decided here.
 
 ## 7. SSR → hydration stability (cross-framework summary)
 
 All three fixes converge on the same underlying guarantee, achieved by each framework's own idiomatic mechanism:
+
 - React: `useId()`'s tree-position-derived ID generation.
 - Vue: `useId()`'s documented server/client stability guarantee.
 - Angular: a fresh application-injector-scoped service instance — request-isolated because the SSR host creates a new application injector per request — whose call-order determinism is inherited from Angular's own pre-existing hydration contract (identical DOM structure requirement).
 
-None of the three introduces a new hydration-timing dependency, a new lifecycle hook, or a new build-time step. All three are drop-in replacements for the existing ID-computation call site, changing only *how* the ID string is produced, not *when* or *where* in each component's render/construction flow it is produced.
+None of the three introduces a new hydration-timing dependency, a new lifecycle hook, or a new build-time step. All three are drop-in replacements for the existing ID-computation call site, changing only _how_ the ID string is produced, not _when_ or _where_ in each component's render/construction flow it is produced.
 
 ## 8. Long-running servers, sequential requests, and concurrent requests
 
 - **Sequential requests (the originally-observed defect):** closed for all three frameworks — each request now gets a value derived from either a genuinely fresh per-render hook call (React/Vue) or a genuinely fresh per-request injector/service instance (Angular), never a shared, persistent counter.
-- **Concurrent requests:** the origin escalation already confirmed (empirically, for Vue, and by the general single-threaded-Node-event-loop reasoning that applies equally to all three frameworks' Node-hosted SSR) that concurrent requests do not produce ID *collisions* even under the old, defective counter design — each request's synchronous render completes atomically before the next can begin. This fix does not change that guarantee; it was never the actual defect. The defect being closed is *determinism/hydration-fidelity*, not *collision-safety*, and this fix's design is scoped accordingly — no additional concurrency-specific mechanism (locking, atomic counters, etc.) is introduced, because none was ever needed.
+- **Concurrent requests:** the origin escalation already confirmed (empirically, for Vue, and by the general single-threaded-Node-event-loop reasoning that applies equally to all three frameworks' Node-hosted SSR) that concurrent requests do not produce ID _collisions_ even under the old, defective counter design — each request's synchronous render completes atomically before the next can begin. This fix does not change that guarantee; it was never the actual defect. The defect being closed is _determinism/hydration-fidelity_, not _collision-safety_, and this fix's design is scoped accordingly — no additional concurrency-specific mechanism (locking, atomic counters, etc.) is introduced, because none was ever needed.
 
 ## 9. Regression tests
 
 Each of the 5 affected components already has an existing spec file (confirmed present at commit `dfc5e97`): `packages/ng/src/dialog/dialog.spec.ts`, `packages/react/src/menu/menu.spec.tsx`, `packages/react/src/dialog/dialog.spec.tsx`, `packages/react/src/tooltip/tooltip.spec.tsx`, `packages/vue/src/menu/menu.spec.ts`. The regression tests for this fix are added to these existing files — no new test infrastructure is introduced.
 
-**Required new test cases per affected component** (exact assertions to be finalized at Implementation Plan time, but the required *behaviors* to prove are fixed here):
+**Required new test cases per affected component** (exact assertions to be finalized at Implementation Plan time, but the required _behaviors_ to prove are fixed here):
 
 1. **Uniqueness within one render:** rendering two instances of the same component in one component tree produces two different IDs (this already had implicit coverage via the old counter's `++`, but should be an explicit assertion post-fix to prove the replacement mechanism preserves it).
 2. **ARIA relationship integrity:** the generated ID and whatever attribute references it (`aria-labelledby`/`aria-describedby`/`aria-activedescendant`) resolve to the same value — i.e., the element carrying `id={x}` and the element carrying the ARIA attribute referencing `x` agree, post-fix, exactly as they did pre-fix. This is the direct regression check for G3.
@@ -160,9 +162,9 @@ Each of the 5 affected components already has an existing spec file (confirmed p
 
 This work item is a **prerequisite for Track E's Tasks 5-7 and Task 8 to be trustworthy**, but it is **not part of Track E's own task list or specification**. Specifically:
 
-- Track E's Tasks 5-7 (Playwright specs) currently would exercise Dialog-open and Menu-interaction states whose underlying components carry this defect — proceeding with those tasks before this fix lands would mean writing Playwright assertions against components that are known, in at least one confirmed case (Vue), to silently rewrite IDs during hydration. This does not necessarily break any *specific* Track E acceptance criterion as currently worded (none of Track E's spec §D.2 requirements assert on ID stability directly), but it does mean Task 8's determinism check — which asserts byte-identical SSR responses across two fetches — **would fail** for any harness/component combination where the counter's non-determinism is currently observable in rendered SSR output (confirmed: Vue's Menu, React's Menu; not currently observable for Angular's Dialog or React's Dialog/Tooltip given their current closed/hidden default fixture states, per the origin escalation §3).
+- Track E's Tasks 5-7 (Playwright specs) currently would exercise Dialog-open and Menu-interaction states whose underlying components carry this defect — proceeding with those tasks before this fix lands would mean writing Playwright assertions against components that are known, in at least one confirmed case (Vue), to silently rewrite IDs during hydration. This does not necessarily break any _specific_ Track E acceptance criterion as currently worded (none of Track E's spec §D.2 requirements assert on ID stability directly), but it does mean Task 8's determinism check — which asserts byte-identical SSR responses across two fetches — **would fail** for any harness/component combination where the counter's non-determinism is currently observable in rendered SSR output (confirmed: Vue's Menu, React's Menu; not currently observable for Angular's Dialog or React's Dialog/Tooltip given their current closed/hidden default fixture states, per the origin escalation §3).
 - Therefore: **this fix is a hard prerequisite for Track E's Task 8 to pass for Vue's Menu and React's Menu specifically**, and a soft/precautionary prerequisite for the Dialog/Tooltip instances not currently exercised by Track E's own fixtures (closing them now, rather than waiting for a future fixture change to surface them, is the safer sequencing, per the human's own Option (a) decision).
-- Track E's Tasks 5-7 do not need to be *rewritten* once this fix lands — they were already specified against the correct, intended component behavior (spec §D.2's interaction requirements are about user-facing behavior, not implementation-internal ID format), so this fix is transparent to Track E's own specification and plan. Only the *sequencing* — this fix landing before Track E's Task 8 actually runs its double-fetch check against Menu — is the binding dependency.
+- Track E's Tasks 5-7 do not need to be _rewritten_ once this fix lands — they were already specified against the correct, intended component behavior (spec §D.2's interaction requirements are about user-facing behavior, not implementation-internal ID format), so this fix is transparent to Track E's own specification and plan. Only the _sequencing_ — this fix landing before Track E's Task 8 actually runs its double-fetch check against Menu — is the binding dependency.
 - **Track E's deterministic double-fetch requirement itself is unchanged by this proposal** (point 12 of the request) — this fix exists specifically to make that requirement passable without weakening it, not to alter what it checks.
 
 ## 11. Explicit non-goals of this fix
