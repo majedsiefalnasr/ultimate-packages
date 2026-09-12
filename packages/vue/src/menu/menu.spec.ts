@@ -292,3 +292,98 @@ describe("UMenu — popup mode lifecycle", () => {
     unrelated.remove();
   });
 });
+
+// Regression tests for the useId()-based menuId fix: Menu.vue previously
+// generated its ARIA-relevant container id from a module-scope counter
+// variable, which leaks/accumulates state across requests in a
+// long-running SSR server process and (confirmed in prior investigation)
+// caused a real, observed silent hydration id rewrite in Vue specifically.
+// menuId is now derived from Vue's own `useId()`, called once in a
+// setup() hook on Menu.vue's own component options and bridged into
+// data() via `this.generatedMenuId` (setup() runs before data() in Vue's
+// documented Options/Composition API merge order).
+//
+// Real-environment finding made while writing these tests: Vue's useId()
+// (packages/@vue/runtime-core, `i.appContext...` + `i.ids[1]++`) guarantees
+// uniqueness only *within a single app instance* — its counter lives on
+// the root app context and restarts at `v-0` for every fresh `createApp()`
+// root (which is exactly what makes it SSR-safe: each server request gets
+// its own fresh app instance, so per-request id generation is
+// deterministic and isolated without any risk of colliding with another
+// concurrent request's ids, since they never share one DOM/HTML document).
+// Two independent @vue/test-utils `mount()` calls each create their own
+// root app instance, so they may legitimately generate the same `v-0`-
+// style id — this is correct Vue behavior, not a defect and not a
+// reintroduction of the old shared-module-counter problem. "Uniqueness
+// within one render" (AC3.1) therefore has to be tested by mounting two
+// UMenu instances as children of one shared parent/app instance, which is
+// what the first test below does.
+describe("UMenu — menuId generation (useId() migration regression tests)", () => {
+  it("generates unique container-derived ids for two UMenu instances mounted within the same app instance", () => {
+    const TwoMenus = {
+      components: { UMenu },
+      data() {
+        return { model };
+      },
+      template: `<div><UMenu :model="model" /><UMenu :model="model" /></div>`,
+    };
+    const wrapper = mount(TwoMenus);
+    const items = wrapper.findAll('[role="menuitem"]');
+    const idA = items[0].attributes("id");
+    const idB = items[4].attributes("id");
+    expect(idA).toBeTruthy();
+    expect(idB).toBeTruthy();
+    expect(idA).not.toBe(idB);
+    wrapper.unmount();
+  });
+
+  it("keeps aria-activedescendant in sync with the actual focused item's rendered id", async () => {
+    const wrapper = mount(UMenu, { props: { model }, attachTo: document.body });
+    const list = wrapper.find('ul[role="menu"]');
+    await list.trigger("focus");
+    await list.trigger("keydown", { code: "ArrowDown" });
+    const activeId = list.attributes("aria-activedescendant");
+    const focusedItem = wrapper.findAll('[role="menuitem"]')[1];
+    expect(activeId).toBe(focusedItem.attributes("id"));
+    wrapper.unmount();
+  });
+
+  // NOTE: this is a jsdom-level check that mounting and unmounting UMenu
+  // repeatedly does not accumulate or retain any shared state (e.g. a
+  // leftover module-scope counter) across mounts within this single test
+  // process run — the specific defect this task fixes. It intentionally
+  // does NOT assert that the two mounts' generated ids differ: per Vue's
+  // own useId() semantics (see the describe-block comment above), each
+  // independent mount() call creates its own fresh app instance, so
+  // useId()'s per-app counter legitimately restarting is correct,
+  // expected behavior, not a bug. This test is NOT a proof of cross-
+  // request SSR id determinism, and asserting id inequality here would
+  // incorrectly fail on correct Vue behavior. What it does prove: each
+  // mount independently produces a well-formed, non-empty id (i.e.
+  // menuId is freshly computed per mount from generatedMenuId, not
+  // undefined, not stale, and not silently empty).
+  it("independently derives a fresh, well-formed menuId on every separate mount (jsdom retained-state check, not an SSR determinism proof)", () => {
+    const wrapper1 = mount(UMenu, { props: { model } });
+    const id1 = wrapper1.find('[role="menuitem"]').attributes("id");
+    wrapper1.unmount();
+
+    const wrapper2 = mount(UMenu, { props: { model } });
+    const id2 = wrapper2.find('[role="menuitem"]').attributes("id");
+    wrapper2.unmount();
+
+    expect(id1).toBeTruthy();
+    expect(id2).toBeTruthy();
+    expect(id1).toMatch(/^u-menu-.+_0$/);
+    expect(id2).toMatch(/^u-menu-.+_0$/);
+  });
+
+  // AC3.4 / id-override prop: createBaseMenu() (packages/vue/src/menu/BaseMenu.ts)
+  // declares UMenu's full prop set — model, popup, appendTo, autoZIndex,
+  // baseZIndex, tabindex, ariaLabel, ariaLabelledby — verified against real
+  // upstream BaseMenu.vue. None of these overrides the generated menuId
+  // (unlike React's sibling components, which support an `id ?? generated`
+  // pattern). No such override mechanism exists on UMenu today, so this
+  // sub-check is not applicable here; a test is intentionally not added,
+  // per this task's own instruction not to fabricate a prop that doesn't
+  // exist.
+});

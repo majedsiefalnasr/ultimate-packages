@@ -14,17 +14,31 @@ import {
   signal,
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
-import { UBaseComponent, UFocusTrap, UOverlay, UTimesIcon } from "@ultimate/ng-core";
+import {
+  ComponentIdGenerator,
+  UBaseComponent,
+  UFocusTrap,
+  UOverlay,
+  UTimesIcon,
+} from "@ultimate/ng-core";
 import { createMotion, type MotionInstance } from "@ultimate/uix-motion";
 import { UButton } from "../button/button";
 import { dialogStyleModule } from "./dialog-style";
-
-let dialogIdCounter = 0;
 
 /**
  * Ultimate-owned adaptation of PrimeNG's `Dialog` component (see
  * `.vendor-extracted/ng/dialog/dialog.ts`). Renders content in a modal
  * (or non-modal) overlay window.
+ *
+ * BREAKING CHANGE — requires `ComponentIdGenerator`: this component injects
+ * `ComponentIdGenerator` (from `@ultimate/ng-core`) to generate its
+ * `aria-labelledby` id in an SSR-deterministic way. The consuming
+ * application MUST provide `ComponentIdGenerator` at bootstrap (e.g. in
+ * `bootstrapApplication(AppComponent, { providers: [...] })`'s providers
+ * array, or an equivalent root-level `providers` array) — `UDialog` has no
+ * default provider for it. An application that renders `UDialog` without
+ * providing `ComponentIdGenerator` will throw `NullInjectorError` at
+ * construction time.
  *
  * Deliberately excludes upstream's much larger prop/behavior surface —
  * `draggable`/`resizable`/drag-and-resize listener wiring, `breakpoints`/
@@ -183,8 +197,14 @@ export class UDialog extends UBaseComponent {
 
   @ViewChild("root") private rootRef?: ElementRef<HTMLElement>;
   private readonly injector = inject(Injector);
+  private readonly idGenerator = inject(ComponentIdGenerator);
 
-  protected readonly ariaLabelledBy = `u_dialog_${++dialogIdCounter}_header`;
+  /**
+   * Consumers must provide `ComponentIdGenerator` (from `@ultimate/ng-core`)
+   * in their application's bootstrap providers for this component to
+   * function — it has no default provider.
+   */
+  protected readonly ariaLabelledBy = `${this.idGenerator.next("u_dialog")}_header`;
 
   /**
    * Gates the mask/dialog DOM's presence in the template. Unlike a direct

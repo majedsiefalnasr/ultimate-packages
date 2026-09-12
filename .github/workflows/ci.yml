@@ -176,3 +176,49 @@ jobs:
         with:
           name: playwright-report-${{ matrix.framework }}
           path: playwright-report/
+
+  track-e-ssr-hydration:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - framework: ng
+            dir: playground-angular
+          - framework: react
+            dir: playground-react
+          - framework: vue
+            dir: playground-vue
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.15.0"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build harness (${{ matrix.dir }})
+        run: pnpm --filter ${{ matrix.dir }} run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright SSR project (${{ matrix.framework }})
+        env:
+          TRACK_E_SSR_FRAMEWORK: ${{ matrix.framework }}
+        run: npx playwright test --project=${{ matrix.framework }}-ssr-chromium
+
+      - name: Upload Playwright HTML report (${{ matrix.framework }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-ssr-${{ matrix.framework }}
+          path: playwright-report/

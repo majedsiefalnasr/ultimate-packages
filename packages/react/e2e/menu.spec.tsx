@@ -54,7 +54,11 @@ test.describe("React/Menu", () => {
     await page.keyboard.press("ArrowDown");
     const activeId = await menu.getAttribute("aria-activedescendant");
     expect(activeId).not.toBe(firstItemId);
-    const activeText = await page.locator(`#${activeId}`).textContent();
+    // React's useId() produces colon-wrapped ids (e.g. ":r0:_1"), which are not valid
+    // bare CSS id-selector characters (a literal "#:" is a CSS parse error). Use an
+    // attribute selector instead of an id selector — it matches the same element
+    // without requiring the id to be CSS-identifier-safe.
+    const activeText = await page.locator(`[id="${activeId}"]`).textContent();
     expect(activeText).toContain("Open");
   });
 
@@ -78,7 +82,9 @@ test.describe("React/Menu", () => {
     await page.keyboard.press("ArrowDown");
     await page.keyboard.press("ArrowDown");
     const activeId = await menu.getAttribute("aria-activedescendant");
-    const activeText = await page.locator(`#${activeId}`).textContent();
+    // See the attribute-selector note above: React's useId() ids may contain colons,
+    // which are invalid in a bare CSS id selector.
+    const activeText = await page.locator(`[id="${activeId}"]`).textContent();
     expect(activeText).toContain("Open");
   });
 

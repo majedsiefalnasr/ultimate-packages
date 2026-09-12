@@ -1,0 +1,29 @@
+{
+  "name": "playground-react",
+  "version": "0.0.0",
+  "description": "Minimal React SSR/hydration verification harness rendering all @ultimate/react components in one page.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build && node scripts/build-server.mjs",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@ultimate/react": "workspace:*",
+    "@ultimate/react-core": "workspace:*",
+    "@ultimate/themes": "workspace:*",
+    "express": "^5.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.28.2",
+    "typescript": "5.9.3",
+    "vite": "^5.4.21"
+  }
+}

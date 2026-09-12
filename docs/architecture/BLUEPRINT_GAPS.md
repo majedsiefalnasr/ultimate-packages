@@ -175,7 +175,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Existing reusable infrastructure:** All 3 frameworks' component packages are otherwise ready to be imported; `packages/themes` is ready to be applied.
 - **Recommended resolution direction:** Build one playground app per framework (or one showcase app spanning all three) that imports and renders the full proof set.
 - **Source/evidence:** `apps/*/.gitkeep`; `docs/architecture/PERFORMANCE.md` Notes section; `docs/architecture/DECISIONS.md` ADR-023.
-- **Architectural decision required:** No.
+- **Architectural decision required:** Resolved for the SSR/hydration slice only — see ADR-045. GAP-008's fuller consumer-app scope (tree-shaking re-measurement, bundle-size benchmarking, a real demo experience) remains open backlog, not addressed by Phase 10 Track E.
 
 #### GAP-009 — Angular tree-shaking verified broken; `ng` ships a single barrel instead of the originally-planned 9 secondary entry points
 - **Status:** IMPLEMENTED-BUT-NOT-ENFORCED (broken, and known-broken)
@@ -566,19 +566,19 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-034 — No SSR/hydration verification anywhere (Angular has an `isPlatformBrowser()` guard; no test proves SSR actually works end-to-end)
-- **Status:** IMPLEMENTED-BUT-UNVERIFIED
+- **Status:** RESOLVED (SSR/hydration verification specifically; does not close GAP-008's fuller scope)
 - **Type:** Testing, Framework, Production
 - **Blocking level:** MEDIUM
-- **Current evidence:** COMPONENT_INVENTORY.md's FocusTrap+Overlay row notes `isPlatformBrowser()`-guarded code — evidence of SSR-awareness in the implementation. No test file name matching `ssr`/`hydrat` was found in this pass (not exhaustively grepped for content, only scanned via directory listings — `UNVERIFIED` whether any spec file exercises SSR indirectly without an SSR-indicating filename).
-- **Expected state:** Blueprint §13 requires Angular to independently track "SSR, hydration" as a compatibility responsibility; §14 the same for React/Vue; §28's Build/Package testing tier requires verifying "SSR where supported."
-- **Why it matters:** SSR-awareness in the code (the guard) is necessary but not sufficient evidence that SSR/hydration actually works correctly end-to-end.
-- **What it blocks:** Confident SSR support claims for any framework.
-- **Dependencies:** GAP-008 (a real consumer app is likely the most realistic way to exercise real SSR/hydration, e.g. an Angular Universal or Next.js/Nuxt playground).
-- **Framework scope:** Cross-framework.
-- **Existing reusable infrastructure:** The `isPlatformBrowser()` guard pattern already exists in Angular's Overlay/FocusTrap as a starting point.
-- **Recommended resolution direction:** Directional only — likely folds into GAP-008's real-consumer-app work, using an SSR-capable app shell for at least one framework.
-- **Source/evidence:** `docs/architecture/COMPONENT_INVENTORY.md` FocusTrap+Overlay row; directory-listing scan for SSR-named test files (none found, not exhaustive).
-- **Architectural decision required:** No.
+- **Current evidence:** COMPONENT_INVENTORY.md's FocusTrap+Overlay row notes `isPlatformBrowser()`-guarded code — evidence of SSR-awareness in the implementation. Phase 10 Track E built one minimal, framework-native SSR/hydration harness per framework — `apps/playground-angular`, `apps/playground-react`, `apps/playground-vue` — each using its own raw SSR primitives (Angular's `provideServerRendering`/`provideClientHydration`; React's `renderToPipeableStream`/`hydrateRoot`; Vue's `createSSRApp`/`renderToString`) rather than a meta-framework. Each harness has a real Playwright spec (`apps/playground-angular/e2e/ssr-hydration.spec.ts`, `apps/playground-react/e2e/ssr-hydration.spec.ts`, `apps/playground-vue/e2e/ssr-hydration.spec.ts`) that builds and serves the harness, asserts server-rendered markup is present pre-hydration, asserts no hydration-mismatch/console errors, and includes a determinism double-fetch check (two independent SSR responses for the same route must match). All three specs run in CI via the `track-e-ssr-hydration` matrix job in `.github/workflows/ci.yml` on every relevant trigger.
+- **Expected state:** Blueprint §13 requires Angular to independently track "SSR, hydration" as a compatibility responsibility; §14 the same for React/Vue; §28's Build/Package testing tier requires verifying "SSR where supported." This state is now met for all three frameworks.
+- **Why it matters:** SSR-awareness in the code (the guard) is necessary but not sufficient evidence that SSR/hydration actually works correctly end-to-end — real, CI-enforced Playwright specs now supply that missing end-to-end proof.
+- **What it blocks:** Nothing further — confident SSR support claims are now backed by CI-enforced evidence for all three frameworks.
+- **Dependencies:** GAP-008 (a real consumer app remains separately, more broadly open — this resolution used GAP-008's harness infrastructure as the vehicle for the SSR/hydration slice specifically, per ADR-045, without closing GAP-008's fuller scope: tree-shaking re-measurement via a real app build, genuine bundle-size/performance benchmarking, or a real consumer/demo experience).
+- **Framework scope:** Cross-framework (Angular, React, Vue — all verified).
+- **Existing reusable infrastructure:** The `isPlatformBrowser()` guard pattern already existed in Angular's Overlay/FocusTrap as a starting point; superseded as primary evidence by the three real harnesses and their CI-enforced specs above.
+- **Recommended resolution direction:** Resolved — no further action for GAP-034 itself. GAP-008's remaining, broader scope (real consumer/demo app, tree-shaking re-measurement, bundle-size benchmarking) stays open as separate backlog.
+- **Source/evidence:** `docs/architecture/COMPONENT_INVENTORY.md` FocusTrap+Overlay row; `apps/playground-angular`, `apps/playground-react`, `apps/playground-vue` (harness implementations and READMEs); `apps/playground-*/e2e/ssr-hydration.spec.ts` (Playwright SSR/hydration specs with determinism double-fetch checks); `.github/workflows/ci.yml`'s `track-e-ssr-hydration` job; `docs/architecture/DECISIONS.md` ADR-045.
+- **Architectural decision required:** No — already resolved, per ADR-045.
 
 #### GAP-035 — No browser-compatibility testing (real-browser or cross-browser) — all tests run under jsdom/Vitest/TestBed
 - **Status:** MISSING

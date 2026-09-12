@@ -1,6 +1,6 @@
 import * as React from "react";
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { UDialog } from "./dialog";
 
 // Regression coverage for the Portal/ref-timing defect (final whole-branch review,
@@ -159,6 +159,74 @@ describe("UDialog", () => {
       await waitFor(() => screen.getByRole("dialog"));
       await waitFor(() => expect(document.body.classList.contains("u-overflow-hidden")).toBe(true));
       document.body.classList.remove("u-overflow-hidden");
+    });
+  });
+
+  describe("id generation (useId migration regression coverage)", () => {
+    it("generates different ids for two instances rendered in the same tree", async () => {
+      render(
+        <>
+          <UDialog visible onHide={() => {}} header="Title A">
+            Content A
+          </UDialog>
+          <UDialog visible onHide={() => {}} header="Title B">
+            Content B
+          </UDialog>
+        </>
+      );
+      await waitFor(() => expect(screen.getAllByRole("dialog")).toHaveLength(2));
+      const [first, second] = screen.getAllByRole("dialog");
+      expect(first.id).toBeTruthy();
+      expect(second.id).toBeTruthy();
+      expect(first.id).not.toBe(second.id);
+    });
+
+    it("keeps aria-labelledby/aria-describedby in agreement with the header/content elements' actual ids", async () => {
+      render(
+        <UDialog visible onHide={() => {}} header="Title">
+          Content
+        </UDialog>
+      );
+      const dialog = await screen.findByRole("dialog");
+      const labelledBy = dialog.getAttribute("aria-labelledby");
+      const describedBy = dialog.getAttribute("aria-describedby");
+      expect(labelledBy).toBeTruthy();
+      expect(describedBy).toBeTruthy();
+      expect(document.getElementById(labelledBy!)?.textContent).toBe("Title");
+      expect(document.getElementById(describedBy!)?.textContent).toBe("Content");
+    });
+
+    // jsdom-level check only: this proves a single test run's two separate render() calls
+    // don't retain and reuse a prior render's id (the actual defect module-scope counters
+    // had). It is NOT proof of cross-request SSR determinism — that is Track E's own Task 8.
+    it("does not reuse the same generated id across separate renders", async () => {
+      const first = render(
+        <UDialog visible onHide={() => {}} header="Title">
+          Content
+        </UDialog>
+      );
+      const firstId = (await screen.findByRole("dialog")).id;
+      cleanup();
+
+      render(
+        <UDialog visible onHide={() => {}} header="Title">
+          Content
+        </UDialog>
+      );
+      const secondId = (await screen.findByRole("dialog")).id;
+
+      expect(secondId).not.toBe(firstId);
+      first.unmount();
+    });
+
+    it("uses an explicit id prop verbatim instead of a generated one", async () => {
+      render(
+        <UDialog visible onHide={() => {}} header="Title" id="custom-dialog-id">
+          Content
+        </UDialog>
+      );
+      const dialog = await screen.findByRole("dialog");
+      expect(dialog.id).toBe("custom-dialog-id");
     });
   });
 });

@@ -51,8 +51,6 @@ export interface UMenuHandle {
   hide: (event?: React.SyntheticEvent) => void;
 }
 
-let menuIdCounter = 0;
-
 // Ultimate-owned stable data-attribute convention, independent of any passthrough
 // system (spec §10 — PrimeReact's own data-pc-* selectors are passthrough-derived
 // and not ported since pt is excluded).
@@ -81,7 +79,8 @@ export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu(
   ref
 ) {
   const { cx } = useComponentBase({ componentName: "menu", styleModule: menuStyleModule });
-  const [menuId] = React.useState(() => id ?? `u-menu-${++menuIdCounter}`);
+  const generatedMenuId = React.useId();
+  const menuId = id ?? generatedMenuId;
   const [visible, setVisible] = React.useState(!popup);
   const [focusedId, setFocusedId] = React.useState<string | null>(null);
   const [focused, setFocused] = React.useState(false);

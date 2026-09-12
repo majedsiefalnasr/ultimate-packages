@@ -1,6 +1,6 @@
 import * as React from "react";
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, act, waitFor, cleanup } from "@testing-library/react";
 import { UMenu, type UMenuItem, type UMenuHandle } from "./menu";
 
 // Regression coverage for the Portal/ref-timing defect (final whole-branch review,
@@ -86,6 +86,56 @@ describe("UMenu (inline mode)", () => {
   it("does not import or render Tooltip anywhere", () => {
     const { container } = render(<UMenu model={model} />);
     expect(container.querySelector('[role="tooltip"]')).toBeNull();
+  });
+});
+
+describe("UMenu id generation (useId migration regression coverage)", () => {
+  it("generates different ids for two instances rendered in the same tree", () => {
+    const { container } = render(
+      <>
+        <UMenu model={model} />
+        <UMenu model={model} />
+      </>
+    );
+    const [first, second] = container.querySelectorAll('[role="menu"]');
+    expect(first.id).toBeTruthy();
+    expect(second.id).toBeTruthy();
+    expect(first.id).not.toBe(second.id);
+  });
+
+  it("keeps aria-activedescendant in agreement with the actual focused menuitem's id", () => {
+    render(<UMenu model={model} />);
+    const list = screen.getByRole("menu");
+    act(() => list.focus());
+    fireEvent.keyDown(list, { code: "ArrowDown" });
+    const activeId = list.getAttribute("aria-activedescendant");
+    expect(activeId).toBeTruthy();
+    // The element aria-activedescendant references must be a real, currently-rendered
+    // menuitem — proving the ARIA relationship resolves against the actual generated id,
+    // not a stale or mismatched one.
+    const focusedItem = screen.getAllByRole("menuitem").find((el) => el.id === activeId);
+    expect(focusedItem).toBeDefined();
+  });
+
+  // jsdom-level check only: this proves a single test run's two separate render() calls
+  // don't retain and reuse a prior render's id (the actual defect module-scope counters
+  // had). It is NOT proof of cross-request SSR determinism — that is Track E's own Task 8.
+  it("does not reuse the same generated id across separate renders", () => {
+    const first = render(<UMenu model={model} />);
+    const firstId = screen.getByRole("menu").id;
+    cleanup();
+
+    render(<UMenu model={model} />);
+    const secondId = screen.getByRole("menu").id;
+
+    expect(secondId).not.toBe(firstId);
+    first.unmount();
+  });
+
+  it("uses an explicit id prop verbatim instead of a generated one", () => {
+    const { container } = render(<UMenu model={model} id="custom-menu-id" />);
+    const menu = container.querySelector('[role="menu"]') as HTMLElement;
+    expect(menu.id).toBe("custom-menu-id_list");
   });
 });
 

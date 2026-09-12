@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { useId } from "vue";
 import {
   Portal as UPortal,
   useZIndex,
@@ -58,7 +59,6 @@ const { set: setZIndex, clear: clearZIndex } = useZIndex();
 // duration (`getMotionMetadata` returns `type: undefined`), matching the
 // same jsdom-safe short-circuit Dialog already relies on.
 const motionHooks = createMotionTransitionHooks(() => ({ name: "u-menu" }));
-let uidCounter = 0;
 
 // Escape handling here is deliberately a LOCAL keydown handler on the <ul>,
 // NOT the shared uix-utils/escape adapter — matching verified Menu.vue's real
@@ -75,6 +75,18 @@ export default {
   inheritAttrs: false,
   emits: ["show", "hide", "focus", "blur"],
   components: { UMenuitem: Menuitem, UPortal },
+  // Vue's Composition API setup() runs before any Options API hook,
+  // including beforeCreate — so its returned properties are already merged
+  // onto the instance (accessible via `this`) by the time data() executes
+  // below. Used here (instead of a module-scope counter) so `menuId` is
+  // generated per-component-instance via Vue's own SSR-safe useId(), which
+  // does not leak state across requests in a long-running SSR server
+  // process and does not trigger a client/server hydration ID mismatch.
+  // Deliberately NOT a `computed` property — Vue's own documentation warns
+  // against calling useId() inside a computed context.
+  setup() {
+    return { generatedMenuId: useId() };
+  },
   data() {
     return {
       overlayVisible: false,
@@ -94,7 +106,7 @@ export default {
       // lookups). Fixed here to keep both derived from the same
       // `menuId`/model-index pair.
       focusedOptionIndex: -1,
-      menuId: `u-menu-${++uidCounter}`,
+      menuId: `u-menu-${this.generatedMenuId}`,
     };
   },
   target: null,

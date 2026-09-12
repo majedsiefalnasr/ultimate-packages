@@ -1,0 +1,26 @@
+{
+  "name": "playground-vue",
+  "version": "0.0.0",
+  "description": "Minimal Vue SSR/hydration verification harness rendering all @ultimate/vue components in one page.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build && vite build --ssr src/entry-server.ts --outDir dist && node scripts/build-server.mjs",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@ultimate/themes": "workspace:*",
+    "@ultimate/vue": "workspace:*",
+    "@ultimate/vue-core": "workspace:*",
+    "express": "^5.2.1",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/node": "^22.10.2",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "esbuild": "^0.28.2",
+    "typescript": "5.9.3",
+    "vite": "^5.4.21"
+  }
+}
