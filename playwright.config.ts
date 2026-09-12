@@ -1,5 +1,50 @@
 import { defineConfig, devices } from "@playwright/test";
 
+type TrackEFramework = "ng" | "react" | "vue";
+
+interface TrackESsrServer {
+  name: string;
+  command: string;
+  url: string;
+  reuseExistingServer: boolean;
+  timeout: number;
+}
+
+/**
+ * Track E SSR/hydration `webServer` entries, keyed by framework, kept
+ * separate from Track A's own 3 Storybook `webServer` entries above (which
+ * remain declared unconditionally, exactly as before).
+ *
+ * Only the `ng` key is populated by this task (the Angular SSR harness,
+ * `apps/playground-angular`, port 6011). Later tasks add their own `react`/
+ * `vue` keys here — this object and the `TRACK_E_SSR_FRAMEWORK` selection
+ * logic below are written generically enough that adding those keys never
+ * requires touching the selection logic itself.
+ */
+const trackESsrServers: Partial<Record<TrackEFramework, TrackESsrServer>> = {
+  ng: {
+    name: "ng-ssr-server",
+    command: "pnpm --filter playground-angular run start",
+    url: "http://localhost:6011",
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
+};
+
+/**
+ * `TRACK_E_SSR_FRAMEWORK`-driven selection: when set to one of the framework
+ * keys above, only that framework's Track E `webServer` entry is included in
+ * the final array (used to start exactly one SSR server in isolation, e.g.
+ * for AC5.6's port-inspection check). When unset, every entry currently in
+ * `trackESsrServers` is included — with only `ng` populated so far, unset and
+ * `TRACK_E_SSR_FRAMEWORK=ng` behave identically; this is what allows a
+ * combined local run across all three frameworks once react/vue keys exist.
+ */
+const trackESsrFrameworkFilter = process.env.TRACK_E_SSR_FRAMEWORK as TrackEFramework | undefined;
+const trackESsrWebServers: TrackESsrServer[] = trackESsrFrameworkFilter
+  ? [trackESsrServers[trackESsrFrameworkFilter]].filter((entry): entry is TrackESsrServer => entry !== undefined)
+  : Object.values(trackESsrServers).filter((entry): entry is TrackESsrServer => entry !== undefined);
+
 /**
  * Root Playwright configuration shared by all three framework packages
  * (@ultimate/ng, @ultimate/react, @ultimate/vue).
@@ -121,6 +166,13 @@ export default defineConfig({
       testDir: "./packages/vue/e2e",
       use: { ...devices["Desktop Safari"] },
     },
+
+    // Track E SSR/hydration harnesses (Chromium only, per binding decision).
+    {
+      name: "ng-ssr-chromium",
+      testDir: "./apps/playground-angular/e2e",
+      use: { ...devices["Desktop Chrome"] },
+    },
   ],
 
   /**
@@ -172,5 +224,6 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
     },
+    ...trackESsrWebServers,
   ],
 });
