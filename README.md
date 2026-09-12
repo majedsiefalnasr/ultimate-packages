@@ -6,7 +6,7 @@ See `docs/architecture/BLUEPRINT.md` for the full architecture baseline, and `do
 
 ## Status
 
-**Phase 0 — Repository Foundation, Provenance & Baseline Verification.** No component source has been migrated yet. See `docs/architecture/ROADMAP.md` for the full phase plan.
+For current phase and track status, see `docs/architecture/ROADMAP.md`. For how to orient yourself in this repository — the source-of-truth hierarchy, the development workflow, and where to find current gaps and decisions — see `AGENTS.md`.
 
 ## Repository structure
 
