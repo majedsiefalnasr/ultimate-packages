@@ -23,6 +23,7 @@
     "boundary:validate:ai": "node scripts/provenance/validate-ai-boundary.mjs",
     "install-script-policy:validate": "node scripts/provenance/validate-install-script-policy.mjs",
     "ceiling:validate": "node scripts/provenance/validate-dependency-ceiling.mjs",
+    "agents-md-pointers:validate": "node scripts/provenance/validate-agents-md-pointers.mjs",
     "compatibility-manifest:validate": "node docs/architecture/compatibility-manifest.test.mjs",
     "changeset": "changeset",
     "changeset:version": "changeset version",
