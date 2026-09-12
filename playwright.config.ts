@@ -15,17 +15,25 @@ interface TrackESsrServer {
  * separate from Track A's own 3 Storybook `webServer` entries above (which
  * remain declared unconditionally, exactly as before).
  *
- * Only the `ng` key is populated by this task (the Angular SSR harness,
- * `apps/playground-angular`, port 6011). Later tasks add their own `react`/
- * `vue` keys here — this object and the `TRACK_E_SSR_FRAMEWORK` selection
- * logic below are written generically enough that adding those keys never
- * requires touching the selection logic itself.
+ * The `ng` key (the Angular SSR harness, `apps/playground-angular`, port
+ * 6011) and `react` key (the React SSR harness, `apps/playground-react`,
+ * port 6012) are populated so far. A later task adds its own `vue` key here
+ * — this object and the `TRACK_E_SSR_FRAMEWORK` selection logic below are
+ * written generically enough that adding that key never requires touching
+ * the selection logic itself.
  */
 const trackESsrServers: Partial<Record<TrackEFramework, TrackESsrServer>> = {
   ng: {
     name: "ng-ssr-server",
     command: "pnpm --filter playground-angular run start",
     url: "http://localhost:6011",
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
+  react: {
+    name: "react-ssr-server",
+    command: "pnpm --filter playground-react run start",
+    url: "http://localhost:6012",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
@@ -171,6 +179,11 @@ export default defineConfig({
     {
       name: "ng-ssr-chromium",
       testDir: "./apps/playground-angular/e2e",
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "react-ssr-chromium",
+      testDir: "./apps/playground-react/e2e",
       use: { ...devices["Desktop Chrome"] },
     },
   ],
