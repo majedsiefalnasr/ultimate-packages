@@ -62,6 +62,10 @@ Re-ran `node scripts/provenance/verify-tree-shaking.mjs` against the fresh Phase
 - No app in this monorepo consumes `@ultimate/ng`/`@ultimate/ng-core` via normal `node_modules` resolution yet — both the package-size and tree-shaking measurements above reflect the packages' own published `dist/` output, not an application bundle produced through a real Angular CLI build (which would run the Angular linker and could tree-shake differently; see Task 17's report caveat).
 - Numbers reflect the current single-barrel-export architecture (Task 12's correction — no per-component subpaths). Re-baseline after any future change to the package's entry-point structure.
 
+## Phase 3 (React), Phase 4 (Vue), Phase 5 (Themes)
+
+No dedicated narrative section was recorded at each phase's own completion (unlike Phase 1/2, which were baselined immediately). Real package-size and coverage measurements for `packages/react`, `packages/vue`, and `packages/themes` do exist, however — see the "Phase 10 — CI/Security/Quality Gates" section immediately below, whose baseline table (measured 2026-09-09 against commit `62480b6`) already includes all three packages alongside every other publishable package, once Phase 10 Track B extended the measurement script's scope from `uix*`/`ng*` to all 17 packages. No React/Vue/Themes-specific tree-shaking spot-check or component-creation-cost benchmark analogous to Phase 2's has been performed; this remains open backlog (tracked as GAP-037 in `docs/architecture/BLUEPRINT_GAPS.md`).
+
 ## Phase 10 — CI/Security/Quality Gates
 
 Phase 10 Track B extends `scripts/provenance/measure-package-size.mjs`'s package-discovery scope from the `uix*`/`ng*` prefix filter to an explicit, exhaustive list of all 17 publishable packages, and adds `scripts/provenance/validate-bundle-size.mjs` as a CI gate (R6) enforcing a merge-base-anchored, two-step baseline acceptance lifecycle (see the spec and `task-6-brief.md` for the full design). This table is the gate's baseline of record: `size:validate` reads each row's value at the merge-base commit and fails a source-changing PR whose fresh measurement regresses more than 15% relative to that value.

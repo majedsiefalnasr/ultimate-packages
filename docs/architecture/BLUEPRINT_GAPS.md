@@ -18,21 +18,23 @@
 
 ## 2. Blueprint phase status (repository-verified)
 
+**Superseded notice (added during Documentation Reconciliation, current as of `main` post-Phase-10):** this section's table was originally written "as of Phase 5 completion" (see this document's own unnumbered header/Purpose line at the top of the file) and was never updated as Phases 6–10 actually landed — Phase 6–9's real completion was only ever reflected in this document's own §3/§4 gap entries (GAP-027/028/029/030), never in this summary table, and Phase 10 postdates this table entirely. The table below has been corrected against direct repository evidence; the full reconciliation evidence trail (commit references, file:line citations) lives in `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §1–§2, which this correction is sourced from.
+
 Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/plans/*` and actual package contents.
 
 | Phase | Name | Blueprint status | Repo-verified status |
 |---|---|---|---|
 | 0 | Baseline/Provenance/Repository | Complete | Confirmed — `docs/architecture/{PROVENANCE,DEPENDENCIES,COMPATIBILITY,checksums.json}` all populated with commit SHAs/tarball hashes for PrimeNG/PrimeVue/PrimeReact/4×`@primeuix/*`. |
 | 1 | UltimateUIX Foundation | Complete | Confirmed — `uix-utils`, `uix-styled`, `uix-styles` (base module only, ADR-017), `uix-motion` all have `package.json`, `src/`, tests, provenance JSON. |
-| 2 | UltimateNG | Complete | Confirmed — `ng-core` + `ng` build, 5-component proof set (Button/Checkbox/Dialog/Menu/Tooltip) + primitives, 18 test files total. Six follow-ups explicitly left open by ADR-023 (see GAP-004–GAP-009 below). |
-| 3 | UltimateReact | Complete | Confirmed — `react-core` + `react`, same 5-component proof set, per-component subpath exports present (unlike `ng`). |
-| 4 | UltimateVue | Complete | Confirmed — `vue-core` + `vue`, same 5-component proof set + `v-ripple`/`v-tooltip` directives, Options-API `extends` mixin architecture (ADR-032). |
-| 5 | Themes | Complete, with a footnoted exception | Confirmed — `packages/themes` (Aura preset, 5-component proof set). Footnote in `ROADMAP.md` itself: React components use hand-written static CSS, not `dt()` token calls — cross-framework theme consistency is proven at the `react-core` registration layer only, not through a real React component's CSS. |
-| 6 | Component Metadata | Not started | Confirmed — `packages/component-schema`, `packages/component-metadata` contain only `.gitkeep`. |
-| 7 | CLI | Not started | Confirmed — `packages/cli` contains only `.gitkeep`. |
-| 8 | MCP | Not started | Confirmed — `packages/mcp` contains only `.gitkeep`. |
-| 9 | AI Skills / LLM Context | Not started | Confirmed — `packages/ai` contains only `.gitkeep`; `skills/` and `tooling/` at repo root are also empty (`.gitkeep` only). |
-| 10 | Production Hardening | Not started | Confirmed — no SECURITY.md, no CONTRIBUTING.md, no CHANGELOG.md, no visual-regression/a11y-scanning tooling anywhere in the tree (see §9). |
+| 2 | UltimateNG | Complete, with explicit follow-ups | Confirmed — `ng-core` + `ng` build; proof set expanded from the original 5 components to 8 (Button/Checkbox/Dialog/Menu/Tooltip/Paginator/Scroller/Table). GAP-003 (style-injection no-op) is now **resolved** (commit `680876f`) — was open when this table was first written. GAP-006/GAP-007/GAP-009/GAP-010 remain genuinely open (see their own entries below). |
+| 3 | UltimateReact | Complete | Confirmed — `react-core` + `react`, full 8-component proof set, per-component subpath exports present (unlike `ng`). |
+| 4 | UltimateVue | Complete | Confirmed — `vue-core` + `vue`, full 8-component proof set + `v-ripple`/`v-tooltip` directives, Options-API `extends` mixin architecture (ADR-032). |
+| 5 | Themes | Complete, with a footnoted exception | Confirmed — `packages/themes` (Aura preset, 8-component proof set). Footnote in `ROADMAP.md` itself: React components use hand-written static CSS, not `dt()` token calls — cross-framework theme consistency is proven at the `react-core` registration layer only, not through a real React component's CSS. GAP-003a (the contradiction this created against ADR-023) is now moot, since GAP-003 itself is resolved. |
+| 6 | Component Metadata | Complete | Confirmed — `@ultimate/component-schema` (versioned `ComponentMetadata` schema) and `@ultimate/component-metadata` (8 real, source-verified records) both have substantial real `src/`. GAP-027 (this document's own §4) already correctly marks this resolved; this row was simply never updated to match. |
+| 7 | CLI | Complete, with explicit follow-ups | Confirmed — `@ultimate/cli` ships 5 real commands (`init`/`add`/`theme`/`doctor`/`generate`) + an `ai` stub; `create`/`migrate`/`update` explicitly deferred per spec scope. See `ROADMAP.md` footnote 3 and GAP-028 below. |
+| 8 | MCP | Complete, with explicit follow-ups | Confirmed — `@ultimate/mcp` ships 5 real tools over stdio transport, boundary-enforced. HTTP transport/resources/prompts explicitly deferred. See `ROADMAP.md` footnote 4 and GAP-029 below. |
+| 9 | AI Skills / LLM Context | Complete, with explicit follow-ups | **Corrected — this table previously read "Not started," which was already stale by the time Phase 9 actually landed.** `packages/ai/src/` contains 7 real files exporting real generation/validation functions; `skills/` at repo root has real per-component Skill files for all 8 proof-set components plus `AGENT_CONVENTIONS.md`. One disclosed follow-up: the `llms.txt`/`llms-full.txt` generator has never been run-and-committed (GAP-036, new below); `tooling/` remains empty. See GAP-030. |
+| 10 | Production Hardening | Complete, with explicit follow-ups | **Corrected — this table previously read "Not started."** All 5 Phase 10 tracks (A–E) are merged into `main`. `SECURITY.md`/`CHANGELOG.md` exist (Track D); visual-regression/a11y-scanning tooling is real and CI-enforced (Track A); dependency/license/SAST scanning and bundle-size/coverage regression gates are real and CI-enforced (Track B); a real release pipeline exists but has never executed a real release (Track C, disclosed); SSR/hydration verification is real (Track E, GAP-034). See `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §2 for the full per-track evidence. |
 
 `packages/uix` (the umbrella package named in Blueprint §4's proposed repo shape) also contains only `.gitkeep` — it was never populated; its candidate responsibilities ended up distributed across `uix-utils`/`uix-styled`/`uix-styles`/`uix-motion`/`uix-data` instead. This is a repository-shape deviation from the Blueprint's literal proposed layout, not a missing capability (see GAP-001).
 
@@ -73,64 +75,64 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-003 — `packages/uix-styled`'s `StyleSheet.createStyleElement` no-op means Angular never injects a real `<style>` element
-- **Status:** MISSING
+- **Status:** RESOLVED
 - **Type:** Foundation, Styling, Framework (Angular)
-- **Blocking level:** HIGH
-- **Current evidence:** ADR-023 follow-up 6 and ADR-029 both document this directly: `ngCoreStyleSheet` never overrides `StyleSheet.createStyleElement`, so Angular's style-registration path only dedups metadata — no `<style>` element is ever appended to the DOM for `@ultimate/ng` components. React's `ReactStyleSheet` (Phase 3) already demonstrates the fix pattern (subclassing `StyleSheet`, delegating to `@ultimate/uix-utils/dom`'s `createStyleElement`). Vue is `UNVERIFIED` for this specific mechanism — not directly re-confirmed in this pass; ADR-036 discusses escape/scroll-lock extraction but not style injection.
-- **Expected state:** Angular components' CSS is actually injected into the DOM at runtime, matching React's already-working mechanism.
-- **Why it matters:** This is a real functional gap in a **shipped, "Phase 2 Complete"** package — Angular's 5-component proof set currently has no working runtime styling path, which the theme system (Phase 5) depends on to render anything visibly.
-- **What it blocks:** Any real visual usage of `@ultimate/ng` components; Phase 5's cross-framework theme consistency claim for Angular (though `ROADMAP.md`'s footnote says Angular's path *is* proven end-to-end — this needs reconciling, see GAP-003a below).
-- **Dependencies:** None — the fix pattern already exists in `react-core`.
+- **Blocking level:** HIGH (at the time this was open)
+- **Current evidence:** `packages/ng-core/src/basecomponent/style-sheet.ts` now contains a real `NgCoreStyleSheet` subclass overriding `createStyleElement`, delegating to `@ultimate/uix-utils`'s real DOM-injection helper, SSR-guarded via `typeof document === "undefined"` — matching React's/Vue's already-working pattern exactly. Landed in commit `680876f` ("fix(ng-core): append registered component styles to document.head").
+- **Expected state:** Angular components' CSS is actually injected into the DOM at runtime, matching React's already-working mechanism. **Met.**
+- **Why it matters:** This was a real functional gap in a shipped package — now fixed, Angular's proof-set components have a working runtime styling path.
+- **What it blocks:** Nothing — resolved. Previously blocked any real visual usage of `@ultimate/ng` components.
+- **Dependencies:** None.
 - **Framework scope:** Angular only.
-- **Existing reusable infrastructure:** `@ultimate/uix-utils/dom`'s `createStyleElement`; `react-core/ReactStyleSheet` as a direct template.
-- **Recommended resolution direction:** Port the `ReactStyleSheet` subclassing pattern into `ng-core`.
-- **Source/evidence:** `docs/architecture/DECISIONS.md` ADR-023 follow-up 6, ADR-029.
-- **Architectural decision required:** No — mechanical fix, pattern already approved and shipped for React.
+- **Existing reusable infrastructure:** N/A — resolved.
+- **Recommended resolution direction:** N/A — resolved.
+- **Source/evidence:** `packages/ng-core/src/basecomponent/style-sheet.ts`; commit `680876f`; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §3 (GAP-003 row).
+- **Architectural decision required:** No.
 
 #### GAP-003a — Apparent contradiction: ADR-023/029 say Angular style injection is a no-op, but `ROADMAP.md` footnote says Angular's theme path is proven end-to-end
-- **Status:** DOCUMENTATION-GAP
+- **Status:** RESOLVED (moot)
 - **Type:** Documentation, Architecture
-- **Blocking level:** MEDIUM
-- **Current evidence:** `ROADMAP.md` footnote 1: *"Cross-framework theme consistency is proven end-to-end for Vue and Angular. React's components... do not yet source their CSS from `@ultimate/uix-styles`."* This directly conflicts with ADR-023/ADR-029's claim that Angular's `createStyleElement` override is missing and no `<style>` tag is ever injected. Not independently re-verified against `packages/themes/test/cross-framework-consistency.test.ts` in this pass — flagged rather than resolved.
-- **Expected state:** One authoritative statement. Either the ROADMAP footnote is wrong (Angular's theme proof is at the token-resolution layer, not the DOM-injection layer, same caveat as React), or ADR-023/029 are stale and Angular's style injection was fixed silently between Phase 2 and Phase 5 without a corresponding ADR update.
-- **Why it matters:** Whichever is true, current docs are internally inconsistent about a production-readiness-relevant fact (whether shipped Angular components actually render styled).
-- **What it blocks:** Confidence in the Phase 5 exit claim.
-- **Dependencies:** GAP-003.
+- **Blocking level:** N/A
+- **Current evidence:** Moot as a direct consequence of GAP-003's resolution: Angular's style injection now genuinely works, so `ROADMAP.md` footnote 1's claim that Angular's theme path is proven end-to-end is no longer in tension with anything — there is no remaining contradiction to reconcile, because the underlying fact (does Angular actually inject styles) changed rather than being newly investigated.
+- **Expected state:** N/A — moot.
+- **Why it matters:** Historical record only; the question this gap asked no longer has two competing answers.
+- **What it blocks:** Nothing.
+- **Dependencies:** GAP-003 (resolved).
 - **Framework scope:** Angular.
-- **Existing reusable infrastructure:** `packages/themes/test/cross-framework-consistency.test.ts` (unread in this pass — read it first).
-- **Recommended resolution direction:** Read the cross-framework-consistency test directly, determine which document is stale, correct it.
-- **Source/evidence:** `docs/architecture/ROADMAP.md` footnote 1 vs. `docs/architecture/DECISIONS.md` ADR-023/ADR-029.
-- **Architectural decision required:** No — factual reconciliation.
+- **Existing reusable infrastructure:** N/A.
+- **Recommended resolution direction:** N/A — close as moot, not as "resolved by investigation."
+- **Source/evidence:** GAP-003's own resolution evidence above; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §3 (GAP-003a row).
+- **Architectural decision required:** No.
 
 #### GAP-004 — No visual regression / Storybook / screenshot tooling anywhere in the repository
-- **Status:** MISSING
+- **Status:** RESOLVED
 - **Type:** Testing, CI, Production
-- **Blocking level:** HIGH
-- **Current evidence:** Repository-wide `grep` for `storybook|playwright|chromatic|percy|axe-core` across every `package.json` returns zero matches. ADR-023 explicitly names this as an accepted Phase 2 gap ("zero Storybook, screenshot, or visual-regression tooling exists anywhere in the repository").
-- **Expected state:** Per Blueprint §28 ("Visual Regression: Use stable theme/component combinations") and §40 (Definition of Done requires "visual regression coverage").
-- **Why it matters:** Blocks Production Hardening (Phase 10) exit criteria directly; blocks confident theme/component changes across 3 frameworks without visual proof.
-- **What it blocks:** Phase 10 exit; safe refactoring of any styled component.
-- **Dependencies:** None architecturally — tooling choice only.
-- **Framework scope:** Cross-framework (Angular/React/Vue all need coverage).
-- **Existing reusable infrastructure:** None yet; `packages/themes`' Aura preset + 5-component proof set across 3 frameworks is a ready-made target surface.
-- **Recommended resolution direction:** Directional only — evaluate Storybook (also serves Blueprint §27's documentation-surface requirement) vs. a lighter screenshot-diff tool.
-- **Source/evidence:** `docs/architecture/DECISIONS.md` ADR-023; grep across `packages/*/package.json`.
-- **Architectural decision required:** Yes — tooling choice, see Open Architectural Decisions §6.
+- **Blocking level:** HIGH (at the time this was open)
+- **Current evidence:** Resolved by Phase 10 Track A. `.storybook/` config directories exist for all 3 frameworks; `storybook` and `axe-core` are real devDependencies in all 3 framework `package.json` files; root `playwright.config.ts` defines 9 named Track A projects (`{ng,react,vue}-{chromium,firefox,webkit}`), each with a real `webServer` entry; `.github/workflows/ci.yml`'s `track-a-browser-visual-a11y` job runs a real 3-framework matrix with screenshot-diff assertions, uploading real HTML/accessibility-report artifacts. `docs/architecture/ACCESSIBILITY_BASELINE.md` documents the real baseline. ADR-044 records the tooling choice this gap's own Open Architectural Decision (DECISION-A) had left open.
+- **Expected state:** Per Blueprint §28/§40. **Met.**
+- **Why it matters:** Historical — this gap directly blocked Production Hardening exit criteria; now resolved.
+- **What it blocks:** Nothing — resolved.
+- **Dependencies:** None.
+- **Framework scope:** Cross-framework — all 3 frameworks covered.
+- **Existing reusable infrastructure:** N/A — resolved.
+- **Recommended resolution direction:** N/A — resolved.
+- **Source/evidence:** `docs/architecture/DECISIONS.md` ADR-044; `.github/workflows/ci.yml` `track-a-browser-visual-a11y` job; `docs/architecture/ACCESSIBILITY_BASELINE.md`; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §2 (Track A).
+- **Architectural decision required:** No — DECISION-A (Open Architectural Decisions §5) is resolved by this implementation; see that entry.
 
 #### GAP-005 — No automated accessibility scanning (axe-core or equivalent) anywhere
-- **Status:** MISSING
+- **Status:** RESOLVED
 - **Type:** Accessibility, Testing, CI
-- **Blocking level:** HIGH
-- **Current evidence:** Same grep as GAP-004 — zero `axe-core` references. ADR-023 confirms: "no automated scanning tool such as axe-core is wired in" for Phase 2; accessibility claims for all 3 frameworks rest on manually-written `TestBed`/`@testing-library`/`@vue/test-utils` assertions checking specific ARIA attributes, not automated audits.
-- **Expected state:** Blueprint §28 requires "Automated checks plus targeted keyboard/screen-reader behavior tests" and §30 states "Accessibility regressions are release blockers."
-- **Why it matters:** Without automated scanning, accessibility is only as good as what a human thought to hand-write a test for. `UTooltip`'s known gap (GAP-006) is exactly the kind of thing an automated scan would have caught.
-- **What it blocks:** Phase 10 exit; confident accessibility claims for any component, present or future.
+- **Blocking level:** HIGH (at the time this was open)
+- **Current evidence:** Resolved by Phase 10 Track A. `axe-core` is a real devDependency in all 3 framework packages, wired through real Playwright specs; `.github/workflows/ci.yml`'s `track-a-browser-visual-a11y` job runs `validate-accessibility-baseline.mjs --check` as a real CI gate, uploading real accessibility-report artifacts per framework.
+- **Expected state:** Blueprint §28/§30. **Met**, with 2 known, isolated, still-open follow-ups tracked separately (GAP-006's Tooltip `aria-describedby`; GAP-007's Escape/stacking accessibility implications) — the scanning infrastructure itself is real and enforced, not merely present.
+- **Why it matters:** Historical — automated scanning now catches the class of gap GAP-006 represents, going forward.
+- **What it blocks:** Nothing — resolved.
 - **Dependencies:** None.
 - **Framework scope:** Cross-framework.
-- **Existing reusable infrastructure:** Existing `TestBed`/`@testing-library/react`/`@vue/test-utils` test harnesses in all three framework packages are the integration points axe-core would hook into.
-- **Recommended resolution direction:** Directional only — wire `axe-core` (or `jest-axe`/`vitest-axe` equivalent) into each framework's existing test harness.
-- **Source/evidence:** `docs/architecture/DECISIONS.md` ADR-023; grep.
-- **Architectural decision required:** No — clear Blueprint requirement, tooling choice is narrow (axe-core is close to the only mature option).
+- **Existing reusable infrastructure:** N/A — resolved.
+- **Recommended resolution direction:** N/A — resolved.
+- **Source/evidence:** `.github/workflows/ci.yml` `track-a-browser-visual-a11y` job; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §2 (Track A), §8 (accessibility validation row).
+- **Architectural decision required:** No.
 
 #### GAP-006 — `UTooltip` (Angular) has `role="tooltip"` but no `aria-describedby` wiring
 - **Status:** PARTIAL
@@ -504,65 +506,65 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — Blueprint §23 is directive; the real prerequisite is GAP-027, not a fork.
 
 #### GAP-030 — AI Skills package, LLM context generation, and agent-instruction conventions do not exist (Phase 9)
-- **Status:** MISSING
+- **Status:** RESOLVED WITH FOLLOW-UP
 - **Type:** AI, Documentation
-- **Blocking level:** MEDIUM
-- **Current evidence:** `packages/ai` and repo-root `skills/` both contain only `.gitkeep`. `ROADMAP.md`: "Not started."
-- **Expected state:** Blueprint §24/§25/§26/ADR-011/ADR-012 — Skills as operational guidance (not just docs), versioned and tied to metadata versions; generated `llms.txt`/`llms-full.txt` outputs that are not the primary source of truth.
+- **Blocking level:** MEDIUM (at the time this was open) → LOW (remaining follow-up only)
+- **Current evidence:** `packages/ai/src/` contains 7 real files (`bin-generate.ts`, `bin-validate.ts`, `context-files.ts`, `render-section.ts`, `skill-file.ts`, `validate.ts`, `index.ts`) exporting real functions (`renderLlmsTxt`, `renderLlmsFullTxt`, `renderFrameworkContext`, `generateContextFiles`, `generateSkillFile`, `validateSkillFile`). Repo-root `skills/` has real per-component skill files for all 8 proof-set components (`button.md` through `tooltip.md`) plus `AGENT_CONVENTIONS.md`. **Remaining follow-up:** the generation *tooling* is real and tested, but no generated `llms.txt`/`llms-full.txt` output file has ever been run-and-committed anywhere in the repository (tracked separately as GAP-036, below); `tooling/` at repo root remains an empty placeholder.
+- **Expected state:** Blueprint §24/§25/§26/ADR-011/ADR-012. **Substantially met** — the generator, validator, and Skill content all exist and are real; only the generated-artifact-commit step (GAP-036) remains.
 - **Why it matters:** Named directly in Blueprint §40 Definition of Done.
-- **What it blocks:** Nothing else architecturally — leaf consumer per §6's dependency diagram.
-- **Dependencies:** Depends on GAP-027 (metadata) per §24's own stated design ("Skills may be human-authored but should reference canonical component metadata").
+- **What it blocks:** Nothing architecturally. GAP-036 (the remaining follow-up) blocks nothing either — it is a "run it once and commit the output" task.
+- **Dependencies:** Depended on GAP-027 (metadata) — now resolved, and `packages/ai`'s real implementation does reference `@ultimate/component-metadata` as its design anticipated.
 - **Framework scope:** Cross-framework, plus framework-specific guidance per skill (§24).
-- **Existing reusable infrastructure:** This very document's Superpowers-workflow discipline (specs → plans → implementation → verification, all recorded in `docs/superpowers/`) is itself a working example of the "operational AI guidance" pattern Blueprint §24 describes — worth studying as a template when Phase 9 begins, though it is process tooling for building Ultimate, not a Skill about using Ultimate's own components.
-- **Recommended resolution direction:** Directional only.
-- **Source/evidence:** `packages/ai/`, `skills/` (both `.gitkeep`-only); `docs/architecture/BLUEPRINT.md` §24/§25/§26.
-- **Architectural decision required:** No — Blueprint is directive; real prerequisite is GAP-027.
+- **Existing reusable infrastructure:** N/A — implemented.
+- **Recommended resolution direction:** See GAP-036 for the one remaining concrete action.
+- **Source/evidence:** `packages/ai/src/index.ts` (barrel exports); `skills/*.md`; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §1 (Phase 9 row), §4 (GAP-036).
+- **Architectural decision required:** No.
 
 ### Production readiness (Phase 10)
 
 #### GAP-031 — No dependency/license/SAST scanning wired into CI
-- **Status:** MISSING
+- **Status:** RESOLVED
 - **Type:** CI, Production, Licensing
-- **Blocking level:** HIGH
-- **Current evidence:** `.github/workflows/ci.yml` (the only workflow file in `.github/workflows/`) runs: checkout, pnpm install, lint, format:check, typecheck, build, test, provenance scripts self-tests, provenance validation, boundary validation, dependency-ceiling validation. No `npm audit`/`pnpm audit`, no license-scanner (e.g. `license-checker`), no SAST tool (e.g. CodeQL, Semgrep) step anywhere.
-- **Expected state:** Blueprint §29: "dependency scanning, license scanning, SAST where appropriate, vulnerability monitoring" as part of the security process.
-- **Why it matters:** Directly named Phase 10 requirement; currently zero automated coverage of any of these three specific items, distinct from the provenance/boundary/ceiling checks that already exist and cover a different concern (Prime-source-lineage integrity, not general dependency vulnerability/license risk).
-- **What it blocks:** Phase 10 exit.
+- **Blocking level:** HIGH (at the time this was open)
+- **Current evidence:** Resolved by Phase 10 Track B. `.github/workflows/ci.yml`'s main `ci` job now runs, in sequence: `pnpm audit --audit-level high --prod` (dependency scan), `license-checker-rseidelsohn --onlyAllow ...` (license scan), a real `github/codeql-action@v3` init+analyze step followed by a SARIF-consuming `sast:validate` step. `docs/architecture/SAST_BASELINE.md` (57 lines) contains 22 real, dated CodeQL findings with fingerprints/rule IDs/file:line references tied to a real `codeql database analyze` run.
+- **Expected state:** Blueprint §29. **Met.**
+- **Why it matters:** Historical — this gap directly blocked Production Hardening exit criteria; now resolved and CI-enforced.
+- **What it blocks:** Nothing — resolved.
 - **Dependencies:** None.
 - **Framework scope:** N/A.
-- **Existing reusable infrastructure:** The existing `provenance:validate`/`boundary:validate`/`ceiling:validate` CI steps are a strong precedent for how to wire in a new scanning step the same way.
-- **Recommended resolution direction:** Directional only — add `pnpm audit` (or equivalent) plus a license-scanner and a SAST tool as new CI steps, following the existing steps' pattern.
-- **Source/evidence:** `.github/workflows/ci.yml` (full file, 8 steps, none matching this gap).
-- **Architectural decision required:** No — tooling choice only.
+- **Existing reusable infrastructure:** N/A — resolved.
+- **Recommended resolution direction:** N/A — resolved.
+- **Source/evidence:** `.github/workflows/ci.yml` (main `ci` job); `docs/architecture/SAST_BASELINE.md`; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §2 (Track B).
+- **Architectural decision required:** No.
 
 #### GAP-032 — No bundle-size monitoring / size-limit tooling in CI (distinct from the one-time `PERFORMANCE.md` snapshot)
-- **Status:** IMPLEMENTED-BUT-NOT-ENFORCED
+- **Status:** RESOLVED
 - **Type:** CI, Production, Packaging
-- **Blocking level:** MEDIUM
-- **Current evidence:** `scripts/provenance/measure-package-size.mjs` exists and has been run manually twice (Phase 1, Phase 2) with results recorded in `PERFORMANCE.md` — but it is not a CI step in `ci.yml`, and there is no `size-limit`/`bundlewatch`/equivalent CI-enforced budget (confirmed via grep — zero matches across all `package.json` files).
-- **Expected state:** Blueprint §31: "Do not optimize based on assumptions; establish benchmarks" — benchmarks exist (`PERFORMANCE.md`), but nothing prevents them from silently regressing since the measurement script isn't wired into CI.
-- **Why it matters:** The measurement capability exists and has produced real numbers twice — the gap is specifically that nothing *enforces* those numbers going forward. This is exactly the "implemented vs. verified vs. CI-enforced" distinction the task brief calls mandatory.
-- **What it blocks:** Confident claims of "bundle-size monitoring" (§31, §40) as opposed to "bundle-size was measured twice, manually, and could regress silently since."
+- **Blocking level:** MEDIUM (at the time this was open)
+- **Current evidence:** Resolved by Phase 10 Track B — now genuinely CI-enforced, not merely measured. `scripts/provenance/validate-bundle-size.mjs` implements a merge-base-anchored, two-step baseline acceptance lifecycle: `REGRESSION_THRESHOLD = 0.15` (15% relative), calls `process.exit(1)` on violation. `PERFORMANCE.md`'s "Phase 10 — CI/Security/Quality Gates" section is the gate's baseline of record, covering all 17 publishable packages (extended from the original `uix*`/`ng*`-only scope).
+- **Expected state:** Blueprint §31. **Met** — this is now genuinely "bundle-size monitoring," not "bundle-size was measured twice, manually."
+- **Why it matters:** Historical — the distinction this gap named (implemented vs. enforced) is now closed in the enforced direction.
+- **What it blocks:** Nothing — resolved.
 - **Dependencies:** None.
-- **Framework scope:** All packages the script already covers (`uix*`, `ng*` — `UNVERIFIED` whether it was extended to `react*`/`vue*`/`themes` after Phase 2; `PERFORMANCE.md` shows only Phase 1/Phase 2 sections).
-- **Existing reusable infrastructure:** `scripts/provenance/measure-package-size.mjs` already exists and works — the gap is purely "not wired into CI as a gate," not "doesn't exist."
-- **Recommended resolution direction:** Add `measure-package-size.mjs` (extended to cover all packages) as a CI step, with either a hard budget or a regression-detection diff against the last recorded baseline.
-- **Source/evidence:** `scripts/provenance/measure-package-size.mjs`; `docs/architecture/PERFORMANCE.md`; `.github/workflows/ci.yml` (no matching step).
+- **Framework scope:** All 17 publishable packages.
+- **Existing reusable infrastructure:** N/A — resolved.
+- **Recommended resolution direction:** N/A — resolved. (See GAP-037 for a related, narrower documentation-only gap: `PERFORMANCE.md` lacks a dedicated narrative section for Phase 3/4/5 specifically, even though the Phase 10 table's data already covers those packages.)
+- **Source/evidence:** `scripts/provenance/validate-bundle-size.mjs`; `docs/architecture/PERFORMANCE.md` "Phase 10" section; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §2 (Track B).
 - **Architectural decision required:** No.
 
 #### GAP-033 — Test suites run, but no coverage threshold is enforced anywhere in CI
-- **Status:** IMPLEMENTED-BUT-NOT-ENFORCED
+- **Status:** RESOLVED
 - **Type:** CI, Testing
-- **Blocking level:** MEDIUM
-- **Current evidence:** `ci.yml`'s "Test" step runs `pnpm run test` (→ `pnpm -r --if-present run test`), which does execute real tests (verified: 96 total test files across all packages inspected in this pass — 10+5+10+3+4+8+10+12+6+14+7+7). No `--coverage` flag, no coverage-threshold config (`vitest.config.ts` files not individually re-checked for a `coverage.thresholds` block in this pass — `UNVERIFIED`, but no coverage-reporting step or badge exists at the CI/repo level regardless of per-package config).
-- **Expected state:** Blueprint §40: "test coverage enforcement" listed as a Definition-of-Done item.
-- **Why it matters:** Tests running ≠ tests enforced-at-a-threshold — exactly the implemented/verified/CI-enforced distinction the task brief requires flagging.
-- **What it blocks:** Confident "test coverage enforcement" claim.
+- **Blocking level:** MEDIUM (at the time this was open)
+- **Current evidence:** Resolved by Phase 10 Track B — now genuinely CI-enforced. `@vitest/coverage-v8` is wired into all 15 Vitest-native packages plus `ng`/`ng-core`'s Angular-idiomatic equivalent (`ng test --coverage`). `scripts/provenance/validate-coverage.mjs` implements the same merge-base-anchored, two-step baseline lifecycle as GAP-032's bundle-size gate: `REGRESSION_THRESHOLD_POINTS = 2.0` (absolute percentage points), calls `process.exit(1)` on violation. `PERFORMANCE.md`'s "Coverage" table is the gate's baseline of record, covering all 17 publishable packages.
+- **Expected state:** Blueprint §40. **Met.**
+- **Why it matters:** Historical — tests running now genuinely equals tests enforced-at-a-threshold.
+- **What it blocks:** Nothing — resolved.
 - **Dependencies:** None.
-- **Framework scope:** All packages.
-- **Existing reusable infrastructure:** Vitest (used everywhere per ADR-022's "Vitest-everywhere consistency") has built-in coverage support (`@vitest/coverage-v8` or similar) — no new test runner needed, only configuration.
-- **Recommended resolution direction:** Add coverage collection + a threshold gate to the existing CI test step.
-- **Source/evidence:** `.github/workflows/ci.yml`; test-file counts gathered via `find`.
+- **Framework scope:** All 17 publishable packages.
+- **Existing reusable infrastructure:** N/A — resolved.
+- **Recommended resolution direction:** N/A — resolved.
+- **Source/evidence:** `scripts/provenance/validate-coverage.mjs`; `docs/architecture/PERFORMANCE.md` "Coverage" table; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §2 (Track B).
 - **Architectural decision required:** No.
 
 #### GAP-034 — No SSR/hydration verification anywhere (Angular has an `isPlatformBrowser()` guard; no test proves SSR actually works end-to-end)
@@ -581,19 +583,49 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — already resolved, per ADR-045.
 
 #### GAP-035 — No browser-compatibility testing (real-browser or cross-browser) — all tests run under jsdom/Vitest/TestBed
-- **Status:** MISSING
+- **Status:** RESOLVED
 - **Type:** Testing, Production
-- **Blocking level:** LOW
-- **Current evidence:** Every framework package's test setup uses `jsdom` (confirmed as a `devDependency` in `uix-utils`, `uix-styled`, `uix-motion`, `react-core`, `vue-core` `package.json` files) or Angular's `TestBed` (which also runs in a simulated DOM, not a real browser engine) — no Playwright/Cypress/WebdriverIO/BrowserStack reference found anywhere (same grep as GAP-004).
-- **Expected state:** Blueprint §28/§31/§40 all reference "browser compatibility" as a testing/production requirement.
-- **Why it matters:** jsdom is not a real browser — layout, real focus/ARIA computed-role behavior, and real CSS cascade/paint behavior can all diverge from jsdom's approximation.
-- **What it blocks:** Phase 10 exit; genuine confidence in accessibility/interaction claims currently verified only against jsdom.
-- **Dependencies:** Likely bundled with GAP-004's visual-regression tooling choice (Playwright serves both real-browser interaction testing and screenshot-diffing use cases) — recommend deciding together.
+- **Blocking level:** LOW (at the time this was open)
+- **Current evidence:** Resolved by Phase 10 Track A, using the same real-browser Playwright matrix as GAP-004: 9 named projects (`{ng,react,vue}-{chromium,firefox,webkit}`) exercising real Chromium/Firefox/WebKit engines, not jsdom. jsdom/TestBed remain in use for unit/component tests (correctly — that tier's purpose is unchanged), but genuine cross-browser interaction testing now exists as a separate, real tier above it.
+- **Expected state:** Blueprint §28/§31/§40. **Met.**
+- **Why it matters:** Historical — accessibility/interaction claims are no longer verified only against jsdom's approximation.
+- **What it blocks:** Nothing — resolved.
+- **Dependencies:** Was bundled with GAP-004's tooling decision, per this entry's own prior note — both resolved by the same Track A implementation.
 - **Framework scope:** Cross-framework.
-- **Existing reusable infrastructure:** None yet.
-- **Recommended resolution direction:** Directional only — likely resolved by the same tooling decision as GAP-004.
-- **Source/evidence:** grep across `package.json` files for `jsdom` vs. real-browser test runners.
-- **Architectural decision required:** Bundled into GAP-004's Open Architectural Decision.
+- **Existing reusable infrastructure:** N/A — resolved.
+- **Recommended resolution direction:** N/A — resolved.
+- **Source/evidence:** `playwright.config.ts` (9 Track A projects); `.github/workflows/ci.yml` `track-a-browser-visual-a11y` job; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §2 (Track A).
+- **Architectural decision required:** No — resolved alongside GAP-004/DECISION-A.
+
+#### GAP-036 (new, added during Documentation Reconciliation) — `llms.txt`/`llms-full.txt` generation tooling exists and is tested, but no generated output artifact has ever been produced or committed
+- **Status:** IMPLEMENTED-BUT-NOT-EXECUTED (distinct from IMPLEMENTED-BUT-NOT-ENFORCED — this is about a missing output artifact, not a missing CI gate)
+- **Type:** AI, Documentation
+- **Blocking level:** LOW
+- **Current evidence:** `packages/ai/src/context-files.ts` exports real `renderLlmsTxt`/`renderLlmsFullTxt`/`generateContextFiles` functions (confirmed via `index.ts`'s barrel exports); a repository-wide search for `llms*.txt` returns zero matches anywhere.
+- **Expected state:** Blueprint §25 ("LLM-Oriented Documentation" — generated `llms.txt`-style outputs); §26 ("AI Context Layers"); ADR-012 ("Generated outputs (llms.txt etc.) should not become the primary source of truth").
+- **Why it matters:** The generator is proven built and tested (Phase 9's own test suite); this is a "run it once and commit the output" gap, not a design gap.
+- **What it blocks:** Nothing architecturally.
+- **Dependencies:** None.
+- **Framework scope:** Cross-framework.
+- **Existing reusable infrastructure:** `packages/ai/src/context-files.ts`'s existing, tested generator functions.
+- **Recommended resolution direction:** Run the existing generator against the current 8-component metadata proof set, commit its output.
+- **Source/evidence:** `packages/ai/src/context-files.ts`, `packages/ai/src/index.ts`; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §4.
+- **Architectural decision required:** No — ordinary implementation/operational task.
+
+#### GAP-037 (new, added during Documentation Reconciliation) — `PERFORMANCE.md` has no dedicated narrative section for Phase 3 (React), Phase 4 (Vue), or Phase 5 (Themes)
+- **Status:** DOCUMENTATION-GAP
+- **Type:** Documentation, Performance
+- **Blocking level:** LOW
+- **Current evidence:** `PERFORMANCE.md`'s section headers are `# Performance Baseline`, `## Package size`, `## Tree-shaking spot-check`, `## Notes`, `## Phase 2 — UltimateNG`, `## Phase 10 — CI/Security/Quality Gates`. No `## Phase 3`, `## Phase 4`, or `## Phase 5` heading exists. **Important nuance, confirmed during reconciliation:** this is narrower than "no data exists" — the Phase 10 section's own package-size and coverage tables already include real, measured rows for `packages/react`, `packages/vue`, and `packages/themes` (e.g., `packages/react`: 370.6 KB dist / 10.60 KB gzip; `packages/vue`: 643.5 KB dist / 19.68 KB gzip; `packages/themes`: 110.7 KB dist / 5.23 KB gzip — both measured 2026-09-09 against commit `62480b6`). What's missing is a phase-attributed narrative section presenting that data in the same style Phase 1/2/10 got (tree-shaking spot-check discussion, component-creation-cost benchmarks, etc.), not the underlying measurements themselves.
+- **Expected state:** Blueprint §31 ("Measure: bundle size... establish benchmarks" — implicitly for all frameworks).
+- **Why it matters:** A human reader looking for "the Phase 3/4/5 performance baseline" finds no dedicated section, even though the raw numbers exist elsewhere in the same document under a differently-scoped heading.
+- **What it blocks:** A narrative reference point for React/Vue/Themes-specific performance discussion (e.g., a React/Vue-specific tree-shaking spot-check, analogous to Phase 2's Angular one) — not the existence of size/coverage data itself, which the CI-enforced gates (GAP-032/GAP-033) already cover going forward for all 17 packages.
+- **Dependencies:** None.
+- **Framework scope:** React, Vue, Themes.
+- **Existing reusable infrastructure:** `scripts/provenance/measure-package-size.mjs`; the Phase 10 table's existing react/vue/themes rows as a starting point.
+- **Recommended resolution direction:** Add `## Phase 3 — UltimateReact`, `## Phase 4 — UltimateVue`, `## Phase 5 — Themes` sections, cross-referencing the Phase 10 table's existing measurements rather than re-measuring, plus any framework-specific tree-shaking spot-check discussion analogous to Phase 2's.
+- **Source/evidence:** `docs/architecture/PERFORMANCE.md` (full section-header read); `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §4, §11 (Drift 3).
+- **Architectural decision required:** No — ordinary documentation backfill.
 
 ---
 
@@ -627,13 +659,30 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 
 Listed here only where the repository shows genuine, unresolved forks requiring a decision — not implementation backlog. One should be handled at a time, later, not resolved by this document.
 
-### DECISION-A — Visual regression + real-browser testing tooling choice
+### DECISION-A — Visual regression + real-browser testing tooling choice — RESOLVED BY IMPLEMENTATION
 
-- **Question:** What tool(s) provide visual regression (Blueprint §28) and real-browser/cross-browser interaction testing (§28/§31), and should the same tool serve both needs?
-- **Current evidence:** Zero tooling exists today (GAP-004, GAP-035). ADR-023 explicitly names this as an accepted, deferred Phase 2 gap, not yet resolved by any later phase.
-- **Options:** (a) Storybook + a screenshot-diff addon (also serves Blueprint §27's documentation-surface requirement, giving two wins from one tool); (b) Playwright alone (serves real-browser interaction + can do visual snapshots, but has no built-in component-documentation surface); (c) both, with Storybook for docs/browsing and Playwright specifically for cross-browser interaction assertions.
-- **Affected areas:** Phase 10 exit criteria; Phase 6 documentation-generation tooling (§27) has partial overlap with option (a).
-- **Recommendation:** Not made here — evidence doesn't yet strongly favor one option; this is a genuine tooling-preference fork, not an evidence-resolvable question.
+- **Question (as originally posed):** What tool(s) provide visual regression (Blueprint §28) and real-browser/cross-browser interaction testing (§28/§31), and should the same tool serve both needs?
+- **Resolution:** Option (c) was chosen and shipped by Phase 10 Track A: Storybook for docs/browsing and screenshot-diff visual regression, Playwright specifically for cross-browser interaction assertions — exactly the combination this entry's own text anticipated as option (c). Recorded formally in **ADR-044** ("Phase 10 testing/documentation tooling: Storybook + Playwright, distinct responsibilities").
+- **Current evidence:** `.storybook/` configs for all 3 frameworks; `storybook`/`axe-core` real devDependencies; 9 real Playwright projects in `playwright.config.ts`; the `track-a-browser-visual-a11y` CI job. See GAP-004/GAP-005/GAP-035 above for full evidence.
+- **Status:** Closed — no longer an open fork. Retained here (rather than deleted) for historical continuity, per this document's own "stable gap identity" convention.
+- **Source/evidence:** `docs/architecture/DECISIONS.md` ADR-044; `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §5.
+
+### DECISION-B — External runtime dependency approval process (Chart.js, Quill, and future cases)
+
+- **Question:** ADR-004 defines a rigorous approval process for Prime-derived source specifically (license verification, commit pinning, provenance recording). No equivalent documented process exists for approving a *non-Prime* external runtime dependency like Chart.js (GAP-019) or Quill (GAP-020).
+- **Current evidence:** Two components (Chart, Editor) are already blocked on this exact unresolved question, independently, in COMPONENT_INVENTORY.md. **Confirmed still genuinely open during Documentation Reconciliation** — no Chart or Editor implementation work has occurred in any track through Phase 10.
+- **Options:** (a) Extend the existing Phase-0-style provenance/license process to cover any external runtime dependency, not just Prime-derived source; (b) treat each external dependency as a one-off case-by-case ADR with no generic process; (c) avoid external chart/rich-text dependencies entirely and scope Chart/Editor out of the initial platform (Blueprint §41's non-goals don't explicitly forbid this, but don't explicitly require Chart/Editor either).
+- **Affected areas:** Chart (Visualization family), Editor (Panel/Layout/Display family), and any future component with a genuine external dependency need.
+- **Recommendation:** Option (a) is weakly favored by the evidence — Ultimate already has a working, proven process (Phase 0's) that generalizes naturally — but this is recorded as a recommendation, not a resolution. **This decision remains open** — this reconciliation pass does not resolve it.
+
+### DECISION-C — Data component architecture for Table/TreeTable specifically (not blocked by `uix-data`, but not yet started either) — PARTIALLY NARROWED, REMAINS OPEN
+
+- **Question:** `uix-data` deliberately ships only the narrow, cross-framework-verified primitives. The actual `Table` component (and its dependents: TreeTable, Scroller, Paginator internal-consumer relationship) still needs its own per-framework architecture decision — how selection/sort/filter/pagination/virtualization primitives compose into a real, framework-native Table implementation.
+- **Current evidence:** COMPONENT_INVENTORY.md marks Table `NEEDS ARCHITECTURE DECISION`, `High` risk, explicitly separate from the (now-resolved) shared-primitives question ADR-043 answered. **Confirmed during Documentation Reconciliation, by direct read of the Table implementation plan (`docs/superpowers/plans/2026-09-02-table-component-implementation.md`) Tasks 5/13/19:** Table's own proof-set architecture is no longer "unstarted" — it shipped for all 3 frameworks, composing real `UPaginator`/`UScroller` instances, with real sort/selection/row-editing/row-grouping. GAP-014 (filter operator/constraints) is separately, correctly marked `RESOLVED` on the strength of these same tasks. **However, the resolution is narrower than this decision's own full scope:** Task 5's own heading is explicit — "**scope narrowed to string match modes**" (`contains`/`startsWith`/`equals` for Angular; `contains` only for React/Vue) — the plan's own Acceptance Criteria section states this outcome is "**Narrower than spec §9's full `FilterMatchMode` vocabulary**." Numeric/set/date/custom filter modes remain explicitly deferred, not implemented. Additionally, this decision's own scope names 7 Data-family rows (Table, TreeTable, Scroller, Paginator, OrderList, PickList, DataView); only Table/Scroller/Paginator have shipped — TreeTable, OrderList, PickList, DataView remain unbuilt.
+- **Options:** No longer "not yet had even a first research pass" — real, shipped, tested, cross-framework evidence now exists for Table's own composition question specifically. What remains open is (1) the fuller filter-operator vocabulary beyond string match modes, and (2) whether Table's now-proven composition pattern (Paginator/Scroller/sort/selection/editing) should be treated as the answer for TreeTable/OrderList/PickList/DataView too, or whether each needs its own pass.
+- **Affected areas:** TreeTable, OrderList, PickList, DataView remain gated on this decision's fuller resolution. Table/Scroller/Paginator's own architecture question is substantially answered by real implementation, not merely a research pass.
+- **Recommendation:** None made here, per this document's scope limits — flagging the narrowed, still-genuinely-open remainder for a future architecture pass, not resolving it.
+- **Source/evidence:** `docs/superpowers/plans/2026-09-02-table-component-implementation.md` Tasks 5, 13, 19, and its "Acceptance Criteria" section; GAP-014 (above); `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §5.
 
 ### DECISION-B — External runtime dependency approval process (Chart.js, Quill, and future cases)
 
@@ -670,6 +719,8 @@ Listed here only where the repository shows genuine, unresolved forks requiring 
 ---
 
 ## 6. Dependency graph of major gaps
+
+**Superseded notice (added during Documentation Reconciliation):** this graph was accurate as of Phase 5 completion. Several of the gaps/edges below are now resolved and are retained here only as a historical record of what once blocked what — see §2/§3/§5 above for each item's corrected current status. In particular: GAP-003/GAP-003a are resolved (the "blocks genuine visual verification" edge no longer applies); GAP-004/GAP-035/DECISION-A are resolved (Track A); GAP-008's edge to GAP-034 is resolved (GAP-034 shipped via Track E using GAP-008's harness infrastructure as the vehicle, per ADR-045 — GAP-008's own fuller scope remains open, but the specific SSR/hydration edge drawn here is closed); GAP-011/GAP-031/GAP-032/GAP-033 are all resolved (Tracks B/D); GAP-027 is resolved (its downstream edges to GAP-029/GAP-030 are both also resolved). GAP-013/GAP-014/GAP-018/GAP-019/GAP-020/DECISION-B/DECISION-C's edges remain live, with DECISION-C narrowed per §5's updated entry.
 
 ```text
 GAP-027 (component metadata schema/data)
@@ -725,9 +776,9 @@ scanning) + GAP-032 (bundle-size not CI-enforced) + GAP-033 (coverage not CI-enf
 
 ### Group: Foundation blockers
 Gaps that unlock the most other work and should be resolved before the workstreams below them start in earnest.
-- **GAP-003 / GAP-003a** (Angular style injection + the documentation contradiction about it) — unlocks genuine visual verification of already-shipped Angular components; low effort (pattern already proven by React), high leverage.
-- **GAP-018** (Angular `BaseModelHolder`/`BaseInput`) — unlocks the entire ~20-component native-input Form family; low risk per its own inventory entry, high leverage.
-- **GAP-009 / GAP-023** (Angular secondary entry points) — unlocks genuine Angular tree-shaking measurement and framework parity with React/Vue's already-working export shape.
+- ~~**GAP-003 / GAP-003a** (Angular style injection)~~ — **RESOLVED** (commit `680876f`); no longer a blocker.
+- **GAP-018** (Angular `BaseModelHolder`/`BaseInput`) — unlocks the entire ~20-component native-input Form family; low risk per its own inventory entry, high leverage. **Still the most valuable remaining item in this group.**
+- **GAP-009 / GAP-023** (Angular secondary entry points) — unlocks genuine Angular tree-shaking measurement and framework parity with React/Vue's already-working export shape. **Still open.**
 Why here: each is small, evidence-backed, has a proven pattern to copy from a sibling framework, and unblocks a materially larger downstream body of work.
 
 ### Group: Component-enabling foundations
@@ -735,56 +786,61 @@ Why here: each is small, evidence-backed, has a proven pattern to copy from a si
 - **GAP-022's successor state** — once a second real overlay component is planned, extract the shared orchestration pattern ADR-020 deferred (not urgent now, but sequenced here because it's a "when a second consumer exists" trigger, and GAP-008's playground app is a plausible source of that second consumer).
 
 ### Group: Component family expansion
-- Form family (after GAP-018), Overlay family (after the second-consumer trigger above), Navigation family, Panel/Layout/Display family — all `ADAPT`-classified, low architectural risk, proven pattern from the 5-component proof set across 3 frameworks (GAP-017).
-- Data family — blocked on DECISION-C (Table architecture, unstarted) for 7 of 8 rows, and on GAP-013 (correctly deferred) for the Tree-family row.
-- Visualization/Editor — blocked on DECISION-B (external dependency policy).
+- Form family (after GAP-018), Overlay family (after the second-consumer trigger above), Navigation family, Panel/Layout/Display family — all `ADAPT`-classified, low architectural risk, proven pattern from the now-8-component proof set across 3 frameworks (GAP-017).
+- Data family — **Table, Scroller, Paginator have shipped** (3 of 8 rows) with real, tested, framework-native composition (see DECISION-C's updated entry in §5). TreeTable, OrderList, PickList, DataView (4 rows) remain blocked on DECISION-C's still-open, now-narrower remainder; Tree itself (1 row) remains correctly deferred per GAP-013/DECISION-D.
+- Visualization/Editor — blocked on DECISION-B (external dependency policy), still genuinely open.
 
 ### Group: Framework parity
 - No forced-parity work is recommended — GAP-024/GAP-025 document that current divergence is evidence-based and correct. The only real parity item is GAP-009/GAP-023 (Angular exports), already placed in Foundation blockers above.
 
-### Group: Platform tooling (Phases 6-9, evidence-sequenced)
-- **GAP-027** (component metadata) first — it is the one Blueprint-diagrammed (§18) upstream dependency for both MCP and AI Skills.
-- **GAP-028** (CLI) can start in parallel — its core orchestration (project init, package install, theme config) does not strictly require metadata; only its later diagnostic/AI-aware features do.
-- **GAP-029** (MCP) and **GAP-030** (AI Skills/LLM context) both wait on GAP-027 per the Blueprint's own stated design.
+### Group: Platform tooling (Phases 6-9) — **all four now RESOLVED (see §2's corrected phase table)**
+- ~~**GAP-027** (component metadata)~~ — RESOLVED. ~~**GAP-028** (CLI)~~ — RESOLVED, with disclosed follow-ups. ~~**GAP-029** (MCP)~~ — RESOLVED, with disclosed follow-ups. ~~**GAP-030** (AI Skills/LLM context)~~ — RESOLVED, with one disclosed follow-up (GAP-036). This entire group, sequenced here as future work when this document was first written, has since landed in full.
 
-### Group: Production hardening
-- **GAP-004/GAP-035** (visual regression + real-browser testing, one tooling decision — DECISION-A) — high leverage, currently completely absent.
-- **GAP-005** (accessibility scanning) — narrow tooling choice (axe-core), high leverage, currently completely absent.
-- **GAP-031/GAP-032/GAP-033** (dependency/license/SAST scanning, bundle-size CI gate, coverage CI gate) — additive CI work, each independent, each currently unenforced despite partial groundwork existing (measurement scripts, test suites) for two of the three.
-- **GAP-011** (SECURITY/CONTRIBUTING/CHANGELOG) — pure documentation, no code dependency.
-This group is largely independent of every other group and could, in principle, run concurrently with component-family expansion — it's gated by attention/priority, not by architecture.
+### Group: Production hardening — **all CI-enforcement items now RESOLVED**
+- ~~**GAP-004/GAP-035**~~ (visual regression + real-browser testing) — RESOLVED by Phase 10 Track A.
+- ~~**GAP-005**~~ (accessibility scanning) — RESOLVED by Phase 10 Track A.
+- ~~**GAP-031/GAP-032/GAP-033**~~ (dependency/license/SAST scanning, bundle-size CI gate, coverage CI gate) — RESOLVED by Phase 10 Track B, all now genuinely CI-enforced.
+- **GAP-011** (SECURITY/CONTRIBUTING/CHANGELOG) — already accurately marked PARTIALLY RESOLVED (Track D); unchanged by this reconciliation.
+- New, small remaining items surfaced during Documentation Reconciliation: **GAP-036** (generate/commit `llms.txt`), **GAP-037** (PERFORMANCE.md Phase 3/4/5 sections) — both LOW blocking level, both mechanical.
+This entire group, sequenced here as future work when this document was first written, has since landed in full except for the two small new items above.
 
 ---
 
 ## 8. Executive summary
 
+**Superseded notice (added during Documentation Reconciliation):** this section was originally written as of Phase 5 completion, before Phases 6–10 landed. It is corrected below against current repository evidence; historical framing is preserved where it remains accurate, and corrected in place where it does not. Full evidence trail: `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md`.
+
 ### Current Platform State
 
-Five Blueprint phases are genuinely complete with runtime-verified evidence: a provenance-complete Phase 0 baseline (exact commit SHAs or tarball hashes for every incorporated source, MIT-verified); a working, framework-neutral `UltimateUIX` foundation (`uix-utils`, `uix-styled`, `uix-styles`, `uix-motion`); a real 5-component proof set (Button, Checkbox, Dialog, Menu, Tooltip) independently, natively implemented across Angular, React, and Vue, each with its own base-architecture ADR and its own verified-against-real-Prime-source behavior; a working theme layer (Aura preset) proven cross-framework for Vue and Angular (React's proof is at a lower layer — see GAP-003a); and, most recently, a narrow, rigorously evidence-gated shared Data foundation (`@ultimate/uix-data`) covering selection/sort/filter/pagination/virtualization primitives, ready for a first real consumer. Every one of these claims is backed by CI-enforced provenance/boundary/dependency-ceiling checks, not merely asserted.
+All ten Blueprint phases are now genuinely complete, most with explicit, disclosed follow-ups rather than zero remaining work — see §2's corrected phase table for the full per-phase evidence. Beyond what was already true at Phase 5 (a provenance-complete Phase 0 baseline; a working `UltimateUIX` foundation; an 8-component proof set — expanded from the original 5 — independently, natively implemented across Angular, React, and Vue; a working theme layer; a narrow, evidence-gated shared Data foundation, `@ultimate/uix-data`), the platform now also has: real, source-verified component metadata (`@ultimate/component-schema`/`@ultimate/component-metadata`, Phase 6); a working CLI with 5 real commands (Phase 7); a working MCP server with 5 real tools (Phase 8); real AI/Skills generation tooling and 8 real per-component Skill files (Phase 9); and all 5 Phase 10 Production Hardening tracks merged — real visual regression, accessibility scanning, and real-browser testing (Track A); real, CI-enforced dependency/license/SAST scanning and bundle-size/coverage regression gates (Track B); a real (never-yet-executed) release pipeline (Track C); operational documentation (Track D); and real SSR/hydration verification (Track E). Every one of these claims is backed by CI-enforced checks or direct source evidence, not merely asserted.
 
 ### Remaining Major Gaps
 
-The two largest bodies of remaining work are (1) the ~101-of-117-directory PrimeNG component backlog (GAP-017, mostly ordinary, low-architectural-risk `ADAPT` work once foundation-tier prerequisites like GAP-018 are met) and (2) the four entirely-unstarted platform phases — Component Metadata, CLI, MCP, and AI/Skills (GAP-027 through GAP-030) — none of which have any code, only empty scaffolding directories. A cluster of smaller-but-real functional gaps exists inside the "complete" phases themselves: Angular's style-injection no-op (GAP-003), Angular's broken tree-shaking (GAP-009), and the complete absence of visual-regression, accessibility-scanning, real-browser, and dependency/license/SAST-scanning tooling anywhere in the repository (GAP-004, GAP-005, GAP-031, GAP-035) — all of which are Phase-10-relevant and currently at zero, not partial, coverage.
+The single largest body of remaining work is the ~90-plus-directory remaining PrimeNG component backlog (GAP-017, mostly ordinary, low-architectural-risk `ADAPT` work once foundation-tier prerequisites like GAP-018 are met — the exact count is itself stale, since the proof set grew from 5 to 8 components since this figure was last computed; see `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §9 for the corrected accounting). A small cluster of isolated, real functional gaps remains inside otherwise-complete phases: Angular's broken tree-shaking (GAP-009/GAP-023), Angular's Tooltip `aria-describedby` gap (GAP-006), Angular's overlay z-index/Escape stacking (GAP-007), the still-missing provenance `sha256OfOriginal` field (GAP-010), and two small new documentation-only items surfaced this pass (GAP-036, GAP-037). None of these block Production Hardening's exit criteria at zero coverage anymore — that state (GAP-004/005/031/032/033/035 all previously `MISSING`/`NOT-ENFORCED`) has been resolved.
 
 ### True Architectural Blockers
 
-Only two gaps are true architectural blockers in the sense of preventing multiple future workstreams, as opposed to being ordinary backlog:
+Four gaps/decisions are true architectural blockers in the sense of preventing multiple future workstreams, as opposed to being ordinary backlog:
 - **GAP-018** (Angular's missing `BaseModelHolder`/`BaseInput` tier) blocks an entire component family (~20 components) until built — but the pattern is already proven and low-risk, so this is a blocker in scope, not in difficulty.
-- **GAP-027** (component metadata) blocks two entire subsequent Blueprint phases (MCP, AI Skills) by the Blueprint's own stated dependency diagram (§18).
+- **DECISION-B** (external dependency approval policy) blocks Chart and Editor independently, and blocks any future non-Prime dependency need generically until a policy exists.
+- **DECISION-C** (Table/Data architecture, now narrower — see §5) blocks TreeTable/OrderList/PickList/DataView's fuller feature sets.
+- **GAP-013/DECISION-D** (Tree-family contract) blocks Tree/TreeTable/TreeSelect/OrganizationChart, correctly and deliberately.
 
-Everything else — including the much larger 101-component backlog, the CLI, and most Production Hardening items — is independently addressable ordinary implementation backlog, not an architectural blocker.
+Everything else — including the much larger remaining component backlog, and every Production Hardening item — is independently addressable ordinary implementation backlog, not an architectural blocker. (GAP-027, previously listed here as a blocker for MCP/AI Skills, is now resolved — both downstream phases have shipped.)
 
 ### Independent Work
 
-The great majority of gaps in this registry can be started without waiting on any other gap or decision: GAP-002/GAP-011/GAP-012 (documentation hygiene), GAP-003/GAP-006/GAP-007/GAP-010 (isolated Angular fixes with proven patterns to copy), GAP-005/GAP-031/GAP-032/GAP-033 (additive CI/tooling gates), GAP-008 (real consumer apps), and most of the Component/Panel/Navigation family expansion once GAP-018 lands.
+The great majority of gaps in this registry can be started without waiting on any other gap or decision: GAP-002/GAP-012 (documentation hygiene), GAP-006/GAP-007/GAP-009/GAP-010 (isolated Angular fixes with proven patterns to copy), GAP-036/GAP-037 (small documentation/artifact backlog), and most of the Component/Panel/Navigation family expansion once GAP-018 lands.
 
 ### Open Architectural Decisions
 
-Five are recorded (§5): visual-regression/browser-testing tooling choice (DECISION-A), external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, unstarted), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), and package-naming finalization (DECISION-E, correctly deferred to pre-1.0). None are resolved by this document, per its operating rules.
+Four remain genuinely open (§5): external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower — Table's own composition question is substantially answered by real implementation; the remainder is the fuller filter-operator vocabulary and the 4 still-unbuilt Data-family rows), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), and package-naming finalization (DECISION-E, correctly deferred to pre-1.0). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
 
 ### Recommended Next Research
 
-The single most valuable next architectural research track is **the Table/Data-component architecture (DECISION-C)** — it is the one open fork with the largest downstream footprint (7 of 8 Data-family components), the one most likely to surface new evidence relevant to the still-deferred filter operator/constraints question (GAP-014), and — unlike DECISION-A/B, which are narrower tooling-preference questions — it requires the same kind of rigorous, multi-pass, real-Prime-source-verified research effort that produced `@ultimate/uix-data` and ADR-043, since Table is verified `High` risk and has zero prior architecture investigation recorded anywhere in the repository. This research track is not begun by this document.
+Two candidates, in order of cost-to-value ratio:
+1. **DECISION-C's narrowed remainder** — the cheapest possible next step is verification, not new research: confirm whether the Table implementation plan's proven composition pattern (Paginator/Scroller/sort/selection/editing) should be the template for TreeTable/OrderList/PickList/DataView, or whether each genuinely needs its own pass. This could retire most of an open decision at near-zero cost.
+2. **DECISION-B** (external dependency approval process) — still the one open fork with no prior research investment at all; unlike DECISION-C, it requires an actual first architecture pass (Ultimate already has a working, generalizable process from Phase 0 to build on, per this entry's own recommendation in §5).
 
 ---
 
@@ -796,12 +852,12 @@ For traceability, every claim flagged `UNVERIFIED` in the gap registry above is 
 2. Whether `packages/themes/test/cross-framework-consistency.test.ts` actually resolves the GAP-003a contradiction between ADR-023/029 and the ROADMAP.md footnote — not read directly in this pass.
 3. Whether React/Vue Tooltip components have the same `aria-describedby` gap Angular's does (GAP-006) — not independently checked.
 4. Whether `vue-core` has adopted the shared `@ultimate/uix-utils/escape`/`zindex` registries the same way `react-core` has (GAP-007) — ADR-036 discusses the extraction but this pass did not re-verify Vue's consumption of it.
-5. Whether `scripts/provenance/validate-provenance.mjs` actually treats `sha256OfOriginal` as a required field that should be failing CI right now (GAP-010) — the validator's source was not read in this pass.
+5. ~~Whether `scripts/provenance/validate-provenance.mjs` actually treats `sha256OfOriginal` as a required field~~ — **RESOLVED during Documentation Reconciliation**: read directly. It checks a `REQUIRED_HEADINGS` list against `PROVENANCE.md`'s own section headings, an entirely different mechanism than a per-manifest-JSON required-field check. Confirmed via grep of all 12 provenance manifests: zero contain `sha256OfOriginal`. This field is genuinely, confirmedly never enforced (GAP-010's status is unchanged — `IMPLEMENTED-BUT-NOT-ENFORCED` — but confidence is now direct, not suspected).
 6. Whether other frameworks' provenance manifests (`react.json`, `react-core.json`, `vue.json`, `vue-core.json`) have the same `sha256OfOriginal` gap as Angular's (GAP-010).
 7. Whether React/Vue built an equivalent to Angular's missing `BaseModelHolder`/`BaseInput` tier (GAP-018) — React/Vue never had a full component inventory produced at all (per PROVENANCE.md's own admission), so this is genuinely unknown, not just unchecked.
 8. Whether PrimeReact/PrimeVue have a Chart-equivalent component surfacing the same external-dependency question as Angular's Chart (GAP-019).
 9. Whether React/Vue have an Editor/Quill-equivalent component (GAP-020).
-10. Whether `scripts/provenance/measure-package-size.mjs` was ever extended to cover `react*`/`vue*`/`themes` packages after the Phase 1/Phase 2 `PERFORMANCE.md` sections — no Phase 3/4/5 performance section exists in the file as read.
+10. ~~Whether `scripts/provenance/measure-package-size.mjs` was ever extended to cover `react*`/`vue*`/`themes` packages~~ — **RESOLVED during Documentation Reconciliation**: yes, by Phase 10 Track B, whose "Phase 10 — CI/Security/Quality Gates" `PERFORMANCE.md` section extends the script's scope to all 17 publishable packages, including `packages/react`/`packages/vue`/`packages/themes`. No dedicated Phase 3/4/5 *narrative* section exists, however (that remains a real, separate documentation gap — see GAP-037).
 11. Whether any spec file anywhere in the repository exercises SSR/hydration behavior without an SSR-indicating filename (GAP-034) — only a filename-pattern scan was performed, not a content grep of every spec file.
 12. Whether `vitest.config.ts` files anywhere in the repo declare a `coverage.thresholds` block despite no CI step consuming it (GAP-033) — individual config files were not opened in this pass.
 
