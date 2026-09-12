@@ -27,8 +27,6 @@ export interface UTooltipProps {
   className?: string;
 }
 
-let tooltipIdCounter = 0;
-
 function resolveTargetElement(target: UTooltipProps["target"]): HTMLElement | null {
   if (typeof target === "string") return document.querySelector<HTMLElement>(target);
   if (Array.isArray(target)) return document.querySelector<HTMLElement>(target[0]);
@@ -55,7 +53,8 @@ export function UTooltip({
   const [visible, setVisible] = React.useState(false);
   const panelRef = React.useRef<HTMLDivElement>(null);
   const targetElRef = React.useRef<HTMLElement | null>(null);
-  const [panelId] = React.useState(() => id ?? `u-tooltip-${++tooltipIdCounter}`);
+  const generatedPanelId = React.useId();
+  const panelId = id ?? generatedPanelId;
   const showTimeout = React.useRef<ReturnType<typeof setTimeout>>();
   const hideTimeout = React.useRef<ReturnType<typeof setTimeout>>();
 

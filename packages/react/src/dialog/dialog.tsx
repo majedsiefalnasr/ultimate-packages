@@ -35,8 +35,6 @@ export interface UDialogProps {
   focusOnShow?: boolean;
 }
 
-let dialogIdCounter = 0;
-
 export function UDialog({
   visible,
   onHide,
@@ -57,7 +55,8 @@ export function UDialog({
   focusOnShow = true,
 }: UDialogProps): React.ReactNode {
   const { cx } = useComponentBase({ componentName: "dialog", styleModule: dialogStyleModule });
-  const [dialogId] = React.useState(() => id ?? `u-dialog-${++dialogIdCounter}`);
+  const generatedDialogId = React.useId();
+  const dialogId = id ?? generatedDialogId;
   const dialogRef = React.useRef<HTMLDivElement>(null);
   const maskRef = React.useRef<HTMLDivElement>(null);
   const focusElementOnHide = React.useRef<HTMLElement | null>(null);
