@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { useId } from "vue";
 import {
   Portal as UPortal,
   TimesIcon as UTimesIcon,
@@ -80,8 +81,6 @@ import { createBaseDialog } from "./BaseDialog";
 const { set: setZIndex, clear: clearZIndex } = useZIndex();
 const { register: registerScrollLock, unregister: unregisterScrollLock } = useScrollLock();
 const motionHooks = createMotionTransitionHooks(() => ({ name: "u-dialog" }));
-
-let dialogIdCounter = 0;
 
 // Real DOM composition verified against .vendor-extracted/vue/dialog/Dialog.vue
 // and BaseDialog.vue (this task's Step 1): Portal wraps <transition> wraps
@@ -118,10 +117,23 @@ export default {
   emits: ["update:visible", "show", "hide", "after-hide"],
   components: { UPortal, UTimesIcon },
   directives: { focustrap: focusTrapDirective, ripple: rippleDirective },
+  // Vue's Composition API setup() runs before any Options API hook,
+  // including beforeCreate — so its returned properties are already merged
+  // onto the instance (accessible via `this`) by the time data() executes
+  // below. Used here (instead of a module-scope counter) so `dialogId` is
+  // generated per-component-instance via Vue's own SSR-safe useId(), which
+  // does not leak state across requests in a long-running SSR server
+  // process and does not trigger a client/server hydration ID mismatch.
+  // Deliberately NOT a `computed` property — Vue's own documentation warns
+  // against calling useId() inside a computed context. Matches Menu.vue's
+  // own already-completed equivalent fix exactly.
+  setup() {
+    return { generatedDialogId: useId() };
+  },
   data() {
     return {
       containerVisible: this.visible,
-      dialogId: `u-dialog-${++dialogIdCounter}`,
+      dialogId: `u-dialog-${this.generatedDialogId}`,
       lastFocusedElement: null,
       maskMouseDownTarget: null,
     };
