@@ -408,3 +408,20 @@ test.describe("Vue SSR/Hydration — Tooltip", () => {
     assertNoHydrationErrors(errors);
   });
 });
+
+test.describe("Vue SSR/Hydration — Determinism", () => {
+  test("serves byte-identical SSR output across two separate requests", async ({ page }) => {
+    const responseA = await page.request.get(HARNESS_URL);
+    const bodyA = await responseA.text();
+
+    const responseB = await page.request.get(HARNESS_URL);
+    const bodyB = await responseB.text();
+
+    // Per spec §D.3: this harness's fixture data is fully static, so two
+    // independent SSR renders of the same route must be byte-identical. No
+    // exclusion/normalization logic — a difference here is a real
+    // determinism violation to fix at the fixture-data source, not to
+    // launder past this check.
+    expect(bodyA).toBe(bodyB);
+  });
+});
