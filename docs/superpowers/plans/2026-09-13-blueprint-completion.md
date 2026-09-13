@@ -905,14 +905,12 @@ git commit -m "fix(ng): adopt shared escape/display-order registry for multi-dia
 
 ## Task 4: WP1 — Angular per-component `ng-packagr` secondary entry points
 
+**AMENDMENT (implementation, 2026-09-13):** the original file list below included `button`, `dialog`, `menu`, and `table`. Attempting all 12 surfaced a reproducible `ng-packagr@21.2.7`/`@angular/compiler-cli@21.2.22` crash (`Cannot destructure property 'pos' of 'file.referencedFiles[index]' as it is undefined`, in Angular's internal `ShimReferenceTagger`) whenever one secondary entry point's source imports a file that is itself another secondary entry point's root — confirmed via isolated repro, order-independent, not fixed by changing the import specifier, and with no newer 21.x patch available. `button` imports `../ripple`; `dialog` imports `../button/button`; `menu` imports `../ripple` and `../tooltip`; `table` imports `../paginator/paginator` and `../scroller/scroller`. Per the approved design-spec amendment to WP1 (see `docs/superpowers/specs/2026-09-13-blueprint-completion-design.md`), this task's scope is narrowed to the 8 confirmed-leaf components with zero cross-component source imports. `button`, `dialog`, `menu`, `table` remain reachable only via the primary `@ultimate/ng` entry point — a real, permanent limitation of this dependency version for this repository's composite components, not a placeholder. The steps below are updated to match this narrowed scope.
+
 **Files:**
-- Create: `packages/ng/button/ng-package.json`
 - Create: `packages/ng/checkbox/ng-package.json`
-- Create: `packages/ng/dialog/ng-package.json`
-- Create: `packages/ng/menu/ng-package.json`
 - Create: `packages/ng/paginator/ng-package.json`
 - Create: `packages/ng/scroller/ng-package.json`
-- Create: `packages/ng/table/ng-package.json`
 - Create: `packages/ng/tooltip/ng-package.json`
 - Create: `packages/ng/autofocus/ng-package.json`
 - Create: `packages/ng/badge/ng-package.json`
@@ -920,23 +918,13 @@ git commit -m "fix(ng): adopt shared escape/display-order registry for multi-dia
 - Create: `packages/ng/ripple/ng-package.json`
 - Modify: `packages/ng/package.json`
 
-**Interfaces:** None — this task only changes build configuration and the package's `exports` map. No source `.ts` file is modified; every component's existing public API (`UButton`, `UCheckbox`, `UDialog`, `UMenu`, `UPaginator`, `UScroller`, `UTable`, `UTooltip`, `UAutoFocus`, `UBadge`, `UFluid`, `URipple`) is unchanged.
+**Interfaces:** None — this task only changes build configuration and the package's `exports` map. No source `.ts` file is modified; every component's existing public API (`UCheckbox`, `UPaginator`, `UScroller`, `UTooltip`, `UAutoFocus`, `UBadge`, `UFluid`, `URipple`) is unchanged. `UButton`, `UDialog`, `UMenu`, `UTable` remain exported only from the primary `@ultimate/ng` entry point, unchanged from before this task.
 
 **Context:** `ng-packagr`'s real, verified (via direct read of the installed `ng-packagr@21.2.7`'s `src/lib/ng-package/discover-packages.js`) secondary-entry-point discovery mechanism: it globs `**/ng-package.json` under the primary package's root directory (excluding `dest` and `node_modules`/`.git`), and treats every match as a secondary entry point whose Angular Package Format output lands at `dist/<path-relative-to-package-root>/`. Each secondary `ng-package.json` needs only a `lib.entryFile` pointing at that component's real `index.ts` (already existing at `packages/ng/src/<component>/index.ts`) — no secondary `package.json` is required (confirmed: `resolveUserPackage`'s `isSecondary` branch skips the `package.json` read entirely). React's and Vue's already-shipped `exports` maps (`packages/react/package.json`, `packages/vue/package.json`) are the exact shape to mirror for `packages/ng/package.json`'s new `exports` field, adapted for `ng-packagr`'s real output layout (`dist/fesm2022/<component>.mjs` + `dist/<component>/index.d.ts`, not `tsup`'s flatter `dist/<component>/index.mjs`).
 
-- [ ] **Step 1: Create the 12 secondary entry-point config files**
+- [ ] **Step 1: Create the 8 secondary entry-point config files**
 
-Each file's content is identical in shape — only the `entryFile` path differs. Create each of the following 12 files with this exact content pattern (the entry file path is relative to the secondary `ng-package.json`'s own directory, i.e. `packages/ng/<component>/`, pointing back into `packages/ng/src/<component>/index.ts`):
-
-`packages/ng/button/ng-package.json`:
-```json
-{
-  "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
-  "lib": {
-    "entryFile": "../src/button/index.ts"
-  }
-}
-```
+Each file's content is identical in shape — only the `entryFile` path differs. Create each of the following 8 files with this exact content pattern (the entry file path is relative to the secondary `ng-package.json`'s own directory, i.e. `packages/ng/<component>/`, pointing back into `packages/ng/src/<component>/index.ts`). Skip `button`, `dialog`, `menu`, `table` per the amendment above.
 
 `packages/ng/checkbox/ng-package.json`:
 ```json
@@ -944,26 +932,6 @@ Each file's content is identical in shape — only the `entryFile` path differs.
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
   "lib": {
     "entryFile": "../src/checkbox/index.ts"
-  }
-}
-```
-
-`packages/ng/dialog/ng-package.json`:
-```json
-{
-  "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
-  "lib": {
-    "entryFile": "../src/dialog/index.ts"
-  }
-}
-```
-
-`packages/ng/menu/ng-package.json`:
-```json
-{
-  "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
-  "lib": {
-    "entryFile": "../src/menu/index.ts"
   }
 }
 ```
@@ -984,16 +952,6 @@ Each file's content is identical in shape — only the `entryFile` path differs.
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
   "lib": {
     "entryFile": "../src/scroller/index.ts"
-  }
-}
-```
-
-`packages/ng/table/ng-package.json`:
-```json
-{
-  "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
-  "lib": {
-    "entryFile": "../src/table/index.ts"
   }
 }
 ```
@@ -1058,7 +1016,7 @@ Then inspect the actual output structure directly — do not proceed to Step 3 u
 find packages/ng/dist -maxdepth 2 -type f \( -name "*.mjs" -o -name "*.d.ts" \) | sort
 ```
 
-Expected: this lists, among the pre-existing primary-entry-point files, one compiled module file and one `.d.ts` file per secondary entry point created in Step 1 (`button`, `checkbox`, `dialog`, `menu`, `paginator`, `scroller`, `table`, `tooltip`, `autofocus`, `badge`, `fluid`, `ripple`) — 24 new files total, 2 per component.
+Expected: this lists, among the pre-existing primary-entry-point files, one compiled module file and one `.d.ts` file per secondary entry point created in Step 1 (`checkbox`, `paginator`, `scroller`, `tooltip`, `autofocus`, `badge`, `fluid`, `ripple`) — 16 new files total, 2 per component. (`button`, `dialog`, `menu`, `table` are not built as secondary entry points — see this task's amendment note.)
 
 **This `find` output is the authoritative source for every path written into Step 3's `exports` map below — not the JSON shown in Step 3.** Step 3's JSON block is this plan's best-evidenced *prediction* of `ng-packagr`'s real Angular Package Format naming convention (flat-module naming: `<primary-package-name>-<secondary-path>.mjs` alongside the primary's own `fesm2022/ultimate-ng.mjs`), made without an actual build having been run during this planning pass. It is not confirmed. Before writing anything into `packages/ng/package.json`, compare Step 3's predicted paths against this step's real `find` output one subpath at a time; for every path that differs (a different directory, a different filename pattern, a different extension), use the real path from `find`, not the predicted one. Do not write a path into `package.json` that this `find` command did not actually show you.
 
@@ -1073,7 +1031,7 @@ Open `packages/ng/package.json`. Find:
   "files": [
 ```
 
-Replace with — **but first, for each of the 12 component subpaths below, replace the predicted `"types"`/`"default"` file paths with the real paths from Step 2's `find` output.** The JSON below shows the plan's predicted shape; treat every `./dist/...` value in it as a placeholder to verify, not a value to copy blindly:
+Replace with — **but first, for each of the 8 component subpaths below, replace the predicted `"types"`/`"default"` file paths with the real paths from Step 2's `find` output.** The JSON below shows the plan's predicted shape; treat every `./dist/...` value in it as a placeholder to verify, not a value to copy blindly. There is no `./button`, `./dialog`, `./menu`, or `./table` subpath — see this task's amendment note:
 
 ```json
   "main": "./dist/fesm2022/ultimate-ng.mjs",
@@ -1084,59 +1042,43 @@ Replace with — **but first, for each of the 12 component subpaths below, repla
       "types": "./dist/types/ultimate-ng.d.ts",
       "default": "./dist/fesm2022/ultimate-ng.mjs"
     },
-    "./button": {
-      "types": "./dist/button/index.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-button.mjs"
-    },
     "./checkbox": {
-      "types": "./dist/checkbox/index.d.ts",
+      "types": "./dist/types/ultimate-ng-checkbox.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-checkbox.mjs"
     },
-    "./dialog": {
-      "types": "./dist/dialog/index.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-dialog.mjs"
-    },
-    "./menu": {
-      "types": "./dist/menu/index.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-menu.mjs"
-    },
     "./paginator": {
-      "types": "./dist/paginator/index.d.ts",
+      "types": "./dist/types/ultimate-ng-paginator.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-paginator.mjs"
     },
     "./scroller": {
-      "types": "./dist/scroller/index.d.ts",
+      "types": "./dist/types/ultimate-ng-scroller.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-scroller.mjs"
     },
-    "./table": {
-      "types": "./dist/table/index.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-table.mjs"
-    },
     "./tooltip": {
-      "types": "./dist/tooltip/index.d.ts",
+      "types": "./dist/types/ultimate-ng-tooltip.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-tooltip.mjs"
     },
     "./autofocus": {
-      "types": "./dist/autofocus/index.d.ts",
+      "types": "./dist/types/ultimate-ng-autofocus.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-autofocus.mjs"
     },
     "./badge": {
-      "types": "./dist/badge/index.d.ts",
+      "types": "./dist/types/ultimate-ng-badge.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-badge.mjs"
     },
     "./fluid": {
-      "types": "./dist/fluid/index.d.ts",
+      "types": "./dist/types/ultimate-ng-fluid.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-fluid.mjs"
     },
     "./ripple": {
-      "types": "./dist/ripple/index.d.ts",
+      "types": "./dist/types/ultimate-ng-ripple.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-ripple.mjs"
     }
   },
   "files": [
 ```
 
-**Mandatory before continuing:** do not treat the JSON above as final. Every `"types"`/`"default"` value in it must be checked, subpath by subpath, against Step 2's real `find` output and corrected to match reality wherever the two differ — this is not optional cleanup, it is the actual deliverable of this step. Step 4 below will catch a missed correction (it fails loudly if any `exports` path doesn't resolve to a real file), but do not rely on Step 4 as a substitute for doing this comparison now.
+**Note (implementation, confirmed against real build output):** the real Angular Package Format layout for this `ng-packagr` version puts every entry point's `.d.ts` under the shared `dist/types/` directory, flat-named `ultimate-ng-<component>.d.ts` — not `dist/<component>/index.d.ts` as originally predicted. The JSON above already reflects the confirmed-real paths.
 
 - [ ] **Step 4: Rebuild and verify each `exports` subpath resolves to a real file**
 
@@ -1169,7 +1111,7 @@ Expected: `All exports paths resolve to real files.` If any path is reported mis
 - [ ] **Step 5: Re-run the tree-shaking verification script and record its result**
 
 Run: `node scripts/provenance/verify-tree-shaking.mjs`
-Expected: this may now PASS (secondary entry points typically let a generic bundler resolve `@ultimate/ng/button` without pulling in `@ultimate/ng/dialog`'s code, since they are now genuinely separate output files rather than one shared barrel), or it may still report the same or a different failure (Angular's own `ng-packagr` output may still lack `/* @__PURE__ */` annotations regardless of entry-point splitting — this is a distinct, separately-documented limitation per `PERFORMANCE.md`'s existing Task 17 finding). Whatever the actual result, do not treat a still-failing result as a task failure — record it exactly in Step 6.
+Expected: this may now PASS for the 8 leaf components (a generic bundler can resolve e.g. `@ultimate/ng/tooltip` without pulling in unrelated code, since they are now genuinely separate output files rather than one shared barrel), or it may still report the same or a different failure (Angular's own `ng-packagr` output may still lack `/* @__PURE__ */` annotations regardless of entry-point splitting — this is a distinct, separately-documented limitation per `PERFORMANCE.md`'s existing Task 17 finding). `button`/`dialog`/`menu`/`table` are excluded from this task's scope (see amendment note above) and remain whatever this script already found for them prior to this task. Whatever the actual result, do not treat a still-failing result as a task failure — record it exactly in Step 6.
 
 - [ ] **Step 6: Update `PERFORMANCE.md`'s existing Phase 2 tree-shaking section with the re-run result**
 
@@ -1178,7 +1120,7 @@ Open `docs/architecture/PERFORMANCE.md`. Find the `### Tree-shaking spot-check (
 ```markdown
 ### Tree-shaking spot-check (Blueprint Completion re-run, secondary entry points added)
 
-Following Blueprint Completion's addition of 12 real `ng-packagr` secondary entry points (GAP-009/GAP-023 — `packages/ng/{button,checkbox,dialog,menu,paginator,scroller,table,tooltip,autofocus,badge,fluid,ripple}/ng-package.json`, each with its own `lib.entryFile`, plus a matching per-component `exports` map in `packages/ng/package.json`), `node scripts/provenance/verify-tree-shaking.mjs` was re-run against the new build: **[PASS/FAIL — fill in the real console output verbatim here]**. [If PASS:] This resolves the tree-shaking failure Task 17 originally found and documented above — importing only `@ultimate/ng/button` no longer pulls in `UDialog`-related code, since each component now has its own real output file rather than sharing one barrel. [If still FAIL:] The secondary-entry-point split did not resolve this specific script's failure mode; `ng-packagr`'s Angular Package Format output for each entry point still lacks `/* @__PURE__ */` purity annotations (this is Task 17's own already-documented, unrelated root cause — only the real Angular linker inside a real application build adds those, which requires GAP-008's still-open real-consumer-app scope, not entry-point splitting). Per-component `exports` subpaths are still added regardless, since they resolve GAP-023's own distinct claim (no per-component subpath exports at all) independently of whether this specific tree-shaking script's assertion passes.
+Following Blueprint Completion's addition of 8 real `ng-packagr` secondary entry points (GAP-009/GAP-023 — `packages/ng/{checkbox,paginator,scroller,tooltip,autofocus,badge,fluid,ripple}/ng-package.json`, each with its own `lib.entryFile`, plus a matching per-component `exports` map in `packages/ng/package.json`), `node scripts/provenance/verify-tree-shaking.mjs` was re-run against the new build: **[PASS/FAIL — fill in the real console output verbatim here]**. [If PASS:] This resolves the tree-shaking failure Task 17 originally found and documented above for these 8 components — importing only one of them no longer pulls in unrelated component code, since each now has its own real output file rather than sharing one barrel. [If still FAIL:] The secondary-entry-point split did not resolve this specific script's failure mode; `ng-packagr`'s Angular Package Format output for each entry point still lacks `/* @__PURE__ */` purity annotations (this is Task 17's own already-documented, unrelated root cause — only the real Angular linker inside a real application build adds those, which requires GAP-008's still-open real-consumer-app scope, not entry-point splitting). Per-component `exports` subpaths are still added regardless, since they resolve GAP-023's own distinct claim (no per-component subpath exports at all) independently of whether this specific tree-shaking script's assertion passes. `button`, `dialog`, `menu`, and `table` remain excluded from this entry-point split entirely — see this task's amendment note — and so are not addressed by this re-run.
 ```
 
 Fill in the real console output from Step 5 verbatim in place of the bracketed placeholder before committing — do not leave the placeholder text in the committed file.
@@ -1194,7 +1136,7 @@ Expected: passes unchanged (no new cross-package dependency was introduced).
 - [ ] **Step 8: Commit**
 
 ```bash
-git add packages/ng/button/ng-package.json packages/ng/checkbox/ng-package.json packages/ng/dialog/ng-package.json packages/ng/menu/ng-package.json packages/ng/paginator/ng-package.json packages/ng/scroller/ng-package.json packages/ng/table/ng-package.json packages/ng/tooltip/ng-package.json packages/ng/autofocus/ng-package.json packages/ng/badge/ng-package.json packages/ng/fluid/ng-package.json packages/ng/ripple/ng-package.json packages/ng/package.json docs/architecture/PERFORMANCE.md
+git add packages/ng/checkbox/ng-package.json packages/ng/paginator/ng-package.json packages/ng/scroller/ng-package.json packages/ng/tooltip/ng-package.json packages/ng/autofocus/ng-package.json packages/ng/badge/ng-package.json packages/ng/fluid/ng-package.json packages/ng/ripple/ng-package.json packages/ng/package.json docs/architecture/PERFORMANCE.md
 git commit -m "feat(ng): add per-component ng-packagr secondary entry points and exports map (GAP-009, GAP-023)"
 ```
 
@@ -1357,15 +1299,15 @@ Find the `#### GAP-009` heading. Replace the entire entry block (up to, but not 
 - **Status:** RESOLVED
 - **Type:** Packaging, Framework (Angular), Testing
 - **Blocking level:** MEDIUM (at the time this was open)
-- **Current evidence:** `packages/ng` now ships 12 real `ng-packagr` secondary entry points (`button`, `checkbox`, `dialog`, `menu`, `paginator`, `scroller`, `table`, `tooltip`, `autofocus`, `badge`, `fluid`, `ripple` — one per component directory with a public API, exceeding the originally-planned 9 since the proof set itself grew), each with its own `ng-package.json`/`lib.entryFile`, matching React's/Vue's per-component `exports` pattern. `packages/ng/package.json` now declares a real `exports` map with a subpath per component. `scripts/provenance/verify-tree-shaking.mjs`'s re-run result is documented in `docs/architecture/PERFORMANCE.md`'s tree-shaking section (see that document for the specific PASS/FAIL outcome — this gap is resolved regardless of that script's specific result, since the resolution criterion is the presence of real, working secondary entry points and a real `exports` map, which `verify-tree-shaking.mjs`'s own known, separately-documented `/* @__PURE__ */`-annotation limitation, per Task 17's original finding, may or may not fully validate without a real consumer app — see GAP-008).
-- **Expected state:** Either Angular ships secondary entry points matching React/Vue's per-component export pattern, or the spec is formally amended. **Met** — secondary entry points now ship.
-- **Why it matters:** Historical — Angular is no longer the outlier among the three frameworks on this specific packaging capability.
-- **What it blocks:** Nothing — resolved.
+- **Current evidence:** `packages/ng` now ships 8 real `ng-packagr` secondary entry points (`checkbox`, `paginator`, `scroller`, `tooltip`, `autofocus`, `badge`, `fluid`, `ripple` — every component directory confirmed to have zero cross-component source imports), each with its own `ng-package.json`/`lib.entryFile`, matching React's/Vue's per-component `exports` pattern. `button`, `dialog`, `menu`, and `table` are **not** split into secondary entry points: attempting all 12 surfaced a reproducible `ng-packagr@21.2.7`/`@angular/compiler-cli@21.2.22` crash (Angular's internal `ShimReferenceTagger` destructuring `undefined`) whenever one secondary entry point's source imports a file that is itself another secondary entry point's root, which is true for these 4 composites (`button`→`ripple`; `dialog`→`button`; `menu`→`ripple`,`tooltip`; `table`→`paginator`,`scroller`) — confirmed via isolated minimal repro, order-independent, not resolved by changing the import specifier, no newer 21.x patch available. `packages/ng/package.json` now declares a real `exports` map with a subpath per shipped component. `scripts/provenance/verify-tree-shaking.mjs`'s re-run result is documented in `docs/architecture/PERFORMANCE.md`'s tree-shaking section (see that document for the specific PASS/FAIL outcome — this gap is resolved for the 8 shipped components regardless of that script's specific result, since the resolution criterion is the presence of real, working secondary entry points and a real `exports` map, which `verify-tree-shaking.mjs`'s own known, separately-documented `/* @__PURE__ */`-annotation limitation, per Task 17's original finding, may or may not fully validate without a real consumer app — see GAP-008).
+- **Expected state:** Either Angular ships secondary entry points matching React/Vue's per-component export pattern, or the spec is formally amended. **Partially met** — 8 of 12 components ship secondary entry points; `button`/`dialog`/`menu`/`table` are permanently excluded due to an upstream `ng-packagr` defect with no available fix, and this exclusion is itself the closure (there is no further action pending — the spec was amended to match reality, per WP1's design-spec amendment).
+- **Why it matters:** Historical — Angular is no longer the outlier among the three frameworks on this specific packaging capability, for the components where the underlying tooling permits it.
+- **What it blocks:** Nothing — resolved (as amended).
 - **Dependencies:** GAP-008 (a real consumer app remains the only way to fully re-measure tree-shaking through the real Angular linker) is unaffected by this resolution and remains separately open, per its own entry.
 - **Framework scope:** Angular only.
 - **Existing reusable infrastructure:** N/A — resolved.
-- **Recommended resolution direction:** N/A — resolved.
-- **Source/evidence:** `packages/ng/{button,checkbox,dialog,menu,paginator,scroller,table,tooltip,autofocus,badge,fluid,ripple}/ng-package.json`; `packages/ng/package.json`; `docs/architecture/PERFORMANCE.md`; commit `<Task-4-commit-sha>`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 4.
+- **Recommended resolution direction:** N/A — resolved. A future `ng-packagr`/`@angular/compiler-cli` upgrade past this defect could revisit `button`/`dialog`/`menu`/`table`, but no such fix exists as of this resolution.
+- **Source/evidence:** `packages/ng/{checkbox,paginator,scroller,tooltip,autofocus,badge,fluid,ripple}/ng-package.json`; `packages/ng/package.json`; `docs/architecture/PERFORMANCE.md`; `docs/superpowers/specs/2026-09-13-blueprint-completion-design.md` WP1 amendment; commit `<Task-4-commit-sha>`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 4.
 - **Architectural decision required:** No.
 
 ```
@@ -1401,10 +1343,10 @@ Find the `#### GAP-023` heading. Replace the entire entry block (up to, but not 
 - **Status:** RESOLVED
 - **Type:** Packaging, Framework
 - **Blocking level:** MEDIUM (at the time this was open)
-- **Current evidence:** Same resolution as GAP-009 (this was always the same underlying fact viewed from two angles). `packages/ng/package.json` now declares a real `exports` map with per-component subpaths (`./button`, `./checkbox`, `./dialog`, `./menu`, `./paginator`, `./scroller`, `./table`, `./tooltip`, `./autofocus`, `./badge`, `./fluid`, `./ripple`), matching `packages/react/package.json`'s and `packages/vue/package.json`'s existing shape.
-- **Expected state:** Angular ships per-component `exports` subpaths matching React/Vue. **Met.**
+- **Current evidence:** Same resolution as GAP-009 (this was always the same underlying fact viewed from two angles). `packages/ng/package.json` now declares a real `exports` map with per-component subpaths for the 8 components an upstream `ng-packagr` defect does not block (`./checkbox`, `./paginator`, `./scroller`, `./tooltip`, `./autofocus`, `./badge`, `./fluid`, `./ripple`), matching `packages/react/package.json`'s and `packages/vue/package.json`'s existing shape for those subpaths. `./button`, `./dialog`, `./menu`, `./table` are not added — see GAP-009's full explanation of the blocking defect.
+- **Expected state:** Angular ships per-component `exports` subpaths matching React/Vue. **Partially met** — 8 of 12; see GAP-009.
 - **Why it matters:** Historical — see GAP-009.
-- **What it blocks:** Nothing — resolved. See GAP-009.
+- **What it blocks:** Nothing — resolved (as amended). See GAP-009.
 - **Dependencies:** Same as GAP-009.
 - **Framework scope:** Angular only, relative to React/Vue.
 - **Existing reusable infrastructure:** N/A — resolved.

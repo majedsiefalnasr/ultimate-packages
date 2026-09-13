@@ -48,6 +48,7 @@ const alias = {
   "@ultimate/ng": distEntry("ng", "fesm2022/ultimate-ng.mjs"),
   "@ultimate/ng-core": distEntry("ng-core", "fesm2022/ultimate-ng-core.mjs"),
   "@ultimate/uix-utils/dom": distEntry("uix-utils", "dom/index.mjs"),
+  "@ultimate/uix-utils/escape": distEntry("uix-utils", "escape/index.mjs"),
   "@ultimate/uix-utils/zindex": distEntry("uix-utils", "zindex/index.mjs"),
   "@ultimate/uix-utils/classnames": distEntry("uix-utils", "classnames/index.mjs"),
   "@ultimate/uix-utils/object": distEntry("uix-utils", "object/index.mjs"),

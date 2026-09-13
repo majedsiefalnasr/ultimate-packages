@@ -7,6 +7,44 @@
   "main": "./dist/fesm2022/ultimate-ng.mjs",
   "module": "./dist/fesm2022/ultimate-ng.mjs",
   "types": "./dist/types/ultimate-ng.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/ultimate-ng.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng.mjs"
+    },
+    "./checkbox": {
+      "types": "./dist/types/ultimate-ng-checkbox.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-checkbox.mjs"
+    },
+    "./paginator": {
+      "types": "./dist/types/ultimate-ng-paginator.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-paginator.mjs"
+    },
+    "./scroller": {
+      "types": "./dist/types/ultimate-ng-scroller.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-scroller.mjs"
+    },
+    "./tooltip": {
+      "types": "./dist/types/ultimate-ng-tooltip.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-tooltip.mjs"
+    },
+    "./autofocus": {
+      "types": "./dist/types/ultimate-ng-autofocus.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-autofocus.mjs"
+    },
+    "./badge": {
+      "types": "./dist/types/ultimate-ng-badge.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-badge.mjs"
+    },
+    "./fluid": {
+      "types": "./dist/types/ultimate-ng-fluid.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-fluid.mjs"
+    },
+    "./ripple": {
+      "types": "./dist/types/ultimate-ng-ripple.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-ripple.mjs"
+    }
+  },
   "files": [
     "dist",
     "README.md",
