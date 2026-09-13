@@ -23,7 +23,11 @@ import {
   UTimesIcon,
 } from "@ultimate/ng-core";
 import { createMotion, type MotionInstance } from "@ultimate/uix-motion";
-import { ESCAPE_PRIORITIES, displayOrderRegistry, escapeRegistry } from "@ultimate/uix-utils/escape";
+import {
+  ESCAPE_PRIORITIES,
+  displayOrderRegistry,
+  escapeRegistry,
+} from "@ultimate/uix-utils/escape";
 import { UButton } from "../button/button";
 import { dialogStyleModule } from "./dialog-style";
 
@@ -294,10 +298,7 @@ export class UDialog extends UBaseComponent {
    */
   private syncEscapeRegistration(visible: boolean): void {
     if (visible && this.registeredDisplayOrder === undefined) {
-      this.registeredDisplayOrder = displayOrderRegistry.register(
-        "dialog",
-        this.displayOrderUid
-      );
+      this.registeredDisplayOrder = displayOrderRegistry.register("dialog", this.displayOrderUid);
       escapeRegistry.register(ESCAPE_PRIORITIES.DIALOG, this.registeredDisplayOrder, () => {
         if (!this.closeOnEscape()) {
           return;
