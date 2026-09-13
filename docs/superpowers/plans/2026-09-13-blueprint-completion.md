@@ -1161,7 +1161,7 @@ git commit -m "feat(ng): add per-component ng-packagr secondary entry points and
 
 **Context:** `packages/ai/package.json`'s `build` script currently invokes `node dist/bin-generate.mjs ../../skills dist/context` — writing generated output under `dist/`, which `.gitignore`'s bare `dist/` pattern excludes at any depth. This task changes only the invocation's output-directory argument (from `dist/context` to `context`), runs the build once, and commits the real output. No CI wiring is added (per the approved spec's explicit Non-goals). The `"files"` array and packaging test are updated (amendment above) so the npm-install-time guarantee these files ship is preserved from the new location.
 
-- [ ] **Step 1: Update the `build` and `validate` scripts' output directory argument**
+- [x] **Step 1: Update the `build` and `validate` scripts' output directory argument**
 
 Open `packages/ai/package.json`. Find:
 
@@ -1187,7 +1187,7 @@ Replace with:
   },
 ```
 
-- [ ] **Step 2: Run the build to generate real output at the new committed path**
+- [x] **Step 2: Run the build to generate real output at the new committed path**
 
 Run: `pnpm --filter @ultimate/ai build`
 Expected: console output includes `[@ultimate/ai] generate: wrote 8 Skill file(s)` and `[@ultimate/ai] generate: wrote 5 LLM-context file(s)`.
@@ -1195,22 +1195,22 @@ Expected: console output includes `[@ultimate/ai] generate: wrote 8 Skill file(s
 Run: `ls packages/ai/context/`
 Expected: `llms-full.txt`, `llms-ng.txt`, `llms-react.txt`, `llms-vue.txt`, `llms.txt`.
 
-- [ ] **Step 3: Confirm the new path is not gitignored**
+- [x] **Step 3: Confirm the new path is not gitignored**
 
 Run: `git check-ignore -v packages/ai/context/llms.txt`
 Expected: no output and a non-zero exit code (confirming the file is NOT matched by any `.gitignore` pattern — `dist/`'s bare pattern only matches directories literally named `dist`, and `context` is a different name).
 
-- [ ] **Step 4: Run the existing validate script against the committed output**
+- [x] **Step 4: Run the existing validate script against the committed output**
 
 Run: `pnpm --filter @ultimate/ai run validate`
 Expected: console output shows `OK` for all 5 context-file checks (`llms.txt`, `llms-full.txt`, `llms-ng.txt`, `llms-react.txt`, `llms-vue.txt`) and all 8 Skill-file checks, ending in `5 of 5 LLM-context file(s) reproducible` and `8 of 8 Skill file(s) passed` (or the real current Skill-file count if it differs — confirm against actual `ls skills/*.md | wc -l` if the numbers don't match, since this reflects real repository content, not a fixed constant this plan can guarantee in advance).
 
-- [ ] **Step 5: Run the package's own test suite to confirm no regression**
+- [x] **Step 5: Run the package's own test suite to confirm no regression**
 
 Run: `pnpm --filter @ultimate/ai test`
 Expected: two tests FAIL — `packages/ai/test/packaging.test.ts`'s "a real `npm pack` tarball includes all 5 dist/context/*.txt files" and "installing the packed tarball into a scratch consumer resolves all 5 files at node_modules/@ultimate/ai/dist/context/" — because they still assert the pre-amendment `dist/context/` path. This is expected per this task's amendment note; Steps 5a-5b fix it. All other tests PASS.
 
-- [ ] **Step 5a: Add `context` to `package.json`'s `files` array so a real install still ships these files**
+- [x] **Step 5a: Add `context` to `package.json`'s `files` array so a real install still ships these files**
 
 Open `packages/ai/package.json`. Find:
 
@@ -1231,7 +1231,7 @@ Replace with:
   ],
 ```
 
-- [ ] **Step 5b: Update `packaging.test.ts`'s expected paths from `dist/context/` to `context/`**
+- [x] **Step 5b: Update `packaging.test.ts`'s expected paths from `dist/context/` to `context/`**
 
 Open `packages/ai/test/packaging.test.ts`. Find the first test's expected-paths array:
 
@@ -1276,7 +1276,7 @@ Also update this test's own name from `"installing the packed tarball into a scr
 Re-run: `pnpm --filter @ultimate/ai test`
 Expected: all tests PASS, including both updated packaging tests (these run a real `npm pack`/`pnpm pack` and scratch install, so allow the full ~90s timeout already set on the second test).
 
-- [ ] **Step 6: Stage and commit, including the generated files despite the repository's default `dist/`-focused `.gitignore` mindset**
+- [x] **Step 6: Stage and commit, including the generated files despite the repository's default `dist/`-focused `.gitignore` mindset**
 
 ```bash
 git add packages/ai/package.json packages/ai/test/packaging.test.ts packages/ai/context/llms.txt packages/ai/context/llms-full.txt packages/ai/context/llms-ng.txt packages/ai/context/llms-react.txt packages/ai/context/llms-vue.txt
