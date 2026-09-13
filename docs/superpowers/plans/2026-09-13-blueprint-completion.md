@@ -922,7 +922,7 @@ git commit -m "fix(ng): adopt shared escape/display-order registry for multi-dia
 
 **Context:** `ng-packagr`'s real, verified (via direct read of the installed `ng-packagr@21.2.7`'s `src/lib/ng-package/discover-packages.js`) secondary-entry-point discovery mechanism: it globs `**/ng-package.json` under the primary package's root directory (excluding `dest` and `node_modules`/`.git`), and treats every match as a secondary entry point whose Angular Package Format output lands at `dist/<path-relative-to-package-root>/`. Each secondary `ng-package.json` needs only a `lib.entryFile` pointing at that component's real `index.ts` (already existing at `packages/ng/src/<component>/index.ts`) — no secondary `package.json` is required (confirmed: `resolveUserPackage`'s `isSecondary` branch skips the `package.json` read entirely). React's and Vue's already-shipped `exports` maps (`packages/react/package.json`, `packages/vue/package.json`) are the exact shape to mirror for `packages/ng/package.json`'s new `exports` field, adapted for `ng-packagr`'s real output layout (`dist/fesm2022/<component>.mjs` + `dist/<component>/index.d.ts`, not `tsup`'s flatter `dist/<component>/index.mjs`).
 
-- [ ] **Step 1: Create the 8 secondary entry-point config files**
+- [x] **Step 1: Create the 8 secondary entry-point config files**
 
 Each file's content is identical in shape — only the `entryFile` path differs. Create each of the following 8 files with this exact content pattern (the entry file path is relative to the secondary `ng-package.json`'s own directory, i.e. `packages/ng/<component>/`, pointing back into `packages/ng/src/<component>/index.ts`). Skip `button`, `dialog`, `menu`, `table` per the amendment above.
 
@@ -1006,7 +1006,7 @@ Each file's content is identical in shape — only the `entryFile` path differs.
 }
 ```
 
-- [ ] **Step 2: Run a build and treat its real output as the only source of truth for Step 3**
+- [x] **Step 2: Run a build and treat its real output as the only source of truth for Step 3**
 
 Run: `pnpm --filter @ultimate/ng build`
 
@@ -1020,7 +1020,7 @@ Expected: this lists, among the pre-existing primary-entry-point files, one comp
 
 **This `find` output is the authoritative source for every path written into Step 3's `exports` map below — not the JSON shown in Step 3.** Step 3's JSON block is this plan's best-evidenced *prediction* of `ng-packagr`'s real Angular Package Format naming convention (flat-module naming: `<primary-package-name>-<secondary-path>.mjs` alongside the primary's own `fesm2022/ultimate-ng.mjs`), made without an actual build having been run during this planning pass. It is not confirmed. Before writing anything into `packages/ng/package.json`, compare Step 3's predicted paths against this step's real `find` output one subpath at a time; for every path that differs (a different directory, a different filename pattern, a different extension), use the real path from `find`, not the predicted one. Do not write a path into `package.json` that this `find` command did not actually show you.
 
-- [ ] **Step 3: Add the `exports` map to `packages/ng/package.json`, using Step 2's real file listing**
+- [x] **Step 3: Add the `exports` map to `packages/ng/package.json`, using Step 2's real file listing**
 
 Open `packages/ng/package.json`. Find:
 
@@ -1080,7 +1080,7 @@ Replace with — **but first, for each of the 8 component subpaths below, replac
 
 **Note (implementation, confirmed against real build output):** the real Angular Package Format layout for this `ng-packagr` version puts every entry point's `.d.ts` under the shared `dist/types/` directory, flat-named `ultimate-ng-<component>.d.ts` — not `dist/<component>/index.d.ts` as originally predicted. The JSON above already reflects the confirmed-real paths.
 
-- [ ] **Step 4: Rebuild and verify each `exports` subpath resolves to a real file**
+- [x] **Step 4: Rebuild and verify each `exports` subpath resolves to a real file**
 
 Run: `pnpm --filter @ultimate/ng build`
 
@@ -1108,12 +1108,12 @@ console.log("All exports paths resolve to real files.");
 
 Expected: `All exports paths resolve to real files.` If any path is reported missing, correct that specific `exports` entry in `packages/ng/package.json` to match the real build output and re-run this verification — do not proceed until it passes cleanly.
 
-- [ ] **Step 5: Re-run the tree-shaking verification script and record its result**
+- [x] **Step 5: Re-run the tree-shaking verification script and record its result**
 
 Run: `node scripts/provenance/verify-tree-shaking.mjs`
 Expected: this may now PASS for the 8 leaf components (a generic bundler can resolve e.g. `@ultimate/ng/tooltip` without pulling in unrelated code, since they are now genuinely separate output files rather than one shared barrel), or it may still report the same or a different failure (Angular's own `ng-packagr` output may still lack `/* @__PURE__ */` annotations regardless of entry-point splitting — this is a distinct, separately-documented limitation per `PERFORMANCE.md`'s existing Task 17 finding). `button`/`dialog`/`menu`/`table` are excluded from this task's scope (see amendment note above) and remain whatever this script already found for them prior to this task. Whatever the actual result, do not treat a still-failing result as a task failure — record it exactly in Step 6.
 
-- [ ] **Step 6: Update `PERFORMANCE.md`'s existing Phase 2 tree-shaking section with the re-run result**
+- [x] **Step 6: Update `PERFORMANCE.md`'s existing Phase 2 tree-shaking section with the re-run result**
 
 Open `docs/architecture/PERFORMANCE.md`. Find the `### Tree-shaking spot-check (Task 17 re-confirmation)` section (search for `Task 17 re-confirmation`). Add a new paragraph immediately after that section's existing final paragraph (before the next `###`/`##` heading), reporting Step 5's actual result. If the script now passes, use:
 
@@ -1125,7 +1125,7 @@ Following Blueprint Completion's addition of 8 real `ng-packagr` secondary entry
 
 Fill in the real console output from Step 5 verbatim in place of the bracketed placeholder before committing — do not leave the placeholder text in the committed file.
 
-- [ ] **Step 7: Run the full Angular test suite and CI-relevant gates to check for regressions**
+- [x] **Step 7: Run the full Angular test suite and CI-relevant gates to check for regressions**
 
 Run: `pnpm --filter @ultimate/ng test && pnpm --filter @ultimate/ng typecheck`
 Expected: both PASS.
@@ -1133,7 +1133,7 @@ Expected: both PASS.
 Run: `node scripts/provenance/validate-boundaries.mjs`
 Expected: passes unchanged (no new cross-package dependency was introduced).
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add packages/ng/checkbox/ng-package.json packages/ng/paginator/ng-package.json packages/ng/scroller/ng-package.json packages/ng/tooltip/ng-package.json packages/ng/autofocus/ng-package.json packages/ng/badge/ng-package.json packages/ng/fluid/ng-package.json packages/ng/ripple/ng-package.json packages/ng/package.json docs/architecture/PERFORMANCE.md
