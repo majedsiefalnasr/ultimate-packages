@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, signal } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { ComponentIdGenerator } from "@ultimate/ng-core";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -61,7 +61,7 @@ describe("UDialog", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.componentInstance.visible = true;
     fixture.detectChanges();
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
     fixture.detectChanges();
     expect(fixture.componentInstance.visible).toBe(false);
   });
@@ -75,7 +75,7 @@ describe("UDialog", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.componentInstance.visible = true;
     fixture.detectChanges();
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
     fixture.detectChanges();
     expect(fixture.componentInstance.visible).toBe(true);
   });
@@ -198,7 +198,7 @@ describe("UDialog", () => {
     let hideCount = 0;
     dialogDebugEl.componentInstance.onHide.subscribe(() => hideCount++);
 
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -241,6 +241,123 @@ describe("UDialog", () => {
     expect(firstId).not.toBe(secondId);
     expect(firstId).toBe("u_dialog_1_header");
     expect(secondId).toBe("u_dialog_2_header");
+  });
+
+  it("closes only the topmost of two simultaneously open dialogs on Escape", async () => {
+    @Component({
+      standalone: true,
+      imports: [UDialog],
+      template: `
+        <u-dialog [(visible)]="visibleA" header="Dialog A">A body</u-dialog>
+        <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
+      `,
+    })
+    class TwoDialogHostComponent {
+      visibleA = true;
+      visibleB = true;
+    }
+
+    const fixture = TestBed.createComponent(TwoDialogHostComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(2);
+
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    // Dialog B was displayed second (registered later, higher display
+    // order), so it is topmost and must be the one Escape closes — Dialog
+    // A must remain open. Asserted via the host's own bound signals rather
+    // than DOM count alone, so a failure clearly names which dialog closed.
+    expect(fixture.componentInstance.visibleA).toBe(true);
+    expect(fixture.componentInstance.visibleB).toBe(false);
+  });
+
+  it("closes the remaining dialog on a second Escape after the topmost one closes", async () => {
+    @Component({
+      standalone: true,
+      imports: [UDialog],
+      template: `
+        <u-dialog [(visible)]="visibleA" header="Dialog A">A body</u-dialog>
+        <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
+      `,
+    })
+    class TwoDialogHostComponent {
+      visibleA = true;
+      visibleB = true;
+    }
+
+    const fixture = TestBed.createComponent(TwoDialogHostComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.visibleB).toBe(false);
+
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.visibleA).toBe(false);
+  });
+
+  it("does not react to Escape after a still-open dialog is destroyed (registry entries cleared on destroy)", async () => {
+    @Component({
+      standalone: true,
+      imports: [UDialog],
+      template: `@if (showB()) {
+        <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
+      }`,
+    })
+    class DestroyableDialogHostComponent {
+      visibleB = true;
+      showB = signal(true);
+    }
+
+    const fixture = TestBed.createComponent(DestroyableDialogHostComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(1);
+
+    // Destroy Dialog B while it is still visible=true and still registered
+    // (never toggled to visible=false first) — a real scenario, e.g. an
+    // *ngIf/@if-gated dialog whose host is torn down directly, or a router
+    // navigation that destroys the component tree mid-dialog. Without an
+    // explicit ngOnDestroy unregistering both registries, this dialog's
+    // now-stale escapeRegistry/displayOrderRegistry entries would remain
+    // registered forever, permanently occupying the topmost display-order
+    // slot and silently swallowing every future Escape keypress meant for
+    // any dialog opened afterward.
+    fixture.componentInstance.showB.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(0);
+
+    @Component({
+      standalone: true,
+      imports: [UDialog],
+      template: `<u-dialog [(visible)]="visibleC" header="Dialog C">C body</u-dialog>`,
+    })
+    class SingleDialogHostComponent {
+      visibleC = true;
+    }
+    const fixtureC = TestBed.createComponent(SingleDialogHostComponent);
+    fixtureC.detectChanges();
+    await fixtureC.whenStable();
+
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    fixtureC.detectChanges();
+    await fixtureC.whenStable();
+
+    // If Dialog B's registry entries leaked past its destruction, Dialog C
+    // (registered later, genuinely topmost) would not receive this Escape —
+    // the stale, higher-priority-looking B entry would still win the
+    // registry's "highest pair" comparison. Asserting C actually closes
+    // proves the leak did not happen.
+    expect(fixtureC.componentInstance.visibleC).toBe(false);
   });
 
   it("renders the header span's id equal to the dialog root's aria-labelledby when open", () => {

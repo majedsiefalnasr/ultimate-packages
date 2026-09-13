@@ -58,4 +58,35 @@ describe("UOverlay", () => {
       .nativeElement as HTMLElement;
     expect(Number(overlayEl.style.zIndex)).toBeGreaterThan(0);
   });
+
+  it("assigns a strictly higher z-index to a second overlay instance appended while the first is still visible", async () => {
+    @Component({
+      standalone: true,
+      imports: [UOverlay],
+      template: `<div uOverlay [visible]="visible"></div>`,
+    })
+    class HostComponent {
+      visible = false;
+    }
+
+    const fixtureA = TestBed.createComponent(HostComponent);
+    fixtureA.componentInstance.visible = true;
+    fixtureA.detectChanges();
+    await fixtureA.whenStable();
+    // Per the existing "appends the host element..." test's own note above,
+    // the element has already moved out from under each fixture's
+    // `nativeElement` into `document.body` by this point — `By.directive`
+    // still resolves each fixture's own instance correctly.
+    const elA = fixtureA.debugElement.query(By.directive(UOverlay)).nativeElement as HTMLElement;
+    const zA = Number(elA.style.zIndex);
+
+    const fixtureB = TestBed.createComponent(HostComponent);
+    fixtureB.componentInstance.visible = true;
+    fixtureB.detectChanges();
+    await fixtureB.whenStable();
+    const elB = fixtureB.debugElement.query(By.directive(UOverlay)).nativeElement as HTMLElement;
+    const zB = Number(elB.style.zIndex);
+
+    expect(zB).toBeGreaterThan(zA);
+  });
 });

@@ -96,4 +96,34 @@ export class UOverlay {
     this.originalNextSibling = null;
     this.appended = false;
   }
+
+  /**
+   * Removes the host element from wherever `append()` moved it
+   * (`document.body` or a custom `appendTo` target) if this directive is
+   * destroyed while still `appended` — e.g. a consumer (`UDialog`) torn
+   * down by a parent `@if`/`*ngIf` while `visible` is still `true`, never
+   * transitioning to `false` first. Deliberately does NOT call `restore()`:
+   * `restore()` reinserts the host element back at `originalParent`, which
+   * is the correct behavior for a normal hide-while-still-alive transition,
+   * but is wrong here — on destroy, the original parent's own view is being
+   * torn down too, so the moved node should simply be removed from the DOM,
+   * not resurrected into a parent Angular is no longer tracking. Mirrors
+   * `UTooltip`'s own `remove()`-in-`ngOnDestroy` pattern for the same class
+   * of "this directive moved a node outside its own view, so ordinary view
+   * teardown won't clean it up" problem (packages/ng/src/tooltip/tooltip.ts).
+   */
+  ngOnDestroy(): void {
+    if (!this.appended) {
+      return;
+    }
+    const hostEl = this.el.nativeElement;
+    ZIndex.clear(hostEl);
+    const parent = hostEl.parentNode;
+    if (parent) {
+      this.renderer.removeChild(parent, hostEl);
+    }
+    this.originalParent = null;
+    this.originalNextSibling = null;
+    this.appended = false;
+  }
 }

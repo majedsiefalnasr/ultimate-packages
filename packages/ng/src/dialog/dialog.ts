@@ -22,8 +22,20 @@ import {
   UTimesIcon,
 } from "@ultimate/ng-core";
 import { createMotion, type MotionInstance } from "@ultimate/uix-motion";
+import { ESCAPE_PRIORITIES, displayOrderRegistry, escapeRegistry } from "@ultimate/uix-utils/escape";
 import { UButton } from "../button/button";
 import { dialogStyleModule } from "./dialog-style";
+
+// Module-scoped display-order registry key, matching
+// packages/vue-core/src/escape/create-display-order-mixin.ts's own
+// established pattern exactly: this uid participates only in in-memory
+// stacking-order comparisons inside displayOrderRegistry, is never rendered
+// into DOM/markup, and therefore does not carry the SSR-hydration-mismatch
+// risk the Track E ID-nondeterminism finding (2026-09-12) required fixing
+// for aria-labelledby/aria-activedescendant-feeding ids specifically (see
+// this class's own ariaLabelledBy field, which correctly uses the
+// DI-scoped ComponentIdGenerator instead, for exactly that reason).
+let dialogDisplayOrderUid = 0;
 
 /**
  * Ultimate-owned adaptation of PrimeNG's `Dialog` component (see
@@ -169,9 +181,6 @@ import { dialogStyleModule } from "./dialog-style";
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  host: {
-    "(document:keydown.escape)": "onEscapeKeydown()",
-  },
 })
 export class UDialog extends UBaseComponent {
   protected override readonly componentName = "dialog";
@@ -198,6 +207,8 @@ export class UDialog extends UBaseComponent {
   @ViewChild("root") private rootRef?: ElementRef<HTMLElement>;
   private readonly injector = inject(Injector);
   private readonly idGenerator = inject(ComponentIdGenerator);
+  private readonly displayOrderUid = ++dialogDisplayOrderUid;
+  private registeredDisplayOrder: number | undefined;
 
   /**
    * Consumers must provide `ComponentIdGenerator` (from `@ultimate/ng-core`)
@@ -236,6 +247,8 @@ export class UDialog extends UBaseComponent {
         return;
       }
 
+      this.syncEscapeRegistration(visible);
+
       if (visible && !this.wasVisible) {
         this.triggerElement = (this.document.activeElement as HTMLElement) ?? null;
         this.renderMask.set(true);
@@ -262,17 +275,56 @@ export class UDialog extends UBaseComponent {
     });
   }
 
-  protected close(): void {
-    this.emitClose();
+  /**
+   * Registers/unregisters this instance with the shared
+   * `@ultimate/uix-utils/escape` registries as `visible` toggles, replacing
+   * the previous unconditional `(document:keydown.escape)` host listener
+   * (GAP-007 fix, Blueprint Completion 2026-09-13). Mirrors
+   * `packages/react/src/dialog/dialog.tsx`'s own
+   * `useDisplayOrder`/`useGlobalEscapeKey` composition: only the
+   * numerically highest-priority (most-recently-displayed) registered
+   * dialog's callback fires on a real Escape keydown, so two simultaneously
+   * open dialogs no longer both close on one keypress.
+   */
+  private syncEscapeRegistration(visible: boolean): void {
+    if (visible && this.registeredDisplayOrder === undefined) {
+      this.registeredDisplayOrder = displayOrderRegistry.register(
+        "dialog",
+        this.displayOrderUid
+      );
+      escapeRegistry.register(ESCAPE_PRIORITIES.DIALOG, this.registeredDisplayOrder, () => {
+        if (!this.closeOnEscape()) {
+          return;
+        }
+        this.emitClose();
+      });
+    } else if (!visible && this.registeredDisplayOrder !== undefined) {
+      escapeRegistry.unregister(ESCAPE_PRIORITIES.DIALOG, this.registeredDisplayOrder);
+      displayOrderRegistry.unregister("dialog", this.displayOrderUid);
+      this.registeredDisplayOrder = undefined;
+    }
   }
 
-  protected onEscapeKeydown(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
+  /**
+   * Force-unregisters this instance from both shared registries if it is
+   * destroyed while still visible and still registered (e.g. an
+   * `@if`/`*ngIf`-gated dialog torn down directly, or a router navigation
+   * destroying the component tree mid-dialog, without `visible` ever
+   * transitioning to `false` first). Without this, `syncEscapeRegistration`'s
+   * own unregister branch — which only runs from the `visible()` `effect()`
+   * — would never fire, permanently leaking this instance's
+   * `escapeRegistry`/`displayOrderRegistry` entries and silently swallowing
+   * every future Escape keypress meant for any dialog opened afterward.
+   */
+  ngOnDestroy(): void {
+    if (this.registeredDisplayOrder !== undefined) {
+      escapeRegistry.unregister(ESCAPE_PRIORITIES.DIALOG, this.registeredDisplayOrder);
+      displayOrderRegistry.unregister("dialog", this.displayOrderUid);
+      this.registeredDisplayOrder = undefined;
     }
-    if (!this.visible() || !this.closeOnEscape()) {
-      return;
-    }
+  }
+
+  protected close(): void {
     this.emitClose();
   }
 
