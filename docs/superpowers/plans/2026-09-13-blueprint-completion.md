@@ -1301,7 +1301,7 @@ git commit -m "feat(ai): generate and commit llms.txt/llms-full.txt context outp
 
 **Context:** This task must be the last task executed in this plan — it references real commit hashes from Tasks 1-5, which only exist once those tasks are committed. Before starting this task, run `git log --oneline -6` and record the six commit hashes from Tasks 1-5 (Task 1 produces one commit; Tasks 2-5 each produce one commit — 5 commits total for Tasks 1-5, not 6; adjust the placeholder `<commit-sha>` references below to the real hashes from your own `git log` output before writing them into the document).
 
-- [ ] **Step 1: Update the Phase 2 row in `BLUEPRINT_GAPS.md`'s §2 phase table**
+- [x] **Step 1: Update the Phase 2 row in `BLUEPRINT_GAPS.md`'s §2 phase table**
 
 Open `docs/architecture/BLUEPRINT_GAPS.md`. Find the Phase 2 row (search for `GAP-006/GAP-007/GAP-009/GAP-010 remain genuinely open`):
 
@@ -1315,7 +1315,7 @@ Replace with (fill in the real Task 2/3/4 commit hashes from your own `git log`)
 | 2 | UltimateNG | Complete | Confirmed — `ng-core` + `ng` build; proof set expanded from the original 5 components to 8 (Button/Checkbox/Dialog/Menu/Tooltip/Paginator/Scroller/Table). GAP-003 (style-injection no-op) resolved (commit `680876f`). GAP-006 (Tooltip `aria-describedby`, commit `<Task-2-commit-sha>`), GAP-007 (Angular Escape-priority stacking, commit `<Task-3-commit-sha>`), GAP-009/GAP-023 (per-component secondary entry points, commit `<Task-4-commit-sha>`), and GAP-010 (provenance spec reconciliation, commit `<Task-1-commit-sha>`) are all now resolved by the Blueprint Completion workstream (2026-09-13) — see their own entries below. |
 ```
 
-- [ ] **Step 2: Update GAP-006's entry**
+- [x] **Step 2: Update GAP-006's entry**
 
 Find the `#### GAP-006` heading (search for `UTooltip.*aria-describedby.*wiring`). Replace the entire entry block (from `#### GAP-006` up to, but not including, the next `#### GAP-007` heading) with:
 
@@ -1337,7 +1337,7 @@ Find the `#### GAP-006` heading (search for `UTooltip.*aria-describedby.*wiring`
 
 ```
 
-- [ ] **Step 3: Update GAP-007's entry**
+- [x] **Step 3: Update GAP-007's entry**
 
 Find the `#### GAP-007` heading. Replace the entire entry block (up to, but not including, the next `#### GAP-008` heading) with:
 
@@ -1359,7 +1359,7 @@ Find the `#### GAP-007` heading. Replace the entire entry block (up to, but not 
 
 ```
 
-- [ ] **Step 4: Update GAP-009's entry**
+- [x] **Step 4: Update GAP-009's entry**
 
 Find the `#### GAP-009` heading. Replace the entire entry block (up to, but not including, the next `#### GAP-010` heading) with:
 
@@ -1381,7 +1381,7 @@ Find the `#### GAP-009` heading. Replace the entire entry block (up to, but not 
 
 ```
 
-- [ ] **Step 5: Update GAP-010's entry**
+- [x] **Step 5: Update GAP-010's entry**
 
 Find the `#### GAP-010` heading. Replace the entire entry block (up to, but not including, the next `#### GAP-011` heading) with:
 
@@ -1403,7 +1403,7 @@ Find the `#### GAP-010` heading. Replace the entire entry block (up to, but not 
 
 ```
 
-- [ ] **Step 6: Update GAP-023's entry**
+- [x] **Step 6: Update GAP-023's entry**
 
 Find the `#### GAP-023` heading. Replace the entire entry block (up to, but not including, the next `#### GAP-024` heading) with:
 
@@ -1425,7 +1425,7 @@ Find the `#### GAP-023` heading. Replace the entire entry block (up to, but not 
 
 ```
 
-- [ ] **Step 7: Update GAP-036's entry**
+- [x] **Step 7: Update GAP-036's entry**
 
 Find the `#### GAP-036` heading. Replace the entire entry block (up to, but not including, the next `#### GAP-037` heading) with:
 
@@ -1443,7 +1443,7 @@ Find the `#### GAP-036` heading. Replace the entire entry block (up to, but not 
 
 ```
 
-- [ ] **Step 8: Update `ROADMAP.md`'s footnote 5**
+- [x] **Step 8: Update `ROADMAP.md`'s footnote 5**
 
 Open `docs/architecture/ROADMAP.md`. Find footnote 5 (search for `no \`llms.txt\`/\`llms-full.txt\` file exists anywhere in the repository yet`). Replace:
 
@@ -1457,7 +1457,7 @@ With:
 [^5]: `@ultimate/ai` (`packages/ai/src/`) ships real, tested generation/validation tooling — `renderLlmsTxt`, `renderLlmsFullTxt`, `renderFrameworkContext`, `generateContextFiles`, `generateSkillFile`, `validateSkillFile` — plus `skills/` at repo root, which holds real, substantive per-component Skill files for all 8 proof-set components (`button.md` through `tooltip.md`) and `AGENT_CONVENTIONS.md`. `packages/ai/context/{llms,llms-full,llms-ng,llms-react,llms-vue}.txt` now exist as real, committed generated output (GAP-036, resolved by the Blueprint Completion workstream, 2026-09-13) — a one-time snapshot, not CI-regenerated. `tooling/` at repo root remains an empty placeholder (cosmetic, GAP-001-adjacent, not independently tracked). See `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §1/§3 and `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 5 for the full evidence trail.
 ```
 
-- [ ] **Step 9: Read through both updated documents once for internal consistency**
+- [x] **Step 9: Read through both updated documents once for internal consistency**
 
 Run: `grep -n "GAP-006\|GAP-007\|GAP-009\|GAP-010\|GAP-023\|GAP-036" docs/architecture/BLUEPRINT_GAPS.md`
 Expected: every occurrence of these six IDs across the whole document (the §2 phase table, each gap's own entry, and any cross-reference from another gap's entry, e.g. GAP-017's dependency note) is consistent with `RESOLVED` — no remaining sentence anywhere in the file still describes any of these six as open, missing, or partial. Read each matched line to confirm.
@@ -1465,7 +1465,7 @@ Expected: every occurrence of these six IDs across the whole document (the §2 p
 Run: `grep -n "GAP-036\|no \`llms.txt\`" docs/architecture/ROADMAP.md`
 Expected: no remaining sentence claims `llms.txt` doesn't exist.
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add docs/architecture/BLUEPRINT_GAPS.md docs/architecture/ROADMAP.md
