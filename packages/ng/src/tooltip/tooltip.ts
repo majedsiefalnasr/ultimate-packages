@@ -1,4 +1,4 @@
-import { Directive, booleanAttribute, input } from "@angular/core";
+import { Directive, booleanAttribute, inject, input } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import {
   getOuterHeight,
@@ -8,7 +8,7 @@ import {
   getWindowScrollTop,
 } from "@ultimate/uix-utils/dom";
 import { ZIndex } from "@ultimate/uix-utils/zindex";
-import { UBaseComponent } from "@ultimate/ng-core";
+import { ComponentIdGenerator, UBaseComponent } from "@ultimate/ng-core";
 import { tooltipStyleModule } from "./tooltip-style";
 
 /**
@@ -59,6 +59,18 @@ import { tooltipStyleModule } from "./tooltip-style";
  * All DOM creation is guarded behind `isPlatformBrowser()` per the SSR
  * requirement (matching upstream's own `onAfterViewInit` guard and this
  * project's established `URipple`/`UOverlay` pattern).
+ *
+ * BREAKING CHANGE — requires `ComponentIdGenerator`: this directive injects
+ * `ComponentIdGenerator` (from `@ultimate/ng-core`) to generate its
+ * floating container's `id` in an SSR-deterministic way (GAP-006 fix,
+ * Blueprint Completion 2026-09-13). The consuming application MUST provide
+ * `ComponentIdGenerator` at bootstrap — same requirement `UDialog` already
+ * documents and enforces, see `packages/ng/src/dialog/dialog.ts`.
+ * `aria-describedby` is set on the host element while the tooltip is
+ * visible, merging with (not replacing) any pre-existing token list, and
+ * restored to its exact pre-show value on hide (including on destroy while
+ * still visible) — mirroring `packages/react/src/tooltip/tooltip.tsx`'s
+ * already-shipped merge/restore behavior for the same problem.
  */
 @Directive({
   selector: "[uTooltip]",
@@ -81,7 +93,9 @@ export class UTooltip extends UBaseComponent {
   /** When present, it specifies that the tooltip should be disabled. */
   uTooltipDisabled = input(false, { transform: booleanAttribute });
 
+  private readonly idGenerator = inject(ComponentIdGenerator);
   private container: HTMLElement | null = null;
+  private describedById: string | null = null;
 
   protected show(): void {
     if (!isPlatformBrowser(this.platformId)) {
@@ -97,17 +111,20 @@ export class UTooltip extends UBaseComponent {
     this.renderer.appendChild(this.document.body, this.container);
     this.align(this.container);
     ZIndex.set("tooltip", this.container, 1100);
+    this.attachDescribedBy(this.container.id);
   }
 
   protected hide(): void {
     if (this.container) {
       ZIndex.clear(this.container);
     }
+    this.detachDescribedBy();
     this.remove();
   }
 
   private create(text: string): HTMLElement {
     const container = this.renderer.createElement("div") as HTMLElement;
+    this.renderer.setAttribute(container, "id", this.idGenerator.next("u_tooltip"));
     this.renderer.setAttribute(container, "class", this.cx("root") ?? "");
     this.renderer.setAttribute(container, "role", "tooltip");
 
@@ -181,6 +198,47 @@ export class UTooltip extends UBaseComponent {
     this.renderer.setStyle(container, "top", `${top}px`);
   }
 
+  /**
+   * Merges `tooltipId` into the host's existing `aria-describedby` token
+   * list rather than overwriting it, so a consumer-provided
+   * `aria-describedby` (e.g. describing form-field validation text)
+   * survives alongside this tooltip's own id — matching
+   * `packages/react/src/tooltip/tooltip.tsx`'s already-shipped behavior for
+   * the same problem.
+   */
+  private attachDescribedBy(tooltipId: string): void {
+    const hostEl = this.el.nativeElement as HTMLElement;
+    const existing = hostEl.getAttribute("aria-describedby");
+    const ids = existing ? existing.split(" ").filter(Boolean) : [];
+    if (!ids.includes(tooltipId)) {
+      this.renderer.setAttribute(hostEl, "aria-describedby", [...ids, tooltipId].join(" "));
+    }
+    this.describedById = tooltipId;
+  }
+
+  /**
+   * Removes only this tooltip's own id from the host's `aria-describedby`
+   * token list, preserving any other ids that were present before this
+   * tooltip attached its own — and removes the attribute entirely once no
+   * tokens remain, rather than leaving an empty string.
+   */
+  private detachDescribedBy(): void {
+    if (!this.describedById) {
+      return;
+    }
+    const hostEl = this.el.nativeElement as HTMLElement;
+    const existing = hostEl.getAttribute("aria-describedby");
+    const remaining = existing
+      ? existing.split(" ").filter((tokenId) => tokenId && tokenId !== this.describedById)
+      : [];
+    if (remaining.length > 0) {
+      this.renderer.setAttribute(hostEl, "aria-describedby", remaining.join(" "));
+    } else {
+      this.renderer.removeAttribute(hostEl, "aria-describedby");
+    }
+    this.describedById = null;
+  }
+
   private remove(): void {
     if (this.container) {
       this.renderer.removeChild(this.document.body, this.container);
@@ -189,6 +247,13 @@ export class UTooltip extends UBaseComponent {
   }
 
   ngOnDestroy(): void {
+    // Clears both the floating DOM element (pre-existing behavior) and the
+    // host's aria-describedby token (GAP-006 fix, Blueprint Completion
+    // 2026-09-13) — a tooltip destroyed while still visible (e.g. its host
+    // is removed from an *ngIf-gated template without a prior
+    // mouseleave/blur) must not leave a stale aria-describedby reference
+    // pointing at an id no longer present anywhere in the DOM.
+    this.detachDescribedBy();
     this.remove();
   }
 }

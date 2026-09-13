@@ -10,7 +10,7 @@ import {
   input,
 } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
+import { ComponentIdGenerator, UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { URipple } from "../ripple";
 import { UTooltip } from "../tooltip";
 import { menuStyleModule } from "./menu-style";
@@ -97,6 +97,11 @@ import { menuStyleModule } from "./menu-style";
   standalone: true,
   selector: "u-menu",
   imports: [RouterModule, URipple, UTooltip],
+  // UMenu's [uTooltip] binding transitively requires ComponentIdGenerator
+  // (GAP-006 fix); providing it here means UMenu consumers don't inherit
+  // that requirement themselves, matching how UDialog documents its own
+  // top-level requirement instead.
+  providers: [ComponentIdGenerator],
   template: `
     <div [class]="cx('root', classesParams())">
       <ul
