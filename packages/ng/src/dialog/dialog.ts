@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
   ViewChild,
@@ -206,9 +207,11 @@ export class UDialog extends UBaseComponent {
 
   @ViewChild("root") private rootRef?: ElementRef<HTMLElement>;
   private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly idGenerator = inject(ComponentIdGenerator);
   private readonly displayOrderUid = ++dialogDisplayOrderUid;
   private registeredDisplayOrder: number | undefined;
+  private destroyed = false;
 
   /**
    * Consumers must provide `ComponentIdGenerator` (from `@ultimate/ng-core`)
@@ -239,6 +242,9 @@ export class UDialog extends UBaseComponent {
 
   constructor() {
     super();
+    this.destroyRef.onDestroy(() => {
+      this.destroyed = true;
+    });
     effect(() => {
       const visible = this.visible();
       if (!isPlatformBrowser(this.platformId)) {
@@ -343,7 +349,12 @@ export class UDialog extends UBaseComponent {
       return;
     }
     this.motion = createMotion(el, { name: "u-dialog", appear: true });
-    void this.motion.enter().then(() => this.onShow.emit());
+    void this.motion.enter().then(() => {
+      if (this.destroyed) {
+        return;
+      }
+      this.onShow.emit();
+    });
   }
 
   private runLeaveMotion(): void {
@@ -353,6 +364,9 @@ export class UDialog extends UBaseComponent {
       return;
     }
     void this.motion.leave().then(() => {
+      if (this.destroyed) {
+        return;
+      }
       this.renderMask.set(false);
     });
   }
