@@ -1482,7 +1482,7 @@ git commit -m "docs(architecture): close GAP-006/007/009/010/023/036 in the gap 
 
 **Context:** Confirms the Blueprint Freeze Definition of Done's item 8 (`docs/superpowers/specs/2026-09-13-blueprint-completion-design.md` §5): the full existing CI suite is green on the consolidated branch, with no regression in any existing gate.
 
-- [ ] **Step 1: Run format and lint checks**
+- [x] **Step 1: Run format and lint checks**
 
 Run: `pnpm run format:check`
 Expected: passes for every file this plan touched (all code edits followed existing file style; if this fails on a file this plan created or modified, run `pnpm run format` scoped to only this plan's changed files — never a blanket `pnpm run format` across the whole repository, since pre-existing, unrelated formatting drift is out of this plan's scope per the prior Blueprint Closure session's own established precedent).
@@ -1490,39 +1490,40 @@ Expected: passes for every file this plan touched (all code edits followed exist
 Run: `pnpm run lint`
 Expected: passes, no new lint errors introduced by this plan's changes.
 
-- [ ] **Step 2: Run typecheck across all touched packages**
+- [x] **Step 2: Run typecheck across all touched packages**
 
 Run: `pnpm --filter @ultimate/ng typecheck && pnpm --filter @ultimate/ng-core typecheck && pnpm --filter @ultimate/ai typecheck`
 Expected: all three PASS.
 
-- [ ] **Step 3: Run the full test suite for every touched package**
+- [x] **Step 3: Run the full test suite for every touched package**
 
 Run: `pnpm --filter @ultimate/ng test && pnpm --filter @ultimate/ng-core test && pnpm --filter @ultimate/ai test`
 Expected: all PASS.
 
-- [ ] **Step 4: Run every provenance/boundary/dependency-ceiling validation script**
+- [x] **Step 4: Run every provenance/boundary/dependency-ceiling validation script**
 
 Run: `node scripts/provenance/validate-provenance.mjs && node scripts/provenance/validate-boundaries.mjs && node scripts/provenance/validate-dependency-ceiling.mjs`
 Expected: all PASS, unchanged from before this plan's work began.
 
-- [ ] **Step 5: Re-run the AGENTS.md pointer validator**
+- [x] **Step 5: Re-run the AGENTS.md pointer validator**
 
 Run: `node scripts/provenance/validate-agents-md-pointers.mjs`
 Expected: `[agents-md-pointers:validate] OK: all 7 path(s) referenced in AGENTS.md's pointer table exist` (unchanged — this plan does not touch `AGENTS.md` or any path it references).
 
-- [ ] **Step 6: Confirm `BLUEPRINT.md` is byte-for-byte unmodified**
+- [x] **Step 6: Confirm `BLUEPRINT.md` is byte-for-byte unmodified**
 
 Run: `git diff --stat main -- docs/architecture/BLUEPRINT.md` (substitute `main` for this branch's actual base if different)
 Expected: no output (zero diff).
 
-- [ ] **Step 7: Confirm no protected/deferred decision was touched**
+- [x] **Step 7: Confirm no protected/deferred decision was touched**
 
 Run: `git diff main -- docs/architecture/BLUEPRINT_GAPS.md | grep -A3 "DECISION-B\|DECISION-C\|DECISION-D\|DECISION-E"`
 Expected: no output (this plan's Task 6 only touches gap entries GAP-006/007/009/010/023/036 and the §2 phase table's Phase 2 row — it does not touch the §5 Open Architectural Decisions section at all).
 
-- [ ] **Step 8: Review the full diff for this branch one final time**
+- [x] **Step 8: Review the full diff for this branch one final time**
 
 Run: `git diff main --stat` (substitute the real base branch/commit if different)
-Expected: exactly these files changed, and no others: `docs/superpowers/specs/2026-08-29-phase-2-ultimateng-foundation-design.md`, `docs/superpowers/specs/2026-08-28-phase-1-uix-foundation-design.md`, `packages/ng/src/tooltip/tooltip.ts`, `packages/ng/src/tooltip/tooltip.spec.ts`, `packages/ng-core/src/overlay/overlay.ts` (no change expected here — WP5's research confirmed the z-index mechanism didn't need a code change, only a new test in `overlay.spec.ts`; if `overlay.ts` shows a diff, stop and re-check Task 3 against this plan's own stated scope), `packages/ng-core/src/overlay/overlay.spec.ts`, `packages/ng/src/dialog/dialog.ts`, `packages/ng/src/dialog/dialog.spec.ts`, the 12 new `packages/ng/*/ng-package.json` files, `packages/ng/package.json`, `docs/architecture/PERFORMANCE.md`, `packages/ai/package.json`, the 5 new `packages/ai/context/*.txt` files, `docs/architecture/BLUEPRINT_GAPS.md`, `docs/architecture/ROADMAP.md`.
 
-This step is a manual read, not a scripted assertion — read the actual `git diff main --stat` output and compare it against this exact list before declaring the plan complete.
+**AMENDMENT (implementation, 2026-09-13):** the original expected list below is superseded by this plan's own Task 4/5 amendments. Real, accounted-for differences from the original list: (1) only 8 new `ng-package.json` files, not 12 (`button`/`dialog`/`menu`/`table` excluded — GAP-009's upstream `ng-packagr` defect); (2) `scripts/provenance/verify-tree-shaking.mjs` is also modified (missing `@ultimate/uix-utils/escape` alias, a real gap Task 3/WP5 left and Task 4 was the first task to surface); (3) `packages/ng/src/menu/menu.ts` shows a diff (a small pre-existing fix bundled with Task 3's WP5 commit, `cfdd4cb`); (4) `packages/ai/test/packaging.test.ts` is also modified (Task 5's npm-packaging-guarantee amendment); (5) `docs/superpowers/specs/2026-09-13-blueprint-completion-design.md` and `docs/superpowers/plans/2026-09-13-blueprint-completion.md` themselves also show diffs (this plan's own amendment trail). Expected files, corrected: `docs/superpowers/specs/2026-08-29-phase-2-ultimateng-foundation-design.md`, `docs/superpowers/specs/2026-08-28-phase-1-uix-foundation-design.md`, `docs/superpowers/specs/2026-09-13-blueprint-completion-design.md`, `docs/superpowers/plans/2026-09-13-blueprint-completion.md`, `packages/ng/src/tooltip/tooltip.ts`, `packages/ng/src/tooltip/tooltip.spec.ts`, `packages/ng-core/src/overlay/overlay.ts` (no change expected here — WP5's research confirmed the z-index mechanism didn't need a code change, only a new test in `overlay.spec.ts`; if `overlay.ts` shows a diff beyond what Task 3 itself introduced, stop and re-check against this plan's own stated scope), `packages/ng-core/src/overlay/overlay.spec.ts`, `packages/ng/src/dialog/dialog.ts`, `packages/ng/src/dialog/dialog.spec.ts`, `packages/ng/src/menu/menu.ts`, the 8 new `packages/ng/{checkbox,paginator,scroller,tooltip,autofocus,badge,fluid,ripple}/ng-package.json` files, `packages/ng/package.json`, `scripts/provenance/verify-tree-shaking.mjs`, `docs/architecture/PERFORMANCE.md`, `packages/ai/package.json`, `packages/ai/test/packaging.test.ts`, the 5 new `packages/ai/context/*.txt` files, `docs/architecture/BLUEPRINT_GAPS.md`, `docs/architecture/ROADMAP.md`.
+
+This step is a manual read, not a scripted assertion — read the actual `git diff main --stat` output and compare it against this corrected list before declaring the plan complete.
