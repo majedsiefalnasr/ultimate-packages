@@ -684,22 +684,6 @@ Listed here only where the repository shows genuine, unresolved forks requiring 
 - **Recommendation:** None made here, per this document's scope limits — flagging the narrowed, still-genuinely-open remainder for a future architecture pass, not resolving it.
 - **Source/evidence:** `docs/superpowers/plans/2026-09-02-table-component-implementation.md` Tasks 5, 13, 19, and its "Acceptance Criteria" section; GAP-014 (above); `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §5.
 
-### DECISION-B — External runtime dependency approval process (Chart.js, Quill, and future cases)
-
-- **Question:** ADR-004 defines a rigorous approval process for Prime-derived source specifically (license verification, commit pinning, provenance recording). No equivalent documented process exists for approving a *non-Prime* external runtime dependency like Chart.js (GAP-019) or Quill (GAP-020).
-- **Current evidence:** Two components (Chart, Editor) are already blocked on this exact unresolved question, independently, in COMPONENT_INVENTORY.md.
-- **Options:** (a) Extend the existing Phase-0-style provenance/license process to cover any external runtime dependency, not just Prime-derived source; (b) treat each external dependency as a one-off case-by-case ADR with no generic process; (c) avoid external chart/rich-text dependencies entirely and scope Chart/Editor out of the initial platform (Blueprint §41's non-goals don't explicitly forbid this, but don't explicitly require Chart/Editor either).
-- **Affected areas:** Chart (Visualization family), Editor (Panel/Layout/Display family), and any future component with a genuine external dependency need.
-- **Recommendation:** Option (a) is weakly favored by the evidence — Ultimate already has a working, proven process (Phase 0's) that generalizes naturally — but this is recorded as a recommendation, not a resolution.
-
-### DECISION-C — Data component architecture for Table/TreeTable specifically (not blocked by `uix-data`, but not yet started either)
-
-- **Question:** `uix-data` deliberately ships only the narrow, cross-framework-verified primitives. The actual `Table` component (and its dependents: TreeTable, Scroller, Paginator internal-consumer relationship) still needs its own per-framework architecture decision — how selection/sort/filter/pagination/virtualization primitives compose into a real, framework-native Table implementation.
-- **Current evidence:** COMPONENT_INVENTORY.md marks Table `NEEDS ARCHITECTURE DECISION`, `High` risk, explicitly separate from the (now-resolved) shared-primitives question ADR-043 answered.
-- **Options:** Not enumerated here — this fork has not yet had even a first research pass, unlike DECISION-A/B which have at least partial prior investigation. Recorded as "exists and is unstarted," per this task's Critical Operating Rule 14 (no implementation plans).
-- **Affected areas:** Table, TreeTable, Scroller, Paginator, OrderList, PickList, DataView (7 of the 8 Data-family rows — Tree itself is GAP-013's separate hierarchical-identity question).
-- **Recommendation:** None — flagging existence only, per this document's scope limits.
-
 ### DECISION-D — Hierarchical (Tree-family) shared contract (do-not-open marker)
 
 - **Question:** Restated from GAP-013 for visibility in this section: should Tree/TreeTable/TreeSelect/OrganizationChart ever get a shared cross-framework contract?
