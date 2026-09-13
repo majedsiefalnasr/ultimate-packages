@@ -1,0 +1,156 @@
+## Button
+Category: Primitive
+A clickable button control with optional icon, loading state, and severity/size/style modifiers.
+### react API
+- `label`: string | undefined
+- `icon`: React.ReactNode
+- `iconPos`: "left" | "right" | "top" | "bottom"
+- `loading`: boolean
+- `loadingIcon`: React.ReactNode
+- `disabled`: boolean
+- `severity`: "secondary" | "success" | "info" | "warning" | "danger" | "help" | "contrast" | undefined
+- `size`: "small" | "large" | undefined
+- `text`: boolean | undefined
+- `raised`: boolean | undefined
+- `rounded`: boolean | undefined
+- `outlined`: boolean | undefined
+- `link`: boolean | undefined
+- `plain`: boolean | undefined
+- `badge`: string | undefined
+- `badgeClassName`: string | undefined
+- `visible`: boolean
+- `tooltip`: string | undefined
+- `tooltipOptions`: Record<string, unknown> | undefined
+
+## Checkbox
+Category: Form
+A boolean input control rendered as a native checkbox, with an optional text label.
+### react API
+- `checked`: unknown
+- `trueValue`: unknown
+- `falseValue`: unknown
+- `disabled`: boolean
+- `readOnly`: boolean
+- `invalid`: boolean
+- `name`: string | undefined
+- `value`: unknown
+- `id`: string | undefined
+- `inputId`: string | undefined
+- `tooltip`: string | undefined
+- `tooltipOptions`: Record<string, unknown> | undefined
+- `autoFocus`: boolean
+- `className`: string | undefined
+- event `onChange` (callback-prop)
+
+## Dialog
+Category: Overlay
+A modal (or non-modal) overlay window that renders projected content above the page, with focus trapping and Escape-key dismissal.
+### react API
+- `visible`: boolean
+- `header`: React.ReactNode
+- `footer`: React.ReactNode
+- `children`: React.ReactNode
+- `modal`: boolean
+- `closable`: boolean
+- `showCloseIcon`: boolean
+- `closeOnEscape`: boolean
+- `dismissableMask`: boolean
+- `blockScroll`: boolean
+- `baseZIndex`: number | undefined
+- `appendTo`: HTMLElement | (() => HTMLElement) | undefined
+- `className`: string | undefined
+- `style`: React.CSSProperties | undefined
+- `id`: string | undefined
+- `focusOnShow`: boolean
+- event `onHide` (callback-prop)
+
+## Menu
+Category: Navigation
+A flat navigation/command list rendered as an ARIA menu, either inline or (React/Vue only) as a popup overlay, with roving-tabindex keyboard navigation.
+### react API
+- `model`: UMenuItem[]
+- `popup`: boolean
+- `popupAlignment`: "left" | "right" | undefined
+- `id`: string | undefined
+- `ariaLabel`: string | undefined
+- `ariaLabelledBy`: string | undefined
+- `className`: string | undefined
+- `style`: React.CSSProperties | undefined
+- `baseZIndex`: number | undefined
+- `appendTo`: HTMLElement | (() => HTMLElement) | undefined
+- `closeOnEscape`: boolean
+- event `onShow` (callback-prop)
+- event `onHide` (callback-prop)
+
+## Paginator
+Category: Data
+A page-navigation control (first/prev/next/last plus numbered page links) driven by first/rows/totalRecords, used standalone or composed inside Table/DataView for paging.
+### react API
+- `first`: number
+- `rows`: number
+- `totalRecords`: number
+- `pageLinkSize`: number
+- event `onPageChange` (callback-prop)
+
+## Scroller
+Category: Data
+A virtual-scroll windowing primitive that renders only the items currently within (plus a tolerated buffer around) the visible viewport, used internally by Table and other large-list components rather than directly by end users.
+### react API
+- `items`: unknown[]
+- `itemSize`: number
+- `numToleratedItems`: number
+- `disabled`: boolean
+- `lazy`: boolean
+- `loading`: boolean
+- event `onLazyLoad` (callback-prop)
+
+## Table
+Category: Data
+Table renders tabular data with sorting, filtering, selection, pagination, virtualization, and row/cell editing.
+### react API
+- `value`: T[]
+- `dataKey`: string
+- `columns`: UTableColumn[]
+- `sortMode`: SortMode
+- `sortField`: string
+- `sortOrder`: 1 | 0 | -1
+- `multiSortMeta`: SortMeta[]
+- `filters`: Record<string, FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }>
+- `selectionMode`: SelectionMode | undefined
+- `selection`: T | T[] | undefined
+- `compareSelectionBy`: "equals" | "deepEquals"
+- `paginator`: boolean
+- `first`: number
+- `rows`: number
+- `totalRecords`: number
+- `virtualScrollerOptions`: { itemSize: number } | undefined
+- `lazy`: boolean | undefined
+- `editMode`: "cell" | "row" | undefined
+- `editingRows`: Record<string, boolean> | undefined
+- `rowGroupMode`: "subheader" | "rowspan" | undefined
+- `groupRowsBy`: string | undefined
+- event `onSort` (callback-prop)
+- event `onSelectionChange` (callback-prop)
+- event `onPage` (callback-prop)
+### Accessibility
+Roles: table, rowgroup, row, columnheader
+Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the currently-rendered virtualized window, not the full logical dataset, when virtualScroll/virtualScrollerOptions is active — a row outside the window is not in the DOM to focus. This is a real, intentional, already-shipped limitation of Table's Scroller composition, documented inline at the row-keydown handler in all three frameworks' own source.
+### Related components
+Paginator, Scroller
+
+## Tooltip
+Category: Overlay
+Shows advisory content next to a host/target element on hover or focus. An attribute directive in Angular and Vue; a target-based component in React.
+### react API
+- `target`: React.RefObject<HTMLElement> | HTMLElement | string | string[]
+- `content`: React.ReactNode | undefined
+- `position`: "right" | "left" | "top" | "bottom"
+- `event`: "hover" | "focus" | "both"
+- `showDelay`: number
+- `hideDelay`: number
+- `disabled`: boolean
+- `closeOnEscape`: boolean
+- `autoZIndex`: boolean
+- `baseZIndex`: number | undefined
+- `id`: string | undefined
+- `className`: string | undefined

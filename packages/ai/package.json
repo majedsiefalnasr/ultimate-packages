@@ -21,6 +21,7 @@
   },
   "files": [
     "dist",
+    "context",
     "README.md"
   ],
   "dependencies": {
@@ -29,11 +30,11 @@
     "js-yaml": "^4.1.0"
   },
   "scripts": {
-    "build": "tsup && node scripts/rename-dts.mjs && node dist/bin-generate.mjs ../../skills dist/context",
+    "build": "tsup && node scripts/rename-dts.mjs && node dist/bin-generate.mjs ../../skills context",
     "test": "vitest run --typecheck",
     "test:coverage": "vitest run --coverage --typecheck",
     "typecheck": "tsc --noEmit",
-    "validate": "node dist/bin-validate.mjs ../../skills dist/context"
+    "validate": "node dist/bin-validate.mjs ../../skills context"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

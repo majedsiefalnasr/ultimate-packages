@@ -1,0 +1,8 @@
+Button (Primitive): A clickable button control with optional icon, loading state, and severity/size/style modifiers.
+Checkbox (Form): A boolean input control rendered as a native checkbox, with an optional text label.
+Dialog (Overlay): A modal (or non-modal) overlay window that renders projected content above the page, with focus trapping and Escape-key dismissal.
+Menu (Navigation): A flat navigation/command list rendered as an ARIA menu, either inline or (React/Vue only) as a popup overlay, with roving-tabindex keyboard navigation.
+Paginator (Data): A page-navigation control (first/prev/next/last plus numbered page links) driven by first/rows/totalRecords, used standalone or composed inside Table/DataView for paging.
+Scroller (Data): A virtual-scroll windowing primitive that renders only the items currently within (plus a tolerated buffer around) the visible viewport, used internally by Table and other large-list components rather than directly by end users.
+Table (Data): Table renders tabular data with sorting, filtering, selection, pagination, virtualization, and row/cell editing.
+Tooltip (Overlay): Shows advisory content next to a host/target element on hover or focus. An attribute directive in Angular and Vue; a target-based component in React.

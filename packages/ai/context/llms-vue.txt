@@ -1,0 +1,159 @@
+## Button
+Category: Primitive
+A clickable button control with optional icon, loading state, and severity/size/style modifiers.
+### vue API
+- `label`: String
+- `icon`: String
+- `iconPos`: String
+- `iconClass`: [String, Object]
+- `badge`: String
+- `badgeClass`: [String, Object]
+- `badgeSeverity`: String
+- `loading`: Boolean
+- `loadingIcon`: String
+- `as`: [String, Object]
+- `asChild`: Boolean
+- `link`: Boolean
+- `severity`: String
+- `raised`: Boolean
+- `rounded`: Boolean
+- `text`: Boolean
+- `outlined`: Boolean
+- `size`: String
+- `variant`: String
+- `plain`: Boolean
+- `fluid`: Boolean
+- `ariaLabel`: String
+- `tooltip`: String
+- `tooltipOptions`: Object
+
+## Checkbox
+Category: Form
+A boolean input control rendered as a native checkbox, with an optional text label.
+### vue API
+- `value`: any
+- `binary`: Boolean
+- `indeterminate`: Boolean
+- `trueValue`: any
+- `falseValue`: any
+- `disabled`: Boolean
+- `readonly`: Boolean
+- `required`: Boolean
+- `tabindex`: Number
+- `inputId`: String
+- `inputClass`: [String, Object]
+- `inputStyle`: Object
+- `ariaLabelledby`: String
+- `ariaLabel`: String
+- `invalid`: Boolean
+- `name`: String
+- event `change` (emit)
+
+## Dialog
+Category: Overlay
+A modal (or non-modal) overlay window that renders projected content above the page, with focus trapping and Escape-key dismissal.
+### vue API
+- `visible`: Boolean
+- `header`: String
+- `footer`: String
+- `modal`: Boolean
+- `closable`: Boolean
+- `closeOnEscape`: Boolean
+- `dismissableMask`: Boolean
+- `blockScroll`: Boolean
+- `baseZIndex`: Number
+- `autoZIndex`: Boolean
+- `position`: String
+- `appendTo`: [String, Object]
+- `ariaCloseLabel`: String
+- event `update:visible` (emit)
+- event `show` (emit)
+- event `hide` (emit)
+
+## Menu
+Category: Navigation
+A flat navigation/command list rendered as an ARIA menu, either inline or (React/Vue only) as a popup overlay, with roving-tabindex keyboard navigation.
+### vue API
+- `model`: Array
+- `popup`: Boolean
+- `appendTo`: [String, Object]
+- `autoZIndex`: Boolean
+- `baseZIndex`: Number
+- `tabindex`: Number
+- `ariaLabel`: String
+- `ariaLabelledby`: String
+- event `show` (emit)
+- event `hide` (emit)
+
+## Paginator
+Category: Data
+A page-navigation control (first/prev/next/last plus numbered page links) driven by first/rows/totalRecords, used standalone or composed inside Table/DataView for paging.
+### vue API
+- `first`: Number
+- `rows`: Number
+- `totalRecords`: Number
+- `pageLinkSize`: Number
+- event `page` (emit)
+- event `update:first` (emit)
+- event `update:rows` (emit)
+
+## Scroller
+Category: Data
+A virtual-scroll windowing primitive that renders only the items currently within (plus a tolerated buffer around) the visible viewport, used internally by Table and other large-list components rather than directly by end users.
+### vue API
+- `items`: Array
+- `itemSize`: Number
+- `numToleratedItems`: Number
+- `disabled`: Boolean
+- `loading`: Boolean
+- `lazy`: Boolean
+- event `lazy-load` (emit)
+
+## Table
+Category: Data
+Table renders tabular data with sorting, filtering, selection, pagination, virtualization, and row/cell editing.
+### vue API
+- `value`: Array
+- `dataKey`: String
+- `columns`: Array
+- `sortMode`: String
+- `sortField`: String
+- `sortOrder`: Number
+- `multiSortMeta`: Array
+- `filters`: Object
+- `selectionMode`: String
+- `selection`: [Object, Array]
+- `compareSelectionBy`: String
+- `paginator`: Boolean
+- `first`: Number
+- `rows`: Number
+- `totalRecords`: Number
+- `rowsPerPageOptions`: Array
+- `virtualScrollerOptions`: Object
+- `lazy`: Boolean
+- `editMode`: String
+- `editingRows`: Array
+- `rowGroupMode`: String
+- `groupRowsBy`: String
+- event `sort` (emit)
+- event `selection-change` (emit)
+- event `page` (emit)
+### Accessibility
+Roles: table, rowgroup, row, columnheader
+Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the currently-rendered virtualized window, not the full logical dataset, when virtualScroll/virtualScrollerOptions is active — a row outside the window is not in the DOM to focus. This is a real, intentional, already-shipped limitation of Table's Scroller composition, documented inline at the row-keydown handler in all three frameworks' own source.
+### Related components
+Paginator, Scroller
+
+## Tooltip
+Category: Overlay
+Shows advisory content next to a host/target element on hover or focus. An attribute directive in Angular and Vue; a target-based component in React.
+### vue API
+- `value`: string
+- `disabled`: boolean | undefined
+- `escape`: boolean
+- `class`: string | undefined
+- `fitContent`: boolean
+- `id`: string | undefined
+- `showDelay`: number
+- `hideDelay`: number
+- `autoHide`: boolean

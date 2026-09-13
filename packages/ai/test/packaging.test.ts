@@ -14,7 +14,7 @@ const COMPONENT_METADATA_ROOT = join(REPO_ROOT, "packages", "component-metadata"
 const COMPONENT_SCHEMA_ROOT = join(REPO_ROOT, "packages", "component-schema");
 
 describe("npm packaging contract (spec §7.1a)", () => {
-  it("a real `npm pack` tarball includes all 5 dist/context/*.txt files", () => {
+  it("a real `npm pack` tarball includes all 5 context/*.txt files", () => {
     const tempDir = mkdtempSync(join(tmpdir(), "ultimate-ai-pack-test-"));
     try {
       const packOutput = execSync("npm pack --json --pack-destination " + JSON.stringify(tempDir), {
@@ -28,11 +28,11 @@ describe("npm packaging contract (spec §7.1a)", () => {
 
       const paths = files.map((f) => f.path);
       for (const expected of [
-        "dist/context/llms.txt",
-        "dist/context/llms-full.txt",
-        "dist/context/llms-ng.txt",
-        "dist/context/llms-react.txt",
-        "dist/context/llms-vue.txt",
+        "context/llms.txt",
+        "context/llms-full.txt",
+        "context/llms-ng.txt",
+        "context/llms-react.txt",
+        "context/llms-vue.txt",
       ]) {
         expect(paths).toContain(expected);
       }
@@ -66,7 +66,7 @@ describe("npm packaging contract (spec §7.1a)", () => {
   // package. The consumer directory has no `pnpm-workspace.yaml` of its
   // own and is not part of this repo's workspace — it is a genuinely
   // standalone install of three real packed tarballs.
-  it("installing the packed tarball into a scratch consumer resolves all 5 files at node_modules/@ultimate/ai/dist/context/", () => {
+  it("installing the packed tarball into a scratch consumer resolves all 5 files at node_modules/@ultimate/ai/context/", () => {
     const packDir = mkdtempSync(join(tmpdir(), "ultimate-ai-pack-"));
     const consumerDir = mkdtempSync(join(tmpdir(), "ultimate-ai-consumer-"));
     try {
@@ -108,7 +108,7 @@ describe("npm packaging contract (spec §7.1a)", () => {
 
       execSync("pnpm install --no-lockfile", { cwd: consumerDir, stdio: "ignore" });
 
-      const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "dist", "context");
+      const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "context");
       for (const filename of [
         "llms.txt",
         "llms-full.txt",

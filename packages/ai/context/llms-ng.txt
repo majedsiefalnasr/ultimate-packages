@@ -1,0 +1,110 @@
+## Button
+Category: Primitive
+A clickable button control with optional icon, loading state, and severity/size/style modifiers.
+### ng API
+- `label`: string | undefined
+- `icon`: string | undefined
+- `iconPos`: "left" | "right" | "top" | "bottom"
+- `loading`: boolean
+- `disabled`: boolean
+- `severity`: string | undefined
+- `raised`: boolean
+- `rounded`: boolean
+- `text`: boolean
+- `outlined`: boolean
+- `size`: "small" | "large" | undefined
+- `fluid`: boolean
+
+## Checkbox
+Category: Form
+A boolean input control rendered as a native checkbox, with an optional text label.
+### ng API
+- `binary`: boolean
+- `label`: string | undefined
+
+## Dialog
+Category: Overlay
+A modal (or non-modal) overlay window that renders projected content above the page, with focus trapping and Escape-key dismissal.
+### ng API
+- `visible`: boolean
+- `header`: string | undefined
+- `closable`: boolean
+- `closeOnEscape`: boolean
+- `modal`: boolean
+- event `visibleChange` (output)
+- event `onShow` (output)
+- event `onHide` (output)
+
+## Menu
+Category: Navigation
+A flat navigation/command list rendered as an ARIA menu, either inline or (React/Vue only) as a popup overlay, with roving-tabindex keyboard navigation.
+### ng API
+- `model`: UMenuItem[]
+- `popup`: boolean
+
+## Paginator
+Category: Data
+A page-navigation control (first/prev/next/last plus numbered page links) driven by first/rows/totalRecords, used standalone or composed inside Table/DataView for paging.
+### ng API
+- `first`: number
+- `rows`: number
+- `totalRecords`: number
+- `pageLinkSize`: number
+- event `onPageChange` (output)
+
+## Scroller
+Category: Data
+A virtual-scroll windowing primitive that renders only the items currently within (plus a tolerated buffer around) the visible viewport, used internally by Table and other large-list components rather than directly by end users.
+### ng API
+- `items`: unknown[]
+- `itemSize`: number
+- `numToleratedItems`: number | undefined
+- `loading`: boolean | undefined
+- `disabled`: boolean
+- `lazy`: boolean
+- event `onLazyLoad` (output)
+
+## Table
+Category: Data
+Table renders tabular data with sorting, filtering, selection, pagination, virtualization, and row/cell editing.
+### ng API
+- `value`: T[]
+- `dataKey`: string
+- `columns`: { field: string; header: string }[]
+- `sortMode`: SortMode
+- `sortField`: string | undefined
+- `sortOrder`: 1 | 0 | -1
+- `multiSortMeta`: SortMeta[]
+- `filters`: Record<string, FilterMetadata | FilterMetadata[]>
+- `selectionMode`: SelectionMode | undefined
+- `selection`: T | T[] | undefined
+- `compareSelectionBy`: "equals" | "deepEquals"
+- `paginator`: boolean
+- `first`: number
+- `rows`: number
+- `totalRecords`: number
+- `rowsPerPageOptions`: number[] | undefined
+- `virtualScroll`: boolean
+- `virtualScrollItemSize`: number
+- `lazy`: boolean
+- `lazyLoadOnInit`: boolean
+- `editMode`: "cell" | "row" | undefined
+- `editingRowKeys`: Record<string, boolean>
+- `rowGroupMode`: "subheader" | "rowspan" | undefined
+- `groupRowsBy`: string | undefined
+- event `sortFieldChange` (output)
+- event `selectionChange` (output)
+- event `firstChange` (output)
+### Accessibility
+Roles: table, rowgroup, row, columnheader
+Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the currently-rendered virtualized window, not the full logical dataset, when virtualScroll/virtualScrollerOptions is active — a row outside the window is not in the DOM to focus. This is a real, intentional, already-shipped limitation of Table's Scroller composition, documented inline at the row-keydown handler in all three frameworks' own source.
+### Related components
+Paginator, Scroller
+
+## Tooltip
+Category: Overlay
+Shows advisory content next to a host/target element on hover or focus. An attribute directive in Angular and Vue; a target-based component in React.
+### ng API
+- `uTooltip`: string | undefined
+- `uTooltipPosition`: "top" | "bottom" | "left" | "right"
+- `uTooltipDisabled`: boolean

@@ -1144,8 +1144,11 @@ git commit -m "feat(ng): add per-component ng-packagr secondary entry points and
 
 ## Task 5: WP3 — Commit generated `llms.txt`/Skill-context output under `packages/ai/context/`
 
+**AMENDMENT (implementation, 2026-09-13):** the original steps below (Steps 1-6) moved generated output out of `dist/` without updating `packages/ai/package.json`'s `"files"` array, which controls what a real `npm`/`pnpm install @ultimate/ai` actually ships. This would have silently broken an existing, pre-Blueprint-Completion test — `packages/ai/test/packaging.test.ts` ("npm packaging contract, spec §7.1a") — which asserts these 5 files are present in a real packed tarball and resolvable after a real install, previously at `dist/context/*.txt`. Per the approved design-spec amendment to WP3, the npm packaging guarantee is kept: `"files"` gains `"context"`, and the packaging test's expected paths move from `dist/context/*.txt` to `context/*.txt`. New Steps 5a and 5b below (after the original Step 5, before the original Step 6/commit) implement this.
+
 **Files:**
 - Modify: `packages/ai/package.json`
+- Modify: `packages/ai/test/packaging.test.ts`
 - Create: `packages/ai/context/llms.txt`
 - Create: `packages/ai/context/llms-full.txt`
 - Create: `packages/ai/context/llms-ng.txt`
@@ -1156,7 +1159,7 @@ git commit -m "feat(ng): add per-component ng-packagr secondary entry points and
 - Consumes: `packages/ai/src/bin-generate.ts`'s existing `main()` (reads `process.argv[2]` for the skills directory, `process.argv[3]` for the context output directory — both already fully parameterizable, no source change needed) and `packages/ai/src/bin-validate.ts`'s existing `main()` (same argument shape).
 - Produces: five new committed text files under `packages/ai/context/`. No new exported function or type.
 
-**Context:** `packages/ai/package.json`'s `build` script currently invokes `node dist/bin-generate.mjs ../../skills dist/context` — writing generated output under `dist/`, which `.gitignore`'s bare `dist/` pattern excludes at any depth. This task changes only the invocation's output-directory argument (from `dist/context` to `context`), runs the build once, and commits the real output. No CI wiring is added (per the approved spec's explicit Non-goals).
+**Context:** `packages/ai/package.json`'s `build` script currently invokes `node dist/bin-generate.mjs ../../skills dist/context` — writing generated output under `dist/`, which `.gitignore`'s bare `dist/` pattern excludes at any depth. This task changes only the invocation's output-directory argument (from `dist/context` to `context`), runs the build once, and commits the real output. No CI wiring is added (per the approved spec's explicit Non-goals). The `"files"` array and packaging test are updated (amendment above) so the npm-install-time guarantee these files ship is preserved from the new location.
 
 - [ ] **Step 1: Update the `build` and `validate` scripts' output directory argument**
 
@@ -1205,16 +1208,82 @@ Expected: console output shows `OK` for all 5 context-file checks (`llms.txt`, `
 - [ ] **Step 5: Run the package's own test suite to confirm no regression**
 
 Run: `pnpm --filter @ultimate/ai test`
-Expected: all tests PASS (none of this package's existing tests read `package.json`'s script strings directly — they call the exported functions with explicit paths, per `packages/ai/src/bin-generate.ts`'s own signature — so this change is not expected to affect any existing test, but this step verifies that assumption holds).
+Expected: two tests FAIL — `packages/ai/test/packaging.test.ts`'s "a real `npm pack` tarball includes all 5 dist/context/*.txt files" and "installing the packed tarball into a scratch consumer resolves all 5 files at node_modules/@ultimate/ai/dist/context/" — because they still assert the pre-amendment `dist/context/` path. This is expected per this task's amendment note; Steps 5a-5b fix it. All other tests PASS.
+
+- [ ] **Step 5a: Add `context` to `package.json`'s `files` array so a real install still ships these files**
+
+Open `packages/ai/package.json`. Find:
+
+```json
+  "files": [
+    "dist",
+    "README.md"
+  ],
+```
+
+Replace with:
+
+```json
+  "files": [
+    "dist",
+    "context",
+    "README.md"
+  ],
+```
+
+- [ ] **Step 5b: Update `packaging.test.ts`'s expected paths from `dist/context/` to `context/`**
+
+Open `packages/ai/test/packaging.test.ts`. Find the first test's expected-paths array:
+
+```typescript
+      for (const expected of [
+        "dist/context/llms.txt",
+        "dist/context/llms-full.txt",
+        "dist/context/llms-ng.txt",
+        "dist/context/llms-react.txt",
+        "dist/context/llms-vue.txt",
+      ]) {
+```
+
+Replace with:
+
+```typescript
+      for (const expected of [
+        "context/llms.txt",
+        "context/llms-full.txt",
+        "context/llms-ng.txt",
+        "context/llms-react.txt",
+        "context/llms-vue.txt",
+      ]) {
+```
+
+Also update this test's own name from `"a real \`npm pack\` tarball includes all 5 dist/context/*.txt files"` to `"a real \`npm pack\` tarball includes all 5 context/*.txt files"`.
+
+Find the second test's `contextDir` line:
+
+```typescript
+      const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "dist", "context");
+```
+
+Replace with:
+
+```typescript
+      const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "context");
+```
+
+Also update this test's own name from `"installing the packed tarball into a scratch consumer resolves all 5 files at node_modules/@ultimate/ai/dist/context/"` to `"installing the packed tarball into a scratch consumer resolves all 5 files at node_modules/@ultimate/ai/context/"`.
+
+Re-run: `pnpm --filter @ultimate/ai test`
+Expected: all tests PASS, including both updated packaging tests (these run a real `npm pack`/`pnpm pack` and scratch install, so allow the full ~90s timeout already set on the second test).
 
 - [ ] **Step 6: Stage and commit, including the generated files despite the repository's default `dist/`-focused `.gitignore` mindset**
 
 ```bash
-git add packages/ai/package.json packages/ai/context/llms.txt packages/ai/context/llms-full.txt packages/ai/context/llms-ng.txt packages/ai/context/llms-react.txt packages/ai/context/llms-vue.txt
+git add packages/ai/package.json packages/ai/test/packaging.test.ts packages/ai/context/llms.txt packages/ai/context/llms-full.txt packages/ai/context/llms-ng.txt packages/ai/context/llms-react.txt packages/ai/context/llms-vue.txt
 git status
 ```
 
-Verify the `git status` output shows all 6 files staged (1 modified, 5 new) before committing — if any `context/*.txt` file is missing from the staged list, re-run `git add` for that specific path; do not use `git add -A`.
+Verify the `git status` output shows all 7 files staged (2 modified, 5 new) before committing — if any `context/*.txt` file is missing from the staged list, re-run `git add` for that specific path; do not use `git add -A`.
 
 ```bash
 git commit -m "feat(ai): generate and commit llms.txt/llms-full.txt context output (GAP-036)"
