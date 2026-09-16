@@ -1,10 +1,10 @@
 # AI/Tooling Architecture Constraints
 
-Restated from Blueprint §14/§2.6/§2.7/§6. Phase 0 preserves these constraints architecturally without implementing them.
+Restated from Blueprint §14/§2.6/§2.7/§6. These constraints are enforced architecturally across all phases, including Phases 7–9 where `cli`/`mcp`/`ai` were implemented as real, shipped packages.
 
 ## Constraints
 
-- `packages/cli`, `packages/mcp`, `packages/ai` are reserved as directory scaffolding only in Phase 0 — no implementation.
+- `packages/cli`, `packages/mcp`, `packages/ai` are real, shipped packages (Phases 7, 8, 9 respectively per `ROADMAP.md`).
 - These packages must never become a runtime dependency of `packages/{uix,ng,react,vue}*` — enforced by CI package-boundary check.
 - Component metadata (Phase 6+) is expected to live in `packages/component-schema` and `packages/component-metadata`, consumed by `cli`/`mcp`/`ai`/`skills`.
 
