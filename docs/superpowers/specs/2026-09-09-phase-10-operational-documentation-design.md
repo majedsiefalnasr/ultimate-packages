@@ -192,6 +192,8 @@ Per the task brief's explicit requirement to distinguish "which state updates ar
 
 **Decision:** Confirmed by direct inspection (§3) that this repository's specs (Phase 6 through Phase 10 Track B, five files checked) uniformly retain `**Status:** Draft for review` in their header even once approved and fully implemented — Track B's own spec header still reads exactly that, verified on `main` post-merge. This is the established convention, not an oversight this Specification should correct. Track D's own spec header (this document) follows the same convention: it will say `Draft for review` now, and per the established pattern, is expected to continue saying `Draft for review` even after approval and implementation — status tracking lives in the SDD progress ledger and commit history, not in a document-header edit. This Specification does not propose changing that convention, and Track D's Implementation Plan must not "fix" other tracks' spec headers under this rationale.
 
+> **Amendment note (Phase B Knowledge Reconciliation, 2026-09-16):** by human decision during Phase B Knowledge Reconciliation, D6's convention was narrowed in effect to the 5 Phase-10-track specs specifically, which were reverted to preserve `Draft for review` per this decision. The Phase 0/1/6/7/9 and component-family specs outside that track-spec set now carry implemented-status headers as part of that same reconciliation effort. D6's own text above is unchanged and continues to describe the convention as originally confirmed for the Phase-10-track specs; this note records the later, deliberate narrowing of its scope rather than an oversight.
+
 ---
 
 ## 10. Acceptance Criteria
