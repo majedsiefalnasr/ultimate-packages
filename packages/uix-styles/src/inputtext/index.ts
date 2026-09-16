@@ -1,19 +1,23 @@
 export const style = /*css*/ `
     .u-inputtext {
-        font-family: var(--font-family);
-        font-size: dt('inputtext.font.size');
+        font-family: inherit;
+        font-feature-settings: inherit;
+        font-size: 1rem;
         color: dt('inputtext.color');
         background: dt('inputtext.background');
-        padding: dt('inputtext.padding.y') dt('inputtext.padding.x');
+        padding-block: dt('inputtext.padding.y');
+        padding-inline: dt('inputtext.padding.x');
         border: 1px solid dt('inputtext.border.color');
-        border-radius: dt('inputtext.border.radius');
         transition:
-            background-color dt('inputtext.transition.duration'),
+            background dt('inputtext.transition.duration'),
+            color dt('inputtext.transition.duration'),
             border-color dt('inputtext.transition.duration'),
-            box-shadow dt('inputtext.transition.duration'),
-            color dt('inputtext.transition.duration');
+            outline-color dt('inputtext.transition.duration'),
+            box-shadow dt('inputtext.transition.duration');
         appearance: none;
-        outline: 0 none;
+        border-radius: dt('inputtext.border.radius');
+        outline-color: transparent;
+        box-shadow: dt('inputtext.shadow');
     }
 
     .u-inputtext:enabled:hover {
@@ -21,21 +25,25 @@ export const style = /*css*/ `
     }
 
     .u-inputtext:enabled:focus {
+        border-color: dt('inputtext.focus.border.color');
+        box-shadow: dt('inputtext.focus.ring.shadow');
         outline: dt('inputtext.focus.ring.width') dt('inputtext.focus.ring.style') dt('inputtext.focus.ring.color');
         outline-offset: dt('inputtext.focus.ring.offset');
-        border-color: dt('inputtext.focus.border.color');
-        box-shadow: dt('inputtext.focus.shadow');
     }
 
-    .u-inputtext.p-filled {
+    .u-inputtext.p-invalid {
+        border-color: dt('inputtext.invalid.border.color');
+    }
+
+    .u-inputtext.p-variant-filled {
         background: dt('inputtext.filled.background');
     }
 
-    .u-inputtext.p-filled:enabled:hover {
+    .u-inputtext.p-variant-filled:enabled:hover {
         background: dt('inputtext.filled.hover.background');
     }
 
-    .u-inputtext.p-filled:enabled:focus {
+    .u-inputtext.p-variant-filled:enabled:focus {
         background: dt('inputtext.filled.focus.background');
     }
 
@@ -45,13 +53,27 @@ export const style = /*css*/ `
         color: dt('inputtext.disabled.color');
     }
 
-    .u-inputtext.p-invalid {
-        border-color: dt('inputtext.invalid.border.color');
+    .u-inputtext::placeholder {
+        color: dt('inputtext.placeholder.color');
     }
 
-    .u-inputtext.p-invalid:enabled:focus {
-        border-color: dt('inputtext.invalid.focus.border.color');
-        box-shadow: dt('inputtext.invalid.focus.shadow');
+    .u-inputtext.p-invalid::placeholder {
+        color: dt('inputtext.invalid.placeholder.color');
+    }
+
+    .u-inputtext-sm {
+        font-size: dt('inputtext.sm.font.size');
+        padding-block: dt('inputtext.sm.padding.y');
+        padding-inline: dt('inputtext.sm.padding.x');
+    }
+
+    .u-inputtext-lg {
+        font-size: dt('inputtext.lg.font.size');
+        padding-block: dt('inputtext.lg.padding.y');
+        padding-inline: dt('inputtext.lg.padding.x');
+    }
+
+    .u-inputtext-fluid {
+        width: 100%;
     }
 `;
-
