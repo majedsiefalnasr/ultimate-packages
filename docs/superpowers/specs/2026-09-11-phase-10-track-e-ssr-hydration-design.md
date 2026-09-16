@@ -1,6 +1,6 @@
 # Phase 10 Track E — SSR/Hydration: Specification
 
-**Status:** Draft for review
+**Status:** Approved — implemented as Phase 10 Track E; `docs/architecture/ROADMAP.md` marks Phase 10 (Production Hardening) Complete (see its footnote 6, Track E).
 **Date:** 2026-09-11
 **Scope:** Specification only. No implementation plan, no source/CI/package/workflow changes, no commit.
 **Baseline:** `main` at `57772ff`. Architecture Gate approved (`docs/architecture/research/2026-09-11-phase-10-track-e-ssr-hydration-research.md`). Tracks A, B, C, D complete and merged.

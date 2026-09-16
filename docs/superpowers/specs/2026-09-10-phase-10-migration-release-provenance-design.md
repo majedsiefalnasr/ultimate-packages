@@ -1,7 +1,7 @@
 # Specification: Phase 10 Track C — Migration / Release / Provenance
 
 **Document:** `docs/superpowers/specs/2026-09-10-phase-10-migration-release-provenance-design.md`
-**Status:** Draft for review
+**Status:** Approved — implemented as Phase 10 Track C; `docs/architecture/ROADMAP.md` marks Phase 10 (Production Hardening) Complete (see its footnote 6, Track C).
 **Companion research:** `docs/architecture/research/2026-09-08-phase-10-production-hardening.md`
 **Companion architecture discussion:** `docs/architecture/research/2026-09-08-phase-10-architecture-discussion.md` (§4, §7, §10, §11, §12)
 **Related, already-implemented:** `docs/superpowers/specs/2026-09-08-phase-10-ci-security-quality-gates-design.md` (Track B — the CI/security precedent this document follows), `docs/superpowers/specs/2026-09-09-phase-10-operational-documentation-design.md` (Track D — CHANGELOG.md/SECURITY.md, which this document does not duplicate), `docs/superpowers/specs/2026-09-10-phase-10-browser-visual-accessibility-design.md` (Track A — completed, unrelated scope)

@@ -1,6 +1,6 @@
 # uix-data — Narrow Shared Data Foundation
 
-**Status:** Draft for review
+**Status:** Approved — implemented as `packages/uix-data` (extends Phase 1's `uix-*` package family); `docs/architecture/ROADMAP.md` marks Phase 1 (UltimateUIX Foundation) Complete.
 **References:** `ULTIMATE_PLATFORM_BLUEPRINT.md` (v0.1, §2.4 framework-native implementations, §6 dependency direction), `docs/architecture/{PROVENANCE,DEPENDENCIES,PACKAGE_ARCHITECTURE,DECISIONS}.md`, six prior architectural research passes (Discovery Audit; Data Architecture Research Report; Narrow Shared Data Foundation — Boundary Research; uix-data Public API Boundary Research; uix-data Ownership & Semantics Boundary Research; uix-data Consumption-Readiness Research)
 
 **This is a specification, not an implementation plan.** No code, package.json files, or source extraction happens as a result of this document.

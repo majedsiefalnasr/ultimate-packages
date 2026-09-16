@@ -1,6 +1,6 @@
 # Phase 7 — CLI Specification
 
-**Status:** Draft for review
+**Status:** Approved — implemented; `docs/architecture/ROADMAP.md` marks Phase 7 (CLI) Complete (see its footnote 3).
 **References:** `docs/architecture/BLUEPRINT.md` §6/§19/§20/§34/§40, `docs/architecture/ROADMAP.md`, `docs/architecture/BLUEPRINT_GAPS.md` GAP-028, `docs/architecture/DECISIONS.md` ADR-008, `docs/architecture/COMPATIBILITY.md`, `docs/architecture/research/2026-09-07-phase-7-cli-architecture.md`, `packages/component-schema`, `packages/component-metadata`
 
 **This is a specification, not an implementation plan.** No code, package.json files, or CLI behavior is created as a result of this document.

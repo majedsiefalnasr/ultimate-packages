@@ -1,7 +1,7 @@
 # Specification: Phase 10 Track D — Operational Documentation
 
 **Document:** `docs/superpowers/specs/2026-09-09-phase-10-operational-documentation-design.md`
-**Status:** Draft for review
+**Status:** Approved — implemented as Phase 10 Track D; `docs/architecture/ROADMAP.md` marks Phase 10 (Production Hardening) Complete (see its footnote 6, Track D).
 **Companion research:** `docs/architecture/research/2026-09-08-phase-10-production-hardening.md`
 **Companion architecture discussion:** `docs/architecture/research/2026-09-08-phase-10-architecture-discussion.md` (§8, §10, §11, §12)
 **Related, already-implemented:** `docs/superpowers/specs/2026-09-08-phase-10-ci-security-quality-gates-design.md` (Track B — the security/quality process this document describes)
