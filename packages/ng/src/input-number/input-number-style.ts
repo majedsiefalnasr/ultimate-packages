@@ -23,37 +23,39 @@ import { style as inputNumberStyle } from "@ultimate/uix-styles/inputnumber";
  * scope here per this task's Non-Goals (no configurable spinner button
  * layouts).
  *
- * `invalid`/`fluid` are reflected on `pcInputText` (the inner native
- * `<input>`), NOT `root` — matching real source's own template, where
- * `invalid`/`fluid` are passed down as `[invalid]`/`[fluid]` inputs to the
- * nested `pInputText` directive, which puts those classes on the `<input>`
- * element itself rather than on `InputNumber`'s own host. `UInputNumber`
- * doesn't compose a nested `UInputText` directive, so `pcInputText` derives
- * those two classes directly here instead, matching the same visible
- * result.
+ * `invalid`/`fluid` are reflected on `root` (the host element), NOT
+ * `pcInputText` — matching real source's own `classes.root` resolver
+ * (`inputnumberstyle.ts`), which puts both `p-inputnumber-fluid` and
+ * `p-invalid` on the host, while `pcInputText` gets only the bare
+ * `'p-inputnumber-input'` string with no modifiers. `u-inputnumber-fluid`
+ * MUST be on root: `@ultimate/uix-styles/inputnumber`'s CSS defines
+ * `.u-inputnumber-fluid { width: 100% }` (the wrapper rule) and
+ * `.u-inputnumber-fluid .u-inputnumber-input { width: 1% }` (a *descendant*
+ * selector) — both classes landing on the same (inner input) element would
+ * make the descendant selector unmatchable and the fluid layout inert.
  */
 const css = /*css*/ `
     ${inputNumberStyle}
 `;
 
-/** Params `UInputNumber` passes into `cx('pcInputText', params)`. */
+/** Params `UInputNumber` passes into `cx('root', params)`. */
 export interface InputNumberClassesParams {
   invalid?: boolean;
   fluid?: boolean;
 }
 
 const classes = {
-  root: "u-inputnumber u-component",
-  pcInputText: (params: InputNumberClassesParams = {}) => {
+  root: (params: InputNumberClassesParams = {}) => {
     const { invalid, fluid } = params;
     return [
-      "u-inputnumber-input",
+      "u-inputnumber u-component",
       {
         "p-invalid": invalid,
         "u-inputnumber-fluid": fluid,
       },
     ];
   },
+  pcInputText: "u-inputnumber-input",
 };
 
 /** `UBaseComponent`-shaped style module for `UInputNumber`. */

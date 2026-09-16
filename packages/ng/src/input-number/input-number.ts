@@ -4,6 +4,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   input,
+  signal,
 } from "@angular/core";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { UBaseInput } from "@ultimate/ng-core";
@@ -25,24 +26,32 @@ import { inputNumberStyleModule } from "./input-number-style";
  * architectural difference between the two real components, not an
  * inconsistency introduced here.
  *
- * `value: number | null` is this component's own local, template-bound
- * state — matching real `InputNumber`'s own `value: Nullable<number>` field
- * and `UCheckbox`'s established own-local-state-plus-bridge pattern (Task
- * 2): `writeControlValue` populates BOTH `value` (real state) AND
- * `modelValue`/`$filled` (via `setModelValue`) from the same CVA write.
+ * `value = signal<number | null>(null)` is this component's own local,
+ * template-bound state — matching real `InputNumber`'s own `value:
+ * Nullable<number>` field (a signal here, rather than a plain field, so
+ * `OnPush` re-renders on `.set()` without a manual `markForCheck()` call —
+ * see the field's own doc comment) and `UCheckbox`'s established
+ * own-local-state-plus-bridge pattern (Task 2): `writeControlValue`
+ * populates BOTH `value` (real state) AND `modelValue`/`$filled` (via
+ * `setModelValue`) from the same CVA write.
  *
- * `writeControlValue` matches real source's exact coercion pattern
+ * `writeControlValue` matches real source's coercion pattern
  * (`inputnumber.ts` line ~1464): `this.value = value ? Number(value) :
- * value; setModelValue(value);` — a plain `Number()` parse, no
- * locale/currency formatting (out of scope per this spec's Non-Goals).
+ * value;` — a plain `Number()` parse, no locale/currency formatting (out of
+ * scope per this spec's Non-Goals). Diverges from real source on what gets
+ * passed to `setModelValue`/`onModelChange` after clamping — see
+ * `writeControlValue`'s own doc comment.
  *
  * `clampToRange` is a deliberately scoped-down port of real source's own
  * `validateValue` (`inputnumber.ts` line ~1294): only the `min`/`max`
  * branches are ported (real `validateValue` also handles the `'-'` sentinel
  * and currency/percent-mode digit-group parsing, both irrelevant here since
  * this component never formats/parses grouped strings). Applied whenever
- * `value` changes — both from CVA writes and from `min`/`max` themselves
- * changing while a value is already set.
+ * `value` changes from a CVA write (`writeControlValue`) or a user-driven
+ * edit (`onInput`) — NOT re-applied merely because `min`/`max` themselves
+ * change while a value is already set (no `effect`/`ngOnChanges` watches
+ * them; matches real source, which also only calls `validateValue` from
+ * those same two call sites).
  *
  * Deliberately excludes real source's much larger surface: locale-aware
  * `Intl.NumberFormat` formatting (`formatValue`/`parseValue`), clipboard
@@ -55,12 +64,12 @@ import { inputNumberStyleModule } from "./input-number-style";
  * component follows: passthrough (`pt`), `NgModule`, `pSize`,
  * `PARENT_INSTANCE`/`INPUTNUMBER_INSTANCE` parent-lookup tokens.
  *
- * `classesParams()`/`cx()` mirrors `UInputText`'s own pattern, scoped to
- * `invalid`/`fluid` only, applied to `pcInputText` (the inner native
- * `<input>`) rather than `root` — matching real source's own template shape
- * where these two classes land on the nested `pInputText`-directive element,
- * not `InputNumber`'s own host (see `input-number-style.ts`'s own doc
- * comment for the full reasoning).
+ * `classesParams()`/`cx()` mirrors `UCheckbox`'s own root-level pattern
+ * (`cx('root', classesParams())` on the host), scoped to `invalid`/`fluid`
+ * — matching real source's own `classes.root` resolver, which puts both
+ * `p-inputnumber-fluid` and `p-invalid` on `InputNumber`'s own host, not the
+ * nested `pInputText`-directive element (see `input-number-style.ts`'s own
+ * doc comment for the full reasoning).
  */
 @Component({
   standalone: true,
@@ -71,11 +80,11 @@ import { inputNumberStyleModule } from "./input-number-style";
       type="text"
       inputmode="decimal"
       role="spinbutton"
-      [class]="cx('pcInputText', classesParams())"
-      [value]="value ?? ''"
+      [class]="cx('pcInputText')"
+      [value]="value() ?? ''"
       [attr.aria-valuemin]="min()"
       [attr.aria-valuemax]="max()"
-      [attr.aria-valuenow]="value"
+      [attr.aria-valuenow]="value()"
       [attr.min]="min()"
       [attr.max]="max()"
       [attr.step]="step() ?? 1"
@@ -88,7 +97,7 @@ import { inputNumberStyleModule } from "./input-number-style";
     />
   `,
   host: {
-    "[class]": "cx('root')",
+    "[class]": "cx('root', classesParams())",
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -97,8 +106,16 @@ export class UInputNumber extends UBaseInput {
   protected override readonly componentName = "input-number";
   protected override readonly styleModule = inputNumberStyleModule;
 
-  /** Current numeric value, reflected by the native input and CVA. Own local state, matching real `InputNumber`'s own `value` field. */
-  value: number | null = null;
+  /**
+   * Current numeric value, reflected by the native input and CVA. Own local
+   * state, matching real `InputNumber`'s own `value` field — a signal
+   * (rather than a plain field) so writes trigger change detection under
+   * `OnPush` on their own, matching `UCheckbox`'s own `readonly checked =
+   * signal(false)` precedent. Real source instead calls `this.cd
+   * .markForCheck()` explicitly at the end of `writeControlValue`; the
+   * signal achieves the same effect without a manual `markForCheck()` call.
+   */
+  readonly value = signal<number | null>(null);
 
   /**
    * When present, specifies the component should have invalid state style.
@@ -119,20 +136,30 @@ export class UInputNumber extends UBaseInput {
    * Writes a CVA-driven value into `value` and, via `setModelValue`, into
    * `modelValue` — matching real source's exact `Number()`-coercion
    * pattern. Clamped to `min`/`max` afterward, same as a user-driven change.
+   *
+   * Unlike real source (which passes the raw, unclamped `value` parameter
+   * straight into `setModelValue`), `modelValue` and the `FormControl`
+   * itself are both corrected to the CLAMPED result here: passing the raw
+   * value into `setModelValue`/`onModelChange` would leave `value` (clamped)
+   * and `modelValue`/the `FormControl` (unclamped) permanently disagreeing,
+   * since this CVA write path never otherwise calls `onModelChange` to
+   * correct the control. `onInput` doesn't need the same explicit
+   * `onModelChange` call — it already calls it itself after clamping.
    */
   override writeControlValue(value: unknown, setModelValue: (value: unknown) => void): void {
-    this.value = value ? Number(value) : (value as number | null);
+    this.value.set(value ? Number(value) : (value as number | null));
     this.clampToRange();
-    setModelValue(value);
+    setModelValue(this.value());
+    this.onModelChange(this.value());
   }
 
   protected onInput(event: Event): void {
     const raw = (event.target as HTMLInputElement).value;
     const next = raw === "" ? null : Number(raw);
-    this.value = next;
+    this.value.set(next);
     this.clampToRange();
-    this.writeModelValue(this.value);
-    this.onModelChange(this.value);
+    this.writeModelValue(this.value());
+    this.onModelChange(this.value());
     this.onModelTouched();
   }
 
@@ -141,15 +168,16 @@ export class UInputNumber extends UBaseInput {
    * branches only (see class doc comment) — clamps `value` in place.
    */
   private clampToRange(): void {
-    if (this.value == null) {
+    const current = this.value();
+    if (current == null) {
       return;
     }
     const min = this.min();
     const max = this.max();
-    if (min != null && this.value < min) {
-      this.value = min;
-    } else if (max != null && this.value > max) {
-      this.value = max;
+    if (min != null && current < min) {
+      this.value.set(min);
+    } else if (max != null && current > max) {
+      this.value.set(max);
     }
   }
 }

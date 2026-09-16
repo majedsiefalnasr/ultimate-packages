@@ -43,7 +43,26 @@ describe("UInputNumber", () => {
     expect(inputNumber.modelValue()).toBe(10);
   });
 
-  it("clamps to min when a written value is below it", () => {
+  it("re-renders the DOM input when a value is written through Angular Forms", () => {
+    @Component({
+      standalone: true,
+      imports: [UInputNumber, ReactiveFormsModule],
+      template: `<u-input-number [formControl]="control" />`,
+    })
+    class HostComponent {
+      control = new FormControl<number | null>(5);
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const input: HTMLInputElement = fixture.nativeElement.querySelector("input");
+    expect(input.value).toBe("5");
+
+    fixture.componentInstance.control.setValue(42);
+    fixture.detectChanges();
+    expect(input.value).toBe("42");
+  });
+
+  it("clamps to min when a written value is below it, correcting value, modelValue, and the FormControl", () => {
     @Component({
       standalone: true,
       imports: [UInputNumber, ReactiveFormsModule],
@@ -58,10 +77,12 @@ describe("UInputNumber", () => {
     fixture.detectChanges();
     const inputNumber = fixture.debugElement.query((de) => de.name === "u-input-number")
       .componentInstance as UInputNumber;
-    expect(inputNumber.value).toBe(0);
+    expect(inputNumber.value()).toBe(0);
+    expect(inputNumber.modelValue()).toBe(0);
+    expect(fixture.componentInstance.control.value).toBe(0);
   });
 
-  it("clamps to max when a written value is above it", () => {
+  it("clamps to max when a written value is above it, correcting value, modelValue, and the FormControl", () => {
     @Component({
       standalone: true,
       imports: [UInputNumber, ReactiveFormsModule],
@@ -76,15 +97,16 @@ describe("UInputNumber", () => {
     fixture.detectChanges();
     const inputNumber = fixture.debugElement.query((de) => de.name === "u-input-number")
       .componentInstance as UInputNumber;
-    expect(inputNumber.value).toBe(100);
+    expect(inputNumber.value()).toBe(100);
+    expect(inputNumber.modelValue()).toBe(100);
+    expect(fixture.componentInstance.control.value).toBe(100);
   });
 
-  it("reflects the invalid input via the invalid class", () => {
+  it("reflects the invalid input via the invalid class on the host", () => {
     const fixture = TestBed.createComponent(UInputNumber);
     fixture.componentRef.setInput("invalid", true);
     fixture.detectChanges();
-    const input = fixture.nativeElement.querySelector("input");
-    expect(input.classList.contains("p-invalid")).toBe(true);
+    expect(fixture.nativeElement.classList.contains("p-invalid")).toBe(true);
   });
 
   it("hasFluid is true when an ancestor UFluid is present", () => {
@@ -102,8 +124,9 @@ describe("UInputNumber", () => {
     const inputNumber = fixture.debugElement.query((de) => de.name === "u-input-number")
       .componentInstance as UInputNumber;
     expect(inputNumber.hasFluid).toBe(true);
-    const input = fixture.nativeElement.querySelector("input");
-    expect(input.classList.contains("u-inputnumber-fluid")).toBe(true);
+    const hostElement = fixture.debugElement.query((de) => de.name === "u-input-number")
+      .nativeElement as HTMLElement;
+    expect(hostElement.classList.contains("u-inputnumber-fluid")).toBe(true);
   });
 
   it("without an ancestor u-fluid wrapper and no fluid input, hasFluid is false", () => {
