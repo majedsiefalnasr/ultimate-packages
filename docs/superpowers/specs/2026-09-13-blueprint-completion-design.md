@@ -1,7 +1,7 @@
 # Blueprint Completion — Design Specification
 
 **Document:** `docs/superpowers/specs/2026-09-13-blueprint-completion-design.md`
-**Status:** Proposed. Awaiting spec review/approval before an implementation plan is written.
+**Status:** Approved — implemented; `docs/architecture/ROADMAP.md` footnote 5 confirms GAP-036 "resolved by the Blueprint Completion workstream, 2026-09-13."
 **Purpose:** Close the remaining confirmed, non-architectural gaps standing between the current repository state and a clean Blueprint Freeze, per the conclusions of `docs/architecture/research/2026-09-13-blueprint-closure-current-state-reconciliation.md` and the `2026-09-13-blueprint-completion` brainstorming session that followed it.
 **Explicitly not in scope:** Any change to `docs/architecture/BLUEPRINT.md`. Any resolution of DECISION-B (external dependency policy), DECISION-C's narrowed remainder (Table/Data fuller filter vocabulary and the 4 unbuilt Data-family rows), or DECISION-E (package naming). Any reopening of DECISION-D (Tree-family, protected). Any work on GAP-017 (remaining ~90-component catalog) or GAP-008's fuller scope (real consumer app, tree-shaking re-measurement via a real build). The act of declaring the Blueprint frozen itself — that remains a separate, later, human-authorized step this workstream does not perform.
 

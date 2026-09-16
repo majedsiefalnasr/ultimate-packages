@@ -5,6 +5,8 @@
 **Audited HEAD:** `d391acf` (`main`) — the Documentation Reconciliation commit. Unchanged by this audit.
 **Method:** Direct repository inspection — full read of `docs/architecture/BLUEPRINT.md` (all 45 sections), all 45 ADR titles in `DECISIONS.md` (several read in full), the reconciled `ROADMAP.md`/`BLUEPRINT_GAPS.md`/`COMPONENT_INVENTORY.md`/`PERFORMANCE.md`/`MIGRATION.md`, both prior committed research artifacts in full (`2026-09-12-post-phase-10-blueprint-reconciliation-audit.md`, `2026-09-12-ai-knowledge-architecture-assessment.md`), the Phase 0 specification's original findings, root `README.md`, and direct source verification (`packages/*/src/`, `scripts/provenance/workspace-graph.mjs`, `packages/component-metadata/src/records/*`, `packages/mcp/src/`, `packages/ai/src/`).
 
+> **Historical/superseded-for-conclusions (2026-09-16):** this document is the third in a 6-document 2026-09-12/13 reconciliation-audit chain. Its §3 ("Is the Blueprint still the correct strategy") finding is explicitly re-confirmed, not re-derived, by `docs/architecture/research/2026-09-13-blueprint-closure-current-state-reconciliation.md` §3.1 ("the prior finding stands, unchallenged by anything new") — that document is the chain's current synthesis. This document is also the direct evidentiary basis for `docs/architecture/research/2026-09-12-ai-orientation-design.md` (cited throughout as `[Audit §N]`), whose own recommendations were subsequently implemented as `AGENTS.md`. Its §6 AI-failure-mode case studies and §8-§11 orientation-gap analysis retain unique evidentiary detail not restated elsewhere.
+
 ---
 
 ## 1. Reconstruct the actual project goal

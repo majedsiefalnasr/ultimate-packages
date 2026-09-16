@@ -1,7 +1,7 @@
 # Specification: Phase 9 — AI Skills and LLM Context
 
 **Document:** `docs/superpowers/specs/2026-09-07-phase-9-ai-skills-llm-context-design.md`
-**Status:** Draft for review
+**Status:** Approved — implemented; `docs/architecture/ROADMAP.md` marks Phase 9 (AI Skills and LLM Context) Complete (see its footnote 5).
 **Companion research:** `docs/architecture/research/2026-09-07-phase-9-ai-skills-llm-context.md`
 **Baseline:** `main` at `033f147` (Phase 8 — MCP, closed)
 

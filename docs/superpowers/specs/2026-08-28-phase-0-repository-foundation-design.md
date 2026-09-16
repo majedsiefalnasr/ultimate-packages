@@ -1,6 +1,6 @@
 # Phase 0 — Repository Foundation, Provenance & Baseline Verification
 
-**Status:** Draft for review
+**Status:** Approved — implemented; `docs/architecture/ROADMAP.md` marks Phase 0 (Repository Foundation, Provenance & Baseline Verification) Complete.
 **References:** `ULTIMATE_PLATFORM_BLUEPRINT.md` (architecture baseline, v0.1)
 
 ---

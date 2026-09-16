@@ -1,6 +1,6 @@
 # @ultimate/ng
 
-Ultimate Platform Angular components: Button, Checkbox, Dialog, Menu, Tooltip.
+Ultimate Platform Angular components. See `docs/architecture/COMPONENT_INVENTORY.md` for the current component inventory.
 
 **Status:** unstable (pre-1.0). No semver guarantee yet.
 
@@ -167,4 +167,4 @@ Depends on `@ultimate/ng-core`, `@ultimate/uix-utils`, `@ultimate/uix-styled`, `
 
 ## Provenance
 
-See `docs/architecture/PROVENANCE.md` (PrimeNG entry) and `docs/architecture/provenance/ng.json` for the full file-level incorporation record, and `docs/architecture/COMPONENT_INVENTORY.md` for how this 5-component proof set fits into PrimeNG's full ~117-area source tree.
+See `docs/architecture/PROVENANCE.md` (PrimeNG entry) and `docs/architecture/provenance/ng.json` for the full file-level incorporation record, and `docs/architecture/COMPONENT_INVENTORY.md` for how this component set fits into PrimeNG's full ~117-area source tree.

@@ -1,6 +1,6 @@
 # Phase 6 — Component Metadata Specification
 
-**Status:** Draft for review
+**Status:** Approved — implemented; `docs/architecture/ROADMAP.md` marks Phase 6 (Component Metadata) Complete (see its footnote 2).
 **References:** `docs/architecture/BLUEPRINT.md` §17/§18/§34/§259, `docs/architecture/ROADMAP.md`, `docs/architecture/BLUEPRINT_GAPS.md` GAP-027, `docs/architecture/COMPONENT_INVENTORY.md`, `docs/architecture/provenance/{ng,react,vue,uix-styles}.json`
 
 **This is a specification, not an implementation plan.** No code, package.json files, or source extraction happens as a result of this document.

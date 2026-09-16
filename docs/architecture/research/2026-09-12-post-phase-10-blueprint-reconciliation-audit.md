@@ -6,6 +6,8 @@
 **Audited HEAD:** `9ec7883` (`main`) — the merge commit for Phase 10 Track E (SSR/Hydration), which itself contains all of Tracks A–E.
 **Method:** Direct repository inspection (file reads, `grep`/`find`, `git log`) cross-referenced against `docs/architecture/BLUEPRINT.md`, `ROADMAP.md`, `BLUEPRINT_GAPS.md`, `DECISIONS.md`, `MIGRATION.md`, `PERFORMANCE.md`, `COMPONENT_INVENTORY.md`, `PROVENANCE.md`, approved specs/plans under `docs/superpowers/`, actual package manifests, `.github/workflows/*.yml`, and real source files. Two focused sub-investigations were dispatched to verify Track A/B/C completion depth and component-coverage/documentation-drift claims independently; their findings are folded in below with attribution.
 
+> **Historical/superseded-for-conclusions (2026-09-16):** this document is the first in a 6-document 2026-09-12/13 reconciliation-audit chain. Its findings were carried into `BLUEPRINT_GAPS.md`'s own reconciliation and re-verified, not re-derived, by every later document in the chain. For the current point-in-time synthesis of the conclusions this document covers, see `docs/architecture/research/2026-09-13-blueprint-closure-current-state-reconciliation.md`. This document remains the original evidence trail (commit SHAs, file:line citations) for those conclusions and retains that value; it is not the current word on gap/decision status.
+
 ---
 
 ## 1. Phase status reconciliation

@@ -11,6 +11,8 @@
 
 `packages/vue/src/dialog/Dialog.vue:84,124` contains the identical module-scope-counter pattern already fixed in five other locations:
 
+**Update (post-decision cross-reference):** This sixth instance was approved for remediation via scope amendment per Option A (§9). See `docs/superpowers/specs/2026-09-12-vue-dialog-id-scope-amendment.md` and its companion implementation plan `docs/superpowers/plans/2026-09-12-vue-dialog-id-scope-amendment-implementation.md` for the approved specification and implementation approach.
+
 - **Counter declaration** (`Dialog.vue:84`): `let dialogIdCounter = 0;` — module scope, persists for the lifetime of the Node process, not reset per SSR request.
 - **ID generation** (`Dialog.vue:124`, inside `data()`): `dialogId: \`u-dialog-${++dialogIdCounter}\`,` — increments the module-scope counter once per component instance construction.
 - **Complete ID → ARIA relationship chain** (verified by direct source read of the full file):

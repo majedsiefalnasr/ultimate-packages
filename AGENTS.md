@@ -17,11 +17,11 @@ When two sources disagree, resolve toward the higher-authority tier as the actua
 1. **Real repository evidence** — actual source code, actual test results, actual CI output, actual git history. Wins every disagreement, always.
 2. **`docs/architecture/BLUEPRINT.md`** — architectural intent and governance.
 3. **`docs/architecture/DECISIONS.md`** (ADRs) — binding architectural decisions within the Blueprint's scope.
-4. **Approved specifications and implementation plans** (`docs/superpowers/specs/`, `docs/superpowers/plans/`) — binding for their own scope.
+4. **Approved specifications and implementation plans** (`docs/superpowers/specs/`, `docs/superpowers/plans/`) — binding for their own scope. A spec/plan's own `Status:` field records that document's lifecycle state at last edit, never current repository state; consult tier 1 or tier 5 to verify whether described work has shipped.
 5. **Current-state tracking documents** (`docs/architecture/BLUEPRINT_GAPS.md`, `ROADMAP.md`, `COMPONENT_INVENTORY.md`, `PERFORMANCE.md`, `MIGRATION.md`) — the layer most likely to be stale relative to reality. Re-verify against real evidence before relying on one for a consequential decision.
 6. **`docs/architecture/research/*.md`** — dated, point-in-time evidence snapshots. Authoritative for what was true when written, not for current truth without re-confirmation.
 7. **`README.md`** and other general/onboarding documentation — descriptive, not authoritative for current project state.
-8. **AI context files / Skills / `llms.txt` / MCP tool responses** — one-directional consumers of tiers 2-5. Never authoritative for anything upstream of themselves.
+8. **AI context files / Skills / `llms.txt` / MCP tool responses** — one-directional consumers of tiers 2-5. Never authoritative for anything upstream of themselves. Within this tier, freshness guarantees differ: MCP tool responses read `@ultimate/component-metadata` live at request time; `llms.txt`/`llms-full.txt`/generated Skill sections are static committed snapshots, no fresher than their last commit date.
 
 ---
 

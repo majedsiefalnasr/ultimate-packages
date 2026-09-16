@@ -1,6 +1,6 @@
 # Paginator — Cross-Framework Component Implementation Specification
 
-**Status:** Draft for review
+**Status:** Approved — implemented; `docs/architecture/ROADMAP.md` marks Phase 6 (Component Metadata) Complete, with its footnote 2 naming Paginator in the shipped 8-component proof set.
 **References:** `docs/architecture/BLUEPRINT.md`, `docs/architecture/research/2026-09-02-table-data-component-architecture.md`, `docs/architecture/research/2026-09-02-table-editing-grouping-dragdrop-architecture.md`, ADR-043 (`docs/architecture/DECISIONS.md`), `docs/superpowers/specs/2026-09-01-uix-data-foundation-design.md`, `docs/superpowers/specs/2026-09-02-table-component-design.md`, `docs/architecture/checksums.json`
 
 **This is a specification, not an implementation plan.** No code, package.json files, or source extraction happens as a result of this document.

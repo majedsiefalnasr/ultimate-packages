@@ -1,6 +1,6 @@
 # @ultimate/vue
 
-Ultimate Platform Vue components: Button, Checkbox, Dialog, Menu, Tooltip.
+Ultimate Platform Vue components. See `docs/architecture/research/2026-09-16-phase-a-prime-migration-inventory.md` for the current component inventory.
 
 **Status:** unstable (pre-1.0). No semver guarantee yet.
 

@@ -164,6 +164,22 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Source/evidence:** `packages/ng/src/dialog/dialog.ts`; `packages/ng/src/dialog/dialog.spec.ts`; `packages/ng-core/src/overlay/overlay.spec.ts`; commit `cfdd4cb`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 3.
 - **Architectural decision required:** No.
 
+#### GAP-039 (new, added during Documentation Reconciliation) — Vue `v-tooltip`'s panel is created with the correct role/text/position but is never actually visible in a real browser
+
+- **Status:** MISSING
+- **Type:** Component, Framework (Vue), Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** `packages/vue/src/tooltip/tooltip.ts`'s `showTooltip()` (lines 52-91) builds the floating panel's class list as `["u-tooltip", binding.class]` (line 75) and never applies a `u-tooltip-{position}` modifier class anywhere in the function — despite `packages/vue/src/tooltip/tooltip-style.ts` defining exactly such a resolver (`classes.root`, which would emit `u-tooltip-${params.position ?? "right"}`) that `showTooltip()` never calls. `packages/uix-styles/src/tooltip/index.ts`'s base `.u-tooltip` rule (line 4) sets `display: none` with no companion rule in that file, in `tooltip-style.ts`, or in `tooltip.ts` itself ever toggling a modifier class or inline style back to visible. A real-browser Playwright spec (`packages/vue/e2e/tooltip.spec.ts` lines 16-38, 78-84) already documents and asserts this exact finding: the tooltip node is created with the correct `role="tooltip"`, text, `aria-describedby` wiring, and a correctly-computed on-screen position, but `getComputedStyle(tooltip).display` is confirmed `"none"` on real hover — the panel never actually renders visibly.
+- **Expected state:** `showTooltip()` applies the position-derived `u-tooltip-{position}` modifier class (or an equivalent visibility toggle) to the panel so the existing `classes.root` resolver in `tooltip-style.ts` has an effect, and the tooltip becomes visible on real hover — matching Angular's `UTooltip` (`packages/ng/src/tooltip/tooltip.ts` line 140, `renderer.addClass(container, \`u-tooltip-${this.uTooltipPosition()}\`)`), which does apply this modifier correctly.
+- **Why it matters:** Vue's Tooltip directive is otherwise fully correct (content, ARIA wiring, real position computation) but is completely non-functional from an end-user's perspective — nothing is ever visible — which jsdom-based unit tests cannot detect since jsdom never computes real `display`/layout, so this defect was invisible until real-browser (Playwright) coverage existed.
+- **What it blocks:** Vue Tooltip's own visibility/usability only — not any other component or workstream.
+- **Dependencies:** None.
+- **Framework scope:** Vue only. Not reproduced in Angular (`packages/ng/src/tooltip/tooltip.ts` correctly applies the position modifier) or React (out of scope for this entry's citation).
+- **Existing reusable infrastructure:** `packages/vue/src/tooltip/tooltip-style.ts`'s `classes.root` resolver already computes the correct `u-tooltip-{position}` class string — `showTooltip()` simply never calls it.
+- **Recommended resolution direction:** Wire `showTooltip()` to consult `tooltipStyleModule.classes.root({ position })` (or otherwise apply the resulting class) when constructing the panel's class list, mirroring Angular's `renderer.addClass` call.
+- **Source/evidence:** `packages/vue/src/tooltip/tooltip.ts` (`showTooltip()`, lines 52-91); `packages/vue/src/tooltip/tooltip-style.ts` (`classes.root`); `packages/uix-styles/src/tooltip/index.ts` (line 4, `.u-tooltip { display: none }`); `packages/vue/e2e/tooltip.spec.ts` (lines 16-38, 78-84); `packages/ng/src/tooltip/tooltip.ts` (line 140, contrasting correct Angular behavior).
+- **Architectural decision required:** No — this is a behavioral bug, not a fork.
+
 #### GAP-008 — No real consumer application anywhere in the monorepo (`apps/*` are all empty scaffolding)
 - **Status:** MISSING
 - **Type:** Testing, Packaging, Production
@@ -637,6 +653,22 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Recommended resolution direction:** N/A — resolved. A future workstream migrating `Password`/`InputMask`/`AutoComplete`/`DatePicker`/`Select` extends `UBaseInput` directly, following `UInputNumber`'s proven template.
 - **Source/evidence:** `packages/ng-core/src/base-input/base-input.ts`; `packages/ng-core/src/base-input/fluid-ancestor.token.ts`; `packages/ng-core/src/base-editable-holder/base-editable-holder.ts`; `packages/ng/src/input-number/input-number.ts`; `packages/ng/src/fluid/fluid.ts`; `packages/ng/src/checkbox/checkbox.ts`; `docs/superpowers/specs/2026-09-16-angular-form-foundation-design.md`; `docs/superpowers/plans/2026-09-16-angular-form-foundation.md`; ADR-047.
 - **Architectural decision required:** No — pattern already established by `UModelHolder`/`UInputText`, extended here.
+
+#### GAP-040 (new, added during Documentation Reconciliation) — Paginator's rows-per-page/jump-to-page dropdown controls (Task 15) remain blocked on an Ultimate Select-equivalent component that does not yet exist in any framework
+
+- **Status:** DEFERRED
+- **Type:** Component, Framework, Architecture
+- **Blocking level:** MEDIUM
+- **Current evidence:** `docs/superpowers/plans/2026-09-02-paginator-component-implementation.md` Task 15 (line 1577 onward) reads: *"Status: BLOCKED pending an Ultimate Select-equivalent component."* Its Step 0 gate instructs re-running `find packages/ng/src packages/react/src packages/vue/src -maxdepth 1 -type d` before ever starting the task. Re-running that exact command confirms no `select`/`dropdown`-named (or otherwise equivalent) component directory exists at one directory depth under any of the three frameworks' `src/` trees — the only top-level component directories present are `tooltip`, `checkbox`, `ripple`, `dialog`, `button`, `table`, `menu`, `scroller`, `paginator` (Vue/React), plus `input-text`, `autofocus`, `input-number`, `fluid`, `badge` (Angular). This is independently consistent with `docs/architecture/research/2026-09-16-phase-a-prime-migration-inventory.md` §3/§4's confirmation that no Select component exists in any of the three frameworks.
+- **Expected state:** Once a real Ultimate Select/Dropdown-equivalent component ships in all three frameworks, Task 15 can be planned concretely (a follow-up plan section wiring the rows-per-page dropdown to `rowsPerPageOptions` per spec §10) and implemented. Until then, no action is expected — this is a deliberately gated, not invented, deferral.
+- **Why it matters:** Paginator's rows-per-page and jump-to-page controls are the one piece of the component's public API surface (spec §10/§21 criterion 6) that cannot be built without a dependency that doesn't exist yet; recording it here prevents a future agent from treating the gap as an oversight rather than an explicit, evidence-based gate.
+- **What it blocks:** Paginator's rows-per-page/jump-to-page dropdown UI specifically — **not** Paginator's already-shipped core functionality. First/prev/next/last navigation, page-links, and the current-page report (Tasks 1-14 of the same plan) are already complete, tested, and usable as a full paging control without rows-per-page/jump-to-page; this gate does not block shipping the rest of Paginator or starting other components' own plans.
+- **Dependencies:** A real Ultimate Select/Dropdown-equivalent component, in all three frameworks (not yet scheduled as its own workstream).
+- **Framework scope:** Cross-framework — Angular, React, and Vue all lack the prerequisite equally.
+- **Existing reusable infrastructure:** None yet — this is the first case requiring a Select-equivalent component; Paginator's Tasks 1-14 (navigation, page-links, current-page report) are unaffected and already reusable as-is.
+- **Recommended resolution direction:** Build a Select-equivalent component first (in whichever framework or cross-framework order is separately prioritized), then write a follow-up Task 15 plan section mirroring the existing plan's Tasks 2-12 structure, per the plan's own Step 0 instructions.
+- **Source/evidence:** `docs/superpowers/plans/2026-09-02-paginator-component-implementation.md` Task 15 (line 1577 onward); `docs/architecture/research/2026-09-16-phase-a-prime-migration-inventory.md` §3/§4; `find packages/ng/src packages/react/src packages/vue/src -maxdepth 1 -type d` (re-run, one directory depth, no Select/Dropdown-equivalent directory found).
+- **Architectural decision required:** No — the blocker's resolution path (build Select first) is already named, not an open fork.
 
 ---
 
