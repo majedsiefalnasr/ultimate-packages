@@ -162,6 +162,30 @@
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   },
   {
+    "originalPath": "packages/primeng/src/inputtext/inputtext.ts",
+    "ultimateDestination": "packages/ng/src/input-text/input-text.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. InputText->UInputText, selector [pInputText]->[uInputText], extends UModelHolder directly (matching real InputText extends BaseModelHolder exactly -- InputText does not use BaseEditableHolder or BaseInput). Reads NgControl (optional, self) read-only to sync modelValue/$filled for p-filled styling -- does NOT implement ControlValueAccessor, provides no NG_VALUE_ACCESSOR; Angular's native DefaultValueAccessor remains the sole accessor. hasFluid DI-injects an ancestor UFluid (optional, host, skipSelf) -- the first Ultimate component to implement this ancestor-lookup mechanism (UButton deliberately excludes it, see UButton's own doc comment). Deliberately excludes upstream's pt/ptInputText/pInputTextPT/pInputTextUnstyled passthrough system and Bind host-directive wiring, hostName/$pcInputText sibling-instance lookup, PARENT_INSTANCE DI-token lookup (all excluded platform-wide per ADR-018's Option B), and pSize/inputSize/the NgModule re-export wrapper (ADR-019 forbids new NgModule authorship)."
+  },
+  {
+    "originalPath": "packages/primeng/src/inputtext/style/inputtextstyle.ts",
+    "ultimateDestination": "packages/ng/src/input-text/input-text-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. InputTextStyle's classes.root resolver ported, .p-inputtext* renamed to .u-inputtext*; p-filled/p-invalid/p-inputtext-fluid/p-variant-filled kept unrenamed to match @ultimate/uix-styles/inputtext's own literal CSS selectors (same precedent as checkbox-style.ts's p-highlight/p-disabled). Reshaped to UBaseComponent's cx(key, params) plain-object contract rather than upstream's ({instance}) => ... resolver shape."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/input-text/input-text.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream's inputtext.spec.ts's non-PassThrough blocks. Verifies native-input rendering, modelValue/$filled sync on input events, reactive-forms FormControl integration, invalid/fluid/variant class reflection, ancestor-UFluid detection, and explicit non-implementation of ControlValueAccessor."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/input-text/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
     "originalPath": "packages/primeng/src/dialog/dialog.ts",
     "ultimateDestination": "packages/ng/src/dialog/dialog.ts",
     "modificationStatus": "adapted",
