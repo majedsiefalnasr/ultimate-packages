@@ -24,10 +24,28 @@
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   },
   {
+    "originalPath": "packages/primeng/src/basemodelholder/basemodelholder.ts",
+    "ultimateDestination": "packages/ng-core/src/model-holder/model-holder.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate-owned reimplementation of PrimeNG's BaseModelHolder, inserted between UBaseComponent and UBaseEditableHolder to match real PrimeNG's BaseComponent -> BaseModelHolder -> BaseEditableHolder ordering exactly. Owns model-value state only (modelValue signal, $filled computed via @ultimate/uix-utils's isNotEmpty, writeModelValue) -- no ControlValueAccessor methods, matching real BaseModelHolder's own scope exactly (BaseEditableHolder, one tier up, owns CVA, not BaseModelHolder)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/model-holder/model-holder.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies modelValue/writeModelValue and the $filled computed's isNotEmpty-derived truthiness across undefined/empty-string/empty-array/non-empty-string/zero."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/model-holder/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
     "originalPath": "packages/primeng/src/baseeditableholder/baseeditableholder.ts",
     "ultimateDestination": "packages/ng-core/src/base-editable-holder/base-editable-holder.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Ultimate-owned reimplementation of PrimeNG's BaseEditableHolder, extending UBaseComponent. Preserves the confirmed split-signal pattern for disabled state (disabled is a read-only input(), setDisabledState writes to a separate writable _disabled signal, $disabled computed combines both) since Angular's input() has no .set(). Does not provide NG_VALUE_ACCESSOR on the base class — confirmed against real PrimeNG source that every leaf component (e.g. Checkbox) redeclares its own provider rather than inheriting one."
+    "modificationDescription": "Ultimate-owned reimplementation of PrimeNG's BaseEditableHolder, extending UModelHolder (was UBaseComponent directly prior to this workstream -- GAP-018's BaseModelHolder-equivalent tier). Preserves the confirmed split-signal pattern for disabled state (disabled is a read-only input(), setDisabledState writes to a separate writable _disabled signal, $disabled computed combines both) since Angular's input() has no .set(). Does not provide NG_VALUE_ACCESSOR on the base class -- confirmed against real PrimeNG source that every leaf component (e.g. Checkbox) redeclares its own provider rather than inheriting one."
   },
   {
     "originalPath": "n/a",
