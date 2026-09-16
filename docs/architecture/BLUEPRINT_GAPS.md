@@ -320,13 +320,13 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No for most families; yes for Data components (GAP-013/GAP-014) and Chart/Visualization (GAP-019).
 
 #### GAP-018 — `BaseModelHolder`/`BaseInput` foundation tier not yet built for Angular; blocks ~20 native-input form components
-- **Status:** RESOLVED (for the `BaseModelHolder`-equivalent slice specifically; see GAP-038 for the narrower, still-open `BaseInput`-equivalent remainder)
+- **Status:** RESOLVED (for the `BaseModelHolder`-equivalent slice specifically; the `BaseInput`-equivalent remainder tracked separately as GAP-038 is now also RESOLVED — see that entry)
 - **Type:** Foundation, Component, Framework (Angular)
 - **Blocking level:** N/A (resolved for its most valuable slice)
 - **Current evidence:** Direct extraction of real pinned PrimeNG 21.1.9 source during this workstream's spec found this entry's own original framing blurred two distinct tiers together: `BaseModelHolder` (minimal — `modelValue`/`$filled`/`writeModelValue`) and `BaseInput` (richer — `fluid`/`variant`/`size`/`pattern`/etc.), with `InputText`/`Textarea` extending `BaseModelHolder` directly, never `BaseInput`. `packages/ng-core/src/model-holder/model-holder.ts`'s `UModelHolder` now implements the `BaseModelHolder`-equivalent tier, inserted between `UBaseComponent` and `UBaseEditableHolder`. `packages/ng/src/input-text/input-text.ts`'s `UInputText` is the first real consumer, proving the tier end-to-end the same way `UCheckbox` proved `UBaseEditableHolder` in Phase 2.
 - **Expected state:** A `modelValue`/`$filled` tier exists and has a real, tested consumer. **Met**, for this narrower, correctly-scoped slice.
 - **Why it matters:** Unblocks any future Angular Form component that only needs `BaseModelHolder`-level capability (e.g. `Textarea`) without requiring the richer `BaseInput` tier.
-- **What it blocks:** Nothing — resolved for its own slice. See GAP-038 for what remains.
+- **What it blocks:** Nothing — resolved for its own slice. GAP-038 (the `BaseInput`-equivalent remainder) is also now resolved; see that entry.
 - **Dependencies:** None.
 - **Framework scope:** Angular only.
 - **Existing reusable infrastructure:** N/A — resolved.
