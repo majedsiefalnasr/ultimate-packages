@@ -59,6 +59,7 @@ export abstract class UBaseEditableHolder extends UModelHolder implements Contro
    * any local state from a CVA write. Default is a NOOP, matching real
    * PrimeNG's own `BaseEditableHolder.writeControlValue`.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- params exist to document the override contract; NOOP by design.
   writeControlValue(value: unknown, setModelValue: (value: unknown) => void): void {
     // NOOP — override in derived classes.
   }
