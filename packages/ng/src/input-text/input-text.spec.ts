@@ -63,6 +63,27 @@ describe("UInputText", () => {
     ).toBeUndefined();
   });
 
+  it("data-p is a distinct token string, not a duplicate of the class attribute", () => {
+    @Component({
+      standalone: true,
+      imports: [UInputText],
+      template: `<input uInputText [invalid]="true" [fluid]="true" variant="filled" #ref="uInputText" />`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const input: HTMLInputElement = fixture.nativeElement.querySelector("input");
+    const dataP = input.getAttribute("data-p");
+    expect(dataP).not.toBeNull();
+    const tokens = (dataP ?? "").split(" ");
+    expect(tokens).toContain("invalid");
+    expect(tokens).toContain("fluid");
+    expect(tokens).toContain("filled");
+    expect(dataP).not.toContain("u-inputtext");
+    expect(dataP).not.toContain("u-component");
+    expect(dataP).not.toEqual(input.getAttribute("class"));
+  });
+
   it("reflects the invalid input as a p-invalid class", () => {
     @Component({
       standalone: true,

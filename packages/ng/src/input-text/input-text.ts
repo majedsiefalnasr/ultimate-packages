@@ -10,6 +10,7 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NgControl } from "@angular/forms";
 import { UModelHolder } from "@ultimate/ng-core";
+import { cn } from "@ultimate/uix-utils/classnames";
 import { UFluid } from "../fluid/fluid";
 import { inputTextStyleModule } from "./input-text-style";
 
@@ -64,6 +65,13 @@ import { inputTextStyleModule } from "./input-text-style";
  * `hostName`/parent-instance DI-token lookup, `pSize`/`inputSize`, and the
  * `NgModule` re-export wrapper — none of these appear in this task's
  * Interfaces section, and new `NgModule` authorship is forbidden platform-wide.
+ *
+ * `$variant`'s upstream `config.inputStyle()`/`config.inputVariant()`
+ * fallback is omitted: `UltimateConfig`'s current Option-B surface has
+ * neither field, and expanding it is gated on config's own still-open
+ * architecture decision (see `COMPONENT_INVENTORY.md`'s cross-cutting
+ * table). `$variant` is retained as the forward-compatible seam for that
+ * fallback once config's surface grows.
  */
 @Directive({
   standalone: true,
@@ -109,8 +117,19 @@ export class UInputText extends UModelHolder {
     };
   }
 
+  /**
+   * A separate, smaller token string than `[class]` — matching real
+   * PrimeNG's `InputText.dataP` getter (`this.cn({ invalid, fluid,
+   * filled: $variant()==='filled' })`), not the `cx('root', ...)` root
+   * class name. `UInputText` has no `pSize`-equivalent, so unlike upstream
+   * there is no size token to include here.
+   */
   protected get dataP(): string | undefined {
-    return this.cx("root", this.classesParams());
+    return cn({
+      invalid: this.invalid(),
+      fluid: this.hasFluid,
+      filled: this.$variant() === "filled",
+    });
   }
 
   ngAfterViewInit(): void {

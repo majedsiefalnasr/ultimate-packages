@@ -27,6 +27,18 @@ import { UModelHolder } from "../model-holder/model-holder";
  * derived `@Component`, so every leaf component (e.g. `UCheckbox`) must
  * declare its own `NG_VALUE_ACCESSOR` provider with `useExisting` pointing
  * at the concrete leaf class.
+ *
+ * Omits real PrimeNG's `writeControlValue(value, setModelValue)` bridge —
+ * real `BaseEditableHolder.writeValue` calls
+ * `this.writeControlValue(value, this.writeModelValue.bind(this))`, letting
+ * subclasses populate `modelValue` by implementing `writeControlValue`.
+ * Here, `writeValue` stays a bare `abstract` method with no such bridge, so
+ * `modelValue`/`$filled` are inherited-but-unpopulated on
+ * `UBaseEditableHolder` subclasses (e.g. `UCheckbox`, which writes only to
+ * its own `checked` signal) until each subclass opts in by calling
+ * `writeModelValue` from its own `writeValue` implementation. This is a
+ * real, known gap — not an oversight silently worked around — see
+ * `docs/architecture/DECISIONS.md`'s ADR-046.
  */
 @Directive({ standalone: true })
 export abstract class UBaseEditableHolder extends UModelHolder implements ControlValueAccessor {
