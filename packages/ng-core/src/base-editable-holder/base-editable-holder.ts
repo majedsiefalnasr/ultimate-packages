@@ -9,9 +9,8 @@ import { UModelHolder } from "../model-holder/model-holder";
  * `writeModelValue`, matching real PrimeNG's `BaseComponent →
  * BaseModelHolder → BaseEditableHolder` ordering exactly) with the
  * `ControlValueAccessor` contract shared by every editable/form-bindable
- * component (e.g. `UCheckbox`): a `disabled` signal `input()`, `writeValue()`
- * left abstract for subclasses to implement, and the
- * `onModelChange`/`onModelTouched` no-op fields that
+ * component: a `disabled` signal `input()`, the `writeControlValue` bridge
+ * (below), and the `onModelChange`/`onModelTouched` no-op fields that
  * `registerOnChange`/`registerOnTouched` replace per the Angular Forms API
  * contract.
  *
@@ -28,17 +27,18 @@ import { UModelHolder } from "../model-holder/model-holder";
  * declare its own `NG_VALUE_ACCESSOR` provider with `useExisting` pointing
  * at the concrete leaf class.
  *
- * Omits real PrimeNG's `writeControlValue(value, setModelValue)` bridge —
- * real `BaseEditableHolder.writeValue` calls
- * `this.writeControlValue(value, this.writeModelValue.bind(this))`, letting
- * subclasses populate `modelValue` by implementing `writeControlValue`.
- * Here, `writeValue` stays a bare `abstract` method with no such bridge, so
- * `modelValue`/`$filled` are inherited-but-unpopulated on
- * `UBaseEditableHolder` subclasses (e.g. `UCheckbox`, which writes only to
- * its own `checked` signal) until each subclass opts in by calling
- * `writeModelValue` from its own `writeValue` implementation. This is a
- * real, known gap — not an oversight silently worked around — see
- * `docs/architecture/DECISIONS.md`'s ADR-046.
+ * `writeControlValue(value, setModelValue)` is the `writeControlValue`
+ * bridge real PrimeNG's `BaseEditableHolder.writeValue` uses
+ * (`this.writeControlValue(value, this.writeModelValue.bind(this))`),
+ * matching real source exactly (GAP-038). `writeValue` is now fixed — no
+ * longer `abstract` — and always constructs and passes
+ * `this.writeModelValue.bind(this)` as `setModelValue`. Subclasses override
+ * `writeControlValue`, never `writeValue`, to populate `modelValue`/
+ * `$filled` and any local state (e.g. `UCheckbox`'s own `checked` signal)
+ * from the same CVA write. The default `writeControlValue` here is a NOOP
+ * (matching real PrimeNG's own documented "should be overridden in derived
+ * classes") — a subclass that never overrides it inherits a working CVA
+ * contract with `modelValue` simply staying unpopulated, not a broken one.
  */
 @Directive({ standalone: true })
 export abstract class UBaseEditableHolder extends UModelHolder implements ControlValueAccessor {
@@ -54,7 +54,19 @@ export abstract class UBaseEditableHolder extends UModelHolder implements Contro
   protected onModelChange: (value: unknown) => void = () => {};
   protected onModelTouched: () => void = () => {};
 
-  abstract writeValue(value: unknown): void;
+  /**
+   * Override to populate `modelValue` (via the `setModelValue` callback) and
+   * any local state from a CVA write. Default is a NOOP, matching real
+   * PrimeNG's own `BaseEditableHolder.writeControlValue`.
+   */
+  writeControlValue(value: unknown, setModelValue: (value: unknown) => void): void {
+    // NOOP — override in derived classes.
+  }
+
+  /** Fixed CVA entry point — always bridges into `writeControlValue`. Do not override. */
+  writeValue(value: unknown): void {
+    this.writeControlValue(value, this.writeModelValue.bind(this));
+  }
 
   registerOnChange(fn: (value: unknown) => void): void {
     this.onModelChange = fn;
