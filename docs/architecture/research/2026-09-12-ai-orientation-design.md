@@ -5,6 +5,8 @@
 **Audited HEAD:** `d391acf` (`main`). Unchanged by this task.
 **Inputs:** `docs/architecture/research/2026-09-12-project-reality-and-ai-operating-model-audit.md` (the direct evidentiary basis for this design — every finding cited below traces to that document's own sections, referenced as `[Audit §N]`), `docs/architecture/research/2026-09-12-ai-knowledge-architecture-assessment.md` (the earlier, narrower assessment this design is consistent with), `docs/architecture/BLUEPRINT.md` §26 ("AI Context Layers").
 
+> **Historical/superseded-for-conclusions (2026-09-16):** this document is the fourth in a 6-document 2026-09-12/13 reconciliation-audit chain, and the one whose recommendations were most directly acted on: its §8 minimal architecture recommendation was implemented as the repository's actual `AGENTS.md` (confirmed by `docs/architecture/research/2026-09-13-blueprint-closure-current-state-reconciliation.md` §3.4, which quotes `AGENTS.md` §2 as the shipped form of this design's §3 hierarchy almost verbatim). For the current, live version of the content this document designed, read `AGENTS.md` directly, not this document. This document retains unique value as the design rationale and rejected-alternatives record (§7 candidate-mechanisms table, §11 explicit non-goals) behind `AGENTS.md`'s shape — that reasoning is not restated in `AGENTS.md` itself.
+
 ---
 
 ## 1. Executive conclusion

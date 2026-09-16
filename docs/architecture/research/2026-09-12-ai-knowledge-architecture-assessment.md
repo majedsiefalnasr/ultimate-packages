@@ -6,6 +6,8 @@
 **Audited HEAD:** `8ea96fa` (`main`) — one commit after the Post-Phase-10 Blueprint Reconciliation Audit.
 **Scope boundary:** Kept separate from Documentation Reconciliation. Does not touch `ROADMAP.md`, `BLUEPRINT_GAPS.md`, `COMPONENT_INVENTORY.md`, or `DECISIONS.md`.
 
+> **Historical/superseded-for-conclusions (2026-09-16):** this document is the second in a 6-document 2026-09-12/13 reconciliation-audit chain. Its central conclusion (no knowledge-graph subsystem justified; borrow selected SocratiCode/Graphify patterns only) is independently re-validated, not merely repeated, by `docs/architecture/research/2026-09-12-project-reality-and-ai-operating-model-audit.md` §5/§12/§13.F, which is itself superseded-for-conclusions by `docs/architecture/research/2026-09-13-blueprint-closure-current-state-reconciliation.md`, the chain's current synthesis. This document's own comparison tables (§5-§6) and candidate-decision framing (§11) retain unique evidentiary detail not fully restated elsewhere.
+
 ---
 
 ## 1. Executive summary
