@@ -1,5 +1,6 @@
 export * from "./basecomponent";
 export * from "./base-editable-holder";
+export * from "./base-input";
 export * from "./overlay";
 export * from "./focus-trap";
 export * from "./config";
