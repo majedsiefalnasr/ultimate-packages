@@ -39,6 +39,11 @@
       "import": "./dist/dialog/index.mjs",
       "default": "./dist/dialog/index.mjs"
     },
+    "./inputnumber": {
+      "types": "./dist/inputnumber/index.d.mts",
+      "import": "./dist/inputnumber/index.mjs",
+      "default": "./dist/inputnumber/index.mjs"
+    },
     "./inputtext": {
       "types": "./dist/inputtext/index.d.mts",
       "import": "./dist/inputtext/index.mjs",

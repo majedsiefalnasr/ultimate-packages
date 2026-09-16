@@ -6,6 +6,7 @@ import { style as badgeStyle } from "../src/badge";
 import { style as buttonStyle } from "../src/button";
 import { style as checkboxStyle } from "../src/checkbox";
 import { style as dialogStyle } from "../src/dialog";
+import { style as inputnumberStyle } from "../src/inputnumber";
 import { style as inputtextStyle } from "../src/inputtext";
 import { style as menuStyle } from "../src/menu";
 import { style as paginatorStyle } from "../src/paginator";
@@ -42,14 +43,14 @@ describe("base module scope guard", () => {
   });
 });
 
-describe("component style modules — exactly 11 exist alongside base", () => {
-  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller + table + inputtext", () => {
+describe("component style modules — exactly 12 exist alongside base", () => {
+  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller + table + inputtext + inputnumber", () => {
     const actualModules = readdirSync(join(__dirname, "..", "src"), { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
       .sort();
     expect(actualModules).toEqual(
-      ["base", "badge", "button", "checkbox", "dialog", "inputtext", "menu", "paginator", "table", "tooltip", "virtualscroller"].sort()
+      ["base", "badge", "button", "checkbox", "dialog", "inputnumber", "inputtext", "menu", "paginator", "table", "tooltip", "virtualscroller"].sort()
     );
   });
 
@@ -65,6 +66,9 @@ describe("component style modules — exactly 11 exist alongside base", () => {
   });
   it("dialog style uses only .u-dialog* selectors", () => {
     expect(dialogStyle).not.toMatch(/\.p-dialog/);
+  });
+  it("inputnumber style uses only .u-inputnumber* selectors", () => {
+    expect(inputnumberStyle).not.toMatch(/\.p-inputnumber/);
   });
   it("inputtext style uses only .u-inputtext* selectors", () => {
     expect(inputtextStyle).not.toMatch(/\.p-inputtext/);
