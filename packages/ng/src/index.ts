@@ -4,6 +4,7 @@ export * from "./fluid";
 export * from "./badge";
 export * from "./button";
 export * from "./checkbox";
+export * from "./input-text";
 export * from "./tooltip";
 export * from "./dialog";
 export * from "./menu";
