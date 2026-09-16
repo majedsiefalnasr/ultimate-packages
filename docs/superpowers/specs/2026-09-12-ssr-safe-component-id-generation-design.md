@@ -24,6 +24,8 @@ Five component-ID usages across three framework packages use a module-scope, pro
 
 No sixth instance exists. Confirmed by a targeted grep for the `let.*Counter\s*=\s*0` / `IdCounter` idiom across all five `*-core`/framework `src` trees during the escalation; not re-run here since the origin document already establishes this as exhaustive at commit `dfc5e97`.
 
+**Update (post-implementation cross-reference):** A sixth instance was later discovered in `packages/vue/src/dialog/Dialog.vue` (lines 84, 124) during Task 4 verification of this specification's implementation. The defect and its remediation were addressed via a separate scope amendment: see `docs/superpowers/specs/2026-09-12-vue-dialog-id-scope-amendment.md` and its companion implementation plan `docs/superpowers/plans/2026-09-12-vue-dialog-id-scope-amendment-implementation.md`. The evidence and rationale for this sixth instance are fully documented in `docs/architecture/research/2026-09-12-vue-dialog-id-counter-sixth-instance-finding.md`.
+
 **Explicitly not in scope:** Vue's Tooltip CSS visibility gap (`packages/vue/src/tooltip/tooltip.ts`'s `showTooltip()` never applying a position-modifier class). That defect does not touch ID generation, was not found to be structurally coupled to it (the tooltip's `id` generation and its class-list construction are independent statements in the same function, sharing no variable or control flow), and is explicitly excluded per this work item's own scope boundary. It remains its own, separately tracked production defect.
 
 ## 3. Design goal
