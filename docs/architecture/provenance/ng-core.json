@@ -45,7 +45,7 @@
     "originalPath": "packages/primeng/src/baseeditableholder/baseeditableholder.ts",
     "ultimateDestination": "packages/ng-core/src/base-editable-holder/base-editable-holder.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Ultimate-owned reimplementation of PrimeNG's BaseEditableHolder, extending UModelHolder (was UBaseComponent directly prior to this workstream -- GAP-018's BaseModelHolder-equivalent tier). Preserves the confirmed split-signal pattern for disabled state (disabled is a read-only input(), setDisabledState writes to a separate writable _disabled signal, $disabled computed combines both) since Angular's input() has no .set(). Does not provide NG_VALUE_ACCESSOR on the base class -- confirmed against real PrimeNG source that every leaf component (e.g. Checkbox) redeclares its own provider rather than inheriting one."
+    "modificationDescription": "Ultimate-owned reimplementation of PrimeNG's BaseEditableHolder, extending UModelHolder (was UBaseComponent directly prior to this workstream -- GAP-018's BaseModelHolder-equivalent tier). Preserves the confirmed split-signal pattern for disabled state (disabled is a read-only input(), setDisabledState writes to a separate writable _disabled signal, $disabled computed combines both) since Angular's input() has no .set(). Does not provide NG_VALUE_ACCESSOR on the base class -- confirmed against real PrimeNG source that every leaf component (e.g. Checkbox) redeclares its own provider rather than inheriting one. Implements the writeControlValue bridge (GAP-038): writeValue() is now fixed (no longer abstract) and always bridges to writeControlValue(value, this.writeModelValue.bind(this)), matching real PrimeNG exactly; subclasses override writeControlValue to populate modelValue/local state from the same CVA write, with a NOOP default (no longer broken)."
   },
   {
     "originalPath": "n/a",
@@ -196,5 +196,29 @@
     "ultimateDestination": "packages/ng-core/src/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored root barrel re-exporting all ng-core submodules, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/baseinput/baseinput.ts",
+    "ultimateDestination": "packages/ng-core/src/base-input/base-input.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate-owned reimplementation of PrimeNG's BaseInput, extending UBaseEditableHolder. Adds fluid/variant/size/inputSize/pattern/min/max/step/minlength/maxlength inputs and hasFluid ancestor-UFluid DI detection via the U_FLUID_ANCESTOR token (not a direct UFluid class import, to avoid circular ng-core→ng dependency — ng-core cannot import from @ultimate/ng per workspace constraints). Introduces zero ControlValueAccessor surface — pure input/config tier, matching real BaseInput exactly (confirmed: zero writeValue/writeControlValue references in real source). $variant's config.inputStyle()/config.inputVariant() fallback omitted, same documented reason as UInputText (GAP-018)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/base-input/base-input.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies input surface, $variant, and hasFluid ancestor detection via a real <u-fluid> component."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/base-input/fluid-ancestor.token.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored marker token that UFluid provides on itself, enabling ng-core-tier classes (like UBaseInput) to detect an ancestor <u-fluid> wrapper via DI injection without creating a circular workspace dependency (ng-core cannot import @ultimate/ng's UFluid class directly)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/base-input/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   }
 ]
