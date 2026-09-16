@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { describe, expect, it } from "vitest";
 import { UFluid } from "../fluid/fluid";
 import { UInputNumber } from "./input-number";
@@ -110,5 +110,22 @@ describe("UInputNumber", () => {
     const fixture = TestBed.createComponent(UInputNumber);
     fixture.detectChanges();
     expect(fixture.componentInstance.hasFluid).toBe(false);
+  });
+
+  it("integrates with template-driven forms — ngModel value flows in and populates modelValue", async () => {
+    @Component({
+      standalone: true,
+      imports: [UInputNumber, FormsModule],
+      template: `<u-input-number [(ngModel)]="value" />`,
+    })
+    class TemplateHostComponent {
+      value: number | null = 5;
+    }
+    const fixture = TestBed.createComponent(TemplateHostComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const inputNumber = fixture.debugElement.query((de) => de.name === "u-input-number")
+      .componentInstance as UInputNumber;
+    expect(inputNumber.modelValue()).toBe(5);
   });
 });

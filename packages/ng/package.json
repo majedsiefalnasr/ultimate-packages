@@ -40,6 +40,10 @@
       "types": "./dist/types/ultimate-ng-fluid.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-fluid.mjs"
     },
+    "./input-number": {
+      "types": "./dist/types/ultimate-ng-input-number.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-input-number.mjs"
+    },
     "./ripple": {
       "types": "./dist/types/ultimate-ng-ripple.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-ripple.mjs"
