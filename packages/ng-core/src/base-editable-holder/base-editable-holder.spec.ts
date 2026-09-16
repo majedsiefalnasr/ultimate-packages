@@ -66,4 +66,13 @@ describe("UBaseEditableHolder", () => {
     fixture.componentInstance.writeValue(control.value);
     expect(fixture.componentInstance.value).toBe("initial");
   });
+
+  it("inherits modelValue/$filled/writeModelValue from UModelHolder", () => {
+    const fixture = TestBed.createComponent(TestEditableComponent);
+    const instance = fixture.componentInstance;
+    expect(instance.$filled()).toBe(false);
+    instance.writeModelValue("x");
+    expect(instance.modelValue()).toBe("x");
+    expect(instance.$filled()).toBe(true);
+  });
 });

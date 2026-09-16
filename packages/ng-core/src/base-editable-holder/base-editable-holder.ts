@@ -1,16 +1,19 @@
 import { Directive, booleanAttribute, computed, input, signal } from "@angular/core";
 import { ControlValueAccessor } from "@angular/forms";
-import { UBaseComponent } from "../basecomponent/base-component";
+import { UModelHolder } from "../model-holder/model-holder";
 
 /**
  * Ultimate-owned reimplementation of PrimeNG's `BaseEditableHolder`.
  *
- * Extends {@link UBaseComponent} with the `ControlValueAccessor` contract
- * shared by every editable/form-bindable component (e.g. Task 11's
- * `UCheckbox`): a `disabled` signal `input()`, `writeValue()` left abstract
- * for subclasses to implement, and the `onModelChange`/`onModelTouched`
- * no-op fields that `registerOnChange`/`registerOnTouched` replace per the
- * Angular Forms API contract.
+ * Extends {@link UModelHolder} (which supplies `modelValue`/`$filled`/
+ * `writeModelValue`, matching real PrimeNG's `BaseComponent →
+ * BaseModelHolder → BaseEditableHolder` ordering exactly) with the
+ * `ControlValueAccessor` contract shared by every editable/form-bindable
+ * component (e.g. `UCheckbox`): a `disabled` signal `input()`, `writeValue()`
+ * left abstract for subclasses to implement, and the
+ * `onModelChange`/`onModelTouched` no-op fields that
+ * `registerOnChange`/`registerOnTouched` replace per the Angular Forms API
+ * contract.
  *
  * `disabled` is a read-only `input()` — Angular's `input()` has no `.set()`
  * — that only reflects a template `[disabled]` binding. CVA's
@@ -26,7 +29,7 @@ import { UBaseComponent } from "../basecomponent/base-component";
  * at the concrete leaf class.
  */
 @Directive({ standalone: true })
-export abstract class UBaseEditableHolder extends UBaseComponent implements ControlValueAccessor {
+export abstract class UBaseEditableHolder extends UModelHolder implements ControlValueAccessor {
   /** Whether the control is disabled (`disabled` attribute/binding). Read-only. */
   disabled = input<boolean | undefined>(undefined, { transform: booleanAttribute });
 
