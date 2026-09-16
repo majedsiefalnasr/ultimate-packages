@@ -1,7 +1,7 @@
 # Specification: Phase 10 Track A — Browser / Visual / Accessibility
 
 **Document:** `docs/superpowers/specs/2026-09-10-phase-10-browser-visual-accessibility-design.md`
-**Status:** Approved — implemented as Phase 10 Track A; `docs/architecture/ROADMAP.md` marks Phase 10 (Production Hardening) Complete (see its footnote 6, Track A).
+**Status:** Draft for review
 **Companion research:** `docs/architecture/research/2026-09-08-phase-10-production-hardening.md`
 **Companion architecture discussion:** `docs/architecture/research/2026-09-08-phase-10-architecture-discussion.md` (§2, §3, §10, §11, §12)
 **Related, already-recorded decision:** `docs/architecture/DECISIONS.md` ADR-044 (DECISION-A — Storybook + Playwright, distinct responsibilities)
