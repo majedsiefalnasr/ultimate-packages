@@ -15,8 +15,9 @@ class TestEditableComponent extends UBaseEditableHolder {
   protected override readonly componentName = "test-editable";
   protected override readonly styleModule = { css: "", classes: {} };
   value: unknown;
-  override writeValue(value: unknown): void {
+  override writeControlValue(value: unknown, setModelValue: (value: unknown) => void): void {
     this.value = value;
+    setModelValue(value);
   }
 }
 
@@ -74,5 +75,38 @@ describe("UBaseEditableHolder", () => {
     instance.writeModelValue("x");
     expect(instance.modelValue()).toBe("x");
     expect(instance.$filled()).toBe(true);
+  });
+
+  it("writeValue calls writeControlValue with the raw value and a bound setModelValue callback", () => {
+    const fixture = TestBed.createComponent(TestEditableComponent);
+    const instance = fixture.componentInstance;
+    let receivedValue: unknown;
+    let receivedSetter: ((value: unknown) => void) | undefined;
+    instance.writeControlValue = (value, setModelValue) => {
+      receivedValue = value;
+      receivedSetter = setModelValue;
+    };
+    instance.writeValue("test-value");
+    expect(receivedValue).toBe("test-value");
+    expect(typeof receivedSetter).toBe("function");
+    receivedSetter?.("via-setter");
+    expect(instance.modelValue()).toBe("via-setter");
+  });
+
+  it("default writeControlValue is a NOOP — modelValue stays unpopulated unless a subclass opts in", () => {
+    @Component({
+      standalone: true,
+      selector: "u-test-bridge-noop",
+      template: "",
+      changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    class NoopBridgeComponent extends UBaseEditableHolder {
+      protected override readonly componentName = "test-bridge-noop";
+      protected override readonly styleModule = { css: "", classes: {} };
+    }
+    const fixture = TestBed.createComponent(NoopBridgeComponent);
+    const instance = fixture.componentInstance;
+    instance.writeValue("ignored");
+    expect(instance.modelValue()).toBeUndefined();
   });
 });

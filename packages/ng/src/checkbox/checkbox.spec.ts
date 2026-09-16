@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { UCheckbox } from "./checkbox";
 
 describe("UCheckbox", () => {
@@ -76,5 +76,73 @@ describe("UCheckbox", () => {
     expect(label).not.toBeNull();
     expect(label.classList.contains("u-checkbox-label")).toBe(true);
     expect(label.textContent).toContain("Accept terms");
+  });
+
+  it("modelValue synchronizes with values written through Angular Forms", () => {
+    @Component({
+      standalone: true,
+      imports: [UCheckbox, ReactiveFormsModule],
+      template: `<u-checkbox [formControl]="control" [binary]="true" />`,
+    })
+    class HostComponent {
+      control = new FormControl(false);
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox").componentInstance as UCheckbox;
+
+    fixture.componentInstance.control.setValue(true);
+    fixture.detectChanges();
+    expect(checkbox.modelValue()).toBe(true);
+  });
+
+  it("$filled reflects the synchronized modelValue correctly", () => {
+    @Component({
+      standalone: true,
+      imports: [UCheckbox, ReactiveFormsModule],
+      template: `<u-checkbox [formControl]="control" [binary]="true" />`,
+    })
+    class HostComponent {
+      control = new FormControl<boolean | null>(null);
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox").componentInstance as UCheckbox;
+
+    expect(checkbox.$filled()).toBe(false);
+
+    fixture.componentInstance.control.setValue(true);
+    fixture.detectChanges();
+    expect(checkbox.$filled()).toBe(true);
+  });
+
+  it("user-driven writes (click) also populate modelValue, not just CVA-driven writes", () => {
+    const fixture = TestBed.createComponent(UCheckbox);
+    fixture.componentRef.setInput("binary", true);
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('input[type="checkbox"]');
+    input.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.modelValue()).toBe(true);
+  });
+
+  it("writeControlValue is invoked exactly once per real CVA write — no double-write or feedback loop", () => {
+    @Component({
+      standalone: true,
+      imports: [UCheckbox, ReactiveFormsModule],
+      template: `<u-checkbox [formControl]="control" [binary]="true" />`,
+    })
+    class HostComponent {
+      control = new FormControl(false);
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox").componentInstance as UCheckbox;
+    const spy = vi.spyOn(checkbox, "writeControlValue");
+
+    fixture.componentInstance.control.setValue(true);
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 });

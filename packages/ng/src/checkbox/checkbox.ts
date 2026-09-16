@@ -15,32 +15,24 @@ import { checkboxStyleModule } from "./checkbox-style";
  * `.vendor-extracted/ng/checkbox/checkbox.ts`). Renders a native
  * `<input type="checkbox">` inside a `.u-checkbox-box` wrapper (matching
  * upstream's own two-element template shape), extends `UBaseEditableHolder`
- * (Task 5) for the `ControlValueAccessor` contract.
+ * for the `ControlValueAccessor` contract via the `writeControlValue`
+ * bridge (GAP-038).
  *
  * Deliberately excludes upstream's much larger prop surface: `value`/
- * `trueValue`/`falseValue` (multi-value/group-checkbox mode — this task's
- * Interfaces section defines only `binary`, and this component only
- * implements upstream's boolean/binary mode; `writeValue` always coerces to
- * a plain boolean, never upstream's array-membership `contains()` check for
- * multi-value mode), `ariaLabelledBy`/`ariaLabel`/`tabindex`/`inputId`/
- * `inputStyle`/`styleClass`/`inputClass`/`readonly`/`autofocus`/`variant`/
- * `size`/`checkboxIcon`/`formControl` inputs, `indeterminate` state, the
- * icon `<ng-template>`/`ContentChild` template-override system, and the
- * `onChange`/`onFocus`/`onBlur` `output()`s — none of these appear in this
- * task's Interfaces section, which defines a smaller, spec-mandated
- * signal-input surface (`binary`, `label`, inherited `disabled`) with "no
- * `UCheckbox`-specific outputs beyond the CVA contract."
+ * `trueValue`/`falseValue` (multi-value/group-checkbox mode — this
+ * component only implements upstream's boolean/binary mode),
+ * `ariaLabelledBy`/`ariaLabel`/`tabindex`/`inputId`/`inputStyle`/
+ * `styleClass`/`inputClass`/`readonly`/`autofocus`/`variant`/`size`/
+ * `checkboxIcon`/`formControl` inputs, `indeterminate` state, the icon
+ * `<ng-template>`/`ContentChild` template-override system, and the
+ * `onChange`/`onFocus`/`onBlur` `output()`s.
  *
- * Renders no check/minus icon: upstream's checked-state icon
- * (`CheckIcon`/`MinusIcon`) has no equivalent yet in `@ultimate/ng-core`'s
- * icon set (Task 9's icon architecture finding covers only spinner/times/
- * window-maximize/window-minimize so far) and no icon-related input is
- * listed in this task's Interfaces section; the checked state is instead
- * conveyed via `.u-checkbox-checked` on the root and the native input's own
- * `checked` state/appearance.
+ * Renders no check/minus icon: upstream's checked-state icon has no
+ * equivalent yet in `@ultimate/ng-core`'s icon set; the checked state is
+ * instead conveyed via `.u-checkbox-checked` on the root and the native
+ * input's own `checked` state/appearance.
  *
  * `providers: [NG_VALUE_ACCESSOR]` is required here (not inherited):
- * confirmed during Task 5 against PrimeNG's real source that
  * `UBaseEditableHolder` provides no `NG_VALUE_ACCESSOR` of its own — DI
  * providers on a base `@Directive` do not propagate to a derived
  * `@Component` — so every leaf component must declare its own, matching
@@ -50,8 +42,19 @@ import { checkboxStyleModule } from "./checkbox-style";
  * The template binds the native input's `[disabled]` to `$disabled()` (the
  * combined computed value from `UBaseEditableHolder`), never to the base
  * `disabled()` input alone — `disabled()` alone doesn't reflect
- * `setDisabledState`'s CVA-driven value (see
- * `packages/ng-core/src/base-editable-holder/base-editable-holder.ts`).
+ * `setDisabledState`'s CVA-driven value.
+ *
+ * `writeControlValue(value, setModelValue)` replaces the previous direct
+ * `writeValue` override (GAP-038's bridge migration): it populates this
+ * component's own `checked` signal — the real, template-bound state source,
+ * matching this component's existing architecture, NOT derived from
+ * `modelValue()` the way real PrimeNG's own `Checkbox` derives `checked`
+ * from `modelValue()` directly — while ALSO calling `setModelValue(value)`
+ * to populate the inherited `modelValue`/`$filled` in parallel. `toggle()`
+ * (the user-interaction path — click/Space) also calls `writeModelValue`
+ * directly, so `modelValue`/`$filled` stay in sync on user-driven writes
+ * too, not just CVA-driven ones — without this, `modelValue` would go stale
+ * the instant a user clicks the checkbox.
  */
 @Component({
   standalone: true,
@@ -94,9 +97,10 @@ export class UCheckbox extends UBaseEditableHolder {
     return { checked: this.checked(), disabled: this.$disabled() };
   }
 
-  /** Writes a CVA-driven value into the local `checked` signal. */
-  writeValue(value: unknown): void {
+  /** Writes a CVA-driven value into `checked` and, via `setModelValue`, into `modelValue`. */
+  override writeControlValue(value: unknown, setModelValue: (value: unknown) => void): void {
     this.checked.set(!!value);
+    setModelValue(value);
   }
 
   protected handleChange(): void {
@@ -117,6 +121,7 @@ export class UCheckbox extends UBaseEditableHolder {
   private toggle(): void {
     const next = !this.checked();
     this.checked.set(next);
+    this.writeModelValue(next);
     this.onModelChange(next);
     this.onModelTouched();
   }

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from "@angular/core";
+import { U_FLUID_ANCESTOR } from "@ultimate/ng-core";
 
 /**
  * Ultimate-owned adaptation of PrimeNG's `Fluid` component. A layout
@@ -17,6 +18,10 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from "@angular/
  * and `FLUID_INSTANCE`/`PARENT_INSTANCE` injection-token parent lookup — see
  * `UBaseComponent`'s doc comment for the same architectural exclusion
  * pattern (Option B).
+ *
+ * Provides {@link U_FLUID_ANCESTOR} on itself so `ng-core`-tier classes
+ * (e.g. `UBaseInput`) can detect an ancestor `<u-fluid>` wrapper via DI
+ * without `ng-core` depending on `ng`.
  */
 @Component({
   standalone: true,
@@ -27,5 +32,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from "@angular/
   host: {
     class: "u-fluid",
   },
+  providers: [{ provide: U_FLUID_ANCESTOR, useValue: true }],
 })
 export class UFluid {}
