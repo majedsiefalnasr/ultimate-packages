@@ -105,11 +105,9 @@ function unbind(el: HTMLElement): void {
  * standard component pattern. `UKeyFilter` mirrors that exactly, built on
  * this repo's own `createDirective` factory
  * (`packages/vue-core/src/directive/base-directive.ts`) — the established
- * Vue directive-authoring primitive already proven by `UAutoFocus`'s Vue
- * counterpart pattern... no such counterpart exists yet in `packages/vue`,
- * making this the first `createDirective` consumer in `packages/vue`
- * itself, though the factory and its own test suite are already Built and
- * proven in `vue-core`.
+ * Vue directive-authoring primitive already used by `packages/vue/src/ripple`
+ * and `packages/vue/src/tooltip`, and proven by its own test suite in
+ * `vue-core`.
  *
  * Ports the same `keypress`/`paste` blocking algorithm as `UKeyFilter`
  * (Angular, `packages/ng/src/key-filter/key-filter.ts`) and React's
