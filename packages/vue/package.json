@@ -44,6 +44,31 @@
       "import": "./dist/toggle-switch/index.mjs",
       "default": "./dist/toggle-switch/index.mjs"
     },
+    "./input-text": {
+      "types": "./dist/input-text/index.d.mts",
+      "import": "./dist/input-text/index.mjs",
+      "default": "./dist/input-text/index.mjs"
+    },
+    "./textarea": {
+      "types": "./dist/textarea/index.d.mts",
+      "import": "./dist/textarea/index.mjs",
+      "default": "./dist/textarea/index.mjs"
+    },
+    "./input-number": {
+      "types": "./dist/input-number/index.d.mts",
+      "import": "./dist/input-number/index.mjs",
+      "default": "./dist/input-number/index.mjs"
+    },
+    "./input-mask": {
+      "types": "./dist/input-mask/index.d.mts",
+      "import": "./dist/input-mask/index.mjs",
+      "default": "./dist/input-mask/index.mjs"
+    },
+    "./input-otp": {
+      "types": "./dist/input-otp/index.d.mts",
+      "import": "./dist/input-otp/index.mjs",
+      "default": "./dist/input-otp/index.mjs"
+    },
     "./dialog": {
       "types": "./dist/dialog/index.d.mts",
       "import": "./dist/dialog/index.mjs",

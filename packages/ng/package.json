@@ -56,6 +56,18 @@
       "types": "./dist/types/ultimate-ng-input-number.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-input-number.mjs"
     },
+    "./textarea": {
+      "types": "./dist/types/ultimate-ng-textarea.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-textarea.mjs"
+    },
+    "./input-mask": {
+      "types": "./dist/types/ultimate-ng-input-mask.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-input-mask.mjs"
+    },
+    "./input-otp": {
+      "types": "./dist/types/ultimate-ng-input-otp.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-input-otp.mjs"
+    },
     "./ripple": {
       "types": "./dist/types/ultimate-ng-ripple.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-ripple.mjs"
