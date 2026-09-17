@@ -76,6 +76,26 @@
       "types": "./dist/types/ultimate-ng-autocomplete.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-autocomplete.mjs"
     },
+    "./select": {
+      "types": "./dist/types/ultimate-ng-select.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-select.mjs"
+    },
+    "./multi-select": {
+      "types": "./dist/types/ultimate-ng-multi-select.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-multi-select.mjs"
+    },
+    "./listbox": {
+      "types": "./dist/types/ultimate-ng-listbox.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-listbox.mjs"
+    },
+    "./cascade-select": {
+      "types": "./dist/types/ultimate-ng-cascade-select.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-cascade-select.mjs"
+    },
+    "./select-button": {
+      "types": "./dist/types/ultimate-ng-select-button.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-select-button.mjs"
+    },
     "./key-filter": {
       "types": "./dist/types/ultimate-ng-key-filter.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-key-filter.mjs"

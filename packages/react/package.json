@@ -74,6 +74,31 @@
       "import": "./dist/autocomplete/index.mjs",
       "default": "./dist/autocomplete/index.mjs"
     },
+    "./select": {
+      "types": "./dist/select/index.d.mts",
+      "import": "./dist/select/index.mjs",
+      "default": "./dist/select/index.mjs"
+    },
+    "./multi-select": {
+      "types": "./dist/multi-select/index.d.mts",
+      "import": "./dist/multi-select/index.mjs",
+      "default": "./dist/multi-select/index.mjs"
+    },
+    "./listbox": {
+      "types": "./dist/listbox/index.d.mts",
+      "import": "./dist/listbox/index.mjs",
+      "default": "./dist/listbox/index.mjs"
+    },
+    "./cascade-select": {
+      "types": "./dist/cascade-select/index.d.mts",
+      "import": "./dist/cascade-select/index.mjs",
+      "default": "./dist/cascade-select/index.mjs"
+    },
+    "./select-button": {
+      "types": "./dist/select-button/index.d.mts",
+      "import": "./dist/select-button/index.mjs",
+      "default": "./dist/select-button/index.mjs"
+    },
     "./key-filter": {
       "types": "./dist/key-filter/index.d.mts",
       "import": "./dist/key-filter/index.mjs",
