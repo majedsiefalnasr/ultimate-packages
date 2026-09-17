@@ -64,6 +64,21 @@
       "import": "./dist/input-otp/index.mjs",
       "default": "./dist/input-otp/index.mjs"
     },
+    "./password": {
+      "types": "./dist/password/index.d.mts",
+      "import": "./dist/password/index.mjs",
+      "default": "./dist/password/index.mjs"
+    },
+    "./autocomplete": {
+      "types": "./dist/autocomplete/index.d.mts",
+      "import": "./dist/autocomplete/index.mjs",
+      "default": "./dist/autocomplete/index.mjs"
+    },
+    "./key-filter": {
+      "types": "./dist/key-filter/index.d.mts",
+      "import": "./dist/key-filter/index.mjs",
+      "default": "./dist/key-filter/index.mjs"
+    },
     "./dialog": {
       "types": "./dist/dialog/index.d.mts",
       "import": "./dist/dialog/index.mjs",

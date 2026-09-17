@@ -68,6 +68,18 @@
       "types": "./dist/types/ultimate-ng-input-otp.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-input-otp.mjs"
     },
+    "./password": {
+      "types": "./dist/types/ultimate-ng-password.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-password.mjs"
+    },
+    "./autocomplete": {
+      "types": "./dist/types/ultimate-ng-autocomplete.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-autocomplete.mjs"
+    },
+    "./key-filter": {
+      "types": "./dist/types/ultimate-ng-key-filter.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-key-filter.mjs"
+    },
     "./ripple": {
       "types": "./dist/types/ultimate-ng-ripple.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-ripple.mjs"

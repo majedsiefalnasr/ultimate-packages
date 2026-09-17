@@ -1,0 +1,1 @@
+export { UPassword } from "./password";
