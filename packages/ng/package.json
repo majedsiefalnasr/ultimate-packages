@@ -16,6 +16,18 @@
       "types": "./dist/types/ultimate-ng-checkbox.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-checkbox.mjs"
     },
+    "./radio-button": {
+      "types": "./dist/types/ultimate-ng-radio-button.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-radio-button.mjs"
+    },
+    "./toggle-button": {
+      "types": "./dist/types/ultimate-ng-toggle-button.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-toggle-button.mjs"
+    },
+    "./toggle-switch": {
+      "types": "./dist/types/ultimate-ng-toggle-switch.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-toggle-switch.mjs"
+    },
     "./paginator": {
       "types": "./dist/types/ultimate-ng-paginator.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-paginator.mjs"

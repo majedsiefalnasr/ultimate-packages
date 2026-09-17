@@ -29,6 +29,21 @@
       "import": "./dist/checkbox/index.mjs",
       "default": "./dist/checkbox/index.mjs"
     },
+    "./radio-button": {
+      "types": "./dist/radio-button/index.d.mts",
+      "import": "./dist/radio-button/index.mjs",
+      "default": "./dist/radio-button/index.mjs"
+    },
+    "./toggle-button": {
+      "types": "./dist/toggle-button/index.d.mts",
+      "import": "./dist/toggle-button/index.mjs",
+      "default": "./dist/toggle-button/index.mjs"
+    },
+    "./toggle-switch": {
+      "types": "./dist/toggle-switch/index.d.mts",
+      "import": "./dist/toggle-switch/index.mjs",
+      "default": "./dist/toggle-switch/index.mjs"
+    },
     "./dialog": {
       "types": "./dist/dialog/index.d.mts",
       "import": "./dist/dialog/index.mjs",
