@@ -1,7 +1,7 @@
 {
   "name": "@ultimate/vue",
   "version": "0.1.0",
-  "description": "Ultimate Platform Vue components: Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip.",
+  "description": "Ultimate Platform Vue components: Badge, Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip.",
   "license": "MIT",
   "type": "module",
   "sideEffects": true,
@@ -13,6 +13,11 @@
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs",
       "default": "./dist/index.mjs"
+    },
+    "./badge": {
+      "types": "./dist/badge/index.d.mts",
+      "import": "./dist/badge/index.mjs",
+      "default": "./dist/badge/index.mjs"
     },
     "./button": {
       "types": "./dist/button/index.d.mts",

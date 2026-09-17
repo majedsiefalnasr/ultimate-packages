@@ -1,4 +1,5 @@
 export * from "./ripple";
+export * from "./badge";
 export * from "./button";
 export * from "./tooltip";
 export * from "./checkbox";
