@@ -127,6 +127,22 @@
     "./ripple": {
       "types": "./dist/types/ultimate-ng-ripple.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-ripple.mjs"
+    },
+    "./float-label": {
+      "types": "./dist/types/ultimate-ng-float-label.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-float-label.mjs"
+    },
+    "./icon-field": {
+      "types": "./dist/types/ultimate-ng-icon-field.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-icon-field.mjs"
+    },
+    "./input-group": {
+      "types": "./dist/types/ultimate-ng-input-group.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-input-group.mjs"
+    },
+    "./ifta-label": {
+      "types": "./dist/types/ultimate-ng-ifta-label.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-ifta-label.mjs"
     }
   },
   "files": [

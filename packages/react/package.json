@@ -134,6 +134,36 @@
       "import": "./dist/key-filter/index.mjs",
       "default": "./dist/key-filter/index.mjs"
     },
+    "./float-label": {
+      "types": "./dist/float-label/index.d.mts",
+      "import": "./dist/float-label/index.mjs",
+      "default": "./dist/float-label/index.mjs"
+    },
+    "./icon-field": {
+      "types": "./dist/icon-field/index.d.mts",
+      "import": "./dist/icon-field/index.mjs",
+      "default": "./dist/icon-field/index.mjs"
+    },
+    "./input-chips": {
+      "types": "./dist/input-chips/index.d.mts",
+      "import": "./dist/input-chips/index.mjs",
+      "default": "./dist/input-chips/index.mjs"
+    },
+    "./mention": {
+      "types": "./dist/mention/index.d.mts",
+      "import": "./dist/mention/index.mjs",
+      "default": "./dist/mention/index.mjs"
+    },
+    "./multi-state-checkbox": {
+      "types": "./dist/multi-state-checkbox/index.d.mts",
+      "import": "./dist/multi-state-checkbox/index.mjs",
+      "default": "./dist/multi-state-checkbox/index.mjs"
+    },
+    "./tri-state-checkbox": {
+      "types": "./dist/tri-state-checkbox/index.d.mts",
+      "import": "./dist/tri-state-checkbox/index.mjs",
+      "default": "./dist/tri-state-checkbox/index.mjs"
+    },
     "./dialog": {
       "types": "./dist/dialog/index.d.mts",
       "import": "./dist/dialog/index.mjs",
