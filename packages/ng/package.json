@@ -96,6 +96,22 @@
       "types": "./dist/types/ultimate-ng-select-button.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-select-button.mjs"
     },
+    "./rating": {
+      "types": "./dist/types/ultimate-ng-rating.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-rating.mjs"
+    },
+    "./slider": {
+      "types": "./dist/types/ultimate-ng-slider.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-slider.mjs"
+    },
+    "./knob": {
+      "types": "./dist/types/ultimate-ng-knob.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-knob.mjs"
+    },
+    "./color-picker": {
+      "types": "./dist/types/ultimate-ng-color-picker.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-color-picker.mjs"
+    },
     "./key-filter": {
       "types": "./dist/types/ultimate-ng-key-filter.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-key-filter.mjs"

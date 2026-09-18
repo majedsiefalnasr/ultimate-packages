@@ -104,6 +104,26 @@
       "import": "./dist/select-button/index.mjs",
       "default": "./dist/select-button/index.mjs"
     },
+    "./rating": {
+      "types": "./dist/rating/index.d.mts",
+      "import": "./dist/rating/index.mjs",
+      "default": "./dist/rating/index.mjs"
+    },
+    "./slider": {
+      "types": "./dist/slider/index.d.mts",
+      "import": "./dist/slider/index.mjs",
+      "default": "./dist/slider/index.mjs"
+    },
+    "./knob": {
+      "types": "./dist/knob/index.d.mts",
+      "import": "./dist/knob/index.mjs",
+      "default": "./dist/knob/index.mjs"
+    },
+    "./color-picker": {
+      "types": "./dist/color-picker/index.d.mts",
+      "import": "./dist/color-picker/index.mjs",
+      "default": "./dist/color-picker/index.mjs"
+    },
     "./key-filter": {
       "types": "./dist/key-filter/index.d.mts",
       "import": "./dist/key-filter/index.mjs",
