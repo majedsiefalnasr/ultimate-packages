@@ -22,6 +22,8 @@ export * from "./rating";
 export * from "./slider";
 export * from "./knob";
 export * from "./color-picker";
+export * from "./date-picker";
+export * from "./file-upload";
 export * from "./key-filter";
 export * from "./tooltip";
 export * from "./dialog";

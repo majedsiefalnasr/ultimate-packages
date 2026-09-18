@@ -119,6 +119,16 @@
       "import": "./dist/color-picker/index.mjs",
       "default": "./dist/color-picker/index.mjs"
     },
+    "./date-picker": {
+      "types": "./dist/date-picker/index.d.mts",
+      "import": "./dist/date-picker/index.mjs",
+      "default": "./dist/date-picker/index.mjs"
+    },
+    "./file-upload": {
+      "types": "./dist/file-upload/index.d.mts",
+      "import": "./dist/file-upload/index.mjs",
+      "default": "./dist/file-upload/index.mjs"
+    },
     "./key-filter": {
       "types": "./dist/key-filter/index.d.mts",
       "import": "./dist/key-filter/index.mjs",

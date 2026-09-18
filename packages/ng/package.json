@@ -112,6 +112,14 @@
       "types": "./dist/types/ultimate-ng-color-picker.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-color-picker.mjs"
     },
+    "./date-picker": {
+      "types": "./dist/types/ultimate-ng-date-picker.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-date-picker.mjs"
+    },
+    "./file-upload": {
+      "types": "./dist/types/ultimate-ng-file-upload.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-file-upload.mjs"
+    },
     "./key-filter": {
       "types": "./dist/types/ultimate-ng-key-filter.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-key-filter.mjs"
