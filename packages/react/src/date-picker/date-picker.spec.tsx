@@ -75,24 +75,22 @@ describe("UDatePicker", () => {
     const onChange = vi.fn();
     render(
       <UDatePicker
-        value={null}
+        value={new Date(2026, 8, 15)}
         onChange={onChange}
         minDate={new Date(2026, 8, 10)}
         maxDate={new Date(2026, 8, 20)}
       />
     );
     fireEvent.click(screen.getByRole("textbox"));
-    // Force viewing September 2026 by navigating won't matter since default
-    // view derives from `value` (null) -> today. Just check any cell showing
-    // day "5" that isn't from another month.
+    // `value` pins the view to September 2026, so day "5" (outside the
+    // min/max range) is guaranteed present and unambiguous.
     const day5 = screen
       .getAllByRole("gridcell")
       .find((el) => el.textContent === "5" && el.className.indexOf("other-month") === -1);
-    if (day5) {
-      fireEvent.click(day5);
-    }
-    // If the current month's day 5 is out of the min/max range, no change
-    // should have fired for it.
+    expect(day5).toBeDefined();
+    expect(day5!.getAttribute("aria-disabled")).toBe("true");
+
+    fireEvent.click(day5!);
     expect(onChange).not.toHaveBeenCalled();
   });
 
