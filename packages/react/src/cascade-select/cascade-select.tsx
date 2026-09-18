@@ -58,8 +58,8 @@ function resolve<R>(
  * recursive `CascadeSelectSub` component with hover/click-to-drill submenu
  * panels (`CascadeSelect.js` lines ~100-130, `CascadeSelectSub.js`). This
  * port keeps the same two-tier concept (a processed tree plus a drilled-path
- * set) but renders the recursion as a same-file recursive `SublistItem`
- * function component, absolute-positioned to the right of its parent
+ * set) but renders the recursion via a same-file recursive `renderSublist`
+ * closure, absolute-positioned to the right of its parent
  * (`.u-cascade-select-sublist`), rather than PrimeReact's own separate
  * `CascadeSelectSub.js` module — still the same "single overlay/panel
  * surface, real click-to-drill interaction" shape real source establishes,
