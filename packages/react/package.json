@@ -174,6 +174,36 @@
       "import": "./dist/menu/index.mjs",
       "default": "./dist/menu/index.mjs"
     },
+    "./breadcrumb": {
+      "types": "./dist/breadcrumb/index.d.mts",
+      "import": "./dist/breadcrumb/index.mjs",
+      "default": "./dist/breadcrumb/index.mjs"
+    },
+    "./mega-menu": {
+      "types": "./dist/mega-menu/index.d.mts",
+      "import": "./dist/mega-menu/index.mjs",
+      "default": "./dist/mega-menu/index.mjs"
+    },
+    "./menubar": {
+      "types": "./dist/menubar/index.d.mts",
+      "import": "./dist/menubar/index.mjs",
+      "default": "./dist/menubar/index.mjs"
+    },
+    "./panel-menu": {
+      "types": "./dist/panel-menu/index.d.mts",
+      "import": "./dist/panel-menu/index.mjs",
+      "default": "./dist/panel-menu/index.mjs"
+    },
+    "./tiered-menu": {
+      "types": "./dist/tiered-menu/index.d.mts",
+      "import": "./dist/tiered-menu/index.mjs",
+      "default": "./dist/tiered-menu/index.mjs"
+    },
+    "./split-button": {
+      "types": "./dist/split-button/index.d.mts",
+      "import": "./dist/split-button/index.mjs",
+      "default": "./dist/split-button/index.mjs"
+    },
     "./paginator": {
       "types": "./dist/paginator/index.d.mts",
       "import": "./dist/paginator/index.mjs",

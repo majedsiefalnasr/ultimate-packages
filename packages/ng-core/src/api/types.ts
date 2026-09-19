@@ -13,6 +13,10 @@ export interface UMenuItem {
    */
   icon?: string;
   /**
+   * External URL for navigation, used when `routerLink` is not set.
+   */
+  url?: string;
+  /**
    * RouterLink definition for internal navigation.
    */
   routerLink?: string | string[];
@@ -32,6 +36,14 @@ export interface UMenuItem {
    * When set as true, disables the menuitem.
    */
   disabled?: boolean;
+  /**
+   * Whether the item is visible. Defaults to `true` when unset.
+   */
+  visible?: boolean;
+  /**
+   * Target of the link, e.g. `_blank` to open in a new window.
+   */
+  target?: string;
   /**
    * Optional tooltip text shown on hover/focus. Real PrimeNG gates its
    * equivalent behind `showOnEllipsis` (truncation-only), which is out of

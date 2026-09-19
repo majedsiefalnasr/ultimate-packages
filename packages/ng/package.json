@@ -143,6 +143,30 @@
     "./ifta-label": {
       "types": "./dist/types/ultimate-ng-ifta-label.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-ifta-label.mjs"
+    },
+    "./breadcrumb": {
+      "types": "./dist/types/ultimate-ng-breadcrumb.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-breadcrumb.mjs"
+    },
+    "./mega-menu": {
+      "types": "./dist/types/ultimate-ng-mega-menu.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-mega-menu.mjs"
+    },
+    "./menubar": {
+      "types": "./dist/types/ultimate-ng-menubar.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-menubar.mjs"
+    },
+    "./panel-menu": {
+      "types": "./dist/types/ultimate-ng-panel-menu.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-panel-menu.mjs"
+    },
+    "./tiered-menu": {
+      "types": "./dist/types/ultimate-ng-tiered-menu.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-tiered-menu.mjs"
+    },
+    "./split-button": {
+      "types": "./dist/types/ultimate-ng-split-button.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-split-button.mjs"
     }
   },
   "files": [
