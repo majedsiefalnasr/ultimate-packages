@@ -248,6 +248,36 @@
       "types": "./dist/tooltip/index.d.mts",
       "import": "./dist/tooltip/index.mjs",
       "default": "./dist/tooltip/index.mjs"
+    },
+    "./style-class": {
+      "types": "./dist/style-class/index.d.mts",
+      "import": "./dist/style-class/index.mjs",
+      "default": "./dist/style-class/index.mjs"
+    },
+    "./popover": {
+      "types": "./dist/popover/index.d.mts",
+      "import": "./dist/popover/index.mjs",
+      "default": "./dist/popover/index.mjs"
+    },
+    "./drawer": {
+      "types": "./dist/drawer/index.d.mts",
+      "import": "./dist/drawer/index.mjs",
+      "default": "./dist/drawer/index.mjs"
+    },
+    "./context-menu": {
+      "types": "./dist/context-menu/index.d.mts",
+      "import": "./dist/context-menu/index.mjs",
+      "default": "./dist/context-menu/index.mjs"
+    },
+    "./confirm-dialog": {
+      "types": "./dist/confirm-dialog/index.d.mts",
+      "import": "./dist/confirm-dialog/index.mjs",
+      "default": "./dist/confirm-dialog/index.mjs"
+    },
+    "./confirm-popup": {
+      "types": "./dist/confirm-popup/index.d.mts",
+      "import": "./dist/confirm-popup/index.mjs",
+      "default": "./dist/confirm-popup/index.mjs"
     }
   },
   "files": [

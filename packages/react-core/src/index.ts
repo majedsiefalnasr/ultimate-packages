@@ -1,4 +1,5 @@
 export * from "./base";
+export * from "./confirmation";
 export * from "./escape";
 export * from "./focus-trap";
 export * from "./hooks";

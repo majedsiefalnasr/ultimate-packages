@@ -187,6 +187,38 @@
     "./split-button": {
       "types": "./dist/types/ultimate-ng-split-button.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-split-button.mjs"
+    },
+    "./style-class": {
+      "types": "./dist/types/ultimate-ng-style-class.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-style-class.mjs"
+    },
+    "./popover": {
+      "types": "./dist/types/ultimate-ng-popover.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-popover.mjs"
+    },
+    "./drawer": {
+      "types": "./dist/types/ultimate-ng-drawer.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-drawer.mjs"
+    },
+    "./context-menu": {
+      "types": "./dist/types/ultimate-ng-context-menu.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-context-menu.mjs"
+    },
+    "./confirm-dialog": {
+      "types": "./dist/types/ultimate-ng-confirm-dialog.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-confirm-dialog.mjs"
+    },
+    "./confirm-popup": {
+      "types": "./dist/types/ultimate-ng-confirm-popup.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-confirm-popup.mjs"
+    },
+    "./dynamic-dialog": {
+      "types": "./dist/types/ultimate-ng-dynamic-dialog.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-dynamic-dialog.mjs"
+    },
+    "./overlay-badge": {
+      "types": "./dist/types/ultimate-ng-overlay-badge.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-overlay-badge.mjs"
     }
   },
   "files": [
