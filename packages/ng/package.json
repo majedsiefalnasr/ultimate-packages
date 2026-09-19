@@ -164,6 +164,26 @@
       "types": "./dist/types/ultimate-ng-tiered-menu.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-tiered-menu.mjs"
     },
+    "./tabs": {
+      "types": "./dist/types/ultimate-ng-tabs.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-tabs.mjs"
+    },
+    "./stepper": {
+      "types": "./dist/types/ultimate-ng-stepper.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-stepper.mjs"
+    },
+    "./steps": {
+      "types": "./dist/types/ultimate-ng-steps.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-steps.mjs"
+    },
+    "./dock": {
+      "types": "./dist/types/ultimate-ng-dock.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-dock.mjs"
+    },
+    "./speed-dial": {
+      "types": "./dist/types/ultimate-ng-speed-dial.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-speed-dial.mjs"
+    },
     "./split-button": {
       "types": "./dist/types/ultimate-ng-split-button.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-split-button.mjs"

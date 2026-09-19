@@ -199,6 +199,31 @@
       "import": "./dist/tiered-menu/index.mjs",
       "default": "./dist/tiered-menu/index.mjs"
     },
+    "./tabs": {
+      "types": "./dist/tabs/index.d.mts",
+      "import": "./dist/tabs/index.mjs",
+      "default": "./dist/tabs/index.mjs"
+    },
+    "./stepper": {
+      "types": "./dist/stepper/index.d.mts",
+      "import": "./dist/stepper/index.mjs",
+      "default": "./dist/stepper/index.mjs"
+    },
+    "./steps": {
+      "types": "./dist/steps/index.d.mts",
+      "import": "./dist/steps/index.mjs",
+      "default": "./dist/steps/index.mjs"
+    },
+    "./dock": {
+      "types": "./dist/dock/index.d.mts",
+      "import": "./dist/dock/index.mjs",
+      "default": "./dist/dock/index.mjs"
+    },
+    "./speed-dial": {
+      "types": "./dist/speed-dial/index.d.mts",
+      "import": "./dist/speed-dial/index.mjs",
+      "default": "./dist/speed-dial/index.mjs"
+    },
     "./split-button": {
       "types": "./dist/split-button/index.d.mts",
       "import": "./dist/split-button/index.mjs",

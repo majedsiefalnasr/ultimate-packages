@@ -1,0 +1,82 @@
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, booleanAttribute, input, numberAttribute, output } from "@angular/core";
+import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
+import { stepsStyleModule } from "./steps-style";
+
+/**
+ * Ultimate-owned adaptation of PrimeNG's `Steps` component (see
+ * `.vendor-extracted/ng/steps/steps.ts`). Renders a linear, read-only-by-
+ * default step *indicator* for a wizard workflow — distinct from
+ * `UStepper`, which is an interactive, content-switching component.
+ *
+ * Real PrimeNG's `Steps` (`extends BaseComponent`, no import of
+ * `primeng/menu`) is a standalone, independent component driven by a flat
+ * `MenuItem[]` model and an `activeIndex`, not a composition of `Menu`.
+ * This adaptation follows that same independent shape.
+ */
+@Component({
+  standalone: true,
+  selector: "u-steps",
+  template: `
+    <nav [class]="cx('root')">
+      <ol [class]="cx('list')">
+        @for (item of model(); track item.label; let i = $index) {
+          @if (item.visible !== false) {
+            <li [class]="cx('item', itemParams(item, i))" [attr.aria-current]="i === activeIndex() ? 'step' : null">
+              <a
+                [href]="item.url || '#'"
+                [target]="item.target"
+                [class]="cx('itemLink')"
+                [attr.tabindex]="isItemDisabled(item, i) ? -1 : 0"
+                [attr.aria-disabled]="isItemDisabled(item, i)"
+                (click)="onItemClick($event, item, i)"
+              >
+                <span [class]="cx('itemNumber')">{{ i + 1 }}</span>
+                @if (item.label) {
+                  <span [class]="cx('itemLabel')">{{ item.label }}</span>
+                }
+              </a>
+            </li>
+          }
+        }
+      </ol>
+    </nav>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+})
+export class USteps extends UBaseComponent {
+  protected override readonly componentName = "steps";
+  protected override readonly styleModule = stepsStyleModule;
+
+  /** An array of menu items. */
+  model = input<UMenuItem[]>([]);
+  /** Index of the active item. */
+  activeIndex = input(0, { transform: numberAttribute });
+  /** Whether the items are clickable or not. */
+  readonly = input(true, { transform: booleanAttribute });
+
+  /** Callback to invoke when the new step is selected. */
+  onSelect = output<{ originalEvent: MouseEvent; item: UMenuItem; index: number }>();
+
+  protected itemParams(item: UMenuItem, index: number) {
+    return { active: index === this.activeIndex(), disabled: this.isItemDisabled(item, index) };
+  }
+
+  protected isItemDisabled(item: UMenuItem, index: number): boolean {
+    return !!item.disabled || (this.readonly() && index !== this.activeIndex());
+  }
+
+  protected onItemClick(event: MouseEvent, item: UMenuItem, index: number): void {
+    if (this.readonly() || item.disabled) {
+      event.preventDefault();
+      return;
+    }
+    this.onSelect.emit({ originalEvent: event, item, index });
+    if (item.command) {
+      item.command({ originalEvent: event, item, index });
+    }
+    if (!item.url) {
+      event.preventDefault();
+    }
+  }
+}
