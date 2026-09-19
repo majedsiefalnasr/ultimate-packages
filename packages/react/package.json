@@ -278,6 +278,41 @@
       "types": "./dist/confirm-popup/index.d.mts",
       "import": "./dist/confirm-popup/index.mjs",
       "default": "./dist/confirm-popup/index.mjs"
+    },
+    "./avatar": {
+      "types": "./dist/avatar/index.d.mts",
+      "import": "./dist/avatar/index.mjs",
+      "default": "./dist/avatar/index.mjs"
+    },
+    "./avatar-group": {
+      "types": "./dist/avatar-group/index.d.mts",
+      "import": "./dist/avatar-group/index.mjs",
+      "default": "./dist/avatar-group/index.mjs"
+    },
+    "./block-ui": {
+      "types": "./dist/block-ui/index.d.mts",
+      "import": "./dist/block-ui/index.mjs",
+      "default": "./dist/block-ui/index.mjs"
+    },
+    "./button-group": {
+      "types": "./dist/button-group/index.d.mts",
+      "import": "./dist/button-group/index.mjs",
+      "default": "./dist/button-group/index.mjs"
+    },
+    "./card": {
+      "types": "./dist/card/index.d.mts",
+      "import": "./dist/card/index.mjs",
+      "default": "./dist/card/index.mjs"
+    },
+    "./carousel": {
+      "types": "./dist/carousel/index.d.mts",
+      "import": "./dist/carousel/index.mjs",
+      "default": "./dist/carousel/index.mjs"
+    },
+    "./accordion": {
+      "types": "./dist/accordion/index.d.mts",
+      "import": "./dist/accordion/index.mjs",
+      "default": "./dist/accordion/index.mjs"
     }
   },
   "files": [

@@ -288,6 +288,56 @@
       "types": "./dist/overlay-badge/index.d.mts",
       "import": "./dist/overlay-badge/index.mjs",
       "default": "./dist/overlay-badge/index.mjs"
+    },
+    "./avatar": {
+      "types": "./dist/avatar/index.d.mts",
+      "import": "./dist/avatar/index.mjs",
+      "default": "./dist/avatar/index.mjs"
+    },
+    "./avatar-group": {
+      "types": "./dist/avatar-group/index.d.mts",
+      "import": "./dist/avatar-group/index.mjs",
+      "default": "./dist/avatar-group/index.mjs"
+    },
+    "./block-ui": {
+      "types": "./dist/block-ui/index.d.mts",
+      "import": "./dist/block-ui/index.mjs",
+      "default": "./dist/block-ui/index.mjs"
+    },
+    "./button-group": {
+      "types": "./dist/button-group/index.d.mts",
+      "import": "./dist/button-group/index.mjs",
+      "default": "./dist/button-group/index.mjs"
+    },
+    "./card": {
+      "types": "./dist/card/index.d.mts",
+      "import": "./dist/card/index.mjs",
+      "default": "./dist/card/index.mjs"
+    },
+    "./carousel": {
+      "types": "./dist/carousel/index.d.mts",
+      "import": "./dist/carousel/index.mjs",
+      "default": "./dist/carousel/index.mjs"
+    },
+    "./accordion": {
+      "types": "./dist/accordion/index.d.mts",
+      "import": "./dist/accordion/index.mjs",
+      "default": "./dist/accordion/index.mjs"
+    },
+    "./accordion-panel": {
+      "types": "./dist/accordion-panel/index.d.mts",
+      "import": "./dist/accordion-panel/index.mjs",
+      "default": "./dist/accordion-panel/index.mjs"
+    },
+    "./accordion-header": {
+      "types": "./dist/accordion-header/index.d.mts",
+      "import": "./dist/accordion-header/index.mjs",
+      "default": "./dist/accordion-header/index.mjs"
+    },
+    "./accordion-content": {
+      "types": "./dist/accordion-content/index.d.mts",
+      "import": "./dist/accordion-content/index.mjs",
+      "default": "./dist/accordion-content/index.mjs"
     }
   },
   "files": [

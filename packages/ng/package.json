@@ -219,6 +219,34 @@
     "./overlay-badge": {
       "types": "./dist/types/ultimate-ng-overlay-badge.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-overlay-badge.mjs"
+    },
+    "./avatar": {
+      "types": "./dist/types/ultimate-ng-avatar.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-avatar.mjs"
+    },
+    "./avatar-group": {
+      "types": "./dist/types/ultimate-ng-avatar-group.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-avatar-group.mjs"
+    },
+    "./block-ui": {
+      "types": "./dist/types/ultimate-ng-block-ui.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-block-ui.mjs"
+    },
+    "./button-group": {
+      "types": "./dist/types/ultimate-ng-button-group.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-button-group.mjs"
+    },
+    "./card": {
+      "types": "./dist/types/ultimate-ng-card.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-card.mjs"
+    },
+    "./carousel": {
+      "types": "./dist/types/ultimate-ng-carousel.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-carousel.mjs"
+    },
+    "./accordion": {
+      "types": "./dist/types/ultimate-ng-accordion.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-accordion.mjs"
     }
   },
   "files": [
