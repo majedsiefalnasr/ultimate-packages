@@ -62,4 +62,25 @@ describe("UScrollTop", () => {
     expect(wrapper.emitted("hide")).toHaveLength(1);
     expect(wrapper.findComponent({ name: "UButton" }).exists()).toBe(false);
   });
+
+  it("tracks a parent element's scroll position when target is 'parent'", async () => {
+    const wrapper = mount(
+      {
+        components: { UScrollTop },
+        template: '<div class="parent-scroller"><UScrollTop :target="\'parent\'" :threshold="50" /></div>',
+      },
+      { attachTo: document.body }
+    );
+    const parent = wrapper.find(".parent-scroller").element;
+    Object.defineProperty(parent, "scrollTop", { value: 100, writable: true, configurable: true });
+    parent.dispatchEvent(new Event("scroll"));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.findComponent({ name: "UButton" }).exists()).toBe(true);
+
+    const scrollSpy = vi.fn();
+    parent.scroll = scrollSpy;
+    await wrapper.findComponent({ name: "UButton" }).trigger("click");
+    expect(scrollSpy).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
+    wrapper.unmount();
+  });
 });

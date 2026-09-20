@@ -30,14 +30,14 @@ describe("UScrollPanel", () => {
   it("steps scroll position on ArrowDown keydown while a bar has focus (vertical orientation default)", async () => {
     const wrapper = mount(UScrollPanel, {
       slots: { default: '<div style="height: 500px;">tall</div>' },
+      attachTo: document.body,
     });
-    const yBar = wrapper.find(".u-scroll-panel-bar-y");
-    const preventDefault = vi.fn();
-    await yBar.trigger("keydown", { code: "ArrowDown" });
-    // jsdom's trigger() constructs a real KeyboardEvent; assert no throw and
-    // orientation-consistent behavior via the exposed refresh()/scrollTop()
-    // methods instead of a wrapped-event preventDefault spy.
-    expect(preventDefault).not.toHaveBeenCalled();
+    const yBar = wrapper.find(".u-scroll-panel-bar-y").element as HTMLElement;
+    const event = new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true, cancelable: true });
+    yBar.dispatchEvent(event);
+    await wrapper.vm.$nextTick();
+    expect(event.defaultPrevented).toBe(true);
+    wrapper.unmount();
   });
 
   it("scrollTop() clamps to the scrollable range", () => {
