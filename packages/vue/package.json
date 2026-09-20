@@ -408,6 +408,51 @@
       "types": "./dist/scroll-top/index.d.mts",
       "import": "./dist/scroll-top/index.mjs",
       "default": "./dist/scroll-top/index.mjs"
+    },
+    "./skeleton": {
+      "types": "./dist/skeleton/index.d.mts",
+      "import": "./dist/skeleton/index.mjs",
+      "default": "./dist/skeleton/index.mjs"
+    },
+    "./splitter": {
+      "types": "./dist/splitter/index.d.mts",
+      "import": "./dist/splitter/index.mjs",
+      "default": "./dist/splitter/index.mjs"
+    },
+    "./tag": {
+      "types": "./dist/tag/index.d.mts",
+      "import": "./dist/tag/index.mjs",
+      "default": "./dist/tag/index.mjs"
+    },
+    "./terminal": {
+      "types": "./dist/terminal/index.d.mts",
+      "import": "./dist/terminal/index.mjs",
+      "default": "./dist/terminal/index.mjs"
+    },
+    "./timeline": {
+      "types": "./dist/timeline/index.d.mts",
+      "import": "./dist/timeline/index.mjs",
+      "default": "./dist/timeline/index.mjs"
+    },
+    "./toast": {
+      "types": "./dist/toast/index.d.mts",
+      "import": "./dist/toast/index.mjs",
+      "default": "./dist/toast/index.mjs"
+    },
+    "./toolbar": {
+      "types": "./dist/toolbar/index.d.mts",
+      "import": "./dist/toolbar/index.mjs",
+      "default": "./dist/toolbar/index.mjs"
+    },
+    "./animate-on-scroll": {
+      "types": "./dist/animate-on-scroll/index.d.mts",
+      "import": "./dist/animate-on-scroll/index.mjs",
+      "default": "./dist/animate-on-scroll/index.mjs"
+    },
+    "./deferred-content": {
+      "types": "./dist/deferred-content/index.d.mts",
+      "import": "./dist/deferred-content/index.mjs",
+      "default": "./dist/deferred-content/index.mjs"
     }
   },
   "files": [

@@ -11,3 +11,5 @@ export * from "./id/component-id-generator";
 export * from "./model-holder";
 export * from "./confirmation";
 export * from "./dialog-service";
+export * from "./terminal-service";
+export * from "./toast-service";

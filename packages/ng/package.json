@@ -303,6 +303,38 @@
     "./scroll-top": {
       "types": "./dist/types/ultimate-ng-scroll-top.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-scroll-top.mjs"
+    },
+    "./skeleton": {
+      "types": "./dist/types/ultimate-ng-skeleton.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-skeleton.mjs"
+    },
+    "./splitter": {
+      "types": "./dist/types/ultimate-ng-splitter.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-splitter.mjs"
+    },
+    "./tag": {
+      "types": "./dist/types/ultimate-ng-tag.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-tag.mjs"
+    },
+    "./terminal": {
+      "types": "./dist/types/ultimate-ng-terminal.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-terminal.mjs"
+    },
+    "./timeline": {
+      "types": "./dist/types/ultimate-ng-timeline.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-timeline.mjs"
+    },
+    "./toast": {
+      "types": "./dist/types/ultimate-ng-toast.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-toast.mjs"
+    },
+    "./toolbar": {
+      "types": "./dist/types/ultimate-ng-toolbar.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-toolbar.mjs"
+    },
+    "./animate-on-scroll": {
+      "types": "./dist/types/ultimate-ng-animate-on-scroll.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-animate-on-scroll.mjs"
     }
   },
   "files": [
