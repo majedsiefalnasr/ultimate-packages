@@ -226,9 +226,26 @@ Explicitly out of scope for this document, consistent with the approved decision
 
 ## 12. Current Phase C position / next step
 
-**Current position:** the Phase C analysis baseline (Operating Context, Dependency Map, Parity Matrix, Batch Selection Analysis) is complete, and this Migration Roadmap is complete and **approved**. No batch has been opened. No implementation has occurred under Phase C.
+**Current position (updated 2026-09-20, following Batch 1's closeout):** Batch 1 is complete — merged to `main` (commit `78233fe`), all 79 canonical capabilities named in §10.3 built, tested, and reviewed across their eligible frameworks (Form 30/30, Overlay 8/8, Navigation 11/11, Panel/Layout/Display/Feedback 30/30), per the full gated sequence in §9 (Specification, Spec Review, Implementation Plan, Plan Review, Implementation, Verification, Final Review/Closeout). `COMPONENT_INVENTORY.md` (Angular) and the newly-created `docs/architecture/REACT_COMPONENT_STATUS.md`/`VUE_COMPONENT_STATUS.md` (per §9 step 8) reflect this.
 
-**Next step:** open Batch 1 per §9's process, starting with Batch 1's own Brainstorming/Decision stage — which, per §10, already has its scope stated by this roadmap and does not need to re-derive batch-formation rules, only confirm/refine Batch 1's specific membership against the evidence current at that time and produce the Batch 1 Specification. This roadmap does not perform that step.
+### 12.1 Batch 2 Brainstorming/Decision (2026-09-20) — outcome: no ordinary batch currently eligible
+
+Per §9 step 1, Batch 2's Brainstorming/Decision stage was opened and evaluated this roadmap's rules (§3–§6) against the repository state and governing documents as they stand today (`docs/architecture/research/2026-09-17-phase-c-migration-dependency-map.md`, the Parity Matrix, `docs/architecture/DECISIONS.md`, `docs/architecture/BLUEPRINT_GAPS.md`), cross-checked directly against the real `packages/{ng,react,vue}/src/` directory listings rather than assumed from any document's own text.
+
+**Finding: no ordinary, non-exception canonical capability is currently eligible for a new batch.** Specifically:
+
+- **Form, Overlay, Navigation, and Panel/Layout/Display/Feedback** — the four families that contributed Batch 1's eligible set — are now fully closed; no eligible member remains in any of them.
+- **Data family** (Tree, TreeTable, TreeSelect, OrderList, PickList, DataView) — remains blocked. DECISION-D (Tree-family, do-not-reopen) and DECISION-C (Table-pattern generalization, narrowed but still open) are confirmed unresolved in `BLUEPRINT_GAPS.md` as of this check; neither has moved since this roadmap's original compilation.
+- **Visualization/Rich-content** (Chart, Editor) — remains blocked on DECISION-B (external runtime dependency approval process), confirmed still open.
+- **OrganizationChart** — the `BLUEPRINT_GAPS.md`-vs-`COMPONENT_INVENTORY.md` discrepancy named in §7 remains unadjudicated.
+- **React `DynamicDialog` and `OverlayBadge`** — confirmed still Unverified (no `packages/react/src/dynamic-dialog/` or `packages/react/src/overlay-badge/` directory exists). Per §6, these remain excluded from ordinary batch membership until a separately commissioned **Parity Reconciliation pass** resolves the status with new evidence — not performed here, per §6.3, and not commissioned by this Brainstorming/Decision stage.
+- **Angular `config`'s full surface**, and the four standing deferrals (React Ripple, Vue Fluid, React DataScroller, Vue InlineMessage) — unchanged, per their existing governing decisions.
+
+No new architectural exception was discovered. No existing decision (DECISION-B/C/D/E, the OrganizationChart discrepancy) was reopened, reinterpreted, or resolved by this check.
+
+**Decision (human-confirmed 2026-09-20): declare Phase C's ordinary-migration scope complete for the current evidence and decision state.** Batch 2 is not opened past this Brainstorming/Decision stage — no Specification, Implementation Plan, or implementation work follows from it. This is a recorded current-state conclusion, not a new roadmap rule or a change to any decision in §7.
+
+**Next step:** further ordinary migration requires either (a) a separately authorized **Parity Reconciliation pass** (§6.3 — resolving the Unverified pool, starting with React's DynamicDialog/OverlayBadge), or (b) an explicitly authorized resolution of one of the open exception-track decisions (DECISION-B, DECISION-C, DECISION-D remains permanently protected and is not a candidate for resolution, or the OrganizationChart discrepancy). Neither is commissioned or scheduled by this entry. Until one of those happens and produces new eligible evidence, no Batch 2 Brainstorming/Decision stage will find different results than this one did.
 
 ---
 
