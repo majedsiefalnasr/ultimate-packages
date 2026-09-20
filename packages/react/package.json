@@ -313,6 +313,36 @@
       "types": "./dist/accordion/index.d.mts",
       "import": "./dist/accordion/index.mjs",
       "default": "./dist/accordion/index.mjs"
+    },
+    "./chip": {
+      "types": "./dist/chip/index.d.mts",
+      "import": "./dist/chip/index.mjs",
+      "default": "./dist/chip/index.mjs"
+    },
+    "./divider": {
+      "types": "./dist/divider/index.d.mts",
+      "import": "./dist/divider/index.mjs",
+      "default": "./dist/divider/index.mjs"
+    },
+    "./fieldset": {
+      "types": "./dist/fieldset/index.d.mts",
+      "import": "./dist/fieldset/index.mjs",
+      "default": "./dist/fieldset/index.mjs"
+    },
+    "./galleria": {
+      "types": "./dist/galleria/index.d.mts",
+      "import": "./dist/galleria/index.mjs",
+      "default": "./dist/galleria/index.mjs"
+    },
+    "./image": {
+      "types": "./dist/image/index.d.mts",
+      "import": "./dist/image/index.mjs",
+      "default": "./dist/image/index.mjs"
+    },
+    "./inplace": {
+      "types": "./dist/inplace/index.d.mts",
+      "import": "./dist/inplace/index.mjs",
+      "default": "./dist/inplace/index.mjs"
     }
   },
   "files": [

@@ -247,6 +247,34 @@
     "./accordion": {
       "types": "./dist/types/ultimate-ng-accordion.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-accordion.mjs"
+    },
+    "./chip": {
+      "types": "./dist/types/ultimate-ng-chip.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-chip.mjs"
+    },
+    "./divider": {
+      "types": "./dist/types/ultimate-ng-divider.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-divider.mjs"
+    },
+    "./fieldset": {
+      "types": "./dist/types/ultimate-ng-fieldset.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-fieldset.mjs"
+    },
+    "./galleria": {
+      "types": "./dist/types/ultimate-ng-galleria.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-galleria.mjs"
+    },
+    "./image": {
+      "types": "./dist/types/ultimate-ng-image.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-image.mjs"
+    },
+    "./image-compare": {
+      "types": "./dist/types/ultimate-ng-image-compare.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-image-compare.mjs"
+    },
+    "./inplace": {
+      "types": "./dist/types/ultimate-ng-inplace.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-inplace.mjs"
     }
   },
   "files": [
