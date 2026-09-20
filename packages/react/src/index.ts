@@ -57,6 +57,7 @@ export * from "./speed-dial";
 export * from "./split-button";
 export * from "./paginator";
 export * from "./scroller";
+export * from "./data-scroller";
 export * from "./table";
 export * from "./chip";
 export * from "./divider";
