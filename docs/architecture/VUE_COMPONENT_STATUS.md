@@ -151,6 +151,12 @@ Sequenced first per spec §3.0/§5 item 1, ahead of any Vue task depending on it
 
 **Excluded for Vue (Unverified, per spec §3.4):** none in this family — Vue is eligible for all 26 all-3-framework capabilities plus ImageCompare, AnimateOnScroll, and DeferredContent (Toast unblocked by Group A). Mention/MultiStateCheckbox/TriStateCheckbox remain React-only, tracked only in `REACT_COMPONENT_STATUS.md`.
 
+**Parity Reconciliation pass (2026-09-20)** — the Phase C Next-Step Assessment's Path 1 workstream checked Vue's remaining Unverified pool against real, pinned PrimeVue 4.5.5 source (never from naming similarity alone; see `docs/architecture/research/2026-09-17-phase-c-cross-framework-functional-parity-matrix.md` §3.3(a)/§4.1b for full evidence).
+
+**Confirmed genuinely present — eligible candidate, not yet promoted to any batch:** **InlineMessage** — real `inlinemessage/InlineMessage.vue`/`BaseInlineMessage.vue`, with theme presets across all 4 PrimeVue preset packs, independently confirmed materially distinct from PrimeVue's own separate `Message.vue` (single-instance alert, severity icon, auto-dismiss via `life` unless `sticky`, no close button — not an alias or subset of `Message`). No Spec, Plan, or implementation authorized by this record.
+
+**Still genuinely Unverified for Vue (not checked by this pass):** MultiStateCheckbox, TriStateCheckbox, Mention, DataScroller.
+
 ---
 
 ## Verification

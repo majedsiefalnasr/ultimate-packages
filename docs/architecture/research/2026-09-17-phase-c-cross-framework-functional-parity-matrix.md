@@ -214,7 +214,7 @@ State per framework, per canonical capability. States used: **Built**, **Migrati
 | InputNumber | Built (`UInputNumber`) | Migration target — ready | Migration target — ready |
 | InputMask | Migration target — ready | Migration target — ready | Migration target — ready |
 | InputOTP | Migration target — ready | Migration target — ready | Migration target — ready |
-| InputChips | Unverified / mapping unresolved — no Angular directory named with this capability's description in Phase A §2; absence of a matching name does not establish the capability is functionally absent from Angular's scope (see §3.3) | Migration target — ready (React names it Chips; see §3) | Migration target — ready |
+| InputChips | **Not applicable** — Parity Reconciliation pass (2026-09-20) confirmed genuine functional absence via full extraction of real PrimeNG 21.1.9's authoritative 117-directory `packages/primeng/src/` listing (no match under any name) plus direct read of `chip/chip.ts` (a bare `BaseComponent`-extending display class, no input-driven multi-value/Enter-to-add-chip logic folded in) | Migration target — ready (React names it Chips; see §3) | Migration target — ready |
 | Password | Migration target — ready | Migration target — ready | Migration target — ready |
 | AutoComplete | Migration target — ready | Migration target — ready | Migration target — ready |
 | Select | Migration target — ready | Migration target — ready (React names it Dropdown; see §3) | Migration target — ready |
@@ -223,8 +223,8 @@ State per framework, per canonical capability. States used: **Built**, **Migrati
 | TreeSelect | Migration target — depends on Tree (hard) | Migration target — depends on Tree (hard) | Migration target — depends on Tree (hard) |
 | Listbox | Migration target — ready | Migration target — ready | Migration target — ready |
 | SelectButton | Migration target — ready | Migration target — ready | Migration target — ready |
-| MultiStateCheckbox | Unverified / mapping unresolved — no Angular directory named with this description in Phase A §2; not established as functionally absent (see §3.3) | Migration target — ready | Unverified / mapping unresolved — same as Angular's caveat |
-| TriStateCheckbox | Unverified / mapping unresolved — same | Migration target — ready | Unverified / mapping unresolved — same |
+| MultiStateCheckbox | **Not applicable** — Parity Reconciliation pass (2026-09-20) confirmed genuine functional absence: no match anywhere in real PrimeNG 21.1.9's full 117-directory `packages/primeng/src/` listing; `checkbox/checkbox.ts` is a single non-cycling `BaseEditableHolder`-extending class, no multi-state variant folded in | Migration target — ready | Unverified / mapping unresolved — Vue not checked by this pass (out of the reconciliation's named scope) |
+| TriStateCheckbox | **Not applicable** — same evidence as MultiStateCheckbox (Parity Reconciliation pass, 2026-09-20) | Migration target — ready | Unverified / mapping unresolved — Vue not checked by this pass |
 | Rating | Migration target — ready | Migration target — ready | Migration target — ready |
 | Slider | Migration target — ready | Migration target — ready | Migration target — ready |
 | Knob | Migration target — ready | Migration target — ready | Migration target — ready |
@@ -232,11 +232,11 @@ State per framework, per canonical capability. States used: **Built**, **Migrati
 | DatePicker | Migration target — ready | Migration target — ready (React names it Calendar; see §3) | Migration target — ready |
 | FileUpload | Migration target — ready | Migration target — ready | Migration target — ready |
 | KeyFilter | Migration target — ready | Migration target — ready | Migration target — ready |
-| Mention | Unverified / mapping unresolved — no Angular directory named with this description in Phase A §2; not established as functionally absent | Migration target — ready | Unverified / mapping unresolved — same |
+| Mention | **Not applicable** — Parity Reconciliation pass (2026-09-20) confirmed genuine functional absence: no `@`-trigger autocomplete-suggestion pattern anywhere in real PrimeNG 21.1.9's full 117-directory listing under any name | Migration target — ready | Unverified / mapping unresolved — Vue not checked by this pass |
 | FloatLabel | Migration target — ready | Migration target — ready | Migration target — ready |
-| IftaLabel | Migration target — ready | Unverified / mapping unresolved — no React directory named with this description in Phase A §3; not established as functionally absent (see §3.3) | Migration target — ready |
+| IftaLabel | Migration target — ready | **Not applicable** — Parity Reconciliation pass (2026-09-20) confirmed genuine functional absence: zero matches anywhere in real PrimeReact 10.9.9's tarball (full-text search, not just directory names); React's `FloatLabel.js` has no alternate-positioning-mode prop that would fold this in | Migration target — ready |
 | IconField / InputIcon | Migration target — ready | Migration target — ready | Migration target — ready |
-| InputGroup / InputGroupAddon | Migration target — ready | Unverified / mapping unresolved — no React directories named with this description in Phase A §3; not established as functionally absent | Migration target — ready |
+| InputGroup / InputGroupAddon | Migration target — ready | **Not applicable — confirmed showcase-pattern-only, not a shipped component.** Parity Reconciliation pass (2026-09-20): real PrimeReact has `components/doc/inputgroup/basicdoc.js` (showcase documentation) but no `components/lib/inputgroup/` directory; the showcase's own markup wraps existing `InputText`/`InputNumber` in a plain `<div className="p-inputgroup">` with zero imported `InputGroup`/`InputGroupAddon` component — a CSS/markup convention, not an importable component | Migration target — ready |
 
 ### 2.3 Overlay
 
@@ -247,10 +247,10 @@ State per framework, per canonical capability. States used: **Built**, **Migrati
 | Drawer | Migration target — ready | Migration target — ready (React names it Sidebar; see §3) | Migration target — ready |
 | ConfirmDialog | Migration target — ready | Migration target — ready | Migration target — blocked (ordinary), unbuilt service tier |
 | ConfirmPopup | Migration target — ready | Migration target — ready | Migration target — blocked (ordinary), unbuilt service tier |
-| DynamicDialog | Migration target — ready | Unverified / mapping unresolved — no React directory named with this description in Phase A §3; not established as functionally absent (see §3.3) | Migration target — blocked (ordinary), unbuilt service tier |
+| DynamicDialog | Migration target — ready | **Not applicable** — Parity Reconciliation pass (2026-09-20) confirmed genuine functional absence: full enumeration of real PrimeReact 10.9.9's ~100-directory `components/lib/` listing has no `dynamicdialog` entry; direct read of `dialog/Dialog.js`/`DialogBase.js` confirms no dynamic-component-injection API, no service `.open(component, options)` method, no `DynamicDialogRef`-equivalent type anywhere | Migration target — blocked (ordinary), unbuilt service tier |
 | ContextMenu | Migration target — ready | Migration target — ready | Migration target — ready |
 | Tooltip | Built | Built | Built |
-| OverlayBadge | Migration target — ready (Badge already built in Angular) | Unverified / mapping unresolved — no React directory named with this description in Phase A §3; not established as functionally absent | Migration target — blocked (ordinary), unbuilt Badge |
+| OverlayBadge | Migration target — ready (Badge already built in Angular) | **Not applicable** — Parity Reconciliation pass (2026-09-20) confirmed genuine functional absence: no `overlaybadge` directory anywhere in real PrimeReact 10.9.9's `components/lib/`; `badge/Badge.js`/`BadgeBase.js` is a plain `<span>{value}</span>`, no overlay-positioning prop or variant | Migration target — blocked (ordinary), unbuilt Badge |
 | StyleClass | Migration target — ready | Migration target — ready | Migration target — ready |
 
 ### 2.4 Navigation
@@ -282,7 +282,7 @@ State per framework, per canonical capability. States used: **Built**, **Migrati
 | OrderList | Architectural exception — DECISION-C open remainder | Architectural exception — same | Architectural exception — same |
 | PickList | Architectural exception — DECISION-C open remainder | Architectural exception — same | Architectural exception — same |
 | DataView | Architectural exception — DECISION-C open remainder | Architectural exception — same | Architectural exception — same |
-| DataScroller | Unverified / mapping unresolved — no Angular directory named with this description in Phase A §2; not established as functionally absent (see §3.3) | Migration target — ready (Paginator + Scroller already built, no dependency) | Unverified / mapping unresolved — same as Angular's caveat |
+| DataScroller | Unverified / mapping unresolved — Angular not checked by this pass (out of the reconciliation's named scope) | **Eligible — Parity Reconciliation pass (2026-09-20) independently confirmed genuine presence and real distinct implementation** (Paginator + Scroller already built, no dependency). Real PrimeReact 10.9.9 source: `components/lib/datascroller/DataScroller.js`/`DataScrollerBase.js`/`datascroller.d.ts` — a real top-level PrimeReact component implementing genuine infinite-scroll/lazy-append list behavior (`load()` windows `value` by `first`/`rows`, `bindScrollListener` triggers further loads on scroll, `onLazyLoad` callback for server-driven lazy mode), materially distinct from React's already-built `Scroller` virtualization primitive | Unverified / mapping unresolved — Vue not checked by this pass |
 
 ### 2.6 Panel / Layout / Display / Feedback
 
@@ -300,7 +300,7 @@ State per framework, per canonical capability. States used: **Built**, **Migrati
 | Fieldset | Migration target — ready | Migration target — ready | Migration target — ready |
 | Galleria | Migration target — ready | Migration target — ready | Migration target — ready |
 | Image | Migration target — ready | Migration target — ready | Migration target — ready |
-| ImageCompare | Migration target — ready | Unverified / mapping unresolved — no React directory named with this description in Phase A §3; not established as functionally absent (see §3.3) | Migration target — ready |
+| ImageCompare | Migration target — ready | **Not applicable** — Parity Reconciliation pass (2026-09-20) confirmed genuine functional absence: zero matches anywhere in real PrimeReact 10.9.9's tarball; `image/` contains only `Image.js`/`ImageBase.js`, a single lightbox/zoom component with no compare-slider variant or sibling file | Migration target — ready |
 | Inplace | Migration target — ready | Migration target — ready | Migration target — ready |
 | Message | Migration target — ready | Migration target — ready | Migration target — ready |
 | Messages | Unverified / mapping unresolved — whether this is a distinct capability from Message or a framework-specific shape/naming difference cannot be determined from current evidence; see §3.6 | Migration target — ready | Unverified / mapping unresolved — same |
@@ -318,9 +318,9 @@ State per framework, per canonical capability. States used: **Built**, **Migrati
 | Timeline | Migration target — ready | Migration target — ready | Migration target — ready |
 | Toast | Migration target — ready | Migration target — ready | Migration target — blocked (ordinary), unbuilt service tier |
 | Toolbar | Migration target — ready | Migration target — ready | Migration target — ready |
-| AnimateOnScroll | Migration target — ready | Unverified / mapping unresolved — no React directory named with this description in Phase A §3; not established as functionally absent (see §3.3) | Migration target — ready |
-| DeferredContent | Unverified / mapping unresolved — no Angular directory named with this description in Phase A §2; not established as functionally absent | Migration target — ready | Migration target — ready |
-| InlineMessage | Unverified / mapping unresolved — no Angular directory named with this description in Phase A §2; not established as functionally absent | Unverified / mapping unresolved — same for React, per Phase A §3 | Migration target — ready |
+| AnimateOnScroll | Migration target — ready | **Not applicable** — Parity Reconciliation pass (2026-09-20) confirmed genuine functional absence: zero matches anywhere in real PrimeReact 10.9.9's tarball, no lib directory, no doc directory | Migration target — ready |
+| DeferredContent | **Not applicable — confirmed showcase-only, never a shipped library component.** Parity Reconciliation pass (2026-09-20): real PrimeNG has no `deferredcontent/` directory anywhere in the authoritative 117-directory `packages/primeng/src/` listing; the exact behavior (`IntersectionObserver`-driven delayed-render-on-scroll) does exist as a genuine, working implementation, but only at `apps/showcase/components/demo/deferreddemo.ts` — PrimeNG's own documentation-site source, never exported as part of the installable `primeng` package. No evidence it relies on Angular's native `@defer` instead (the showcase file hand-rolls its own `IntersectionObserver`) | Migration target — ready | Migration target — ready |
+| InlineMessage | Unverified / mapping unresolved — Angular not checked by this pass (out of the reconciliation's named scope) | Unverified / mapping unresolved — React not checked by this pass | **Eligible — Parity Reconciliation pass (2026-09-20) confirmed genuine presence.** Real PrimeVue 4.5.5 source: `inlinemessage/InlineMessage.vue`/`BaseInlineMessage.vue`, with its own theme presets across all 4 preset packs (aura/lara/material/nora) — a real, distinct, working component (single-instance alert, severity-driven icon, auto-dismiss via `life` timeout unless `sticky`, no close button), independently confirmed materially different from PrimeVue's own separate `Message.vue` (which has `closable` + a close button + its own timer). Not a stub, not deprecated, not an alias of Message. |
 
 ### 2.7 Visualization / Rich content
 
@@ -378,12 +378,25 @@ Phase A's per-framework "Remaining"/"Built" enumerations name capabilities by th
 |---|---|---|
 | Editable/model-holder tier, Input tier | React | Phase A §3 states directly: "every PrimeReact form component is fully controlled... with no shared base class carrying model-value state. React has *no* `basemodelholder`/`baseeditableholder`/`baseinput` source directories at all" — verified against real PrimeReact source itself, not just Ultimate's own inventory. This is functional-architecture evidence, not a naming gap. |
 | Ripple | React | Phase A §1 finding 4 / §7: "React has none anywhere in `packages/react/src/` or `packages/react-core/src/`" — confirmed by direct repository inspection of the actual built-package trees, not merely by the absence of a Prime directory name. Real, confirmed cross-framework asymmetry. |
+| MultiStateCheckbox | Angular | **Parity Reconciliation pass (2026-09-20):** full extraction of real PrimeNG 21.1.9's authoritative 117-directory `packages/primeng/src/` listing has no match under any name; `checkbox/checkbox.ts` is a single non-cycling `BaseEditableHolder`-extending class with no multi-state variant folded in. |
+| TriStateCheckbox | Angular | Same evidence as MultiStateCheckbox (Parity Reconciliation pass, 2026-09-20). |
+| Mention | Angular | **Parity Reconciliation pass (2026-09-20):** no `@`-trigger autocomplete-suggestion pattern anywhere in real PrimeNG 21.1.9's full 117-directory listing under any name. |
+| InputChips | Angular | **Parity Reconciliation pass (2026-09-20):** no match in the full 117-directory listing; `chip/chip.ts` is a bare `BaseComponent`-extending display class, no input-driven multi-value logic folded in. |
+| IftaLabel | React | **Parity Reconciliation pass (2026-09-20):** zero matches anywhere in real PrimeReact 10.9.9's tarball (full-text search); `FloatLabel.js` has no alternate-positioning-mode prop. |
+| InputGroup / InputGroupAddon | React | **Parity Reconciliation pass (2026-09-20), reclassified as showcase-pattern-only, not a component:** real PrimeReact has `components/doc/inputgroup/basicdoc.js` (showcase documentation) but no `components/lib/inputgroup/` directory; the showcase markup wraps existing `InputText`/`InputNumber` in a plain `<div className="p-inputgroup">` with zero imported `InputGroup` component. |
+| DynamicDialog | React | **Parity Reconciliation pass (2026-09-20):** full enumeration of real PrimeReact 10.9.9's ~100-directory `components/lib/` listing has no `dynamicdialog` entry; `dialog/Dialog.js`/`DialogBase.js` has no dynamic-component-injection API. |
+| OverlayBadge | React | **Parity Reconciliation pass (2026-09-20):** no `overlaybadge` directory anywhere in real PrimeReact 10.9.9; `badge/Badge.js`/`BadgeBase.js` is a plain `<span>{value}</span>` with no overlay-positioning variant. |
+| ImageCompare | React | **Parity Reconciliation pass (2026-09-20):** zero matches anywhere in real PrimeReact 10.9.9's tarball; `image/` contains only a single lightbox/zoom component. |
+| AnimateOnScroll | React | **Parity Reconciliation pass (2026-09-20):** zero matches anywhere in real PrimeReact 10.9.9's tarball, no lib or doc directory. |
+| DeferredContent | Angular | **Parity Reconciliation pass (2026-09-20), reclassified as showcase-only, never a shipped library component:** no `deferredcontent/` directory in real PrimeNG 21.1.9's authoritative 117-directory listing; the exact `IntersectionObserver`-driven behavior exists only at `apps/showcase/components/demo/deferreddemo.ts` (PrimeNG's own doc-site source), never exported as part of the installable `primeng` package. |
 
 **(b) No corresponding named Prime entry found (naming-enumeration gap only — functional status not established)**
 
 The following capabilities have no Phase A entry under a matching name for the framework(s) listed, but Phase A's own per-framework enumeration is known to be incomplete (the Dependency Map's own §0 finding 3 already established that Phase A's React/Vue "Remaining" bullets undercount their own stated totals by 12 and ~23-24 items respectively) and Phase A never performed a reverse check (searching each framework's real Prime source for a capability under a *different* name). Absence of a matching directory name is therefore **not sufficient evidence of functional absence** and each is carried as Unverified in §2, not "Not applicable":
 
-MultiStateCheckbox, TriStateCheckbox, Mention (no Angular/Vue directory named), InputGroup/InputGroupAddon, IftaLabel, DynamicDialog, OverlayBadge, ImageCompare, AnimateOnScroll (no React directory named), DataScroller (no Angular/Vue directory named), DeferredContent (no Angular directory named), InlineMessage (no Angular/React directory named), InputChips (no Angular directory named).
+**Resolved by the Parity Reconciliation pass (2026-09-20)** — moved out of this tier: MultiStateCheckbox/TriStateCheckbox/Mention/InputChips (Angular), InputGroup/InputGroupAddon/IftaLabel/DynamicDialog/OverlayBadge/ImageCompare/AnimateOnScroll (React), DeferredContent (Angular) — all reclassified to tier (a), confirmed functional absence, above. DataScroller (React) and InlineMessage (Vue) — both confirmed genuinely present with real distinct implementations; see §2.5/§2.6 and the new §4.1b below.
+
+**Still genuinely unresolved (that pass's named scope did not cover these framework legs):** DataScroller (Angular, Vue not checked), InlineMessage (Angular, React not checked).
 
 **(c) Mapping unresolved / insufficient evidence** — see §3.6 for items where even the naming-enumeration facts above cannot be established with confidence (e.g. whether an item might exist under an entirely different canonical name not yet identified by this matrix).
 
@@ -431,17 +444,28 @@ A functional parity gap is asymmetric coverage of a canonical capability across 
 
 ### 4.1 Confirmed functional parity gaps (evidence-backed functional absence, not directory-naming asymmetry)
 
-Per correction #4, an item is listed here only when independent evidence (not merely "no Phase A directory name found") establishes that a framework genuinely lacks the capability, while at least one other framework has it. Every item previously listed here on the basis of "No corresponding capability named" alone has been removed and reclassified — see §3.3(b) and §2 for their corrected Unverified states. Only two items meet the stricter bar:
+Per correction #4, an item is listed here only when independent evidence (not merely "no Phase A directory name found") establishes that a framework genuinely lacks the capability, while at least one other framework has it. Every item previously listed here on the basis of "No corresponding capability named" alone had been removed and reclassified as Unverified — the Parity Reconciliation pass (2026-09-20) has since resolved most of that Unverified pool with real source evidence (§3.3(b)), moving several items back into this section:
 
 | Canonical capability | Angular | React | Vue | Gap description |
 |---|---|---|---|---|
 | Ripple | Built | **Missing** | Built | Confirmed by direct repository inspection of `packages/react/src/` and `packages/react-core/src/` — no Ripple directory exists anywhere in React's actual built-package trees (Phase A §1 finding 4, §7). This is evidence of the built package's real contents, not an inference from a missing Prime directory name. |
 | Fluid | Built | Unverified | **Missing** (Vue only) | Vue's absence is confirmed by direct evidence: `packages/vue/src/fluid/` does not exist, and this concretely blocks Vue's own ancestor-Fluid-detection code path from ever resolving `true` (Phase A §4 explicit finding). React's status remains genuinely Unverified — not established as present or absent — so this is recorded as a two-framework asymmetry (Angular built, Vue confirmed missing), not a three-way comparison. |
+| MultiStateCheckbox | **Missing** | Migration target — ready | Unverified (not checked by this pass) | Parity Reconciliation pass (2026-09-20): confirmed genuine functional absence from real PrimeNG 21.1.9 — see §3.3(a). |
+| TriStateCheckbox | **Missing** | Migration target — ready | Unverified (not checked by this pass) | Same evidence as MultiStateCheckbox. |
+| Mention | **Missing** | Migration target — ready | Unverified (not checked by this pass) | Parity Reconciliation pass (2026-09-20): confirmed genuine functional absence from real PrimeNG 21.1.9 — see §3.3(a). |
+| InputChips | **Missing** | Migration target — ready (React names it Chips) | Migration target — ready | Parity Reconciliation pass (2026-09-20): confirmed genuine functional absence from real PrimeNG 21.1.9 — see §3.3(a). |
+| IftaLabel | Migration target — ready | **Missing** | Migration target — ready | Parity Reconciliation pass (2026-09-20): confirmed genuine functional absence from real PrimeReact 10.9.9 — see §3.3(a). |
+| InputGroup / InputGroupAddon | Migration target — ready | **Missing (showcase-pattern-only, not a component)** | Migration target — ready | Parity Reconciliation pass (2026-09-20): real PrimeReact ships this only as an uncomponentized CSS/markup convention in showcase docs — see §3.3(a). |
+| DynamicDialog | Migration target — ready | **Missing** | Blocked (ordinary), unbuilt service tier | Parity Reconciliation pass (2026-09-20): confirmed genuine functional absence from real PrimeReact 10.9.9 — see §3.3(a). |
+| OverlayBadge | Migration target — ready | **Missing** | Blocked (ordinary), unbuilt Badge | Parity Reconciliation pass (2026-09-20): confirmed genuine functional absence from real PrimeReact 10.9.9 — see §3.3(a). |
+| ImageCompare | Migration target — ready | **Missing** | Migration target — ready | Parity Reconciliation pass (2026-09-20): confirmed genuine functional absence from real PrimeReact 10.9.9 — see §3.3(a). |
+| AnimateOnScroll | Migration target — ready | **Missing** | Migration target — ready | Parity Reconciliation pass (2026-09-20): confirmed genuine functional absence from real PrimeReact 10.9.9 — see §3.3(a). |
+| DeferredContent | **Missing (showcase-only, never shipped in the library)** | Migration target — ready | Migration target — ready | Parity Reconciliation pass (2026-09-20): real PrimeNG has the exact behavior only in its own doc-site source (`apps/showcase/`), never exported as part of the installable package — see §3.3(a). |
 
 **Reclassified out of this section (no longer treated as confirmed functional parity gaps):**
 
 - **Badge** — Vue's state is "migration target, blocked (unbuilt)," not "missing." It is an ordinary not-yet-built target like hundreds of others in the Dependency Map, not evidence of functional absence. React's status is Unverified. No confirmed gap.
-- **OverlayBadge, InputGroup/InputGroupAddon, IftaLabel, DynamicDialog, ImageCompare, AnimateOnScroll, MultiStateCheckbox/TriStateCheckbox/Mention, DataScroller, DeferredContent, InlineMessage** — each was previously listed here solely because Phase A's per-framework enumeration does not name a matching directory for one or more frameworks. Per §3.3(b), that is a naming-enumeration gap, not a confirmed functional gap — Phase A's own enumeration is independently known to be incomplete (Dependency Map §0 finding 3), and no reverse-search for an alternate name was performed. These remain Unverified in §2, not confirmed gaps here.
+- **DataScroller, InlineMessage** — the Parity Reconciliation pass (2026-09-20) confirmed both are genuinely *present* with real, distinct implementations (React DataScroller; Vue InlineMessage) — the opposite outcome from the items above. Not a parity gap; see §4.1b.
 - **Messages** — relationship to Message is itself unresolved (§3.6), so it cannot be evidence of a parity gap; a capability whose own existence-as-distinct-from-Message is unresolved cannot simultaneously be asserted as "present in React, missing elsewhere."
 
 ### 4.1a Confirmed infrastructure asymmetry (distinct from a capability being functionally absent)
@@ -450,7 +474,18 @@ One further asymmetry is evidence-backed but is not "capability missing" — it 
 
 | Capability family | Angular | React | Vue | Description |
 |---|---|---|---|---|
-| ConfirmDialog / ConfirmPopup / DynamicDialog / Toast | Migration target — ready | Migration target — ready (DynamicDialog: Unverified, no matching React directory name found — see §3.3(b)) | Migration target — **blocked**, unbuilt ConfirmationService/DialogService/ToastService-equivalent tier | Phase A §4 states explicitly that Vue's service tier is unbuilt and blocks this family. This is a real, confirmed infrastructure gap for Vue specifically — but the capability itself is named and classified in Vue's own inventory (not "missing"), so it is recorded here as a blocked-infrastructure asymmetry rather than folded into §4.1's functional-absence list. |
+| ConfirmDialog / ConfirmPopup / DynamicDialog / Toast | Migration target — ready | Migration target — ready (DynamicDialog: now **Not applicable**, confirmed genuine functional absence — see §3.3(a)/§4.1) | Migration target — **blocked**, unbuilt ConfirmationService/DialogService/ToastService-equivalent tier | Phase A §4 states explicitly that Vue's service tier is unbuilt and blocks this family. This is a real, confirmed infrastructure gap for Vue specifically — but the capability itself is named and classified in Vue's own inventory (not "missing"), so it is recorded here as a blocked-infrastructure asymmetry rather than folded into §4.1's functional-absence list. React's DynamicDialog column is updated for consistency following the Parity Reconciliation pass (2026-09-20); this does not change the Vue infrastructure-blocking finding itself. |
+
+### 4.1b Parity Reconciliation pass (2026-09-20) — newly eligible candidates confirmed by real source evidence
+
+Per the Phase C Next-Step Assessment's Path 1 authorization, a dedicated evidence/reconciliation pass checked every capability/framework pair remaining in §3.3(b)'s Unverified pool against real, pinned Prime source (`.vendor-cache/primereact-10.9.9.tar.gz`, `.vendor-cache/primevue-4.5.5.tar.gz`, `.vendor-cache/primeng-21.1.9.tar.gz`, via `scripts/provenance/extract-prime{react,vue,ng}-source.mjs`) — never inferring eligibility from naming similarity alone. Ten capability/framework pairs resolved to confirmed functional absence (moved into §4.1 above); two resolved to confirmed genuine presence:
+
+| Canonical capability | Framework | Real source evidence | Status |
+|---|---|---|---|
+| DataScroller | React | `components/lib/datascroller/DataScroller.js`/`DataScrollerBase.js`/`datascroller.d.ts` — a real, distinct top-level PrimeReact component implementing genuine infinite-scroll/lazy-append list behavior, materially different from React's already-built `Scroller` virtualization primitive. | **Eligible** — a real capability Phase A's enumeration never named. Not yet promoted to any batch; reported as a candidate only, per this pass's explicit scope boundary against opening implementation. |
+| InlineMessage | Vue | `inlinemessage/InlineMessage.vue`/`BaseInlineMessage.vue`, with theme presets across all 4 PrimeVue preset packs — a real, distinct, working component (single-instance alert, severity icon, auto-dismiss via `life` unless `sticky`, no close button), independently confirmed materially different from PrimeVue's own separate `Message.vue`. | **Eligible** — a real, previously-Unverified capability confirmed present under its expected name. Not yet promoted to any batch. |
+
+**This pass did not check:** Angular's column for MultiStateCheckbox/TriStateCheckbox/Mention/InputChips/DeferredContent/DataScroller/InlineMessage was outside its named target list except where explicitly stated above (Angular MultiStateCheckbox/TriStateCheckbox/Mention/InputChips/DeferredContent *were* checked and resolved to confirmed absence, per §4.1 above); Vue's column for MultiStateCheckbox/TriStateCheckbox/Mention/DataScroller and React's column for InlineMessage remain genuinely Unverified — carried forward in §3.3(b), not resolved by this pass. This pass also did not touch DECISION-B, DECISION-C, or DECISION-D, and did not adjudicate OrganizationChart (§4.2).
 
 ### 4.2 OrganizationChart — preserved, unresolved discrepancy (not adjudicated)
 
@@ -513,6 +548,12 @@ Per the task's own instruction, these are kept as explicitly distinct counts, ne
 6. **No migration ordering, ranking, scoring, or Batch 1 selection** — confirmed. This document contains no priority language, no recommended sequence beyond what the Dependency Map already established (not restated here), and no batch-selection statement.
 7. **Directory-name absence is not treated as functional absence** — confirmed this pass (see report). §3.3 now separates confirmed functional absence (tier a, 2 items) from naming-enumeration-only gaps (tier b, 12 items) from mapping-unresolved (tier c); §4.1 retains only the 2 tier-a items as confirmed functional parity gaps.
 8. **"Confirmed functional gap" is not used as a proxy for directory-structure asymmetry** — confirmed this pass. §4.1 was reduced from 13 rows to 2; the 11 removed rows are explicitly listed as reclassified-out, with the reasoning stated per item, not silently dropped.
+
+---
+
+## Post-Batch-1 update (2026-09-20) — Parity Reconciliation pass
+
+Items 3, 7, and 8 of §7's checklist above describe this document's state as of its original 2026-09-17 completion. Following Phase C Batch 1's closeout (79/79 capabilities built and reviewed) and the Phase C Next-Step Assessment's authorization of Path 1 (Parity Reconciliation), a dedicated evidence pass resolved 10 of the 12 items in §3.3(b)'s naming-enumeration-gap tier to confirmed functional absence (now in §4.1, tier (a) in §3.3) and 2 to confirmed genuine presence (§4.1b) — all against real, pinned Prime source, never from naming similarity alone. §3.3(b)'s tier now carries only the framework legs this pass did not check (Vue for MultiStateCheckbox/TriStateCheckbox/Mention/DataScroller; React for InlineMessage; Angular for DataScroller/InlineMessage). This document's own §2/§3.3/§4.1 tables have been edited in place to reflect this — this note records why they no longer exactly match §7's original verification narrative. See `docs/architecture/research/PHASE_C_MIGRATION_ROADMAP.md` §12.2 for the workstream record. No new architecture decision was created by this update, and DECISION-B/C/D and the OrganizationChart discrepancy (§4.2) were not touched.
 
 ---
 

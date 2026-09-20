@@ -172,7 +172,7 @@ This document does not assert that F.2 (or F.2+F.4, or F.3) **should** be Batch 
 | Candidate | Why deferred/blocked | Which gate would need to clear |
 |---|---|---|
 | Chart, Editor | Architectural exception — DECISION-B (external runtime dependency approval process, not yet created) | A human decision on DECISION-B's approval process, then a separately-gated dependency-approval exercise — not a batch-eligibility fix |
-| Tree | Architectural exception — DECISION-D, protected, do-not-reopen | Explicitly not scheduled for resolution by this Phase C track at all, per ADR-043's structural-incompatibility finding |
+| Tree | Architectural exception — DECISION-D, protected, do-not-reopen | Explicitly not scheduled for resolution by this Phase C track at all, per DECISION-D's own structural-incompatibility finding (`BLUEPRINT_GAPS.md`; not ADR-043, which is the unrelated `@ultimate/uix-data` decision — reference corrected by the Parity Reconciliation pass, 2026-09-20) |
 | TreeTable, TreeSelect | Depend on Tree (hard) | Blocked transitively until Tree's DECISION-D status changes |
 | OrderList, PickList, DataView | Architectural exception — DECISION-C's open remainder | A human decision on whether Table's composition pattern generalizes to these, or whether each needs its own pass |
 | Angular `config` (full surface) | Architectural exception (soft) — building past ADR-018's scoped minimum | Only becomes urgent if a future component requires the fuller surface; no current pressure identified |

@@ -133,6 +133,11 @@ Real PrimeReact source paths are cited by top-level `components/lib/<name>/` dir
 
 **Excluded for React (Unverified, per spec §3.4):** ImageCompare, AnimateOnScroll — Angular+Vue only. Not present in this file's scope.
 
+**Parity Reconciliation pass (2026-09-20)** — the Phase C Next-Step Assessment's Path 1 workstream checked React's remaining Unverified pool against real, pinned PrimeReact 10.9.9 source (never from naming similarity alone; see `docs/architecture/research/2026-09-17-phase-c-cross-framework-functional-parity-matrix.md` §3.3(a)/§4.1/§4.1b for full evidence). Outcome for React:
+
+- **Confirmed genuinely absent (reclassified Unverified → Not applicable, not eligible for any future batch without new evidence):** DynamicDialog (no dynamic-component-injection mechanism in `dialog/Dialog.js`), OverlayBadge (`badge/Badge.js` has no overlay-positioning variant), IftaLabel (zero matches in the tarball), ImageCompare (zero matches; `image/` has only a single lightbox component), AnimateOnScroll (zero matches). InputGroup/InputGroupAddon confirmed as a showcase-only CSS/markup convention (`components/doc/inputgroup/basicdoc.js`), not a shipped component — same "Not applicable" disposition.
+- **Confirmed genuinely present — eligible candidate, not yet promoted to any batch:** **DataScroller** — real `components/lib/datascroller/DataScroller.js`/`DataScrollerBase.js`/`datascroller.d.ts`, a genuine infinite-scroll/lazy-append list component distinct from React's already-built `Scroller` virtualization primitive. No Spec, Plan, or implementation authorized by this record.
+
 ---
 
 ## Verification
