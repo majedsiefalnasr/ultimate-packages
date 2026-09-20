@@ -374,6 +374,11 @@
       "import": "./dist/inplace/index.mjs",
       "default": "./dist/inplace/index.mjs"
     },
+    "./inline-message": {
+      "types": "./dist/inline-message/index.d.mts",
+      "import": "./dist/inline-message/index.mjs",
+      "default": "./dist/inline-message/index.mjs"
+    },
     "./message": {
       "types": "./dist/message/index.d.mts",
       "import": "./dist/message/index.mjs",
