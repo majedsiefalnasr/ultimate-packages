@@ -2,7 +2,7 @@
 
 **Status:** Draft — awaiting Spec Review.
 **Date:** 2026-09-20
-**Branch:** not yet created (created at Implementation Plan time, per the established Batch 1 precedent — `feature/phase-c-batch-2-migration` off clean `main`).
+**Branch:** `feature/phase-c-batch-2-migration` (created off clean `main`, this specification's own commit is its first content).
 
 **Origin:** the Phase C Batch 2 Brainstorming/Decision stage (this conversation), governed by `docs/architecture/research/PHASE_C_MIGRATION_ROADMAP.md` (approved, `e04bd5e`, updated §12.1/§12.2 following Batch 1's closeout and the Parity Reconciliation pass), the updated `docs/architecture/research/2026-09-17-phase-c-cross-framework-functional-parity-matrix.md` (§4.1b), the updated `docs/architecture/research/2026-09-17-phase-c-migration-dependency-map.md`, the updated `docs/architecture/research/2026-09-17-phase-c-migration-batch-selection-analysis.md`, and the focused Vue RadioButtonGroup/CheckboxGroup verification (this conversation) that confirmed no scope expansion was warranted. Every scope boundary below traces to one of these documents or to a human decision made in this Batch 2 Brainstorming/Decision conversation, referenced as `[Decision N]` per that conversation's own numbering.
 
@@ -20,11 +20,11 @@
 1. **React DataScroller** (§3.1).
 2. **Vue InlineMessage** (§3.2).
 
-Each is a single-framework realization of its own canonical capability. Per the Roadmap's capability-scoped model, a capability entering scope for one framework does not require or imply any other framework's realization — neither of these two capabilities has an Angular, nor (for InlineMessage) a React, nor (for DataScroller) a Vue counterpart in scope here `[Roadmap §5.1]`.
+Each is a single-framework realization of its own canonical capability. Per the Roadmap's capability-scoped model, a capability entering scope for one framework does not require or imply any other framework's realization — for DataScroller, its Angular and Vue realizations are simply **not in scope for this batch**; for InlineMessage, its Angular and React realizations are simply **not in scope for this batch**. In every case, the framework(s) not in scope remain genuinely `Unverified / mapping unresolved` (§1) — this specification does not assert or imply they are confirmed absent `[Roadmap §5.1]`.
 
 **Out of scope, entirely, for this specification and its eventual Implementation Plan:**
 - Any capability not named in §3.
-- Any of the 10 capability/framework pairs the Parity Reconciliation pass confirmed genuinely absent (`Not applicable`): React DynamicDialog, React OverlayBadge, Angular MultiStateCheckbox, Angular TriStateCheckbox, Angular Mention, Angular InputChips, React IftaLabel, React ImageCompare, React AnimateOnScroll, React InputGroup/InputGroupAddon, Angular DeferredContent `[Parity Matrix §4.1]`.
+- Any of the 11 capability/framework pairs the Parity Reconciliation pass confirmed genuinely absent (`Not applicable`) — React: DynamicDialog, OverlayBadge, IftaLabel, ImageCompare, AnimateOnScroll, InputGroup/InputGroupAddon (6); Angular: MultiStateCheckbox, TriStateCheckbox, Mention, InputChips, DeferredContent (5) `[Parity Matrix §4.1]`.
 - The 7 capability/framework pairs still genuinely `Unverified / mapping unresolved` after the reconciliation pass (Vue MultiStateCheckbox/TriStateCheckbox/Mention/DataScroller; React InlineMessage; Angular DataScroller/InlineMessage) — none promoted without further evidence `[Parity Matrix §4.1b, Roadmap §6]`.
 - Vue `RadioButtonGroup`/`CheckboxGroup` — confirmed, by this conversation's own focused verification, to be Vue-specific supporting implementations of the already-Built `RadioButton`/`Checkbox` capabilities, not separate canonical capabilities. Not added to the canonical inventory, not migration targets.
 - Any architectural exception (Chart, Editor, Tree, TreeTable, TreeSelect, OrderList, PickList, DataView, Angular's `config` full-surface remainder) — `[Roadmap §7]`, not reopened.
@@ -41,7 +41,7 @@ Each is a single-framework realization of its own canonical capability. Per the 
 
 Per the Batch 2 Brainstorming/Decision stage and the preceding Parity Reconciliation pass:
 
-1. **The Parity Reconciliation pass's outcome is accepted as evidence** — 10 capability/framework pairs confirmed genuinely absent, 2 confirmed genuinely eligible (React DataScroller, Vue InlineMessage), 7 remain genuinely Unverified. Not re-derived here.
+1. **The Parity Reconciliation pass's outcome is accepted as evidence** — 11 capability/framework pairs confirmed genuinely absent (React 6, Angular 5), 2 confirmed genuinely eligible (React DataScroller, Vue InlineMessage), 7 remain genuinely Unverified. Not re-derived here.
 2. **Vue RadioButtonGroup/CheckboxGroup do not expand this batch's scope** — confirmed, via focused real-source verification, to be Vue-specific supporting implementations of already-Built RadioButton/Checkbox, not new canonical capabilities. Not added to the canonical inventory.
 3. **Batch 2 is authorized for exactly these two capabilities**, despite each being single-framework — the capability-scoped model does not require cross-framework parity as a precondition for batch inclusion `[Roadmap §5.1]`; this reverses Batch 1's own earlier deferral of both items (`[Batch 1 spec §8]`, "not promoted solely on single-framework eligibility") now that a full reconciliation pass has independently re-confirmed both are real, and no other family has any currently-eligible member competing for batch composition.
 4. **No further capability is added to close out an otherwise-small batch.** A 2-realization batch is accepted as correctly sized for the currently eligible evidence — not padded with anything from the Unverified pool or the exception tracks.
@@ -161,7 +161,7 @@ Neither capability requires `uix-data` (Data-family shared primitives are irrele
 | React Ripple, Vue Fluid, Angular `config` full surface | Existing standing deferrals; not bundled into this batch merely because it is small | Roadmap §7, this Brainstorming/Decision §7 item 4 |
 | Vue RadioButtonGroup, Vue CheckboxGroup | Confirmed Vue-specific supporting implementations of already-Built RadioButton/Checkbox, not separate canonical capabilities | This Batch 2 Brainstorming/Decision's own focused verification |
 | Angular DataScroller, Vue DataScroller, Angular InlineMessage, React InlineMessage, Vue MultiStateCheckbox, Vue TriStateCheckbox, Vue Mention | Still genuinely `Unverified / mapping unresolved`; not checked by the Parity Reconciliation pass; not promoted without further evidence | Parity Matrix §4.1b, Roadmap §6 |
-| The 10 confirmed-absent pairs (React DynamicDialog/OverlayBadge/IftaLabel/ImageCompare/AnimateOnScroll/InputGroup-InputGroupAddon, Angular MultiStateCheckbox/TriStateCheckbox/Mention/InputChips/DeferredContent) | Confirmed genuine functional absence by the Parity Reconciliation pass — `Not applicable`, not eligible for migration | Parity Matrix §4.1 |
+| The 11 confirmed-absent pairs (React DynamicDialog/OverlayBadge/IftaLabel/ImageCompare/AnimateOnScroll/InputGroup-InputGroupAddon — 6; Angular MultiStateCheckbox/TriStateCheckbox/Mention/InputChips/DeferredContent — 5) | Confirmed genuine functional absence by the Parity Reconciliation pass — `Not applicable`, not eligible for migration | Parity Matrix §4.1 |
 
 ---
 
