@@ -16,6 +16,18 @@
       "types": "./dist/types/ultimate-ng-checkbox.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-checkbox.mjs"
     },
+    "./radio-button": {
+      "types": "./dist/types/ultimate-ng-radio-button.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-radio-button.mjs"
+    },
+    "./toggle-button": {
+      "types": "./dist/types/ultimate-ng-toggle-button.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-toggle-button.mjs"
+    },
+    "./toggle-switch": {
+      "types": "./dist/types/ultimate-ng-toggle-switch.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-toggle-switch.mjs"
+    },
     "./paginator": {
       "types": "./dist/types/ultimate-ng-paginator.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-paginator.mjs"
@@ -44,9 +56,285 @@
       "types": "./dist/types/ultimate-ng-input-number.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-input-number.mjs"
     },
+    "./textarea": {
+      "types": "./dist/types/ultimate-ng-textarea.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-textarea.mjs"
+    },
+    "./input-mask": {
+      "types": "./dist/types/ultimate-ng-input-mask.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-input-mask.mjs"
+    },
+    "./input-otp": {
+      "types": "./dist/types/ultimate-ng-input-otp.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-input-otp.mjs"
+    },
+    "./password": {
+      "types": "./dist/types/ultimate-ng-password.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-password.mjs"
+    },
+    "./autocomplete": {
+      "types": "./dist/types/ultimate-ng-autocomplete.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-autocomplete.mjs"
+    },
+    "./select": {
+      "types": "./dist/types/ultimate-ng-select.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-select.mjs"
+    },
+    "./multi-select": {
+      "types": "./dist/types/ultimate-ng-multi-select.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-multi-select.mjs"
+    },
+    "./listbox": {
+      "types": "./dist/types/ultimate-ng-listbox.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-listbox.mjs"
+    },
+    "./cascade-select": {
+      "types": "./dist/types/ultimate-ng-cascade-select.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-cascade-select.mjs"
+    },
+    "./select-button": {
+      "types": "./dist/types/ultimate-ng-select-button.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-select-button.mjs"
+    },
+    "./rating": {
+      "types": "./dist/types/ultimate-ng-rating.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-rating.mjs"
+    },
+    "./slider": {
+      "types": "./dist/types/ultimate-ng-slider.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-slider.mjs"
+    },
+    "./knob": {
+      "types": "./dist/types/ultimate-ng-knob.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-knob.mjs"
+    },
+    "./color-picker": {
+      "types": "./dist/types/ultimate-ng-color-picker.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-color-picker.mjs"
+    },
+    "./date-picker": {
+      "types": "./dist/types/ultimate-ng-date-picker.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-date-picker.mjs"
+    },
+    "./file-upload": {
+      "types": "./dist/types/ultimate-ng-file-upload.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-file-upload.mjs"
+    },
+    "./key-filter": {
+      "types": "./dist/types/ultimate-ng-key-filter.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-key-filter.mjs"
+    },
     "./ripple": {
       "types": "./dist/types/ultimate-ng-ripple.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-ripple.mjs"
+    },
+    "./float-label": {
+      "types": "./dist/types/ultimate-ng-float-label.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-float-label.mjs"
+    },
+    "./icon-field": {
+      "types": "./dist/types/ultimate-ng-icon-field.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-icon-field.mjs"
+    },
+    "./input-group": {
+      "types": "./dist/types/ultimate-ng-input-group.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-input-group.mjs"
+    },
+    "./ifta-label": {
+      "types": "./dist/types/ultimate-ng-ifta-label.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-ifta-label.mjs"
+    },
+    "./breadcrumb": {
+      "types": "./dist/types/ultimate-ng-breadcrumb.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-breadcrumb.mjs"
+    },
+    "./mega-menu": {
+      "types": "./dist/types/ultimate-ng-mega-menu.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-mega-menu.mjs"
+    },
+    "./menubar": {
+      "types": "./dist/types/ultimate-ng-menubar.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-menubar.mjs"
+    },
+    "./panel-menu": {
+      "types": "./dist/types/ultimate-ng-panel-menu.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-panel-menu.mjs"
+    },
+    "./tiered-menu": {
+      "types": "./dist/types/ultimate-ng-tiered-menu.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-tiered-menu.mjs"
+    },
+    "./tabs": {
+      "types": "./dist/types/ultimate-ng-tabs.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-tabs.mjs"
+    },
+    "./stepper": {
+      "types": "./dist/types/ultimate-ng-stepper.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-stepper.mjs"
+    },
+    "./steps": {
+      "types": "./dist/types/ultimate-ng-steps.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-steps.mjs"
+    },
+    "./dock": {
+      "types": "./dist/types/ultimate-ng-dock.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-dock.mjs"
+    },
+    "./speed-dial": {
+      "types": "./dist/types/ultimate-ng-speed-dial.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-speed-dial.mjs"
+    },
+    "./split-button": {
+      "types": "./dist/types/ultimate-ng-split-button.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-split-button.mjs"
+    },
+    "./style-class": {
+      "types": "./dist/types/ultimate-ng-style-class.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-style-class.mjs"
+    },
+    "./popover": {
+      "types": "./dist/types/ultimate-ng-popover.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-popover.mjs"
+    },
+    "./drawer": {
+      "types": "./dist/types/ultimate-ng-drawer.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-drawer.mjs"
+    },
+    "./context-menu": {
+      "types": "./dist/types/ultimate-ng-context-menu.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-context-menu.mjs"
+    },
+    "./confirm-dialog": {
+      "types": "./dist/types/ultimate-ng-confirm-dialog.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-confirm-dialog.mjs"
+    },
+    "./confirm-popup": {
+      "types": "./dist/types/ultimate-ng-confirm-popup.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-confirm-popup.mjs"
+    },
+    "./dynamic-dialog": {
+      "types": "./dist/types/ultimate-ng-dynamic-dialog.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-dynamic-dialog.mjs"
+    },
+    "./overlay-badge": {
+      "types": "./dist/types/ultimate-ng-overlay-badge.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-overlay-badge.mjs"
+    },
+    "./avatar": {
+      "types": "./dist/types/ultimate-ng-avatar.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-avatar.mjs"
+    },
+    "./avatar-group": {
+      "types": "./dist/types/ultimate-ng-avatar-group.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-avatar-group.mjs"
+    },
+    "./block-ui": {
+      "types": "./dist/types/ultimate-ng-block-ui.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-block-ui.mjs"
+    },
+    "./button-group": {
+      "types": "./dist/types/ultimate-ng-button-group.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-button-group.mjs"
+    },
+    "./card": {
+      "types": "./dist/types/ultimate-ng-card.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-card.mjs"
+    },
+    "./carousel": {
+      "types": "./dist/types/ultimate-ng-carousel.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-carousel.mjs"
+    },
+    "./accordion": {
+      "types": "./dist/types/ultimate-ng-accordion.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-accordion.mjs"
+    },
+    "./chip": {
+      "types": "./dist/types/ultimate-ng-chip.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-chip.mjs"
+    },
+    "./divider": {
+      "types": "./dist/types/ultimate-ng-divider.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-divider.mjs"
+    },
+    "./fieldset": {
+      "types": "./dist/types/ultimate-ng-fieldset.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-fieldset.mjs"
+    },
+    "./galleria": {
+      "types": "./dist/types/ultimate-ng-galleria.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-galleria.mjs"
+    },
+    "./image": {
+      "types": "./dist/types/ultimate-ng-image.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-image.mjs"
+    },
+    "./image-compare": {
+      "types": "./dist/types/ultimate-ng-image-compare.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-image-compare.mjs"
+    },
+    "./inplace": {
+      "types": "./dist/types/ultimate-ng-inplace.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-inplace.mjs"
+    },
+    "./message": {
+      "types": "./dist/types/ultimate-ng-message.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-message.mjs"
+    },
+    "./meter-group": {
+      "types": "./dist/types/ultimate-ng-meter-group.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-meter-group.mjs"
+    },
+    "./panel": {
+      "types": "./dist/types/ultimate-ng-panel.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-panel.mjs"
+    },
+    "./progress-bar": {
+      "types": "./dist/types/ultimate-ng-progress-bar.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-progress-bar.mjs"
+    },
+    "./progress-spinner": {
+      "types": "./dist/types/ultimate-ng-progress-spinner.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-progress-spinner.mjs"
+    },
+    "./scroll-panel": {
+      "types": "./dist/types/ultimate-ng-scroll-panel.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-scroll-panel.mjs"
+    },
+    "./scroll-top": {
+      "types": "./dist/types/ultimate-ng-scroll-top.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-scroll-top.mjs"
+    },
+    "./skeleton": {
+      "types": "./dist/types/ultimate-ng-skeleton.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-skeleton.mjs"
+    },
+    "./splitter": {
+      "types": "./dist/types/ultimate-ng-splitter.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-splitter.mjs"
+    },
+    "./tag": {
+      "types": "./dist/types/ultimate-ng-tag.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-tag.mjs"
+    },
+    "./terminal": {
+      "types": "./dist/types/ultimate-ng-terminal.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-terminal.mjs"
+    },
+    "./timeline": {
+      "types": "./dist/types/ultimate-ng-timeline.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-timeline.mjs"
+    },
+    "./toast": {
+      "types": "./dist/types/ultimate-ng-toast.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-toast.mjs"
+    },
+    "./toolbar": {
+      "types": "./dist/types/ultimate-ng-toolbar.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-toolbar.mjs"
+    },
+    "./animate-on-scroll": {
+      "types": "./dist/types/ultimate-ng-animate-on-scroll.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-animate-on-scroll.mjs"
     }
   },
   "files": [

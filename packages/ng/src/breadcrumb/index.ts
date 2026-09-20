@@ -1,0 +1,1 @@
+export { UBreadcrumb } from "./breadcrumb";

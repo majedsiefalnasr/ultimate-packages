@@ -1,0 +1,23 @@
+/**
+ * Ultimate-owned adaptation of PrimeNG's `ConfirmPopupStyle` (see
+ * `.vendor-extracted/ng/confirmpopup/confirmpopup.ts` / `style/`), shaped
+ * to match `UBaseComponent`'s `styleModule: {css, classes}` contract. No
+ * `@ultimate/uix-styles/confirm-popup` entry exists yet, so `css`/`classes`
+ * are authored locally (same precedent as `tieredMenuStyleModule`).
+ */
+const css = /*css*/ `
+.u-confirmpopup { position: absolute; top: 0; left: 0; }
+.u-confirmpopup-content { display: flex; align-items: flex-start; gap: 0.5rem; }
+.u-confirmpopup-footer { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; }
+`;
+
+const classes = {
+  root: () => ["u-confirmpopup u-component"],
+  content: "u-confirmpopup-content",
+  icon: "u-confirmpopup-icon",
+  message: "u-confirmpopup-message",
+  footer: "u-confirmpopup-footer",
+};
+
+/** `UBaseComponent`-shaped style module for `UConfirmPopup`. */
+export const confirmPopupStyleModule = { css, classes };

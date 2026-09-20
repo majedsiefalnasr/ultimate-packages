@@ -1,0 +1,23 @@
+import type { StyleModule } from "@ultimate/vue-core";
+
+/**
+ * Ultimate-owned adaptation of PrimeVue's `SplitButtonStyle` (see
+ * `.vendor-extracted/vue/splitbutton/style/SplitButtonStyle.js`), shaped
+ * to match `createBaseComponent`'s `styleModule: {css, classes}` contract.
+ * No `@ultimate/uix-styles/split-button` entry exists yet, so
+ * `css`/`classes` are authored locally — same precedent as this same
+ * capability's Angular/React `split-button-style.ts` siblings.
+ */
+const css = /*css*/ `
+.u-splitbutton { display: inline-flex; position: relative; border-radius: 6px; }
+.u-splitbutton .u-splitbutton-button { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.u-splitbutton .u-splitbutton-dropdown { border-top-left-radius: 0; border-bottom-left-radius: 0; border-left: 0; }
+`;
+
+const classes = {
+  root: "u-splitbutton u-component",
+  pcButton: "u-splitbutton-button",
+  pcDropdown: "u-splitbutton-dropdown",
+};
+
+export const splitButtonStyleModule: StyleModule = { css, classes };

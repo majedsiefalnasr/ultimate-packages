@@ -6,5 +6,6 @@ export * from "./icons";
 export * from "./motion";
 export * from "./overlay";
 export * from "./scroll-lock";
+export * from "./service";
 export * from "./styling";
 export * from "./zindex";
