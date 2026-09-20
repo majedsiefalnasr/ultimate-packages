@@ -1,6 +1,6 @@
 # Specification — Phase C, Batch 2: React DataScroller, Vue InlineMessage
 
-**Status:** Draft — awaiting Spec Review.
+**Status:** Approved — Spec Review passed, corrections applied (11-count fix, scope wording, branch metadata), human-approved.
 **Date:** 2026-09-20
 **Branch:** `feature/phase-c-batch-2-migration` (created off clean `main`, this specification's own commit is its first content).
 
@@ -215,6 +215,6 @@ None of these three gaps blocks Spec Review — they are scoped, named, and assi
 
 ## Status
 
-**Draft — awaiting Spec Review.**
+**Approved.**
 
-This specification does not authorize implementation. It defines Batch 2's exact, evidence-derived scope and binding constraints for the two capabilities the Parity Reconciliation pass confirmed eligible.
+This specification does not authorize implementation. It defines Batch 2's exact, evidence-derived scope and binding constraints for the two capabilities the Parity Reconciliation pass confirmed eligible, now proceeding to the Implementation Plan stage.
