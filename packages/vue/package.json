@@ -373,6 +373,41 @@
       "types": "./dist/inplace/index.d.mts",
       "import": "./dist/inplace/index.mjs",
       "default": "./dist/inplace/index.mjs"
+    },
+    "./message": {
+      "types": "./dist/message/index.d.mts",
+      "import": "./dist/message/index.mjs",
+      "default": "./dist/message/index.mjs"
+    },
+    "./meter-group": {
+      "types": "./dist/meter-group/index.d.mts",
+      "import": "./dist/meter-group/index.mjs",
+      "default": "./dist/meter-group/index.mjs"
+    },
+    "./panel": {
+      "types": "./dist/panel/index.d.mts",
+      "import": "./dist/panel/index.mjs",
+      "default": "./dist/panel/index.mjs"
+    },
+    "./progress-bar": {
+      "types": "./dist/progress-bar/index.d.mts",
+      "import": "./dist/progress-bar/index.mjs",
+      "default": "./dist/progress-bar/index.mjs"
+    },
+    "./progress-spinner": {
+      "types": "./dist/progress-spinner/index.d.mts",
+      "import": "./dist/progress-spinner/index.mjs",
+      "default": "./dist/progress-spinner/index.mjs"
+    },
+    "./scroll-panel": {
+      "types": "./dist/scroll-panel/index.d.mts",
+      "import": "./dist/scroll-panel/index.mjs",
+      "default": "./dist/scroll-panel/index.mjs"
+    },
+    "./scroll-top": {
+      "types": "./dist/scroll-top/index.d.mts",
+      "import": "./dist/scroll-top/index.mjs",
+      "default": "./dist/scroll-top/index.mjs"
     }
   },
   "files": [

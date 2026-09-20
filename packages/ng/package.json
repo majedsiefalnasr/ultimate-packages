@@ -275,6 +275,34 @@
     "./inplace": {
       "types": "./dist/types/ultimate-ng-inplace.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-inplace.mjs"
+    },
+    "./message": {
+      "types": "./dist/types/ultimate-ng-message.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-message.mjs"
+    },
+    "./meter-group": {
+      "types": "./dist/types/ultimate-ng-meter-group.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-meter-group.mjs"
+    },
+    "./panel": {
+      "types": "./dist/types/ultimate-ng-panel.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-panel.mjs"
+    },
+    "./progress-bar": {
+      "types": "./dist/types/ultimate-ng-progress-bar.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-progress-bar.mjs"
+    },
+    "./progress-spinner": {
+      "types": "./dist/types/ultimate-ng-progress-spinner.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-progress-spinner.mjs"
+    },
+    "./scroll-panel": {
+      "types": "./dist/types/ultimate-ng-scroll-panel.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-scroll-panel.mjs"
+    },
+    "./scroll-top": {
+      "types": "./dist/types/ultimate-ng-scroll-top.d.ts",
+      "default": "./dist/fesm2022/ultimate-ng-scroll-top.mjs"
     }
   },
   "files": [
