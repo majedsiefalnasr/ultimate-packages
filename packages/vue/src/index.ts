@@ -71,6 +71,7 @@ export * from "./galleria";
 export * from "./image";
 export * from "./image-compare";
 export * from "./inplace";
+export * from "./inline-message";
 export * from "./message";
 export * from "./meter-group";
 export * from "./panel";

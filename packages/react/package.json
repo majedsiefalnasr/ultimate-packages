@@ -119,6 +119,11 @@
       "import": "./dist/color-picker/index.mjs",
       "default": "./dist/color-picker/index.mjs"
     },
+    "./data-scroller": {
+      "types": "./dist/data-scroller/index.d.mts",
+      "import": "./dist/data-scroller/index.mjs",
+      "default": "./dist/data-scroller/index.mjs"
+    },
     "./date-picker": {
       "types": "./dist/date-picker/index.d.mts",
       "import": "./dist/date-picker/index.mjs",

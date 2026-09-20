@@ -136,7 +136,17 @@ Real PrimeReact source paths are cited by top-level `components/lib/<name>/` dir
 **Parity Reconciliation pass (2026-09-20)** — the Phase C Next-Step Assessment's Path 1 workstream checked React's remaining Unverified pool against real, pinned PrimeReact 10.9.9 source (never from naming similarity alone; see `docs/architecture/research/2026-09-17-phase-c-cross-framework-functional-parity-matrix.md` §3.3(a)/§4.1/§4.1b for full evidence). Outcome for React:
 
 - **Confirmed genuinely absent (reclassified Unverified → Not applicable, not eligible for any future batch without new evidence):** DynamicDialog (no dynamic-component-injection mechanism in `dialog/Dialog.js`), OverlayBadge (`badge/Badge.js` has no overlay-positioning variant), IftaLabel (zero matches in the tarball), ImageCompare (zero matches; `image/` has only a single lightbox component), AnimateOnScroll (zero matches). InputGroup/InputGroupAddon confirmed as a showcase-only CSS/markup convention (`components/doc/inputgroup/basicdoc.js`), not a shipped component — same "Not applicable" disposition.
-- **Confirmed genuinely present — eligible candidate, not yet promoted to any batch:** **DataScroller** — real `components/lib/datascroller/DataScroller.js`/`DataScrollerBase.js`/`datascroller.d.ts`, a genuine infinite-scroll/lazy-append list component distinct from React's already-built `Scroller` virtualization primitive. No Spec, Plan, or implementation authorized by this record.
+- **Confirmed genuinely present — Batch 2 Specification created** (`docs/superpowers/specs/2026-09-20-phase-c-batch-2-migration-design.md` §3.1), now implemented (see `## Built (Phase C Batch 2)` below): **DataScroller** — real `components/lib/datascroller/DataScroller.js`/`DataScrollerBase.js`/`datascroller.d.ts`, a genuine infinite-scroll/lazy-append list component distinct from React's already-built `Scroller` virtualization primitive. Confirmed independent of `Scroller` — no composition dependency.
+
+---
+
+## Built (Phase C Batch 2) — 1 capability
+
+Implemented on `feature/phase-c-batch-2-migration` (commit `88cf3c6`), pending merge to `main`.
+
+| Component | Prime source path | Category | Dependencies | Framework-specific responsibilities | Migration classification | Migration phase | Risk |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| DataScroller (`UDataScroller`) | `components/lib/datascroller/` | Data | react-core base | Incremental array-slicing plus scroll-position listener; imperative `load()`/`reset()` via `useImperativeHandle`; confirmed independent of `UScroller` (no composition dependency) | ADAPT | Built (Phase C Batch 2) | Medium |
 
 ---
 

@@ -153,9 +153,19 @@ Sequenced first per spec §3.0/§5 item 1, ahead of any Vue task depending on it
 
 **Parity Reconciliation pass (2026-09-20)** — the Phase C Next-Step Assessment's Path 1 workstream checked Vue's remaining Unverified pool against real, pinned PrimeVue 4.5.5 source (never from naming similarity alone; see `docs/architecture/research/2026-09-17-phase-c-cross-framework-functional-parity-matrix.md` §3.3(a)/§4.1b for full evidence).
 
-**Confirmed genuinely present — eligible candidate, not yet promoted to any batch:** **InlineMessage** — real `inlinemessage/InlineMessage.vue`/`BaseInlineMessage.vue`, with theme presets across all 4 PrimeVue preset packs, independently confirmed materially distinct from PrimeVue's own separate `Message.vue` (single-instance alert, severity icon, auto-dismiss via `life` unless `sticky`, no close button — not an alias or subset of `Message`). No Spec, Plan, or implementation authorized by this record.
+**Confirmed genuinely present — Batch 2 Specification created** (`docs/superpowers/specs/2026-09-20-phase-c-batch-2-migration-design.md` §3.2), now implemented (see `## Built (Phase C Batch 2)` below): **InlineMessage** — real `inlinemessage/InlineMessage.vue`/`BaseInlineMessage.vue`, with theme presets across all 4 PrimeVue preset packs, independently confirmed materially distinct from PrimeVue's own separate `Message.vue` (severity-driven icon, no close button — not an alias or subset of `Message`). **Correction (Batch 2 Specification, 2026-09-20):** real source's `sticky`/`life` auto-dismiss mechanism referenced in `mounted()` is dead code — neither prop is declared anywhere, and the template never gates on `visible` — so real InlineMessage is actually always-visible with no dismiss mechanism of any kind, not "auto-dismiss unless sticky" as earlier reported. The Batch 2 Spec requires the corrected (always-visible) behavior, and this is what was implemented.
 
 **Still genuinely Unverified for Vue (not checked by this pass):** MultiStateCheckbox, TriStateCheckbox, Mention, DataScroller.
+
+---
+
+## Built (Phase C Batch 2) — 1 capability
+
+Implemented on `feature/phase-c-batch-2-migration` (commit `cdef095`), pending merge to `main`.
+
+| Component | Prime source path | Category | Dependencies | Framework-specific responsibilities | Migration classification | Migration phase | Risk |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| InlineMessage (`UInlineMessage`) | `inlinemessage/` | Feedback | vue-core base | Severity-driven icon, always-visible, no close button, no dismiss timer (real source's `sticky`/`life` confirmed dead code, deliberately not ported) | ADAPT | Built (Phase C Batch 2) | Low |
 
 ---
 
