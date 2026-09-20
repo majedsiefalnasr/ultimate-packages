@@ -29,17 +29,18 @@
 - Create: `packages/react/src/data-scroller/data-scroller.spec.tsx`
 - Create: `packages/react/src/data-scroller/data-scroller.stories.tsx`
 - Create: `packages/react/src/data-scroller/index.ts`
-- Modify: `packages/react/src/index.ts` — add `export * from "./data-scroller";` in alphabetical position (after `./date-picker`, before `./deferred-content` — confirm exact neighbors by reading the file first)
+- Modify: `packages/react/src/index.ts` — add `export * from "./data-scroller";`. **This file's export order is not strictly alphabetical** (it groups related capabilities) — read the actual current file before choosing an insertion point (Step 1).
 - Modify: `packages/react/package.json` — add a `"./data-scroller"` subpath entry to `exports`, matching the `"./date-picker"`/`"./deferred-content"` entries' exact shape
 
 **Interfaces:**
 - Produces: `UDataScroller` (React function component, `React.forwardRef<HTMLDivElement, UDataScrollerProps<T>>`), `UDataScrollerProps<T>` (exported interface), an imperative handle exposing `load(): void` and `reset(): void` via `React.useImperativeHandle`.
 - Consumes: `useComponentBase` from `@ultimate/react-core` (already Built — no new interface).
 
-- [ ] **Step 1: Read the two neighboring barrel lines to confirm exact alphabetical insertion point**
+- [ ] **Step 1: Read the whole barrel file to find the correct insertion point**
 
-Run: `grep -n "date-picker\|deferred-content" packages/react/src/index.ts`
-Expected: two lines, `export * from "./date-picker";` then `export * from "./deferred-content";` (or similar neighbors) — use this to know exactly where `./data-scroller` (alphabetically between `./dailyeah`-none and `./date-picker`... actually `data-scroller` sorts BEFORE `date-picker` alphabetically: `data-scroller` < `date-picker`). Confirm by reading the actual current neighbor lines before editing, do not assume.
+Run: `cat -n packages/react/src/index.ts`
+
+This file's export order is **not alphabetical** — it groups related/adjacent capabilities (confirmed by direct inspection: `date-picker`, `dialog`, `drawer`, `dock`, `divider`, `deferred-content` appear in that non-alphabetical sequence). Do not assume alphabetical order. Since DataScroller is a Data-family capability with no direct sibling grouping in this file, insert its export line in a locally sensible spot near other single-entry/ungrouped capabilities (read the full file to judge this), or simply at the end of the export list if no clear grouping fits — correctness of the barrel does not depend on position, only on the line being present exactly once.
 
 - [ ] **Step 2: Write the failing style module**
 
@@ -231,32 +232,45 @@ export const UDataScroller = React.forwardRef<UDataScrollerRef, UDataScrollerPro
   ref
 ) {
   const { cx } = useComponentBase({ componentName: "data-scroller", styleModule: dataScrollerStyleModule });
-  const [first, setFirst] = React.useState(0);
+  const [windowEnd, setWindowEnd] = React.useState(0);
+  const hasLoadedInitial = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const isLazy = lazy;
   const total = value?.length ?? 0;
-  const dataToRender = isLazy ? (value ?? []) : (value ?? []).slice(0, first + rows);
+  const dataToRender = isLazy ? (value ?? []) : (value ?? []).slice(0, windowEnd);
 
+  // `load()` advances the render window by `rows` each call. The first call
+  // (from the mount effect below, matching real source's own
+  // `useMountEffect(() => load())`) fills the initial window (0..rows)
+  // rather than skipping past it — subsequent calls (from scroll or the
+  // exposed imperative `load()`) advance further, matching real source's
+  // own single-`load()`-does-both-jobs shape.
   const load = React.useCallback(() => {
-    const nextFirst = first + rows;
+    const first = hasLoadedInitial.current ? windowEnd : 0;
+    const nextWindowEnd = first + rows;
+    hasLoadedInitial.current = true;
     if (isLazy) {
-      onLazyLoad?.({ first: nextFirst, rows });
-      setFirst(nextFirst);
+      onLazyLoad?.({ first, rows });
+      setWindowEnd(nextWindowEnd);
     } else {
-      if (nextFirst < total) setFirst(nextFirst);
+      if (first < total) setWindowEnd(Math.min(nextWindowEnd, total));
     }
-  }, [first, rows, isLazy, onLazyLoad, total]);
+  }, [windowEnd, rows, isLazy, onLazyLoad, total]);
 
   const reset = React.useCallback(() => {
-    setFirst(0);
-    if (isLazy) onLazyLoad?.({ first: 0, rows });
-  }, [isLazy, onLazyLoad, rows]);
+    setWindowEnd(0);
+    hasLoadedInitial.current = false;
+    load();
+  }, [load]);
 
   React.useImperativeHandle(ref, () => ({ load, reset }), [load, reset]);
 
+  // Mount-time load, matching real source's own `useMountEffect(() => load())`
+  // — reuses the same `load()` used everywhere else, rather than duplicating
+  // the lazy-mode branch separately.
   React.useEffect(() => {
-    if (isLazy) onLazyLoad?.({ first: 0, rows });
+    load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -264,13 +278,17 @@ export const UDataScroller = React.forwardRef<UDataScrollerRef, UDataScrollerPro
     if (loader) return;
     const target: HTMLElement | Window = inline ? (containerRef.current ?? window) : window;
     const handleScroll = () => {
+      // Matches real source's own threshold formula
+      // (`scrollTop >= scrollHeight * buffer - viewportHeight`), not a
+      // rescaled fraction-of-total formula — kept algebraically identical
+      // to real `DataScroller.js` so `buffer`'s meaning matches upstream
+      // exactly.
       if (inline && containerRef.current) {
         const el = containerRef.current;
-        const ratio = (el.scrollTop + el.clientHeight) / el.scrollHeight;
-        if (ratio >= buffer) load();
+        if (el.scrollTop >= el.scrollHeight * buffer - el.clientHeight) load();
       } else {
-        const ratio = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
-        if (ratio >= buffer) load();
+        const doc = document.documentElement;
+        if (window.scrollY >= doc.scrollHeight * buffer - window.innerHeight) load();
       }
     };
     target.addEventListener("scroll", handleScroll);
@@ -350,7 +368,7 @@ export const Inline: Story = {
 
 Run: `grep -n "^export \* from \"\.\/da" packages/react/src/index.ts`
 
-Add the line `export * from "./data-scroller";` at the correct alphabetical position (immediately before the existing `./date-picker` line — confirm from the grep output above, insert exactly there, do not guess).
+Add the line `export * from "./data-scroller";` at the insertion point chosen from Step 1's full-file read — do not guess a position from partial context.
 
 - [ ] **Step 9: Wire package.json — read exact neighbor entry first**
 
@@ -395,17 +413,18 @@ git commit -m "feat(react): add DataScroller (Phase C Batch 2)"
 - Create: `packages/vue/src/inline-message/inline-message.spec.ts`
 - Create: `packages/vue/src/inline-message/inline-message.stories.ts`
 - Create: `packages/vue/src/inline-message/index.ts`
-- Modify: `packages/vue/src/index.ts` — add `export * from "./inline-message";` at the correct alphabetical position (confirm exact neighbors by reading the file first — sorts between `./inplace` and `./input-chips`)
+- Modify: `packages/vue/src/index.ts` — add `export * from "./inline-message";`. **This file's export order is not strictly alphabetical** (it groups related capabilities, matching React's own barrel convention) — read the actual current file before choosing an insertion point (Step 1).
 - Modify: `packages/vue/package.json` — add a `"./inline-message"` subpath entry to `exports`, matching the `"./inplace"`/`"./input-chips"` entries' exact shape
 
 **Interfaces:**
 - Produces: `UInlineMessage` (Vue component, default export from `InlineMessage.vue`), `createBaseInlineMessage` (factory function, default export... actually named export, matching `createBaseMessage`'s own convention) from `BaseInlineMessage.ts`.
 - Consumes: `createBaseComponent` from `@ultimate/vue-core` (already Built — no new interface).
 
-- [ ] **Step 1: Confirm exact alphabetical barrel neighbors**
+- [ ] **Step 1: Read the whole barrel file to find the correct insertion point**
 
-Run: `grep -n "inplace\|input-chips" packages/vue/src/index.ts`
-Expected: `export * from "./inplace";` then `export * from "./input-chips";` (or similar) — use this to know exactly where `./inline-message` goes (`inline-message` sorts before `inplace` alphabetically — confirm from actual file content, do not assume).
+Run: `cat -n packages/vue/src/index.ts`
+
+Vue's barrel follows the same non-alphabetical, grouping-based convention as React's — do not assume alphabetical order. Insert InlineMessage's export line in a locally sensible spot (near `message` if that grouping exists, or at the end of the export list if no clear grouping fits) — correctness depends only on the line being present exactly once, not its position.
 
 - [ ] **Step 2: Write the failing base factory**
 
@@ -643,13 +662,13 @@ export const Success: Story = {
 
 Run: `grep -n "^export \* from \"\.\/in" packages/vue/src/index.ts`
 
-Add the line `export * from "./inline-message";` at the correct alphabetical position (confirm exact insertion point from the grep output — do not guess).
+Add the line `export * from "./inline-message";` at the insertion point chosen from Step 1's full-file read — do not guess a position from partial context.
 
 - [ ] **Step 10: Wire package.json — read exact neighbor entry first**
 
 Run: `grep -n -A3 "\"./inplace\"" packages/vue/package.json`
 
-Add, immediately before or after that block per correct alphabetical order (confirm from the grep output):
+This file's `exports` map is also not alphabetically ordered. Add the new entry immediately adjacent to the `"./inplace"` block found above (before or after, whichever reads more naturally against the surrounding entries):
 
 ```json
     "./inline-message": {
@@ -737,5 +756,5 @@ git commit -m "docs: mark React DataScroller and Vue InlineMessage Built (Phase 
 3. Both typechecks clean (`tsc --noEmit` React; `vue-tsc --noEmit` Vue).
 4. `validate-dependency-ceiling.mjs` reports zero violations.
 5. `git diff --name-only main feature/phase-c-batch-2-migration` shows only: the 2 new component directories, 2 barrel `index.ts` files, 2 `package.json` files, the 3 documentation files from Task 3, and the spec/plan documents themselves — nothing else.
-6. DataScroller's implementation does not import or reference `UScroller` anywhere (`grep -rn "UScroller\|scroller" packages/react/src/data-scroller/` should return no match to the Scroller component itself).
+6. DataScroller's implementation does not import or compose `UScroller`'s virtualization component (`grep -rn "from \"\.\./scroller\"\|from \"@ultimate/react\".*Scroller\|UScroller" packages/react/src/data-scroller/` should return no match — the component's own name/CSS classes legitimately contain "scroller" and are not what this check targets).
 7. InlineMessage's implementation has no `sticky`/`life` prop, no close button, no timer (`grep -n "sticky\|life\|setTimeout\|closable" packages/vue/src/inline-message/*.ts packages/vue/src/inline-message/*.vue` should return no match).
