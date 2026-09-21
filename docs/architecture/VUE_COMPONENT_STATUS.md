@@ -161,7 +161,7 @@ Sequenced first per spec §3.0/§5 item 1, ahead of any Vue task depending on it
 
 ## Built (Phase C Batch 2) — 1 capability
 
-Implemented on `feature/phase-c-batch-2-migration` (commit `cdef095`), pending merge to `main`.
+Merged to `main` (commit `c37dc40`), originally implemented on `feature/phase-c-batch-2-migration` (commit `cdef095`).
 
 | Component | Prime source path | Category | Dependencies | Framework-specific responsibilities | Migration classification | Migration phase | Risk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
