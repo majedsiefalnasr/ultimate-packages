@@ -56,6 +56,20 @@ describe("UOrderList", () => {
     expect(change).toHaveBeenLastCalledWith(["B", "A", "C", "D"]);
   });
 
+  it("removes disabled drag-mode options from tab order and selection", () => {
+    const { fixture } = setup(true);
+    fixture.componentRef.setInput("disabled", true);
+    fixture.detectChanges();
+    const options = fixture.nativeElement.querySelectorAll('[role="option"]');
+    for (const option of options) {
+      expect(option.tabIndex).toBe(-1);
+      expect(option.getAttribute("aria-disabled")).toBe("true");
+    }
+    options[0].click();
+    fixture.detectChanges();
+    expect(options[0].getAttribute("aria-selected")).toBe("false");
+  });
+
   it("filters by configured fields and mode with accessible selection", () => {
     const { fixture } = setup();
     fixture.componentRef.setInput("value", [
