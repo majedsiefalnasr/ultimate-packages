@@ -68,6 +68,41 @@ describe("UOrderList", () => {
     expect(change).toHaveBeenLastCalledWith(["A", "B", "C"]);
   });
 
+  it("reorders equivalent controlled objects that refresh during a drag by dataKey", () => {
+    const change = vi.fn();
+    const initial = [
+      { id: "a", label: "Apple" },
+      { id: "b", label: "Banana" },
+    ];
+    const refreshed = [
+      { id: "a", label: "Apple refreshed" },
+      { id: "b", label: "Banana refreshed" },
+    ];
+    const { rerender } = render(
+      <UOrderList
+        value={initial}
+        onChange={change}
+        dataKey="id"
+        dragdrop
+        itemTemplate={(item) => <span>{item.label}</span>}
+      />
+    );
+    const dataTransfer = { setData: vi.fn(), effectAllowed: "" };
+    fireEvent.dragStart(screen.getByRole("option", { name: "Apple" }), { dataTransfer });
+
+    rerender(
+      <UOrderList
+        value={refreshed}
+        onChange={change}
+        dataKey="id"
+        dragdrop
+        itemTemplate={(item) => <span>{item.label}</span>}
+      />
+    );
+    fireEvent.drop(screen.getByRole("option", { name: "Banana refreshed" }), { dataTransfer });
+    expect(change).toHaveBeenLastCalledWith([refreshed[1], refreshed[0]]);
+  });
+
   it("filters configured fields and supports keyboard selection", () => {
     const change = vi.fn();
     render(
@@ -164,5 +199,55 @@ describe("UOrderList", () => {
       />
     );
     expect(screen.getByRole("option", { name: "Apple" })).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("enters the options from the list when autoOptionFocus is false without extra tab stops", () => {
+    render(
+      <UOrderList
+        value={["A", "B", "C"]}
+        onChange={() => {}}
+        itemTemplate={(item) => <span>{item}</span>}
+        autoOptionFocus={false}
+      />
+    );
+    const list = screen.getByRole("listbox");
+    const options = screen.getAllByRole("option");
+    expect(options.every((option) => option.tabIndex === -1)).toBe(true);
+
+    list.focus();
+    expect(document.activeElement).toBe(list);
+    fireEvent.keyDown(list, { key: "ArrowDown" });
+    expect(document.activeElement).toBe(options[0]);
+    list.focus();
+    fireEvent.keyDown(list, { key: "Home" });
+    expect(document.activeElement).toBe(options[0]);
+    list.focus();
+    fireEvent.keyDown(list, { key: "ArrowUp" });
+    expect(document.activeElement).toBe(options[2]);
+    list.focus();
+    fireEvent.keyDown(list, { key: "End" });
+    expect(document.activeElement).toBe(options[2]);
+  });
+
+  it("renders the configured breakpoint CSS and filters using filterLocale", () => {
+    const { container } = render(
+      <UOrderList
+        value={[{ name: "Istanbul" }, { name: "Ankara" }]}
+        onChange={() => {}}
+        itemTemplate={(item) => <span>{item.name}</span>}
+        filter
+        filterBy="name"
+        filterMatchMode="startsWith"
+        filterLocale="tr"
+        breakpoint="720px"
+      />
+    );
+    expect(container.querySelector("style")).toHaveTextContent("@media (max-width: 720px)");
+
+    fireEvent.change(screen.getByRole("searchbox", { name: "Filter source" }), {
+      target: { value: "ı" },
+    });
+    expect(screen.getByRole("option", { name: "Istanbul" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Ankara" })).toBeNull();
   });
 });

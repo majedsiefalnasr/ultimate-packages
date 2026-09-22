@@ -101,6 +101,8 @@ export function UOrderList<T = unknown>({
   const [query, setQuery] = React.useState("");
   const drag = React.useRef<T | null>(null);
   const identity = (item: T): unknown => (dataKey ? field(item, dataKey) : item);
+  const indexOfIdentity = (items: T[], item: T): number =>
+    items.findIndex((candidate) => identity(candidate) === identity(item));
   const isSelected = (item: T): boolean =>
     selected.some((selectedItem) => identity(selectedItem) === identity(item));
 
@@ -144,14 +146,15 @@ export function UOrderList<T = unknown>({
     event.stopPropagation();
     const item = drag.current;
     drag.current = null;
-    const from = value.indexOf(item);
+    const from = indexOfIdentity(value, item);
     if (from < 0) return;
 
     const next = [...value];
-    const destination = before === undefined ? next.length - 1 : next.indexOf(before);
+    const destination = before === undefined ? next.length - 1 : indexOfIdentity(next, before);
     if (destination < 0) return;
+    const draggedItem = next[from];
     next.splice(from, 1);
-    next.splice(destination, 0, item);
+    next.splice(destination, 0, draggedItem);
     onChange(next);
     setSelected([]);
   };
@@ -180,6 +183,23 @@ export function UOrderList<T = unknown>({
     if (options[destination]) {
       event.preventDefault();
       options[destination].focus();
+    }
+  };
+
+  const listKeyDown = (event: React.KeyboardEvent<HTMLUListElement>): void => {
+    if (event.target !== event.currentTarget) return;
+    const options = Array.from(
+      event.currentTarget.querySelectorAll<HTMLElement>('[role="option"]')
+    );
+    const target =
+      event.key === "ArrowDown" || event.key === "Home"
+        ? options[0]
+        : event.key === "ArrowUp" || event.key === "End"
+          ? options[options.length - 1]
+          : undefined;
+    if (target) {
+      event.preventDefault();
+      target.focus();
     }
   };
 
@@ -225,6 +245,7 @@ export function UOrderList<T = unknown>({
           aria-multiselectable="true"
           tabIndex={tabIndex}
           style={listStyle}
+          onKeyDown={listKeyDown}
           onFocus={(event) => {
             if (autoOptionFocus && event.target === event.currentTarget) {
               event.currentTarget.querySelector<HTMLElement>('[role="option"]')?.focus();
