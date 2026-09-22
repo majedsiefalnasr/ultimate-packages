@@ -1,5 +1,6 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from "@angular/cdk/drag-drop";
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -113,7 +114,6 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
         data-pc-section="listcontainer"
         [style.max-height]="scrollHeight()"
         style="overflow:auto"
-        [attr.tabindex]="disabled() ? -1 : tabindex()"
       >
         @if (filterBy()) {
           <input
@@ -165,6 +165,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
               (ngModelChange)="listboxSelection.set($event)"
               [optionLabel]="label"
               [optionValue]="identity"
+              [optionDisabled]="isOptionDisabled"
               [disabled]="disabled()"
               [ariaLabel]="ariaLabel()"
               (onChange)="fromListbox($event)"
@@ -175,7 +176,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
     </div>
   `,
 })
-export class UOrderList extends UBaseComponent {
+export class UOrderList extends UBaseComponent implements AfterViewChecked {
   protected override readonly componentName = "order-list";
   protected override readonly styleModule = orderListStyleModule;
 
@@ -228,8 +229,22 @@ export class UOrderList extends UBaseComponent {
     this.dataKey() ? field(item, this.dataKey()) : item;
   protected readonly label = (item: unknown): string =>
     String(this.dataKey() ? field(item, this.dataKey()) : item);
+  protected readonly isOptionDisabled = () => this.disabled();
 
   @ViewChild(UListbox) private listbox?: UListbox;
+  @ViewChild(UListbox, { read: ElementRef }) private listboxElement?: ElementRef<HTMLElement>;
+
+  ngAfterViewChecked(): void {
+    const listbox =
+      this.listboxElement?.nativeElement.querySelector<HTMLElement>('[role="listbox"]');
+    if (listbox) {
+      this.styleRenderer.setAttribute(
+        listbox,
+        "tabindex",
+        String(this.disabled() ? -1 : this.tabindex())
+      );
+    }
+  }
 
   protected isSelected(item: unknown): boolean {
     return this.selected().includes(this.identity(item));
@@ -246,6 +261,7 @@ export class UOrderList extends UBaseComponent {
   }
 
   protected fromListbox(event: UListboxChangeEvent): void {
+    if (this.disabled()) return;
     const current = this.selected();
     const next = Array.isArray(event.value) ? event.value : [];
     const normalized = this.normalizeSelection(next, current, event.originalEvent);

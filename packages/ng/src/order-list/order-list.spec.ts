@@ -70,6 +70,52 @@ describe("UOrderList", () => {
     expect(options[0].getAttribute("aria-selected")).toBe("false");
   });
 
+  it("disables baseline Listbox options and move controls", () => {
+    const { fixture } = setup();
+    fixture.componentRef.setInput("disabled", true);
+    fixture.detectChanges();
+    const root = fixture.nativeElement;
+    const options = root.querySelectorAll('[role="option"]');
+    for (const option of options) {
+      expect(option.getAttribute("aria-disabled")).toBe("true");
+    }
+    for (const control of root.querySelectorAll("button")) {
+      expect(control.disabled).toBe(true);
+    }
+    options[0].click();
+    fixture.detectChanges();
+    expect(options[0].getAttribute("aria-selected")).toBe("false");
+  });
+
+  it("assigns tabindex only to the interactive Listbox in both modes", () => {
+    const baseline = setup();
+    baseline.fixture.componentRef.setInput("tabindex", 7);
+    baseline.fixture.detectChanges();
+    const baselineRoot = baseline.fixture.nativeElement;
+    const baselineListbox = baselineRoot.querySelector('[role="listbox"]') as HTMLElement;
+    expect(baselineListbox.tabIndex).toBe(7);
+    expect(
+      baselineRoot.querySelector('[data-pc-section="listcontainer"]').getAttribute("tabindex")
+    ).toBeNull();
+    baselineListbox.dispatchEvent(
+      new KeyboardEvent("keydown", { bubbles: true, code: "ArrowDown" })
+    );
+    baselineListbox.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, code: "Enter" }));
+    baseline.fixture.detectChanges();
+    expect(baselineRoot.querySelector('[role="option"]').getAttribute("aria-selected")).toBe(
+      "true"
+    );
+
+    const dragdrop = setup(true);
+    dragdrop.fixture.componentRef.setInput("tabindex", 7);
+    dragdrop.fixture.detectChanges();
+    const dragdropRoot = dragdrop.fixture.nativeElement;
+    expect((dragdropRoot.querySelector('[role="listbox"]') as HTMLElement).tabIndex).toBe(7);
+    expect(
+      dragdropRoot.querySelector('[data-pc-section="listcontainer"]').getAttribute("tabindex")
+    ).toBeNull();
+  });
+
   it("filters by configured fields and mode with accessible selection", () => {
     const { fixture } = setup();
     fixture.componentRef.setInput("value", [
@@ -117,6 +163,7 @@ describe("UOrderList", () => {
     const viewport = fixture.nativeElement.querySelector(
       '[data-pc-section="listcontainer"]'
     ) as HTMLElement;
+    const listbox = fixture.nativeElement.querySelector('[role="listbox"]') as HTMLElement;
     const up = fixture.nativeElement.querySelector(
       '[data-pc-section="moveupbutton"]'
     ) as HTMLElement;
@@ -124,7 +171,8 @@ describe("UOrderList", () => {
     expect(responsiveCss).toContain("@media (max-width: 640px)");
     expect(responsiveCss).toContain("grid-template-columns: minmax(0, 1fr)");
     expect(viewport.style.maxHeight).toBe("9rem");
-    expect(viewport.tabIndex).toBe(7);
+    expect(viewport.getAttribute("tabindex")).toBeNull();
+    expect(listbox.tabIndex).toBe(7);
     expect(root.classList.contains("u-striped")).toBe(true);
     expect(up.classList.contains("shared")).toBe(true);
     expect(up.classList.contains("specific")).toBe(true);
