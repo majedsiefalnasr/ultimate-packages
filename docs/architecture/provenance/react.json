@@ -202,5 +202,35 @@
     "ultimateDestination": "packages/react/src/table/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "components/lib/orderlist/OrderList.js",
+    "ultimateDestination": "packages/react/src/order-list/order-list.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeReact 10.9.9 source; disclosed cuts remain excluded. UListbox composition was evaluated first but its selection-only onChange contract and lack of an item render or per-option native drag/drop handler surface cannot support OrderList's templated items and opt-in native DnD without distorting behavior, matching real PrimeReact's own bespoke OrderListSubList rendering."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/order-list/order-list-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/order-list/order-list.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList behavior test."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/order-list/order-list.stories.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList Storybook stories."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/order-list/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList barrel re-export."
   }
 ]
