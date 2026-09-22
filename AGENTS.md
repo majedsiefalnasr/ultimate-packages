@@ -116,3 +116,9 @@ Before modifying any repository file, establish: the current branch, the current
 - An approved specification does not authorize implementation before an implementation plan exists and is itself reviewed and approved.
 - Approval for one task does not automatically authorize a different task.
 - Surface ambiguity or conflicting evidence to the human rather than silently resolving an architectural question that belongs to them.
+
+### 7.6 AI model selection and delegation
+
+- Follow [`docs/agents/AI_DELEGATION_POLICY.md`](docs/agents/AI_DELEGATION_POLICY.md) for task-tier model recommendations, same-CLI fallback, and explicitly requested delegation lanes.
+- Default to the current CLI and choose the least costly capable native model for the task.
+- Cross-CLI delegation requires an explicit user request; never start or substitute another AI CLI automatically.
