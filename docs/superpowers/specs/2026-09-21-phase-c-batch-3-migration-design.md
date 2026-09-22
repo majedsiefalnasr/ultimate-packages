@@ -1,6 +1,6 @@
 # Specification — Phase C, Batch 3: OrderList, PickList, DataView, OrganizationChart
 
-**Status:** Draft — awaiting Spec Review.
+**Status:** Spec Review passed on 2026-09-22 after the explicitly authorized generic Angular `UListbox` `trackBy` amendment; awaiting human approval.
 **Date:** 2026-09-21
 **Branch:** `feature/phase-c-batch-3-migration` (created off clean `main` at `f8cd78b`, this specification's own commit is its first content).
 
@@ -34,7 +34,7 @@ Total: 11 capability/framework realizations across 4 canonical capabilities.
 - The 7 capability/framework pairs still genuinely `Unverified / mapping unresolved` (Vue MultiStateCheckbox/TriStateCheckbox/Mention/DataScroller; React InlineMessage; Angular DataScroller/InlineMessage) — none promoted without further evidence `[Parity Matrix §4.1b, Roadmap §6]`.
 - Vue `RadioButtonGroup`/`CheckboxGroup` — confirmed Vue-specific supporting implementations of already-Built `RadioButton`/`Checkbox`, not separate canonical capabilities `[Batch 2 spec §1, unchanged]`.
 - Table's own fuller filter-operator vocabulary beyond string match modes — `BLUEPRINT_GAPS.md` DECISION-C's own separately-tracked remainder, untouched by this batch.
-- Any new architectural decision, feasibility study, or foundation-tier change beyond what §6 states is already built and reused — **DECISION-C's own resolution is not reopened, re-litigated, or re-derived here; it is accepted as binding evidence** `[Decision 3]`.
+- Any new architectural decision, feasibility study, or foundation-tier change beyond §3.2/§6's expressly authorized generic Angular `UListbox` `trackBy` input and what §6 states is already built and reused — **DECISION-C's own resolution is not reopened, re-litigated, or re-derived here; it is accepted as binding evidence** `[Decision 3]`.
 - Batch 4 or any later batch's composition — not pre-decided by this specification.
 - Cross-framework naming standardization — every capability below is realized under its existing framework-native name.
 
@@ -133,6 +133,8 @@ None of these decisions is reopened by this specification.
 
 **Angular:** same `dragdrop` (`boolean`, default `false`, real `@angular/cdk/drag-drop` mechanism), `filterBy`/`filterLocale` (`FilterService`-based, independently configurable per source/target side — confirmed via separate `showSourceFilter`/`showTargetFilter` booleans, default `true`), `dataKey`, `metaKeySelection`, `breakpoint`, `sourceHeader`/`targetHeader`, `sourceStyle`/`targetStyle`, `showSourceControls`/`showTargetControls` (default `true`), `sourceTrackBy`/`targetTrackBy`, `disabled`, `sourceOptionDisabled`/`targetOptionDisabled`. Real source composes 2 independent `p-listbox` instances (confirmed at the template level: separate `[options]="sourceOptions"`/`[options]="targetOptions"` bindings on two `p-listbox` elements).
 
+**Narrow, expressly authorized Angular foundation exception:** current Ultimate `UListbox` hardcodes `@for (option of visibleOptions(); track $index)` and exposes no `trackBy` input. Add exactly one generic Angular `UListbox` `trackBy` input with the callback contract `(index: number, option: unknown) => unknown`. When supplied, `UListbox` invokes that callback with the rendered option's index and option and uses its return value as the tracking key. When absent, the tracking expression returns the index, preserving the current index-tracking behavior. This is generic list rendering support, not PickList behavior: it adds no source/target state, transfer controls, selection policy, or other PickList semantics to `UListbox`. Angular `UPickList` must map `sourceTrackBy` only to the source `UListbox.trackBy` and `targetTrackBy` only to the target `UListbox.trackBy`.
+
 **React:** same `dragdrop`, `filter`/`filterBy`/`filterMatchMode` (independently configurable via `showSourceFilter`/`showTargetFilter`, default `true`), `dataKey`, `metaKeySelection`, `breakpoint`, `sourceHeader`/`targetHeader`, `sourceStyle`/`targetStyle`, `showSourceControls`/`showTargetControls` (default `true`). Real source does **not** compose PrimeReact's own `Listbox` (same divergence as OrderList) — renders via its own `PickListSubList.js`, doubled.
 
 **Vue:** `dataKey`, `metaKeySelection`, `breakpoint`, `striped`, `scrollHeight`, `showSourceControls`/`showTargetControls`, `buttonProps` + per-button overrides. **Confirmed via full-file read of `BasePickList.vue` (116 lines) and `PickList.vue` (643 lines): zero `dragdrop`-related field, zero `filterBy`/`filter`/`FilterService`-related field anywhere in either file.** Vue's real PickList is button-move-only, matching OrderList's own confirmed pattern exactly — not merely inferred by analogy, independently re-verified. Vue's real `PickList.vue` composes `Listbox` (`import Listbox from 'primevue/listbox'`) twice, once per side.
@@ -184,7 +186,7 @@ None of these decisions is reopened by this specification.
 | `value` (`OrganizationChartNodeData[]`) | Root-level node array. Each node: `{className?, expanded?, children?, selectable?, label?}` (real `OrganizationChartNodeData` interface, confirmed in full). |
 | `selectionMode` (`'single' \| 'multiple'`) | Real selection-cardinality vocabulary — matches `uix-data`'s own already-Built `SelectionMode` type exactly, no new primitive needed. |
 | `selection` (`OrganizationChartNodeData \| OrganizationChartNodeData[] \| null`) | Selected node(s). |
-| `togglerIcon` | Expand/collapse toggle icon override. |
+| `togglerIcon` | Upstream evidence only; expressly excluded from Batch 3 by the binding scope cut below. |
 
 **Internal behavior, React:** expand/collapse state is local `React.useState(node.expanded)` per node instance (confirmed in `OrganizationChartNode.js`, line 22) — seeded from the node's own `expanded` field, not a global expanded-keys map, not a mutate-in-place write onto the node object. This is a real, distinct third mechanism (neither Tree's key-map nor Angular OrganizationChart's own object-mutation).
 
@@ -212,7 +214,7 @@ Restated from the Roadmap and Batch 3 Brainstorming/Selection stage, as binding 
 
 1. **Batch membership is capability-based**, not framework-based. Each of the 4 capabilities in §3 is realized independently per eligible framework — OrganizationChart's React/Vue-only scope is expected and correct, not a deviation requiring justification beyond §1's own explanation of its permanent nature.
 2. **No Unverified capability is promoted.** None of the 11 combinations in this batch was ever Unverified — all 11 were independently confirmed "Eligible now" or "Eligible only after an ordinary prerequisite" by the Batch 3 eligibility-verification pass. The 7 still-Unverified pairs from the Parity Reconciliation pass remain untouched and out of scope (§1).
-3. **Existing Ultimate architecture and foundations are reused, not re-derived** — see §6. `UListbox` and `UPaginator` are the two load-bearing compositions this batch relies on; both are already Built and their real contracts are cited in §3.
+3. **Existing Ultimate architecture and foundations are reused, not re-derived** — see §6. `UListbox` and `UPaginator` are the two load-bearing compositions this batch relies on; both are already Built and their real contracts are cited in §3. The only exception is §3.2's expressly authorized, generic Angular `UListbox` `trackBy` input: it is a bounded extension of the existing foundation solely as generic list-rendering support, not new PickList semantics or broader foundation work.
 4. **Dependency correctness governs sequencing** — see §5. The `@angular/cdk/drag-drop` prerequisite (§5 item 1) is the only cross-cutting sequencing rule this batch introduces; everything else may proceed in any order or in parallel.
 5. **Proof-by-exception applies.** No new feasibility study is authorized for any of the 11 combinations unless implementation reveals a genuinely new architectural pattern, an unresolved dependency, or another meaningful exception not already known — in which case implementation halts on that specific realization and escalates, per the Operating Context's own §5 criteria.
 6. **Framework-native implementation is mandatory** — no shared cross-framework implementation, no forced identical API shape, consistent with every prior Ultimate component (Option B: reference, not verbatim; ADR-006/018/024/032). §3.2's PickList data-model divergence (Vue's `[[], []]`-pair vs. Angular/React's two-separate-props) is the clearest instance of this rule in this batch — it must not be flattened to one shape across frameworks.
@@ -233,17 +235,18 @@ Restated from the Roadmap and Batch 3 Brainstorming/Selection stage, as binding 
 
 ---
 
-## 6. Reuse of existing Ultimate foundations (binding — no new foundation work authorized)
+## 6. Reuse of existing Ultimate foundations (binding — no new foundation work except the expressly authorized generic Angular `UListbox` `trackBy` input)
 
 | Framework | Capability | Foundation reused | Evidence |
 |---|---|---|---|
 | Angular, React, Vue | OrderList, PickList | Bare tier (`useComponentBase`/`createBaseComponent`/`UBaseComponent`) + `UListbox` composition (Angular/Vue real; React independent per §3.1's own divergence finding) | `packages/{ng,react,vue}/src/listbox/`, real props confirmed in §3.1/§3.2 |
+| Angular only | Generic `UListbox` rendering support | Existing `UListbox` gains exactly one generic `trackBy` input with the callback contract `(index: number, option: unknown) => unknown`: an omitted input makes the tracking expression return the index; a supplied callback's return value drives list rendering. It has no PickList semantics. | `packages/ng/src/listbox/listbox.ts` (current `@for` hardcodes `track $index`; no `trackBy` input), §3.2 |
 | Angular, React, Vue | DataView | Bare tier + `UPaginator` composition (all 3, real and direct) | `packages/{ng,react,vue}/src/paginator/`, real `UPaginatorProps` contract confirmed in §3.3 |
 | React, Vue | OrganizationChart | Bare tier only, no composition dependency | `react-core`/`vue-core`'s own bare-component tiers, already Built |
 | Angular only | OrderList, PickList (drag/drop mode) | New: `@angular/cdk/drag-drop`, a real Angular-first-party package, not Prime-derived — ordinary dependency addition per §4 item 9/§5 item 1 | `packages/ng/package.json` (to be added), `validate-dependency-ceiling.mjs` (confirmed out of this gate's scope) |
 | All | — | `uix-utils`, `uix-styled`, `uix-styles`, `uix-motion` | Already built, Layer 0 per Dependency Map §B |
 
-`uix-data`'s `SelectionMode` type is directly reusable for OrganizationChart's `selectionMode` prop in both React and Vue (§3.4) — confirmed matching vocabulary, no new primitive needed. No new base-class tier, no new shared package export, and no new architectural pattern is authorized by this specification beyond the one named dependency addition (§5 item 1).
+`uix-data`'s `SelectionMode` type is directly reusable for OrganizationChart's `selectionMode` prop in both React and Vue (§3.4) — confirmed matching vocabulary, no new primitive needed. No new base-class tier, no new shared package export, and no new architectural pattern is authorized by this specification beyond the one named dependency addition (§5 item 1) and the expressly authorized generic Angular `UListbox` `trackBy` input above. No other foundation work is authorized.
 
 ---
 
@@ -275,7 +278,7 @@ Restated from the Roadmap and Batch 3 Brainstorming/Selection stage, as binding 
 
 Every Batch 3 capability, for every framework it is realized in, must meet the same bar every already-Built Ultimate component met:
 
-1. **Unit tests** covering each capability's own stated behavior (§3), following each framework's existing test conventions. Specifically: OrderList/PickList's move-button reordering (all 4 directions), Angular's real drag/drop (`CdkDragDrop` event handling), React's real drag/drop (native `dragstart`/`dragover`/`drop` event simulation); DataView's grid/list toggle, Paginator composition (page-change events genuinely update the rendered window), Angular's real filtering; OrganizationChart's expand/collapse per node, selection (single/multiple mode). **Where §3 establishes that a real upstream mechanism is genuinely absent for a given framework** (Vue OrderList/PickList's drag/drop and filtering; React/Vue DataView's filtering) **, tests must guard against that absence being silently violated by a future change** — i.e., confirm the implementation does not accidentally introduce behavior the verified upstream contract does not contain, where that absence is load-bearing to the Spec's own binding findings (§7). The concrete test mechanism for each such guard (which assertion, which DOM/state check) is Implementation Plan/task-level detail, not specified here — matching the established precedent already used for Batch 2's own InlineMessage dead-code-exclusion guard, without mandating that specific test's own assertion shape.
+1. **Unit tests** covering each capability's own stated behavior (§3), following each framework's existing test conventions. Specifically: OrderList/PickList's move-button reordering (all 4 directions), Angular's real drag/drop (`CdkDragDrop` event handling), React's real drag/drop (native `dragstart`/`dragover`/`drop` event simulation); DataView's grid/list toggle, Paginator composition (page-change events genuinely update the rendered window), Angular's real filtering; OrganizationChart's expand/collapse per node, selection (single/multiple mode). The expressly authorized generic Angular `UListbox` `trackBy` input requires regression coverage for: omitted-input default/index tracking; supplied custom tracking; stable PickList selection and subsequent deselection after an equivalent-object refresh; and independent forwarding of `sourceTrackBy` to the source `UListbox.trackBy` and `targetTrackBy` to the target `UListbox.trackBy`. **Where §3 establishes that a real upstream mechanism is genuinely absent for a given framework** (Vue OrderList/PickList's drag/drop and filtering; React/Vue DataView's filtering) **, tests must guard against that absence being silently violated by a future change** — i.e., confirm the implementation does not accidentally introduce behavior the verified upstream contract does not contain, where that absence is load-bearing to the Spec's own binding findings (§7). The concrete test mechanism for each such guard (which assertion, which DOM/state check) is Implementation Plan/task-level detail, not specified here — matching the established precedent already used for Batch 2's own InlineMessage dead-code-exclusion guard, without mandating that specific test's own assertion shape.
 2. **No regression** to any already-Built component or foundation tier — the full existing test suite passes after each task, not just the new capability's own tests.
 3. **Accessibility parity** with the pattern already established for Built components (ARIA roles/labels where real source has them).
 4. **Cross-framework consistency check** where `uix-styles`/`uix-styled` token resolution applies, matching `packages/themes/test/cross-framework-consistency.test.ts`, for any capability sourcing styling via `dt()`.
@@ -301,19 +304,20 @@ Batch 3 is complete when, for every capability in §3 and every framework marked
 1. The capability is implemented following that framework's own established architecture (§6, §7) — real, source-verified against the pinned Prime tarball, not invented.
 2. §9's testing/verification bar is met (unit tests including regression guards for every real, load-bearing absence named in §3/§7 — Vue's drag-drop/filter absence, React/Vue's DataView filter absence — no regression, accessibility parity, cross-framework consistency where applicable, dependency-ceiling clean including the CDK addition).
 3. Angular's `@angular/cdk/drag-drop` dependency was added, disclosed, and confirmed not to trip `validate-dependency-ceiling.mjs`, sequenced ahead of Angular OrderList's/PickList's own implementation (§5 item 1).
-4. PickList's Vue implementation uses the real `[[], []]`-pair `modelValue` shape, not Angular/React's two-separate-props shape (§3.2, §7).
-5. DataView's Angular implementation includes real filtering; React/Vue implementations do not (§3.3, §7).
-6. OrganizationChart is realized for React and Vue only — no Angular realization exists anywhere in this batch's output (§1, §3.4).
-7. `COMPONENT_INVENTORY.md`, `REACT_COMPONENT_STATUS.md`, and `VUE_COMPONENT_STATUS.md` are each updated for every capability/framework closed in this batch.
-8. No capability outside §3's exact list was implemented; no capability inside §3 was silently dropped or substituted.
-9. No architectural exception, protected decision, or unresolved discrepancy named in §1/§8 was touched, reinterpreted, or resolved.
-10. A single Final Review/Closeout confirms all of the above for the whole batch, then the branch proceeds to merge per the Roadmap's own lifecycle.
+4. Angular `UListbox` exposes exactly the one generic `trackBy` input in §3.2/§6: omitting it preserves index tracking, it carries no PickList semantics, and Angular PickList forwards `sourceTrackBy` and `targetTrackBy` to their corresponding child `UListbox` instances. The §9 regression coverage proves default/index tracking, custom tracking, stable selection and deselection after an equivalent-object refresh, and both forwarding paths.
+5. PickList's Vue implementation uses the real `[[], []]`-pair `modelValue` shape, not Angular/React's two-separate-props shape (§3.2, §7).
+6. DataView's Angular implementation includes real filtering; React/Vue implementations do not (§3.3, §7).
+7. OrganizationChart is realized for React and Vue only — no Angular realization exists anywhere in this batch's output (§1, §3.4).
+8. `COMPONENT_INVENTORY.md`, `REACT_COMPONENT_STATUS.md`, and `VUE_COMPONENT_STATUS.md` are each updated for every capability/framework closed in this batch.
+9. No capability outside §3's exact list was implemented; no capability inside §3 was silently dropped or substituted.
+10. Except for the expressly authorized generic Angular `UListbox` `trackBy` exception in §3.2/§6, no architectural exception, protected decision, or unresolved discrepancy named in §1/§8 was touched, reinterpreted, or resolved.
+11. A single Final Review/Closeout confirms all of the above for the whole batch, then the branch proceeds to merge per the Roadmap's own lifecycle.
 
 ---
 
 ## 12. Downstream clarifications — non-blocking, explicitly not Spec-level uncertainties
 
-Everything this specification needed to resolve at the Spec level is resolved — §3's own "Disclosed scope cut (non-goal, binding)" notes for OrderList, PickList, DataView, and OrganizationChart are now firm decisions, not open questions. The two items below are genuinely different in kind: neither is a gap in this Spec's own scope or requirements — both are administrative/downstream matters correctly deferred to a later stage or a separate, unrelated workstream.
+Everything this specification needed to resolve at the Spec level is resolved — including §3.2's expressly authorized generic Angular `UListbox` `trackBy` exception — and §3's own "Disclosed scope cut (non-goal, binding)" notes for OrderList, PickList, DataView, and OrganizationChart are firm decisions, not open questions. The two items below are genuinely different in kind: neither is a gap in this Spec's own scope or requirements — both are administrative/downstream matters correctly deferred to a later stage or a separate, unrelated workstream.
 
 1. **Two non-blocking documentation follow-ups**, discovered during the Batch 3 eligibility-verification pass, entirely outside this batch's own scope and unrelated to Batch 3's requirements: the Parity Matrix's separate `DragDrop` capability row still references OrderList/PickList as "both exceptions for unrelated reasons" (stale since DECISION-C's resolution); the Parity Matrix's React/Vue OrganizationChart cells still say "not yet verified eligible beyond this question" (now superseded by this batch's own eligibility-verification pass). Neither is a Batch 3 acceptance-criteria item — both are candidates for a future, separate documentation-hygiene pass, not addressed by this specification or its eventual Plan.
 2. **React OrderList's/PickList's exact `UListbox`-reuse outcome** (§3.1, §7) is Implementation Plan/task-level detail by design, not a Spec-level gap — §3.1/§7 already state the binding rule (`UListbox` preferred where its contract fits, never mandatory, proof-by-exception governs any real gap). This item records that the *specific outcome* (does the contract fit cleanly, or does a gap surface) is necessarily unknown until implementation begins — the *rule* governing that outcome is already fully specified and is not itself open.
@@ -324,6 +328,6 @@ Neither item blocks Spec Review or requires any further Spec-level decision.
 
 ## Status
 
-**Draft — awaiting Spec Review.**
+**Spec Review passed on 2026-09-22 after the explicitly authorized generic Angular `UListbox` `trackBy` amendment; awaiting human approval.**
 
-This specification does not authorize implementation. It defines Batch 3's exact, evidence-derived scope and binding constraints for the 11 capability/framework combinations the eligibility-verification pass confirmed ready.
+This specification does not authorize implementation. It defines Batch 3's exact, evidence-derived scope and binding constraints for the 11 capability/framework combinations the eligibility-verification pass confirmed ready, plus the one expressly authorized generic Angular `UListbox` `trackBy` foundation exception required for Angular PickList forwarding.

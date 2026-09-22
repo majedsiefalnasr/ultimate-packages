@@ -2,11 +2,15 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Approved for implementation; final Plan Review corrections approved on 2026-09-22. The specification was approved in the conversation; its stale Draft label is preserved under the explicit no-Spec-edit constraint. This revision changes only the Plan.
+**Status:** Awaiting Plan Review as of 2026-09-22; implementation is not yet authorized. The amended specification passed technical Spec Review and is awaiting human approval alongside this reviewed Plan.
 
 **Dispatch rule:** One numbered task per fresh implementer dispatch, followed by review of that task's result before the next dispatch. Preserve Tasks 0–14 exactly. The only capability prerequisite is Task 0 → Tasks 1 and 4; Tasks 2, 3, 5–11 are otherwise independent. Tasks 12–14 retain their batch verification/documentation/closeout order. Review order is an execution gate, not a new implementation dependency between otherwise-independent realizations.
 
-**Current evidence notes:** Angular Listbox exposes `(onChange)` with `{ originalEvent, value }`; it does not expose DnD/item templates or `dataKey`/`metaKeySelection`, so the component-local adaptations below use only that real contract. `uix-data` exports filter types, not a runtime FilterService; matching is implemented privately inside the five affected component files, without changing Table or adding a shared foundation. Current Paginator events are Angular `(onPageChange)`, React `onPageChange`, and Vue `@page`; its minimal prop surface is extended by DataView-owned rows-per-page/report/placement controls, not unsupported child bindings. All inline code is the implementation contract, not illustrative pseudocode.
+**Branch/base allowlist:** Execute this Plan only on `feature/phase-c-batch-3-migration`, whose approved Batch 3 base is `f8cd78b`. Task 14 verifies both facts explicitly before closeout; changing either requires returning to the applicable review gate rather than silently editing the audit range.
+
+**Current evidence notes:** Angular `UListbox` exposes `optionLabel`, `optionValue`, `(onChange)` with `{ originalEvent, value }`, and the `NG_VALUE_ACCESSOR` CVA contract used through `ngModel`; the approved generic tracking addition is one optional `trackBy` input with exact callback contract `(index: number, option: unknown) => unknown`, whose helper returns the callback result when supplied and the index otherwise. It does not expose DnD/item templates or `dataKey`/`metaKeySelection`, so the component-local adaptations below use only that real contract. `uix-data` exports filter types, not a runtime FilterService; matching is implemented privately inside the five affected component files, without changing Table or adding a shared foundation. Current Paginator events are Angular `(onPageChange)`, React `onPageChange`, and Vue `@page`; its minimal prop surface is extended by DataView-owned rows-per-page/report/placement controls, not unsupported child bindings. All inline code is the implementation contract, not illustrative pseudocode.
+
+**Plan Review corrections applied (2026-09-22):** Angular OrderList and PickList use the real Listbox CVA `ngModel`/`onChange` path with `optionLabel` and `optionValue`; their selection stores stable keys so `dataKey` survives an equivalent-object refresh. Angular responsive styles are owned with `Renderer2`/`ElementRef` in both OrderList and PickList, never an in-template `<style>`. Vue tests import direct SFC files, and Vue OrderList/PickList drive the existing Listbox `<ul role="listbox">` through its rendered DOM for `tabindex`, auto-focus, and hover-focus without a foundation change. Both OrganizationChart togglers stop nested keyboard propagation and are tested. Batch 3 style modules define functional structural layout, state, and hierarchy CSS. Movement stories use controlled framework-valid wrappers; unnecessary DataView/OrganizationChart controlled stories are absent. React OrganizationChart continues to exclude `togglerIcon`. The expressly authorized generic Angular `UListbox.trackBy` exception is planned in Task 4 and covered by focused regression tests.
 
 **Goal:** Implement the 11 capability/framework realizations approved in `docs/superpowers/specs/2026-09-21-phase-c-batch-3-migration-design.md` (Batch 3): `UOrderList`, `UPickList`, `UDataView` for Angular/React/Vue, and `UOrganizationChart` for React/Vue only.
 
@@ -175,7 +179,7 @@ describe("UOrderList", () => {
     expect(fixture.componentInstance.value()).toEqual(["A", "B", "C", "D"]);
   });
   it("does not enable CDK or filtering by default", () => {
-    const { fixture } = setup();
+    const { fixture, change } = setup();
     expect(fixture.debugElement.queryAll(By.directive(CdkDrag))).toHaveLength(0);
     expect(fixture.nativeElement.querySelector('[role="searchbox"]')).toBeNull();
   });
@@ -224,8 +228,20 @@ describe("UOrderList", () => {
     fixture.componentRef.setInput("scrollHeight", "9rem");
     fixture.componentRef.setInput("tabindex", 7);
     fixture.componentRef.setInput("stripedRows", true);
-    fixture.componentRef.setInput("buttonProps", { class: "shared" });
-    fixture.componentRef.setInput("moveUpButtonProps", { class: "specific" });
+    fixture.componentRef.setInput("buttonProps", {
+      class: "shared",
+      id: "shared-up",
+      title: "Shared move",
+      name: "order-action",
+      value: "shared-value",
+      tabindex: 3,
+    });
+    fixture.componentRef.setInput("moveUpButtonProps", {
+      class: "specific",
+      id: "specific-up",
+      title: "Move this item up",
+      value: "up-value",
+    });
     fixture.detectChanges();
     const root = fixture.nativeElement.querySelector(".u-order-list") as HTMLElement;
     const viewport = fixture.nativeElement.querySelector(
@@ -234,14 +250,60 @@ describe("UOrderList", () => {
     const up = fixture.nativeElement.querySelector(
       '[data-pc-section="moveupbutton"]'
     ) as HTMLElement;
-    expect(fixture.nativeElement.querySelector("style").textContent).toContain(
-      "@media (max-width: 640px)"
-    );
+    const responsiveCss = fixture.nativeElement.querySelector("style").textContent;
+    expect(responsiveCss).toContain("@media (max-width: 640px)");
+    expect(responsiveCss).toContain("grid-template-columns: minmax(0, 1fr)");
     expect(viewport.style.maxHeight).toBe("9rem");
     expect(viewport.tabIndex).toBe(7);
     expect(root.classList.contains("u-striped")).toBe(true);
     expect(up.classList.contains("shared")).toBe(true);
     expect(up.classList.contains("specific")).toBe(true);
+    expect(up.id).toBe("specific-up");
+    expect(up.title).toBe("Move this item up");
+    expect(up.getAttribute("name")).toBe("order-action");
+    expect(up.getAttribute("value")).toBe("up-value");
+    expect(up.tabIndex).toBe(3);
+  });
+  it("keeps a dataKey selection after an equivalent-object refresh", () => {
+    const { fixture } = setup();
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("value", [
+      { id: "a", label: "Apple" },
+      { id: "b", label: "Banana" },
+    ]);
+    fixture.detectChanges();
+    fixture.nativeElement.querySelectorAll('[role="option"]')[1].click();
+    fixture.detectChanges();
+    fixture.componentRef.setInput("value", [
+      { id: "a", label: "Apple refreshed" },
+      { id: "b", label: "Banana refreshed" },
+    ]);
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelectorAll('[role="option"]')[1].getAttribute("aria-selected")
+    ).toBe("true");
+    fixture.nativeElement.querySelectorAll('[role="option"]')[1].click();
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelectorAll('[role="option"]')[1].getAttribute("aria-selected")
+    ).toBe("false");
+  });
+  it("implements metaKeySelection for plain and Ctrl/Cmd clicks", () => {
+    const { fixture } = setup();
+    fixture.componentRef.setInput("metaKeySelection", true);
+    fixture.detectChanges();
+    const options = fixture.nativeElement.querySelectorAll('[role="option"]');
+    options[0].click();
+    options[1].click();
+    fixture.detectChanges();
+    expect(options[0].getAttribute("aria-selected")).toBe("false");
+    expect(options[1].getAttribute("aria-selected")).toBe("true");
+    options[1].click();
+    fixture.detectChanges();
+    expect(options[1].getAttribute("aria-selected")).toBe("true");
+    options[1].dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
+    fixture.detectChanges();
+    expect(options[1].getAttribute("aria-selected")).toBe("false");
   });
 });
 ```
@@ -256,11 +318,21 @@ Expected: FAIL — `./order-list` module not found.
 ```typescript
 // packages/ng/src/order-list/order-list-style.ts
 export const orderListStyleModule = {
-  css: ".u-order-list { display: flex; gap: 0.5rem; } .u-order-list-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-order-list { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: .75rem; }
+    .u-order-list-controls { display: flex; flex-direction: column; gap: .25rem; }
+    .u-order-list-list { min-width: 0; margin: 0; padding: 0; border: 1px solid currentColor; overflow: auto; }
+    .u-order-list-list [role="listbox"] { margin: 0; padding: 0; list-style: none; }
+    .u-order-list-item, .u-order-list-list [role="option"] { display: block; padding: .5rem .75rem; cursor: pointer; }
+    .u-order-list-item-selected, .u-order-list-list [role="option"][aria-selected="true"] { outline: 2px solid currentColor; outline-offset: -2px; }
+    .u-order-list.u-striped .u-order-list-item:nth-child(even), .u-order-list.u-striped .u-order-list-list [role="option"]:nth-child(even) { background: rgba(0, 0, 0, .06); }
+  `,
   classes: {
     root: () => "u-order-list",
     controls: () => "u-order-list-controls",
     list: () => "u-order-list-list",
+    listItem: () => "u-order-list-item",
+    itemSelected: () => "u-order-list-item u-order-list-item-selected",
   },
 };
 ```
@@ -273,9 +345,12 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from "@angular/cdk/drag-
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  Renderer2,
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  effect,
   input,
   output,
   signal,
@@ -286,6 +361,16 @@ import { UListbox, UListboxChangeEvent } from "../listbox/listbox";
 import { orderListStyleModule } from "./order-list-style";
 
 let nextOrderListId = 0;
+
+export interface UOrderListButtonProps {
+  class?: string;
+  id?: string;
+  title?: string;
+  name?: string;
+  value?: string;
+  tabindex?: number;
+  disabled?: boolean;
+}
 
 type MatchMode =
   | "contains"
@@ -342,15 +427,19 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
   encapsulation: ViewEncapsulation.None,
   template: `
     <div [id]="rootId" [class]="cx('root')" [class.u-striped]="stripedRows()">
-      <style [textContent]="responsiveStyle()"></style>
       <div [class]="cx('controls')">
         @for (direction of directions; track direction) {
           <button
             type="button"
             [attr.data-pc-section]="'move' + direction + 'button'"
-            [disabled]="disabled() || selected().length === 0"
+            [disabled]="disabled() || selected().length === 0 || buttonPropsFor(direction).disabled"
             (click)="move(direction)"
-            [class]="buttonClass(direction)"
+            [class]="buttonPropsFor(direction).class"
+            [attr.id]="buttonPropsFor(direction).id"
+            [attr.title]="buttonPropsFor(direction).title"
+            [attr.name]="buttonPropsFor(direction).name"
+            [attr.value]="buttonPropsFor(direction).value"
+            [attr.tabindex]="buttonPropsFor(direction).tabindex"
           >
             Move {{ direction }}
           </button>
@@ -375,6 +464,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
         @if (dragdrop()) {
           <ul
             cdkDropList
+            [class]="cx('list')"
             [cdkDropListData]="visible()"
             [cdkDropListDisabled]="disabled()"
             (cdkDropListDropped)="drop($event)"
@@ -386,6 +476,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
             @for (item of visible(); track identity(item)) {
               <li
                 cdkDrag
+                [class]="isSelected(item) ? cx('itemSelected') : cx('listItem')"
                 [cdkDragData]="item"
                 [cdkDragDisabled]="disabled()"
                 role="option"
@@ -400,16 +491,18 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
             }
           </ul>
         } @else {
-          <u-listbox
-            [options]="visible()"
-            [multiple]="true"
-            [ngModel]="selected()"
-            [ngModelOptions]="{ standalone: true }"
-            [disabled]="disabled()"
-            [optionLabel]="label"
-            [ariaLabel]="ariaLabel()"
-            (onChange)="fromListbox($event)"
-          />
+          <div [class]="cx('list')">
+            <u-listbox
+              [options]="visible()"
+              [multiple]="true"
+              [ngModel]="selected()"
+              [optionLabel]="label"
+              [optionValue]="identity"
+              [disabled]="disabled()"
+              [ariaLabel]="ariaLabel()"
+              (onChange)="fromListbox($event)"
+            />
+          </div>
         }
       </div>
     </div>
@@ -432,14 +525,15 @@ export class UOrderList extends UBaseComponent {
   disabled = input(false, { transform: booleanAttribute });
   tabindex = input(0);
   ariaLabel = input("Order list");
-  buttonProps = input<{ class?: string }>({});
-  moveUpButtonProps = input<{ class?: string }>({});
-  moveTopButtonProps = input<{ class?: string }>({});
-  moveDownButtonProps = input<{ class?: string }>({});
-  moveBottomButtonProps = input<{ class?: string }>({});
+  buttonProps = input<UOrderListButtonProps>({});
+  moveUpButtonProps = input<UOrderListButtonProps>({});
+  moveTopButtonProps = input<UOrderListButtonProps>({});
+  moveDownButtonProps = input<UOrderListButtonProps>({});
+  moveBottomButtonProps = input<UOrderListButtonProps>({});
   protected readonly rootId = `u-order-list-${++nextOrderListId}`;
   protected readonly responsiveStyle = computed(
-    () => `@media (max-width: ${this.breakpoint()}) { #${this.rootId} { flex-direction: column; } }`
+    () =>
+      `@media (max-width: ${this.breakpoint()}) { #${this.rootId} { grid-template-columns: minmax(0, 1fr); } }`
   );
   protected readonly directions = ["up", "top", "down", "bottom"] as const;
   protected readonly selected = signal<unknown[]>([]);
@@ -465,33 +559,44 @@ export class UOrderList extends UBaseComponent {
   protected readonly label = (item: unknown): string =>
     String(this.dataKey() ? field(item, this.dataKey()) : item);
   protected isSelected(item: unknown): boolean {
-    return this.selected().some((value) => this.identity(value) === this.identity(item));
+    return this.selected().includes(this.identity(item));
   }
   protected select(item: unknown, event: MouseEvent | KeyboardEvent): void {
     if (this.disabled()) return;
-    const current =
-      this.metaKeySelection() && !event.ctrlKey && !event.metaKey ? [] : this.selected();
-    this.selected.set(
-      current.some((value) => this.identity(value) === this.identity(item))
-        ? current.filter((value) => this.identity(value) !== this.identity(item))
-        : [...current, item]
-    );
+    const key = this.identity(item);
+    const current = this.selected();
+    const toggled = current.includes(key)
+      ? current.filter((value) => value !== key)
+      : [...current, key];
+    this.selected.set(this.normalizeSelection(toggled, current, event));
   }
   protected fromListbox(event: UListboxChangeEvent): void {
+    const current = this.selected();
     const next = Array.isArray(event.value) ? event.value : [];
-    const changed =
-      next.find((item) => !this.isSelected(item)) ??
-      this.selected().find((item) => !next.includes(item));
-    if (changed !== undefined) this.select(changed, event.originalEvent as MouseEvent);
+    this.selected.set(this.normalizeSelection(next, current, event.originalEvent));
   }
-  protected buttonClass(direction: "up" | "top" | "down" | "bottom"): string {
+  private normalizeSelection(next: unknown[], current: unknown[], event: Event): unknown[] {
+    const pointer = event as MouseEvent;
+    if (!this.metaKeySelection() || pointer.ctrlKey || pointer.metaKey) return next;
+    const added = next.find((value) => !current.includes(value));
+    if (added !== undefined) return [added];
+    const removed = current.find((value) => !next.includes(value));
+    return removed !== undefined ? [removed] : current;
+  }
+  protected buttonPropsFor(direction: "up" | "top" | "down" | "bottom"): UOrderListButtonProps {
     const overrides = {
       up: this.moveUpButtonProps(),
       top: this.moveTopButtonProps(),
       down: this.moveDownButtonProps(),
       bottom: this.moveBottomButtonProps(),
     };
-    return [this.buttonProps().class, overrides[direction].class].filter(Boolean).join(" ");
+    const shared = this.buttonProps();
+    const specific = overrides[direction];
+    return {
+      ...shared,
+      ...specific,
+      class: [shared.class, specific.class].filter(Boolean).join(" ") || undefined,
+    };
   }
   protected move(direction: "up" | "top" | "down" | "bottom"): void {
     if (this.disabled()) return;
@@ -528,6 +633,22 @@ export class UOrderList extends UBaseComponent {
     moveItemInArray(next, from, to);
     this.valueChange.emit(next);
   }
+
+  private styleEl?: HTMLStyleElement;
+  constructor(
+    private readonly elementRef: ElementRef<HTMLElement>,
+    private readonly renderer: Renderer2
+  ) {
+    super();
+    effect(() => {
+      const style = this.responsiveStyle();
+      if (!this.styleEl) {
+        this.styleEl = this.renderer.createElement("style");
+        this.renderer.appendChild(this.elementRef.nativeElement, this.styleEl);
+      }
+      this.renderer.setProperty(this.styleEl, "textContent", style);
+    });
+  }
 }
 ```
 
@@ -559,8 +680,19 @@ export * from "./order-list";
 
 ```typescript
 // packages/ng/src/order-list/order-list.stories.ts
-import type { Meta, StoryObj } from "@storybook/angular";
+import { Component } from "@angular/core";
+import { moduleMetadata, type Meta, type StoryObj } from "@storybook/angular";
 import { UOrderList } from "./order-list";
+
+@Component({
+  selector: "story-controlled-order-list",
+  standalone: true,
+  imports: [UOrderList],
+  template: `<u-order-list [value]="value" (valueChange)="value = $event" />`,
+})
+class ControlledOrderListStory {
+  value = ["Apple", "Banana", "Cherry", "Date"];
+}
 
 const meta: Meta<UOrderList> = {
   title: "Data/OrderList",
@@ -576,6 +708,11 @@ export const Default: Story = {
 
 export const WithDragDrop: Story = {
   args: { value: ["Apple", "Banana", "Cherry", "Date"], dragdrop: true },
+};
+
+export const Controlled: Story = {
+  decorators: [moduleMetadata({ imports: [ControlledOrderListStory] })],
+  render: () => ({ template: "<story-controlled-order-list />" }),
 };
 ```
 
@@ -916,7 +1053,7 @@ export function UOrderList<T = unknown>({
   };
   return (
     <div id={id} className={[cx("root"), className].filter(Boolean).join(" ")}>
-      <style>{`@media (max-width: ${breakpoint}) { #${id} { flex-direction: column; } }`}</style>
+      <style>{`@media (max-width: ${breakpoint}) { #${id} { grid-template-columns: minmax(0, 1fr); } }`}</style>
       {lists.map((items, side) => {
         const showFilter = filter && true;
         const visible =
@@ -978,6 +1115,7 @@ export function UOrderList<T = unknown>({
               {visible.map((item, index) => (
                 <li
                   key={dataKey ? String(identity(item)) : index}
+                  className={isSelected(side, item) ? cx("itemSelected") : cx("listItem")}
                   role="option"
                   aria-selected={isSelected(side, item)}
                   tabIndex={0}
@@ -1025,12 +1163,18 @@ export function UOrderList<T = unknown>({
 import type { StyleModule } from "@ultimate/react-core";
 
 export const orderListStyleModule: StyleModule = {
-  css: ".u-order-list { display: flex; gap: 0.5rem; } .u-order-list-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-order-list { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: .75rem; }
+    .u-order-list-controls { display: flex; flex-direction: column; gap: .25rem; }
+    .u-order-list-list { min-width: 0; margin: 0; padding: 0; list-style: none; border: 1px solid currentColor; overflow: auto; }
+    .u-order-list-item { display: block; padding: .5rem .75rem; cursor: pointer; }
+    .u-order-list-item-selected { outline: 2px solid currentColor; outline-offset: -2px; }
+  `,
   classes: {
     root: () => "u-order-list",
     controls: () => "u-order-list-controls",
     list: () => "u-order-list-list",
-    item: () => "u-order-list-item",
+    listItem: () => "u-order-list-item",
     itemSelected: () => "u-order-list-item u-order-list-item-selected",
   },
 };
@@ -1055,7 +1199,19 @@ Append `export * from "./order-list";` to `packages/react/src/index.ts` (read cu
 ```tsx
 // packages/react/src/order-list/order-list.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { UOrderList } from "./order-list";
+
+function ControlledOrderListStory(): React.ReactElement {
+  const [value, setValue] = useState(["Apple", "Banana", "Cherry", "Date"]);
+  return (
+    <UOrderList
+      value={value}
+      onChange={setValue}
+      itemTemplate={(item) => <span>{item as string}</span>}
+    />
+  );
+}
 
 const meta: Meta<typeof UOrderList> = {
   title: "Data/OrderList",
@@ -1078,6 +1234,10 @@ export const WithDragDrop: Story = {
     dragdrop: true,
     itemTemplate: (item) => <span>{item as string}</span>,
   },
+};
+
+export const Controlled: Story = {
+  render: () => <ControlledOrderListStory />,
 };
 ```
 
@@ -1157,7 +1317,7 @@ EOF
 // packages/vue/src/order-list/order-list.spec.ts
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import { UOrderList } from "./index";
+import UOrderList from "./OrderList.vue";
 
 function setup() {
   return mount(UOrderList, { props: { modelValue: ["A", "B", "C", "D"] } });
@@ -1188,6 +1348,56 @@ describe("UOrderList", () => {
     expect(wrapper.find('[role="listbox"]').attributes("aria-multiselectable")).toBe("true");
     await wrapper.find('[role="option"]').trigger("click");
     expect(wrapper.find('[role="option"]').attributes("aria-selected")).toBe("true");
+  });
+  it("retains dataKey selection after an equivalent model array refresh", async () => {
+    const wrapper = mount(UOrderList, {
+      props: {
+        modelValue: [
+          { id: "a", label: "Apple" },
+          { id: "b", label: "Banana" },
+        ],
+        dataKey: "id",
+      },
+    });
+    await wrapper.findAll('[role="option"]')[1].trigger("click");
+    await wrapper.setProps({
+      modelValue: [
+        { id: "a", label: "Apple refreshed" },
+        { id: "b", label: "Banana refreshed" },
+      ],
+    });
+    expect(wrapper.findAll('[role="option"]')[1].attributes("aria-selected")).toBe("true");
+    await wrapper.findAll('[role="option"]')[1].trigger("click");
+    expect(wrapper.findAll('[role="option"]')[1].attributes("aria-selected")).toBe("false");
+  });
+  it("implements metaKeySelection for plain and Ctrl/Cmd clicks", async () => {
+    const wrapper = mount(UOrderList, {
+      props: { modelValue: ["A", "B"], metaKeySelection: true },
+    });
+    const options = wrapper.findAll('[role="option"]');
+    await options[0].trigger("click");
+    await options[1].trigger("click");
+    expect(options[0].attributes("aria-selected")).toBe("false");
+    expect(options[1].attributes("aria-selected")).toBe("true");
+    await options[1].trigger("click");
+    expect(options[1].attributes("aria-selected")).toBe("true");
+    await options[1].trigger("click", { ctrlKey: true });
+    expect(options[1].attributes("aria-selected")).toBe("false");
+  });
+  it("applies tabindex and auto/hover focus to the composed Listbox ul", async () => {
+    const wrapper = mount(UOrderList, {
+      props: { modelValue: ["A", "B"], tabindex: 6, autoOptionFocus: false, focusOnHover: true },
+    });
+    await wrapper.vm.$nextTick();
+    const listbox = wrapper.find('[role="listbox"]');
+    expect(listbox.attributes("tabindex")).toBe("6");
+    await wrapper.find('[role="option"]').trigger("mouseover");
+    expect(document.activeElement).toBe(listbox.element);
+    const auto = mount(UOrderList, { props: { modelValue: ["A", "B"], autoOptionFocus: true } });
+    const autoListbox = auto.find('[role="listbox"]');
+    await autoListbox.trigger("focus");
+    await autoListbox.trigger("keydown", { code: "Enter" });
+    expect(auto.findAll('[role="option"]')[0].attributes("aria-selected")).toBe("true");
   });
 });
 ```
@@ -1244,10 +1454,19 @@ export function createBaseOrderList(): ComponentOptions {
 import type { StyleModule } from "@ultimate/vue-core";
 
 export const orderListStyleModule: StyleModule = {
-  css: ".u-order-list { display: flex; gap: 0.5rem; } .u-order-list-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-order-list { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: .75rem; }
+    .u-order-list-controls { display: flex; flex-direction: column; gap: .25rem; }
+    .u-order-list-list { min-width: 0; margin: 0; padding: 0; list-style: none; border: 1px solid currentColor; overflow: auto; }
+    .u-order-list-list [role="listbox"] { margin: 0; padding: 0; list-style: none; }
+    .u-order-list-item, .u-order-list-list [role="option"] { display: block; padding: .5rem .75rem; cursor: pointer; }
+    .u-order-list-item-selected, .u-order-list-list [role="option"][aria-selected="true"] { outline: 2px solid currentColor; outline-offset: -2px; }
+    .u-order-list.u-striped .u-order-list-item:nth-child(even), .u-order-list.u-striped .u-order-list-list [role="option"]:nth-child(even) { background: rgba(0, 0, 0, .06); }
+  `,
   classes: {
     root: () => "u-order-list",
     controls: () => "u-order-list-controls",
+    list: () => "u-order-list-list",
   },
 };
 ```
@@ -1285,6 +1504,10 @@ export default {
   },
   mounted() {
     this.bindMedia();
+    this.syncListboxDom();
+  },
+  updated() {
+    this.syncListboxDom();
   },
   beforeUnmount() {
     this.media?.removeEventListener("change", this.mediaListener);
@@ -1303,26 +1526,28 @@ export default {
     identity(item) {
       return this.dataKey && item != null ? item[this.dataKey] : item;
     },
+    optionValue(item) {
+      return this.identity(item);
+    },
     label(item) {
       return String(this.dataKey && item != null ? item[this.dataKey] : item);
     },
     isSelected(side, item) {
-      return this.selected[side].some((value) => this.identity(value) === this.identity(item));
+      return this.selected[side].includes(this.optionValue(item));
     },
     select(side, event) {
       if (this.disabled) return;
       const nextValue = Array.isArray(event.value) ? event.value : [];
-      const changed =
-        nextValue.find((item) => !this.isSelected(side, item)) ??
-        this.selected[side].find((item) => !nextValue.includes(item));
-      if (changed === undefined) return;
-      const original = event.originalEvent;
-      const current =
-        this.metaKeySelection && !original.ctrlKey && !original.metaKey ? [] : this.selected[side];
       const next = this.selected.map((items) => [...items]);
-      next[side] = current.some((item) => this.identity(item) === this.identity(changed))
-        ? current.filter((item) => this.identity(item) !== this.identity(changed))
-        : [...current, changed];
+      const current = next[side];
+      const original = event.originalEvent;
+      if (this.metaKeySelection && !original.ctrlKey && !original.metaKey) {
+        const added = nextValue.find((value) => !current.includes(value));
+        const removed = current.find((value) => !nextValue.includes(value));
+        next[side] = added !== undefined ? [added] : removed !== undefined ? [removed] : current;
+      } else {
+        next[side] = nextValue;
+      }
       this.selected = next;
     },
     move(side, direction) {
@@ -1350,6 +1575,7 @@ export default {
         }
       }
       this.$emit("update:modelValue", result);
+      this.focusListbox();
     },
 
     propsFor(direction) {
@@ -1361,12 +1587,36 @@ export default {
       };
       return { ...this.buttonProps, ...this[names[direction]] };
     },
+    listboxComponent() {
+      const refs = Array.isArray(this.$refs.listbox) ? this.$refs.listbox : [this.$refs.listbox];
+      return refs[0] ?? null;
+    },
+    listboxElement() {
+      return this.listboxComponent()?.$el?.querySelector('[role="listbox"]') ?? null;
+    },
+    syncListboxDom() {
+      this.$nextTick(() => {
+        const listbox = this.listboxElement();
+        if (listbox) listbox.tabIndex = this.disabled ? -1 : this.tabindex;
+      });
+    },
+    focusListbox(force = false) {
+      if (!force && !this.autoOptionFocus) return;
+      this.$nextTick(() => this.listboxElement()?.focus());
+    },
     focusOption(event) {
-      if (this.autoOptionFocus && event.target.getAttribute("role") === "listbox")
-        event.target.querySelector('[role="option"]')?.focus();
+      if (
+        this.autoOptionFocus &&
+        event.target.getAttribute("role") === "listbox" &&
+        this.listboxComponent()?.focusedIndex < 0
+      ) {
+        event.target.dispatchEvent(
+          new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true })
+        );
+      }
     },
     hoverOption(event) {
-      if (this.focusOnHover) event.target.closest('[role="option"]')?.focus();
+      if (this.focusOnHover && event.target.closest('[role="option"]')) this.focusListbox(true);
     },
   },
 };
@@ -1375,9 +1625,10 @@ export default {
 <template>
   <div
     :class="[cx('root'), { 'u-striped': striped }]"
-    :style="{ flexDirection: responsive && narrow ? 'column' : 'row' }"
+    :style="{ gridTemplateColumns: responsive && narrow ? 'minmax(0, 1fr)' : undefined }"
     :aria-label="ariaLabel"
     :aria-labelledby="ariaLabelledby"
+    @focusin="focusOption"
   >
     <section
       v-for="(items, side) in lists"
@@ -1398,16 +1649,17 @@ export default {
         </button>
       </div>
       <div
+        :class="cx('list')"
         :style="{ maxHeight: scrollHeight, overflow: 'auto' }"
-        :tabindex="disabled ? -1 : tabindex"
-        @focusin="focusOption"
         @mouseover="hoverOption"
       >
         <Listbox
+          ref="listbox"
           :options="items"
           :model-value="selected[side]"
           :multiple="true"
           :option-label="label"
+          :option-value="optionValue"
           :disabled="disabled"
           :aria-label="side === 0 ? ariaLabel + ' source' : ariaLabel + ' target'"
           @change="select(side, $event)"
@@ -1439,7 +1691,8 @@ Append the corresponding line to `packages/vue/src/index.ts`.
 ```typescript
 // packages/vue/src/order-list/order-list.stories.ts
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { UOrderList } from "./index";
+import { ref } from "vue";
+import UOrderList from "./OrderList.vue";
 
 const meta: Meta<typeof UOrderList> = {
   title: "Data/OrderList",
@@ -1451,6 +1704,17 @@ type Story = StoryObj<typeof UOrderList>;
 
 export const Default: Story = {
   args: { modelValue: ["Apple", "Banana", "Cherry", "Date"] },
+};
+
+export const Controlled: Story = {
+  render: () => ({
+    components: { UOrderList },
+    setup() {
+      const modelValue = ref(["Apple", "Banana", "Cherry", "Date"]);
+      return { modelValue };
+    },
+    template: '<UOrderList v-model="modelValue" />',
+  }),
 };
 ```
 
@@ -1510,19 +1774,88 @@ EOF
 - Create: `packages/ng/src/pick-list/pick-list.stories.ts`
 - Create: `packages/ng/src/pick-list/index.ts`
 - Modify: `packages/ng/src/index.ts`
+- Modify: `packages/ng/src/listbox/listbox.ts` (add the one generic `trackBy` input)
+- Modify: `packages/ng/src/listbox/listbox.spec.ts` (default/custom tracking DOM-reuse regressions)
 
 - Modify: `docs/architecture/provenance/ng.json` (only this component's new file records)
 
 **Interfaces:**
 
-- Consumes: `UBaseComponent` from `@ultimate/ng-core`; two `UListbox` instances (source/target), each using the real `(onChange)` payload `{ originalEvent, value }`; `@angular/cdk/drag-drop` (Task 0).
+- Consumes: `UBaseComponent` from `@ultimate/ng-core`; two `UListbox` instances (source/target), each using the real `(onChange)` payload `{ originalEvent, value }` and the generic `trackBy` input; `@angular/cdk/drag-drop` (Task 0).
 - Produces: `UPickList` component, selector `u-pick-list`, `source`/`target` as two independent inputs (matching real Angular shape — NOT the Vue combined-array shape).
 
 **Depends on:** Task 0.
 
-**Current-API adaptation:** As in Task 1, `UListbox` has no item-drag hook. Non-drag mode composes the two Listboxes through their real inputs and `(onChange)` event; opt-in drag mode renders two component-local, grouped CDK drop lists. No Listbox foundation change is authorized.
+**Current-API adaptation:** As in Task 1, `UListbox` has no item-drag hook. Task 4 adds the expressly authorized generic `trackBy` input to `UListbox`; its optional callback contract is `(index: number, option: unknown) => unknown`, and its helper returns the callback result when supplied and the index otherwise. Non-drag mode composes the two Listboxes through their real inputs and `(onChange)` event, forwarding `sourceTrackBy` only to the source child and `targetTrackBy` only to the target child; opt-in drag mode renders two component-local, grouped CDK drop lists.
 
-- [ ] **Step 1: Write the failing test**
+- [ ] **Step 1: Write the failing tests**
+
+First add the generic `UListbox` tracking regressions to the existing test file. The omitted-input case must prove index tracking reuses each option node by position after an equivalent-object refresh; the supplied callback case must prove custom keys reuse nodes by key across a reorder:
+
+```typescript
+// packages/ng/src/listbox/listbox.spec.ts
+import { Component } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { describe, expect, it } from "vitest";
+import { UListbox } from "./listbox";
+
+describe("UListbox trackBy", () => {
+  it("uses index tracking by default and reuses option DOM by position", () => {
+    @Component({
+      standalone: true,
+      imports: [UListbox],
+      template: `<u-listbox [options]="options" [optionLabel]="'label'" />`,
+    })
+    class HostComponent {
+      options = [
+        { id: "a", label: "A" },
+        { id: "b", label: "B" },
+      ];
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const before = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
+    fixture.componentInstance.options = [
+      { id: "a", label: "A refreshed" },
+      { id: "b", label: "B refreshed" },
+    ];
+    fixture.detectChanges();
+    const after = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
+    expect(after[0]).toBe(before[0]);
+    expect(after[1]).toBe(before[1]);
+  });
+
+  it("uses supplied custom keys and reuses option DOM by key", () => {
+    @Component({
+      standalone: true,
+      imports: [UListbox],
+      template: `<u-listbox [options]="options" [optionLabel]="'label'" [trackBy]="trackBy" />`,
+    })
+    class HostComponent {
+      options = [
+        { id: "a", label: "A" },
+        { id: "b", label: "B" },
+      ];
+      trackBy(index: number, option: unknown): unknown {
+        return (option as { id: string }).id;
+      }
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const before = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
+    fixture.componentInstance.options = [
+      { id: "b", label: "B refreshed" },
+      { id: "a", label: "A refreshed" },
+    ];
+    fixture.detectChanges();
+    const after = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
+    expect(after[0]).toBe(before[1]);
+    expect(after[1]).toBe(before[0]);
+  });
+});
+```
+
+Keep the complete existing `UPickList` move, transfer, CDK, filter, and control coverage below, and add the forwarding regression to that same test file:
 
 ```typescript
 // packages/ng/src/pick-list/pick-list.spec.ts
@@ -1530,6 +1863,7 @@ import { TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { CdkDrag, CdkDropList } from "@angular/cdk/drag-drop";
 import { describe, expect, it, vi } from "vitest";
+import { UListbox } from "../listbox/listbox";
 import { UPickList } from "./pick-list";
 
 function setup(dragdrop = false) {
@@ -1687,7 +2021,7 @@ describe("UPickList", () => {
       fixture.nativeElement.querySelector('[data-pc-section="targetlist"] [data-move]')
     ).toBeNull();
   });
-  it("applies source/target styles, trackBy functions, and responsive breakpoint", () => {
+  it("forwards sourceTrackBy and targetTrackBy independently and applies responsive styles", () => {
     const { fixture } = setup();
     const sourceTrackBy = vi.fn((index: number, item: string) => index + item);
     const targetTrackBy = vi.fn((index: number, item: string) => index + item);
@@ -1696,6 +2030,13 @@ describe("UPickList", () => {
     fixture.componentRef.setInput("sourceTrackBy", sourceTrackBy);
     fixture.componentRef.setInput("targetTrackBy", targetTrackBy);
     fixture.componentRef.setInput("breakpoint", "700px");
+    fixture.componentRef.setInput("dragdrop", true);
+    fixture.detectChanges();
+    fixture.componentRef.setInput("dragdrop", false);
+    fixture.detectChanges();
+    const listboxes = fixture.debugElement.queryAll(By.directive(UListbox));
+    expect(listboxes[0].componentInstance.trackBy()).toBe(sourceTrackBy);
+    expect(listboxes[1].componentInstance.trackBy()).toBe(targetTrackBy);
     fixture.componentRef.setInput("dragdrop", true);
     fixture.detectChanges();
     const source = fixture.nativeElement.querySelector(
@@ -1708,34 +2049,121 @@ describe("UPickList", () => {
     expect(target.style.maxHeight).toBe("12rem");
     expect(sourceTrackBy).toHaveBeenCalled();
     expect(targetTrackBy).toHaveBeenCalled();
-    expect(fixture.nativeElement.querySelector("style").textContent).toContain(
-      "@media (max-width: 700px)"
+    expect(fixture.debugElement.queryAll(By.directive(CdkDrag))).not.toHaveLength(0);
+    const responsiveCss = fixture.nativeElement.querySelector("style").textContent;
+    expect(responsiveCss).toContain("@media (max-width: 700px)");
+    expect(responsiveCss).toContain("grid-template-columns: minmax(0, 1fr)");
+  });
+  it("keeps dataKey selection and permits subsequent deselection after equivalent arrays refresh", () => {
+    const { fixture } = setup();
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("source", [
+      { id: "a", name: "Apple" },
+      { id: "b", name: "Banana" },
+    ]);
+    fixture.componentRef.setInput("target", [{ id: "x", name: "Xylophone" }]);
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('[data-pc-section="sourcelist"] [role="option"]').click();
+    fixture.componentRef.setInput("source", [
+      { id: "a", name: "Apple refreshed" },
+      { id: "b", name: "Banana refreshed" },
+    ]);
+    fixture.componentRef.setInput("target", [{ id: "x", name: "Xylophone refreshed" }]);
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement
+        .querySelector('[data-pc-section="sourcelist"] [role="option"]')
+        .getAttribute("aria-selected")
+    ).toBe("true");
+    fixture.nativeElement.querySelector('[data-pc-section="sourcelist"] [role="option"]').click();
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement
+        .querySelector('[data-pc-section="sourcelist"] [role="option"]')
+        .getAttribute("aria-selected")
+    ).toBe("false");
+  });
+  it("implements metaKeySelection in the composed source list", () => {
+    const { fixture } = setup();
+    fixture.componentRef.setInput("metaKeySelection", true);
+    fixture.detectChanges();
+    const options = fixture.nativeElement.querySelectorAll(
+      '[data-pc-section="sourcelist"] [role="option"]'
     );
+    options[0].click();
+    options[1].click();
+    fixture.detectChanges();
+    expect(options[0].getAttribute("aria-selected")).toBe("false");
+    expect(options[1].getAttribute("aria-selected")).toBe("true");
+    options[1].click();
+    fixture.detectChanges();
+    expect(options[1].getAttribute("aria-selected")).toBe("true");
+    options[1].dispatchEvent(new MouseEvent("click", { bubbles: true, metaKey: true }));
+    fixture.detectChanges();
+    expect(options[1].getAttribute("aria-selected")).toBe("false");
   });
 });
 ```
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `pnpm --filter @ultimate/ng test --watch=false --include='src/pick-list/pick-list.spec.ts'`
-Expected: FAIL.
+Run these focused commands:
+
+```bash
+pnpm --filter @ultimate/ng test --watch=false --include='src/listbox/listbox.spec.ts'
+pnpm --filter @ultimate/ng test --watch=false --include='src/pick-list/pick-list.spec.ts'
+```
+
+Expected: both FAIL — the `trackBy` input/helper and `UPickList` module are not implemented yet.
 
 - [ ] **Step 3: Write the style module**
 
 ```typescript
 // packages/ng/src/pick-list/pick-list-style.ts
 export const pickListStyleModule = {
-  css: ".u-pick-list { display: flex; gap: 0.5rem; } .u-pick-list-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-pick-list { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; gap: .75rem; }
+    .u-pick-list-source, .u-pick-list-target { min-width: 0; border: 1px solid currentColor; }
+    .u-pick-list-controls { display: flex; flex-direction: column; gap: .25rem; }
+    .u-pick-list-list { margin: 0; padding: 0; list-style: none; overflow: auto; }
+    .u-pick-list-item { display: block; padding: .5rem .75rem; cursor: pointer; }
+    .u-pick-list-item-selected { outline: 2px solid currentColor; outline-offset: -2px; }
+  `,
   classes: {
     root: () => "u-pick-list",
     sourceList: () => "u-pick-list-source",
     targetList: () => "u-pick-list-target",
     controls: () => "u-pick-list-controls",
+    list: () => "u-pick-list-list",
+    listItem: () => "u-pick-list-item",
+    itemSelected: () => "u-pick-list-item u-pick-list-item-selected",
   },
 };
 ```
 
 - [ ] **Step 4: Implement `UPickList`**
+
+First add the expressly authorized generic tracking support to the existing Angular `UListbox`:
+
+```typescript
+// packages/ng/src/listbox/listbox.ts
+// Add this input beside the other generic rendering inputs.
+trackBy = input<(index: number, option: unknown) => unknown>();
+
+// Add this helper beside the other option-rendering helpers.
+protected trackOption(index: number, option: unknown): unknown {
+  const callback = this.trackBy();
+  return callback ? callback(index, option) : index;
+}
+```
+
+Replace only the template's hard-coded tracking expression:
+
+```html
+@for (option of visibleOptions(); track trackOption($index, option)) {
+```
+
+The conditional above is intentional: when the optional callback is absent, the helper returns the index; when supplied, it returns the callback result. Do not use `??` or another fallback after invoking the callback.
 
 ```typescript
 // packages/ng/src/pick-list/pick-list.ts
@@ -1749,9 +2177,12 @@ import { NgStyle } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  Renderer2,
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  effect,
   input,
   output,
   signal,
@@ -1818,10 +2249,10 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
   encapsulation: ViewEncapsulation.None,
   template: `
     <div [id]="rootId" [class]="cx('root')" cdkDropListGroup>
-      <style [textContent]="responsiveStyle()"></style>
       @for (side of sides; track side) {
         <section
           [attr.data-pc-section]="side === 0 ? 'sourcelist' : 'targetlist'"
+          [class]="side === 0 ? cx('sourceList') : cx('targetList')"
           [ngStyle]="side === 0 ? sourceStyle() : targetStyle()"
         >
           <h3>{{ side === 0 ? sourceHeader() : targetHeader() }}</h3>
@@ -1852,6 +2283,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
           @if (dragdrop()) {
             <ul
               cdkDropList
+              [class]="cx('list')"
               [cdkDropListData]="side"
               [cdkDropListDisabled]="disabled()"
               (cdkDropListDropped)="drop($event)"
@@ -1862,6 +2294,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
               @for (item of visible(side); track trackItem(side, $index, item)) {
                 <li
                   cdkDrag
+                  [class]="isSelected(side, item) ? cx('itemSelected') : cx('listItem')"
                   [cdkDragData]="item"
                   [cdkDragDisabled]="disabled() || optionDisabled(side, item)"
                   role="option"
@@ -1877,17 +2310,21 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
               }
             </ul>
           } @else {
-            <u-listbox
-              [options]="visible(side)"
-              [multiple]="true"
-              [ngModel]="selected()[side]"
-              [ngModelOptions]="{ standalone: true }"
-              [optionLabel]="label"
-              [disabled]="disabled()"
-              [optionDisabled]="side === 0 ? sourceOptionDisabled() : targetOptionDisabled()"
-              [ariaLabel]="side === 0 ? sourceHeader() : targetHeader()"
-              (onChange)="fromListbox(side, $event)"
-            />
+            <div [class]="cx('list')">
+              <u-listbox
+                [options]="visible(side)"
+                [multiple]="true"
+                [ngModel]="selected()[side]"
+                [ngModelOptions]="{ standalone: true }"
+                [optionLabel]="label"
+                [optionValue]="identity"
+                [trackBy]="side === 0 ? sourceTrackBy() : targetTrackBy()"
+                [disabled]="disabled()"
+                [optionDisabled]="side === 0 ? sourceOptionDisabled() : targetOptionDisabled()"
+                [ariaLabel]="side === 0 ? sourceHeader() : targetHeader()"
+                (onChange)="fromListbox(side, $event)"
+              />
+            </div>
           }
         </section>
       }
@@ -1961,7 +2398,8 @@ export class UPickList extends UBaseComponent {
   breakpoint = input("960px");
   protected readonly rootId = `u-pick-list-${++nextPickListId}`;
   protected readonly responsiveStyle = computed(
-    () => `@media (max-width: ${this.breakpoint()}) { #${this.rootId} { flex-direction: column; } }`
+    () =>
+      `@media (max-width: ${this.breakpoint()}) { #${this.rootId} { grid-template-columns: minmax(0, 1fr); } }`
   );
   protected readonly sides = [0, 1] as const;
   protected readonly directions = ["up", "top", "down", "bottom"] as const;
@@ -2008,23 +2446,36 @@ export class UPickList extends UBaseComponent {
     this.queries.set(next);
   }
   protected isSelected(side: number, item: unknown): boolean {
-    return this.selected()[side].some((value) => this.identity(value) === this.identity(item));
+    return this.selected()[side].includes(this.identity(item));
   }
   protected select(side: number, item: unknown, event: MouseEvent | KeyboardEvent): void {
     if (this.disabled() || this.optionDisabled(side, item)) return;
     const next: [unknown[], unknown[]] = [...this.selected()];
     const current = this.metaKeySelection() && !event.ctrlKey && !event.metaKey ? [] : next[side];
-    next[side] = current.some((value) => this.identity(value) === this.identity(item))
-      ? current.filter((value) => this.identity(value) !== this.identity(item))
-      : [...current, item];
+    const value = this.identity(item);
+    const toggled = current.includes(value)
+      ? current.filter((selectedValue) => selectedValue !== value)
+      : [...current, value];
+    next[side] = this.normalizeSelection(toggled, next[side], event);
+    this.selected.set(next);
+  }
+  protected setSelected(side: number, value: unknown[]): void {
+    const next: [unknown[], unknown[]] = [...this.selected()];
+    next[side] = value;
     this.selected.set(next);
   }
   protected fromListbox(side: number, event: UListboxChangeEvent): void {
+    const current = this.selected()[side];
     const next = Array.isArray(event.value) ? event.value : [];
-    const changed =
-      next.find((item) => !this.isSelected(side, item)) ??
-      this.selected()[side].find((item) => !next.includes(item));
-    if (changed !== undefined) this.select(side, changed, event.originalEvent as MouseEvent);
+    this.setSelected(side, this.normalizeSelection(next, current, event.originalEvent));
+  }
+  private normalizeSelection(next: unknown[], current: unknown[], event: Event): unknown[] {
+    const pointer = event as MouseEvent;
+    if (!this.metaKeySelection() || pointer.ctrlKey || pointer.metaKey) return next;
+    const added = next.find((value) => !current.includes(value));
+    if (added !== undefined) return [added];
+    const removed = current.find((value) => !next.includes(value));
+    return removed !== undefined ? [removed] : current;
   }
   private emit(side: number, value: unknown[]): void {
     (side === 0 ? this.sourceChange : this.targetChange).emit(value);
@@ -2088,13 +2539,35 @@ export class UPickList extends UBaseComponent {
     }
     this.selected.set([[], []]);
   }
+
+  private styleEl?: HTMLStyleElement;
+  constructor(
+    private readonly elementRef: ElementRef<HTMLElement>,
+    private readonly renderer: Renderer2
+  ) {
+    super();
+    effect(() => {
+      const style = this.responsiveStyle();
+      if (!this.styleEl) {
+        this.styleEl = this.renderer.createElement("style");
+        this.renderer.appendChild(this.elementRef.nativeElement, this.styleEl);
+      }
+      this.renderer.setProperty(this.styleEl, "textContent", style);
+    });
+  }
 }
 ```
 
 - [ ] **Step 5: Run to verify pass**
 
-Run: `pnpm --filter @ultimate/ng test --watch=false --include='src/pick-list/pick-list.spec.ts'`
-Expected: PASS.
+Run these focused commands:
+
+```bash
+pnpm --filter @ultimate/ng test --watch=false --include='src/listbox/listbox.spec.ts'
+pnpm --filter @ultimate/ng test --watch=false --include='src/pick-list/pick-list.spec.ts'
+```
+
+Expected: both PASS.
 
 - [ ] **Step 6: Barrel + stories**
 
@@ -2107,13 +2580,34 @@ Append to `packages/ng/src/index.ts`.
 
 ```typescript
 // packages/ng/src/pick-list/pick-list.stories.ts
-import type { Meta, StoryObj } from "@storybook/angular";
+import { Component } from "@angular/core";
+import { moduleMetadata, type Meta, type StoryObj } from "@storybook/angular";
 import { UPickList } from "./pick-list";
+
+@Component({
+  selector: "story-controlled-pick-list",
+  standalone: true,
+  imports: [UPickList],
+  template: `<u-pick-list
+    [source]="source"
+    [target]="target"
+    (sourceChange)="source = $event"
+    (targetChange)="target = $event"
+  />`,
+})
+class ControlledPickListStory {
+  source = ["Apple", "Banana", "Cherry"];
+  target: string[] = [];
+}
 
 const meta: Meta<UPickList> = { title: "Data/PickList", component: UPickList };
 export default meta;
 type Story = StoryObj<UPickList>;
 export const Default: Story = { args: { source: ["Apple", "Banana", "Cherry"], target: [] } };
+export const Controlled: Story = {
+  decorators: [moduleMetadata({ imports: [ControlledPickListStory] })],
+  render: () => ({ template: "<story-controlled-pick-list />" }),
+};
 ```
 
 - [ ] **Step 7: Register provenance and run the full regression/ceiling checks**
@@ -2148,13 +2642,16 @@ Expected: the complete existing suite passes and the ceiling script exits 0. Do 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add packages/ng/src/pick-list packages/ng/src/index.ts docs/architecture/provenance/ng.json
+git add packages/ng/src/listbox/listbox.ts packages/ng/src/listbox/listbox.spec.ts packages/ng/src/pick-list packages/ng/src/index.ts docs/architecture/provenance/ng.json
 git commit -m "$(cat <<'EOF'
 feat(ng): add UPickList
 
 Real PrimeNG PickList behavior: two independent source/target inputs
 (matching real shape, not a combined array), move-between-lists
-controls, real opt-in CDK drag/drop. Composes two UListbox instances.
+controls, real opt-in CDK drag/drop. Composes two UListbox instances
+and forwards independent sourceTrackBy/targetTrackBy callbacks through
+the generic UListbox trackBy input. The focused Listbox and PickList
+regressions pass before this commit.
 EOF
 )"
 ```
@@ -2521,7 +3018,7 @@ export function UPickList<T = unknown>({
   };
   return (
     <div id={id} className={[cx("root"), className].filter(Boolean).join(" ")}>
-      <style>{`@media (max-width: ${breakpoint}) { #${id} { flex-direction: column; } }`}</style>
+      <style>{`@media (max-width: ${breakpoint}) { #${id} { grid-template-columns: minmax(0, 1fr); } }`}</style>
       {lists.map((items, side) => {
         const showFilter = filter && (side === 0 ? showSourceFilter : showTargetFilter);
         const visible =
@@ -2580,6 +3077,7 @@ export function UPickList<T = unknown>({
               {visible.map((item, index) => (
                 <li
                   key={dataKey ? String(identity(item)) : index}
+                  className={isSelected(side, item) ? cx("itemSelected") : cx("listItem")}
                   role="option"
                   aria-selected={isSelected(side, item)}
                   tabIndex={0}
@@ -2639,13 +3137,21 @@ export function UPickList<T = unknown>({
 import type { StyleModule } from "@ultimate/react-core";
 
 export const pickListStyleModule: StyleModule = {
-  css: ".u-pick-list { display: flex; gap: 0.5rem; } .u-pick-list-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-pick-list { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; gap: .75rem; }
+    .u-pick-list-source, .u-pick-list-target { min-width: 0; border: 1px solid currentColor; }
+    .u-pick-list-controls { display: flex; flex-direction: column; gap: .25rem; }
+    .u-pick-list-list { margin: 0; padding: 0; list-style: none; overflow: auto; }
+    .u-pick-list-item { display: block; padding: .5rem .75rem; cursor: pointer; }
+    .u-pick-list-item-selected { outline: 2px solid currentColor; outline-offset: -2px; }
+  `,
   classes: {
     root: () => "u-pick-list",
     sourceList: () => "u-pick-list-source",
     targetList: () => "u-pick-list-target",
     controls: () => "u-pick-list-controls",
-    item: () => "u-pick-list-item",
+    list: () => "u-pick-list-list",
+    listItem: () => "u-pick-list-item",
     itemSelected: () => "u-pick-list-item u-pick-list-item-selected",
   },
 };
@@ -2668,7 +3174,22 @@ Append to `packages/react/src/index.ts`.
 ```tsx
 // packages/react/src/pick-list/pick-list.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { UPickList } from "./pick-list";
+
+function ControlledPickListStory(): React.ReactElement {
+  const [source, setSource] = useState(["Apple", "Banana", "Cherry"]);
+  const [target, setTarget] = useState<string[]>([]);
+  return (
+    <UPickList
+      source={source}
+      target={target}
+      onSourceChange={setSource}
+      onTargetChange={setTarget}
+      itemTemplate={(item) => <span>{item as string}</span>}
+    />
+  );
+}
 
 const meta: Meta<typeof UPickList> = { title: "Data/PickList", component: UPickList };
 export default meta;
@@ -2679,6 +3200,10 @@ export const Default: Story = {
     target: [],
     itemTemplate: (item) => <span>{item as string}</span>,
   },
+};
+
+export const Controlled: Story = {
+  render: () => <ControlledPickListStory />,
 };
 ```
 
@@ -2754,7 +3279,7 @@ EOF
 // packages/vue/src/pick-list/pick-list.spec.ts
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import { UPickList } from "./index";
+import UPickList from "./PickList.vue";
 
 function setup() {
   return mount(UPickList, {
@@ -2801,6 +3326,75 @@ describe("UPickList", () => {
     expect(wrapper.props("modelValue")).toEqual([[], []]);
     expect(wrapper.props()).not.toHaveProperty("source");
     expect(wrapper.props()).not.toHaveProperty("target");
+  });
+  it("retains source dataKey selection after an equivalent pair refresh", async () => {
+    const wrapper = mount(UPickList, {
+      props: {
+        modelValue: [
+          [
+            { id: "a", label: "Apple" },
+            { id: "b", label: "Banana" },
+          ],
+          [],
+        ],
+        dataKey: "id",
+      },
+    });
+    await wrapper.find('[data-pc-section="sourcelist"] [role="option"]').trigger("click");
+    await wrapper.setProps({
+      modelValue: [
+        [
+          { id: "a", label: "Apple refreshed" },
+          { id: "b", label: "Banana refreshed" },
+        ],
+        [],
+      ],
+    });
+    expect(
+      wrapper.find('[data-pc-section="sourcelist"] [role="option"]').attributes("aria-selected")
+    ).toBe("true");
+    await wrapper.find('[data-pc-section="sourcelist"] [role="option"]').trigger("click");
+    expect(
+      wrapper.find('[data-pc-section="sourcelist"] [role="option"]').attributes("aria-selected")
+    ).toBe("false");
+  });
+  it("implements metaKeySelection in the composed source list", async () => {
+    const wrapper = mount(UPickList, {
+      props: { modelValue: [["A", "B"], []], metaKeySelection: true },
+    });
+    const options = wrapper.findAll('[data-pc-section="sourcelist"] [role="option"]');
+    await options[0].trigger("click");
+    await options[1].trigger("click");
+    expect(options[0].attributes("aria-selected")).toBe("false");
+    expect(options[1].attributes("aria-selected")).toBe("true");
+    await options[1].trigger("click");
+    expect(options[1].attributes("aria-selected")).toBe("true");
+    await options[1].trigger("click", { metaKey: true });
+    expect(options[1].attributes("aria-selected")).toBe("false");
+  });
+  it("drives each composed Listbox ul's tabindex, auto-focus, and hover-focus", async () => {
+    const wrapper = mount(UPickList, {
+      props: {
+        modelValue: [["A", "B"], ["X"]],
+        tabindex: 5,
+        autoOptionFocus: false,
+        focusOnHover: true,
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const sourceListbox = wrapper.find('[data-pc-section="sourcelist"] [role="listbox"]');
+    expect(sourceListbox.attributes("tabindex")).toBe("5");
+    await wrapper.find('[data-pc-section="sourcelist"] [role="option"]').trigger("mouseover");
+    expect(document.activeElement).toBe(sourceListbox.element);
+    const auto = mount(UPickList, {
+      props: { modelValue: [["A", "B"], ["X"]], autoOptionFocus: true },
+    });
+    const autoListbox = auto.find('[data-pc-section="sourcelist"] [role="listbox"]');
+    await autoListbox.trigger("focus");
+    await autoListbox.trigger("keydown", { code: "Enter" });
+    expect(
+      auto.find('[data-pc-section="sourcelist"] [role="option"]').attributes("aria-selected")
+    ).toBe("true");
   });
   it.each(["up", "top", "down", "bottom"])("also reorders target %s", async (direction) => {
     const wrapper = setup();
@@ -2914,12 +3508,22 @@ export function createBasePickList(): ComponentOptions {
 import type { StyleModule } from "@ultimate/vue-core";
 
 export const pickListStyleModule: StyleModule = {
-  css: ".u-pick-list { display: flex; gap: 0.5rem; } .u-pick-list-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-pick-list { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; gap: .75rem; }
+    .u-pick-list-source, .u-pick-list-target { min-width: 0; border: 1px solid currentColor; }
+    .u-pick-list-controls { display: flex; flex-direction: column; gap: .25rem; }
+    .u-pick-list-list { margin: 0; padding: 0; list-style: none; overflow: auto; }
+    .u-pick-list-list [role="listbox"] { margin: 0; padding: 0; list-style: none; }
+    .u-pick-list-item, .u-pick-list-list [role="option"] { display: block; padding: .5rem .75rem; cursor: pointer; }
+    .u-pick-list-item-selected, .u-pick-list-list [role="option"][aria-selected="true"] { outline: 2px solid currentColor; outline-offset: -2px; }
+    .u-pick-list.u-striped .u-pick-list-item:nth-child(even), .u-pick-list.u-striped .u-pick-list-list [role="option"]:nth-child(even) { background: rgba(0, 0, 0, .06); }
+  `,
   classes: {
     root: () => "u-pick-list",
     sourceList: () => "u-pick-list-source",
     targetList: () => "u-pick-list-target",
     controls: () => "u-pick-list-controls",
+    list: () => "u-pick-list-list",
   },
 };
 ```
@@ -2957,6 +3561,10 @@ export default {
   },
   mounted() {
     this.bindMedia();
+    this.syncListboxDom();
+  },
+  updated() {
+    this.syncListboxDom();
   },
   beforeUnmount() {
     this.media?.removeEventListener("change", this.mediaListener);
@@ -2975,26 +3583,28 @@ export default {
     identity(item) {
       return this.dataKey && item != null ? item[this.dataKey] : item;
     },
+    optionValue(item) {
+      return this.identity(item);
+    },
     label(item) {
       return String(this.dataKey && item != null ? item[this.dataKey] : item);
     },
     isSelected(side, item) {
-      return this.selected[side].some((value) => this.identity(value) === this.identity(item));
+      return this.selected[side].includes(this.optionValue(item));
     },
     select(side, event) {
       if (this.disabled) return;
       const nextValue = Array.isArray(event.value) ? event.value : [];
-      const changed =
-        nextValue.find((item) => !this.isSelected(side, item)) ??
-        this.selected[side].find((item) => !nextValue.includes(item));
-      if (changed === undefined) return;
-      const original = event.originalEvent;
-      const current =
-        this.metaKeySelection && !original.ctrlKey && !original.metaKey ? [] : this.selected[side];
       const next = this.selected.map((items) => [...items]);
-      next[side] = current.some((item) => this.identity(item) === this.identity(changed))
-        ? current.filter((item) => this.identity(item) !== this.identity(changed))
-        : [...current, changed];
+      const current = next[side];
+      const original = event.originalEvent;
+      if (this.metaKeySelection && !original.ctrlKey && !original.metaKey) {
+        const added = nextValue.find((value) => !current.includes(value));
+        const removed = current.find((value) => !nextValue.includes(value));
+        next[side] = added !== undefined ? [added] : removed !== undefined ? [removed] : current;
+      } else {
+        next[side] = nextValue;
+      }
       this.selected = next;
     },
     move(side, direction) {
@@ -3024,6 +3634,7 @@ export default {
       const pair = this.modelValue.map((items) => [...items]);
       pair[side] = result;
       this.$emit("update:modelValue", pair);
+      this.focusListbox(side);
     },
     transfer(side, all) {
       if (this.disabled) return;
@@ -3033,6 +3644,7 @@ export default {
       pair[1 - side].push(...chosen);
       this.$emit("update:modelValue", pair);
       this.selected = [[], []];
+      this.focusListbox(1 - side);
     },
     propsFor(direction) {
       const names = {
@@ -3043,12 +3655,44 @@ export default {
       };
       return { ...this.buttonProps, ...this[names[direction]] };
     },
+    listboxElement(side) {
+      const refs = Array.isArray(this.$refs.listboxes)
+        ? this.$refs.listboxes
+        : [this.$refs.listboxes];
+      return refs[side]?.$el?.querySelector('[role="listbox"]') ?? null;
+    },
+    listboxComponent(side) {
+      const refs = Array.isArray(this.$refs.listboxes)
+        ? this.$refs.listboxes
+        : [this.$refs.listboxes];
+      return refs[side] ?? null;
+    },
+    syncListboxDom() {
+      this.$nextTick(() => {
+        for (const side of [0, 1]) {
+          const listbox = this.listboxElement(side);
+          if (listbox) listbox.tabIndex = this.disabled ? -1 : this.tabindex;
+        }
+      });
+    },
+    focusListbox(side, force = false) {
+      if (!force && !this.autoOptionFocus) return;
+      this.$nextTick(() => this.listboxElement(side)?.focus());
+    },
     focusOption(event) {
-      if (this.autoOptionFocus && event.target.getAttribute("role") === "listbox")
-        event.target.querySelector('[role="option"]')?.focus();
+      if (!this.autoOptionFocus || event.target.getAttribute("role") !== "listbox") return;
+      const section = event.target.closest("[data-pc-section]");
+      const side = section?.dataset.pcSection === "targetlist" ? 1 : 0;
+      if (this.listboxComponent(side)?.focusedIndex < 0)
+        event.target.dispatchEvent(
+          new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true })
+        );
     },
     hoverOption(event) {
-      if (this.focusOnHover) event.target.closest('[role="option"]')?.focus();
+      const section = event.target.closest("[data-pc-section]");
+      const side = section?.dataset.pcSection === "targetlist" ? 1 : 0;
+      if (this.focusOnHover && event.target.closest('[role="option"]'))
+        this.focusListbox(side, true);
     },
   },
 };
@@ -3057,14 +3701,16 @@ export default {
 <template>
   <div
     :class="[cx('root'), { 'u-striped': striped }]"
-    :style="{ flexDirection: responsive && narrow ? 'column' : 'row' }"
+    :style="{ gridTemplateColumns: responsive && narrow ? 'minmax(0, 1fr)' : undefined }"
     :aria-label="ariaLabel"
     :aria-labelledby="ariaLabelledby"
+    @focusin="focusOption"
   >
     <section
       v-for="(items, side) in lists"
       :key="side"
       :data-pc-section="side === 0 ? 'sourcelist' : 'targetlist'"
+      :class="side === 0 ? cx('sourceList') : cx('targetList')"
     >
       <div v-if="side === 0 ? showSourceControls : showTargetControls" :class="cx('controls')">
         <button
@@ -3080,16 +3726,17 @@ export default {
         </button>
       </div>
       <div
+        :class="cx('list')"
         :style="{ maxHeight: scrollHeight, overflow: 'auto' }"
-        :tabindex="disabled ? -1 : tabindex"
-        @focusin="focusOption"
         @mouseover="hoverOption"
       >
         <Listbox
+          ref="listboxes"
           :options="items"
           :model-value="selected[side]"
           :multiple="true"
           :option-label="label"
+          :option-value="optionValue"
           :disabled="disabled"
           :aria-label="side === 0 ? ariaLabel + ' source' : ariaLabel + ' target'"
           @change="select(side, $event)"
@@ -3155,12 +3802,24 @@ Append to `packages/vue/src/index.ts`.
 ```typescript
 // packages/vue/src/pick-list/pick-list.stories.ts
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { UPickList } from "./index";
+import { ref } from "vue";
+import UPickList from "./PickList.vue";
 
 const meta: Meta<typeof UPickList> = { title: "Data/PickList", component: UPickList };
 export default meta;
 type Story = StoryObj<typeof UPickList>;
 export const Default: Story = { args: { modelValue: [["Apple", "Banana"], ["Cherry"]] } };
+
+export const Controlled: Story = {
+  render: () => ({
+    components: { UPickList },
+    setup() {
+      const modelValue = ref([["Apple", "Banana"], ["Cherry"]] as [string[], string[]]);
+      return { modelValue };
+    },
+    template: '<UPickList v-model="modelValue" />',
+  }),
+};
 ```
 
 - [ ] **Step 8: Register provenance and run the full regression/ceiling checks**
@@ -3372,11 +4031,17 @@ Expected: FAIL.
 ```typescript
 // packages/ng/src/data-view/data-view-style.ts
 export const dataViewStyleModule = {
-  css: ".u-data-view { display: flex; gap: 0.5rem; } .u-data-view-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-data-view { display: grid; grid-template-columns: minmax(0, 1fr); gap: .75rem; }
+    .u-data-view-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; margin: 0; padding: 0; list-style: none; }
+    .u-data-view-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .75rem; }
+    .u-data-view-item { min-width: 0; padding: .75rem; border: 1px solid currentColor; }
+  `,
   classes: {
     root: () => "u-data-view",
     list: (params?: Record<string, unknown>) =>
       params?.["layout"] === "grid" ? "u-data-view-grid" : "u-data-view-list",
+    listItem: () => "u-data-view-item",
   },
 };
 ```
@@ -3476,17 +4141,17 @@ function compare(a: unknown, b: unknown): number {
         />
       }
       @if (layout() === "grid") {
-        <div class="u-data-view-grid" role="list">
+        <div [class]="cx('list', { layout: 'grid' })" role="list">
           @for (item of pageValue(); track identity($index, item)) {
-            <div role="listitem">{{ itemTemplate()(item, "grid") }}</div>
+            <div [class]="cx('listItem')" role="listitem">{{ itemTemplate()(item, "grid") }}</div>
           } @empty {
             <div>{{ emptyMessage() }}</div>
           }
         </div>
       } @else {
-        <ul class="u-data-view-list">
+        <ul [class]="cx('list', { layout: 'list' })">
           @for (item of pageValue(); track identity($index, item)) {
-            <li>{{ itemTemplate()(item, "list") }}</li>
+            <li [class]="cx('listItem')">{{ itemTemplate()(item, "list") }}</li>
           } @empty {
             <li>{{ emptyMessage() }}</li>
           }
@@ -3973,10 +4638,10 @@ export function UDataView<T = unknown>({
       {loading && <span role="status">{loadingIcon}</span>}
       {showPaginator && paginatorPosition !== "bottom" && paging}
       {layout === "grid" ? (
-        <div className="u-data-view-grid" role="list">
+        <div className={cx("list", { layout: "grid" })} role="list">
           {paged.length ? (
             paged.map((item, index) => (
-              <div role="listitem" key={key(item, index)}>
+              <div className={cx("listItem")} role="listitem" key={key(item, index)}>
                 {itemTemplate(item, "grid")}
               </div>
             ))
@@ -3985,9 +4650,13 @@ export function UDataView<T = unknown>({
           )}
         </div>
       ) : (
-        <ul className="u-data-view-list">
+        <ul className={cx("list", { layout: "list" })}>
           {paged.length ? (
-            paged.map((item, index) => <li key={key(item, index)}>{itemTemplate(item, "list")}</li>)
+            paged.map((item, index) => (
+              <li className={cx("listItem")} key={key(item, index)}>
+                {itemTemplate(item, "list")}
+              </li>
+            ))
           ) : (
             <li>{emptyMessage}</li>
           )}
@@ -4035,11 +4704,17 @@ export function UDataView<T = unknown>({
 import type { StyleModule } from "@ultimate/react-core";
 
 export const dataViewStyleModule: StyleModule = {
-  css: ".u-data-view { display: flex; gap: 0.5rem; } .u-data-view-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-data-view { display: grid; grid-template-columns: minmax(0, 1fr); gap: .75rem; }
+    .u-data-view-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; margin: 0; padding: 0; list-style: none; }
+    .u-data-view-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .75rem; }
+    .u-data-view-item { min-width: 0; padding: .75rem; border: 1px solid currentColor; }
+  `,
   classes: {
     root: () => "u-data-view",
     list: (params?: Record<string, unknown>) =>
       params?.["layout"] === "grid" ? "u-data-view-grid" : "u-data-view-list",
+    listItem: () => "u-data-view-item",
   },
 };
 ```
@@ -4148,7 +4823,7 @@ EOF
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 import { h } from "vue";
-import { UDataView } from "./index";
+import UDataView from "./DataView.vue";
 const items = [
   { name: "Apple", score: 3 },
   { name: "Banana", score: 1 },
@@ -4263,11 +4938,17 @@ export function createBaseDataView(): ComponentOptions {
 import type { StyleModule } from "@ultimate/vue-core";
 
 export const dataViewStyleModule: StyleModule = {
-  css: ".u-data-view { display: flex; gap: 0.5rem; } .u-data-view-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-data-view { display: grid; grid-template-columns: minmax(0, 1fr); gap: .75rem; }
+    .u-data-view-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; margin: 0; padding: 0; list-style: none; }
+    .u-data-view-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .75rem; }
+    .u-data-view-item { min-width: 0; padding: .75rem; border: 1px solid currentColor; }
+  `,
   classes: {
     root: () => "u-data-view",
     list: (params?: Record<string, unknown>) =>
       params?.["layout"] === "grid" ? "u-data-view-grid" : "u-data-view-list",
+    listItem: () => "u-data-view-item",
   },
 };
 ```
@@ -4397,16 +5078,26 @@ export default {
       :total-records="count"
       @page="onPage"
     />
-    <div v-if="layout === 'grid'" class="u-data-view-grid" role="list">
+    <div v-if="layout === 'grid'" :class="cx('list', { layout: 'grid' })" role="list">
       <slot name="grid" :items="pagedValue">
-        <div v-for="(item, index) in pagedValue" :key="identity(item, index)" role="listitem">
+        <div
+          v-for="(item, index) in pagedValue"
+          :key="identity(item, index)"
+          :class="cx('listItem')"
+          role="listitem"
+        >
           {{ itemTemplate(item, "grid") }}
         </div>
       </slot>
     </div>
-    <div v-else class="u-data-view-list" role="list">
+    <div v-else :class="cx('list', { layout: 'list' })" role="list">
       <slot name="list" :items="pagedValue">
-        <div v-for="(item, index) in pagedValue" :key="identity(item, index)" role="listitem">
+        <div
+          v-for="(item, index) in pagedValue"
+          :key="identity(item, index)"
+          :class="cx('listItem')"
+          role="listitem"
+        >
           {{ itemTemplate(item, "list") }}
         </div>
       </slot>
@@ -4448,7 +5139,7 @@ Append to `packages/vue/src/index.ts`.
 ```typescript
 // packages/vue/src/data-view/data-view.stories.ts
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { UDataView } from "./index";
+import UDataView from "./DataView.vue";
 
 const meta: Meta<typeof UDataView> = { title: "Data/DataView", component: UDataView };
 export default meta;
@@ -4541,6 +5232,12 @@ describe("UOrganizationChart", () => {
     expect(select).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Toggle CEO" }));
     expect(screen.getByText("CTO")).toBeInTheDocument();
+  });
+  it("does not bubble nested toggler keyboard input into node selection", () => {
+    const select = vi.fn();
+    render(<UOrganizationChart value={[root]} selectionMode="single" onSelectionChange={select} />);
+    fireEvent.keyDown(screen.getByRole("button", { name: "Toggle CEO" }), { key: "Enter" });
+    expect(select).not.toHaveBeenCalled();
   });
   it("selects and unselects a single node", () => {
     const select = vi.fn();
@@ -4693,6 +5390,7 @@ function OrganizationChartNode({
             type="button"
             aria-label={"Toggle " + (node.label ?? "node")}
             aria-expanded={expanded}
+            onKeyDown={(event) => event.stopPropagation()}
             onClick={(event) => {
               event.stopPropagation();
               setExpanded((e) => !e);
@@ -4760,7 +5458,14 @@ export function UOrganizationChart({
 import type { StyleModule } from "@ultimate/react-core";
 
 export const organizationChartStyleModule: StyleModule = {
-  css: ".u-organization-chart { display: flex; gap: 0.5rem; } .u-organization-chart-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-organization-chart { display: flex; justify-content: center; overflow: auto; }
+    .u-organization-chart-node { position: relative; display: flex; flex-direction: column; align-items: center; min-width: max-content; }
+    .u-organization-chart-node-content { position: relative; z-index: 1; padding: .5rem .75rem; border: 1px solid currentColor; background: Canvas; }
+    .u-organization-chart-children { position: relative; display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.5rem; padding-top: 1.5rem; }
+    .u-organization-chart-children::before { content: ""; position: absolute; top: 0; left: 12.5%; right: 12.5%; border-top: 1px solid currentColor; }
+    .u-organization-chart-children > .u-organization-chart-node::before { content: ""; position: absolute; top: -1.5rem; height: 1.5rem; border-left: 1px solid currentColor; }
+  `,
   classes: {
     root: () => "u-organization-chart",
     node: () => "u-organization-chart-node",
@@ -4876,7 +5581,7 @@ EOF
 // packages/vue/src/organization-chart/organization-chart.spec.ts
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import { UOrganizationChart } from "./index";
+import UOrganizationChart from "./OrganizationChart.vue";
 const value = {
   label: "CEO",
   key: "0",
@@ -4902,6 +5607,13 @@ describe("UOrganizationChart", () => {
     await wrapper.setProps({ collapsedKeys: { "0": true } });
     expect(wrapper.text()).not.toContain("CTO");
     expect(value).not.toHaveProperty("expanded");
+  });
+  it("does not bubble nested toggler keyboard input into node selection", async () => {
+    const wrapper = mount(UOrganizationChart, {
+      props: { value, collapsible: true, selectionMode: "single", selectionKeys: {} },
+    });
+    await wrapper.find("button").trigger("keydown", { key: "Enter" });
+    expect(wrapper.emitted("update:selectionKeys")).toBeUndefined();
   });
   it("emits a single selection key and removes it when selected again", async () => {
     const wrapper = mount(UOrganizationChart, {
@@ -4965,7 +5677,14 @@ export function createBaseOrganizationChart(): ComponentOptions {
 import type { StyleModule } from "@ultimate/vue-core";
 
 export const organizationChartStyleModule: StyleModule = {
-  css: ".u-organization-chart { display: flex; gap: 0.5rem; } .u-organization-chart-controls { display: flex; gap: 0.25rem; }",
+  css: `
+    .u-organization-chart { display: flex; justify-content: center; overflow: auto; }
+    .u-organization-chart-node { position: relative; display: flex; flex-direction: column; align-items: center; min-width: max-content; }
+    .u-organization-chart-node-content { position: relative; z-index: 1; padding: .5rem .75rem; border: 1px solid currentColor; background: Canvas; }
+    .u-organization-chart-children { position: relative; display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.5rem; padding-top: 1.5rem; }
+    .u-organization-chart-children::before { content: ""; position: absolute; top: 0; left: 12.5%; right: 12.5%; border-top: 1px solid currentColor; }
+    .u-organization-chart-children > .u-organization-chart-node::before { content: ""; position: absolute; top: -1.5rem; height: 1.5rem; border-left: 1px solid currentColor; }
+  `,
   classes: {
     root: () => "u-organization-chart",
     node: () => "u-organization-chart-node",
@@ -5050,6 +5769,7 @@ export default {
                       type: "button",
                       "aria-label": "Toggle " + (node.label ?? "node"),
                       "aria-expanded": expanded,
+                      onKeydown: (event) => event.stopPropagation(),
                       onClick: (event) => {
                         event.stopPropagation();
                         this.toggleCollapse(node);
@@ -5104,7 +5824,8 @@ Append to `packages/vue/src/index.ts`.
 ```typescript
 // packages/vue/src/organization-chart/organization-chart.stories.ts
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { UOrganizationChart } from "./index";
+import UOrganizationChart from "./OrganizationChart.vue";
+
 const meta: Meta<typeof UOrganizationChart> = {
   title: "Panel/OrganizationChart",
   component: UOrganizationChart,
@@ -5174,8 +5895,8 @@ EOF
 
 ## Task 12: Whole-batch Verification
 
-**Files:** None created or modified — verification-only task.
-**Interfaces:** Consumes Tasks 0–11; produces recorded results for Task 13.
+**Files:** Create ignored execution artifact `.superpowers/sdd/2026-09-21-phase-c-batch-3/task-12-report.md`; no tracked repository file is created or modified by this verification-only task.
+**Interfaces:** Consumes Tasks 0–11; produces `.superpowers/sdd/2026-09-21-phase-c-batch-3/task-12-report.md` for Task 13.
 **Depends on:** completed Tasks 0–11. This is the single whole-batch Verification pass; per-task test runs are regression checks.
 
 - [ ] **Step 1: Validate dependencies and repository pointers**
@@ -5232,7 +5953,7 @@ Expected: each exits 0, or any failure is compared command-for-command with Task
 
 - [ ] **Step 5: Record the result**
 
-Record command, exit code, meaningful output, and current commit for each check in the implementation progress report. There is no commit in this task and no merge action.
+Record command, exit code, meaningful output, and current commit for each check in `.superpowers/sdd/2026-09-21-phase-c-batch-3/task-12-report.md`. The report is an ignored Superpowers execution artifact consumed by Task 13; it is not staged or committed. There is no commit in this task and no merge action.
 
 ---
 
@@ -5246,7 +5967,7 @@ Record command, exit code, meaningful output, and current commit for each check 
 - Modify: `docs/architecture/research/PHASE_C_MIGRATION_ROADMAP.md`
 - Modify: `docs/architecture/PROVENANCE.md` (batch source/dependency disclosure)
 
-**Interfaces:** Consumes Task 12's recorded evidence; produces accurate status documentation.
+**Interfaces:** Consumes Task 12's recorded evidence from `.superpowers/sdd/2026-09-21-phase-c-batch-3/task-12-report.md`; produces accurate status documentation.
 **Depends on:** Task 12. Document implementation and verification as separate claims; final human review and merge have not happened yet.
 
 - [ ] **Step 1: Update Angular inventory ownership correctly**
@@ -5381,18 +6102,19 @@ git commit -m "docs: close out Phase C Batch 3 status"
 
 - [ ] **Step 1: Review each Spec §11 acceptance criterion**
 
-| Criterion                                          | Evidence to inspect                                                                             |
-| -------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| 1. Framework-native source-grounded implementation | Tasks 1–11; pinned source references and each framework's base/composition API                  |
-| 2. Complete §9 test/verification bar               | Tests in Tasks 1–11, per-task full-suite/ceiling results, Task 12, and accessibility assertions |
-| 3. CDK prerequisite disclosed and verified         | Task 0 commit before Tasks 1/4; MIT and dependency-ceiling output                               |
-| 4. Vue PickList pair model                         | Task 6 default-shape, transfer, and per-side reorder tests                                      |
-| 5. Angular-only DataView filtering                 | Task 7 match-mode/multi-field tests; Tasks 8/9 runtime and type/prop absence guards             |
-| 6. React/Vue-only OrganizationChart                | Tasks 10/11; explicit negative path check below                                                 |
-| 7. Correct status-document ownership               | Task 13: Angular 3 rows, React 4, Vue 4                                                         |
-| 8. Exact membership                                | Eleven source/test pairs, no substitution or extra capability                                   |
-| 9. Protected decisions and exclusions unchanged    | Review base-to-head file diff and scope-cut guards                                              |
-| 10. One Final Review/Closeout                      | This report; human review before separately authorized branch integration                       |
+| Criterion                                          | Evidence to inspect                                                                                                             |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Framework-native source-grounded implementation | Tasks 1–11; pinned source references and each framework's base/composition API                                                  |
+| 2. Complete §9 test/verification bar               | Tests in Tasks 1–11, per-task full-suite/ceiling results, Task 12, and accessibility assertions                                 |
+| 3. CDK prerequisite disclosed and verified         | Task 0 commit before Tasks 1/4; MIT and dependency-ceiling output                                                               |
+| 4. Generic Angular `UListbox.trackBy`              | Task 4 Listbox default/index and custom-key DOM-reuse tests; PickList forwarding, stable selection, and deselection regressions |
+| 5. Vue PickList pair model                         | Task 6 default-shape, transfer, and per-side reorder tests                                                                      |
+| 6. Angular-only DataView filtering                 | Task 7 match-mode/multi-field tests; Tasks 8/9 runtime and type/prop absence guards                                             |
+| 7. React/Vue-only OrganizationChart                | Tasks 10/11; explicit negative path check below                                                                                 |
+| 8. Correct status-document ownership               | Task 13: Angular 3 rows, React 4, Vue 4                                                                                         |
+| 9. Exact membership                                | Eleven source/test pairs, no substitution or extra capability                                                                   |
+| 10. Protected decisions and exclusions unchanged   | Review base-to-head file diff and scope-cut guards                                                                              |
+| 11. One Final Review/Closeout                      | This report; human review before separately authorized branch integration                                                       |
 
 - [ ] **Step 2: Audit the entire branch diff from the actual Batch 3 base**
 
@@ -5404,8 +6126,14 @@ node --input-type=module <<'NODE'
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 const changed = execFileSync("git", ["diff", "--name-only", "f8cd78b...HEAD"], { encoding: "utf8" }).trim().split("\n").filter(Boolean);
+const branch = execFileSync("git", ["branch", "--show-current"], { encoding: "utf8" }).trim();
+if (branch !== "feature/phase-c-batch-3-migration") throw Error("Unexpected branch: " + branch);
+const expectedBase = execFileSync("git", ["rev-parse", "f8cd78b"], { encoding: "utf8" }).trim();
+const base = execFileSync("git", ["merge-base", "HEAD", expectedBase], { encoding: "utf8" }).trim();
+if (base !== expectedBase) throw Error("Unexpected Batch 3 merge base: " + base);
 const files = new Set([
   "packages/ng/package.json", "packages/ng/README.md", "pnpm-lock.yaml",
+  "packages/ng/src/listbox/listbox.ts", "packages/ng/src/listbox/listbox.spec.ts",
   "packages/ng/src/index.ts", "packages/react/src/index.ts", "packages/vue/src/index.ts",
   "docs/superpowers/specs/2026-09-21-phase-c-batch-3-migration-design.md",
   "docs/superpowers/plans/2026-09-21-phase-c-batch-3-migration.md",
