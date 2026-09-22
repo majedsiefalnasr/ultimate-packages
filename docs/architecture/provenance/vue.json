@@ -292,5 +292,41 @@
     "ultimateDestination": "packages/vue/src/table/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/orderlist/OrderList.vue",
+    "ultimateDestination": "packages/vue/src/order-list/BaseOrderList.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "packages/primevue/src/orderlist/OrderList.vue",
+    "ultimateDestination": "packages/vue/src/order-list/OrderList.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/order-list/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/order-list/order-list.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/order-list/order-list.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/order-list/order-list-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
   }
 ]
