@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Approved for implementation; Plan Review corrections incorporated on 2026-09-21. The specification was approved in the conversation; its stale Draft label is preserved under the explicit no-Spec-edit constraint. This revision changes only the Plan.
+**Status:** Approved for implementation; final Plan Review corrections approved on 2026-09-22. The specification was approved in the conversation; its stale Draft label is preserved under the explicit no-Spec-edit constraint. This revision changes only the Plan.
 
-**Dispatch rule:** One numbered task per fresh implementer dispatch. Preserve Tasks 0–14 exactly. The only capability prerequisite is Task 0 → Tasks 1 and 4; Tasks 2, 3, 5–11 are otherwise independent. Tasks 12–14 retain their batch verification/documentation/closeout order.
+**Dispatch rule:** One numbered task per fresh implementer dispatch, followed by review of that task's result before the next dispatch. Preserve Tasks 0–14 exactly. The only capability prerequisite is Task 0 → Tasks 1 and 4; Tasks 2, 3, 5–11 are otherwise independent. Tasks 12–14 retain their batch verification/documentation/closeout order. Review order is an execution gate, not a new implementation dependency between otherwise-independent realizations.
 
-**Current evidence notes:** Angular Listbox does not expose DnD/item templates or `dataKey`/`metaKeySelection`; use the component-local adaptations below. `uix-data` exports filter types, not a runtime FilterService; matching is implemented privately inside the five affected component files, without changing Table or adding a shared foundation. Current Paginator events are Angular `(onPageChange)`, React `onPageChange`, and Vue `@page`; its minimal prop surface is extended by DataView-owned rows-per-page/report/placement controls, not unsupported child bindings. All inline code is the implementation contract, not illustrative pseudocode.
+**Current evidence notes:** Angular Listbox exposes `(onChange)` with `{ originalEvent, value }`; it does not expose DnD/item templates or `dataKey`/`metaKeySelection`, so the component-local adaptations below use only that real contract. `uix-data` exports filter types, not a runtime FilterService; matching is implemented privately inside the five affected component files, without changing Table or adding a shared foundation. Current Paginator events are Angular `(onPageChange)`, React `onPageChange`, and Vue `@page`; its minimal prop surface is extended by DataView-owned rows-per-page/report/placement controls, not unsupported child bindings. All inline code is the implementation contract, not illustrative pseudocode.
 
 **Goal:** Implement the 11 capability/framework realizations approved in `docs/superpowers/specs/2026-09-21-phase-c-batch-3-migration-design.md` (Batch 3): `UOrderList`, `UPickList`, `UDataView` for Angular/React/Vue, and `UOrganizationChart` for React/Vue only.
 
@@ -54,9 +54,12 @@ This dependency is introduced specifically, and only, to support Angular OrderLi
 ```bash
 rg -n '"@angular/cdk"' packages/ng/package.json
 node scripts/provenance/validate-provenance.mjs
+pnpm test
+pnpm typecheck
+pnpm build
 ```
 
-Expected: the grep has no output (package not yet present). The provenance command currently exits 1 only at the pre-existing `packages/ng/src/accordion/accordion-style.ts` missing-manifest record, after printing that all seven baseline headings are present. Save that exact output with the implementation progress record; Task 12 compares the whole-batch result to this baseline. If the first failure differs, stop and reconcile the real baseline before implementation.
+Expected: the grep has no output (package not yet present). The provenance command currently exits 1 only at the pre-existing `packages/ng/src/accordion/accordion-style.ts` missing-manifest record, after printing that all seven baseline headings are present. Record the command, exit code, and meaningful output for all three repository-wide validation commands as the pre-implementation baseline; a failure is baseline evidence, not a pass. Task 12 compares the same command against this recorded result so pre-existing failures remain explicitly distinct from regressions. If provenance's first failure differs, or a repository-wide command cannot be run, stop and reconcile the real baseline before implementation.
 
 - [ ] **Step 2: Add the dependency**
 
@@ -89,8 +92,12 @@ Expected: `MIT`, consistent with ADR-005's MIT-only baseline. Record this confir
 
 - [ ] **Step 5: Run the dependency-ceiling gate**
 
-Run: `node scripts/provenance/validate-dependency-ceiling.mjs`
-Expected: `OK` — the gate's own source only checks `primeng`/`primevue`/`primereact` and `@primeuix/*`; `@angular/cdk` is out of its scope (confirmed by direct source read during Spec Review). Do not assume this — run it and record the actual output.
+```bash
+node scripts/provenance/validate-dependency-ceiling.mjs
+pnpm test
+```
+
+Expected: the ceiling gate prints `OK`, and the complete existing suite passes. The gate's own source only checks `primeng`/`primevue`/`primereact` and `@primeuix/*`; `@angular/cdk` is out of its scope (confirmed by direct source read during Spec Review). Do not assume either result — run both and record the actual output. This full-suite run satisfies Spec §9.2 for the dependency task before its commit.
 
 - [ ] **Step 6: Commit**
 
@@ -124,7 +131,7 @@ EOF
 
 **Interfaces:**
 
-- Consumes: `UBaseComponent` from `@ultimate/ng-core`; `UListbox` from `../listbox/listbox` (real composition target, props: `options`, `multiple`, `filter`, `emptyMessage` — confirmed in `packages/ng/src/listbox/listbox.ts`); `@angular/cdk/drag-drop`'s `CdkDragDrop`, `DragDropModule`, `moveItemInArray` (Task 0).
+- Consumes: `UBaseComponent` from `@ultimate/ng-core`; `UListbox` from `../listbox/listbox` (real composition target, using its current `options`, `multiple`, `optionLabel`, `disabled`, and `ariaLabel` inputs plus `(onChange)` output with `{ originalEvent, value }` — confirmed in `packages/ng/src/listbox/listbox.ts`); `@angular/cdk/drag-drop`'s `CdkDragDrop`, `DragDropModule`, `moveItemInArray` (Task 0).
 - Produces: `UOrderList` standalone component, selector `u-order-list`, consumed by no later task in this batch (OrderList has no downstream consumer within Batch 3).
 
 **Depends on:** Task 0 (must not start before Task 0's commit).
@@ -786,7 +793,6 @@ export interface UOrderListProps<T = unknown> {
   filterMatchMode?: MatchMode;
   filterLocale?: string;
   dragdrop?: boolean;
-  metaKeySelection?: boolean;
   breakpoint?: string;
   className?: string;
 }
@@ -804,7 +810,6 @@ export function UOrderList<T = unknown>({
   filterMatchMode = "contains",
   filterLocale,
   dragdrop = false,
-  metaKeySelection = false,
   breakpoint = "960px",
   className,
 }: UOrderListProps<T>): React.ReactElement {
@@ -823,10 +828,10 @@ export function UOrderList<T = unknown>({
   const emit = (side: number, items: T[]): void => {
     onChange(items);
   };
-  const select = (side: number, item: T, event: React.MouseEvent | React.KeyboardEvent): void => {
+  const select = (side: number, item: T): void => {
     setSelected((previous) => {
       const next = previous.map((items) => [...items]);
-      const current = metaKeySelection && !event.ctrlKey && !event.metaKey ? [] : next[side];
+      const current = next[side];
       next[side] = current.some((value) => identity(value) === identity(item))
         ? current.filter((value) => identity(value) !== identity(item))
         : [...current, item];
@@ -887,7 +892,7 @@ export function UOrderList<T = unknown>({
   const keyDown = (side: number, item: T, event: React.KeyboardEvent<HTMLLIElement>): void => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      select(side, item, event);
+      select(side, item);
       return;
     }
     const options = Array.from(
@@ -977,7 +982,7 @@ export function UOrderList<T = unknown>({
                   aria-selected={isSelected(side, item)}
                   tabIndex={0}
                   draggable={dragdrop || undefined}
-                  onClick={(event) => select(side, item, event)}
+                  onClick={() => select(side, item)}
                   onKeyDown={(event) => keyDown(side, item, event)}
                   onMouseEnter={(event) => {
                     if (focusOnHover) event.currentTarget.focus();
@@ -1049,7 +1054,7 @@ Append `export * from "./order-list";` to `packages/react/src/index.ts` (read cu
 
 ```tsx
 // packages/react/src/order-list/order-list.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { UOrderList } from "./order-list";
 
 const meta: Meta<typeof UOrderList> = {
@@ -1394,6 +1399,7 @@ export default {
       </div>
       <div
         :style="{ maxHeight: scrollHeight, overflow: 'auto' }"
+        :tabindex="disabled ? -1 : tabindex"
         @focusin="focusOption"
         @mouseover="hoverOption"
       >
@@ -1404,7 +1410,6 @@ export default {
           :option-label="label"
           :disabled="disabled"
           :aria-label="side === 0 ? ariaLabel + ' source' : ariaLabel + ' target'"
-          :tabindex="tabindex"
           @change="select(side, $event)"
         />
       </div>
@@ -1433,7 +1438,7 @@ Append the corresponding line to `packages/vue/src/index.ts`.
 
 ```typescript
 // packages/vue/src/order-list/order-list.stories.ts
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { UOrderList } from "./index";
 
 const meta: Meta<typeof UOrderList> = {
@@ -1510,10 +1515,12 @@ EOF
 
 **Interfaces:**
 
-- Consumes: `UBaseComponent` from `@ultimate/ng-core`; two `UListbox` instances (source/target); `@angular/cdk/drag-drop` (Task 0).
+- Consumes: `UBaseComponent` from `@ultimate/ng-core`; two `UListbox` instances (source/target), each using the real `(onChange)` payload `{ originalEvent, value }`; `@angular/cdk/drag-drop` (Task 0).
 - Produces: `UPickList` component, selector `u-pick-list`, `source`/`target` as two independent inputs (matching real Angular shape — NOT the Vue combined-array shape).
 
 **Depends on:** Task 0.
+
+**Current-API adaptation:** As in Task 1, `UListbox` has no item-drag hook. Non-drag mode composes the two Listboxes through their real inputs and `(onChange)` event; opt-in drag mode renders two component-local, grouped CDK drop lists. No Listbox foundation change is authorized.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -2660,7 +2667,7 @@ Append to `packages/react/src/index.ts`.
 
 ```tsx
 // packages/react/src/pick-list/pick-list.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { UPickList } from "./pick-list";
 
 const meta: Meta<typeof UPickList> = { title: "Data/PickList", component: UPickList };
@@ -3074,6 +3081,7 @@ export default {
       </div>
       <div
         :style="{ maxHeight: scrollHeight, overflow: 'auto' }"
+        :tabindex="disabled ? -1 : tabindex"
         @focusin="focusOption"
         @mouseover="hoverOption"
       >
@@ -3084,7 +3092,6 @@ export default {
           :option-label="label"
           :disabled="disabled"
           :aria-label="side === 0 ? ariaLabel + ' source' : ariaLabel + ' target'"
-          :tabindex="tabindex"
           @change="select(side, $event)"
         />
       </div>
@@ -3147,7 +3154,7 @@ Append to `packages/vue/src/index.ts`.
 
 ```typescript
 // packages/vue/src/pick-list/pick-list.stories.ts
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { UPickList } from "./index";
 
 const meta: Meta<typeof UPickList> = { title: "Data/PickList", component: UPickList };
@@ -3763,8 +3770,14 @@ describe("UDataView", () => {
     rerender(<UDataView value={items} itemTemplate={itemTemplate} paginator rows={2} first={1} />);
     expect(screen.getByText("list:Banana")).toBeInTheDocument();
   });
-  it("sorts before paging without mutating input", () => {
-    const { container } = render(
+  it("responds to sorting state changes before paging without mutating input", () => {
+    const { container, rerender } = render(
+      <UDataView value={items} itemTemplate={itemTemplate} paginator rows={2} />
+    );
+    expect(
+      Array.from(container.querySelectorAll(".u-data-view-list > li"), (node) => node.textContent)
+    ).toEqual(["list:Apple", "list:Banana"]);
+    rerender(
       <UDataView
         value={items}
         itemTemplate={itemTemplate}
@@ -4047,7 +4060,7 @@ Append to `packages/react/src/index.ts`.
 
 ```tsx
 // packages/react/src/data-view/data-view.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { UDataView } from "./data-view";
 
 const meta: Meta<typeof UDataView> = { title: "Data/DataView", component: UDataView };
@@ -4164,11 +4177,13 @@ describe("UDataView", () => {
     await wrapper.setProps({ first: 1 });
     expect(wrapper.find(".u-data-view-list").text()).toBe("list:Banana,Cherry");
   });
-  it("sorts before paging without mutating the source", () => {
+  it("responds to sorting state changes before paging without mutating the source", async () => {
     const wrapper = mount(UDataView, {
-      props: { value: items, paginator: true, rows: 2, sortField: "score", sortOrder: -1 },
+      props: { value: items, paginator: true, rows: 2 },
       slots,
     });
+    expect(wrapper.find(".u-data-view-list").text()).toBe("list:Apple,Banana");
+    await wrapper.setProps({ sortField: "score", sortOrder: -1 });
     expect(wrapper.find(".u-data-view-list").text()).toBe("list:Apple,Cherry");
     expect(items.map((item) => item.score)).toEqual([3, 1, 2]);
   });
@@ -4432,7 +4447,7 @@ Append to `packages/vue/src/index.ts`.
 
 ```typescript
 // packages/vue/src/data-view/data-view.stories.ts
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { UDataView } from "./index";
 
 const meta: Meta<typeof UDataView> = { title: "Data/DataView", component: UDataView };
@@ -4771,7 +4786,7 @@ Append to `packages/react/src/index.ts`.
 
 ```tsx
 // packages/react/src/organization-chart/organization-chart.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { UOrganizationChart } from "./organization-chart";
 
 const meta: Meta<typeof UOrganizationChart> = {
@@ -5088,7 +5103,7 @@ Append to `packages/vue/src/index.ts`.
 
 ```typescript
 // packages/vue/src/organization-chart/organization-chart.stories.ts
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { UOrganizationChart } from "./index";
 const meta: Meta<typeof UOrganizationChart> = {
   title: "Panel/OrganizationChart",
@@ -5157,7 +5172,7 @@ EOF
 
 ---
 
-## Task 12: Whole-batch dependency-ceiling and cross-framework consistency gate
+## Task 12: Whole-batch Verification
 
 **Files:** None created or modified — verification-only task.
 **Interfaces:** Consumes Tasks 0–11; produces recorded results for Task 13.
@@ -5213,7 +5228,7 @@ pnpm typecheck
 pnpm build
 ```
 
-Expected: each exits 0, or any pre-existing failure is reproduced on the baseline and disclosed with its exact output. Do not label a failing run clean.
+Expected: each exits 0, or any failure is compared command-for-command with Task 0's recorded pre-implementation baseline. Disclose an unchanged baseline failure with its exact output and identify every new or changed failure as a Batch 3 regression that must return to its owning implementation task. Do not label a failing run clean and do not classify a failure as pre-existing without the Task 0 comparison.
 
 - [ ] **Step 5: Record the result**
 
@@ -5236,7 +5251,7 @@ Record command, exit code, meaningful output, and current commit for each check 
 
 - [ ] **Step 1: Update Angular inventory ownership correctly**
 
-In `COMPONENT_INVENTORY.md`, change only OrderList, PickList, and DataView's **Migration phase** cells from `Later Phase` to `Built (Phase C Batch 3)`. Preserve their `ADAPT` classification and the DECISION-C rationale. Keep Angular OrganizationChart's permanent exclusion unchanged. Do not add React or Vue rows to this Angular inventory.
+In `COMPONENT_INVENTORY.md`, change only OrderList, PickList, and DataView's **Migration phase** cells from `Later Phase` to `**Built -- Phase C Batch 3**`, matching that Angular inventory's established phase formatting. Preserve their `ADAPT` classification and the DECISION-C rationale. Keep Angular OrganizationChart's permanent exclusion unchanged. Do not add React or Vue rows to this Angular inventory.
 
 Replace the heading `### Data components (later phase — NEEDS ARCHITECTURE DECISION, per spec)` with `### Data components (mixed built/later phase)`. In the reconciliation notice, replace the final two sentences with:
 
@@ -5258,7 +5273,7 @@ Append this cumulative statement immediately after the existing Phase C Batch 1 
 
 - [ ] **Step 2: Add React's four rows to its own status document**
 
-Append this section to `REACT_COMPONENT_STATUS.md`:
+Insert this section in `REACT_COMPONENT_STATUS.md` immediately before its existing `## Verification` section, matching the established placement of Batch 2's status section:
 
 ```markdown
 ## Built (Phase C Batch 3) — 4 capabilities
@@ -5289,7 +5304,7 @@ Extend the Migration phase definition bullet to include `Built (Phase C Batch 2)
 
 - [ ] **Step 3: Add Vue's four rows to its own status document**
 
-Append this section to `VUE_COMPONENT_STATUS.md`:
+Insert this section in `VUE_COMPONENT_STATUS.md` immediately before its existing `## Verification` section, matching the established placement of Batch 2's status section:
 
 ```markdown
 ## Built (Phase C Batch 3) — 4 capabilities
@@ -5320,7 +5335,7 @@ Extend the Migration phase definition bullet to include `Built (Phase C Batch 2)
 
 - [ ] **Step 4: Record Batch 3 implementation and provenance without claiming a merge**
 
-Add `### 12.6 Phase C Batch 3 implementation and verification (2026-09-21)` to the Roadmap immediately before its final Status section. Its body is:
+Add `### 12.6 Phase C Batch 3 implementation and verification (<actual closeout date>)` to the Roadmap immediately before its final Status section, substituting the date on which Task 13 actually runs rather than copying the Plan's authorship date. Its body is:
 
 ```markdown
 Phase C Batch 3 implements 11 realizations: OrderList, PickList, and DataView for Angular/React/Vue, and OrganizationChart for React/Vue. Angular OrderList/PickList use the disclosed @angular/cdk/drag-drop dependency for opt-in drag/drop; Vue OrderList/PickList have neither drag/drop nor filtering. DataView filtering remains Angular-only. DECISION-C and DECISION-D are unchanged, including Angular OrganizationChart's permanent exclusion.
@@ -5360,7 +5375,7 @@ git commit -m "docs: close out Phase C Batch 3 status"
 
 ---
 
-## Task 14: Whole-Batch Verification and Final Review/Closeout
+## Task 14: Final Review/Closeout
 
 **Files:** None. This terminal review consumes Task 12 verification and Task 13 documentation; it is not a second independent batch or an implementation task.
 
