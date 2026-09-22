@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Approved — Plan Review passed; human-approved.
+**Status:** Complete — implementation, verification, and Final Review/Closeout passed; ready for the authorized merge to main.
 
 **Goal:** Add a repository-wide, current-CLI-first model-selection recommendation and explicit-only cross-CLI delegation lanes for Codex, Claude Code, OpenCode, and Cursor, while keeping MiniMax disabled until configured.
 
@@ -132,7 +132,7 @@ The OpenCode critical lane intentionally omits `variant`: live discovery did not
 - Consumes: The binding decisions and model matrix in the approved specification.
 - Produces: The stable policy target referenced by `AGENTS.md` in Task 2 and the human-readable semantics for `.delegate/config.json` in Task 3.
 
-- [ ] **Step 1: Confirm the task starts clean and scoped**
+- [x] **Step 1: Confirm the task starts clean and scoped**
 
 Run:
 
@@ -144,7 +144,7 @@ test "$(git branch --show-current)" = "docs/ai-delegation-policy"
 
 Expected: branch is `docs/ai-delegation-policy`; only this Plan may be uncommitted at the start of implementation. Stop if any unrelated file is modified.
 
-- [ ] **Step 2: Create the policy document**
+- [x] **Step 2: Create the policy document**
 
 Create `docs/agents/AI_DELEGATION_POLICY.md` with exactly this content:
 
@@ -223,7 +223,7 @@ Model availability, aliases, authentication, quotas, and supported reasoning con
 As of the last-verified date, Codex exposed the four named Codex models, Claude Code exposed the `haiku`/`sonnet`/`opus` aliases, and OpenCode exposed the named GitHub Copilot and OpenAI identifiers. Cursor was installed but its model discovery required authentication, and no configured MiniMax CLI/provider was available.
 ```
 
-- [ ] **Step 3: Verify policy content and formatting**
+- [x] **Step 3: Verify policy content and formatting**
 
 Run:
 
@@ -235,7 +235,7 @@ git diff --check -- docs/agents/AI_DELEGATION_POLICY.md
 
 Expected: Prettier reports the file is formatted; `rg` finds every required concept; `git diff --check` prints nothing.
 
-- [ ] **Step 4: Review and commit Task 1 only**
+- [x] **Step 4: Review and commit Task 1 only**
 
 Run:
 
@@ -261,7 +261,7 @@ Expected: the commit contains only `docs/agents/AI_DELEGATION_POLICY.md`.
 - Consumes: `docs/agents/AI_DELEGATION_POLICY.md` from Task 1.
 - Produces: The repository entry-point instruction that directs every supported agent to the detailed policy.
 
-- [ ] **Step 1: Add the concise pointer**
+- [x] **Step 1: Add the concise pointer**
 
 Append this subsection immediately after §7.5:
 
@@ -273,7 +273,7 @@ Append this subsection immediately after §7.5:
 - Cross-CLI delegation requires an explicit user request; never start or substitute another AI CLI automatically.
 ```
 
-- [ ] **Step 2: Verify the pointer and stable entry-point behavior**
+- [x] **Step 2: Verify the pointer and stable entry-point behavior**
 
 Run:
 
@@ -287,7 +287,7 @@ git diff --check -- AGENTS.md
 
 Expected: the target exists; all three pointer concepts are found; pointer validation reports `OK`; Prettier passes; `git diff --check` prints nothing.
 
-- [ ] **Step 3: Review and commit Task 2 only**
+- [x] **Step 3: Review and commit Task 2 only**
 
 Run:
 
@@ -313,7 +313,7 @@ Expected: the commit contains only `AGENTS.md`.
 - Consumes: the exact Plan Review-approved JSON under “Approved lane proposal.”
 - Produces: 16 project-local lanes resolvable by the matching `*-delegate` relay when the user explicitly requests cross-CLI delegation.
 
-- [ ] **Step 1: Refresh discovery without changing the approved proposal**
+- [x] **Step 1: Refresh discovery without changing the approved proposal**
 
 Run:
 
@@ -324,13 +324,13 @@ node /Users/majedsiefalnasr/.codex/skills/delegate-setup/scripts/config.mjs load
 
 Expected: Codex, Claude Code, OpenCode, and Cursor remain installed; the configured model identifiers remain discoverable as recorded in the specification. Cursor may remain unauthenticated because its lanes omit `model`. If a configured model is no longer discoverable, stop at the Plan gate; do not silently change the JSON.
 
-- [ ] **Step 2: Confirm exact approval and create the configuration**
+- [x] **Step 2: Confirm exact approval and create the configuration**
 
 Confirm that Plan Review approved the exact lane table and JSON above. If any value changed after approval, re-show the complete table and JSON and obtain explicit approval before writing.
 
 Create `.delegate/config.json` with the exact JSON under “Approved lane proposal.” Do not add a MiniMax lane, an OpenCode `variant`, a Cursor `model`, automatic fallback fields, or any lane not shown there.
 
-- [ ] **Step 3: Validate, trust, and reload the project configuration**
+- [x] **Step 3: Validate, trust, and reload the project configuration**
 
 Run:
 
@@ -342,7 +342,7 @@ node /Users/majedsiefalnasr/.codex/skills/delegate-setup/scripts/config.mjs load
 
 Expected: validation returns `ok: true` with all 16 lane names; write returns `projectTrusted: true`; load reports the same 16 project lanes and `projectTrusted: true`.
 
-- [ ] **Step 4: Verify prohibited and required configuration states**
+- [x] **Step 4: Verify prohibited and required configuration states**
 
 Run:
 
@@ -367,7 +367,7 @@ git diff --check -- .delegate/config.json
 
 Expected: `delegation policy lanes: OK`; `git diff --check` prints nothing.
 
-- [ ] **Step 5: Review and commit Task 3 only**
+- [x] **Step 5: Review and commit Task 3 only**
 
 Run:
 
@@ -397,7 +397,7 @@ Expected: the commit contains only `.delegate/config.json`. The trust hash writt
 - Consumes: Tasks 1–3.
 - Produces: Evidence that the policy, pointer, and executable lane map agree and that no out-of-scope file was changed.
 
-- [ ] **Step 1: Run focused documentation and configuration checks**
+- [x] **Step 1: Run focused documentation and configuration checks**
 
 Run:
 
@@ -411,7 +411,7 @@ git diff --check main...HEAD
 
 Expected: all commands pass; loaded configuration reports 16 project lanes and `projectTrusted: true`.
 
-- [ ] **Step 2: Verify scope and semantic agreement**
+- [x] **Step 2: Verify scope and semantic agreement**
 
 Run:
 
@@ -434,7 +434,7 @@ docs/superpowers/specs/2026-09-22-ai-delegation-policy-design.md
 
 Expected: no `CLAUDE.md`; policy and pointer contain the durable rules; `lane scope: OK`.
 
-- [ ] **Step 3: Re-run repository baseline commands and classify failures**
+- [x] **Step 3: Re-run repository baseline commands and classify failures**
 
 Run:
 
@@ -445,7 +445,7 @@ PATH=/opt/homebrew/opt/node@24/bin:$PATH pnpm test
 
 Expected baseline limitation: `pnpm build` may fail in `@ultimate/ng` with TS2729 for `UAutoComplete.instanceCount` and `USelect.instanceCount`, matching the pre-implementation baseline. `pnpm test` may depend on build artifacts. Record exact results; do not call a pre-existing failure new, do not claim full-suite success if either command fails, and do not fix either Angular source file in this task.
 
-- [ ] **Step 4: Perform final repository/branch review**
+- [x] **Step 4: Perform final repository/branch review**
 
 Review:
 
@@ -471,7 +471,7 @@ Confirm every acceptance criterion in the specification, no uncommitted file rem
 - Consumes: successful Task 4 final review plus the user's explicit instruction that the completed policy must merge to `main`.
 - Produces: a closed Plan and an integrated `main` branch without touching the dirty Phase C Batch 3 checkout.
 
-- [ ] **Step 1: Record verified closeout in this Plan**
+- [x] **Step 1: Record verified closeout in this Plan**
 
 Change the Plan status to `Complete — implementation, verification, and Final Review/Closeout passed; ready for the authorized merge to main.` only after Task 4 passes. Mark completed task checkboxes. Do not rewrite requirements or verification evidence.
 
