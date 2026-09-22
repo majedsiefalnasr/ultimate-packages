@@ -47,6 +47,27 @@ describe("UOrderList", () => {
     expect(change).toHaveBeenLastCalledWith(["B", "A", "C", "D"]);
   });
 
+  it("uses target-index semantics for forward drag moves and leaves self drops unchanged", () => {
+    const change = vi.fn();
+    render(
+      <UOrderList
+        value={["A", "B", "C"]}
+        onChange={change}
+        itemTemplate={(item) => <span>{item}</span>}
+        dragdrop
+      />
+    );
+    const dataTransfer = { setData: vi.fn(), effectAllowed: "" };
+
+    fireEvent.dragStart(screen.getByRole("option", { name: "A" }), { dataTransfer });
+    fireEvent.drop(screen.getByRole("option", { name: "B" }), { dataTransfer });
+    expect(change).toHaveBeenLastCalledWith(["B", "A", "C"]);
+
+    fireEvent.dragStart(screen.getByRole("option", { name: "B" }), { dataTransfer });
+    fireEvent.drop(screen.getByRole("option", { name: "B" }), { dataTransfer });
+    expect(change).toHaveBeenLastCalledWith(["A", "B", "C"]);
+  });
+
   it("filters configured fields and supports keyboard selection", () => {
     const change = vi.fn();
     render(
@@ -65,6 +86,83 @@ describe("UOrderList", () => {
     });
     expect(screen.queryByRole("option", { name: "Banana" })).toBeNull();
     fireEvent.keyDown(screen.getByRole("option", { name: "Apple" }), { key: "Enter" });
+    expect(screen.getByRole("option", { name: "Apple" })).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("applies listStyle to the scrollable list and keeps options programmatically focusable", () => {
+    const { rerender } = render(
+      <UOrderList
+        value={["A", "B"]}
+        onChange={() => {}}
+        itemTemplate={(item) => <span>{item}</span>}
+        tabIndex={-1}
+        focusOnHover
+        listStyle={{ maxHeight: "12rem" }}
+      />
+    );
+    const list = screen.getByRole("listbox");
+    const options = screen.getAllByRole("option");
+
+    expect(list).toHaveStyle({ maxHeight: "12rem" });
+    expect(list).toHaveAttribute("tabindex", "-1");
+    expect(options).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tabIndex: -1 }),
+        expect.objectContaining({ tabIndex: -1 }),
+      ])
+    );
+
+    list.focus();
+    expect(document.activeElement).toBe(options[0]);
+    fireEvent.keyDown(options[0], { key: "ArrowDown" });
+    expect(document.activeElement).toBe(options[1]);
+    fireEvent.keyDown(options[1], { key: "Enter" });
+    expect(options[1]).toHaveAttribute("aria-selected", "true");
+    fireEvent.mouseEnter(options[0]);
+    expect(document.activeElement).toBe(options[0]);
+
+    rerender(
+      <UOrderList
+        value={["A", "B"]}
+        onChange={() => {}}
+        itemTemplate={(item) => <span>{item}</span>}
+        tabIndex={3}
+      />
+    );
+    expect(screen.getByRole("listbox")).toHaveAttribute("tabindex", "3");
+    expect(screen.getAllByRole("option")).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tabIndex: -1 }),
+        expect.objectContaining({ tabIndex: -1 }),
+      ])
+    );
+  });
+
+  it("keeps dataKey selection after an equivalent-object rerender", () => {
+    const { rerender } = render(
+      <UOrderList
+        value={[
+          { id: "a", label: "Apple" },
+          { id: "b", label: "Banana" },
+        ]}
+        onChange={() => {}}
+        dataKey="id"
+        itemTemplate={(item) => <span>{item.label}</span>}
+      />
+    );
+    fireEvent.click(screen.getByRole("option", { name: "Apple" }));
+
+    rerender(
+      <UOrderList
+        value={[
+          { id: "a", label: "Apple" },
+          { id: "b", label: "Banana" },
+        ]}
+        onChange={() => {}}
+        dataKey="id"
+        itemTemplate={(item) => <span>{item.label}</span>}
+      />
+    );
     expect(screen.getByRole("option", { name: "Apple" })).toHaveAttribute("aria-selected", "true");
   });
 });

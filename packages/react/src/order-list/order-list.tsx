@@ -15,18 +15,24 @@ type MatchMode =
   | "gte";
 
 function field(item: unknown, path: string): unknown {
-  return path.split(".").reduce<unknown>(
-    (value, key) =>
-      value != null && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined,
-    item
-  );
+  return path
+    .split(".")
+    .reduce<unknown>(
+      (value, key) =>
+        value != null && typeof value === "object"
+          ? (value as Record<string, unknown>)[key]
+          : undefined,
+      item
+    );
 }
 
 function matches(value: unknown, query: unknown, mode: MatchMode, locale?: string): boolean {
   if (query == null || query === "") return true;
-  const text = (candidate: unknown) => String(candidate ?? "").toLocaleLowerCase(locale || undefined);
+  const text = (candidate: unknown) =>
+    String(candidate ?? "").toLocaleLowerCase(locale || undefined);
 
-  if (mode === "in") return Array.isArray(query) && query.some((candidate) => text(value) === text(candidate));
+  if (mode === "in")
+    return Array.isArray(query) && query.some((candidate) => text(value) === text(candidate));
   if (value == null) return mode === "notEquals";
 
   switch (mode) {
@@ -189,7 +195,7 @@ export function UOrderList<T = unknown>({
   return (
     <div id={id} className={[cx("root"), className].filter(Boolean).join(" ")}>
       <style>{`@media (max-width: ${breakpoint}) { #${id} { grid-template-columns: minmax(0, 1fr); } }`}</style>
-      <section data-pc-section="sourcelist" style={listStyle}>
+      <section data-pc-section="sourcelist">
         <div className={cx("controls")}>
           {(["up", "top", "down", "bottom"] as const).map((direction) => (
             <button
@@ -218,6 +224,7 @@ export function UOrderList<T = unknown>({
           aria-label="Source"
           aria-multiselectable="true"
           tabIndex={tabIndex}
+          style={listStyle}
           onFocus={(event) => {
             if (autoOptionFocus && event.target === event.currentTarget) {
               event.currentTarget.querySelector<HTMLElement>('[role="option"]')?.focus();
@@ -232,7 +239,7 @@ export function UOrderList<T = unknown>({
               className={isSelected(item) ? cx("itemSelected") : cx("listItem")}
               role="option"
               aria-selected={isSelected(item)}
-              tabIndex={0}
+              tabIndex={-1}
               draggable={dragdrop || undefined}
               onClick={() => select(item)}
               onKeyDown={(event) => keyDown(item, event)}

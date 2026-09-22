@@ -2,9 +2,20 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { UOrderList } from "./order-list";
 
-function ControlledOrderListStory(): React.ReactElement {
+function ControlledOrderListStory({
+  dragdrop = false,
+}: {
+  dragdrop?: boolean;
+}): React.ReactElement {
   const [value, setValue] = useState(["Apple", "Banana", "Cherry", "Date"]);
-  return <UOrderList value={value} onChange={setValue} itemTemplate={(item) => <span>{item}</span>} />;
+  return (
+    <UOrderList
+      value={value}
+      onChange={setValue}
+      dragdrop={dragdrop}
+      itemTemplate={(item) => <span>{item}</span>}
+    />
+  );
 }
 
 const meta: Meta<typeof UOrderList> = {
@@ -16,18 +27,11 @@ export default meta;
 type Story = StoryObj<typeof UOrderList>;
 
 export const Default: Story = {
-  args: {
-    value: ["Apple", "Banana", "Cherry", "Date"],
-    itemTemplate: (item) => <span>{item as string}</span>,
-  },
+  render: () => <ControlledOrderListStory />,
 };
 
 export const WithDragDrop: Story = {
-  args: {
-    value: ["Apple", "Banana", "Cherry", "Date"],
-    dragdrop: true,
-    itemTemplate: (item) => <span>{item as string}</span>,
-  },
+  render: () => <ControlledOrderListStory dragdrop />,
 };
 
 export const Controlled: Story = {
