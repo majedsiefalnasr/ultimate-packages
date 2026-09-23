@@ -232,5 +232,35 @@
     "ultimateDestination": "packages/react/src/order-list/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored OrderList barrel re-export."
+  },
+  {
+    "originalPath": "components/lib/picklist/PickList.js",
+    "ultimateDestination": "packages/react/src/pick-list/pick-list.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native PickList; behavior referenced from pinned PrimeReact 10.9.9 source. UListbox composition was evaluated but its selection-only onChange contract lacks itemTemplate and per-option native drag/drop handlers required for two independent controlled lists. Bespoke rendering matches PrimeReact PickListSubList's separate list rendering; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/pick-list/pick-list-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/pick-list/pick-list.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList behavior test."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/pick-list/pick-list.stories.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored controlled PickList Storybook stories."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/pick-list/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList barrel re-export."
   }
 ]
