@@ -344,6 +344,7 @@
   ],
   "sideEffects": true,
   "dependencies": {
+    "@angular/cdk": "^21.0.0",
     "@ultimate/ng-core": "workspace:*",
     "@ultimate/uix-data": "workspace:*",
     "@ultimate/uix-motion": "workspace:*",

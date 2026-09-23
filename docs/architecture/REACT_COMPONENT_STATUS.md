@@ -2,12 +2,12 @@
 
 Current-state tracking for `@ultimate/react`, created per the approved Phase C Batch 1 Implementation Plan's own resolution of the React/Vue current-state-tracking gap (`docs/superpowers/plans/2026-09-17-phase-c-batch-1-migration-implementation.md` §1.1, Task Group Z / §8). No committed React-equivalent of `docs/architecture/COMPONENT_INVENTORY.md` existed before this file.
 
-**Origin of this file's scope:** every component `@ultimate/react` shipped **before** Phase C Batch 1 (the pre-existing baseline, 8 components), plus every canonical capability Phase C Batch 1 closed for React (73 capabilities, per the approved specification `docs/superpowers/specs/2026-09-17-phase-c-batch-1-migration-design.md` §3 and its implementation ledger `.superpowers/sdd/progress.md`). Confirmed against direct inspection of `packages/react/src/` (81 top-level directories total = 8 baseline + 73 Batch 1) — no capability listed here that spec §3 does not mark React-eligible, no React-eligible capability omitted.
+**Origin of this file's scope:** every component `@ultimate/react` shipped **before** Phase C Batch 1 (8 components), every React capability closed by Phase C Batch 1 (73), React DataScroller from Batch 2 (1), and OrderList, PickList, DataView, and OrganizationChart from Batch 3 (4). Confirmed against direct inspection of `packages/react/src/`: **86 top-level component directories = 8 + 73 + 1 + 4**. No capability listed here is outside its approved framework eligibility, and no implemented React capability is omitted.
 
 Schema (7 columns, matching `COMPONENT_INVENTORY.md`'s own schema minus its Angular-specific `UIX dependencies`/`Angular-specific responsibilities` columns, substituting one framework-specific-responsibilities column): **Component** | **Prime source path** | **Category** | **Dependencies** | **Framework-specific responsibilities** | **Migration classification** | **Migration phase** | **Risk**.
 
 - **Migration classification:** `ADAPT` (incorporated, PrimeReact source is the design reference) — every row in this file is `ADAPT`; React carries no `NOT NEEDED`/`NEEDS ARCHITECTURE DECISION` rows of its own distinct from Angular's (architectural exceptions are tracked once, in `COMPONENT_INVENTORY.md`, not duplicated per framework).
-- **Migration phase:** `Built (pre-existing)` (shipped before Phase C Batch 1) / `Built (Phase C Batch 1)` (shipped by this batch, commits `28ecdb8..be9f35e`).
+- **Migration phase:** `Built (pre-existing)` (shipped before Phase C Batch 1) / `Built (Phase C Batch 1)` (shipped by this batch, commits `28ecdb8..be9f35e`) / `Built (Phase C Batch 2)` / `Built (Phase C Batch 3)`.
 - **Risk** is a qualitative flag, carried over from `COMPONENT_INVENTORY.md`'s own already-vetted per-capability risk rating where the capability is shared cross-framework (Prime source complexity is framework-independent in nature); Low by default for capabilities with no direct Angular-row precedent.
 
 Real PrimeReact source paths are cited by top-level `components/lib/<name>/` directory, per PrimeReact 10.9.9's own package layout (confirmed via this batch's own component doc comments, e.g. `accordion.tsx`'s citation of `components/lib/accordion/Accordion.js`) — the equivalent role `packages/primeng/src/<name>/` plays for `COMPONENT_INVENTORY.md`.
@@ -150,8 +150,19 @@ Merged to `main` (commit `c37dc40`), originally implemented on `feature/phase-c-
 
 ---
 
+## Built (Phase C Batch 3) — 4 capabilities
+
+| Component                              | Prime source path                 | Category     | Dependencies               | Framework-specific responsibilities                                                                                                                       | Migration classification | Migration phase         | Risk   |
+| -------------------------------------- | --------------------------------- | ------------ | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------------------- | ------ |
+| OrderList (UOrderList)                 | components/lib/orderlist/         | Data         | react-core base            | All four button moves, filtering, optional native HTML5 drag/drop; packages/react/src/order-list/                                                         | ADAPT                    | Built (Phase C Batch 3) | Medium |
+| PickList (UPickList)                   | components/lib/picklist/          | Data         | react-core base            | Separate source/target arrays, bidirectional transfers and per-side reordering, filtering, optional native HTML5 drag/drop; packages/react/src/pick-list/ | ADAPT                    | Built (Phase C Batch 3) | Medium |
+| DataView (UDataView)                   | components/lib/dataview/          | Data         | react-core base, paginator | List/grid rendering, sorting, pagination; no filtering; packages/react/src/data-view/                                                                     | ADAPT                    | Built (Phase C Batch 3) | Medium |
+| OrganizationChart (UOrganizationChart) | components/lib/organizationchart/ | Data/Display | react-core base            | Per-node local expansion, object-reference single/multiple selection; packages/react/src/organization-chart/                                              | ADAPT                    | Built (Phase C Batch 3) | Medium |
+
+OrganizationChart's React/Vue-only membership is a permanent framework asymmetry under DECISION-D. Angular OrganizationChart remains excluded.
+
 ## Verification
 
-- 8 pre-existing baseline components + 73 Phase C Batch 1 capabilities = **81 entries**, matching `packages/react/src/`'s own 81 top-level directory count exactly (confirmed via direct `ls` inspection).
+- 8 pre-existing baseline components + 73 Phase C Batch 1 capabilities + 1 Phase C Batch 2 capability + 4 Phase C Batch 3 capabilities = **86 entries**, matching `packages/react/src/`'s 86 top-level component directories after Batch 3 (confirmed by direct directory inspection).
 - React eligibility cross-checked against spec §3: 79 canonical capabilities − 6 React-excluded (InputGroup/InputGroupAddon, IftaLabel — Angular/Vue only; ImageCompare, AnimateOnScroll — Angular/Vue only; DynamicDialog, OverlayBadge — Angular only) = 73. Matches this file's Batch 1 row count exactly.
 - No capability from spec §3 is marked Built here where spec §3 excludes React for it (DynamicDialog, OverlayBadge, InputGroup/InputGroupAddon, IftaLabel, ImageCompare, AnimateOnScroll all correctly absent).

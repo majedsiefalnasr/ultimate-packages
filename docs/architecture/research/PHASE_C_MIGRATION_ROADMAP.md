@@ -285,6 +285,45 @@ Following the OrganizationChart resolution (§12.4), a Phase C Architecture Deci
 
 ---
 
+### 12.6 Phase C Batch 3 implementation and verification (2026-09-23)
+
+Phase C Batch 3 implements 11 realizations: OrderList, PickList, and DataView for Angular/React/Vue, and OrganizationChart for React/Vue. Angular OrderList/PickList use the disclosed @angular/cdk/drag-drop dependency for opt-in drag/drop; Vue OrderList/PickList have neither drag/drop nor filtering. DataView filtering remains Angular-only. DECISION-C and DECISION-D are unchanged, including Angular OrganizationChart's permanent exclusion.
+
+Implementation and the recorded whole-batch Verification results are available for Final Review/Closeout. The branch is feature/phase-c-batch-3-migration. Final Review approval and merge are separate subsequent events; this entry does not claim either has occurred.
+
+| # | Command | Exit | Meaningful output | Comparison to Task 0 |
+| ---: | --- | ---: | --- | --- |
+| 1 | `node scripts/provenance/validate-dependency-ceiling.mjs` | 0 | `OK: scanned 12 package.json file(s), zero violations` | Passed. |
+| 2 | `node scripts/provenance/validate-agents-md-pointers.mjs` | 0 | `OK: all 7 path(s) referenced in AGENTS.md's pointer table exist` | Passed. |
+| 3 | scoped Batch 3 provenance script from Task 12 brief | 0 | `All Batch 3 files have manifest records.` | Passed; newer Batch 3 source files are represented in their manifests. |
+| 4 | `node scripts/provenance/validate-provenance.mjs` | 1 | Seven baseline entries are present; `packages/ng/src/accordion/accordion-style.ts` has no `docs/architecture/provenance/ng.json` entry. | **Unchanged baseline:** identical missing Angular Accordion style-record failure. |
+| 5 | `pnpm --filter @ultimate/themes test cross-framework-consistency.test.ts` | 0 | 1 test file and 9 tests passed. | Passed. |
+| 6 | `pnpm test` | 1 | Reached `packages/ai` packaging checks, which failed opening root-owned npm-cache content under `/Users/majedsiefalnasr/.npm/_cacache/tmp/***` with `EPERM`; npm recommends `sudo chown -R 501:20 \"/Users/majedsiefalnasr/.npm\"`. | **Unchanged baseline:** same `@ultimate/ai` root-owned npm-cache `EPERM` condition recorded in Task 0 (which reported 78 passed / 2 failed). |
+| 7 | `pnpm typecheck` | 0 | All 20 participating workspace projects completed their typecheck commands. | Passed; consistent with Task 0. |
+| 8 | `pnpm build` | 1 | `@ultimate/ng` fails with `TS2729`: static `instanceCount` is used before initialization at `packages/ng/src/autocomplete/autocomplete.ts:156` and `packages/ng/src/select/select.ts:162`. | **Unchanged baseline:** same two errors at the same files and lines. |
+
+Scoped provenance command (exact):
+
+```bash
+node --input-type=module <<'NODE'
+import { readFileSync, readdirSync } from "node:fs";
+const components = { ng: ["order-list", "pick-list", "data-view"], react: ["order-list", "pick-list", "data-view", "organization-chart"], vue: ["order-list", "pick-list", "data-view", "organization-chart"] };
+for (const [framework, names] of Object.entries(components)) {
+  const manifest = JSON.parse(readFileSync("docs/architecture/provenance/" + framework + ".json", "utf8"));
+  const paths = new Set(manifest.map(entry => entry.ultimateDestination));
+  for (const name of names) {
+    const dir = "packages/" + framework + "/src/" + name;
+    for (const file of readdirSync(dir).filter(file => /\.(ts|tsx|vue)$/.test(file))) {
+      if (!paths.has(dir + "/" + file)) throw Error("Missing manifest entry: " + dir + "/" + file);
+    }
+  }
+}
+console.log("All Batch 3 files have manifest records.");
+NODE
+```
+
+Implementation HEAD: `765e1e60cf6274a31347c5e50710746ad611ff7f`
+
 ## Status
 
 **APPROVED — 2026-09-17.**

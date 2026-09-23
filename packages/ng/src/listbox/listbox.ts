@@ -64,7 +64,7 @@ export interface UListboxChangeEvent {
         (focus)="onFocus.emit($event)"
         (blur)="onBlur()"
       >
-        @for (option of visibleOptions(); track $index) {
+        @for (option of visibleOptions(); track trackOption($index, option)) {
           <li
             role="option"
             [class]="cx('option', optionClassesParams(option, $index))"
@@ -101,6 +101,8 @@ export class UListbox extends UBaseEditableHolder {
   optionLabel = input<string | ((item: unknown) => string)>();
   /** Property name or getter function to use as the value of an option, defaults to the option itself. */
   optionValue = input<string | ((item: unknown) => unknown)>();
+  /** Optional key for reusing option DOM nodes when options change. */
+  trackBy = input<(index: number, option: unknown) => unknown>();
   /** Property name or getter function to determine if an option is disabled. */
   optionDisabled = input<string | ((item: unknown) => boolean)>();
   /** Whether multiple selection is allowed. */
@@ -164,6 +166,11 @@ export class UListbox extends UBaseEditableHolder {
       return (option as Record<string, unknown>)[value];
     }
     return option;
+  }
+
+  protected trackOption(index: number, option: unknown): unknown {
+    const callback = this.trackBy();
+    return callback ? callback(index, option) : index;
   }
 
   protected isOptionDisabled(option: unknown): boolean {

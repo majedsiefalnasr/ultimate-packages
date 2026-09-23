@@ -346,5 +346,95 @@
     "ultimateDestination": "packages/ng/src/fluid/fluid.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Fluid→UFluid, selector p-fluid→u-fluid, host class .p-fluid→.u-fluid. Real upstream Fluid is a component with an <ng-content> template and a `p-fluid` element selector, NOT an attribute directive with a [pFluid] selector as this task's brief illustratively described — no [pFluid] selector exists anywhere in upstream source; adapted to match the real mechanism per the brief's own instruction to verify against extracted source. Deliberately excludes upstream's Bind/passthrough hostDirectives wiring and FLUID_INSTANCE/PARENT_INSTANCE injection-token parent lookup — see UBaseComponent's doc comment for the same Option B architectural exclusion pattern. Provides U_FLUID_ANCESTOR token on itself (providers: [{provide: U_FLUID_ANCESTOR, useValue: true}]) so ng-core-tier classes (e.g. UBaseInput) can detect an ancestor <u-fluid> wrapper via DI injection without ng-core depending on ng (avoids circular workspace dependency)."
+  },
+  {
+    "originalPath": "packages/primeng/src/orderlist/orderlist.ts",
+    "ultimateDestination": "packages/ng/src/order-list/order-list.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeNG 21.1.9 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/order-list/order-list-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/order-list/order-list.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/order-list/order-list.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/order-list/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "packages/primeng/src/picklist/picklist.ts",
+    "ultimateDestination": "packages/ng/src/pick-list/pick-list.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native PickList; behavior referenced from the pinned PrimeNG 21.1.9 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/pick-list/pick-list-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/pick-list/pick-list.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/pick-list/pick-list.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/pick-list/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/data-view/data-view-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/data-view/data-view.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/data-view/data-view.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "packages/primeng/src/dataview/dataview.ts",
+    "ultimateDestination": "packages/ng/src/data-view/data-view.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeNG 21.1.9 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/data-view/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
   }
 ]

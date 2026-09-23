@@ -292,5 +292,149 @@
     "ultimateDestination": "packages/vue/src/table/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent."
+  },
+  {
+    "originalPath": "packages/primevue/src/orderlist/OrderList.vue",
+    "ultimateDestination": "packages/vue/src/order-list/BaseOrderList.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "packages/primevue/src/orderlist/OrderList.vue",
+    "ultimateDestination": "packages/vue/src/order-list/OrderList.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/order-list/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/order-list/order-list.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/order-list/order-list.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/order-list/order-list-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "packages/primevue/src/picklist/PickList.vue",
+    "ultimateDestination": "packages/vue/src/pick-list/BasePickList.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native PickList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "packages/primevue/src/picklist/PickList.vue",
+    "ultimateDestination": "packages/vue/src/pick-list/PickList.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native PickList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/pick-list/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/pick-list/pick-list.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/pick-list/pick-list.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/pick-list/pick-list-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "packages/primevue/src/dataview/DataView.vue",
+    "ultimateDestination": "packages/vue/src/data-view/BaseDataView.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "packages/primevue/src/dataview/DataView.vue",
+    "ultimateDestination": "packages/vue/src/data-view/DataView.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/data-view/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/data-view/data-view.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/data-view/data-view.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/data-view/data-view-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "packages/primevue/src/organizationchart/OrganizationChart.vue",
+    "ultimateDestination": "packages/vue/src/organization-chart/BaseOrganizationChart.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native OrganizationChart; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "packages/primevue/src/organizationchart/OrganizationChart.vue",
+    "ultimateDestination": "packages/vue/src/organization-chart/OrganizationChart.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native OrganizationChart; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/organization-chart/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/organization-chart/organization-chart.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/organization-chart/organization-chart.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/organization-chart/organization-chart-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
   }
 ]
