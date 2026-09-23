@@ -79,46 +79,31 @@ export function UDataView<T = unknown>({
   className,
 }: UDataViewProps<T>): React.ReactElement {
   const { cx } = useComponentBase({ componentName: "data-view", styleModule: dataViewStyleModule });
-  const [pageFirst, setPageFirst] = React.useState(first);
-  const [pageRows, setPageRows] = React.useState(rows);
 
   React.useEffect(() => {
-    setPageFirst(first);
-  }, [first]);
-
-  React.useEffect(() => {
-    setPageRows(rows);
-  }, [rows]);
-
-  React.useEffect(() => {
-    if (lazy) onLazyLoad?.({ first: pageFirst, rows: pageRows, sortField, sortOrder });
-  }, [lazy, pageFirst, pageRows, sortField, sortOrder, onLazyLoad]);
+    if (lazy) onLazyLoad?.({ first, rows, sortField, sortOrder });
+  }, [lazy, first, rows, sortField, sortOrder, onLazyLoad]);
 
   const processed = React.useMemo(() => {
     if (lazy || !sortField) return value;
     return [...value].sort((a, b) => compare(field(a, sortField), field(b, sortField)) * sortOrder);
   }, [value, lazy, sortField, sortOrder]);
   const count = lazy ? (totalRecords ?? value.length) : processed.length;
-  const paged =
-    lazy || !paginator || pageRows <= 0
-      ? processed
-      : processed.slice(pageFirst, pageFirst + pageRows);
+  const paged = lazy || !paginator || rows <= 0 ? processed : processed.slice(first, first + rows);
   const changePage = (event: PaginatorPageChangeEvent): void => {
-    setPageFirst(event.first);
-    setPageRows(event.rows);
     onPageChange?.(event);
   };
-  const pageCount = pageRows > 0 ? Math.ceil(count / pageRows) : 0;
+  const pageCount = rows > 0 ? Math.ceil(count / rows) : 0;
   const report = currentPageReportTemplate
-    .replaceAll("{first}", String(count ? pageFirst + 1 : 0))
-    .replaceAll("{last}", String(Math.min(pageFirst + pageRows, count)))
+    .replaceAll("{first}", String(count ? first + 1 : 0))
+    .replaceAll("{last}", String(Math.min(first + rows, count)))
     .replaceAll("{totalRecords}", String(count))
-    .replaceAll("{currentPage}", String(pageCount ? Math.floor(pageFirst / pageRows) + 1 : 0))
+    .replaceAll("{currentPage}", String(pageCount ? Math.floor(first / rows) + 1 : 0))
     .replaceAll("{totalPages}", String(pageCount))
-    .replaceAll("{rows}", String(pageRows));
-  const showPaginator = paginator && (alwaysShowPaginator || count > pageRows);
+    .replaceAll("{rows}", String(rows));
+  const showPaginator = paginator && (alwaysShowPaginator || count > rows);
   const paging = (
-    <UPaginator first={pageFirst} rows={pageRows} totalRecords={count} onPageChange={changePage} />
+    <UPaginator first={first} rows={rows} totalRecords={count} onPageChange={changePage} />
   );
   const key = (item: T, index: number): React.Key =>
     dataKey ? String(field(item, dataKey)) : trackBy ? trackBy(item, index) : index;
@@ -136,7 +121,7 @@ export function UDataView<T = unknown>({
               </div>
             ))
           ) : (
-            <div>{emptyMessage}</div>
+            <div role="listitem">{emptyMessage}</div>
           )}
         </div>
       ) : (
@@ -153,13 +138,13 @@ export function UDataView<T = unknown>({
         </ul>
       )}
       {showPaginator && paginatorPosition !== "top" && paging}
-      {paginator && (
+      {showPaginator && (
         <>
           {rowsPerPageOptions.length > 0 && (
             <label>
               Rows per page
               <select
-                value={pageRows}
+                value={rows}
                 onChange={(event) => {
                   const nextRows = Number(event.target.value);
                   if (nextRows > 0)
