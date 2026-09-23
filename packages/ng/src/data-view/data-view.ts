@@ -121,7 +121,7 @@ function compare(a: unknown, b: unknown): number {
           (onPageChange)="onPageChange($event)"
         />
       }
-      @if (paginator()) {
+      @if (showPaginator()) {
         @if (rowsPerPageOptions().length) {
           <label
             >Rows per page

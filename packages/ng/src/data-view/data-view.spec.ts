@@ -144,6 +144,46 @@ describe("UDataView", () => {
     expect(pageChange).toHaveBeenCalledWith({ first: 0, rows: 1, page: 0, pageCount: 3 });
   });
 
+  it("hides all paginator UI for one page when alwaysShowPaginator is false", () => {
+    const fixture = setup();
+    fixture.componentRef.setInput("paginator", true);
+    fixture.componentRef.setInput("rows", 3);
+    fixture.componentRef.setInput("rowsPerPageOptions", [1, 3]);
+    fixture.componentRef.setInput("alwaysShowPaginator", false);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector("u-paginator")).toBeNull();
+    expect(fixture.nativeElement.querySelector("select")).toBeNull();
+    expect(fixture.nativeElement.querySelector('[aria-live="polite"]')).toBeNull();
+
+    fixture.componentRef.setInput("alwaysShowPaginator", true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("u-paginator")).not.toBeNull();
+    expect(fixture.nativeElement.querySelector("select")).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('[aria-live="polite"]')).not.toBeNull();
+  });
+
+  it.each([0, -1])("ignores nonpositive page-size option %i", (invalidRows) => {
+    const fixture = setup();
+    fixture.componentRef.setInput("paginator", true);
+    fixture.componentRef.setInput("rows", 2);
+    fixture.componentRef.setInput("rowsPerPageOptions", [invalidRows, 2]);
+    fixture.detectChanges();
+    const pageChange = vi.fn();
+    fixture.componentInstance.pageChange.subscribe(pageChange);
+
+    const select = fixture.nativeElement.querySelector("select") as HTMLSelectElement;
+    select.value = String(invalidRows);
+    select.dispatchEvent(new Event("change"));
+    fixture.detectChanges();
+
+    expect(pageChange).not.toHaveBeenCalled();
+    expect(names(fixture)).toEqual(["Apple", "Banana"]);
+    expect(fixture.nativeElement.querySelector("u-paginator").getAttribute("data-page-count")).toBe(
+      "2"
+    );
+  });
+
   it("renders loading and empty state", () => {
     const fixture = setup();
     fixture.componentRef.setInput("value", []);
