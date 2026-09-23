@@ -406,5 +406,35 @@
     "ultimateDestination": "packages/ng/src/pick-list/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/data-view/data-view-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/data-view/data-view.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/data-view/data-view.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "packages/primeng/src/dataview/dataview.ts",
+    "ultimateDestination": "packages/ng/src/data-view/data-view.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeNG 21.1.9 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/data-view/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
   }
 ]
