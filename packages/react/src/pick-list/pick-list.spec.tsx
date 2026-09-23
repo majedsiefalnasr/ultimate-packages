@@ -149,22 +149,98 @@ describe("UPickList", () => {
     expect(screen.getByRole("option", { name: "C" })).toHaveAttribute("aria-selected", "true");
   });
 
-  it("deselects a selected item on a plain click with metaKeySelection", () => {
+  it.each(["Source", "Target"])(
+    "keeps %s selection on plain click and toggles it with Ctrl/Cmd",
+    (side) => {
+      render(
+        <UPickList
+          source={["A"]}
+          target={["X"]}
+          onSourceChange={vi.fn()}
+          onTargetChange={vi.fn()}
+          itemTemplate={(item) => item}
+          metaKeySelection
+        />
+      );
+      const option = screen.getByRole("option", { name: side === "Source" ? "A" : "X" });
+      fireEvent.click(option);
+      expect(option).toHaveAttribute("aria-selected", "true");
+      fireEvent.click(option);
+      expect(option).toHaveAttribute("aria-selected", "true");
+      fireEvent.click(option, { ctrlKey: true });
+      expect(option).toHaveAttribute("aria-selected", "false");
+      fireEvent.click(option, { metaKey: true });
+      expect(option).toHaveAttribute("aria-selected", "true");
+      fireEvent.click(option, { metaKey: true });
+      expect(option).toHaveAttribute("aria-selected", "false");
+    }
+  );
+
+  it.each(["Source", "Target"])("uses the %s listbox as the only option Tab stop", (side) => {
+    setup();
+    const list = screen.getByRole("listbox", { name: side });
+    expect(list).toHaveAttribute("tabindex", "0");
+    for (const option of within(list).getAllByRole("option")) {
+      expect(option).toHaveAttribute("tabindex", "-1");
+    }
+    list.focus();
+    fireEvent.keyDown(list, { key: "ArrowDown" });
+    const options = within(list).getAllByRole("option");
+    expect(options[0]).toHaveFocus();
+    fireEvent.keyDown(options[0], { key: "ArrowDown" });
+    expect(options[1]).toHaveFocus();
+    fireEvent.keyDown(options[1], { key: "End" });
+    expect(options[options.length - 1]).toHaveFocus();
+    fireEvent.keyDown(options[options.length - 1], { key: "Home" });
+    expect(options[0]).toHaveFocus();
+    fireEvent.keyDown(options[0], { key: "Enter" });
+    expect(options[0]).toHaveAttribute("aria-selected", "true");
+    fireEvent.keyDown(options[0], { key: " " });
+    expect(options[0]).toHaveAttribute("aria-selected", "false");
+  });
+
+  it("keeps listbox keyboard entry with a custom item template and filter controls", () => {
     render(
       <UPickList
-        source={["A"]}
+        source={[{ label: "Apple" }, { label: "Banana" }]}
+        target={[]}
+        onSourceChange={vi.fn()}
+        onTargetChange={vi.fn()}
+        itemTemplate={(item) => <strong>{item.label}</strong>}
+        filter
+        showSourceControls={false}
+      />
+    );
+    expect(screen.getByRole("searchbox", { name: "Filter source" })).toBeInTheDocument();
+    const list = screen.getByRole("listbox", { name: "Source" });
+    const option = within(list).getByRole("option", { name: "Apple" });
+    expect(list).toHaveAttribute("tabindex", "0");
+    expect(option).toHaveAttribute("tabindex", "-1");
+    list.focus();
+    fireEvent.keyDown(list, { key: "Home" });
+    expect(option).toHaveFocus();
+    fireEvent.keyDown(option, { key: " " });
+    expect(option).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("applies configured match mode with locale-aware case folding", () => {
+    render(
+      <UPickList
+        source={["Istanbul", "Izmir"]}
         target={[]}
         onSourceChange={vi.fn()}
         onTargetChange={vi.fn()}
         itemTemplate={(item) => item}
-        metaKeySelection
+        filter
+        filterMatchMode="startsWith"
+        filterLocale="tr-TR"
       />
     );
-    const option = screen.getByRole("option", { name: "A" });
-    fireEvent.click(option);
-    expect(option).toHaveAttribute("aria-selected", "true");
-    fireEvent.click(option);
-    expect(option).toHaveAttribute("aria-selected", "false");
+    fireEvent.change(screen.getByRole("searchbox", { name: "Filter source" }), {
+      target: { value: "ıst" },
+    });
+    expect(screen.getByRole("option", { name: "Istanbul" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Izmir" })).toBeNull();
   });
 
   it("does not expose native drag handlers or filters without opt-in", () => {
@@ -182,6 +258,68 @@ describe("UPickList", () => {
     );
     fireEvent.drop(screen.getByRole("option", { name: "A" }), { dataTransfer });
     expect(onSourceChange).toHaveBeenLastCalledWith(["B", "A", "C", "D"]);
+  });
+
+  it("moves an item forward by native drag without mutating source", () => {
+    const source = ["A", "B", "C", "D"];
+    const onSourceChange = vi.fn();
+    render(
+      <UPickList
+        source={source}
+        target={[]}
+        onSourceChange={onSourceChange}
+        onTargetChange={vi.fn()}
+        itemTemplate={(item) => item}
+        dragdrop
+      />
+    );
+    const dataTransfer = { setData: vi.fn(), effectAllowed: "" };
+    fireEvent.dragStart(screen.getByRole("option", { name: "B" }), { dataTransfer });
+    fireEvent.dragOver(screen.getByRole("option", { name: "D" }), { dataTransfer });
+    fireEvent.drop(screen.getByRole("option", { name: "D" }), { dataTransfer });
+    expect(onSourceChange).toHaveBeenLastCalledWith(["A", "C", "B", "D"]);
+    expect(source).toEqual(["A", "B", "C", "D"]);
+  });
+
+  it("does not emit a change when an item is dropped onto itself", () => {
+    const { onSourceChange } = setup(true);
+    const item = screen.getByRole("option", { name: "B" });
+    const dataTransfer = { setData: vi.fn(), effectAllowed: "" };
+    fireEvent.dragStart(item, { dataTransfer });
+    fireEvent.dragOver(item, { dataTransfer });
+    fireEvent.drop(item, { dataTransfer });
+    expect(onSourceChange).not.toHaveBeenCalled();
+  });
+
+  it("keeps dataKey selection through equivalent-object rerender and preserves inputs", () => {
+    const first = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
+    const second = first.map((item) => ({ ...item }));
+    const target = [{ id: 3, name: "X" }];
+    const onSourceChange = vi.fn();
+    const onTargetChange = vi.fn();
+    const props = {
+      target,
+      onSourceChange,
+      onTargetChange,
+      dataKey: "id",
+      itemTemplate: (item: { id: number; name: string }) => item.name,
+    };
+    const { rerender } = render(<UPickList {...props} source={first} />);
+    fireEvent.click(screen.getByRole("option", { name: "A" }));
+    rerender(<UPickList {...props} source={second} />);
+    expect(screen.getByRole("option", { name: "A" })).toHaveAttribute("aria-selected", "true");
+    fireEvent.click(screen.getByRole("button", { name: "To Target" }));
+    expect(onSourceChange).toHaveBeenLastCalledWith([second[1]]);
+    expect(onTargetChange).toHaveBeenLastCalledWith([target[0], second[0]]);
+    expect(first).toEqual([
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ]);
+    expect(second).toEqual(first);
+    expect(target).toEqual([{ id: 3, name: "X" }]);
   });
 
   it.each([

@@ -121,7 +121,8 @@ export function UPickList<T = unknown>({
     setSelected((previous) => {
       const next: [T[], T[]] = [[...previous[0]], [...previous[1]]];
       if (metaKeySelection && !event.ctrlKey && !event.metaKey) {
-        next[side] = previous[side].some((candidate) => same(candidate, item)) ? [] : [item];
+        if (previous[side].some((candidate) => same(candidate, item))) return previous;
+        next[side] = [item];
         return next;
       }
       const current = next[side];
@@ -293,7 +294,7 @@ export function UPickList<T = unknown>({
               className={cx(isSelected(side, item) ? "itemSelected" : "listItem")}
               role="option"
               aria-selected={isSelected(side, item)}
-              tabIndex={0}
+              tabIndex={-1}
               draggable={dragdrop || undefined}
               onClick={(event) => select(side, item, event)}
               onKeyDown={(event) => keyDown(side, item, event)}
