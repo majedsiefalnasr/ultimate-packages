@@ -77,6 +77,7 @@ export * from "./inplace";
 export * from "./inline-message";
 export * from "./message";
 export * from "./meter-group";
+export * from "./organization-chart";
 export * from "./panel";
 export * from "./progress-bar";
 export * from "./progress-spinner";
