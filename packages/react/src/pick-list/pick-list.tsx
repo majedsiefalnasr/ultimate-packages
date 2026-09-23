@@ -121,7 +121,6 @@ export function UPickList<T = unknown>({
     setSelected((previous) => {
       const next: [T[], T[]] = [[...previous[0]], [...previous[1]]];
       if (metaKeySelection && !event.ctrlKey && !event.metaKey) {
-        if (previous[side].some((candidate) => same(candidate, item))) return previous;
         next[side] = [item];
         return next;
       }

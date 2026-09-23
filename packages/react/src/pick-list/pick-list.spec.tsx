@@ -176,6 +176,32 @@ describe("UPickList", () => {
     }
   );
 
+  it.each([
+    ["Source", "A", "B"],
+    ["Target", "X", "Y"],
+  ])("collapses a multi-selection on %s to the plain-clicked item", (side, first, second) => {
+    render(
+      <UPickList
+        source={["A", "B"]}
+        target={["X", "Y"]}
+        onSourceChange={vi.fn()}
+        onTargetChange={vi.fn()}
+        itemTemplate={(item) => item}
+        metaKeySelection
+      />
+    );
+    const list = within(screen.getByRole("listbox", { name: side }));
+    const firstOption = list.getByRole("option", { name: first });
+    const secondOption = list.getByRole("option", { name: second });
+    fireEvent.click(firstOption);
+    fireEvent.click(secondOption, { ctrlKey: true });
+    expect(firstOption).toHaveAttribute("aria-selected", "true");
+    expect(secondOption).toHaveAttribute("aria-selected", "true");
+    fireEvent.click(firstOption);
+    expect(firstOption).toHaveAttribute("aria-selected", "true");
+    expect(secondOption).toHaveAttribute("aria-selected", "false");
+  });
+
   it.each(["Source", "Target"])("uses the %s listbox as the only option Tab stop", (side) => {
     setup();
     const list = screen.getByRole("listbox", { name: side });
