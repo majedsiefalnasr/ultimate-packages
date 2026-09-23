@@ -4,6 +4,7 @@ export const orderListStyleModule: StyleModule = {
   css: `
     .u-order-list { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: .75rem; }
     .u-order-list-controls { display: flex; flex-direction: column; gap: .25rem; }
+    .u-order-list.u-order-list-narrow .u-order-list-controls { flex-direction: row; flex-wrap: wrap; }
     .u-order-list-list { min-width: 0; margin: 0; padding: 0; list-style: none; border: 1px solid currentColor; overflow: auto; }
     .u-order-list-list [role="listbox"] { margin: 0; padding: 0; list-style: none; }
     .u-order-list-item, .u-order-list-list [role="option"] { display: block; padding: .5rem .75rem; cursor: pointer; }

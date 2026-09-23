@@ -24,6 +24,9 @@ export default {
     breakpoint() {
       this.bindMedia();
     },
+    responsive() {
+      this.bindMedia();
+    },
   },
   mounted() {
     this.bindMedia();
@@ -38,7 +41,8 @@ export default {
   methods: {
     bindMedia() {
       this.media?.removeEventListener("change", this.mediaListener);
-      if (typeof window === "undefined" || !window.matchMedia) return;
+      this.narrow = false;
+      if (!this.responsive || typeof window === "undefined" || !window.matchMedia) return;
       this.media = window.matchMedia("(max-width: " + this.breakpoint + ")");
       this.mediaListener = (event) => {
         this.narrow = event.matches;
@@ -51,6 +55,12 @@ export default {
     },
     optionValue(item) {
       return this.identity(item);
+    },
+    isGloballyDisabled() {
+      return this.disabled;
+    },
+    listboxAriaLabel() {
+      return this.ariaLabel ? this.ariaLabel + " source" : null;
     },
     label(item) {
       return String(this.dataKey && item != null ? item[this.dataKey] : item);
@@ -119,7 +129,18 @@ export default {
     syncListboxDom() {
       this.$nextTick(() => {
         const listbox = this.listboxElement();
-        if (listbox) listbox.tabIndex = this.disabled ? -1 : this.tabindex;
+        if (!listbox) return;
+        listbox.tabIndex = this.disabled ? -1 : this.tabindex;
+        if (this.ariaLabelledby) {
+          listbox.setAttribute("aria-labelledby", this.ariaLabelledby);
+          listbox.removeAttribute("aria-label");
+        } else {
+          listbox.removeAttribute("aria-labelledby");
+          if (this.listboxAriaLabel()) listbox.setAttribute("aria-label", this.listboxAriaLabel());
+          else listbox.removeAttribute("aria-label");
+        }
+        if (this.disabled) listbox.setAttribute("aria-disabled", "true");
+        else listbox.removeAttribute("aria-disabled");
       });
     },
     focusListbox(force = false) {
@@ -146,7 +167,7 @@ export default {
 
 <template>
   <div
-    :class="[cx('root'), { 'u-striped': striped }]"
+    :class="[cx('root'), { 'u-striped': striped, 'u-order-list-narrow': responsive && narrow }]"
     :style="{ gridTemplateColumns: responsive && narrow ? 'minmax(0, 1fr)' : undefined }"
     :aria-label="ariaLabel"
     :aria-labelledby="ariaLabelledby"
@@ -157,7 +178,7 @@ export default {
       :key="side"
       :data-pc-section="side === 0 ? 'sourcelist' : 'targetlist'"
     >
-      <div v-if="true" :class="cx('controls')">
+      <div :class="cx('controls')">
         <button
           v-for="direction in directions"
           :key="direction"
@@ -182,8 +203,9 @@ export default {
           :multiple="true"
           :option-label="label"
           :option-value="optionValue"
+          :option-disabled="isGloballyDisabled"
           :disabled="disabled"
-          :aria-label="side === 0 ? ariaLabel + ' source' : ariaLabel + ' target'"
+          :aria-label="ariaLabelledby ? null : listboxAriaLabel()"
           @focus="focusOption"
           @change="select(side, $event)"
         />
