@@ -364,5 +364,41 @@
     "ultimateDestination": "packages/vue/src/pick-list/pick-list-style.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "packages/primevue/src/dataview/DataView.vue",
+    "ultimateDestination": "packages/vue/src/data-view/BaseDataView.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "packages/primevue/src/dataview/DataView.vue",
+    "ultimateDestination": "packages/vue/src/data-view/DataView.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/data-view/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/data-view/data-view.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/data-view/data-view.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/data-view/data-view-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
   }
 ]
