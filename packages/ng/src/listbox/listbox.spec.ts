@@ -147,3 +147,56 @@ describe("UListbox", () => {
     expect(listbox.modelValue()).toBe("Banana");
   });
 });
+
+describe("UListbox trackBy", () => {
+  it("reuses option DOM by position after an equivalent-object refresh by default", () => {
+    @Component({
+      standalone: true,
+      imports: [UListbox],
+      template: `<u-listbox [options]="options" [optionLabel]="'label'" />`,
+    })
+    class HostComponent {
+      options = [{ id: "a", label: "A" }, { id: "b", label: "B" }];
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const before = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
+    fixture.componentInstance.options = [
+      { id: "a", label: "A refreshed" },
+      { id: "b", label: "B refreshed" },
+    ];
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const after = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
+    expect(after.map((option) => option.textContent?.trim())).toEqual(["A refreshed", "B refreshed"]);
+    expect(after[0]).toBe(before[0]);
+    expect(after[1]).toBe(before[1]);
+  });
+
+  it("reuses option DOM by supplied key across a reorder", () => {
+    @Component({
+      standalone: true,
+      imports: [UListbox],
+      template: `<u-listbox [options]="options" [optionLabel]="'label'" [trackBy]="trackBy" />`,
+    })
+    class HostComponent {
+      options = [{ id: "a", label: "A" }, { id: "b", label: "B" }];
+      trackBy(_index: number, option: unknown): unknown {
+        return (option as { id: string }).id;
+      }
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const before = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
+    fixture.componentInstance.options = [
+      { id: "b", label: "B refreshed" },
+      { id: "a", label: "A refreshed" },
+    ];
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const after = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
+    expect(after.map((option) => option.textContent?.trim())).toEqual(["B refreshed", "A refreshed"]);
+    expect(after[0]).toBe(before[1]);
+    expect(after[1]).toBe(before[0]);
+  });
+});

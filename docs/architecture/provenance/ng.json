@@ -376,5 +376,35 @@
     "ultimateDestination": "packages/ng/src/order-list/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "packages/primeng/src/picklist/picklist.ts",
+    "ultimateDestination": "packages/ng/src/pick-list/pick-list.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native PickList; behavior referenced from the pinned PrimeNG 21.1.9 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/pick-list/pick-list-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/pick-list/pick-list.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/pick-list/pick-list.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/pick-list/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
   }
 ]
