@@ -1,4 +1,9 @@
-import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+  transferArrayItem,
+} from "@angular/cdk/drag-drop";
 import { NgStyle } from "@angular/common";
 import {
   ChangeDetectionStrategy,
@@ -22,32 +27,56 @@ import { pickListStyleModule } from "./pick-list-style";
 
 let nextPickListId = 0;
 
-type MatchMode = "contains" | "startsWith" | "endsWith" | "equals" | "notEquals" | "in" | "lt" | "lte" | "gt" | "gte";
+type MatchMode =
+  | "contains"
+  | "startsWith"
+  | "endsWith"
+  | "equals"
+  | "notEquals"
+  | "in"
+  | "lt"
+  | "lte"
+  | "gt"
+  | "gte";
 
 function field(item: unknown, path: string): unknown {
-  return path.split(".").reduce<unknown>(
-    (value, key) => value != null && typeof value === "object"
-      ? (value as Record<string, unknown>)[key]
-      : undefined,
-    item
-  );
+  return path
+    .split(".")
+    .reduce<unknown>(
+      (value, key) =>
+        value != null && typeof value === "object"
+          ? (value as Record<string, unknown>)[key]
+          : undefined,
+      item
+    );
 }
 
 function matches(value: unknown, query: unknown, mode: MatchMode, locale?: string): boolean {
   if (query == null || query === "") return true;
-  const text = (candidate: unknown) => String(candidate ?? "").toLocaleLowerCase(locale || undefined);
-  if (mode === "in") return Array.isArray(query) && query.some((candidate) => text(value) === text(candidate));
+  const text = (candidate: unknown) =>
+    String(candidate ?? "").toLocaleLowerCase(locale || undefined);
+  if (mode === "in")
+    return Array.isArray(query) && query.some((candidate) => text(value) === text(candidate));
   if (value == null) return mode === "notEquals";
   switch (mode) {
-    case "contains": return text(value).includes(text(query));
-    case "startsWith": return text(value).startsWith(text(query));
-    case "endsWith": return text(value).endsWith(text(query));
-    case "equals": return text(value) === text(query);
-    case "notEquals": return text(value) !== text(query);
-    case "lt": return Number(value) < Number(query);
-    case "lte": return Number(value) <= Number(query);
-    case "gt": return Number(value) > Number(query);
-    case "gte": return Number(value) >= Number(query);
+    case "contains":
+      return text(value).includes(text(query));
+    case "startsWith":
+      return text(value).startsWith(text(query));
+    case "endsWith":
+      return text(value).endsWith(text(query));
+    case "equals":
+      return text(value) === text(query);
+    case "notEquals":
+      return text(value) !== text(query);
+    case "lt":
+      return Number(value) < Number(query);
+    case "lte":
+      return Number(value) <= Number(query);
+    case "gt":
+      return Number(value) > Number(query);
+    case "gte":
+      return Number(value) >= Number(query);
   }
 }
 
@@ -69,61 +98,112 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
           @if (side === 0 ? showSourceControls() : showTargetControls()) {
             <div [class]="cx('controls')">
               @for (direction of directions; track direction) {
-                <button type="button" [attr.data-move]="direction"
-                  [disabled]="disabled() || selected()[side].length === 0"
-                  (click)="move(side, direction)">Move {{ direction }}</button>
+                <button
+                  type="button"
+                  [attr.data-move]="direction"
+                  [disabled]="disabled() || !hasMovableSelection(side)"
+                  (click)="move(side, direction)"
+                >
+                  Move {{ direction }}
+                </button>
               }
             </div>
           }
           @if (filterBy() && (side === 0 ? showSourceFilter() : showTargetFilter())) {
-            <input type="text" role="searchbox"
+            <input
+              type="text"
+              role="searchbox"
               [attr.aria-label]="side === 0 ? 'Filter source' : 'Filter target'"
-              [value]="queries()[side]" [disabled]="disabled()"
-              (input)="setQuery(side, $any($event.target).value)" />
+              [value]="queries()[side]"
+              [disabled]="disabled()"
+              (input)="setQuery(side, $any($event.target).value)"
+            />
           }
           @if (dragdrop()) {
-            <ul cdkDropList [class]="cx('list')" [cdkDropListData]="side"
-              [cdkDropListDisabled]="disabled()" (cdkDropListDropped)="drop($event)"
-              role="listbox" aria-multiselectable="true"
-              [attr.aria-label]="side === 0 ? sourceHeader() : targetHeader()">
-              @for (entry of visibleEntries(side); track trackItem(entry.side, $index, entry.item)) {
+            <ul
+              cdkDropList
+              [class]="cx('list')"
+              [cdkDropListData]="side"
+              [cdkDropListDisabled]="disabled()"
+              (cdkDropListDropped)="drop($event)"
+              role="listbox"
+              aria-multiselectable="true"
+              [attr.aria-label]="side === 0 ? sourceHeader() : targetHeader()"
+            >
+              @for (
+                entry of visibleEntries(side);
+                track trackItem(entry.side, $index, entry.item)
+              ) {
                 @let item = entry.item;
-                <li cdkDrag [cdkDragData]="item"
+                <li
+                  cdkDrag
+                  [cdkDragData]="item"
                   [cdkDragDisabled]="disabled() || optionDisabled(side, item)"
                   [class]="isSelected(side, item) ? cx('itemSelected') : cx('listItem')"
-                  role="option" [attr.aria-disabled]="disabled() || optionDisabled(side, item)"
+                  role="option"
+                  [attr.aria-disabled]="disabled() || optionDisabled(side, item)"
                   [attr.aria-selected]="isSelected(side, item)"
                   [attr.tabindex]="disabled() || optionDisabled(side, item) ? -1 : 0"
                   (click)="select(side, item, $event)"
                   (keydown.enter)="select(side, item, $event)"
-                  (keydown.space)="$event.preventDefault(); select(side, item, $event)">
+                  (keydown.space)="$event.preventDefault(); select(side, item, $event)"
+                >
                   {{ label(item) }}
                 </li>
               }
             </ul>
           } @else {
             <div [class]="cx('list')">
-              <u-listbox [options]="visible(side)" [multiple]="true"
-                [ngModel]="listboxSelection()[side]" [ngModelOptions]="{ standalone: true }"
-                [optionLabel]="label" [optionValue]="identity"
+              <u-listbox
+                [options]="visible(side)"
+                [multiple]="true"
+                [ngModel]="listboxSelection()[side]"
+                [ngModelOptions]="{ standalone: true }"
+                [optionLabel]="label"
+                [optionValue]="identity"
                 [trackBy]="side === 0 ? sourceTrackBy() : targetTrackBy()"
                 [optionDisabled]="side === 0 ? sourceListboxDisabled : targetListboxDisabled"
                 [disabled]="disabled()"
                 [ariaLabel]="side === 0 ? sourceHeader() : targetHeader()"
-                (onChange)="fromListbox(side, $event)" />
+                (onChange)="fromListbox(side, $event)"
+              />
             </div>
           }
         </section>
       }
       <div [class]="cx('controls')">
-        <button type="button" data-pc-section="movetotargetbutton"
-          [disabled]="disabled() || !selected()[0].length" (click)="transfer(0, false)">To Target</button>
-        <button type="button" data-pc-section="movealltotargetbutton"
-          [disabled]="disabled() || !source().length" (click)="transfer(0, true)">All To Target</button>
-        <button type="button" data-pc-section="movetosourcebutton"
-          [disabled]="disabled() || !selected()[1].length" (click)="transfer(1, false)">To Source</button>
-        <button type="button" data-pc-section="movealltosourcebutton"
-          [disabled]="disabled() || !target().length" (click)="transfer(1, true)">All To Source</button>
+        <button
+          type="button"
+          data-pc-section="movetotargetbutton"
+          [disabled]="disabled() || !selected()[0].length"
+          (click)="transfer(0, false)"
+        >
+          To Target
+        </button>
+        <button
+          type="button"
+          data-pc-section="movealltotargetbutton"
+          [disabled]="disabled() || !source().length"
+          (click)="transfer(0, true)"
+        >
+          All To Target
+        </button>
+        <button
+          type="button"
+          data-pc-section="movetosourcebutton"
+          [disabled]="disabled() || !selected()[1].length"
+          (click)="transfer(1, false)"
+        >
+          To Source
+        </button>
+        <button
+          type="button"
+          data-pc-section="movealltosourcebutton"
+          [disabled]="disabled() || !target().length"
+          (click)="transfer(1, true)"
+        >
+          All To Source
+        </button>
       </div>
     </div>
   `,
@@ -153,13 +233,18 @@ export class UPickList extends UBaseComponent {
   targetOptionDisabled = input<string | ((item: unknown) => boolean)>();
   sourceStyle = input<Record<string, string | number>>({});
   targetStyle = input<Record<string, string | number>>({});
-  sourceTrackBy = input<(index: number, item: unknown) => unknown>((_index, item) => this.identity(item) ?? item);
-  targetTrackBy = input<(index: number, item: unknown) => unknown>((_index, item) => this.identity(item) ?? item);
+  sourceTrackBy = input<(index: number, item: unknown) => unknown>(
+    (_index, item) => this.identity(item) ?? item
+  );
+  targetTrackBy = input<(index: number, item: unknown) => unknown>(
+    (_index, item) => this.identity(item) ?? item
+  );
   breakpoint = input("960px");
 
   protected readonly rootId = `u-pick-list-${++nextPickListId}`;
-  protected readonly responsiveStyle = computed(() =>
-    `@media (max-width: ${this.breakpoint()}) { #${this.rootId} { grid-template-columns: minmax(0, 1fr); } #${this.rootId} > * { grid-column: 1; grid-row: auto; } }`
+  protected readonly responsiveStyle = computed(
+    () =>
+      `@media (max-width: ${this.breakpoint()}) { #${this.rootId} { grid-template-columns: minmax(0, 1fr); } #${this.rootId} > * { grid-column: 1; grid-row: auto; } }`
   );
   protected readonly sides = [0, 1] as const;
   protected readonly directions = ["up", "top", "down", "bottom"] as const;
@@ -185,15 +270,28 @@ export class UPickList extends UBaseComponent {
   }
   protected optionDisabled(side: number, item: unknown): boolean {
     const accessor = side === 0 ? this.sourceOptionDisabled() : this.targetOptionDisabled();
-    return typeof accessor === "function" ? accessor(item)
-      : accessor ? Boolean(field(item, accessor)) : false;
+    return typeof accessor === "function"
+      ? accessor(item)
+      : accessor
+        ? Boolean(field(item, accessor))
+        : false;
   }
   protected visible(side: number): unknown[] {
     const gate = side === 0 ? this.showSourceFilter() : this.showTargetFilter();
-    return !this.filterBy() || !gate ? this.items(side)
-      : this.items(side).filter((item) => this.filterBy().split(",").some((key) =>
-          matches(field(item, key.trim()), this.queries()[side], this.filterMatchMode(), this.filterLocale())
-        ));
+    return !this.filterBy() || !gate
+      ? this.items(side)
+      : this.items(side).filter((item) =>
+          this.filterBy()
+            .split(",")
+            .some((key) =>
+              matches(
+                field(item, key.trim()),
+                this.queries()[side],
+                this.filterMatchMode(),
+                this.filterLocale()
+              )
+            )
+        );
   }
   protected visibleEntries(side: 0 | 1): { side: 0 | 1; item: unknown }[] {
     return this.visible(side).map((item) => ({ side, item }));
@@ -206,12 +304,19 @@ export class UPickList extends UBaseComponent {
   protected isSelected(side: number, item: unknown): boolean {
     return this.selected()[side].includes(this.identity(item));
   }
+  protected hasMovableSelection(side: number): boolean {
+    return this.items(side).some(
+      (item) => this.isSelected(side, item) && !this.optionDisabled(side, item)
+    );
+  }
   protected select(side: number, item: unknown, event: Event): void {
     if (this.disabled() || this.optionDisabled(side, item)) return;
     const next: [unknown[], unknown[]] = [...this.selected()];
     const current = next[side];
     const key = this.identity(item);
-    const toggled = current.includes(key) ? current.filter((value) => value !== key) : [...current, key];
+    const toggled = current.includes(key)
+      ? current.filter((value) => value !== key)
+      : [...current, key];
     next[side] = this.normalizeSelection(toggled, current, event);
     this.selected.set(next);
   }
@@ -238,31 +343,44 @@ export class UPickList extends UBaseComponent {
     (side === 0 ? this.sourceChange : this.targetChange).emit(value);
   }
   protected move(side: number, direction: "up" | "top" | "down" | "bottom"): void {
-    if (this.disabled()) return;
+    if (this.disabled() || !this.hasMovableSelection(side)) return;
     const next = [...this.items(side)];
+    let movable = next.filter((item) => !this.optionDisabled(side, item));
     if (direction === "top" || direction === "bottom") {
-      const chosen = next.filter((item) => this.isSelected(side, item));
-      const rest = next.filter((item) => !this.isSelected(side, item));
-      this.emit(side, direction === "top" ? [...chosen, ...rest] : [...rest, ...chosen]);
-      return;
-    }
-    const delta = direction === "up" ? -1 : 1;
-    const indexes = next.map((_, index) => index);
-    if (delta === 1) indexes.reverse();
-    for (const index of indexes) {
-      const to = index + delta;
-      if (to >= 0 && to < next.length && this.isSelected(side, next[index]) && !this.isSelected(side, next[to])) {
-        moveItemInArray(next, index, to);
+      const chosen = movable.filter((item) => this.isSelected(side, item));
+      const rest = movable.filter((item) => !this.isSelected(side, item));
+      movable = direction === "top" ? [...chosen, ...rest] : [...rest, ...chosen];
+    } else {
+      const delta = direction === "up" ? -1 : 1;
+      const indexes = movable.map((_, index) => index);
+      if (delta === 1) indexes.reverse();
+      for (const index of indexes) {
+        const to = index + delta;
+        if (
+          to >= 0 &&
+          to < movable.length &&
+          this.isSelected(side, movable[index]) &&
+          !this.isSelected(side, movable[to])
+        ) {
+          moveItemInArray(movable, index, to);
+        }
       }
     }
-    this.emit(side, next);
+    let movableIndex = 0;
+    this.emit(
+      side,
+      next.map((item) => (this.optionDisabled(side, item) ? item : movable[movableIndex++]))
+    );
   }
   protected transfer(side: number, all: boolean): void {
     if (this.disabled()) return;
-    const chosen = this.items(side).filter((item) =>
-      !this.optionDisabled(side, item) && (all || this.isSelected(side, item))
+    const chosen = this.items(side).filter(
+      (item) => !this.optionDisabled(side, item) && (all || this.isSelected(side, item))
     );
-    this.emit(side, this.items(side).filter((item) => !chosen.includes(item)));
+    this.emit(
+      side,
+      this.items(side).filter((item) => !chosen.includes(item))
+    );
     this.emit(1 - side, [...this.items(1 - side), ...chosen]);
     this.selected.set([[], []]);
     this.listboxSelection.set([[], []]);
@@ -293,7 +411,10 @@ export class UPickList extends UBaseComponent {
   }
 
   private styleEl?: HTMLStyleElement;
-  constructor(private readonly elementRef: ElementRef<HTMLElement>, private readonly styleRenderer: Renderer2) {
+  constructor(
+    private readonly elementRef: ElementRef<HTMLElement>,
+    private readonly styleRenderer: Renderer2
+  ) {
     super();
     effect(() => {
       const style = this.responsiveStyle();
