@@ -60,6 +60,7 @@ export * from "./split-button";
 export * from "./paginator";
 export * from "./scroller";
 export * from "./data-scroller";
+export * from "./data-view";
 export * from "./table";
 export * from "./chip";
 export * from "./divider";

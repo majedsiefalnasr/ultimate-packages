@@ -234,6 +234,36 @@
     "modificationDescription": "Ultimate-authored OrderList barrel re-export."
   },
   {
+    "originalPath": "components/lib/dataview/DataView.js",
+    "ultimateDestination": "packages/react/src/data-view/data-view.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeReact 10.9.9 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/data-view/data-view-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/data-view/data-view.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/data-view/data-view.stories.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/data-view/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
     "originalPath": "components/lib/picklist/PickList.js",
     "ultimateDestination": "packages/react/src/pick-list/pick-list.tsx",
     "modificationStatus": "reimplemented-with-reference",
