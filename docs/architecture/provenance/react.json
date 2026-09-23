@@ -292,5 +292,35 @@
     "ultimateDestination": "packages/react/src/pick-list/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored PickList barrel re-export."
+  },
+  {
+    "originalPath": "components/lib/organizationchart/OrganizationChart.js",
+    "ultimateDestination": "packages/react/src/organization-chart/organization-chart.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Batch 3 framework-native OrganizationChart; behavior referenced from the pinned PrimeReact 10.9.9 source; disclosed cuts remain excluded."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/organization-chart/organization-chart-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/organization-chart/organization-chart.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/organization-chart/organization-chart.stories.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/organization-chart/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
   }
 ]

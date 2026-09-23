@@ -23,6 +23,7 @@ export * from "./multi-select";
 export * from "./cascade-select";
 export * from "./listbox";
 export * from "./order-list";
+export * from "./organization-chart";
 export * from "./pick-list";
 export * from "./select-button";
 export * from "./rating";
