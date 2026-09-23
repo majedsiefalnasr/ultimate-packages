@@ -175,7 +175,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
         <button
           type="button"
           data-pc-section="movetotargetbutton"
-          [disabled]="disabled() || !selected()[0].length"
+          [disabled]="disabled() || !hasMovableSelection(0)"
           (click)="transfer(0, false)"
         >
           To Target
@@ -183,7 +183,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
         <button
           type="button"
           data-pc-section="movealltotargetbutton"
-          [disabled]="disabled() || !source().length"
+          [disabled]="disabled() || !hasTransferableItems(0)"
           (click)="transfer(0, true)"
         >
           All To Target
@@ -191,7 +191,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
         <button
           type="button"
           data-pc-section="movetosourcebutton"
-          [disabled]="disabled() || !selected()[1].length"
+          [disabled]="disabled() || !hasMovableSelection(1)"
           (click)="transfer(1, false)"
         >
           To Source
@@ -199,7 +199,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
         <button
           type="button"
           data-pc-section="movealltosourcebutton"
-          [disabled]="disabled() || !target().length"
+          [disabled]="disabled() || !hasTransferableItems(1)"
           (click)="transfer(1, true)"
         >
           All To Source
@@ -309,6 +309,9 @@ export class UPickList extends UBaseComponent {
       (item) => this.isSelected(side, item) && !this.optionDisabled(side, item)
     );
   }
+  protected hasTransferableItems(side: number): boolean {
+    return this.items(side).some((item) => !this.optionDisabled(side, item));
+  }
   protected select(side: number, item: unknown, event: Event): void {
     if (this.disabled() || this.optionDisabled(side, item)) return;
     const next: [unknown[], unknown[]] = [...this.selected()];
@@ -377,6 +380,7 @@ export class UPickList extends UBaseComponent {
     const chosen = this.items(side).filter(
       (item) => !this.optionDisabled(side, item) && (all || this.isSelected(side, item))
     );
+    if (chosen.length === 0) return;
     this.emit(
       side,
       this.items(side).filter((item) => !chosen.includes(item))

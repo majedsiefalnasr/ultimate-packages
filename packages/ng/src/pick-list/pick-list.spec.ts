@@ -314,7 +314,7 @@ describe("UPickList", () => {
   );
 
   it.each([0, 1])(
-    "keeps newly disabled option on side %s out of transfer and CDK reorder",
+    "disables selected transfer and preserves selection when its only candidate becomes disabled on side %s",
     (side) => {
       const blocked = side === 0 ? "B" : "Y";
       const optionDisabled = side === 0 ? "sourceOptionDisabled" : "targetOptionDisabled";
@@ -327,40 +327,111 @@ describe("UPickList", () => {
       baseline.fixture.detectChanges();
       baseline.fixture.componentRef.setInput(optionDisabled, (item: unknown) => item === blocked);
       baseline.fixture.detectChanges();
-      baseline.fixture.nativeElement
-        .querySelector(
-          '[data-pc-section="' + (side === 0 ? "movetotargetbutton" : "movetosourcebutton") + '"]'
-        )
-        .click();
-      expect(baseline.change).toHaveBeenLastCalledWith(["A", "B", "C", "D"]);
-      expect(baseline.targetChange).toHaveBeenLastCalledWith(["X", "Y", "Z", "W"]);
-
-      const drag = setup(true);
-      drag.fixture.nativeElement
-        .querySelectorAll(
-          '[data-pc-section="' + (side === 0 ? "sourcelist" : "targetlist") + '"] [role="option"]'
-        )[1]
-        .click();
-      drag.fixture.detectChanges();
-      drag.fixture.componentRef.setInput(optionDisabled, (item: unknown) => item === blocked);
-      drag.fixture.detectChanges();
-      const listElement = drag.fixture.debugElement.queryAll(By.directive(CdkDropList))[side];
-      const container = listElement.injector.get(CdkDropList);
-      const item = listElement.queryAll(By.directive(CdkDrag))[1].injector.get(CdkDrag);
-      expect(item.disabled).toBe(true);
-      listElement.triggerEventHandler("cdkDropListDropped", {
-        previousIndex: 1,
-        currentIndex: 0,
-        item,
-        container,
-        previousContainer: container,
-        isPointerOverContainer: true,
-        distance: { x: 0, y: -20 },
-        dropPoint: { x: 0, y: 0 },
-        event: new MouseEvent("mouseup"),
-      });
-      expect(drag.change).not.toHaveBeenCalled();
-      expect(drag.targetChange).not.toHaveBeenCalled();
+      const transferButton = baseline.fixture.nativeElement.querySelector(
+        '[data-pc-section="' + (side === 0 ? "movetotargetbutton" : "movetosourcebutton") + '"]'
+      ) as HTMLButtonElement;
+      (
+        baseline.fixture.componentInstance as unknown as {
+          transfer: (side: number, all: boolean) => void;
+        }
+      ).transfer(side, false);
+      expect(baseline.change).not.toHaveBeenCalled();
+      expect(baseline.targetChange).not.toHaveBeenCalled();
+      expect(transferButton.disabled).toBe(true);
+      baseline.fixture.componentRef.setInput(optionDisabled, () => false);
+      baseline.fixture.detectChanges();
+      expect(transferButton.disabled).toBe(false);
+      transferButton.click();
+      expect(side === 0 ? baseline.change : baseline.targetChange).toHaveBeenCalledTimes(1);
     }
   );
+
+  it.each([0, 1])("disables all transfer when every item on side %s is disabled", (side) => {
+    const { fixture, change, targetChange } = setup();
+    const optionDisabled = side === 0 ? "sourceOptionDisabled" : "targetOptionDisabled";
+    fixture.componentRef.setInput(optionDisabled, () => true);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector(
+      '[data-pc-section="' + (side === 0 ? "movealltotargetbutton" : "movealltosourcebutton") + '"]'
+    ) as HTMLButtonElement;
+    (
+      fixture.componentInstance as unknown as { transfer: (side: number, all: boolean) => void }
+    ).transfer(side, true);
+    expect(change).not.toHaveBeenCalled();
+    expect(targetChange).not.toHaveBeenCalled();
+    expect(button.disabled).toBe(true);
+  });
+
+  it.each([
+    [0, false],
+    [0, true],
+    [1, false],
+    [1, true],
+  ])("transfers eligible items from mixed side %s with all=%s", (side, all) => {
+    const { fixture, change, targetChange } = setup();
+    const section = side === 0 ? "sourcelist" : "targetlist";
+    const optionDisabled = side === 0 ? "sourceOptionDisabled" : "targetOptionDisabled";
+    const blocked = side === 0 ? "B" : "Y";
+    const options = fixture.nativeElement.querySelectorAll(
+      '[data-pc-section="' + section + '"] [role="option"]'
+    );
+    options[1].click();
+    options[2].click();
+    fixture.detectChanges();
+    fixture.componentRef.setInput(optionDisabled, (item: unknown) => item === blocked);
+    fixture.detectChanges();
+    const selectedButton = fixture.nativeElement.querySelector(
+      '[data-pc-section="' + (side === 0 ? "movetotargetbutton" : "movetosourcebutton") + '"]'
+    ) as HTMLButtonElement;
+    const allButton = fixture.nativeElement.querySelector(
+      '[data-pc-section="' + (side === 0 ? "movealltotargetbutton" : "movealltosourcebutton") + '"]'
+    ) as HTMLButtonElement;
+    expect(selectedButton.disabled).toBe(false);
+    expect(allButton.disabled).toBe(false);
+    (all ? allButton : selectedButton).click();
+    expect(side === 0 ? change : targetChange).toHaveBeenLastCalledWith(
+      side === 0 ? (all ? ["B"] : ["A", "B", "D"]) : all ? ["Y"] : ["X", "Y", "W"]
+    );
+    expect(side === 0 ? targetChange : change).toHaveBeenLastCalledWith(
+      side === 0
+        ? all
+          ? ["X", "Y", "Z", "W", "A", "C", "D"]
+          : ["X", "Y", "Z", "W", "C"]
+        : all
+          ? ["A", "B", "C", "D", "X", "Z", "W"]
+          : ["A", "B", "C", "D", "Z"]
+    );
+  });
+
+  it.each([0, 1])("keeps newly disabled option on side %s out of CDK reorder", (side) => {
+    const blocked = side === 0 ? "B" : "Y";
+    const optionDisabled = side === 0 ? "sourceOptionDisabled" : "targetOptionDisabled";
+
+    const drag = setup(true);
+    drag.fixture.nativeElement
+      .querySelectorAll(
+        '[data-pc-section="' + (side === 0 ? "sourcelist" : "targetlist") + '"] [role="option"]'
+      )[1]
+      .click();
+    drag.fixture.detectChanges();
+    drag.fixture.componentRef.setInput(optionDisabled, (item: unknown) => item === blocked);
+    drag.fixture.detectChanges();
+    const listElement = drag.fixture.debugElement.queryAll(By.directive(CdkDropList))[side];
+    const container = listElement.injector.get(CdkDropList);
+    const item = listElement.queryAll(By.directive(CdkDrag))[1].injector.get(CdkDrag);
+    expect(item.disabled).toBe(true);
+    listElement.triggerEventHandler("cdkDropListDropped", {
+      previousIndex: 1,
+      currentIndex: 0,
+      item,
+      container,
+      previousContainer: container,
+      isPointerOverContainer: true,
+      distance: { x: 0, y: -20 },
+      dropPoint: { x: 0, y: 0 },
+      event: new MouseEvent("mouseup"),
+    });
+    expect(drag.change).not.toHaveBeenCalled();
+    expect(drag.targetChange).not.toHaveBeenCalled();
+  });
 });
