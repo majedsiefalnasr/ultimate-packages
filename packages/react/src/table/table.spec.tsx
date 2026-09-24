@@ -395,6 +395,63 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
     expect(cells[0].textContent?.trim()).toBe("Bob");
   });
 
+  it("matchMode: notContains passes through (matches everything) when the filter value is absent or empty", () => {
+    const { container, rerender } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: undefined, matchMode: "notContains" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+
+    rerender(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "", matchMode: "notContains" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: startsWith, case-insensitively", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Alison" },
+          { id: 3, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "ALI", matchMode: "startsWith" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: equals, case-insensitively", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Alison" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "alice", matchMode: "equals" } }}
+      />
+    );
+    const cells = container.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Alice");
+  });
+
   it("applies matchMode: endsWith, case-insensitively", () => {
     const { container } = render(
       <UTable
