@@ -95,13 +95,80 @@ function compareValues(a: unknown, b: unknown): number {
  * scope; all other `FilterMatchMode` values are deferred.
  */
 function matchesFilter<T>(row: T, field: string, filter: FilterMetadata): boolean {
-  const cellValue = String(resolveCell(row, field) ?? "").toLowerCase();
-  const filterValue = String(filter.value ?? "").toLowerCase();
+  const rawCellValue = resolveCell(row, field);
+  const rawFilterValue = filter.value;
+  const cellValue = String(rawCellValue ?? "").toLowerCase();
+  const filterValue = String(rawFilterValue ?? "").toLowerCase();
 
   switch (filter.matchMode) {
     case "contains":
       return cellValue.includes(filterValue);
-    // NEEDS IMPLEMENTATION-TIME VERIFICATION: startsWith, notContains, endsWith, equals, notEquals, lt, lte, gt, gte, between, in, notIn, dateIs, dateIsNot, dateBefore, dateAfter, custom
+    case "startsWith":
+      return cellValue.startsWith(filterValue);
+    case "notContains":
+      return !cellValue.includes(filterValue);
+    case "endsWith":
+      return cellValue.endsWith(filterValue);
+    case "equals":
+      return cellValue === filterValue;
+    case "notEquals":
+      // Real PrimeReact FilterService.js: absent (undefined/null) OR an
+      // empty/whitespace-only string filter value => true (matches
+      // everything) — the opposite outcome from Angular's/Vue's real source
+      // for the identical condition.
+      if (rawFilterValue === undefined || rawFilterValue === null || (typeof rawFilterValue === "string" && rawFilterValue.trim() === "")) return true;
+      return cellValue !== filterValue;
+    case "lt":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return (rawCellValue as number | Date) < (rawFilterValue as number | Date);
+    case "lte":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return (rawCellValue as number | Date) <= (rawFilterValue as number | Date);
+    case "gt":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return (rawCellValue as number | Date) > (rawFilterValue as number | Date);
+    case "gte":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return (rawCellValue as number | Date) >= (rawFilterValue as number | Date);
+    case "between": {
+      const range = rawFilterValue as [unknown, unknown] | null | undefined;
+      if (range == null || range[0] == null || range[1] == null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      const low = range[0] as number | Date;
+      const high = range[1] as number | Date;
+      return low <= (rawCellValue as number | Date) && (rawCellValue as number | Date) <= high;
+    }
+    case "in": {
+      const options = rawFilterValue as unknown[] | null | undefined;
+      if (options == null || options.length === 0) return true;
+      return options.some((option) => equals(rawCellValue, option));
+    }
+    case "notIn": {
+      const options = rawFilterValue as unknown[] | null | undefined;
+      if (options == null || options.length === 0) return true;
+      return !options.some((option) => equals(rawCellValue, option));
+    }
+    case "dateIs":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return (rawCellValue as Date).toDateString() === (rawFilterValue as Date).toDateString();
+    case "dateIsNot":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return (rawCellValue as Date).toDateString() !== (rawFilterValue as Date).toDateString();
+    case "dateBefore":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return (rawCellValue as Date).getTime() < (rawFilterValue as Date).getTime();
+    case "dateAfter":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return (rawCellValue as Date).getTime() > (rawFilterValue as Date).getTime();
+    // NEEDS IMPLEMENTATION-TIME VERIFICATION: custom (Task 5)
     default:
       return true;
   }
