@@ -184,6 +184,332 @@ describe("filtering (Angular array-of-alternatives operator shape, spec §9 — 
   });
 });
 
+describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filter-vocabulary-design.md)", () => {
+  // Explicit mode-coverage checklist for this framework — each of the 14
+  // comparator modes must appear as a literal matchMode string in at least
+  // one assertion below: notContains, endsWith, notEquals, lt, lte, gt,
+  // gte, between, in, notIn, dateIs, dateIsNot, dateBefore, dateAfter.
+  interface NumRow {
+    id: number;
+    score: number;
+  }
+  interface DateRow {
+    id: number;
+    when: Date;
+  }
+
+  it("applies matchMode: notContains", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "ali", matchMode: "notContains" } });
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Bob");
+  });
+
+  it("applies matchMode: notContains case-insensitively, matching contains' precedent", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "ALI", matchMode: "notContains" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("matchMode: notContains passes through (matches everything) when the filter value is absent or empty", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: undefined, matchMode: "notContains" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+
+    fixture.componentRef.setInput("filters", { name: { value: "", matchMode: "notContains" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: endsWith", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "ce", matchMode: "endsWith" } });
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Alice");
+  });
+
+  it("applies matchMode: endsWith case-insensitively, matching startsWith's precedent", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "CE", matchMode: "endsWith" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
+  });
+
+  it("applies matchMode: notEquals, and an absent OR empty-string filter value does not match (Angular's verified real default)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "Alice", matchMode: "notEquals" } });
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Bob");
+
+    // Real PrimeNG filterservice.ts's own notEquals: filter === undefined ||
+    // filter === null || (typeof filter === 'string' && filter.trim() === '')
+    // => false (does not match). Both undefined and '' hit this branch.
+    fixture.componentRef.setInput("filters", { name: { value: undefined, matchMode: "notEquals" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+
+    fixture.componentRef.setInput("filters", { name: { value: "", matchMode: "notEquals" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("applies matchMode: notEquals with a whitespace-only filter value (treats as absent)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "   ", matchMode: "notEquals" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("applies matchMode: lt", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: 20, matchMode: "lt" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
+  });
+
+  it("applies matchMode: lte", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: 20, matchMode: "lte" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: gt", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: 20, matchMode: "gt" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
+  });
+
+  it("applies matchMode: gte", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: 20, matchMode: "gte" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("lt/lte/gt/gte pass through (match everything) when the filter value itself is absent", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: undefined, matchMode: "lt" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(3);
+  });
+
+  it("applies matchMode: between, inclusive on both bounds", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: [10, 20], matchMode: "between" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("matchMode: between with an inverted range (low > high) matches nothing, not a throw", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: [30, 10], matchMode: "between" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("matchMode: between with a null bound passes through (matches everything)", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: [null, null], matchMode: "between" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(3);
+  });
+
+  it("applies matchMode: in, using equals-based membership, including a null filter-array entry", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: [10, 30, null], matchMode: "in" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: notIn, using equals-based membership, including a null filter-array entry", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: [10, 30, null], matchMode: "notIn" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
+  });
+
+  it("in/notIn pass through (match everything) when the filter array is empty", () => {
+    const fixture = TestBed.createComponent(UTable<NumRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: [], matchMode: "in" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(3);
+  });
+
+  it("applies matchMode: dateIs (day-level), no string coercion", () => {
+    const fixture = TestBed.createComponent(UTable<DateRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, when: new Date(2026, 0, 1, 9, 0) },
+      { id: 2, when: new Date(2026, 0, 1, 15, 0) },
+      { id: 3, when: new Date(2026, 0, 2, 9, 0) },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "when", header: "When" }]);
+    fixture.componentRef.setInput("filters", {
+      when: { value: new Date(2026, 0, 1), matchMode: "dateIs" },
+    });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: dateIsNot (day-level)", () => {
+    const fixture = TestBed.createComponent(UTable<DateRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, when: new Date(2026, 0, 1, 9, 0) },
+      { id: 2, when: new Date(2026, 0, 1, 15, 0) },
+      { id: 3, when: new Date(2026, 0, 2, 9, 0) },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "when", header: "When" }]);
+    fixture.componentRef.setInput("filters", {
+      when: { value: new Date(2026, 0, 1), matchMode: "dateIsNot" },
+    });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
+  });
+
+  it("applies matchMode: dateBefore (time-precise)", () => {
+    const fixture = TestBed.createComponent(UTable<DateRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, when: new Date(2026, 0, 1, 9, 0) },
+      { id: 2, when: new Date(2026, 0, 1, 15, 0) },
+      { id: 3, when: new Date(2026, 0, 2, 9, 0) },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "when", header: "When" }]);
+    fixture.componentRef.setInput("filters", {
+      when: { value: new Date(2026, 0, 1, 12, 0), matchMode: "dateBefore" },
+    });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
+  });
+
+  it("applies matchMode: dateAfter (time-precise)", () => {
+    const fixture = TestBed.createComponent(UTable<DateRow>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, when: new Date(2026, 0, 1, 9, 0) },
+      { id: 2, when: new Date(2026, 0, 1, 15, 0) },
+      { id: 3, when: new Date(2026, 0, 2, 9, 0) },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "when", header: "When" }]);
+    fixture.componentRef.setInput("filters", {
+      when: { value: new Date(2026, 0, 1, 12, 0), matchMode: "dateAfter" },
+    });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("a row with an undefined field value fails lt/lte/gt/gte/between once a real filter value is present", () => {
+    const fixture = TestBed.createComponent(UTable<Partial<NumRow> & { id: number }>);
+    fixture.componentRef.setInput("value", [{ id: 1 }, { id: 2, score: 20 }]);
+    fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
+    fixture.componentRef.setInput("filters", { score: { value: 10, matchMode: "gt" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
+  });
+});
+
 describe("selection", () => {
   it("emits selectionChange with the clicked row in single mode", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -502,5 +828,122 @@ describe("real child-component composition (regression guard, Task 24)", () => {
     } finally {
       vi.unstubAllGlobals();
     }
+  });
+});
+
+describe("filtering — custom mode, Angular registration contract (Spec §3.4.1)", () => {
+  it("dispatches a predicate registered under the reserved 'custom' key", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const instance = fixture.componentInstance;
+    instance.registerCustomFilter((value) => typeof value === "string" && value.length > 3);
+
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Al" },
+      { id: 2, name: "Alice" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixture.detectChanges();
+
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Alice");
+  });
+
+  it("passes all three callback arguments (value, filter, filterLocale) to the registered predicate, with filterLocale explicitly undefined (no real locale source exists in Table's current data flow)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const instance = fixture.componentInstance;
+    const spy = vi.fn(() => true);
+    instance.registerCustomFilter(spy);
+
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "needle", matchMode: "custom" } });
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith("Alice", "needle", undefined);
+    expect(spy.mock.calls[0].length).toBe(3);
+  });
+
+  it("an unregistered custom mode matches no rows (false, not the unhandled-mode pass-through)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("a second registration under 'custom' replaces the first (duplicate-registration behavior)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const instance = fixture.componentInstance;
+    instance.registerCustomFilter(() => true);
+    instance.registerCustomFilter(() => false);
+
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("a predicate registered on one UTable instance is not reachable from a second, unrelated instance", () => {
+    const fixtureA = TestBed.createComponent(UTable<Row>);
+    fixtureA.componentInstance.registerCustomFilter(() => true);
+
+    const fixtureB = TestBed.createComponent(UTable<Row>);
+    fixtureB.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixtureB.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixtureB.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixtureB.detectChanges();
+
+    // Instance B never registered a predicate — its own 'custom' mode
+    // must resolve to false, unaffected by instance A's registration.
+    expect(fixtureB.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("a throwing registered predicate's error is not silently swallowed", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentInstance.registerCustomFilter(() => {
+      throw new Error("predicate boom");
+    });
+
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+
+    expect(() => fixture.detectChanges()).toThrow("predicate boom");
+  });
+
+  it("registering a predicate AFTER the first change-detection pass still triggers reactivity under OnPush (no stale render)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Al" },
+      { id: 2, name: "Alice" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixture.detectChanges();
+
+    // Before registration: 'custom' is unregistered, so no rows match.
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+
+    // Register only now, after the component's first render — the realistic
+    // case, since a component reference is only obtainable via
+    // viewChild/@ViewChild, which resolves after first render.
+    fixture.componentInstance.registerCustomFilter(
+      (value) => typeof value === "string" && value.length > 3,
+    );
+    fixture.detectChanges();
+
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Alice");
   });
 });

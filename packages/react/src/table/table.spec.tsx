@@ -363,6 +363,363 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   });
 });
 
+describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filter-vocabulary-design.md)", () => {
+  // Explicit mode-coverage checklist for this framework — each of the 14
+  // comparator modes must appear as a literal matchMode string in at least
+  // one assertion below: notContains, endsWith, notEquals, lt, lte, gt,
+  // gte, between, in, notIn, dateIs, dateIsNot, dateBefore, dateAfter.
+  interface NumRow {
+    id: number;
+    score: number;
+  }
+  interface DateRow {
+    id: number;
+    when: Date;
+  }
+
+  afterEach(cleanup);
+
+  it("applies matchMode: notContains, case-insensitively", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "ALI", matchMode: "notContains" } }}
+      />
+    );
+    const cells = container.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Bob");
+  });
+
+  it("matchMode: notContains passes through (matches everything) when the filter value is absent or empty", () => {
+    const { container, rerender } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: undefined, matchMode: "notContains" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+
+    rerender(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "", matchMode: "notContains" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: startsWith, case-insensitively", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Alison" },
+          { id: 3, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "ALI", matchMode: "startsWith" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: equals, case-insensitively", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Alison" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "alice", matchMode: "equals" } }}
+      />
+    );
+    const cells = container.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Alice");
+  });
+
+  it("applies matchMode: endsWith, case-insensitively", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "CE", matchMode: "endsWith" } }}
+      />
+    );
+    const cells = container.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Alice");
+  });
+
+  it("applies matchMode: notEquals, and an absent OR empty-string filter value matches (React's verified real default — the opposite of Angular/Vue)", () => {
+    const { container, rerender } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "Alice", matchMode: "notEquals" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(1);
+
+    // Real PrimeReact FilterService.js's own notEquals: filter === undefined
+    // || filter === null || (typeof filter === 'string' && filter.trim() ===
+    // '') => true (matches everything). Both undefined and '' hit this branch.
+    rerender(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: undefined, matchMode: "notEquals" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+
+    rerender(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "", matchMode: "notEquals" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: lt/lte/gt/gte", () => {
+    const rows: NumRow[] = [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ];
+    const { container, rerender } = render(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: 20, matchMode: "lt" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(1);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: 20, matchMode: "lte" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: 20, matchMode: "gt" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(1);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: 20, matchMode: "gte" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("lt passes through (matches everything) when the filter value itself is absent", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, score: 10 },
+          { id: 2, score: 20 },
+          { id: 3, score: 30 },
+        ]}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: undefined, matchMode: "lt" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(3);
+  });
+
+  it("applies matchMode: between, inclusive bounds, inverted range matches nothing, null bound passes through", () => {
+    const rows: NumRow[] = [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ];
+    const { container, rerender } = render(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: [10, 20], matchMode: "between" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: [30, 10], matchMode: "between" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(0);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: [null, null], matchMode: "between" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(3);
+  });
+
+  it("applies matchMode: in/notIn using equals-based membership, including a null filter-array entry; empty array passes through", () => {
+    const rows: NumRow[] = [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ];
+    const { container, rerender } = render(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: [10, 30, null], matchMode: "in" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: [10, 30, null], matchMode: "notIn" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(1);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: [], matchMode: "in" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(3);
+  });
+
+  it("applies date matchModes: dateIs/dateIsNot (day-level) and dateBefore/dateAfter (time-precise), no string coercion", () => {
+    const rows: DateRow[] = [
+      { id: 1, when: new Date(2026, 0, 1, 9, 0) },
+      { id: 2, when: new Date(2026, 0, 1, 15, 0) },
+      { id: 3, when: new Date(2026, 0, 2, 9, 0) },
+    ];
+    const { container, rerender } = render(
+      <UTable
+        value={rows}
+        columns={[{ field: "when", header: "When" }]}
+        filters={{ when: { value: new Date(2026, 0, 1), matchMode: "dateIs" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "when", header: "When" }]}
+        filters={{ when: { value: new Date(2026, 0, 1), matchMode: "dateIsNot" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(1);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "when", header: "When" }]}
+        filters={{ when: { value: new Date(2026, 0, 1, 12, 0), matchMode: "dateBefore" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(1);
+
+    rerender(
+      <UTable
+        value={rows}
+        columns={[{ field: "when", header: "When" }]}
+        filters={{ when: { value: new Date(2026, 0, 1, 12, 0), matchMode: "dateAfter" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+  });
+
+  it("a row with an undefined field value fails gt once a real filter value is present", () => {
+    const { container } = render(
+      <UTable
+        value={[{ id: 1 }, { id: 2, score: 20 }] as (Partial<NumRow> & { id: number })[]}
+        columns={[{ field: "score", header: "Score" }]}
+        filters={{ score: { value: 10, matchMode: "gt" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(1);
+  });
+
+  it("a whitespace-only string filter value on notEquals matches everything (React's verified real default)", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "   ", matchMode: "notEquals" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(2);
+  });
+});
+
+describe("filtering — custom mode, React (Spec §3.4.2: no executable registration path)", () => {
+  it("a custom matchMode matches no rows, with no public prop able to change that outcome", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "anything", matchMode: "custom" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(0);
+  });
+});
+
 describe("package export", () => {
   it("is exported from its own subpath index", () => {
     expect(SubpathExport).toBe(UTable);
