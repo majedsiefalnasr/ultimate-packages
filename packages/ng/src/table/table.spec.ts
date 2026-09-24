@@ -221,6 +221,22 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
     expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
   });
 
+  it("matchMode: notContains passes through (matches everything) when the filter value is absent or empty", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: undefined, matchMode: "notContains" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+
+    fixture.componentRef.setInput("filters", { name: { value: "", matchMode: "notContains" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
+  });
+
   it("applies matchMode: endsWith", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
     fixture.componentRef.setInput("value", [
@@ -903,5 +919,31 @@ describe("filtering — custom mode, Angular registration contract (Spec §3.4.1
     fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
 
     expect(() => fixture.detectChanges()).toThrow("predicate boom");
+  });
+
+  it("registering a predicate AFTER the first change-detection pass still triggers reactivity under OnPush (no stale render)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Al" },
+      { id: 2, name: "Alice" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixture.detectChanges();
+
+    // Before registration: 'custom' is unregistered, so no rows match.
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+
+    // Register only now, after the component's first render — the realistic
+    // case, since a component reference is only obtainable via
+    // viewChild/@ViewChild, which resolves after first render.
+    fixture.componentInstance.registerCustomFilter(
+      (value) => typeof value === "string" && value.length > 3,
+    );
+    fixture.detectChanges();
+
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Alice");
   });
 });

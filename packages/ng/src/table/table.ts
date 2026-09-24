@@ -155,7 +155,20 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
   rowGroupMode = input<"subheader" | "rowspan">();
   groupRowsBy = input<string>();
 
-  private customFilterPredicate?: (value: unknown, filter: unknown, filterLocale?: string) => boolean;
+  /**
+   * A signal (not a plain field) so `matchesFilter`'s read of it inside the
+   * `custom` case — reached via `filteredValue`'s template-bound getter —
+   * marks this `OnPush` view dirty when `registerCustomFilter` mutates it.
+   * Without this, a predicate registered after the component's first render
+   * (the realistic case: a component reference is only obtainable via
+   * viewChild/@ViewChild, which resolves after first render) would leave a
+   * table already rendered with `custom` filters stuck showing the stale
+   * (empty) predicate result until some unrelated input change happened to
+   * trigger change detection.
+   */
+  private readonly customFilterPredicate = signal<
+    ((value: unknown, filter: unknown, filterLocale?: string) => boolean) | undefined
+  >(undefined);
 
   /**
    * Registers the predicate the 'custom' FilterMatchMode dispatches to for
@@ -165,7 +178,7 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * instance.
    */
   registerCustomFilter(fn: (value: unknown, filter: unknown, filterLocale?: string) => boolean): void {
-    this.customFilterPredicate = fn;
+    this.customFilterPredicate.set(fn);
   }
 
   /**
@@ -200,10 +213,10 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
   }
 
   /**
-   * Tests one row's field value against a single `FilterMetadata`. Only the
-   * string match modes in this task's scope are dispatched; all other
-   * `FilterMatchMode` values are deferred (see `filteredValue`'s dispatch
-   * comment) and never reach this method.
+   * Tests one row's field value against a single `FilterMetadata`. Every
+   * `FilterMatchMode` value is dispatched, including `custom`, which
+   * resolves through the Table-scoped registration contract (Spec §3.4.1)
+   * via `registerCustomFilter`/`customFilterPredicate`.
    */
   private matchesFilter(row: T, field: string, filter: FilterMetadata): boolean {
     const rawCellValue = this.resolveCell(row, field);
@@ -217,6 +230,12 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
       case "startsWith":
         return cellValue.startsWith(filterValue);
       case "notContains":
+        // Real PrimeNG filterservice.ts (matching PrimeReact's/PrimeVue's own
+        // notContains): an absent/empty filter value passes through (matches
+        // everything). String.prototype.includes("") is always true, so
+        // without this guard `!cellValue.includes("")` would be false for
+        // every row, hiding all of them instead of showing all of them.
+        if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return true;
         return !cellValue.includes(filterValue);
       case "endsWith":
         return cellValue.endsWith(filterValue);
@@ -283,13 +302,15 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
         if (rawFilterValue === undefined || rawFilterValue === null) return true;
         if (rawCellValue === undefined || rawCellValue === null) return false;
         return (rawCellValue as Date).getTime() > (rawFilterValue as Date).getTime();
-      case "custom":
-        if (!this.customFilterPredicate) return false;
+      case "custom": {
+        const predicate = this.customFilterPredicate();
+        if (!predicate) return false;
         // NEEDS IMPLEMENTATION-TIME VERIFICATION: filterLocale is passed as
         // undefined — FilterMetadata has no filterLocale field and Table has
         // no filterLocale input, so no real locale value exists in Table's
         // current data flow. Revisit once a Table-level locale input exists.
-        return this.customFilterPredicate(rawCellValue, rawFilterValue, undefined);
+        return predicate(rawCellValue, rawFilterValue, undefined);
+      }
       default:
         return true;
     }
