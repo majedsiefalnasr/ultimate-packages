@@ -124,13 +124,91 @@ function compareValues(a, b) {
  * Task 13 narrowed scope.
  */
 function matchesFilter(row, field, filter) {
-  const cellValue = String(resolveCell(row, field) ?? "").toLowerCase();
-  const filterValue = String(filter.value ?? "").toLowerCase();
+  const rawCellValue = resolveCell(row, field);
+  const rawFilterValue = filter.value;
+  const cellValue = String(rawCellValue ?? "").toLowerCase();
+  const filterValue = String(rawFilterValue ?? "").toLowerCase();
+
+  const toComparable = (v) => (typeof v === "string" ? new Date(v) : v);
 
   switch (filter.matchMode) {
     case "contains":
       return cellValue.includes(filterValue);
-    // NEEDS IMPLEMENTATION-TIME VERIFICATION: startsWith, notContains, endsWith, equals, notEquals, lt, lte, gt, gte, between, in, notIn, dateIs, dateIsNot, dateBefore, dateAfter, custom
+    case "startsWith":
+      return cellValue.startsWith(filterValue);
+    case "notContains":
+      return !cellValue.includes(filterValue);
+    case "endsWith":
+      return cellValue.endsWith(filterValue);
+    case "equals":
+      return cellValue === filterValue;
+    case "notEquals":
+      // Real PrimeVue FilterService.js: absent (undefined/null) OR an empty
+      // string filter value => false (does not match) — matching Angular's
+      // real outcome, not React's.
+      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return false;
+      return cellValue !== filterValue;
+    case "lt":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return rawCellValue < rawFilterValue;
+    case "lte":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return rawCellValue <= rawFilterValue;
+    case "gt":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return rawCellValue > rawFilterValue;
+    case "gte":
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return rawCellValue >= rawFilterValue;
+    case "between": {
+      const range = rawFilterValue;
+      if (range == null || range[0] == null || range[1] == null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      return range[0] <= rawCellValue && rawCellValue <= range[1];
+    }
+    case "in": {
+      const options = rawFilterValue;
+      if (options == null || options.length === 0) return true;
+      return options.some((option) => equals(rawCellValue, option));
+    }
+    case "notIn": {
+      const options = rawFilterValue;
+      if (options == null || options.length === 0) return true;
+      return !options.some((option) => equals(rawCellValue, option));
+    }
+    case "dateIs": {
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      const value = toComparable(rawCellValue);
+      const filterVal = toComparable(rawFilterValue);
+      return value.toDateString() === filterVal.toDateString();
+    }
+    case "dateIsNot": {
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      const value = toComparable(rawCellValue);
+      const filterVal = toComparable(rawFilterValue);
+      return value.toDateString() !== filterVal.toDateString();
+    }
+    case "dateBefore": {
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      const value = toComparable(rawCellValue);
+      const filterVal = toComparable(rawFilterValue);
+      return value.getTime() < filterVal.getTime();
+    }
+    case "dateAfter": {
+      if (rawFilterValue === undefined || rawFilterValue === null) return true;
+      if (rawCellValue === undefined || rawCellValue === null) return false;
+      const value = toComparable(rawCellValue);
+      const filterVal = toComparable(rawFilterValue);
+      return value.getTime() > filterVal.getTime();
+    }
+    // NEEDS IMPLEMENTATION-TIME VERIFICATION: custom (Task 6)
     default:
       return true;
   }

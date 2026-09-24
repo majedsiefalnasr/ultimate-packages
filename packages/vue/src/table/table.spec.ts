@@ -86,6 +86,218 @@ describe("filtering (Vue object+constraints operator shape, spec §9)", () => {
   });
 });
 
+describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filter-vocabulary-design.md)", () => {
+  // Explicit mode-coverage checklist for this framework — each of the 14
+  // comparator modes must appear as a literal matchMode string in at least
+  // one assertion below: notContains, endsWith, notEquals, lt, lte, gt,
+  // gte, between, in, notIn, dateIs, dateIsNot, dateBefore, dateAfter.
+  interface NumRow {
+    id: number;
+    score: number;
+  }
+  interface DateRow {
+    id: number;
+    when: Date;
+  }
+
+  it("applies matchMode: notContains, case-insensitively", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
+        columns: [{ field: "name", header: "Name" }],
+        filters: { name: { value: "ALI", matchMode: "notContains" } },
+      },
+    });
+    const cells = wrapper.findAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].text()).toBe("Bob");
+  });
+
+  it("applies matchMode: endsWith, case-insensitively", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
+        columns: [{ field: "name", header: "Name" }],
+        filters: { name: { value: "CE", matchMode: "endsWith" } },
+      },
+    });
+    const cells = wrapper.findAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].text()).toBe("Alice");
+  });
+
+  it("applies matchMode: notEquals, and an absent OR empty-string filter value does not match (Vue's verified real default, same as Angular — not React)", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
+        columns: [{ field: "name", header: "Name" }],
+        filters: { name: { value: "Alice", matchMode: "notEquals" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(1);
+
+    // Real PrimeVue FilterService.js's own notEquals: filter === undefined ||
+    // filter === null || filter === '' => false (does not match). Vue checks
+    // the literal empty string (no .trim()), unlike Angular's/React's
+    // whitespace-aware check, but the outcome for a plain '' is identical.
+    await wrapper.setProps({ filters: { name: { value: undefined, matchMode: "notEquals" } } });
+    expect(wrapper.findAll("td").length).toBe(0);
+
+    await wrapper.setProps({ filters: { name: { value: "", matchMode: "notEquals" } } });
+    expect(wrapper.findAll("td").length).toBe(0);
+  });
+
+  it("applies matchMode: lt/lte/gt/gte", async () => {
+    const rows: NumRow[] = [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ];
+    const wrapper = mount(UTable, {
+      props: {
+        value: rows,
+        columns: [{ field: "score", header: "Score" }],
+        filters: { score: { value: 20, matchMode: "lt" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(1);
+
+    await wrapper.setProps({ filters: { score: { value: 20, matchMode: "lte" } } });
+    expect(wrapper.findAll("td").length).toBe(2);
+
+    await wrapper.setProps({ filters: { score: { value: 20, matchMode: "gt" } } });
+    expect(wrapper.findAll("td").length).toBe(1);
+
+    await wrapper.setProps({ filters: { score: { value: 20, matchMode: "gte" } } });
+    expect(wrapper.findAll("td").length).toBe(2);
+  });
+
+  it("lt passes through (matches everything) when the filter value itself is absent", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, score: 10 },
+          { id: 2, score: 20 },
+          { id: 3, score: 30 },
+        ],
+        columns: [{ field: "score", header: "Score" }],
+        filters: { score: { value: undefined, matchMode: "lt" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(3);
+  });
+
+  it("applies matchMode: between, inclusive bounds, inverted range matches nothing, null bound passes through", async () => {
+    const rows: NumRow[] = [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ];
+    const wrapper = mount(UTable, {
+      props: {
+        value: rows,
+        columns: [{ field: "score", header: "Score" }],
+        filters: { score: { value: [10, 20], matchMode: "between" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(2);
+
+    await wrapper.setProps({ filters: { score: { value: [30, 10], matchMode: "between" } } });
+    expect(wrapper.findAll("td").length).toBe(0);
+
+    await wrapper.setProps({ filters: { score: { value: [null, null], matchMode: "between" } } });
+    expect(wrapper.findAll("td").length).toBe(3);
+  });
+
+  it("applies matchMode: in/notIn using equals-based membership, including a null filter-array entry; empty array passes through", async () => {
+    const rows: NumRow[] = [
+      { id: 1, score: 10 },
+      { id: 2, score: 20 },
+      { id: 3, score: 30 },
+    ];
+    const wrapper = mount(UTable, {
+      props: {
+        value: rows,
+        columns: [{ field: "score", header: "Score" }],
+        filters: { score: { value: [10, 30, null], matchMode: "in" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(2);
+
+    await wrapper.setProps({ filters: { score: { value: [10, 30, null], matchMode: "notIn" } } });
+    expect(wrapper.findAll("td").length).toBe(1);
+
+    await wrapper.setProps({ filters: { score: { value: [], matchMode: "in" } } });
+    expect(wrapper.findAll("td").length).toBe(3);
+  });
+
+  it("applies date matchModes: dateIs/dateIsNot (day-level) and dateBefore/dateAfter (time-precise)", async () => {
+    const rows: DateRow[] = [
+      { id: 1, when: new Date(2026, 0, 1, 9, 0) },
+      { id: 2, when: new Date(2026, 0, 1, 15, 0) },
+      { id: 3, when: new Date(2026, 0, 2, 9, 0) },
+    ];
+    const wrapper = mount(UTable, {
+      props: {
+        value: rows,
+        columns: [{ field: "when", header: "When" }],
+        filters: { when: { value: new Date(2026, 0, 1), matchMode: "dateIs" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(2);
+
+    await wrapper.setProps({ filters: { when: { value: new Date(2026, 0, 1), matchMode: "dateIsNot" } } });
+    expect(wrapper.findAll("td").length).toBe(1);
+
+    await wrapper.setProps({
+      filters: { when: { value: new Date(2026, 0, 1, 12, 0), matchMode: "dateBefore" } },
+    });
+    expect(wrapper.findAll("td").length).toBe(1);
+
+    await wrapper.setProps({
+      filters: { when: { value: new Date(2026, 0, 1, 12, 0), matchMode: "dateAfter" } },
+    });
+    expect(wrapper.findAll("td").length).toBe(2);
+  });
+
+  it("applies date matchModes with real string-date coercion, distinct from Angular/React", () => {
+    const rows: DateRow[] = [
+      { id: 1, when: new Date(2026, 0, 1, 9, 0) },
+      { id: 2, when: new Date(2026, 0, 2, 9, 0) },
+    ];
+    const wrapper = mount(UTable, {
+      props: {
+        value: rows,
+        columns: [{ field: "when", header: "When" }],
+        // A string-typed filter value — Vue's real FilterService coerces this
+        // via new Date(...) before comparing; Angular/React do not support this.
+        filters: { when: { value: "2026-01-01T00:00:00", matchMode: "dateIs" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(1);
+  });
+
+  it("a row with an undefined field value fails gt once a real filter value is present", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1 }, { id: 2, score: 20 }],
+        columns: [{ field: "score", header: "Score" }],
+        filters: { score: { value: 10, matchMode: "gt" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(1);
+  });
+});
+
 describe("selection", () => {
   it("emits update:selection with the clicked row in single mode", async () => {
     const wrapper = mount(UTable, {
