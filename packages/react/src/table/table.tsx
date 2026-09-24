@@ -168,7 +168,13 @@ function matchesFilter<T>(row: T, field: string, filter: FilterMetadata): boolea
       if (rawFilterValue === undefined || rawFilterValue === null) return true;
       if (rawCellValue === undefined || rawCellValue === null) return false;
       return (rawCellValue as Date).getTime() > (rawFilterValue as Date).getTime();
-    // NEEDS IMPLEMENTATION-TIME VERIFICATION: custom (Task 5)
+    case "custom":
+      // No executable registration path exists for React's UTable (Spec
+      // §3.4.2) — 'custom' is a recognized but permanently inert mode name
+      // here, matching no rows. This must never be changed to read from or
+      // invoke an application-supplied function without a new specification
+      // authorizing that surface.
+      return false;
     default:
       return true;
   }

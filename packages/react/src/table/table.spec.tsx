@@ -647,6 +647,22 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
   });
 });
 
+describe("filtering — custom mode, React (Spec §3.4.2: no executable registration path)", () => {
+  it("a custom matchMode matches no rows, with no public prop able to change that outcome", () => {
+    const { container } = render(
+      <UTable
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
+        columns={[{ field: "name", header: "Name" }]}
+        filters={{ name: { value: "anything", matchMode: "custom" } }}
+      />
+    );
+    expect(container.querySelectorAll("td").length).toBe(0);
+  });
+});
+
 describe("package export", () => {
   it("is exported from its own subpath index", () => {
     expect(SubpathExport).toBe(UTable);
