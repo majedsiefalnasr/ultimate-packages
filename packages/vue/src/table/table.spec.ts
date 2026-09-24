@@ -482,6 +482,22 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   });
 });
 
+describe("filtering — custom mode, Vue (Spec §3.4.2: no executable registration path)", () => {
+  it("a custom matchMode matches no rows, with no public prop able to change that outcome", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
+        columns: [{ field: "name", header: "Name" }],
+        filters: { name: { value: "anything", matchMode: "custom" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(0);
+  });
+});
+
 describe("package export", () => {
   it("is exported from the package root", async () => {
     const { UTable: RootExport } = await import("../index");
