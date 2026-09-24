@@ -116,6 +116,54 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
     expect(cells[0].text()).toBe("Bob");
   });
 
+  it("matchMode: notContains passes through (matches everything) when the filter value is absent or empty", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
+        columns: [{ field: "name", header: "Name" }],
+        filters: { name: { value: undefined, matchMode: "notContains" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(2);
+
+    await wrapper.setProps({ filters: { name: { value: "", matchMode: "notContains" } } });
+    expect(wrapper.findAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: startsWith, case-insensitively", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Alison" },
+          { id: 3, name: "Bob" },
+        ],
+        columns: [{ field: "name", header: "Name" }],
+        filters: { name: { value: "ALI", matchMode: "startsWith" } },
+      },
+    });
+    expect(wrapper.findAll("td").length).toBe(2);
+  });
+
+  it("applies matchMode: equals, case-insensitively", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Alison" },
+        ],
+        columns: [{ field: "name", header: "Name" }],
+        filters: { name: { value: "alice", matchMode: "equals" } },
+      },
+    });
+    const cells = wrapper.findAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].text()).toBe("Alice");
+  });
+
   it("applies matchMode: endsWith, case-insensitively", () => {
     const wrapper = mount(UTable, {
       props: {

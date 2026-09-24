@@ -118,10 +118,10 @@ function compareValues(a, b) {
 }
 
 /**
- * Tests one row's field value against a single `FilterMetadata`. Only
- * `contains` (case-insensitive substring) is dispatched in this task's
- * scope; all other `FilterMatchMode` values are deferred, matching React's
- * Task 13 narrowed scope.
+ * Tests one row's field value against a single `FilterMetadata`. Every
+ * `FilterMatchMode` value is dispatched except `custom`, which has no
+ * executable registration path for Vue (Spec §3.4.2) and always resolves
+ * to `false`.
  */
 function matchesFilter(row, field, filter) {
   const rawCellValue = resolveCell(row, field);
@@ -137,6 +137,12 @@ function matchesFilter(row, field, filter) {
     case "startsWith":
       return cellValue.startsWith(filterValue);
     case "notContains":
+      // Real PrimeVue FilterService.js (matching PrimeNG's/PrimeReact's own
+      // notContains): an absent/empty filter value passes through (matches
+      // everything). String.prototype.includes("") is always true, so
+      // without this guard `!cellValue.includes("")` would be false for
+      // every row, hiding all of them instead of showing all of them.
+      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return true;
       return !cellValue.includes(filterValue);
     case "endsWith":
       return cellValue.endsWith(filterValue);
