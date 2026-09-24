@@ -155,6 +155,19 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
   rowGroupMode = input<"subheader" | "rowspan">();
   groupRowsBy = input<string>();
 
+  private customFilterPredicate?: (value: unknown, filter: unknown, filterLocale?: string) => boolean;
+
+  /**
+   * Registers the predicate the 'custom' FilterMatchMode dispatches to for
+   * this UTable instance only (Spec §3.4.1's binding contract: Table-scoped,
+   * reserved 'custom' key, replace-on-duplicate). No consuming application
+   * code should assume this registration is visible to any other UTable
+   * instance.
+   */
+  registerCustomFilter(fn: (value: unknown, filter: unknown, filterLocale?: string) => boolean): void {
+    this.customFilterPredicate = fn;
+  }
+
   /**
    * Internal paging cursor, reconciled from the `first` input via
    * `ngOnChanges` and mutated directly by `onPaginatorPageChange` —
@@ -270,7 +283,13 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
         if (rawFilterValue === undefined || rawFilterValue === null) return true;
         if (rawCellValue === undefined || rawCellValue === null) return false;
         return (rawCellValue as Date).getTime() > (rawFilterValue as Date).getTime();
-      // NEEDS IMPLEMENTATION-TIME VERIFICATION: custom (Task 4)
+      case "custom":
+        if (!this.customFilterPredicate) return false;
+        // NEEDS IMPLEMENTATION-TIME VERIFICATION: filterLocale is passed as
+        // undefined — FilterMetadata has no filterLocale field and Table has
+        // no filterLocale input, so no real locale value exists in Table's
+        // current data flow. Revisit once a Table-level locale input exists.
+        return this.customFilterPredicate(rawCellValue, rawFilterValue, undefined);
       default:
         return true;
     }

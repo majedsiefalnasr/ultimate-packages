@@ -814,3 +814,94 @@ describe("real child-component composition (regression guard, Task 24)", () => {
     }
   });
 });
+
+describe("filtering — custom mode, Angular registration contract (Spec §3.4.1)", () => {
+  it("dispatches a predicate registered under the reserved 'custom' key", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const instance = fixture.componentInstance;
+    instance.registerCustomFilter((value) => typeof value === "string" && value.length > 3);
+
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Al" },
+      { id: 2, name: "Alice" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixture.detectChanges();
+
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells.length).toBe(1);
+    expect(cells[0].textContent?.trim()).toBe("Alice");
+  });
+
+  it("passes all three callback arguments (value, filter, filterLocale) to the registered predicate, with filterLocale explicitly undefined (no real locale source exists in Table's current data flow)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const instance = fixture.componentInstance;
+    const spy = vi.fn(() => true);
+    instance.registerCustomFilter(spy);
+
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "needle", matchMode: "custom" } });
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith("Alice", "needle", undefined);
+    expect(spy.mock.calls[0].length).toBe(3);
+  });
+
+  it("an unregistered custom mode matches no rows (false, not the unhandled-mode pass-through)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("a second registration under 'custom' replaces the first (duplicate-registration behavior)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const instance = fixture.componentInstance;
+    instance.registerCustomFilter(() => true);
+    instance.registerCustomFilter(() => false);
+
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("a predicate registered on one UTable instance is not reachable from a second, unrelated instance", () => {
+    const fixtureA = TestBed.createComponent(UTable<Row>);
+    fixtureA.componentInstance.registerCustomFilter(() => true);
+
+    const fixtureB = TestBed.createComponent(UTable<Row>);
+    fixtureB.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixtureB.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixtureB.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+    fixtureB.detectChanges();
+
+    // Instance B never registered a predicate — its own 'custom' mode
+    // must resolve to false, unaffected by instance A's registration.
+    expect(fixtureB.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
+  it("a throwing registered predicate's error is not silently swallowed", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentInstance.registerCustomFilter(() => {
+      throw new Error("predicate boom");
+    });
+
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Alice" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: null, matchMode: "custom" } });
+
+    expect(() => fixture.detectChanges()).toThrow("predicate boom");
+  });
+});
