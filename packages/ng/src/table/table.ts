@@ -212,10 +212,13 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
       case "notEquals":
         // Real PrimeNG filterservice.ts: absent (undefined/null) OR an
         // empty/whitespace-only string filter value => false (no match).
-        // filterValue is already lowercased/trimmed-by-String-coercion here,
-        // so filterValue === "" also catches the whitespace-only case once
-        // combined with the raw-value undefined/null check.
-        if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return false;
+        // String() does NOT trim, so we check rawFilterValue.trim() === "" to catch whitespace-only.
+        if (
+          rawFilterValue === undefined ||
+          rawFilterValue === null ||
+          (typeof rawFilterValue === "string" && rawFilterValue.trim() === "")
+        )
+          return false;
         return cellValue !== filterValue;
       case "lt":
         if (rawFilterValue === undefined || rawFilterValue === null) return true;

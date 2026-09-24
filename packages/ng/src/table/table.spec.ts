@@ -269,6 +269,18 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
     expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
   });
 
+  it("applies matchMode: notEquals with a whitespace-only filter value (treats as absent)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("filters", { name: { value: "   ", matchMode: "notEquals" } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
+  });
+
   it("applies matchMode: lt", () => {
     const fixture = TestBed.createComponent(UTable<NumRow>);
     fixture.componentRef.setInput("value", [
