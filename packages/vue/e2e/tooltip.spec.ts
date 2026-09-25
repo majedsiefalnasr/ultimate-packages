@@ -98,7 +98,7 @@ test.describe("Vue/Tooltip", () => {
     await page.goto(storyUrl("vue-tooltip--disabled"));
     const button = page.getByRole("button", { name: "Hover me (disabled)" });
     await button.hover();
-    // Distinct from the enabled story's node-exists-but-invisible state:
+    // Distinct from the enabled story's node-exists-and-is-visible state:
     // `showTooltip()` short-circuits at `if (binding.disabled || ...)
     // return;` before the panel is ever created, so the Portal-equivalent
     // `document.body.appendChild` never runs at all.
