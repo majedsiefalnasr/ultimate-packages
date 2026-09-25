@@ -75,7 +75,7 @@ Sequenced first per spec §3.0/§5 item 1, ahead of any Vue task depending on it
 | FloatLabel | `floatlabel/` | Form | vue-core base | Label-position wrapper, bare-`BaseComponent`, no CVA | ADAPT | Built (Phase C Batch 1) | Low |
 | IconField / InputIcon | `iconfield/`, `inputicon/` | Form | vue-core base | Input decoration wrapper; one canonical capability, two Prime directories, bare-`BaseComponent` | ADAPT | Built (Phase C Batch 1) | Low |
 
-### Form — Vue-eligible mixed-eligibility (3 capabilities; excludes Mention/MultiStateCheckbox/TriStateCheckbox, React-only)
+### Form — Vue-eligible mixed-eligibility (3 capabilities; excludes Mention/MultiStateCheckbox/TriStateCheckbox — confirmed absent from Angular, genuinely Unverified for Vue)
 
 | Component | Prime source path | Category | Dependencies | Framework-specific responsibilities | Migration classification | Migration phase | Risk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -149,7 +149,7 @@ Sequenced first per spec §3.0/§5 item 1, ahead of any Vue task depending on it
 | DeferredContent | `deferredcontent/` | Primitive/Feedback | vue-core base | Angular Unverified/excluded; real source uses window `scroll` + `getBoundingClientRect()` — deliberately swapped for `IntersectionObserver` (disclosed mechanism deviation, not silently substituted) | ADAPT | Built (Phase C Batch 1) | Low |
 | Toast | `toast/` | Feedback | `UToastService`/`toastEventBus` (Group A, `vue-core/service`) | Reuses the already-built Group A `UToastService`/`toastEventBus` directly, subscribing to add/remove/remove-all events, filtering on `group`; per-message dismiss-timer map assigned in `created()` (real self-caught bug fix — a top-level object-literal outside `data()` is never auto-installed as an instance property by Vue) | ADAPT | Built (Phase C Batch 1) | Medium |
 
-**Excluded for Vue (Unverified, per spec §3.4):** none in this family — Vue is eligible for all 26 all-3-framework capabilities plus ImageCompare, AnimateOnScroll, and DeferredContent (Toast unblocked by Group A). Mention/MultiStateCheckbox/TriStateCheckbox remain React-only, tracked only in `REACT_COMPONENT_STATUS.md`.
+**Excluded for Vue (Unverified, per spec §3.4):** none in this family — Vue is eligible for all 26 all-3-framework capabilities plus ImageCompare, AnimateOnScroll, and DeferredContent (Toast unblocked by Group A). Mention/MultiStateCheckbox/TriStateCheckbox are confirmed absent from Angular but remain genuinely Unverified for Vue (see "Still genuinely Unverified for Vue" below) — not a settled React-only exclusion.
 
 **Parity Reconciliation pass (2026-09-20)** — the Phase C Next-Step Assessment's Path 1 workstream checked Vue's remaining Unverified pool against real, pinned PrimeVue 4.5.5 source (never from naming similarity alone; see `docs/architecture/research/2026-09-17-phase-c-cross-framework-functional-parity-matrix.md` §3.3(a)/§4.1b for full evidence).
 
@@ -183,5 +183,5 @@ OrganizationChart's React/Vue-only membership is a permanent framework asymmetry
 ## Verification
 
 - 9 pre-existing baseline components + 1 Group A infrastructure item (Badge) + 76 Phase C Batch 1 canonical capabilities + 1 Phase C Batch 2 capability + 4 Phase C Batch 3 capabilities = **91 canonical-capability-equivalent rows**. This reconciles to `packages/vue/src/`'s 94 top-level directories after Batch 3: 94 total directories − 3 extra directories consumed by Accordion's four-directory family = 91.
-- Vue eligibility cross-checked against spec §3: 79 canonical capabilities − 3 Vue-excluded (Mention, MultiStateCheckbox, TriStateCheckbox — React only) = 76. Matches this file's Batch 1 canonical-capability row count exactly (excluding the separately-tracked Badge infrastructure item, which is not one of the 79).
-- No capability from spec §3 is marked Built here where spec §3 excludes Vue for it (Mention, MultiStateCheckbox, TriStateCheckbox all correctly absent).
+- Vue eligibility cross-checked against spec §3: 79 canonical capabilities − 3 Vue-excluded (Mention, MultiStateCheckbox, TriStateCheckbox — confirmed absent from Angular, genuinely Unverified for Vue per spec §3, not a settled React-only exclusion) = 76. Matches this file's Batch 1 canonical-capability row count exactly (excluding the separately-tracked Badge infrastructure item, which is not one of the 79).
+- No capability from spec §3 is marked Built here where spec §3 excludes Vue for it (Mention, MultiStateCheckbox, TriStateCheckbox all correctly absent, pending the Unverified evidence gap tracked below).
