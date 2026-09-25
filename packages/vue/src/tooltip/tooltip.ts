@@ -73,7 +73,11 @@ function showTooltip(el: HTMLElement, state: TooltipState, binding: TooltipBindi
       id: state.panelId,
       role: "tooltip",
       class: ["u-tooltip", binding.class],
-      style: { position: "absolute", width: binding.fitContent === false ? undefined : "fit-content" },
+      style: {
+        position: "absolute",
+        display: "inline-block",
+        width: binding.fitContent === false ? undefined : "fit-content",
+      },
     },
     text
   );

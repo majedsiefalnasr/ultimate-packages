@@ -2,7 +2,8 @@ import { expect, test } from "@playwright/test";
 import { runAccessibilityScan, storyUrl } from "./accessibility-envelope";
 
 /**
- * Real-browser coverage for v-tooltip (Vue/Tooltip), Task 8.
+ * Real-browser coverage for v-tooltip (Vue/Tooltip), Task 8 (original),
+ * updated for the GAP-039 visibility fix.
  *
  * Vitest/@vue/test-utils already covers (packages/vue/src/tooltip/tooltip.spec.ts):
  * no tooltip before hover, a role="tooltip" panel with the bound content
@@ -13,40 +14,29 @@ import { runAccessibilityScan, storyUrl } from "./accessibility-envelope";
  * `display` is always zeroed/inert, so none of that Vitest coverage can
  * assert real computed layout/visibility.
  *
- * REAL-BROWSER FINDING (documented here, not fixed — out of Task 8's
- * scope, which may not modify any Vue component/style source):
- * `@ultimate/uix-styles/tooltip`'s base `.u-tooltip` rule hardcodes
- * `display: none` with no companion rule anywhere in `tooltip-style.ts`,
- * `tooltip.ts`, or the shared stylesheet ever adding a class/inline style
- * that overrides it back to visible (confirmed by grep: `showTooltip()` in
- * `packages/vue/src/tooltip/tooltip.ts` only ever sets `class: ["u-tooltip",
- * binding.class]` and inline `position`/`width` — never toggles a
- * `u-tooltip-active`-style modifier or an inline `display` override). So in
- * a real browser, the tooltip panel is genuinely created with the correct
- * `role="tooltip"` and text content on real hover, IS correctly positioned
- * via real `getBoundingClientRect()`-derived inline `left`/`top` styles
- * (a real, working computation — unlike React's Tooltip, whose real,
- * verified finding in Task 7 is a permanently-hardcoded off-screen
- * position; Vue's positioning math is genuinely correct) — but the panel
- * is never actually visible at all, staying `display: none` throughout,
- * a real CSS/component gap the jsdom-based Vitest suite cannot detect at
- * all (jsdom never applies real stylesheet layout, so it also never
- * observes computed `display`). Confirmed via isolated trace inspection:
- * Playwright reports the real hover completing and the DOM node existing
- * with the right attributes and correctly-computed position, but
- * `getComputedStyle(tooltip).display === "none"` and its bounding box is
- * `{width: 0, height: 0}`.
+ * GAP-039 FIX (verified here, in a real browser): `showTooltip()`
+ * (packages/vue/src/tooltip/tooltip.ts) now sets an inline `display:
+ * inline-block` style on the panel when it is created, mirroring real
+ * PrimeVue's own Tooltip.js `create()` mechanism (an inline style outranks
+ * the shared `@ultimate/uix-styles/tooltip` base `.u-tooltip { display:
+ * none }` CSS rule by specificity). The panel is now genuinely visible on
+ * real hover, in addition to already having the correct `role="tooltip"`,
+ * text content, aria-describedby wiring, and a correctly-computed on-
+ * screen position from the target's real getBoundingClientRect() (unlike
+ * React's Tooltip, whose real, verified finding in Task 7 is a
+ * permanently-hardcoded off-screen position — Vue's positioning math was
+ * always correct; only visibility was broken).
  *
- * This file proves that real, verified behavior directly, and confirms
+ * This file proves the fixed, visible behavior directly, and confirms
  * `disabled` genuinely never even creates the node on hover (distinct from
- * the enabled case's node-exists-but-invisible state).
+ * the enabled case's node-exists-and-is-visible state).
  *
  * Vue's own stories (tooltip.stories.ts) expose only Default/Disabled —
  * there is no separate position-variant story, so this file has no
  * left-position test.
  */
 test.describe("Vue/Tooltip", () => {
-  test("Default story: real hover creates the tooltip node with the right role/text/aria-describedby wiring and a correctly-computed position, though it is never actually displayed", async ({
+  test("Default story: real hover creates a visible tooltip node with the right role/text/aria-describedby wiring and a correctly-computed position", async ({
     page,
   }) => {
     await page.goto(storyUrl("vue-tooltip--default"));
@@ -75,13 +65,17 @@ test.describe("Vue/Tooltip", () => {
     expect(left).toBeCloseTo(buttonBox!.x, 0);
     expect(top).toBeGreaterThan(buttonBox!.y);
 
-    // Real, verified gap: despite the correct position, the base
-    // `.u-tooltip { display: none }` rule is never overridden anywhere in
-    // this codebase, so the panel stays genuinely invisible in a real
-    // browser.
-    await expect(tooltip).toBeHidden();
+    // Verified fix (GAP-039): showTooltip() now sets an inline
+    // `display: inline-block` style on the panel, mirroring real
+    // PrimeVue's own create() mechanism, so the panel is genuinely
+    // visible in a real browser despite the base `.u-tooltip { display:
+    // none }` CSS rule (an inline style outranks a class-based rule by
+    // specificity). Asserting `not.toBe("none")` rather than an exact
+    // value keeps this robust across Chromium/Firefox/WebKit computed-
+    // style reporting differences.
+    await expect(tooltip).toBeVisible();
     const display = await tooltip.evaluate((el) => getComputedStyle(el).display);
-    expect(display).toBe("none");
+    expect(display).not.toBe("none");
   });
 
   test("Default story: accessibility scan", async ({ page }, testInfo) => {
@@ -104,7 +98,7 @@ test.describe("Vue/Tooltip", () => {
     await page.goto(storyUrl("vue-tooltip--disabled"));
     const button = page.getByRole("button", { name: "Hover me (disabled)" });
     await button.hover();
-    // Distinct from the enabled story's node-exists-but-invisible state:
+    // Distinct from the enabled story's node-exists-and-is-visible state:
     // `showTooltip()` short-circuits at `if (binding.disabled || ...)
     // return;` before the panel is ever created, so the Portal-equivalent
     // `document.body.appendChild` never runs at all.
