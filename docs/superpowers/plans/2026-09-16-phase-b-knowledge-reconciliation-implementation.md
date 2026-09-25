@@ -1,7 +1,7 @@
 # Implementation Plan — Phase B: Knowledge Reconciliation
 
 **Document:** `docs/superpowers/plans/2026-09-16-phase-b-knowledge-reconciliation-implementation.md`
-**Status:** Draft for Plan Review.
+**Status:** Complete — implemented and merged; see `docs/architecture/research/2026-09-16-phase-b-knowledge-reconciliation.md` for the reconciliation's evidence trail.
 **Approved specification:** `docs/superpowers/specs/2026-09-16-phase-b-knowledge-reconciliation-design.md` (Spec Gate: **APPROVED**, 2026-09-16, all 7 Spec Review corrections applied).
 **Baseline:** `main`, working tree containing only the pre-existing untracked artifacts this plan itself is aware of (see Pre-planning inspection below).
 **Required sequence (this document is the Implementation Plan step):** Research ✅ → Decision ✅ → Specification ✅ → Spec Review ✅ → **Implementation Plan (this document)** → Plan Review → Implementation → Verification → Final Review/Closeout.

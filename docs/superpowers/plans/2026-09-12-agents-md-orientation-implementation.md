@@ -1,7 +1,7 @@
 # Implementation Plan — Root-Level `AGENTS.md` Orientation File
 
 **Document:** `docs/superpowers/plans/2026-09-12-agents-md-orientation-implementation.md`
-**Status:** Draft for Plan Review.
+**Status:** Complete — implemented and merged; root-level `AGENTS.md` exists in the repository per this plan's scope.
 **Approved specification:** `docs/superpowers/specs/2026-09-12-agents-md-orientation-design.md` (amended, 7-section structure including AI Operating Rules — Spec Gate: APPROVED).
 **Baseline:** `main` at `d391acf`.
 **Required sequence (this document is the Implementation Plan step):** Research ✅ → Architecture Discussion ✅ → Decision ✅ → Specification ✅ → Spec Review ✅ → **Implementation Plan (this document)** → Plan Review → Implementation → Verification → Final Review/Closeout.

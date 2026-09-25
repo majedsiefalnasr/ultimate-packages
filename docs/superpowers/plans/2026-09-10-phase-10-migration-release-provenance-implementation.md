@@ -1,7 +1,7 @@
 # Implementation Plan: Phase 10 Track C — Migration / Release / Provenance
 
 **Document:** `docs/superpowers/plans/2026-09-10-phase-10-migration-release-provenance-implementation.md`
-**Status:** Draft for review (implementation-ready)
+**Status:** Complete — implemented and merged (Track C); Phase 10 marked Complete in `docs/architecture/ROADMAP.md`. Track C's release pipeline is real but has never executed a real release — disclosed, not hidden (see `MIGRATION.md` §7).
 **Approved specification:** `docs/superpowers/specs/2026-09-10-phase-10-migration-release-provenance-design.md` (Final Spec Review verdict: APPROVE)
 **Baseline:** `main` at `02c60d7` (Track A — Browser/Visual/Accessibility Validation, merged)
 

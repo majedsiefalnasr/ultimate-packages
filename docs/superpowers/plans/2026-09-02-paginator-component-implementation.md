@@ -1576,7 +1576,7 @@ git commit -m "docs(provenance): add paginator component manifest entries"
 
 ### Task 15 (GATED — do not start until prerequisite confirmed): Rows-per-page and jump-to-page dropdown controls, all three frameworks
 
-**Status: BLOCKED pending an Ultimate Select-equivalent component.**
+**Status: BLOCKED pending an Ultimate Select-equivalent component — scoped to this task only.** Tasks 1-14 (first/prev/next/last navigation, page-links, current-page report, across all three frameworks) are complete, tested, and shipped; this gate blocks only the rows-per-page/jump-to-page dropdown UI described below. See `docs/architecture/BLUEPRINT_GAPS.md` GAP-040.
 
 **Files:** Not yet determined — depends entirely on whichever Select/Dropdown component API lands first.
 

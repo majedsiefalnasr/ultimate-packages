@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Draft for review
+**Status:** Complete — implemented and merged; Phase 8 marked Complete in `docs/architecture/ROADMAP.md` and GAP-029 RESOLVED in `docs/architecture/BLUEPRINT_GAPS.md`.
 **Approved spec:** `docs/superpowers/specs/2026-09-07-phase-8-mcp-design.md` (Approved — formal Spec Review passed, §13)
 **Research:** `docs/architecture/research/2026-09-07-phase-8-mcp-architecture.md`
 **References:** `docs/architecture/BLUEPRINT.md` §5/§6/§18/§22/§23/§34/§35/§40, `docs/architecture/DECISIONS.md` ADR-010, `docs/architecture/BLUEPRINT_GAPS.md` GAP-029, `packages/component-schema`, `packages/component-metadata`, `packages/cli`, `.github/workflows/ci.yml`, `scripts/provenance/validate-cli-boundary.mjs`

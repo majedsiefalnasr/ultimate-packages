@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Awaiting Plan Review as of 2026-09-22; implementation is not yet authorized. The amended specification passed technical Spec Review and is awaiting human approval alongside this reviewed Plan.
+**Status:** Complete — implemented, reviewed, and merged to `main` (`389386b`, `Merge branch 'feature/phase-c-batch-3-migration'`); closed out in `bbe01e7`. See `docs/architecture/BLUEPRINT_GAPS.md` DECISION-C and `docs/architecture/VUE_COMPONENT_STATUS.md` for current-state evidence.
 
 **Dispatch rule:** One numbered task per fresh implementer dispatch, followed by review of that task's result before the next dispatch. Preserve Tasks 0–14 exactly. The only capability prerequisite is Task 0 → Tasks 1 and 4; Tasks 2, 3, 5–11 are otherwise independent. Tasks 12–14 retain their batch verification/documentation/closeout order. Review order is an execution gate, not a new implementation dependency between otherwise-independent realizations.
 

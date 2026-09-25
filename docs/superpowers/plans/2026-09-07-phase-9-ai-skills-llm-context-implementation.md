@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Draft for review
+**Status:** Complete — implemented and merged; Phase 9 marked Complete in `docs/architecture/ROADMAP.md` and GAP-030 RESOLVED in `docs/architecture/BLUEPRINT_GAPS.md`.
 **Approved spec:** `docs/superpowers/specs/2026-09-07-phase-9-ai-skills-llm-context-design.md` (Status: Draft for review; formally APPROVED at spec-review gate, round 4 — see the spec's own Formal Review Record correction-pass log — ready for Implementation Plan per SKey workflow)
 **Research:** `docs/architecture/research/2026-09-07-phase-9-ai-skills-llm-context.md`
 **References:** `docs/architecture/BLUEPRINT.md` §6/§18/§22/§23/§24/§25/§26/§35, `docs/architecture/DECISIONS.md` ADR-011/ADR-012, `docs/architecture/BLUEPRINT_GAPS.md` GAP-004/GAP-030, `packages/component-schema`, `packages/component-metadata`, `packages/cli`, `packages/mcp`, `.github/workflows/ci.yml`, `scripts/provenance/validate-cli-boundary.mjs`, `scripts/provenance/validate-mcp-boundary.mjs`

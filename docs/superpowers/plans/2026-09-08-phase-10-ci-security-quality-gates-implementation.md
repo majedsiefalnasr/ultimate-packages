@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Draft for review
+**Status:** Complete — implemented and merged (Track B); Phase 10 marked Complete in `docs/architecture/ROADMAP.md` and GAP-031/GAP-032/GAP-033 RESOLVED in `docs/architecture/BLUEPRINT_GAPS.md`.
 **Approved spec:** `docs/superpowers/specs/2026-09-08-phase-10-ci-security-quality-gates-design.md` (Status: Draft for review; formally APPROVED at spec-review gate)
 **Companion research:** `docs/architecture/research/2026-09-08-phase-10-production-hardening.md`
 **Companion architecture discussion:** `docs/architecture/research/2026-09-08-phase-10-architecture-discussion.md`
