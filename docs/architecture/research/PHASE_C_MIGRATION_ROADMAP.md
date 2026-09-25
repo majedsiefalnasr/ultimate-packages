@@ -324,6 +324,18 @@ NODE
 
 Implementation HEAD: `765e1e60cf6274a31347c5e50710746ad611ff7f`
 
+---
+
+### 12.7 Table filter-operator vocabulary — DECISION-C remainder closed (2026-09-23)
+
+Following Batch 3 (§12.6), the fuller filter-operator vocabulary beyond string match modes — `BLUEPRINT_GAPS.md`'s DECISION-C's own separately-tracked remainder, explicitly named as untouched by §12.5's OrderList/PickList/DataView resolution and by Batch 3 — was specified, planned, implemented, and closed via its own Spec Review → Plan Review → subagent-driven implementation → whole-branch final review sequence, independent of the Batch 3/4 cadence this roadmap otherwise governs.
+
+**Outcome:** all `FilterMatchMode` comparator modes are now dispatched by Table's real `matchesFilter` in all 3 frameworks, with real, framework-verified edge-case divergences deliberately preserved (`notEquals`'s absent/empty-filter default differs by framework; Vue alone coerces string-typed date operands). The `custom` extension mode is supported only for Angular, via a real, Spec-approved, Table-scoped registration contract; React and Vue were confirmed, by direct source verification, to have no executable registration path for `custom` — by design, not a gap. Final review additionally found and fixed two implementation defects (an empty-filter guard missing from `notContains` in all 3 frameworks; a stale-render risk in Angular's registration surface under `OnPush`) and two Spec evidence corrections (an earlier draft's `notEquals`/`notIn` cross-framework claims, both corrected against directly re-extracted pinned Prime source) — none of which changed any architectural conclusion. Full branch merged to `main`; feature branch deleted; no push (no remote configured).
+
+**DECISION-C state after this closure:** of the 7 Data-family rows DECISION-C names (Table, TreeTable, Scroller, Paginator, OrderList, PickList, DataView), every item is now resolved except TreeTable — and TreeTable's own blocker is, and remains, DECISION-D (Tree-family, protected, do-not-reopen), not an independent DECISION-C question. DECISION-C carries no remaining scope of its own; its only open thread is the one already governed by DECISION-D. DECISION-B and DECISION-D are both unchanged by this work.
+
+**Impact on Phase C**: this closure does not open, propose, or pre-select any new batch. No ordinary-migration candidate was found eligible in the post-closure reassessment beyond the pool already known from §12.2 — the only unresolved item there is Vue's still-genuinely-Unverified `MultiStateCheckbox`/`TriStateCheckbox`/`Mention`/`DataScroller` pool, which requires its own Parity Reconciliation evidence pass before any eligibility question could be asked, not proposed or begun here.
+
 ## Status
 
 **APPROVED — 2026-09-17.**
