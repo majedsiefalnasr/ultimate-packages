@@ -1,9 +1,9 @@
-# Specification — Navigation: Steps, Menubar/TieredMenu/MegaMenu/PanelMenu, Dock, SpeedDial Keyboard Navigation; Angular `routerLink`; React Tabs `scrollable`/`closable` (GAP-052–GAP-058)
+# Specification — Navigation: Steps, Menubar/TieredMenu/MegaMenu/PanelMenu, Dock, SpeedDial Keyboard Navigation; Angular `routerLink`; React Tabs `scrollable`/`closable` (GAP-052–GAP-058, GAP-069)
 
 **Status:** Spec stage — awaiting Spec Review.
-**Date:** 2026-09-26
+**Date:** 2026-09-26 (updated 2026-09-26 — GAP-069 integrated following its registration during the Scope Reconciliation stage)
 **Branch:** `feature/prime-parity-audit-gaps`
-**Origin:** the exhaustive Prime-vs-Ultimate parity audit (Batch 3 — Navigation family), its Findings Triage, the Consolidated Pass 1 Report, the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger, and GAP-052 through GAP-058.
+**Origin:** the exhaustive Prime-vs-Ultimate parity audit (Batch 3 — Navigation family), its Findings Triage, the Consolidated Pass 1 Report, the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger, GAP-052 through GAP-058, and GAP-069 (registered following this Spec's own §12 disclosure and the subsequent Scope Reconciliation Report).
 
 **Required sequence:** Research → Architecture Discussion → Decision (INCLUDE) → GAP registration → **Specification (this document)** → Spec Review → Implementation Plan → Plan Review → Implementation → Verification → Final Review/Closeout.
 
@@ -13,11 +13,9 @@
 
 ## 1. Purpose and Scope
 
-**Purpose:** Establish the acceptance contract for seven confirmed Navigation-family gaps, all INCLUDE by human decision, spanning keyboard-navigation additions, one Angular-specific router-integration gap, and two React-specific Tabs gaps.
+**Purpose:** Establish the acceptance contract for eight confirmed Navigation-family gaps, all INCLUDE by human decision, spanning keyboard-navigation additions, two Angular-specific router-integration gaps, and two React-specific Tabs gaps.
 
-**In scope:** GAP-052 (Steps keyboard nav), GAP-053 (Angular Steps `routerLink`), GAP-054 (Menubar/TieredMenu/MegaMenu/PanelMenu keyboard nav — one systemic finding, four components), GAP-055 (Dock keyboard nav), GAP-056 (SpeedDial keyboard nav), GAP-057 (React Tabs `scrollable`), GAP-058 (React Tabs `closable`).
-
-**Not in scope, and explicitly flagged as an unregistered finding rather than silently included (see §12):** "Angular Dock `routerLink`," which the Final Scope Ledger names as its own distinct INCLUDE line item, has no corresponding GAP entry in the committed registry — GAP-055 as actually committed covers Dock keyboard navigation only, with no `routerLink` content anywhere in its body. This specification does not fold that requirement into GAP-055's own scope, since doing so would broaden GAP-055 beyond its committed text. It is reported to the human for a GAP-stage decision, per this Spec stage's own explicit "record separately, do not silently add" rule.
+**In scope:** GAP-052 (Steps keyboard nav), GAP-053 (Angular Steps `routerLink`), GAP-054 (Menubar/TieredMenu/MegaMenu/PanelMenu keyboard nav — one systemic finding, four components), GAP-055 (Dock keyboard nav), GAP-056 (SpeedDial keyboard nav), GAP-057 (React Tabs `scrollable`), GAP-058 (React Tabs `closable`), GAP-069 (Angular Dock `routerLink`).
 
 **Out of scope:** PanelMenu's own multiple-expansion behavioral difference (KEEP CURRENT BEHAVIOR, not touched — see §2.4); MegaMenu's own disabled-group hover behavioral difference (KEEP CURRENT BEHAVIOR, not touched — see §2.4); any Menu (`UMenu`) capability (tracked separately by GAP-067, not this Spec).
 
@@ -27,12 +25,13 @@
 
 1. **GAP-052 (Steps keyboard nav) is INCLUDE, all three frameworks.**
 2. **GAP-053 (Angular Steps `routerLink`) is INCLUDE, Angular only.**
-3. **Registry gap discovered, not resolved here:** the Final Scope Ledger names "Angular Dock routerLink" as its own INCLUDE line item, distinct from Dock's own keyboard-navigation gap. Direct re-check of `docs/architecture/BLUEPRINT_GAPS.md`'s actual committed registry (GAP-041–068) confirms **no GAP entry exists for it** — GAP-055 as committed covers Dock keyboard navigation only. This specification excludes Angular Dock `routerLink` from its own in-scope items (§1) rather than folding it into GAP-055 (which would broaden that GAP beyond its committed text) or inventing a new GAP number (not authorized at this stage). **Reported to the human for a GAP-stage decision — see §12.**
+3. **GAP-069 (Angular Dock `routerLink`) is INCLUDE, Angular only.** This item was originally disclosed by an earlier version of this Spec as an unregistered finding (the Final Scope Ledger names "Angular Dock routerLink" as its own INCLUDE line item, distinct from Dock's own keyboard-navigation gap, with no corresponding GAP at the time this Spec was first authored). The subsequent Scope Reconciliation Report confirmed no prior GAP covered it, and it was registered as GAP-069. **GAP-055 remains strictly Dock keyboard navigation, not broadened by GAP-069's own registration** — the two are tracked as separate GAPs, per §2.6/§7.
 4. **GAP-054 is one systemic finding covering four components** (Menubar, TieredMenu, MegaMenu, PanelMenu keyboard navigation) — preserved as one Spec section with per-component acceptance criteria, not split into four GAPs (matching the GAP registry's own single-entry treatment).
 5. **PanelMenu's multiple-expansion semantics and MegaMenu's disabled-group hover behavior are KEEP CURRENT BEHAVIOR** — explicitly not implementation scope. This Spec's own GAP-054 section covers *keyboard navigation* for PanelMenu/MegaMenu only; it must not be read as reopening either of these two accepted behavioral differences.
 6. **GAP-055 (Dock keyboard nav) is INCLUDE, all three frameworks.**
 7. **GAP-056 (SpeedDial keyboard nav) is INCLUDE, all three frameworks** — explicitly distinct from SpeedDial's own layout-fidelity question (Parity Confirmed, not touched by this Spec).
 8. **GAP-057 (React Tabs `scrollable`) and GAP-058 (React Tabs `closable`) are both INCLUDE, React only, confirmed independent of each other** (different Prime-availability shape — Angular/Vue already have `scrollable`'s equivalent; Angular/Vue correctly never had `closable`'s equivalent).
+9. **GAP-069 is confirmed independent of GAP-055** — GAP-055 (Dock keyboard navigation) and GAP-069 (Angular Dock `routerLink`) are two distinct capabilities on the same component, tracked as two separate GAPs; neither broadens the other.
 
 ---
 
@@ -44,7 +43,7 @@
 | GAP-053 (Angular Steps routerLink) | In scope | N/A | N/A |
 | GAP-054 (Menubar-family keyboard nav) | In scope | In scope | In scope |
 | GAP-055 (Dock keyboard nav) | In scope | In scope | In scope |
-| *(unregistered — Angular Dock routerLink, see §2.3/§12)* | *Named by the Final Scope Ledger, no GAP exists* | N/A | N/A |
+| GAP-069 (Angular Dock routerLink) | In scope | N/A | N/A |
 | GAP-056 (SpeedDial keyboard nav) | In scope | In scope | In scope |
 | GAP-057 (React Tabs scrollable) | N/A (already has equivalent) | In scope | N/A (already has equivalent) |
 | GAP-058 (React Tabs closable) | **Explicitly out of scope — confirmed no upstream equivalent ever existed** | In scope | **Explicitly out of scope — confirmed no upstream equivalent ever existed** |
@@ -56,7 +55,8 @@
 - **GAP-052:** Real Prime has a full ArrowRight/Left/Home/End system for Steps; Ultimate has none in any framework.
 - **GAP-053:** Real PrimeNG Steps has router integration; Angular's own sibling Breadcrumb already correctly implements the equivalent pattern.
 - **GAP-054:** Real Prime has extensive keyboard systems for Menubar/TieredMenu/MegaMenu/PanelMenu (confirmed at source-line level for Menubar/MegaMenu); Ultimate has zero keyboard navigation for any of the four, in any framework. `UMenu` itself retains basic Arrow navigation — these four retain none, a materially larger reduction than `UMenu`'s own.
-- **GAP-055:** Real Prime Dock has full roving keyboard navigation; Ultimate is mouse-only in all three frameworks. *(Separately, real PrimeNG Dock also has router integration that Angular's Dock lacks — internally inconsistent with Angular's own Menu/Breadcrumb/TieredMenu/MegaMenu, which all support it. This fact is preserved here as evidence, but is not itself in this Spec's scope — see §2.3/§12.)*
+- **GAP-055:** Real Prime Dock has full roving keyboard navigation; Ultimate is mouse-only in all three frameworks.
+- **GAP-069:** Real PrimeNG Dock has router integration; Angular's Dock lacks it, internally inconsistent with Angular's own Menu/Breadcrumb/TieredMenu/MegaMenu/Steps, which all already support the equivalent `routerLink` pattern.
 - **GAP-056:** Real Prime SpeedDial has full roving keyboard navigation between action items; Ultimate implements only Escape-to-close, in all three frameworks. (SpeedDial's layout/positioning math is separately Parity Confirmed, unrelated to this gap.)
 - **GAP-057:** Real PrimeReact TabView has a scroll-button overflow feature; Angular's `showNavigators`/Vue's `TabList.vue` already correctly implement the equivalent. React's `UTabPanel` lacks it.
 - **GAP-058:** Real PrimeReact TabView/TabPanel has a genuine per-tab close capability; React's `UTabPanel` omits it. Angular's/Vue's own real upstream Tabs family never had this concept.
@@ -79,7 +79,11 @@ For each of the four components, independently, in all three frameworks: roving-
 
 ### 5.4 GAP-055 — Dock keyboard navigation
 
-Roving-focus keyboard navigation between Dock action items, matching real Prime's own key set. All three frameworks. **Angular Dock `routerLink` is explicitly not part of this requirement** — see §2.3/§12; that finding has no GAP entry and is reported for human decision rather than being implemented under GAP-055's own scope.
+Roving-focus keyboard navigation between Dock action items, matching real Prime's own key set. All three frameworks. **Angular Dock `routerLink` is a separate requirement, tracked by GAP-069 (§5.6), not part of GAP-055's own scope.**
+
+### 5.6 GAP-069 — Angular Dock `routerLink`
+
+Dock must accept a `routerLink`-equivalent per-item navigation binding, consistent with Angular's own already-working Breadcrumb/Menu/Steps pattern (GAP-053's own template). Angular only.
 
 ### 5.5 GAP-056 — SpeedDial keyboard navigation
 
@@ -97,7 +101,7 @@ React `UTabPanel` must support a per-tab close affordance (close button/icon) th
 
 ## 6. API Requirements
 
-- **GAP-053 (routerLink):** Steps gains a `routerLink`-equivalent input, following the exact same binding pattern Angular's Breadcrumb/Menu already use — no new binding shape is introduced.
+- **GAP-053/GAP-069 (routerLink):** Steps (GAP-053) and Dock (GAP-069) each gain a `routerLink`-equivalent input, following the exact same binding pattern Angular's Breadcrumb/Menu already use — no new binding shape is introduced for either.
 - **GAP-057:** a `scrollable`-equivalent behavior, activated automatically on overflow (matching Angular/Vue's own automatic-overflow-detection behavior) — no new boolean prop is mandated unless the Implementation Plan determines real PrimeReact's own API requires one for parity.
 - **GAP-058:** a `closable`-equivalent prop (component-level or per-tab-item-level, matching real PrimeReact's own API shape) plus a close-event callback.
 - All keyboard-navigation requirements (GAP-052/054/055/056) require no new public API — they are internal keydown-handler additions with no externally observable prop/event surface change beyond the keyboard behavior itself.
@@ -106,7 +110,7 @@ React `UTabPanel` must support a per-tab close affordance (close button/icon) th
 
 ## 7. Dependency Relationships
 
-None among GAP-052 through GAP-058. GAP-057 and GAP-058 are confirmed independent of each other (§2.8). GAP-054 and GAP-055's keyboard-navigation halves are independent of each other (different components, same omission pattern only, no shared mechanism).
+None among GAP-052 through GAP-058, or GAP-069. GAP-057 and GAP-058 are confirmed independent of each other (§2.8). GAP-054 and GAP-055's keyboard-navigation halves are independent of each other (different components, same omission pattern only, no shared mechanism). **GAP-055 and GAP-069 are confirmed independent** (§2.9) — two distinct capabilities on the same component (Dock), tracked as two separate GAPs.
 
 ---
 
@@ -129,6 +133,7 @@ None among GAP-052 through GAP-058. GAP-057 and GAP-058 are confirmed independen
 | PanelMenu's multiple-expansion exclusivity scope is unchanged | GAP-054 (non-regression) |
 | MegaMenu's disabled-group hover-open behavior is unchanged | GAP-054 (non-regression) |
 | Roving-focus keyboard nav on Dock action items — all 3 frameworks | GAP-055 |
+| Dock accepts `routerLink`-equivalent binding — Angular only | GAP-069 |
 | Roving-focus keyboard nav on SpeedDial action items once open — all 3 frameworks | GAP-056 |
 | SpeedDial's layout/positioning math is unchanged | GAP-056 (non-regression) |
 | React Tabs shows scroll-button overflow on tab-label overflow | GAP-057 |
@@ -139,7 +144,7 @@ None among GAP-052 through GAP-058. GAP-057 and GAP-058 are confirmed independen
 
 ## 10. Evidence/Source References
 
-`docs/architecture/BLUEPRINT_GAPS.md` GAP-052 through GAP-058; Navigation Findings Triage (`navigation-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Consolidated Decision Ledger; Final Scope Ledger.
+`docs/architecture/BLUEPRINT_GAPS.md` GAP-052 through GAP-058, GAP-069; Navigation Findings Triage (`navigation-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Consolidated Decision Ledger; Final Scope Ledger; Scope Reconciliation Report (this session, confirming GAP-069's registration).
 
 ---
 
@@ -149,12 +154,6 @@ PanelMenu multiple-expansion behavior; MegaMenu disabled-group hover behavior; `
 
 ---
 
-## 12. Unregistered Finding Discovered During Spec Work (Human Review Required, Not Resolved Here)
+## 12. Resolution History (Informational)
 
-**Finding:** "Angular Dock `routerLink`" is named as its own distinct INCLUDE line item in the Final Scope Ledger (both §A's row list and §C's capability-family grouping), separate from "Dock keyboard navigation." Direct re-verification of `docs/architecture/BLUEPRINT_GAPS.md`'s actual committed text (GAP-041 through GAP-068, re-read in full during this Spec's authoring) confirms **no GAP entry covers it** — GAP-055 as committed ("Dock lacks keyboard navigation in all three frameworks") contains no `routerLink` content anywhere in its body, evidence, or expected-state fields.
-
-**Why this happened:** the prior GAP-creation stage evidently registered Dock's keyboard-navigation gap but did not separately register its own `routerLink` gap, despite the Final Scope Ledger listing both as distinct INCLUDE items (the same pattern already correctly followed for Steps, which has two separate GAPs — GAP-052 for keyboard nav, GAP-053 for `routerLink`).
-
-**What this Spec does about it:** nothing — per the explicit Spec-stage rule ("if the Spec process discovers a genuinely new issue outside GAP-041–GAP-068, record it separately for human review; do not silently add it to the current scope"), this finding is named here and excluded from §1's in-scope list, §3's framework table, §5's required-behavior sections, and §9's acceptance criteria. It is not implemented under GAP-055's own scope (that would broaden GAP-055 beyond its committed text) and no new GAP number is created (not authorized at this stage).
-
-**Requires:** a human decision on whether to register a new GAP (e.g., a next-available number) for "Angular Dock `routerLink`," mirroring GAP-053's own existing treatment of Steps.
+This Spec originally disclosed "Angular Dock `routerLink`" as an unregistered finding with no corresponding GAP entry, discovered while authoring this document. A subsequent Scope Reconciliation Report confirmed no prior GAP covered it and recommended registration; GAP-069 was then created, and this Spec was updated (§1, §2.3/§2.9, §3, §4, §5.6, §6, §7, §9, §10) to incorporate it as a normal, fully-traced requirement. GAP-055 was not modified or broadened by this process — it remains exactly as originally committed ("Dock lacks keyboard navigation in all three frameworks"), and GAP-069 is tracked as its own, separate entry.

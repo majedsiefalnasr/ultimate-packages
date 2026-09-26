@@ -1124,6 +1124,38 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** `packages/react/tsup.config.ts`; `packages/vue/tsup.config.ts`; Overlay Findings Triage (`overlay-findings-triage.md` — real-build verification distinguishing barrel-level success from subpath-level failure); Final Decision Ledger / Final Scope Ledger (React/Vue tsup per-component subpath artifacts — COMPLETE EXISTING COMMITMENT); pre-Spec tracking reconciliation (this session) confirming no prior GAP/ADR tracked this finding.
 - **Architectural decision required:** No — this is a mechanical extension of an already-working, already-correct pattern, not an architectural fork.
 
+#### GAP-069 — Angular Dock lacks `routerLink` integration
+
+- **Status:** MISSING (fix not yet applied) — existing commitment, not newly discovered scope
+- **Type:** Component, Framework (Angular)
+- **Blocking level:** LOW
+- **Current evidence:** Real PrimeNG Dock has router integration; Angular's Dock lacks it, internally inconsistent with Angular's own Menu/Breadcrumb/TieredMenu/MegaMenu/Steps, which all already support the equivalent `routerLink` pattern (Steps' own version tracked separately by GAP-053). Confirmed during Navigation Batch 3 triage; independently re-confirmed as its own distinct, unregistered finding during the Prime parity audit's Spec-stage Scope Reconciliation (this session), which found no existing GAP covered it — GAP-055 as committed covers Dock keyboard navigation only, with no `routerLink` content anywhere in its body.
+- **Expected state:** Dock accepts a `routerLink`-equivalent per-item navigation binding, matching Angular's own already-working Breadcrumb/Menu/Steps pattern.
+- **Why it matters:** Internal cross-component inconsistency within Angular's own Navigation family — Breadcrumb/Menu/TieredMenu/MegaMenu/Steps all have router integration; Dock does not, despite having a real upstream equivalent.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. **Independent from GAP-055** — GAP-055 remains strictly Dock keyboard navigation, not broadened by this entry.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** Angular's own `[routerLink]` wiring pattern, already used by Breadcrumb/Menu/Steps (GAP-053), is the direct template.
+- **Recommended resolution direction:** Directional only — port the same `[routerLink]` wiring pattern already used by Breadcrumb/Menu/Steps to Dock.
+- **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); Final Decision Ledger / Final Scope Ledger (Angular Dock routerLink — INCLUDE); `docs/superpowers/specs/2026-09-26-prime-parity-navigation-design.md` §12 (original disclosure of this then-unregistered finding); Scope Reconciliation Report (this session, confirming no prior GAP covered it).
+- **Architectural decision required:** No.
+
+#### GAP-070 — Angular per-component `ng-packagr` secondary entry points not extended to components shipped after the original proof set
+
+- **Status:** MISSING (characterization + fix not yet applied) — existing commitment extension, not newly discovered scope
+- **Type:** Packaging, Framework (Angular)
+- **Blocking level:** MEDIUM
+- **Current evidence:** GAP-009's own RESOLVED scope covers only the original proof-set components (`checkbox`, `paginator`, `scroller`, `tooltip`, `autofocus`, `badge`, `fluid`, `ripple`, `input-number` — 9 components as of the Angular Form Foundation workstream's own addition), with `button`/`dialog`/`menu`/`table`/`input-text` permanently excluded by a confirmed `ng-packagr@21.2.7`/`@angular/compiler-cli@21.2.22` `ShimReferenceTagger` defect (triggered when one secondary entry point's own compilation unit directly imports another secondary entry point's root class). GAP-009's own text makes no claim about any Angular component built after that workstream — the ~90+ components shipped since (Phase C batches and later) have never been evaluated against this same convention. Confirmed via direct GAP-009 text re-read during the Prime parity audit's Spec-stage Scope Reconciliation (this session) that no existing GAP tracks this extension.
+- **Expected state:** Every Angular component shipped after the original proof set is first characterized against the same confirmed `ShimReferenceTagger` trigger condition GAP-009 already established (does the component's own compilation unit directly import another secondary entry point's root class?); components that do **not** hit that trigger receive a real `ng-packagr` secondary entry point, matching the existing convention; components that **do** hit the trigger are excluded on the same already-established basis as `button`/`dialog`/`menu`/`table`/`input-text`, not treated as a new, separate defect.
+- **Why it matters:** Angular currently has real per-component packaging parity with React/Vue for only its own original 9-component proof set; every newer component ships via the main barrel only, an unevaluated (not necessarily incorrect, but unconfirmed) state.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None upstream from any other GAP. **Internal prerequisite:** the characterization step (does each newer component hit the `ShimReferenceTagger` trigger?) must complete before that specific component's own secondary-entry-point addition — do not assume every newer component requires one before checking.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** GAP-009's own already-established trigger-condition characterization method and its own existing `ng-package.json`-per-component convention are the direct template for both the characterization step and the eventual fix.
+- **Recommended resolution direction:** Directional only — characterize each newer component against the existing trigger condition first; add secondary entry points only to those that pass; leave those that fail excluded, following GAP-009's own existing precedent and reasoning, not a new investigation.
+- **Source/evidence:** GAP-009 (this document, §3, Foundation/architecture — referenced as existing authoritative context, not modified); Final Decision Ledger / Final Scope Ledger (Angular ng-packagr/export/build mechanism — COMPLETE EXISTING COMMITMENT); `docs/superpowers/specs/2026-09-26-prime-parity-existing-commitments-design.md` §1 (original disclosure of this then-unregistered extension); Scope Reconciliation Report (this session, confirming no prior GAP covered it).
+- **Architectural decision required:** No — this is a mechanical characterization-then-extension of an already-established, already-understood defect boundary, not a new architectural question.
+
 **Note on GC-D1's own template-shape scope:** GAP-041's exact column-template API shape is intentionally left undesigned here, deferred to its own future Spec, per the GAP-stage's own explicit constraint.
 
 ---
