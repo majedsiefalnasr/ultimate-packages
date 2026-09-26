@@ -1092,7 +1092,39 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** GAP-039 (this document, §3, Cross-cutting: Overlay/Interaction) — its own text discloses and disclaims tracking this; `packages/ng/e2e/tooltip.spec.ts`; Final Decision Ledger / Final Scope Ledger (Angular Tooltip visibility — COMPLETE EXISTING COMMITMENT).
 - **Architectural decision required:** No — this is a behavioral bug with an already-proven fix, not a fork, exactly matching GAP-039's own reasoning.
 
-**Note on the remaining 3 COMPLETE EXISTING COMMITMENT items (Angular ng-packagr/export/build mechanism; React/Vue tsup per-component subpath artifacts; Angular UMenu popup + SplitButton workaround) and on GC-D1's own template-shape scope:** see the GAP-stage report accompanying this registry update for the full existing-artifact mapping, mismatch disclosures, and the explicit statement that GC-D1's (GAP-041's) exact API shape is intentionally left undesigned here, deferred to its own future Spec.
+#### GAP-067 — Angular `UMenu` popup mode is inert; `USplitButton` hand-rolls its own overlay instead of using it
+
+- **Status:** MISSING (fix not yet applied) — existing commitment, not newly discovered scope
+- **Type:** Component, Framework (Angular), Architecture
+- **Blocking level:** MEDIUM
+- **Current evidence:** `UMenu`'s own doc comment (`packages/ng/src/menu/menu.ts:38-44`) explicitly discloses: *"`popup` is accepted as an input per the Interfaces section, but this task's file list has no popup-overlay component to render into, so it is currently inert beyond flagging the `u-menu-overlay` style-class variant... A future task can extend this component's input/output surface for the popup overlay, submenu nesting, and the additional key handlers."* This was named as expected future work at the time `UMenu` shipped, not discovered fresh by the Prime-vs-Ultimate parity audit. `USplitButton` currently implements its own hand-rolled overlay state as a workaround rather than delegating to `UMenu`'s popup mode, confirmed during the Findings Decision/Scope Triage. React's and Vue's own `UMenu`/`USplitButton` equivalents already have working popup mechanisms (Portal+escape-registry+z-index), confirmed as the direct cross-framework template.
+- **Expected state:** `UMenu`'s popup-overlay mechanism built out (input/output surface extended per its own doc comment's named scope), after which `USplitButton` can be simplified to delegate to it, matching React/Vue's own already-working shape.
+- **Why it matters:** This is a real, previously-named (not undisclosed) piece of unfinished work — `UMenu`'s own doc comment named the deferral at the time it shipped — that `USplitButton` currently works around with duplicated, hand-rolled overlay logic instead of a shared mechanism.
+- **What it blocks:** Nothing further downstream; `USplitButton`'s current workaround is functional, just duplicated.
+- **Dependencies:** None upstream. `USplitButton`'s own simplification is downstream of this gap's resolution, not a separate blocking dependency.
+- **Framework scope:** Angular only. React's and Vue's own equivalents already have working popup mechanisms and are unaffected.
+- **Existing reusable infrastructure:** React's and Vue's own working Portal+escape-registry+z-index popup mechanisms are the direct cross-framework template for what Angular's `UMenu` needs to build out.
+- **Recommended resolution direction:** Directional only, per GAP-stage rules — build out `UMenu`'s popup-overlay mechanism using the React/Vue pattern as the template, then simplify `USplitButton` to delegate to it. Exact task breakdown belongs to this gap's own future Plan, not designed here.
+- **Source/evidence:** `packages/ng/src/menu/menu.ts:38-44` (UMenu's own disclosing doc comment); `packages/ng/src/split-button/` (USplitButton's current hand-rolled overlay workaround); Findings Decision/Scope Triage (`pass1-decision-triage.md`, lines 42/56); Final Decision Ledger / Final Scope Ledger (Angular UMenu popup + SplitButton workaround — COMPLETE EXISTING COMMITMENT); pre-Spec tracking reconciliation (this session) confirming no prior GAP/ADR tracked this finding.
+- **Architectural decision required:** No — this is scoped, already-named implementation work, not an architectural fork.
+
+#### GAP-068 — React/Vue tsup per-component subpath exports are broken for components beyond the original proof set
+
+- **Status:** MISSING (fix not yet applied) — existing commitment, not newly discovered scope
+- **Type:** Packaging, Framework (React, Vue)
+- **Blocking level:** MEDIUM
+- **Current evidence:** `tsup.config.ts`'s `entry` map is stale relative to the components actually shipped since it was last updated — confirmed empirically via a real build during the Overlay Findings Triage: the main package barrel (`@ultimate/{react,vue}`) is fully unaffected, since esbuild bundles everything transitively through the barrel regardless of the `entry` map's own contents; only the per-component subpath exports (`@ultimate/{react,vue}/<component>`) fail for components added after the map was last updated. One shared root cause (`tsup.config.ts`'s own `entry` map), two framework-local instances (React and Vue each maintain their own stale map).
+- **Expected state:** `tsup.config.ts`'s `entry` map extended in both packages to cover every currently-shipped component, restoring working per-component subpath exports for all of them, matching each framework's own already-correct convention for its original proof-set components.
+- **Why it matters:** This is a real, silent packaging regression — consumers importing a newer component via its own subpath (rather than the main barrel) currently get a broken import, with no build-time signal, since the main barrel's own successful build masks the subpath-specific failure.
+- **What it blocks:** Nothing further downstream; the main barrel import path remains fully functional as a workaround in the interim.
+- **Dependencies:** None. The React and Vue instances share one root cause but can be fixed independently per framework.
+- **Framework scope:** React, Vue. Angular is unaffected — its own per-component export mechanism (`ng-packagr` secondary entry points, GAP-009/GAP-023) is a structurally different, separately-tracked mechanism, not the same defect.
+- **Existing reusable infrastructure:** Each framework's own already-correct `entry` map for its original proof-set components is the direct template — this is a mechanical extension of an existing, working pattern, not new tooling.
+- **Recommended resolution direction:** Directional only, per GAP-stage rules — extend `tsup.config.ts`'s `entry` map in both packages to cover every currently-shipped component. Exact task breakdown belongs to this gap's own future Plan, not designed here.
+- **Source/evidence:** `packages/react/tsup.config.ts`; `packages/vue/tsup.config.ts`; Overlay Findings Triage (`overlay-findings-triage.md` — real-build verification distinguishing barrel-level success from subpath-level failure); Final Decision Ledger / Final Scope Ledger (React/Vue tsup per-component subpath artifacts — COMPLETE EXISTING COMMITMENT); pre-Spec tracking reconciliation (this session) confirming no prior GAP/ADR tracked this finding.
+- **Architectural decision required:** No — this is a mechanical extension of an already-working, already-correct pattern, not an architectural fork.
+
+**Note on GC-D1's own template-shape scope:** GAP-041's exact column-template API shape is intentionally left undesigned here, deferred to its own future Spec, per the GAP-stage's own explicit constraint.
 
 ---
 
