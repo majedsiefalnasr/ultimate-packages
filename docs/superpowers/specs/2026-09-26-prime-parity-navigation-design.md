@@ -79,13 +79,13 @@ For each of the four components, independently, in all three frameworks: roving-
 
 ### 5.4 GAP-055 — Dock keyboard navigation
 
-Roving-focus keyboard navigation between Dock action items, matching real Prime's own key set. All three frameworks. **Angular Dock `routerLink` is a separate requirement, tracked by GAP-069 (§5.6), not part of GAP-055's own scope.**
+Roving-focus keyboard navigation between Dock action items, matching real Prime's own key set. All three frameworks. **Angular Dock `routerLink` is a separate requirement, tracked by GAP-069 (§5.5), not part of GAP-055's own scope.**
 
-### 5.6 GAP-069 — Angular Dock `routerLink`
+### 5.5 GAP-069 — Angular Dock `routerLink`
 
 Dock must accept a `routerLink`-equivalent per-item navigation binding, consistent with Angular's own already-working Breadcrumb/Menu/Steps pattern (GAP-053's own template). Angular only.
 
-### 5.5 GAP-056 — SpeedDial keyboard navigation
+### 5.6 GAP-056 — SpeedDial keyboard navigation
 
 Roving-focus keyboard navigation between SpeedDial action items once open, matching real Prime's own key set. All three frameworks. **Explicitly excludes any change to SpeedDial's layout/positioning math** (trig-based calculation, radius/direction handling) — that capability is Parity Confirmed and unrelated to this requirement.
 
@@ -156,4 +156,4 @@ PanelMenu multiple-expansion behavior; MegaMenu disabled-group hover behavior; `
 
 ## 12. Resolution History (Informational)
 
-This Spec originally disclosed "Angular Dock `routerLink`" as an unregistered finding with no corresponding GAP entry, discovered while authoring this document. A subsequent Scope Reconciliation Report confirmed no prior GAP covered it and recommended registration; GAP-069 was then created, and this Spec was updated (§1, §2.3/§2.9, §3, §4, §5.6, §6, §7, §9, §10) to incorporate it as a normal, fully-traced requirement. GAP-055 was not modified or broadened by this process — it remains exactly as originally committed ("Dock lacks keyboard navigation in all three frameworks"), and GAP-069 is tracked as its own, separate entry.
+This Spec originally disclosed "Angular Dock `routerLink`" as an unregistered finding with no corresponding GAP entry, discovered while authoring this document. A subsequent Scope Reconciliation Report confirmed no prior GAP covered it and recommended registration; GAP-069 was then created, and this Spec was updated (§1, §2.3/§2.9, §3, §4, §5.5, §6, §7, §9, §10) to incorporate it as a normal, fully-traced requirement. GAP-055 was not modified or broadened by this process — it remains exactly as originally committed ("Dock lacks keyboard navigation in all three frameworks"), and GAP-069 is tracked as its own, separate entry. **Section-numbering correction (2026-09-26):** §5's subsections were originally numbered out of sequence (§5.6 for GAP-069 physically appearing before §5.5 for GAP-056); renumbered here to be sequential (§5.5 GAP-069, §5.6 GAP-056) per the Spec Review's own finding — no content, scope, or acceptance criteria changed by this correction.
