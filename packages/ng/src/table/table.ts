@@ -69,6 +69,17 @@ export interface UTableColumn<T = unknown> {
         <table [class]="cx('table')">
           <thead [class]="cx('thead')" role="rowgroup">
             <tr role="row">
+              @if (selectionColumn() && selectionMode()) {
+                <th>
+                  @if (selectionMode() === "multiple") {
+                    <input
+                      type="checkbox"
+                      [checked]="allSelected"
+                      (click)="toggleAllSelection()"
+                    />
+                  }
+                </th>
+              }
               @for (col of columns(); track col.field) {
                 <th
                   role="columnheader"
@@ -93,6 +104,23 @@ export interface UTableColumn<T = unknown> {
                 (click)="onRowClick(entry.row)"
                 (keydown)="onRowKeyDown($event)"
               >
+                @if (selectionColumn() && selectionMode()) {
+                  <td>
+                    @if (selectionMode() === "multiple") {
+                      <input
+                        type="checkbox"
+                        [checked]="isSelected(entry.row)"
+                        (click)="onSelectionInputClick($event, entry.row)"
+                      />
+                    } @else {
+                      <input
+                        type="radio"
+                        [checked]="isSelected(entry.row)"
+                        (click)="onSelectionInputClick($event, entry.row)"
+                      />
+                    }
+                  </td>
+                }
                 @for (col of columns(); track col.field) {
                   <td>{{ renderCell(entry.row, col, rowIndex) }}</td>
                 }
@@ -137,6 +165,7 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
   selection = input<T | T[]>();
   compareSelectionBy = input<"equals" | "deepEquals">("equals");
   selectionChange = output<T | T[]>();
+  selectionColumn = input(false);
 
   paginator = input(false);
   first = input(0);
@@ -543,6 +572,15 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * clicks are inert (no emit) — selection is opt-in per spec §6.
    */
   protected onRowClick(row: T): void {
+    this.toggleSelection(row);
+  }
+
+  /**
+   * Shared row-selection-toggle logic (GAP-042, Spec §5.2), extracted from
+   * `onRowClick` so the new checkbox/radio selection-column controls
+   * reuse the exact same toggle behavior rather than duplicating it.
+   */
+  private toggleSelection(row: T): void {
     const mode = this.selectionMode();
     if (!mode) return;
 
@@ -555,6 +593,37 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
     const currentArray = Array.isArray(current) ? current : [];
     const index = currentArray.findIndex((s) => this.isRowEqual(s, row));
     const next = index === -1 ? [...currentArray, row] : currentArray.filter((_, i) => i !== index);
+    this.selectionChange.emit(next);
+  }
+
+  /**
+   * Selection-column checkbox/radio click handler (GAP-042, Spec §5.2):
+   * stops propagation so the enclosing row's own `(click)="onRowClick(...)"`
+   * handler doesn't also fire and double-toggle the same row, then delegates
+   * to the shared `toggleSelection` logic.
+   */
+  protected onSelectionInputClick(event: Event, row: T): void {
+    event.stopPropagation();
+    this.toggleSelection(row);
+  }
+
+  /**
+   * Header select-all checkbox state (GAP-042, Spec §5.2): checked only when
+   * there is at least one row and every row is currently selected — an empty
+   * `value()` is never considered "all selected".
+   */
+  protected get allSelected(): boolean {
+    const rows = this.value();
+    return rows.length > 0 && rows.every((row) => this.isSelected(row));
+  }
+
+  /**
+   * Header select-all checkbox click handler (GAP-042, Spec §5.2): selects
+   * every row in `value()` if not all are already selected, otherwise
+   * deselects all (clears the selection).
+   */
+  protected toggleAllSelection(): void {
+    const next = this.allSelected ? [] : [...this.value()];
     this.selectionChange.emit(next);
   }
 

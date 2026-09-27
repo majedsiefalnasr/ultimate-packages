@@ -592,6 +592,85 @@ describe("selection", () => {
   });
 });
 
+describe("selection-column UI (Spec §5.2, GAP-042)", () => {
+  interface Row { id: number; name: string }
+
+  it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 2, name: "B" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.detectChanges();
+    const headerCheckbox = fixture.nativeElement.querySelector("thead input[type=checkbox]");
+    const rowCheckboxes = fixture.nativeElement.querySelectorAll("tbody input[type=checkbox]");
+    expect(headerCheckbox).toBeTruthy();
+    expect(rowCheckboxes.length).toBe(2);
+  });
+
+  it("renders a radio button per row and no header control when selectionMode is single and selectionColumn is true", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "single");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("tbody input[type=radio]")).toBeTruthy();
+    expect(fixture.nativeElement.querySelector("thead input")).toBeFalsy();
+  });
+
+  it("does not render a selection column when selectionColumn is false (default)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("input[type=checkbox]")).toBeFalsy();
+  });
+
+  it("header checkbox is unchecked and enabled when value is empty", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.detectChanges();
+    const headerCheckbox = fixture.nativeElement.querySelector("thead input[type=checkbox]");
+    expect(headerCheckbox.checked).toBe(false);
+    expect(headerCheckbox.disabled).toBe(false);
+  });
+
+  it("clicking a row checkbox toggles that row into the selection and emits selectionChange", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("tbody input[type=checkbox]").click();
+    expect(emitted).toEqual([[{ id: 1, name: "A" }]]);
+  });
+
+  it("clicking the header checkbox selects all rows; clicking again deselects all", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    fixture.componentRef.setInput("value", rows);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    const headerCheckbox = fixture.nativeElement.querySelector("thead input[type=checkbox]");
+    headerCheckbox.click();
+    expect(emitted[0]).toEqual(rows);
+  });
+});
+
 describe("keyboard navigation", () => {
   it("ArrowDown on a row moves focus to the next row", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
