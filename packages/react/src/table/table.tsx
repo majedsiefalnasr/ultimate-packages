@@ -14,6 +14,21 @@ export interface UTableColumn<T = unknown> {
   body?: (row: T, options: { field: string; rowIndex: number }) => React.ReactNode;
 }
 
+/**
+ * Default empty-state message (Spec §5.6, GAP-046). Real PrimeNG's own
+ * Table component (React's real-source reference stays PrimeReact, but this
+ * text value is cross-framework, matching Angular Task 10's own sourcing)
+ * has no hardcoded default text for its empty region — it renders purely
+ * via a content-projected template with no built-in fallback string. The
+ * closest verified real-Prime default text is the global locale's
+ * `emptyMessage` translation key (confirmed via the pinned
+ * `primeng-21.1.9.tar.gz` tarball, `packages/primeng/src/config/
+ * primeng.ts`: `emptyMessage: 'No results found'`), which this constant
+ * matches, kept identical across all 3 frameworks per the plan's
+ * cross-framework consistency precedent.
+ */
+const DEFAULT_EMPTY_MESSAGE = "No results found";
+
 export interface UTableSortEvent {
   sortField?: string;
   sortOrder?: 1 | 0 | -1;
@@ -77,6 +92,7 @@ export interface UTableProps<T> {
   onCellEditCancel?: (event: { newValue: unknown; oldValue: unknown }) => void;
   rowGroupMode?: "subheader" | "rowspan";
   groupRowsBy?: string;
+  loading?: boolean;
 }
 
 function resolveCell<T>(row: T, field: string): unknown {
@@ -341,6 +357,7 @@ export function UTable<T>({
   onRowEditInit,
   rowGroupMode,
   groupRowsBy,
+  loading = false,
 }: UTableProps<T>) {
   const { cx } = useComponentBase({ componentName: "table", styleModule: tableStyleModule });
 
@@ -628,7 +645,21 @@ export function UTable<T>({
             ))}
           </tr>
         </thead>
-        {!virtualScrollerOptions && (
+        {!virtualScrollerOptions && loading && (
+          <tbody className={cx("tbody") as string} role="rowgroup">
+            <tr>
+              <td data-u-table-loading colSpan={columns.length} />
+            </tr>
+          </tbody>
+        )}
+        {!virtualScrollerOptions && !loading && value.length === 0 && (
+          <tbody className={cx("tbody") as string} role="rowgroup">
+            <tr>
+              <td colSpan={columns.length}>{DEFAULT_EMPTY_MESSAGE}</td>
+            </tr>
+          </tbody>
+        )}
+        {!virtualScrollerOptions && !loading && value.length > 0 && (
           <tbody className={cx("tbody") as string} role="rowgroup">
             {groupedRows.map(({ row, isGroupHeader }, index) => (
               <React.Fragment key={index}>

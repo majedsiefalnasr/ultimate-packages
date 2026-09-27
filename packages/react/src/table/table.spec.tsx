@@ -1014,3 +1014,66 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
     expect(screen.getByText("Widget").tagName).toBe("STRONG");
   });
 });
+
+describe("loading/empty states (Spec §5.6, GAP-046)", () => {
+  it("shows a loading indicator when loading is true", () => {
+    const { container } = render(
+      <UTable<Row> value={[]} columns={[{ field: "name", header: "Name" }]} loading />
+    );
+    expect(container.querySelector("[data-u-table-loading]")).toBeTruthy();
+  });
+
+  it("shows a default empty-state message when value is empty and loading is false", () => {
+    render(<UTable<Row> value={[]} columns={[{ field: "name", header: "Name" }]} />);
+    expect(screen.getByText("No results found")).toBeTruthy();
+  });
+
+  it("does not show the empty-state message when value has rows", () => {
+    render(
+      <UTable<Row> value={[{ id: 1, name: "A" }]} columns={[{ field: "name", header: "Name" }]} />
+    );
+    expect(screen.queryByText("No results found")).toBeNull();
+  });
+
+  it("does not show the empty-state message while loading is true, even with an empty value", () => {
+    render(
+      <UTable<Row> value={[]} columns={[{ field: "name", header: "Name" }]} loading />
+    );
+    expect(screen.queryByText("No results found")).toBeNull();
+  });
+
+  it("preserves existing selection when loading toggles to true and back", () => {
+    const { rerender } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selection={[{ id: 1, name: "A" }]}
+      />
+    );
+    // Table is fully controlled (no internal selection state) — toggling
+    // `loading` on and back off must not have mutated the `selection` prop
+    // the parent is still passing back in, matching Angular's own
+    // component-instance-state assertion adapted to React's controlled
+    // model.
+    rerender(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selection={[{ id: 1, name: "A" }]}
+        loading
+      />
+    );
+    rerender(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selection={[{ id: 1, name: "A" }]}
+      />
+    );
+    const row = screen.getAllByRole("row")[1];
+    expect(row).toHaveAttribute("aria-selected", "true");
+  });
+});
