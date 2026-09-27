@@ -361,6 +361,92 @@ describe("selection", () => {
   });
 });
 
+describe("selection-column UI (Spec §5.2, GAP-042)", () => {
+  it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }, { id: 2, name: "B" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selectionColumn: true,
+      },
+    });
+    const headerCheckbox = wrapper.find("thead input[type=checkbox]");
+    const rowCheckboxes = wrapper.findAll("tbody input[type=checkbox]");
+    expect(headerCheckbox.exists()).toBe(true);
+    expect(rowCheckboxes.length).toBe(2);
+  });
+
+  it("renders a radio button per row and no header control when selectionMode is single and selectionColumn is true", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "single",
+        selectionColumn: true,
+      },
+    });
+    expect(wrapper.find("tbody input[type=radio]").exists()).toBe(true);
+    expect(wrapper.find("thead input").exists()).toBe(false);
+  });
+
+  it("does not render a selection column when selectionColumn is false (default)", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+      },
+    });
+    expect(wrapper.find("input[type=checkbox]").exists()).toBe(false);
+  });
+
+  it("header checkbox is unchecked and enabled when value is empty", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selectionColumn: true,
+      },
+    });
+    const headerCheckbox = wrapper.find("thead input[type=checkbox]");
+    expect((headerCheckbox.element as HTMLInputElement).checked).toBe(false);
+    expect((headerCheckbox.element as HTMLInputElement).disabled).toBe(false);
+  });
+
+  it("clicking a row checkbox toggles that row into the selection and emits selection-change", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        dataKey: "id",
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selection: [],
+        selectionColumn: true,
+      },
+    });
+    await wrapper.find("tbody input[type=checkbox]").trigger("click");
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([[{ id: 1, name: "A" }]]);
+  });
+
+  it("clicking the header checkbox selects all rows; clicking again deselects all", async () => {
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const wrapper = mount(UTable, {
+      props: {
+        value: rows,
+        dataKey: "id",
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selection: [],
+        selectionColumn: true,
+      },
+    });
+    await wrapper.find("thead input[type=checkbox]").trigger("click");
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([rows]);
+  });
+});
+
 describe("keyboard navigation", () => {
   it("ArrowDown on a row moves focus to the next row", async () => {
     const wrapper = mount(UTable, {

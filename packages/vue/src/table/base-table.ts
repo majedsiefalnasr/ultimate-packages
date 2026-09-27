@@ -17,6 +17,7 @@ export function createBaseTable(): ComponentOptions {
       selectionMode: { type: String, default: undefined },
       selection: { type: [Object, Array], default: undefined },
       compareSelectionBy: { type: String, default: "equals" },
+      selectionColumn: { type: Boolean, default: false },
       paginator: { type: Boolean, default: false },
       first: { type: Number, default: 0 },
       rows: { type: Number, default: 0 },

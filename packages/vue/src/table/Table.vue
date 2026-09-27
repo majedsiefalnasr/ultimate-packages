@@ -3,6 +3,14 @@
     <table :class="cx('table')">
       <thead :class="cx('thead')" role="rowgroup">
         <tr role="row">
+          <th v-if="selectionColumn && selectionMode">
+            <input
+              v-if="selectionMode === 'multiple'"
+              type="checkbox"
+              :checked="allSelected"
+              @click="toggleAllSelection"
+            />
+          </th>
           <th
             v-for="col in columns"
             :key="col.field"
@@ -29,6 +37,13 @@
             @click="selectRow(entry.row)"
             @keydown="onRowKeyDown"
           >
+            <td v-if="selectionColumn && selectionMode">
+              <input
+                :type="selectionMode === 'multiple' ? 'checkbox' : 'radio'"
+                :checked="isSelected(entry.row)"
+                @click.stop="selectRow(entry.row)"
+              />
+            </td>
             <td v-for="col in columns" :key="col.field">{{ renderCell(entry.row, col, index) }}</td>
             <td v-if="editMode === 'row'">
               <button
@@ -289,6 +304,14 @@ export default {
       return this.applySortTo(this.value);
     },
     /**
+     * Header select-all checkbox state (GAP-042, Spec §5.2): checked only
+     * when there is at least one row and every row is currently selected —
+     * an empty `value` is never considered "all selected".
+     */
+    allSelected() {
+      return this.value.length > 0 && this.value.every((row) => this.isSelected(row));
+    },
+    /**
      * Applies `filters` (filter-then-sort) via `matchesFilterEntry`/
      * `matchesFilter`: each `filters` entry is keyed by field and is either
      * a single `FilterMetadata` (must match) or a `{operator, constraints}`
@@ -455,6 +478,16 @@ export default {
       if (this.selection == null) return false;
       if (Array.isArray(this.selection)) return this.selection.some((s) => this.isRowEqual(s, row));
       return this.isRowEqual(this.selection, row);
+    },
+    /**
+     * Header select-all checkbox click handler (GAP-042, Spec §5.2):
+     * selects every row in `value` if not all are already selected,
+     * otherwise deselects all — same dual-emit pattern as `selectRow`.
+     */
+    toggleAllSelection() {
+      const next = this.allSelected ? [] : [...this.value];
+      this.$emit("update:selection", next);
+      this.$emit("selection-change", next);
     },
     /**
      * Computes the next selection value and emits it rather than mutating
