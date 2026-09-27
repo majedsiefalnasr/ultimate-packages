@@ -1,0 +1,454 @@
+# Prime Parity: Navigation Implementation Plan (GAP-052–GAP-058, GAP-069)
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task.
+
+**Execution approach:** Subagent-driven development, one implementer/reviewer cycle per task. GAP-054 (4 components) is broken into 4 independent per-component sub-tasks per framework rather than one giant task, so a reviewer can verify each component's roving-focus behavior in isolation.
+
+**Goal:** Add keyboard navigation to Steps (GAP-052), Menubar/TieredMenu/MegaMenu/PanelMenu (GAP-054), Dock (GAP-055), SpeedDial (GAP-056); add `routerLink` to Angular Steps (GAP-053) and Angular Dock (GAP-069); add `scrollable`/`closable` to React Tabs (GAP-057/058).
+
+**Spec:** `docs/superpowers/specs/2026-09-26-prime-parity-navigation-design.md`.
+
+**GAP → Task mapping:**
+
+| GAP | Task(s) |
+|---|---|
+| GAP-052 | Task 1 (Angular), Task 2 (React), Task 3 (Vue) |
+| GAP-053 | Task 4 (Angular only) |
+| GAP-054 | Task 5-8 (Angular: Menubar, TieredMenu, MegaMenu, PanelMenu), Task 9-12 (React, same order), Task 13-16 (Vue, same order) |
+| GAP-055 | Task 17 (Angular), Task 18 (React), Task 19 (Vue) |
+| GAP-069 | Task 20 (Angular only) |
+| GAP-056 | Task 21 (Angular), Task 22 (React), Task 23 (Vue) |
+| GAP-057 | Task 24 (React only) |
+| GAP-058 | Task 25 (React only) |
+
+## Global Constraints
+
+- **PanelMenu's multiple-expansion exclusivity scope is not touched by Task 8/12/16.** Only keyboard navigation is added; the per-level sibling-exclusivity behavior (KEEP CURRENT BEHAVIOR) is unchanged.
+- **MegaMenu's disabled-group hover-open behavior is not touched by Task 7/11/15.** Only keyboard navigation is added.
+- **SpeedDial's already-existing Escape mechanism (`closeOnEscape`, confirmed present at `speed-dial.ts:184-186`) is not modified.** Task 21-23 add only between-item Arrow-key navigation.
+- **Angular/Vue Tabs are not touched by Task 25.** `closable` is React-only, per Spec §5.8's own explicit exclusion.
+- **`routerLink` binding pattern is fixed by precedent, not re-designed.** Task 4/20 use the exact pattern already established in `packages/ng/src/breadcrumb/breadcrumb.ts` (`[attr.href]="item.routerLink ? null : (item.url ?? '#')"` + `[routerLink]="item.disabled ? null : (item.routerLink ?? null)"`, with `RouterModule` imported).
+- **No task modifies `packages/ng/src/menu/menu.ts` or any Menu-family shared mechanism.** `UMenu`'s own popup capability is tracked separately by GAP-067 (Existing Commitments Plan).
+- **Roving-tabindex, where added, follows `UPanelMenu`'s own already-established pattern** (`[attr.tabindex]="item.disabled ? -1 : 0"`, confirmed present at `panel-menu-list.ts:58`) as the cross-component precedent for "only one item at a time is tabbable."
+
+## Review Focus
+
+- **Keyboard navigation reaching a disabled item** — a reasonable person pressing Arrow keys expects disabled items to be skipped over (focus moves to the next enabled item), not to receive focus and then do nothing when activated; every task below must skip disabled items in its roving-focus computation, matching `UPanelMenu`'s own existing disabled-skip precedent if one exists there, or established fresh here consistently across all 4 GAP-054 components.
+- **Escape closing an open submenu in Menubar/TieredMenu/MegaMenu (GAP-054) while a parent menu is also open** — a reasonable person expects Escape to close only the innermost open submenu first (returning focus to that submenu's own trigger), not the entire menu tree at once, matching standard nested-menu UX and avoiding an unexpected total-dismissal surprise.
+- **`routerLink` combined with `disabled` on the same item (Task 4/20)** — Breadcrumb's own existing pattern (`item.disabled ? null : (item.routerLink ?? null)`) already resolves this: a disabled item's `routerLink` binding resolves to `null`, preventing navigation; Task 4/20 must reuse this exact conditional, not a bare `item.routerLink` binding that would let a disabled item still navigate.
+
+---
+
+### Task 1: Angular — GAP-052 Steps keyboard navigation
+
+**Files:** `packages/ng/src/steps/steps.ts`, `packages/ng/src/steps/steps.spec.ts`.
+
+- [ ] **Step 1: Write the failing tests**
+
+```typescript
+describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
+  it("ArrowRight moves focus to the next enabled step", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }, { label: "C" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
+    const links = fixture.nativeElement.querySelectorAll("a");
+    links[0].focus();
+    links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+    expect(document.activeElement).toBe(links[1]);
+  });
+
+  it("ArrowLeft moves focus to the previous enabled step", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
+    const links = fixture.nativeElement.querySelectorAll("a");
+    links[1].focus();
+    links[1].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft", bubbles: true }));
+    expect(document.activeElement).toBe(links[0]);
+  });
+
+  it("Home moves focus to the first enabled step, End to the last", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }, { label: "C" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
+    const links = fixture.nativeElement.querySelectorAll("a");
+    links[1].focus();
+    links[1].dispatchEvent(new KeyboardEvent("keydown", { code: "End", bubbles: true }));
+    expect(document.activeElement).toBe(links[2]);
+    links[2].dispatchEvent(new KeyboardEvent("keydown", { code: "Home", bubbles: true }));
+    expect(document.activeElement).toBe(links[0]);
+  });
+
+  it("ArrowRight skips a disabled step", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
+    const links = fixture.nativeElement.querySelectorAll("a");
+    links[0].focus();
+    links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+    expect(document.activeElement).toBe(links[2]);
+  });
+});
+```
+
+- [ ] **Step 2: Implement**
+
+Add a `(keydown)` handler on the `<ol>` (event delegation, matching the existing single-listener pattern other components in this codebase use rather than one listener per `<a>`): `ArrowRight`/`ArrowLeft` move focus to the next/previous non-disabled item (per `isItemDisabled`, already defined); `Home`/`End` move to the first/last non-disabled item. Use `querySelectorAll("a")` scoped to the component's own root plus index math, or track focused index via a signal — either is acceptable; call `event.preventDefault()` for each handled key.
+
+- [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
+
+---
+
+### Task 2: React — GAP-052 Steps keyboard navigation
+
+**Files:** `packages/react/src/steps/steps.tsx`, `steps.spec.tsx`. Equivalent 4 tests + implementation, React idioms.
+
+---
+
+### Task 3: Vue — GAP-052 Steps keyboard navigation
+
+**Files:** `packages/vue/src/steps/Steps.vue`, `steps.spec.ts`. Equivalent 4 tests + implementation, Vue idioms.
+
+---
+
+### Task 4: Angular — GAP-053 Steps `routerLink`
+
+**Files:** `packages/ng/src/steps/steps.ts`, `steps.spec.ts`.
+
+- [ ] **Step 1: Write the failing tests**
+
+```typescript
+describe("routerLink (Spec §5.2, GAP-053)", () => {
+  it("binds routerLink when an item has one, omitting href", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A", routerLink: "/a" }]);
+    fixture.detectChanges();
+    const link = fixture.nativeElement.querySelector("a");
+    expect(link.getAttribute("href")).toBe("/a"); // RouterLink sets href itself when rendered with RouterModule's test harness
+  });
+
+  it("does not bind routerLink when the item is disabled", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A", routerLink: "/a", disabled: true }]);
+    fixture.detectChanges();
+    const link = fixture.nativeElement.querySelector("a");
+    expect(link.getAttribute("href")).not.toBe("/a");
+  });
+
+  it("falls back to url/# href when no routerLink is set", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A" }]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("a").getAttribute("href")).toBe("#");
+  });
+});
+```
+
+(Test setup requires `RouterTestingModule`/`provideRouter([])` in the `TestBed.configureTestingModule`, matching `breadcrumb.spec.ts`'s own existing setup — copy that file's harness, do not invent a new one.)
+
+- [ ] **Step 2: Implement**
+
+1. Add `import { RouterModule } from "@angular/router";` and `imports: [RouterModule]` to `@Component`.
+2. Change the template's `[href]="item.url || '#'"` to `[attr.href]="item.routerLink ? null : (item.url ?? '#')"` and add `[routerLink]="item.disabled ? null : (item.routerLink ?? null)"`, matching Breadcrumb's own exact pattern.
+
+- [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
+
+---
+
+### Task 5: Angular — GAP-054 Menubar keyboard navigation
+
+**Files:** `packages/ng/src/menubar/menubar.ts`, `packages/ng/src/menubar/menubar-sub.ts`, `menubar.spec.ts`.
+
+- [ ] **Step 1: Write the failing tests**
+
+```typescript
+describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
+  it("ArrowRight/ArrowLeft move focus among top-level items", () => {
+    const fixture = TestBed.createComponent(UMenubar);
+    fixture.componentRef.setInput("model", [{ label: "File" }, { label: "Edit" }, { label: "View" }]);
+    fixture.detectChanges();
+    const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+    items[0].focus();
+    items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+    expect(document.activeElement).toBe(items[1]);
+  });
+
+  it("Enter/Space on a top-level item with children opens its submenu", () => {
+    const fixture = TestBed.createComponent(UMenubar);
+    fixture.componentRef.setInput("model", [{ label: "File", items: [{ label: "New" }] }]);
+    fixture.detectChanges();
+    const item = fixture.nativeElement.querySelector("[role=menuitem]");
+    item.focus();
+    item.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[role=menuitem][aria-label=New]") || fixture.nativeElement.textContent).toContain("New");
+  });
+
+  it("Escape closes the innermost open submenu, keeping focus on its own trigger", () => {
+    const fixture = TestBed.createComponent(UMenubar);
+    fixture.componentRef.setInput("model", [{ label: "File", items: [{ label: "New" }] }]);
+    fixture.detectChanges();
+    const item = fixture.nativeElement.querySelector("[role=menuitem]");
+    item.focus();
+    item.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+    fixture.detectChanges();
+    item.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
+    fixture.detectChanges();
+    expect(document.activeElement).toBe(item);
+  });
+
+  it("ArrowRight skips a disabled top-level item", () => {
+    const fixture = TestBed.createComponent(UMenubar);
+    fixture.componentRef.setInput("model", [{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]);
+    fixture.detectChanges();
+    const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+    items[0].focus();
+    items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+    expect(document.activeElement).toBe(items[2]);
+  });
+});
+```
+
+- [ ] **Step 2: Implement**
+
+In `menubar-sub.ts` (the recursive sub-component actually rendering items — confirmed `menubar.ts` composes it): add a keydown handler on the item list: `ArrowRight`/`ArrowLeft` (top-level, horizontal) or `ArrowDown`/`ArrowUp` (submenu, vertical — matching real PrimeNG's own axis-per-level convention) move focus between non-disabled siblings; `Enter`/`Space` on an item with `items` opens its submenu and moves focus to the submenu's first item; `Escape` closes the innermost open submenu only and returns focus to that submenu's own trigger element (track the trigger via the same open/close signal already gating submenu visibility).
+
+- [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
+
+---
+
+### Task 6: Angular — GAP-054 TieredMenu keyboard navigation
+
+**Files:** `packages/ng/src/tiered-menu/tiered-menu.ts` (+ sub-component file), `tiered-menu.spec.ts`. Same pattern as Task 5, ported to TieredMenu's own recursive structure.
+
+---
+
+### Task 7: Angular — GAP-054 MegaMenu keyboard navigation
+
+**Files:** `packages/ng/src/mega-menu/mega-menu.ts` (+ column sub-component), `mega-menu.spec.ts`. Same pattern as Task 5. **Does not touch the existing `hasColumns(item) && !item.disabled` hover-guard** (KEEP CURRENT BEHAVIOR) — only adds keyboard handling alongside it.
+
+---
+
+### Task 8: Angular — GAP-054 PanelMenu keyboard navigation
+
+**Files:** `packages/ng/src/panel-menu/panel-menu.ts`, `panel-menu-list.ts`, `panel-menu.spec.ts`. Same pattern as Task 5, adapted to PanelMenu's accordion (expand-in-place) shape: `ArrowDown`/`ArrowUp` move focus between visible (expanded-into-view) items; `Enter`/`Space` toggles expand/collapse on a group item. **Does not touch the existing per-level sibling-exclusivity `Set<UMenuItem>` mechanism** (KEEP CURRENT BEHAVIOR) — only adds keyboard handling.
+
+---
+
+### Task 9-12: React — GAP-054 Menubar, TieredMenu, MegaMenu, PanelMenu keyboard navigation
+
+**Files:** `packages/react/src/{menubar,tiered-menu,mega-menu,panel-menu}/*.tsx` + specs. Same 4 patterns as Tasks 5-8, ported to React's own component structure for each.
+
+---
+
+### Task 13-16: Vue — GAP-054 Menubar, TieredMenu, MegaMenu, PanelMenu keyboard navigation
+
+**Files:** `packages/vue/src/{menubar,tiered-menu,mega-menu,panel-menu}/*.vue` + specs. Same 4 patterns, ported to Vue.
+
+---
+
+### Task 17: Angular — GAP-055 Dock keyboard navigation
+
+**Files:** `packages/ng/src/dock/dock.ts`, `dock.spec.ts`.
+
+- [ ] **Step 1: Write the failing tests**
+
+```typescript
+describe("keyboard navigation (Spec §5.4, GAP-055)", () => {
+  it("ArrowRight/ArrowLeft move focus among dock items", () => {
+    const fixture = TestBed.createComponent(UDock);
+    fixture.componentRef.setInput("model", [{ label: "Finder" }, { label: "Mail" }]);
+    fixture.detectChanges();
+    const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+    items[0].focus();
+    items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+    expect(document.activeElement).toBe(items[1]);
+  });
+
+  it("Home/End jump to the first/last item", () => {
+    const fixture = TestBed.createComponent(UDock);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }, { label: "C" }]);
+    fixture.detectChanges();
+    const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+    items[1].focus();
+    items[1].dispatchEvent(new KeyboardEvent("keydown", { code: "End", bubbles: true }));
+    expect(document.activeElement).toBe(items[2]);
+  });
+
+  it("uses ArrowUp/ArrowDown instead when position is left or right", () => {
+    const fixture = TestBed.createComponent(UDock);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }]);
+    fixture.componentRef.setInput("position", "left");
+    fixture.detectChanges();
+    const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+    items[0].focus();
+    items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true }));
+    expect(document.activeElement).toBe(items[1]);
+  });
+});
+```
+
+- [ ] **Step 2: Implement**
+
+Add a keydown handler on the `<ul role="menu">`. When `position()` is `"top"`/`"bottom"`: `ArrowRight`/`ArrowLeft` move focus. When `position()` is `"left"`/`"right"`: `ArrowDown`/`ArrowUp` move focus (matching real Prime's own axis-follows-orientation convention, consistent with Task 5's own Menubar horizontal/vertical split). `Home`/`End` move to first/last regardless of orientation. Skip disabled items.
+
+- [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
+
+---
+
+### Task 18: React — GAP-055 Dock keyboard navigation
+
+**Files:** `packages/react/src/dock/dock.tsx`, `dock.spec.tsx`. Equivalent tests + implementation.
+
+---
+
+### Task 19: Vue — GAP-055 Dock keyboard navigation
+
+**Files:** `packages/vue/src/dock/Dock.vue`, `dock.spec.ts`. Equivalent tests + implementation.
+
+---
+
+### Task 20: Angular — GAP-069 Dock `routerLink`
+
+**Files:** `packages/ng/src/dock/dock.ts`, `dock.spec.ts`. **Independent of Task 17 (different capability, same component).**
+
+- [ ] **Step 1: Write the failing tests** — same 3-test shape as Task 4, adapted to Dock's own item template.
+- [ ] **Step 2: Implement** — add `RouterModule` import + `[attr.href]="item.routerLink ? null : (item.url ?? '#')"` / `[routerLink]="item.disabled ? null : (item.routerLink ?? null)"`, replacing the current plain `[href]="item.url || '#'"` (line 31).
+- [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
+
+---
+
+### Task 21: Angular — GAP-056 SpeedDial keyboard navigation
+
+**Files:** `packages/ng/src/speed-dial/speed-dial.ts`, `speed-dial.spec.ts`. **Does not touch the existing `closeOnEscape`/`onEscape` mechanism (confirmed present, lines 184-186).**
+
+- [ ] **Step 1: Write the failing tests**
+
+```typescript
+describe("keyboard navigation between action items (Spec §5.5, GAP-056)", () => {
+  it("ArrowDown/ArrowUp move focus among action items once open", () => {
+    const fixture = TestBed.createComponent(USpeedDial);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }]);
+    fixture.detectChanges();
+    fixture.componentInstance.show();
+    fixture.detectChanges();
+    const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+    items[0].focus();
+    items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true }));
+    expect(document.activeElement).toBe(items[1]);
+  });
+
+  it("existing Escape-to-close behavior is unaffected", () => {
+    const fixture = TestBed.createComponent(USpeedDial);
+    fixture.componentRef.setInput("model", [{ label: "A" }]);
+    fixture.detectChanges();
+    fixture.componentInstance.show();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.visible()).toBe(true);
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.visible()).toBe(false);
+  });
+});
+```
+
+- [ ] **Step 2: Implement**
+
+Add a keydown handler on the action-item list (only relevant while `visible()` is true): `ArrowDown`/`ArrowRight` (direction-dependent per the existing `type`/`direction` inputs, matching whichever axis the layout already lays items out along — confirmed real Prime's own convention follows the visual layout direction) moves focus to the next action item; `ArrowUp`/`ArrowLeft` to the previous. Do not add a second Escape handler — the existing `@HostListener("document:keydown.escape")` already covers dismissal.
+
+- [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
+
+---
+
+### Task 22: React — GAP-056 SpeedDial keyboard navigation
+
+**Files:** `packages/react/src/speed-dial/speed-dial.tsx`, `speed-dial.spec.tsx`. Equivalent, does not touch React's own existing Escape mechanism.
+
+---
+
+### Task 23: Vue — GAP-056 SpeedDial keyboard navigation
+
+**Files:** `packages/vue/src/speed-dial/SpeedDial.vue`, `speed-dial.spec.ts`. Equivalent, does not touch Vue's own existing Escape mechanism.
+
+---
+
+### Task 24: React — GAP-057 Tabs `scrollable`
+
+**Files:** `packages/react/src/tabs/tabs.tsx` (or the specific TabView-equivalent file), `tabs.spec.tsx`.
+
+- [ ] **Step 1: Write the failing tests**
+
+First read Angular's `showNavigators`/Vue's `TabList.vue` own existing overflow-detection implementation in full (both already real and working, per Spec §4/§7) to confirm the exact detection mechanism (likely a `ResizeObserver` or scroll-width comparison) before porting — do not invent a different detection approach.
+
+```tsx
+describe("scrollable overflow (Spec §5.7, GAP-057)", () => {
+  it("shows scroll buttons when tab labels overflow the available width", () => {
+    // Render with enough tabs / a constrained container width to force overflow,
+    // matching the exact overflow-detection condition confirmed from Angular/Vue's
+    // own real implementation (Step 1's own investigation).
+    render(<UTabs>{/* many tab panels */}</UTabs>);
+    expect(screen.getByRole("button", { name: /scroll left|previous/i })).toBeInTheDocument();
+  });
+
+  it("does not show scroll buttons when tabs fit without overflow", () => {
+    render(<UTabs>{/* one short tab */}</UTabs>);
+    expect(screen.queryByRole("button", { name: /scroll left|previous/i })).not.toBeInTheDocument();
+  });
+});
+```
+
+- [ ] **Step 2: Implement** — port Angular's `showNavigators`/Vue's `TabList.vue` overflow-detection mechanism to React (same detection approach, React-idiomatic wiring — e.g. a `ResizeObserver` in a `useEffect` if that's what Angular/Vue's own real implementation uses).
+- [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
+
+---
+
+### Task 25: React — GAP-058 Tabs `closable`
+
+**Files:** `packages/react/src/tabs/tabs.tsx`, `tabs.spec.tsx`. **Independent of Task 24.**
+
+- [ ] **Step 1: Write the failing tests**
+
+First read real PrimeReact's own close-button/close-icon implementation (`.vendor-cache/primereact-10.9.9.tar.gz`, TabView/TabPanel source) to confirm the exact prop name and close-event payload shape before writing assertions — do not invent one.
+
+```tsx
+describe("closable tabs (Spec §5.8, GAP-058)", () => {
+  it("renders a close button on a tab with closable set", () => {
+    render(<UTabs><UTabPanel header="A" closable /></UTabs>);
+    expect(screen.getByRole("button", { name: /close/i })).toBeInTheDocument();
+  });
+
+  it("clicking the close button removes the tab and fires the close callback", () => {
+    const onClose = vi.fn();
+    render(<UTabs><UTabPanel header="A" closable onClose={onClose} /></UTabs>);
+    fireEvent.click(screen.getByRole("button", { name: /close/i }));
+    expect(onClose).toHaveBeenCalled();
+    expect(screen.queryByText("A")).not.toBeInTheDocument();
+  });
+
+  it("does not render a close button when closable is unset", () => {
+    render(<UTabs><UTabPanel header="A" /></UTabs>);
+    expect(screen.queryByRole("button", { name: /close/i })).not.toBeInTheDocument();
+  });
+});
+```
+
+- [ ] **Step 2: Implement** — add `closable?: boolean` and `onClose?: (event: { originalEvent: React.SyntheticEvent }) => void` (exact payload shape confirmed from real PrimeReact source in Step 1) to `UTabPanel`'s props; render a close button/icon per real PrimeReact's own pattern when `closable` is true; clicking it removes the tab from the rendered set and fires `onClose`.
+- [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
+
+---
+
+## Completion Criteria
+
+- All 25 tasks pass, all applicable frameworks.
+- `pnpm test`, `pnpm run ceiling:validate` pass after each task.
+- PanelMenu's multiple-expansion behavior and MegaMenu's disabled-hover behavior are byte-identical to pre-plan (verify via `git diff`).
+- Angular's/Vue's Tabs gain no `closable` capability (verify no changes to those files under Task 25's own scope).
+- GAP-055 is not broadened — Task 17-19 touch only keyboard navigation; Task 20 (GAP-069) is a separate, independently-committable task.
+
+## Documentation/Ledger Updates
+
+Upon Final Review/Closeout: mark GAP-052 through GAP-058 and GAP-069 RESOLVED in `docs/architecture/BLUEPRINT_GAPS.md`. Not performed by this plan document.
