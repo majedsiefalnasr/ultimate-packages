@@ -142,10 +142,24 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                       }
                     </td>
                   }
+                  @if (dataKey()) {
+                    <td>
+                      <button
+                        type="button"
+                        data-u-table-row-toggle
+                        (click)="toggleRowExpansion($event, entry.row)"
+                      >{{ isRowExpanded(entry.row) ? "-" : "+" }}</button>
+                    </td>
+                  }
                   @for (col of columns(); track col.field) {
                     <td>{{ renderCell(entry.row, col, rowIndex) }}</td>
                   }
                 </tr>
+                @if (dataKey() && isRowExpanded(entry.row)) {
+                  <tr data-u-table-row-expansion>
+                    <td [attr.colspan]="columns().length + 1"></td>
+                  </tr>
+                }
               }
             }
           </tbody>
@@ -208,6 +222,11 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
   editMode = input<"cell" | "row">();
   editingRowKeys = input<Record<string, boolean>>({});
   editingRowKeysChange = output<Record<string, boolean>>();
+
+  expandedRowKeys = input<Record<string, boolean>>({});
+  expandedRowKeysChange = output<Record<string, boolean>>();
+  onRowExpand = output<{ originalEvent: Event; data: T }>();
+  onRowCollapse = output<{ originalEvent: Event; data: T }>();
 
   rowGroupMode = input<"subheader" | "rowspan">();
   groupRowsBy = input<string>();
@@ -501,6 +520,39 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
   initRowEdit(row: T): void {
     const key = String(this.resolveCell(row, this.dataKey()));
     this.editingRowKeysChange.emit({ ...this.editingRowKeys(), [key]: true });
+  }
+
+  /**
+   * Row-expansion state check (GAP-044, Spec §5.4), matching the existing
+   * `editingRowKeys()`-style key-map read: a row is expanded when its
+   * `dataKey()`-resolved identity is present (truthy) in `expandedRowKeys()`.
+   */
+  protected isRowExpanded(row: T): boolean {
+    const key = String(this.resolveCell(row, this.dataKey()));
+    return !!this.expandedRowKeys()[key];
+  }
+
+  /**
+   * Row-expansion toggle (GAP-044, Spec §5.4), reusing the same key-map
+   * read/write pattern already established by `initRowEdit`/
+   * `editingRowKeys`: the row's `dataKey()`-resolved identity is flipped in
+   * a shallow-copied map (spread, so a duplicate `dataKey` value across two
+   * rows is last-write-wins — no new uniqueness validation, matching Review
+   * Focus item 5 and the existing selection key-map's own precedent), the
+   * merged map is emitted via `expandedRowKeysChange`, and `onRowExpand`/
+   * `onRowCollapse` fire according to the row's new state.
+   */
+  protected toggleRowExpansion(event: Event, row: T): void {
+    const key = String(this.resolveCell(row, this.dataKey()));
+    const wasExpanded = !!this.expandedRowKeys()[key];
+    const next = { ...this.expandedRowKeys(), [key]: !wasExpanded };
+    this.expandedRowKeysChange.emit(next);
+
+    if (wasExpanded) {
+      this.onRowCollapse.emit({ originalEvent: event, data: row });
+    } else {
+      this.onRowExpand.emit({ originalEvent: event, data: row });
+    }
   }
 
   /**

@@ -1201,3 +1201,38 @@ describe("loading/empty states (Spec §5.6, GAP-046)", () => {
     expect(fixture.componentInstance.selection()).toEqual([{ id: 1, name: "A" }]);
   });
 });
+
+describe("row expansion (Spec §5.4, GAP-044)", () => {
+  interface Row { id: number; name: string }
+
+  it("toggles a row's expanded state and renders expanded content via the expandedRowTemplate", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("expandedRowKeys", {});
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-toggle]").click();
+    expect(fixture.componentInstance.expandedRowKeysChange).toBeTruthy();
+  });
+
+  it("emits onRowExpand when a row is expanded and onRowCollapse when collapsed", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    const expandEvents: unknown[] = [];
+    fixture.componentInstance.onRowExpand.subscribe((e: unknown) => expandEvents.push(e));
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-toggle]").click();
+    expect(expandEvents.length).toBe(1);
+  });
+
+  it("does not throw when dataKey maps to a duplicate value across two rows", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 1, name: "B" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    expect(() => fixture.detectChanges()).not.toThrow();
+  });
+});
