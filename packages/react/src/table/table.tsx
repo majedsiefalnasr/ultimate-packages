@@ -90,6 +90,10 @@ export interface UTableProps<T> {
   cellEditValidator?: (event: { newValue: unknown; oldValue: unknown }) => boolean;
   onCellEditComplete?: (event: { newValue: unknown; oldValue: unknown }) => void;
   onCellEditCancel?: (event: { newValue: unknown; oldValue: unknown }) => void;
+  expandedRowKeys?: Record<string, boolean>;
+  onExpandedRowKeysChange?: (expandedRowKeys: Record<string, boolean>) => void;
+  onRowExpand?: (event: { originalEvent: React.SyntheticEvent; data: T }) => void;
+  onRowCollapse?: (event: { originalEvent: React.SyntheticEvent; data: T }) => void;
   rowGroupMode?: "subheader" | "rowspan";
   groupRowsBy?: string;
   loading?: boolean;
@@ -355,6 +359,10 @@ export function UTable<T>({
   editingRows,
   onRowEditChange,
   onRowEditInit,
+  expandedRowKeys,
+  onExpandedRowKeysChange,
+  onRowExpand,
+  onRowCollapse,
   rowGroupMode,
   groupRowsBy,
   loading = false,
@@ -363,6 +371,19 @@ export function UTable<T>({
 
   const [internalEditingRows, setInternalEditingRows] = React.useState<Record<string, boolean>>({});
   const resolvedEditingRows = onRowEditChange ? editingRows ?? {} : editingRows ?? internalEditingRows;
+
+  /**
+   * Row-expansion key-map state (GAP-044, Spec §5.4), matching the
+   * controlled/uncontrolled duality already established for `editingRows`/
+   * `onRowEditChange`: when `onExpandedRowKeysChange` is supplied, the map
+   * is fully parent-owned via the `expandedRowKeys` prop; otherwise an
+   * internal `useState` fallback takes over so the toggle still works
+   * standalone.
+   */
+  const [internalExpandedRowKeys, setInternalExpandedRowKeys] = React.useState<Record<string, boolean>>({});
+  const resolvedExpandedRowKeys = onExpandedRowKeysChange
+    ? expandedRowKeys ?? {}
+    : expandedRowKeys ?? internalExpandedRowKeys;
 
   /**
    * Always-internal cell-edit dirty-value tracking (spec §11.2), keyed by
@@ -599,6 +620,35 @@ export function UTable<T>({
     }
   };
 
+  /**
+   * Row-expansion toggle (GAP-044, Spec §5.4), reusing the same key-map
+   * read/write pattern already established by `initRowEdit`/
+   * `editingRows`: the row's `dataKey`-resolved identity is flipped in a
+   * shallow-copied map (spread, so a duplicate `dataKey` value across two
+   * rows is last-write-wins — no new uniqueness validation, matching
+   * Angular Task 13's own precedent), the merged map is handed to
+   * `onExpandedRowKeysChange` if supplied (else the internal `useState`
+   * fallback), and `onRowExpand`/`onRowCollapse` fire according to the
+   * row's new state.
+   */
+  const toggleRowExpansion = (event: React.SyntheticEvent, row: T) => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    const wasExpanded = !!resolvedExpandedRowKeys[key];
+    const next = { ...resolvedExpandedRowKeys, [key]: !wasExpanded };
+
+    if (onExpandedRowKeysChange) {
+      onExpandedRowKeysChange(next);
+    } else {
+      setInternalExpandedRowKeys(next);
+    }
+
+    if (wasExpanded) {
+      onRowCollapse?.({ originalEvent: event, data: row });
+    } else {
+      onRowExpand?.({ originalEvent: event, data: row });
+    }
+  };
+
   const handleSort = (field: string) => {
     if (!onSort) return;
 
@@ -686,6 +736,20 @@ export function UTable<T>({
                       />
                     </td>
                   )}
+                  {dataKey && (
+                    <td>
+                      <button
+                        type="button"
+                        data-u-table-row-toggle
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleRowExpansion(event, row);
+                        }}
+                      >
+                        {resolvedExpandedRowKeys[String(resolveCell(row, dataKey))] ? "-" : "+"}
+                      </button>
+                    </td>
+                  )}
                   {columns.map((col) => (
                     <td key={col.field}>{renderCell(row, col, index)}</td>
                   ))}
@@ -704,6 +768,11 @@ export function UTable<T>({
                     </td>
                   )}
                 </tr>
+                {dataKey && resolvedExpandedRowKeys[String(resolveCell(row, dataKey))] && (
+                  <tr data-u-table-row-expansion>
+                    <td colSpan={columns.length + 1} />
+                  </tr>
+                )}
               </React.Fragment>
             ))}
           </tbody>

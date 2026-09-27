@@ -1077,3 +1077,64 @@ describe("loading/empty states (Spec §5.6, GAP-046)", () => {
     expect(row).toHaveAttribute("aria-selected", "true");
   });
 });
+
+describe("row expansion (Spec §5.4, GAP-044)", () => {
+  interface Row { id: number; name: string }
+
+  it("toggles a row's expanded state via expandedRowKeys/onExpandedRowKeysChange", () => {
+    const onExpandedRowKeysChange = vi.fn();
+    render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        expandedRowKeys={{}}
+        onExpandedRowKeysChange={onExpandedRowKeysChange}
+      />
+    );
+    fireEvent.click(screen.getByRole("button", { name: "+" }));
+    expect(onExpandedRowKeysChange).toHaveBeenCalledWith({ "1": true });
+  });
+
+  it("emits onRowExpand when a row is expanded and onRowCollapse when collapsed", () => {
+    const onRowExpand = vi.fn();
+    const onRowCollapse = vi.fn();
+    const { rerender } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        expandedRowKeys={{}}
+        onRowExpand={onRowExpand}
+        onRowCollapse={onRowCollapse}
+      />
+    );
+    fireEvent.click(screen.getByRole("button", { name: "+" }));
+    expect(onRowExpand).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        expandedRowKeys={{ "1": true }}
+        onRowExpand={onRowExpand}
+        onRowCollapse={onRowCollapse}
+      />
+    );
+    fireEvent.click(screen.getByRole("button", { name: "-" }));
+    expect(onRowCollapse).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not throw when dataKey maps to a duplicate value across two rows", () => {
+    expect(() =>
+      render(
+        <UTable<Row>
+          value={[{ id: 1, name: "A" }, { id: 1, name: "B" }]}
+          columns={[{ field: "name", header: "Name" }]}
+          dataKey="id"
+        />
+      )
+    ).not.toThrow();
+  });
+});
