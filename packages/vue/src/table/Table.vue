@@ -35,7 +35,7 @@
             tabindex="0"
             :aria-selected="isSelected(entry.row)"
             @click="selectRow(entry.row)"
-            @keydown="onRowKeyDown"
+            @keydown="onRowKeyDown($event, entry.row)"
           >
             <td v-if="selectionColumn && selectionMode">
               <input
@@ -79,7 +79,7 @@
                 width: '100%',
               }"
               @click="selectRow(entry.value)"
-              @keydown="onRowKeyDown"
+              @keydown="onRowKeyDown($event, entry.value)"
             >
               <!--
                 Known limitation: onRowKeyDown walks nextElementSibling/
@@ -524,25 +524,51 @@ export default {
      * `@HostListener`/React's `querySelectorAll`), the vocabulary does not.
      * Only moves `.focus()` between sibling `tbody [role="row"]` elements —
      * never the header row, since this handler is bound per data row.
-     * Enter/selection-toggle behavior is already covered by `@click`, so it
-     * is intentionally out of scope here.
+     *
+     * Also handles keyboard selection (GAP-047, Spec §5.7): Space/Enter
+     * toggle the focused row's selection by reusing the same `selectRow`
+     * toggle logic the row-click handler and selection-column controls
+     * already share (no duplicated toggle logic), and Ctrl+A/Cmd+A selects
+     * every row in `value` when `selectionMode` is exactly `"multiple"`.
+     * When `selectionMode` is not `"multiple"` (including unset), Ctrl+A
+     * does nothing and does not call `preventDefault()` — the browser's
+     * native "select all text" behavior is only swallowed when Ctrl+A
+     * actually did something (Review Focus item 3).
      */
-    onRowKeyDown(event) {
-      const row = event.currentTarget;
+    onRowKeyDown(event, row) {
+      if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") {
+        if (this.selectionMode === "multiple") {
+          event.preventDefault();
+          const next = [...this.value];
+          this.$emit("update:selection", next);
+          this.$emit("selection-change", next);
+        }
+        return;
+      }
+
+      if (event.code === "Space" || event.code === "Enter") {
+        if (this.selectionMode) {
+          event.preventDefault();
+          this.selectRow(row);
+        }
+        return;
+      }
+
+      const rowElement = event.currentTarget;
 
       let target;
       switch (event.key) {
         case "ArrowDown":
-          target = row.nextElementSibling;
+          target = rowElement.nextElementSibling;
           break;
         case "ArrowUp":
-          target = row.previousElementSibling;
+          target = rowElement.previousElementSibling;
           break;
         case "Home":
-          target = row.parentElement.firstElementChild;
+          target = rowElement.parentElement.firstElementChild;
           break;
         case "End":
-          target = row.parentElement.lastElementChild;
+          target = rowElement.parentElement.lastElementChild;
           break;
         default:
           return;

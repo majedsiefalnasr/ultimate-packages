@@ -464,6 +464,72 @@ describe("keyboard navigation", () => {
   });
 });
 
+describe("keyboard selection (Spec §5.7, GAP-047)", () => {
+  it("Space toggles the focused row's selection when selectionMode is set", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selection: [],
+      },
+    });
+    await wrapper.find("tbody [role=row]").trigger("keydown", { code: "Space" });
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([[{ id: 1, name: "A" }]]);
+  });
+
+  it("Enter toggles the focused row's selection when selectionMode is set", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "single",
+      },
+    });
+    await wrapper.find("tbody [role=row]").trigger("keydown", { code: "Enter" });
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([{ id: 1, name: "A" }]);
+  });
+
+  it("Ctrl+A selects all rows when selectionMode is multiple", async () => {
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const wrapper = mount(UTable, {
+      props: {
+        value: rows,
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+      },
+    });
+    await wrapper.find("tbody [role=row]").trigger("keydown", { code: "KeyA", ctrlKey: true });
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([rows]);
+  });
+
+  it("Ctrl+A does nothing when selectionMode is unset", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+      },
+    });
+    await wrapper.find("tbody [role=row]").trigger("keydown", { code: "KeyA", ctrlKey: true });
+    expect(wrapper.emitted("selection-change")).toBeUndefined();
+  });
+
+  it("existing Arrow/Home/End keyboard navigation is unaffected by the new Space/Enter/Ctrl+A handling", async () => {
+    const wrapper = mount(UTable, {
+      attachTo: document.body,
+      props: {
+        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        columns: [{ field: "name", header: "Name" }],
+      },
+    });
+    const rows = wrapper.findAll('tbody [role="row"]');
+    (rows[0].element as HTMLElement).focus();
+    await rows[0].trigger("keydown", { key: "ArrowDown" });
+    expect(document.activeElement).toBe(rows[1].element);
+    wrapper.unmount();
+  });
+});
+
 describe("Paginator composition (real UPaginator, not a mock)", () => {
   it("renders a real UPaginator child and slices rows to the current page", () => {
     const rowsData = Array.from({ length: 25 }, (_, i) => ({ id: i, name: `Row ${i}` }));
