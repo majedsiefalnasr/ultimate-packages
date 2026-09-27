@@ -1153,3 +1153,51 @@ describe("filtering — custom mode, Angular registration contract (Spec §3.4.1
     expect(cells[0].textContent?.trim()).toBe("Alice");
   });
 });
+
+describe("loading/empty states (Spec §5.6, GAP-046)", () => {
+  it("shows a loading indicator when loading is true", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[data-u-table-loading]")).toBeTruthy();
+  });
+
+  it("shows a default empty-state message when value is empty and loading is false", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain("No results found");
+  });
+
+  it("does not show the empty-state message when value has rows", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).not.toContain("No results found");
+  });
+
+  it("does not show the empty-state message while loading is true, even with an empty value", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).not.toContain("No results found");
+  });
+
+  it("preserves existing selection when loading toggles to true", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", [{ id: 1, name: "A" }]);
+    fixture.detectChanges();
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.selection()).toEqual([{ id: 1, name: "A" }]);
+  });
+});

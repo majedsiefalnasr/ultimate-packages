@@ -22,6 +22,18 @@ export interface UTableColumn<T = unknown> {
   body?: (row: T, options: { field: string; rowIndex: number }) => string;
 }
 
+/**
+ * Default empty-state message (Spec §5.6, GAP-046). Real PrimeNG's own
+ * Table component has no hardcoded default text for its empty region — it
+ * renders purely via a content-projected `#emptymessage` template with no
+ * built-in fallback string. The closest verified real-PrimeNG default text
+ * is the global locale's `emptyMessage` translation key (confirmed via the
+ * pinned `primeng-21.1.9.tar.gz` tarball, `packages/primeng/src/config/
+ * primeng.ts`: `emptyMessage: 'No results found'` — used by Tree, DataView,
+ * and AutoComplete's empty-search fallback), which this constant matches.
+ */
+const DEFAULT_EMPTY_MESSAGE = "No results found";
+
 @Component({
   standalone: true,
   selector: "u-table",
@@ -90,41 +102,51 @@ export interface UTableColumn<T = unknown> {
             </tr>
           </thead>
           <tbody [class]="cx('tbody')" role="rowgroup">
-            @for (entry of groupedRows; track $index; let rowIndex = $index) {
-              @if (entry.isGroupHeader) {
-                <tr data-u-table-group-header [class]="cx('rowGroupHeader')">
-                  <td [attr.colspan]="columns().length">{{ resolveCell(entry.row, groupRowsBy() ?? "") }}</td>
+            @if (loading()) {
+              <tr>
+                <td data-u-table-loading [attr.colspan]="columns().length"></td>
+              </tr>
+            } @else if (value().length === 0) {
+              <tr>
+                <td [attr.colspan]="columns().length">{{ emptyMessage }}</td>
+              </tr>
+            } @else {
+              @for (entry of groupedRows; track $index; let rowIndex = $index) {
+                @if (entry.isGroupHeader) {
+                  <tr data-u-table-group-header [class]="cx('rowGroupHeader')">
+                    <td [attr.colspan]="columns().length">{{ resolveCell(entry.row, groupRowsBy() ?? "") }}</td>
+                  </tr>
+                }
+                <tr
+                  [class]="cx('row')"
+                  role="row"
+                  tabindex="0"
+                  [attr.aria-selected]="isSelected(entry.row)"
+                  (click)="onRowClick(entry.row)"
+                  (keydown)="onRowKeyDown($event, entry.row)"
+                >
+                  @if (selectionColumn() && selectionMode()) {
+                    <td>
+                      @if (selectionMode() === "multiple") {
+                        <input
+                          type="checkbox"
+                          [checked]="isSelected(entry.row)"
+                          (click)="onSelectionInputClick($event, entry.row)"
+                        />
+                      } @else {
+                        <input
+                          type="radio"
+                          [checked]="isSelected(entry.row)"
+                          (click)="onSelectionInputClick($event, entry.row)"
+                        />
+                      }
+                    </td>
+                  }
+                  @for (col of columns(); track col.field) {
+                    <td>{{ renderCell(entry.row, col, rowIndex) }}</td>
+                  }
                 </tr>
               }
-              <tr
-                [class]="cx('row')"
-                role="row"
-                tabindex="0"
-                [attr.aria-selected]="isSelected(entry.row)"
-                (click)="onRowClick(entry.row)"
-                (keydown)="onRowKeyDown($event, entry.row)"
-              >
-                @if (selectionColumn() && selectionMode()) {
-                  <td>
-                    @if (selectionMode() === "multiple") {
-                      <input
-                        type="checkbox"
-                        [checked]="isSelected(entry.row)"
-                        (click)="onSelectionInputClick($event, entry.row)"
-                      />
-                    } @else {
-                      <input
-                        type="radio"
-                        [checked]="isSelected(entry.row)"
-                        (click)="onSelectionInputClick($event, entry.row)"
-                      />
-                    }
-                  </td>
-                }
-                @for (col of columns(); track col.field) {
-                  <td>{{ renderCell(entry.row, col, rowIndex) }}</td>
-                }
-              </tr>
             }
           </tbody>
         </table>
@@ -189,6 +211,16 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
 
   rowGroupMode = input<"subheader" | "rowspan">();
   groupRowsBy = input<string>();
+
+  loading = input(false);
+
+  /**
+   * Default empty-state message (Spec §5.6, GAP-046). Not itself an input —
+   * the plan's own Task 10 scope is the boolean flag and default message
+   * only; a future templated-empty-state extension is a separate,
+   * not-yet-authorized soft dependency (see the plan's Global Constraints).
+   */
+  protected readonly emptyMessage = DEFAULT_EMPTY_MESSAGE;
 
   /**
    * A signal (not a plain field) so `matchesFilter`'s read of it inside the
