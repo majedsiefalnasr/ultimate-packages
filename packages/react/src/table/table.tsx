@@ -465,16 +465,42 @@ export function UTable<T>({
    * `currentTarget`/`parentElement` here vs. Angular's `@HostListener`),
    * the vocabulary does not. Only moves `.focus()` between `tbody
    * [role="row"]` elements — never the header row, since this handler is
-   * bound per data row. Enter/selection-toggle behavior is already covered
-   * by `onClick`, so it is intentionally out of scope here.
+   * bound per data row.
+   *
+   * Also handles keyboard selection (GAP-047, Spec §5.7): Space/Enter
+   * toggle the focused row's selection by reusing the same
+   * `handleRowClick` toggle logic the row-click handler and
+   * selection-column controls already share (no duplicated toggle logic),
+   * and Ctrl+A/Cmd+A selects every row in `value` when `selectionMode` is
+   * exactly `"multiple"`. When `selectionMode` is not `"multiple"`
+   * (including unset), Ctrl+A does nothing and does not call
+   * `preventDefault()` — the browser's native "select all text" behavior
+   * is only swallowed when Ctrl+A actually did something (Review Focus
+   * item 3).
    */
-  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>) => {
-    const row = event.currentTarget;
-    const rowGroup = row.parentElement;
+  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>, row: T) => {
+    if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") {
+      if (selectionMode === "multiple" && onSelectionChange) {
+        event.preventDefault();
+        onSelectionChange([...value]);
+      }
+      return;
+    }
+
+    if (event.code === "Space" || event.code === "Enter") {
+      if (selectionMode) {
+        event.preventDefault();
+        handleRowClick(row);
+      }
+      return;
+    }
+
+    const rowElement = event.currentTarget;
+    const rowGroup = rowElement.parentElement;
     if (!rowGroup) return;
 
     const rows = Array.from(rowGroup.querySelectorAll<HTMLElement>(':scope > [role="row"]'));
-    const index = rows.indexOf(row);
+    const index = rows.indexOf(rowElement);
     if (index === -1) return;
 
     let target: HTMLElement | undefined;
@@ -617,7 +643,7 @@ export function UTable<T>({
                   tabIndex={0}
                   aria-selected={isSelected(row)}
                   onClick={() => handleRowClick(row)}
-                  onKeyDown={handleRowKeyDown}
+                  onKeyDown={(event) => handleRowKeyDown(event, row)}
                 >
                   {selectionColumn && selectionMode && (
                     <td>
@@ -675,7 +701,7 @@ export function UTable<T>({
                     // ArrowDown/ArrowUp/Home/End stop at the edges of what's mounted,
                     // not the edges of the full `value` dataset. This is intentional
                     // (a row outside the window isn't in the DOM to focus), not a bug.
-                    onKeyDown={handleRowKeyDown}
+                    onKeyDown={(event) => handleRowKeyDown(event, value as T)}
                     style={{ position: "absolute", top: getItemOptions(index).index * itemSize, width: "100%" }}
                   >
                     {columns.map((col) => (

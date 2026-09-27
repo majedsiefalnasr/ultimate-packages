@@ -246,6 +246,84 @@ describe("keyboard navigation", () => {
   });
 });
 
+describe("keyboard selection (Spec §5.7, GAP-047)", () => {
+  it("Space toggles the focused row's selection when selectionMode is set", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const row = container.querySelector("tbody [role=row]") as HTMLElement;
+    fireEvent.keyDown(row, { code: "Space" });
+    expect(onSelectionChange).toHaveBeenCalledWith([{ id: 1, name: "A" }]);
+  });
+
+  it("Enter toggles the focused row's selection when selectionMode is set", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="single"
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const row = container.querySelector("tbody [role=row]") as HTMLElement;
+    fireEvent.keyDown(row, { code: "Enter" });
+    expect(onSelectionChange).toHaveBeenCalledWith({ id: 1, name: "A" });
+  });
+
+  it("Ctrl+A selects all rows when selectionMode is multiple", () => {
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={rows}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const row = container.querySelector("tbody [role=row]") as HTMLElement;
+    fireEvent.keyDown(row, { code: "KeyA", ctrlKey: true });
+    expect(onSelectionChange).toHaveBeenCalledWith(rows);
+  });
+
+  it("Ctrl+A does nothing when selectionMode is unset", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const row = container.querySelector("tbody [role=row]") as HTMLElement;
+    fireEvent.keyDown(row, { code: "KeyA", ctrlKey: true });
+    expect(onSelectionChange).not.toHaveBeenCalled();
+  });
+
+  it("existing Arrow/Home/End keyboard navigation is unaffected by the new Space/Enter/Ctrl+A handling", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        columns={[{ field: "name", header: "Name" }]}
+      />
+    );
+    const rows = container.querySelectorAll('tbody [role="row"]');
+    (rows[0] as HTMLElement).focus();
+    (rows[0] as HTMLElement).dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })
+    );
+    expect(document.activeElement).toBe(rows[1]);
+  });
+});
+
 describe("Paginator composition (real UPaginator, not a mock)", () => {
   it("renders a real UPaginator child and slices rows to the current page", () => {
     const rowsData = Array.from({ length: 25 }, (_, i) => ({ id: i, name: `Row ${i}` }));
