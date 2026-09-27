@@ -953,6 +953,36 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   });
 });
 
+describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
+  interface Row2 { id: number; category: string; name: string }
+
+  it("spans consecutive rows sharing the same groupRowsBy value under one cell", () => {
+    const fixture = TestBed.createComponent(UTable<Row2>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, category: "Fruit", name: "Apple" },
+      { id: 2, category: "Fruit", name: "Banana" },
+      { id: 3, category: "Veg", name: "Carrot" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "category", header: "Category" }, { field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("rowGroupMode", "rowspan");
+    fixture.componentRef.setInput("groupRowsBy", "category");
+    fixture.detectChanges();
+    const categoryCells = fixture.nativeElement.querySelectorAll("td[data-u-table-group-cell]");
+    expect(categoryCells.length).toBe(2); // one spanned cell per group, not per row
+    expect(categoryCells[0].getAttribute("rowspan")).toBe("2");
+    expect(categoryCells[1].getAttribute("rowspan")).toBe("1");
+  });
+
+  it("renders ungrouped when groupRowsBy is unset, matching subheader mode's own fallback", () => {
+    const fixture = TestBed.createComponent(UTable<Row2>);
+    fixture.componentRef.setInput("value", [{ id: 1, category: "Fruit", name: "Apple" }]);
+    fixture.componentRef.setInput("columns", [{ field: "category", header: "Category" }]);
+    fixture.componentRef.setInput("rowGroupMode", "rowspan");
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect(fixture.nativeElement.querySelector("[data-u-table-group-header]")).toBeFalsy();
+  });
+});
+
 describe("package export", () => {
   it("is exported from the package root barrel", () => {
     // import added at top of file: import { UTable as RootExport } from "../index";

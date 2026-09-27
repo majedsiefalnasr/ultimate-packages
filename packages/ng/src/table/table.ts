@@ -112,7 +112,7 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
               </tr>
             } @else {
               @for (entry of groupedRows; track $index; let rowIndex = $index) {
-                @if (entry.isGroupHeader) {
+                @if (entry.isGroupHeader && rowGroupMode() === "subheader") {
                   <tr data-u-table-group-header [class]="cx('rowGroupHeader')">
                     <td [attr.colspan]="columns().length">{{ resolveCell(entry.row, groupRowsBy() ?? "") }}</td>
                   </tr>
@@ -152,7 +152,13 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                     </td>
                   }
                   @for (col of columns(); track col.field) {
-                    <td>{{ renderCell(entry.row, col, rowIndex) }}</td>
+                    @if (rowGroupMode() === "rowspan" && groupRowsBy() && col.field === groupRowsBy()) {
+                      @if (entry.isGroupHeader) {
+                        <td data-u-table-group-cell [attr.rowspan]="entry.groupSize">{{ renderCell(entry.row, col, rowIndex) }}</td>
+                      }
+                    } @else {
+                      <td>{{ renderCell(entry.row, col, rowIndex) }}</td>
+                    }
                   }
                 </tr>
                 @if (dataKey() && isRowExpanded(entry.row)) {
@@ -468,20 +474,40 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * When `groupRowsBy()` is unset, this degrades to `pagedValue` unchanged
    * (no boundaries ever detected), preserving every prior task's ungrouped
    * rendering.
+   *
+   * `groupSize` (GAP-045) is the count of consecutive rows, starting at this
+   * entry, that share this row's `groupRowsBy()` value — meaningful only on
+   * an `isGroupHeader: true` entry (every other entry's own value is `1` but
+   * unused by the template). It's computed via the same boundary detection
+   * as `isGroupHeader` (a forward scan from each header to the next), so
+   * `"rowspan"` mode's `[attr.rowspan]` binding reuses the identical group
+   * boundaries `"subheader"` mode already renders — no parallel grouping
+   * algorithm.
    */
-  protected get groupedRows(): { row: T; isGroupHeader: boolean }[] {
+  protected get groupedRows(): { row: T; isGroupHeader: boolean; groupSize: number }[] {
     const field = this.groupRowsBy();
-    if (!field) return this.pagedValue.map((row) => ({ row, isGroupHeader: false }));
+    if (!field) return this.pagedValue.map((row) => ({ row, isGroupHeader: false, groupSize: 1 }));
 
     const meta: SortMeta[] = [{ field, order: 1 }, ...this.multiSortMeta()];
     const rows = this.applyMultiFieldSort([...this.pagedValue], meta);
 
-    return rows.map((row, index) => {
+    const withHeaders = rows.map((row, index) => {
       const previous = rows[index - 1];
       const isGroupHeader =
         index === 0 || !equals(this.resolveCell(row, field), this.resolveCell(previous, field));
-      return { row, isGroupHeader };
+      return { row, isGroupHeader, groupSize: 1 };
     });
+
+    let currentHeaderIndex = -1;
+    withHeaders.forEach((entry, index) => {
+      if (entry.isGroupHeader) {
+        currentHeaderIndex = index;
+      } else if (currentHeaderIndex !== -1) {
+        withHeaders[currentHeaderIndex].groupSize++;
+      }
+    });
+
+    return withHeaders;
   }
 
   /**
