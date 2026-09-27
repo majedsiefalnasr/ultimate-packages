@@ -54,6 +54,61 @@ describe("UTable", () => {
   });
 });
 
+describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
+  interface Row { id: number; name: string; price: number }
+
+  it("renders a column's body function output instead of the raw field value", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Widget", price: 9.5 }]);
+    fixture.componentRef.setInput("columns", [
+      { field: "name", header: "Name" },
+      { field: "price", header: "Price", body: (row: Row) => `$${row.price.toFixed(2)}` },
+    ]);
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells[0].textContent?.trim()).toBe("Widget");
+    expect(cells[1].textContent?.trim()).toBe("$9.50");
+  });
+
+  it("passes { field, rowIndex } as the body function's second argument", () => {
+    const seen: { field: string; rowIndex: number }[] = [];
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "A", price: 1 },
+      { id: 2, name: "B", price: 2 },
+    ]);
+    fixture.componentRef.setInput("columns", [
+      { field: "name", header: "Name", body: (row: Row, options: { field: string; rowIndex: number }) => { seen.push(options); return row.name; } },
+    ]);
+    fixture.detectChanges();
+    expect(seen).toEqual([
+      { field: "name", rowIndex: 0 },
+      { field: "name", rowIndex: 1 },
+    ]);
+  });
+
+  it("falls back to the raw field value when no body function is supplied", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Widget", price: 9.5 }]);
+    fixture.componentRef.setInput("columns", [{ field: "price", header: "Price" }]);
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells[0].textContent?.trim()).toBe("9.5");
+  });
+
+  it("calls the body function with undefined row[field] for a sparse row without throwing", () => {
+    interface SparseRow { id: number; name?: string }
+    const fixture = TestBed.createComponent(UTable<SparseRow>);
+    fixture.componentRef.setInput("value", [{ id: 1 }]);
+    fixture.componentRef.setInput("columns", [
+      { field: "name", header: "Name", body: (row: SparseRow) => row.name ?? "—" },
+    ]);
+    expect(() => fixture.detectChanges()).not.toThrow();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells[0].textContent?.trim()).toBe("—");
+  });
+});
+
 describe("sorting", () => {
   it("sorts by sortField/sortOrder (single-sort) without mutating the input array", () => {
     const fixture = TestBed.createComponent(UTable<Row>);

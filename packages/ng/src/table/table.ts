@@ -16,6 +16,12 @@ import { PaginatorPageChangeEvent, UPaginator } from "../paginator/paginator";
 import { UScroller } from "../scroller/scroller";
 import { tableStyleModule } from "./table-style";
 
+export interface UTableColumn<T = unknown> {
+  field: string;
+  header: string;
+  body?: (row: T, options: { field: string; rowIndex: number }) => string;
+}
+
 @Component({
   standalone: true,
   selector: "u-table",
@@ -32,7 +38,7 @@ import { tableStyleModule } from "./table-style";
           <ng-template #content let-visibleItems let-options="options">
             <table data-u-table-virtual-body [class]="cx('table')">
               <tbody [class]="cx('tbody')" role="rowgroup">
-                @for (item of visibleItems; track item.index) {
+                @for (item of visibleItems; track item.index; let rowIndex = $index) {
                   <!-- Known limitation: onRowKeyDown walks :scope > [role="row"] within
                        this tbody, which under virtualization only contains the
                        currently-rendered window, not the full logical dataset — so
@@ -51,7 +57,7 @@ import { tableStyleModule } from "./table-style";
                     (keydown)="onRowKeyDown($event)"
                   >
                     @for (col of columns(); track col.field) {
-                      <td>{{ resolveCell(item.value, col.field) }}</td>
+                      <td>{{ renderCell(item.value, col, rowIndex) }}</td>
                     }
                   </tr>
                 }
@@ -73,7 +79,7 @@ import { tableStyleModule } from "./table-style";
             </tr>
           </thead>
           <tbody [class]="cx('tbody')" role="rowgroup">
-            @for (entry of groupedRows; track $index) {
+            @for (entry of groupedRows; track $index; let rowIndex = $index) {
               @if (entry.isGroupHeader) {
                 <tr data-u-table-group-header [class]="cx('rowGroupHeader')">
                   <td [attr.colspan]="columns().length">{{ resolveCell(entry.row, groupRowsBy() ?? "") }}</td>
@@ -88,7 +94,7 @@ import { tableStyleModule } from "./table-style";
                 (keydown)="onRowKeyDown($event)"
               >
                 @for (col of columns(); track col.field) {
-                  <td>{{ resolveCell(entry.row, col.field) }}</td>
+                  <td>{{ renderCell(entry.row, col, rowIndex) }}</td>
                 }
               </tr>
             }
@@ -114,7 +120,7 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
 
   value = input<T[]>([]);
   dataKey = input<string>("");
-  columns = input<{ field: string; header: string }[]>([]);
+  columns = input<UTableColumn<T>[]>([]);
 
   sortMode = input<SortMode>("single");
   sortField = input<string>();
@@ -202,6 +208,10 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
 
   protected resolveCell(row: T, field: string): unknown {
     return (row as Record<string, unknown>)[field];
+  }
+
+  protected renderCell(row: T, col: UTableColumn<T>, rowIndex: number): unknown {
+    return col.body ? col.body(row, { field: col.field, rowIndex }) : this.resolveCell(row, col.field);
   }
 
   private compareValues(a: unknown, b: unknown): number {
