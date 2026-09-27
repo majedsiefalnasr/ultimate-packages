@@ -8,9 +8,10 @@ import type { PaginatorPageChangeEvent } from "../paginator/paginator";
 import { UScroller } from "../scroller/scroller";
 import { tableStyleModule } from "./table-style";
 
-export interface UTableColumn {
+export interface UTableColumn<T = unknown> {
   field: string;
   header: string;
+  body?: (row: T, options: { field: string; rowIndex: number }) => React.ReactNode;
 }
 
 export interface UTableSortEvent {
@@ -22,7 +23,7 @@ export interface UTableSortEvent {
 export interface UTableProps<T> {
   value: T[];
   dataKey?: string;
-  columns: UTableColumn[];
+  columns: UTableColumn<T>[];
   sortMode?: SortMode;
   sortField?: string;
   sortOrder?: 1 | 0 | -1;
@@ -79,6 +80,12 @@ export interface UTableProps<T> {
 
 function resolveCell<T>(row: T, field: string): unknown {
   return (row as Record<string, unknown>)[field];
+}
+
+function renderCell<T>(row: T, col: UTableColumn<T>, rowIndex: number): React.ReactNode {
+  return col.body
+    ? col.body(row, { field: col.field, rowIndex })
+    : String(resolveCell(row, col.field));
 }
 
 function compareValues(a: unknown, b: unknown): number {
@@ -571,7 +578,7 @@ export function UTable<T>({
                   onKeyDown={handleRowKeyDown}
                 >
                   {columns.map((col) => (
-                    <td key={col.field}>{String(resolveCell(row, col.field))}</td>
+                    <td key={col.field}>{renderCell(row, col, index)}</td>
                   ))}
                   {editMode === "row" && (
                     <td>
@@ -620,7 +627,7 @@ export function UTable<T>({
                     style={{ position: "absolute", top: getItemOptions(index).index * itemSize, width: "100%" }}
                   >
                     {columns.map((col) => (
-                      <td key={col.field}>{String(resolveCell(value as T, col.field))}</td>
+                      <td key={col.field}>{renderCell(value as T, col, index)}</td>
                     ))}
                   </tr>
                 ))}

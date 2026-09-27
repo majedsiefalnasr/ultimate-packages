@@ -1,7 +1,7 @@
 /// <reference types="@testing-library/jest-dom" />
 import * as React from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, cleanup, act } from "@testing-library/react";
+import { render, cleanup, act, screen } from "@testing-library/react";
 import { UTable } from "./table";
 import { UTable as SubpathExport } from "./index";
 import * as PaginatorModule from "../paginator/paginator";
@@ -777,5 +777,69 @@ describe("real child-component composition (regression guard, Task 24)", () => {
     } finally {
       vi.unstubAllGlobals();
     }
+  });
+});
+
+describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
+  interface Row {
+    id: number;
+    name: string;
+    price: number;
+  }
+
+  it("renders a column's body function output instead of the raw field value", () => {
+    render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Widget", price: 9.5 }]}
+        columns={[
+          { field: "name", header: "Name" },
+          { field: "price", header: "Price", body: (row) => `$${row.price.toFixed(2)}` },
+        ]}
+      />
+    );
+    const cells = screen.getAllByRole("cell");
+    expect(cells[0]).toHaveTextContent("Widget");
+    expect(cells[1]).toHaveTextContent("$9.50");
+  });
+
+  it("passes { field, rowIndex } as the body function's second argument", () => {
+    const seen: { field: string; rowIndex: number }[] = [];
+    render(
+      <UTable<Row>
+        value={[
+          { id: 1, name: "A", price: 1 },
+          { id: 2, name: "B", price: 2 },
+        ]}
+        columns={[
+          {
+            field: "name",
+            header: "Name",
+            body: (row, options) => {
+              seen.push(options);
+              return row.name;
+            },
+          },
+        ]}
+      />
+    );
+    expect(seen).toEqual([
+      { field: "name", rowIndex: 0 },
+      { field: "name", rowIndex: 1 },
+    ]);
+  });
+
+  it("falls back to the raw field value when no body function is supplied", () => {
+    render(<UTable<Row> value={[{ id: 1, name: "Widget", price: 9.5 }]} columns={[{ field: "price", header: "Price" }]} />);
+    expect(screen.getAllByRole("cell")[0]).toHaveTextContent("9.5");
+  });
+
+  it("can return a React element from the body function", () => {
+    render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Widget", price: 9.5 }]}
+        columns={[{ field: "name", header: "Name", body: (row) => <strong>{row.name}</strong> }]}
+      />
+    );
+    expect(screen.getByText("Widget").tagName).toBe("STRONG");
   });
 });
