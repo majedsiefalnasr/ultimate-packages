@@ -49,6 +49,7 @@ export interface UTableProps<T> {
   selection?: T | T[];
   onSelectionChange?: (selection: T | T[]) => void;
   compareSelectionBy?: "equals" | "deepEquals";
+  selectionColumn?: boolean;
   paginator?: boolean;
   first?: number;
   rows?: number;
@@ -325,6 +326,7 @@ export function UTable<T>({
   selection,
   onSelectionChange,
   compareSelectionBy = "equals",
+  selectionColumn = false,
   paginator = false,
   first = 0,
   rows = 0,
@@ -415,6 +417,35 @@ export function UTable<T>({
     const index = current.findIndex((s) => isRowEqual(s, row));
     const next = index === -1 ? [...current, row] : current.filter((_, i) => i !== index);
     onSelectionChange(next);
+  };
+
+  /**
+   * Selection-column checkbox/radio click handler (GAP-042, Spec §5.2):
+   * stops propagation so the enclosing row's own `onClick={() =>
+   * handleRowClick(row)}` doesn't also fire and double-toggle the same row,
+   * then delegates to the same `handleRowClick` toggle logic rather than
+   * duplicating it.
+   */
+  const handleSelectionInputClick = (event: React.MouseEvent, row: T) => {
+    event.stopPropagation();
+    handleRowClick(row);
+  };
+
+  /**
+   * Header select-all checkbox state (GAP-042, Spec §5.2): checked only when
+   * there is at least one row and every row is currently selected — an empty
+   * `value` is never considered "all selected".
+   */
+  const allSelected = value.length > 0 && value.every((row) => isSelected(row));
+
+  /**
+   * Header select-all checkbox click handler (GAP-042, Spec §5.2): selects
+   * every row in `value` if not all are already selected, otherwise
+   * deselects all (clears the selection).
+   */
+  const handleToggleAllSelection = () => {
+    if (!onSelectionChange) return;
+    onSelectionChange(allSelected ? [] : [...value]);
   };
 
   const ariaSortFor = (field: string): "ascending" | "descending" | undefined => {
@@ -548,6 +579,17 @@ export function UTable<T>({
       <table className={cx("table") as string}>
         <thead className={cx("thead") as string} role="rowgroup">
           <tr role="row">
+            {selectionColumn && selectionMode && (
+              <th>
+                {selectionMode === "multiple" && (
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={handleToggleAllSelection}
+                  />
+                )}
+              </th>
+            )}
             {columns.map((col) => (
               <th
                 key={col.field}
@@ -577,6 +619,16 @@ export function UTable<T>({
                   onClick={() => handleRowClick(row)}
                   onKeyDown={handleRowKeyDown}
                 >
+                  {selectionColumn && selectionMode && (
+                    <td>
+                      <input
+                        type={selectionMode === "multiple" ? "checkbox" : "radio"}
+                        checked={isSelected(row)}
+                        onChange={() => {}}
+                        onClick={(event) => handleSelectionInputClick(event, row)}
+                      />
+                    </td>
+                  )}
                   {columns.map((col) => (
                     <td key={col.field}>{renderCell(row, col, index)}</td>
                   ))}

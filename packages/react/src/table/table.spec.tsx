@@ -1,7 +1,7 @@
 /// <reference types="@testing-library/jest-dom" />
 import * as React from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, cleanup, act, screen } from "@testing-library/react";
+import { render, cleanup, act, screen, fireEvent } from "@testing-library/react";
 import { UTable } from "./table";
 import { UTable as SubpathExport } from "./index";
 import * as PaginatorModule from "../paginator/paginator";
@@ -133,6 +133,99 @@ describe("selection", () => {
     );
     (container.querySelector('tbody [role="row"]') as HTMLElement).click();
     expect(onSelectionChange).toHaveBeenCalledWith({ id: 1, name: "Alice" });
+  });
+});
+
+describe("selection-column UI (Spec §5.2, GAP-042)", () => {
+  it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }, { id: 2, name: "B" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selectionColumn
+        onSelectionChange={vi.fn()}
+      />
+    );
+    const headerCheckbox = container.querySelector("thead input[type=checkbox]");
+    const rowCheckboxes = container.querySelectorAll("tbody input[type=checkbox]");
+    expect(headerCheckbox).toBeTruthy();
+    expect(rowCheckboxes.length).toBe(2);
+  });
+
+  it("renders a radio button per row and no header control when selectionMode is single and selectionColumn is true", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="single"
+        selectionColumn
+        onSelectionChange={vi.fn()}
+      />
+    );
+    expect(container.querySelector("tbody input[type=radio]")).toBeTruthy();
+    expect(container.querySelector("thead input")).toBeFalsy();
+  });
+
+  it("does not render a selection column when selectionColumn is false (default)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        onSelectionChange={vi.fn()}
+      />
+    );
+    expect(container.querySelector("input[type=checkbox]")).toBeFalsy();
+  });
+
+  it("header checkbox is unchecked and enabled when value is empty", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selectionColumn
+        onSelectionChange={vi.fn()}
+      />
+    );
+    const headerCheckbox = container.querySelector("thead input[type=checkbox]") as HTMLInputElement;
+    expect(headerCheckbox.checked).toBe(false);
+    expect(headerCheckbox.disabled).toBe(false);
+  });
+
+  it("clicking a row checkbox toggles that row into the selection and calls onSelectionChange", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selectionColumn
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    fireEvent.click(container.querySelector("tbody input[type=checkbox]") as HTMLInputElement);
+    expect(onSelectionChange).toHaveBeenCalledWith([{ id: 1, name: "A" }]);
+  });
+
+  it("clicking the header checkbox selects all rows; clicking again deselects all", () => {
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={rows}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selectionColumn
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const headerCheckbox = container.querySelector("thead input[type=checkbox]") as HTMLInputElement;
+    fireEvent.click(headerCheckbox);
+    expect(onSelectionChange).toHaveBeenCalledWith(rows);
   });
 });
 
