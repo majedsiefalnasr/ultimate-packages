@@ -20,7 +20,17 @@
           >{{ col.header }}</th>
         </tr>
       </thead>
-      <tbody v-if="!virtualScrollerOptions" :class="cx('tbody')" role="rowgroup">
+      <tbody v-if="!virtualScrollerOptions && loading" :class="cx('tbody')" role="rowgroup">
+        <tr>
+          <td data-u-table-loading :colspan="columns.length"></td>
+        </tr>
+      </tbody>
+      <tbody v-else-if="!virtualScrollerOptions && value.length === 0" :class="cx('tbody')" role="rowgroup">
+        <tr>
+          <td :colspan="columns.length">{{ emptyMessage }}</td>
+        </tr>
+      </tbody>
+      <tbody v-else-if="!virtualScrollerOptions" :class="cx('tbody')" role="rowgroup">
         <template v-for="(entry, index) in groupedRows" :key="index">
           <tr
             v-if="rowGroupMode === 'subheader' && entry.isGroupHeader"
@@ -141,6 +151,19 @@ function resolveCell(row, field) {
 function renderCell(row, col, rowIndex) {
   return col.body ? col.body(row, { field: col.field, rowIndex }) : row[col.field];
 }
+
+/**
+ * Default empty-state message (Spec §5.6, GAP-046), kept identical across
+ * all 3 frameworks. Real PrimeNG's own Table component has no hardcoded
+ * default text for its empty region — it renders purely via a
+ * content-projected template with no built-in fallback string. The closest
+ * verified real-Prime default text is the global locale's `emptyMessage`
+ * translation key (confirmed via the pinned `primeng-21.1.9.tar.gz`
+ * tarball, `packages/primeng/src/config/primeng.ts`:
+ * `emptyMessage: 'No results found'`), matching Angular Task 10's and
+ * React Task 11's own sourcing.
+ */
+const DEFAULT_EMPTY_MESSAGE = "No results found";
 
 function compareValues(a, b) {
   if (a == null && b == null) return 0;
@@ -290,6 +313,12 @@ export default {
        * symmetry); no consumer reads this yet.
        */
       d_editingMeta: {},
+      /**
+       * Default empty-state message (Spec §5.6, GAP-046). Not itself a
+       * prop — this task's scope is the boolean `loading` flag and default
+       * message only, matching Angular's/React's own Task 10/11 scope.
+       */
+      emptyMessage: DEFAULT_EMPTY_MESSAGE,
     };
   },
   computed: {

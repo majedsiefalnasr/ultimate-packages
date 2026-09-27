@@ -29,6 +29,7 @@ export function createBaseTable(): ComponentOptions {
       editingRows: { type: Array, default: () => [] },
       rowGroupMode: { type: String, default: undefined },
       groupRowsBy: { type: String, default: undefined },
+      loading: { type: Boolean, default: false },
     },
     emits: [
       "sort",

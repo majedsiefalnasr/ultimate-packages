@@ -781,3 +781,65 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
     expect(wrapper.find("td").text()).toBe("9.5");
   });
 });
+
+describe("loading/empty states (Spec §5.6, GAP-046)", () => {
+  interface Row {
+    id: number;
+    name: string;
+  }
+
+  it("shows a loading indicator when loading is true", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+        loading: true,
+      },
+    });
+    expect(wrapper.find("[data-u-table-loading]").exists()).toBe(true);
+  });
+
+  it("shows a default empty-state message when value is empty and loading is false", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+      },
+    });
+    expect(wrapper.text()).toContain("No results found");
+  });
+
+  it("does not show the empty-state message when value has rows", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+      },
+    });
+    expect(wrapper.text()).not.toContain("No results found");
+  });
+
+  it("does not show the empty-state message while loading is true, even with an empty value", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+        loading: true,
+      },
+    });
+    expect(wrapper.text()).not.toContain("No results found");
+  });
+
+  it("preserves existing selection when loading toggles to true", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selection: [{ id: 1, name: "A" }],
+      },
+    });
+    await wrapper.setProps({ loading: true });
+    expect(wrapper.props("selection")).toEqual([{ id: 1, name: "A" }]);
+  });
+});
