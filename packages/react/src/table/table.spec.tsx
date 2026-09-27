@@ -534,6 +534,50 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   });
 });
 
+describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
+  interface RowspanRow {
+    id: number;
+    category: string;
+    name: string;
+  }
+
+  it("spans consecutive rows sharing the same groupRowsBy value under one cell", () => {
+    const { container } = render(
+      <UTable<RowspanRow>
+        value={[
+          { id: 1, category: "Fruit", name: "Apple" },
+          { id: 2, category: "Fruit", name: "Banana" },
+          { id: 3, category: "Veg", name: "Carrot" },
+        ]}
+        columns={[
+          { field: "category", header: "Category" },
+          { field: "name", header: "Name" },
+        ]}
+        rowGroupMode="rowspan"
+        groupRowsBy="category"
+      />
+    );
+    const categoryCells = container.querySelectorAll("td[data-u-table-group-cell]");
+    expect(categoryCells.length).toBe(2); // one spanned cell per group, not per row
+    expect(categoryCells[0].getAttribute("rowspan")).toBe("2");
+    expect(categoryCells[1].getAttribute("rowspan")).toBe("1");
+  });
+
+  it("renders ungrouped when groupRowsBy is unset, matching subheader mode's own fallback", () => {
+    let container!: HTMLElement;
+    expect(() => {
+      container = render(
+        <UTable<RowspanRow>
+          value={[{ id: 1, category: "Fruit", name: "Apple" }]}
+          columns={[{ field: "category", header: "Category" }]}
+          rowGroupMode="rowspan"
+        />
+      ).container;
+    }).not.toThrow();
+    expect(container.querySelector("[data-u-table-group-header]")).toBeFalsy();
+  });
+});
+
 describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filter-vocabulary-design.md)", () => {
   // Explicit mode-coverage checklist for this framework — each of the 14
   // comparator modes must appear as a literal matchMode string in at least

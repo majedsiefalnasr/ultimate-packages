@@ -581,9 +581,17 @@ export function UTable<T>({
    * previous row's via `uix-data`'s shared `equals` (2-arg form) to detect
    * group boundaries. When `groupRowsBy` is unset, this degrades to
    * `pagedValue` unchanged (no boundaries ever detected).
+   *
+   * `groupSize` (GAP-045) is the count of consecutive rows, starting at this
+   * entry, that share this row's `groupRowsBy` value — meaningful only on an
+   * `isGroupHeader: true` entry. Computed via the same boundary detection as
+   * `isGroupHeader` (a forward scan from each header to the next), so
+   * `"rowspan"` mode's `rowSpan` attribute reuses the identical group
+   * boundaries `"subheader"` mode already renders — no parallel grouping
+   * algorithm.
    */
-  const groupedRows = React.useMemo((): { row: T; isGroupHeader: boolean }[] => {
-    if (!groupRowsBy) return pagedValue.map((row) => ({ row, isGroupHeader: false }));
+  const groupedRows = React.useMemo((): { row: T; isGroupHeader: boolean; groupSize: number }[] => {
+    if (!groupRowsBy) return pagedValue.map((row) => ({ row, isGroupHeader: false, groupSize: 1 }));
 
     const meta: SortMeta[] = [{ field: groupRowsBy, order: 1 }, ...multiSortMeta];
     const rows = [...pagedValue].sort((a, b) => {
@@ -594,12 +602,23 @@ export function UTable<T>({
       return 0;
     });
 
-    return rows.map((row, index) => {
+    const withHeaders = rows.map((row, index) => {
       const previous = rows[index - 1];
       const isGroupHeader =
         index === 0 || !equals(resolveCell(row, groupRowsBy), resolveCell(previous, groupRowsBy));
-      return { row, isGroupHeader };
+      return { row, isGroupHeader, groupSize: 1 };
     });
+
+    let currentHeaderIndex = -1;
+    withHeaders.forEach((entry, index) => {
+      if (entry.isGroupHeader) {
+        currentHeaderIndex = index;
+      } else if (currentHeaderIndex !== -1) {
+        withHeaders[currentHeaderIndex].groupSize++;
+      }
+    });
+
+    return withHeaders;
   }, [groupRowsBy, pagedValue, multiSortMeta]);
 
   /**
@@ -711,7 +730,7 @@ export function UTable<T>({
         )}
         {!virtualScrollerOptions && !loading && value.length > 0 && (
           <tbody className={cx("tbody") as string} role="rowgroup">
-            {groupedRows.map(({ row, isGroupHeader }, index) => (
+            {groupedRows.map(({ row, isGroupHeader, groupSize }, index) => (
               <React.Fragment key={index}>
                 {rowGroupMode === "subheader" && isGroupHeader && (
                   <tr data-u-table-group-header className={cx("rowGroupHeader") as string}>
@@ -750,9 +769,17 @@ export function UTable<T>({
                       </button>
                     </td>
                   )}
-                  {columns.map((col) => (
-                    <td key={col.field}>{renderCell(row, col, index)}</td>
-                  ))}
+                  {columns.map((col) =>
+                    rowGroupMode === "rowspan" && groupRowsBy && col.field === groupRowsBy ? (
+                      isGroupHeader && (
+                        <td key={col.field} data-u-table-group-cell rowSpan={groupSize}>
+                          {renderCell(row, col, index)}
+                        </td>
+                      )
+                    ) : (
+                      <td key={col.field}>{renderCell(row, col, index)}</td>
+                    )
+                  )}
                   {editMode === "row" && (
                     <td>
                       <button
