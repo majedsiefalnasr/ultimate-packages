@@ -690,6 +690,78 @@ describe("keyboard navigation", () => {
   });
 });
 
+describe("keyboard selection (Spec §5.7, GAP-047)", () => {
+  it("Space toggles the focused row's selection when selectionMode is set", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    const row = fixture.nativeElement.querySelector("tbody [role=row]");
+    row.dispatchEvent(new KeyboardEvent("keydown", { code: "Space" }));
+    expect(emitted).toEqual([[{ id: 1, name: "A" }]]);
+  });
+
+  it("Enter toggles the focused row's selection when selectionMode is set", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "single");
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement
+      .querySelector("tbody [role=row]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "Enter" }));
+    expect(emitted).toEqual([{ id: 1, name: "A" }]);
+  });
+
+  it("Ctrl+A selects all rows when selectionMode is multiple", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    fixture.componentRef.setInput("value", rows);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement
+      .querySelector("tbody [role=row]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true }));
+    expect(emitted).toEqual([rows]);
+  });
+
+  it("Ctrl+A does nothing when selectionMode is unset", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement
+      .querySelector("tbody [role=row]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true }));
+    expect(emitted).toEqual([]);
+  });
+
+  it("existing Arrow/Home/End keyboard navigation is unaffected by the new Space/Enter/Ctrl+A handling", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.detectChanges();
+    const rows = fixture.nativeElement.querySelectorAll('tbody [role="row"]');
+    rows[0].focus();
+    rows[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.ownerDocument.activeElement).toBe(rows[1]);
+  });
+});
+
 describe("Paginator composition (real UPaginator, not a mock)", () => {
   it("renders a real u-paginator child when paginator=true and slices rows to the current page", () => {
     const fixture = TestBed.createComponent(UTable<Row>);

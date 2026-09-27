@@ -54,7 +54,7 @@ export interface UTableColumn<T = unknown> {
                     [style.top.px]="options.getItemOptions(item.index).index * options.itemSize"
                     [style.width]="'100%'"
                     (click)="onRowClick(item.value)"
-                    (keydown)="onRowKeyDown($event)"
+                    (keydown)="onRowKeyDown($event, item.value)"
                   >
                     @for (col of columns(); track col.field) {
                       <td>{{ renderCell(item.value, col, rowIndex) }}</td>
@@ -102,7 +102,7 @@ export interface UTableColumn<T = unknown> {
                 tabindex="0"
                 [attr.aria-selected]="isSelected(entry.row)"
                 (click)="onRowClick(entry.row)"
-                (keydown)="onRowKeyDown($event)"
+                (keydown)="onRowKeyDown($event, entry.row)"
               >
                 @if (selectionColumn() && selectionMode()) {
                   <td>
@@ -633,17 +633,41 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * `table.ts:3918-4014` row-keydown convention. Only moves `.focus()`
    * between `tbody [role="row"]` elements — never the header row, since
    * this handler is bound per data row, not delegated from a host
-   * listener spanning the whole table. Enter/selection-toggle behavior is
-   * already covered by Task 6's `(click)` handler, so it is intentionally
-   * out of scope here.
+   * listener spanning the whole table.
+   *
+   * Also handles keyboard selection (GAP-047, Spec §5.7): Space/Enter
+   * toggle the focused row's selection via the same `toggleSelection`
+   * logic the row-click handler and selection-column controls already
+   * share (no duplicated toggle logic), and Ctrl+A/Cmd+A selects every row
+   * in `value()` when `selectionMode()` is exactly `"multiple"`. When
+   * `selectionMode()` is not `"multiple"` (including unset), Ctrl+A does
+   * nothing and does not call `preventDefault()` — the browser's native
+   * "select all text" behavior is only swallowed when Ctrl+A actually did
+   * something (Review Focus item 3).
    */
-  protected onRowKeyDown(event: KeyboardEvent): void {
-    const row = event.currentTarget as HTMLElement;
-    const rowGroup = row.parentElement;
+  protected onRowKeyDown(event: KeyboardEvent, row: T): void {
+    if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") {
+      if (this.selectionMode() === "multiple") {
+        event.preventDefault();
+        this.selectionChange.emit([...this.value()]);
+      }
+      return;
+    }
+
+    if (event.code === "Space" || event.code === "Enter") {
+      if (this.selectionMode()) {
+        event.preventDefault();
+        this.toggleSelection(row);
+      }
+      return;
+    }
+
+    const rowElement = event.currentTarget as HTMLElement;
+    const rowGroup = rowElement.parentElement;
     if (!rowGroup) return;
 
     const rows = Array.from(rowGroup.querySelectorAll<HTMLElement>(':scope > [role="row"]'));
-    const index = rows.indexOf(row);
+    const index = rows.indexOf(rowElement);
     if (index === -1) return;
 
     let target: HTMLElement | undefined;
