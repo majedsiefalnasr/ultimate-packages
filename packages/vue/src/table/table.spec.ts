@@ -575,3 +575,57 @@ describe("real child-component composition (regression guard, Task 24)", () => {
     expect(scrollerComponent.exists()).toBe(true);
   });
 });
+
+describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
+  interface Row {
+    id: number;
+    name: string;
+    price: number;
+  }
+
+  it("renders a column's body function output instead of the raw field value", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "Widget", price: 9.5 }],
+        columns: [
+          { field: "name", header: "Name" },
+          { field: "price", header: "Price", body: (row: Row) => `$${row.price.toFixed(2)}` },
+        ],
+      },
+    });
+    const cells = wrapper.findAll("td");
+    expect(cells[0].text()).toBe("Widget");
+    expect(cells[1].text()).toBe("$9.50");
+  });
+
+  it("passes { field, rowIndex } as the body function's second argument", () => {
+    const seen: { field: string; rowIndex: number }[] = [];
+    mount(UTable, {
+      props: {
+        value: [
+          { id: 1, name: "A", price: 1 },
+          { id: 2, name: "B", price: 2 },
+        ],
+        columns: [
+          {
+            field: "name",
+            header: "Name",
+            body: (row: Row, options: { field: string; rowIndex: number }) => {
+              seen.push(options);
+              return row.name;
+            },
+          },
+        ],
+      },
+    });
+    expect(seen).toEqual([
+      { field: "name", rowIndex: 0 },
+      { field: "name", rowIndex: 1 },
+    ]);
+  });
+
+  it("falls back to the raw field value when no body function is supplied", () => {
+    const wrapper = mount(UTable, { props: { value: [{ id: 1, name: "Widget", price: 9.5 }], columns: [{ field: "price", header: "Price" }] } });
+    expect(wrapper.find("td").text()).toBe("9.5");
+  });
+});

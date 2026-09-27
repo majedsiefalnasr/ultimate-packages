@@ -29,7 +29,7 @@
             @click="selectRow(entry.row)"
             @keydown="onRowKeyDown"
           >
-            <td v-for="col in columns" :key="col.field">{{ entry.row[col.field] }}</td>
+            <td v-for="col in columns" :key="col.field">{{ renderCell(entry.row, col, index) }}</td>
             <td v-if="editMode === 'row'">
               <button
                 type="button"
@@ -76,7 +76,7 @@
                 This is intentional (a row outside the window isn't in the
                 DOM to focus), not a bug.
               -->
-              <td v-for="col in columns" :key="col.field">{{ entry.value[col.field] }}</td>
+              <td v-for="col in columns" :key="col.field">{{ renderCell(entry.value, col, entry.index) }}</td>
             </tr>
           </tbody>
         </table>
@@ -100,6 +100,13 @@ import UPaginator from "../paginator/Paginator.vue";
 import UScroller from "../scroller/Scroller.vue";
 
 /**
+ * @typedef {Object} UTableColumn
+ * @property {string} field
+ * @property {string} header
+ * @property {(row: unknown, options: { field: string; rowIndex: number }) => import("vue").VNode | string} [body]
+ */
+
+/**
  * Sort execution is entangled with row-value resolution per uix-data's
  * SortMeta doc comment, so it lives here rather than as a shared primitive.
  * Mirrors Angular's `compareValues`/React's `compareValues` (identical
@@ -107,6 +114,17 @@ import UScroller from "../scroller/Scroller.vue";
  */
 function resolveCell(row, field) {
   return row[field];
+}
+
+/**
+ * Renders a column's body function output when supplied, else falls back to
+ * the raw field value (spec §5.1, matching Angular's/React's `renderCell`).
+ * @param {unknown} row
+ * @param {UTableColumn} col
+ * @param {number} rowIndex
+ */
+function renderCell(row, col, rowIndex) {
+  return col.body ? col.body(row, { field: col.field, rowIndex }) : row[col.field];
 }
 
 function compareValues(a, b) {
@@ -342,6 +360,16 @@ export default {
     },
   },
   methods: {
+    /**
+     * Renders a column's body function output when supplied, else falls
+     * back to the raw field value (spec §5.1). Exposed as a method (rather
+     * than calling the module-level `renderCell` helper directly from the
+     * template) so the template can invoke it the same way it already calls
+     * `ariaSortFor`/`isSelected`/etc.
+     */
+    renderCell(row, col, rowIndex) {
+      return renderCell(row, col, rowIndex);
+    },
     /**
      * Re-emits UPaginator's own `page` event as Table's `page` event.
      * UPaginator owns its internal `d_first`/`d_rows` mutate-then-emit
