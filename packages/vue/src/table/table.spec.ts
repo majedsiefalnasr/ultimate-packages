@@ -843,3 +843,52 @@ describe("loading/empty states (Spec §5.6, GAP-046)", () => {
     expect(wrapper.props("selection")).toEqual([{ id: 1, name: "A" }]);
   });
 });
+
+describe("row expansion (Spec §5.4, GAP-044)", () => {
+  interface Row {
+    id: number;
+    name: string;
+  }
+
+  it("toggles a row's expanded state via expandedRowKeys/update:expandedRowKeys", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        expandedRowKeys: {},
+      },
+    });
+    await wrapper.find("[data-u-table-row-toggle]").trigger("click");
+    expect(wrapper.emitted("update:expandedRowKeys")).toEqual([[{ "1": true }]]);
+  });
+
+  it("emits row-expand when a row is expanded and row-collapse when collapsed", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        expandedRowKeys: {},
+      },
+    });
+    await wrapper.find("[data-u-table-row-toggle]").trigger("click");
+    expect(wrapper.emitted("row-expand")).toHaveLength(1);
+
+    await wrapper.setProps({ expandedRowKeys: { "1": true } });
+    await wrapper.find("[data-u-table-row-toggle]").trigger("click");
+    expect(wrapper.emitted("row-collapse")).toHaveLength(1);
+  });
+
+  it("does not throw when dataKey maps to a duplicate value across two rows", () => {
+    expect(() =>
+      mount(UTable, {
+        props: {
+          value: [{ id: 1, name: "A" }, { id: 1, name: "B" }] as Row[],
+          columns: [{ field: "name", header: "Name" }],
+          dataKey: "id",
+        },
+      })
+    ).not.toThrow();
+  });
+});

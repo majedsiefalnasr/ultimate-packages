@@ -27,6 +27,7 @@ export function createBaseTable(): ComponentOptions {
       lazy: { type: Boolean, default: false },
       editMode: { type: String, default: undefined },
       editingRows: { type: Array, default: () => [] },
+      expandedRowKeys: { type: Object, default: () => ({}) },
       rowGroupMode: { type: String, default: undefined },
       groupRowsBy: { type: String, default: undefined },
       loading: { type: Boolean, default: false },
@@ -39,6 +40,9 @@ export function createBaseTable(): ComponentOptions {
       "page",
       "lazy-load",
       "update:editingRows",
+      "update:expandedRowKeys",
+      "row-expand",
+      "row-collapse",
     ],
   };
 }

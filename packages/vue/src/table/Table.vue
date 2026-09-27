@@ -54,6 +54,13 @@
                 @click.stop="selectRow(entry.row)"
               />
             </td>
+            <td v-if="dataKey">
+              <button
+                type="button"
+                data-u-table-row-toggle
+                @click.stop="toggleRowExpansion($event, entry.row)"
+              >{{ isRowExpanded(entry.row) ? "-" : "+" }}</button>
+            </td>
             <td v-for="col in columns" :key="col.field">{{ renderCell(entry.row, col, index) }}</td>
             <td v-if="editMode === 'row'">
               <button
@@ -62,6 +69,9 @@
                 @click.stop="initRowEdit(entry.row)"
               >Edit</button>
             </td>
+          </tr>
+          <tr v-if="dataKey && isRowExpanded(entry.row)" data-u-table-row-expansion>
+            <td :colspan="columns.length + 1"></td>
           </tr>
         </template>
       </tbody>
@@ -618,6 +628,40 @@ export default {
      */
     initRowEdit(row) {
       this.$emit("update:editingRows", [...this.editingRows, row]);
+    },
+    /**
+     * Row-expansion state check (GAP-044, Spec §5.4), matching the
+     * key-map shape Angular's/React's `expandedRowKeys` use (distinct from
+     * Vue's own array-prop `editingRows` idiom — the plan's Task 15 fixes
+     * this shape explicitly): a row is expanded when its `dataKey`-resolved
+     * identity is present (truthy) in `expandedRowKeys`.
+     */
+    isRowExpanded(row) {
+      const key = String(resolveCell(row, this.dataKey));
+      return !!this.expandedRowKeys[key];
+    },
+    /**
+     * Row-expansion toggle (GAP-044, Spec §5.4), reusing the same key-map
+     * read/write pattern already established by Angular's/React's
+     * `expandedRowKeys`: the row's `dataKey`-resolved identity is flipped in
+     * a shallow-copied map (spread, so a duplicate `dataKey` value across
+     * two rows is last-write-wins — no new uniqueness validation, matching
+     * Review Focus item 5 and the existing selection key-map's own
+     * precedent), the merged map is emitted via `update:expandedRowKeys`,
+     * and `row-expand`/`row-collapse` fire according to the row's new
+     * state.
+     */
+    toggleRowExpansion(event, row) {
+      const key = String(resolveCell(row, this.dataKey));
+      const wasExpanded = !!this.expandedRowKeys[key];
+      const next = { ...this.expandedRowKeys, [key]: !wasExpanded };
+      this.$emit("update:expandedRowKeys", next);
+
+      if (wasExpanded) {
+        this.$emit("row-collapse", { originalEvent: event, data: row });
+      } else {
+        this.$emit("row-expand", { originalEvent: event, data: row });
+      }
     },
   },
 };
