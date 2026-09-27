@@ -61,7 +61,14 @@
                 @click.stop="toggleRowExpansion($event, entry.row)"
               >{{ isRowExpanded(entry.row) ? "-" : "+" }}</button>
             </td>
-            <td v-for="col in columns" :key="col.field">{{ renderCell(entry.row, col, index) }}</td>
+            <template v-for="col in columns" :key="col.field">
+              <td
+                v-if="rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy && entry.isGroupHeader"
+                data-u-table-group-cell
+                :rowspan="entry.groupSize"
+              >{{ renderCell(entry.row, col, index) }}</td>
+              <td v-else-if="!(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)">{{ renderCell(entry.row, col, index) }}</td>
+            </template>
             <td v-if="editMode === 'row'">
               <button
                 type="button"
@@ -397,10 +404,18 @@ export default {
      * When `groupRowsBy` is unset, this degrades to `pagedValue` unchanged
      * (no boundaries ever detected), preserving every prior task's
      * ungrouped rendering.
+     *
+     * `groupSize` (GAP-045) is the count of consecutive rows, starting at
+     * this entry, that share this row's `groupRowsBy` value — meaningful
+     * only on an `isGroupHeader: true` entry. Computed via the same
+     * boundary detection as `isGroupHeader` (a forward scan from each
+     * header to the next), so `"rowspan"` mode's `rowspan` attribute reuses
+     * the identical group boundaries `"subheader"` mode already renders —
+     * no parallel grouping algorithm.
      */
     groupedRows() {
       if (!this.groupRowsBy) {
-        return this.pagedValue.map((row) => ({ row, isGroupHeader: false }));
+        return this.pagedValue.map((row) => ({ row, isGroupHeader: false, groupSize: 1 }));
       }
 
       const meta = [{ field: this.groupRowsBy, order: 1 }, ...this.multiSortMeta];
@@ -412,13 +427,24 @@ export default {
         return 0;
       });
 
-      return rows.map((row, index) => {
+      const withHeaders = rows.map((row, index) => {
         const previous = rows[index - 1];
         const isGroupHeader =
           index === 0 ||
           !equals(resolveCell(row, this.groupRowsBy), resolveCell(previous, this.groupRowsBy));
-        return { row, isGroupHeader };
+        return { row, isGroupHeader, groupSize: 1 };
       });
+
+      let currentHeaderIndex = -1;
+      withHeaders.forEach((entry, index) => {
+        if (entry.isGroupHeader) {
+          currentHeaderIndex = index;
+        } else if (currentHeaderIndex !== -1) {
+          withHeaders[currentHeaderIndex].groupSize++;
+        }
+      });
+
+      return withHeaders;
     },
   },
   methods: {

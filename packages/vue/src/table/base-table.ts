@@ -1,6 +1,6 @@
 import { createBaseComponent } from "@ultimate/vue-core";
 import { tableStyleModule } from "./table-style";
-import type { ComponentOptions } from "vue";
+import type { ComponentOptions, PropType } from "vue";
 
 export function createBaseTable(): ComponentOptions {
   return {
@@ -28,7 +28,9 @@ export function createBaseTable(): ComponentOptions {
       editMode: { type: String, default: undefined },
       editingRows: { type: Array, default: () => [] },
       expandedRowKeys: { type: Object, default: () => ({}) },
-      rowGroupMode: { type: String, default: undefined },
+      // Widened for GAP-045: this task adds "rowspan" for the first time —
+      // Vue's own rowGroupMode never declared it (only "subheader" existed).
+      rowGroupMode: { type: String as PropType<"subheader" | "rowspan">, default: undefined },
       groupRowsBy: { type: String, default: undefined },
       loading: { type: Boolean, default: false },
     },

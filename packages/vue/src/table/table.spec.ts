@@ -682,6 +682,44 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   });
 });
 
+describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
+  it("spans consecutive rows sharing the same groupRowsBy value under one cell", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, category: "Fruit", name: "Apple" },
+          { id: 2, category: "Fruit", name: "Banana" },
+          { id: 3, category: "Veg", name: "Carrot" },
+        ],
+        columns: [
+          { field: "category", header: "Category" },
+          { field: "name", header: "Name" },
+        ],
+        rowGroupMode: "rowspan",
+        groupRowsBy: "category",
+      },
+    });
+    const categoryCells = wrapper.findAll("td[data-u-table-group-cell]");
+    expect(categoryCells.length).toBe(2); // one spanned cell per group, not per row
+    expect(categoryCells[0].attributes("rowspan")).toBe("2");
+    expect(categoryCells[1].attributes("rowspan")).toBe("1");
+  });
+
+  it("renders ungrouped when groupRowsBy is unset, matching subheader mode's own fallback", () => {
+    let wrapper;
+    expect(() => {
+      wrapper = mount(UTable, {
+        props: {
+          value: [{ id: 1, category: "Fruit", name: "Apple" }],
+          columns: [{ field: "category", header: "Category" }],
+          rowGroupMode: "rowspan",
+        },
+      });
+    }).not.toThrow();
+    expect(wrapper!.find("[data-u-table-group-header]").exists()).toBe(false);
+  });
+});
+
 describe("filtering — custom mode, Vue (Spec §3.4.2: no executable registration path)", () => {
   it("a custom matchMode matches no rows, with no public prop able to change that outcome", () => {
     const wrapper = mount(UTable, {
