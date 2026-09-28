@@ -516,6 +516,56 @@ describe("row editing (controlled editingRows, spec §11.2)", () => {
   });
 });
 
+describe("row/cell editing lifecycle (Spec §5.3, GAP-043)", () => {
+  it("entering edit mode on a row adds its key to editingRows and renders an editable input", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{}}
+      />
+    );
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-init]") as HTMLElement);
+    expect(container.querySelector("[data-u-table-cell-editor] input")).toBeTruthy();
+  });
+
+  it("saving an edit commits the new value and exits edit mode", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "Changed" } });
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-save]") as HTMLElement);
+    expect(container.querySelector("[data-u-table-cell-editor]")).toBeFalsy();
+    expect(container.textContent).toContain("Changed");
+  });
+
+  it("canceling an edit reverts to the original value and exits edit mode", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "Changed" } });
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-cancel]") as HTMLElement);
+    expect(container.textContent).toContain("A");
+    expect(container.textContent).not.toContain("Changed");
+  });
+});
+
 describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   it("groups adjacent rows sharing the same groupRowsBy value under subheader mode", () => {
     const { container } = render(

@@ -359,6 +359,8 @@ export function UTable<T>({
   editingRows,
   onRowEditChange,
   onRowEditInit,
+  onRowEditSave,
+  onRowEditCancel,
   expandedRowKeys,
   onExpandedRowKeysChange,
   onRowExpand,
@@ -369,8 +371,10 @@ export function UTable<T>({
 }: UTableProps<T>) {
   const { cx } = useComponentBase({ componentName: "table", styleModule: tableStyleModule });
 
-  const [internalEditingRows, setInternalEditingRows] = React.useState<Record<string, boolean>>({});
-  const resolvedEditingRows = onRowEditChange ? editingRows ?? {} : editingRows ?? internalEditingRows;
+  const [internalEditingRows, setInternalEditingRows] = React.useState<Record<string, boolean>>(
+    editingRows ?? {}
+  );
+  const resolvedEditingRows = onRowEditChange ? editingRows ?? {} : internalEditingRows;
 
   /**
    * Row-expansion key-map state (GAP-044, Spec §5.4), matching the
@@ -387,12 +391,43 @@ export function UTable<T>({
 
   /**
    * Always-internal cell-edit dirty-value tracking (spec §11.2), keyed by
-   * `dataKey`-or-`rowIndex`. Scaffolded per the row-edit-lifecycle scope
-   * documented on the class doc comment — no consumer reads this yet.
+   * `dataKey`-or-`rowIndex` then by field (GAP-043, Spec §5.3): the cell
+   * editor's `<input>` binds to this draft store, never to `value` directly,
+   * so keystrokes never mutate the source array until `saveRowEdit` commits
+   * them. This is the exact scaffold Task 16 left for this purpose — no
+   * parallel draft-tracking store was introduced.
    */
   const [editingMeta, setEditingMeta] = React.useState<Record<string, Record<string, unknown>>>({});
-  void editingMeta;
-  void setEditingMeta;
+
+  /**
+   * Row-level committed-value overrides (GAP-043, Spec §5.3): `value` is a
+   * plain, parent-owned prop with no corresponding "next value" callback on
+   * this component's declared surface (`onRowEditSave` reports the row that
+   * was saved, per spec §4.2's real-PrimeReact-matching signature, but does
+   * not hand back a whole replacement array), so a save commits by
+   * recording a fresh row object (immutable update) here, keyed by
+   * `dataKey`-or-`rowIndex` identity. `resolveEditRowKey`'s callers layer
+   * this over `value` for rendering, sorting, filtering, selection, and
+   * grouping alike — no parallel rendering path, and `value` itself is
+   * never mutated.
+   */
+  const [committedRows, setCommittedRows] = React.useState<Record<string, T>>({});
+
+  /**
+   * `value` with any `committedRows` overrides (GAP-043, Spec §5.3) layered
+   * on top, by `dataKey`-resolved identity. Every downstream derived view
+   * (`sortedValue`/`filteredValue`/`pagedValue`/`groupedRows`) is built from
+   * this instead of `value` directly, so a saved edit is visible everywhere
+   * `value` would have been read, with no parallel rendering path — and
+   * `value` itself is never mutated.
+   */
+  const effectiveValue = React.useMemo(() => {
+    if (!dataKey || Object.keys(committedRows).length === 0) return value;
+    return value.map((row) => {
+      const override = committedRows[String(resolveCell(row, dataKey))];
+      return override ?? row;
+    });
+  }, [value, dataKey, committedRows]);
 
   const applySort = React.useCallback(
     (input: T[]): T[] => {
@@ -417,16 +452,16 @@ export function UTable<T>({
     [sortMode, sortField, sortOrder, multiSortMeta]
   );
 
-  const sortedValue = React.useMemo(() => applySort(value), [value, applySort]);
+  const sortedValue = React.useMemo(() => applySort(effectiveValue), [effectiveValue, applySort]);
 
   const filteredValue = React.useMemo(() => {
     const fields = Object.keys(filters);
     if (fields.length === 0) return sortedValue;
 
     return applySort(
-      value.filter((row) => fields.every((field) => matchesFilterEntry(row, field, filters[field])))
+      effectiveValue.filter((row) => fields.every((field) => matchesFilterEntry(row, field, filters[field])))
     );
-  }, [value, filters, applySort, sortedValue]);
+  }, [effectiveValue, filters, applySort, sortedValue]);
 
   const isRowEqual = React.useCallback(
     (a: T, b: T): boolean =>
@@ -640,6 +675,73 @@ export function UTable<T>({
   };
 
   /**
+   * Reads a field's current draft value for `row` from `editingMeta`,
+   * falling back to the live (`effectiveValue`-resolved) cell value the
+   * first time the row enters edit mode, before any keystroke has populated
+   * `editingMeta` (GAP-043, Spec §5.3).
+   */
+  const draftValue = (row: T, field: string): unknown => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    const rowDraft = editingMeta[key];
+    return rowDraft && field in rowDraft ? rowDraft[field] : resolveCell(row, field);
+  };
+
+  /**
+   * Updates one field's draft value for `row` in `editingMeta` from the
+   * cell editor `<input>`'s `onChange`, without touching `value`/
+   * `effectiveValue` at all (Spec §5.3's "edits must not mutate the source
+   * data until explicitly saved" contract).
+   */
+  const handleDraftChange = (row: T, field: string, next: string) => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    setEditingMeta((current) => ({ ...current, [key]: { ...current[key], [field]: next } }));
+  };
+
+  /**
+   * Commits `row`'s accumulated `editingMeta` draft into `committedRows` as
+   * a new row object (immutable update, matching this codebase's
+   * established immutable-update convention), calls `onRowEditSave` with
+   * the committed row (spec §4.2's real-PrimeReact-matching signature), and
+   * exits edit mode the same way `initRowEdit` entered it (controlled via
+   * `onRowEditChange` when supplied, else the internal `useState` setter).
+   */
+  const saveRowEdit = (row: T) => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    const draft = editingMeta[key];
+    let committedRow = row;
+    if (draft) {
+      committedRow = { ...(committedRows[key] ?? row), ...draft } as T;
+      setCommittedRows((current) => ({ ...current, [key]: committedRow }));
+    }
+    onRowEditSave?.(committedRow);
+    exitRowEdit(row);
+  };
+
+  /**
+   * Discards `row`'s `editingMeta` draft (no mutation to `value`/
+   * `committedRows` at all), calls `onRowEditCancel` with the original row,
+   * and exits edit mode the same way `saveRowEdit` does.
+   */
+  const cancelRowEdit = (row: T) => {
+    onRowEditCancel?.(row);
+    exitRowEdit(row);
+  };
+
+  const exitRowEdit = (row: T) => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    setEditingMeta((current) => {
+      const { [key]: _discardedDraft, ...rest } = current;
+      return rest;
+    });
+    const { [key]: _wasEditing, ...remainingKeys } = resolvedEditingRows;
+    if (onRowEditChange) {
+      onRowEditChange(remainingKeys);
+    } else {
+      setInternalEditingRows(remainingKeys);
+    }
+  };
+
+  /**
    * Row-expansion toggle (GAP-044, Spec §5.4), reusing the same key-map
    * read/write pattern already established by `initRowEdit`/
    * `editingRows`: the row's `dataKey`-resolved identity is flipped in a
@@ -769,31 +871,66 @@ export function UTable<T>({
                       </button>
                     </td>
                   )}
-                  {columns.map((col) =>
-                    rowGroupMode === "rowspan" && groupRowsBy && col.field === groupRowsBy ? (
-                      isGroupHeader && (
-                        <td key={col.field} data-u-table-group-cell rowSpan={groupSize}>
-                          {renderCell(row, col, index)}
+                  {columns.map((col) => {
+                    if (rowGroupMode === "rowspan" && groupRowsBy && col.field === groupRowsBy) {
+                      return (
+                        isGroupHeader && (
+                          <td key={col.field} data-u-table-group-cell rowSpan={groupSize}>
+                            {renderCell(row, col, index)}
+                          </td>
+                        )
+                      );
+                    }
+                    if (resolvedEditingRows[String(resolveCell(row, dataKey ?? ""))]) {
+                      return (
+                        <td key={col.field} data-u-table-cell-editor>
+                          <input
+                            value={draftValue(row, col.field) as string}
+                            onChange={(event) => handleDraftChange(row, col.field, event.target.value)}
+                          />
                         </td>
-                      )
+                      );
+                    }
+                    return <td key={col.field}>{renderCell(row, col, index)}</td>;
+                  })}
+                  {editMode === "row" &&
+                    (resolvedEditingRows[String(resolveCell(row, dataKey ?? ""))] ? (
+                      <td>
+                        <button
+                          type="button"
+                          data-u-table-row-edit-save
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            saveRowEdit(row);
+                          }}
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          data-u-table-row-edit-cancel
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            cancelRowEdit(row);
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </td>
                     ) : (
-                      <td key={col.field}>{renderCell(row, col, index)}</td>
-                    )
-                  )}
-                  {editMode === "row" && (
-                    <td>
-                      <button
-                        type="button"
-                        data-u-table-row-edit-init
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          initRowEdit(row);
-                        }}
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  )}
+                      <td>
+                        <button
+                          type="button"
+                          data-u-table-row-edit-init
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            initRowEdit(row);
+                          }}
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    ))}
                 </tr>
                 {dataKey && resolvedExpandedRowKeys[String(resolveCell(row, dataKey))] && (
                   <tr data-u-table-row-expansion>
