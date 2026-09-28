@@ -1341,3 +1341,216 @@ describe("row expansion (Spec §5.4, GAP-044)", () => {
     expect(() => fixture.detectChanges()).not.toThrow();
   });
 });
+
+describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
+  interface Row { id: number; name: string }
+
+  it("clicking the expand-toggle button does not also toggle row selection (Important finding 1)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-toggle]").click();
+    expect(emitted).toEqual([]);
+  });
+
+  it("clicking Edit/Save/Cancel does not also toggle row selection (Important finding 1)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", {});
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-init]").click();
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-save]").click();
+    fixture.detectChanges();
+
+    expect(emitted).toEqual([]);
+  });
+
+  it("typing a space in the cell editor input does not toggle selection, and the character appears in the input (Important finding 2)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.focus();
+    const keydownEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+    input.dispatchEvent(keydownEvent);
+    input.value = "A ";
+    input.dispatchEvent(new Event("input"));
+
+    expect(emitted).toEqual([]);
+    expect(input.value).toBe("A ");
+  });
+
+  it("Ctrl+A while focused inside the cell editor input does not trigger select-all-rows (Important finding 2)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 2, name: "B" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.focus();
+    input.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true, bubbles: true }));
+
+    expect(emitted).toEqual([]);
+  });
+
+  it("clicking into the cell editor input does not toggle row selection (Important finding 2)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector("[data-u-table-cell-editor] input").click();
+
+    expect(emitted).toEqual([]);
+  });
+
+  it("colspan on loading/empty/subheader-group rows accounts for the selection, expansion-toggle, and edit-actions columns (Minor finding 3)", () => {
+    const fixture = TestBed.createComponent(UTable<{ group: string; name: string }>);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+    // base columns.length (1) + selection (1) + expansion-toggle (1) + edit-actions (1) = 4
+    const loadingCell = fixture.nativeElement.querySelector("[data-u-table-loading]");
+    expect(loadingCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("empty-state row colspan also accounts for selection/expansion/edit-actions columns (Minor finding 3)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.detectChanges();
+    const emptyCell = fixture.nativeElement.querySelector("tbody td[colspan]");
+    expect(emptyCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("row-expansion placeholder row colspan accounts for the selection and edit-actions columns too (Minor finding 3)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("expandedRowKeys", { "1": true });
+    fixture.detectChanges();
+    // base columns.length (1) + selection (1) + expansion-toggle (1) + edit-actions (1) = 4
+    const expansionRow = fixture.nativeElement.querySelector("[data-u-table-row-expansion] td");
+    expect(expansionRow.getAttribute("colspan")).toBe("4");
+  });
+
+  it("header row has matching th cells for the expansion-toggle and edit-actions columns (Minor finding 3)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.detectChanges();
+    const headerCells = fixture.nativeElement.querySelectorAll("thead tr th");
+    const bodyRowCells = fixture.nativeElement.querySelectorAll("tbody tr:first-child > *");
+    expect(headerCells.length).toBe(bodyRowCells.length);
+  });
+
+  it("virtual-scroll rowIndex uses the absolute dataset index, not the visible-window-relative index (Minor finding 4)", () => {
+    let resizeObserverCallback: ResizeObserverCallback | undefined;
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(cb: ResizeObserverCallback) {
+          resizeObserverCallback = cb;
+        }
+        observe(target: Element) {
+          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        }
+        disconnect() {}
+      }
+    );
+
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const seenRowIndexes: number[] = [];
+    fixture.componentRef.setInput("value", rowsData);
+    fixture.componentRef.setInput("virtualScroll", true);
+    fixture.componentRef.setInput("virtualScrollItemSize", 30);
+    fixture.componentRef.setInput("columns", [
+      {
+        field: "name",
+        header: "Name",
+        body: (row: Row, options: { rowIndex: number }) => {
+          seenRowIndexes.push(options.rowIndex);
+          return row.name;
+        },
+      },
+    ]);
+    fixture.detectChanges();
+    const scrollerRoot = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    Object.defineProperty(scrollerRoot, "offsetHeight", { value: 200, configurable: true });
+    resizeObserverCallback?.(
+      [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    fixture.detectChanges();
+
+    // Scroll well into the dataset so the visible window's row indexes no
+    // longer start at 0 — this is the case that distinguishes a
+    // window-relative $index (which would reset to 0 here) from the item's
+    // real absolute dataset index (React/Vue's own semantics).
+    seenRowIndexes.length = 0;
+    Object.defineProperty(scrollerRoot, "scrollTop", { value: 3000, writable: true, configurable: true });
+    scrollerRoot.dispatchEvent(new Event("scroll"));
+    fixture.detectChanges();
+
+    expect(seenRowIndexes.length).toBeGreaterThan(0);
+    // first visible absolute index = floor(3000/30) = 100
+    expect(Math.min(...seenRowIndexes)).toBe(100);
+
+    vi.unstubAllGlobals();
+  });
+});

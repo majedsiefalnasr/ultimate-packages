@@ -50,7 +50,7 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
           <ng-template #content let-visibleItems let-options="options">
             <table data-u-table-virtual-body [class]="cx('table')">
               <tbody [class]="cx('tbody')" role="rowgroup">
-                @for (item of visibleItems; track item.index; let rowIndex = $index) {
+                @for (item of visibleItems; track item.index) {
                   <!-- Known limitation: onRowKeyDown walks :scope > [role="row"] within
                        this tbody, which under virtualization only contains the
                        currently-rendered window, not the full logical dataset — so
@@ -68,8 +68,12 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                     (click)="onRowClick(item.value)"
                     (keydown)="onRowKeyDown($event, item.value)"
                   >
+                    <!-- Minor finding 4 (fix-loop integration review): use the item's
+                         own absolute dataset index, not a $index re-derived from the
+                         visible window (which would reset to 0 per scroll) — matching
+                         React's/Vue's own absolute-index semantics. -->
                     @for (col of columns(); track col.field) {
-                      <td>{{ renderCell(item.value, col, rowIndex) }}</td>
+                      <td>{{ renderCell(item.value, col, item.index) }}</td>
                     }
                   </tr>
                 }
@@ -92,6 +96,14 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                   }
                 </th>
               }
+              <!-- Minor finding 3 (fix-loop integration review): the expansion-toggle
+                   and edit-actions columns each render a <td> per body row but had no
+                   matching header <th> at all, leaving the header row's cell count
+                   short of the body rows' — added empty <th> cells here so counts
+                   match, mirroring the selection column's own already-correct <th>. -->
+              @if (dataKey()) {
+                <th></th>
+              }
               @for (col of columns(); track col.field) {
                 <th
                   role="columnheader"
@@ -99,22 +111,25 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                   (click)="onSort(col.field)"
                 >{{ col.header }}</th>
               }
+              @if (editMode() === "row") {
+                <th></th>
+              }
             </tr>
           </thead>
           <tbody [class]="cx('tbody')" role="rowgroup">
             @if (loading()) {
               <tr>
-                <td data-u-table-loading [attr.colspan]="columns().length"></td>
+                <td data-u-table-loading [attr.colspan]="totalColumnCount"></td>
               </tr>
             } @else if (value().length === 0) {
               <tr>
-                <td [attr.colspan]="columns().length">{{ emptyMessage }}</td>
+                <td [attr.colspan]="totalColumnCount">{{ emptyMessage }}</td>
               </tr>
             } @else {
               @for (entry of groupedRows; track $index; let rowIndex = $index) {
                 @if (entry.isGroupHeader && rowGroupMode() === "subheader") {
                   <tr data-u-table-group-header [class]="cx('rowGroupHeader')">
-                    <td [attr.colspan]="columns().length">{{ resolveCell(entry.row, groupRowsBy() ?? "") }}</td>
+                    <td [attr.colspan]="totalColumnCount">{{ resolveCell(entry.row, groupRowsBy() ?? "") }}</td>
                   </tr>
                 }
                 <tr
@@ -161,6 +176,7 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                         <input
                           [value]="draftValue(entry.row, col.field)"
                           (input)="onDraftInput(entry.row, col.field, $event)"
+                          (click)="$event.stopPropagation()"
                         />
                       </td>
                     } @else {
@@ -169,18 +185,18 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                   }
                   @if (editMode() === "row" && isRowEditing(entry.row)) {
                     <td>
-                      <button type="button" data-u-table-row-edit-save (click)="saveRowEdit(entry.row)">Save</button>
-                      <button type="button" data-u-table-row-edit-cancel (click)="cancelRowEdit(entry.row)">Cancel</button>
+                      <button type="button" data-u-table-row-edit-save (click)="saveRowEdit(entry.row, $event)">Save</button>
+                      <button type="button" data-u-table-row-edit-cancel (click)="cancelRowEdit(entry.row, $event)">Cancel</button>
                     </td>
                   } @else if (editMode() === "row") {
                     <td>
-                      <button type="button" data-u-table-row-edit-init (click)="initRowEdit(entry.row)">Edit</button>
+                      <button type="button" data-u-table-row-edit-init (click)="initRowEdit(entry.row, $event)">Edit</button>
                     </td>
                   }
                 </tr>
                 @if (dataKey() && isRowExpanded(entry.row)) {
                   <tr data-u-table-row-expansion>
-                    <td [attr.colspan]="columns().length + 1"></td>
+                    <td [attr.colspan]="totalColumnCount"></td>
                   </tr>
                 }
               }
@@ -263,6 +279,23 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * not-yet-authorized soft dependency (see the plan's Global Constraints).
    */
   protected readonly emptyMessage = DEFAULT_EMPTY_MESSAGE;
+
+  /**
+   * Total header/body cell count (Minor finding 3, fix-loop integration
+   * review): `columns().length` plus one for each of the selection,
+   * expansion-toggle, and edit-actions columns that are actually rendered.
+   * Used consistently everywhere a `colspan` is set (loading row, empty row,
+   * subheader-group row, row-expansion placeholder row) so none of them
+   * under-counts once those extra columns are present — previously all four
+   * used the bare `columns().length`, ignoring the extra columns entirely.
+   */
+  protected get totalColumnCount(): number {
+    let count = this.columns().length;
+    if (this.selectionColumn() && this.selectionMode()) count++;
+    if (this.dataKey()) count++;
+    if (this.editMode() === "row") count++;
+    return count;
+  }
 
   /**
    * A signal (not a plain field) so `matchesFilter`'s read of it inside the
@@ -616,8 +649,16 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * cell editor are explicitly out of scope for this task (spec §11.1:
    * GAP-018/reactive-forms integration is a consumer/example concern, not a
    * Table core blocker).
+   *
+   * `event` is optional (public API callers, like the pre-existing
+   * `initRowEdit(row)` direct-invocation test, don't have to supply one) —
+   * when supplied, `stopPropagation()` is called (Important finding 1,
+   * fix-loop integration review) so the enclosing row's own
+   * `(click)="onRowClick(...)"` doesn't also fire and toggle selection,
+   * mirroring `onSelectionInputClick`'s own established convention.
    */
-  initRowEdit(row: T): void {
+  initRowEdit(row: T, event?: Event): void {
+    event?.stopPropagation();
     const key = String(this.resolveCell(row, this.dataKey()));
     const next = { ...this._editingRowKeys(), [key]: true };
     this._editingRowKeys.set(next);
@@ -692,8 +733,13 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * a new object (immutable update) stored in `committedOverrides`, then
    * exits edit mode: the row's key is removed from `editingRowKeys()` and
    * the merged map is emitted via `editingRowKeysChange`.
+   *
+   * `event` is optional, same rationale as `initRowEdit`'s own doc comment —
+   * when supplied, `stopPropagation()` is called (Important finding 1) so
+   * the enclosing row's `(click)="onRowClick(...)"` doesn't also fire.
    */
-  protected saveRowEdit(row: T): void {
+  protected saveRowEdit(row: T, event?: Event): void {
+    event?.stopPropagation();
     const key = String(this.resolveCell(row, this.dataKey()));
     const draft = this.editDrafts()[key];
     if (draft) {
@@ -705,9 +751,11 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
 
   /**
    * Discards `row`'s draft (no mutation to `value()` or `committedOverrides`
-   * at all) and exits edit mode the same way `saveRowEdit` does.
+   * at all) and exits edit mode the same way `saveRowEdit` does. `event` is
+   * optional, same rationale as `initRowEdit`'s own doc comment.
    */
-  protected cancelRowEdit(row: T): void {
+  protected cancelRowEdit(row: T, event?: Event): void {
+    event?.stopPropagation();
     this.exitRowEdit(row);
   }
 
@@ -739,8 +787,14 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * Focus item 5 and the existing selection key-map's own precedent), the
    * merged map is emitted via `expandedRowKeysChange`, and `onRowExpand`/
    * `onRowCollapse` fire according to the row's new state.
+   *
+   * `stopPropagation()` (Important finding 1, fix-loop integration review)
+   * so the enclosing row's own `(click)="onRowClick(...)"` doesn't also fire
+   * and toggle selection, mirroring `onSelectionInputClick`'s own
+   * established convention.
    */
   protected toggleRowExpansion(event: Event, row: T): void {
+    event.stopPropagation();
     const key = String(this.resolveCell(row, this.dataKey()));
     const wasExpanded = !!this.expandedRowKeys()[key];
     const next = { ...this.expandedRowKeys(), [key]: !wasExpanded };
@@ -926,8 +980,27 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * nothing and does not call `preventDefault()` — the browser's native
    * "select all text" behavior is only swallowed when Ctrl+A actually did
    * something (Review Focus item 3).
+   *
+   * Important finding 2 (fix-loop integration review): the Space/Enter/
+   * Ctrl+A branches only apply when the keydown genuinely originated from
+   * the row element itself (`event.target === event.currentTarget`) — not
+   * when it bubbled up from a child control (the cell-editor `<input>`, or
+   * the expand/edit/save/cancel buttons). Without this guard, typing a space
+   * in the editor input got swallowed into a row-selection toggle instead of
+   * appearing in the input, Ctrl+A selected all rows instead of the input's
+   * text, and Space/Enter on a focused button got hijacked instead of
+   * activating the button. Arrow/Home/End navigation below is unaffected —
+   * it already only moves focus among sibling rows and only actually acts
+   * when the focused row element is found in the row list, so a bubbled
+   * event from a child control that isn't itself a `[role="row"]` is
+   * already a no-op there.
    */
   protected onRowKeyDown(event: KeyboardEvent, row: T): void {
+    if (event.target !== event.currentTarget) {
+      if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") return;
+      if (event.code === "Space" || event.code === "Enter") return;
+    }
+
     if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") {
       if (this.selectionMode() === "multiple") {
         event.preventDefault();
