@@ -1232,3 +1232,182 @@ describe("row expansion (Spec §5.4, GAP-044)", () => {
     ).not.toThrow();
   });
 });
+
+describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
+  it("typing a space in the cell editor input does not toggle selection, and the character appears in the input (Important finding 2)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.keyDown(input, { code: "Space" });
+    fireEvent.change(input, { target: { value: "A " } });
+
+    expect(onSelectionChange).not.toHaveBeenCalled();
+    expect(input.value).toBe("A ");
+  });
+
+  it("Ctrl+A while focused inside the cell editor input does not trigger select-all-rows (Important finding 2)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }, { id: 2, name: "B" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.keyDown(input, { code: "KeyA", ctrlKey: true });
+
+    expect(onSelectionChange).not.toHaveBeenCalled();
+  });
+
+  it("clicking into the cell editor input does not toggle row selection (Important finding 2)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.click(input);
+
+    expect(onSelectionChange).not.toHaveBeenCalled();
+  });
+
+  it("colspan on loading/empty/subheader-group rows accounts for the selection, expansion-toggle, and edit-actions columns (Minor finding 3)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        selectionMode="multiple"
+        selectionColumn
+        editMode="row"
+        loading
+      />
+    );
+    const loadingCell = container.querySelector("[data-u-table-loading]") as HTMLElement;
+    // base columns.length (1) + selection (1) + expansion-toggle (1) + edit-actions (1) = 4
+    expect(loadingCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("empty-state row colspan also accounts for selection/expansion/edit-actions columns (Minor finding 3)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        selectionMode="multiple"
+        selectionColumn
+        editMode="row"
+      />
+    );
+    const emptyCell = container.querySelector("tbody td[colspan]") as HTMLElement;
+    expect(emptyCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("row-expansion placeholder row colspan accounts for the selection and edit-actions columns too (Minor finding 3)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        selectionMode="multiple"
+        selectionColumn
+        editMode="row"
+        expandedRowKeys={{ "1": true }}
+      />
+    );
+    const expansionCell = container.querySelector("[data-u-table-row-expansion] td") as HTMLElement;
+    expect(expansionCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("header row has matching th cells for the expansion-toggle and edit-actions columns (Minor finding 3)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        selectionMode="multiple"
+        selectionColumn
+        editMode="row"
+      />
+    );
+    const headerCells = container.querySelectorAll("thead tr th");
+    const bodyRowCells = container.querySelectorAll("tbody tr:first-child > *");
+    expect(headerCells.length).toBe(bodyRowCells.length);
+  });
+
+  it("selecting all rows via the header checkbox emits the post-edit merged (effectiveValue) rows, not raw value (Minor finding 5)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selectionColumn
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+        compareSelectionBy="deepEquals"
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "Changed" } });
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-save]") as HTMLElement);
+
+    const headerCheckbox = container.querySelector("thead input[type=checkbox]") as HTMLInputElement;
+    fireEvent.click(headerCheckbox);
+
+    expect(onSelectionChange).toHaveBeenCalledWith([{ id: 1, name: "Changed" }]);
+  });
+
+  it("Ctrl+A select-all-rows emits the post-edit merged (effectiveValue) rows, not raw value (Minor finding 5)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+        compareSelectionBy="deepEquals"
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "Changed" } });
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-save]") as HTMLElement);
+
+    const row = container.querySelector('tbody [role="row"]') as HTMLElement;
+    fireEvent.keyDown(row, { code: "KeyA", ctrlKey: true });
+
+    expect(onSelectionChange).toHaveBeenCalledWith([{ id: 1, name: "Changed" }]);
+  });
+});
