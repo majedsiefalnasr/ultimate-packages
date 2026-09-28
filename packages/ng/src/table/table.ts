@@ -342,8 +342,36 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
     return (row as Record<string, unknown>)[field];
   }
 
+  /**
+   * Resolves the post-edit row object for `row` — the same `committedOverrides`
+   * entry `resolveCell` reads a single field from, above — so a caller that
+   * needs the *whole* row (not just one field) sees a saved edit too. A no-op
+   * (returns `row` itself) when `dataKey()` is unset or no edit has been
+   * committed for this row, mirroring `resolveCell`'s own fallback.
+   */
+  private resolveRow(row: T): T {
+    const dataKey = this.dataKey();
+    if (dataKey) {
+      const override = this.committedOverrides()[String((row as Record<string, unknown>)[dataKey])];
+      if (override) return override;
+    }
+    return row;
+  }
+
+  /**
+   * Fix-loop round 1 (GAP-043 review): `col.body` must see the same post-edit
+   * merged row `resolveCell` already honors for the plain-value path — React's
+   * and Vue's `effectiveValue` replace the row object itself via `.map()`, so
+   * their `col.body` automatically receives the merged row; Angular's
+   * equivalent override lives only in `committedOverrides`/`resolveCell`, so
+   * `renderCell` must explicitly resolve the merged row before handing it to
+   * `col.body`, or a custom renderer reading fields directly off `row` would
+   * render stale pre-edit data after a save.
+   */
   protected renderCell(row: T, col: UTableColumn<T>, rowIndex: number): unknown {
-    return col.body ? col.body(row, { field: col.field, rowIndex }) : this.resolveCell(row, col.field);
+    return col.body
+      ? col.body(this.resolveRow(row), { field: col.field, rowIndex })
+      : this.resolveCell(row, col.field);
   }
 
   private compareValues(a: unknown, b: unknown): number {

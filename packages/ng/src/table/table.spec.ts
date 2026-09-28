@@ -980,6 +980,32 @@ describe("row/cell editing lifecycle (Spec §5.3, GAP-043)", () => {
     expect(fixture.nativeElement.textContent).toContain("A");
     expect(fixture.nativeElement.textContent).not.toContain("Changed");
   });
+
+  it("a column body renderer sees the post-edit merged row after a save, not the stale pre-edit row (review fix)", () => {
+    // Regression test for the fix-loop round 1 finding: renderCell used to
+    // pass the raw, un-overridden `row` object straight to `col.body`,
+    // bypassing resolveCell's committedOverrides lookup entirely. A body
+    // renderer reading `row.name` directly (as real consumers do, matching
+    // the existing "column body renderer" describe block's own body
+    // signatures above) would therefore render the stale pre-edit value even
+    // after a save committed a new one.
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [
+      { field: "name", header: "Name", body: (row: Row) => `Name: ${row.name}` },
+    ]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.value = "Changed";
+    input.dispatchEvent(new Event("input"));
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-save]").click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain("Name: Changed");
+    expect(fixture.nativeElement.textContent).not.toContain("Name: A");
+  });
 });
 
 describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
