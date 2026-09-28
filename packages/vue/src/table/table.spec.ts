@@ -664,6 +664,60 @@ describe("row editing (v-model:editingRows array, spec §11.3)", () => {
   });
 });
 
+describe("row/cell editing lifecycle (Spec §5.3, GAP-043)", () => {
+  it("entering edit mode on a row adds it to editingRows and renders an editable input", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [],
+      },
+    });
+    await wrapper.find("[data-u-table-row-edit-init]").trigger("click");
+    await wrapper.setProps({ editingRows: wrapper.emitted("update:editingRows")?.[0]?.[0] as unknown[] });
+    expect(wrapper.find("[data-u-table-cell-editor] input").exists()).toBe(true);
+  });
+
+  it("saving an edit commits the new value and exits edit mode", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [row],
+      },
+    });
+    const input = wrapper.find("[data-u-table-cell-editor] input");
+    await input.setValue("Changed");
+    await wrapper.find("[data-u-table-row-edit-save]").trigger("click");
+    expect(wrapper.find("[data-u-table-cell-editor]").exists()).toBe(false);
+    expect(wrapper.text()).toContain("Changed");
+  });
+
+  it("canceling an edit reverts to the original value and exits edit mode", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [row],
+      },
+    });
+    const input = wrapper.find("[data-u-table-cell-editor] input");
+    await input.setValue("Changed");
+    await wrapper.find("[data-u-table-row-edit-cancel]").trigger("click");
+    expect(wrapper.text()).toContain("A");
+    expect(wrapper.text()).not.toContain("Changed");
+  });
+});
+
 describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   it("groups adjacent rows sharing the same groupRowsBy value under subheader mode", () => {
     const wrapper = mount(UTable, {

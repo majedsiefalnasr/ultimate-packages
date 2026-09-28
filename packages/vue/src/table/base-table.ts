@@ -42,6 +42,8 @@ export function createBaseTable(): ComponentOptions {
       "page",
       "lazy-load",
       "update:editingRows",
+      "row-edit-save",
+      "row-edit-cancel",
       "update:expandedRowKeys",
       "row-expand",
       "row-collapse",

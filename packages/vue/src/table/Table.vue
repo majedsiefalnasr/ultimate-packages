@@ -67,9 +67,19 @@
                 data-u-table-group-cell
                 :rowspan="entry.groupSize"
               >{{ renderCell(entry.row, col, index) }}</td>
+              <td v-else-if="isRowEditing(entry.row) && !(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)" data-u-table-cell-editor>
+                <input
+                  :value="draftValue(entry.row, col.field)"
+                  @input="onDraftInput(entry.row, col.field, $event)"
+                />
+              </td>
               <td v-else-if="!(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)">{{ renderCell(entry.row, col, index) }}</td>
             </template>
-            <td v-if="editMode === 'row'">
+            <td v-if="editMode === 'row' && isRowEditing(entry.row)">
+              <button type="button" data-u-table-row-edit-save @click.stop="saveRowEdit(entry.row)">Save</button>
+              <button type="button" data-u-table-row-edit-cancel @click.stop="cancelRowEdit(entry.row)">Cancel</button>
+            </td>
+            <td v-else-if="editMode === 'row'">
               <button
                 type="button"
                 data-u-table-row-edit-init
@@ -331,6 +341,30 @@ export default {
        */
       d_editingMeta: {},
       /**
+       * Row-level committed-value overrides (GAP-043, Spec §5.3), keyed by
+       * `dataKey`-resolved row identity: `value` is a one-way prop with no
+       * corresponding `update:value` emit on this component's declared
+       * surface, so a save commits by recording a fresh row object
+       * (immutable update, matching this codebase's established
+       * immutable-update convention everywhere else) here rather than
+       * mutating `value`. `effectiveValue` layers this over `value` for
+       * every downstream reader (sort/filter/select/group), so no parallel
+       * rendering path exists.
+       */
+      d_committedRows: {},
+      /**
+       * Internal edit-in-progress array, seeded once from the `editingRows`
+       * prop (lazy-init, like a `defaultValue`) and thereafter the sole
+       * source `isRowEditing` reads (GAP-043, Spec §5.3) — mirrors the same
+       * fix applied to Angular's `_editingRowKeys`/React's
+       * `internalEditingRows` in this task: `editingRows` is a one-way prop
+       * with no round-trip guarantee within a single test/consumer tick, so
+       * `initRowEdit`/`saveRowEdit`/`cancelRowEdit` update this local array
+       * immediately in addition to emitting `update:editingRows` — never
+       * mutating the `editingRows` prop array itself.
+       */
+      d_editingRows: [...this.editingRows],
+      /**
        * Default empty-state message (Spec §5.6, GAP-046). Not itself a
        * prop — this task's scope is the boolean `loading` flag and default
        * message only, matching Angular's/React's own Task 10/11 scope.
@@ -346,8 +380,23 @@ export default {
      * `multiSortMeta` entries in priority order (first entry is primary
      * key).
      */
+    /**
+     * `value` with any `d_committedRows` overrides (GAP-043, Spec §5.3)
+     * layered on top, by `dataKey`-resolved identity. Every downstream
+     * derived view (`sortedValue`/`filteredValue`/`pagedValue`/
+     * `groupedRows`) is built from this instead of `value` directly, so a
+     * saved edit is visible everywhere `value` would have been read, with
+     * no parallel rendering path — and `value` itself is never mutated.
+     */
+    effectiveValue() {
+      if (!this.dataKey || Object.keys(this.d_committedRows).length === 0) return this.value;
+      return this.value.map((row) => {
+        const override = this.d_committedRows[String(resolveCell(row, this.dataKey))];
+        return override ?? row;
+      });
+    },
     sortedValue() {
-      return this.applySortTo(this.value);
+      return this.applySortTo(this.effectiveValue);
     },
     /**
      * Header select-all checkbox state (GAP-042, Spec §5.2): checked only
@@ -372,7 +421,7 @@ export default {
       const fields = Object.keys(this.filters);
       if (fields.length === 0) return this.sortedValue;
 
-      const filtered = this.value.filter((row) =>
+      const filtered = this.effectiveValue.filter((row) =>
         fields.every((field) => matchesFilterEntry(row, field, this.filters[field]))
       );
       return this.applySortTo(filtered);
@@ -653,7 +702,84 @@ export default {
      * `selection`/etc.
      */
     initRowEdit(row) {
-      this.$emit("update:editingRows", [...this.editingRows, row]);
+      const next = [...this.d_editingRows, row];
+      this.d_editingRows = next;
+      this.$emit("update:editingRows", next);
+    },
+    /**
+     * True when `row` (identity via `dataKey`, matching every other
+     * key-map/array editing check in this file) is present in
+     * `d_editingRows` (spec §11.3's own array-prop idiom, mirrored locally —
+     * see `d_editingRows`'s own doc comment) — drives whether each column's
+     * cell renders the plain `renderCell` output or the editable
+     * `data-u-table-cell-editor` input (GAP-043, Spec §5.3).
+     */
+    isRowEditing(row) {
+      const key = String(resolveCell(row, this.dataKey));
+      return this.d_editingRows.some((r) => String(resolveCell(r, this.dataKey)) === key);
+    },
+    /**
+     * Reads a field's current draft value for `row` from `d_editingMeta`
+     * (keyed by `rowIndex`, matching this store's own pre-existing keying
+     * doc comment above), falling back to the live (`effectiveValue`
+     * -resolved) cell value the first time the row enters edit mode, before
+     * any keystroke has populated `d_editingMeta` (GAP-043, Spec §5.3).
+     */
+    draftValue(row, field) {
+      const index = this.effectiveValue.indexOf(row);
+      const rowDraft = this.d_editingMeta[index];
+      return rowDraft && field in rowDraft ? rowDraft[field] : resolveCell(row, field);
+    },
+    /**
+     * Updates one field's draft value for `row` in `d_editingMeta` from the
+     * cell editor `<input>`'s `input` event, without touching `value`/
+     * `effectiveValue` at all (Spec §5.3's "edits must not mutate the source
+     * data until explicitly saved" contract).
+     */
+    onDraftInput(row, field, event) {
+      const index = this.effectiveValue.indexOf(row);
+      this.d_editingMeta = {
+        ...this.d_editingMeta,
+        [index]: { ...this.d_editingMeta[index], [field]: event.target.value },
+      };
+    },
+    /**
+     * Commits `row`'s accumulated `d_editingMeta` draft into
+     * `d_committedRows` as a new row object (immutable update), emits
+     * `row-edit-save` with the committed row, and exits edit mode: `row` is
+     * removed from the `editingRows` array and the resulting array is
+     * emitted via `update:editingRows` — never mutating the `editingRows`
+     * prop directly, matching `initRowEdit`'s own one-way-prop discipline.
+     */
+    saveRowEdit(row) {
+      const index = this.effectiveValue.indexOf(row);
+      const draft = this.d_editingMeta[index];
+      const key = String(resolveCell(row, this.dataKey));
+      let committedRow = row;
+      if (draft) {
+        committedRow = { ...(this.d_committedRows[key] ?? row), ...draft };
+        this.d_committedRows = { ...this.d_committedRows, [key]: committedRow };
+      }
+      this.$emit("row-edit-save", committedRow);
+      this.exitRowEdit(row, index);
+    },
+    /**
+     * Discards `row`'s `d_editingMeta` draft (no mutation to `value`/
+     * `d_committedRows` at all), emits `row-edit-cancel` with the original
+     * row, and exits edit mode the same way `saveRowEdit` does.
+     */
+    cancelRowEdit(row) {
+      const index = this.effectiveValue.indexOf(row);
+      this.$emit("row-edit-cancel", row);
+      this.exitRowEdit(row, index);
+    },
+    exitRowEdit(row, index) {
+      const { [index]: _discardedDraft, ...remainingDrafts } = this.d_editingMeta;
+      this.d_editingMeta = remainingDrafts;
+      const key = String(resolveCell(row, this.dataKey));
+      const next = this.d_editingRows.filter((r) => String(resolveCell(r, this.dataKey)) !== key);
+      this.d_editingRows = next;
+      this.$emit("update:editingRows", next);
     },
     /**
      * Row-expansion state check (GAP-044, Spec §5.4), matching the
