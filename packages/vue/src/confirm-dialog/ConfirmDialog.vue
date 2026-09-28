@@ -1,6 +1,7 @@
 <template>
   <UDialog
     :visible="visible"
+    role="alertdialog"
     :header="confirmation?.header"
     :modal="confirmation?.modal ?? true"
     :closeOnEscape="confirmation?.closeOnEscape ?? true"

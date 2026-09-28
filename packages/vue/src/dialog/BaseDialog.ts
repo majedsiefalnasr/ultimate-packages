@@ -32,6 +32,10 @@ export function createBaseDialog(): ComponentOptions {
       blockScroll: { type: Boolean, default: false },
       baseZIndex: { type: Number, default: 0 },
       autoZIndex: { type: Boolean, default: true },
+      // ARIA role override for the dialog's root element. Defaults to
+      // "dialog"; ConfirmDialog.vue overrides this to "alertdialog" to
+      // match real upstream's own Dialog composition (GAP-049).
+      role: { type: String, default: "dialog" },
       position: { type: String, default: "center" },
       appendTo: { type: [String, Object], default: "body" },
       ariaCloseLabel: { type: String, default: "Close" },

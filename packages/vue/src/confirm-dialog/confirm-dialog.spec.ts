@@ -58,6 +58,17 @@ describe("UConfirmDialog", () => {
     wrapper.unmount();
   });
 
+  it("renders role=alertdialog on the composed UDialog's root element (Spec §5.2, GAP-049)", async () => {
+    const wrapper = mount(UConfirmDialog, { attachTo: document.body });
+    confirmationEventBus.emit("confirm", { message: "Proceed?" });
+    await wrapper.vm.$nextTick();
+
+    expect(document.querySelector('[role="alertdialog"]')).not.toBeNull();
+    expect(document.querySelector('[role="dialog"]')).toBeNull();
+
+    wrapper.unmount();
+  });
+
   it("only responds to confirmations matching its own group key", async () => {
     const wrapper = mount(UConfirmDialog, { props: { group: "secondary" }, attachTo: document.body });
 
