@@ -11,6 +11,13 @@
               @click="toggleAllSelection"
             />
           </th>
+          <!-- Minor finding 3 (fix-loop integration review): the
+               expansion-toggle and edit-actions columns each render a <td>
+               per body row but had no matching header <th> at all, leaving
+               the header row's cell count short of the body rows' — added
+               empty <th> cells here so counts match, mirroring the
+               selection column's own already-correct <th>. -->
+          <th v-if="dataKey"></th>
           <th
             v-for="col in columns"
             :key="col.field"
@@ -18,16 +25,17 @@
             :aria-sort="ariaSortFor(col.field)"
             @click="sortColumn(col.field)"
           >{{ col.header }}</th>
+          <th v-if="editMode === 'row'"></th>
         </tr>
       </thead>
       <tbody v-if="!virtualScrollerOptions && loading" :class="cx('tbody')" role="rowgroup">
         <tr>
-          <td data-u-table-loading :colspan="columns.length"></td>
+          <td data-u-table-loading :colspan="totalColumnCount"></td>
         </tr>
       </tbody>
       <tbody v-else-if="!virtualScrollerOptions && value.length === 0" :class="cx('tbody')" role="rowgroup">
         <tr>
-          <td :colspan="columns.length">{{ emptyMessage }}</td>
+          <td :colspan="totalColumnCount">{{ emptyMessage }}</td>
         </tr>
       </tbody>
       <tbody v-else-if="!virtualScrollerOptions" :class="cx('tbody')" role="rowgroup">
@@ -37,7 +45,7 @@
             data-u-table-group-header
             :class="cx('rowGroupHeader')"
           >
-            <td :colspan="columns.length">{{ entry.row[groupRowsBy] }}</td>
+            <td :colspan="totalColumnCount">{{ entry.row[groupRowsBy] }}</td>
           </tr>
           <tr
             :class="cx('row')"
@@ -71,6 +79,7 @@
                 <input
                   :value="draftValue(entry.row, col.field)"
                   @input="onDraftInput(entry.row, col.field, $event)"
+                  @click.stop
                 />
               </td>
               <td v-else-if="!(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)">{{ renderCell(entry.row, col, index) }}</td>
@@ -88,7 +97,7 @@
             </td>
           </tr>
           <tr v-if="dataKey && isRowExpanded(entry.row)" data-u-table-row-expansion>
-            <td :colspan="columns.length + 1"></td>
+            <td :colspan="totalColumnCount"></td>
           </tr>
         </template>
       </tbody>
@@ -407,6 +416,23 @@ export default {
       return this.value.length > 0 && this.value.every((row) => this.isSelected(row));
     },
     /**
+     * Total header/body cell count (Minor finding 3, fix-loop integration
+     * review): `columns.length` plus one for each of the selection,
+     * expansion-toggle, and edit-actions columns that are actually rendered.
+     * Used consistently everywhere a `colspan` is set (loading row, empty
+     * row, subheader-group row, row-expansion placeholder row) so none of
+     * them under-counts once those extra columns are present — previously
+     * all four used the bare `columns.length`, ignoring the extra columns
+     * entirely.
+     */
+    totalColumnCount() {
+      let count = this.columns.length;
+      if (this.selectionColumn && this.selectionMode) count++;
+      if (this.dataKey) count++;
+      if (this.editMode === "row") count++;
+      return count;
+    },
+    /**
      * Applies `filters` (filter-then-sort) via `matchesFilterEntry`/
      * `matchesFilter`: each `filters` entry is keyed by field and is either
      * a single `FilterMetadata` (must match) or a `{operator, constraints}`
@@ -595,11 +621,19 @@ export default {
     },
     /**
      * Header select-all checkbox click handler (GAP-042, Spec §5.2):
-     * selects every row in `value` if not all are already selected,
-     * otherwise deselects all — same dual-emit pattern as `selectRow`.
+     * selects every row if not all are already selected, otherwise
+     * deselects all — same dual-emit pattern as `selectRow`.
+     *
+     * Minor finding 5 (fix-loop integration review): emits from
+     * `effectiveValue` (the post-edit merged rows), not raw `value` —
+     * matching `selectRow`'s own already-correct behavior. With
+     * `compareSelectionBy="deepEquals"`, emitting the stale raw `value` row
+     * object here would make an edited-then-select-all'd row compare
+     * unequal to the currently-rendered (merged) row and show as
+     * unselected.
      */
     toggleAllSelection() {
-      const next = this.allSelected ? [] : [...this.value];
+      const next = this.allSelected ? [] : [...this.effectiveValue];
       this.$emit("update:selection", next);
       this.$emit("selection-change", next);
     },
@@ -643,17 +677,36 @@ export default {
      * toggle the focused row's selection by reusing the same `selectRow`
      * toggle logic the row-click handler and selection-column controls
      * already share (no duplicated toggle logic), and Ctrl+A/Cmd+A selects
-     * every row in `value` when `selectionMode` is exactly `"multiple"`.
-     * When `selectionMode` is not `"multiple"` (including unset), Ctrl+A
-     * does nothing and does not call `preventDefault()` — the browser's
-     * native "select all text" behavior is only swallowed when Ctrl+A
-     * actually did something (Review Focus item 3).
+     * every row when `selectionMode` is exactly `"multiple"` (emitting
+     * `effectiveValue` — see Minor finding 5 below). When `selectionMode` is
+     * not `"multiple"` (including unset), Ctrl+A does nothing and does not
+     * call `preventDefault()` — the browser's native "select all text"
+     * behavior is only swallowed when Ctrl+A actually did something (Review
+     * Focus item 3).
+     *
+     * Important finding 2 (fix-loop integration review): the Space/Enter/
+     * Ctrl+A branches only apply when the keydown genuinely originated from
+     * the row element itself (`event.target === event.currentTarget`) — not
+     * when it bubbled up from a child control (the cell-editor `<input>`,
+     * or the expand/edit/save/cancel buttons). Without this guard, typing a
+     * space in the editor input got swallowed into a row-selection toggle
+     * instead of appearing in the input, Ctrl+A selected all rows instead
+     * of the input's text, and Space/Enter on a focused button got
+     * hijacked instead of activating the button. Arrow/Home/End navigation
+     * below is unaffected — it already only moves focus among sibling rows
+     * via direct sibling traversal, so a bubbled event from a child
+     * control is already inert there.
      */
     onRowKeyDown(event, row) {
+      if (event.target !== event.currentTarget) {
+        if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") return;
+        if (event.code === "Space" || event.code === "Enter") return;
+      }
+
       if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") {
         if (this.selectionMode === "multiple") {
           event.preventDefault();
-          const next = [...this.value];
+          const next = [...this.effectiveValue];
           this.$emit("update:selection", next);
           this.$emit("selection-change", next);
         }
