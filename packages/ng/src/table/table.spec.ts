@@ -933,6 +933,55 @@ describe("row editing (key-map, spec §11.1)", () => {
   });
 });
 
+describe("row/cell editing lifecycle (Spec §5.3, GAP-043)", () => {
+  it("entering edit mode on a row adds its key to editingRowKeys and renders an editable input", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", {});
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-init]").click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[data-u-table-cell-editor] input")).toBeTruthy();
+  });
+
+  it("saving an edit commits the new value and exits edit mode", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.value = "Changed";
+    input.dispatchEvent(new Event("input"));
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-save]").click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[data-u-table-cell-editor]")).toBeFalsy();
+    expect(fixture.nativeElement.textContent).toContain("Changed");
+  });
+
+  it("canceling an edit reverts to the original value and exits edit mode", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.value = "Changed";
+    input.dispatchEvent(new Event("input"));
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-cancel]").click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain("A");
+    expect(fixture.nativeElement.textContent).not.toContain("Changed");
+  });
+});
+
 describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   it("groups adjacent rows sharing the same groupRowsBy value under subheader mode", () => {
     const fixture = TestBed.createComponent(UTable<{ group: string; name: string }>);

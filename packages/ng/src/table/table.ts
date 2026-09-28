@@ -156,9 +156,26 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                       @if (entry.isGroupHeader) {
                         <td data-u-table-group-cell [attr.rowspan]="entry.groupSize">{{ renderCell(entry.row, col, rowIndex) }}</td>
                       }
+                    } @else if (isRowEditing(entry.row)) {
+                      <td data-u-table-cell-editor>
+                        <input
+                          [value]="draftValue(entry.row, col.field)"
+                          (input)="onDraftInput(entry.row, col.field, $event)"
+                        />
+                      </td>
                     } @else {
                       <td>{{ renderCell(entry.row, col, rowIndex) }}</td>
                     }
+                  }
+                  @if (editMode() === "row" && isRowEditing(entry.row)) {
+                    <td>
+                      <button type="button" data-u-table-row-edit-save (click)="saveRowEdit(entry.row)">Save</button>
+                      <button type="button" data-u-table-row-edit-cancel (click)="cancelRowEdit(entry.row)">Cancel</button>
+                    </td>
+                  } @else if (editMode() === "row") {
+                    <td>
+                      <button type="button" data-u-table-row-edit-init (click)="initRowEdit(entry.row)">Edit</button>
+                    </td>
                   }
                 </tr>
                 @if (dataKey() && isRowExpanded(entry.row)) {
@@ -286,13 +303,42 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    */
   protected readonly _first = signal(0);
 
+  /**
+   * Internal edit-in-progress key-map, reconciled from the `editingRowKeys`
+   * input via `ngOnChanges` — mirrors `_first`'s own internal-signal pattern
+   * above so that `initRowEdit`/`saveRowEdit`/`cancelRowEdit` can update
+   * local edit state immediately (driving `isRowEditing`'s template read
+   * under `OnPush`) without requiring a parent to feed `editingRowKeysChange`
+   * back into the `editingRowKeys` input in the same tick — matching every
+   * existing consumer test's own expectation that the row-edit-init button
+   * alone (with no simulated parent round-trip) opens the cell editor.
+   */
+  protected readonly _editingRowKeys = signal<Record<string, boolean>>({});
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["first"]) {
       this._first.set(changes["first"].currentValue);
     }
+    if (changes["editingRowKeys"]) {
+      this._editingRowKeys.set(changes["editingRowKeys"].currentValue ?? {});
+    }
   }
 
+  /**
+   * Reads `field` off `row`, transparently substituting a committed
+   * row-editing override (GAP-043, Spec §5.3 — see `committedOverrides`)
+   * when `row`'s `dataKey()`-resolved identity has one, so every existing
+   * caller (rendering, sorting, filtering, selection, grouping) sees a
+   * saved edit without any parallel rendering path. A no-op when
+   * `dataKey()` is unset (empty-string identity never matches a real
+   * override key) or no edit has been committed for this row.
+   */
   protected resolveCell(row: T, field: string): unknown {
+    const dataKey = this.dataKey();
+    if (dataKey) {
+      const override = this.committedOverrides()[String((row as Record<string, unknown>)[dataKey])];
+      if (override) return (override as Record<string, unknown>)[field];
+    }
     return (row as Record<string, unknown>)[field];
   }
 
@@ -545,7 +591,105 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    */
   initRowEdit(row: T): void {
     const key = String(this.resolveCell(row, this.dataKey()));
-    this.editingRowKeysChange.emit({ ...this.editingRowKeys(), [key]: true });
+    const next = { ...this._editingRowKeys(), [key]: true };
+    this._editingRowKeys.set(next);
+    this.editingRowKeysChange.emit(next);
+  }
+
+  /**
+   * Per-row draft values for in-progress edits (GAP-043, Spec §5.3), keyed
+   * by `dataKey()`-resolved row identity and then by field — never the live
+   * `value()` array, so keystrokes in the cell editor's `<input>` do not
+   * mutate source data until `saveRowEdit` explicitly commits them. A
+   * signal (not a plain field) so template reads under `OnPush` re-render on
+   * every keystroke, matching `customFilterPredicate`'s own signal rationale
+   * above.
+   */
+  private readonly editDrafts = signal<Record<string, Record<string, unknown>>>({});
+
+  /**
+   * True when `row`'s `dataKey()`-resolved identity is present in
+   * `editingRowKeys()` (spec §11.1's key-map idiom) — drives whether each
+   * column's cell renders the plain `renderCell` output or the editable
+   * `data-u-table-cell-editor` input.
+   */
+  protected isRowEditing(row: T): boolean {
+    const key = String(this.resolveCell(row, this.dataKey()));
+    return !!this._editingRowKeys()[key];
+  }
+
+  /**
+   * Reads a field's current draft value for `row`, falling back to the live
+   * cell value the first time the row enters edit mode (before any keystroke
+   * has populated `editDrafts`).
+   */
+  protected draftValue(row: T, field: string): unknown {
+    const key = String(this.resolveCell(row, this.dataKey()));
+    const rowDraft = this.editDrafts()[key];
+    return rowDraft && field in rowDraft ? rowDraft[field] : this.resolveCell(row, field);
+  }
+
+  /**
+   * Updates one field's draft value for `row` from the cell editor
+   * `<input>`'s `(input)` event, without touching `value()` at all (Spec
+   * §5.3's "edits must not mutate the source data until explicitly saved"
+   * contract).
+   */
+  protected onDraftInput(row: T, field: string, event: Event): void {
+    const key = String(this.resolveCell(row, this.dataKey()));
+    const target = event.target as HTMLInputElement;
+    const current = this.editDrafts();
+    this.editDrafts.set({
+      ...current,
+      [key]: { ...current[key], [field]: target.value },
+    });
+  }
+
+  /**
+   * Row-level committed-value overrides (GAP-043, Spec §5.3): `value()` is a
+   * parent-owned `input()` with no corresponding `valueChange` output on
+   * this component (Table's declared event surface for row editing is
+   * `editingRowKeysChange` alone), so a save commits by recording a fresh,
+   * immutably-built row (new object, matching this codebase's established
+   * immutable-update convention everywhere else) keyed by `dataKey()`
+   * identity. `resolveCell` consults this map first — see below — so every
+   * existing reader (render, sort, filter, selection, grouping) transparently
+   * sees the committed value with no parallel rendering path and no mutation
+   * of the `value()` array itself.
+   */
+  private readonly committedOverrides = signal<Record<string, T>>({});
+
+  /**
+   * Commits `row`'s accumulated draft values by replacing the whole row with
+   * a new object (immutable update) stored in `committedOverrides`, then
+   * exits edit mode: the row's key is removed from `editingRowKeys()` and
+   * the merged map is emitted via `editingRowKeysChange`.
+   */
+  protected saveRowEdit(row: T): void {
+    const key = String(this.resolveCell(row, this.dataKey()));
+    const draft = this.editDrafts()[key];
+    if (draft) {
+      const committedRow = { ...(this.committedOverrides()[key] ?? row), ...draft } as T;
+      this.committedOverrides.set({ ...this.committedOverrides(), [key]: committedRow });
+    }
+    this.exitRowEdit(row);
+  }
+
+  /**
+   * Discards `row`'s draft (no mutation to `value()` or `committedOverrides`
+   * at all) and exits edit mode the same way `saveRowEdit` does.
+   */
+  protected cancelRowEdit(row: T): void {
+    this.exitRowEdit(row);
+  }
+
+  private exitRowEdit(row: T): void {
+    const key = String(this.resolveCell(row, this.dataKey()));
+    const { [key]: _discardedDraft, ...remainingDrafts } = this.editDrafts();
+    this.editDrafts.set(remainingDrafts);
+    const { [key]: _wasEditing, ...remainingKeys } = this._editingRowKeys();
+    this._editingRowKeys.set(remainingKeys);
+    this.editingRowKeysChange.emit(remainingKeys);
   }
 
   /**
