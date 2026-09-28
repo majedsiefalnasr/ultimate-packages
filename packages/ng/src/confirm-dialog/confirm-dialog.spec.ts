@@ -121,6 +121,20 @@ describe("UConfirmDialog", () => {
     fixture.destroy();
   });
 
+  it("renders role=alertdialog on the composed UDialog's root element (Spec §5.2, GAP-049)", () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    const service = TestBed.inject(UConfirmationService);
+    fixture.detectChanges();
+
+    service.confirm({ message: "Proceed?" });
+    fixture.detectChanges();
+
+    expect(document.querySelector("[role=alertdialog]")).toBeTruthy();
+    expect(document.querySelector("[role=dialog]")).toBeFalsy();
+
+    fixture.destroy();
+  });
+
   it("hides when the service dispatches close()", async () => {
     const fixture = TestBed.createComponent(HostComponent);
     const service = TestBed.inject(UConfirmationService);

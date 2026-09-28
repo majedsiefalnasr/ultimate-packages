@@ -40,11 +40,10 @@ import { confirmDialogStyleModule } from "./confirm-dialog-style";
  * upstream's own single-instance-per-key convention.
  *
  * Real upstream renders its dialog with `role="alertdialog"` (a real,
- * accessibility-relevant deviation from a plain `role="dialog"`); the
- * already-Built `UDialog` this port composes hardcodes `role="dialog"` in
- * its own template with no override input, so this composition inherits
- * `UDialog`'s existing role rather than upstream's `alertdialog` — a known,
- * disclosed gap, not silently dropped.
+ * accessibility-relevant deviation from a plain `role="dialog"`). `UDialog`
+ * now exposes a `role` override input (GAP-049) defaulting to `"dialog"`,
+ * and this composition passes `role="alertdialog"` on its `<u-dialog>`
+ * element below — the gap previously disclosed here no longer exists.
  */
 @Component({
   standalone: true,
@@ -53,6 +52,7 @@ import { confirmDialogStyleModule } from "./confirm-dialog-style";
   template: `
     <u-dialog
       [visible]="visible()"
+      [role]="'alertdialog'"
       [header]="confirmation()?.header"
       [closable]="true"
       [modal]="confirmation()?.modal ?? true"

@@ -445,6 +445,39 @@ describe("scroll-lock (Spec §5.1, GAP-048)", () => {
   });
 });
 
+describe("role override (Spec §5.2, GAP-049)", () => {
+  // UOverlay (appendTo="body", the default) moves the mask/root element
+  // containing [role] to document.body, so — matching every other bare
+  // TestBed.createComponent(UDialog) test in this file (see the
+  // "scroll-lock" describe block above, which queries document.body rather
+  // than fixture.nativeElement for the same reason — fixture.nativeElement
+  // is left empty once UOverlay relocates the content) — assertions here
+  // query document.body, not fixture.nativeElement.
+  afterEach(() => {
+    document.querySelectorAll('[role="dialog"], [role="alertdialog"]').forEach((el) => el.remove());
+  });
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [ComponentIdGenerator] });
+  });
+
+  it("defaults to role=dialog when no role override is supplied", () => {
+    const fixture = TestBed.createComponent(UDialog);
+    fixture.componentRef.setInput("visible", true);
+    fixture.detectChanges();
+    expect(document.querySelector("[role=dialog]")).toBeTruthy();
+  });
+
+  it("renders the supplied role override when set", () => {
+    const fixture = TestBed.createComponent(UDialog);
+    fixture.componentRef.setInput("visible", true);
+    fixture.componentRef.setInput("role", "alertdialog");
+    fixture.detectChanges();
+    expect(document.querySelector("[role=alertdialog]")).toBeTruthy();
+    expect(document.querySelector("[role=dialog]")).toBeFalsy();
+  });
+});
+
 describe("UDialog without ComponentIdGenerator provided", () => {
   afterEach(() => {
     document.querySelectorAll('[role="dialog"]').forEach((el) => el.remove());

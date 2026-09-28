@@ -151,7 +151,7 @@ let dialogDisplayOrderUid = 0;
         <div
           #root
           [class]="cx('root')"
-          role="dialog"
+          [attr.role]="role()"
           [attr.aria-modal]="modal()"
           [attr.aria-labelledby]="header() ? ariaLabelledBy : null"
         >
@@ -202,6 +202,12 @@ export class UDialog extends UBaseComponent {
   closeOnEscape = input(true, { transform: booleanAttribute });
   /** Defines if background should be blocked when dialog is displayed. */
   modal = input(true, { transform: booleanAttribute });
+  /**
+   * ARIA role override for the dialog's root element. Defaults to
+   * `"dialog"`; `UConfirmDialog` overrides this to `"alertdialog"` to
+   * match real upstream's own `p-confirmdialog` composition (GAP-049).
+   */
+  role = input<"dialog" | "alertdialog">("dialog");
 
   /** Notifies changes in the visibility state of the component. */
   visibleChange = output<boolean>();
