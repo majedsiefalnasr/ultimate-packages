@@ -76,4 +76,130 @@ describe("UMegaMenu", () => {
     fireEvent.click(link);
     expect(item.getAttribute("data-u-open")).toBe("false");
   });
+
+  describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
+    it("ArrowRight/ArrowLeft move focus among root items, wrapping around", () => {
+      const { container } = render(
+        <UMegaMenu model={[{ label: "File" }, { label: "Edit" }, { label: "View" }]} />
+      );
+      const links = container.querySelectorAll<HTMLAnchorElement>(".u-megamenu-root-list > li > .u-megamenu-content > a");
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[1]);
+
+      fireEvent.keyDown(links[1], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[2]);
+
+      // Wraps around.
+      fireEvent.keyDown(links[2], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[0]);
+
+      fireEvent.keyDown(links[0], { code: "ArrowLeft" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("ArrowRight skips a disabled root item", () => {
+      const { container } = render(
+        <UMegaMenu model={[{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]} />
+      );
+      const links = container.querySelectorAll<HTMLAnchorElement>(".u-megamenu-root-list > li > .u-megamenu-content > a");
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("Enter/Space on a column-having item opens the overlay and focuses its first leaf item", () => {
+      const { container } = render(<UMegaMenu model={items} />);
+      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      const productsLink = productsItem.querySelector("a") as HTMLAnchorElement;
+      productsLink.focus();
+      fireEvent.keyDown(productsLink, { code: "Enter" });
+
+      expect(productsItem.getAttribute("data-u-open")).toBe("true");
+      expect(productsLink.getAttribute("aria-expanded")).toBe("true");
+      const firstLeafLink = productsItem.querySelector<HTMLAnchorElement>(".u-megamenu-submenu a");
+      expect(document.activeElement).toBe(firstLeafLink);
+    });
+
+    it("Escape closes the open overlay from a focused leaf item and returns focus to its root trigger", () => {
+      const { container } = render(<UMegaMenu model={items} />);
+      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      const productsLink = productsItem.querySelector("a") as HTMLAnchorElement;
+      productsLink.focus();
+      fireEvent.keyDown(productsLink, { code: "Enter" });
+
+      const firstLeafLink = productsItem.querySelector<HTMLAnchorElement>(".u-megamenu-submenu a") as HTMLAnchorElement;
+      expect(document.activeElement).toBe(firstLeafLink);
+
+      // Escape fired from focus genuinely inside the overlay on a leaf item,
+      // not merely from the trigger — the coverage gap flagged for this task.
+      fireEvent.keyDown(firstLeafLink, { code: "Escape" });
+
+      expect(productsItem.getAttribute("data-u-open")).toBe("false");
+      expect(document.activeElement).toBe(productsLink);
+    });
+
+    it("ArrowDown/ArrowUp move focus among a column group's own leaf items, wrapping around", () => {
+      const model: UMegaMenuItem[] = [
+        { label: "Products", items: [[{ label: "Category A", items: [{ label: "A1" }, { label: "A2" }, { label: "A3" }] }]] },
+      ];
+      const { container } = render(<UMegaMenu model={model} />);
+      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      fireEvent.click(productsItem.querySelector("a") as HTMLAnchorElement);
+
+      const leafLinks = productsItem.querySelectorAll<HTMLAnchorElement>(".u-megamenu-submenu a");
+      expect(leafLinks.length).toBe(3);
+      leafLinks[0].focus();
+
+      fireEvent.keyDown(leafLinks[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(leafLinks[1]);
+
+      fireEvent.keyDown(leafLinks[1], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(leafLinks[2]);
+
+      // Wraps around.
+      fireEvent.keyDown(leafLinks[2], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(leafLinks[0]);
+
+      fireEvent.keyDown(leafLinks[0], { code: "ArrowUp" });
+      expect(document.activeElement).toBe(leafLinks[2]);
+    });
+
+    it("skips a disabled leaf item when moving focus with ArrowDown", () => {
+      const model: UMegaMenuItem[] = [
+        {
+          label: "Products",
+          items: [[{ label: "Category A", items: [{ label: "A1" }, { label: "A2", disabled: true }, { label: "A3" }] }]],
+        },
+      ];
+      const { container } = render(<UMegaMenu model={model} />);
+      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      fireEvent.click(productsItem.querySelector("a") as HTMLAnchorElement);
+
+      const leafLinks = productsItem.querySelectorAll<HTMLAnchorElement>(".u-megamenu-submenu a");
+      leafLinks[0].focus();
+      fireEvent.keyDown(leafLinks[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(leafLinks[2]);
+    });
+
+    it("closing the overlay via Escape while a sibling root item exists closes only the innermost overlay", () => {
+      // MegaMenu's hard-2-level structure means there is no "further up"
+      // beyond the root — this asserts the sibling root item is unaffected.
+      const model: UMegaMenuItem[] = [
+        { label: "Products", items: [[{ label: "Category A", items: [{ label: "A1" }] }]] },
+        { label: "About", url: "/about" },
+      ];
+      const { container } = render(<UMegaMenu model={model} />);
+      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      const productsLink = productsItem.querySelector("a") as HTMLAnchorElement;
+      productsLink.focus();
+      fireEvent.keyDown(productsLink, { code: "Enter" });
+
+      const firstLeafLink = productsItem.querySelector<HTMLAnchorElement>(".u-megamenu-submenu a") as HTMLAnchorElement;
+      fireEvent.keyDown(firstLeafLink, { code: "Escape" });
+
+      expect(productsItem.getAttribute("data-u-open")).toBe("false");
+      expect(document.activeElement).toBe(productsLink);
+    });
+  });
 });
