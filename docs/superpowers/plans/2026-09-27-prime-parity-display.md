@@ -139,32 +139,36 @@ In `packages/ng/src/galleria/galleria.ts`:
 
 - [ ] **Step 1: Write the failing tests**
 
-First, confirm real PrimeNG's exact condition by re-reading the pinned source (`.vendor-cache/primeng-21.1.9.tar.gz`, `packages/primeng/src/carousel/carousel.ts`) before writing the assertion — do not assume; the condition must match real source exactly (expected: `aria-live` is set to `"polite"` when autoplay is active, absent/unset otherwise, but confirm the literal value real PrimeNG uses before hardcoding it here).
+**Plan correction (post-Plan-Review, pre-Task-4-implementation):** the implementer's mandated real-source verification against the pinned `.vendor-cache/primeng-21.1.9.tar.gz` (`packages/primeng/src/carousel/carousel.ts`) found this Task's original text was wrong about the off-state: real PrimeNG's template (`[attr.aria-live]="allowAutoplay ? 'polite' : 'off'"`) **always renders `aria-live`**, using the literal value `"off"` when autoplay is not active — never absent/unset, contrary to this Task's original "absent/unset otherwise" text. Real Prime's condition is also driven by a separate stateful `allowAutoplay` flag (flipping on `startAutoplay`/`stopAutoplay`, including on manual navigation), not the static `autoplayInterval` input directly.
+
+**Ruling (user-authorized):** implement the static `autoplayInterval() > 0` condition as originally planned (do NOT add new autoplay-running state, do NOT modify the autoplay mechanism, preserving this Plan's own Global Constraint) — but correct the off-value to match real Prime's actual rendered markup: **always render `aria-live`, value `"polite"` when `autoplayInterval() > 0`, value `"off"` otherwise. Never omit the attribute.** This is confirmed consistent with the governing Spec's own §5.2 text ("this specification does not mandate an always-on `aria-live`, only that Ultimate's conditional behavior matches real Prime's own conditional behavior") — the Spec was already written not to require absence, only this Plan's own paraphrase was inaccurate. No Spec change needed, no new GAP, no scope broadening.
+
+The Step-1 tests below are corrected accordingly (superseding the original "does not set aria-live" test, which asserted the wrong off-behavior):
 
 ```typescript
 describe("aria-live on autoplay content wrapper (Spec §5.2, GAP-051)", () => {
   interface Item { id: number }
 
-  it("sets aria-live on the content wrapper when autoplayInterval is greater than 0", () => {
+  it("sets aria-live=polite on the content wrapper when autoplayInterval is greater than 0", () => {
     const fixture = TestBed.createComponent(UCarousel<Item>);
     fixture.componentRef.setInput("value", [{ id: 1 }, { id: 2 }]);
     fixture.componentRef.setInput("autoplayInterval", 3000);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector("[data-u-carousel-content]").getAttribute("aria-live")).toBe("polite"); // confirm literal value against real source first
+    expect(fixture.nativeElement.querySelector("[data-u-carousel-content]").getAttribute("aria-live")).toBe("polite");
   });
 
-  it("does not set aria-live when autoplayInterval is 0 (autoplay disabled)", () => {
+  it("sets aria-live=off (not absent) when autoplayInterval is 0 (autoplay disabled), matching real PrimeNG's own always-rendered attribute", () => {
     const fixture = TestBed.createComponent(UCarousel<Item>);
     fixture.componentRef.setInput("value", [{ id: 1 }, { id: 2 }]);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector("[data-u-carousel-content]").hasAttribute("aria-live")).toBe(false);
+    expect(fixture.nativeElement.querySelector("[data-u-carousel-content]").getAttribute("aria-live")).toBe("off");
   });
 });
 ```
 
 - [ ] **Step 2: Implement**
 
-Add `[attr.aria-live]="autoplayInterval() > 0 ? 'polite' : null"` (or the exact real-source-confirmed value from Step 1) to the existing content-wrapper element (add a `data-u-carousel-content` attribute to it first if not already uniquely selectable).
+Add `[attr.aria-live]="autoplayInterval() > 0 ? 'polite' : 'off'"` (always present, never `null`) to the existing content-wrapper element (add a `data-u-carousel-content` attribute to it first if not already uniquely selectable).
 
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
