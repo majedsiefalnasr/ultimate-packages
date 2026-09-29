@@ -81,4 +81,108 @@ describe("UTieredMenu", () => {
     expect(onItemSelect).toHaveBeenCalled();
     expect(container.querySelector('[role="menu"]')).toBeNull();
   });
+
+  describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
+    // TieredMenu uses a single ArrowDown/ArrowUp axis at every level (root and
+    // submenu alike) to move between siblings, per real PrimeNG/PrimeReact's
+    // own TieredMenuSub convention (used unconditionally regardless of level)
+    // — unlike Menubar, whose root level is a horizontal menubar
+    // (ArrowRight/ArrowLeft) with vertical submenus.
+    it("ArrowDown/ArrowUp move focus among top-level items", () => {
+      const { container } = render(
+        <UTieredMenu model={[{ label: "File" }, { label: "Edit" }, { label: "View" }]} />
+      );
+      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"] > .u-tieredmenu-content > a');
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(links[1]);
+
+      fireEvent.keyDown(links[1], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(links[2]);
+
+      // Wraps around.
+      fireEvent.keyDown(links[2], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(links[0]);
+
+      fireEvent.keyDown(links[0], { code: "ArrowUp" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("ArrowDown skips a disabled top-level item", () => {
+      const { container } = render(
+        <UTieredMenu model={[{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]} />
+      );
+      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"] > .u-tieredmenu-content > a');
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("opens a submenu and focuses its first item on Enter/Space", () => {
+      const { container } = render(<UTieredMenu model={[{ label: "File", items: [{ label: "New" }] }]} />);
+      const item = container.querySelector('[role="menuitem"]') as HTMLElement;
+      const link = item.querySelector(".u-tieredmenu-content > a") as HTMLAnchorElement;
+      link.focus();
+      fireEvent.keyDown(link, { code: "Enter" });
+
+      expect(item.getAttribute("data-u-open")).toBe("true");
+      expect(link.getAttribute("aria-expanded")).toBe("true");
+      const firstSubItemLink = item.querySelector<HTMLAnchorElement>(
+        ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-content > a"
+      );
+      expect(document.activeElement).toBe(firstSubItemLink);
+    });
+
+    it("closes the innermost open submenu on Escape and refocuses its trigger", () => {
+      const { container } = render(<UTieredMenu model={[{ label: "File", items: [{ label: "New" }] }]} />);
+      const item = container.querySelector('[role="menuitem"]') as HTMLElement;
+      const link = item.querySelector(".u-tieredmenu-content > a") as HTMLAnchorElement;
+      link.focus();
+      fireEvent.keyDown(link, { code: "Enter" });
+
+      const firstSubItemLink = item.querySelector<HTMLAnchorElement>(
+        ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-content > a"
+      ) as HTMLAnchorElement;
+      expect(document.activeElement).toBe(firstSubItemLink);
+
+      fireEvent.keyDown(firstSubItemLink, { code: "Escape" });
+
+      expect(item.getAttribute("data-u-open")).toBe("false");
+      expect(document.activeElement).toBe(link);
+    });
+
+    it("closes only the innermost submenu when nested two levels deep via real keyboard navigation", () => {
+      const { container } = render(<UTieredMenu model={items} />);
+      // File (root) -> Open (submenu item 2, has nested "Recent") -> Recent (nested submenu).
+      const fileItem = container.querySelector('[role="menuitem"]') as HTMLElement;
+      const fileLink = fileItem.querySelector(".u-tieredmenu-content > a") as HTMLAnchorElement;
+      fileLink.focus();
+      fireEvent.keyDown(fileLink, { code: "Enter" });
+
+      const newLink = fileItem.querySelector<HTMLAnchorElement>(
+        ".u-tieredmenu-submenu > li:nth-child(1) > .u-tieredmenu-content > a"
+      ) as HTMLAnchorElement;
+      expect(document.activeElement).toBe(newLink);
+
+      // Move down within the open submenu to "Open" (has its own nested submenu).
+      fireEvent.keyDown(newLink, { code: "ArrowDown" });
+      const openItemLi = fileItem.querySelector(".u-tieredmenu-submenu > li:nth-child(2)") as HTMLElement;
+      const openLink = openItemLi.querySelector<HTMLAnchorElement>(":scope > .u-tieredmenu-content > a") as HTMLAnchorElement;
+      expect(document.activeElement).toBe(openLink);
+
+      // Open the nested submenu via Enter, landing focus on "Recent".
+      fireEvent.keyDown(openLink, { code: "Enter" });
+      expect(openItemLi.getAttribute("data-u-open")).toBe("true");
+      const recentLink = openItemLi.querySelector<HTMLAnchorElement>(
+        ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-content > a"
+      ) as HTMLAnchorElement;
+      expect(document.activeElement).toBe(recentLink);
+
+      // Escape from the deepest level closes only that level, not the parent "File" menu.
+      fireEvent.keyDown(recentLink, { code: "Escape" });
+      expect(openItemLi.getAttribute("data-u-open")).toBe("false");
+      expect(document.activeElement).toBe(openLink);
+      expect(fileItem.getAttribute("data-u-open")).toBe("true");
+    });
+  });
 });
