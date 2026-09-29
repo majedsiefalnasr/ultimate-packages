@@ -58,7 +58,7 @@ export interface UGalleriaItemContext<T = unknown> {
   imports: [CommonModule, UOverlay, UFocusTrap, UTimesIcon],
   template: `
     @if (!(fullScreen() && fullScreenActive())) {
-      <div [class]="cx('root')">
+      <div [class]="cx('root')" role="region">
         <ng-container *ngTemplateOutlet="content"></ng-container>
       </div>
     }
@@ -74,7 +74,7 @@ export interface UGalleriaItemContext<T = unknown> {
     }
 
     <ng-template #content>
-      <div [class]="cx('itemWrapper')">
+      <div [class]="cx('itemWrapper')" data-u-galleria-content tabindex="-1" (keydown)="onContentKeyDown($event)">
         @if (showItemNavigators() && value().length > 1) {
           <button
             type="button"
@@ -151,8 +151,10 @@ export class UGalleria<T = unknown> extends UBaseComponent {
   @ContentChild("thumbnail", { descendants: false })
   protected thumbnailTemplate?: TemplateRef<UGalleriaItemContext<T>>;
 
-  protected readonly activeIndex = signal(0);
-  protected readonly fullScreenActive = signal(false);
+  /** The currently active item index. Publicly readable for consumers/tests observing navigation state. */
+  readonly activeIndex = signal(0);
+  /** Whether the fullscreen overlay is currently open. Publicly readable for consumers/tests observing overlay state. */
+  readonly fullScreenActive = signal(false);
   private intervalId: ReturnType<typeof setInterval> | undefined;
 
   protected readonly activeItem = computed<T | undefined>(() => this.value()[this.activeIndex()]);
@@ -213,6 +215,53 @@ export class UGalleria<T = unknown> extends UBaseComponent {
     }
     this.activeIndex.set(index);
     this.activeIndexChange.emit(index);
+  }
+
+  /**
+   * Handles keyboard navigation on the content viewport: `ArrowLeft`/`ArrowRight` move to the
+   * previous/next item, `Home`/`End` jump to the first/last item, and `Escape` closes the
+   * fullscreen overlay when active (no-op otherwise). Ignored when the event originates from a
+   * focused editable descendant (e.g. an `<input>` inside a custom item template) so typing in
+   * projected content never triggers gallery navigation.
+   */
+  protected onContentKeyDown(event: KeyboardEvent): void {
+    if (this.isEditableTarget(event.target)) {
+      return;
+    }
+    switch (event.code) {
+      case "ArrowLeft":
+        event.preventDefault();
+        this.navBackward();
+        break;
+      case "ArrowRight":
+        event.preventDefault();
+        this.navForward();
+        break;
+      case "Home":
+        event.preventDefault();
+        this.goTo(0);
+        break;
+      case "End":
+        event.preventDefault();
+        this.goTo(this.value().length - 1);
+        break;
+      case "Escape":
+        if (this.fullScreenActive()) {
+          event.preventDefault();
+          this.closeFullScreen();
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  private isEditableTarget(target: EventTarget | null): boolean {
+    if (!(target instanceof HTMLElement)) {
+      return false;
+    }
+    const tagName = target.tagName;
+    return tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT" || target.isContentEditable;
   }
 
   /** Opens the fullscreen overlay (only meaningful when `fullScreen` is true). */

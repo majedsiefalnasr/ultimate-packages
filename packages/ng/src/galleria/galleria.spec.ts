@@ -153,3 +153,110 @@ describe("UGalleria", () => {
     await fixture.whenStable();
   });
 });
+
+describe("keyboard navigation, Escape, role=region (Spec §5.1, GAP-050)", () => {
+  interface Item {
+    src: string;
+  }
+
+  it("has role=region on the root element", () => {
+    const fixture = TestBed.createComponent(UGalleria<Item>);
+    fixture.componentRef.setInput("value", [{ src: "a.png" }]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[role=region]")).toBeTruthy();
+  });
+
+  it("ArrowRight advances to the next item", () => {
+    const fixture = TestBed.createComponent(UGalleria<Item>);
+    fixture.componentRef.setInput("value", [{ src: "a.png" }, { src: "b.png" }]);
+    fixture.detectChanges();
+    fixture.nativeElement
+      .querySelector("[data-u-galleria-content]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight" }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeIndex()).toBe(1);
+  });
+
+  it("ArrowLeft goes to the previous item", () => {
+    const fixture = TestBed.createComponent(UGalleria<Item>);
+    fixture.componentRef.setInput("value", [{ src: "a.png" }, { src: "b.png" }]);
+    fixture.componentRef.setInput("activeIndex", 1);
+    fixture.detectChanges();
+    fixture.nativeElement
+      .querySelector("[data-u-galleria-content]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft" }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeIndex()).toBe(0);
+  });
+
+  it("Home jumps to the first item, End jumps to the last", () => {
+    const fixture = TestBed.createComponent(UGalleria<Item>);
+    fixture.componentRef.setInput("value", [{ src: "a.png" }, { src: "b.png" }, { src: "c.png" }]);
+    fixture.componentRef.setInput("activeIndex", 1);
+    fixture.detectChanges();
+    const content = fixture.nativeElement.querySelector("[data-u-galleria-content]");
+    content.dispatchEvent(new KeyboardEvent("keydown", { code: "End" }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeIndex()).toBe(2);
+    content.dispatchEvent(new KeyboardEvent("keydown", { code: "Home" }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeIndex()).toBe(0);
+  });
+
+  it("Escape closes fullscreen mode when active", async () => {
+    const fixture = TestBed.createComponent(UGalleria<Item>);
+    fixture.componentRef.setInput("value", [{ src: "a.png" }]);
+    fixture.componentRef.setInput("fullScreen", true);
+    fixture.detectChanges();
+    fixture.componentInstance.openFullScreen();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.fullScreenActive()).toBe(true);
+    document
+      .querySelector("[data-u-galleria-content]")!
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.fullScreenActive()).toBe(false);
+  });
+
+  it("Escape does nothing when fullscreen mode is not active", () => {
+    const fixture = TestBed.createComponent(UGalleria<Item>);
+    fixture.componentRef.setInput("value", [{ src: "a.png" }]);
+    fixture.detectChanges();
+    expect(() =>
+      fixture.nativeElement
+        .querySelector("[data-u-galleria-content]")
+        .dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }))
+    ).not.toThrow();
+    expect(fixture.componentInstance.fullScreenActive()).toBe(false);
+  });
+
+  it("does not navigate when ArrowLeft/ArrowRight are pressed while a focused input inside a custom item template has focus", () => {
+    @Component({
+      standalone: true,
+      imports: [UGalleria],
+      template: `
+        <u-galleria [value]="items">
+          <ng-template #item let-item>
+            <input class="item-input" [value]="item.src" />
+          </ng-template>
+        </u-galleria>
+      `,
+    })
+    class InputHostComponent {
+      items = [{ src: "a.png" }, { src: "b.png" }];
+    }
+
+    const fixture = TestBed.createComponent(InputHostComponent);
+    fixture.detectChanges();
+    const galleria = fixture.debugElement.query(By.directive(UGalleria))
+      .componentInstance as UGalleria<Item>;
+    const input = fixture.nativeElement.querySelector(".item-input") as HTMLInputElement;
+    input.focus();
+    input.value = "typed";
+    input.dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+    fixture.detectChanges();
+    expect(galleria.activeIndex()).toBe(0);
+    expect(input.value).toBe("typed");
+  });
+});
