@@ -130,9 +130,52 @@ export function UGalleria<T>({
   const isBackwardDisabled = value.length === 0 || (activeIndex <= 0 && !circular);
   const activeItem = value[activeIndex];
 
+  const isEditableTarget = (target: EventTarget | null): boolean => {
+    if (!(target instanceof HTMLElement)) return false;
+    const tagName = target.tagName;
+    return tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT" || target.isContentEditable;
+  };
+
+  /**
+   * Handles keyboard navigation on the content viewport: ArrowLeft/ArrowRight move to the
+   * previous/next item, Home/End jump to the first/last item, and Escape closes the fullscreen
+   * overlay when active (no-op otherwise). Ignored when the event originates from a focused
+   * editable descendant (e.g. an `<input>` inside a custom item template) so typing in projected
+   * content never triggers gallery navigation.
+   */
+  const onContentKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (isEditableTarget(event.target)) return;
+    switch (event.code) {
+      case "ArrowLeft":
+        event.preventDefault();
+        navBackward();
+        break;
+      case "ArrowRight":
+        event.preventDefault();
+        navForward();
+        break;
+      case "Home":
+        event.preventDefault();
+        goTo(0);
+        break;
+      case "End":
+        event.preventDefault();
+        goTo(value.length - 1);
+        break;
+      case "Escape":
+        if (fullScreenActive) {
+          event.preventDefault();
+          setFullScreenActive(false);
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   const content = (
     <>
-      <div className={cx("itemWrapper")}>
+      <div className={cx("itemWrapper")} data-u-galleria-content tabIndex={-1} onKeyDown={onContentKeyDown}>
         {showItemNavigators && value.length > 1 && (
           <button
             type="button"
@@ -177,7 +220,9 @@ export function UGalleria<T>({
   return (
     <>
       {!(fullScreen && fullScreenActive) && (
-        <div className={[cx("root"), className].filter(Boolean).join(" ")}>{content}</div>
+        <div role="region" className={[cx("root"), className].filter(Boolean).join(" ")}>
+          {content}
+        </div>
       )}
       {fullScreen && fullScreenActive && (
         <Portal
