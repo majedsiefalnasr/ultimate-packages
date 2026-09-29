@@ -9,6 +9,8 @@ import {
   numberAttribute,
   output,
 } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
+import { RouterModule } from "@angular/router";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { stepsStyleModule } from "./steps-style";
 
@@ -26,30 +28,47 @@ import { stepsStyleModule } from "./steps-style";
 @Component({
   standalone: true,
   selector: "u-steps",
+  imports: [NgTemplateOutlet, RouterModule],
   template: `
     <nav [class]="cx('root')">
       <ol [class]="cx('list')" (keydown)="onKeydown($event)">
         @for (item of model(); track item.label; let i = $index) {
           @if (item.visible !== false) {
             <li [class]="cx('item', itemParams(item, i))" [attr.aria-current]="i === activeIndex() ? 'step' : null">
-              <a
-                [href]="item.url || '#'"
-                [target]="item.target"
-                [class]="cx('itemLink')"
-                [attr.tabindex]="isItemDisabled(item, i) ? -1 : 0"
-                [attr.aria-disabled]="isItemDisabled(item, i)"
-                (click)="onItemClick($event, item, i)"
-              >
-                <span [class]="cx('itemNumber')">{{ i + 1 }}</span>
-                @if (item.label) {
-                  <span [class]="cx('itemLabel')">{{ item.label }}</span>
-                }
-              </a>
+              @if (item.routerLink && !item.disabled) {
+                <a
+                  [routerLink]="item.routerLink"
+                  [target]="item.target"
+                  [class]="cx('itemLink')"
+                  [attr.tabindex]="isItemDisabled(item, i) ? -1 : 0"
+                  [attr.aria-disabled]="isItemDisabled(item, i)"
+                  (click)="onItemClick($event, item, i)"
+                >
+                  <ng-container [ngTemplateOutlet]="linkContent" [ngTemplateOutletContext]="{ $implicit: item, i }" />
+                </a>
+              } @else {
+                <a
+                  [attr.href]="item.url ?? '#'"
+                  [target]="item.target"
+                  [class]="cx('itemLink')"
+                  [attr.tabindex]="isItemDisabled(item, i) ? -1 : 0"
+                  [attr.aria-disabled]="isItemDisabled(item, i)"
+                  (click)="onItemClick($event, item, i)"
+                >
+                  <ng-container [ngTemplateOutlet]="linkContent" [ngTemplateOutletContext]="{ $implicit: item, i }" />
+                </a>
+              }
             </li>
           }
         }
       </ol>
     </nav>
+    <ng-template #linkContent let-item let-i="i">
+      <span [class]="cx('itemNumber')">{{ i + 1 }}</span>
+      @if (item.label) {
+        <span [class]="cx('itemLabel')">{{ item.label }}</span>
+      }
+    </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

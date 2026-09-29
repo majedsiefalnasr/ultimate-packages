@@ -1,4 +1,5 @@
 import { TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 import { describe, expect, it } from "vitest";
 import { USteps } from "./steps";
 import type { UMenuItem } from "@ultimate/ng-core";
@@ -7,6 +8,7 @@ describe("USteps", () => {
   const items: UMenuItem[] = [{ label: "Personal" }, { label: "Payment" }, { label: "Confirmation" }];
 
   function setup(model: UMenuItem[] = items, activeIndex = 0, readonly = true) {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(USteps);
     fixture.componentRef.setInput("model", model);
     fixture.componentRef.setInput("activeIndex", activeIndex);
@@ -78,11 +80,17 @@ describe("USteps", () => {
 });
 
 describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
-  it("ArrowRight moves focus to the next enabled step", () => {
+  function setup(model: UMenuItem[], readonly = false) {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(USteps);
-    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }, { label: "C" }]);
-    fixture.componentRef.setInput("readonly", false);
+    fixture.componentRef.setInput("model", model);
+    fixture.componentRef.setInput("readonly", readonly);
     fixture.detectChanges();
+    return fixture;
+  }
+
+  it("ArrowRight moves focus to the next enabled step", () => {
+    const fixture = setup([{ label: "A" }, { label: "B" }, { label: "C" }]);
     const links = fixture.nativeElement.querySelectorAll("a");
     links[0].focus();
     links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
@@ -90,10 +98,7 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
   });
 
   it("ArrowLeft moves focus to the previous enabled step", () => {
-    const fixture = TestBed.createComponent(USteps);
-    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }]);
-    fixture.componentRef.setInput("readonly", false);
-    fixture.detectChanges();
+    const fixture = setup([{ label: "A" }, { label: "B" }]);
     const links = fixture.nativeElement.querySelectorAll("a");
     links[1].focus();
     links[1].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft", bubbles: true }));
@@ -101,10 +106,7 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
   });
 
   it("Home moves focus to the first enabled step, End to the last", () => {
-    const fixture = TestBed.createComponent(USteps);
-    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }, { label: "C" }]);
-    fixture.componentRef.setInput("readonly", false);
-    fixture.detectChanges();
+    const fixture = setup([{ label: "A" }, { label: "B" }, { label: "C" }]);
     const links = fixture.nativeElement.querySelectorAll("a");
     links[1].focus();
     links[1].dispatchEvent(new KeyboardEvent("keydown", { code: "End", bubbles: true }));
@@ -114,13 +116,37 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
   });
 
   it("ArrowRight skips a disabled step", () => {
-    const fixture = TestBed.createComponent(USteps);
-    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }]);
-    fixture.componentRef.setInput("readonly", false);
-    fixture.detectChanges();
+    const fixture = setup([{ label: "A" }, { label: "B", disabled: true }, { label: "C" }]);
     const links = fixture.nativeElement.querySelectorAll("a");
     links[0].focus();
     links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
     expect(document.activeElement).toBe(links[2]);
+  });
+});
+
+describe("routerLink (Spec §5.2, GAP-053)", () => {
+  function setup(model: UMenuItem[]) {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", model);
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  it("binds routerLink when an item has one, omitting href", () => {
+    const fixture = setup([{ label: "A", routerLink: "/a" }]);
+    const link = fixture.nativeElement.querySelector("a");
+    expect(link.getAttribute("href")).toBe("/a"); // RouterLink sets href itself when rendered with RouterModule's test harness
+  });
+
+  it("does not bind routerLink when the item is disabled", () => {
+    const fixture = setup([{ label: "A", routerLink: "/a", disabled: true }]);
+    const link = fixture.nativeElement.querySelector("a");
+    expect(link.getAttribute("href")).not.toBe("/a");
+  });
+
+  it("falls back to url/# href when no routerLink is set", () => {
+    const fixture = setup([{ label: "A" }]);
+    expect(fixture.nativeElement.querySelector("a").getAttribute("href")).toBe("#");
   });
 });
