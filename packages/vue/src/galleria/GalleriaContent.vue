@@ -31,7 +31,10 @@
         :key="index"
         :class="cx('thumbnailItem', { active: index === activeIndex })"
         :aria-current="index === activeIndex ? 'true' : null"
+        role="button"
+        tabindex="0"
         @click="$emit('goTo', index)"
+        @keydown="onThumbnailKeyDown($event, index)"
       >
         <slot name="thumbnail" :item="item">
           <slot name="item" :item="item" />
@@ -98,6 +101,14 @@ export default {
       if (!(target instanceof HTMLElement)) return false;
       const tagName = target.tagName;
       return tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT" || target.isContentEditable;
+    },
+    // Handles Enter/Space on a focused thumbnail: activates it the same way the existing click
+    // handler does (Spec §5.1, GAP-050 Task 7). No-op for any other key.
+    onThumbnailKeyDown(event, index) {
+      if (event.code === "Enter" || event.code === "Space") {
+        event.preventDefault();
+        this.$emit("goTo", index);
+      }
     },
   },
 };

@@ -181,3 +181,36 @@ describe("keyboard navigation, Escape, role=region (Spec §5.1, GAP-050)", () =>
     wrapper.unmount();
   });
 });
+
+describe("thumbnail keyboard activation (Spec §5.1, GAP-050 Task 7)", () => {
+  it("makes the thumbnail focusable", () => {
+    const wrapper = mountGalleria();
+    const thumbnail = wrapper.find(".u-galleria-thumbnail-item");
+    expect(thumbnail.attributes("tabindex")).toBe("0");
+    wrapper.unmount();
+  });
+
+  it("Enter on a focused thumbnail activates it the same as a click", async () => {
+    const wrapper = mountGalleria();
+    const thumbnails = wrapper.findAll(".u-galleria-thumbnail-item");
+    await thumbnails[2].trigger("keydown", { code: "Enter" });
+    expect(wrapper.find(".active-item").attributes("src")).toBe("c.png");
+    wrapper.unmount();
+  });
+
+  it("Space on a focused thumbnail activates it the same as a click", async () => {
+    const wrapper = mountGalleria();
+    const thumbnails = wrapper.findAll(".u-galleria-thumbnail-item");
+    await thumbnails[1].trigger("keydown", { code: "Space" });
+    expect(wrapper.find(".active-item").attributes("src")).toBe("b.png");
+    wrapper.unmount();
+  });
+
+  it("existing click behavior on the thumbnail is unchanged", async () => {
+    const wrapper = mountGalleria();
+    const thumbnails = wrapper.findAll(".u-galleria-thumbnail-item");
+    await thumbnails[2].trigger("click");
+    expect(wrapper.find(".active-item").attributes("src")).toBe("c.png");
+    wrapper.unmount();
+  });
+});
