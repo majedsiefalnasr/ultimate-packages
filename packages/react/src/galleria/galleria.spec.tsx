@@ -201,3 +201,32 @@ describe("keyboard navigation, Escape, role=region (Spec §5.1, GAP-050)", () =>
     expect(input.value).toBe("typed");
   });
 });
+
+describe("thumbnail keyboard activation (Spec §5.1, GAP-050 Task 7)", () => {
+  it("makes the thumbnail focusable", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const thumbnail = container.querySelector(".u-galleria-thumbnail-item") as HTMLElement;
+    expect(thumbnail.tabIndex).toBe(0);
+  });
+
+  it("Enter on a focused thumbnail activates it the same as a click", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const thumbnails = container.querySelectorAll(".u-galleria-thumbnail-item");
+    fireEvent.keyDown(thumbnails[2], { code: "Enter" });
+    expect(getActiveItemImage(container).src).toContain("c.png");
+  });
+
+  it("Space on a focused thumbnail activates it the same as a click", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const thumbnails = container.querySelectorAll(".u-galleria-thumbnail-item");
+    fireEvent.keyDown(thumbnails[1], { code: "Space" });
+    expect(getActiveItemImage(container).src).toContain("b.png");
+  });
+
+  it("existing click behavior on the thumbnail is unchanged", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const thumbnails = container.querySelectorAll(".u-galleria-thumbnail-item");
+    fireEvent.click(thumbnails[2]);
+    expect(getActiveItemImage(container).src).toContain("c.png");
+  });
+});

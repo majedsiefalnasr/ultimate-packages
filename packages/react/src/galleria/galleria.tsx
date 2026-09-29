@@ -130,6 +130,17 @@ export function UGalleria<T>({
   const isBackwardDisabled = value.length === 0 || (activeIndex <= 0 && !circular);
   const activeItem = value[activeIndex];
 
+  /**
+   * Handles Enter/Space on a focused thumbnail: activates it the same way the existing onClick
+   * handler does (Spec §5.1, GAP-050 Task 7). No-op for any other key.
+   */
+  const onThumbnailKeyDown = (event: React.KeyboardEvent<HTMLLIElement>, index: number) => {
+    if (event.code === "Enter" || event.code === "Space") {
+      event.preventDefault();
+      goTo(index);
+    }
+  };
+
   const isEditableTarget = (target: EventTarget | null): boolean => {
     if (!(target instanceof HTMLElement)) return false;
     const tagName = target.tagName;
@@ -207,7 +218,10 @@ export function UGalleria<T>({
               key={index}
               className={cx("thumbnailItem", { active: index === activeIndex })}
               aria-current={index === activeIndex ? "true" : undefined}
+              role="button"
+              tabIndex={0}
               onClick={() => goTo(index)}
+              onKeyDown={(event) => onThumbnailKeyDown(event, index)}
             >
               {(thumbnailTemplate ?? itemTemplate)(item)}
             </li>
