@@ -1,4 +1,5 @@
 import { TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 import { describe, expect, it } from "vitest";
 import { UDock } from "./dock";
 import type { UMenuItem } from "@ultimate/ng-core";
@@ -11,6 +12,7 @@ describe("UDock", () => {
   ];
 
   function setup(model: UMenuItem[] = items) {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(UDock);
     fixture.componentRef.setInput("model", model);
     fixture.detectChanges();
@@ -47,6 +49,7 @@ describe("UDock", () => {
   });
 
   it("applies a non-default position class", () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(UDock);
     fixture.componentRef.setInput("model", items);
     fixture.componentRef.setInput("position", "left");
@@ -73,6 +76,7 @@ describe("UDock", () => {
 
   describe("keyboard navigation (Spec §5.4, GAP-055)", () => {
     it("ArrowRight/ArrowLeft move focus among dock items", () => {
+      TestBed.configureTestingModule({ providers: [provideRouter([])] });
       const fixture = TestBed.createComponent(UDock);
       fixture.componentRef.setInput("model", [{ label: "Finder" }, { label: "Mail" }]);
       fixture.detectChanges();
@@ -83,6 +87,7 @@ describe("UDock", () => {
     });
 
     it("ArrowLeft wraps from the first item to the last", () => {
+      TestBed.configureTestingModule({ providers: [provideRouter([])] });
       const fixture = TestBed.createComponent(UDock);
       fixture.componentRef.setInput("model", [{ label: "Finder" }, { label: "Mail" }]);
       fixture.detectChanges();
@@ -93,6 +98,7 @@ describe("UDock", () => {
     });
 
     it("Home/End jump to the first/last item", () => {
+      TestBed.configureTestingModule({ providers: [provideRouter([])] });
       const fixture = TestBed.createComponent(UDock);
       fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }, { label: "C" }]);
       fixture.detectChanges();
@@ -103,6 +109,7 @@ describe("UDock", () => {
     });
 
     it("uses ArrowUp/ArrowDown instead when position is left or right", () => {
+      TestBed.configureTestingModule({ providers: [provideRouter([])] });
       const fixture = TestBed.createComponent(UDock);
       fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }]);
       fixture.componentRef.setInput("position", "left");
@@ -114,6 +121,7 @@ describe("UDock", () => {
     });
 
     it("ArrowRight/ArrowLeft do nothing when position is left or right", () => {
+      TestBed.configureTestingModule({ providers: [provideRouter([])] });
       const fixture = TestBed.createComponent(UDock);
       fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }]);
       fixture.componentRef.setInput("position", "right");
@@ -125,6 +133,7 @@ describe("UDock", () => {
     });
 
     it("skips disabled items when moving focus", () => {
+      TestBed.configureTestingModule({ providers: [provideRouter([])] });
       const fixture = TestBed.createComponent(UDock);
       fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }]);
       fixture.detectChanges();
@@ -143,6 +152,33 @@ describe("UDock", () => {
       items[1].focus(); // "B", model index 2.
       items[1].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
       expect(document.activeElement).toBe(items[2]); // "C", not stuck or misrouted.
+    });
+  });
+
+  describe("routerLink (GAP-069)", () => {
+    function setupRouterLink(model: UMenuItem[]) {
+      TestBed.configureTestingModule({ providers: [provideRouter([])] });
+      const fixture = TestBed.createComponent(UDock);
+      fixture.componentRef.setInput("model", model);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    it("binds routerLink when an item has one, omitting href", () => {
+      const fixture = setupRouterLink([{ label: "A", routerLink: "/a" }]);
+      const link = fixture.nativeElement.querySelector("a");
+      expect(link.getAttribute("href")).toBe("/a"); // RouterLink sets href itself when rendered with RouterModule's test harness
+    });
+
+    it("does not bind routerLink when the item is disabled", () => {
+      const fixture = setupRouterLink([{ label: "A", routerLink: "/a", disabled: true }]);
+      const link = fixture.nativeElement.querySelector("a");
+      expect(link.getAttribute("href")).not.toBe("/a");
+    });
+
+    it("falls back to url/# href when no routerLink is set", () => {
+      const fixture = setupRouterLink([{ label: "A" }]);
+      expect(fixture.nativeElement.querySelector("a").getAttribute("href")).toBe("#");
     });
   });
 });

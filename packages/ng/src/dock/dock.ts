@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, input, output, signal } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
+import { RouterModule } from "@angular/router";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { dockStyleModule } from "./dock-style";
 
@@ -20,6 +22,7 @@ import { dockStyleModule } from "./dock-style";
 @Component({
   standalone: true,
   selector: "u-dock",
+  imports: [NgTemplateOutlet, RouterModule],
   template: `
     <div [class]="cx('root', { position: position() })">
       <div [class]="cx('listContainer')">
@@ -27,28 +30,48 @@ import { dockStyleModule } from "./dock-style";
           @for (item of model(); track item.label; let i = $index) {
             @if (item.visible !== false) {
               <li [class]="cx('item', itemParams(item, i))" role="none">
-                <a
-                  [href]="item.url || '#'"
-                  [target]="item.target"
-                  [class]="cx('itemLink')"
-                  role="menuitem"
-                  [attr.aria-label]="item.label"
-                  [attr.aria-disabled]="isDisabled(item)"
-                  [attr.data-u-active]="hoveredIndex() === i"
-                  (click)="onItemClick($event, item)"
-                  (mouseenter)="onItemMouseEnter(i)"
-                  (mouseleave)="onListMouseLeave()"
-                >
-                  @if (item.icon) {
-                    <span [class]="[cx('itemIcon'), item.icon]"></span>
-                  }
-                </a>
+                @if (item.routerLink && !item.disabled) {
+                  <a
+                    [routerLink]="item.routerLink"
+                    [target]="item.target"
+                    [class]="cx('itemLink')"
+                    role="menuitem"
+                    [attr.aria-label]="item.label"
+                    [attr.aria-disabled]="isDisabled(item)"
+                    [attr.data-u-active]="hoveredIndex() === i"
+                    (click)="onItemClick($event, item)"
+                    (mouseenter)="onItemMouseEnter(i)"
+                    (mouseleave)="onListMouseLeave()"
+                  >
+                    <ng-container [ngTemplateOutlet]="itemContent" [ngTemplateOutletContext]="{ $implicit: item }" />
+                  </a>
+                } @else {
+                  <a
+                    [attr.href]="item.url ?? '#'"
+                    [target]="item.target"
+                    [class]="cx('itemLink')"
+                    role="menuitem"
+                    [attr.aria-label]="item.label"
+                    [attr.aria-disabled]="isDisabled(item)"
+                    [attr.data-u-active]="hoveredIndex() === i"
+                    (click)="onItemClick($event, item)"
+                    (mouseenter)="onItemMouseEnter(i)"
+                    (mouseleave)="onListMouseLeave()"
+                  >
+                    <ng-container [ngTemplateOutlet]="itemContent" [ngTemplateOutletContext]="{ $implicit: item }" />
+                  </a>
+                }
               </li>
             }
           }
         </ul>
       </div>
     </div>
+    <ng-template #itemContent let-item>
+      @if (item.icon) {
+        <span [class]="[cx('itemIcon'), item.icon]"></span>
+      }
+    </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
