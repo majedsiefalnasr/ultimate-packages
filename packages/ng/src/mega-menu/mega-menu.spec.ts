@@ -90,4 +90,95 @@ describe("UMegaMenu", () => {
     fixture.detectChanges();
     expect(item.getAttribute("data-u-open")).toBe("false");
   });
+
+  describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
+    async function flushFocus() {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+
+    it("ArrowRight/ArrowLeft move focus among root items", () => {
+      const fixture = setup([{ label: "File" }, { label: "Edit" }, { label: "View" }]);
+      const rootItems = fixture.nativeElement.querySelectorAll(".u-megamenu-root-list > li > .u-megamenu-item-content > a");
+      rootItems[0].focus();
+      rootItems[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+      expect(document.activeElement).toBe(rootItems[1]);
+      (document.activeElement as HTMLElement).dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft", bubbles: true }));
+      expect(document.activeElement).toBe(rootItems[0]);
+    });
+
+    it("ArrowRight skips a disabled root item", () => {
+      const fixture = setup([{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]);
+      const rootItems = fixture.nativeElement.querySelectorAll(".u-megamenu-root-list > li > .u-megamenu-item-content > a");
+      rootItems[0].focus();
+      rootItems[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+      expect(document.activeElement).toBe(rootItems[2]);
+    });
+
+    it("Enter/Space on a column-having item opens it and moves focus to its first leaf item", async () => {
+      const fixture = setup();
+      const productsLink = fixture.nativeElement.querySelector(".u-megamenu-root-list > li:first-child a");
+      productsLink.focus();
+      productsLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+      fixture.detectChanges();
+      await flushFocus();
+
+      const productsItem = fixture.nativeElement.querySelector(".u-megamenu-root-list > li:first-child");
+      expect(productsItem.getAttribute("data-u-open")).toBe("true");
+      const firstLeafLink = productsItem.querySelector(".u-megamenu-submenu a");
+      expect(document.activeElement).toBe(firstLeafLink);
+    });
+
+    it("Escape closes the open overlay from a focused leaf item and returns focus to its trigger", async () => {
+      const fixture = setup();
+      const productsLink = fixture.nativeElement.querySelector(".u-megamenu-root-list > li:first-child a");
+      productsLink.focus();
+      productsLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+      fixture.detectChanges();
+      await flushFocus();
+
+      const productsItem = fixture.nativeElement.querySelector(".u-megamenu-root-list > li:first-child");
+      const leafLink = document.activeElement as HTMLElement;
+      expect(productsItem.querySelector(".u-megamenu-submenu a")).toBe(leafLink); // sanity: focus is inside the overlay, not the trigger
+
+      leafLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
+      fixture.detectChanges();
+      await flushFocus();
+
+      expect(productsItem.getAttribute("data-u-open")).toBe("false");
+      expect(document.activeElement).toBe(productsLink);
+    });
+
+    it("ArrowDown/ArrowUp move focus among a column group's own leaf items", () => {
+      const fixture = setup([
+        { label: "Products", items: [[{ label: "Category A", items: [{ label: "A1" }, { label: "A2" }] }]] },
+      ]);
+      const productsItem = fixture.nativeElement.querySelector(".u-megamenu-root-list > li:first-child");
+      productsItem.querySelector("a").click();
+      fixture.detectChanges();
+
+      const leafLinks = productsItem.querySelectorAll(".u-megamenu-submenu a");
+      leafLinks[0].focus();
+      leafLinks[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true }));
+      expect(document.activeElement).toBe(leafLinks[1]);
+      (document.activeElement as HTMLElement).dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowUp", bubbles: true }));
+      expect(document.activeElement).toBe(leafLinks[0]);
+    });
+
+    it("skips a disabled leaf item when moving focus with ArrowDown", () => {
+      const fixture = setup([
+        {
+          label: "Products",
+          items: [[{ label: "Category A", items: [{ label: "A1" }, { label: "A2", disabled: true }, { label: "A3" }] }]],
+        },
+      ]);
+      const productsItem = fixture.nativeElement.querySelector(".u-megamenu-root-list > li:first-child");
+      productsItem.querySelector("a").click();
+      fixture.detectChanges();
+
+      const leafLinks = productsItem.querySelectorAll(".u-megamenu-submenu a");
+      leafLinks[0].focus();
+      leafLinks[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true }));
+      expect(document.activeElement).toBe(leafLinks[2]);
+    });
+  });
 });
