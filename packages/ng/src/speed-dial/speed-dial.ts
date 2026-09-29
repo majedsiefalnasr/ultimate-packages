@@ -41,7 +41,7 @@ type SpeedDialType = "linear" | "circle" | "semi-circle" | "quarter-circle";
           <span [class]="icon()"></span>
         }
       </button>
-      <ul [class]="cx('list')" role="menu" [style]="listDirectionStyle()">
+      <ul [class]="cx('list')" role="menu" [style]="listDirectionStyle()" (keydown)="onKeydown($event)">
         @for (item of model(); track item.label; let i = $index) {
           <li [class]="cx('item', { hidden: item.visible === false })" role="none" [style]="getItemStyle(i)">
             <button
@@ -163,6 +163,69 @@ export class USpeedDial extends UBaseComponent {
       item.command({ originalEvent: event, item });
     }
     this.hide();
+  }
+
+  /**
+   * Roving focus among action items once open (Spec §5.5, GAP-056), bound on
+   * the `<ul role="menu">` itself — never on the toggle button — matching the
+   * ancestor-binding requirement established while fixing GAP-054/GAP-055.
+   * Axis follows `direction()`: ArrowRight/ArrowLeft move focus for a
+   * left/right-opening dial; ArrowDown/ArrowUp for every other direction
+   * (`up`, `down`, and the diagonal `type: "quarter-circle"` directions,
+   * which all lay items out along the vertical axis per
+   * `listDirectionStyle()`/the CSS default). Disabled and `visible: false`
+   * items are skipped — unlike `UDock`, SpeedDial keeps a `[role=menuitem]`
+   * button in the DOM for every model entry even when hidden (CSS
+   * `visibility: hidden`, not omitted), so the DOM-links array here is not
+   * already a rendered-only subset; the eligible list is filtered instead of
+   * relying on `renderedItems()`-style DOM omission.
+   */
+  protected onKeydown(event: KeyboardEvent): void {
+    if (!this.visible()) return;
+
+    const target = event.target as HTMLButtonElement;
+    const links = this.getItemLinks();
+    const index = links.indexOf(target);
+    if (index === -1) return;
+
+    const horizontal = this.direction() === "left" || this.direction() === "right";
+    const nextCode = horizontal ? "ArrowRight" : "ArrowDown";
+    const prevCode = horizontal ? "ArrowLeft" : "ArrowUp";
+
+    if (event.code === nextCode) {
+      event.preventDefault();
+      this.moveFocus(index, 1);
+    } else if (event.code === prevCode) {
+      event.preventDefault();
+      this.moveFocus(index, -1);
+    }
+  }
+
+  /** This dial's own action-item buttons, in DOM order (one per model entry, including hidden ones). */
+  private getItemLinks(): HTMLButtonElement[] {
+    const list = (this.el.nativeElement as HTMLElement).querySelector("ul");
+    return list ? Array.from(list.querySelectorAll<HTMLButtonElement>(":scope > li > button")) : [];
+  }
+
+  /** Whether the model entry at `index` is eligible to receive roving focus (not disabled, not hidden). */
+  private isEligible(index: number): boolean {
+    const item = this.model()[index];
+    return !!item && !item.disabled && item.visible !== false;
+  }
+
+  private moveFocus(fromIndex: number, direction: 1 | -1): void {
+    const links = this.getItemLinks();
+    const length = links.length;
+    if (length === 0) return;
+
+    let nextIndex = fromIndex;
+    for (let step = 0; step < length; step++) {
+      nextIndex = (nextIndex + direction + length) % length;
+      if (this.isEligible(nextIndex)) {
+        links[nextIndex]?.focus();
+        return;
+      }
+    }
   }
 
   /** Shows the action items. */
