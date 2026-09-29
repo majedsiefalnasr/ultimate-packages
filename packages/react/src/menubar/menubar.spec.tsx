@@ -72,4 +72,125 @@ describe("UMenubar", () => {
     const { container } = render(<UMenubar model={[{ label: "A" }, { separator: true }, { label: "B" }]} />);
     expect(container.querySelector('[role="separator"]')).not.toBeNull();
   });
+
+  describe("keyboard navigation (GAP-054)", () => {
+    const rootLink = (container: HTMLElement, index: number) =>
+      container.querySelectorAll<HTMLAnchorElement>(".u-menubar-root-list > li > .u-menubar-content > a")[
+        index
+      ];
+
+    it("carries ARIA roles for menubar/menu/menuitem", () => {
+      const { container } = render(<UMenubar model={items} />);
+      expect(container.querySelector(".u-menubar-root-list")?.getAttribute("role")).toBe("menubar");
+      const rootLinks = container.querySelectorAll(".u-menubar-root-list > li > .u-menubar-content > a");
+      rootLinks.forEach((link) => expect(link.getAttribute("role")).toBe("menuitem"));
+    });
+
+    it("moves focus with ArrowRight/ArrowLeft among root items", () => {
+      const { container } = render(<UMenubar model={items} />);
+      const file = rootLink(container, 0);
+      const edit = rootLink(container, 1);
+      const help = rootLink(container, 2);
+
+      file.focus();
+      fireEvent.keyDown(file, { code: "ArrowRight" });
+      expect(document.activeElement).toBe(edit);
+
+      fireEvent.keyDown(edit, { code: "ArrowRight" });
+      expect(document.activeElement).toBe(help);
+
+      // Wraps around.
+      fireEvent.keyDown(help, { code: "ArrowRight" });
+      expect(document.activeElement).toBe(file);
+
+      fireEvent.keyDown(file, { code: "ArrowLeft" });
+      expect(document.activeElement).toBe(help);
+    });
+
+    it("skips disabled items in roving focus", () => {
+      const model: UMenuItem[] = [
+        { label: "One" },
+        { label: "Two", disabled: true },
+        { label: "Three" },
+      ];
+      const { container } = render(<UMenubar model={model} />);
+      const one = rootLink(container, 0);
+      const three = rootLink(container, 2);
+
+      one.focus();
+      fireEvent.keyDown(one, { code: "ArrowRight" });
+      expect(document.activeElement).toBe(three);
+    });
+
+    it("opens a submenu and focuses its first item on Enter/Space", () => {
+      const { container } = render(<UMenubar model={items} />);
+      const file = rootLink(container, 0);
+      file.focus();
+      fireEvent.keyDown(file, { code: "Enter" });
+
+      const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+      expect(fileItem.getAttribute("data-u-open")).toBe("true");
+
+      const firstSubItemLink = fileItem.querySelector<HTMLAnchorElement>(
+        ".u-menubar-submenu > li:first-child > .u-menubar-content > a"
+      );
+      expect(document.activeElement).toBe(firstSubItemLink);
+    });
+
+    it("closes the innermost open submenu on Escape and refocuses its trigger", () => {
+      const { container } = render(<UMenubar model={items} />);
+      const file = rootLink(container, 0);
+      file.focus();
+      fireEvent.keyDown(file, { code: "Enter" });
+
+      const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+      const firstSubItemLink = fileItem.querySelector<HTMLAnchorElement>(
+        ".u-menubar-submenu > li:first-child > .u-menubar-content > a"
+      ) as HTMLAnchorElement;
+      expect(document.activeElement).toBe(firstSubItemLink);
+
+      fireEvent.keyDown(firstSubItemLink, { code: "Escape" });
+
+      expect(fileItem.getAttribute("data-u-open")).toBe("false");
+      expect(document.activeElement).toBe(file);
+    });
+
+    it("closes only the innermost submenu when nested two levels deep via real keyboard navigation", () => {
+      const { container } = render(<UMenubar model={items} />);
+      // File (root) -> Open (submenu item 2, has nested "Recent") -> Recent (nested submenu).
+      const file = rootLink(container, 0);
+      file.focus();
+      fireEvent.keyDown(file, { code: "Enter" });
+
+      const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+      const newLink = fileItem.querySelector<HTMLAnchorElement>(
+        ".u-menubar-submenu > li:nth-child(1) > .u-menubar-content > a"
+      ) as HTMLAnchorElement;
+      expect(document.activeElement).toBe(newLink);
+
+      // Move down within the open submenu to "Open" (has its own nested submenu).
+      fireEvent.keyDown(newLink, { code: "ArrowDown" });
+      const openItemLi = fileItem.querySelector(
+        ".u-menubar-submenu > li:nth-child(2)"
+      ) as HTMLElement;
+      const openLink = openItemLi.querySelector<HTMLAnchorElement>(
+        ":scope > .u-menubar-content > a"
+      ) as HTMLAnchorElement;
+      expect(document.activeElement).toBe(openLink);
+
+      // Open the nested submenu via Enter, landing focus on "Recent".
+      fireEvent.keyDown(openLink, { code: "Enter" });
+      expect(openItemLi.getAttribute("data-u-open")).toBe("true");
+      const recentLink = openItemLi.querySelector<HTMLAnchorElement>(
+        ".u-menubar-submenu > li:first-child > .u-menubar-content > a"
+      ) as HTMLAnchorElement;
+      expect(document.activeElement).toBe(recentLink);
+
+      // Escape from the deepest level closes only that level, not the parent "File" menu.
+      fireEvent.keyDown(recentLink, { code: "Escape" });
+      expect(openItemLi.getAttribute("data-u-open")).toBe("false");
+      expect(document.activeElement).toBe(openLink);
+      expect(fileItem.getAttribute("data-u-open")).toBe("true");
+    });
+  });
 });
