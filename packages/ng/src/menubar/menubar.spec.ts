@@ -199,5 +199,81 @@ describe("UMenubar", () => {
         expect(document.activeElement).toBe(fileLink);
       });
     });
+
+    describe("index mapping with a separator/hidden item before the target (GAP-054 fix-loop)", () => {
+      async function flushFocus() {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      }
+
+      const modelWithSeparator: UMenuItem[] = [
+        { label: "New" },
+        { separator: true },
+        { label: "Open", items: [{ label: "Recent" }] },
+        { label: "Exit" },
+      ];
+
+      it("opens the submenu on Enter for a group item positioned after a separator", async () => {
+        const fixture = setup([{ label: "File", items: modelWithSeparator }]);
+        const fileLink = fixture.nativeElement.querySelector(".u-menubar-root-list > li > .u-menubar-item-content > a");
+        fileLink.click();
+        fixture.detectChanges();
+
+        const fileItem = fixture.nativeElement.querySelector(".u-menubar-root-list > li:first-child");
+        // "Open" is rendered link index 1 (separator has no <a>), but model index 2.
+        const openLink = fileItem.querySelectorAll(".u-menubar-submenu > li > .u-menubar-item-content > a")[1];
+        openLink.focus();
+        openLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+        fixture.detectChanges();
+        await flushFocus();
+
+        const openLi = openLink.closest("li");
+        expect(openLi.getAttribute("data-u-open")).toBe("true");
+      });
+
+      it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", async () => {
+        const fixture = setup([{ label: "File", items: modelWithSeparator }]);
+        const fileLink = fixture.nativeElement.querySelector(".u-menubar-root-list > li > .u-menubar-item-content > a");
+        fileLink.click();
+        fixture.detectChanges();
+
+        const fileItem = fixture.nativeElement.querySelector(".u-menubar-root-list > li:first-child");
+        const openLink = fileItem.querySelectorAll(".u-menubar-submenu > li > .u-menubar-item-content > a")[1];
+        openLink.focus();
+        openLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+        fixture.detectChanges();
+        await flushFocus();
+
+        const recentLink = openLink
+          .closest("li")
+          .querySelector(".u-menubar-submenu > li:first-child > .u-menubar-item-content > a");
+        expect(document.activeElement).toBe(recentLink);
+
+        recentLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
+        fixture.detectChanges();
+        await flushFocus();
+
+        // Must refocus "Open" (its real owning trigger), not "Exit".
+        expect(document.activeElement).toBe(openLink);
+      });
+
+      it("ArrowLeft from a root item after a hidden item does not get stuck", () => {
+        const model: UMenuItem[] = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "B" },
+          { label: "C" },
+        ];
+        const fixture = setup(model);
+        const links = fixture.nativeElement.querySelectorAll(".u-menubar-root-list > li > .u-menubar-item-content > a");
+        // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
+        const [a, b, c] = links;
+        b.focus();
+        b.dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft", bubbles: true }));
+        expect(document.activeElement).toBe(a);
+
+        a.dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft", bubbles: true }));
+        expect(document.activeElement).toBe(c);
+      });
+    });
   });
 });

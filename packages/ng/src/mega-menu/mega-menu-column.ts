@@ -82,14 +82,18 @@ export class UMegaMenuColumnGroup extends UBaseComponent {
     this.itemSelect.emit({ originalEvent: event, item });
   }
 
+  /** Items that actually render their own direct-child `<a>` (excludes hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+  private renderedItems(): UMenuItem[] {
+    return (this.group.items ?? []).filter((candidate) => candidate.visible !== false);
+  }
+
   /** ArrowDown/ArrowUp roving focus among this group's own flat leaf items; Escape is intentionally left unhandled so it bubbles to `UMegaMenu`'s own root `<ul>`. */
   protected onKeydown(event: KeyboardEvent): void {
-    const items = this.group.items ?? [];
     const links = this.getItemLinks();
     const index = links.indexOf(event.target as HTMLAnchorElement);
     if (index === -1) return; // Not one of this group's own item links.
 
-    const current = items[index];
+    const current = this.renderedItems()[index];
     if (!current) return;
 
     switch (event.code) {
@@ -118,7 +122,7 @@ export class UMegaMenuColumnGroup extends UBaseComponent {
     const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
     const nextItem = enabled[nextIndex];
     const links = this.getItemLinks();
-    const targetIndex = items.indexOf(nextItem);
+    const targetIndex = this.renderedItems().indexOf(nextItem);
     links[targetIndex]?.focus();
   }
 }

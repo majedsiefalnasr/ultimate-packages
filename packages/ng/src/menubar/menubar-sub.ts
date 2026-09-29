@@ -218,13 +218,18 @@ export class UMenubarSub extends UBaseComponent {
   private resolveOwnItem(target: EventTarget | null): UMenuItem | null {
     const links = this.getItemLinks();
     const index = links.indexOf(target as HTMLAnchorElement);
-    return index === -1 ? null : (this.items[index] ?? null);
+    return index === -1 ? null : (this.renderedItems()[index] ?? null);
   }
 
   /** Direct-child item trigger links for this level only (excludes nested submenus). */
   private getItemLinks(): HTMLAnchorElement[] {
     const ul = (this.el.nativeElement as HTMLElement).querySelector("ul");
     return ul ? Array.from(ul.querySelectorAll<HTMLAnchorElement>(ITEM_LINK_SELECTOR)) : [];
+  }
+
+  /** Items that actually render their own direct-child `<a>` (excludes separators and hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+  private renderedItems(): UMenuItem[] {
+    return this.items.filter((candidate) => !candidate.separator && candidate.visible !== false);
   }
 
   private moveFocus(current: UMenuItem, direction: 1 | -1): void {
@@ -235,7 +240,7 @@ export class UMenubarSub extends UBaseComponent {
     const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
     const nextItem = enabled[nextIndex];
     const links = this.getItemLinks();
-    const targetIndex = this.items.indexOf(nextItem);
+    const targetIndex = this.renderedItems().indexOf(nextItem);
     links[targetIndex]?.focus();
   }
 
@@ -257,7 +262,7 @@ export class UMenubarSub extends UBaseComponent {
   private closeAndRefocus(item: UMenuItem): void {
     this.openItem = null;
     const links = this.getItemLinks();
-    const targetIndex = this.items.indexOf(item);
+    const targetIndex = this.renderedItems().indexOf(item);
     setTimeout(() => links[targetIndex]?.focus());
   }
 }

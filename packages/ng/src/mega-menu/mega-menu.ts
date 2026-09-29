@@ -215,7 +215,7 @@ export class UMegaMenu extends UBaseComponent {
   private resolveOwnItem(target: EventTarget | null): UMegaMenuItem | null {
     const links = this.getRootLinks();
     const index = links.indexOf(target as HTMLAnchorElement);
-    return index === -1 ? null : (this.model()[index] ?? null);
+    return index === -1 ? null : (this.renderedRootItems()[index] ?? null);
   }
 
   private getRootLinks(): HTMLAnchorElement[] {
@@ -223,6 +223,11 @@ export class UMegaMenu extends UBaseComponent {
     return rootList
       ? Array.from(rootList.querySelectorAll<HTMLAnchorElement>(":scope > li > .u-megamenu-item-content > a"))
       : [];
+  }
+
+  /** Root items that actually render their own direct-child `<a>` (excludes hidden items), in the same order `getRootLinks()` returns their DOM nodes. */
+  private renderedRootItems(): UMegaMenuItem[] {
+    return this.model().filter((candidate) => candidate.visible !== false);
   }
 
   private moveFocus(current: UMegaMenuItem, direction: 1 | -1): void {
@@ -233,7 +238,7 @@ export class UMegaMenu extends UBaseComponent {
     const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
     const nextItem = enabled[nextIndex];
     const links = this.getRootLinks();
-    const targetIndex = this.model().indexOf(nextItem);
+    const targetIndex = this.renderedRootItems().indexOf(nextItem);
     links[targetIndex]?.focus();
   }
 
@@ -249,7 +254,7 @@ export class UMegaMenu extends UBaseComponent {
   private closeAndRefocus(item: UMegaMenuItem): void {
     this.openItem = null;
     const links = this.getRootLinks();
-    const targetIndex = this.model().indexOf(item);
+    const targetIndex = this.renderedRootItems().indexOf(item);
     setTimeout(() => links[targetIndex]?.focus());
   }
 }

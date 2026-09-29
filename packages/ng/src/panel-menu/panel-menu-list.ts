@@ -219,7 +219,7 @@ export class UPanelMenuList extends UBaseComponent {
   private resolveOwnItem(target: EventTarget | null): UMenuItem | null {
     const links = this.getItemLinks();
     const index = links.indexOf(target as HTMLAnchorElement);
-    return index === -1 ? null : (this.items[index] ?? null);
+    return index === -1 ? null : (this.renderedItems()[index] ?? null);
   }
 
   /** Direct-child header links for this level only (excludes nested levels' own headers). */
@@ -230,6 +230,11 @@ export class UPanelMenuList extends UBaseComponent {
       : [];
   }
 
+  /** Items that actually render their own direct-child header `<a>` (excludes hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+  private renderedItems(): UMenuItem[] {
+    return this.items.filter((candidate) => candidate.visible !== false);
+  }
+
   private moveFocus(current: UMenuItem, direction: 1 | -1): void {
     const enabled = this.items.filter((candidate) => candidate.visible !== false && !candidate.disabled);
     if (enabled.length === 0) return;
@@ -238,7 +243,7 @@ export class UPanelMenuList extends UBaseComponent {
     const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
     const nextItem = enabled[nextIndex];
     const links = this.getItemLinks();
-    const targetIndex = this.items.indexOf(nextItem);
+    const targetIndex = this.renderedItems().indexOf(nextItem);
     links[targetIndex]?.focus();
   }
 }

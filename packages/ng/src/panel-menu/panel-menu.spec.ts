@@ -227,5 +227,47 @@ describe("UPanelMenu", () => {
       const rootItem = fixture.nativeElement.querySelector('[role="tree"] > [role="treeitem"]');
       expect(rootItem.getAttribute("data-u-expanded")).toBe("true");
     });
+
+    describe("index mapping with a hidden item before the target (GAP-054 fix-loop)", () => {
+      it("toggles expand/collapse on Enter for a group item positioned after a hidden item", () => {
+        const model: UMenuItem[] = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "Files", items: [{ label: "Doc" }] },
+        ];
+        const fixture = setup(model);
+        // "Files" is rendered link index 1 (Hidden renders no <li>/<a>), but model index 2.
+        const links = fixture.nativeElement.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+        const filesLink = links[1];
+        filesLink.focus();
+        keydown(filesLink, "Enter");
+        fixture.detectChanges();
+
+        const filesItem = filesLink.closest('[role="treeitem"]');
+        expect(filesItem.getAttribute("data-u-expanded")).toBe("true");
+      });
+
+      it("ArrowDown from an item after a hidden item does not get stuck", () => {
+        const model: UMenuItem[] = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "B" },
+          { label: "C" },
+        ];
+        const fixture = setup(model);
+        const links = fixture.nativeElement.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+        // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
+        const [a, b, c] = links;
+        b.focus();
+        keydown(b, "ArrowDown");
+        expect(document.activeElement).toBe(c);
+
+        keydown(c, "ArrowUp");
+        expect(document.activeElement).toBe(b);
+
+        keydown(b, "ArrowUp");
+        expect(document.activeElement).toBe(a);
+      });
+    });
   });
 });
