@@ -70,4 +70,79 @@ describe("UDock", () => {
     const fixture = setup(model);
     expect(fixture.nativeElement.querySelectorAll('[role="menuitem"]').length).toBe(1);
   });
+
+  describe("keyboard navigation (Spec §5.4, GAP-055)", () => {
+    it("ArrowRight/ArrowLeft move focus among dock items", () => {
+      const fixture = TestBed.createComponent(UDock);
+      fixture.componentRef.setInput("model", [{ label: "Finder" }, { label: "Mail" }]);
+      fixture.detectChanges();
+      const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+      items[0].focus();
+      items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+      expect(document.activeElement).toBe(items[1]);
+    });
+
+    it("ArrowLeft wraps from the first item to the last", () => {
+      const fixture = TestBed.createComponent(UDock);
+      fixture.componentRef.setInput("model", [{ label: "Finder" }, { label: "Mail" }]);
+      fixture.detectChanges();
+      const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+      items[0].focus();
+      items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft", bubbles: true }));
+      expect(document.activeElement).toBe(items[1]);
+    });
+
+    it("Home/End jump to the first/last item", () => {
+      const fixture = TestBed.createComponent(UDock);
+      fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }, { label: "C" }]);
+      fixture.detectChanges();
+      const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+      items[1].focus();
+      items[1].dispatchEvent(new KeyboardEvent("keydown", { code: "End", bubbles: true }));
+      expect(document.activeElement).toBe(items[2]);
+    });
+
+    it("uses ArrowUp/ArrowDown instead when position is left or right", () => {
+      const fixture = TestBed.createComponent(UDock);
+      fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }]);
+      fixture.componentRef.setInput("position", "left");
+      fixture.detectChanges();
+      const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+      items[0].focus();
+      items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true }));
+      expect(document.activeElement).toBe(items[1]);
+    });
+
+    it("ArrowRight/ArrowLeft do nothing when position is left or right", () => {
+      const fixture = TestBed.createComponent(UDock);
+      fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }]);
+      fixture.componentRef.setInput("position", "right");
+      fixture.detectChanges();
+      const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+      items[0].focus();
+      items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+      expect(document.activeElement).toBe(items[0]);
+    });
+
+    it("skips disabled items when moving focus", () => {
+      const fixture = TestBed.createComponent(UDock);
+      fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }]);
+      fixture.detectChanges();
+      const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+      items[0].focus();
+      items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+      expect(document.activeElement).toBe(items[2]);
+    });
+
+    it("resolves the correct target when a hidden item precedes it (GAP-054 lesson applied proactively)", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+      const fixture = setup(model);
+      const items = fixture.nativeElement.querySelectorAll('[role="menuitem"]');
+      // Rendered items are [A, B, C] (Hidden renders no <a>).
+      expect(items.length).toBe(3);
+      items[1].focus(); // "B", model index 2.
+      items[1].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+      expect(document.activeElement).toBe(items[2]); // "C", not stuck or misrouted.
+    });
+  });
 });
