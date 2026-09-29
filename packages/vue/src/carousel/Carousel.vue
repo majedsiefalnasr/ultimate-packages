@@ -1,6 +1,6 @@
 <template>
   <div :class="cx('root', { vertical: isVertical })" role="region">
-    <div :class="cx('content')">
+    <div :class="cx('content')" data-u-carousel-content :aria-live="autoplayInterval > 0 ? 'polite' : 'off'">
       <div :class="cx('contentInner')">
         <button
           v-if="showNavigators"
