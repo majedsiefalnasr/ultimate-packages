@@ -9,21 +9,36 @@ import { RouterModule } from "@angular/router";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { menubarStyleModule } from "./menubar-style";
 
+/** Selector for a level's own direct-child item trigger links (excludes nested submenu items). */
+const ITEM_LINK_SELECTOR = ":scope > li > .u-menubar-item-content > a";
+
 /**
  * Recursive submenu renderer for `UMenubar`, adapted from real PrimeNG's
  * `MenubarSub` (`.vendor-extracted/ng/menubar/menubar.ts` lines 245-449) —
  * same recursive-self-reference shape (a `p-menubarSub` renders a nested
  * `p-menubarSub` for each item with `items`), scoped down to this task's
  * smaller surface (no template projection, no ARIA `aria-orientation`
- * toggle by level, no keyboard roving-focus machinery — click/hover-only
- * open/close, matching `UMenu`'s own established reduction pattern).
+ * toggle by level — matching `UMenu`'s own established reduction pattern).
+ *
+ * Carries real ARIA roles (`menubar`/`menu`/`menuitem`), matching the same
+ * shape already established by this component's own siblings `UTieredMenu`
+ * and `UMegaMenu` (GAP-054, Spec §5.3) — required for the roving-focus
+ * keyboard navigation below to be meaningfully testable/correct at all.
+ * ArrowRight/ArrowLeft move focus horizontally among the root level's own
+ * items; ArrowDown/ArrowUp move focus vertically within a submenu level
+ * (real PrimeNG's own axis-per-level convention). Enter/Space on an item
+ * with children opens its submenu and moves focus to its first item.
+ * Escape closes only the innermost open submenu and returns focus to that
+ * submenu's own trigger. Disabled items are always skipped in roving focus
+ * and excluded from the DOM tab order (`[attr.tabindex]="item.disabled ?
+ * -1 : 0"`), the same pattern `UPanelMenu` already established.
  */
 @Component({
   standalone: true,
   selector: "u-menubar-sub",
   imports: [RouterModule, UMenubarSub],
   template: `
-    <ul [class]="root ? cx('rootList') : cx('submenu')">
+    <ul [class]="root ? cx('rootList') : cx('submenu')" [attr.role]="root ? 'menubar' : 'menu'">
       @for (item of items; track $index) {
         @if (item.separator) {
           <li [class]="cx('separator')" role="separator"></li>
@@ -36,6 +51,7 @@ import { menubarStyleModule } from "./menubar-style";
           >
             <div [class]="cx('itemContent')">
               <a
+                role="menuitem"
                 [attr.href]="item.routerLink ? null : (item.url ?? '#')"
                 [routerLink]="item.disabled ? null : (item.routerLink ?? null)"
                 [class]="cx('itemLink')"
@@ -44,6 +60,7 @@ import { menubarStyleModule } from "./menubar-style";
                 [attr.aria-disabled]="item.disabled || null"
                 [attr.tabindex]="item.disabled ? -1 : 0"
                 (click)="onItemClick($event, item)"
+                (keydown)="onKeydown($event, item)"
               >
                 @if (item.icon) {
                   <span [class]="item.icon + ' ' + cx('itemIcon')"></span>
@@ -115,5 +132,81 @@ export class UMenubarSub extends UBaseComponent {
     }
     item.command?.({ originalEvent: event, item });
     this.itemSelect.emit({ originalEvent: event, item });
+  }
+
+  /**
+   * Roving-focus keyboard handling for this level's own item list. Root
+   * level moves horizontally (ArrowRight/ArrowLeft); nested submenu levels
+   * move vertically (ArrowDown/ArrowUp) — matching real PrimeNG's own
+   * axis-per-level convention. Enter/Space on an item with children opens
+   * its submenu and moves focus into it. Escape closes only this level's
+   * own open submenu (the innermost one, since the keydown originates from
+   * whichever level currently holds focus) and returns focus to that
+   * submenu's own trigger, then stops propagation so an ancestor level does
+   * not also try to close itself for the same keypress.
+   */
+  protected onKeydown(event: KeyboardEvent, item: UMenuItem): void {
+    const forwardKey = this.root ? "ArrowRight" : "ArrowDown";
+    const backwardKey = this.root ? "ArrowLeft" : "ArrowUp";
+
+    switch (event.code) {
+      case forwardKey:
+        event.preventDefault();
+        this.moveFocus(item, 1);
+        break;
+      case backwardKey:
+        event.preventDefault();
+        this.moveFocus(item, -1);
+        break;
+      case "Enter":
+      case "Space":
+        if (this.hasItems(item) && !item.disabled) {
+          event.preventDefault();
+          this.openItem = item;
+          this.focusFirstSubmenuItem();
+        }
+        break;
+      case "Escape":
+        if (this.openItem) {
+          event.preventDefault();
+          event.stopPropagation();
+          this.closeAndRefocus(this.openItem);
+        }
+        break;
+    }
+  }
+
+  /** Direct-child item trigger links for this level only (excludes nested submenus). */
+  private getItemLinks(): HTMLAnchorElement[] {
+    const ul = (this.el.nativeElement as HTMLElement).querySelector("ul");
+    return ul ? Array.from(ul.querySelectorAll<HTMLAnchorElement>(ITEM_LINK_SELECTOR)) : [];
+  }
+
+  private moveFocus(current: UMenuItem, direction: 1 | -1): void {
+    const enabled = this.items.filter((candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled);
+    if (enabled.length === 0) return;
+    const currentIndex = enabled.indexOf(current);
+    const startIndex = currentIndex === -1 ? 0 : currentIndex;
+    const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
+    const nextItem = enabled[nextIndex];
+    const links = this.getItemLinks();
+    const targetIndex = this.items.indexOf(nextItem);
+    links[targetIndex]?.focus();
+  }
+
+  private focusFirstSubmenuItem(): void {
+    setTimeout(() => {
+      const ul = (this.el.nativeElement as HTMLElement).querySelector("ul");
+      const openLi = ul?.querySelector(':scope > li[data-u-open="true"]');
+      const firstLink = openLi?.querySelector<HTMLAnchorElement>(":scope > ul > li > .u-menubar-item-content > a");
+      firstLink?.focus();
+    });
+  }
+
+  private closeAndRefocus(item: UMenuItem): void {
+    this.openItem = null;
+    const links = this.getItemLinks();
+    const targetIndex = this.items.indexOf(item);
+    setTimeout(() => links[targetIndex]?.focus());
   }
 }

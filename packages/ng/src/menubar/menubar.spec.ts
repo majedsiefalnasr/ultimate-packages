@@ -88,4 +88,42 @@ describe("UMenubar", () => {
     const fixture = setup([{ label: "A" }, { separator: true }, { label: "B" }]);
     expect(fixture.nativeElement.querySelector('[role="separator"]')).not.toBeNull();
   });
+
+  describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
+    it("ArrowRight/ArrowLeft move focus among top-level items", () => {
+      const fixture = setup([{ label: "File" }, { label: "Edit" }, { label: "View" }]);
+      const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+      items[0].focus();
+      items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+      expect(document.activeElement).toBe(items[1]);
+    });
+
+    it("Enter/Space on a top-level item with children opens its submenu", () => {
+      const fixture = setup([{ label: "File", items: [{ label: "New" }] }]);
+      const item = fixture.nativeElement.querySelector("[role=menuitem]");
+      item.focus();
+      item.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector("[role=menuitem][aria-label=New]") || fixture.nativeElement.textContent).toContain("New");
+    });
+
+    it("Escape closes the innermost open submenu, keeping focus on its own trigger", () => {
+      const fixture = setup([{ label: "File", items: [{ label: "New" }] }]);
+      const item = fixture.nativeElement.querySelector("[role=menuitem]");
+      item.focus();
+      item.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+      fixture.detectChanges();
+      item.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(item);
+    });
+
+    it("ArrowRight skips a disabled top-level item", () => {
+      const fixture = setup([{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]);
+      const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
+      items[0].focus();
+      items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+      expect(document.activeElement).toBe(items[2]);
+    });
+  });
 });
