@@ -3,14 +3,36 @@ import { RouterModule } from "@angular/router";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { tieredMenuStyleModule } from "./tiered-menu-style";
 
+/** Selector for a level's own direct-child item trigger links (excludes nested submenu items). */
+const ITEM_LINK_SELECTOR = ":scope > li > .u-tieredmenu-item-content > a";
+
 /**
  * Recursive submenu renderer for `UTieredMenu`, adapted from real PrimeNG's
  * `TieredMenuSub` (`.vendor-extracted/ng/tieredmenu/tieredmenu.ts` lines
  * 48-490) — same recursive-self-reference shape (a `p-tieredMenuSub`
  * renders a nested `p-tieredMenuSub` for each item with `items`), scoped
- * down to this task's smaller surface (click/hover-driven open, no
- * keyboard roving-focus/search-by-typing machinery, matching `UMenu`'s own
- * established reduction pattern).
+ * down to this task's smaller surface (matching `UMenu`'s own established
+ * reduction pattern).
+ *
+ * Keyboard navigation (GAP-054, Spec §5.3) uses a single ArrowDown/ArrowUp
+ * axis to move between siblings at *every* level — root and submenu alike
+ * — matching real PrimeNG's own `TieredMenuSub` convention
+ * (`onArrowDownKey`/`onArrowUpKey` used unconditionally regardless of
+ * level; confirmed at `tieredmenu.ts:935-993` in the vendored source).
+ * This differs deliberately from `UMenubarSub`'s own root-horizontal
+ * (ArrowRight/ArrowLeft) / submenu-vertical (ArrowDown/ArrowUp) split:
+ * TieredMenu's root list is itself a vertical menu (`role="menu"`, not
+ * `menubar`), so real Prime never switches axis by level for it.
+ * ArrowRight (or Enter/Space) on a group item opens its submenu and moves
+ * focus to its first item. Escape closes only the innermost open submenu
+ * and returns focus to that submenu's own trigger.
+ * Disabled items are always skipped in roving focus and excluded from the
+ * DOM tab order (`[attr.tabindex]="item.disabled ? -1 : 0"`), the same
+ * pattern `UPanelMenu` already established. The item's own focusable
+ * target is its `<a>` (not the `<li>`, which carries `role="menuitem"`
+ * for this component's own pre-existing ARIA shape) — the `<a>` needs a
+ * real tabindex for roving focus to move a native, keyboard-reachable
+ * element.
  */
 @Component({
   standalone: true,
@@ -37,8 +59,9 @@ import { tieredMenuStyleModule } from "./tiered-menu-style";
                 [attr.aria-haspopup]="hasItems(item) ? 'menu' : null"
                 [attr.aria-expanded]="hasItems(item) ? isOpen(item) : null"
                 [attr.aria-disabled]="item.disabled || null"
-                [attr.tabindex]="-1"
+                [attr.tabindex]="item.disabled ? -1 : 0"
                 (click)="onItemClick($event, item)"
+                (keydown)="onKeydown($event, item)"
               >
                 @if (item.icon) {
                   <span [class]="item.icon + ' ' + cx('itemIcon')"></span>
@@ -110,5 +133,79 @@ export class UTieredMenuSub extends UBaseComponent {
     }
     item.command?.({ originalEvent: event, item });
     this.itemSelect.emit({ originalEvent: event, item });
+  }
+
+  /**
+   * Roving-focus keyboard handling for this level's own item list.
+   * ArrowDown/ArrowUp move focus between this level's own non-disabled
+   * siblings (single axis at every level — see class doc comment).
+   * ArrowRight (or Enter/Space) on a group item opens its submenu and
+   * moves focus into it. Escape closes only this level's own open submenu
+   * (the innermost one, since the keydown originates from whichever level
+   * currently holds focus) and returns focus to that submenu's own
+   * trigger, then stops propagation so an ancestor level does not also try
+   * to close itself for the same keypress.
+   */
+  protected onKeydown(event: KeyboardEvent, item: UMenuItem): void {
+    switch (event.code) {
+      case "ArrowDown":
+        event.preventDefault();
+        this.moveFocus(item, 1);
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        this.moveFocus(item, -1);
+        break;
+      case "ArrowRight":
+      case "Enter":
+      case "Space":
+        if (this.hasItems(item) && !item.disabled) {
+          event.preventDefault();
+          this.openItem = item;
+          this.focusFirstSubmenuItem();
+        }
+        break;
+      case "Escape":
+        if (this.openItem) {
+          event.preventDefault();
+          event.stopPropagation();
+          this.closeAndRefocus(this.openItem);
+        }
+        break;
+    }
+  }
+
+  /** Direct-child item trigger links for this level only (excludes nested submenus). */
+  private getItemLinks(): HTMLAnchorElement[] {
+    const ul = (this.el.nativeElement as HTMLElement).querySelector("ul");
+    return ul ? Array.from(ul.querySelectorAll<HTMLAnchorElement>(ITEM_LINK_SELECTOR)) : [];
+  }
+
+  private moveFocus(current: UMenuItem, direction: 1 | -1): void {
+    const enabled = this.items.filter((candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled);
+    if (enabled.length === 0) return;
+    const currentIndex = enabled.indexOf(current);
+    const startIndex = currentIndex === -1 ? 0 : currentIndex;
+    const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
+    const nextItem = enabled[nextIndex];
+    const links = this.getItemLinks();
+    const targetIndex = this.items.indexOf(nextItem);
+    links[targetIndex]?.focus();
+  }
+
+  private focusFirstSubmenuItem(): void {
+    setTimeout(() => {
+      const ul = (this.el.nativeElement as HTMLElement).querySelector("ul");
+      const openLi = ul?.querySelector(':scope > li[data-u-open="true"]');
+      const firstLink = openLi?.querySelector<HTMLAnchorElement>(":scope > ul > li > .u-tieredmenu-item-content > a");
+      firstLink?.focus();
+    });
+  }
+
+  private closeAndRefocus(item: UMenuItem): void {
+    this.openItem = null;
+    const links = this.getItemLinks();
+    const targetIndex = this.items.indexOf(item);
+    setTimeout(() => links[targetIndex]?.focus());
   }
 }
