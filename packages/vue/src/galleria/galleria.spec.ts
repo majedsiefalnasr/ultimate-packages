@@ -107,3 +107,77 @@ describe("UGalleria", () => {
     wrapper.unmount();
   });
 });
+
+describe("keyboard navigation, Escape, role=region (Spec §5.1, GAP-050)", () => {
+  it("has role=region on the root element", () => {
+    const wrapper = mountGalleria();
+    expect(wrapper.find("[role=region]").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("ArrowRight advances to the next item", async () => {
+    const wrapper = mountGalleria();
+    await wrapper.find("[data-u-galleria-content]").trigger("keydown", { code: "ArrowRight" });
+    expect(wrapper.find(".active-item").attributes("src")).toBe("b.png");
+    wrapper.unmount();
+  });
+
+  it("ArrowLeft goes to the previous item", async () => {
+    const wrapper = mountGalleria();
+    await wrapper.find("[data-u-galleria-content]").trigger("keydown", { code: "ArrowRight" });
+    await wrapper.find("[data-u-galleria-content]").trigger("keydown", { code: "ArrowLeft" });
+    expect(wrapper.find(".active-item").attributes("src")).toBe("a.png");
+    wrapper.unmount();
+  });
+
+  it("Home jumps to the first item, End jumps to the last", async () => {
+    const wrapper = mountGalleria();
+    const content = wrapper.find("[data-u-galleria-content]");
+    await content.trigger("keydown", { code: "End" });
+    expect(wrapper.find(".active-item").attributes("src")).toBe("c.png");
+    await content.trigger("keydown", { code: "Home" });
+    expect(wrapper.find(".active-item").attributes("src")).toBe("a.png");
+    wrapper.unmount();
+  });
+
+  it("Escape closes fullscreen mode when active", async () => {
+    const wrapper = mountGalleria({ fullScreen: true, fullScreenActive: true });
+    await wrapper.vm.$nextTick();
+    await flushMacrotask();
+    expect(document.querySelector(".u-galleria-mask")).toBeTruthy();
+
+    const content = document.querySelector("[data-u-galleria-content]") as HTMLElement;
+    content.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
+    await wrapper.vm.$nextTick();
+    await flushMacrotask();
+    expect(document.querySelector(".u-galleria-mask")).toBeFalsy();
+    expect(wrapper.emitted("update:fullScreenActive")).toEqual([[false]]);
+    wrapper.unmount();
+  });
+
+  it("Escape does nothing when fullscreen mode is not active", async () => {
+    const wrapper = mountGalleria();
+    const content = wrapper.find("[data-u-galleria-content]");
+    await expect(content.trigger("keydown", { code: "Escape" })).resolves.not.toThrow();
+    expect(wrapper.emitted("update:fullScreenActive")).toBeUndefined();
+    wrapper.unmount();
+  });
+
+  it("does not navigate when ArrowLeft/ArrowRight are pressed while a focused input inside a custom item template has focus", async () => {
+    const wrapper = mount(UGalleria, {
+      props: { value: items },
+      slots: {
+        item: (slotProps: { item: string }) =>
+          h("input", { class: "item-input", value: slotProps.item }),
+      },
+      attachTo: document.body,
+    });
+    const input = wrapper.find(".item-input").element as HTMLInputElement;
+    input.focus();
+    input.value = "typed";
+    await wrapper.find(".item-input").trigger("keydown", { code: "ArrowRight" });
+    expect(wrapper.emitted("update:activeIndex")).toBeUndefined();
+    expect(input.value).toBe("typed");
+    wrapper.unmount();
+  });
+});
