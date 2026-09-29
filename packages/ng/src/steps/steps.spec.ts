@@ -76,3 +76,51 @@ describe("USteps", () => {
     expect(labels).toEqual(["One", "Three"]);
   });
 });
+
+describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
+  it("ArrowRight moves focus to the next enabled step", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }, { label: "C" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
+    const links = fixture.nativeElement.querySelectorAll("a");
+    links[0].focus();
+    links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+    expect(document.activeElement).toBe(links[1]);
+  });
+
+  it("ArrowLeft moves focus to the previous enabled step", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
+    const links = fixture.nativeElement.querySelectorAll("a");
+    links[1].focus();
+    links[1].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft", bubbles: true }));
+    expect(document.activeElement).toBe(links[0]);
+  });
+
+  it("Home moves focus to the first enabled step, End to the last", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B" }, { label: "C" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
+    const links = fixture.nativeElement.querySelectorAll("a");
+    links[1].focus();
+    links[1].dispatchEvent(new KeyboardEvent("keydown", { code: "End", bubbles: true }));
+    expect(document.activeElement).toBe(links[2]);
+    links[2].dispatchEvent(new KeyboardEvent("keydown", { code: "Home", bubbles: true }));
+    expect(document.activeElement).toBe(links[0]);
+  });
+
+  it("ArrowRight skips a disabled step", () => {
+    const fixture = TestBed.createComponent(USteps);
+    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
+    const links = fixture.nativeElement.querySelectorAll("a");
+    links[0].focus();
+    links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
+    expect(document.activeElement).toBe(links[2]);
+  });
+});
