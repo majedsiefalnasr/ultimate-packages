@@ -199,5 +199,58 @@ describe("UTieredMenu", () => {
 
       wrapper.unmount();
     });
+
+    describe("index mapping with a separator/hidden item before the target (GAP-054 fix-loop)", () => {
+      const modelWithSeparator = [
+        { label: "New" },
+        { separator: true },
+        { label: "Open", items: [{ label: "Recent" }] },
+        { label: "Exit" },
+      ];
+
+      it("opens the submenu on Enter for a group item positioned after a separator", async () => {
+        const wrapper = mount(UTieredMenu, { props: { model: modelWithSeparator }, attachTo: document.body });
+        // "Open" is rendered link index 1 (separator has no <a>), but model index 2.
+        const openLink = wrapper.findAll(".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a")[1];
+        (openLink.element as HTMLElement).focus();
+        await openLink.trigger("keydown", { code: "Enter" });
+
+        const openLi = openLink.element.closest("li") as HTMLElement;
+        expect(openLi.getAttribute("data-u-open")).toBe("true");
+
+        wrapper.unmount();
+      });
+
+      it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", async () => {
+        const wrapper = mount(UTieredMenu, { props: { model: modelWithSeparator }, attachTo: document.body });
+        const openLink = wrapper.findAll(".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a")[1];
+        (openLink.element as HTMLElement).focus();
+        await openLink.trigger("keydown", { code: "Enter" });
+
+        const openLi = wrapper
+          .findAll(".u-tieredmenu-root-list > li")
+          .find((li) => li.element === openLink.element.closest("li"))!;
+        const recentLink = openLi.find(".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a");
+        expect(document.activeElement).toBe(recentLink.element);
+
+        await recentLink.trigger("keydown", { code: "Escape" });
+
+        expect(document.activeElement).toBe(openLink.element);
+
+        wrapper.unmount();
+      });
+
+      it("ArrowUp from an item after a hidden item does not get stuck", async () => {
+        const model = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+        const wrapper = mount(UTieredMenu, { props: { model }, attachTo: document.body });
+        const links = wrapper.findAll(".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a");
+        const [a, b] = links;
+        (b.element as HTMLElement).focus();
+        await b.trigger("keydown", { code: "ArrowUp" });
+        expect(document.activeElement).toBe(a.element);
+
+        wrapper.unmount();
+      });
+    });
   });
 });

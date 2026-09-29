@@ -192,5 +192,41 @@ describe("UPanelMenu", () => {
       expect(wrapper.find('[role="treeitem"]').attributes("data-u-expanded")).toBe("true");
       wrapper.unmount();
     });
+
+    describe("index mapping with a hidden item before the target (GAP-054 fix-loop)", () => {
+      it("toggles expand/collapse on Enter for a group item positioned after a hidden item", async () => {
+        const model = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "Files", items: [{ label: "Doc" }] }];
+        const wrapper = mount(UPanelMenu, { props: { model }, attachTo: document.body });
+        // "Files" is rendered link index 1 (Hidden renders no <li>/<a>), but model index 2.
+        const links = wrapper.findAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+        const filesLink = links[1];
+        (filesLink.element as HTMLElement).focus();
+        await filesLink.trigger("keydown", { code: "Enter" });
+
+        const filesItem = filesLink.element.closest('[role="treeitem"]') as HTMLElement;
+        expect(filesItem.getAttribute("data-u-expanded")).toBe("true");
+
+        wrapper.unmount();
+      });
+
+      it("ArrowDown from an item after a hidden item does not get stuck", async () => {
+        const model = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+        const wrapper = mount(UPanelMenu, { props: { model }, attachTo: document.body });
+        const links = wrapper.findAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+        // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
+        const [a, b, c] = links;
+        (b.element as HTMLElement).focus();
+        await b.trigger("keydown", { code: "ArrowDown" });
+        expect(document.activeElement).toBe(c.element);
+
+        await c.trigger("keydown", { code: "ArrowUp" });
+        expect(document.activeElement).toBe(b.element);
+
+        await b.trigger("keydown", { code: "ArrowUp" });
+        expect(document.activeElement).toBe(a.element);
+
+        wrapper.unmount();
+      });
+    });
   });
 });

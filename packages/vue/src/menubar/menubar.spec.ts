@@ -184,5 +184,77 @@ describe("UMenubar", () => {
 
       wrapper.unmount();
     });
+
+    describe("index mapping with a separator/hidden item before the target (GAP-054 fix-loop)", () => {
+      const modelWithSeparator = [
+        { label: "New" },
+        { separator: true },
+        { label: "Open", items: [{ label: "Recent" }] },
+        { label: "Exit" },
+      ];
+
+      it("opens the submenu on Enter for a group item positioned after a separator", async () => {
+        const wrapper = mount(UMenubar, {
+          props: { model: [{ label: "File", items: modelWithSeparator }] },
+          attachTo: document.body,
+        });
+        const file = rootLink(wrapper, 0);
+        (file.element as HTMLElement).focus();
+        await file.trigger("keydown", { code: "Enter" });
+
+        const fileItem = wrapper.findAll(".u-menubar-root-list > li")[0];
+        // "Open" is rendered link index 1 (separator has no <a>), but model index 2.
+        const openLink = fileItem.findAll(".u-menubar-submenu > li > .u-menubar-item-content > a")[1];
+        (openLink.element as HTMLElement).focus();
+        await openLink.trigger("keydown", { code: "Enter" });
+
+        const openLi = openLink.element.closest("li") as HTMLElement;
+        expect(openLi.getAttribute("data-u-open")).toBe("true");
+
+        wrapper.unmount();
+      });
+
+      it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", async () => {
+        const wrapper = mount(UMenubar, {
+          props: { model: [{ label: "File", items: modelWithSeparator }] },
+          attachTo: document.body,
+        });
+        const file = rootLink(wrapper, 0);
+        (file.element as HTMLElement).focus();
+        await file.trigger("keydown", { code: "Enter" });
+
+        const fileItem = wrapper.findAll(".u-menubar-root-list > li")[0];
+        const openLink = fileItem.findAll(".u-menubar-submenu > li > .u-menubar-item-content > a")[1];
+        (openLink.element as HTMLElement).focus();
+        await openLink.trigger("keydown", { code: "Enter" });
+
+        const openLi = wrapper.findAll(".u-menubar-submenu > li").find((li) => li.element === openLink.element.closest("li"))!;
+        const recentLink = openLi.find(".u-menubar-submenu > li:first-child > .u-menubar-item-content > a");
+        expect(document.activeElement).toBe(recentLink.element);
+
+        await recentLink.trigger("keydown", { code: "Escape" });
+
+        // Must refocus "Open" (its real owning trigger), not "Exit".
+        expect(document.activeElement).toBe(openLink.element);
+
+        wrapper.unmount();
+      });
+
+      it("ArrowLeft from a root item after a hidden item does not get stuck", async () => {
+        const model = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+        const wrapper = mount(UMenubar, { props: { model }, attachTo: document.body });
+        const links = wrapper.findAll(".u-menubar-root-list > li > .u-menubar-item-content > a");
+        // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
+        const [a, b, c] = links;
+        (b.element as HTMLElement).focus();
+        await b.trigger("keydown", { code: "ArrowLeft" });
+        expect(document.activeElement).toBe(a.element);
+
+        await a.trigger("keydown", { code: "ArrowLeft" });
+        expect(document.activeElement).toBe(c.element);
+
+        wrapper.unmount();
+      });
+    });
   });
 });

@@ -179,6 +179,11 @@ export default {
       return ul ? Array.from(ul.querySelectorAll(ITEM_LINK_SELECTOR)) : [];
     },
 
+    /** Items that actually render their own direct-child header `<a>` (excludes hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+    renderedItems() {
+      return this.items.filter((candidate) => this.isVisible(candidate));
+    },
+
     /**
      * Resolves the item this event's target `<a>` belongs to, but only if
      * that `<a>` is a direct-child header link of *this* level's own `<ul>`
@@ -191,7 +196,7 @@ export default {
     resolveOwnItem(target) {
       const links = this.getItemLinks();
       const index = links.indexOf(target);
-      return index === -1 ? null : (this.items[index] ?? null);
+      return index === -1 ? null : (this.renderedItems()[index] ?? null);
     },
 
     moveFocus(current, direction) {
@@ -202,7 +207,7 @@ export default {
       const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
       const nextItem = enabled[nextIndex];
       const links = this.getItemLinks();
-      const targetIndex = this.items.indexOf(nextItem);
+      const targetIndex = this.renderedItems().indexOf(nextItem);
       links[targetIndex]?.focus();
     },
 

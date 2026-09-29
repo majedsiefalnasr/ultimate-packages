@@ -131,6 +131,11 @@ export default {
       return ul ? Array.from(ul.querySelectorAll(ITEM_LINK_SELECTOR)) : [];
     },
 
+    /** Items that actually render their own direct-child `<a>` (excludes separators and hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+    renderedItems() {
+      return this.items.filter((candidate) => !candidate.separator && this.isVisible(candidate));
+    },
+
     /**
      * Resolves the menu item this event's target `<a>` belongs to, but only
      * if that `<a>` is a direct-child item link of *this* level's own `<ul>`
@@ -141,7 +146,7 @@ export default {
     resolveOwnItem(target) {
       const links = this.getItemLinks();
       const index = links.indexOf(target);
-      return index === -1 ? null : (this.items[index] ?? null);
+      return index === -1 ? null : (this.renderedItems()[index] ?? null);
     },
 
     enabledItems() {
@@ -156,7 +161,7 @@ export default {
       const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
       const nextItem = enabled[nextIndex];
       const links = this.getItemLinks();
-      const targetIndex = this.items.indexOf(nextItem);
+      const targetIndex = this.renderedItems().indexOf(nextItem);
       links[targetIndex]?.focus();
     },
 
@@ -172,7 +177,7 @@ export default {
     closeAndRefocus(item) {
       this.openItem = null;
       const links = this.getItemLinks();
-      const targetIndex = this.items.indexOf(item);
+      const targetIndex = this.renderedItems().indexOf(item);
       links[targetIndex]?.focus();
     },
 

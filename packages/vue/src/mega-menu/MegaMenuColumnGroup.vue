@@ -82,6 +82,12 @@ export default {
       return ul ? Array.from(ul.querySelectorAll(ITEM_LINK_SELECTOR)) : [];
     },
 
+    /** Items that actually render their own direct-child `<a>` (excludes hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+    renderedItems() {
+      const items = this.group.items || [];
+      return items.filter((candidate) => this.isVisible(candidate));
+    },
+
     moveFocus(current, direction) {
       const items = this.group.items || [];
       const enabled = items.filter((candidate) => this.isVisible(candidate) && !this.isDisabled(candidate));
@@ -91,18 +97,17 @@ export default {
       const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
       const nextItem = enabled[nextIndex];
       const links = this.getItemLinks();
-      const targetIndex = items.indexOf(nextItem);
+      const targetIndex = this.renderedItems().indexOf(nextItem);
       links[targetIndex]?.focus();
     },
 
     /** ArrowDown/ArrowUp roving focus among this group's own flat leaf items; Escape is intentionally left unhandled so it bubbles to `MegaMenu.vue`'s own root `<ul>`. */
     onKeydown(event) {
-      const items = this.group.items || [];
       const links = this.getItemLinks();
       const index = links.indexOf(event.target);
       if (index === -1) return; // Not one of this group's own item links.
 
-      const current = items[index];
+      const current = this.renderedItems()[index];
       if (!current) return;
 
       switch (event.code) {

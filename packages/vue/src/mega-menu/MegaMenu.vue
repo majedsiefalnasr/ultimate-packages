@@ -159,11 +159,16 @@ export default {
       return ul ? Array.from(ul.querySelectorAll(ROOT_ITEM_LINK_SELECTOR)) : [];
     },
 
+    /** Root items that actually render their own direct-child `<a>` (excludes hidden items), in the same order `getRootLinks()` returns their DOM nodes. */
+    renderedRootItems() {
+      return this.model.filter((candidate) => this.isVisible(candidate));
+    },
+
     /** Resolves the root item this event's target `<a>` belongs to, or `null` if it isn't one of this root list's own direct-child item links. */
     resolveOwnItem(target) {
       const links = this.getRootLinks();
       const index = links.indexOf(target);
-      return index === -1 ? null : (this.model[index] ?? null);
+      return index === -1 ? null : (this.renderedRootItems()[index] ?? null);
     },
 
     enabledRootItems() {
@@ -178,7 +183,7 @@ export default {
       const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
       const nextItem = enabled[nextIndex];
       const links = this.getRootLinks();
-      const targetIndex = this.model.indexOf(nextItem);
+      const targetIndex = this.renderedRootItems().indexOf(nextItem);
       links[targetIndex]?.focus();
     },
 
@@ -194,7 +199,7 @@ export default {
     closeAndRefocus(item) {
       this.openItem = null;
       const links = this.getRootLinks();
-      const targetIndex = this.model.indexOf(item);
+      const targetIndex = this.renderedRootItems().indexOf(item);
       links[targetIndex]?.focus();
     },
 
