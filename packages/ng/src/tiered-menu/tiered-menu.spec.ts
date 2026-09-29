@@ -139,5 +139,80 @@ describe("UTieredMenu", () => {
       links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true }));
       expect(document.activeElement).toBe(links[2]);
     });
+
+    describe("Escape from a nested submenu item (GAP-054 fix-loop)", () => {
+      // 3-level model: File (root) -> Open (depth-1 submenu) -> Recent (depth-2 nested submenu).
+      const nestedModel: UMenuItem[] = [
+        { label: "File", items: [{ label: "Open", items: [{ label: "Recent" }] }] },
+      ];
+
+      // Focus-moving handlers (focusFirstSubmenuItem/closeAndRefocus) defer via a
+      // raw setTimeout, matching this codebase's established convention (see
+      // auto-focus.spec.ts) — a real setTimeout(0) flush is required to observe
+      // the resulting focus change.
+      async function flushFocus() {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      }
+
+      async function openToDepth2(fixture: ReturnType<typeof setup>) {
+        const fileItem = fixture.nativeElement.querySelector('[role="menuitem"]');
+        const fileLink = fileItem.querySelector(".u-tieredmenu-item-content > a") as HTMLElement;
+        fileLink.focus();
+        fileLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+        fixture.detectChanges();
+        await flushFocus();
+        // Focus is now on "Open" (first item of the depth-1 submenu). Open it too.
+        const openLink = document.activeElement as HTMLElement;
+        openLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
+        fixture.detectChanges();
+        await flushFocus();
+        // Focus is now on "Recent" (first item of the depth-2 nested submenu).
+        return { fileLink, openLink, recentLink: document.activeElement as HTMLElement };
+      }
+
+      it("closes the innermost (nested) submenu when Escape is dispatched from a focused nested item", async () => {
+        const fixture = setup(nestedModel);
+        const { openLink, recentLink } = await openToDepth2(fixture);
+        const openLi = openLink.closest("li")!;
+        expect(recentLink).not.toBe(openLink); // sanity: focus actually reached depth 2
+
+        recentLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
+        fixture.detectChanges();
+        await flushFocus();
+
+        expect(openLi.getAttribute("data-u-open")).toBe("false");
+      });
+
+      it("restores focus to the nested submenu's own owning trigger after Escape", async () => {
+        const fixture = setup(nestedModel);
+        const { openLink, recentLink } = await openToDepth2(fixture);
+
+        recentLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
+        fixture.detectChanges();
+        await flushFocus();
+
+        expect(document.activeElement).toBe(openLink);
+      });
+
+      it("closes the next parent level on a second Escape from the refocused trigger", async () => {
+        const fixture = setup(nestedModel);
+        const { fileLink, openLink } = await openToDepth2(fixture);
+        const fileItem = fileLink.closest("li")!;
+
+        openLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
+        fixture.detectChanges();
+        await flushFocus();
+        expect(document.activeElement).toBe(openLink);
+
+        (document.activeElement as HTMLElement).dispatchEvent(
+          new KeyboardEvent("keydown", { code: "Escape", bubbles: true }),
+        );
+        fixture.detectChanges();
+        await flushFocus();
+
+        expect(fileItem.getAttribute("data-u-open")).toBe("false");
+        expect(document.activeElement).toBe(fileLink);
+      });
+    });
   });
 });

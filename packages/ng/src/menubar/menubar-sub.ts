@@ -38,7 +38,11 @@ const ITEM_LINK_SELECTOR = ":scope > li > .u-menubar-item-content > a";
   selector: "u-menubar-sub",
   imports: [RouterModule, UMenubarSub],
   template: `
-    <ul [class]="root ? cx('rootList') : cx('submenu')" [attr.role]="root ? 'menubar' : 'menu'">
+    <ul
+      [class]="root ? cx('rootList') : cx('submenu')"
+      [attr.role]="root ? 'menubar' : 'menu'"
+      (keydown)="onKeydown($event)"
+    >
       @for (item of items; track $index) {
         @if (item.separator) {
           <li [class]="cx('separator')" role="separator"></li>
@@ -60,7 +64,6 @@ const ITEM_LINK_SELECTOR = ":scope > li > .u-menubar-item-content > a";
                 [attr.aria-disabled]="item.disabled || null"
                 [attr.tabindex]="item.disabled ? -1 : 0"
                 (click)="onItemClick($event, item)"
-                (keydown)="onKeydown($event, item)"
               >
                 @if (item.icon) {
                   <span [class]="item.icon + ' ' + cx('itemIcon')"></span>
@@ -135,17 +138,53 @@ export class UMenubarSub extends UBaseComponent {
   }
 
   /**
-   * Roving-focus keyboard handling for this level's own item list. Root
-   * level moves horizontally (ArrowRight/ArrowLeft); nested submenu levels
-   * move vertically (ArrowDown/ArrowUp) — matching real PrimeNG's own
-   * axis-per-level convention. Enter/Space on an item with children opens
-   * its submenu and moves focus into it. Escape closes only this level's
-   * own open submenu (the innermost one, since the keydown originates from
-   * whichever level currently holds focus) and returns focus to that
-   * submenu's own trigger, then stops propagation so an ancestor level does
-   * not also try to close itself for the same keypress.
+   * Delegated roving-focus keyboard handling for this level's own item
+   * list, bound on this level's own `<ul>` rather than on each individual
+   * `<a>`. This is deliberate: a nested `u-menubar-sub` rendering a deeper
+   * level is a DOM *sibling* of its parent item's own `<a>` (both live
+   * inside the same `<li>`), so a `keydown` fired on a deeper level's own
+   * `<a>` never bubbles through an ancestor level's `<a>` — only through
+   * that ancestor's own `<ul>`, which genuinely is a DOM ancestor of every
+   * level nested within it. Binding here instead of on the `<a>` is what
+   * makes an ancestor level's own Escape handling reachable at all once
+   * focus has moved into a nested submenu.
+   *
+   * Because this listener is now shared by every item `<a>` at this level
+   * (delegation) and also receives bubbled events from every deeper-nested
+   * level, movement/activation keys (Arrow keys, Enter, Space) first resolve
+   * which item (if any) at *this* level the event's real target belongs
+   * to, and no-op for anything that isn't a real direct-child `<a>` of this
+   * level's own `<ul>` — letting that event keep bubbling toward whichever
+   * ancestor level's own listener does own it as one of its own items.
+   *
+   * Escape is handled differently on purpose: it doesn't act on "whichever
+   * item the target belongs to" (a nested-level item, e.g. Recent, has no
+   * submenu of its own to close), it acts on *this level's own* `openItem`
+   * — the item at this level whose submenu currently contains the focused
+   * element. Since a keydown reaches this level's own `<ul>` (via bubbling)
+   * before any shallower ancestor level's own `<ul>`, the first level in
+   * the bubble path with a non-null `openItem` is always the correct,
+   * innermost one to close; calling `stopPropagation()` there prevents any
+   * shallower ancestor level from also reacting to the same keypress.
+   *
+   * Root level moves horizontally (ArrowRight/ArrowLeft); nested submenu
+   * levels move vertically (ArrowDown/ArrowUp) — matching real PrimeNG's
+   * own axis-per-level convention. Enter/Space on an item with children
+   * opens its submenu and moves focus into it.
    */
-  protected onKeydown(event: KeyboardEvent, item: UMenuItem): void {
+  protected onKeydown(event: KeyboardEvent): void {
+    if (event.code === "Escape") {
+      if (this.openItem) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.closeAndRefocus(this.openItem);
+      }
+      return;
+    }
+
+    const item = this.resolveOwnItem(event.target);
+    if (!item) return; // Not this level's own item — let it keep bubbling.
+
     const forwardKey = this.root ? "ArrowRight" : "ArrowDown";
     const backwardKey = this.root ? "ArrowLeft" : "ArrowUp";
 
@@ -166,14 +205,20 @@ export class UMenubarSub extends UBaseComponent {
           this.focusFirstSubmenuItem();
         }
         break;
-      case "Escape":
-        if (this.openItem) {
-          event.preventDefault();
-          event.stopPropagation();
-          this.closeAndRefocus(this.openItem);
-        }
-        break;
     }
+  }
+
+  /**
+   * Resolves the `UMenuItem` this event's target `<a>` belongs to, but only
+   * if that `<a>` is a direct-child item link of *this* level's own `<ul>`
+   * (not a descendant belonging to a deeper-nested level). Returns `null`
+   * for any event this level does not own, so the caller can leave it
+   * bubbling toward the ancestor level that does.
+   */
+  private resolveOwnItem(target: EventTarget | null): UMenuItem | null {
+    const links = this.getItemLinks();
+    const index = links.indexOf(target as HTMLAnchorElement);
+    return index === -1 ? null : (this.items[index] ?? null);
   }
 
   /** Direct-child item trigger links for this level only (excludes nested submenus). */
@@ -198,7 +243,13 @@ export class UMenubarSub extends UBaseComponent {
     setTimeout(() => {
       const ul = (this.el.nativeElement as HTMLElement).querySelector("ul");
       const openLi = ul?.querySelector(':scope > li[data-u-open="true"]');
-      const firstLink = openLi?.querySelector<HTMLAnchorElement>(":scope > ul > li > .u-menubar-item-content > a");
+      // The nested level's own <ul> is rendered inside a <u-menubar-sub>
+      // child of openLi (not a direct <ul> child of openLi), since a
+      // recursive sub-component — not a plain nested <ul> — is what
+      // actually renders the next level down.
+      const firstLink = openLi?.querySelector<HTMLAnchorElement>(
+        ":scope > u-menubar-sub > ul > li > .u-menubar-item-content > a",
+      );
       firstLink?.focus();
     });
   }
