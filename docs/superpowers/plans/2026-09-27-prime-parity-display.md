@@ -17,7 +17,7 @@
 
 ## Global Constraints
 
-- **Galleria's fullscreen-overlay redesign itself is unchanged.** Task 1-3 add a keydown handler and an attribute; they do not alter `fullScreenActive`/`onEnterFullScreen`/`exitFullScreen`'s own existing state machine.
+- **Galleria's fullscreen-overlay redesign itself is unchanged.** Task 1-3 add a keydown handler and an attribute; they do not alter `fullScreenActive`/`openFullScreen`/`closeFullScreen`'s own existing state machine. (Doc correction, post-implementation: this Plan originally named these methods `onEnterFullScreen`/`exitFullScreen`, which never existed in the codebase — the real methods are `openFullScreen`/`closeFullScreen`. Task 1's implementer correctly identified and used the real names; this text is now corrected to match. See the ledger for the full record of this finding.)
 - **Carousel's autoplay mechanism itself is unchanged.** Task 4-6 add one conditional attribute only.
 - **`role="region"` is additive** — Galleria's existing `role="dialog"` on the fullscreen mask (confirmed present, `galleria.ts:66`) is a different element (the mask) from the root element the new `role="region"` applies to; the two do not conflict.
 
@@ -82,7 +82,7 @@ describe("keyboard navigation, Escape, role=region (Spec §5.1, GAP-050)", () =>
     fixture.componentRef.setInput("value", [{ src: "a.png" }]);
     fixture.componentRef.setInput("fullScreen", true);
     fixture.detectChanges();
-    fixture.componentInstance.onEnterFullScreen();
+    fixture.componentInstance.openFullScreen();
     fixture.detectChanges();
     expect(fixture.componentInstance.fullScreenActive()).toBe(true);
     fixture.nativeElement.querySelector("[data-u-galleria-content]").dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
@@ -107,7 +107,7 @@ In `packages/ng/src/galleria/galleria.ts`:
 
 1. Add `role="region"` to the component's root element (the outer `<div>` wrapping both the non-fullscreen and fullscreen branches — confirmed at the top of the existing template, around line 60).
 2. Add a `data-u-galleria-content` attribute to the main content viewport element (whichever element already hosts the prev/next navigation, so the test can target it) if not already uniquely selectable.
-3. Add a `(keydown)="onContentKeyDown($event)"` handler on that same element, implementing: `ArrowLeft` → `prev()`; `ArrowRight` → `next()`; `Home` → `goTo(0)`; `End` → `goTo(this.value().length - 1)`; `Enter`/`Space` when focus is on a thumbnail button → activate that thumbnail (reuse the existing thumbnail-click handler); `Escape` → if `fullScreenActive()`, call `exitFullScreen()`, else no-op. Call `event.preventDefault()` for every handled key.
+3. Add a `(keydown)="onContentKeyDown($event)"` handler on that same element, implementing: `ArrowLeft` → `navBackward()`; `ArrowRight` → `navForward()`; `Home` → `goTo(0)`; `End` → `goTo(this.value().length - 1)`; `Enter`/`Space` when focus is on a thumbnail button → activate that thumbnail (reuse the existing thumbnail-click handler); `Escape` → if `fullScreenActive()`, call `closeFullScreen()`, else no-op. Call `event.preventDefault()` for every handled key. (Doc correction, post-implementation: originally named `prev()`/`next()`/`exitFullScreen()`, which never existed — real methods are `navBackward()`/`navForward()`/`closeFullScreen()`.)
 
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
@@ -118,7 +118,7 @@ In `packages/ng/src/galleria/galleria.ts`:
 **Files:** `packages/react/src/galleria/galleria.tsx`, `galleria.spec.tsx`.
 
 - [ ] **Step 1:** Equivalent 6 tests to Task 1, React idioms.
-- [ ] **Step 2: Implement** — same `role="region"` + keydown handler as Task 1, ported to React's own existing `next()`/`prev()`/fullscreen-state mechanism.
+- [ ] **Step 2: Implement** — same `role="region"` + keydown handler as Task 1, ported to React's own existing `navForward()`/`navBackward()`/fullscreen-state mechanism.
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
 ---
@@ -190,7 +190,7 @@ Add `[attr.aria-live]="autoplayInterval() > 0 ? 'polite' : 'off'"` (always prese
 
 - All 6 tasks pass, all 3 frameworks.
 - `pnpm test`, `pnpm run ceiling:validate` pass after each task.
-- Galleria's fullscreen-overlay state machine and Carousel's autoplay mechanism are otherwise byte-identical to their pre-plan behavior (verify via `git diff` showing only additive lines).
+- Galleria's fullscreen-overlay state machine (`openFullScreen`/`closeFullScreen`/`navForward`/`navBackward`) and Carousel's autoplay mechanism (`startAutoplay`/`stopAutoplay`/timer logic) are otherwise unchanged in substance from their pre-plan behavior — verified via `git diff` review, not a literal all-lines-additive requirement (the diff also includes template-attribute additions on existing tags, Angular's disclosed `protected`→public visibility widening on two Galleria signals for test accessibility, and Vue's `emits` list gaining `"escape"`, none of which alter the state machines' own logic).
 
 ## Documentation/Ledger Updates
 
