@@ -107,10 +107,13 @@ export const UPanelMenuList: React.FC<UPanelMenuListProps> = ({
    * bubbling toward the ancestor level that does — though in practice a
    * deeper-nested level's own listener always claims a bubbled event first.
    */
+  /** Items that actually render their own direct-child header `<a>` (excludes hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+  const renderedItems = () => items.filter((candidate) => candidate.visible !== false);
+
   const resolveOwnItem = (target: EventTarget | null): UMenuItem | null => {
     const links = getItemLinks();
     const index = links.indexOf(target as HTMLAnchorElement);
-    return index === -1 ? null : (items[index] ?? null);
+    return index === -1 ? null : (renderedItems()[index] ?? null);
   };
 
   const moveFocus = (current: UMenuItem, direction: 1 | -1) => {
@@ -121,7 +124,7 @@ export const UPanelMenuList: React.FC<UPanelMenuListProps> = ({
     const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
     const nextItem = enabled[nextIndex];
     const links = getItemLinks();
-    const targetIndex = items.indexOf(nextItem);
+    const targetIndex = renderedItems().indexOf(nextItem);
     links[targetIndex]?.focus();
   };
 

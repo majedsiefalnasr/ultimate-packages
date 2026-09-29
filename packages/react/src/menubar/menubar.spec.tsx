@@ -192,5 +192,87 @@ describe("UMenubar", () => {
       expect(document.activeElement).toBe(openLink);
       expect(fileItem.getAttribute("data-u-open")).toBe("true");
     });
+
+    describe("index mapping with a separator/hidden item before the target (GAP-054 fix-loop)", () => {
+      // Reviewer's own repro shape: a separator before "Open" desyncs the
+      // DOM-links index (which skips the separator's non-rendered <a>) from
+      // the full model-items index used by the old buggy lookup.
+      const modelWithSeparator: UMenuItem[] = [
+        { label: "New" },
+        { separator: true },
+        { label: "Open", items: [{ label: "Recent" }] },
+        { label: "Exit" },
+      ];
+
+      it("opens the submenu on Enter for a group item positioned after a separator", () => {
+        const { container } = render(<UMenubar model={[{ label: "File", items: modelWithSeparator }]} />);
+        const file = container.querySelector<HTMLAnchorElement>(
+          ".u-menubar-root-list > li > .u-menubar-content > a"
+        ) as HTMLAnchorElement;
+        file.focus();
+        fireEvent.keyDown(file, { code: "Enter" });
+
+        const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+        // "Open" is rendered link index 1 (separator has no <a>), but model
+        // index 2 — the old bug indexed the DOM links with the model index.
+        const openLink = fileItem.querySelectorAll<HTMLAnchorElement>(
+          ".u-menubar-submenu > li > .u-menubar-content > a"
+        )[1];
+        openLink.focus();
+        fireEvent.keyDown(openLink, { code: "Enter" });
+
+        const openLi = openLink.closest("li") as HTMLElement;
+        expect(openLi.getAttribute("data-u-open")).toBe("true");
+      });
+
+      it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", () => {
+        const { container } = render(<UMenubar model={[{ label: "File", items: modelWithSeparator }]} />);
+        const file = container.querySelector<HTMLAnchorElement>(
+          ".u-menubar-root-list > li > .u-menubar-content > a"
+        ) as HTMLAnchorElement;
+        file.focus();
+        fireEvent.keyDown(file, { code: "Enter" });
+
+        const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+        const openLink = fileItem.querySelectorAll<HTMLAnchorElement>(
+          ".u-menubar-submenu > li > .u-menubar-content > a"
+        )[1];
+        openLink.focus();
+        fireEvent.keyDown(openLink, { code: "Enter" });
+
+        const recentLink = openLink
+          .closest("li")
+          ?.querySelector<HTMLAnchorElement>(
+            ".u-menubar-submenu > li:first-child > .u-menubar-content > a"
+          ) as HTMLAnchorElement;
+        expect(document.activeElement).toBe(recentLink);
+
+        fireEvent.keyDown(recentLink, { code: "Escape" });
+
+        // Must refocus "Open" (its real owning trigger), not "Exit".
+        expect(document.activeElement).toBe(openLink);
+      });
+
+      it("ArrowLeft from a root item after a hidden item does not get stuck", () => {
+        const model: UMenuItem[] = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "B" },
+          { label: "C" },
+        ];
+        const { container } = render(<UMenubar model={model} />);
+        const links = container.querySelectorAll<HTMLAnchorElement>(
+          ".u-menubar-root-list > li > .u-menubar-content > a"
+        );
+        // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
+        const [a, b, c] = Array.from(links);
+        b.focus();
+        fireEvent.keyDown(b, { code: "ArrowLeft" });
+        expect(document.activeElement).toBe(a);
+
+        fireEvent.keyDown(a, { code: "ArrowLeft" });
+        expect(document.activeElement).toBe(c);
+      });
+    });
   });
 });

@@ -201,5 +201,82 @@ describe("UMegaMenu", () => {
       expect(productsItem.getAttribute("data-u-open")).toBe("false");
       expect(document.activeElement).toBe(productsLink);
     });
+
+    describe("index mapping with a hidden root item before the target (GAP-054 fix-loop)", () => {
+      const modelWithHidden: UMegaMenuItem[] = [
+        { label: "A" },
+        { label: "Hidden", visible: false },
+        { label: "B", items: [[{ label: "Group", items: [{ label: "Leaf" }] }]] },
+        { label: "C" },
+      ];
+
+      it("opens the overlay on Enter for a root item positioned after a hidden item", () => {
+        const { container } = render(<UMegaMenu model={modelWithHidden} />);
+        // "B" is rendered link index 1 (Hidden renders no <li>/<a>), but model index 2.
+        const bLink = container.querySelectorAll<HTMLAnchorElement>(
+          ".u-megamenu-root-list > li > .u-megamenu-content > a"
+        )[1];
+        bLink.focus();
+        fireEvent.keyDown(bLink, { code: "Enter" });
+
+        const bLi = bLink.closest("li") as HTMLElement;
+        expect(bLi.getAttribute("data-u-open")).toBe("true");
+      });
+
+      it("Escape from a leaf item refocuses the correct owning root trigger, not a sibling shifted by a hidden item", () => {
+        const { container } = render(<UMegaMenu model={modelWithHidden} />);
+        const bLink = container.querySelectorAll<HTMLAnchorElement>(
+          ".u-megamenu-root-list > li > .u-megamenu-content > a"
+        )[1];
+        bLink.focus();
+        fireEvent.keyDown(bLink, { code: "Enter" });
+
+        const leafLink = bLink.closest("li")?.querySelector<HTMLAnchorElement>(".u-megamenu-submenu a") as HTMLAnchorElement;
+        expect(document.activeElement).toBe(leafLink);
+
+        fireEvent.keyDown(leafLink, { code: "Escape" });
+
+        expect(document.activeElement).toBe(bLink);
+      });
+
+      it("ArrowLeft from a root item after a hidden item does not get stuck", () => {
+        const { container } = render(<UMegaMenu model={modelWithHidden} />);
+        const links = container.querySelectorAll<HTMLAnchorElement>(
+          ".u-megamenu-root-list > li > .u-megamenu-content > a"
+        );
+        const [a, b] = Array.from(links);
+        b.focus();
+        fireEvent.keyDown(b, { code: "ArrowLeft" });
+        expect(document.activeElement).toBe(a);
+      });
+    });
+
+    describe("index mapping with a hidden leaf item before the target in a column group (GAP-054 fix-loop)", () => {
+      it("ArrowDown from a leaf item after a hidden leaf item does not get stuck", () => {
+        const model: UMegaMenuItem[] = [
+          {
+            label: "Products",
+            items: [
+              [
+                {
+                  label: "Category A",
+                  items: [{ label: "A1" }, { label: "Hidden", visible: false }, { label: "A2" }],
+                },
+              ],
+            ],
+          },
+        ];
+        const { container } = render(<UMegaMenu model={model} />);
+        const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+        fireEvent.click(productsItem.querySelector("a") as HTMLAnchorElement);
+
+        const leafLinks = productsItem.querySelectorAll<HTMLAnchorElement>(".u-megamenu-submenu a");
+        // Rendered leaf links are [A1, A2] (Hidden renders no <li>/<a>).
+        expect(leafLinks.length).toBe(2);
+        leafLinks[0].focus();
+        fireEvent.keyDown(leafLinks[0], { code: "ArrowDown" });
+        expect(document.activeElement).toBe(leafLinks[1]);
+      });
+    });
   });
 });

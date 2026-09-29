@@ -212,5 +212,50 @@ describe("UPanelMenu", () => {
       fireEvent.keyDown(header, { code: "Escape" });
       expect(item.getAttribute("data-u-expanded")).toBe("true");
     });
+
+    describe("index mapping with a hidden item before the target (GAP-054 fix-loop)", () => {
+      it("toggles expand/collapse on Enter for a group item positioned after a hidden item", () => {
+        const model: UMenuItem[] = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "Files", items: [{ label: "Doc" }] },
+        ];
+        const { container } = render(<UPanelMenu model={model} />);
+        // "Files" is rendered link index 1 (Hidden renders no <li>/<a>), but model index 2.
+        const links = Array.from(
+          container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')
+        ) as HTMLAnchorElement[];
+        const filesLink = links[1];
+        filesLink.focus();
+        fireEvent.keyDown(filesLink, { code: "Enter" });
+
+        const filesItem = filesLink.closest('[role="treeitem"]') as HTMLElement;
+        expect(filesItem.getAttribute("data-u-expanded")).toBe("true");
+      });
+
+      it("ArrowDown from an item after a hidden item does not get stuck", () => {
+        const model: UMenuItem[] = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "B" },
+          { label: "C" },
+        ];
+        const { container } = render(<UPanelMenu model={model} />);
+        const links = Array.from(
+          container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')
+        ) as HTMLAnchorElement[];
+        // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
+        const [a, b, c] = links;
+        b.focus();
+        fireEvent.keyDown(b, { code: "ArrowDown" });
+        expect(document.activeElement).toBe(c);
+
+        fireEvent.keyDown(c, { code: "ArrowUp" });
+        expect(document.activeElement).toBe(b);
+
+        fireEvent.keyDown(b, { code: "ArrowUp" });
+        expect(document.activeElement).toBe(a);
+      });
+    });
   });
 });

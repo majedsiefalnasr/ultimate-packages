@@ -184,5 +184,64 @@ describe("UTieredMenu", () => {
       expect(document.activeElement).toBe(openLink);
       expect(fileItem.getAttribute("data-u-open")).toBe("true");
     });
+
+    describe("index mapping with a separator/hidden item before the target (GAP-054 fix-loop)", () => {
+      const modelWithSeparator: UMenuItem[] = [
+        { label: "New" },
+        { separator: true },
+        { label: "Open", items: [{ label: "Recent" }] },
+        { label: "Exit" },
+      ];
+
+      it("opens the submenu on Enter for a group item positioned after a separator", () => {
+        const { container } = render(<UTieredMenu model={modelWithSeparator} />);
+        // "Open" is rendered link index 1 (separator has no <a>), but model index 2.
+        const openLink = container.querySelectorAll<HTMLAnchorElement>(
+          '[role="menuitem"] > .u-tieredmenu-content > a'
+        )[1];
+        openLink.focus();
+        fireEvent.keyDown(openLink, { code: "Enter" });
+
+        const openLi = openLink.closest("li") as HTMLElement;
+        expect(openLi.getAttribute("data-u-open")).toBe("true");
+      });
+
+      it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", () => {
+        const { container } = render(<UTieredMenu model={modelWithSeparator} />);
+        const openLink = container.querySelectorAll<HTMLAnchorElement>(
+          '[role="menuitem"] > .u-tieredmenu-content > a'
+        )[1];
+        openLink.focus();
+        fireEvent.keyDown(openLink, { code: "Enter" });
+
+        const recentLink = openLink
+          .closest("li")
+          ?.querySelector<HTMLAnchorElement>(
+            ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-content > a"
+          ) as HTMLAnchorElement;
+        expect(document.activeElement).toBe(recentLink);
+
+        fireEvent.keyDown(recentLink, { code: "Escape" });
+
+        expect(document.activeElement).toBe(openLink);
+      });
+
+      it("ArrowUp from an item after a hidden item does not get stuck", () => {
+        const model: UMenuItem[] = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "B" },
+          { label: "C" },
+        ];
+        const { container } = render(<UTieredMenu model={model} />);
+        const links = container.querySelectorAll<HTMLAnchorElement>(
+          '[role="menuitem"] > .u-tieredmenu-content > a'
+        );
+        const [a, b] = Array.from(links);
+        b.focus();
+        fireEvent.keyDown(b, { code: "ArrowUp" });
+        expect(document.activeElement).toBe(a);
+      });
+    });
   });
 });

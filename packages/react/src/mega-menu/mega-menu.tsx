@@ -105,10 +105,13 @@ export const UMegaMenu = React.forwardRef<HTMLElement, UMegaMenuProps>(function 
   };
 
   /** Resolves the root `UMegaMenuItem` this event's target `<a>` belongs to, or `null` if it isn't one of this root list's own direct-child item links. */
+  /** Root items that actually render their own direct-child `<a>` (excludes hidden items), in the same order `getRootLinks()` returns their DOM nodes. */
+  const renderedRootItems = () => model.filter((candidate) => candidate.visible !== false);
+
   const resolveOwnItem = (target: EventTarget | null): UMegaMenuItem | null => {
     const links = getRootLinks();
     const index = links.indexOf(target as HTMLAnchorElement);
-    return index === -1 ? null : (model[index] ?? null);
+    return index === -1 ? null : (renderedRootItems()[index] ?? null);
   };
 
   const enabledRootItems = () => model.filter((candidate) => candidate.visible !== false && !candidate.disabled);
@@ -121,7 +124,7 @@ export const UMegaMenu = React.forwardRef<HTMLElement, UMegaMenuProps>(function 
     const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
     const nextItem = enabled[nextIndex];
     const links = getRootLinks();
-    const targetIndex = model.indexOf(nextItem);
+    const targetIndex = renderedRootItems().indexOf(nextItem);
     links[targetIndex]?.focus();
   };
 
@@ -131,7 +134,7 @@ export const UMegaMenu = React.forwardRef<HTMLElement, UMegaMenuProps>(function 
     // synchronously, unlike focusFirstOnOpen below which must wait for a
     // not-yet-existing nested <ul> to actually commit.
     const links = getRootLinks();
-    const targetIndex = model.indexOf(item);
+    const targetIndex = renderedRootItems().indexOf(item);
     links[targetIndex]?.focus();
     setOpenItem(null);
   };

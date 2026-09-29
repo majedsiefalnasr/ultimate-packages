@@ -93,10 +93,13 @@ export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({ items, root, cx,
    * for any event this level does not own, so the caller can leave it
    * bubbling toward the ancestor level that does.
    */
+  /** Items that actually render their own direct-child `<a>` (excludes separators and hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+  const renderedItems = () => items.filter((candidate) => !candidate.separator && candidate.visible !== false);
+
   const resolveOwnItem = (target: EventTarget | null): UMenuItem | null => {
     const links = getItemLinks();
     const index = links.indexOf(target as HTMLAnchorElement);
-    return index === -1 ? null : (items[index] ?? null);
+    return index === -1 ? null : (renderedItems()[index] ?? null);
   };
 
   const enabledItems = () => items.filter((candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled);
@@ -109,7 +112,7 @@ export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({ items, root, cx,
     const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
     const nextItem = enabled[nextIndex];
     const links = getItemLinks();
-    const targetIndex = items.indexOf(nextItem);
+    const targetIndex = renderedItems().indexOf(nextItem);
     links[targetIndex]?.focus();
   };
 
@@ -119,7 +122,7 @@ export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({ items, root, cx,
     // happen synchronously, unlike focusFirstOnOpen below which must wait
     // for a not-yet-existing nested <ul> to actually commit.
     const links = getItemLinks();
-    const targetIndex = items.indexOf(item);
+    const targetIndex = renderedItems().indexOf(item);
     links[targetIndex]?.focus();
     setOpenItem(null);
   };

@@ -49,6 +49,9 @@ export const UMegaMenuColumnGroup: React.FC<UMegaMenuColumnGroupProps> = ({ grou
     }
   };
 
+  /** Items that actually render their own direct-child `<a>` (excludes hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+  const renderedItems = () => items.filter((candidate) => candidate.visible !== false);
+
   const moveFocus = (current: UMenuItem, direction: 1 | -1) => {
     const enabled = items.filter((candidate) => candidate.visible !== false && !candidate.disabled);
     if (enabled.length === 0) return;
@@ -57,7 +60,7 @@ export const UMegaMenuColumnGroup: React.FC<UMegaMenuColumnGroupProps> = ({ grou
     const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
     const nextItem = enabled[nextIndex];
     const links = getItemLinks();
-    const targetIndex = items.indexOf(nextItem);
+    const targetIndex = renderedItems().indexOf(nextItem);
     links[targetIndex]?.focus();
   };
 
@@ -69,7 +72,7 @@ export const UMegaMenuColumnGroup: React.FC<UMegaMenuColumnGroupProps> = ({ grou
     const index = links.indexOf(event.target as HTMLAnchorElement);
     if (index === -1) return; // Not one of this group's own item links.
 
-    const current = items[index];
+    const current = renderedItems()[index];
     if (!current) return;
 
     switch (event.code) {
