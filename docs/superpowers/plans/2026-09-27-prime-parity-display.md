@@ -12,8 +12,29 @@
 
 | GAP | Task(s) |
 |---|---|
-| GAP-050 | Task 1 (Angular), Task 2 (React), Task 3 (Vue) |
+| GAP-050 | Task 1 (Angular), Task 2 (React), Task 3 (Vue), Task 7 (fix-loop, all 3 — see below) |
 | GAP-051 | Task 4 (Angular), Task 5 (React), Task 6 (Vue) |
+
+**Post-final-review scope correction (Task 7, GAP-050):** the Display Plan's final whole-plan review found that Tasks 1-3's own Spec §5.1 requirement ("Enter/Space must activate the focused thumbnail") was not actually satisfied for React (a plain non-focusable `<li onClick>` thumbnail, no keyboard path at all), while the review itself incorrectly assumed Angular/Vue were already compliant via native `<button>` thumbnails. Direct source verification during the resulting fix dispatch found Angular's and Vue's thumbnails are **also** plain non-focusable `<li>` elements with only a click handler — the identical gap exists in all 3 frameworks, not React alone. User-authorized correction: widen this fix to cover all 3 frameworks as one same-shape batch (Task 7), closing the real Spec §5.1 gap completely rather than only in React. This is a scope correction based on direct source evidence, not a new product/design decision, and not a reopening of GAP-050 itself — the original Tasks 1-3 acceptance criteria for keyboard nav/Escape/role=region remain fully satisfied and approved; only the thumbnail-activation sub-requirement needed this follow-up.
+
+---
+
+### Task 7: Angular+React+Vue — GAP-050 Galleria thumbnail keyboard activation (fix-loop, post-final-review)
+
+**Files:**
+- Angular: `packages/ng/src/galleria/galleria.ts`, `galleria.spec.ts`
+- React: `packages/react/src/galleria/galleria.tsx`, `galleria.spec.tsx`
+- Vue: `packages/vue/src/galleria/GalleriaContent.vue`, `galleria.spec.ts`
+
+**Requirement (Spec §5.1):** "Enter/Space must activate the focused thumbnail (if thumbnails are present), matching real Prime's own key set."
+
+**Current state (confirmed via direct source read in all 3):** each framework's thumbnail is a plain `<li>` with only a click handler (`(click)="goTo($index)"` / `onClick={() => goTo(index)}` / `@click="$emit('goTo', index)"`) — no `tabIndex`, no interactive `role`, no keydown handler, not focusable at all.
+
+**Implement, per framework, in its own idiom:** make the thumbnail keyboard-focusable and wire Enter/Space to the same activation the click handler already triggers, without changing existing click behavior or introducing any other Galleria behavior change. Each framework may choose whichever concrete approach (native `<button>` wrap, or `tabIndex`/`role="button"`/`onKeyDown`) best fits its own existing markup/style-module conventions — investigate before choosing, disclose the choice and why.
+
+**Tests, per framework:** (a) thumbnail is focusable; (b) Enter activates the same behavior as click; (c) Space activates the same behavior as click; (d) existing click behavior unchanged; (e) no other Galleria test regresses.
+
+**Verification:** each framework's own test suite + full package suite + `pnpm run ceiling:validate`. Confirm GAP-050's original Tasks 1-3 acceptance criteria (keyboard nav, Escape, role=region) remain unaffected.
 
 ## Global Constraints
 
