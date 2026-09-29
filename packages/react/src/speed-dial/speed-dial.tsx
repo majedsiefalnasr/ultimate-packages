@@ -82,6 +82,7 @@ export const USpeedDial = React.forwardRef<USpeedDialHandle, USpeedDialProps>(fu
 ) {
   const { cx } = useComponentBase({ componentName: "speed-dial", styleModule: speedDialStyleModule });
   const [visible, setVisible] = React.useState(false);
+  const listRef = React.useRef<HTMLUListElement>(null);
 
   const show = React.useCallback(() => {
     setVisible((current) => {
@@ -111,6 +112,67 @@ export const USpeedDial = React.forwardRef<USpeedDialHandle, USpeedDialProps>(fu
     document.addEventListener("keydown", onEscape);
     return () => document.removeEventListener("keydown", onEscape);
   }, [closeOnEscape, visible, hide]);
+
+  /** This dial's own action-item buttons, in DOM order (one per model entry, including hidden ones). */
+  const getItemLinks = React.useCallback((): HTMLButtonElement[] => {
+    const ul = listRef.current;
+    return ul ? Array.from(ul.querySelectorAll<HTMLButtonElement>(":scope > li > button")) : [];
+  }, []);
+
+  /** Whether the model entry at `index` is eligible to receive roving focus (not disabled, not hidden). */
+  const isEligible = (index: number): boolean => {
+    const item = model[index];
+    return !!item && !item.disabled && item.visible !== false;
+  };
+
+  const moveFocus = (fromIndex: number, step: 1 | -1): void => {
+    const links = getItemLinks();
+    const length = links.length;
+    if (length === 0) return;
+
+    let nextIndex = fromIndex;
+    for (let i = 0; i < length; i++) {
+      nextIndex = (nextIndex + step + length) % length;
+      if (isEligible(nextIndex)) {
+        links[nextIndex]?.focus();
+        return;
+      }
+    }
+  };
+
+  /**
+   * Roving focus among action items once open (Spec §5.5, GAP-056), bound on
+   * the `<ul role="menu">` itself — never on the toggle button — matching the
+   * ancestor-binding requirement established while fixing GAP-054/GAP-055.
+   * Axis follows `direction`: ArrowRight/ArrowLeft move focus for a
+   * left/right-opening dial; ArrowDown/ArrowUp for every other direction.
+   * Disabled and `visible: false` items are skipped — React SpeedDial keeps
+   * a `[role=menuitem]` button in the DOM for every model entry even when
+   * hidden (CSS `hidden` class, never omitted, matching Angular's own
+   * confirmed shape), so the eligible list is filtered rather than relying
+   * on a `renderedItems()`-style DOM-omission remap (that pattern is for
+   * Dock's own different, DOM-omission shape).
+   */
+  const onListKeyDown = (event: React.KeyboardEvent<HTMLUListElement>): void => {
+    if (!visible) return;
+
+    const target = event.target as HTMLButtonElement;
+    const links = getItemLinks();
+    const index = links.indexOf(target);
+    if (index === -1) return;
+
+    const horizontal = direction === "left" || direction === "right";
+    const nextCode = horizontal ? "ArrowRight" : "ArrowDown";
+    const prevCode = horizontal ? "ArrowLeft" : "ArrowUp";
+
+    if (event.code === nextCode) {
+      event.preventDefault();
+      moveFocus(index, 1);
+    } else if (event.code === prevCode) {
+      event.preventDefault();
+      moveFocus(index, -1);
+    }
+  };
 
   const calculatePointStyle = (index: number): React.CSSProperties => {
     if (type === "linear") return {};
@@ -175,7 +237,13 @@ export const USpeedDial = React.forwardRef<USpeedDialHandle, USpeedDialProps>(fu
         >
           {icon && <span className={icon} />}
         </button>
-        <ul className={cx("list")} role="menu" style={listFlexDirection ? { flexDirection: listFlexDirection } : undefined}>
+        <ul
+          ref={listRef}
+          className={cx("list")}
+          role="menu"
+          style={listFlexDirection ? { flexDirection: listFlexDirection } : undefined}
+          onKeyDown={onListKeyDown}
+        >
           {model.map((item, index) => (
             <li key={item.label ?? index} className={cx("item", { hidden: item.visible === false })} role="none" style={getItemStyle(index)}>
               <button

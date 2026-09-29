@@ -66,4 +66,57 @@ describe("USpeedDial", () => {
     fireEvent.click(container.querySelector("button") as HTMLButtonElement);
     expect((container.querySelector('[role="menuitem"]') as HTMLButtonElement).disabled).toBe(true);
   });
+
+  describe("keyboard navigation between action items (Spec §5.5, GAP-056)", () => {
+    it("ArrowDown/ArrowUp move focus among action items once open", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }];
+      const { container } = render(<USpeedDial model={model} />);
+      fireEvent.click(container.querySelector("button") as HTMLButtonElement);
+      const menuItems = container.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
+      menuItems[0].focus();
+      fireEvent.keyDown(menuItems[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(menuItems[1]);
+      fireEvent.keyDown(menuItems[1], { code: "ArrowUp" });
+      expect(document.activeElement).toBe(menuItems[0]);
+    });
+
+    it("wraps focus from the last item to the first on ArrowDown", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }];
+      const { container } = render(<USpeedDial model={model} />);
+      fireEvent.click(container.querySelector("button") as HTMLButtonElement);
+      const menuItems = container.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
+      menuItems[1].focus();
+      fireEvent.keyDown(menuItems[1], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(menuItems[0]);
+    });
+
+    it("skips disabled items when moving focus", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }];
+      const { container } = render(<USpeedDial model={model} />);
+      fireEvent.click(container.querySelector("button") as HTMLButtonElement);
+      const menuItems = container.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
+      menuItems[0].focus();
+      fireEvent.keyDown(menuItems[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(menuItems[2]);
+    });
+
+    it("uses ArrowRight/ArrowLeft instead of ArrowDown/ArrowUp when direction is horizontal", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }];
+      const { container } = render(<USpeedDial model={model} direction="right" />);
+      fireEvent.click(container.querySelector("button") as HTMLButtonElement);
+      const menuItems = container.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
+      menuItems[0].focus();
+      fireEvent.keyDown(menuItems[0], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(menuItems[1]);
+    });
+
+    it("existing Escape-to-close behavior is unaffected", () => {
+      const model: UMenuItem[] = [{ label: "A" }];
+      const { container } = render(<USpeedDial model={model} />);
+      fireEvent.click(container.querySelector("button") as HTMLButtonElement);
+      expect(container.querySelector("button")?.getAttribute("aria-expanded")).toBe("true");
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(container.querySelector("button")?.getAttribute("aria-expanded")).toBe("false");
+    });
+  });
 });
