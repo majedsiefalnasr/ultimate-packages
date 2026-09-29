@@ -1,6 +1,6 @@
 <template>
   <nav :class="cx('root')">
-    <ol :class="cx('list')">
+    <ol :class="cx('list')" @keydown="onKeydown">
       <template v-for="(item, index) in model" :key="(item.label || '') + index">
         <li
           v-if="isVisible(item)"
@@ -62,6 +62,50 @@ export default {
     },
     isItemDisabled(item, index) {
       return !!item.disabled || (this.readonly && index !== this.d_activeStep);
+    },
+    onKeydown(event) {
+      const links = Array.from(this.$el.querySelectorAll("a"));
+      if (links.length === 0) return;
+      const isEnabled = (index) => !this.isItemDisabled(this.model[index], index);
+      const currentIndex = links.indexOf(document.activeElement);
+
+      let targetIndex;
+      switch (event.code) {
+        case "ArrowRight":
+          for (let i = currentIndex + 1; i < links.length; i++) {
+            if (isEnabled(i)) {
+              targetIndex = i;
+              break;
+            }
+          }
+          break;
+        case "ArrowLeft":
+          for (let i = currentIndex - 1; i >= 0; i--) {
+            if (isEnabled(i)) {
+              targetIndex = i;
+              break;
+            }
+          }
+          break;
+        case "Home":
+          targetIndex = links.findIndex((_, i) => isEnabled(i));
+          break;
+        case "End":
+          for (let i = links.length - 1; i >= 0; i--) {
+            if (isEnabled(i)) {
+              targetIndex = i;
+              break;
+            }
+          }
+          break;
+        default:
+          return;
+      }
+
+      event.preventDefault();
+      if (targetIndex !== undefined && targetIndex >= 0) {
+        links[targetIndex].focus();
+      }
     },
     onItemClick(event, item, index) {
       if (this.readonly || item.disabled) {
