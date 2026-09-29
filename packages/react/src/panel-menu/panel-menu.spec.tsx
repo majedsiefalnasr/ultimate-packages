@@ -95,4 +95,122 @@ describe("UPanelMenu", () => {
     expect(command).not.toHaveBeenCalled();
     expect(container.querySelector('[role="treeitem"]')?.getAttribute("data-u-expanded")).toBe("false");
   });
+
+  describe("keyboard navigation (GAP-054)", () => {
+    it("moves focus to the next root item on ArrowDown", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }, { label: "C" }];
+      const { container } = render(<UPanelMenu model={model} />);
+      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(links[1]);
+    });
+
+    it("moves focus to the previous root item on ArrowUp, wrapping at the start", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }, { label: "C" }];
+      const { container } = render(<UPanelMenu model={model} />);
+      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowUp" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("wraps focus from the last root item to the first on ArrowDown", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }, { label: "C" }];
+      const { container } = render(<UPanelMenu model={model} />);
+      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      links[2].focus();
+      fireEvent.keyDown(links[2], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(links[0]);
+    });
+
+    it("skips a disabled item when moving focus with ArrowDown", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }];
+      const { container } = render(<UPanelMenu model={model} />);
+      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("skips a disabled item when moving focus with ArrowUp", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }];
+      const { container } = render(<UPanelMenu model={model} />);
+      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      links[2].focus();
+      fireEvent.keyDown(links[2], { code: "ArrowUp" });
+      expect(document.activeElement).toBe(links[0]);
+    });
+
+    it("toggles expand/collapse on Enter for a group item, leaving focus on the header", () => {
+      const model: UMenuItem[] = [{ label: "Files", items: [{ label: "Doc" }] }];
+      const { container } = render(<UPanelMenu model={model} />);
+      const header = container.querySelector('[role="treeitem"] a') as HTMLAnchorElement;
+      header.focus();
+      fireEvent.keyDown(header, { code: "Enter" });
+      const item = container.querySelector('[role="treeitem"]') as HTMLElement;
+      expect(item.getAttribute("data-u-expanded")).toBe("true");
+      expect(document.activeElement).toBe(header);
+    });
+
+    it("toggles expand/collapse on Space for a group item, leaving focus on the header", () => {
+      const model: UMenuItem[] = [{ label: "Files", items: [{ label: "Doc" }] }];
+      const { container } = render(<UPanelMenu model={model} />);
+      const header = container.querySelector('[role="treeitem"] a') as HTMLAnchorElement;
+      header.focus();
+      fireEvent.keyDown(header, { code: "Space" });
+      const item = container.querySelector('[role="treeitem"]') as HTMLElement;
+      expect(item.getAttribute("data-u-expanded")).toBe("true");
+      expect(document.activeElement).toBe(header);
+
+      fireEvent.keyDown(header, { code: "Space" });
+      expect(item.getAttribute("data-u-expanded")).toBe("false");
+      expect(document.activeElement).toBe(header);
+    });
+
+    it("does not toggle a disabled group item on Enter", () => {
+      const command = vi.fn();
+      const model: UMenuItem[] = [{ label: "Disabled", disabled: true, items: [{ label: "Hidden" }], command }];
+      const { container } = render(<UPanelMenu model={model} />);
+      const header = container.querySelector('[role="treeitem"] a') as HTMLAnchorElement;
+      fireEvent.keyDown(header, { code: "Enter" });
+      expect(container.querySelector('[role="treeitem"]')?.getAttribute("data-u-expanded")).toBe("false");
+    });
+
+    it("moves focus among a genuinely-expanded nested level's own items, independent of the root level", () => {
+      const model: UMenuItem[] = [
+        { label: "Files", items: [{ label: "Documents" }, { label: "Photos" }] },
+        { label: "Settings" },
+      ];
+      const { container } = render(<UPanelMenu model={model} />);
+      const rootHeader = container.querySelector('[role="treeitem"] a') as HTMLAnchorElement;
+      // Real click-driven expansion, not manual DOM manipulation.
+      fireEvent.click(rootHeader);
+
+      const nestedList = container.querySelector('[role="tree"] [role="tree"]') as HTMLElement;
+      const nestedLinks = Array.from(
+        nestedList.querySelectorAll(':scope > [role="treeitem"] > .u-panelmenu-header-content > a')
+      ) as HTMLAnchorElement[];
+      expect(nestedLinks.length).toBe(2);
+
+      nestedLinks[0].focus();
+      fireEvent.keyDown(nestedLinks[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(nestedLinks[1]);
+
+      // Root level's own roving focus is unaffected by the nested level's move.
+      fireEvent.keyDown(nestedLinks[1], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(nestedLinks[0]);
+    });
+
+    it("does not throw or close anything on Escape (no overlay to escape from)", () => {
+      const model: UMenuItem[] = [{ label: "Files", items: [{ label: "Doc" }] }];
+      const { container } = render(<UPanelMenu model={model} />);
+      const header = container.querySelector('[role="treeitem"] a') as HTMLAnchorElement;
+      fireEvent.click(header);
+      const item = container.querySelector('[role="treeitem"]') as HTMLElement;
+      expect(item.getAttribute("data-u-expanded")).toBe("true");
+      fireEvent.keyDown(header, { code: "Escape" });
+      expect(item.getAttribute("data-u-expanded")).toBe("true");
+    });
+  });
 });
