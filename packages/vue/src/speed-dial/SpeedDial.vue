@@ -12,7 +12,7 @@
       >
         <span v-if="icon" :class="icon"></span>
       </button>
-      <ul :class="cx('list')" role="menu" :style="listDirectionStyle">
+      <ul ref="listEl" :class="cx('list')" role="menu" :style="listDirectionStyle" @keydown="onKeydown">
         <template v-for="(item, index) in model" :key="(item.label || '') + index">
           <li :class="cx('item', { hidden: item.visible === false })" role="none" :style="getItemStyle(index)">
             <button
@@ -129,6 +129,68 @@ export default {
     onItemClick(event, item) {
       if (item.command) item.command({ originalEvent: event, item });
       this.hide();
+    },
+    /**
+     * Roving focus among action items once open (Spec §5.5, GAP-056), bound
+     * on the `<ul role="menu">` itself — never on the toggle button —
+     * matching the ancestor-binding requirement established while fixing
+     * GAP-054/GAP-055. Axis follows `direction`: ArrowRight/ArrowLeft move
+     * focus for a left/right-opening dial; ArrowDown/ArrowUp for every other
+     * direction (`up`, `down`, and the diagonal `type: "quarter-circle"`
+     * directions, which all lay items out along the vertical axis per
+     * `listDirectionStyle()`/the CSS default). Disabled and `visible: false`
+     * items are skipped — Vue SpeedDial keeps a `[role=menuitem]` button in
+     * the DOM for every model entry even when hidden (CSS `hidden` class,
+     * never omitted, matching Angular/React's own confirmed shape), so the
+     * eligible list is filtered rather than relying on a
+     * `renderedItems()`-style DOM-omission remap (that pattern is for
+     * PanelMenu's own different, DOM-omission shape). Uses `event.code`,
+     * distinct from this component's pre-existing `event.key`-based Escape
+     * check in `bindEscapeListener`, which is NOT modified by this handler.
+     */
+    onKeydown(event) {
+      if (!this.d_visible) return;
+
+      const target = event.target;
+      const links = this.getItemLinks();
+      const index = links.indexOf(target);
+      if (index === -1) return;
+
+      const horizontal = this.direction === "left" || this.direction === "right";
+      const nextCode = horizontal ? "ArrowRight" : "ArrowDown";
+      const prevCode = horizontal ? "ArrowLeft" : "ArrowUp";
+
+      if (event.code === nextCode) {
+        event.preventDefault();
+        this.moveFocus(index, 1);
+      } else if (event.code === prevCode) {
+        event.preventDefault();
+        this.moveFocus(index, -1);
+      }
+    },
+    /** This dial's own action-item buttons, in DOM order (one per model entry, including hidden ones). */
+    getItemLinks() {
+      const list = this.$refs.listEl;
+      return list ? Array.from(list.querySelectorAll(":scope > li > button")) : [];
+    },
+    /** Whether the model entry at `index` is eligible to receive roving focus (not disabled, not hidden). */
+    isEligible(index) {
+      const item = this.model[index];
+      return !!item && !item.disabled && item.visible !== false;
+    },
+    moveFocus(fromIndex, direction) {
+      const links = this.getItemLinks();
+      const length = links.length;
+      if (length === 0) return;
+
+      let nextIndex = fromIndex;
+      for (let step = 0; step < length; step++) {
+        nextIndex = (nextIndex + direction + length) % length;
+        if (this.isEligible(nextIndex)) {
+          links[nextIndex]?.focus();
+          return;
+        }
+      }
     },
     show() {
       if (this.d_visible) return;
