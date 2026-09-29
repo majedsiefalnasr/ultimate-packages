@@ -117,4 +117,115 @@ describe("UPanelMenu", () => {
     expect(called).toBe(false);
     expect(fixture.nativeElement.querySelector('[role="treeitem"]').getAttribute("data-u-expanded")).toBe("false");
   });
+
+  describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
+    function keydown(el: Element, code: string): void {
+      el.dispatchEvent(new KeyboardEvent("keydown", { code, bubbles: true }));
+    }
+
+    it("ArrowDown/ArrowUp move focus among root-level visible items", () => {
+      const fixture = setup([{ label: "Files" }, { label: "Settings" }, { label: "Help" }]);
+      const links = fixture.nativeElement.querySelectorAll('[role="tree"] > [role="treeitem"] a');
+      links[0].focus();
+      keydown(links[0], "ArrowDown");
+      expect(document.activeElement).toBe(links[1]);
+      keydown(links[1], "ArrowDown");
+      expect(document.activeElement).toBe(links[2]);
+      keydown(links[2], "ArrowUp");
+      expect(document.activeElement).toBe(links[1]);
+    });
+
+    it("ArrowDown skips a disabled root item", () => {
+      const fixture = setup([{ label: "Files" }, { label: "Settings", disabled: true }, { label: "Help" }]);
+      const links = fixture.nativeElement.querySelectorAll('[role="tree"] > [role="treeitem"] a');
+      links[0].focus();
+      keydown(links[0], "ArrowDown");
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("Enter toggles expand/collapse on a group item, keeping the sibling-exclusivity mechanism intact", () => {
+      const fixture = setup();
+      const firstHeader = fixture.nativeElement.querySelector('[role="treeitem"] a');
+      firstHeader.focus();
+      keydown(firstHeader, "Enter");
+      fixture.detectChanges();
+      const firstItem = fixture.nativeElement.querySelector('[role="treeitem"]');
+      expect(firstItem.getAttribute("data-u-expanded")).toBe("true");
+      keydown(firstHeader, "Space");
+      fixture.detectChanges();
+      expect(firstItem.getAttribute("data-u-expanded")).toBe("false");
+    });
+
+    it("does not toggle a disabled group item via Enter/Space", () => {
+      const model: UMenuItem[] = [{ label: "Disabled", disabled: true, items: [{ label: "Hidden" }] }];
+      const fixture = setup(model);
+      const link = fixture.nativeElement.querySelector("a");
+      link.focus();
+      keydown(link, "Enter");
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('[role="treeitem"]').getAttribute("data-u-expanded")).toBe("false");
+    });
+
+    it("ArrowDown/ArrowUp move focus among a nested (genuinely focused, non-root) level's own visible items, not bubbling into the root level's navigation", () => {
+      const fixture = setup([
+        {
+          label: "Files",
+          items: [{ label: "Documents" }, { label: "Photos" }, { label: "Videos" }],
+        },
+        { label: "Settings" },
+      ]);
+      const rootHeader = fixture.nativeElement.querySelector('[role="tree"] > [role="treeitem"] a');
+      rootHeader.click();
+      fixture.detectChanges();
+      const nestedLinks = fixture.nativeElement.querySelectorAll(
+        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"] a',
+      );
+      expect(nestedLinks.length).toBe(3);
+      nestedLinks[0].focus();
+      keydown(nestedLinks[0], "ArrowDown");
+      expect(document.activeElement).toBe(nestedLinks[1]);
+      keydown(nestedLinks[1], "ArrowDown");
+      expect(document.activeElement).toBe(nestedLinks[2]);
+      // Wrapping within the nested level only — must not jump out to "Settings" at root level.
+      keydown(nestedLinks[2], "ArrowDown");
+      expect(document.activeElement).toBe(nestedLinks[0]);
+    });
+
+    it("ArrowDown skips a disabled item within a nested level", () => {
+      const fixture = setup([
+        {
+          label: "Files",
+          items: [{ label: "Documents" }, { label: "Photos", disabled: true }, { label: "Videos" }],
+        },
+      ]);
+      const rootHeader = fixture.nativeElement.querySelector('[role="tree"] > [role="treeitem"] a');
+      rootHeader.click();
+      fixture.detectChanges();
+      const nestedLinks = fixture.nativeElement.querySelectorAll(
+        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"] a',
+      );
+      nestedLinks[0].focus();
+      keydown(nestedLinks[0], "ArrowDown");
+      expect(document.activeElement).toBe(nestedLinks[2]);
+    });
+
+    it("Enter on a nested group item toggles its own expand/collapse without affecting the root level", () => {
+      const fixture = setup();
+      const rootHeader = fixture.nativeElement.querySelector('[role="tree"] > [role="treeitem"] a');
+      rootHeader.click();
+      fixture.detectChanges();
+      const nestedHeader = fixture.nativeElement.querySelector(
+        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"] a',
+      );
+      nestedHeader.focus();
+      keydown(nestedHeader, "Enter");
+      fixture.detectChanges();
+      const nestedItem = fixture.nativeElement.querySelector(
+        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"]',
+      );
+      expect(nestedItem.getAttribute("data-u-expanded")).toBe("true");
+      const rootItem = fixture.nativeElement.querySelector('[role="tree"] > [role="treeitem"]');
+      expect(rootItem.getAttribute("data-u-expanded")).toBe("true");
+    });
+  });
 });
