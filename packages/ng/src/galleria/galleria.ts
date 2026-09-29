@@ -109,7 +109,10 @@ export interface UGalleriaItemContext<T = unknown> {
             <li
               [class]="cx('thumbnailItem', { active: $index === activeIndex() })"
               [attr.aria-current]="$index === activeIndex() ? 'true' : null"
+              role="button"
+              tabindex="0"
               (click)="goTo($index)"
+              (keydown)="onThumbnailKeyDown($event, $index)"
             >
               <ng-container *ngTemplateOutlet="thumbnailTemplate ?? itemTemplate ?? null; context: { $implicit: item }"></ng-container>
             </li>
@@ -253,6 +256,17 @@ export class UGalleria<T = unknown> extends UBaseComponent {
         break;
       default:
         break;
+    }
+  }
+
+  /**
+   * Handles Enter/Space on a focused thumbnail: activates it the same way the existing click
+   * handler does (Spec §5.1, GAP-050 Task 7). No-op for any other key.
+   */
+  protected onThumbnailKeyDown(event: KeyboardEvent, index: number): void {
+    if (event.code === "Enter" || event.code === "Space") {
+      event.preventDefault();
+      this.goTo(index);
     }
   }
 

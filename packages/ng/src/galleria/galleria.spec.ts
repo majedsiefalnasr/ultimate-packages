@@ -260,3 +260,51 @@ describe("keyboard navigation, Escape, role=region (Spec §5.1, GAP-050)", () =>
     expect(input.value).toBe("typed");
   });
 });
+
+describe("thumbnail keyboard activation (Spec §5.1, GAP-050 Task 7)", () => {
+  function createFixture() {
+    const fixture = createHost();
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  it("makes the thumbnail focusable", () => {
+    const fixture = createFixture();
+    const thumbnail = fixture.nativeElement.querySelector(".u-galleria-thumbnail-item") as HTMLElement;
+    expect(thumbnail.tabIndex).toBe(0);
+  });
+
+  it("Enter on a focused thumbnail activates it the same as a click", () => {
+    const fixture = createFixture();
+    const thumbnails = fixture.nativeElement.querySelectorAll(".u-galleria-thumbnail-item");
+    (thumbnails[2] as HTMLElement).dispatchEvent(
+      new KeyboardEvent("keydown", { code: "Enter", bubbles: true })
+    );
+    fixture.detectChanges();
+    expect(
+      (fixture.nativeElement.querySelector(".active-item") as HTMLImageElement).getAttribute("src")
+    ).toBe("c.png");
+  });
+
+  it("Space on a focused thumbnail activates it the same as a click", () => {
+    const fixture = createFixture();
+    const thumbnails = fixture.nativeElement.querySelectorAll(".u-galleria-thumbnail-item");
+    (thumbnails[1] as HTMLElement).dispatchEvent(
+      new KeyboardEvent("keydown", { code: "Space", bubbles: true })
+    );
+    fixture.detectChanges();
+    expect(
+      (fixture.nativeElement.querySelector(".active-item") as HTMLImageElement).getAttribute("src")
+    ).toBe("b.png");
+  });
+
+  it("existing click behavior on the thumbnail is unchanged", () => {
+    const fixture = createFixture();
+    const thumbnails = fixture.nativeElement.querySelectorAll(".u-galleria-thumbnail-item");
+    (thumbnails[2] as HTMLElement).click();
+    fixture.detectChanges();
+    expect(
+      (fixture.nativeElement.querySelector(".active-item") as HTMLImageElement).getAttribute("src")
+    ).toBe("c.png");
+  });
+});
