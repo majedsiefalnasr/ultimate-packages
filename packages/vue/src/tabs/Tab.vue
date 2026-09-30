@@ -21,7 +21,8 @@
 // `.vendor-extracted/vue/tab/Tab.vue`). A single tab trigger inside
 // `UTabList` (this family's tier-3 member, built after `UTabs`/
 // `UTabList` per the container-first order); owns keyboard roving-focus
-// navigation (ArrowLeft/ArrowRight/Home/End) across sibling `u-tab`
+// navigation (ArrowLeft/ArrowRight/Home/End; PageUp/PageDown only scroll
+// the first/last tab into view, without moving focus or selection) across sibling `u-tab`
 // elements sharing the same parent, matching real PrimeVue's own
 // `findNextTab`/`findPrevTab`/`findFirstTab`/`findLastTab` DOM-sibling
 // traversal.
@@ -81,6 +82,14 @@ export default {
           this.focusSibling(this.findLast());
           event.preventDefault();
           break;
+        case "PageDown":
+          this.scrollInView(this.findLast());
+          event.preventDefault();
+          break;
+        case "PageUp":
+          this.scrollInView(this.findFirst());
+          event.preventDefault();
+          break;
         case "Enter":
         case "Space":
         case "NumpadEnter":
@@ -118,6 +127,9 @@ export default {
     },
     focusSibling(el) {
       el?.focus?.();
+      this.scrollInView(el);
+    },
+    scrollInView(el) {
       el?.scrollIntoView?.({ block: "nearest" });
     },
   },

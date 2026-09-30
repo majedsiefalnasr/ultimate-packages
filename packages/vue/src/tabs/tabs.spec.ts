@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import { UTabs, UTabList, UTab, UTabPanels, UTabPanel } from "./index";
 
@@ -94,5 +94,70 @@ describe("Tabs family (UTabs/UTabList/UTab/UTabPanels/UTabPanel)", () => {
     const wrapper = mountTabs(1);
     const tabs = wrapper.findAll('[role="tab"]');
     expect(tabs[1].attributes("aria-selected")).toBe("true");
+  });
+
+  describe("PageUp/PageDown scroll-into-view (GAP-062)", () => {
+    const original = Element.prototype.scrollIntoView;
+    let scrollSpy: ReturnType<typeof vi.fn>;
+
+    beforeEach(() => {
+      scrollSpy = vi.fn();
+      Element.prototype.scrollIntoView = scrollSpy as unknown as typeof Element.prototype.scrollIntoView;
+    });
+    afterEach(() => {
+      Element.prototype.scrollIntoView = original;
+    });
+
+    it("PageDown scrolls the last non-disabled tab into view without moving focus or selection", async () => {
+      const wrapper = mountTabs();
+      const tabs = wrapper.findAll('[role="tab"]');
+      (tabs[0].element as HTMLElement).focus();
+      await tabs[0].trigger("keydown", { code: "PageDown" });
+      // tabs[2] is disabled, so the last eligible tab is tabs[1].
+      expect(scrollSpy).toHaveBeenCalledTimes(1);
+      expect(scrollSpy.mock.instances[0]).toBe(tabs[1].element);
+      expect(scrollSpy).toHaveBeenCalledWith({ block: "nearest" });
+      expect(document.activeElement).toBe(tabs[0].element);
+      expect(tabs[0].attributes("aria-selected")).toBe("true");
+      expect(tabs[1].attributes("aria-selected")).toBe("false");
+    });
+
+    it("PageUp scrolls the first tab into view without moving focus or selection", async () => {
+      const wrapper = mountTabs(1);
+      const tabs = wrapper.findAll('[role="tab"]');
+      (tabs[1].element as HTMLElement).focus();
+      await tabs[1].trigger("keydown", { code: "PageUp" });
+      expect(scrollSpy).toHaveBeenCalledTimes(1);
+      expect(scrollSpy.mock.instances[0]).toBe(tabs[0].element);
+      expect(scrollSpy).toHaveBeenCalledWith({ block: "nearest" });
+      expect(document.activeElement).toBe(tabs[1].element);
+      expect(tabs[1].attributes("aria-selected")).toBe("true");
+      expect(tabs[0].attributes("aria-selected")).toBe("false");
+    });
+
+    it("prevents the default action for PageUp and PageDown", () => {
+      const wrapper = mountTabs();
+      const tab = wrapper.findAll('[role="tab"]')[0];
+      for (const code of ["PageDown", "PageUp"]) {
+        const event = new KeyboardEvent("keydown", { code, bubbles: true, cancelable: true });
+        tab.element.dispatchEvent(event);
+        expect(event.defaultPrevented).toBe(true);
+      }
+    });
+
+    it("does not throw with a single tab", async () => {
+      const wrapper = mount(
+        {
+          components: { UTabs, UTabList, UTab },
+          template: `<UTabs :value="0"><UTabList><UTab :value="0">Only</UTab></UTabList></UTabs>`,
+        },
+        { attachTo: document.body }
+      );
+      const tab = wrapper.find('[role="tab"]');
+      await tab.trigger("keydown", { code: "PageDown" });
+      await tab.trigger("keydown", { code: "PageUp" });
+      expect(scrollSpy).toHaveBeenCalledTimes(2);
+      expect(scrollSpy.mock.instances[0]).toBe(tab.element);
+    });
   });
 });
