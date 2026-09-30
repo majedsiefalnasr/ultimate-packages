@@ -1260,15 +1260,15 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Status:** MISSING
 - **Type:** Component, Framework (Vue)
 - **Blocking level:** LOW
-- **Current evidence:** Found by the Vue Plan's Implementation-stage source check (2026-09-30); registered on user instruction. Real PrimeVue 4.5.5 `step/Step.vue` renders `<StepperSeparator v-if="isSeparatorVisible" />` after each step header (`:9`), with `updateState()` setting `isSeparatorVisible = index !== stepLen - 1` when the step is inside a `StepList` (`:43-49`). Ultimate's `packages/vue/src/stepper/Step.vue` renders no separator, although `stepper-style.ts:21` already defines an unused horizontal `.u-stepper-separator` rule. This contradicts the earlier audit claim (Vue Plan Spec §4/§8, GAP-063's original text) that Ultimate's `Step` already matches PrimeVue exactly.
+- **Current evidence:** Found by the Vue Plan's Implementation-stage source check (2026-09-30); registered on user instruction. Real PrimeVue 4.5.5 `step/Step.vue` renders `<StepperSeparator v-if="isSeparatorVisible" />` after each step header (`:9`), with `updateState()` setting `isSeparatorVisible = index !== stepLen - 1` when the step is inside a `StepList` (`:43-49`). Ultimate's `packages/vue/src/stepper/Step.vue` renders no separator, although `stepper-style.ts` already defines a horizontal `.u-stepper-separator` rule (line 19 as of `41a219c`; before GAP-063 it was unused, and GAP-063's internal `StepperSeparator.vue` now uses it only in vertical mode, with vertical overrides). This contradicts the earlier audit claim (Vue Plan Spec §4/§8, GAP-063's original text) that Ultimate's `Step` already matches PrimeVue exactly.
 - **Expected state:** Horizontal Steppers render a separator between consecutive step headers, none after the last, matching PrimeVue.
 - **Why it matters:** Visible rendering gap in the default (horizontal) Stepper layout.
 - **What it blocks:** Nothing further downstream.
 - **Dependencies:** Can reuse the step marker and internal separator element added by GAP-063.
 - **Framework scope:** Vue only (Angular/React Stepper not examined as part of this finding).
-- **Existing reusable infrastructure:** `.u-stepper-separator` CSS; GAP-063's separator element and step marker once shipped.
+- **Existing reusable infrastructure:** `.u-stepper-separator` CSS; GAP-063's internal `StepperSeparator.vue` and `data-u-step` marker (shipped in `bd4c025`).
 - **Recommended resolution direction:** Directional only — port `Step.vue`'s separator rendering for steps inside `StepList`.
-- **Source/evidence:** Vue Plan pre-dispatch source check (ledger `.superpowers/sdd/2026-09-27-prime-parity-vue/progress.md`); PrimeVue `Step.vue:9,43-49`; Ultimate `Step.vue`, `stepper-style.ts:21`.
+- **Source/evidence:** Vue Plan pre-dispatch source check (ledger `.superpowers/sdd/2026-09-27-prime-parity-vue/progress.md`); PrimeVue `Step.vue:9,43-49`; Ultimate `Step.vue`, `stepper-style.ts:19` (as of `41a219c`).
 - **Architectural decision required:** No.
 
 ---
