@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useComponentBase } from "@ultimate/react-core";
+import { UProgressBar } from "../progress-bar/progress-bar";
 import { fileUploadStyleModule } from "./file-upload-style";
 
 export interface UFileUploadSelectEvent {
@@ -318,11 +319,7 @@ export function UFileUpload({
           onChange={onFileInputChange}
         />
       </div>
-      {uploading && (
-        <div className={cx("progressBar")}>
-          <div className={cx("progressBarValue")} style={{ width: `${progress}%` }} />
-        </div>
-      )}
+      {uploading && <UProgressBar value={progress} showValue={false} />}
       {messages.map((msg) => (
         <div key={msg} className={cx("message")}>
           {msg}

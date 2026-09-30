@@ -2,6 +2,7 @@ import * as React from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { UFileUpload } from "./file-upload";
+import { fileUploadStyleModule } from "./file-upload-style";
 
 function makeFile(name: string, size: number, type = "text/plain"): File {
   return new File([new Uint8Array(size)], name, { type });
@@ -131,5 +132,45 @@ describe("UFileUpload", () => {
     fireEvent.change(input, { target: { files: [makeFile("a.txt", 100)] } });
 
     expect(onUploadHandler).toHaveBeenCalledWith({ files: expect.any(Array) });
+  });
+  describe("progress ARIA via UProgressBar composition (Spec §5.2, GAP-060)", () => {
+    class InFlightXhr {
+      upload = {
+        addEventListener: (_type: string, handler: (event: ProgressEvent) => void) => {
+          this.progressHandler = handler;
+        },
+      };
+      progressHandler: ((event: ProgressEvent) => void) | null = null;
+      onreadystatechange: (() => void) | null = null;
+      readyState = 0;
+      status = 200;
+      withCredentials = false;
+      open = vi.fn();
+      send = vi.fn(() => {
+        this.progressHandler?.({ lengthComputable: true, loaded: 42, total: 100 } as ProgressEvent);
+      });
+    }
+
+    it("renders a role=progressbar element with the current progress as aria-valuenow while uploading", () => {
+      globalThis.XMLHttpRequest = InFlightXhr as unknown as typeof XMLHttpRequest;
+      const { container } = render(<UFileUpload url="/upload" auto />);
+      const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+      fireEvent.change(input, { target: { files: [makeFile("a.txt", 100)] } });
+
+      const bar = container.querySelector("[role=progressbar]");
+      expect(bar).toBeTruthy();
+      expect(bar?.getAttribute("aria-valuenow")).toBe("42");
+    });
+
+    it("renders no progressbar when not uploading", () => {
+      const { container } = render(<UFileUpload url="/upload" />);
+      expect(container.querySelector("[role=progressbar]")).toBeNull();
+    });
+
+    it("scopes the composed progress bar to Prime's thin FileUpload height", () => {
+      const css = fileUploadStyleModule.css.replace(/\s+/g, " ");
+      expect(css).toContain(".u-file-upload .u-progress-bar { width: 100%; height: 0.25rem;");
+      expect(css).not.toContain("u-file-upload-progress-bar");
+    });
   });
 });

@@ -17,8 +17,7 @@ const css = /*css*/ `
 .u-file-upload-input { display: none; }
 .u-file-upload-content { border: 1px dashed #d1d5db; border-radius: 6px; padding: 1rem; min-height: 6rem; transition: background 0.2s, border-color 0.2s; }
 .u-file-upload-content-highlight { border-color: #6366f1; background: #eef2ff; }
-.u-file-upload-progress-bar { width: 100%; height: 0.5rem; border-radius: 1rem; background: #e5e7eb; overflow: hidden; margin-bottom: 0.75rem; }
-.u-file-upload-progress-bar-value { height: 100%; background: #6366f1; transition: width 0.2s ease; }
+.u-file-upload .u-progress-bar { width: 100%; height: 0.25rem; margin-bottom: 0.75rem; }
 .u-file-upload-file { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid #e5e7eb; }
 .u-file-upload-file-info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0.25rem; }
 .u-file-upload-file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -44,8 +43,6 @@ const classes = {
     "u-file-upload-content",
     { "u-file-upload-content-highlight": Boolean(params.highlight) },
   ],
-  progressBar: "u-file-upload-progress-bar",
-  progressBarValue: "u-file-upload-progress-bar-value",
   file: "u-file-upload-file",
   fileInfo: "u-file-upload-file-info",
   fileName: "u-file-upload-file-name",
