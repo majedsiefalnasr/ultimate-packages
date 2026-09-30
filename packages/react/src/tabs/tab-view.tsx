@@ -15,6 +15,13 @@ export interface UTabViewProps {
    * buttons render only while scrolling in that direction is possible.
    */
   scrollable?: boolean;
+  /**
+   * Called before a closable tab is closed; returning `false` cancels the
+   * close. `index` is the tab's index among the panels.
+   */
+  onBeforeTabClose?: (event: { originalEvent: React.SyntheticEvent; index: number }) => boolean | void;
+  /** Called after a closable tab has been closed. */
+  onTabClose?: (event: { originalEvent: React.SyntheticEvent; index: number }) => void;
   children?: React.ReactNode;
   className?: string;
 }
@@ -35,6 +42,8 @@ export const UTabView = React.forwardRef<HTMLDivElement, UTabViewProps>(function
     onTabChange,
     tabIndex = 0,
     scrollable = false,
+    onBeforeTabClose,
+    onTabClose,
     children,
     className,
   },
@@ -103,6 +112,15 @@ export const UTabView = React.forwardRef<HTMLDivElement, UTabViewProps>(function
       React.isValidElement(child) && child.type === UTabPanel
   );
 
+  // Closed tabs are hidden in internal state, identified by the child's own
+  // React key when it has one (toArray prefixes explicit keys with ".$"),
+  // else by its original index. Indices stay the original panel indices.
+  const [hiddenTabs, setHiddenTabs] = React.useState<(string | number)[]>([]);
+  const tabId = (panel: React.ReactElement, index: number): string | number =>
+    panel.key !== null && String(panel.key).startsWith(".$") ? panel.key : index;
+  const isVisible = (index: number, hidden: (string | number)[] = hiddenTabs) =>
+    !hidden.includes(tabId(panels[index], index));
+
   const changeActiveIndex = (event: React.SyntheticEvent, index: number) => {
     if (panels[index]?.props.disabled) return;
     if (onTabChange) {
@@ -112,8 +130,30 @@ export const UTabView = React.forwardRef<HTMLDivElement, UTabViewProps>(function
     }
   };
 
+  // Mirrors PrimeReact `findVisibleActiveTab`: first enabled visible tab at or
+  // after the closed index, else the nearest enabled visible one before it.
+  const findVisibleActiveTab = (closedIndex: number, hidden: (string | number)[]) => {
+    const candidates = panels
+      .map((panel, index) => ({ panel, index }))
+      .filter(({ panel, index }) => isVisible(index, hidden) && !panel.props.disabled);
+    return (
+      candidates.find(({ index }) => index >= closedIndex) ??
+      candidates.reverse().find(({ index }) => closedIndex > index)
+    );
+  };
+
+  const closeTab = (event: React.SyntheticEvent, index: number) => {
+    event.preventDefault();
+    if (onBeforeTabClose?.({ originalEvent: event, index }) === false) return;
+    const hidden = [...hiddenTabs, tabId(panels[index], index)];
+    setHiddenTabs(hidden);
+    onTabClose?.({ originalEvent: event, index });
+    const next = findVisibleActiveTab(index, hidden);
+    if (next) changeActiveIndex(event, next.index);
+  };
+
   const eligibleIndices = panels.reduce<number[]>((acc, panel, index) => {
-    if (!panel.props.disabled) acc.push(index);
+    if (!panel.props.disabled && isVisible(index)) acc.push(index);
     return acc;
   }, []);
 
@@ -160,6 +200,7 @@ export const UTabView = React.forwardRef<HTMLDivElement, UTabViewProps>(function
         const tabList = (
           <ul className={cx("tabViewNav")} role="tablist">
             {panels.map((panel, index) => {
+              if (!isVisible(index)) return null;
               const selected = index === activeIndex;
               const disabled = !!panel.props.disabled;
               return (
@@ -184,6 +225,16 @@ export const UTabView = React.forwardRef<HTMLDivElement, UTabViewProps>(function
                   >
                     {panel.props.header}
                   </button>
+                  {panel.props.closable && (
+                    <button
+                      type="button"
+                      className={cx("tabViewClose")}
+                      aria-label="Close"
+                      onClick={(event) => closeTab(event, index)}
+                    >
+                      {panel.props.closeIcon ?? <span aria-hidden="true">×</span>}
+                    </button>
+                  )}
                 </li>
               );
             })}
@@ -224,6 +275,7 @@ export const UTabView = React.forwardRef<HTMLDivElement, UTabViewProps>(function
       })()}
       <div className={cx("tabViewPanels")}>
         {panels.map((panel, index) => {
+          if (!isVisible(index)) return null;
           const selected = index === activeIndex;
           return (
             <div

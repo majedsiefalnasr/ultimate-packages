@@ -19,6 +19,7 @@ const css = /*css*/ `
 .u-tabview-header, .u-tabmenu-item { cursor: pointer; display: inline-flex; align-items: center; user-select: none; white-space: nowrap; }
 .u-tabview-header[data-u-disabled="true"], .u-tabmenu-item[data-u-disabled="true"] { cursor: default; opacity: 0.6; pointer-events: none; }
 .u-tabview-header-action, .u-tabmenu-action { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; background: transparent; border: none; cursor: pointer; }
+.u-tabview-close { display: inline-flex; align-items: center; background: transparent; border: none; cursor: pointer; padding: 0 0.5rem; }
 .u-tabview-nav-container { position: relative; }
 .u-tabview-nav-content { overflow-x: auto; scrollbar-width: none; }
 .u-tabview-nav-content::-webkit-scrollbar { display: none; }
@@ -42,6 +43,7 @@ const classes = {
     { "u-tabview-header-selected": params.selected, "u-tabview-header-disabled": params.disabled },
   ],
   tabViewHeaderAction: "u-tabview-header-action",
+  tabViewClose: "u-tabview-close",
   tabViewPanels: "u-tabview-panels",
   tabViewPanel: (params: { selected?: boolean } = {}) => ["u-tabview-panel", { "u-tabview-panel-selected": params.selected }],
 
