@@ -261,4 +261,24 @@ describe("UFileUpload", () => {
 
     expect(fixture.componentInstance.handled).toEqual({ files: expect.any(Array) });
   });
+  describe("progress ARIA via UProgressBar composition (Spec §5.2, GAP-060)", () => {
+    it("renders a role=progressbar element with the current progress as aria-valuenow while uploading", () => {
+      const fixture = TestBed.createComponent(UFileUpload);
+      fixture.detectChanges();
+      fixture.componentInstance["uploading"].set(true);
+      fixture.componentInstance["progress"].set(42);
+      fixture.detectChanges();
+      const bar = fixture.nativeElement.querySelector("[role=progressbar]");
+      expect(bar).toBeTruthy();
+      expect(bar.getAttribute("aria-valuenow")).toBe("42");
+    });
+
+    it("renders no progressbar when not uploading", () => {
+      const fixture = TestBed.createComponent(UFileUpload);
+      fixture.detectChanges();
+      fixture.componentInstance["progress"].set(42);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector("[role=progressbar]")).toBeNull();
+    });
+  });
 });
