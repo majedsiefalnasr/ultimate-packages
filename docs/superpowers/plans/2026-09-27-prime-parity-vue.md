@@ -6,6 +6,8 @@
 
 **Goal:** Add PageUp/PageDown scroll-into-view to Vue `Tab.vue` (GAP-062); add vertical-mode separator rendering to Vue `StepPanel.vue` (GAP-063).
 
+**Corrections (2026-09-30, before implementation):** Task 1's mechanism and Task 2's scope and supporting pieces were corrected against real PrimeVue 4.5.5 by user decision; the horizontal Step separator is registered separately as GAP-077. See Spec §12.
+
 **Spec:** `docs/superpowers/specs/2026-09-26-prime-parity-vue-design.md`.
 
 **GAP → Task mapping:** GAP-062 → Task 1. GAP-063 → Task 2.
@@ -18,13 +20,14 @@
 ## Review Focus
 
 - **PageDown/PageUp pressed when there is nothing to scroll (all tabs already fit in view)** — a reasonable person expects `scrollIntoView` to simply be a no-op in this case (browsers handle already-visible elements gracefully), not an error; Task 1's test should include this case to confirm no exception.
-- **Task 2's `isSeparatorVisible` computation requires the same `data-pc-name="step"`-style DOM query real PrimeVue uses, or Ultimate's own equivalent data-attribute** — confirm which data attribute Ultimate's own `UStep`/`UStepItem` already renders (if any) before assuming `data-pc-name` exists in this codebase; Ultimate likely uses its own `data-u-*` convention (matching every other component in this codebase), not PrimeVue's literal `data-pc-name` string.
+- **Task 2's `isSeparatorVisible` computation requires a stable step marker** — confirmed 2026-09-30 that Ultimate's `UStep` renders none (only `data-u-active`/`data-u-disabled`); Task 2 adds one following the `data-u-*` convention, not PrimeVue's literal `data-pc-name`.
+- **Task 2 must not change horizontal Stepper markup** — horizontal separators are GAP-077.
 
 ---
 
 ### Task 1: Vue — GAP-062 Tabs PageUp/PageDown
 
-**Files:** `packages/vue/src/tabs/Tab.vue`, `tab.spec.ts` (or wherever `Tab.vue`'s existing tests live — confirm exact filename first).
+**Files:** `packages/vue/src/tabs/Tab.vue`, `packages/vue/src/tabs/tabs.spec.ts` (the existing test file).
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -56,20 +59,11 @@ describe("PageUp/PageDown scroll-into-view (Spec §5.1, GAP-062)", () => {
 
 - [ ] **Step 2: Implement**
 
-In `packages/vue/src/tabs/Tab.vue`'s `onKeyDown` method, add:
+**Corrected 2026-09-30 (pre-dispatch source check, user decision — Spec §12):** real PrimeVue 4.5.5 `Tab.vue:88-95,122-123` scrolls the **last** tab into view on PageDown and the **first** on PageUp, with `{ block: 'nearest' }`, then `preventDefault()`; it moves neither focus nor selection. (This step originally scrolled the focused tab itself with `inline: "end"/"start"`.)
 
-```javascript
-case "PageDown":
-  this.$el.scrollIntoView?.({ block: "nearest", inline: "end" });
-  event.preventDefault();
-  break;
-case "PageUp":
-  this.$el.scrollIntoView?.({ block: "nearest", inline: "start" });
-  event.preventDefault();
-  break;
-```
+In `packages/vue/src/tabs/Tab.vue`'s `onKeyDown`, add `PageDown`/`PageUp` cases that call the file's existing `findLastTab()`/`findFirstTab()` helpers and its existing `scrollIntoView({ block: "nearest" })` call (currently at `Tab.vue:121`), then `event.preventDefault()`. Match the key-matching convention already used by the other cases in this `onKeyDown` (check whether it switches on `event.code` or `event.key`). Do not focus the target tab, and do not call `this.activate()` or `this.$pcTabs.updateValue(...)` — per Global Constraints.
 
-(Confirm the exact `scrollIntoView` options real PrimeVue's own `onPageDownKey`/`onPageUpKey` pass — re-check the pinned source before finalizing `inline: "end"`/`"start"`, do not assume without verifying.) Do not call `this.activate()` or `this.$pcTabs.updateValue(...)` in either new case — this is the one thing that must not happen, per Global Constraints.
+Tests (Step 1, adjusted): stub `scrollIntoView` and assert it is called on the **last** tab element for PageDown and the **first** for PageUp, with `{ block: "nearest" }`; the selected value and `document.activeElement` are unchanged; `preventDefault` is called; a single tab does not throw.
 
 - [ ] **Step 3: Run tests, verify green**
 
@@ -83,46 +77,25 @@ case "PageUp":
 
 ### Task 2: Vue — GAP-063 Stepper vertical separator
 
-**Files:** `packages/vue/src/stepper/StepPanel.vue`, its test file.
+**Files:** `packages/vue/src/stepper/StepPanel.vue`, `StepItem.vue`, `Step.vue` (marker attribute only), `stepper-style.ts`, `stepper.spec.ts`, and one new internal separator file in `packages/vue/src/stepper/` (not exported from `index.ts`).
 
-- [ ] **Step 1: Write the failing tests**
+**Corrected 2026-09-30 (pre-dispatch source check, user decision — Spec §12).** Real PrimeVue 4.5.5 `steppanel/StepPanel.vue`: `isVertical = !!$pcStepItem`; the vertical template wraps content in a `contentWrapper` div with `<StepperSeparator v-if="isSeparatorVisible" />` before the `content` div; `updateSeparator()` (on `mounted` and `updated`) finds all `[data-pc-name="step"]` in the stepper root, the index of the `step` inside `$pcStepItem.$el`, and sets `isSeparatorVisible = isVertical && index !== stepElements.length - 1`. Ultimate has none of the supporting pieces: no `StepperSeparator` component (only an unused horizontal `.u-stepper-separator` rule, `stepper-style.ts:21`), `StepItem.vue` provides nothing, and `Step.vue` has no marker attribute. This task originally asked only for `StepPanel.vue` changes and a "no separator in horizontal mode" test; PrimeVue's horizontal separator lives in `Step.vue` and is GAP-077, out of scope.
 
-First confirm what data attribute Ultimate's own `UStep`/`UStepItem` components actually render (check `packages/vue/src/stepper/Step.vue` and `StepItem.vue` for any existing `data-u-*` marker before assuming one exists — if none exists yet, this task must add one, since real PrimeVue's own `updateSeparator()` depends on being able to query sibling step elements by a stable marker).
-
-```typescript
-describe("vertical-mode separator (Spec §5.2, GAP-063)", () => {
-  it("renders a separator between two vertical steps except after the last", async () => {
-    // mount a vertical UStepper with 2 UStepItem/UStepPanel pairs, matching
-    // this file's own existing test harness for a vertical Stepper (if one
-    // exists) or the Stepper family's own established multi-component mount
-    // pattern
-    const wrapper = mount(/* vertical stepper, 2 items */);
-    const separators = wrapper.findAllComponents({ name: "UStepperSeparator" });
-    expect(separators.length).toBe(1); // one separator, between step 1 and step 2, none after the last
-  });
-
-  it("renders no separator in horizontal mode", async () => {
-    const wrapper = mount(/* horizontal stepper, 2 items */);
-    expect(wrapper.findAllComponents({ name: "UStepperSeparator" }).length).toBe(0);
-  });
-});
-```
-
+- [ ] **Step 1: Write the failing tests** (in `stepper.spec.ts`, reusing its existing mount harness) — vertical Stepper (`UStepItem` each containing `UStep` + `UStepPanel`) with 3 items: separators render in the first two panels and not the last; the separator sits inside the panel's content wrapper before the content; adding/removing an item updates separator visibility (the `updated` path); horizontal Stepper (`UStepList` + `UStepPanels`) renders no separators and its existing markup is unchanged; `StepPanel`'s `active` computed is unchanged (existing tests still pass).
 - [ ] **Step 2: Implement**
-
-1. If no stable per-step data attribute exists yet, add one to `UStep`/`UStepItem` (e.g. `data-u-step` — matching this codebase's own `data-u-*` naming convention, not PrimeVue's literal `data-pc-name`).
-2. In `StepPanel.vue`, add `isSeparatorVisible` to `data()`, and a `updateSeparator()` method mirroring real PrimeVue's own logic exactly (adapted to Ultimate's own data attribute from Step 1): query all step elements within the stepper's root, find this panel's own step's index, set `isSeparatorVisible = isVertical && index !== stepElements.length - 1`. `isVertical` must be derived from whatever existing mechanism the Stepper family already uses to know its own orientation (check `$pcStepper`'s injected properties for an existing orientation field before adding a new one).
-3. Call `updateSeparator()` from `mounted()` and `updated()` (matching real PrimeVue's own lifecycle hooks exactly).
-4. Render `<UStepperSeparator v-if="isSeparatorVisible" />` in the template, inside the vertical-mode branch, before the existing `<slot>`.
-
-- [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
+  1. `StepItem.vue`: `provide` its instance (e.g. `$pcStepItem: this`), matching how `Stepper.vue` provides `$pcStepper` (`Stepper.vue:32`).
+  2. `Step.vue`: add a stable marker attribute on the step root, following this codebase's `data-u-*` convention (e.g. `data-u-step`); no other `Step.vue` change.
+  3. New internal separator element (e.g. `StepperSeparator.vue`, a `<span>` with the existing `stepperSeparator` class), registered locally in `StepPanel.vue`, not exported.
+  4. `StepPanel.vue`: inject `$pcStepItem` with a `null` default; add `isSeparatorVisible` data, `isVertical` computed (`!!$pcStepItem`), and `updateSeparator()` mirroring PrimeVue (using the marker attribute), called from `mounted()` and `updated()`. In vertical mode, wrap the slot in a content-wrapper div with the separator before a content div; horizontal markup unchanged. Do not change the existing `active` computed (DEFERRED, Spec §2.2).
+  5. `stepper-style.ts`: add vertical rules based on `@primeuix/styles` 2.0.3 stepper — separator inside a step item: `flex: 0 0 auto; width: <separator size>; height: auto; margin: <separator margin>` (PrimeUIX also uses `position: relative; left: calc(-1 * size)`), content wrapper `display: flex; flex: 1 1 auto; min-height: 0`, content `width: 100%`. Scope them under the step-item class so the existing horizontal `.u-stepper-separator` rule is unaffected. Use this file's existing value conventions (it uses literal values, not `dt()` tokens — verify).
+- [ ] **Step 3-4:** Tests, full Vue suite, typecheck, dependency ceiling.
 
 ---
 
 ## Completion Criteria
 
 - Both tasks pass their own tests.
-- `pnpm test`, `pnpm run ceiling:validate` pass after each task.
+- `pnpm --filter @ultimate/vue test`, `pnpm --filter @ultimate/vue run typecheck` and `pnpm run ceiling:validate` pass after each task. (Corrected 2026-09-30: originally `pnpm test`; the full-monorepo run has pre-existing unrelated dist-artifact failures.)
 - Neither task adds a mode-aware active-state comparison to `StepPanel.vue`'s existing `active` computed property (verify via `git diff` — that property must remain unchanged).
 
 ## Documentation/Ledger Updates

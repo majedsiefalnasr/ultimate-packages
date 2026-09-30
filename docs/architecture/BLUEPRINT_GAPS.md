@@ -1018,7 +1018,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Type:** Component, Accessibility, Framework (Vue)
 - **Blocking level:** LOW
 - **Current evidence:** Real PrimeVue's `Tab.vue` implements `onPageDownKey`/`onPageUpKey` to scroll the tab list into view without changing selection; Ultimate's Vue `Tab.vue` omits both entirely, confirmed during the Vue Tabs/Stepper residual verification.
-- **Expected state:** PageUp/PageDown scroll-into-view-only behavior, ported exactly — must not change the selected tab as a side effect, per the human decision's own explicit clarification.
+- **Expected state:** PageUp/PageDown scroll-into-view-only behavior, ported exactly — must not change the selected tab as a side effect, per the human decision's own explicit clarification. Real PrimeVue 4.5.5 `Tab.vue:88-95,122-123`: PageDown scrolls the last tab into view, PageUp the first, via `scrollIntoView({ block: 'nearest' })`, with `preventDefault()` and no focus change. (Clarified 2026-09-30 after the Implementation-stage source check; the Plan's original snippet scrolled the current tab instead.)
 - **Why it matters:** Real PrimeVue's own keyboard mechanism (`findNextTab`/`findPrevTab`/`findFirstTab`/`findLastTab`, confirmed to live in `Tab.vue` not `TabList.vue`) is otherwise already matched by Ultimate's Vue port; this is the one confirmed missing piece.
 - **What it blocks:** Nothing further downstream.
 - **Dependencies:** None.
@@ -1034,8 +1034,8 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Type:** Component, Framework (Vue)
 - **Blocking level:** LOW
 - **Current evidence:** Real PrimeVue's `StepPanel.vue` has a real `updateSeparator()` method rendering a `StepperSeparator` between vertical steps (except after the last); Ultimate's `StepPanel.vue` has zero separator logic anywhere in the Stepper family, confirmed by exhaustive grep during the Vue Tabs/Stepper residual verification.
-- **Expected state:** The `updateSeparator()` mechanism ported, with `StepperSeparator` rendering wired in for vertical-mode Steppers.
-- **Why it matters:** This is a real, visible rendering gap for vertical-orientation Steppers — real PrimeVue's other Stepper-family files (`Step`/`StepItem`/`StepList`/`StepPanels`) are already confirmed to match exactly; `StepPanel.vue`'s separator logic is the one confirmed gap.
+- **Expected state:** The `updateSeparator()` mechanism ported, with `StepperSeparator` rendering wired in for vertical-mode Steppers. "Vertical" means the panel sits inside a `StepItem` (PrimeVue `StepPanel.vue`: `isVertical = !!$pcStepItem`); the separator renders inside a content wrapper before the panel content, for every vertical step except the last. Supporting pieces Ultimate lacks and this gap adds (user decision 2026-09-30): `StepItem` provides its context to descendants, a stable step marker attribute, a small internal separator element, and vertical separator/content-wrapper CSS based on `@primeuix/styles` 2.0.3 stepper (`.p-stepitem .p-stepper-separator`, `.p-stepitem .p-steppanel-content-wrapper`).
+- **Why it matters:** This is a real, visible rendering gap for vertical-orientation Steppers. **(Corrected 2026-09-30, Implementation-stage source check:** this entry originally said PrimeVue's other Stepper-family files already match Ultimate exactly. Real PrimeVue `Step.vue:9,43-49` also renders a separator after each horizontal step header except the last, which Ultimate's `Step.vue` lacks; that horizontal gap is registered separately as GAP-077 and is not part of GAP-063.)
 - **What it blocks:** Nothing further downstream.
 - **Dependencies:** None.
 - **Framework scope:** Vue only.
@@ -1253,6 +1253,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Existing reusable infrastructure:** The existing `ariaLabel` prop/binding pattern in the same component.
 - **Recommended resolution direction:** Directional only — add the prop and binding with a test.
 - **Source/evidence:** Form/Accessibility Plan Task 6 review (2026-09-30); PrimeVue `Password.vue:11`; `BasePassword.ts:38-39`.
+- **Architectural decision required:** No.
+
+#### GAP-077 — Vue Stepper lacks horizontal separators between step headers
+
+- **Status:** MISSING
+- **Type:** Component, Framework (Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Found by the Vue Plan's Implementation-stage source check (2026-09-30); registered on user instruction. Real PrimeVue 4.5.5 `step/Step.vue` renders `<StepperSeparator v-if="isSeparatorVisible" />` after each step header (`:9`), with `updateState()` setting `isSeparatorVisible = index !== stepLen - 1` when the step is inside a `StepList` (`:43-49`). Ultimate's `packages/vue/src/stepper/Step.vue` renders no separator, although `stepper-style.ts:21` already defines an unused horizontal `.u-stepper-separator` rule. This contradicts the earlier audit claim (Vue Plan Spec §4/§8, GAP-063's original text) that Ultimate's `Step` already matches PrimeVue exactly.
+- **Expected state:** Horizontal Steppers render a separator between consecutive step headers, none after the last, matching PrimeVue.
+- **Why it matters:** Visible rendering gap in the default (horizontal) Stepper layout.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** Can reuse the step marker and internal separator element added by GAP-063.
+- **Framework scope:** Vue only (Angular/React Stepper not examined as part of this finding).
+- **Existing reusable infrastructure:** `.u-stepper-separator` CSS; GAP-063's separator element and step marker once shipped.
+- **Recommended resolution direction:** Directional only — port `Step.vue`'s separator rendering for steps inside `StepList`.
+- **Source/evidence:** Vue Plan pre-dispatch source check (ledger `.superpowers/sdd/2026-09-27-prime-parity-vue/progress.md`); PrimeVue `Step.vue:9,43-49`; Ultimate `Step.vue`, `stepper-style.ts:21`.
 - **Architectural decision required:** No.
 
 ---
