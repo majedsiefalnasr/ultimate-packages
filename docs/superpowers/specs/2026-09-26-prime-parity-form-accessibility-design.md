@@ -51,7 +51,7 @@
 
 ### 5.1 GAP-059 — SelectButton roving-tabindex
 
-Only one option is tabbable (`tabindex="0"`) at a time, initially the first; ArrowRight/ArrowDown move focus (and the roving `tabindex`) to the next option and ArrowLeft/ArrowUp to the previous, wrapping at both ends; arrows move focus only, Space selects; disabled options are not skipped — matching real PrimeReact 10.9.9 (`SelectButton.js:16,101`, `SelectButtonItem.js:41-94`). One Ultimate addition: when no option is tabbable (component `disabled`), arrow keys are a no-op instead of throwing. React only. **(Corrected 2026-09-30 — see §12.)**
+Only one option is tabbable (`tabindex="0"`) at a time, initially the first; ArrowRight/ArrowDown move focus (and the roving `tabindex`) to the next option and ArrowLeft/ArrowUp to the previous, wrapping at both ends; arrows move focus only, Space selects — matching real PrimeReact 10.9.9 (`SelectButton.js:16,101`, `SelectButtonItem.js:41-94`). Two Ultimate differences: when no option is tabbable (component `disabled`), arrow keys are a no-op instead of throwing; and disabled options are skipped (PrimeReact does not skip them), because `USelectButton` composes `UToggleButton`, whose native-disabled input cannot receive focus. `UToggleButton` gains one optional `tabIndex` prop. React only. **(Corrected 2026-09-30 — see §12.)**
 
 ### 5.2 GAP-060 — FileUpload progress ARIA
 
@@ -65,7 +65,7 @@ Matching real PrimeVue 4.5.5 (`Password.vue:13-15,44-45,57-58`): Vue Password's 
 
 ## 6. API Requirements
 
-- **GAP-059:** no new public API — internal keyboard/focus-management behavior only.
+- **GAP-059:** no new `USelectButton` API — internal keyboard/focus-management behavior. `UToggleButton` gains one optional `tabIndex` prop (added 2026-09-30 by user decision, see §12), passed to its input.
 - **GAP-060:** no new public API — an internal implementation change (compose `UProgressBar` instead of a bare `div`); FileUpload's own existing progress-related props (if any) are unaffected.
 - **GAP-061:** no new public API — internal ARIA-attribute wiring on Password's existing input and strength-overlay markup.
 
@@ -115,4 +115,6 @@ Source checks at the start of implementation (pinned `.vendor-cache/` tarballs) 
 - **GAP-059 Angular removed.** Real PrimeNG 21.1.9 SelectButton has no roving-tabindex: each option is a `p-togglebutton` with tabindex 0 (−1 when disabled) handling only Enter/Space (`togglebutton.ts:54,87-100`); `SelectButton.changeTabIndexes` (`selectbutton.ts:267`) is never called outside its own spec. Ultimate's Angular port already matches. User decision: reclassify Angular as matching upstream, like Vue; GAP-059 is React-only.
 - **GAP-059 React semantics.** The Plan asked for skipping disabled options and an all-disabled no-op; real PrimeReact wraps without skipping disabled options and would throw when no option is tabbable. User decision: match PrimeReact exactly (§5.1), plus a guard so arrow keys are a no-op when no option is tabbable.
 - **GAP-061 ARIA placement.** The original text put the disclosure ARIA on the "overlay-toggle", which the Plan read as the mask toggle with `aria-expanded` tracking the mask state. Real PrimeVue 4.5.5 puts it on the input, describing the strength-meter overlay (`Password.vue:13-15`), with live regions at `:44-45` and `:57-58`. User decision: follow real PrimeVue (§5.3).
-- **GAP-060 unchanged.** All three real Prime FileUploads compose ProgressBar (PrimeNG `fileupload.ts:240`, PrimeReact `FileUpload.js:545`, PrimeVue `FileUpload.vue:43`); the premise holds.
+- **GAP-059 React: composition constraint.** A pre-dispatch check of Task 2 found Ultimate's `USelectButton` composes `UToggleButton`, which renders a native `<input type="checkbox">` (disabled natively) and exposes no `tabIndex` prop, while PrimeReact renders its own focusable item per option. User decision: add one optional `tabIndex` prop to `UToggleButton`, handle arrow keys on the `role="group"` container, and skip disabled options since they cannot be focused (§5.1).
+- **GAP-060 bar height.** Composing `UProgressBar` inherited its standalone 1.5rem height; real Prime scopes the bar to 0.25rem inside FileUpload. User decision: Tasks 3-5 also add a FileUpload-scoped rule in each `file-upload-style.ts` and delete the dead bare-div CSS; `UProgressBar` styles unchanged.
+- **GAP-060 premise unchanged.** All three real Prime FileUploads compose ProgressBar (PrimeNG `fileupload.ts:240`, PrimeReact `FileUpload.js:545`, PrimeVue `FileUpload.vue:43`); the premise holds.

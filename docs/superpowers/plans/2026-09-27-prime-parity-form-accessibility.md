@@ -27,7 +27,7 @@
 
 ## Review Focus
 
-- **SelectButton with no tabbable option** — PrimeReact does not skip disabled options, so there is no "find the next enabled option" loop; but when the component itself is `disabled` every option has tabindex −1 and PrimeReact's `changeTabIndexes` would throw. Task 2 must make arrow keys a no-op in that case (the one user-approved addition to PrimeReact behavior).
+- **SelectButton with no focusable option** — Task 2 skips disabled options (user decision 2026-09-30, see Task 2), so the "find the next enabled option" search must terminate when every option is disabled, and arrow keys must be a no-op (no throw, no infinite loop) when the component is `disabled` or all options are disabled.
 - **FileUpload's `progress` value exceeding 100 or going negative from a malformed XHR event** — `UProgressBar`'s own existing `value` input has no documented clamping; Task 3-5 should pass the raw `progress` state through unchanged (matching current behavior) rather than adding new clamping logic not requested by any GAP.
 
 ---
@@ -40,16 +40,19 @@ Not implemented. Step 1's required source check found real PrimeNG 21.1.9 Select
 
 ### Task 2: React — GAP-059 SelectButton roving-tabindex
 
-**Files:** `packages/react/src/select-button/select-button.tsx`, `select-button.spec.tsx` (plus `packages/react/src/toggle-button/toggle-button.tsx` only if `UToggleButton` cannot currently accept `tabIndex`/`onKeyDown` — stop and report before changing its public props).
+**Files:** `packages/react/src/select-button/select-button.tsx`, `select-button.spec.tsx`, `packages/react/src/toggle-button/toggle-button.tsx` (+ its spec for the new prop).
 
-**Target behavior (real PrimeReact 10.9.9, `SelectButton.js:16,101`, `SelectButtonItem.js:41-94`; Spec §5.1):**
-- A `focusedIndex` state, initially `0`. Each option's tabindex is `-1` when the component is `disabled` or `index !== focusedIndex`, otherwise `0`. Per-option `disabled` does not affect tabindex.
-- Keydown on an option, matching on `event.code`: `ArrowRight`/`ArrowDown` → next option, `ArrowLeft`/`ArrowUp` → previous option, wrapping at both ends; `preventDefault()`; set `focusedIndex` and move DOM focus. Arrows move focus only, never selection. Disabled options are not skipped.
+**Composition constraint (found pre-dispatch 2026-09-30; user decision recorded in Spec §12):** `USelectButton` composes `UToggleButton`, which renders a native `<input type="checkbox" disabled>` and exposed no `tabIndex` prop; PrimeReact renders its own focusable item per option. Decision: add one optional `tabIndex?: number` prop to `UToggleButton`, forwarded to its `<input>` (omitted → current behavior unchanged); handle arrow keys on `USelectButton`'s `role="group"` container (keydown bubbles from the focused input); skip disabled options, since a native-disabled input cannot receive focus. No other `UToggleButton` changes.
+
+**Target behavior (real PrimeReact 10.9.9, `SelectButton.js:16,101`, `SelectButtonItem.js:41-94`; Spec §5.1), with the two recorded differences:**
+- A `focusedIndex` state, initially the first enabled option (PrimeReact: `0`; differs only when option 0 is disabled, because a disabled input cannot hold the tab stop). Each option's tabindex is `0` when it is the `focusedIndex` option and the component is not `disabled`, otherwise `-1`.
+- Keydown, matching on `event.code`: `ArrowRight`/`ArrowDown` → next enabled option, `ArrowLeft`/`ArrowUp` → previous enabled option, wrapping at both ends; `preventDefault()`; set `focusedIndex` and move DOM focus. Arrows move focus only, never selection.
 - `Space` selects (keep `UToggleButton`'s existing activation; do not double-toggle).
-- User-approved addition: when no option has tabindex `0` (component `disabled`), arrow keys are a no-op and do not throw.
+- When the component is `disabled` or no option is enabled, arrow keys are a no-op (no throw, bounded search).
+- If `focusedIndex` points at an option that becomes disabled or removed, fall back to the first enabled option.
 
-- [ ] **Step 1: Write the failing tests** — only the `focusedIndex` option has tabindex `0` (initially the first); ArrowRight and ArrowDown move to the next option; ArrowLeft and ArrowUp move to the previous; wrap at both ends; arrows do not change the selected value; a disabled option is not skipped; component `disabled` → every option tabindex `-1` and ArrowRight does not throw.
-- [ ] **Step 2: Implement** per the target behavior above, React idioms. If `UToggleButton` renders a disabled option in a way that cannot receive focus (e.g. native `disabled`), stop and report — do not change disabled rendering unilaterally.
+- [ ] **Step 1: Write the failing tests** — `UToggleButton` forwards `tabIndex` to its input and omits it when not given; only the `focusedIndex` option has tabindex `0` (initially the first enabled); ArrowRight/ArrowDown move to the next enabled option; ArrowLeft/ArrowUp to the previous; wrap at both ends; a disabled option is skipped; arrows do not change the selected value; component `disabled` → every option tabindex `-1` and ArrowRight does not throw; all options disabled → no throw, no loop.
+- [ ] **Step 2: Implement** per the target behavior above, React idioms. Any further change to `UToggleButton` beyond the optional `tabIndex` prop → stop and report.
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
 ---
