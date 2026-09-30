@@ -9,6 +9,9 @@
       :placeholder="placeholder"
       :disabled="disabled"
       :aria-label="ariaLabel"
+      :aria-haspopup="feedback"
+      :aria-expanded="overlayVisible"
+      :aria-controls="overlayVisible ? overlayId : undefined"
       @input="onInput"
       @focus="onFocus"
       @blur="onBlur"
@@ -51,17 +54,19 @@
       </svg>
     </template>
     <UPortal v-if="feedback" :appendTo="appendTo">
-      <div v-if="overlayVisible" :class="cx('overlay')">
+      <div v-if="overlayVisible" :id="overlayId" :class="cx('overlay')" role="dialog" aria-live="polite">
         <div :class="cx('meter')">
           <div :class="cx('meterLabel', { strength: meter ? meter.strength : null })" :style="{ width: meter ? meter.width : '' }" />
         </div>
         <div :class="cx('meterText')">{{ infoText }}</div>
       </div>
     </UPortal>
+    <span :class="cx('hiddenAccessible')" aria-live="polite">{{ infoText }}</span>
   </div>
 </template>
 
 <script>
+import { useId } from "vue";
 import { Portal as UPortal } from "@ultimate/vue-core";
 import { createBasePassword } from "./BasePassword";
 
@@ -81,8 +86,13 @@ export default {
   extends: createBasePassword(),
   emits: ["change", "focus", "blur"],
   components: { UPortal },
+  // Per-instance SSR-safe id, same setup()-useId() pattern as Dialog.vue / Menu.vue.
+  setup() {
+    return { generatedOverlayId: useId() };
+  },
   data() {
     return {
+      overlayId: `u-password-overlay-${this.generatedOverlayId}`,
       unmasked: false,
       overlayVisible: false,
       meter: null,
