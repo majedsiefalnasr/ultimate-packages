@@ -389,7 +389,7 @@ First read real PrimeReact 10.9.9's own `TabView`/`TabViewBase` source in full (
 ```tsx
 describe("scrollable overflow (Spec §5.7, GAP-057)", () => {
   it("does not render navigator buttons when scrollable is false (the default)", () => {
-    render(<UTabs>{/* many tab panels, enough to overflow */}</UTabs>);
+    render(<UTabView>{/* many tab panels, enough to overflow */}</UTabView>);
     expect(screen.queryByRole("button", { name: /scroll left|previous|next/i })).not.toBeInTheDocument();
   });
 
@@ -400,13 +400,13 @@ describe("scrollable overflow (Spec §5.7, GAP-057)", () => {
     // stub scrollWidth/clientWidth/scrollLeft on the scroll container per Step 1's
     // own confirmed values (mirroring whichever stubbing approach, if any, Ultimate's
     // own existing Tabs spec files already use for this same jsdom limitation).
-    render(<UTabs scrollable>{/* many tab panels */}</UTabs>);
+    render(<UTabView scrollable>{/* many tab panels */}</UTabView>);
     expect(screen.queryByRole("button", { name: /scroll left|previous/i })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /scroll right|next/i })).toBeInTheDocument();
   });
 
   it("does not render navigator buttons when scrollable is true but tabs fit without overflow", () => {
-    render(<UTabs scrollable>{/* one short tab */}</UTabs>);
+    render(<UTabView scrollable>{/* one short tab */}</UTabView>);
     expect(screen.queryByRole("button", { name: /scroll left|previous|next/i })).not.toBeInTheDocument();
   });
 });
@@ -419,7 +419,7 @@ describe("scrollable overflow (Spec §5.7, GAP-057)", () => {
 
 ### Task 25: React — GAP-058 Tabs `closable`
 
-**Files:** `packages/react/src/tabs/tabs.tsx`, `tabs.spec.tsx`. **Independent of Task 24.**
+**Files:** `packages/react/src/tabs/tab-view.tsx` (the real TabView-equivalent file, same as Task 24 — there is no `tabs.tsx`; `UTabPanel`'s own props live in `tab-panel.tsx` if the `closable`/`onClose` prop declarations belong there), `tabs.spec.tsx`. **Independent of Task 24.**
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -428,20 +428,20 @@ First read real PrimeReact's own close-button/close-icon implementation (`.vendo
 ```tsx
 describe("closable tabs (Spec §5.8, GAP-058)", () => {
   it("renders a close button on a tab with closable set", () => {
-    render(<UTabs><UTabPanel header="A" closable /></UTabs>);
+    render(<UTabView><UTabPanel header="A" closable /></UTabView>);
     expect(screen.getByRole("button", { name: /close/i })).toBeInTheDocument();
   });
 
   it("clicking the close button removes the tab and fires the close callback", () => {
     const onClose = vi.fn();
-    render(<UTabs><UTabPanel header="A" closable onClose={onClose} /></UTabs>);
+    render(<UTabView><UTabPanel header="A" closable onClose={onClose} /></UTabView>);
     fireEvent.click(screen.getByRole("button", { name: /close/i }));
     expect(onClose).toHaveBeenCalled();
     expect(screen.queryByText("A")).not.toBeInTheDocument();
   });
 
   it("does not render a close button when closable is unset", () => {
-    render(<UTabs><UTabPanel header="A" /></UTabs>);
+    render(<UTabView><UTabPanel header="A" /></UTabView>);
     expect(screen.queryByRole("button", { name: /close/i })).not.toBeInTheDocument();
   });
 });
