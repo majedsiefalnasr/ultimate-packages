@@ -91,4 +91,146 @@ describe("USelectButton", () => {
     expect(inputsAfter[0]).not.toBeChecked();
     expect(inputsAfter[1]).toBeChecked();
   });
+
+  describe("roving tabindex (GAP-059)", () => {
+    const inputsOf = () => screen.getAllByRole("checkbox", { hidden: true }) as HTMLInputElement[];
+    const tabIndexes = () => inputsOf().map((i) => i.getAttribute("tabindex"));
+    const press = (code: string) => fireEvent.keyDown(document.activeElement as Element, { code });
+
+    it("gives tabindex 0 only to the first enabled option initially", () => {
+      render(
+        <USelectButton
+          value={null}
+          onChange={() => {}}
+          options={[{ label: "A", disabled: true }, "B", "C"]}
+          optionLabel="label"
+          optionDisabled="disabled"
+        />
+      );
+      expect(tabIndexes()).toEqual(["-1", "0", "-1"]);
+    });
+
+    it("ArrowRight and ArrowDown move focus and the tab stop to the next option", () => {
+      render(<USelectButton value={null} onChange={() => {}} options={["A", "B", "C"]} />);
+      inputsOf()[0].focus();
+      press("ArrowRight");
+      expect(document.activeElement).toBe(inputsOf()[1]);
+      expect(tabIndexes()).toEqual(["-1", "0", "-1"]);
+      press("ArrowDown");
+      expect(document.activeElement).toBe(inputsOf()[2]);
+      expect(tabIndexes()).toEqual(["-1", "-1", "0"]);
+    });
+
+    it("ArrowLeft and ArrowUp move to the previous option", () => {
+      render(<USelectButton value={null} onChange={() => {}} options={["A", "B", "C"]} />);
+      inputsOf()[2].focus();
+      press("ArrowLeft");
+      expect(document.activeElement).toBe(inputsOf()[1]);
+      press("ArrowUp");
+      expect(document.activeElement).toBe(inputsOf()[0]);
+    });
+
+    it("wraps at both ends", () => {
+      render(<USelectButton value={null} onChange={() => {}} options={["A", "B", "C"]} />);
+      inputsOf()[2].focus();
+      press("ArrowRight");
+      expect(document.activeElement).toBe(inputsOf()[0]);
+      press("ArrowLeft");
+      expect(document.activeElement).toBe(inputsOf()[2]);
+    });
+
+    it("skips disabled options", () => {
+      render(
+        <USelectButton
+          value={null}
+          onChange={() => {}}
+          options={["A", { label: "B", disabled: true }, "C"]}
+          optionLabel="label"
+          optionDisabled="disabled"
+        />
+      );
+      inputsOf()[0].focus();
+      press("ArrowRight");
+      expect(document.activeElement).toBe(inputsOf()[2]);
+      press("ArrowLeft");
+      expect(document.activeElement).toBe(inputsOf()[0]);
+    });
+
+    it("calls preventDefault on arrow keys", () => {
+      render(<USelectButton value={null} onChange={() => {}} options={["A", "B"]} />);
+      inputsOf()[0].focus();
+      const notPrevented = fireEvent.keyDown(inputsOf()[0], { code: "ArrowRight" });
+      expect(notPrevented).toBe(false);
+    });
+
+    it("arrow keys never change the selected value", () => {
+      const onChange = vi.fn();
+      render(<USelectButton value="A" onChange={onChange} options={["A", "B", "C"]} />);
+      inputsOf()[0].focus();
+      press("ArrowRight");
+      press("ArrowLeft");
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it("component disabled: every option has tabindex -1 and arrows do not throw", () => {
+      render(<USelectButton value={null} onChange={() => {}} options={["A", "B"]} disabled />);
+      expect(tabIndexes()).toEqual(["-1", "-1"]);
+      expect(() => fireEvent.keyDown(inputsOf()[0], { code: "ArrowRight" })).not.toThrow();
+      expect(tabIndexes()).toEqual(["-1", "-1"]);
+    });
+
+    it("all options disabled: no throw, no tab stop", () => {
+      render(
+        <USelectButton
+          value={null}
+          onChange={() => {}}
+          options={[
+            { label: "A", disabled: true },
+            { label: "B", disabled: true },
+          ]}
+          optionLabel="label"
+          optionDisabled="disabled"
+        />
+      );
+      expect(tabIndexes()).toEqual(["-1", "-1"]);
+      expect(() => fireEvent.keyDown(inputsOf()[0], { code: "ArrowRight" })).not.toThrow();
+      expect(tabIndexes()).toEqual(["-1", "-1"]);
+    });
+
+    it("falls back to the first enabled option when the focused option becomes disabled", () => {
+      const opts = (bDisabled: boolean) => ["A", { label: "B", disabled: bDisabled }, "C"];
+      const ui = (bDisabled: boolean) => (
+        <USelectButton
+          value={null}
+          onChange={() => {}}
+          options={opts(bDisabled)}
+          optionLabel="label"
+          optionDisabled="disabled"
+        />
+      );
+      const { rerender } = render(ui(false));
+      inputsOf()[0].focus();
+      press("ArrowRight");
+      expect(tabIndexes()).toEqual(["-1", "0", "-1"]);
+      rerender(ui(true));
+      expect(tabIndexes()).toEqual(["0", "-1", "-1"]);
+    });
+
+    it("falls back to the first enabled option when the focused option is removed", () => {
+      const { rerender } = render(<USelectButton value={null} onChange={() => {}} options={["A", "B", "C"]} />);
+      inputsOf()[2].focus();
+      fireEvent.click(inputsOf()[2]);
+      expect(tabIndexes()).toEqual(["-1", "-1", "0"]);
+      rerender(<USelectButton value={null} onChange={() => {}} options={["A", "B"]} />);
+      expect(tabIndexes()).toEqual(["0", "-1"]);
+    });
+
+    it("Space still selects exactly once", () => {
+      const onChange = vi.fn();
+      render(<USelectButton value={null} onChange={onChange} options={["A", "B"]} />);
+      inputsOf()[0].focus();
+      fireEvent.keyDown(inputsOf()[0], { key: " ", code: "Space" });
+      expect(onChange).toHaveBeenCalledTimes(1);
+    });
+  });
 });

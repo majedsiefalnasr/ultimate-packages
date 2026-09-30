@@ -55,4 +55,14 @@ describe("UToggleButton", () => {
     fireEvent.keyDown(screen.getByRole("checkbox", { hidden: true }), { key: " " });
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ value: true }));
   });
+
+  it("forwards tabIndex to the input", () => {
+    render(<UToggleButton checked={false} onChange={() => {}} tabIndex={-1} />);
+    expect(screen.getByRole("checkbox", { hidden: true })).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("omits tabindex from the input when tabIndex is not given", () => {
+    render(<UToggleButton checked={false} onChange={() => {}} />);
+    expect(screen.getByRole("checkbox", { hidden: true })).not.toHaveAttribute("tabindex");
+  });
 });
