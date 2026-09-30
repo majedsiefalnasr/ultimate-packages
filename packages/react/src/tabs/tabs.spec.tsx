@@ -220,4 +220,22 @@ describe("UTabView scrollable overflow (Spec §5.7, GAP-057)", () => {
     fireEvent.click(prev(container) as HTMLElement);
     expect(dims.scrollLeft).toBe(0);
   });
+
+  it("click step subtracts the overlaid navigator widths from the strip width", () => {
+    setDims(1000, 200, 300);
+    const { container } = renderTabs(true);
+    const widths = new Map<Element, number>([
+      [prev(container) as Element, 30],
+      [next(container) as Element, 30],
+    ]);
+    const spy = vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockImplementation(function (this: HTMLElement) {
+      return widths.get(this) ?? 0;
+    });
+    try {
+      fireEvent.click(next(container) as HTMLElement);
+      expect(dims.scrollLeft).toBe(440);
+    } finally {
+      spy.mockRestore();
+    }
+  });
 });

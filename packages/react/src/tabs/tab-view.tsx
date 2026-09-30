@@ -63,10 +63,23 @@ export const UTabView = React.forwardRef<HTMLDivElement, UTabViewProps>(function
     if (scrollable) updateButtonState();
   });
 
+  // Mirrors PrimeReact `DomHandler.getWidth`: offsetWidth minus horizontal padding and border.
+  const contentBoxWidth = (el: HTMLElement) => {
+    const style = getComputedStyle(el);
+    return (
+      el.offsetWidth -
+      (parseFloat(style.paddingLeft) +
+        parseFloat(style.paddingRight) +
+        parseFloat(style.borderLeftWidth) +
+        parseFloat(style.borderRightWidth) || 0)
+    );
+  };
+
+  // Buttons overlay the strip (absolute), so their widths are not part of content.clientWidth's free space.
   const visibleButtonsWidth = (content: HTMLDivElement) =>
     Array.from(
       content.parentElement?.querySelectorAll<HTMLElement>(".u-tabview-nav-btn") ?? []
-    ).reduce((acc, el) => acc + el.offsetWidth, 0);
+    ).reduce((acc, el) => acc + contentBoxWidth(el), 0);
 
   const navBackward = () => {
     const content = navContentRef.current;
