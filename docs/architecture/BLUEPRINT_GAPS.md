@@ -1223,6 +1223,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** Form/Accessibility Plan Task 6 stop report (`task-6-report.md`, 2026-09-30) and controller re-verification (repo-wide search of source packages).
 - **Architectural decision required:** Possibly — whether a shared utility-class layer is introduced.
 
+#### GAP-075 — React `UToggleButton` toggles twice on Space in real browsers
+
+- **Status:** MISSING
+- **Type:** Component, Accessibility, Framework (React)
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found by the Form/Accessibility Plan's Task 2 (GAP-059) review (2026-09-30); pre-existing since `13d92bb` (Phase C Batch 1); registered on user instruction. `packages/react/src/toggle-button/toggle-button.tsx:71-75` (as of `f2b8d41`) calls `toggle()` on a Space/Enter `keydown` but never calls `preventDefault()`. The element is a native `<input type="checkbox">`, so in a real browser Space also fires `click`/`change` on keyup, and the input's `onChange={toggle}` runs a second time — by then the parent has re-rendered, so the second call reverses the first. Real PrimeReact 10.9.9 `ToggleButton.js:47-50` toggles on Space and calls `event.preventDefault()`, suppressing the native toggle. Effect: in `USelectButton` single mode with `allowEmpty`, Space selects an option and immediately deselects it; standalone `UToggleButton` flips twice. jsdom does not simulate the keyup click, so the existing unit tests (including GAP-059's "Space selects exactly once") cannot detect it.
+- **Expected state:** Space toggles `UToggleButton` exactly once in real browsers, matching PrimeReact, with a browser-level (e.g. Playwright) regression check.
+- **Why it matters:** Keyboard activation of ToggleButton and SelectButton is unreliable, undermining GAP-059's keyboard support.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Not part of GAP-059.
+- **Framework scope:** React only (Angular/Vue not examined as part of this finding).
+- **Existing reusable infrastructure:** PrimeReact's own Space handling as the reference.
+- **Recommended resolution direction:** Directional only — prevent the native Space activation when toggling on keydown (or rely solely on the native change path), and add a real-browser test.
+- **Source/evidence:** Form/Accessibility Plan Task 2 review (2026-09-30); controller verification of PrimeReact `ToggleButton.js:47-50` and `git log` for `13d92bb`.
+- **Architectural decision required:** No.
+
 ---
 
 ## 4. Resolved gaps
