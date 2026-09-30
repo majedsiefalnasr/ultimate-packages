@@ -23,6 +23,7 @@
 - **Vue and Angular SelectButton are not touched.** Both confirmed matching their own real upstream (no roving-tabindex) — GAP-059 is React only.
 - **Angular/React Password are not touched by Task 6.** Confirmed their own real upstream lacks this disclosure-pattern ARIA richness — GAP-061 is Vue only.
 - **`UProgressBar`'s own existing ARIA (`role="progressbar"`, `aria-valuemin`/`aria-valuemax`/`aria-valuenow`) is not modified.** Tasks 3-5 compose it as-is; the fix is purely "use the existing correct component instead of a bare div."
+- **FileUpload-scoped progress bar height (added 2026-09-30, user decision after Task 3 review).** Composing `UProgressBar` gives it its standalone fixed `height: 1.5rem`; real Prime makes the bar thin inside FileUpload (`@primeuix/styles` 2.0.3 fileupload: `.p-fileupload-content .p-progressbar { width: 100%; height: dt('fileupload.progressbar.height') }`, Aura `0.25rem`). Tasks 3-5 therefore also touch each framework's `file-upload-style.ts`: add a FileUpload-scoped rule giving the composed progress bar `width: 100%; height: 0.25rem`, and delete the now-dead `progressBar`/`progressBarValue` classes and `.u-file-upload-progress-bar(-value)` CSS. `UProgressBar`'s own style file is not modified. The bar's placement and its `uploading` render condition are unchanged (PrimeNG renders it inside the content area when files exist — not adopted).
 
 ## Review Focus
 
@@ -55,7 +56,7 @@ Not implemented. Step 1's required source check found real PrimeNG 21.1.9 Select
 
 ### Task 3: Angular — GAP-060 FileUpload progress ARIA
 
-**Files:** `packages/ng/src/file-upload/file-upload.ts`, `file-upload.spec.ts`.
+**Files:** `packages/ng/src/file-upload/file-upload.ts`, `file-upload.spec.ts`, `file-upload-style.ts` (style file added 2026-09-30 — see Global Constraints; landed as a follow-up commit after the initial Task 3 commit `e47233c`).
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -85,7 +86,7 @@ Import `UProgressBar` and add it to the component's `imports` array. Replace the
 
 ### Task 4: React — GAP-060 FileUpload progress ARIA
 
-**Files:** `packages/react/src/file-upload/file-upload.tsx`, `file-upload.spec.tsx`.
+**Files:** `packages/react/src/file-upload/file-upload.tsx`, `file-upload.spec.tsx`, `file-upload-style.ts` (style file added 2026-09-30 — see Global Constraints).
 
 - [ ] **Step 1:** Equivalent test, driving the existing `progress`/`setProgress` state (confirmed present, `file-upload.tsx:137`).
 - [ ] **Step 2: Implement** — import and render `UProgressBar` (React's own equivalent component) with `value={progress}` in place of the existing bare progress-bar `<div>` markup.
@@ -95,7 +96,7 @@ Import `UProgressBar` and add it to the component's `imports` array. Replace the
 
 ### Task 5: Vue — GAP-060 FileUpload progress ARIA
 
-**Files:** `packages/vue/src/file-upload/FileUpload.vue`, `file-upload.spec.ts`.
+**Files:** `packages/vue/src/file-upload/FileUpload.vue`, `file-upload.spec.ts`, `file-upload-style.ts` (style file added 2026-09-30 — see Global Constraints).
 
 - [ ] **Step 1:** Equivalent test, driving the existing `this.progress` data field (confirmed present, `FileUpload.vue:96/205`).
 - [ ] **Step 2: Implement** — import `UProgressBar` and replace the existing `:class="cx('progressBar')"` / `:class="cx('progressBarValue')"` bare-div markup (lines 25-27) with `<UProgressBar :value="progress" />`.
