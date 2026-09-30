@@ -66,7 +66,12 @@ export default {
     onKeydown(event) {
       const links = Array.from(this.$el.querySelectorAll("a"));
       if (links.length === 0) return;
-      const isEnabled = (index) => !this.isItemDisabled(this.model[index], index);
+      // `links` holds rendered items only; pair each with its model index so
+      // `isItemDisabled` (which compares against the active step) stays correct.
+      const rendered = this.model
+        .map((item, modelIndex) => ({ item, modelIndex }))
+        .filter(({ item }) => this.isVisible(item));
+      const isEnabled = (index) => !this.isItemDisabled(rendered[index].item, rendered[index].modelIndex);
       const currentIndex = links.indexOf(document.activeElement);
 
       let targetIndex;
