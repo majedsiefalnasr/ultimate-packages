@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import { UStepper, UStepList, UStep, UStepPanels, UStepPanel } from "./index";
+import { nextTick } from "vue";
+import { UStepper, UStepList, UStep, UStepPanels, UStepPanel, UStepItem } from "./index";
 
 function mountStepper(linear = false) {
   return mount({
@@ -80,5 +81,67 @@ describe("Stepper family (UStepper/UStepList/UStep/UStepPanels/UStepPanel)", () 
     const headers = wrapper.findAll(".u-step-header");
     expect((headers[1].element as HTMLButtonElement).disabled).toBe(false);
     expect((headers[0].element as HTMLButtonElement).disabled).toBe(true);
+  });
+});
+
+describe("UStepPanel vertical separator (GAP-063)", () => {
+  function mountVertical(count = 3) {
+    return mount({
+      components: { UStepper, UStepItem, UStep, UStepPanel },
+      data() {
+        return { count };
+      },
+      template: `
+        <UStepper :value="1">
+          <UStepItem v-for="n in count" :key="n" :value="n">
+            <UStep :value="n">Step {{ n }}</UStep>
+            <UStepPanel :value="n">Content {{ n }}</UStepPanel>
+          </UStepItem>
+        </UStepper>
+      `,
+    });
+  }
+
+  const sepCounts = (w: ReturnType<typeof mountVertical>) =>
+    w.findAll('[role="tabpanel"]').map((p) => p.findAll(".u-stepper-separator").length);
+
+  it("renders separators in all but the last vertical panel, inside the content wrapper before the content", async () => {
+    const wrapper = mountVertical(3);
+    await nextTick();
+    expect(sepCounts(wrapper)).toEqual([1, 1, 0]);
+    const wrapperEl = wrapper.find('[role="tabpanel"] .u-step-panel-content-wrapper');
+    expect(wrapperEl.exists()).toBe(true);
+    const kids = Array.from(wrapperEl.element.children);
+    expect(kids[0].classList.contains("u-stepper-separator")).toBe(true);
+    expect(kids[1].classList.contains("u-step-panel-content")).toBe(true);
+    expect(kids[1].textContent).toContain("Content 1");
+  });
+
+  it("updates separator visibility when items are added or removed", async () => {
+    const wrapper = mountVertical(3);
+    await nextTick();
+    (wrapper.vm as unknown as { count: number }).count = 4;
+    await nextTick();
+    await nextTick();
+    expect(sepCounts(wrapper)).toEqual([1, 1, 1, 0]);
+    (wrapper.vm as unknown as { count: number }).count = 2;
+    await nextTick();
+    await nextTick();
+    expect(sepCounts(wrapper)).toEqual([1, 0]);
+  });
+
+  it("keeps v-show on the panel root in vertical mode", () => {
+    const wrapper = mountVertical(3);
+    const panels = wrapper.findAll('[role="tabpanel"]');
+    expect(panels[0].isVisible()).toBe(true);
+    expect(panels[1].isVisible()).toBe(false);
+  });
+
+  it("horizontal mode renders no separators and no content wrapper", async () => {
+    const wrapper = mountStepper();
+    await nextTick();
+    expect(wrapper.findAll(".u-stepper-separator").length).toBe(0);
+    expect(wrapper.find(".u-step-panel-content-wrapper").exists()).toBe(false);
+    expect(wrapper.find('[role="tabpanel"]').html()).toContain("Panel One");
   });
 });

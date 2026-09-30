@@ -18,6 +18,11 @@ export default {
   extends: createBaseComponent({ componentName: "stepper", styleModule: stepperStyleModule }),
   inheritAttrs: false,
   inject: ["$pcStepper"],
+  provide() {
+    return {
+      $pcStepItem: this,
+    };
+  },
   props: {
     value: { type: [String, Number], required: true },
   },
