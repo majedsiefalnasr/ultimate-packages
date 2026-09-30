@@ -37,7 +37,12 @@ export const USteps = React.forwardRef<HTMLElement, UStepsProps>(function USteps
   const onKeyDown = (event: React.KeyboardEvent) => {
     const links = Array.from(listRef.current?.querySelectorAll("a") ?? []);
     if (links.length === 0) return;
-    const isEnabled = (index: number) => !isItemDisabled(model[index], index);
+    // `links` holds rendered items only; pair each with its model index so
+    // `isItemDisabled` (which compares against `activeIndex`) stays correct.
+    const rendered = model
+      .map((item, modelIndex) => ({ item, modelIndex }))
+      .filter(({ item }) => item.visible !== false);
+    const isEnabled = (index: number) => !isItemDisabled(rendered[index].item, rendered[index].modelIndex);
     const currentIndex = links.indexOf(document.activeElement as HTMLAnchorElement);
 
     let targetIndex: number | undefined;

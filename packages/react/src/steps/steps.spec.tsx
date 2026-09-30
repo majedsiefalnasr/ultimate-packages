@@ -98,4 +98,47 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
     fireEvent.keyDown(links[0], { code: "ArrowRight" });
     expect(document.activeElement).toBe(links[2]);
   });
+
+  describe("with a hidden item (rendered-link index vs model index)", () => {
+    it("ArrowRight from A skips the disabled step and reaches C", () => {
+      const model: UMenuItem[] = [
+        { label: "A" },
+        { label: "H", visible: false },
+        { label: "B", disabled: true },
+        { label: "C" },
+      ];
+      const { container } = render(<USteps model={model} readonly={false} />);
+      const links = container.querySelectorAll("a");
+      (links[0] as HTMLElement).focus();
+      fireEvent.keyDown(links[0], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("Home skips hidden/disabled items and reaches the first valid step", () => {
+      const model: UMenuItem[] = [{ label: "H", visible: false }, { label: "B", disabled: true }, { label: "C" }, { label: "D" }];
+      const { container } = render(<USteps model={model} readonly={false} />);
+      const links = container.querySelectorAll("a");
+      (links[2] as HTMLElement).focus();
+      fireEvent.keyDown(links[2], { code: "Home" });
+      expect(document.activeElement).toBe(links[1]);
+    });
+
+    it("End skips hidden/disabled items and reaches the last valid step", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }, { label: "H", visible: false }, { label: "D", disabled: true }];
+      const { container } = render(<USteps model={model} readonly={false} />);
+      const links = container.querySelectorAll("a");
+      (links[0] as HTMLElement).focus();
+      fireEvent.keyDown(links[0], { code: "End" });
+      expect(document.activeElement).toBe(links[1]);
+    });
+
+    it("readonly: a hidden item before the active step does not shift the active comparison", () => {
+      const model: UMenuItem[] = [{ label: "H", visible: false }, { label: "B" }, { label: "C" }];
+      const { container } = render(<USteps model={model} activeIndex={2} />);
+      const links = container.querySelectorAll("a");
+      (links[0] as HTMLElement).focus();
+      fireEvent.keyDown(links[0], { code: "End" });
+      expect(document.activeElement).toBe(links[1]);
+    });
+  });
 });
