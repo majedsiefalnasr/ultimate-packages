@@ -25,7 +25,7 @@
 
 - **PanelMenu's multiple-expansion exclusivity scope is not touched by Task 8/12/16.** Only keyboard navigation is added; the per-level sibling-exclusivity behavior (KEEP CURRENT BEHAVIOR) is unchanged.
 - **MegaMenu's disabled-group hover-open behavior is not touched by Task 7/11/15.** Only keyboard navigation is added.
-- **SpeedDial's already-existing Escape mechanism (`closeOnEscape`, confirmed present at `speed-dial.ts:184-186`) is not modified.** Task 21-23 add only between-item Arrow-key navigation.
+- **SpeedDial's already-existing Escape mechanism (`closeOnEscape`, confirmed present at `speed-dial.ts:247-252` as of the GAP-056 implementation; originally cited as lines 184-186 before Task 21 inserted code above it) is not modified.** Task 21-23 add only between-item Arrow-key navigation.
 - **Angular/Vue Tabs are not touched by Task 25.** `closable` is React-only, per Spec §5.8's own explicit exclusion.
 - **`routerLink` binding pattern is fixed by precedent, not re-designed.** Task 4/20 use the exact pattern already established and shipped in Task 4's own real implementation (`packages/ng/src/steps/steps.ts`), with `RouterModule` imported: an `@if (item.routerLink && !item.disabled)`/`@else` structural branch — the `@if` branch's `<a>` binds `[routerLink]` with no `[attr.href]` at all; the `@else` branch's `<a>` binds `[attr.href]="item.url ?? '#'"` with no `RouterLink` directive present. Shared inner markup factored via `<ng-template>` + `NgTemplateOutlet` from both branches. (Doc correction, post-Task-20-review: this line originally described Breadcrumb's own literal dual-attribute conditional — `[attr.href]="item.routerLink ? null : (item.url ?? '#')"` + `[routerLink]="item.disabled ? null : (item.routerLink ?? null)"` on one anchor — but Task 4's real, already-approved GAP-053 implementation correctly diverged from that pattern after discovering it has a latent bug: Angular's `RouterLink` directive's own host binding unconditionally overwrites a co-existing `[attr.href]` binding on the same anchor, even when `routerLink` is bound to `null`. The `@if`/`@else` structural branch avoids ever co-locating both bindings. Task 20 correctly followed Task 4's real shipped code over this stale prose; this text is now corrected to match. Breadcrumb itself still has the original latent bug, disclosed but out of scope for GAP-053/GAP-069, tracked as a known, unfixed issue.)
 - **No task modifies `packages/ng/src/menu/menu.ts` or any Menu-family shared mechanism.** `UMenu`'s own popup capability is tracked separately by GAP-067 (Existing Commitments Plan).
@@ -35,7 +35,7 @@
 
 - **Keyboard navigation reaching a disabled item** — a reasonable person pressing Arrow keys expects disabled items to be skipped over (focus moves to the next enabled item), not to receive focus and then do nothing when activated; every task below must skip disabled items in its roving-focus computation, matching `UPanelMenu`'s own existing disabled-skip precedent if one exists there, or established fresh here consistently across all 4 GAP-054 components.
 - **Escape closing an open submenu in Menubar/TieredMenu/MegaMenu (GAP-054) while a parent menu is also open** — a reasonable person expects Escape to close only the innermost open submenu first (returning focus to that submenu's own trigger), not the entire menu tree at once, matching standard nested-menu UX and avoiding an unexpected total-dismissal surprise.
-- **`routerLink` combined with `disabled` on the same item (Task 4/20)** — Breadcrumb's own existing pattern (`item.disabled ? null : (item.routerLink ?? null)`) already resolves this: a disabled item's `routerLink` binding resolves to `null`, preventing navigation; Task 4/20 must reuse this exact conditional, not a bare `item.routerLink` binding that would let a disabled item still navigate.
+- **`routerLink` combined with `disabled` on the same item (Task 4/20)** — a disabled item must not navigate. The shipped pattern (see the corrected Global Constraints note above) renders the `RouterLink` directive only in an `@if` branch whose condition excludes non-clickable items — Steps: `item.routerLink && !readonly() && !item.disabled` (matching PrimeNG 21.1.9's `isClickableRouterLink`; the `readonly` term was added by the post-final-review GAP-053 fix, commit `a169b00`); Dock: `item.routerLink && !item.disabled` — never a bare `item.routerLink` binding. (Doc correction, 2026-09-30: this bullet originally pointed to Breadcrumb's own dual-attribute conditional as the precedent; that pattern has a latent href-clobbering defect, now tracked separately as GAP-073, and is not the template for Task 4/20.)
 
 ---
 
@@ -153,7 +153,7 @@ describe("routerLink (Spec §5.2, GAP-053)", () => {
 - [ ] **Step 2: Implement**
 
 1. Add `import { RouterModule } from "@angular/router";` and `imports: [RouterModule]` to `@Component`.
-2. Change the template's `[href]="item.url || '#'"` to `[attr.href]="item.routerLink ? null : (item.url ?? '#')"` and add `[routerLink]="item.disabled ? null : (item.routerLink ?? null)"`, matching Breadcrumb's own exact pattern.
+2. Replace the template's single `[href]="item.url || '#'"` anchor with an `@if`/`@else` structural branch: the `@if` branch (clickable router link — as shipped, `item.routerLink && !readonly() && !item.disabled`) renders the anchor with `[routerLink]` and no `[attr.href]`; the `@else` branch renders the anchor with `[attr.href]="item.url ?? '#'"` and no `RouterLink` directive. Factor shared inner markup via `<ng-template>` + `NgTemplateOutlet`. (Doc correction, 2026-09-30: this step originally said to co-locate `[attr.href]` and `[routerLink]` on one anchor, "matching Breadcrumb's own exact pattern". Implementation found Angular's `RouterLink` host binding overwrites a co-existing `[attr.href]` even when `routerLink` is `null`, so the shipped fix uses the structural branch; the post-final-review fix then added the `readonly` term. Breadcrumb's own copy of the defect is tracked separately as GAP-073.)
 
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
@@ -324,7 +324,7 @@ Add a keydown handler on the `<ul role="menu">`. When `position()` is `"top"`/`"
 
 ### Task 21: Angular — GAP-056 SpeedDial keyboard navigation
 
-**Files:** `packages/ng/src/speed-dial/speed-dial.ts`, `speed-dial.spec.ts`. **Does not touch the existing `closeOnEscape`/`onEscape` mechanism (confirmed present, lines 184-186).**
+**Files:** `packages/ng/src/speed-dial/speed-dial.ts`, `speed-dial.spec.ts`. **Does not touch the existing `closeOnEscape`/`onEscape` mechanism (confirmed present; now `speed-dial.ts:247-252` after Task 21, originally cited as lines 184-186).**
 
 - [ ] **Step 1: Write the failing tests**
 
