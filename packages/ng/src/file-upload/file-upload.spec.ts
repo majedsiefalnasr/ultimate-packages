@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { UFileUpload } from "./file-upload";
+import { fileUploadStyleModule } from "./file-upload-style";
 
 function makeFile(name: string, size: number, type = "text/plain"): File {
   const file = new File([new Uint8Array(size)], name, { type });
@@ -279,6 +280,12 @@ describe("UFileUpload", () => {
       fixture.componentInstance["progress"].set(42);
       fixture.detectChanges();
       expect(fixture.nativeElement.querySelector("[role=progressbar]")).toBeNull();
+    });
+
+    it("scopes the composed progress bar to Prime's thin FileUpload height", () => {
+      const css = fileUploadStyleModule.css.replace(/\s+/g, " ");
+      expect(css).toContain(".u-file-upload .u-progress-bar { width: 100%; height: 0.25rem;");
+      expect(css).not.toContain("u-file-upload-progress-bar");
     });
   });
 });
