@@ -51,7 +51,7 @@
 
 ### 5.1 GAP-059 — SelectButton roving-tabindex
 
-Only one option is tabbable (`tabindex="0"`) at a time, initially the first; ArrowRight/ArrowDown move focus (and the roving `tabindex`) to the next option and ArrowLeft/ArrowUp to the previous, wrapping at both ends; arrows move focus only, Space selects — matching real PrimeReact 10.9.9 (`SelectButton.js:16,101`, `SelectButtonItem.js:41-94`). Two Ultimate differences: when no option is tabbable (component `disabled`), arrow keys are a no-op instead of throwing; and disabled options are skipped (PrimeReact does not skip them), because `USelectButton` composes `UToggleButton`, whose native-disabled input cannot receive focus. `UToggleButton` gains one optional `tabIndex` prop. React only. **(Corrected 2026-09-30 — see §12.)**
+Only one option is tabbable (`tabindex="0"`) at a time, initially the first enabled option (PrimeReact: the first option); ArrowRight/ArrowDown move focus (and the roving `tabindex`) to the next option and ArrowLeft/ArrowUp to the previous, wrapping at both ends; arrows move focus only, Space selects — matching real PrimeReact 10.9.9 (`SelectButton.js:16,101`, `SelectButtonItem.js:41-94`). Two Ultimate differences: when no option is tabbable (component `disabled`), arrow keys are a no-op instead of throwing; and disabled options are skipped (PrimeReact does not skip them), because `USelectButton` composes `UToggleButton`, whose native-disabled input cannot receive focus. `UToggleButton` gains one optional `tabIndex` prop. React only. **(Corrected 2026-09-30 — see §12.)**
 
 ### 5.2 GAP-060 — FileUpload progress ARIA
 

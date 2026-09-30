@@ -47,7 +47,7 @@ Not implemented. Step 1's required source check found real PrimeNG 21.1.9 Select
 **Target behavior (real PrimeReact 10.9.9, `SelectButton.js:16,101`, `SelectButtonItem.js:41-94`; Spec §5.1), with the two recorded differences:**
 - A `focusedIndex` state, initially the first enabled option (PrimeReact: `0`; differs only when option 0 is disabled, because a disabled input cannot hold the tab stop). Each option's tabindex is `0` when it is the `focusedIndex` option and the component is not `disabled`, otherwise `-1`.
 - Keydown, matching on `event.code`: `ArrowRight`/`ArrowDown` → next enabled option, `ArrowLeft`/`ArrowUp` → previous enabled option, wrapping at both ends; `preventDefault()`; set `focusedIndex` and move DOM focus. Arrows move focus only, never selection.
-- `Space` selects (keep `UToggleButton`'s existing activation; do not double-toggle).
+- `Space` selects (keep `UToggleButton`'s existing activation; do not add a second toggle path). Note: `UToggleButton`'s existing Space handling double-toggles in real browsers — a pre-existing defect not visible in jsdom, registered separately as GAP-075 and not fixed here.
 - When the component is `disabled` or no option is enabled, arrow keys are a no-op (no throw, bounded search).
 - If `focusedIndex` points at an option that becomes disabled or removed, fall back to the first enabled option.
 
@@ -81,7 +81,7 @@ describe("progress ARIA via UProgressBar composition (Spec §5.2, GAP-060)", () 
 
 - [ ] **Step 2: Implement**
 
-Import `UProgressBar` and add it to the component's `imports` array. Replace the existing bare progress `<div>` markup with `<u-progress-bar [value]="progress()"></u-progress-bar>` (or the exact existing progress-state accessor name in this file), inheriting `UProgressBar`'s own already-correct `role="progressbar"`/`aria-valuemin`/`aria-valuemax`/`aria-valuenow` host bindings automatically. Do not add any new clamping to the `progress` value — pass it through exactly as FileUpload's own XHR progress handler already computes it.
+Import `UProgressBar` and add it to the component's `imports` array. Replace the existing bare progress `<div>` markup with `<u-progress-bar [value]="progress()" [showValue]="false" />` (matching Prime's `showValue` false; or the exact existing progress-state accessor name in this file), inheriting `UProgressBar`'s own already-correct `role="progressbar"`/`aria-valuemin`/`aria-valuemax`/`aria-valuenow` host bindings automatically. Do not add any new clamping to the `progress` value — pass it through exactly as FileUpload's own XHR progress handler already computes it.
 
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
@@ -92,7 +92,7 @@ Import `UProgressBar` and add it to the component's `imports` array. Replace the
 **Files:** `packages/react/src/file-upload/file-upload.tsx`, `file-upload.spec.tsx`, `file-upload-style.ts` (style file added 2026-09-30 — see Global Constraints).
 
 - [ ] **Step 1:** Equivalent test, driving the existing `progress`/`setProgress` state (confirmed present, `file-upload.tsx:137`).
-- [ ] **Step 2: Implement** — import and render `UProgressBar` (React's own equivalent component) with `value={progress}` in place of the existing bare progress-bar `<div>` markup.
+- [ ] **Step 2: Implement** — import and render `UProgressBar` (React's own equivalent component) with `value={progress}` and `showValue={false}` in place of the existing bare progress-bar `<div>` markup.
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
 ---
@@ -102,7 +102,7 @@ Import `UProgressBar` and add it to the component's `imports` array. Replace the
 **Files:** `packages/vue/src/file-upload/FileUpload.vue`, `file-upload.spec.ts`, `file-upload-style.ts` (style file added 2026-09-30 — see Global Constraints).
 
 - [ ] **Step 1:** Equivalent test, driving the existing `this.progress` data field (confirmed present, `FileUpload.vue:96/205`).
-- [ ] **Step 2: Implement** — import `UProgressBar` and replace the existing `:class="cx('progressBar')"` / `:class="cx('progressBarValue')"` bare-div markup (lines 25-27) with `<UProgressBar :value="progress" />`.
+- [ ] **Step 2: Implement** — import `UProgressBar` and replace the existing `:class="cx('progressBar')"` / `:class="cx('progressBarValue')"` bare-div markup (lines 25-27) with `<UProgressBar v-if="uploading" :value="progress" :showValue="false" />`.
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
 ---
@@ -127,7 +127,7 @@ Import `UProgressBar` and add it to the component's `imports` array. Replace the
 ## Completion Criteria
 
 - Tasks 2-6 pass (Task 1 withdrawn).
-- `pnpm test`, `pnpm run ceiling:validate` pass after each task.
+- The affected package's own suite (`pnpm --filter @ultimate/<pkg> test`), its typecheck, and `pnpm run ceiling:validate` pass after each task. (Corrected 2026-09-30: this line said `pnpm test`; the full-monorepo run has pre-existing unrelated dist-artifact failures, so per-package runs are the standing rule.)
 - Vue/Angular SelectButton and Angular/React Password remain unmodified (verify via `git status`).
 
 ## Documentation/Ledger Updates

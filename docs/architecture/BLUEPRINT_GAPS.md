@@ -970,14 +970,14 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Type:** Component, Accessibility
 - **Blocking level:** MEDIUM
 - **Current evidence:** Real PrimeReact 10.9.9 implements roving-tabindex on SelectButton (`SelectButton.js:16,101`; `SelectButtonItem.js:41-94`); React's SelectButton port lacks it entirely, confirmed during Batch 6 triage. **Vue is intentionally, correctly excluded** — real PrimeVue itself lacks this mechanism, independently confirmed via corroborated extraction (not inferred from PrimeNG/PrimeReact). **(Corrected 2026-09-30, Implementation-stage source check:** this entry originally also claimed real PrimeNG implements roving-tabindex and scoped Angular in. Real PrimeNG 21.1.9 SelectButton has none — each option is a `p-togglebutton` with tabindex 0 (−1 when disabled) handling only Enter/Space (`togglebutton.ts:54,87-100`); its `changeTabIndexes` method (`selectbutton.ts:267`) is never called outside its own spec. Ultimate Angular already matches PrimeNG; by user decision Angular is reclassified as matching upstream, like Vue.)
-- **Expected state:** Roving-tabindex keyboard behavior for React SelectButton, matching real PrimeReact: first option initially tabbable; ArrowRight/ArrowDown move focus to the next option, ArrowLeft/ArrowUp to the previous, wrapping at both ends; arrows move focus only; Space selects. Two Ultimate differences by user decision: arrow keys on a component with no tabbable option are a no-op instead of throwing (PrimeReact would throw); and disabled options are skipped, because Ultimate's `USelectButton` composes `UToggleButton`, whose native-disabled checkbox input cannot receive focus (PrimeReact renders its own focusable item per option). `UToggleButton` gains one optional `tabIndex` prop to support this.
+- **Expected state:** Roving-tabindex keyboard behavior for React SelectButton, matching real PrimeReact: first enabled option initially tabbable (PrimeReact: first option); ArrowRight/ArrowDown move focus to the next option, ArrowLeft/ArrowUp to the previous, wrapping at both ends; arrows move focus only; Space selects. Two Ultimate differences by user decision: arrow keys on a component with no tabbable option are a no-op instead of throwing (PrimeReact would throw); and disabled options are skipped, because Ultimate's `USelectButton` composes `UToggleButton`, whose native-disabled checkbox input cannot receive focus (PrimeReact renders its own focusable item per option). `UToggleButton` gains one optional `tabIndex` prop to support this.
 - **Why it matters:** Roving-tabindex is a real accessibility pattern real PrimeReact provides; Ultimate's React port currently lacks it.
 - **What it blocks:** Nothing further downstream.
 - **Dependencies:** None.
 - **Framework scope:** React only. **Vue and Angular explicitly out of scope** — both confirmed to already match their own real upstream's (lacking) behavior, not an oversight.
 - **Existing reusable infrastructure:** None directly reusable — new roving-tabindex logic needed for React.
 - **Recommended resolution direction:** Directional only — add PrimeReact-matching roving-tabindex keyboard behavior to React only.
-- **Source/evidence:** Batch 6 Triage (`batch6-triage.md`, GC-B6-01); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (GC-B6-01 — INCLUDE, Angular + React only).
+- **Source/evidence:** Batch 6 Triage (`batch6-triage.md`, GC-B6-01); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (GC-B6-01 — INCLUDE, Angular + React only, as originally decided; Angular removed 2026-09-30, see Current evidence); Form/Accessibility Spec §12.
 - **Architectural decision required:** No.
 
 #### GAP-060 — FileUpload progress bar lacks ARIA attributes in all three frameworks
@@ -986,7 +986,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Type:** Component, Accessibility
 - **Blocking level:** MEDIUM
 - **Current evidence:** All three real Prime frameworks compose their own real ProgressBar component for upload-progress; Ultimate's own `UProgressBar` sibling already has correct ARIA in every framework; FileUpload's own implementation task, identically in all three frameworks, rendered a bare `div` instead — confirmed during Batch 6 triage. **One shared root cause, three framework-local instances** — not three separate gaps.
-- **Expected state:** FileUpload composes the already-existing, already-correct `UProgressBar` in place of the bare `div`, in all three frameworks.
+- **Expected state:** FileUpload composes the already-existing, already-correct `UProgressBar` (`showValue` false) in place of the bare `div`, in all three frameworks, under the existing `uploading` render condition. Added 2026-09-30 by user decision: a FileUpload-scoped rule gives the composed bar Prime's thin `0.25rem` height (`@primeuix/styles` fileupload), and the dead bare-div CSS is removed; `UProgressBar`'s own styles are unchanged, so the bar now takes `UProgressBar`'s colours, radius and transition (accepted).
 - **Why it matters:** This is the most mechanical fix in the entire audit — the correct, accessible component already exists and is already used correctly elsewhere in the same codebase; FileUpload simply didn't reuse it.
 - **What it blocks:** Nothing further downstream.
 - **Dependencies:** None.
@@ -1237,6 +1237,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Existing reusable infrastructure:** PrimeReact's own Space handling as the reference.
 - **Recommended resolution direction:** Directional only — prevent the native Space activation when toggling on keydown (or rely solely on the native change path), and add a real-browser test.
 - **Source/evidence:** Form/Accessibility Plan Task 2 review (2026-09-30); controller verification of PrimeReact `ToggleButton.js:47-50` and `git log` for `13d92bb`.
+- **Architectural decision required:** No.
+
+#### GAP-076 — Vue Password has no `ariaLabelledby` prop
+
+- **Status:** MISSING
+- **Type:** Component, Accessibility, Framework (Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Found by the Form/Accessibility Plan's Task 6 (GAP-061) review (2026-09-30); pre-existing; registered on user instruction. Real PrimeVue 4.5.5 binds `:aria-labelledby="ariaLabelledby"` on the Password input (`packages/primevue/src/password/Password.vue:11`). Ultimate's `packages/vue/src/password/BasePassword.ts` declares `inputId` and `ariaLabel` (`:38-39`) but no `ariaLabelledby`, so consumers cannot label the input by reference. GAP-061 deliberately added no new public props.
+- **Expected state:** Vue Password accepts `ariaLabelledby` and binds it to the input's `aria-labelledby`, matching PrimeVue.
+- **Why it matters:** Referencing a visible label element is a standard labelling path; without it consumers must duplicate label text in `ariaLabel`.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Not part of GAP-061.
+- **Framework scope:** Vue only (Angular/React Password not examined as part of this finding).
+- **Existing reusable infrastructure:** The existing `ariaLabel` prop/binding pattern in the same component.
+- **Recommended resolution direction:** Directional only — add the prop and binding with a test.
+- **Source/evidence:** Form/Accessibility Plan Task 6 review (2026-09-30); PrimeVue `Password.vue:11`; `BasePassword.ts:38-39`.
 - **Architectural decision required:** No.
 
 ---
