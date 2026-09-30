@@ -22,9 +22,7 @@
         @change="onFileInputChange"
       />
     </div>
-    <div v-if="uploading" :class="cx('progressBar')">
-      <div :class="cx('progressBarValue')" :style="{ width: progress + '%' }"></div>
-    </div>
+    <UProgressBar v-if="uploading" :value="progress" :showValue="false" />
     <div v-for="msg in messages" :key="msg" :class="cx('message')">{{ msg }}</div>
     <div
       ref="content"
@@ -47,6 +45,7 @@
 </template>
 
 <script>
+import UProgressBar from "../progress-bar/ProgressBar.vue";
 import { createBaseFileUpload } from "./BaseFileUpload";
 
 function formatSize(bytes) {
@@ -89,6 +88,7 @@ export default {
   name: "UFileUpload",
   extends: createBaseFileUpload(),
   emits: ["select", "progress", "upload", "error", "clear", "remove", "upload-handler"],
+  components: { UProgressBar },
   data() {
     return {
       files: [],
