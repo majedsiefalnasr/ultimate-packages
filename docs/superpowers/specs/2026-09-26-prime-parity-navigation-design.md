@@ -53,10 +53,10 @@
 ## 4. Existing Behavior
 
 - **GAP-052:** Real Prime has a full ArrowRight/Left/Home/End system for Steps; Ultimate has none in any framework.
-- **GAP-053:** Real PrimeNG Steps has router integration; Angular's own sibling Breadcrumb already correctly implements the equivalent pattern.
+- **GAP-053:** Real PrimeNG Steps has router integration; Angular Steps lacks it. Angular's sibling Breadcrumb exposes a `routerLink` binding, but its co-located `[attr.href]`+`[routerLink]` pattern has a known href/`RouterLink` conflict, tracked separately as GAP-073 — it is not the template for GAP-053. **(Corrected 2026-09-30 — see §12 Breadcrumb routerLink note; this line previously said Breadcrumb "already correctly implements the equivalent pattern".)**
 - **GAP-054:** Real Prime has extensive keyboard systems for Menubar/TieredMenu/MegaMenu/PanelMenu (confirmed at source-line level for Menubar/MegaMenu); Ultimate has zero keyboard navigation for any of the four, in any framework. `UMenu` itself retains basic Arrow navigation — these four retain none, a materially larger reduction than `UMenu`'s own.
 - **GAP-055:** Real Prime Dock has full roving keyboard navigation; Ultimate is mouse-only in all three frameworks.
-- **GAP-069:** Real PrimeNG Dock has router integration; Angular's Dock lacks it, internally inconsistent with Angular's own Menu/Breadcrumb/TieredMenu/MegaMenu/Steps, which all already support the equivalent `routerLink` pattern.
+- **GAP-069:** Real PrimeNG Dock has router integration; Angular's Dock lacks it, internally inconsistent with Angular's own Menu/Breadcrumb/TieredMenu/MegaMenu/Steps, which all already expose a `routerLink` binding (Breadcrumb's has a known href/`RouterLink` conflict, tracked separately as GAP-073, not part of GAP-069). **(Corrected 2026-09-30 — see §12.)**
 - **GAP-056:** Real Prime SpeedDial has full roving keyboard navigation between action items; Ultimate implements only Escape-to-close, in all three frameworks. (SpeedDial's layout/positioning math is separately Parity Confirmed, unrelated to this gap.)
 - **GAP-057:** Real PrimeReact 10.9.9 TabView has an opt-in `scrollable` prop (default `false`) that, when enabled, renders prev/next navigator buttons only while scrolling in that direction is possible, recomputed on render/update and on the strip's own `scroll` event (no `ResizeObserver`). React's `UTabView` has none of this — no scroll container, no navigators, no `scrollable` prop. **(Corrected 2026-09-30, Implementation-stage re-verification, superseding this Spec's own original text below — see §12.)** The original claim that "Angular's `showNavigators`/Vue's `TabList.vue` already correctly implement the equivalent" was carried forward from an unverified triage claim and is INCORRECT as a description of continuous/automatic overflow detection: Ultimate Angular's own `updateButtonState()` only runs on user scroll, never at load or resize (tracked separately as GAP-071); Ultimate Vue's own runs once at mount plus on scroll, but never on resize (tracked separately as GAP-072). Neither matches real PrimeNG/PrimeVue's own `ResizeObserver`-driven behavior, and GAP-057's own parity target is real PrimeReact (which itself has no `ResizeObserver`), not Angular/Vue's current state.
 - **GAP-058:** Real PrimeReact TabView/TabPanel has a genuine per-tab close capability; React's `UTabPanel` omits it. Angular's/Vue's own real upstream Tabs family never had this concept.
@@ -71,7 +71,7 @@ ArrowRight/ArrowLeft move focus to the next/previous enabled step; Home/End move
 
 ### 5.2 GAP-053 — Angular Steps `routerLink`
 
-Steps must accept a `routerLink`-equivalent per-item navigation binding, consistent with Angular's own Breadcrumb's already-working `[routerLink]` pattern. Angular only.
+Steps must accept a `routerLink`-equivalent per-item navigation binding, with the `RouterLink` directive present only on clickable items (not `readonly`, not disabled), never co-located with an `[attr.href]` binding on the same anchor. Angular only. **(Corrected 2026-09-30 — see §12 Breadcrumb routerLink note; this requirement previously cited Breadcrumb's "already-working" pattern, which has a known href/`RouterLink` conflict tracked separately as GAP-073.)**
 
 ### 5.3 GAP-054 — Menubar/TieredMenu/MegaMenu/PanelMenu keyboard navigation
 
@@ -83,7 +83,7 @@ Roving-focus keyboard navigation between Dock action items, matching real Prime'
 
 ### 5.5 GAP-069 — Angular Dock `routerLink`
 
-Dock must accept a `routerLink`-equivalent per-item navigation binding, consistent with Angular's own already-working Breadcrumb/Menu/Steps pattern (GAP-053's own template). Angular only.
+Dock must accept a `routerLink`-equivalent per-item navigation binding, following Steps' shipped structural-branch `routerLink` pattern (GAP-053), with the `RouterLink` directive present only on enabled items. Angular only. **(Corrected 2026-09-30 — see §12 Breadcrumb routerLink note; this requirement previously cited an "already-working Breadcrumb/Menu/Steps pattern"; Breadcrumb's pattern has a known href/`RouterLink` conflict tracked separately as GAP-073.)**
 
 ### 5.6 GAP-056 — SpeedDial keyboard navigation
 
