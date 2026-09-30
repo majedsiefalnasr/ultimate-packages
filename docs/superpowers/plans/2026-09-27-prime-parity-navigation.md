@@ -378,30 +378,41 @@ Add a keydown handler on the action-item list (only relevant while `visible()` i
 
 ### Task 24: React — GAP-057 Tabs `scrollable`
 
-**Files:** `packages/react/src/tabs/tabs.tsx` (or the specific TabView-equivalent file), `tabs.spec.tsx`.
+**Files:** `packages/react/src/tabs/tab-view.tsx` (the real TabView-equivalent file — confirmed there is no `tabs.tsx`; React's Tabs family is `tab-view.tsx` + `tab-panel.tsx` + `tab-menu.tsx`), `tabs.spec.tsx`.
+
+**Plan correction (2026-09-30, pre-implementation — see the Spec's own §12 for the full correction record):** this task's original Step 1/Step 2 text instructed porting "Angular's `showNavigators`/Vue's `TabList.vue` own existing overflow-detection implementation," describing it as "already real and working" and suggesting a `ResizeObserver`. Direct re-verification against real source (both Ultimate Angular/Vue and real PrimeReact 10.9.9/PrimeNG 21.1.9/PrimeVue 4.5.5) found this premise false: neither Ultimate Angular nor Ultimate Vue performs continuous/automatic overflow detection (tracked separately as GAP-071/GAP-072, out of this task's own scope), and real PrimeReact's own `scrollable` behavior is a materially different, opt-in, render/scroll-recalculated pattern with no `ResizeObserver` at all. **Do not port Angular's or Vue's own current implementation.** The corrected Step 1/Step 2 below target real PrimeReact 10.9.9 directly.
 
 - [ ] **Step 1: Write the failing tests**
 
-First read Angular's `showNavigators`/Vue's `TabList.vue` own existing overflow-detection implementation in full (both already real and working, per Spec §4/§7) to confirm the exact detection mechanism (likely a `ResizeObserver` or scroll-width comparison) before porting — do not invent a different detection approach.
+First read real PrimeReact 10.9.9's own `TabView`/`TabViewBase` source in full (`.vendor-cache/primereact-10.9.9.tar.gz`, `components/lib/tabview/{TabView,TabViewBase}.js`) to confirm the exact `scrollable` prop default, the exact prev/next enabled-state computation, and the exact recalculation triggers (a `useEffect` with no dependency array, i.e. after every render, plus the strip's own `scroll` event — no `ResizeObserver`) — do not invent a different mechanism, and do not port Ultimate's own Angular/Vue implementation (see the Plan correction above).
 
 ```tsx
 describe("scrollable overflow (Spec §5.7, GAP-057)", () => {
-  it("shows scroll buttons when tab labels overflow the available width", () => {
-    // Render with enough tabs / a constrained container width to force overflow,
-    // matching the exact overflow-detection condition confirmed from Angular/Vue's
-    // own real implementation (Step 1's own investigation).
-    render(<UTabs>{/* many tab panels */}</UTabs>);
-    expect(screen.getByRole("button", { name: /scroll left|previous/i })).toBeInTheDocument();
+  it("does not render navigator buttons when scrollable is false (the default)", () => {
+    render(<UTabs>{/* many tab panels, enough to overflow */}</UTabs>);
+    expect(screen.queryByRole("button", { name: /scroll left|previous|next/i })).not.toBeInTheDocument();
   });
 
-  it("does not show scroll buttons when tabs fit without overflow", () => {
-    render(<UTabs>{/* one short tab */}</UTabs>);
+  it("shows only the next-scroll button when scrollable is true and tab labels overflow, scrolled to the start", () => {
+    // Render with scrollable and enough tabs to force overflow. At scrollLeft === 0,
+    // only "next" should render (matching real PrimeReact's own backward/forward
+    // enabled-state computation confirmed in Step 1) — jsdom has no real layout, so
+    // stub scrollWidth/clientWidth/scrollLeft on the scroll container per Step 1's
+    // own confirmed values (mirroring whichever stubbing approach, if any, Ultimate's
+    // own existing Tabs spec files already use for this same jsdom limitation).
+    render(<UTabs scrollable>{/* many tab panels */}</UTabs>);
     expect(screen.queryByRole("button", { name: /scroll left|previous/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /scroll right|next/i })).toBeInTheDocument();
+  });
+
+  it("does not render navigator buttons when scrollable is true but tabs fit without overflow", () => {
+    render(<UTabs scrollable>{/* one short tab */}</UTabs>);
+    expect(screen.queryByRole("button", { name: /scroll left|previous|next/i })).not.toBeInTheDocument();
   });
 });
 ```
 
-- [ ] **Step 2: Implement** — port Angular's `showNavigators`/Vue's `TabList.vue` overflow-detection mechanism to React (same detection approach, React-idiomatic wiring — e.g. a `ResizeObserver` in a `useEffect` if that's what Angular/Vue's own real implementation uses).
+- [ ] **Step 2: Implement** — add a `scrollable?: boolean` prop (default `false`) to React's Tabs; when `true`, wrap the tab-header strip in a horizontally-scrollable container and render prev/next navigator buttons only while scrolling in that direction is possible (`scrollLeft !== 0` for prev; not at the scroll end for next — exact PrimeReact-confirmed computation from Step 1), recomputed via a `useEffect` with no dependency array plus the strip's own `scroll` handler. Do not add a `ResizeObserver` (out of this task's own scope — see GAP-071/GAP-072 for the separate, already-registered Angular/Vue resize-reactivity findings, which this task does not need to address or block on).
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
 ---
