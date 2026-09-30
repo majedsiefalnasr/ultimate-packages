@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 import { nextTick } from "vue";
+import { stepperStyleModule } from "./stepper-style";
 import { UStepper, UStepList, UStep, UStepPanels, UStepPanel, UStepItem } from "./index";
 
 function mountStepper(linear = false) {
@@ -143,5 +144,34 @@ describe("UStepPanel vertical separator (GAP-063)", () => {
     expect(wrapper.findAll(".u-stepper-separator").length).toBe(0);
     expect(wrapper.find(".u-step-panel-content-wrapper").exists()).toBe(false);
     expect(wrapper.find('[role="tabpanel"]').html()).toContain("Panel One");
+  });
+});
+
+describe("Stepper vertical StepItem layout CSS (GAP-063)", () => {
+  const css = stepperStyleModule.css as string;
+  const rule = (selector: string) => {
+    const m = css.match(new RegExp(`^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{([^}]*)\\}`, "m"));
+    return m ? m[1].trim() : null;
+  };
+
+  it("lays the step item out as a column, active item growing", () => {
+    expect(rule(".u-step-item")).toBe("display: flex; flex-direction: column; flex: initial;");
+    expect(rule(".u-step-item.u-step-item-active")).toBe("flex: 1 1 auto;");
+  });
+
+  it("keeps the vertical step header left-aligned without touching the global .u-step rule", () => {
+    expect(rule(".u-step-item .u-step")).toBe("flex: initial; align-items: flex-start;");
+    expect(rule(".u-step")).toContain("align-items: center");
+  });
+
+  it("makes the panel a grid, offsets content, handles RTL and last-item padding", () => {
+    expect(rule(".u-step-item .u-step-panel")).toBe("display: grid; grid-template-rows: 1fr;");
+    expect(rule(".u-step-item .u-step-panel-content")).toBe("width: 100%; margin-inline-start: 1rem;");
+    expect(rule(".u-step-item .u-stepper-separator:dir(rtl)")).toBe("left: -18px;");
+    expect(rule(".u-step-item:last-of-type .u-step-panel")).toBe("padding-inline-start: 2rem;");
+  });
+
+  it("declares the hidden-panel rule after the grid rule so inactive panels stay hidden", () => {
+    expect(css.indexOf('.u-step-panel[data-u-hidden="true"]')).toBeGreaterThan(css.indexOf(".u-step-item .u-step-panel {"));
   });
 });
