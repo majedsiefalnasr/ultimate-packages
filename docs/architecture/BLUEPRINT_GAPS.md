@@ -964,19 +964,19 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (React Tabs closable — INCLUDE, Angular/Vue N/A).
 - **Architectural decision required:** No.
 
-#### GAP-059 — SelectButton lacks roving-tabindex keyboard behavior (Angular, React)
+#### GAP-059 — SelectButton lacks roving-tabindex keyboard behavior (React)
 
 - **Status:** MISSING
 - **Type:** Component, Accessibility
 - **Blocking level:** MEDIUM
-- **Current evidence:** Real PrimeNG/PrimeReact both implement genuine roving-tabindex; Angular's and React's SelectButton ports lack it entirely, confirmed during Batch 6 triage and undisclosed in either Spec or Plan. **Vue is intentionally, correctly excluded** — real PrimeVue itself lacks this mechanism, independently confirmed via corroborated extraction (not inferred from PrimeNG/PrimeReact).
-- **Expected state:** Roving-tabindex keyboard behavior for Angular and React SelectButton, matching their own real upstream.
-- **Why it matters:** Roving-tabindex is a real accessibility pattern real Prime provides for two of the three frameworks; Ultimate currently provides it for neither.
+- **Current evidence:** Real PrimeReact 10.9.9 implements roving-tabindex on SelectButton (`SelectButton.js:16,101`; `SelectButtonItem.js:41-94`); React's SelectButton port lacks it entirely, confirmed during Batch 6 triage. **Vue is intentionally, correctly excluded** — real PrimeVue itself lacks this mechanism, independently confirmed via corroborated extraction (not inferred from PrimeNG/PrimeReact). **(Corrected 2026-09-30, Implementation-stage source check:** this entry originally also claimed real PrimeNG implements roving-tabindex and scoped Angular in. Real PrimeNG 21.1.9 SelectButton has none — each option is a `p-togglebutton` with tabindex 0 (−1 when disabled) handling only Enter/Space (`togglebutton.ts:54,87-100`); its `changeTabIndexes` method (`selectbutton.ts:267`) is never called outside its own spec. Ultimate Angular already matches PrimeNG; by user decision Angular is reclassified as matching upstream, like Vue.)
+- **Expected state:** Roving-tabindex keyboard behavior for React SelectButton, matching real PrimeReact: first option initially tabbable; ArrowRight/ArrowDown move focus to the next option, ArrowLeft/ArrowUp to the previous, wrapping at both ends; arrows move focus only; Space selects; disabled options are not skipped. One Ultimate addition by user decision: arrow keys on a component with no tabbable option are a no-op instead of throwing (PrimeReact would throw).
+- **Why it matters:** Roving-tabindex is a real accessibility pattern real PrimeReact provides; Ultimate's React port currently lacks it.
 - **What it blocks:** Nothing further downstream.
 - **Dependencies:** None.
-- **Framework scope:** Angular, React only. **Vue explicitly out of scope** — confirmed to already match its own real upstream's (lacking) behavior, not an oversight.
-- **Existing reusable infrastructure:** None directly reusable — new roving-tabindex logic needed for Angular/React.
-- **Recommended resolution direction:** Directional only — add roving-tabindex keyboard behavior to Angular and React only.
+- **Framework scope:** React only. **Vue and Angular explicitly out of scope** — both confirmed to already match their own real upstream's (lacking) behavior, not an oversight.
+- **Existing reusable infrastructure:** None directly reusable — new roving-tabindex logic needed for React.
+- **Recommended resolution direction:** Directional only — add PrimeReact-matching roving-tabindex keyboard behavior to React only.
 - **Source/evidence:** Batch 6 Triage (`batch6-triage.md`, GC-B6-01); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (GC-B6-01 — INCLUDE, Angular + React only).
 - **Architectural decision required:** No.
 
@@ -1002,13 +1002,13 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Type:** Component, Accessibility, Framework (Vue)
 - **Blocking level:** LOW
 - **Current evidence:** Genuinely PrimeVue-specific richness (`aria-haspopup`, `aria-expanded`, `aria-controls`, two `aria-live` regions) — independently confirmed absent from PrimeNG/PrimeReact too, confirmed during Batch 6 triage, so Angular/React correctly match their own baselines by *not* having it.
-- **Expected state:** Vue's Password overlay-toggle interaction gains the four disclosure-pattern ARIA attributes, matching real PrimeVue.
+- **Expected state:** Vue's Password gains the disclosure-pattern ARIA real PrimeVue 4.5.5 uses (`Password.vue:13-15,44-45,57-58`): on the **input**, `aria-haspopup` (= `feedback`), `aria-expanded` (= strength overlay open) and `aria-controls` (= the overlay's id, only while open); the strength overlay gets an id plus `role="dialog"` and `aria-live="polite"`; a visually hidden `aria-live="polite"` span shows the current strength text (`infoText`), always rendered. The mask/unmask toggle icons are unchanged. **(Corrected 2026-09-30, Implementation-stage source check:** this entry originally placed the ARIA on the "overlay-toggle", which the Plan read as the mask toggle; real PrimeVue puts it on the input and ties it to the strength-meter overlay. User decision: follow real PrimeVue.)
 - **Why it matters:** This is genuinely Vue-specific richness real PrimeVue provides that Ultimate's Vue port currently lacks; Angular/React are correctly unaffected since their own real upstream never had this either.
 - **What it blocks:** Nothing further downstream.
 - **Dependencies:** None.
 - **Framework scope:** Vue only. **Angular/React explicitly out of scope** — confirmed their own real upstream never had this feature.
 - **Existing reusable infrastructure:** The same disclosure-pattern ARIA approach already used elsewhere in this codebase for overlay-disclosure ARIA is the direct precedent.
-- **Recommended resolution direction:** Directional only — add the four disclosure-pattern ARIA attributes to Vue's Password overlay-toggle interaction.
+- **Recommended resolution direction:** Directional only — add real PrimeVue's input/overlay disclosure ARIA and two `aria-live` regions to Vue's Password.
 - **Source/evidence:** Batch 6 Triage (`batch6-triage.md`, GC-B6-03); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (GC-B6-03 — INCLUDE, Vue only).
 - **Architectural decision required:** No.
 

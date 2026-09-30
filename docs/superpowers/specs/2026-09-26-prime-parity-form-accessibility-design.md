@@ -15,15 +15,15 @@
 
 **Purpose:** Establish the acceptance contract for three confirmed Form/Accessibility gaps, all INCLUDE by human decision, each with a distinct, non-overlapping framework scope.
 
-**In scope:** GAP-059 (SelectButton roving-tabindex, Angular + React), GAP-060 (FileUpload progress ARIA, all three frameworks), GAP-061 (Vue Password disclosure ARIA, Vue only) — `packages/{ng,react}/src/select-button/`, `packages/{ng,react,vue}/src/file-upload/`, `packages/vue/src/password/`.
+**In scope:** GAP-059 (SelectButton roving-tabindex, React — Angular removed 2026-09-30, see §12), GAP-060 (FileUpload progress ARIA, all three frameworks), GAP-061 (Vue Password disclosure ARIA, Vue only) — `packages/react/src/select-button/`, `packages/{ng,react,vue}/src/file-upload/`, `packages/vue/src/password/`.
 
-**Out of scope:** Vue's SelectButton (confirmed correctly matching its own real upstream's lacking behavior — not a gap); Angular's/React's Password (confirmed their own real upstream never had this disclosure-pattern richness).
+**Out of scope:** Vue's and Angular's SelectButton (both confirmed correctly matching their own real upstream's lacking behavior — not a gap; Angular per §12); Angular's/React's Password (confirmed their own real upstream never had this disclosure-pattern richness).
 
 ---
 
 ## 2. Human Decisions This Specification Implements
 
-1. **GAP-059 is INCLUDE for Angular + React only.** Vue is explicitly excluded — real PrimeVue itself lacks the roving-tabindex mechanism, independently confirmed via corroborated extraction during Batch 6 triage, not inferred from PrimeNG/PrimeReact. This is not an oversight to correct; Vue already correctly matches its own upstream.
+1. **GAP-059 is INCLUDE for React only** (originally Angular + React; Angular removed by user decision 2026-09-30 after real PrimeNG was found to lack the mechanism — see §12). Vue is also explicitly excluded — real PrimeVue itself lacks the roving-tabindex mechanism, independently confirmed via corroborated extraction during Batch 6 triage, not inferred from PrimeNG/PrimeReact. This is not an oversight to correct; Vue already correctly matches its own upstream.
 2. **GAP-060 is INCLUDE for all three frameworks** — one shared root cause (FileUpload's implementation task, identically in all three frameworks, rendered a bare `div` instead of composing the already-existing `UProgressBar`), three framework-local instances of the identical fix.
 3. **GAP-061 is INCLUDE for Vue only.** Angular and React are explicitly excluded — independently confirmed that PrimeNG's and PrimeReact's own real Password components also lack this disclosure-pattern ARIA richness; this is genuinely Vue-specific, not a gap for the other two frameworks.
 
@@ -33,7 +33,7 @@
 
 | Gap | Angular | React | Vue |
 |---|---|---|---|
-| GAP-059 (SelectButton roving-tabindex) | In scope | In scope | **Explicitly out of scope — confirmed matching its own real upstream** |
+| GAP-059 (SelectButton roving-tabindex) | **Explicitly out of scope — confirmed matching its own real upstream (§12)** | In scope | **Explicitly out of scope — confirmed matching its own real upstream** |
 | GAP-060 (FileUpload progress ARIA) | In scope | In scope | In scope |
 | GAP-061 (Password disclosure ARIA) | **Explicitly out of scope — confirmed no upstream equivalent exists** | **Explicitly out of scope — confirmed no upstream equivalent exists** | In scope |
 
@@ -41,9 +41,9 @@
 
 ## 4. Existing Behavior
 
-- **GAP-059:** Real PrimeNG/PrimeReact both implement genuine roving-tabindex on SelectButton; Angular's and React's SelectButton ports lack it entirely. Real PrimeVue's own SelectButton also lacks it — Ultimate's Vue port correctly matches.
+- **GAP-059:** Real PrimeReact implements genuine roving-tabindex on SelectButton; React's SelectButton port lacks it entirely. Real PrimeNG 21.1.9 does not (each option is a separately tabbable `p-togglebutton` handling only Enter/Space), and Ultimate's Angular port already matches it. **(Corrected 2026-09-30 — see §12; this line previously said PrimeNG also implements roving-tabindex.)** Real PrimeVue's own SelectButton also lacks it — Ultimate's Vue port correctly matches.
 - **GAP-060:** All three real Prime frameworks compose their own real ProgressBar component for FileUpload's upload-progress display. Ultimate's own `UProgressBar` sibling already has correct ARIA in every framework. FileUpload's own implementation task, identically in all three frameworks, rendered a bare `div` instead of composing `UProgressBar`.
-- **GAP-061:** Real PrimeVue's Password overlay-toggle interaction has `aria-haspopup`, `aria-expanded`, `aria-controls`, and two `aria-live` regions. Ultimate's Vue Password lacks all four. Real PrimeNG's and PrimeReact's own Password components also lack this richness — independently confirmed, not inferred.
+- **GAP-061:** Real PrimeVue's Password input has `aria-haspopup`, `aria-expanded` and `aria-controls` describing its strength-meter overlay, plus two `aria-live` regions (a hidden strength-text span and the overlay itself). **(Corrected 2026-09-30 — see §12; this line previously attributed the ARIA to the "overlay-toggle".)** Ultimate's Vue Password lacks all four. Real PrimeNG's and PrimeReact's own Password components also lack this richness — independently confirmed, not inferred.
 
 ---
 
@@ -51,7 +51,7 @@
 
 ### 5.1 GAP-059 — SelectButton roving-tabindex
 
-With focus inside the SelectButton group, only one option is tabbable (`tabindex="0"`) at a time; Arrow keys move focus (and the roving `tabindex`) between options, matching real PrimeNG's/PrimeReact's own mechanism exactly. Angular and React only.
+Only one option is tabbable (`tabindex="0"`) at a time, initially the first; ArrowRight/ArrowDown move focus (and the roving `tabindex`) to the next option and ArrowLeft/ArrowUp to the previous, wrapping at both ends; arrows move focus only, Space selects; disabled options are not skipped — matching real PrimeReact 10.9.9 (`SelectButton.js:16,101`, `SelectButtonItem.js:41-94`). One Ultimate addition: when no option is tabbable (component `disabled`), arrow keys are a no-op instead of throwing. React only. **(Corrected 2026-09-30 — see §12.)**
 
 ### 5.2 GAP-060 — FileUpload progress ARIA
 
@@ -59,7 +59,7 @@ FileUpload's upload-progress display must compose Ultimate's own existing `UProg
 
 ### 5.3 GAP-061 — Vue Password disclosure ARIA
 
-Vue Password's overlay-toggle interaction must carry `aria-haspopup`, `aria-expanded` (reflecting the overlay's open/closed state), and `aria-controls` (referencing the overlay's element id), plus two `aria-live` regions matching real PrimeVue's own mechanism, for whatever specific announcements real PrimeVue's own two live regions carry. Vue only.
+Matching real PrimeVue 4.5.5 (`Password.vue:13-15,44-45,57-58`): Vue Password's **input** must carry `aria-haspopup` (= `feedback`), `aria-expanded` (= strength overlay open) and `aria-controls` (= the overlay's element id, only while open). The strength overlay gets that id plus `role="dialog"` and `aria-live="polite"`. A visually hidden `aria-live="polite"` span renders the current strength text (`infoText`), always present. The mask/unmask toggle icons are unchanged. Vue only. **(Corrected 2026-09-30 — see §12.)**
 
 ---
 
@@ -67,7 +67,7 @@ Vue Password's overlay-toggle interaction must carry `aria-haspopup`, `aria-expa
 
 - **GAP-059:** no new public API — internal keyboard/focus-management behavior only.
 - **GAP-060:** no new public API — an internal implementation change (compose `UProgressBar` instead of a bare `div`); FileUpload's own existing progress-related props (if any) are unaffected.
-- **GAP-061:** no new public API — internal ARIA-attribute wiring on Password's existing overlay-toggle markup.
+- **GAP-061:** no new public API — internal ARIA-attribute wiring on Password's existing input and strength-overlay markup.
 
 ---
 
@@ -79,7 +79,7 @@ None. GAP-059, GAP-060, and GAP-061 are independent of each other and of every o
 
 ## 8. Intentional Divergences That Must Remain Unchanged
 
-- Vue's SelectButton correctly lacking roving-tabindex (matches its own real upstream) — must not be "fixed" to match Angular/React.
+- Vue's and Angular's SelectButton correctly lacking roving-tabindex (each matches its own real upstream) — must not be "fixed" to match React.
 - Angular's and React's Password correctly lacking disclosure-pattern ARIA richness (matches their own real upstream) — must not be "fixed" to match Vue.
 
 ---
@@ -88,10 +88,10 @@ None. GAP-059, GAP-060, and GAP-061 are independent of each other and of every o
 
 | Criterion | Traces to |
 |---|---|
-| SelectButton roving-tabindex with Arrow-key focus movement — Angular, React | GAP-059 |
-| Vue SelectButton unchanged (no roving-tabindex added) | GAP-059 (non-regression) |
+| SelectButton roving-tabindex with Arrow-key focus movement matching PrimeReact — React | GAP-059 |
+| Vue and Angular SelectButton unchanged (no roving-tabindex added) | GAP-059 (non-regression) |
 | FileUpload composes `UProgressBar` for upload progress, inheriting its correct ARIA — all 3 frameworks | GAP-060 |
-| Vue Password overlay-toggle carries `aria-haspopup`/`aria-expanded`/`aria-controls` plus two `aria-live` regions matching real PrimeVue | GAP-061 |
+| Vue Password input carries `aria-haspopup`/`aria-expanded`/`aria-controls` for the strength overlay, plus two `aria-live` regions, matching real PrimeVue | GAP-061 |
 | Angular/React Password unchanged (no disclosure-pattern ARIA added) | GAP-061 (non-regression) |
 
 ---
@@ -104,4 +104,15 @@ None. GAP-059, GAP-060, and GAP-061 are independent of each other and of every o
 
 ## 11. Explicit Out-of-Scope Items
 
-Vue SelectButton; Angular/React Password; any other Form-family or Batch-6 finding not named in §1 (e.g. React DynamicDialog/OverlayBadge, InputGroup/IftaLabel-React, InputChips/MultiStateCheckbox/TriStateCheckbox/Mention — all confirmed "Prime capability absent," not INCLUDE, not touched here).
+Vue and Angular SelectButton; Angular/React Password; any other Form-family or Batch-6 finding not named in §1 (e.g. React DynamicDialog/OverlayBadge, InputGroup/IftaLabel-React, InputChips/MultiStateCheckbox/TriStateCheckbox/Mention — all confirmed "Prime capability absent," not INCLUDE, not touched here).
+
+---
+
+## 12. Implementation-Stage Corrections (2026-09-30)
+
+Source checks at the start of implementation (pinned `.vendor-cache/` tarballs) found two premise errors; the user ruled on each before any code was written.
+
+- **GAP-059 Angular removed.** Real PrimeNG 21.1.9 SelectButton has no roving-tabindex: each option is a `p-togglebutton` with tabindex 0 (−1 when disabled) handling only Enter/Space (`togglebutton.ts:54,87-100`); `SelectButton.changeTabIndexes` (`selectbutton.ts:267`) is never called outside its own spec. Ultimate's Angular port already matches. User decision: reclassify Angular as matching upstream, like Vue; GAP-059 is React-only.
+- **GAP-059 React semantics.** The Plan asked for skipping disabled options and an all-disabled no-op; real PrimeReact wraps without skipping disabled options and would throw when no option is tabbable. User decision: match PrimeReact exactly (§5.1), plus a guard so arrow keys are a no-op when no option is tabbable.
+- **GAP-061 ARIA placement.** The original text put the disclosure ARIA on the "overlay-toggle", which the Plan read as the mask toggle with `aria-expanded` tracking the mask state. Real PrimeVue 4.5.5 puts it on the input, describing the strength-meter overlay (`Password.vue:13-15`), with live regions at `:44-45` and `:57-58`. User decision: follow real PrimeVue (§5.3).
+- **GAP-060 unchanged.** All three real Prime FileUploads compose ProgressBar (PrimeNG `fileupload.ts:240`, PrimeReact `FileUpload.js:545`, PrimeVue `FileUpload.vue:43`); the premise holds.
