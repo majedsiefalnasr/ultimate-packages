@@ -419,11 +419,13 @@ describe("scrollable overflow (Spec §5.7, GAP-057)", () => {
 
 ### Task 25: React — GAP-058 Tabs `closable`
 
-**Files:** `packages/react/src/tabs/tab-view.tsx` (the real TabView-equivalent file, same as Task 24 — there is no `tabs.tsx`; `UTabPanel`'s own props live in `tab-panel.tsx` if the `closable`/`onClose` prop declarations belong there), `tabs.spec.tsx`. **Independent of Task 24.**
+**Files:** `packages/react/src/tabs/tab-panel.tsx` (`closable`/`closeIcon` props), `packages/react/src/tabs/tab-view.tsx` (the real TabView-equivalent file, same as Task 24 — there is no `tabs.tsx`; `onTabClose`/`onBeforeTabClose` props and close behavior), `tabs-style.ts`, `tabs.spec.tsx`. **Independent of Task 24.**
+
+**Plan correction (2026-09-30, pre-implementation):** this task's original Step 1/Step 2 text guessed an `onClose` callback on each `UTabPanel` with an `{ originalEvent }` payload. Step 1's own mandated source check against real PrimeReact 10.9.9 (`components/lib/tabview/{TabView,TabViewBase}.js`) found the real contract differs, and Spec §6 already requires "matching real PrimeReact's own API shape": `closable` (default `false`) and `closeIcon` are `TabPanel` props (`TabViewBase.js:62-63`); the close callbacks are `onTabClose({ originalEvent, index })` and cancellable `onBeforeTabClose({ originalEvent, index })` (returning `false` cancels) on `TabView` (`TabViewBase.js:41,43`; `TabView.js:85-101`); closed tabs are tracked in internal hidden state, so the parent need not remove children (`TabView.js:22,72`); after every close, including of a non-active tab, the active tab is re-picked via `findVisibleActiveTab`, i.e. the first enabled visible tab at/after the closed index, else the nearest before it (`TabView.js:74-82, 317-322`). User rulings (2026-09-30): (1) follow PrimeReact exactly, including `onBeforeTabClose`; (2) render the close control as a real `<button type="button" aria-label="Close">` placed beside the header button inside the `<li role="tab">` (never nested in the header button), a disclosed deviation from PrimeReact's bare focusable SVG for better native semantics; clicking it must not also activate the tab; (3) replicate PrimeReact's active-tab re-pick policy exactly, including after closing a non-active tab, via the normal tab-change path; (4) identify closed tabs by the child's React `key` when present, falling back to its original index. The steps below are corrected accordingly.
 
 - [ ] **Step 1: Write the failing tests**
 
-First read real PrimeReact's own close-button/close-icon implementation (`.vendor-cache/primereact-10.9.9.tar.gz`, TabView/TabPanel source) to confirm the exact prop name and close-event payload shape before writing assertions — do not invent one.
+First re-read real PrimeReact 10.9.9's own `TabView.js`/`TabViewBase.js` close path (`.vendor-cache/primereact-10.9.9.tar.gz`) to confirm the details cited in the correction above before writing assertions.
 
 ```tsx
 describe("closable tabs (Spec §5.8, GAP-058)", () => {
@@ -432,12 +434,29 @@ describe("closable tabs (Spec §5.8, GAP-058)", () => {
     expect(screen.getByRole("button", { name: /close/i })).toBeInTheDocument();
   });
 
-  it("clicking the close button removes the tab and fires the close callback", () => {
-    const onClose = vi.fn();
-    render(<UTabView><UTabPanel header="A" closable onClose={onClose} /></UTabView>);
+  it("clicking the close button removes the tab and fires onTabClose with the tab index", () => {
+    const onTabClose = vi.fn();
+    render(
+      <UTabView onTabClose={onTabClose}>
+        <UTabPanel header="A" closable />
+        <UTabPanel header="B" />
+      </UTabView>
+    );
     fireEvent.click(screen.getByRole("button", { name: /close/i }));
-    expect(onClose).toHaveBeenCalled();
+    expect(onTabClose).toHaveBeenCalledWith(expect.objectContaining({ index: 0 }));
     expect(screen.queryByText("A")).not.toBeInTheDocument();
+  });
+
+  it("onBeforeTabClose returning false cancels the close", () => {
+    const onTabClose = vi.fn();
+    render(
+      <UTabView onBeforeTabClose={() => false} onTabClose={onTabClose}>
+        <UTabPanel header="A" closable />
+      </UTabView>
+    );
+    fireEvent.click(screen.getByRole("button", { name: /close/i }));
+    expect(onTabClose).not.toHaveBeenCalled();
+    expect(screen.getByText("A")).toBeInTheDocument();
   });
 
   it("does not render a close button when closable is unset", () => {
@@ -447,7 +466,9 @@ describe("closable tabs (Spec §5.8, GAP-058)", () => {
 });
 ```
 
-- [ ] **Step 2: Implement** — add `closable?: boolean` and `onClose?: (event: { originalEvent: React.SyntheticEvent }) => void` (exact payload shape confirmed from real PrimeReact source in Step 1) to `UTabPanel`'s props; render a close button/icon per real PrimeReact's own pattern when `closable` is true; clicking it removes the tab from the rendered set and fires `onClose`.
+Also add tests for: the active-tab re-pick after closing the active tab, and after closing a non-active tab (PrimeReact policy); the close button activating by keyboard (Enter/Space, native button); the close click not also activating the tab; closed-tab tracking by `key` with an index fallback.
+
+- [ ] **Step 2: Implement** — add `closable?: boolean` (default `false`) and `closeIcon?: React.ReactNode` to `UTabPanelProps`; add `onTabClose?` and `onBeforeTabClose?` (payload `{ originalEvent: React.SyntheticEvent; index: number }`; `onBeforeTabClose` returning `false` cancels) to `UTabViewProps`. When `closable`, render a `<button type="button" aria-label="Close">` beside the header button inside the `<li role="tab">`. On activation: call `event.preventDefault()`, then `onBeforeTabClose` (return if it returns `false`), hide the tab in internal state keyed by the child's React `key` (falling back to the original index), fire `onTabClose`, then re-pick the active tab per PrimeReact's `findVisibleActiveTab` policy through the normal tab-change path (`onTabChange` when controlled).
 - [ ] **Step 3-4:** Tests, full suite, dependency ceiling.
 
 ---
