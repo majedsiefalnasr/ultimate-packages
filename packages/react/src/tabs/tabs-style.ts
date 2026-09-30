@@ -19,6 +19,10 @@ const css = /*css*/ `
 .u-tabview-header, .u-tabmenu-item { cursor: pointer; display: inline-flex; align-items: center; user-select: none; white-space: nowrap; }
 .u-tabview-header[data-u-disabled="true"], .u-tabmenu-item[data-u-disabled="true"] { cursor: default; opacity: 0.6; pointer-events: none; }
 .u-tabview-header-action, .u-tabmenu-action { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; background: transparent; border: none; cursor: pointer; }
+.u-tabview-nav-container { display: flex; position: relative; }
+.u-tabview-nav-content { flex: 1 1 auto; overflow-x: auto; scrollbar-width: none; }
+.u-tabview-nav-content::-webkit-scrollbar { display: none; }
+.u-tabview-nav-btn { flex: 0 0 auto; display: flex; align-items: center; background: transparent; border: none; cursor: pointer; }
 .u-tabview-panels { flex: 1 1 auto; }
 .u-tabview-panel[data-u-hidden="true"] { display: none; }
 `;
@@ -26,6 +30,10 @@ const css = /*css*/ `
 const classes = {
   tabViewRoot: "u-tabview u-component",
   tabViewNav: "u-tabview-nav",
+  tabViewNavContainer: "u-tabview-nav-container",
+  tabViewNavContent: "u-tabview-nav-content",
+  tabViewNavPrev: "u-tabview-nav-prev u-tabview-nav-btn",
+  tabViewNavNext: "u-tabview-nav-next u-tabview-nav-btn",
   tabViewInkbar: "u-tabview-inkbar",
   tabViewHeader: (params: { selected?: boolean; disabled?: boolean } = {}) => [
     "u-tabview-header",

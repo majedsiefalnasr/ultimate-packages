@@ -1,5 +1,5 @@
 import * as React from "react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, fireEvent } from "@testing-library/react";
 import { UTabView } from "./tab-view";
 import { UTabPanel } from "./tab-panel";
@@ -113,5 +113,111 @@ describe("UTabMenu", () => {
     fireEvent.click(links[2]);
     const items = container.querySelectorAll('[role="tab"]');
     expect(items[2].getAttribute("aria-selected")).toBe("false");
+  });
+});
+
+describe("UTabView scrollable overflow (Spec §5.7, GAP-057)", () => {
+  const dims = { scrollWidth: 0, clientWidth: 0, scrollLeft: 0 };
+  const originals = new Map<string, PropertyDescriptor | undefined>();
+
+  // jsdom has no layout: stub the scroll metrics on HTMLElement.prototype.
+  beforeEach(() => {
+    for (const key of Object.keys(dims) as (keyof typeof dims)[]) {
+      originals.set(key, Object.getOwnPropertyDescriptor(HTMLElement.prototype, key));
+      Object.defineProperty(HTMLElement.prototype, key, {
+        configurable: true,
+        get() {
+          return dims[key];
+        },
+        set(v: number) {
+          dims[key] = v;
+        },
+      });
+    }
+  });
+
+  afterEach(() => {
+    for (const [key, desc] of originals) {
+      if (desc) Object.defineProperty(HTMLElement.prototype, key, desc);
+      else delete (HTMLElement.prototype as unknown as Record<string, unknown>)[key];
+    }
+    originals.clear();
+  });
+
+  function setDims(scrollWidth: number, clientWidth: number, scrollLeft: number) {
+    Object.assign(dims, { scrollWidth, clientWidth, scrollLeft });
+  }
+
+  function renderTabs(scrollable?: boolean) {
+    return render(
+      <UTabView scrollable={scrollable}>
+        <UTabPanel header="One">A</UTabPanel>
+        <UTabPanel header="Two">B</UTabPanel>
+        <UTabPanel header="Three">C</UTabPanel>
+      </UTabView>
+    );
+  }
+
+  const prev = (c: HTMLElement) => c.querySelector('button[aria-label="Previous Page"]');
+  const next = (c: HTMLElement) => c.querySelector('button[aria-label="Next Page"]');
+
+  it("renders no navigators by default, even when overflowing", () => {
+    setDims(1000, 200, 0);
+    const { container } = renderTabs();
+    expect(prev(container)).toBeNull();
+    expect(next(container)).toBeNull();
+    expect(container.querySelector(".u-tabview-nav-content")).toBeNull();
+  });
+
+  it("shows only next when scrollable, overflowing, at the start", () => {
+    setDims(1000, 200, 0);
+    const { container } = renderTabs(true);
+    expect(prev(container)).toBeNull();
+    expect(next(container)).not.toBeNull();
+  });
+
+  it("shows no navigators when scrollable and tabs fit", () => {
+    setDims(200, 200, 0);
+    const { container } = renderTabs(true);
+    expect(prev(container)).toBeNull();
+    expect(next(container)).toBeNull();
+  });
+
+  it("shows both navigators when scrolled to the middle", () => {
+    setDims(1000, 200, 300);
+    const { container } = renderTabs(true);
+    expect(prev(container)).not.toBeNull();
+    expect(next(container)).not.toBeNull();
+  });
+
+  it("shows only prev when scrolled to the end", () => {
+    setDims(1000, 200, 800);
+    const { container } = renderTabs(true);
+    expect(prev(container)).not.toBeNull();
+    expect(next(container)).toBeNull();
+  });
+
+  it("updates navigators on the strip's scroll event", () => {
+    setDims(1000, 200, 0);
+    const { container } = renderTabs(true);
+    expect(prev(container)).toBeNull();
+    dims.scrollLeft = 800;
+    fireEvent.scroll(container.querySelector(".u-tabview-nav-content") as HTMLElement);
+    expect(prev(container)).not.toBeNull();
+    expect(next(container)).toBeNull();
+  });
+
+  it("clicking next scrolls the strip forward by the visible width", () => {
+    setDims(1000, 200, 0);
+    const { container } = renderTabs(true);
+    fireEvent.click(next(container) as HTMLElement);
+    expect(dims.scrollLeft).toBe(200);
+  });
+
+  it("clicking prev scrolls the strip back, clamped at 0", () => {
+    setDims(1000, 200, 100);
+    const { container } = renderTabs(true);
+    fireEvent.click(prev(container) as HTMLElement);
+    expect(dims.scrollLeft).toBe(0);
   });
 });
