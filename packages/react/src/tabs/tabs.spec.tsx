@@ -383,7 +383,7 @@ describe("closable tabs (Spec §5.8, GAP-058)", () => {
     expect(onTabChange).toHaveBeenCalledWith(expect.objectContaining({ index: 1 }));
   });
 
-  it("the close control is a native button (Enter/Space activate via click)", () => {
+  it("the close control is a native button element (type=button); activation is via click", () => {
     const { container } = render(
       <UTabView>
         <UTabPanel header="A" closable />
@@ -408,6 +408,26 @@ describe("closable tabs (Spec §5.8, GAP-058)", () => {
     expect(headers(container)).toEqual(["a", "c"]);
     rerender(tabs(["c", "b", "a"]));
     expect(headers(container)).toEqual(["c", "a"]);
+  });
+
+  it("tracks closed tabs by key for mapped tabs next to a static tab", () => {
+    const tabs = (order: string[]) => (
+      <UTabView>
+        <UTabPanel header="S" />
+        {order.map((k) => (
+          <UTabPanel key={k} header={k} closable />
+        ))}
+      </UTabView>
+    );
+    const { container, rerender } = render(tabs(["a", "b", "c"]));
+    fireEvent.click(closeBtn(container, 1));
+    expect(headers(container)).toEqual(["S", "a", "c"]);
+    rerender(tabs(["c", "b", "a"]));
+    expect(headers(container)).toEqual(["S", "c", "a"]);
+    rerender(tabs(["c", "a"]));
+    expect(headers(container)).toEqual(["S", "c", "a"]);
+    rerender(tabs(["a"]));
+    expect(headers(container)).toEqual(["S", "a"]);
   });
 
   it("falls back to the original index when tabs have no key", () => {

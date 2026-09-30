@@ -36,6 +36,8 @@ export interface UTabViewProps {
  * supplied, else internally-managed state — matching real source's own
  * `props.onTabChange ? props.activeIndex : activeIndexState` pattern).
  */
+const EXPLICIT_KEY = /(^\.|:)\$/;
+
 export const UTabView = React.forwardRef<HTMLDivElement, UTabViewProps>(function UTabView(
   {
     activeIndex: activeIndexProp,
@@ -113,11 +115,13 @@ export const UTabView = React.forwardRef<HTMLDivElement, UTabViewProps>(function
   );
 
   // Closed tabs are hidden in internal state, identified by the child's own
-  // React key when it has one (toArray prefixes explicit keys with ".$"),
-  // else by its original index. Indices stay the original panel indices.
+  // React key when it has one, else by its original index. toArray marks an
+  // explicit key with "$" after the path separator: ".$k" at top level,
+  // ".1:$k" inside nested arrays (":" in user keys is escaped as "=2").
+  // Indices stay the original panel indices.
   const [hiddenTabs, setHiddenTabs] = React.useState<(string | number)[]>([]);
   const tabId = (panel: React.ReactElement, index: number): string | number =>
-    panel.key !== null && String(panel.key).startsWith(".$") ? panel.key : index;
+    panel.key !== null && EXPLICIT_KEY.test(String(panel.key)) ? panel.key : index;
   const isVisible = (index: number, hidden: (string | number)[] = hiddenTabs) =>
     !hidden.includes(tabId(panels[index], index));
 
