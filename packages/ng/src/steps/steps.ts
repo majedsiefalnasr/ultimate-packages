@@ -102,8 +102,12 @@ export class USteps extends UBaseComponent {
     if (links.length === 0) {
       return;
     }
-    const model = this.model();
-    const isEnabled = (index: number) => !this.isItemDisabled(model[index], index);
+    // `links` holds rendered items only; pair each with its model index so
+    // `isItemDisabled` (which compares against `activeIndex`) stays correct.
+    const rendered = this.model()
+      .map((item, modelIndex) => ({ item, modelIndex }))
+      .filter(({ item }) => item.visible !== false);
+    const isEnabled = (index: number) => !this.isItemDisabled(rendered[index].item, rendered[index].modelIndex);
     const currentIndex = links.indexOf(document.activeElement as HTMLElement);
 
     let targetIndex: number | undefined;

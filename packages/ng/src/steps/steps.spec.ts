@@ -122,6 +122,51 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
     links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
     expect(document.activeElement).toBe(links[2]);
   });
+
+  describe("with a hidden item (rendered-link index vs model index)", () => {
+    const model: UMenuItem[] = [
+      { label: "A" },
+      { label: "H", visible: false },
+      { label: "B", disabled: true },
+      { label: "C" },
+    ];
+    const press = (el: HTMLElement, code: string) =>
+      el.dispatchEvent(new KeyboardEvent("keydown", { code, bubbles: true }));
+
+    it("ArrowRight from A skips the disabled step and reaches C", () => {
+      const fixture = setup(model);
+      const links = fixture.nativeElement.querySelectorAll("a");
+      links[0].focus();
+      press(links[0], "ArrowRight");
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("Home skips hidden/disabled items and reaches the first valid step", () => {
+      const fixture = setup([{ label: "H", visible: false }, { label: "B", disabled: true }, { label: "C" }, { label: "D" }]);
+      const links = fixture.nativeElement.querySelectorAll("a");
+      links[2].focus();
+      press(links[2], "Home");
+      expect(document.activeElement).toBe(links[1]);
+    });
+
+    it("End skips hidden/disabled items and reaches the last valid step", () => {
+      const fixture = setup([{ label: "A" }, { label: "B" }, { label: "H", visible: false }, { label: "D", disabled: true }]);
+      const links = fixture.nativeElement.querySelectorAll("a");
+      links[0].focus();
+      press(links[0], "End");
+      expect(document.activeElement).toBe(links[1]);
+    });
+
+    it("readonly: a hidden item before the active step does not shift the active comparison", () => {
+      const fixture = setup([{ label: "H", visible: false }, { label: "B" }, { label: "C" }], true);
+      fixture.componentRef.setInput("activeIndex", 2);
+      fixture.detectChanges();
+      const links = fixture.nativeElement.querySelectorAll("a");
+      links[0].focus();
+      press(links[0], "End");
+      expect(document.activeElement).toBe(links[1]);
+    });
+  });
 });
 
 describe("routerLink (Spec §5.2, GAP-053)", () => {
