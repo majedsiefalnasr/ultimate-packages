@@ -109,12 +109,13 @@ Import `UProgressBar` and add it to the component's `imports` array. Replace the
 
 ### Task 6: Vue — GAP-061 Password disclosure-pattern ARIA
 
-**Files:** `packages/vue/src/password/Password.vue`, `password.spec.ts`.
+**Files:** `packages/vue/src/password/Password.vue`, `password.spec.ts`, `password-style.ts` (style file added 2026-09-30 — see hidden-span note below).
 
 **Target behavior (real PrimeVue 4.5.5, `packages/primevue/src/password/Password.vue:13-15,44-45,57-58`; Spec §5.3). Corrected 2026-09-30 — this task originally put the ARIA on the mask-toggle `<svg role="button">` icons with `aria-expanded` tracking the mask state, which does not match real PrimeVue; see Spec §12.**
 - On the **input**: `aria-haspopup` bound to `feedback`; `aria-expanded` bound to `overlayVisible`; `aria-controls` = the strength overlay's id while `overlayVisible`, otherwise absent.
 - The strength overlay element (inside the existing `UPortal`) gets that id plus `role="dialog"` and `aria-live="polite"`. Generate the id with this codebase's existing Vue unique-id pattern (find and reuse it; do not add a new mechanism). Do not add new public props such as `overlayId`/`panelId`.
-- A visually hidden span with `aria-live="polite"` rendering `{{ infoText }}`, always rendered (PrimeVue `:44-45`, class `p-hidden-accessible`). Reuse the codebase's existing hidden-accessible class/style if one exists; otherwise stop and report.
+- A visually hidden span with `aria-live="polite"` rendering `{{ infoText }}`, always rendered (PrimeVue `:44-45`, class `p-hidden-accessible`). **Updated 2026-09-30 (user decision after Task 6 stop):** the codebase has no CSS for `p-hidden-accessible`/`u-hidden-accessible` (pre-existing defect registered separately as GAP-074, not fixed here). Hide the span with a Password-owned class and a standard visually-hidden rule (1px, clip, absolute, overflow hidden, no margin/padding/border) added to `packages/vue/src/password/password-style.ts`; do not add shared/base styling.
+- Overlay id: reuse the `useId()`-in-`setup()` pattern of `Dialog.vue:57,130-136` / `Menu.vue`.
 - Mask/unmask toggle icons unchanged.
 
 - [ ] **Step 1: Write the failing tests** — input has `aria-haspopup="true"` with `feedback` (and `"false"` without); `aria-expanded="false"` initially; after focusing the input with `feedback`, `aria-expanded="true"`, `aria-controls` equals the overlay element's id, and the overlay has `role="dialog"` and `aria-live="polite"`; after blur, `aria-expanded="false"` and no `aria-controls`; the hidden `aria-live` span exists and shows the current `infoText` (prompt, then strength label after input); toggle icons carry no `aria-expanded`/`aria-controls`/`aria-haspopup`. The overlay is portaled — query the document, not only the wrapper.

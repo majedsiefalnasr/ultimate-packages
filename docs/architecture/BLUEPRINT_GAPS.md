@@ -1207,6 +1207,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** Navigation Plan Task 4 (GAP-053) implementation and review findings; Navigation Plan final review (2026-09-30); direct source inspection of `breadcrumb.ts` and Angular router 21.2.22's `RouterLink` host binding.
 - **Architectural decision required:** No — user-authorized (2026-09-30) as a separate GAP, not fixed as part of GAP-053 or GAP-069.
 
+#### GAP-074 — `hidden-accessible` classes are used but never styled (Angular, React, Vue)
+
+- **Status:** MISSING
+- **Type:** Accessibility, Styling, Framework (Angular, React, Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Discovered during the Form/Accessibility Plan's GAP-061 task (2026-09-30); registered on user instruction. Several components mark content as visually hidden with a `p-hidden-accessible` or `u-hidden-accessible` class, but no stylesheet, style module or theme in the source packages defines either class (only built `storybook-static` output contains a `clip` rule). Real Prime relies on its shared base CSS (`.p-hidden-accessible`) for this. Usages: `packages/vue/src/rating/Rating.vue:9` and `packages/ng/src/rating/rating.ts:45` (`p-hidden-accessible` wrapping each star's radio input); `packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx:93` (`u-hidden-accessible` `aria-live` label text); `packages/vue-core/src/focus-trap/focus-trap.ts:33` and `packages/react-core/src/focus-trap/focus-trap.tsx:65,75` (`u-hidden-accessible` empty focus sentinels). Consequence: content meant for assistive technology only (radio inputs, live label text) can render visibly unless the consuming app supplies CSS for these classes.
+- **Expected state:** Every element marked hidden-accessible is visually hidden but still available to assistive technology, in all three frameworks.
+- **Why it matters:** Visible stray inputs or duplicate label text in Rating/TriStateCheckbox; the hidden-accessible contract is silently broken.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Not part of GAP-061: Vue Password's new live span is hidden by a Password-scoped rule (user decision 2026-09-30).
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** None — no shared base stylesheet currently defines utility classes.
+- **Recommended resolution direction:** Directional only — decide whether to define one shared hidden-accessible utility (and normalise the `p-`/`u-` prefixes) or scope a rule per component; add visual-hiding assertions. Exact approach belongs to this gap's own Spec.
+- **Source/evidence:** Form/Accessibility Plan Task 6 stop report (`task-6-report.md`, 2026-09-30) and controller re-verification (repo-wide search of source packages).
+- **Architectural decision required:** Possibly — whether a shared utility-class layer is introduced.
+
 ---
 
 ## 4. Resolved gaps
