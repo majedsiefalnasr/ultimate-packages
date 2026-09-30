@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
-import { provideRouter } from "@angular/router";
-import { describe, expect, it } from "vitest";
+import { Router, provideRouter } from "@angular/router";
+import { describe, expect, it, vi } from "vitest";
 import { USteps } from "./steps";
 import type { UMenuItem } from "@ultimate/ng-core";
 
@@ -180,6 +180,8 @@ describe("routerLink (Spec §5.2, GAP-053)", () => {
 
   it("binds routerLink when an item has one, omitting href", () => {
     const fixture = setup([{ label: "A", routerLink: "/a" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
     const link = fixture.nativeElement.querySelector("a");
     expect(link.getAttribute("href")).toBe("/a"); // RouterLink sets href itself when rendered with RouterModule's test harness
   });
@@ -188,6 +190,23 @@ describe("routerLink (Spec §5.2, GAP-053)", () => {
     const fixture = setup([{ label: "A", routerLink: "/a", disabled: true }]);
     const link = fixture.nativeElement.querySelector("a");
     expect(link.getAttribute("href")).not.toBe("/a");
+  });
+
+  it("does not navigate via routerLink when readonly (non-active step)", () => {
+    const fixture = setup([{ label: "A" }, { label: "B", routerLink: "/b" }]);
+    const navigateByUrl = vi.spyOn(TestBed.inject(Router), "navigateByUrl");
+    const link = fixture.nativeElement.querySelectorAll("a")[1];
+    expect(link.getAttribute("href")).not.toBe("/b");
+    link.click();
+    expect(navigateByUrl).not.toHaveBeenCalled();
+  });
+
+  it("navigates via routerLink when not readonly", () => {
+    const fixture = setup([{ label: "A" }, { label: "B", routerLink: "/b" }]);
+    fixture.componentRef.setInput("readonly", false);
+    fixture.detectChanges();
+    const link = fixture.nativeElement.querySelectorAll("a")[1];
+    expect(link.getAttribute("href")).toBe("/b");
   });
 
   it("falls back to url/# href when no routerLink is set", () => {

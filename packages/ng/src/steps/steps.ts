@@ -35,7 +35,7 @@ import { stepsStyleModule } from "./steps-style";
         @for (item of model(); track item.label; let i = $index) {
           @if (item.visible !== false) {
             <li [class]="cx('item', itemParams(item, i))" [attr.aria-current]="i === activeIndex() ? 'step' : null">
-              @if (item.routerLink && !item.disabled) {
+              @if (item.routerLink && !readonly() && !item.disabled) {
                 <a
                   [routerLink]="item.routerLink"
                   [target]="item.target"
