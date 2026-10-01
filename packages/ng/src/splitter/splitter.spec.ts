@@ -1,6 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, PLATFORM_ID } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { USplitter, USplitterPanel } from "./splitter";
 
 /** jsdom's `MouseEvent` doesn't accept `pageX`/`pageY` via its constructor init dict — set them directly (real, readonly-in-spec but writable-in-jsdom properties). */
@@ -178,5 +178,40 @@ describe("USplitter", () => {
     expect(
       fixture.nativeElement.querySelector(".u-splitter")?.classList.contains("u-splitter-vertical")
     ).toBe(true);
+  });
+
+  describe("SSR safety (GAP-065)", () => {
+    @Component({
+      standalone: true,
+      imports: [USplitter, USplitterPanel],
+      template: `<u-splitter>
+        <ng-template uSplitterPanel>Left</ng-template>
+        <ng-template uSplitterPanel>Right</ng-template>
+      </u-splitter>`,
+    })
+    class SsrHostComponent {}
+
+    it("reaches no browser globals on the server platform through mount, change detection and destroy", () => {
+      TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+      const spies = {
+        winAdd: vi.spyOn(window, "addEventListener"),
+        winRemove: vi.spyOn(window, "removeEventListener"),
+        docAdd: vi.spyOn(document, "addEventListener"),
+        docRemove: vi.spyOn(document, "removeEventListener"),
+      };
+      try {
+        const fixture = TestBed.createComponent(SsrHostComponent);
+        fixture.detectChanges();
+        // Panels project real content, so ngAfterContentInit and its destroy hook run.
+        expect(fixture.nativeElement.querySelectorAll(".u-splitter-panel").length).toBe(2);
+        fixture.destroy();
+
+        for (const [spyName, spy] of Object.entries(spies)) {
+          expect(spy, spyName).not.toHaveBeenCalled();
+        }
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
   });
 });
