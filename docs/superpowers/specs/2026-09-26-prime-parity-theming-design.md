@@ -89,3 +89,14 @@ None upstream. This gap does not depend on any other GAP in this audit's scope. 
 ## 11. Explicit Out-of-Scope Items
 
 Material/Lara/Nora built-in preset catalog (DEFERRED, separate decision). `base`-tier foundation tokens (Parity Confirmed). The exact component sequencing/batching plan (unresolved, deferred to a follow-up Spec or the Implementation Plan itself).
+
+---
+
+## 12. Implementation-Stage Corrections (2026-10-01)
+
+A pre-dispatch check of the Plan against real `@primeuix/themes` 2.0.3 and the repository found the following; the user ruled on each before any module was written.
+
+- **No `inputmask` module upstream.** PrimeVue v4 InputMask uses `inputtext` tokens. User decision: drop `input-mask.ts`; InputMask is covered by the ported `inputtext` tokens, as upstream.
+- **`tabs` vs `tabview`/`tabmenu`.** All three modules exist upstream. User decision: port `tabs` only for now; `tabview`/`tabmenu` are carried forward for React's `UTabView`/`UTabMenu`.
+- **Registration.** The existing five modules are registered in `auraPreset.components`, which is how `applyUltimateTheme` consumes them (§6, §9). User decision: register every new module the same way and record the bundle/emitted-CSS size change.
+- **Provenance.** CI's manifest check requires a `themes.json` entry for each new file; entries follow the existing aura ones.

@@ -8,15 +8,17 @@
 
 **Spec:** `docs/superpowers/specs/2026-09-26-prime-parity-theming-design.md`.
 
+**Corrections (2026-10-01, pre-dispatch source check, user decisions — see Spec §12):** (1) real `@primeuix/themes` 2.0.3 has no `inputmask` module (PrimeVue v4 InputMask reuses `inputtext` tokens), so `input-mask.ts` is dropped from Task 1 (24 modules); (2) Task 3 ports upstream `tabs` only as `tabs.ts` — upstream `tabview`/`tabmenu` modules are carried forward for React's `UTabView`/`UTabMenu`; (3) "export from the preset's own index" means registering each module in `auraPreset.components` (`aura/index.ts`), the existing 5's real pattern, with the themes bundle and emitted-CSS size measured before and after; (4) each new file gets a `docs/architecture/provenance/themes.json` entry like the existing aura entries (CI manifest check); (5) tests live in `packages/themes/test/*.test.ts`; port from the readable `.vendor-extracted/themes/src/presets/aura/<module>/index.ts` sources (same content as the tarball's `index.mjs`).
+
 **Scope note, binding on this Plan:** this document sequences and executes the **first, largest, already-fully-mapped tranche** of GAP-064's own total scope — every real Prime preset module that corresponds to a Batch 1, 2, or 3 canonical capability (per the table below). It explicitly does not claim to close GAP-064 in full within this one Plan; the disclosed exceptions (editor/DECISION-B, tree-family/DECISION-D, `ripple`'s ambiguous status) remain genuinely unresolved and are not silently absorbed here.
 
 ## Sequencing Table (GAP-064's own investigated mapping — authoritative, not re-derived)
 
 | Real Prime module | Ultimate directory | Batch | Task |
 |---|---|---|---|
-| radiobutton, toggleswitch, togglebutton, inputtext, textarea, inputnumber, inputmask, inputotp, password, autocomplete, select, multiselect, cascadeselect, listbox, selectbutton, rating, slider, knob, colorpicker, datepicker, fileupload, iconfield, floatlabel, inputchips, iftalabel | `radio-button`, `toggle-switch`, `toggle-button`, `input-text`, `textarea`, `input-number`, `input-mask`, `input-otp`, `password`, `autocomplete`, `select`, `multi-select`, `cascade-select`, `listbox`, `select-button`, `rating`, `slider`, `knob`, `color-picker`, `date-picker`, `file-upload`, `icon-field`, `float-label`, `input-chips`, `ifta-label` | Batch 1 §3.1 (Form) | Task 1 |
+| radiobutton, toggleswitch, togglebutton, inputtext, textarea, inputnumber, ~~inputmask~~ (no upstream module — dropped 2026-10-01), inputotp, password, autocomplete, select, multiselect, cascadeselect, listbox, selectbutton, rating, slider, knob, colorpicker, datepicker, fileupload, iconfield, floatlabel, inputchips, iftalabel | `radio-button`, `toggle-switch`, `toggle-button`, `input-text`, `textarea`, `input-number`, ~~`input-mask`~~, `input-otp`, `password`, `autocomplete`, `select`, `multi-select`, `cascade-select`, `listbox`, `select-button`, `rating`, `slider`, `knob`, `color-picker`, `date-picker`, `file-upload`, `icon-field`, `float-label`, `input-chips`, `ifta-label` | Batch 1 §3.1 (Form) | Task 1 |
 | popover, drawer, contextmenu, confirmdialog, confirmpopup, overlaybadge | `popover`, `drawer`, `context-menu`, `confirm-dialog`, `confirm-popup`, `overlay-badge` | Batch 1 §3.2 (Overlay) | Task 2 |
-| breadcrumb, megamenu, menubar, panelmenu, tieredmenu, tabs/tabview, stepper, steps, dock, speeddial, splitbutton | `breadcrumb`, `mega-menu`, `menubar`, `panel-menu`, `tiered-menu`, `tabs`, `stepper`, `steps`, `dock`, `speed-dial`, `split-button` | Batch 1 §3.3 (Navigation) | Task 3 |
+| breadcrumb, megamenu, menubar, panelmenu, tieredmenu, tabs (upstream `tabs` only; `tabview`/`tabmenu` carried forward — 2026-10-01), stepper, steps, dock, speeddial, splitbutton | `breadcrumb`, `mega-menu`, `menubar`, `panel-menu`, `tiered-menu`, `tabs`, `stepper`, `steps`, `dock`, `speed-dial`, `split-button` | Batch 1 §3.3 (Navigation) | Task 3 |
 | accordion, avatar, blockui, card, carousel, chip, divider, fieldset, galleria, image, imagecompare, inplace, message, metergroup, panel, progressbar, progressspinner, scrollpanel, skeleton, splitter, tag, terminal, timeline, toolbar, toast | `accordion`, `avatar`, `block-ui`, `card`, `carousel`, `chip`, `divider`, `fieldset`, `galleria`, `image`, `image-compare`, `inplace`, `message`, `meter-group`, `panel`, `progress-bar`, `progress-spinner`, `scroll-panel`, `skeleton`, `splitter`, `tag`, `terminal`, `timeline`, `toolbar`, `toast` | Batch 1 §3.4 (Panel/Layout/Display/Feedback) | Task 4 |
 | inlinemessage | `inline-message` | Batch 2 §3.2 | Task 5 |
 | orderlist, picklist, dataview | `order-list`, `pick-list`, `data-view` | Batch 3 §3.1-3.3 | Task 6 |
@@ -43,7 +45,7 @@
 
 ### Task 1: Form family preset modules (25 modules)
 
-**Files:** create `packages/themes/src/presets/aura/{radio-button,toggle-switch,toggle-button,input-text,textarea,input-number,input-mask,input-otp,password,autocomplete,select,multi-select,cascade-select,listbox,select-button,rating,slider,knob,color-picker,date-picker,file-upload,icon-field,float-label,input-chips,ifta-label}.ts`. Test: `packages/themes/src/presets/aura/*.spec.ts` (one per module, or one shared spec file covering all 25 — match this package's own existing test-file convention, check first).
+**Files:** create `packages/themes/src/presets/aura/{radio-button,toggle-switch,toggle-button,input-text,textarea,input-number,input-otp,password,autocomplete,select,multi-select,cascade-select,listbox,select-button,rating,slider,knob,color-picker,date-picker,file-upload,icon-field,float-label,input-chips,ifta-label}.ts` (24 — `input-mask` dropped 2026-10-01). Tests: `packages/themes/test/` (this package's convention). Also: `aura/index.ts` (register), `docs/architecture/provenance/themes.json` (entries).
 
 - [ ] **Step 1: Extract real source**
 
@@ -59,11 +61,11 @@ Port each of the 25 modules following `checkbox.ts`'s own established doc-commen
 
 - [ ] **Step 4: Export from the preset's own index**
 
-Add each new module's named export to `packages/themes/src/presets/aura/index.ts`, matching the existing 5's own export pattern.
+Register each new module in `auraPreset.components` in `packages/themes/src/presets/aura/index.ts`, matching the existing 5's real pattern (import + `components` key named as upstream's preset key, e.g. `radiobutton`), and add a `themes.json` provenance entry per new file (corrected 2026-10-01; originally "add each new module's named export"). Record the themes bundle size and the CSS emitted by `applyUltimateTheme` before and after.
 
-- [ ] **Step 5: Tests, full suite, dependency ceiling**
+- [ ] **Step 5: Tests, package suite, dependency ceiling**
 
-`pnpm --filter @ultimate/themes test`, `pnpm test`, `pnpm run ceiling:validate`.
+`pnpm --filter @ultimate/themes test`, the themes typecheck/build, `pnpm run ceiling:validate` (corrected 2026-10-01: originally also `pnpm test`; full-monorepo runs have pre-existing unrelated failures).
 
 ---
 
@@ -108,13 +110,17 @@ Add each new module's named export to `packages/themes/src/presets/aura/index.ts
 - All 7 tasks' new preset modules exist, are exported from `packages/themes/src/presets/aura/index.ts`, and pass their own shape/token-path-resolution tests.
 - `base.ts` is byte-identical to its pre-plan state (verify via `git diff`).
 - No `material/`, `lara/`, or `nora/` directory exists anywhere in `packages/themes/src/presets/` after this plan (verify via `git status`/directory listing).
-- `pnpm test`, `pnpm run ceiling:validate` pass after each task.
+- `pnpm --filter @ultimate/themes test` and `pnpm run ceiling:validate` pass after each task (corrected 2026-10-01: originally `pnpm test`).
+- Every new preset file has a `themes.json` provenance entry.
+- `input-mask.ts`, `tab-view.ts` and `tab-menu.ts` do not exist (2026-10-01 decisions).
 - `editor.ts`, `tree.ts`, `treeselect.ts`, `treetable.ts`, and `ripple.ts` do not exist anywhere in `packages/themes/src/presets/aura/` after this plan.
 
 ## Unresolved, Carried Forward (Not Silently Closed)
 
 - **Wiring each new preset module into its corresponding component's own style file** — explicitly out of this Plan's own scope (Global Constraints), required before any component actually becomes re-themeable via the new modules. This is real, substantial follow-up work this Plan does not authorize.
 - **`ripple`'s inclusion/exclusion** — genuinely undecided, flagged for Plan Review.
+- **Upstream `tabview` and `tabmenu` modules** (added 2026-10-01) — not ported; needed when React's `UTabView`/`UTabMenu` are wired to tokens.
+- **InputMask** (added 2026-10-01) — no upstream module; upstream InputMask uses `inputtext` tokens, which Task 1 ports.
 - **Any Ultimate component built after Batch 3** (if any exist by the time this Plan executes) that has no corresponding entry in the sequencing table above — this Plan's own mapping was computed against the migration batches' own text as they existed at Spec-authoring time; if new components have shipped since, they are not covered here and would need their own follow-up task.
 
 ## Documentation/Ledger Updates
