@@ -1273,6 +1273,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** SSR Plan Task 1 and final reviews (2026-10-01, ledger `.superpowers/sdd/2026-09-27-prime-parity-ssr/progress.md`); the three style-sheet files above.
 - **Architectural decision required:** Yes — the SSR styling strategy.
 
+#### GAP-079 — Vue's shipped type declarations are unresolvable for consumers
+
+- **Status:** MISSING
+- **Type:** Packaging, Framework (Vue)
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found during the Existing Commitments Plan's GAP-068 work (2026-10-01); pre-existing; registered on user instruction. `@ultimate/vue` emits declarations per file with `vue-tsc --emitDeclarationOnly` followed by `scripts/rename-dts.mjs` (`packages/vue/package.json` `build` script), which renames `.d.ts` to `.d.mts` but leaves relative import specifiers unrewritten. A scratch consumer (TypeScript, `moduleResolution: Bundler`) importing `@ultimate/vue/button` fails with TS2307 "Cannot find module './Button.vue'" and on `./base-button` — the emitted `.d.mts` files reference SFC and extensionless paths that do not resolve to emitted declaration files. This predates GAP-068's new subpath entries (the proof-set `button` subpath already shipped this way). Evidence: `.superpowers/sdd/2026-09-27-prime-parity-existing-commitments/task-4-5-report.md` (Task 4 resumed section).
+- **Expected state:** Every exported `@ultimate/vue` subpath and the barrel type-check for consumers under `Bundler` and `NodeNext` resolution, with props/emits types intact.
+- **Why it matters:** TypeScript consumers of `@ultimate/vue` get unresolved-module errors or `any`-typed components.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Related: React's equivalent was fixed within GAP-068 by rewriting relative specifiers in React's `scripts/rename-dts.mjs`; Vue additionally needs `.vue` declaration handling.
+- **Framework scope:** Vue only.
+- **Existing reusable infrastructure:** React's specifier rewrite in `packages/react/scripts/rename-dts.mjs` (GAP-068).
+- **Recommended resolution direction:** Directional only — make Vue's declaration build emit resolvable specifiers (including SFC declarations), verified by a consumer type-check.
+- **Source/evidence:** GAP-068 Task 4 stop report (2026-10-01); `packages/vue/package.json` build script; `packages/vue/scripts/rename-dts.mjs`.
+- **Architectural decision required:** No.
+
 #### GAP-077 — Vue Stepper lacks horizontal separators between step headers
 
 - **Status:** MISSING
