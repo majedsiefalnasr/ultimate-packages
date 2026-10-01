@@ -17,6 +17,12 @@
 | GAP-068 | Task 4 (React), Task 5 (Vue) |
 | GAP-070 | Task 6 (characterization), Task 7 (fix, gated on Task 6) |
 
+**Corrections (2026-10-01, pre-dispatch check, user decisions — see Spec §12):**
+1. **TS2729 prerequisite (supersedes the Global Constraint "TS2729 is not addressed by any task" for this one blocker).** `pnpm --filter @ultimate/ng build` fails at the primary entry point with TS2729 ("Property 'instanceCount' is used before its initialization") in `packages/ng/src/autocomplete/autocomplete.ts:156` and `packages/ng/src/select/select.ts:162`, so no ng-packagr build — and therefore no Task 6 characterization — is possible. User decision: a new **Task 5b** fixes it minimally before Task 6 (declare each `private static instanceCount` before the instance field that reads it; no behavior change; existing tests must still pass; a full `@ultimate/ng` build must then get past these errors — any further build error is reported, not fixed).
+2. **Advertised-but-unbuilt subpaths.** `packages/ng/package.json` `exports` already lists 81 component subpaths, but only 9 components have an `ng-package.json`, so 72 advertised subpaths point at artifacts the build never produces. Task 7 therefore *reconciles* rather than only adds: it adds entry points for components Task 6 marks passing (their `exports` entries mostly already exist), and reports the remaining advertised subpaths with no entry point (Task 6 failures plus GAP-009's excluded five) for a user decision on whether to keep or remove them — it does not remove them on its own.
+3. Task 1: if fixing visibility changes the Angular Tooltip visual baselines (`packages/ng/e2e/tooltip.spec.ts-snapshots/`), regenerate only those snapshots, as the Vue fix did (`26feee7`), and disclose it.
+4. Test commands are per package (`pnpm --filter <pkg> test`), not full-monorepo `pnpm test`, which has pre-existing unrelated failures.
+
 **Investigation result for GAP-067, authoritative for Task 2 (confirmed during Plan-stage investigation, human-approved corrected surface):**
 
 - **Inputs:** `appendTo`, `baseZIndex`, `closeOnEscape`.
