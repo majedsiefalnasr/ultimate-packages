@@ -1,6 +1,4 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { Theme } from "@ultimate/uix-styled";
 import { applyUltimateTheme } from "../src/apply-theme";
 import { auraPreset } from "../src/presets/aura";
@@ -19,6 +17,7 @@ interface FormModule {
   colorScheme: boolean;
 }
 
+// Deep equality against upstream lives in aura-upstream-fidelity.test.ts (committed fixture).
 // Key lists below were derived from `@primeuix/themes@2.0.3` (aura/<module>/index.mjs).
 const FORM_MODULES: FormModule[] = [
   {
@@ -247,12 +246,6 @@ const modules = import.meta.glob<Record<string, unknown>>("../src/presets/aura/*
   eager: true,
 });
 
-const REPO_ROOT = join(__dirname, "..", "..", "..");
-const UPSTREAM_ROOT = join(REPO_ROOT, ".vendor-extracted/themes/src/presets/aura");
-// `.vendor-extracted/` is gitignored, so deep-equality against the upstream
-// source can only run where the pinned tarball has been extracted.
-const hasUpstream = existsSync(UPSTREAM_ROOT);
-
 function ultimateModule({ file, exportName }: FormModule): Record<string, unknown> {
   const loaded = modules[`../src/presets/aura/${file}.ts`];
   return loaded?.[exportName] as Record<string, unknown>;
@@ -291,30 +284,20 @@ describe("Aura Form-family preset modules", () => {
     it("resolves every {token.path} reference against base.ts in light and dark", () => {
       expect(unresolvedReferences(ultimateModule(mod))).toEqual([]);
     });
-
-    it.skipIf(!hasUpstream)("deep-equals the upstream @primeuix/themes@2.0.3 source", async () => {
-      const upstream = await import(
-        /* @vite-ignore */ join(UPSTREAM_ROOT, mod.upstream, "index.ts")
-      );
-      expect(ultimateModule(mod)).toEqual(upstream.default);
-    });
   });
 
   describe("auraPreset registration", () => {
-    it("registers all 29 components (5 proof-set + 24 Form-family)", () => {
-      const expected = [...EXISTING_KEYS, ...FORM_MODULES.map((m) => m.upstream)].sort();
-      expect(Object.keys(auraPreset.components).sort()).toEqual(expected);
-      expect(expected).toHaveLength(29);
+    it("registers every Form-family module plus the proof-set (total count is asserted by the newest family's test)", () => {
+      const registered = Object.keys(auraPreset.components);
+      for (const key of [...EXISTING_KEYS, ...FORM_MODULES.map((m) => m.upstream)]) {
+        expect(registered).toContain(key);
+      }
     });
   });
 
   describe("applyUltimateTheme with the Form-family modules", () => {
     beforeAll(() => {
       applyUltimateTheme();
-    });
-
-    it("keeps the theme applied with all 29 components", () => {
-      expect(Object.keys(Theme.getTheme()?.preset?.components ?? {})).toHaveLength(29);
     });
 
     it("emits CSS variables for a flat module (radiobutton)", () => {

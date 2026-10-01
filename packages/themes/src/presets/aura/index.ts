@@ -29,14 +29,21 @@ import { textarea } from "./textarea";
 import { toggleButton } from "./toggle-button";
 import { toggleSwitch } from "./toggle-switch";
 import { tooltip } from "./tooltip";
+import { confirmDialog } from "./confirm-dialog";
+import { confirmPopup } from "./confirm-popup";
+import { contextMenu } from "./context-menu";
+import { drawer } from "./drawer";
+import { overlayBadge } from "./overlay-badge";
+import { popover } from "./popover";
 
 /**
  * Ultimate's Aura-derived preset: the shared primitive/semantic base tier plus
  * component tokens for the five-component proof set (Button, Checkbox, Dialog,
  * Menu, Tooltip) and the Form family (24 modules: RadioButton through
  * IftaLabel; `inputmask` has no upstream module — PrimeVue's InputMask reuses
- * the InputText tokens). Ported (Option B — reference, not verbatim copy) from
- * `@primeuix/themes@2.0.3`'s Aura preset; see `docs/architecture/provenance/themes.json`
+ * the InputText tokens) and the Overlay family (6 modules: Popover, Drawer,
+ * ContextMenu, ConfirmDialog, ConfirmPopup, OverlayBadge). Ported (Option B —
+ * reference, not verbatim copy) from `@primeuix/themes@2.0.3`'s Aura preset; see `docs/architecture/provenance/themes.json`
  * for per-file provenance detail. Each module is registered under upstream's
  * own preset key (e.g. `radiobutton`), which is the name the dt engine looks
  * up per component.
@@ -50,8 +57,12 @@ export const auraPreset = definePreset({
     cascadeselect: cascadeSelect,
     checkbox,
     colorpicker: colorPicker,
+    confirmdialog: confirmDialog,
+    confirmpopup: confirmPopup,
+    contextmenu: contextMenu,
     datepicker: datePicker,
     dialog,
+    drawer,
     fileupload: fileUpload,
     floatlabel: floatLabel,
     iconfield: iconField,
@@ -64,7 +75,9 @@ export const auraPreset = definePreset({
     listbox,
     menu,
     multiselect: multiSelect,
+    overlaybadge: overlayBadge,
     password,
+    popover,
     radiobutton: radioButton,
     rating,
     select,
