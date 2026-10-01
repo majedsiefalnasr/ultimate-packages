@@ -1,4 +1,5 @@
 import { TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import { provideRouter } from "@angular/router";
 import { describe, expect, it } from "vitest";
 import { USplitButton } from "./split-button";
@@ -32,8 +33,8 @@ describe("USplitButton", () => {
     const buttons = fixture.nativeElement.querySelectorAll("button");
     buttons[1].click();
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('[role="menu"]')).not.toBeNull();
-    expect(fixture.nativeElement.querySelectorAll('[role="menuitem"]').length).toBe(2);
+    expect(fixture.debugElement.query(By.css('[role="menu"]'))).not.toBeNull();
+    expect(fixture.debugElement.queryAll(By.css('[role="menuitem"]')).length).toBe(2);
   });
 
   it("closes the popup menu on a second dropdown button click", () => {
@@ -43,7 +44,7 @@ describe("USplitButton", () => {
     fixture.detectChanges();
     buttons[1].click();
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
+    expect(fixture.debugElement.query(By.css('[role="menu"]'))).toBeNull();
   });
 
   it("emits onClick and does not open the menu when the default button is clicked", () => {
@@ -64,11 +65,11 @@ describe("USplitButton", () => {
     const buttons = fixture.nativeElement.querySelectorAll("button");
     buttons[1].click();
     fixture.detectChanges();
-    const menuItemLink = fixture.nativeElement.querySelector('[role="menuitem"]');
+    const menuItemLink = fixture.debugElement.query(By.css('[role="menuitem"]')).nativeElement;
     menuItemLink.click();
     fixture.detectChanges();
     expect(called).toBe(true);
-    expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
+    expect(fixture.debugElement.query(By.css('[role="menu"]'))).toBeNull();
   });
 
   it("closes the popup menu on Escape", () => {
@@ -76,9 +77,9 @@ describe("USplitButton", () => {
     const buttons = fixture.nativeElement.querySelectorAll("button");
     buttons[1].click();
     fixture.detectChanges();
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", code: "Escape", bubbles: true }));
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
+    expect(fixture.debugElement.query(By.css('[role="menu"]'))).toBeNull();
   });
 
   it("closes the popup when the default button is clicked while expanded", () => {
@@ -88,6 +89,6 @@ describe("USplitButton", () => {
     fixture.detectChanges();
     buttons[0].click();
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
+    expect(fixture.debugElement.query(By.css('[role="menu"]'))).toBeNull();
   });
 });

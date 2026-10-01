@@ -1,6 +1,8 @@
-import { TestBed } from "@angular/core/testing";
+import { Component, PLATFORM_ID, ViewChild } from "@angular/core";
+import { TestBed, type ComponentFixture } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import { provideRouter } from "@angular/router";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { UMenu } from "./menu";
 import type { UMenuItem } from "@ultimate/ng-core";
 
@@ -141,5 +143,339 @@ describe("UMenu", () => {
     // Regression guard: [uTooltip]="item.label" previously showed a
     // redundant tooltip duplicating the visible label on every item.
     expect(document.querySelector('[role="tooltip"]')).toBeNull();
+  });
+
+  describe("popup-overlay mechanism (Spec §5.2, GAP-067)", () => {
+    // In popup mode UOverlay moves the panel out of the fixture's host
+    // element (to document.body or appendTo), so popup assertions locate the
+    // menu through the logical view tree (debugElement), not nativeElement.
+    function menuList(fixture: ComponentFixture<unknown>): HTMLElement | null {
+      return fixture.debugElement.query(By.css('[role="menu"]'))?.nativeElement ?? null;
+    }
+
+    function panel(fixture: ComponentFixture<unknown>): HTMLElement | null {
+      return fixture.debugElement.query(By.css(".u-menu"))?.nativeElement ?? null;
+    }
+
+    function createPopup(inputs: Record<string, unknown> = {}): ComponentFixture<UMenu> {
+      const fixture = TestBed.createComponent(UMenu);
+      fixture.componentRef.setInput("model", [{ label: "A" }]);
+      fixture.componentRef.setInput("popup", true);
+      for (const [name, value] of Object.entries(inputs)) {
+        fixture.componentRef.setInput(name, value);
+      }
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    function createInline(model: UMenuItem[]): ComponentFixture<UMenu> {
+      const fixture = TestBed.createComponent(UMenu);
+      fixture.componentRef.setInput("model", model);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    const escape = () => document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    const flushMicrotasks = () => new Promise<void>((resolve) => queueMicrotask(resolve));
+
+    @Component({
+      standalone: true,
+      imports: [UMenu],
+      template: `
+        <button (click)="menu.toggle($event)">Open</button>
+        <u-menu #menu [popup]="true" [model]="model"></u-menu>
+      `,
+    })
+    class TriggerHost {
+      @ViewChild("menu") menu!: UMenu;
+      command = vi.fn();
+      model: UMenuItem[] = [{ label: "Run", command: this.command }];
+    }
+
+    function createTriggerHost(): ComponentFixture<TriggerHost> {
+      const fixture = TestBed.createComponent(TriggerHost);
+      document.body.appendChild(fixture.nativeElement);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    });
+
+    it("popup mode renders no menu until toggled open", () => {
+      const fixture = createPopup();
+      expect(menuList(fixture)).toBeNull();
+    });
+
+    it("show(event) opens the popup and emits onShow", () => {
+      const fixture = createPopup();
+      const shown = vi.fn();
+      fixture.componentInstance.onShow.subscribe(shown);
+      fixture.componentInstance.show(new MouseEvent("click"));
+      fixture.detectChanges();
+      expect(menuList(fixture)).not.toBeNull();
+      expect(shown).toHaveBeenCalledTimes(1);
+    });
+
+    it("hide() closes the popup and emits onHide", () => {
+      const fixture = createPopup();
+      const hidden = vi.fn();
+      fixture.componentInstance.onHide.subscribe(hidden);
+      fixture.componentInstance.show(new MouseEvent("click"));
+      fixture.detectChanges();
+      fixture.componentInstance.hide();
+      fixture.detectChanges();
+      expect(menuList(fixture)).toBeNull();
+      expect(hidden).toHaveBeenCalledTimes(1);
+    });
+
+    it("toggle(event) opens when closed and closes when open", () => {
+      const fixture = createPopup();
+      fixture.componentInstance.toggle(new MouseEvent("click"));
+      fixture.detectChanges();
+      expect(menuList(fixture)).not.toBeNull();
+      fixture.componentInstance.toggle(new MouseEvent("click"));
+      fixture.detectChanges();
+      expect(menuList(fixture)).toBeNull();
+    });
+
+    it("toggle(event) is a no-op in inline mode", () => {
+      const fixture = createInline([{ label: "A" }]);
+      const shown = vi.fn();
+      fixture.componentInstance.onShow.subscribe(shown);
+      fixture.componentInstance.toggle(new MouseEvent("click"));
+      fixture.componentInstance.toggle(new MouseEvent("click"));
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('[role="menu"]')).not.toBeNull();
+      expect(shown).not.toHaveBeenCalled();
+    });
+
+    it("Escape closes the popup when closeOnEscape is true (default)", () => {
+      const fixture = createPopup();
+      fixture.componentInstance.show(new MouseEvent("click"));
+      fixture.detectChanges();
+      escape();
+      fixture.detectChanges();
+      expect(menuList(fixture)).toBeNull();
+    });
+
+    it("Escape does not close the popup when closeOnEscape is false", () => {
+      const fixture = createPopup({ closeOnEscape: false });
+      fixture.componentInstance.show(new MouseEvent("click"));
+      fixture.detectChanges();
+      escape();
+      fixture.detectChanges();
+      expect(menuList(fixture)).not.toBeNull();
+    });
+
+    it("closeOnEscape has no effect when popup is false (inline mode)", () => {
+      const fixture = createInline([{ label: "A" }]);
+      escape();
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('[role="menu"]')).not.toBeNull();
+    });
+
+    it("Escape closes only the most recently opened popup (A created first, opened last)", () => {
+      const a = createPopup();
+      const b = createPopup();
+      b.componentInstance.show(new MouseEvent("click"));
+      a.componentInstance.show(new MouseEvent("click"));
+      a.detectChanges();
+      b.detectChanges();
+
+      escape();
+      a.detectChanges();
+      b.detectChanges();
+      expect(menuList(a)).toBeNull();
+      expect(menuList(b)).not.toBeNull();
+
+      escape();
+      b.detectChanges();
+      expect(menuList(b)).toBeNull();
+    });
+
+    it("Escape closes only the most recently opened popup (B created last, opened last)", () => {
+      const a = createPopup();
+      const b = createPopup();
+      a.componentInstance.show(new MouseEvent("click"));
+      b.componentInstance.show(new MouseEvent("click"));
+      a.detectChanges();
+      b.detectChanges();
+
+      escape();
+      a.detectChanges();
+      b.detectChanges();
+      expect(menuList(b)).toBeNull();
+      expect(menuList(a)).not.toBeNull();
+
+      escape();
+      a.detectChanges();
+      expect(menuList(a)).toBeNull();
+    });
+
+    it("applies baseZIndex to the panel's z-index", async () => {
+      const fixture = createPopup({ baseZIndex: 5000 });
+      fixture.componentInstance.show(new MouseEvent("click"));
+      fixture.detectChanges();
+      await flushMicrotasks();
+      expect(Number(panel(fixture)?.style.zIndex)).toBeGreaterThan(5000);
+    });
+
+    it("appends the overlay to document.body by default", async () => {
+      const fixture = createPopup();
+      fixture.componentInstance.show(new MouseEvent("click"));
+      fixture.detectChanges();
+      await fixture.whenStable();
+      const el = panel(fixture);
+      expect(el && document.body.contains(el)).toBe(true);
+      expect(fixture.nativeElement.contains(el)).toBe(false);
+    });
+
+    it("forwards a resolved appendTo (element or function form) to the overlay", async () => {
+      const container = document.createElement("div");
+      document.body.appendChild(container);
+      try {
+        for (const appendTo of [container, () => container]) {
+          const fixture = createPopup({ appendTo });
+          fixture.componentInstance.show(new MouseEvent("click"));
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(container.contains(panel(fixture))).toBe(true);
+          fixture.destroy();
+        }
+      } finally {
+        container.remove();
+      }
+    });
+
+    it("anchors the panel below the triggering element", async () => {
+      const fixture = createTriggerHost();
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector("button");
+      vi.spyOn(button, "getBoundingClientRect").mockReturnValue({
+        top: 80,
+        bottom: 100,
+        left: 50,
+        right: 150,
+        width: 100,
+        height: 20,
+        x: 50,
+        y: 80,
+        toJSON: () => ({}),
+      } as DOMRect);
+      button.click();
+      fixture.detectChanges();
+      await flushMicrotasks();
+      const el = panel(fixture)!;
+      expect(el.style.position).toBe("absolute");
+      expect(el.style.top).toBe(`${100 + window.scrollY}px`);
+      expect(el.style.left).toBe(`${50 + window.scrollX}px`);
+      fixture.nativeElement.remove();
+    });
+
+    it("hides on outside click but not on a click inside the panel", () => {
+      const fixture = createTriggerHost();
+      fixture.nativeElement.querySelector("button").click();
+      fixture.detectChanges();
+      expect(menuList(fixture)).not.toBeNull();
+
+      panel(fixture)!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      fixture.detectChanges();
+      expect(menuList(fixture)).not.toBeNull();
+
+      document.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      fixture.detectChanges();
+      expect(menuList(fixture)).toBeNull();
+      fixture.nativeElement.remove();
+    });
+
+    it("toggles closed when the trigger is clicked again", () => {
+      const fixture = createTriggerHost();
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector("button");
+      button.click();
+      fixture.detectChanges();
+      button.click();
+      fixture.detectChanges();
+      expect(menuList(fixture)).toBeNull();
+      fixture.nativeElement.remove();
+    });
+
+    it("hides on window resize", () => {
+      const fixture = createPopup();
+      fixture.componentInstance.show(new MouseEvent("click"));
+      fixture.detectChanges();
+      window.dispatchEvent(new Event("resize"));
+      fixture.detectChanges();
+      expect(menuList(fixture)).toBeNull();
+    });
+
+    it("runs the item command and then hides the popup on item click", () => {
+      const fixture = createTriggerHost();
+      fixture.nativeElement.querySelector("button").click();
+      fixture.detectChanges();
+      (fixture.debugElement.query(By.css('[role="menuitem"]')).nativeElement as HTMLElement).click();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.command).toHaveBeenCalledTimes(1);
+      expect(menuList(fixture)).toBeNull();
+      fixture.nativeElement.remove();
+    });
+
+    it("keeps an inline menu rendered after an item click", () => {
+      const command = vi.fn();
+      const fixture = createInline([{ label: "Run", command }]);
+      fixture.nativeElement.querySelector('[role="menuitem"]').click();
+      fixture.detectChanges();
+      expect(command).toHaveBeenCalledTimes(1);
+      expect(fixture.nativeElement.querySelector('[role="menu"]')).not.toBeNull();
+    });
+
+    it("releases Escape and document listeners when destroyed while open", () => {
+      const fixture = createPopup();
+      const hidden = vi.fn();
+      fixture.componentInstance.onHide.subscribe(hidden);
+      fixture.componentInstance.show(new MouseEvent("click"));
+      fixture.detectChanges();
+      const docRemove = vi.spyOn(document, "removeEventListener");
+      try {
+        fixture.destroy();
+        expect(docRemove).toHaveBeenCalledWith("click", expect.any(Function));
+        escape();
+        expect(hidden).not.toHaveBeenCalled();
+      } finally {
+        docRemove.mockRestore();
+      }
+    });
+
+    it("reaches no browser globals on the server platform through show, hide and destroy", () => {
+      TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+      const spies = {
+        winAdd: vi.spyOn(window, "addEventListener"),
+        winRemove: vi.spyOn(window, "removeEventListener"),
+        docAdd: vi.spyOn(document, "addEventListener"),
+        docRemove: vi.spyOn(document, "removeEventListener"),
+        scrollX: vi.spyOn(window, "scrollX", "get"),
+        scrollY: vi.spyOn(window, "scrollY", "get"),
+      };
+      try {
+        const fixture = createPopup();
+        fixture.componentInstance.show(new MouseEvent("click"));
+        fixture.detectChanges();
+        fixture.componentInstance.hide();
+        fixture.detectChanges();
+        fixture.componentInstance.show(new MouseEvent("click"));
+        fixture.detectChanges();
+        fixture.destroy();
+        // UMenu's [routerLink] needs provideRouter (beforeEach), and the
+        // router itself subscribes to popstate/hashchange on window — those
+        // are the test harness's, not UMenu's, so they are excluded here.
+        const routerEvents = new Set(["popstate", "hashchange"]);
+        for (const [spyName, spy] of Object.entries(spies)) {
+          const calls = spy.mock.calls.filter((args: unknown[]) => !routerEvents.has(args[0] as string));
+          expect(calls, spyName).toEqual([]);
+        }
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
   });
 });
