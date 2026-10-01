@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-01
 **Audited at:** `4320ef1`; checks re-run after the closeout corrections `ae2971d` (provenance) and `c9be11c` (format/lint). Merge-base with `main`: `9265d02`.
-**Status:** closeout audit recorded; final branch closure is a user decision.
+**Status:** FINALLY CLOSED (2026-10-01, approved by the user). GAP-071–GAP-081 are registered follow-up scope, not branch blockers. No further changes without a new user-requested phase.
 
 This note records the overall branch closeout of the nine Prime-parity Implementation Plans (Table, Overlay, Display, Navigation, Form/Accessibility, Vue, Theming, SSR, Existing Commitments). Every Plan is closed: implemented, reviewed and approved. GAP statuses are in `docs/architecture/BLUEPRINT_GAPS.md`.
 
@@ -40,3 +40,9 @@ None of these items is unresolved implementation scope. Each was explicitly defe
 | Unit tests (`ng`, `react`, `vue`)                                      | 899 / 854 / 872 passed                                                                    | n/a                                   | Pass                                                                                                                                                                                               |
 
 `lint` and `format:check` were run locally; untracked paths (`.claude/worktrees/`, `packages/*/storybook-static/`, `playwright-report/`) are excluded from the counts above.
+
+## Expected CI-red items at closure
+
+1. **Provenance manifest completeness** — inherited from `main` (1,294 files without entries).
+2. **Size gate** — needs the agreed explicit human override at merge, followed by the `PERFORMANCE.md`-only baseline change off `main`.
+3. **Visual regression** (`track-a-browser-visual-a11y`) — pending the Linux screenshot baseline regeneration (deferred item 1).
