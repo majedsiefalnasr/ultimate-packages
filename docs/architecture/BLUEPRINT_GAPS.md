@@ -1289,6 +1289,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** GAP-068 Task 4 stop report (2026-10-01); `packages/vue/package.json` build script; `packages/vue/scripts/rename-dts.mjs`.
 - **Architectural decision required:** No.
 
+#### GAP-080 — Angular Scroller creates a `ResizeObserver` in `ngAfterViewInit` without a browser guard (SSR)
+
+- **Status:** MISSING
+- **Type:** Component, Framework (Angular), SSR
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found during the Existing Commitments Plan's GAP-070 prerequisite work (2026-10-01) and confirmed in review; pre-existing on `main` (`2bd2538`); registered on user instruction. `packages/ng/src/scroller/scroller.ts:141` runs `this.resizeObserver = new ResizeObserver(...)` in `UScroller.ngAfterViewInit` with no `isPlatformBrowser` guard; `ngAfterViewInit` runs during server rendering, where `ResizeObserver` is undefined. The Angular SSR playground's build-time prerender logs `ERROR ReferenceError: ResizeObserver is not defined at ngAfterViewInit` (via `apps/playground-angular/src/app/proof-page.component.ts:90`). The build still exits 0 and the `ng-ssr-chromium` Playwright project passes (it checks browser console/pageerror only), so CI does not catch it. It surfaced only once `@ultimate/ng` could be built again (TS2729 and `@angular/cdk` fixes, `4a47883`/`29a3390`). Scroller is one of Track E's eight proof-set components, which GAP-065's scope deliberately excluded.
+- **Expected state:** No browser-only API is reached from Scroller's server-executed lifecycle hooks; the observer is created only in the browser, with a spy-based server test as in GAP-065.
+- **Why it matters:** Server rendering of any page with a Scroller logs an error and skips the rest of `ngAfterViewInit`.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Same defect class as GAP-065.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** The `isPlatformBrowser(this.platformId)` guard and spy-based server test pattern from GAP-065 (`38560be`).
+- **Recommended resolution direction:** Directional only — guard the observer creation (and its cleanup) for the browser; consider whether the CI SSR job should fail on server-side prerender errors.
+- **Source/evidence:** Existing Commitments Plan Tasks 5b/5c review (2026-10-01, ledger `.superpowers/sdd/2026-09-27-prime-parity-existing-commitments/progress.md`); `scroller.ts:141`; playground prerender log.
+- **Architectural decision required:** No.
+
 #### GAP-077 — Vue Stepper lacks horizontal separators between step headers
 
 - **Status:** MISSING

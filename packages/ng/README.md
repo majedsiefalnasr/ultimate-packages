@@ -161,9 +161,9 @@ Naming migration: every component's PrimeNG selector/class prefix (`p-*`) is ren
 
 ## Dependencies
 
-Depends on `@ultimate/ng-core`, `@ultimate/uix-utils`, `@ultimate/uix-styled`, `@ultimate/uix-motion`, `@ultimate/uix-styles` (workspace), and `tslib`. Peers on `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/platform-browser`, `@angular/router`, and `rxjs`.
+Depends on `@ultimate/ng-core`, `@ultimate/uix-utils`, `@ultimate/uix-styled`, `@ultimate/uix-motion`, `@ultimate/uix-styles` (workspace), and `tslib`. Peers on `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/platform-browser`, `@angular/router`, `@angular/cdk`, and `rxjs`.
 
-`@angular/router` is a genuine (non-optional) peer dependency: `UMenu` directly imports `RouterModule` and binds `routerLink` in its template. `@angular/cdk/drag-drop` is used by OrderList and PickList for their optional drag/drop mode; button controls remain the default interaction.
+`@angular/router` is a genuine (non-optional) peer dependency: `UMenu` directly imports `RouterModule` and binds `routerLink` in its template. `@angular/cdk/drag-drop` is used by OrderList and PickList for their optional drag/drop mode; button controls remain the default interaction. `@angular/cdk` is a peer dependency (matching PrimeNG), so applications install it alongside Angular.
 
 ## Provenance
 
