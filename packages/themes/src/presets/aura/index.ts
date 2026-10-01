@@ -15,6 +15,7 @@ import { colorPicker } from "./color-picker";
 import { confirmDialog } from "./confirm-dialog";
 import { confirmPopup } from "./confirm-popup";
 import { contextMenu } from "./context-menu";
+import { dataView } from "./data-view";
 import { datePicker } from "./date-picker";
 import { dialog } from "./dialog";
 import { divider } from "./divider";
@@ -42,10 +43,12 @@ import { menubar } from "./menubar";
 import { message } from "./message";
 import { meterGroup } from "./meter-group";
 import { multiSelect } from "./multi-select";
+import { orderList } from "./order-list";
 import { overlayBadge } from "./overlay-badge";
 import { panel } from "./panel";
 import { panelMenu } from "./panel-menu";
 import { password } from "./password";
+import { pickList } from "./pick-list";
 import { popover } from "./popover";
 import { progressBar } from "./progress-bar";
 import { progressSpinner } from "./progress-spinner";
@@ -86,7 +89,8 @@ import { tooltip } from "./tooltip";
  * Accordion, Avatar, BlockUI, Card, Carousel, Chip, Divider, Fieldset, Galleria,
  * Image, ImageCompare, Inplace, Message, MeterGroup, Panel, ProgressBar,
  * ProgressSpinner, ScrollPanel, Skeleton, Splitter, Tag, Terminal, Timeline,
- * Toolbar, Toast) and InlineMessage. Ported (Option B —
+ * Toolbar, Toast), InlineMessage and the Data family (3 modules:
+ * OrderList, PickList, DataView). Ported (Option B —
  * reference, not verbatim copy) from `@primeuix/themes@2.0.3`'s Aura preset; see `docs/architecture/provenance/themes.json`
  * for per-file provenance detail. Each module is registered under upstream's
  * own preset key (e.g. `radiobutton`), which is the name the dt engine looks
@@ -111,6 +115,7 @@ export const auraPreset = definePreset({
     confirmdialog: confirmDialog,
     confirmpopup: confirmPopup,
     contextmenu: contextMenu,
+    dataview: dataView,
     datepicker: datePicker,
     dialog,
     divider,
@@ -138,10 +143,12 @@ export const auraPreset = definePreset({
     message,
     metergroup: meterGroup,
     multiselect: multiSelect,
+    orderlist: orderList,
     overlaybadge: overlayBadge,
     panel,
     panelmenu: panelMenu,
     password,
+    picklist: pickList,
     popover,
     progressbar: progressBar,
     progressspinner: progressSpinner,

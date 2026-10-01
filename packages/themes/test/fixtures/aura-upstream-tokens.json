@@ -3,7 +3,7 @@
     "source": "@primeuix/themes@2.0.3 (MIT, https://github.com/primefaces/primeuix) - dist/aura/<module>/index.mjs default export",
     "generatedFrom": "pinned npm tarball of @primeuix/themes@2.0.3; each module key is the upstream directory name (= auraPreset.components key)",
     "method": "one-off scratch script: dynamic import() of each dist/aura/<module>/index.mjs, JSON.stringify of the default export, 2-space indent; no hand edits. Also cross-checked deep-equal against the readable .vendor-extracted/themes/src/presets/aura/<module>/index.ts sources.",
-    "scope": "Task 1 Form family (24 modules) + Task 2 Overlay family (6 modules) + Task 3 Navigation family (11 modules) + Task 4 Panel/Layout/Display/Feedback family (25 modules) + Task 5 InlineMessage (1 module); later tasks append their modules",
+    "scope": "Task 1 Form family (24 modules) + Task 2 Overlay family (6 modules) + Task 3 Navigation family (11 modules) + Task 4 Panel/Layout/Display/Feedback family (25 modules) + Task 5 InlineMessage (1 module) + Task 6 Data family (3 modules); later tasks append their modules",
     "purpose": "CI-runnable upstream-fidelity snapshot (the .vendor-extracted directory is gitignored). Test data only, not shipped source."
   },
   "modules": {
@@ -3174,6 +3174,62 @@
             "shadow": "0px 4px 8px 0px color-mix(in srgb, {surface.950}, transparent 96%)"
           }
         }
+      }
+    },
+    "orderlist": {
+      "root": {
+        "gap": "1.125rem"
+      },
+      "controls": {
+        "gap": "0.5rem"
+      }
+    },
+    "picklist": {
+      "root": {
+        "gap": "1.125rem"
+      },
+      "controls": {
+        "gap": "0.5rem"
+      }
+    },
+    "dataview": {
+      "root": {
+        "borderColor": "transparent",
+        "borderWidth": "0",
+        "borderRadius": "0",
+        "padding": "0"
+      },
+      "header": {
+        "background": "{content.background}",
+        "color": "{content.color}",
+        "borderColor": "{content.border.color}",
+        "borderWidth": "0 0 1px 0",
+        "padding": "0.75rem 1rem",
+        "borderRadius": "0"
+      },
+      "content": {
+        "background": "{content.background}",
+        "color": "{content.color}",
+        "borderColor": "transparent",
+        "borderWidth": "0",
+        "padding": "0",
+        "borderRadius": "0"
+      },
+      "footer": {
+        "background": "{content.background}",
+        "color": "{content.color}",
+        "borderColor": "{content.border.color}",
+        "borderWidth": "1px 0 0 0",
+        "padding": "0.75rem 1rem",
+        "borderRadius": "0"
+      },
+      "paginatorTop": {
+        "borderColor": "{content.border.color}",
+        "borderWidth": "0 0 1px 0"
+      },
+      "paginatorBottom": {
+        "borderColor": "{content.border.color}",
+        "borderWidth": "1px 0 0 0"
       }
     }
   }

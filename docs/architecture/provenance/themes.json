@@ -132,6 +132,12 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset contextmenu module (.vendor-extracted/themes/src/presets/aura/contextmenu/index.ts); all top-level sections and values are transcribed as-is. Upstream's contextmenu module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local ContextMenuComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/data-view.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/data-view.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset dataview module (.vendor-extracted/themes/src/presets/aura/dataview/index.ts); all top-level sections and values are transcribed as-is. Upstream's dataview module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local DataViewComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/date-picker.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/date-picker.ts",
     "modificationStatus": "reference-derived",
@@ -213,7 +219,7 @@
     "originalPath": "src/presets/aura/index.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/index.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "New file assembling the ported base, proof-set (button/checkbox/dialog/menu/tooltip) and Form-family (24), Overlay-family (6), Navigation-family (11) Panel/Layout/Display/Feedback-family (25) and InlineMessage preset modules via @ultimate/uix-styled's definePreset; the assembly pattern mirrors @primeuix/themes' own preset index.ts shape but is not itself extracted from a single upstream file. Auto-classified as import-path-adapted by generate-manifest.mjs's default heuristic because it imports @ultimate/uix-styled, which is a false positive — corrected here."
+    "modificationDescription": "New file assembling the ported base, proof-set (button/checkbox/dialog/menu/tooltip) and Form-family (24), Overlay-family (6), Navigation-family (11) Panel/Layout/Display/Feedback-family (25), InlineMessage and Data-family (3) preset modules via @ultimate/uix-styled's definePreset; the assembly pattern mirrors @primeuix/themes' own preset index.ts shape but is not itself extracted from a single upstream file. Auto-classified as import-path-adapted by generate-manifest.mjs's default heuristic because it imports @ultimate/uix-styled, which is a false positive — corrected here."
   },
   {
     "originalPath": "src/presets/aura/inline-message.ts",
@@ -300,6 +306,12 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset multiselect module (.vendor-extracted/themes/src/presets/aura/multiselect/index.ts); all top-level sections and values are transcribed as-is. Upstream's multiselect module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local MultiSelectComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/order-list.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/order-list.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset orderlist module (.vendor-extracted/themes/src/presets/aura/orderlist/index.ts); all top-level sections and values are transcribed as-is. Upstream's orderlist module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local OrderListComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/overlay-badge.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/overlay-badge.ts",
     "modificationStatus": "reference-derived",
@@ -322,6 +334,12 @@
     "ultimateDestination": "packages/themes/src/presets/aura/password.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset password module (.vendor-extracted/themes/src/presets/aura/password/index.ts); all top-level sections and values are transcribed as-is. Upstream's password module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local PasswordComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
+  },
+  {
+    "originalPath": "src/presets/aura/pick-list.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/pick-list.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset picklist module (.vendor-extracted/themes/src/presets/aura/picklist/index.ts); all top-level sections and values are transcribed as-is. Upstream's picklist module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local PickListComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
     "originalPath": "src/presets/aura/popover.ts",
