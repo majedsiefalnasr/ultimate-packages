@@ -56,10 +56,6 @@
       "types": "./dist/types/ultimate-ng-input-number.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-input-number.mjs"
     },
-    "./textarea": {
-      "types": "./dist/types/ultimate-ng-textarea.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-textarea.mjs"
-    },
     "./input-mask": {
       "types": "./dist/types/ultimate-ng-input-mask.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-input-mask.mjs"
@@ -92,10 +88,6 @@
       "types": "./dist/types/ultimate-ng-cascade-select.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-cascade-select.mjs"
     },
-    "./select-button": {
-      "types": "./dist/types/ultimate-ng-select-button.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-select-button.mjs"
-    },
     "./rating": {
       "types": "./dist/types/ultimate-ng-rating.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-rating.mjs"
@@ -115,10 +107,6 @@
     "./date-picker": {
       "types": "./dist/types/ultimate-ng-date-picker.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-date-picker.mjs"
-    },
-    "./file-upload": {
-      "types": "./dist/types/ultimate-ng-file-upload.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-file-upload.mjs"
     },
     "./key-filter": {
       "types": "./dist/types/ultimate-ng-key-filter.d.ts",
@@ -184,10 +172,6 @@
       "types": "./dist/types/ultimate-ng-speed-dial.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-speed-dial.mjs"
     },
-    "./split-button": {
-      "types": "./dist/types/ultimate-ng-split-button.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-split-button.mjs"
-    },
     "./style-class": {
       "types": "./dist/types/ultimate-ng-style-class.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-style-class.mjs"
@@ -196,29 +180,9 @@
       "types": "./dist/types/ultimate-ng-popover.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-popover.mjs"
     },
-    "./drawer": {
-      "types": "./dist/types/ultimate-ng-drawer.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-drawer.mjs"
-    },
     "./context-menu": {
       "types": "./dist/types/ultimate-ng-context-menu.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-context-menu.mjs"
-    },
-    "./confirm-dialog": {
-      "types": "./dist/types/ultimate-ng-confirm-dialog.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-confirm-dialog.mjs"
-    },
-    "./confirm-popup": {
-      "types": "./dist/types/ultimate-ng-confirm-popup.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-confirm-popup.mjs"
-    },
-    "./dynamic-dialog": {
-      "types": "./dist/types/ultimate-ng-dynamic-dialog.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-dynamic-dialog.mjs"
-    },
-    "./overlay-badge": {
-      "types": "./dist/types/ultimate-ng-overlay-badge.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-overlay-badge.mjs"
     },
     "./avatar": {
       "types": "./dist/types/ultimate-ng-avatar.d.ts",
@@ -284,10 +248,6 @@
       "types": "./dist/types/ultimate-ng-meter-group.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-meter-group.mjs"
     },
-    "./panel": {
-      "types": "./dist/types/ultimate-ng-panel.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-panel.mjs"
-    },
     "./progress-bar": {
       "types": "./dist/types/ultimate-ng-progress-bar.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-progress-bar.mjs"
@@ -299,10 +259,6 @@
     "./scroll-panel": {
       "types": "./dist/types/ultimate-ng-scroll-panel.d.ts",
       "default": "./dist/fesm2022/ultimate-ng-scroll-panel.mjs"
-    },
-    "./scroll-top": {
-      "types": "./dist/types/ultimate-ng-scroll-top.d.ts",
-      "default": "./dist/fesm2022/ultimate-ng-scroll-top.mjs"
     },
     "./skeleton": {
       "types": "./dist/types/ultimate-ng-skeleton.d.ts",
