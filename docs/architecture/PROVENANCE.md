@@ -165,3 +165,7 @@ Modification status      Modification description  Date incorporated
 OrderList, PickList, and DataView reference PrimeNG 21.1.9, PrimeReact 10.9.9, and PrimeVue 4.5.5. OrganizationChart references only PrimeReact 10.9.9 and PrimeVue 4.5.5; Angular is excluded by DECISION-D. The implementations are Ultimate-owned, framework-native components without Prime runtime dependencies. Per-file records are in provenance/ng.json, provenance/react.json, and provenance/vue.json.
 
 Angular OrderList/PickList add the MIT-licensed @angular/cdk dependency solely for optional drag/drop. React uses native HTML5 events; Vue has no drag/drop. The exact CDK version and license verification are recorded in Task 0's commit and pnpm-lock.yaml.
+
+### Prime-parity audit source disclosure
+
+The Prime-parity Implementation Plans (GAP-041–GAP-070, `feature/prime-parity-audit-gaps`, 2026-09-27..2026-10-01) changed existing `ng`, `react` and `vue` components against the same pinned upstream baselines recorded above: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5, `@primeuix/styles` 2.0.3 and `@primeuix/themes` 2.0.3. No new upstream package or version was introduced, and no Prime runtime dependency was added. GAP-064 ported 71 Aura per-component preset modules from `@primeuix/themes` 2.0.3, each recorded in provenance/themes.json. GAP-063 added `packages/vue/src/stepper/StepperSeparator.vue`, recorded in provenance/vue.json. GAP status and evidence are in `docs/architecture/BLUEPRINT_GAPS.md`.
