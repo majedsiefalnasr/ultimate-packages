@@ -1,7 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, PLATFORM_ID } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule, FormControl } from "@angular/forms";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { UKnob } from "./knob";
 
 describe("UKnob", () => {
@@ -142,5 +142,35 @@ describe("UKnob", () => {
     svg.dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowUp", bubbles: true }));
     fixture.detectChanges();
     expect(fixture.componentInstance.control.value).toBe(50);
+  });
+
+  describe("SSR safety (GAP-065)", () => {
+    @Component({ standalone: true, imports: [UKnob, FormsModule], template: `<u-knob [(ngModel)]="value" />` })
+    class SsrHostComponent {
+      value = 30;
+    }
+
+    it("reaches no browser globals on the server platform through mount, change detection and destroy", async () => {
+      TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+      const spies = {
+        winAdd: vi.spyOn(window, "addEventListener"),
+        winRemove: vi.spyOn(window, "removeEventListener"),
+        docAdd: vi.spyOn(document, "addEventListener"),
+        docRemove: vi.spyOn(document, "removeEventListener"),
+      };
+      try {
+        const fixture = TestBed.createComponent(SsrHostComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        fixture.destroy();
+
+        for (const [spyName, spy] of Object.entries(spies)) {
+          expect(spy, spyName).not.toHaveBeenCalled();
+        }
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
   });
 });
