@@ -219,7 +219,7 @@
     "originalPath": "src/presets/aura/index.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/index.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "New file assembling the ported base, proof-set (button/checkbox/dialog/menu/tooltip) and Form-family (24), Overlay-family (6), Navigation-family (11) Panel/Layout/Display/Feedback-family (25), InlineMessage and Data-family (3) preset modules via @ultimate/uix-styled's definePreset; the assembly pattern mirrors @primeuix/themes' own preset index.ts shape but is not itself extracted from a single upstream file. Auto-classified as import-path-adapted by generate-manifest.mjs's default heuristic because it imports @ultimate/uix-styled, which is a false positive — corrected here."
+    "modificationDescription": "New file assembling the ported base, proof-set (button/checkbox/dialog/menu/tooltip) and Form-family (24), Overlay-family (6), Navigation-family (11) Panel/Layout/Display/Feedback-family (25), InlineMessage, Data-family (3) and OrganizationChart preset modules via @ultimate/uix-styled's definePreset; the assembly pattern mirrors @primeuix/themes' own preset index.ts shape but is not itself extracted from a single upstream file. Auto-classified as import-path-adapted by generate-manifest.mjs's default heuristic because it imports @ultimate/uix-styled, which is a false positive — corrected here."
   },
   {
     "originalPath": "src/presets/aura/inline-message.ts",
@@ -310,6 +310,12 @@
     "ultimateDestination": "packages/themes/src/presets/aura/order-list.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset orderlist module (.vendor-extracted/themes/src/presets/aura/orderlist/index.ts); all top-level sections and values are transcribed as-is. Upstream's orderlist module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local OrderListComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/organization-chart.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/organization-chart.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset organizationchart module (.vendor-extracted/themes/src/presets/aura/organizationchart/index.ts); all top-level sections and values are transcribed as-is. Upstream's organizationchart module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local OrganizationChartComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme. Note: the OrganizationChart component exists only in the React and Vue packages (DECISION-D excludes Angular); this preset module is framework-neutral, so that has no code implication here."
   },
   {
     "originalPath": "src/presets/aura/overlay-badge.ts",

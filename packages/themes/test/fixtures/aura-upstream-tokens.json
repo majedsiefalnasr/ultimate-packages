@@ -3,7 +3,7 @@
     "source": "@primeuix/themes@2.0.3 (MIT, https://github.com/primefaces/primeuix) - dist/aura/<module>/index.mjs default export",
     "generatedFrom": "pinned npm tarball of @primeuix/themes@2.0.3; each module key is the upstream directory name (= auraPreset.components key)",
     "method": "one-off scratch script: dynamic import() of each dist/aura/<module>/index.mjs, JSON.stringify of the default export, 2-space indent; no hand edits. Also cross-checked deep-equal against the readable .vendor-extracted/themes/src/presets/aura/<module>/index.ts sources.",
-    "scope": "Task 1 Form family (24 modules) + Task 2 Overlay family (6 modules) + Task 3 Navigation family (11 modules) + Task 4 Panel/Layout/Display/Feedback family (25 modules) + Task 5 InlineMessage (1 module) + Task 6 Data family (3 modules); later tasks append their modules",
+    "scope": "Task 1 Form family (24 modules) + Task 2 Overlay family (6 modules) + Task 3 Navigation family (11 modules) + Task 4 Panel/Layout/Display/Feedback family (25 modules) + Task 5 InlineMessage (1 module) + Task 6 Data family (3 modules) + Task 7 OrganizationChart (1 module)",
     "purpose": "CI-runnable upstream-fidelity snapshot (the .vendor-extracted directory is gitignored). Test data only, not shipped source."
   },
   "modules": {
@@ -3230,6 +3230,45 @@
       "paginatorBottom": {
         "borderColor": "{content.border.color}",
         "borderWidth": "1px 0 0 0"
+      }
+    },
+    "organizationchart": {
+      "root": {
+        "gutter": "0.75rem",
+        "transitionDuration": "{transition.duration}"
+      },
+      "node": {
+        "background": "{content.background}",
+        "hoverBackground": "{content.hover.background}",
+        "selectedBackground": "{highlight.background}",
+        "borderColor": "{content.border.color}",
+        "color": "{content.color}",
+        "selectedColor": "{highlight.color}",
+        "hoverColor": "{content.hover.color}",
+        "padding": "0.75rem 1rem",
+        "toggleablePadding": "0.75rem 1rem 1.25rem 1rem",
+        "borderRadius": "{content.border.radius}"
+      },
+      "nodeToggleButton": {
+        "background": "{content.background}",
+        "hoverBackground": "{content.hover.background}",
+        "borderColor": "{content.border.color}",
+        "color": "{text.muted.color}",
+        "hoverColor": "{text.color}",
+        "size": "1.5rem",
+        "borderRadius": "50%",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "connector": {
+        "color": "{content.border.color}",
+        "borderRadius": "{content.border.radius}",
+        "height": "24px"
       }
     }
   }

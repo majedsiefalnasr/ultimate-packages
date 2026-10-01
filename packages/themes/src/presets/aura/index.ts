@@ -44,6 +44,7 @@ import { message } from "./message";
 import { meterGroup } from "./meter-group";
 import { multiSelect } from "./multi-select";
 import { orderList } from "./order-list";
+import { organizationChart } from "./organization-chart";
 import { overlayBadge } from "./overlay-badge";
 import { panel } from "./panel";
 import { panelMenu } from "./panel-menu";
@@ -89,8 +90,8 @@ import { tooltip } from "./tooltip";
  * Accordion, Avatar, BlockUI, Card, Carousel, Chip, Divider, Fieldset, Galleria,
  * Image, ImageCompare, Inplace, Message, MeterGroup, Panel, ProgressBar,
  * ProgressSpinner, ScrollPanel, Skeleton, Splitter, Tag, Terminal, Timeline,
- * Toolbar, Toast), InlineMessage and the Data family (3 modules:
- * OrderList, PickList, DataView). Ported (Option B —
+ * Toolbar, Toast), InlineMessage, the Data family (3 modules:
+ * OrderList, PickList, DataView) and OrganizationChart. Ported (Option B —
  * reference, not verbatim copy) from `@primeuix/themes@2.0.3`'s Aura preset; see `docs/architecture/provenance/themes.json`
  * for per-file provenance detail. Each module is registered under upstream's
  * own preset key (e.g. `radiobutton`), which is the name the dt engine looks
@@ -144,6 +145,7 @@ export const auraPreset = definePreset({
     metergroup: meterGroup,
     multiselect: multiSelect,
     orderlist: orderList,
+    organizationchart: organizationChart,
     overlaybadge: overlayBadge,
     panel,
     panelmenu: panelMenu,
