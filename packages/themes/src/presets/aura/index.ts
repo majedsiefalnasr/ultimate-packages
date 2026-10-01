@@ -28,6 +28,7 @@ import { iconField } from "./icon-field";
 import { iftaLabel } from "./ifta-label";
 import { image } from "./image";
 import { imageCompare } from "./image-compare";
+import { inlineMessage } from "./inline-message";
 import { inplace } from "./inplace";
 import { inputChips } from "./input-chips";
 import { inputNumber } from "./input-number";
@@ -85,7 +86,7 @@ import { tooltip } from "./tooltip";
  * Accordion, Avatar, BlockUI, Card, Carousel, Chip, Divider, Fieldset, Galleria,
  * Image, ImageCompare, Inplace, Message, MeterGroup, Panel, ProgressBar,
  * ProgressSpinner, ScrollPanel, Skeleton, Splitter, Tag, Terminal, Timeline,
- * Toolbar, Toast). Ported (Option B —
+ * Toolbar, Toast) and InlineMessage. Ported (Option B —
  * reference, not verbatim copy) from `@primeuix/themes@2.0.3`'s Aura preset; see `docs/architecture/provenance/themes.json`
  * for per-file provenance detail. Each module is registered under upstream's
  * own preset key (e.g. `radiobutton`), which is the name the dt engine looks
@@ -123,6 +124,7 @@ export const auraPreset = definePreset({
     iftalabel: iftaLabel,
     image,
     imagecompare: imageCompare,
+    inlinemessage: inlineMessage,
     inplace,
     inputchips: inputChips,
     inputnumber: inputNumber,
