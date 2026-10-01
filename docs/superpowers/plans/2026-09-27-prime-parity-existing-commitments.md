@@ -298,10 +298,10 @@ Run a real full-package build. Confirm each newly-added component is importable 
 ## Completion Criteria
 
 - Task 1's e2e assertion passes with the tooltip actually visible.
-- Task 2's `UMenu` popup mode is fully functional per its own 8 tests; Task 3's `USplitButton` delegates to it with zero externally-observable behavior regression.
+- Task 2's `UMenu` popup mode is fully functional per its own tests (8 sketched here; 21 shipped, plus the fix-loop's cross-component tests); Task 3's `USplitButton` delegates to it with zero externally-observable behavior regression.
 - Task 4/5's React/Vue subpath exports work for every currently-shipped component in each framework.
 - Task 6's characterization table is complete for every candidate component; Task 7 adds secondary entry points only to those the table marks as passing.
-- GAP-009/GAP-023 remain byte-for-byte unchanged (verify via `git diff` on `docs/architecture/BLUEPRINT_GAPS.md` showing no lines touched — though no task in this plan modifies that file at all, since doc updates are deferred to closeout).
+- GAP-009/GAP-023 remain byte-for-byte unchanged (verify via `git diff` on `docs/architecture/BLUEPRINT_GAPS.md` showing no lines touched — the file was edited during this plan only to record user decisions and new GAPs (GAP-070 progress, GAP-079, GAP-080, GAP-081); GAP-009/GAP-023 themselves were never touched).
 - `pnpm test`, `pnpm run ceiling:validate` pass after every task.
 
 ## Documentation/Ledger Updates

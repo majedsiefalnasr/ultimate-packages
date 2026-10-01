@@ -1320,7 +1320,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Existing reusable infrastructure:** None yet.
 - **Recommended resolution direction:** Directional only — decide the Angular packaging model in its own Spec.
 - **Source/evidence:** Existing Commitments Plan Task 6 characterization and review (2026-10-01).
-- **Architectural decision required:** Yes — the Angular packaging model.
+- **Architectural decision required:** Yes — the Angular packaging model (Open Architectural Decisions §5, DECISION-F).
 
 #### GAP-077 — Vue Stepper lacks horizontal separators between step headers
 
@@ -1415,6 +1415,14 @@ Listed here only where the repository shows genuine, unresolved forks requiring 
 - **Options:** Not enumerated — this is a single validation pass across all ~17 package names at once, not a per-package fork.
 - **Affected areas:** Every package.
 - **Recommendation:** None — correctly deferred per Blueprint §34's own stated gate ("before the first stable public release"), not urgent now.
+
+### DECISION-F — Angular packaging model: primary barrel vs secondary entry points (GAP-081)
+
+- **Question:** Should the Angular primary `@ultimate/ng` barrel re-export from its secondary entry points (one class identity per component), or should consumers be told to use a single import style?
+- **Current evidence:** Registered 2026-10-01 with GAP-081. The primary bundle contains every component's code while each of the 70 secondary entry points (GAP-070) ships its own copy, so mixing import styles loads two copies of a class. ng-packagr's per-entry `rootDir` also prevents components with cross-directory imports from being secondary entries (GAP-070's corrected trigger), which constrains any model.
+- **Options:** Not enumerated here — to be framed in GAP-081's own Spec.
+- **Affected areas:** `@ultimate/ng` packaging, consumer imports, bundle size.
+- **Recommendation:** None yet — open fork; decide before the first stable public release.
 
 ---
 
