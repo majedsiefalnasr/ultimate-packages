@@ -36,16 +36,34 @@
     "modificationDescription": "Ultimate-authored framework-agnostic entry point (applyUltimateTheme). Not a port of any single @primeuix/themes file — it is a thin wrapper calling @ultimate/uix-styled's own Theme.setTheme() with auraPreset and prefix: 'u' fixed, giving every framework-core package's dt()-resolving StyleSheet a single, framework-neutral call site to configure before any component mounts."
   },
   {
+    "originalPath": "src/presets/aura/accordion.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/accordion.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset accordion module (.vendor-extracted/themes/src/presets/aura/accordion/index.ts); all top-level sections and values are transcribed as-is. Upstream's accordion module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local AccordionComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/autocomplete.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/autocomplete.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset autocomplete module (.vendor-extracted/themes/src/presets/aura/autocomplete/index.ts); all top-level sections and values are transcribed as-is. Upstream's autocomplete module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local AutocompleteComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
   },
   {
+    "originalPath": "src/presets/aura/avatar.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/avatar.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset avatar module (.vendor-extracted/themes/src/presets/aura/avatar/index.ts); all top-level sections and values are transcribed as-is. Upstream's avatar module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local AvatarComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/base.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/base.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset base module (.vendor-extracted/themes/src/presets/aura/base/index.ts, recovered from the pinned tarball in Task 9); primitive color-ramp and semantic light/dark token values are transcribed as-is, retyped against Ultimate's own PrimitiveTokens/SemanticTokens contract (Task 8) instead of @primeuix/themes' generated .d.ts types."
+  },
+  {
+    "originalPath": "src/presets/aura/block-ui.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/block-ui.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset blockui module (.vendor-extracted/themes/src/presets/aura/blockui/index.ts); all top-level sections and values are transcribed as-is. Upstream's blockui module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local BlockUIComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
     "originalPath": "src/presets/aura/breadcrumb.ts",
@@ -60,6 +78,18 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset button module (.vendor-extracted/themes/src/presets/aura/button/index.ts); root sizing tokens and the full colorScheme.light/dark variant matrix are transcribed as-is, retyped against Ultimate's own ComponentTokens<T> contract (Task 8) instead of @primeuix/themes' generated .d.ts types."
   },
   {
+    "originalPath": "src/presets/aura/card.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/card.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset card module (.vendor-extracted/themes/src/presets/aura/card/index.ts); all top-level sections and values are transcribed as-is. Upstream's card module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local CardComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/carousel.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/carousel.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset carousel module (.vendor-extracted/themes/src/presets/aura/carousel/index.ts); all top-level sections and values are transcribed as-is. Upstream's carousel module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local CarouselComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
+  },
+  {
     "originalPath": "src/presets/aura/cascade-select.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/cascade-select.ts",
     "modificationStatus": "reference-derived",
@@ -70,6 +100,12 @@
     "ultimateDestination": "packages/themes/src/presets/aura/checkbox.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset checkbox module (.vendor-extracted/themes/src/presets/aura/checkbox/index.ts); root/icon token values are transcribed as-is. Upstream's checkbox module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local CheckboxComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme — using the real contract type here would misrepresent upstream's structure by forcing a fake wrapper."
+  },
+  {
+    "originalPath": "src/presets/aura/chip.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/chip.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset chip module (.vendor-extracted/themes/src/presets/aura/chip/index.ts); all top-level sections and values are transcribed as-is. Upstream's chip module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local ChipComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
   },
   {
     "originalPath": "src/presets/aura/color-picker.ts",
@@ -108,6 +144,12 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset dialog module (.vendor-extracted/themes/src/presets/aura/dialog/index.ts); root/header/title/content/footer token values are transcribed as-is. Upstream's dialog module has no colorScheme split (mode-awareness flows transitively through {overlay.modal.*} semantic references resolved in base.ts), so this file defines its own local DialogComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/divider.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/divider.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset divider module (.vendor-extracted/themes/src/presets/aura/divider/index.ts); all top-level sections and values are transcribed as-is. Upstream's divider module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local DividerComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/dock.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/dock.ts",
     "modificationStatus": "reference-derived",
@@ -118,6 +160,12 @@
     "ultimateDestination": "packages/themes/src/presets/aura/drawer.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset drawer module (.vendor-extracted/themes/src/presets/aura/drawer/index.ts); all top-level sections and values are transcribed as-is. Upstream's drawer module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local DrawerComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/fieldset.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/fieldset.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset fieldset module (.vendor-extracted/themes/src/presets/aura/fieldset/index.ts); all top-level sections and values are transcribed as-is. Upstream's fieldset module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local FieldsetComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
     "originalPath": "src/presets/aura/file-upload.ts",
@@ -132,6 +180,12 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset floatlabel module (.vendor-extracted/themes/src/presets/aura/floatlabel/index.ts); all top-level sections and values are transcribed as-is. Upstream's floatlabel module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local FloatLabelComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/galleria.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/galleria.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset galleria module (.vendor-extracted/themes/src/presets/aura/galleria/index.ts); all top-level sections and values are transcribed as-is. Upstream's galleria module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local GalleriaComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
+  },
+  {
     "originalPath": "src/presets/aura/icon-field.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/icon-field.ts",
     "modificationStatus": "reference-derived",
@@ -144,10 +198,28 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset iftalabel module (.vendor-extracted/themes/src/presets/aura/iftalabel/index.ts); all top-level sections and values are transcribed as-is. Upstream's iftalabel module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local IftaLabelComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/image-compare.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/image-compare.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset imagecompare module (.vendor-extracted/themes/src/presets/aura/imagecompare/index.ts); all top-level sections and values are transcribed as-is. Upstream's imagecompare module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local ImageCompareComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/image.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/image.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset image module (.vendor-extracted/themes/src/presets/aura/image/index.ts); all top-level sections and values are transcribed as-is. Upstream's image module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local ImageComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/index.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/index.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "New file assembling the ported base, proof-set (button/checkbox/dialog/menu/tooltip) and Form-family (24), Overlay-family (6) and Navigation-family (11) preset modules via @ultimate/uix-styled's definePreset; the assembly pattern mirrors @primeuix/themes' own preset index.ts shape but is not itself extracted from a single upstream file. Auto-classified as import-path-adapted by generate-manifest.mjs's default heuristic because it imports @ultimate/uix-styled, which is a false positive — corrected here."
+    "modificationDescription": "New file assembling the ported base, proof-set (button/checkbox/dialog/menu/tooltip) and Form-family (24), Overlay-family (6), Navigation-family (11) and Panel/Layout/Display/Feedback-family (25) preset modules via @ultimate/uix-styled's definePreset; the assembly pattern mirrors @primeuix/themes' own preset index.ts shape but is not itself extracted from a single upstream file. Auto-classified as import-path-adapted by generate-manifest.mjs's default heuristic because it imports @ultimate/uix-styled, which is a false positive — corrected here."
+  },
+  {
+    "originalPath": "src/presets/aura/inplace.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/inplace.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset inplace module (.vendor-extracted/themes/src/presets/aura/inplace/index.ts); all top-level sections and values are transcribed as-is. Upstream's inplace module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local InplaceComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
     "originalPath": "src/presets/aura/input-chips.ts",
@@ -204,6 +276,18 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset menubar module (.vendor-extracted/themes/src/presets/aura/menubar/index.ts); all top-level sections and values are transcribed as-is. Upstream's menubar module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local MenubarComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/message.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/message.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset message module (.vendor-extracted/themes/src/presets/aura/message/index.ts); all top-level sections and values are transcribed as-is. Upstream's message module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local MessageComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
+  },
+  {
+    "originalPath": "src/presets/aura/meter-group.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/meter-group.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset metergroup module (.vendor-extracted/themes/src/presets/aura/metergroup/index.ts); all top-level sections and values are transcribed as-is. Upstream's metergroup module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local MeterGroupComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/multi-select.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/multi-select.ts",
     "modificationStatus": "reference-derived",
@@ -222,6 +306,12 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset panelmenu module (.vendor-extracted/themes/src/presets/aura/panelmenu/index.ts); all top-level sections and values are transcribed as-is. Upstream's panelmenu module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local PanelMenuComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/panel.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/panel.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset panel module (.vendor-extracted/themes/src/presets/aura/panel/index.ts); all top-level sections and values are transcribed as-is. Upstream's panel module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local PanelComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/password.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/password.ts",
     "modificationStatus": "reference-derived",
@@ -232,6 +322,18 @@
     "ultimateDestination": "packages/themes/src/presets/aura/popover.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset popover module (.vendor-extracted/themes/src/presets/aura/popover/index.ts); all top-level sections and values are transcribed as-is. Upstream's popover module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local PopoverComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/progress-bar.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/progress-bar.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset progressbar module (.vendor-extracted/themes/src/presets/aura/progressbar/index.ts); all top-level sections and values are transcribed as-is. Upstream's progressbar module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local ProgressBarComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/progress-spinner.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/progress-spinner.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset progressspinner module (.vendor-extracted/themes/src/presets/aura/progressspinner/index.ts); all top-level sections and values are transcribed as-is. Upstream's progressspinner module has a colorScheme split (colorScheme.light/dark transcribed as-is) and no other sections outside it that the contract does not model, so it is typed directly against Task 8's ComponentTokens contract."
   },
   {
     "originalPath": "src/presets/aura/radio-button.ts",
@@ -246,6 +348,12 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset rating module (.vendor-extracted/themes/src/presets/aura/rating/index.ts); all top-level sections and values are transcribed as-is. Upstream's rating module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local RatingComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/scroll-panel.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/scroll-panel.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset scrollpanel module (.vendor-extracted/themes/src/presets/aura/scrollpanel/index.ts); all top-level sections and values are transcribed as-is. Upstream's scrollpanel module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local ScrollPanelComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
+  },
+  {
     "originalPath": "src/presets/aura/select-button.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/select-button.ts",
     "modificationStatus": "reference-derived",
@@ -256,6 +364,12 @@
     "ultimateDestination": "packages/themes/src/presets/aura/select.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset select module (.vendor-extracted/themes/src/presets/aura/select/index.ts); all top-level sections and values are transcribed as-is. Upstream's select module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local SelectComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/skeleton.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/skeleton.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset skeleton module (.vendor-extracted/themes/src/presets/aura/skeleton/index.ts); all top-level sections and values are transcribed as-is. Upstream's skeleton module has a colorScheme split (colorScheme.light/dark transcribed as-is) and no other sections outside it that the contract does not model, so it is typed directly against Task 8's ComponentTokens contract."
   },
   {
     "originalPath": "src/presets/aura/slider.ts",
@@ -276,6 +390,12 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset splitbutton module (.vendor-extracted/themes/src/presets/aura/splitbutton/index.ts); all top-level sections and values are transcribed as-is. Upstream's splitbutton module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local SplitButtonComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/splitter.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/splitter.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset splitter module (.vendor-extracted/themes/src/presets/aura/splitter/index.ts); all top-level sections and values are transcribed as-is. Upstream's splitter module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local SplitterComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/stepper.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/stepper.ts",
     "modificationStatus": "reference-derived",
@@ -294,6 +414,18 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset tabs module (.vendor-extracted/themes/src/presets/aura/tabs/index.ts); all top-level sections and values are transcribed as-is. Upstream's tabs module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local TabsComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split. Upstream's separate tabview and tabmenu modules are not ported by this file."
   },
   {
+    "originalPath": "src/presets/aura/tag.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/tag.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset tag module (.vendor-extracted/themes/src/presets/aura/tag/index.ts); all top-level sections and values are transcribed as-is. Upstream's tag module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local TagComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
+  },
+  {
+    "originalPath": "src/presets/aura/terminal.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/terminal.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset terminal module (.vendor-extracted/themes/src/presets/aura/terminal/index.ts); all top-level sections and values are transcribed as-is. Upstream's terminal module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local TerminalComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
     "originalPath": "src/presets/aura/textarea.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/textarea.ts",
     "modificationStatus": "reference-derived",
@@ -306,6 +438,18 @@
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset tieredmenu module (.vendor-extracted/themes/src/presets/aura/tieredmenu/index.ts); all top-level sections and values are transcribed as-is. Upstream's tieredmenu module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local TieredMenuComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
+    "originalPath": "src/presets/aura/timeline.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/timeline.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset timeline module (.vendor-extracted/themes/src/presets/aura/timeline/index.ts); all top-level sections and values are transcribed as-is. Upstream's timeline module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local TimelineComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
+  },
+  {
+    "originalPath": "src/presets/aura/toast.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/toast.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset toast module (.vendor-extracted/themes/src/presets/aura/toast/index.ts); all top-level sections and values are transcribed as-is. Upstream's toast module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local ToastComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
+  },
+  {
     "originalPath": "src/presets/aura/toggle-button.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/toggle-button.ts",
     "modificationStatus": "reference-derived",
@@ -316,6 +460,12 @@
     "ultimateDestination": "packages/themes/src/presets/aura/toggle-switch.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset toggleswitch module (.vendor-extracted/themes/src/presets/aura/toggleswitch/index.ts); all top-level sections and values are transcribed as-is. Upstream's toggleswitch module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against Task 8's ComponentTokens contract via a local ToggleSwitchComponentTokens extension because the contract only models root + colorScheme and upstream also has sections outside the split."
+  },
+  {
+    "originalPath": "src/presets/aura/toolbar.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/toolbar.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset toolbar module (.vendor-extracted/themes/src/presets/aura/toolbar/index.ts); all top-level sections and values are transcribed as-is. Upstream's toolbar module has no colorScheme split (mode-awareness flows transitively through semantic references resolved in base.ts), so this file defines its own local ToolbarComponentTokens type instead of Task 8's ComponentTokens<T>, which requires colorScheme."
   },
   {
     "originalPath": "src/presets/aura/tooltip.ts",

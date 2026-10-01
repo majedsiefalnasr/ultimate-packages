@@ -3,7 +3,7 @@
     "source": "@primeuix/themes@2.0.3 (MIT, https://github.com/primefaces/primeuix) - dist/aura/<module>/index.mjs default export",
     "generatedFrom": "pinned npm tarball of @primeuix/themes@2.0.3; each module key is the upstream directory name (= auraPreset.components key)",
     "method": "one-off scratch script: dynamic import() of each dist/aura/<module>/index.mjs, JSON.stringify of the default export, 2-space indent; no hand edits. Also cross-checked deep-equal against the readable .vendor-extracted/themes/src/presets/aura/<module>/index.ts sources.",
-    "scope": "Task 1 Form family (24 modules) + Task 2 Overlay family (6 modules) + Task 3 Navigation family (11 modules); later tasks append their modules",
+    "scope": "Task 1 Form family (24 modules) + Task 2 Overlay family (6 modules) + Task 3 Navigation family (11 modules) + Task 4 Panel/Layout/Display/Feedback family (25 modules); later tasks append their modules",
     "purpose": "CI-runnable upstream-fidelity snapshot (the .vendor-extracted directory is gitignored). Test data only, not shipped source."
   },
   "modules": {
@@ -1789,6 +1789,1300 @@
         "borderRadius": "{form.field.border.radius}",
         "roundedBorderRadius": "2rem",
         "raisedShadow": "0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12)"
+      }
+    },
+    "accordion": {
+      "root": {
+        "transitionDuration": "{transition.duration}"
+      },
+      "panel": {
+        "borderWidth": "0 0 1px 0",
+        "borderColor": "{content.border.color}"
+      },
+      "header": {
+        "color": "{text.muted.color}",
+        "hoverColor": "{text.color}",
+        "activeColor": "{text.color}",
+        "activeHoverColor": "{text.color}",
+        "padding": "1.125rem",
+        "fontWeight": "600",
+        "borderRadius": "0",
+        "borderWidth": "0",
+        "borderColor": "{content.border.color}",
+        "background": "{content.background}",
+        "hoverBackground": "{content.background}",
+        "activeBackground": "{content.background}",
+        "activeHoverBackground": "{content.background}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "-1px",
+          "shadow": "{focus.ring.shadow}"
+        },
+        "toggleIcon": {
+          "color": "{text.muted.color}",
+          "hoverColor": "{text.color}",
+          "activeColor": "{text.color}",
+          "activeHoverColor": "{text.color}"
+        },
+        "first": {
+          "topBorderRadius": "{content.border.radius}",
+          "borderWidth": "0"
+        },
+        "last": {
+          "bottomBorderRadius": "{content.border.radius}",
+          "activeBottomBorderRadius": "0"
+        }
+      },
+      "content": {
+        "borderWidth": "0",
+        "borderColor": "{content.border.color}",
+        "background": "{content.background}",
+        "color": "{text.color}",
+        "padding": "0 1.125rem 1.125rem 1.125rem"
+      }
+    },
+    "avatar": {
+      "root": {
+        "width": "2rem",
+        "height": "2rem",
+        "fontSize": "1rem",
+        "background": "{content.border.color}",
+        "color": "{content.color}",
+        "borderRadius": "{content.border.radius}"
+      },
+      "icon": {
+        "size": "1rem"
+      },
+      "group": {
+        "borderColor": "{content.background}",
+        "offset": "-0.75rem"
+      },
+      "lg": {
+        "width": "3rem",
+        "height": "3rem",
+        "fontSize": "1.5rem",
+        "icon": {
+          "size": "1.5rem"
+        },
+        "group": {
+          "offset": "-1rem"
+        }
+      },
+      "xl": {
+        "width": "4rem",
+        "height": "4rem",
+        "fontSize": "2rem",
+        "icon": {
+          "size": "2rem"
+        },
+        "group": {
+          "offset": "-1.5rem"
+        }
+      }
+    },
+    "blockui": {
+      "root": {
+        "borderRadius": "{content.border.radius}"
+      }
+    },
+    "card": {
+      "root": {
+        "background": "{content.background}",
+        "borderRadius": "{border.radius.xl}",
+        "color": "{content.color}",
+        "shadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)"
+      },
+      "body": {
+        "padding": "1.25rem",
+        "gap": "0.5rem"
+      },
+      "caption": {
+        "gap": "0.5rem"
+      },
+      "title": {
+        "fontSize": "1.25rem",
+        "fontWeight": "500"
+      },
+      "subtitle": {
+        "color": "{text.muted.color}"
+      }
+    },
+    "carousel": {
+      "root": {
+        "transitionDuration": "{transition.duration}"
+      },
+      "content": {
+        "gap": "0.25rem"
+      },
+      "indicatorList": {
+        "padding": "1rem",
+        "gap": "0.5rem"
+      },
+      "indicator": {
+        "width": "2rem",
+        "height": "0.5rem",
+        "borderRadius": "{content.border.radius}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "colorScheme": {
+        "light": {
+          "indicator": {
+            "background": "{surface.200}",
+            "hoverBackground": "{surface.300}",
+            "activeBackground": "{primary.color}"
+          }
+        },
+        "dark": {
+          "indicator": {
+            "background": "{surface.700}",
+            "hoverBackground": "{surface.600}",
+            "activeBackground": "{primary.color}"
+          }
+        }
+      }
+    },
+    "chip": {
+      "root": {
+        "borderRadius": "16px",
+        "paddingX": "0.75rem",
+        "paddingY": "0.5rem",
+        "gap": "0.5rem",
+        "transitionDuration": "{transition.duration}"
+      },
+      "image": {
+        "width": "2rem",
+        "height": "2rem"
+      },
+      "icon": {
+        "size": "1rem"
+      },
+      "removeIcon": {
+        "size": "1rem",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{form.field.focus.ring.shadow}"
+        }
+      },
+      "colorScheme": {
+        "light": {
+          "root": {
+            "background": "{surface.100}",
+            "color": "{surface.800}"
+          },
+          "icon": {
+            "color": "{surface.800}"
+          },
+          "removeIcon": {
+            "color": "{surface.800}"
+          }
+        },
+        "dark": {
+          "root": {
+            "background": "{surface.800}",
+            "color": "{surface.0}"
+          },
+          "icon": {
+            "color": "{surface.0}"
+          },
+          "removeIcon": {
+            "color": "{surface.0}"
+          }
+        }
+      }
+    },
+    "divider": {
+      "root": {
+        "borderColor": "{content.border.color}"
+      },
+      "content": {
+        "background": "{content.background}",
+        "color": "{text.color}"
+      },
+      "horizontal": {
+        "margin": "1rem 0",
+        "padding": "0 1rem",
+        "content": {
+          "padding": "0 0.5rem"
+        }
+      },
+      "vertical": {
+        "margin": "0 1rem",
+        "padding": "0.5rem 0",
+        "content": {
+          "padding": "0.5rem 0"
+        }
+      }
+    },
+    "fieldset": {
+      "root": {
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "borderRadius": "{content.border.radius}",
+        "color": "{content.color}",
+        "padding": "0 1.125rem 1.125rem 1.125rem",
+        "transitionDuration": "{transition.duration}"
+      },
+      "legend": {
+        "background": "{content.background}",
+        "hoverBackground": "{content.hover.background}",
+        "color": "{content.color}",
+        "hoverColor": "{content.hover.color}",
+        "borderRadius": "{content.border.radius}",
+        "borderWidth": "1px",
+        "borderColor": "transparent",
+        "padding": "0.5rem 0.75rem",
+        "gap": "0.5rem",
+        "fontWeight": "600",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "toggleIcon": {
+        "color": "{text.muted.color}",
+        "hoverColor": "{text.hover.muted.color}"
+      },
+      "content": {
+        "padding": "0"
+      }
+    },
+    "galleria": {
+      "root": {
+        "borderWidth": "1px",
+        "borderColor": "{content.border.color}",
+        "borderRadius": "{content.border.radius}",
+        "transitionDuration": "{transition.duration}"
+      },
+      "navButton": {
+        "background": "rgba(255, 255, 255, 0.1)",
+        "hoverBackground": "rgba(255, 255, 255, 0.2)",
+        "color": "{surface.100}",
+        "hoverColor": "{surface.0}",
+        "size": "3rem",
+        "gutter": "0.5rem",
+        "prev": {
+          "borderRadius": "50%"
+        },
+        "next": {
+          "borderRadius": "50%"
+        },
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "navIcon": {
+        "size": "1.5rem"
+      },
+      "thumbnailsContent": {
+        "background": "{content.background}",
+        "padding": "1rem 0.25rem"
+      },
+      "thumbnailNavButton": {
+        "size": "2rem",
+        "borderRadius": "{content.border.radius}",
+        "gutter": "0.5rem",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "thumbnailNavButtonIcon": {
+        "size": "1rem"
+      },
+      "caption": {
+        "background": "rgba(0, 0, 0, 0.5)",
+        "color": "{surface.100}",
+        "padding": "1rem"
+      },
+      "indicatorList": {
+        "gap": "0.5rem",
+        "padding": "1rem"
+      },
+      "indicatorButton": {
+        "width": "1rem",
+        "height": "1rem",
+        "activeBackground": "{primary.color}",
+        "borderRadius": "50%",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "insetIndicatorList": {
+        "background": "rgba(0, 0, 0, 0.5)"
+      },
+      "insetIndicatorButton": {
+        "background": "rgba(255, 255, 255, 0.4)",
+        "hoverBackground": "rgba(255, 255, 255, 0.6)",
+        "activeBackground": "rgba(255, 255, 255, 0.9)"
+      },
+      "closeButton": {
+        "size": "3rem",
+        "gutter": "0.5rem",
+        "background": "rgba(255, 255, 255, 0.1)",
+        "hoverBackground": "rgba(255, 255, 255, 0.2)",
+        "color": "{surface.50}",
+        "hoverColor": "{surface.0}",
+        "borderRadius": "50%",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "closeButtonIcon": {
+        "size": "1.5rem"
+      },
+      "colorScheme": {
+        "light": {
+          "thumbnailNavButton": {
+            "hoverBackground": "{surface.100}",
+            "color": "{surface.600}",
+            "hoverColor": "{surface.700}"
+          },
+          "indicatorButton": {
+            "background": "{surface.200}",
+            "hoverBackground": "{surface.300}"
+          }
+        },
+        "dark": {
+          "thumbnailNavButton": {
+            "hoverBackground": "{surface.700}",
+            "color": "{surface.400}",
+            "hoverColor": "{surface.0}"
+          },
+          "indicatorButton": {
+            "background": "{surface.700}",
+            "hoverBackground": "{surface.600}"
+          }
+        }
+      }
+    },
+    "image": {
+      "root": {
+        "transitionDuration": "{transition.duration}"
+      },
+      "preview": {
+        "icon": {
+          "size": "1.5rem"
+        },
+        "mask": {
+          "background": "{mask.background}",
+          "color": "{mask.color}"
+        }
+      },
+      "toolbar": {
+        "position": {
+          "left": "auto",
+          "right": "1rem",
+          "top": "1rem",
+          "bottom": "auto"
+        },
+        "blur": "8px",
+        "background": "rgba(255,255,255,0.1)",
+        "borderColor": "rgba(255,255,255,0.2)",
+        "borderWidth": "1px",
+        "borderRadius": "30px",
+        "padding": ".5rem",
+        "gap": "0.5rem"
+      },
+      "action": {
+        "hoverBackground": "rgba(255,255,255,0.1)",
+        "color": "{surface.50}",
+        "hoverColor": "{surface.0}",
+        "size": "3rem",
+        "iconSize": "1.5rem",
+        "borderRadius": "50%",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      }
+    },
+    "imagecompare": {
+      "handle": {
+        "size": "15px",
+        "hoverSize": "30px",
+        "background": "rgba(255,255,255,0.3)",
+        "hoverBackground": "rgba(255,255,255,0.3)",
+        "borderColor": "unset",
+        "hoverBorderColor": "unset",
+        "borderWidth": "0",
+        "borderRadius": "50%",
+        "transitionDuration": "{transition.duration}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "rgba(255,255,255,0.3)",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      }
+    },
+    "inplace": {
+      "root": {
+        "padding": "{form.field.padding.y} {form.field.padding.x}",
+        "borderRadius": "{content.border.radius}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        },
+        "transitionDuration": "{transition.duration}"
+      },
+      "display": {
+        "hoverBackground": "{content.hover.background}",
+        "hoverColor": "{content.hover.color}"
+      }
+    },
+    "message": {
+      "root": {
+        "borderRadius": "{content.border.radius}",
+        "borderWidth": "1px",
+        "transitionDuration": "{transition.duration}"
+      },
+      "content": {
+        "padding": "0.5rem 0.75rem",
+        "gap": "0.5rem",
+        "sm": {
+          "padding": "0.375rem 0.625rem"
+        },
+        "lg": {
+          "padding": "0.625rem 0.875rem"
+        }
+      },
+      "text": {
+        "fontSize": "1rem",
+        "fontWeight": "500",
+        "sm": {
+          "fontSize": "0.875rem"
+        },
+        "lg": {
+          "fontSize": "1.125rem"
+        }
+      },
+      "icon": {
+        "size": "1.125rem",
+        "sm": {
+          "size": "1rem"
+        },
+        "lg": {
+          "size": "1.25rem"
+        }
+      },
+      "closeButton": {
+        "width": "1.75rem",
+        "height": "1.75rem",
+        "borderRadius": "50%",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "offset": "{focus.ring.offset}"
+        }
+      },
+      "closeIcon": {
+        "size": "1rem",
+        "sm": {
+          "size": "0.875rem"
+        },
+        "lg": {
+          "size": "1.125rem"
+        }
+      },
+      "outlined": {
+        "root": {
+          "borderWidth": "1px"
+        }
+      },
+      "simple": {
+        "content": {
+          "padding": "0"
+        }
+      },
+      "colorScheme": {
+        "light": {
+          "info": {
+            "background": "color-mix(in srgb, {blue.50}, transparent 5%)",
+            "borderColor": "{blue.200}",
+            "color": "{blue.600}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {blue.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{blue.100}",
+              "focusRing": {
+                "color": "{blue.600}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{blue.600}",
+              "borderColor": "{blue.600}"
+            },
+            "simple": {
+              "color": "{blue.600}"
+            }
+          },
+          "success": {
+            "background": "color-mix(in srgb, {green.50}, transparent 5%)",
+            "borderColor": "{green.200}",
+            "color": "{green.600}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {green.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{green.100}",
+              "focusRing": {
+                "color": "{green.600}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{green.600}",
+              "borderColor": "{green.600}"
+            },
+            "simple": {
+              "color": "{green.600}"
+            }
+          },
+          "warn": {
+            "background": "color-mix(in srgb,{yellow.50}, transparent 5%)",
+            "borderColor": "{yellow.200}",
+            "color": "{yellow.600}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {yellow.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{yellow.100}",
+              "focusRing": {
+                "color": "{yellow.600}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{yellow.600}",
+              "borderColor": "{yellow.600}"
+            },
+            "simple": {
+              "color": "{yellow.600}"
+            }
+          },
+          "error": {
+            "background": "color-mix(in srgb, {red.50}, transparent 5%)",
+            "borderColor": "{red.200}",
+            "color": "{red.600}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {red.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{red.100}",
+              "focusRing": {
+                "color": "{red.600}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{red.600}",
+              "borderColor": "{red.600}"
+            },
+            "simple": {
+              "color": "{red.600}"
+            }
+          },
+          "secondary": {
+            "background": "{surface.100}",
+            "borderColor": "{surface.200}",
+            "color": "{surface.600}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {surface.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{surface.200}",
+              "focusRing": {
+                "color": "{surface.600}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{surface.500}",
+              "borderColor": "{surface.500}"
+            },
+            "simple": {
+              "color": "{surface.500}"
+            }
+          },
+          "contrast": {
+            "background": "{surface.900}",
+            "borderColor": "{surface.950}",
+            "color": "{surface.50}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {surface.950}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{surface.800}",
+              "focusRing": {
+                "color": "{surface.50}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{surface.950}",
+              "borderColor": "{surface.950}"
+            },
+            "simple": {
+              "color": "{surface.950}"
+            }
+          }
+        },
+        "dark": {
+          "info": {
+            "background": "color-mix(in srgb, {blue.500}, transparent 84%)",
+            "borderColor": "color-mix(in srgb, {blue.700}, transparent 64%)",
+            "color": "{blue.500}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {blue.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "rgba(255, 255, 255, 0.05)",
+              "focusRing": {
+                "color": "{blue.500}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{blue.500}",
+              "borderColor": "{blue.500}"
+            },
+            "simple": {
+              "color": "{blue.500}"
+            }
+          },
+          "success": {
+            "background": "color-mix(in srgb, {green.500}, transparent 84%)",
+            "borderColor": "color-mix(in srgb, {green.700}, transparent 64%)",
+            "color": "{green.500}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {green.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "rgba(255, 255, 255, 0.05)",
+              "focusRing": {
+                "color": "{green.500}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{green.500}",
+              "borderColor": "{green.500}"
+            },
+            "simple": {
+              "color": "{green.500}"
+            }
+          },
+          "warn": {
+            "background": "color-mix(in srgb, {yellow.500}, transparent 84%)",
+            "borderColor": "color-mix(in srgb, {yellow.700}, transparent 64%)",
+            "color": "{yellow.500}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {yellow.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "rgba(255, 255, 255, 0.05)",
+              "focusRing": {
+                "color": "{yellow.500}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{yellow.500}",
+              "borderColor": "{yellow.500}"
+            },
+            "simple": {
+              "color": "{yellow.500}"
+            }
+          },
+          "error": {
+            "background": "color-mix(in srgb, {red.500}, transparent 84%)",
+            "borderColor": "color-mix(in srgb, {red.700}, transparent 64%)",
+            "color": "{red.500}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {red.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "rgba(255, 255, 255, 0.05)",
+              "focusRing": {
+                "color": "{red.500}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{red.500}",
+              "borderColor": "{red.500}"
+            },
+            "simple": {
+              "color": "{red.500}"
+            }
+          },
+          "secondary": {
+            "background": "{surface.800}",
+            "borderColor": "{surface.700}",
+            "color": "{surface.300}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {surface.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{surface.700}",
+              "focusRing": {
+                "color": "{surface.300}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{surface.400}",
+              "borderColor": "{surface.400}"
+            },
+            "simple": {
+              "color": "{surface.400}"
+            }
+          },
+          "contrast": {
+            "background": "{surface.0}",
+            "borderColor": "{surface.100}",
+            "color": "{surface.950}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {surface.950}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{surface.100}",
+              "focusRing": {
+                "color": "{surface.950}",
+                "shadow": "none"
+              }
+            },
+            "outlined": {
+              "color": "{surface.0}",
+              "borderColor": "{surface.0}"
+            },
+            "simple": {
+              "color": "{surface.0}"
+            }
+          }
+        }
+      }
+    },
+    "metergroup": {
+      "root": {
+        "borderRadius": "{content.border.radius}",
+        "gap": "1rem"
+      },
+      "meters": {
+        "background": "{content.border.color}",
+        "size": "0.5rem"
+      },
+      "label": {
+        "gap": "0.5rem"
+      },
+      "labelMarker": {
+        "size": "0.5rem"
+      },
+      "labelIcon": {
+        "size": "1rem"
+      },
+      "labelList": {
+        "verticalGap": "0.5rem",
+        "horizontalGap": "1rem"
+      }
+    },
+    "panel": {
+      "root": {
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "color": "{content.color}",
+        "borderRadius": "{content.border.radius}"
+      },
+      "header": {
+        "background": "transparent",
+        "color": "{text.color}",
+        "padding": "1.125rem",
+        "borderColor": "{content.border.color}",
+        "borderWidth": "0",
+        "borderRadius": "0"
+      },
+      "toggleableHeader": {
+        "padding": "0.375rem 1.125rem"
+      },
+      "title": {
+        "fontWeight": "600"
+      },
+      "content": {
+        "padding": "0 1.125rem 1.125rem 1.125rem"
+      },
+      "footer": {
+        "padding": "0 1.125rem 1.125rem 1.125rem"
+      }
+    },
+    "progressbar": {
+      "root": {
+        "background": "{content.border.color}",
+        "borderRadius": "{content.border.radius}",
+        "height": "1.25rem"
+      },
+      "value": {
+        "background": "{primary.color}"
+      },
+      "label": {
+        "color": "{primary.contrast.color}",
+        "fontSize": "0.75rem",
+        "fontWeight": "600"
+      }
+    },
+    "progressspinner": {
+      "colorScheme": {
+        "light": {
+          "root": {
+            "colorOne": "{red.500}",
+            "colorTwo": "{blue.500}",
+            "colorThree": "{green.500}",
+            "colorFour": "{yellow.500}"
+          }
+        },
+        "dark": {
+          "root": {
+            "colorOne": "{red.400}",
+            "colorTwo": "{blue.400}",
+            "colorThree": "{green.400}",
+            "colorFour": "{yellow.400}"
+          }
+        }
+      }
+    },
+    "scrollpanel": {
+      "root": {
+        "transitionDuration": "{transition.duration}"
+      },
+      "bar": {
+        "size": "9px",
+        "borderRadius": "{border.radius.sm}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "colorScheme": {
+        "light": {
+          "bar": {
+            "background": "{surface.100}"
+          }
+        },
+        "dark": {
+          "bar": {
+            "background": "{surface.800}"
+          }
+        }
+      }
+    },
+    "skeleton": {
+      "root": {
+        "borderRadius": "{content.border.radius}"
+      },
+      "colorScheme": {
+        "light": {
+          "root": {
+            "background": "{surface.200}",
+            "animationBackground": "rgba(255,255,255,0.4)"
+          }
+        },
+        "dark": {
+          "root": {
+            "background": "rgba(255, 255, 255, 0.06)",
+            "animationBackground": "rgba(255, 255, 255, 0.04)"
+          }
+        }
+      }
+    },
+    "splitter": {
+      "root": {
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "color": "{content.color}",
+        "transitionDuration": "{transition.duration}"
+      },
+      "gutter": {
+        "background": "{content.border.color}"
+      },
+      "handle": {
+        "size": "24px",
+        "background": "transparent",
+        "borderRadius": "{content.border.radius}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      }
+    },
+    "tag": {
+      "root": {
+        "fontSize": "0.875rem",
+        "fontWeight": "700",
+        "padding": "0.25rem 0.5rem",
+        "gap": "0.25rem",
+        "borderRadius": "{content.border.radius}",
+        "roundedBorderRadius": "{border.radius.xl}"
+      },
+      "icon": {
+        "size": "0.75rem"
+      },
+      "colorScheme": {
+        "light": {
+          "primary": {
+            "background": "{primary.100}",
+            "color": "{primary.700}"
+          },
+          "secondary": {
+            "background": "{surface.100}",
+            "color": "{surface.600}"
+          },
+          "success": {
+            "background": "{green.100}",
+            "color": "{green.700}"
+          },
+          "info": {
+            "background": "{sky.100}",
+            "color": "{sky.700}"
+          },
+          "warn": {
+            "background": "{orange.100}",
+            "color": "{orange.700}"
+          },
+          "danger": {
+            "background": "{red.100}",
+            "color": "{red.700}"
+          },
+          "contrast": {
+            "background": "{surface.950}",
+            "color": "{surface.0}"
+          }
+        },
+        "dark": {
+          "primary": {
+            "background": "color-mix(in srgb, {primary.500}, transparent 84%)",
+            "color": "{primary.300}"
+          },
+          "secondary": {
+            "background": "{surface.800}",
+            "color": "{surface.300}"
+          },
+          "success": {
+            "background": "color-mix(in srgb, {green.500}, transparent 84%)",
+            "color": "{green.300}"
+          },
+          "info": {
+            "background": "color-mix(in srgb, {sky.500}, transparent 84%)",
+            "color": "{sky.300}"
+          },
+          "warn": {
+            "background": "color-mix(in srgb, {orange.500}, transparent 84%)",
+            "color": "{orange.300}"
+          },
+          "danger": {
+            "background": "color-mix(in srgb, {red.500}, transparent 84%)",
+            "color": "{red.300}"
+          },
+          "contrast": {
+            "background": "{surface.0}",
+            "color": "{surface.950}"
+          }
+        }
+      }
+    },
+    "terminal": {
+      "root": {
+        "background": "{form.field.background}",
+        "borderColor": "{form.field.border.color}",
+        "color": "{form.field.color}",
+        "height": "18rem",
+        "padding": "{form.field.padding.y} {form.field.padding.x}",
+        "borderRadius": "{form.field.border.radius}"
+      },
+      "prompt": {
+        "gap": "0.25rem"
+      },
+      "commandResponse": {
+        "margin": "2px 0"
+      }
+    },
+    "timeline": {
+      "event": {
+        "minHeight": "5rem"
+      },
+      "horizontal": {
+        "eventContent": {
+          "padding": "1rem 0"
+        }
+      },
+      "vertical": {
+        "eventContent": {
+          "padding": "0 1rem"
+        }
+      },
+      "eventMarker": {
+        "size": "1.125rem",
+        "borderRadius": "50%",
+        "borderWidth": "2px",
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "content": {
+          "borderRadius": "50%",
+          "size": "0.375rem",
+          "background": "{primary.color}",
+          "insetShadow": "0px 0.5px 0px 0px rgba(0, 0, 0, 0.06), 0px 1px 1px 0px rgba(0, 0, 0, 0.12)"
+        }
+      },
+      "eventConnector": {
+        "color": "{content.border.color}",
+        "size": "2px"
+      }
+    },
+    "toolbar": {
+      "root": {
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "borderRadius": "{content.border.radius}",
+        "color": "{content.color}",
+        "gap": "0.5rem",
+        "padding": "0.75rem"
+      }
+    },
+    "toast": {
+      "root": {
+        "width": "25rem",
+        "borderRadius": "{content.border.radius}",
+        "borderWidth": "1px",
+        "transitionDuration": "{transition.duration}"
+      },
+      "icon": {
+        "size": "1.125rem"
+      },
+      "content": {
+        "padding": "{overlay.popover.padding}",
+        "gap": "0.5rem"
+      },
+      "text": {
+        "gap": "0.5rem"
+      },
+      "summary": {
+        "fontWeight": "500",
+        "fontSize": "1rem"
+      },
+      "detail": {
+        "fontWeight": "500",
+        "fontSize": "0.875rem"
+      },
+      "closeButton": {
+        "width": "1.75rem",
+        "height": "1.75rem",
+        "borderRadius": "50%",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "offset": "{focus.ring.offset}"
+        }
+      },
+      "closeIcon": {
+        "size": "1rem"
+      },
+      "colorScheme": {
+        "light": {
+          "root": {
+            "blur": "1.5px"
+          },
+          "info": {
+            "background": "color-mix(in srgb, {blue.50}, transparent 5%)",
+            "borderColor": "{blue.200}",
+            "color": "{blue.600}",
+            "detailColor": "{surface.700}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {blue.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{blue.100}",
+              "focusRing": {
+                "color": "{blue.600}",
+                "shadow": "none"
+              }
+            }
+          },
+          "success": {
+            "background": "color-mix(in srgb, {green.50}, transparent 5%)",
+            "borderColor": "{green.200}",
+            "color": "{green.600}",
+            "detailColor": "{surface.700}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {green.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{green.100}",
+              "focusRing": {
+                "color": "{green.600}",
+                "shadow": "none"
+              }
+            }
+          },
+          "warn": {
+            "background": "color-mix(in srgb,{yellow.50}, transparent 5%)",
+            "borderColor": "{yellow.200}",
+            "color": "{yellow.600}",
+            "detailColor": "{surface.700}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {yellow.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{yellow.100}",
+              "focusRing": {
+                "color": "{yellow.600}",
+                "shadow": "none"
+              }
+            }
+          },
+          "error": {
+            "background": "color-mix(in srgb, {red.50}, transparent 5%)",
+            "borderColor": "{red.200}",
+            "color": "{red.600}",
+            "detailColor": "{surface.700}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {red.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{red.100}",
+              "focusRing": {
+                "color": "{red.600}",
+                "shadow": "none"
+              }
+            }
+          },
+          "secondary": {
+            "background": "{surface.100}",
+            "borderColor": "{surface.200}",
+            "color": "{surface.600}",
+            "detailColor": "{surface.700}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {surface.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{surface.200}",
+              "focusRing": {
+                "color": "{surface.600}",
+                "shadow": "none"
+              }
+            }
+          },
+          "contrast": {
+            "background": "{surface.900}",
+            "borderColor": "{surface.950}",
+            "color": "{surface.50}",
+            "detailColor": "{surface.0}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {surface.950}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{surface.800}",
+              "focusRing": {
+                "color": "{surface.50}",
+                "shadow": "none"
+              }
+            }
+          }
+        },
+        "dark": {
+          "root": {
+            "blur": "10px"
+          },
+          "info": {
+            "background": "color-mix(in srgb, {blue.500}, transparent 84%)",
+            "borderColor": "color-mix(in srgb, {blue.700}, transparent 64%)",
+            "color": "{blue.500}",
+            "detailColor": "{surface.0}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {blue.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "rgba(255, 255, 255, 0.05)",
+              "focusRing": {
+                "color": "{blue.500}",
+                "shadow": "none"
+              }
+            }
+          },
+          "success": {
+            "background": "color-mix(in srgb, {green.500}, transparent 84%)",
+            "borderColor": "color-mix(in srgb, {green.700}, transparent 64%)",
+            "color": "{green.500}",
+            "detailColor": "{surface.0}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {green.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "rgba(255, 255, 255, 0.05)",
+              "focusRing": {
+                "color": "{green.500}",
+                "shadow": "none"
+              }
+            }
+          },
+          "warn": {
+            "background": "color-mix(in srgb, {yellow.500}, transparent 84%)",
+            "borderColor": "color-mix(in srgb, {yellow.700}, transparent 64%)",
+            "color": "{yellow.500}",
+            "detailColor": "{surface.0}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {yellow.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "rgba(255, 255, 255, 0.05)",
+              "focusRing": {
+                "color": "{yellow.500}",
+                "shadow": "none"
+              }
+            }
+          },
+          "error": {
+            "background": "color-mix(in srgb, {red.500}, transparent 84%)",
+            "borderColor": "color-mix(in srgb, {red.700}, transparent 64%)",
+            "color": "{red.500}",
+            "detailColor": "{surface.0}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {red.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "rgba(255, 255, 255, 0.05)",
+              "focusRing": {
+                "color": "{red.500}",
+                "shadow": "none"
+              }
+            }
+          },
+          "secondary": {
+            "background": "{surface.800}",
+            "borderColor": "{surface.700}",
+            "color": "{surface.300}",
+            "detailColor": "{surface.0}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {surface.500}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{surface.700}",
+              "focusRing": {
+                "color": "{surface.300}",
+                "shadow": "none"
+              }
+            }
+          },
+          "contrast": {
+            "background": "{surface.0}",
+            "borderColor": "{surface.100}",
+            "color": "{surface.950}",
+            "detailColor": "{surface.950}",
+            "shadow": "0px 4px 8px 0px color-mix(in srgb, {surface.950}, transparent 96%)",
+            "closeButton": {
+              "hoverBackground": "{surface.100}",
+              "focusRing": {
+                "color": "{surface.950}",
+                "shadow": "none"
+              }
+            }
+          }
+        }
       }
     }
   }

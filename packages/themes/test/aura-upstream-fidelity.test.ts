@@ -30,8 +30,8 @@ describe("Aura upstream fidelity (committed fixture)", () => {
     expect([...upstreamKeys].sort()).toEqual(expected);
   });
 
-  it.each(upstreamKeys)("%s deep-equals the upstream snapshot", (key) => {
-    expect(auraPreset.components[key]).toEqual(upstream[key]);
+  it.each(upstreamKeys)("%s strictly deep-equals the upstream snapshot", (key) => {
+    expect(auraPreset.components[key]).toStrictEqual(upstream[key]);
   });
 
   // The fixture itself is checked against the readable vendored source where
