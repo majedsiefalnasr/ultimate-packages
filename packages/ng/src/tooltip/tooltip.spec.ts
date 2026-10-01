@@ -33,6 +33,20 @@ describe("UTooltip", () => {
     expect(tooltip!.textContent).toContain("Save changes");
   });
 
+  it("forces the tooltip container visible with an inline display (GAP-066)", () => {
+    // The shared `.u-tooltip` stylesheet rule is `display: none`, so the
+    // container needs an inline display override to ever be visible in a
+    // real browser. jsdom does not apply the stylesheet, so the inline style
+    // itself is what can be asserted here.
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector("button");
+    button.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
+    fixture.detectChanges();
+    const tooltip = document.querySelector('[role="tooltip"]') as HTMLElement;
+    expect(tooltip.style.display).toBe("inline-block");
+  });
+
   it("hides the tooltip on mouseleave", () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();

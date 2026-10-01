@@ -127,6 +127,10 @@ export class UTooltip extends UBaseComponent {
     this.renderer.setAttribute(container, "id", this.idGenerator.next("u_tooltip"));
     this.renderer.setAttribute(container, "class", this.cx("root") ?? "");
     this.renderer.setAttribute(container, "role", "tooltip");
+    // The shared `.u-tooltip` rule is `display: none`; an inline display
+    // outranks it (GAP-066). Set at creation, before `align()` measures the
+    // container, since a `display: none` element measures 0x0.
+    this.renderer.setStyle(container, "display", "inline-block");
 
     const arrow = this.renderer.createElement("div") as HTMLElement;
     this.renderer.setAttribute(arrow, "class", this.cx("arrow") ?? "");

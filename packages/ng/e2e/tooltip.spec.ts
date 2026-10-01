@@ -10,28 +10,21 @@ import { runAccessibilityScan, storyUrl } from "./accessibility-envelope";
  * (jsdom's getBoundingClientRect is always zeroed, so it cannot assert
  * real coordinates), position-specific class, disabled suppression.
  *
- * REAL-BROWSER FINDING (documented here, not fixed — out of Task 6's
- * scope, which may not modify any Angular component/style source):
- * `packages/uix-styles/src/tooltip/index.ts`'s `.u-tooltip` rule is
- * `position: absolute; display: none;` with no companion rule (no
- * `.u-tooltip-visible`/`.u-tooltip-open` modifier, etc.) that ever flips
- * `display` back on — `tooltip.ts`'s `show()` never adds such a class
- * either. So in a real browser, the tooltip element is genuinely created
- * with the correct `role="tooltip"`, text, and computed left/top position
- * styles on real hover, but its computed `display` stays `none` and it is
- * never actually visible on screen — a real CSS gap the jsdom-based Vitest
- * suite cannot detect at all (jsdom does not apply real stylesheet rules
- * from `uix-styles`' registered `<style>` element the way a real browser
- * does). Confirmed via isolated trace inspection (Playwright reports
- * "hover action done" and the DOM node exists with the right attributes,
- * but `getComputedStyle(tooltip).display === "none"`).
+ * GAP-066 FIX (verified here, in a real browser): `UTooltip.create()`
+ * (packages/ng/src/tooltip/tooltip.ts) now sets an inline `display:
+ * inline-block` style on the container, which outranks the shared
+ * `@ultimate/uix-styles/tooltip` base `.u-tooltip { display: none }` rule
+ * (jsdom does not apply that stylesheet, so only a real browser can prove
+ * the tooltip is actually displayed). The tooltip is now genuinely visible
+ * on real hover, in addition to the correct `role="tooltip"`, text, and
+ * computed left/top position styles.
  *
- * This file proves that real, verified behavior directly, and confirms
+ * This file proves the fixed, visible behavior directly, and confirms
  * `uTooltipDisabled` genuinely never even creates the node on hover
- * (distinct from the enabled case's node-exists-but-hidden state).
+ * (distinct from the enabled case's node-exists-and-is-visible state).
  */
 test.describe("Ng/Tooltip", () => {
-  test("Default story: real hover creates the tooltip node with the right role/text/position styling, though it is not visually displayed", async ({
+  test("Default story: real hover creates a visible tooltip node with the right role/text/position styling", async ({
     page,
   }) => {
     await page.goto(storyUrl("ng-tooltip--default"));
@@ -54,17 +47,23 @@ test.describe("Ng/Tooltip", () => {
     // align()'s real math against the button's real layout box.
     const styleLeft = await tooltip.evaluate((el) => (el as HTMLElement).style.left);
     const styleTop = await tooltip.evaluate((el) => (el as HTMLElement).style.top);
-    expect(Number.parseFloat(styleLeft)).toBeGreaterThan(0);
-    expect(Number.parseFloat(styleTop)).toBeGreaterThanOrEqual(0);
+    // Now that the container is displayed when align() measures it, it has a
+    // real size: a tooltip wider than the near-edge trigger is centred past
+    // the viewport's left edge and clamped to 0, and sits above the trigger
+    // ("top" position, no vertical clamp), so top may be negative.
+    const buttonBox = await button.boundingBox();
+    expect(buttonBox).not.toBeNull();
+    expect(Number.parseFloat(styleLeft)).toBeGreaterThanOrEqual(0);
+    expect(Number.parseFloat(styleTop)).toBeLessThan(buttonBox!.y);
 
-    // Real, verified gap: uix-styles' `.u-tooltip { display: none; }` rule
-    // has no companion "visible" modifier class ever applied by
-    // tooltip.ts's show(), so the real computed display stays "none" even
-    // though the node exists with correct content/attributes/position —
-    // provable only against a real browser's stylesheet cascade, which
-    // jsdom does not apply.
+    // Verified fix (GAP-066): create() sets an inline `display: inline-block`
+    // that outranks the base `.u-tooltip { display: none }` rule, so the
+    // tooltip is genuinely visible. Asserting `not.toBe("none")` rather than
+    // an exact value keeps this robust across browsers' computed-style
+    // reporting.
+    await expect(tooltip).toBeVisible();
     const computedDisplay = await tooltip.evaluate((el) => getComputedStyle(el).display);
-    expect(computedDisplay).toBe("none");
+    expect(computedDisplay).not.toBe("none");
   });
 
   test("Default story: visual regression", async ({ page }) => {
@@ -122,7 +121,7 @@ test.describe("Ng/Tooltip", () => {
     await page.goto(storyUrl("ng-tooltip--disabled"));
     const button = page.getByRole("button");
     await button.hover();
-    // Distinct from the enabled stories' node-exists-but-hidden state:
+    // Distinct from the enabled stories' node-exists-and-is-visible state:
     // uTooltipDisabled short-circuits show() before create() ever runs,
     // so no tooltip node is created at all, not merely hidden.
     await expect(page.locator('[role="tooltip"]')).toHaveCount(0);
