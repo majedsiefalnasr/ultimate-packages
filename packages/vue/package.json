@@ -458,6 +458,26 @@
       "types": "./dist/deferred-content/index.d.mts",
       "import": "./dist/deferred-content/index.mjs",
       "default": "./dist/deferred-content/index.mjs"
+    },
+    "./data-view": {
+      "types": "./dist/data-view/index.d.mts",
+      "import": "./dist/data-view/index.mjs",
+      "default": "./dist/data-view/index.mjs"
+    },
+    "./order-list": {
+      "types": "./dist/order-list/index.d.mts",
+      "import": "./dist/order-list/index.mjs",
+      "default": "./dist/order-list/index.mjs"
+    },
+    "./organization-chart": {
+      "types": "./dist/organization-chart/index.d.mts",
+      "import": "./dist/organization-chart/index.mjs",
+      "default": "./dist/organization-chart/index.mjs"
+    },
+    "./pick-list": {
+      "types": "./dist/pick-list/index.d.mts",
+      "import": "./dist/pick-list/index.mjs",
+      "default": "./dist/pick-list/index.mjs"
     }
   },
   "files": [
