@@ -1,6 +1,6 @@
 # Specification — Theming: Aura Per-Component Preset Coverage Expansion (GAP-064)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Batches 1-3 tranche implemented on `feature/prime-parity-audit-gaps` (2026-10-01); corrections in §12; GAP-064 remains PARTIAL.
 **Date:** 2026-09-26
 **Branch:** `feature/prime-parity-audit-gaps`
 **Origin:** the exhaustive Prime-vs-Ultimate parity audit's residual-Unverified verification "Aura Preset Token Completeness" (`aura-token-verification.md`), the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger, and GAP-064.

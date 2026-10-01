@@ -1,6 +1,6 @@
 # Specification — Existing Commitments: Angular Tooltip Visibility, UMenu Popup + SplitButton, React/Vue tsup Subpath Extension, Angular ng-packagr Extension (GAP-066–GAP-068, GAP-070)
 
-**Status:** Implemented on `feature/prime-parity-audit-gaps` (2026-10-01); implementation-stage corrections in §13. GAP status changes are recorded at the branch closeout.
+**Status:** Implemented on `feature/prime-parity-audit-gaps` (2026-10-01); implementation-stage corrections in §13. GAP-066–GAP-068 and GAP-070 marked RESOLVED at the branch closeout (2026-10-01).
 **Date:** 2026-09-26 (updated 2026-09-26 — GAP-070 integrated following its registration during the Scope Reconciliation stage)
 **Branch:** `feature/prime-parity-audit-gaps`
 **Origin:** the exhaustive Prime-vs-Ultimate parity audit's Final Consolidated Decision Ledger and Final Scope Ledger (classifying four items as COMPLETE EXISTING COMMITMENT), the pre-Spec tracking reconciliation (this session), GAP-066/GAP-067/GAP-068, the Scope Reconciliation Report (this session), and GAP-070.

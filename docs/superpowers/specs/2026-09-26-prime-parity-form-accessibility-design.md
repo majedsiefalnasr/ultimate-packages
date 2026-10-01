@@ -1,6 +1,6 @@
 # Specification — Form/Accessibility: SelectButton Roving-Tabindex, FileUpload Progress ARIA, Vue Password Disclosure ARIA (GAP-059–GAP-061)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Implemented on `feature/prime-parity-audit-gaps` (2026-09-30); implementation-stage corrections in §12 (GAP-059 React only); GAP-059–GAP-061 marked RESOLVED at the branch closeout (2026-10-01).
 **Date:** 2026-09-26
 **Branch:** `feature/prime-parity-audit-gaps`
 **Origin:** the exhaustive Prime-vs-Ultimate parity audit (Batch 6 — depth-closure pass), its Triage, the Consolidated Pass 1 Report, the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger, and GAP-059 through GAP-061.

@@ -1,6 +1,6 @@
 # Specification — Navigation: Steps, Menubar/TieredMenu/MegaMenu/PanelMenu, Dock, SpeedDial Keyboard Navigation; Angular `routerLink`; React Tabs `scrollable`/`closable` (GAP-052–GAP-058, GAP-069)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Implemented on `feature/prime-parity-audit-gaps` (2026-09-30); corrections in §12; GAP-052–GAP-058 and GAP-069 marked RESOLVED at the branch closeout (2026-10-01).
 **Date:** 2026-09-26 (updated 2026-09-26 — GAP-069 integrated following its registration during the Scope Reconciliation stage)
 **Branch:** `feature/prime-parity-audit-gaps`
 **Origin:** the exhaustive Prime-vs-Ultimate parity audit (Batch 3 — Navigation family), its Findings Triage, the Consolidated Pass 1 Report, the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger, GAP-052 through GAP-058, and GAP-069 (registered following this Spec's own §12 disclosure and the subsequent Scope Reconciliation Report).

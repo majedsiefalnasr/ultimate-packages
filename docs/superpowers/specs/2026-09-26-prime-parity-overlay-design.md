@@ -1,6 +1,6 @@
 # Specification — Overlay: Angular Dialog Scroll-Lock, ConfirmDialog Role Semantics (GAP-048–GAP-049)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Implemented on `feature/prime-parity-audit-gaps` (`a3d3ddf`, `5cefdb6`, `8ac8d7f`); GAP-048/GAP-049 marked RESOLVED at the branch closeout (2026-10-01).
 **Date:** 2026-09-26
 **Branch:** `feature/prime-parity-audit-gaps`
 **Origin:** the exhaustive Prime-vs-Ultimate parity audit (Batch 2 — Overlay family), its Findings Triage, the Consolidated Pass 1 Report, the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger, and GAP-048/GAP-049.

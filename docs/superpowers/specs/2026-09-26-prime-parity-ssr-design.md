@@ -1,6 +1,6 @@
 # Specification — SSR: Post-Track-E Angular Unguarded `window`/`document` Access (GAP-065)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Implemented on `feature/prime-parity-audit-gaps` (2026-10-01); implementation-stage corrections in §12; GAP-065 marked RESOLVED at the branch closeout (2026-10-01).
 **Date:** 2026-09-26
 **Branch:** `feature/prime-parity-audit-gaps`
 **Origin:** the exhaustive Prime-vs-Ultimate parity audit's residual-Unverified verification "Post-Track-E SSR Status" (`ssr-post-track-e-verification.md`), the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger, and GAP-065.

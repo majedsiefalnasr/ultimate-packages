@@ -1,6 +1,6 @@
 # Specification — Display: Galleria Keyboard/Escape/Region, Carousel `aria-live` (GAP-050–GAP-051)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Implemented on `feature/prime-parity-audit-gaps`; Plan corrections `4d48825`, `a087cd7`, `1d492a7` (thumbnail keyboard activation widened to all 3 frameworks); GAP-050/GAP-051 marked RESOLVED at the branch closeout (2026-10-01).
 **Date:** 2026-09-26
 **Branch:** `feature/prime-parity-audit-gaps`
 **Origin:** the exhaustive Prime-vs-Ultimate parity audit (Batch 5 — Panel/Layout/Display family), its Findings Triage, the Consolidated Pass 1 Report, the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger, and GAP-050/GAP-051.

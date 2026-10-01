@@ -1,6 +1,6 @@
 # Specification — Table: Templating, Selection, Editing, Expansion, Row-Grouping, Loading States, Keyboard Selection (GAP-041–GAP-047)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Implemented on `feature/prime-parity-audit-gaps` (Table Plan, 2026-09-27..2026-09-30); GAP-041–GAP-047 marked RESOLVED at the branch closeout (2026-10-01).
 **Date:** 2026-09-26
 **Branch:** `feature/prime-parity-audit-gaps`
 **Origin:** the exhaustive Prime-vs-Ultimate parity audit (Batch 4 — Data family), its Findings Triage, the Consolidated Pass 1 Report, the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger (Scope Freeze reconciliation), and the GAP stage (`docs/architecture/BLUEPRINT_GAPS.md` GAP-041 through GAP-047).

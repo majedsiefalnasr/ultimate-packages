@@ -1,6 +1,6 @@
 # Specification — Vue: Tabs PageUp/PageDown, Stepper Vertical Separator (GAP-062–GAP-063)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Implemented on `feature/prime-parity-audit-gaps` (2026-09-30); implementation-stage corrections in §12; GAP-062/GAP-063 marked RESOLVED at the branch closeout (2026-10-01).
 **Date:** 2026-09-26
 **Branch:** `feature/prime-parity-audit-gaps`
 **Origin:** the exhaustive Prime-vs-Ultimate parity audit's residual-Unverified verification "Vue Tabs/Stepper Internal Behavior" (`vue-tabs-stepper-verification.md`), the Findings Decision/Scope Triage, the Final Consolidated Decision Ledger, the Final Scope Ledger, and GAP-062/GAP-063.
