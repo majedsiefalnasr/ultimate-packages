@@ -1,6 +1,6 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, PLATFORM_ID, ViewChild } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { UPopover } from "./popover";
 
 @Component({
@@ -116,5 +116,31 @@ describe("UPopover", () => {
     expect(document.querySelector(".u-popover")).not.toBeNull();
 
     fixture.nativeElement.remove();
+  });
+
+  describe("SSR safety (GAP-065)", () => {
+    it("reaches no browser globals on the server platform through mount, change detection and destroy", () => {
+      TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+      const spies = {
+        winAdd: vi.spyOn(window, "addEventListener"),
+        winRemove: vi.spyOn(window, "removeEventListener"),
+        docAdd: vi.spyOn(document, "addEventListener"),
+        docRemove: vi.spyOn(document, "removeEventListener"),
+        scrollX: vi.spyOn(window, "scrollX", "get"),
+        scrollY: vi.spyOn(window, "scrollY", "get"),
+      };
+      try {
+        const fixture = TestBed.createComponent(HostComponent);
+        fixture.detectChanges();
+        fixture.detectChanges();
+        fixture.destroy();
+
+        for (const [spyName, spy] of Object.entries(spies)) {
+          expect(spy, spyName).not.toHaveBeenCalled();
+        }
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
   });
 });
