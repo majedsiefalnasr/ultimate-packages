@@ -119,7 +119,7 @@ import { menuStyleModule } from "./menu-style";
   template: `
     @if (popup()) {
       @if (render()) {
-        <div uOverlay [visible]="visible()" [appendTo]="resolvedAppendTo()">
+        <div uOverlay [visible]="visible()" [appendTo]="overlayAppendTo()">
           <ng-container [ngTemplateOutlet]="menuPanel" />
         </div>
       }
@@ -188,10 +188,8 @@ export class UMenu extends UBaseComponent {
   protected readonly visible = signal(false);
   protected readonly render = signal(false);
 
-  protected readonly resolvedAppendTo = computed<"body" | HTMLElement>(() => {
-    const appendTo = this.appendTo();
-    return typeof appendTo === "function" ? appendTo() : (appendTo ?? "body");
-  });
+  /** `appendTo` resolved at each `show()`, so a function form is re-evaluated per open. */
+  protected readonly overlayAppendTo = signal<"body" | HTMLElement>("body");
 
   /**
    * Model index of the first rendered `<a role="menuitem">` (i.e. the first
@@ -232,8 +230,13 @@ export class UMenu extends UBaseComponent {
     if (!this.popup() || this.visible()) {
       return;
     }
-    event.stopPropagation();
+    // The opening event is left to propagate (React parity): other popups'
+    // outside-click listeners close them and app-level document listeners
+    // still see it. This popup's own listener ignores it because its target
+    // lies inside `this.target` (the event's currentTarget).
     this.target = (event.currentTarget ?? event.target) as HTMLElement | null;
+    const appendTo = this.appendTo();
+    this.overlayAppendTo.set(typeof appendTo === "function" ? appendTo() : (appendTo ?? "body"));
     this.visible.set(true);
     this.render.set(true);
     if (isPlatformBrowser(this.platformId)) {

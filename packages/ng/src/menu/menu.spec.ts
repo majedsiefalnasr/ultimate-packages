@@ -400,6 +400,76 @@ describe("UMenu", () => {
       fixture.nativeElement.remove();
     });
 
+    it("does not stop the opening click: a second popup's opening click closes the first, and document listeners still see it", () => {
+      @Component({
+        standalone: true,
+        imports: [UMenu],
+        template: `
+          <button id="a" (click)="a.toggle($event)">A</button>
+          <u-menu #a [popup]="true" [model]="model"></u-menu>
+          <button id="b" (click)="b.toggle($event)">B</button>
+          <u-menu #b [popup]="true" [model]="model"></u-menu>
+        `,
+      })
+      class TwoMenusHost {
+        @ViewChild("a") a!: UMenu;
+        @ViewChild("b") b!: UMenu;
+        model: UMenuItem[] = [{ label: "Run" }];
+      }
+      const fixture = TestBed.createComponent(TwoMenusHost);
+      document.body.appendChild(fixture.nativeElement);
+      fixture.detectChanges();
+      const appListener = vi.fn();
+      document.addEventListener("click", appListener);
+      try {
+        const isOpen = (menu: UMenu) =>
+          fixture.debugElement
+            .queryAll(By.directive(UMenu))
+            .find((de) => de.componentInstance === menu)!
+            .query(By.css('[role="menu"]')) !== null;
+
+        fixture.nativeElement.querySelector("#a").click();
+        fixture.detectChanges();
+        expect(isOpen(fixture.componentInstance.a)).toBe(true);
+        expect(appListener).toHaveBeenCalledTimes(1);
+
+        fixture.nativeElement.querySelector("#b").click();
+        fixture.detectChanges();
+        expect(isOpen(fixture.componentInstance.b)).toBe(true);
+        expect(isOpen(fixture.componentInstance.a)).toBe(false);
+        expect(appListener).toHaveBeenCalledTimes(2);
+      } finally {
+        document.removeEventListener("click", appListener);
+        fixture.nativeElement.remove();
+      }
+    });
+
+    it("resolves a function-form appendTo on each open", async () => {
+      const first = document.createElement("div");
+      const second = document.createElement("div");
+      document.body.append(first, second);
+      try {
+        let target = first;
+        const fixture = createPopup({ appendTo: () => target });
+        fixture.componentInstance.show(new MouseEvent("click"));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(first.contains(panel(fixture))).toBe(true);
+
+        fixture.componentInstance.hide();
+        fixture.detectChanges();
+        target = second;
+        fixture.componentInstance.show(new MouseEvent("click"));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(second.contains(panel(fixture))).toBe(true);
+        fixture.destroy();
+      } finally {
+        first.remove();
+        second.remove();
+      }
+    });
+
     it("hides on window resize", () => {
       const fixture = createPopup();
       fixture.componentInstance.show(new MouseEvent("click"));
