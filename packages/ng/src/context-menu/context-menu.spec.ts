@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, PLATFORM_ID } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { describe, expect, it, vi } from "vitest";
 import { UContextMenu } from "./context-menu";
@@ -150,5 +150,59 @@ describe("UContextMenu", () => {
     expect(document.querySelector(".u-contextmenu")).toBeNull();
 
     fixture.nativeElement.remove();
+  });
+
+  describe("SSR safety (GAP-065)", () => {
+    @Component({
+      standalone: true,
+      imports: [UContextMenu],
+      template: `<u-context-menu [model]="items" [global]="true"></u-context-menu>`,
+    })
+    class GlobalHostComponent {
+      items = items;
+    }
+
+    it("reaches no browser globals on the server platform with global=true", () => {
+      TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+      const spies = {
+        winAdd: vi.spyOn(window, "addEventListener"),
+        winRemove: vi.spyOn(window, "removeEventListener"),
+        computed: vi.spyOn(window, "getComputedStyle"),
+        docAdd: vi.spyOn(document, "addEventListener"),
+        docRemove: vi.spyOn(document, "removeEventListener"),
+      };
+      try {
+        const fixture = TestBed.createComponent(GlobalHostComponent);
+        fixture.detectChanges();
+        fixture.destroy();
+
+        for (const [name, spy] of Object.entries(spies)) {
+          expect(spy, name).not.toHaveBeenCalled();
+        }
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
+
+    it("still registers the global contextmenu listener and shows the menu in the browser", () => {
+      const docAdd = vi.spyOn(document, "addEventListener");
+      const docRemove = vi.spyOn(document, "removeEventListener");
+      try {
+        const fixture = TestBed.createComponent(GlobalHostComponent);
+        fixture.detectChanges();
+        expect(docAdd).toHaveBeenCalledWith("contextmenu", expect.any(Function));
+
+        const event = new MouseEvent("contextmenu", { bubbles: true, cancelable: true });
+        document.body.dispatchEvent(event);
+        fixture.detectChanges();
+        expect(event.defaultPrevented).toBe(true);
+        expect(document.querySelector(".u-contextmenu")).not.toBeNull();
+
+        fixture.destroy();
+        expect(docRemove).toHaveBeenCalledWith("contextmenu", expect.any(Function));
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
   });
 });

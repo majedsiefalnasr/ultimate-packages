@@ -8,6 +8,7 @@ import {
   output,
   signal,
 } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { UBaseComponent, UOverlay, type UMenuItem } from "@ultimate/ng-core";
 import { ESCAPE_PRIORITIES, escapeRegistry } from "@ultimate/uix-utils/escape";
 import { ZIndex } from "@ultimate/uix-utils/zindex";
@@ -120,7 +121,7 @@ export class UContextMenu extends UBaseComponent {
 
   ngOnInit(): void {
     super.ngOnInit();
-    if (this.global()) {
+    if (this.global() && isPlatformBrowser(this.platformId)) {
       this.documentContextMenuListener = (event: MouseEvent) => this.show(event);
       document.addEventListener("contextmenu", this.documentContextMenuListener);
     }

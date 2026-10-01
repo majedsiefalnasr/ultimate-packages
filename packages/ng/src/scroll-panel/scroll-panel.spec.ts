@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, PLATFORM_ID, ViewChild } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { describe, expect, it, vi } from "vitest";
 import { UScrollPanel } from "./scroll-panel";
@@ -129,5 +129,61 @@ describe("UScrollPanel", () => {
     expect(preventDefaultSpy).toHaveBeenCalled();
 
     xBar.dispatchEvent(new FocusEvent("blur"));
+  });
+
+  describe("SSR safety (GAP-065)", () => {
+    @Component({
+      standalone: true,
+      imports: [UScrollPanel],
+      template: `<u-scroll-panel style="height: 50px;"><div style="height: 500px;">tall</div></u-scroll-panel>`,
+    })
+    class SsrHostComponent {}
+
+    function spyOnBrowserGlobals() {
+      return {
+        winAdd: vi.spyOn(window, "addEventListener"),
+        winRemove: vi.spyOn(window, "removeEventListener"),
+        computed: vi.spyOn(window, "getComputedStyle"),
+        docAdd: vi.spyOn(document, "addEventListener"),
+        docRemove: vi.spyOn(document, "removeEventListener"),
+        // moveBar() schedules requestAnimationFrame; spy on it directly because
+        // Angular's own test scheduler also uses rAF, so a window-level spy is noisy.
+        moveBar: vi.spyOn(UScrollPanel.prototype as unknown as { moveBar(): void }, "moveBar"),
+      };
+    }
+
+    it("reaches no browser globals on the server platform", async () => {
+      TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+      const spies = spyOnBrowserGlobals();
+      try {
+        const fixture = TestBed.createComponent(SsrHostComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.destroy();
+
+        for (const [name, spy] of Object.entries(spies)) {
+          expect(spy, name).not.toHaveBeenCalled();
+        }
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
+
+    it("still measures and registers the resize listener in the browser", async () => {
+      const spies = spyOnBrowserGlobals();
+      try {
+        const fixture = TestBed.createComponent(SsrHostComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(spies.computed).toHaveBeenCalled();
+        expect(spies.winAdd).toHaveBeenCalledWith("resize", expect.any(Function));
+
+        fixture.destroy();
+        expect(spies.winRemove).toHaveBeenCalledWith("resize", expect.any(Function));
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
   });
 });
