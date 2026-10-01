@@ -3,7 +3,7 @@
     "source": "@primeuix/themes@2.0.3 (MIT, https://github.com/primefaces/primeuix) - dist/aura/<module>/index.mjs default export",
     "generatedFrom": "pinned npm tarball of @primeuix/themes@2.0.3; each module key is the upstream directory name (= auraPreset.components key)",
     "method": "one-off scratch script: dynamic import() of each dist/aura/<module>/index.mjs, JSON.stringify of the default export, 2-space indent; no hand edits. Also cross-checked deep-equal against the readable .vendor-extracted/themes/src/presets/aura/<module>/index.ts sources.",
-    "scope": "Task 1 Form family (24 modules) + Task 2 Overlay family (6 modules); later tasks append their modules",
+    "scope": "Task 1 Form family (24 modules) + Task 2 Overlay family (6 modules) + Task 3 Navigation family (11 modules); later tasks append their modules",
     "purpose": "CI-runnable upstream-fidelity snapshot (the .vendor-extracted directory is gitignored). Test data only, not shipped source."
   },
   "modules": {
@@ -1339,6 +1339,456 @@
           "width": "2px",
           "color": "{content.background}"
         }
+      }
+    },
+    "breadcrumb": {
+      "root": {
+        "padding": "1rem",
+        "background": "{content.background}",
+        "gap": "0.5rem",
+        "transitionDuration": "{transition.duration}"
+      },
+      "item": {
+        "color": "{text.muted.color}",
+        "hoverColor": "{text.color}",
+        "borderRadius": "{content.border.radius}",
+        "gap": "{navigation.item.gap}",
+        "icon": {
+          "color": "{navigation.item.icon.color}",
+          "hoverColor": "{navigation.item.icon.focus.color}"
+        },
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "separator": {
+        "color": "{navigation.item.icon.color}"
+      }
+    },
+    "megamenu": {
+      "root": {
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "borderRadius": "{content.border.radius}",
+        "color": "{content.color}",
+        "gap": "0.5rem",
+        "verticalOrientation": {
+          "padding": "{navigation.list.padding}",
+          "gap": "{navigation.list.gap}"
+        },
+        "horizontalOrientation": {
+          "padding": "0.5rem 0.75rem",
+          "gap": "0.5rem"
+        },
+        "transitionDuration": "{transition.duration}"
+      },
+      "baseItem": {
+        "borderRadius": "{content.border.radius}",
+        "padding": "{navigation.item.padding}"
+      },
+      "item": {
+        "focusBackground": "{navigation.item.focus.background}",
+        "activeBackground": "{navigation.item.active.background}",
+        "color": "{navigation.item.color}",
+        "focusColor": "{navigation.item.focus.color}",
+        "activeColor": "{navigation.item.active.color}",
+        "padding": "{navigation.item.padding}",
+        "borderRadius": "{navigation.item.border.radius}",
+        "gap": "{navigation.item.gap}",
+        "icon": {
+          "color": "{navigation.item.icon.color}",
+          "focusColor": "{navigation.item.icon.focus.color}",
+          "activeColor": "{navigation.item.icon.active.color}"
+        }
+      },
+      "overlay": {
+        "padding": "0",
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "borderRadius": "{content.border.radius}",
+        "color": "{content.color}",
+        "shadow": "{overlay.navigation.shadow}",
+        "gap": "0.5rem"
+      },
+      "submenu": {
+        "padding": "{navigation.list.padding}",
+        "gap": "{navigation.list.gap}"
+      },
+      "submenuLabel": {
+        "padding": "{navigation.submenu.label.padding}",
+        "fontWeight": "{navigation.submenu.label.font.weight}",
+        "background": "{navigation.submenu.label.background}",
+        "color": "{navigation.submenu.label.color}"
+      },
+      "submenuIcon": {
+        "size": "{navigation.submenu.icon.size}",
+        "color": "{navigation.submenu.icon.color}",
+        "focusColor": "{navigation.submenu.icon.focus.color}",
+        "activeColor": "{navigation.submenu.icon.active.color}"
+      },
+      "separator": {
+        "borderColor": "{content.border.color}"
+      },
+      "mobileButton": {
+        "borderRadius": "50%",
+        "size": "1.75rem",
+        "color": "{text.muted.color}",
+        "hoverColor": "{text.hover.muted.color}",
+        "hoverBackground": "{content.hover.background}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      }
+    },
+    "menubar": {
+      "root": {
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "borderRadius": "{content.border.radius}",
+        "color": "{content.color}",
+        "gap": "0.5rem",
+        "padding": "0.5rem 0.75rem",
+        "transitionDuration": "{transition.duration}"
+      },
+      "baseItem": {
+        "borderRadius": "{content.border.radius}",
+        "padding": "{navigation.item.padding}"
+      },
+      "item": {
+        "focusBackground": "{navigation.item.focus.background}",
+        "activeBackground": "{navigation.item.active.background}",
+        "color": "{navigation.item.color}",
+        "focusColor": "{navigation.item.focus.color}",
+        "activeColor": "{navigation.item.active.color}",
+        "padding": "{navigation.item.padding}",
+        "borderRadius": "{navigation.item.border.radius}",
+        "gap": "{navigation.item.gap}",
+        "icon": {
+          "color": "{navigation.item.icon.color}",
+          "focusColor": "{navigation.item.icon.focus.color}",
+          "activeColor": "{navigation.item.icon.active.color}"
+        }
+      },
+      "submenu": {
+        "padding": "{navigation.list.padding}",
+        "gap": "{navigation.list.gap}",
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "borderRadius": "{content.border.radius}",
+        "shadow": "{overlay.navigation.shadow}",
+        "mobileIndent": "1rem",
+        "icon": {
+          "size": "{navigation.submenu.icon.size}",
+          "color": "{navigation.submenu.icon.color}",
+          "focusColor": "{navigation.submenu.icon.focus.color}",
+          "activeColor": "{navigation.submenu.icon.active.color}"
+        }
+      },
+      "separator": {
+        "borderColor": "{content.border.color}"
+      },
+      "mobileButton": {
+        "borderRadius": "50%",
+        "size": "1.75rem",
+        "color": "{text.muted.color}",
+        "hoverColor": "{text.hover.muted.color}",
+        "hoverBackground": "{content.hover.background}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      }
+    },
+    "panelmenu": {
+      "root": {
+        "gap": "0.5rem",
+        "transitionDuration": "{transition.duration}"
+      },
+      "panel": {
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "borderWidth": "1px",
+        "color": "{content.color}",
+        "padding": "0.25rem 0.25rem",
+        "borderRadius": "{content.border.radius}",
+        "first": {
+          "borderWidth": "1px",
+          "topBorderRadius": "{content.border.radius}"
+        },
+        "last": {
+          "borderWidth": "1px",
+          "bottomBorderRadius": "{content.border.radius}"
+        }
+      },
+      "item": {
+        "focusBackground": "{navigation.item.focus.background}",
+        "color": "{navigation.item.color}",
+        "focusColor": "{navigation.item.focus.color}",
+        "gap": "0.5rem",
+        "padding": "{navigation.item.padding}",
+        "borderRadius": "{content.border.radius}",
+        "icon": {
+          "color": "{navigation.item.icon.color}",
+          "focusColor": "{navigation.item.icon.focus.color}"
+        }
+      },
+      "submenu": {
+        "indent": "1rem"
+      },
+      "submenuIcon": {
+        "color": "{navigation.submenu.icon.color}",
+        "focusColor": "{navigation.submenu.icon.focus.color}"
+      }
+    },
+    "tieredmenu": {
+      "root": {
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "color": "{content.color}",
+        "borderRadius": "{content.border.radius}",
+        "shadow": "{overlay.navigation.shadow}",
+        "transitionDuration": "{transition.duration}"
+      },
+      "list": {
+        "padding": "{navigation.list.padding}",
+        "gap": "{navigation.list.gap}"
+      },
+      "item": {
+        "focusBackground": "{navigation.item.focus.background}",
+        "activeBackground": "{navigation.item.active.background}",
+        "color": "{navigation.item.color}",
+        "focusColor": "{navigation.item.focus.color}",
+        "activeColor": "{navigation.item.active.color}",
+        "padding": "{navigation.item.padding}",
+        "borderRadius": "{navigation.item.border.radius}",
+        "gap": "{navigation.item.gap}",
+        "icon": {
+          "color": "{navigation.item.icon.color}",
+          "focusColor": "{navigation.item.icon.focus.color}",
+          "activeColor": "{navigation.item.icon.active.color}"
+        }
+      },
+      "submenu": {
+        "mobileIndent": "1rem"
+      },
+      "submenuIcon": {
+        "size": "{navigation.submenu.icon.size}",
+        "color": "{navigation.submenu.icon.color}",
+        "focusColor": "{navigation.submenu.icon.focus.color}",
+        "activeColor": "{navigation.submenu.icon.active.color}"
+      },
+      "separator": {
+        "borderColor": "{content.border.color}"
+      }
+    },
+    "tabs": {
+      "root": {
+        "transitionDuration": "{transition.duration}"
+      },
+      "tablist": {
+        "borderWidth": "0 0 1px 0",
+        "background": "{content.background}",
+        "borderColor": "{content.border.color}"
+      },
+      "tab": {
+        "background": "transparent",
+        "hoverBackground": "transparent",
+        "activeBackground": "transparent",
+        "borderWidth": "0 0 1px 0",
+        "borderColor": "{content.border.color}",
+        "hoverBorderColor": "{content.border.color}",
+        "activeBorderColor": "{primary.color}",
+        "color": "{text.muted.color}",
+        "hoverColor": "{text.color}",
+        "activeColor": "{primary.color}",
+        "padding": "1rem 1.125rem",
+        "fontWeight": "600",
+        "margin": "0 0 -1px 0",
+        "gap": "0.5rem",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "-1px",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "tabpanel": {
+        "background": "{content.background}",
+        "color": "{content.color}",
+        "padding": "0.875rem 1.125rem 1.125rem 1.125rem",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "inset {focus.ring.shadow}"
+        }
+      },
+      "navButton": {
+        "background": "{content.background}",
+        "color": "{text.muted.color}",
+        "hoverColor": "{text.color}",
+        "width": "2.5rem",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "-1px",
+          "shadow": "{focus.ring.shadow}"
+        }
+      },
+      "activeBar": {
+        "height": "1px",
+        "bottom": "-1px",
+        "background": "{primary.color}"
+      },
+      "colorScheme": {
+        "light": {
+          "navButton": {
+            "shadow": "0px 0px 10px 50px rgba(255, 255, 255, 0.6)"
+          }
+        },
+        "dark": {
+          "navButton": {
+            "shadow": "0px 0px 10px 50px color-mix(in srgb, {content.background}, transparent 50%)"
+          }
+        }
+      }
+    },
+    "stepper": {
+      "root": {
+        "transitionDuration": "{transition.duration}"
+      },
+      "separator": {
+        "background": "{content.border.color}",
+        "activeBackground": "{primary.color}",
+        "margin": "0 0 0 1.625rem",
+        "size": "2px"
+      },
+      "step": {
+        "padding": "0.5rem",
+        "gap": "1rem"
+      },
+      "stepHeader": {
+        "padding": "0",
+        "borderRadius": "{content.border.radius}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        },
+        "gap": "0.5rem"
+      },
+      "stepTitle": {
+        "color": "{text.muted.color}",
+        "activeColor": "{primary.color}",
+        "fontWeight": "500"
+      },
+      "stepNumber": {
+        "background": "{content.background}",
+        "activeBackground": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "activeBorderColor": "{content.border.color}",
+        "color": "{text.muted.color}",
+        "activeColor": "{primary.color}",
+        "size": "2rem",
+        "fontSize": "1.143rem",
+        "fontWeight": "500",
+        "borderRadius": "50%",
+        "shadow": "0px 0.5px 0px 0px rgba(0, 0, 0, 0.06), 0px 1px 1px 0px rgba(0, 0, 0, 0.12)"
+      },
+      "steppanels": {
+        "padding": "0.875rem 0.5rem 1.125rem 0.5rem"
+      },
+      "steppanel": {
+        "background": "{content.background}",
+        "color": "{content.color}",
+        "padding": "0",
+        "indent": "1rem"
+      }
+    },
+    "steps": {
+      "root": {
+        "transitionDuration": "{transition.duration}"
+      },
+      "separator": {
+        "background": "{content.border.color}"
+      },
+      "itemLink": {
+        "borderRadius": "{content.border.radius}",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        },
+        "gap": "0.5rem"
+      },
+      "itemLabel": {
+        "color": "{text.muted.color}",
+        "activeColor": "{primary.color}",
+        "fontWeight": "500"
+      },
+      "itemNumber": {
+        "background": "{content.background}",
+        "activeBackground": "{content.background}",
+        "borderColor": "{content.border.color}",
+        "activeBorderColor": "{content.border.color}",
+        "color": "{text.muted.color}",
+        "activeColor": "{primary.color}",
+        "size": "2rem",
+        "fontSize": "1.143rem",
+        "fontWeight": "500",
+        "borderRadius": "50%",
+        "shadow": "0px 0.5px 0px 0px rgba(0, 0, 0, 0.06), 0px 1px 1px 0px rgba(0, 0, 0, 0.12)"
+      }
+    },
+    "dock": {
+      "root": {
+        "background": "rgba(255, 255, 255, 0.1)",
+        "borderColor": "rgba(255, 255, 255, 0.2)",
+        "padding": "0.5rem",
+        "borderRadius": "{border.radius.xl}"
+      },
+      "item": {
+        "borderRadius": "{content.border.radius}",
+        "padding": "0.5rem",
+        "size": "3rem",
+        "focusRing": {
+          "width": "{focus.ring.width}",
+          "style": "{focus.ring.style}",
+          "color": "{focus.ring.color}",
+          "offset": "{focus.ring.offset}",
+          "shadow": "{focus.ring.shadow}"
+        }
+      }
+    },
+    "speeddial": {
+      "root": {
+        "gap": "0.5rem",
+        "transitionDuration": "{transition.duration}"
+      }
+    },
+    "splitbutton": {
+      "root": {
+        "borderRadius": "{form.field.border.radius}",
+        "roundedBorderRadius": "2rem",
+        "raisedShadow": "0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12)"
       }
     }
   }

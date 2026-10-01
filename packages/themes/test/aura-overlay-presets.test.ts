@@ -17,7 +17,8 @@ interface OverlayModule {
 
 // Key lists below were derived from `@primeuix/themes@2.0.3` (aura/<module>/index.mjs).
 // None of the six Overlay-family modules has a `colorScheme` split upstream.
-// Deep equality against upstream lives in aura-upstream-fidelity.test.ts.
+// Deep equality against upstream lives in aura-upstream-fidelity.test.ts, which is
+// also the single source of truth for the exact registered set.
 const OVERLAY_MODULES: OverlayModule[] = [
   { file: "popover", exportName: "popover", upstream: "popover", keys: ["root", "content"] },
   {
@@ -45,38 +46,6 @@ const OVERLAY_MODULES: OverlayModule[] = [
     keys: ["root", "content", "icon", "footer"],
   },
   { file: "overlay-badge", exportName: "overlayBadge", upstream: "overlaybadge", keys: ["root"] },
-];
-
-const EXISTING_KEYS = [
-  "button",
-  "checkbox",
-  "dialog",
-  "menu",
-  "tooltip",
-  "radiobutton",
-  "toggleswitch",
-  "togglebutton",
-  "inputtext",
-  "textarea",
-  "inputnumber",
-  "inputotp",
-  "password",
-  "autocomplete",
-  "select",
-  "multiselect",
-  "cascadeselect",
-  "listbox",
-  "selectbutton",
-  "rating",
-  "slider",
-  "knob",
-  "colorpicker",
-  "datepicker",
-  "fileupload",
-  "iconfield",
-  "floatlabel",
-  "inputchips",
-  "iftalabel",
 ];
 
 const modules = import.meta.glob<Record<string, unknown>>("../src/presets/aura/*.ts", {
@@ -116,21 +85,9 @@ describe("Aura Overlay-family preset modules", () => {
     });
   });
 
-  describe("auraPreset registration", () => {
-    it("registers all 35 components (5 proof-set + 24 Form-family + 6 Overlay-family)", () => {
-      const expected = [...EXISTING_KEYS, ...OVERLAY_MODULES.map((m) => m.upstream)].sort();
-      expect(Object.keys(auraPreset.components).sort()).toEqual(expected);
-      expect(expected).toHaveLength(35);
-    });
-  });
-
   describe("applyUltimateTheme with the Overlay-family modules", () => {
     beforeAll(() => {
       applyUltimateTheme();
-    });
-
-    it("keeps the theme applied with all 35 components", () => {
-      expect(Object.keys(Theme.getTheme()?.preset?.components ?? {})).toHaveLength(35);
     });
 
     it("emits CSS variables for popover", () => {

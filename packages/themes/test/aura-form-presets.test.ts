@@ -17,7 +17,8 @@ interface FormModule {
   colorScheme: boolean;
 }
 
-// Deep equality against upstream lives in aura-upstream-fidelity.test.ts (committed fixture).
+// Deep equality against upstream lives in aura-upstream-fidelity.test.ts (committed fixture),
+// which is also the single source of truth for the exact registered set.
 // Key lists below were derived from `@primeuix/themes@2.0.3` (aura/<module>/index.mjs).
 const FORM_MODULES: FormModule[] = [
   {
@@ -240,8 +241,6 @@ const FORM_MODULES: FormModule[] = [
   },
 ];
 
-const EXISTING_KEYS = ["button", "checkbox", "dialog", "menu", "tooltip"];
-
 const modules = import.meta.glob<Record<string, unknown>>("../src/presets/aura/*.ts", {
   eager: true,
 });
@@ -283,15 +282,6 @@ describe("Aura Form-family preset modules", () => {
 
     it("resolves every {token.path} reference against base.ts in light and dark", () => {
       expect(unresolvedReferences(ultimateModule(mod))).toEqual([]);
-    });
-  });
-
-  describe("auraPreset registration", () => {
-    it("registers every Form-family module plus the proof-set (total count is asserted by the newest family's test)", () => {
-      const registered = Object.keys(auraPreset.components);
-      for (const key of [...EXISTING_KEYS, ...FORM_MODULES.map((m) => m.upstream)]) {
-        expect(registered).toContain(key);
-      }
     });
   });
 
