@@ -16,7 +16,11 @@ import {
 import { NgTemplateOutlet, isPlatformBrowser } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { ComponentIdGenerator, UBaseComponent, UOverlay, type UMenuItem } from "@ultimate/ng-core";
-import { ESCAPE_PRIORITIES, displayOrderRegistry, escapeRegistry } from "@ultimate/uix-utils/escape";
+import {
+  ESCAPE_PRIORITIES,
+  displayOrderRegistry,
+  escapeRegistry,
+} from "@ultimate/uix-utils/escape";
 import { ZIndex } from "@ultimate/uix-utils/zindex";
 import { URipple } from "../ripple";
 import { UTooltip } from "../tooltip";
@@ -253,7 +257,8 @@ export class UMenu extends UBaseComponent {
    * Hides the popup. `event` is accepted for parity with `show`/`toggle`
    * and React's `hide(event?)` handle; it is not read.
    */
-  hide(_event?: Event): void {
+  hide(event?: Event): void {
+    void event;
     if (!this.visible()) {
       return;
     }

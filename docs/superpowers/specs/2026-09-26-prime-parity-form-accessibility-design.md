@@ -31,11 +31,11 @@
 
 ## 3. Framework Applicability
 
-| Gap | Angular | React | Vue |
-|---|---|---|---|
-| GAP-059 (SelectButton roving-tabindex) | **Explicitly out of scope — confirmed matching its own real upstream (§12)** | In scope | **Explicitly out of scope — confirmed matching its own real upstream** |
-| GAP-060 (FileUpload progress ARIA) | In scope | In scope | In scope |
-| GAP-061 (Password disclosure ARIA) | **Explicitly out of scope — confirmed no upstream equivalent exists** | **Explicitly out of scope — confirmed no upstream equivalent exists** | In scope |
+| Gap                                    | Angular                                                                      | React                                                                 | Vue                                                                    |
+| -------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| GAP-059 (SelectButton roving-tabindex) | **Explicitly out of scope — confirmed matching its own real upstream (§12)** | In scope                                                              | **Explicitly out of scope — confirmed matching its own real upstream** |
+| GAP-060 (FileUpload progress ARIA)     | In scope                                                                     | In scope                                                              | In scope                                                               |
+| GAP-061 (Password disclosure ARIA)     | **Explicitly out of scope — confirmed no upstream equivalent exists**        | **Explicitly out of scope — confirmed no upstream equivalent exists** | In scope                                                               |
 
 ---
 
@@ -86,13 +86,13 @@ None. GAP-059, GAP-060, and GAP-061 are independent of each other and of every o
 
 ## 9. Acceptance Criteria
 
-| Criterion | Traces to |
-|---|---|
-| SelectButton roving-tabindex with Arrow-key focus movement matching PrimeReact — React | GAP-059 |
-| Vue and Angular SelectButton unchanged (no roving-tabindex added) | GAP-059 (non-regression) |
-| FileUpload composes `UProgressBar` for upload progress, inheriting its correct ARIA — all 3 frameworks | GAP-060 |
-| Vue Password input carries `aria-haspopup`/`aria-expanded`/`aria-controls` for the strength overlay, plus two `aria-live` regions, matching real PrimeVue | GAP-061 |
-| Angular/React Password unchanged (no disclosure-pattern ARIA added) | GAP-061 (non-regression) |
+| Criterion                                                                                                                                                 | Traces to                |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| SelectButton roving-tabindex with Arrow-key focus movement matching PrimeReact — React                                                                    | GAP-059                  |
+| Vue and Angular SelectButton unchanged (no roving-tabindex added)                                                                                         | GAP-059 (non-regression) |
+| FileUpload composes `UProgressBar` for upload progress, inheriting its correct ARIA — all 3 frameworks                                                    | GAP-060                  |
+| Vue Password input carries `aria-haspopup`/`aria-expanded`/`aria-controls` for the strength overlay, plus two `aria-live` regions, matching real PrimeVue | GAP-061                  |
+| Angular/React Password unchanged (no disclosure-pattern ARIA added)                                                                                       | GAP-061 (non-regression) |
 
 ---
 

@@ -12,11 +12,11 @@
 
 **GAP → Task mapping:**
 
-| GAP | Task(s) |
-|---|---|
-| GAP-059 | Task 2 (React) — Task 1 (Angular) withdrawn |
+| GAP     | Task(s)                                        |
+| ------- | ---------------------------------------------- |
+| GAP-059 | Task 2 (React) — Task 1 (Angular) withdrawn    |
 | GAP-060 | Task 3 (Angular), Task 4 (React), Task 5 (Vue) |
-| GAP-061 | Task 6 (Vue only) |
+| GAP-061 | Task 6 (Vue only)                              |
 
 ## Global Constraints
 
@@ -45,6 +45,7 @@ Not implemented. Step 1's required source check found real PrimeNG 21.1.9 Select
 **Composition constraint (found pre-dispatch 2026-09-30; user decision recorded in Spec §12):** `USelectButton` composes `UToggleButton`, which renders a native `<input type="checkbox" disabled>` and exposed no `tabIndex` prop; PrimeReact renders its own focusable item per option. Decision: add one optional `tabIndex?: number` prop to `UToggleButton`, forwarded to its `<input>` (omitted → current behavior unchanged); handle arrow keys on `USelectButton`'s `role="group"` container (keydown bubbles from the focused input); skip disabled options, since a native-disabled input cannot receive focus. No other `UToggleButton` changes.
 
 **Target behavior (real PrimeReact 10.9.9, `SelectButton.js:16,101`, `SelectButtonItem.js:41-94`; Spec §5.1), with the two recorded differences:**
+
 - A `focusedIndex` state, initially the first enabled option (PrimeReact: `0`; differs only when option 0 is disabled, because a disabled input cannot hold the tab stop). Each option's tabindex is `0` when it is the `focusedIndex` option and the component is not `disabled`, otherwise `-1`.
 - Keydown, matching on `event.code`: `ArrowRight`/`ArrowDown` → next enabled option, `ArrowLeft`/`ArrowUp` → previous enabled option, wrapping at both ends; `preventDefault()`; set `focusedIndex` and move DOM focus. Arrows move focus only, never selection.
 - `Space` selects (keep `UToggleButton`'s existing activation; do not add a second toggle path). Note: `UToggleButton`'s existing Space handling double-toggles in real browsers — a pre-existing defect not visible in jsdom, registered separately as GAP-075 and not fixed here.
@@ -112,6 +113,7 @@ Import `UProgressBar` and add it to the component's `imports` array. Replace the
 **Files:** `packages/vue/src/password/Password.vue`, `password.spec.ts`, `password-style.ts` (style file added 2026-09-30 — see hidden-span note below).
 
 **Target behavior (real PrimeVue 4.5.5, `packages/primevue/src/password/Password.vue:13-15,44-45,57-58`; Spec §5.3). Corrected 2026-09-30 — this task originally put the ARIA on the mask-toggle `<svg role="button">` icons with `aria-expanded` tracking the mask state, which does not match real PrimeVue; see Spec §12.**
+
 - On the **input**: `aria-haspopup` bound to `feedback`; `aria-expanded` bound to `overlayVisible`; `aria-controls` = the strength overlay's id while `overlayVisible`, otherwise absent.
 - The strength overlay element (inside the existing `UPortal`) gets that id plus `role="dialog"` and `aria-live="polite"`. Generate the id with this codebase's existing Vue unique-id pattern (find and reuse it; do not add a new mechanism). Do not add new public props such as `overlayId`/`panelId`.
 - A visually hidden span with `aria-live="polite"` rendering `{{ infoText }}`, always rendered (PrimeVue `:44-45`, class `p-hidden-accessible`). **Updated 2026-09-30 (user decision after Task 6 stop):** the codebase has no CSS for `p-hidden-accessible`/`u-hidden-accessible` (pre-existing defect registered separately as GAP-074, not fixed here). Hide the span with a Password-owned class and a standard visually-hidden rule (1px, clip, absolute, overflow hidden, no margin/padding/border) added to `packages/vue/src/password/password-style.ts`; do not add shared/base styling.

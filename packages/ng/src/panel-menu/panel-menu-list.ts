@@ -226,7 +226,9 @@ export class UPanelMenuList extends UBaseComponent {
   private getItemLinks(): HTMLAnchorElement[] {
     const ul = (this.el.nativeElement as HTMLElement).querySelector("ul");
     return ul
-      ? Array.from(ul.querySelectorAll<HTMLAnchorElement>(":scope > li > .u-panelmenu-header-content > a"))
+      ? Array.from(
+          ul.querySelectorAll<HTMLAnchorElement>(":scope > li > .u-panelmenu-header-content > a")
+        )
       : [];
   }
 
@@ -236,7 +238,9 @@ export class UPanelMenuList extends UBaseComponent {
   }
 
   private moveFocus(current: UMenuItem, direction: 1 | -1): void {
-    const enabled = this.items.filter((candidate) => candidate.visible !== false && !candidate.disabled);
+    const enabled = this.items.filter(
+      (candidate) => candidate.visible !== false && !candidate.disabled
+    );
     if (enabled.length === 0) return;
     const currentIndex = enabled.indexOf(current);
     const startIndex = currentIndex === -1 ? 0 : currentIndex;

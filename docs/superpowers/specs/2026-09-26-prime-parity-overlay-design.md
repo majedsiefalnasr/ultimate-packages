@@ -30,10 +30,10 @@
 
 ## 3. Framework Applicability
 
-| Gap | Angular | React | Vue |
-|---|---|---|---|
-| GAP-048 (scroll-lock) | In scope | N/A (React Dialog is unaffected — no scroll-lock gap identified for React) | N/A (not identified as a gap for Vue) |
-| GAP-049 (ConfirmDialog role) | In scope | **Explicitly out of scope — confirmed matching its own upstream** | In scope |
+| Gap                          | Angular  | React                                                                      | Vue                                   |
+| ---------------------------- | -------- | -------------------------------------------------------------------------- | ------------------------------------- |
+| GAP-048 (scroll-lock)        | In scope | N/A (React Dialog is unaffected — no scroll-lock gap identified for React) | N/A (not identified as a gap for Vue) |
+| GAP-049 (ConfirmDialog role) | In scope | **Explicitly out of scope — confirmed matching its own upstream**          | In scope                              |
 
 ---
 
@@ -77,13 +77,13 @@ None. GAP-048 and GAP-049 are independent of each other and of every other GAP i
 
 ## 9. Acceptance Criteria
 
-| Criterion | Traces to |
-|---|---|
-| Background page does not scroll while a modal `UDialog` is open (Angular); scroll restores on close | GAP-048 |
-| Angular `ConfirmDialog` renders `role="alertdialog"` | GAP-049 |
-| Vue `ConfirmDialog` renders `role="alertdialog"` | GAP-049 |
-| React `ConfirmDialog`/`Dialog` role is unchanged (still matches its own real upstream) | GAP-049 (negative/non-regression criterion) |
-| `UDialog`'s/`Dialog.vue`'s own default (non-confirm) role remains `role="dialog"`, unchanged | GAP-049 (negative/non-regression criterion) |
+| Criterion                                                                                           | Traces to                                   |
+| --------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| Background page does not scroll while a modal `UDialog` is open (Angular); scroll restores on close | GAP-048                                     |
+| Angular `ConfirmDialog` renders `role="alertdialog"`                                                | GAP-049                                     |
+| Vue `ConfirmDialog` renders `role="alertdialog"`                                                    | GAP-049                                     |
+| React `ConfirmDialog`/`Dialog` role is unchanged (still matches its own real upstream)              | GAP-049 (negative/non-regression criterion) |
+| `UDialog`'s/`Dialog.vue`'s own default (non-confirm) role remains `role="dialog"`, unchanged        | GAP-049 (negative/non-regression criterion) |
 
 ---
 

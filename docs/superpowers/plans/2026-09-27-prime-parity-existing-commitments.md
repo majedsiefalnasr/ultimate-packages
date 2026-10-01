@@ -10,16 +10,17 @@
 
 **GAP → Task mapping:**
 
-| GAP | Task(s) |
-|---|---|
-| GAP-066 | Task 1 |
+| GAP     | Task(s)                                                       |
+| ------- | ------------------------------------------------------------- |
+| GAP-066 | Task 1                                                        |
 | GAP-067 | Task 2 (build popup mechanism), Task 3 (simplify SplitButton) |
-| GAP-068 | Task 4 (React), Task 5 (Vue) |
-| GAP-070 | Task 6 (characterization), Task 7 (fix, gated on Task 6) |
+| GAP-068 | Task 4 (React), Task 5 (Vue)                                  |
+| GAP-070 | Task 6 (characterization), Task 7 (fix, gated on Task 6)      |
 
 **Corrections (2026-10-01, pre-dispatch check, user decisions — see Spec §12):**
+
 1. **TS2729 prerequisite (supersedes the Global Constraint "TS2729 is not addressed by any task" for this one blocker).** `pnpm --filter @ultimate/ng build` fails at the primary entry point with TS2729 ("Property 'instanceCount' is used before its initialization") in `packages/ng/src/autocomplete/autocomplete.ts:156` and `packages/ng/src/select/select.ts:162`, so no ng-packagr build — and therefore no Task 6 characterization — is possible. User decision: a new **Task 5b** fixes it minimally before Task 6 (declare each `private static instanceCount` before the instance field that reads it; no behavior change; existing tests must still pass; a full `@ultimate/ng` build must then get past these errors — any further build error is reported, not fixed).
-2. **Advertised-but-unbuilt subpaths.** `packages/ng/package.json` `exports` already lists 81 component subpaths, but only 9 components have an `ng-package.json`, so 72 advertised subpaths point at artifacts the build never produces. Task 7 therefore *reconciles* rather than only adds: it adds entry points for components Task 6 marks passing (their `exports` entries mostly already exist), and reports the remaining advertised subpaths with no entry point (Task 6 failures plus GAP-009's excluded five) for a user decision on whether to keep or remove them — it does not remove them on its own.
+2. **Advertised-but-unbuilt subpaths.** `packages/ng/package.json` `exports` already lists 81 component subpaths, but only 9 components have an `ng-package.json`, so 72 advertised subpaths point at artifacts the build never produces. Task 7 therefore _reconciles_ rather than only adds: it adds entry points for components Task 6 marks passing (their `exports` entries mostly already exist), and reports the remaining advertised subpaths with no entry point (Task 6 failures plus GAP-009's excluded five) for a user decision on whether to keep or remove them — it does not remove them on its own.
 3. Task 1 (revised after Task 1 stop, user decisions): (a) the Angular Storybook preview never provided `ComponentIdGenerator` (an app-provided `@Injectable()`, provided by the playground and unit tests), so every Tooltip and Dialog story fails with NG0201 and the Tooltip e2e cannot run — Task 1 adds it to the global providers in `packages/ng/.storybook/preview.ts` (tooling only); (b) the root cause is `.u-tooltip { display: none }` in `packages/uix-styles/src/tooltip/index.ts`; the inline `display: inline-block` is set in `create()`, not at the end of `align()` as Step 2 originally said, because `align()` measures the container first and a `display: none` element measures 0×0 (Vue's GAP-039 fix also sets it at creation); (c) visual baselines are generated in a Linux container to match CI and Docker is unavailable locally — Task 1 does not regenerate baselines; functional e2e assertions are verified locally, and the Tooltip (and, if affected, Dialog) visual baselines must be regenerated in the Linux container before merge.
 4. Task 2 (after Task 2 stop, user decisions): (a) Escape registers at `ESCAPE_PRIORITIES.MENU`, not `OVERLAY_PANEL` — menu-type components use `MENU` (Angular `context-menu.ts:236`, React `menu.tsx:159`), consistent with the Review Focus; (b) "topmost" is decided by open order via `displayOrderRegistry` (group `"menu"`), as React's `useDisplayOrder` and Angular `UImage` (`image.ts:183-189`) do, not by UPopover's creation-order `instanceUid`; (c) `UOverlay` has no `baseZIndex` input (only `visible`/`appendTo`, base 1000), so `UMenu` applies `ZIndex.set("menu", <panel>, baseZIndex)` to its own panel and clears it on hide/destroy (default 0, matching Vue), as UPopover/UContextMenu/Vue Menu do — `UOverlay` is unchanged; (d) Step 1 test 8 has no UPopover assertion to copy — write it fresh against the panel's z-index and the overlay's `appendTo`. Clear-from-source behaviors: item click runs the command then hides (React `menu.tsx:312-313`); outside click and window resize hide (UPopover); anchor via the trigger's `getBoundingClientRect()`; `isPlatformBrowser` guards. Mechanical: `escapeRegistry` matches `event.code`; a function-form `appendTo` is resolved in `UMenu` (fallback `"body"`); `hide(event?)`; `toggle` is a no-op in inline mode.
 5. Tasks 2+3 land together (after Task 2's second stop, user decision): making `popup` real hides `<u-menu [popup]="true">` until `show()`/`toggle()`, which breaks `USplitButton` (it renders the popup menu itself, `split-button.ts:68-72`) and the Menu `Popup` story (no trigger, `menu.stories.ts:49-55`; e2e `packages/ng/e2e/menu.spec.ts:73-82`). Task 3 is done in the same change so every commit stays green, with one joint review. GAP-067 also covers the story/e2e: add a trigger button to the `Popup` story that calls `toggle($event)`, make its e2e click it first, and add its screenshot baseline to the "regenerate in the Linux container before merge" list.
@@ -48,7 +49,7 @@
 ## Review Focus
 
 - **`UMenu`'s new popup mode combined with an already-open instance when a second `UMenu` is toggled open** — matching React's own `displayOrder`/Escape-priority-registry pattern (confirmed present in React's `UMenu` via `useDisplayOrder`/`ESCAPE_PRIORITIES`), a reasonable person expects Angular's own new popup mechanism to participate in the same cross-instance Escape-priority arbitration `UDialog`/`UPopover` already use (`escapeRegistry`), not a naive single-global-listener that would let two open popups' Escape handlers both fire on one keypress.
-- **`USplitButton`'s existing consumers relying on its own current hand-rolled overlay's specific CSS classes/DOM structure** — Task 3's own simplification changes `USplitButton`'s internal implementation; its test suite must confirm the *externally observable* behavior (menu opens/closes, items are clickable, ARIA roles present) is unchanged, not merely that internal delegation happened.
+- **`USplitButton`'s existing consumers relying on its own current hand-rolled overlay's specific CSS classes/DOM structure** — Task 3's own simplification changes `USplitButton`'s internal implementation; its test suite must confirm the _externally observable_ behavior (menu opens/closes, items are clickable, ARIA roles present) is unchanged, not merely that internal delegation happened.
 - **GAP-070's characterization step producing a false negative** (a component that doesn't hit the `ShimReferenceTagger` trigger during a quick check but would under a full build) — Task 6's own verification must be a real `ng-packagr` build attempt per component, not a static import-graph guess, matching GAP-009's own original characterization methodology (a real, reproducible repro, not inferred).
 
 ---
@@ -56,6 +57,7 @@
 ### Task 1: Angular — GAP-066 Tooltip visibility fix
 
 **Files:**
+
 - Modify: `packages/ng/src/tooltip/tooltip.ts`
 - Test: `packages/ng/e2e/tooltip.spec.ts` (real-browser Playwright test, confirmed already present and currently asserting the known failure per GAP-066's own evidence)
 
@@ -80,6 +82,7 @@ In `packages/ng/src/tooltip/tooltip.ts`'s `align()` method, add one line alongsi
 ### Task 2: Angular — GAP-067 build UMenu's popup-overlay mechanism
 
 **Files:**
+
 - Modify: `packages/ng/src/menu/menu.ts`
 - Test: `packages/ng/src/menu/menu.spec.ts`
 
@@ -196,6 +199,7 @@ describe("popup-overlay mechanism (Spec §5.2, GAP-067)", () => {
 ### Task 3: Angular — GAP-067 simplify USplitButton to delegate to UMenu's popup
 
 **Files:**
+
 - Modify: `packages/ng/src/split-button/split-button.ts`
 - Test: `packages/ng/src/split-button/split-button.spec.ts`
 

@@ -768,9 +768,11 @@ export function UTable<T>({
   const exitRowEdit = (row: T) => {
     const key = String(resolveCell(row, dataKey ?? ""));
     setEditingMeta((current) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to omit the row's key
       const { [key]: _discardedDraft, ...rest } = current;
       return rest;
     });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to omit the row's key
     const { [key]: _wasEditing, ...remainingKeys } = resolvedEditingRows;
     if (onRowEditChange) {
       onRowEditChange(remainingKeys);

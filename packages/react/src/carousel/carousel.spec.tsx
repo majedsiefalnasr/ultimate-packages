@@ -85,16 +85,16 @@ describe("UCarousel", () => {
       const { container } = render(
         <UCarousel value={items} itemTemplate={(item) => item} autoplayInterval={3000} />
       );
-      expect(
-        container.querySelector("[data-u-carousel-content]")?.getAttribute("aria-live")
-      ).toBe("polite");
+      expect(container.querySelector("[data-u-carousel-content]")?.getAttribute("aria-live")).toBe(
+        "polite"
+      );
     });
 
     it("sets aria-live=off (not absent) when autoplayInterval is 0 (autoplay disabled), matching real PrimeReact's own always-rendered attribute", () => {
       const { container } = render(<UCarousel value={items} itemTemplate={(item) => item} />);
-      expect(
-        container.querySelector("[data-u-carousel-content]")?.getAttribute("aria-live")
-      ).toBe("off");
+      expect(container.querySelector("[data-u-carousel-content]")?.getAttribute("aria-live")).toBe(
+        "off"
+      );
     });
   });
 });

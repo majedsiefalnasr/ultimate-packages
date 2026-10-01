@@ -135,7 +135,11 @@ describe("UDock", () => {
     it("skips disabled items when moving focus", () => {
       TestBed.configureTestingModule({ providers: [provideRouter([])] });
       const fixture = TestBed.createComponent(UDock);
-      fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }]);
+      fixture.componentRef.setInput("model", [
+        { label: "A" },
+        { label: "B", disabled: true },
+        { label: "C" },
+      ]);
       fixture.detectChanges();
       const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
       items[0].focus();
@@ -144,7 +148,12 @@ describe("UDock", () => {
     });
 
     it("resolves the correct target when a hidden item precedes it (GAP-054 lesson applied proactively)", () => {
-      const model: UMenuItem[] = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+      const model: UMenuItem[] = [
+        { label: "A" },
+        { label: "Hidden", visible: false },
+        { label: "B" },
+        { label: "C" },
+      ];
       const fixture = setup(model);
       const items = fixture.nativeElement.querySelectorAll('[role="menuitem"]');
       // Rendered items are [A, B, C] (Hidden renders no <a>).

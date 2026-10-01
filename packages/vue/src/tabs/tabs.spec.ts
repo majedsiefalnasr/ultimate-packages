@@ -102,7 +102,8 @@ describe("Tabs family (UTabs/UTabList/UTab/UTabPanels/UTabPanel)", () => {
 
     beforeEach(() => {
       scrollSpy = vi.fn();
-      Element.prototype.scrollIntoView = scrollSpy as unknown as typeof Element.prototype.scrollIntoView;
+      Element.prototype.scrollIntoView =
+        scrollSpy as unknown as typeof Element.prototype.scrollIntoView;
     });
     afterEach(() => {
       Element.prototype.scrollIntoView = original;

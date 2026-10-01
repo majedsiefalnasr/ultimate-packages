@@ -32,18 +32,18 @@
 
 ## 3. Framework Applicability
 
-| Gap | Angular | React | Vue |
-|---|---|---|---|
-| GAP-066 (Tooltip visibility) | In scope | N/A (different, already-safe mechanism — off-screen positioning, not `display: none`) | N/A (already fixed, GAP-039) |
-| GAP-067 (UMenu popup + SplitButton) | In scope | N/A (already has working popup mechanism) | N/A (already has working popup mechanism) |
-| GAP-068 (tsup subpath exports) | N/A (uses a structurally different mechanism, `ng-packagr`, tracked by GAP-009/023/GAP-070) | In scope | In scope |
-| GAP-070 (ng-packagr extension to newer components) | In scope | N/A (React already has per-component subpath exports for its own components, unaffected) | N/A (Vue already has per-component subpath exports for its own components, unaffected) |
+| Gap                                                | Angular                                                                                     | React                                                                                    | Vue                                                                                    |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| GAP-066 (Tooltip visibility)                       | In scope                                                                                    | N/A (different, already-safe mechanism — off-screen positioning, not `display: none`)    | N/A (already fixed, GAP-039)                                                           |
+| GAP-067 (UMenu popup + SplitButton)                | In scope                                                                                    | N/A (already has working popup mechanism)                                                | N/A (already has working popup mechanism)                                              |
+| GAP-068 (tsup subpath exports)                     | N/A (uses a structurally different mechanism, `ng-packagr`, tracked by GAP-009/023/GAP-070) | In scope                                                                                 | In scope                                                                               |
+| GAP-070 (ng-packagr extension to newer components) | In scope                                                                                    | N/A (React already has per-component subpath exports for its own components, unaffected) | N/A (Vue already has per-component subpath exports for its own components, unaffected) |
 
 ---
 
 ## 4. Existing Behavior
 
-- **GAP-066:** Angular's `UTooltip` has the same effective visibility defect GAP-039 already fixed for Vue — confirmed by Angular's own existing e2e test (`packages/ng/e2e/tooltip.spec.ts`, `expect(computedDisplay).toBe("none")`), which was already in the repository, undisclosed by GAP-039's own original text, when GAP-039 was first written. GAP-039's own resolved entry explicitly discloses this and explicitly disclaims tracking it: *"Angular's gap remains a separately disclosed, not-yet-registered fact; it is not tracked by this entry."*
+- **GAP-066:** Angular's `UTooltip` has the same effective visibility defect GAP-039 already fixed for Vue — confirmed by Angular's own existing e2e test (`packages/ng/e2e/tooltip.spec.ts`, `expect(computedDisplay).toBe("none")`), which was already in the repository, undisclosed by GAP-039's own original text, when GAP-039 was first written. GAP-039's own resolved entry explicitly discloses this and explicitly disclaims tracking it: _"Angular's gap remains a separately disclosed, not-yet-registered fact; it is not tracked by this entry."_
 - **GAP-067:** `UMenu`'s own doc comment (`packages/ng/src/menu/menu.ts:38-44`) explicitly discloses that its `popup` input is currently inert, "awaiting a future task" to extend its input/output surface for the popup overlay. `USplitButton` currently implements its own hand-rolled overlay state as a workaround rather than delegating to `UMenu`'s popup mode.
 - **GAP-068:** `tsup.config.ts`'s `entry` map (React and Vue, independently) is stale relative to the components actually shipped since it was last updated — confirmed empirically via a real build during the Overlay Findings Triage: the main package barrel is fully unaffected (esbuild bundles transitively), but per-component subpath exports fail for components added after the map was last updated.
 - **GAP-070:** GAP-009's own RESOLVED scope covers only the original 9 proof-set components; `button`/`dialog`/`menu`/`table`/`input-text` are permanently excluded by a confirmed `ShimReferenceTagger` defect (triggered when one secondary entry point's own compilation unit directly imports another secondary entry point's root class). GAP-009's own text makes no claim about any Angular component built after the Angular Form Foundation workstream — the ~90+ components shipped since (Phase C batches and later) have never been evaluated against this same convention.
@@ -77,7 +77,7 @@ Angular's `UTooltip` must apply the same companion inline `display` style GAP-03
 ## 6. API Requirements
 
 - **GAP-066:** no new public API — an internal styling fix (one additional inline-style property), exactly mirroring GAP-039's own fix mechanism.
-- **GAP-067:** `UMenu`'s own already-declared `popup` input's *behavior* becomes functional; no new prop is introduced beyond what `UMenu`'s own doc comment already names as pending ("extend this component's input/output surface for the popup overlay, submenu nesting, and the additional key handlers" — the exact additional inputs/outputs needed are an Implementation Plan design question, not fixed here). `USplitButton`'s own public API is unaffected by its internal delegation-mechanism simplification.
+- **GAP-067:** `UMenu`'s own already-declared `popup` input's _behavior_ becomes functional; no new prop is introduced beyond what `UMenu`'s own doc comment already names as pending ("extend this component's input/output surface for the popup overlay, submenu nesting, and the additional key handlers" — the exact additional inputs/outputs needed are an Implementation Plan design question, not fixed here). `USplitButton`'s own public API is unaffected by its internal delegation-mechanism simplification.
 - **GAP-068:** no public API change — this is a build/packaging configuration fix; the same components already accessible via the main barrel become also accessible via their own subpath, matching their own already-existing barrel-level public contract.
 - **GAP-070:** no public API change — components that receive a secondary entry point become additionally accessible via their own subpath (`@ultimate/ng/<component>`), matching React's/Vue's own already-correct convention; components excluded by the trigger condition remain accessible via the main barrel only, exactly as they are today. No component's own component-level API (props/inputs/outputs) changes.
 
@@ -100,18 +100,18 @@ None among GAP-066, GAP-067, GAP-068, and GAP-070 — each is independent of the
 
 ## 9. Acceptance Criteria
 
-| Criterion | Traces to |
-|---|---|
-| Angular `UTooltip` panel is visible in a real browser once shown (computed `display` is not `"none"`); `packages/ng/e2e/tooltip.spec.ts` asserts correct visibility | GAP-066 |
-| `UMenu`'s `popup` mode renders a real, functional popup overlay | GAP-067 |
-| `USplitButton` delegates to `UMenu`'s own popup mechanism rather than its own hand-rolled overlay state | GAP-067 |
-| React per-component subpath exports (`@ultimate/react/<component>`) work for every currently-shipped component | GAP-068 |
-| Vue per-component subpath exports (`@ultimate/vue/<component>`) work for every currently-shipped component | GAP-068 |
-| React/Vue main barrel imports remain unaffected | GAP-068 (non-regression) |
-| Every Angular component shipped after the original proof set is characterized against the confirmed `ShimReferenceTagger` trigger condition before any secondary-entry-point decision is made for it | GAP-070 (Step 1) |
-| Newer components that do not hit the trigger condition receive a real `ng-packagr` secondary entry point | GAP-070 (Step 2) |
-| Newer components that do hit the trigger condition remain excluded, on the same basis as GAP-009's own already-excluded 5 components | GAP-070 (Step 2, non-regression) |
-| GAP-009/GAP-023's own RESOLVED status and their own 5 excluded components are unchanged | GAP-070 (non-regression) |
+| Criterion                                                                                                                                                                                            | Traces to                        |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| Angular `UTooltip` panel is visible in a real browser once shown (computed `display` is not `"none"`); `packages/ng/e2e/tooltip.spec.ts` asserts correct visibility                                  | GAP-066                          |
+| `UMenu`'s `popup` mode renders a real, functional popup overlay                                                                                                                                      | GAP-067                          |
+| `USplitButton` delegates to `UMenu`'s own popup mechanism rather than its own hand-rolled overlay state                                                                                              | GAP-067                          |
+| React per-component subpath exports (`@ultimate/react/<component>`) work for every currently-shipped component                                                                                       | GAP-068                          |
+| Vue per-component subpath exports (`@ultimate/vue/<component>`) work for every currently-shipped component                                                                                           | GAP-068                          |
+| React/Vue main barrel imports remain unaffected                                                                                                                                                      | GAP-068 (non-regression)         |
+| Every Angular component shipped after the original proof set is characterized against the confirmed `ShimReferenceTagger` trigger condition before any secondary-entry-point decision is made for it | GAP-070 (Step 1)                 |
+| Newer components that do not hit the trigger condition receive a real `ng-packagr` secondary entry point                                                                                             | GAP-070 (Step 2)                 |
+| Newer components that do hit the trigger condition remain excluded, on the same basis as GAP-009's own already-excluded 5 components                                                                 | GAP-070 (Step 2, non-regression) |
+| GAP-009/GAP-023's own RESOLVED status and their own 5 excluded components are unchanged                                                                                                              | GAP-070 (non-regression)         |
 
 ---
 

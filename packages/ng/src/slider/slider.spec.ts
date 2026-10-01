@@ -147,7 +147,11 @@ describe("USlider", () => {
   });
 
   describe("SSR safety (GAP-065)", () => {
-    @Component({ standalone: true, imports: [USlider, FormsModule], template: `<u-slider [(ngModel)]="value" />` })
+    @Component({
+      standalone: true,
+      imports: [USlider, FormsModule],
+      template: `<u-slider [(ngModel)]="value" />`,
+    })
     class SsrHostComponent {
       value = 50;
     }

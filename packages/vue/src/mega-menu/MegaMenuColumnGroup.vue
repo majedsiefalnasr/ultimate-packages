@@ -90,7 +90,9 @@ export default {
 
     moveFocus(current, direction) {
       const items = this.group.items || [];
-      const enabled = items.filter((candidate) => this.isVisible(candidate) && !this.isDisabled(candidate));
+      const enabled = items.filter(
+        (candidate) => this.isVisible(candidate) && !this.isDisabled(candidate)
+      );
       if (enabled.length === 0) return;
       const currentIndex = enabled.indexOf(current);
       const startIndex = currentIndex === -1 ? 0 : currentIndex;

@@ -103,7 +103,12 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
 
   describe("with a hidden item (rendered-link index vs model index)", () => {
     it("ArrowRight from A skips the disabled step and reaches C", async () => {
-      const model = [{ label: "A" }, { label: "H", visible: false }, { label: "B", disabled: true }, { label: "C" }];
+      const model = [
+        { label: "A" },
+        { label: "H", visible: false },
+        { label: "B", disabled: true },
+        { label: "C" },
+      ];
       const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
       const links = wrapper.findAll("a");
       links[0].element.focus();
@@ -113,7 +118,12 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
     });
 
     it("Home skips hidden/disabled items and reaches the first valid step", async () => {
-      const model = [{ label: "H", visible: false }, { label: "B", disabled: true }, { label: "C" }, { label: "D" }];
+      const model = [
+        { label: "H", visible: false },
+        { label: "B", disabled: true },
+        { label: "C" },
+        { label: "D" },
+      ];
       const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
       const links = wrapper.findAll("a");
       links[2].element.focus();
@@ -123,7 +133,12 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
     });
 
     it("End skips hidden/disabled items and reaches the last valid step", async () => {
-      const model = [{ label: "A" }, { label: "B" }, { label: "H", visible: false }, { label: "D", disabled: true }];
+      const model = [
+        { label: "A" },
+        { label: "B" },
+        { label: "H", visible: false },
+        { label: "D", disabled: true },
+      ];
       const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
       const links = wrapper.findAll("a");
       links[0].element.focus();

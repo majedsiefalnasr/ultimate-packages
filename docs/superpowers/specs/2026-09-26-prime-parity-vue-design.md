@@ -30,10 +30,10 @@
 
 ## 3. Framework Applicability
 
-| Gap | Angular | React | Vue |
-|---|---|---|---|
-| GAP-062 (Tabs PageUp/PageDown) | N/A | N/A | In scope |
-| GAP-063 (Stepper vertical separator) | N/A | N/A | In scope |
+| Gap                                  | Angular | React | Vue      |
+| ------------------------------------ | ------- | ----- | -------- |
+| GAP-062 (Tabs PageUp/PageDown)       | N/A     | N/A   | In scope |
+| GAP-063 (Stepper vertical separator) | N/A     | N/A   | In scope |
 
 ---
 
@@ -77,12 +77,12 @@ None. GAP-062 and GAP-063 are independent of each other and of every other GAP i
 
 ## 9. Acceptance Criteria
 
-| Criterion | Traces to |
-|---|---|
-| PageDown/PageUp scrolls the Vue Tab list into view without changing the selected tab | GAP-062 |
-| Vue Stepper renders a `StepperSeparator` between consecutive vertical-mode steps, except after the last step | GAP-063 |
-| Vue Stepper's horizontal-mode rendering is unchanged by GAP-063 (no separators added in horizontal mode — that is GAP-077) | GAP-063 (non-regression) |
-| Vue Stepper's active-state internal comparison mechanism is unchanged | GAP-063 (non-regression, per §2.2's DEFER) |
+| Criterion                                                                                                                  | Traces to                                  |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| PageDown/PageUp scrolls the Vue Tab list into view without changing the selected tab                                       | GAP-062                                    |
+| Vue Stepper renders a `StepperSeparator` between consecutive vertical-mode steps, except after the last step               | GAP-063                                    |
+| Vue Stepper's horizontal-mode rendering is unchanged by GAP-063 (no separators added in horizontal mode — that is GAP-077) | GAP-063 (non-regression)                   |
+| Vue Stepper's active-state internal comparison mechanism is unchanged                                                      | GAP-063 (non-regression, per §2.2's DEFER) |
 
 ---
 

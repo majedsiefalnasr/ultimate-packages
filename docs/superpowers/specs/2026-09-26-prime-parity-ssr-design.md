@@ -17,7 +17,7 @@
 
 **In scope:** GAP-065 — `packages/ng/src/{scroll-panel,context-menu,breadcrumb,color-picker,confirm-popup,knob,popover,slider,splitter,style-class}/`.
 
-**Out of scope, entirely, for this specification and its eventual Implementation Plan:** React's and Vue's own equivalent-risk-class SSR behavior — Parity Confirmed by direct evidence (React's `useEffect`, Vue's `mounted()` never execute server-side, by each framework's own design), a separate row in the Final Scope Ledger, not touched here. Track E's original 8-component proof set (Button/Checkbox/Dialog/Menu/Paginator/Scroller/Table/Tooltip) — already verified safe by Track E itself, not reopened (except `Tooltip`, whose *visibility* defect — unrelated to SSR-safety — is tracked separately by GAP-066, not this Spec).
+**Out of scope, entirely, for this specification and its eventual Implementation Plan:** React's and Vue's own equivalent-risk-class SSR behavior — Parity Confirmed by direct evidence (React's `useEffect`, Vue's `mounted()` never execute server-side, by each framework's own design), a separate row in the Final Scope Ledger, not touched here. Track E's original 8-component proof set (Button/Checkbox/Dialog/Menu/Paginator/Scroller/Table/Tooltip) — already verified safe by Track E itself, not reopened (except `Tooltip`, whose _visibility_ defect — unrelated to SSR-safety — is tracked separately by GAP-066, not this Spec).
 
 ---
 
@@ -38,7 +38,7 @@ Angular only. React and Vue are explicitly out of scope (Parity Confirmed, per �
 
 ## 4. Existing Behavior
 
-`ScrollPanel`'s `ngAfterViewInit` and `ContextMenu`'s `ngOnInit` unconditionally call `window`/`document` APIs with zero `isPlatformBrowser` guard, confirmed via full lifecycle tracing during the Post-Track-E SSR residual verification — both hooks genuinely execute server-side under Angular Universal SSR, producing a real `ReferenceError` crash. `Breadcrumb`, `ColorPicker`, `ConfirmPopup`, `Knob`, `Popover`, `Slider`, `Splitter`, and `StyleClass` share the identical missing-guard *pattern* (unconditional `window`/`document` access with no `isPlatformBrowser` check) but were not individually traced to confirm which lifecycle hook triggers the access or whether that hook genuinely executes server-side for each specific component. Track E's own Plan (`docs/superpowers/plans/2026-09-11-phase-10-track-e-ssr-hydration-implementation.md`, lines 12/570) explicitly, fixedly scoped SSR verification to an 8-component proof set that never included any of these 10 components. None of the 10 flagged components is currently exercised by the existing SSR test harness.
+`ScrollPanel`'s `ngAfterViewInit` and `ContextMenu`'s `ngOnInit` unconditionally call `window`/`document` APIs with zero `isPlatformBrowser` guard, confirmed via full lifecycle tracing during the Post-Track-E SSR residual verification — both hooks genuinely execute server-side under Angular Universal SSR, producing a real `ReferenceError` crash. `Breadcrumb`, `ColorPicker`, `ConfirmPopup`, `Knob`, `Popover`, `Slider`, `Splitter`, and `StyleClass` share the identical missing-guard _pattern_ (unconditional `window`/`document` access with no `isPlatformBrowser` check) but were not individually traced to confirm which lifecycle hook triggers the access or whether that hook genuinely executes server-side for each specific component. Track E's own Plan (`docs/superpowers/plans/2026-09-11-phase-10-track-e-ssr-hydration-implementation.md`, lines 12/570) explicitly, fixedly scoped SSR verification to an 8-component proof set that never included any of these 10 components. None of the 10 flagged components is currently exercised by the existing SSR test harness.
 
 ---
 
@@ -74,13 +74,13 @@ None upstream. **Internal sequencing within this gap's own scope:** the 8 not-ye
 
 ## 9. Acceptance Criteria
 
-| Criterion | Traces to |
-|---|---|
-| `ScrollPanel`'s `ngAfterViewInit` window/document access is guarded by `isPlatformBrowser`; no SSR crash | GAP-065 (tier 1, fully confirmed) |
-| `ContextMenu`'s `ngOnInit` window/document access is guarded by `isPlatformBrowser`; no SSR crash | GAP-065 (tier 1, fully confirmed) |
+| Criterion                                                                                                                                                                                                                                           | Traces to                           |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `ScrollPanel`'s `ngAfterViewInit` window/document access is guarded by `isPlatformBrowser`; no SSR crash                                                                                                                                            | GAP-065 (tier 1, fully confirmed)   |
+| `ContextMenu`'s `ngOnInit` window/document access is guarded by `isPlatformBrowser`; no SSR crash                                                                                                                                                   | GAP-065 (tier 1, fully confirmed)   |
 | Each of the 8 remaining components (`Breadcrumb`, `ColorPicker`, `ConfirmPopup`, `Knob`, `Popover`, `Slider`, `Splitter`, `StyleClass`) has its own triggering hook individually lifecycle-traced and confirmed before its own guard fix is applied | GAP-065 (tier 2, prerequisite step) |
-| Each of the 8 remaining components' confirmed window/document access is guarded by `isPlatformBrowser`; no SSR crash, after its own tracing step completes | GAP-065 (tier 2, fix) |
-| React's and Vue's own equivalent components are unaffected by any work under this Spec | GAP-065 (non-regression, per §2.4) |
+| Each of the 8 remaining components' confirmed window/document access is guarded by `isPlatformBrowser`; no SSR crash, after its own tracing step completes                                                                                          | GAP-065 (tier 2, fix)               |
+| React's and Vue's own equivalent components are unaffected by any work under this Spec                                                                                                                                                              | GAP-065 (non-regression, per §2.4)  |
 
 (Note 2026-10-01: rows 3-4 are satisfied per §12 — the tier-2 tracing found none of the 8 reaches a browser global from a server-executed path, so they received spy-based verification tests instead of guards.)
 
@@ -94,7 +94,7 @@ None upstream. **Internal sequencing within this gap's own scope:** the 8 not-ye
 
 ## 11. Explicit Out-of-Scope Items
 
-React/Vue SSR behavior (Parity Confirmed). Track E's original 8-component proof set (already verified). Angular Tooltip's own *visibility* defect (unrelated to SSR-safety, tracked separately by GAP-066).
+React/Vue SSR behavior (Parity Confirmed). Track E's original 8-component proof set (already verified). Angular Tooltip's own _visibility_ defect (unrelated to SSR-safety, tracked separately by GAP-066).
 
 ---
 

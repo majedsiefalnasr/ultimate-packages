@@ -172,7 +172,9 @@ export default {
     },
 
     enabledRootItems() {
-      return this.model.filter((candidate) => this.isVisible(candidate) && !this.isDisabled(candidate));
+      return this.model.filter(
+        (candidate) => this.isVisible(candidate) && !this.isDisabled(candidate)
+      );
     },
 
     moveFocus(current, direction) {

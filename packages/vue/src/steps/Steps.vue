@@ -71,7 +71,8 @@ export default {
       const rendered = this.model
         .map((item, modelIndex) => ({ item, modelIndex }))
         .filter(({ item }) => this.isVisible(item));
-      const isEnabled = (index) => !this.isItemDisabled(rendered[index].item, rendered[index].modelIndex);
+      const isEnabled = (index) =>
+        !this.isItemDisabled(rendered[index].item, rendered[index].modelIndex);
       const currentIndex = links.indexOf(document.activeElement);
 
       let targetIndex;

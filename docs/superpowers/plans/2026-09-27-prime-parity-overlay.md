@@ -10,9 +10,9 @@
 
 **GAP → Task mapping:**
 
-| GAP | Task(s) |
-|---|---|
-| GAP-048 | Task 1 |
+| GAP     | Task(s)                        |
+| ------- | ------------------------------ |
+| GAP-048 | Task 1                         |
 | GAP-049 | Task 2 (Angular), Task 3 (Vue) |
 
 ## Global Constraints
@@ -31,10 +31,12 @@
 ### Task 1: Angular — GAP-048 Dialog scroll-lock
 
 **Files:**
+
 - Modify: `packages/ng/src/dialog/dialog.ts`
 - Test: `packages/ng/src/dialog/dialog.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `scrollLockRegistry` from `@ultimate/uix-utils/scroll-lock` (`register(lockId)`/`unregister(lockId)`), already proven via `packages/ng/src/block-ui/block-ui.ts`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -109,6 +111,7 @@ In `packages/ng/src/dialog/dialog.ts`:
 ### Task 2: Angular — GAP-049 ConfirmDialog `role="alertdialog"`
 
 **Files:**
+
 - Modify: `packages/ng/src/dialog/dialog.ts`, `packages/ng/src/confirm-dialog/confirm-dialog.ts`
 - Test: `packages/ng/src/confirm-dialog/confirm-dialog.spec.ts`
 
@@ -165,6 +168,7 @@ describe("role override (Spec §5.2, GAP-049)", () => {
 ### Task 3: Vue — GAP-049 ConfirmDialog `role="alertdialog"`
 
 **Files:**
+
 - Modify: `packages/vue/src/dialog/Dialog.vue`, `packages/vue/src/confirm-dialog/ConfirmDialog.vue`
 - Test: `packages/vue/src/confirm-dialog/confirm-dialog.spec.ts`
 

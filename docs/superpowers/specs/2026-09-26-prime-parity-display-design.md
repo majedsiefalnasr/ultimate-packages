@@ -24,14 +24,14 @@
 ## 2. Human Decisions This Specification Implements
 
 1. **GAP-050 is INCLUDE, all three frameworks.** Three sub-facts (keyboard nav, local Escape handler, `role="region"`) were merged into one finding by the original Batch 5 triage's own consolidation decision — preserved as one Spec section, one GAP, not split.
-2. **GAP-051 is INCLUDE, all three frameworks, confirmed independent of GAP-050** — same omission *pattern* (missing accessibility affordance), no shared mechanism, per the Batch 5 triage's explicit non-merge decision. Kept as a separate acceptance-criteria set within this Spec, not merged into GAP-050's own criteria.
+2. **GAP-051 is INCLUDE, all three frameworks, confirmed independent of GAP-050** — same omission _pattern_ (missing accessibility affordance), no shared mechanism, per the Batch 5 triage's explicit non-merge decision. Kept as a separate acceptance-criteria set within this Spec, not merged into GAP-050's own criteria.
 
 ---
 
 ## 3. Framework Applicability
 
-| Gap | Angular | React | Vue |
-|---|---|---|---|
+| Gap                | Angular  | React    | Vue      |
+| ------------------ | -------- | -------- | -------- |
 | GAP-050 (Galleria) | In scope | In scope | In scope |
 | GAP-051 (Carousel) | In scope | In scope | In scope |
 
@@ -49,6 +49,7 @@
 ### 5.1 GAP-050
 
 **Externally observable requirements:**
+
 1. **Keyboard navigation:** with focus on the Galleria, ArrowLeft/ArrowRight must navigate to the previous/next image, Home/End must jump to the first/last image, and Enter/Space must activate the focused thumbnail (if thumbnails are present), matching real Prime's own key set.
 2. **Local Escape handler:** while Ultimate's redesigned fullscreen overlay is open, pressing Escape must close it — this is a component-owned handler (not reliant on native browser fullscreen-Escape behavior, since Ultimate's overlay is not native fullscreen).
 3. **`role="region"`:** the Galleria's root element must carry `role="region"`, matching real PrimeNG.
@@ -73,18 +74,18 @@ None. GAP-050 and GAP-051 are confirmed independent of each other (§2.2) and of
 
 ## 8. Intentional Divergences That Must Remain Unchanged
 
-- Ultimate's Galleria fullscreen mode remains its own redesigned (non-native) overlay implementation — this specification's local-Escape-handler requirement is a *consequence* of that existing, unreopened design choice, not a reversion to native fullscreen.
+- Ultimate's Galleria fullscreen mode remains its own redesigned (non-native) overlay implementation — this specification's local-Escape-handler requirement is a _consequence_ of that existing, unreopened design choice, not a reversion to native fullscreen.
 
 ---
 
 ## 9. Acceptance Criteria
 
-| Criterion | Traces to |
-|---|---|
-| ArrowLeft/Right navigate prev/next image; Home/End jump to first/last; Enter/Space activate focused thumbnail — all 3 frameworks | GAP-050 |
-| Escape closes Ultimate's redesigned fullscreen overlay — all 3 frameworks | GAP-050 |
-| Galleria root element carries `role="region"` — all 3 frameworks | GAP-050 |
-| Carousel content wrapper carries `aria-live` during autoplay, matching real Prime's own conditional value — all 3 frameworks | GAP-051 |
+| Criterion                                                                                                                        | Traces to |
+| -------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| ArrowLeft/Right navigate prev/next image; Home/End jump to first/last; Enter/Space activate focused thumbnail — all 3 frameworks | GAP-050   |
+| Escape closes Ultimate's redesigned fullscreen overlay — all 3 frameworks                                                        | GAP-050   |
+| Galleria root element carries `role="region"` — all 3 frameworks                                                                 | GAP-050   |
+| Carousel content wrapper carries `aria-live` during autoplay, matching real Prime's own conditional value — all 3 frameworks     | GAP-051   |
 
 ---
 

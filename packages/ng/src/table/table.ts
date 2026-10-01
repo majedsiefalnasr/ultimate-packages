@@ -761,8 +761,10 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
 
   private exitRowEdit(row: T): void {
     const key = String(this.resolveCell(row, this.dataKey()));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to omit the row's key
     const { [key]: _discardedDraft, ...remainingDrafts } = this.editDrafts();
     this.editDrafts.set(remainingDrafts);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to omit the row's key
     const { [key]: _wasEditing, ...remainingKeys } = this._editingRowKeys();
     this._editingRowKeys.set(remainingKeys);
     this.editingRowKeysChange.emit(remainingKeys);

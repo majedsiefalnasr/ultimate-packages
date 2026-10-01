@@ -99,7 +99,9 @@ describe("UTieredMenu", () => {
     it("carries ARIA roles for menu/menuitem", () => {
       const wrapper = mount(UTieredMenu, { props: { model: items } });
       expect(wrapper.find(".u-tieredmenu-root-list").attributes("role")).toBe("menu");
-      const rootLinks = wrapper.findAll(".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a");
+      const rootLinks = wrapper.findAll(
+        ".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a"
+      );
       rootLinks.forEach((link) => expect(link.attributes("role")).toBeUndefined());
     });
 
@@ -144,7 +146,9 @@ describe("UTieredMenu", () => {
       const fileItem = wrapper.findAll(".u-tieredmenu-root-list > li")[0];
       expect(fileItem.attributes("data-u-open")).toBe("true");
 
-      const firstSubItemLink = fileItem.find(".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a");
+      const firstSubItemLink = fileItem.find(
+        ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+      );
       expect(document.activeElement).toBe(firstSubItemLink.element);
 
       wrapper.unmount();
@@ -157,7 +161,9 @@ describe("UTieredMenu", () => {
       await file.trigger("keydown", { code: "Enter" });
 
       const fileItem = wrapper.findAll(".u-tieredmenu-root-list > li")[0];
-      const firstSubItemLink = fileItem.find(".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a");
+      const firstSubItemLink = fileItem.find(
+        ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+      );
       expect(document.activeElement).toBe(firstSubItemLink.element);
 
       await firstSubItemLink.trigger("keydown", { code: "Escape" });
@@ -176,7 +182,9 @@ describe("UTieredMenu", () => {
       await file.trigger("keydown", { code: "Enter" });
 
       const fileItem = wrapper.findAll(".u-tieredmenu-root-list > li")[0];
-      const newLink = fileItem.find(".u-tieredmenu-submenu > li:nth-child(1) > .u-tieredmenu-item-content > a");
+      const newLink = fileItem.find(
+        ".u-tieredmenu-submenu > li:nth-child(1) > .u-tieredmenu-item-content > a"
+      );
       expect(document.activeElement).toBe(newLink.element);
 
       // Move down within the open submenu to "Open" (has its own nested submenu).
@@ -188,7 +196,9 @@ describe("UTieredMenu", () => {
       // Open the nested submenu via Enter, landing focus on "Recent".
       await openLink.trigger("keydown", { code: "Enter" });
       expect(openItemLi.attributes("data-u-open")).toBe("true");
-      const recentLink = openItemLi.find(".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a");
+      const recentLink = openItemLi.find(
+        ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+      );
       expect(document.activeElement).toBe(recentLink.element);
 
       // Escape from the deepest level closes only that level, not the parent "File" menu.
@@ -209,9 +219,14 @@ describe("UTieredMenu", () => {
       ];
 
       it("opens the submenu on Enter for a group item positioned after a separator", async () => {
-        const wrapper = mount(UTieredMenu, { props: { model: modelWithSeparator }, attachTo: document.body });
+        const wrapper = mount(UTieredMenu, {
+          props: { model: modelWithSeparator },
+          attachTo: document.body,
+        });
         // "Open" is rendered link index 1 (separator has no <a>), but model index 2.
-        const openLink = wrapper.findAll(".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a")[1];
+        const openLink = wrapper.findAll(
+          ".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a"
+        )[1];
         (openLink.element as HTMLElement).focus();
         await openLink.trigger("keydown", { code: "Enter" });
 
@@ -222,15 +237,22 @@ describe("UTieredMenu", () => {
       });
 
       it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", async () => {
-        const wrapper = mount(UTieredMenu, { props: { model: modelWithSeparator }, attachTo: document.body });
-        const openLink = wrapper.findAll(".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a")[1];
+        const wrapper = mount(UTieredMenu, {
+          props: { model: modelWithSeparator },
+          attachTo: document.body,
+        });
+        const openLink = wrapper.findAll(
+          ".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a"
+        )[1];
         (openLink.element as HTMLElement).focus();
         await openLink.trigger("keydown", { code: "Enter" });
 
         const openLi = wrapper
           .findAll(".u-tieredmenu-root-list > li")
           .find((li) => li.element === openLink.element.closest("li"))!;
-        const recentLink = openLi.find(".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a");
+        const recentLink = openLi.find(
+          ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+        );
         expect(document.activeElement).toBe(recentLink.element);
 
         await recentLink.trigger("keydown", { code: "Escape" });
@@ -241,9 +263,16 @@ describe("UTieredMenu", () => {
       });
 
       it("ArrowUp from an item after a hidden item does not get stuck", async () => {
-        const model = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+        const model = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "B" },
+          { label: "C" },
+        ];
         const wrapper = mount(UTieredMenu, { props: { model }, attachTo: document.body });
-        const links = wrapper.findAll(".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a");
+        const links = wrapper.findAll(
+          ".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a"
+        );
         const [a, b] = links;
         (b.element as HTMLElement).focus();
         await b.trigger("keydown", { code: "ArrowUp" });

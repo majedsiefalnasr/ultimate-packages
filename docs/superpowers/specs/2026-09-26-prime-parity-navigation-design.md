@@ -27,7 +27,7 @@
 2. **GAP-053 (Angular Steps `routerLink`) is INCLUDE, Angular only.**
 3. **GAP-069 (Angular Dock `routerLink`) is INCLUDE, Angular only.** This item was originally disclosed by an earlier version of this Spec as an unregistered finding (the Final Scope Ledger names "Angular Dock routerLink" as its own INCLUDE line item, distinct from Dock's own keyboard-navigation gap, with no corresponding GAP at the time this Spec was first authored). The subsequent Scope Reconciliation Report confirmed no prior GAP covered it, and it was registered as GAP-069. **GAP-055 remains strictly Dock keyboard navigation, not broadened by GAP-069's own registration** — the two are tracked as separate GAPs, per §2.6/§7.
 4. **GAP-054 is one systemic finding covering four components** (Menubar, TieredMenu, MegaMenu, PanelMenu keyboard navigation) — preserved as one Spec section with per-component acceptance criteria, not split into four GAPs (matching the GAP registry's own single-entry treatment).
-5. **PanelMenu's multiple-expansion semantics and MegaMenu's disabled-group hover behavior are KEEP CURRENT BEHAVIOR** — explicitly not implementation scope. This Spec's own GAP-054 section covers *keyboard navigation* for PanelMenu/MegaMenu only; it must not be read as reopening either of these two accepted behavioral differences.
+5. **PanelMenu's multiple-expansion semantics and MegaMenu's disabled-group hover behavior are KEEP CURRENT BEHAVIOR** — explicitly not implementation scope. This Spec's own GAP-054 section covers _keyboard navigation_ for PanelMenu/MegaMenu only; it must not be read as reopening either of these two accepted behavioral differences.
 6. **GAP-055 (Dock keyboard nav) is INCLUDE, all three frameworks.**
 7. **GAP-056 (SpeedDial keyboard nav) is INCLUDE, all three frameworks** — explicitly distinct from SpeedDial's own layout-fidelity question (Parity Confirmed, not touched by this Spec).
 8. **GAP-057 (React Tabs `scrollable`) and GAP-058 (React Tabs `closable`) are both INCLUDE, React only, confirmed independent of each other** (different Prime-availability shape — GAP-057's parity target is real PrimeReact's own opt-in `scrollable` behavior, React-only; Angular/Vue's own separate Tabs overflow deficiencies are tracked independently by GAP-071/GAP-072, not by GAP-057 (corrected 2026-09-30, see §12); Angular/Vue correctly never had `closable`'s equivalent).
@@ -37,16 +37,16 @@
 
 ## 3. Framework Applicability
 
-| Gap | Angular | React | Vue |
-|---|---|---|---|
-| GAP-052 (Steps keyboard nav) | In scope | In scope | In scope |
-| GAP-053 (Angular Steps routerLink) | In scope | N/A | N/A |
-| GAP-054 (Menubar-family keyboard nav) | In scope | In scope | In scope |
-| GAP-055 (Dock keyboard nav) | In scope | In scope | In scope |
-| GAP-069 (Angular Dock routerLink) | In scope | N/A | N/A |
-| GAP-056 (SpeedDial keyboard nav) | In scope | In scope | In scope |
-| GAP-057 (React Tabs scrollable) | N/A — out of GAP-057 scope (Angular's own overflow deficiency tracked separately by GAP-071) | In scope | N/A — out of GAP-057 scope (Vue's own resize-overflow deficiency tracked separately by GAP-072) |
-| GAP-058 (React Tabs closable) | **Explicitly out of scope — confirmed no upstream equivalent ever existed** | In scope | **Explicitly out of scope — confirmed no upstream equivalent ever existed** |
+| Gap                                   | Angular                                                                                      | React    | Vue                                                                                             |
+| ------------------------------------- | -------------------------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------- |
+| GAP-052 (Steps keyboard nav)          | In scope                                                                                     | In scope | In scope                                                                                        |
+| GAP-053 (Angular Steps routerLink)    | In scope                                                                                     | N/A      | N/A                                                                                             |
+| GAP-054 (Menubar-family keyboard nav) | In scope                                                                                     | In scope | In scope                                                                                        |
+| GAP-055 (Dock keyboard nav)           | In scope                                                                                     | In scope | In scope                                                                                        |
+| GAP-069 (Angular Dock routerLink)     | In scope                                                                                     | N/A      | N/A                                                                                             |
+| GAP-056 (SpeedDial keyboard nav)      | In scope                                                                                     | In scope | In scope                                                                                        |
+| GAP-057 (React Tabs scrollable)       | N/A — out of GAP-057 scope (Angular's own overflow deficiency tracked separately by GAP-071) | In scope | N/A — out of GAP-057 scope (Vue's own resize-overflow deficiency tracked separately by GAP-072) |
+| GAP-058 (React Tabs closable)         | **Explicitly out of scope — confirmed no upstream equivalent ever existed**                  | In scope | **Explicitly out of scope — confirmed no upstream equivalent ever existed**                     |
 
 ---
 
@@ -125,20 +125,20 @@ None among GAP-052 through GAP-058, or GAP-069. GAP-057 and GAP-058 are confirme
 
 ## 9. Acceptance Criteria
 
-| Criterion | Traces to |
-|---|---|
-| Arrow/Home/End roving-focus keyboard nav on Steps — all 3 frameworks | GAP-052 |
-| Steps accepts `routerLink`-equivalent binding — Angular only | GAP-053 |
-| Roving-focus keyboard nav on Menubar, TieredMenu, MegaMenu, PanelMenu independently — all 3 frameworks each | GAP-054 |
-| PanelMenu's multiple-expansion exclusivity scope is unchanged | GAP-054 (non-regression) |
-| MegaMenu's disabled-group hover-open behavior is unchanged | GAP-054 (non-regression) |
-| Roving-focus keyboard nav on Dock action items — all 3 frameworks | GAP-055 |
-| Dock accepts `routerLink`-equivalent binding — Angular only | GAP-069 |
-| Roving-focus keyboard nav on SpeedDial action items once open — all 3 frameworks | GAP-056 |
-| SpeedDial's layout/positioning math is unchanged | GAP-056 (non-regression) |
-| React Tabs gains opt-in `scrollable` prop (default `false`); when `false`, no navigators render; when `true`, prev/next navigators render only while scrolling in that direction is possible, recalculated on render/update and on the strip's `scroll` event (no `ResizeObserver`) — matching real PrimeReact 10.9.9 | GAP-057 |
-| React Tabs supports per-tab close affordance with close event | GAP-058 |
-| Angular/Vue Tabs do not gain a close affordance | GAP-058 (non-regression) |
+| Criterion                                                                                                                                                                                                                                                                                                             | Traces to                |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| Arrow/Home/End roving-focus keyboard nav on Steps — all 3 frameworks                                                                                                                                                                                                                                                  | GAP-052                  |
+| Steps accepts `routerLink`-equivalent binding — Angular only                                                                                                                                                                                                                                                          | GAP-053                  |
+| Roving-focus keyboard nav on Menubar, TieredMenu, MegaMenu, PanelMenu independently — all 3 frameworks each                                                                                                                                                                                                           | GAP-054                  |
+| PanelMenu's multiple-expansion exclusivity scope is unchanged                                                                                                                                                                                                                                                         | GAP-054 (non-regression) |
+| MegaMenu's disabled-group hover-open behavior is unchanged                                                                                                                                                                                                                                                            | GAP-054 (non-regression) |
+| Roving-focus keyboard nav on Dock action items — all 3 frameworks                                                                                                                                                                                                                                                     | GAP-055                  |
+| Dock accepts `routerLink`-equivalent binding — Angular only                                                                                                                                                                                                                                                           | GAP-069                  |
+| Roving-focus keyboard nav on SpeedDial action items once open — all 3 frameworks                                                                                                                                                                                                                                      | GAP-056                  |
+| SpeedDial's layout/positioning math is unchanged                                                                                                                                                                                                                                                                      | GAP-056 (non-regression) |
+| React Tabs gains opt-in `scrollable` prop (default `false`); when `false`, no navigators render; when `true`, prev/next navigators render only while scrolling in that direction is possible, recalculated on render/update and on the strip's `scroll` event (no `ResizeObserver`) — matching real PrimeReact 10.9.9 | GAP-057                  |
+| React Tabs supports per-tab close affordance with close event                                                                                                                                                                                                                                                         | GAP-058                  |
+| Angular/Vue Tabs do not gain a close affordance                                                                                                                                                                                                                                                                       | GAP-058 (non-regression) |
 
 ---
 

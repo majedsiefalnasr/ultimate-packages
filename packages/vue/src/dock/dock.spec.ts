@@ -117,7 +117,12 @@ describe("UDock", () => {
     });
 
     it("maps focus correctly when a hidden item precedes the target item (GAP-054 lesson applied proactively)", async () => {
-      const model = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+      const model = [
+        { label: "A" },
+        { label: "Hidden", visible: false },
+        { label: "B" },
+        { label: "C" },
+      ];
       const wrapper = mount(UDock, { props: { model }, attachTo: document.body });
       const links = wrapper.findAll('[role="menuitem"]');
       // Rendered links are [A, B, C] (Hidden is skipped). Focusing A and

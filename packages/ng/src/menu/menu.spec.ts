@@ -483,7 +483,9 @@ describe("UMenu", () => {
       const fixture = createTriggerHost();
       fixture.nativeElement.querySelector("button").click();
       fixture.detectChanges();
-      (fixture.debugElement.query(By.css('[role="menuitem"]')).nativeElement as HTMLElement).click();
+      (
+        fixture.debugElement.query(By.css('[role="menuitem"]')).nativeElement as HTMLElement
+      ).click();
       fixture.detectChanges();
       expect(fixture.componentInstance.command).toHaveBeenCalledTimes(1);
       expect(menuList(fixture)).toBeNull();
@@ -540,7 +542,9 @@ describe("UMenu", () => {
         // are the test harness's, not UMenu's, so they are excluded here.
         const routerEvents = new Set(["popstate", "hashchange"]);
         for (const [spyName, spy] of Object.entries(spies)) {
-          const calls = spy.mock.calls.filter((args: unknown[]) => !routerEvents.has(args[0] as string));
+          const calls = spy.mock.calls.filter(
+            (args: unknown[]) => !routerEvents.has(args[0] as string)
+          );
           expect(calls, spyName).toEqual([]);
         }
       } finally {

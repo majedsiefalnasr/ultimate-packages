@@ -39,7 +39,7 @@ describe("PageUp/PageDown scroll-into-view (Spec §5.1, GAP-062)", () => {
     const wrapper = mount(/* ... */);
     const activeValueBefore = wrapper.vm.$pcTabs?.d_value; // or however active value is inspected in this file's existing tests
     Element.prototype.scrollIntoView = scrollIntoViewMock;
-    await wrapper.find('[role=tab]').trigger('keydown', { code: 'PageDown' });
+    await wrapper.find("[role=tab]").trigger("keydown", { code: "PageDown" });
     expect(scrollIntoViewMock).toHaveBeenCalled();
     expect(wrapper.vm.$pcTabs?.d_value).toBe(activeValueBefore);
   });
@@ -50,7 +50,9 @@ describe("PageUp/PageDown scroll-into-view (Spec §5.1, GAP-062)", () => {
 
   it("does not throw when there is nothing to scroll", async () => {
     const wrapper = mount(/* single tab, fits in view */);
-    await expect(wrapper.find('[role=tab]').trigger('keydown', { code: 'PageDown' })).resolves.not.toThrow();
+    await expect(
+      wrapper.find("[role=tab]").trigger("keydown", { code: "PageDown" })
+    ).resolves.not.toThrow();
   });
 });
 ```

@@ -270,7 +270,9 @@ describe("thumbnail keyboard activation (Spec §5.1, GAP-050 Task 7)", () => {
 
   it("makes the thumbnail focusable", () => {
     const fixture = createFixture();
-    const thumbnail = fixture.nativeElement.querySelector(".u-galleria-thumbnail-item") as HTMLElement;
+    const thumbnail = fixture.nativeElement.querySelector(
+      ".u-galleria-thumbnail-item"
+    ) as HTMLElement;
     expect(thumbnail.tabIndex).toBe(0);
   });
 

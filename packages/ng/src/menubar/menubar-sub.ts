@@ -233,7 +233,9 @@ export class UMenubarSub extends UBaseComponent {
   }
 
   private moveFocus(current: UMenuItem, direction: 1 | -1): void {
-    const enabled = this.items.filter((candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled);
+    const enabled = this.items.filter(
+      (candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled
+    );
     if (enabled.length === 0) return;
     const currentIndex = enabled.indexOf(current);
     const startIndex = currentIndex === -1 ? 0 : currentIndex;
@@ -253,7 +255,7 @@ export class UMenubarSub extends UBaseComponent {
       // recursive sub-component — not a plain nested <ul> — is what
       // actually renders the next level down.
       const firstLink = openLi?.querySelector<HTMLAnchorElement>(
-        ":scope > u-menubar-sub > ul > li > .u-menubar-item-content > a",
+        ":scope > u-menubar-sub > ul > li > .u-menubar-item-content > a"
       );
       firstLink?.focus();
     });

@@ -31,7 +31,7 @@
 
 ## 3. Framework Applicability
 
-Framework-neutral. `@ultimate/themes` is consumed identically by Angular, React, and Vue via `applyUltimateTheme()`. This gap's scope is the shared preset-module layer, not any one framework's own component source (though the *consumers* of the new preset modules — each framework's own component style files — will need their own follow-up work once this gap's own Spec/Plan defines the sequencing; see §7).
+Framework-neutral. `@ultimate/themes` is consumed identically by Angular, React, and Vue via `applyUltimateTheme()`. This gap's scope is the shared preset-module layer, not any one framework's own component source (though the _consumers_ of the new preset modules — each framework's own component style files — will need their own follow-up work once this gap's own Spec/Plan defines the sequencing; see §7).
 
 ---
 
@@ -71,12 +71,12 @@ None upstream. This gap does not depend on any other GAP in this audit's scope. 
 
 ## 9. Acceptance Criteria
 
-| Criterion | Traces to |
-|---|---|
-| Each component brought into this gap's scope gains a `dt()`-resolvable Aura preset module, consumable via `applyUltimateTheme({preset})`, matching the original 5-component proof set's own existing pattern | GAP-064 |
-| Components not yet brought into scope remain unaffected (their existing hardcoded-CSS-variable-fallback mechanism is unchanged) | GAP-064 (non-regression) |
-| Material/Lara/Nora catalog breadth is not touched by any work under this Spec | GAP-064 (non-regression, per §2.2) |
-| `base`-tier foundation tokens are not touched by any work under this Spec | GAP-064 (non-regression, per §2.3) |
+| Criterion                                                                                                                                                                                                    | Traces to                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| Each component brought into this gap's scope gains a `dt()`-resolvable Aura preset module, consumable via `applyUltimateTheme({preset})`, matching the original 5-component proof set's own existing pattern | GAP-064                            |
+| Components not yet brought into scope remain unaffected (their existing hardcoded-CSS-variable-fallback mechanism is unchanged)                                                                              | GAP-064 (non-regression)           |
+| Material/Lara/Nora catalog breadth is not touched by any work under this Spec                                                                                                                                | GAP-064 (non-regression, per §2.2) |
+| `base`-tier foundation tokens are not touched by any work under this Spec                                                                                                                                    | GAP-064 (non-regression, per §2.3) |
 
 ---
 

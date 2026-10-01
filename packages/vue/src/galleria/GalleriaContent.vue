@@ -100,7 +100,12 @@ export default {
     isEditableTarget(target) {
       if (!(target instanceof HTMLElement)) return false;
       const tagName = target.tagName;
-      return tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT" || target.isContentEditable;
+      return (
+        tagName === "INPUT" ||
+        tagName === "TEXTAREA" ||
+        tagName === "SELECT" ||
+        target.isContentEditable
+      );
     },
     // Handles Enter/Space on a focused thumbnail: activates it the same way the existing click
     // handler does (Spec §5.1, GAP-050 Task 7). No-op for any other key.

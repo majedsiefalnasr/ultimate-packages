@@ -10,11 +10,11 @@
 
 **GAP → Task mapping (this document's own traceability index):**
 
-| GAP | Task(s) |
-|---|---|
-| GAP-041 | Task 1 (Angular), Task 2 (React), Task 3 (Vue) |
-| GAP-042 | Task 4 (Angular), Task 5 (React), Task 6 (Vue) |
-| GAP-047 | Task 7 (Angular), Task 8 (React), Task 9 (Vue) |
+| GAP     | Task(s)                                           |
+| ------- | ------------------------------------------------- |
+| GAP-041 | Task 1 (Angular), Task 2 (React), Task 3 (Vue)    |
+| GAP-042 | Task 4 (Angular), Task 5 (React), Task 6 (Vue)    |
+| GAP-047 | Task 7 (Angular), Task 8 (React), Task 9 (Vue)    |
 | GAP-046 | Task 10 (Angular), Task 11 (React), Task 12 (Vue) |
 | GAP-044 | Task 13 (Angular), Task 14 (React), Task 15 (Vue) |
 | GAP-045 | Task 16 (Angular), Task 17 (React), Task 18 (Vue) |
@@ -59,10 +59,12 @@ No new files. Every task modifies one of these 3 existing component files (plus 
 ### Task 1: Angular — GAP-041 column-renderer mechanism
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Test: `packages/ng/src/table/table.spec.ts`
 
 **Interfaces:**
+
 - Produces: `UTableColumn<T>` gains an optional `body?: (row: T, options: { field: string; rowIndex: number }) => string` field. Consumed by Task 4 (GAP-042) as the mechanism selection-column UI renders through, and by Task 10 (GAP-046) for the empty-state region's own future extension (not this task's own scope).
 
 - [ ] **Step 1: Write the failing tests**
@@ -71,7 +73,11 @@ Add to `packages/ng/src/table/table.spec.ts`, in a new `describe` block after th
 
 ```typescript
 describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
-  interface Row { id: number; name: string; price: number }
+  interface Row {
+    id: number;
+    name: string;
+    price: number;
+  }
 
   it("renders a column's body function output instead of the raw field value", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -94,7 +100,14 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
       { id: 2, name: "B", price: 2 },
     ]);
     fixture.componentRef.setInput("columns", [
-      { field: "name", header: "Name", body: (row: Row, options: { field: string; rowIndex: number }) => { seen.push(options); return row.name; } },
+      {
+        field: "name",
+        header: "Name",
+        body: (row: Row, options: { field: string; rowIndex: number }) => {
+          seen.push(options);
+          return row.name;
+        },
+      },
     ]);
     fixture.detectChanges();
     expect(seen).toEqual([
@@ -113,7 +126,10 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
   });
 
   it("calls the body function with undefined row[field] for a sparse row without throwing", () => {
-    interface SparseRow { id: number; name?: string }
+    interface SparseRow {
+      id: number;
+      name?: string;
+    }
     const fixture = TestBed.createComponent(UTable<SparseRow>);
     fixture.componentRef.setInput("value", [{ id: 1 }]);
     fixture.componentRef.setInput("columns", [
@@ -155,10 +171,12 @@ Run `pnpm test` (full monorepo) and `pnpm run ceiling:validate`. Both must pass.
 ### Task 2: React — GAP-041 column-renderer mechanism
 
 **Files:**
+
 - Modify: `packages/react/src/table/table.tsx`
 - Test: `packages/react/src/table/table.spec.tsx`
 
 **Interfaces:**
+
 - Produces: `UTableColumn` gains `body?: (row: T, options: { field: string; rowIndex: number }) => React.ReactNode`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -167,7 +185,11 @@ Add to `packages/react/src/table/table.spec.tsx`:
 
 ```tsx
 describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
-  interface Row { id: number; name: string; price: number }
+  interface Row {
+    id: number;
+    name: string;
+    price: number;
+  }
 
   it("renders a column's body function output instead of the raw field value", () => {
     render(
@@ -188,15 +210,35 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
     const seen: { field: string; rowIndex: number }[] = [];
     render(
       <UTable<Row>
-        value={[{ id: 1, name: "A", price: 1 }, { id: 2, name: "B", price: 2 }]}
-        columns={[{ field: "name", header: "Name", body: (row, options) => { seen.push(options); return row.name; } }]}
+        value={[
+          { id: 1, name: "A", price: 1 },
+          { id: 2, name: "B", price: 2 },
+        ]}
+        columns={[
+          {
+            field: "name",
+            header: "Name",
+            body: (row, options) => {
+              seen.push(options);
+              return row.name;
+            },
+          },
+        ]}
       />
     );
-    expect(seen).toEqual([{ field: "name", rowIndex: 0 }, { field: "name", rowIndex: 1 }]);
+    expect(seen).toEqual([
+      { field: "name", rowIndex: 0 },
+      { field: "name", rowIndex: 1 },
+    ]);
   });
 
   it("falls back to the raw field value when no body function is supplied", () => {
-    render(<UTable<Row> value={[{ id: 1, name: "Widget", price: 9.5 }]} columns={[{ field: "price", header: "Price" }]} />);
+    render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Widget", price: 9.5 }]}
+        columns={[{ field: "price", header: "Price" }]}
+      />
+    );
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("9.5");
   });
 
@@ -233,10 +275,12 @@ Run `pnpm test` and `pnpm run ceiling:validate`.
 ### Task 3: Vue — GAP-041 column-renderer mechanism
 
 **Files:**
+
 - Modify: `packages/vue/src/table/Table.vue`
 - Test: `packages/vue/src/table/table.spec.ts`
 
 **Interfaces:**
+
 - Produces: `UTableColumn` gains `body?: (row: T, options: { field: string; rowIndex: number }) => VNode | string`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -245,7 +289,11 @@ Add to `packages/vue/src/table/table.spec.ts`:
 
 ```typescript
 describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
-  interface Row { id: number; name: string; price: number }
+  interface Row {
+    id: number;
+    name: string;
+    price: number;
+  }
 
   it("renders a column's body function output instead of the raw field value", async () => {
     const wrapper = mount(UTable, {
@@ -266,15 +314,35 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
     const seen: { field: string; rowIndex: number }[] = [];
     mount(UTable, {
       props: {
-        value: [{ id: 1, name: "A", price: 1 }, { id: 2, name: "B", price: 2 }],
-        columns: [{ field: "name", header: "Name", body: (row: Row, options: { field: string; rowIndex: number }) => { seen.push(options); return row.name; } }],
+        value: [
+          { id: 1, name: "A", price: 1 },
+          { id: 2, name: "B", price: 2 },
+        ],
+        columns: [
+          {
+            field: "name",
+            header: "Name",
+            body: (row: Row, options: { field: string; rowIndex: number }) => {
+              seen.push(options);
+              return row.name;
+            },
+          },
+        ],
       },
     });
-    expect(seen).toEqual([{ field: "name", rowIndex: 0 }, { field: "name", rowIndex: 1 }]);
+    expect(seen).toEqual([
+      { field: "name", rowIndex: 0 },
+      { field: "name", rowIndex: 1 },
+    ]);
   });
 
   it("falls back to the raw field value when no body function is supplied", () => {
-    const wrapper = mount(UTable, { props: { value: [{ id: 1, name: "Widget", price: 9.5 }], columns: [{ field: "price", header: "Price" }] } });
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "Widget", price: 9.5 }],
+        columns: [{ field: "price", header: "Price" }],
+      },
+    });
     expect(wrapper.find("td").text()).toBe("9.5");
   });
 });
@@ -301,10 +369,12 @@ Run `pnpm test` and `pnpm run ceiling:validate`.
 ### Task 4: Angular — GAP-042 checkbox/radio selection UI
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Test: `packages/ng/src/table/table.spec.ts`
 
 **Interfaces:**
+
 - Consumes: Task 1's `UTableColumn.body`/`renderCell` mechanism as the render host for the selection-column cell/header.
 - Produces: a new `selectionColumn` input (`boolean`, default `false`) that, when true, prepends a checkbox/radio selection column, matching real Prime's own template-consumed selection-column pattern (Spec §5.2).
 
@@ -314,11 +384,17 @@ Run `pnpm test` and `pnpm run ceiling:validate`.
 
 ```typescript
 describe("selection-column UI (Spec §5.2, GAP-042)", () => {
-  interface Row { id: number; name: string }
+  interface Row {
+    id: number;
+    name: string;
+  }
 
   it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 2, name: "B" }]);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ]);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("selectionMode", "multiple");
     fixture.componentRef.setInput("selectionColumn", true);
@@ -377,7 +453,10 @@ describe("selection-column UI (Spec §5.2, GAP-042)", () => {
 
   it("clicking the header checkbox selects all rows; clicking again deselects all", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const rows = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
     fixture.componentRef.setInput("value", rows);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("selectionMode", "multiple");
@@ -432,7 +511,10 @@ describe("selection-column UI (Spec §5.2, GAP-042)", () => {
 
 ```typescript
 describe("keyboard selection (Spec §5.7, GAP-047)", () => {
-  interface Row { id: number; name: string }
+  interface Row {
+    id: number;
+    name: string;
+  }
 
   it("Space toggles the focused row's selection when selectionMode is set", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -456,20 +538,27 @@ describe("keyboard selection (Spec §5.7, GAP-047)", () => {
     const emitted: unknown[] = [];
     fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
     fixture.detectChanges();
-    fixture.nativeElement.querySelector("tbody [role=row]").dispatchEvent(new KeyboardEvent("keydown", { code: "Enter" }));
+    fixture.nativeElement
+      .querySelector("tbody [role=row]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "Enter" }));
     expect(emitted).toEqual([{ id: 1, name: "A" }]);
   });
 
   it("Ctrl+A selects all rows when selectionMode is multiple", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const rows = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
     fixture.componentRef.setInput("value", rows);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("selectionMode", "multiple");
     const emitted: unknown[] = [];
     fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
     fixture.detectChanges();
-    fixture.nativeElement.querySelector("tbody [role=row]").dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true }));
+    fixture.nativeElement
+      .querySelector("tbody [role=row]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true }));
     expect(emitted).toEqual([rows]);
   });
 
@@ -480,7 +569,9 @@ describe("keyboard selection (Spec §5.7, GAP-047)", () => {
     const emitted: unknown[] = [];
     fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
     fixture.detectChanges();
-    fixture.nativeElement.querySelector("tbody [role=row]").dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true }));
+    fixture.nativeElement
+      .querySelector("tbody [role=row]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true }));
     expect(emitted).toEqual([]);
   });
 
@@ -527,7 +618,10 @@ In the existing `onRowKeyDown` handler (already present, handling Arrow/Home/End
 
 ```typescript
 describe("loading/empty states (Spec §5.6, GAP-046)", () => {
-  interface Row { id: number; name: string }
+  interface Row {
+    id: number;
+    name: string;
+  }
 
   it("shows a loading indicator when loading is true", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -613,7 +707,10 @@ Add `loading = input(false);` and a fixed default empty-state string constant (`
 
 ```typescript
 describe("row expansion (Spec §5.4, GAP-044)", () => {
-  interface Row { id: number; name: string }
+  interface Row {
+    id: number;
+    name: string;
+  }
 
   it("toggles a row's expanded state and renders expanded content via the expandedRowTemplate", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -640,7 +737,10 @@ describe("row expansion (Spec §5.4, GAP-044)", () => {
 
   it("does not throw when dataKey maps to a duplicate value across two rows", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 1, name: "B" }]);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "A" },
+      { id: 1, name: "B" },
+    ]);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("dataKey", "id");
     expect(() => fixture.detectChanges()).not.toThrow();
@@ -684,7 +784,11 @@ Add `expandedRowKeys = input<Record<string, boolean>>({});`, `expandedRowKeysCha
 
 ```typescript
 describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
-  interface Row { id: number; category: string; name: string }
+  interface Row {
+    id: number;
+    category: string;
+    name: string;
+  }
 
   it("spans consecutive rows sharing the same groupRowsBy value under one cell", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -693,7 +797,10 @@ describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
       { id: 2, category: "Fruit", name: "Banana" },
       { id: 3, category: "Veg", name: "Carrot" },
     ]);
-    fixture.componentRef.setInput("columns", [{ field: "category", header: "Category" }, { field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("columns", [
+      { field: "category", header: "Category" },
+      { field: "name", header: "Name" },
+    ]);
     fixture.componentRef.setInput("rowGroupMode", "rowspan");
     fixture.componentRef.setInput("groupRowsBy", "category");
     fixture.detectChanges();
@@ -752,7 +859,10 @@ Reuse the existing `groupedRows` computation already built for `"subheader"` mod
 
 ```typescript
 describe("row/cell editing lifecycle (Spec §5.3, GAP-043)", () => {
-  interface Row { id: number; name: string }
+  interface Row {
+    id: number;
+    name: string;
+  }
 
   it("entering edit mode on a row adds its key to editingRowKeys and renders an editable input", () => {
     const fixture = TestBed.createComponent(UTable<Row>);

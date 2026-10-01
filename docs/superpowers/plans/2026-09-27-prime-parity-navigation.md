@@ -10,16 +10,16 @@
 
 **GAP → Task mapping:**
 
-| GAP | Task(s) |
-|---|---|
-| GAP-052 | Task 1 (Angular), Task 2 (React), Task 3 (Vue) |
-| GAP-053 | Task 4 (Angular only) |
+| GAP     | Task(s)                                                                                                                   |
+| ------- | ------------------------------------------------------------------------------------------------------------------------- |
+| GAP-052 | Task 1 (Angular), Task 2 (React), Task 3 (Vue)                                                                            |
+| GAP-053 | Task 4 (Angular only)                                                                                                     |
 | GAP-054 | Task 5-8 (Angular: Menubar, TieredMenu, MegaMenu, PanelMenu), Task 9-12 (React, same order), Task 13-16 (Vue, same order) |
-| GAP-055 | Task 17 (Angular), Task 18 (React), Task 19 (Vue) |
-| GAP-069 | Task 20 (Angular only) |
-| GAP-056 | Task 21 (Angular), Task 22 (React), Task 23 (Vue) |
-| GAP-057 | Task 24 (React only) |
-| GAP-058 | Task 25 (React only) |
+| GAP-055 | Task 17 (Angular), Task 18 (React), Task 19 (Vue)                                                                         |
+| GAP-069 | Task 20 (Angular only)                                                                                                    |
+| GAP-056 | Task 21 (Angular), Task 22 (React), Task 23 (Vue)                                                                         |
+| GAP-057 | Task 24 (React only)                                                                                                      |
+| GAP-058 | Task 25 (React only)                                                                                                      |
 
 ## Global Constraints
 
@@ -84,7 +84,11 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
 
   it("ArrowRight skips a disabled step", () => {
     const fixture = TestBed.createComponent(USteps);
-    fixture.componentRef.setInput("model", [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }]);
+    fixture.componentRef.setInput("model", [
+      { label: "A" },
+      { label: "B", disabled: true },
+      { label: "C" },
+    ]);
     fixture.componentRef.setInput("readonly", false);
     fixture.detectChanges();
     const links = fixture.nativeElement.querySelectorAll("a");
@@ -169,7 +173,11 @@ describe("routerLink (Spec §5.2, GAP-053)", () => {
 describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
   it("ArrowRight/ArrowLeft move focus among top-level items", () => {
     const fixture = TestBed.createComponent(UMenubar);
-    fixture.componentRef.setInput("model", [{ label: "File" }, { label: "Edit" }, { label: "View" }]);
+    fixture.componentRef.setInput("model", [
+      { label: "File" },
+      { label: "Edit" },
+      { label: "View" },
+    ]);
     fixture.detectChanges();
     const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
     items[0].focus();
@@ -185,7 +193,10 @@ describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
     item.focus();
     item.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector("[role=menuitem][aria-label=New]") || fixture.nativeElement.textContent).toContain("New");
+    expect(
+      fixture.nativeElement.querySelector("[role=menuitem][aria-label=New]") ||
+        fixture.nativeElement.textContent
+    ).toContain("New");
   });
 
   it("Escape closes the innermost open submenu, keeping focus on its own trigger", () => {
@@ -203,7 +214,11 @@ describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
 
   it("ArrowRight skips a disabled top-level item", () => {
     const fixture = TestBed.createComponent(UMenubar);
-    fixture.componentRef.setInput("model", [{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]);
+    fixture.componentRef.setInput("model", [
+      { label: "File" },
+      { label: "Edit", disabled: true },
+      { label: "View" },
+    ]);
     fixture.detectChanges();
     const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
     items[0].focus();
@@ -390,7 +405,9 @@ First read real PrimeReact 10.9.9's own `TabView`/`TabViewBase` source in full (
 describe("scrollable overflow (Spec §5.7, GAP-057)", () => {
   it("does not render navigator buttons when scrollable is false (the default)", () => {
     render(<UTabView>{/* many tab panels, enough to overflow */}</UTabView>);
-    expect(screen.queryByRole("button", { name: /scroll left|previous|next/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /scroll left|previous|next/i })
+    ).not.toBeInTheDocument();
   });
 
   it("shows only the next-scroll button when scrollable is true and tab labels overflow, scrolled to the start", () => {
@@ -407,7 +424,9 @@ describe("scrollable overflow (Spec §5.7, GAP-057)", () => {
 
   it("does not render navigator buttons when scrollable is true but tabs fit without overflow", () => {
     render(<UTabView scrollable>{/* one short tab */}</UTabView>);
-    expect(screen.queryByRole("button", { name: /scroll left|previous|next/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /scroll left|previous|next/i })
+    ).not.toBeInTheDocument();
   });
 });
 ```
@@ -430,7 +449,11 @@ First re-read real PrimeReact 10.9.9's own `TabView.js`/`TabViewBase.js` close p
 ```tsx
 describe("closable tabs (Spec §5.8, GAP-058)", () => {
   it("renders a close button on a tab with closable set", () => {
-    render(<UTabView><UTabPanel header="A" closable /></UTabView>);
+    render(
+      <UTabView>
+        <UTabPanel header="A" closable />
+      </UTabView>
+    );
     expect(screen.getByRole("button", { name: /close/i })).toBeInTheDocument();
   });
 
@@ -460,7 +483,11 @@ describe("closable tabs (Spec §5.8, GAP-058)", () => {
   });
 
   it("does not render a close button when closable is unset", () => {
-    render(<UTabView><UTabPanel header="A" /></UTabView>);
+    render(
+      <UTabView>
+        <UTabPanel header="A" />
+      </UTabView>
+    );
     expect(screen.queryByRole("button", { name: /close/i })).not.toBeInTheDocument();
   });
 });

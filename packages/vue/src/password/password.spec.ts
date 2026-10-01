@@ -96,7 +96,7 @@ describe("UPassword", () => {
       // useId() is unique per app; separate mount() calls are separate apps, so host both in one.
       const wrapper = mount(
         { components: { UPassword }, template: "<div><UPassword /><UPassword /></div>" },
-        { attachTo: document.body },
+        { attachTo: document.body }
       );
       const inputs = wrapper.findAll("input");
       await inputs[0].trigger("focus");
@@ -129,7 +129,14 @@ describe("UPassword", () => {
     it("defines the visually-hidden rule in the Password style module", () => {
       const css = passwordStyleModule.css.replace(/\s+/g, " ");
       expect(css).toContain(".u-password-hidden-accessible {");
-      for (const decl of ["clip: rect(0 0 0 0)", "height: 1px", "width: 1px", "margin: -1px", "overflow: hidden", "position: absolute"]) {
+      for (const decl of [
+        "clip: rect(0 0 0 0)",
+        "height: 1px",
+        "width: 1px",
+        "margin: -1px",
+        "overflow: hidden",
+        "position: absolute",
+      ]) {
         expect(css).toContain(decl);
       }
     });

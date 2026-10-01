@@ -44,22 +44,22 @@ This is broader than GAP-009's recorded wording (one secondary entry point direc
 
 ### Failures (14)
 
-| Component | iso | solo | Triggering import | Import target a secondary entry? |
-|---|---|---|---|---|
-| confirm-dialog | FAIL | FAIL | `confirm-dialog.ts:12` `../button/button`; `:13` `../dialog/dialog` | No (excluded 5) |
-| confirm-popup | FAIL | FAIL | `confirm-popup.ts:16` `../button/button` | No (excluded 5) |
-| data-view | FAIL | FAIL | `data-view.ts:14` `../paginator/paginator` | Yes in iso, no in solo |
-| drawer | FAIL | FAIL | `drawer.ts:13` `../button/button` | No (excluded 5) |
-| dynamic-dialog | FAIL | FAIL | `dynamic-dialog.ts:4` `../dialog/dialog` | No (excluded 5) |
-| file-upload | FAIL | FAIL | `file-upload.ts:15` `../progress-bar/progress-bar` | **No** (progress-bar itself passes) |
-| order-list | FAIL | FAIL | `order-list.ts:19` `../listbox/listbox` | **No** |
-| overlay-badge | FAIL | FAIL | `overlay-badge.ts:3` `../badge/badge` | Yes in iso, no in solo |
-| panel | FAIL | FAIL | `panel.ts:13` `../button` | No (excluded 5) |
-| pick-list | FAIL | FAIL | `pick-list.ts:25` `../listbox/listbox` | **No** |
-| scroll-top | FAIL | FAIL | `scroll-top.ts:19` `../button` | No (excluded 5) |
-| select-button | FAIL | FAIL | `select-button.ts:13` `../toggle-button/toggle-button` | **No** |
-| split-button | FAIL | FAIL | `split-button.ts:11` `../button`; `:12` `../menu` | No (excluded 5) |
-| textarea | FAIL | FAIL | `textarea.ts:14` `../fluid/fluid` | Yes in iso, no in solo (same shape as GAP-009's input-text → fluid) |
+| Component      | iso  | solo | Triggering import                                                   | Import target a secondary entry?                                    |
+| -------------- | ---- | ---- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| confirm-dialog | FAIL | FAIL | `confirm-dialog.ts:12` `../button/button`; `:13` `../dialog/dialog` | No (excluded 5)                                                     |
+| confirm-popup  | FAIL | FAIL | `confirm-popup.ts:16` `../button/button`                            | No (excluded 5)                                                     |
+| data-view      | FAIL | FAIL | `data-view.ts:14` `../paginator/paginator`                          | Yes in iso, no in solo                                              |
+| drawer         | FAIL | FAIL | `drawer.ts:13` `../button/button`                                   | No (excluded 5)                                                     |
+| dynamic-dialog | FAIL | FAIL | `dynamic-dialog.ts:4` `../dialog/dialog`                            | No (excluded 5)                                                     |
+| file-upload    | FAIL | FAIL | `file-upload.ts:15` `../progress-bar/progress-bar`                  | **No** (progress-bar itself passes)                                 |
+| order-list     | FAIL | FAIL | `order-list.ts:19` `../listbox/listbox`                             | **No**                                                              |
+| overlay-badge  | FAIL | FAIL | `overlay-badge.ts:3` `../badge/badge`                               | Yes in iso, no in solo                                              |
+| panel          | FAIL | FAIL | `panel.ts:13` `../button`                                           | No (excluded 5)                                                     |
+| pick-list      | FAIL | FAIL | `pick-list.ts:25` `../listbox/listbox`                              | **No**                                                              |
+| scroll-top     | FAIL | FAIL | `scroll-top.ts:19` `../button`                                      | No (excluded 5)                                                     |
+| select-button  | FAIL | FAIL | `select-button.ts:13` `../toggle-button/toggle-button`              | **No**                                                              |
+| split-button   | FAIL | FAIL | `split-button.ts:11` `../button`; `:12` `../menu`                   | No (excluded 5)                                                     |
+| textarea       | FAIL | FAIL | `textarea.ts:14` `../fluid/fluid`                                   | Yes in iso, no in solo (same shape as GAP-009's input-text → fluid) |
 
 ### Passes (61)
 

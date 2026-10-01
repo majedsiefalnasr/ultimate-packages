@@ -77,7 +77,9 @@ describe("USplitButton", () => {
     const buttons = fixture.nativeElement.querySelectorAll("button");
     buttons[1].click();
     fixture.detectChanges();
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", code: "Escape", bubbles: true }));
+    document.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Escape", code: "Escape", bubbles: true })
+    );
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('[role="menu"]'))).toBeNull();
   });

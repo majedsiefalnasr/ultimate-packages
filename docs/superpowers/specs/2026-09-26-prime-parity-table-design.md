@@ -23,7 +23,7 @@
 - Table's filter-vocabulary work — already resolved by DECISION-C / `2026-09-23-table-filter-vocabulary-design.md`, not reopened here.
 - Any Material/Lara/Nora theming question — DEFERRED, unrelated to this Spec's scope, not touched.
 - PanelMenu/MegaMenu behavioral-difference questions — KEEP CURRENT BEHAVIOR, unrelated, not touched.
-- Designing GAP-041's exact column-template API shape as a final, binding contract — per the GAP stage's own explicit constraint, this specification establishes the *externally observable requirements* the eventual API must satisfy (§5), not the API's own concrete shape (prop names, function signatures, slot names) — that remains open, and the Implementation Plan (or a narrower follow-up Spec, if the Plan reviewer determines one is needed) resolves it with real framework-idiomatic design work.
+- Designing GAP-041's exact column-template API shape as a final, binding contract — per the GAP stage's own explicit constraint, this specification establishes the _externally observable requirements_ the eventual API must satisfy (§5), not the API's own concrete shape (prop names, function signatures, slot names) — that remains open, and the Implementation Plan (or a narrower follow-up Spec, if the Plan reviewer determines one is needed) resolves it with real framework-idiomatic design work.
 
 ---
 
@@ -32,7 +32,7 @@
 1. **All seven items are INCLUDE** — Final Consolidated Decision Ledger, Final Scope Ledger §A. Not re-derived here.
 2. **GC-D3 (GAP-043) supersedes its own earlier Deferred classification** — the Batch 4 Findings Triage originally classified Table row/cell editing lifecycle "Deferred" because the implementation Plan's own task text (Angular Task 10/React Task 16/Vue Task 22) explicitly, symmetrically defers it. The final human decision overrides that classification to INCLUDE. This specification treats GAP-043 as in-scope, full stop — the superseded Deferred classification is historical record only (see GAP-043's own entry in `BLUEPRINT_GAPS.md`), not a live constraint.
 3. **GAP-041 → GAP-042 is a hard dependency** — GAP-042 cannot be scoped concretely, and must not be implemented, before GAP-041's own template mechanism exists. Preserved explicitly in §7.
-4. **GAP-045 (`rowspan`) is INCLUDE for Angular + React + Vue** — resolving the Final Decision Ledger's own previously-flagged open question about Vue's asymmetry (Vue never declared the `rowspan` type option at all, unlike Angular/React which declared but never implemented it). This specification's scope covers completing Angular/React's declared-but-unimplemented branch *and* adding the option to Vue for the first time.
+4. **GAP-045 (`rowspan`) is INCLUDE for Angular + React + Vue** — resolving the Final Decision Ledger's own previously-flagged open question about Vue's asymmetry (Vue never declared the `rowspan` type option at all, unlike Angular/React which declared but never implemented it). This specification's scope covers completing Angular/React's declared-but-unimplemented branch _and_ adding the option to Vue for the first time.
 5. **GAP-047 is confirmed independent of GAP-042** — real PrimeNG's own Ctrl+A condition checks `selectionMode`, not checkbox-column presence, verified via direct source read during Batch 4 triage. This specification does not sequence GAP-047 after GAP-041/042.
 6. **The framework-native editing-state model per framework (GAP-043) is already settled by the original Table Spec §11** (`2026-09-02-table-component-design.md`) and is not reopened here — Angular's key-map/DOM-forms-validity, React's controlled/uncontrolled `editingRows`, Vue's array-prop each remain framework-native.
 
@@ -42,15 +42,15 @@ None of these decisions is reopened by this specification.
 
 ## 3. Framework Applicability
 
-| Gap | Angular | React | Vue |
-|---|---|---|---|
-| GAP-041 (column templates) | In scope | In scope | In scope |
-| GAP-042 (selection UI) | In scope (depends on GAP-041) | In scope (depends on GAP-041) | In scope (depends on GAP-041) |
-| GAP-043 (editing lifecycle) | In scope | In scope | In scope |
-| GAP-044 (row expansion) | In scope | In scope | In scope |
-| GAP-045 (`rowspan`) | In scope (complete declared-but-unimplemented branch) | In scope (complete declared-but-unimplemented branch) | In scope (add the option for the first time) |
-| GAP-046 (loading/empty states) | In scope | In scope | In scope |
-| GAP-047 (keyboard selection) | In scope | In scope | In scope |
+| Gap                            | Angular                                               | React                                                 | Vue                                          |
+| ------------------------------ | ----------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------- |
+| GAP-041 (column templates)     | In scope                                              | In scope                                              | In scope                                     |
+| GAP-042 (selection UI)         | In scope (depends on GAP-041)                         | In scope (depends on GAP-041)                         | In scope (depends on GAP-041)                |
+| GAP-043 (editing lifecycle)    | In scope                                              | In scope                                              | In scope                                     |
+| GAP-044 (row expansion)        | In scope                                              | In scope                                              | In scope                                     |
+| GAP-045 (`rowspan`)            | In scope (complete declared-but-unimplemented branch) | In scope (complete declared-but-unimplemented branch) | In scope (add the option for the first time) |
+| GAP-046 (loading/empty states) | In scope                                              | In scope                                              | In scope                                     |
+| GAP-047 (keyboard selection)   | In scope                                              | In scope                                              | In scope                                     |
 
 ---
 
@@ -111,7 +111,7 @@ No specific API shape is mandated by this specification beyond the observable be
 ## 7. Dependency Relationships
 
 - **GAP-041 → GAP-042 (hard dependency).** GAP-042 must not be planned or implemented before GAP-041's column-template mechanism's externally observable contract (§5.1) is settled by the Implementation Plan (or its own follow-up Spec, if escalated).
-- **GAP-041 → GAP-046 (soft dependency, templated-empty-state half only).** GAP-046's boolean `loading` flag and default empty-state message have no dependency on GAP-041 and may be implemented independently. Only the *customizable* empty-state region depends on GAP-041's own template mechanism existing.
+- **GAP-041 → GAP-046 (soft dependency, templated-empty-state half only).** GAP-046's boolean `loading` flag and default empty-state message have no dependency on GAP-041 and may be implemented independently. Only the _customizable_ empty-state region depends on GAP-041's own template mechanism existing.
 - **GAP-047 is confirmed independent of GAP-042.** No sequencing constraint between them.
 - **GAP-043, GAP-044, GAP-045 are independent** of every other gap in this Spec and of each other.
 
@@ -127,16 +127,16 @@ No specific API shape is mandated by this specification beyond the observable be
 
 ## 9. Acceptance Criteria (Traceable to Originating GAP)
 
-| Criterion | Traces to |
-|---|---|
-| Consumer can render custom cell/header/footer content via a framework-idiomatic mechanism, in all 3 frameworks | GAP-041 |
-| Consumer can enable a checkbox/radio selection column with select-all header checkbox, in all 3 frameworks, after GAP-041 lands | GAP-042 |
-| Consumer can enter/save/cancel row or cell edits with validation-state feedback, in all 3 frameworks, using each framework's own already-settled editing-state model | GAP-043 |
-| Consumer can expand/collapse rows and receive an expansion-change notification, in all 3 frameworks | GAP-044 |
-| `rowGroupMode: "rowspan"` groups consecutive same-value rows under a spanned cell, in all 3 frameworks | GAP-045 |
-| `loading` boolean displays a loading indicator; empty `value` + non-loading displays a default empty-state message, in all 3 frameworks, independent of GAP-041 | GAP-046 (boolean/default half) |
-| Empty-state region content is customizable via GAP-041's template mechanism once it exists | GAP-046 (templated half) |
-| Space/Enter toggles row selection, Ctrl/Cmd+A selects all (when `selectionMode="multiple"`), on the existing keyboard-navigation handler, in all 3 frameworks, independent of GAP-042 | GAP-047 |
+| Criterion                                                                                                                                                                             | Traces to                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| Consumer can render custom cell/header/footer content via a framework-idiomatic mechanism, in all 3 frameworks                                                                        | GAP-041                        |
+| Consumer can enable a checkbox/radio selection column with select-all header checkbox, in all 3 frameworks, after GAP-041 lands                                                       | GAP-042                        |
+| Consumer can enter/save/cancel row or cell edits with validation-state feedback, in all 3 frameworks, using each framework's own already-settled editing-state model                  | GAP-043                        |
+| Consumer can expand/collapse rows and receive an expansion-change notification, in all 3 frameworks                                                                                   | GAP-044                        |
+| `rowGroupMode: "rowspan"` groups consecutive same-value rows under a spanned cell, in all 3 frameworks                                                                                | GAP-045                        |
+| `loading` boolean displays a loading indicator; empty `value` + non-loading displays a default empty-state message, in all 3 frameworks, independent of GAP-041                       | GAP-046 (boolean/default half) |
+| Empty-state region content is customizable via GAP-041's template mechanism once it exists                                                                                            | GAP-046 (templated half)       |
+| Space/Enter toggles row selection, Ctrl/Cmd+A selects all (when `selectionMode="multiple"`), on the existing keyboard-navigation handler, in all 3 frameworks, independent of GAP-042 | GAP-047                        |
 
 ---
 

@@ -10,18 +10,18 @@
 
 **Investigation result, authoritative for this Plan (confirmed during Plan-stage investigation, human-approved):**
 
-| Component | Result | Evidence |
-|---|---|---|
-| ScrollPanel | **Confirmed defect** | `ngAfterViewInit()` unconditionally calls `this.moveBar()` (→ `window.getComputedStyle`) and `window.addEventListener("resize", ...)`. |
-| ContextMenu | **Confirmed defect** | `ngOnInit()` unconditionally calls `document.addEventListener("contextmenu", ...)` when `global()` is true. |
-| Breadcrumb | **Confirmed safe** | `isCurrent()`'s `window.location` access is already guarded by `typeof window !== "undefined"`. |
-| ColorPicker | **Confirmed safe** | `document.addEventListener` calls live only in `bindDragListeners()`, reachable only from `onColorMouseDown`/`onHueMouseDown` (mouse event handlers, never a lifecycle hook). |
-| ConfirmPopup | **Confirmed safe** | `document`/`window.addEventListener` calls live only in `bindDismissListeners()`, reachable only from `show()`, itself reachable only from a `UConfirmationService` subscription callback that fires only on a real user-triggered `confirm()` call. |
-| Knob | **Confirmed safe** | `document.addEventListener` call lives only in `onMouseDown` (a mouse event handler). Zero lifecycle hooks in the file. |
-| Popover | **Confirmed safe** | Same pattern as ConfirmPopup — `document`/`window.addEventListener` calls live only in `bindDismissListeners()`, reachable only from the imperatively-invoked public `show()` method. |
-| Slider | **Confirmed safe** | `document.addEventListener` call lives only in `bindDragListeners()`, reachable only from `onMouseDown` (a mouse event handler). |
-| Splitter | **Confirmed safe** | `ngAfterContentInit()` (a lifecycle hook that does run server-side) calls only `this.panels()`/`this.panelSizes.set(...)`/`this.destroyRef.onDestroy(...)` — zero `window`/`document` access. All `document.addEventListener` calls live in `bindMouseListeners()`/`bindTouchListeners()`, reachable only from mouse/touch event handlers. |
-| StyleClass | **Confirmed safe** | `document.querySelector` (in `resolveTarget()`) and all `document`/`window.addEventListener` calls are reachable only from `onClick()` (a `@HostListener("click")` handler), never from a lifecycle hook. |
+| Component    | Result               | Evidence                                                                                                                                                                                                                                                                                                                                   |
+| ------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ScrollPanel  | **Confirmed defect** | `ngAfterViewInit()` unconditionally calls `this.moveBar()` (→ `window.getComputedStyle`) and `window.addEventListener("resize", ...)`.                                                                                                                                                                                                     |
+| ContextMenu  | **Confirmed defect** | `ngOnInit()` unconditionally calls `document.addEventListener("contextmenu", ...)` when `global()` is true.                                                                                                                                                                                                                                |
+| Breadcrumb   | **Confirmed safe**   | `isCurrent()`'s `window.location` access is already guarded by `typeof window !== "undefined"`.                                                                                                                                                                                                                                            |
+| ColorPicker  | **Confirmed safe**   | `document.addEventListener` calls live only in `bindDragListeners()`, reachable only from `onColorMouseDown`/`onHueMouseDown` (mouse event handlers, never a lifecycle hook).                                                                                                                                                              |
+| ConfirmPopup | **Confirmed safe**   | `document`/`window.addEventListener` calls live only in `bindDismissListeners()`, reachable only from `show()`, itself reachable only from a `UConfirmationService` subscription callback that fires only on a real user-triggered `confirm()` call.                                                                                       |
+| Knob         | **Confirmed safe**   | `document.addEventListener` call lives only in `onMouseDown` (a mouse event handler). Zero lifecycle hooks in the file.                                                                                                                                                                                                                    |
+| Popover      | **Confirmed safe**   | Same pattern as ConfirmPopup — `document`/`window.addEventListener` calls live only in `bindDismissListeners()`, reachable only from the imperatively-invoked public `show()` method.                                                                                                                                                      |
+| Slider       | **Confirmed safe**   | `document.addEventListener` call lives only in `bindDragListeners()`, reachable only from `onMouseDown` (a mouse event handler).                                                                                                                                                                                                           |
+| Splitter     | **Confirmed safe**   | `ngAfterContentInit()` (a lifecycle hook that does run server-side) calls only `this.panels()`/`this.panelSizes.set(...)`/`this.destroyRef.onDestroy(...)` — zero `window`/`document` access. All `document.addEventListener` calls live in `bindMouseListeners()`/`bindTouchListeners()`, reachable only from mouse/touch event handlers. |
+| StyleClass   | **Confirmed safe**   | `document.querySelector` (in `resolveTarget()`) and all `document`/`window.addEventListener` calls are reachable only from `onClick()` (a `@HostListener("click")` handler), never from a lifecycle hook.                                                                                                                                  |
 
 **This table is the binding basis for Tasks 1-9 below — no task re-derives this evidence; each verification task cites its own row directly.** (Re-checked against HEAD 2026-10-01: still accurate. Destroy paths — which also run server-side — only remove listeners that were actually registered, so they are safe too.)
 
@@ -44,6 +44,7 @@
 ### Task 1: Angular — GAP-065 fix `ScrollPanel` and `ContextMenu`
 
 **Files:**
+
 - Modify: `packages/ng/src/scroll-panel/scroll-panel.ts`, `packages/ng/src/context-menu/context-menu.ts`
 - Test: `packages/ng/src/scroll-panel/scroll-panel.spec.ts`, `packages/ng/src/context-menu/context-menu.spec.ts`, plus an SSR-specific test if this repo's existing SSR harness (`apps/playground-angular/e2e/ssr-hydration.spec.ts`) supports adding new component cases — check that file's own existing structure first.
 
@@ -57,7 +58,9 @@ describe("SSR safety (Spec §5, GAP-065)", () => {
     // repo's own existing SSR-simulation pattern (check Tooltip's own
     // spec file for the established TestBed provider-override shape used
     // to prove its own isPlatformBrowser guard — copy that pattern here).
-    const fixture = TestBed.createComponent(UScrollPanel /* with PLATFORM_ID overridden to 'server' */);
+    const fixture = TestBed.createComponent(
+      UScrollPanel /* with PLATFORM_ID overridden to 'server' */
+    );
     expect(() => fixture.detectChanges()).not.toThrow();
   });
 });
@@ -65,7 +68,9 @@ describe("SSR safety (Spec §5, GAP-065)", () => {
 // context-menu.spec.ts, additive:
 describe("SSR safety (Spec §5, GAP-065)", () => {
   it("ngOnInit does not throw when window/document are unavailable, even with global=true", () => {
-    const fixture = TestBed.createComponent(UContextMenu /* with PLATFORM_ID overridden to 'server' */);
+    const fixture = TestBed.createComponent(
+      UContextMenu /* with PLATFORM_ID overridden to 'server' */
+    );
     fixture.componentRef.setInput("global", true);
     expect(() => fixture.detectChanges()).not.toThrow();
   });
@@ -82,12 +87,14 @@ describe("SSR safety (Spec §5, GAP-065)", () => {
 - [ ] **Step 2: Implement**
 
 In `packages/ng/src/scroll-panel/scroll-panel.ts`:
+
 1. Inject `PLATFORM_ID` and import `isPlatformBrowser` from `@angular/common` (matching `Tooltip`'s own exact import/injection pattern).
 2. Wrap `ngAfterViewInit`'s entire body in `if (isPlatformBrowser(this.platformId)) { ... }` — this covers `moveBar()`, `calculateContainerHeight()`, and the `window.addEventListener` call in one guard, addressing Review Focus item 1 by guarding the outer call rather than each inner one separately.
 
 In `packages/ng/src/context-menu/context-menu.ts`:
+
 1. Same injection pattern.
-2. Wrap `ngOnInit`'s `if (this.global()) { ... }` block in an additional `isPlatformBrowser(this.platformId) &&` check (or nest it), so the `document.addEventListener("contextmenu", ...)` call is skipped server-side but still registers normally once the component runs client-side (addressing Review Focus item 2 — this is a guard on *when* registration happens, not a permanent feature removal).
+2. Wrap `ngOnInit`'s `if (this.global()) { ... }` block in an additional `isPlatformBrowser(this.platformId) &&` check (or nest it), so the `document.addEventListener("contextmenu", ...)` call is skipped server-side but still registers normally once the component runs client-side (addressing Review Focus item 2 — this is a guard on _when_ registration happens, not a permanent feature removal).
 
 - [ ] **Step 3: Run tests, verify green**
 

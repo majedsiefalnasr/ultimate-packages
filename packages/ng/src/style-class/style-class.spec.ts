@@ -273,7 +273,9 @@ describe("UStyleClass", () => {
         for (const [spyName, spy] of Object.entries(spies)) {
           expect(spy, spyName).not.toHaveBeenCalled();
         }
-        const directiveQueries = docQuery.mock.calls.filter(([selector]) => !/^#root\d+$/.test(selector));
+        const directiveQueries = docQuery.mock.calls.filter(
+          ([selector]) => !/^#root\d+$/.test(selector)
+        );
         expect(directiveQueries).toEqual([]);
       } finally {
         vi.restoreAllMocks();

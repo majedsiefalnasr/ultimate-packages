@@ -10,7 +10,11 @@ import {
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { UBaseComponent, UOverlay, type UMenuItem } from "@ultimate/ng-core";
-import { ESCAPE_PRIORITIES, displayOrderRegistry, escapeRegistry } from "@ultimate/uix-utils/escape";
+import {
+  ESCAPE_PRIORITIES,
+  displayOrderRegistry,
+  escapeRegistry,
+} from "@ultimate/uix-utils/escape";
 import { ZIndex } from "@ultimate/uix-utils/zindex";
 import { contextMenuStyleModule } from "./context-menu-style";
 

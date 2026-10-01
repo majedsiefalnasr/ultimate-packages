@@ -92,7 +92,9 @@ describe("UTieredMenu", () => {
       const { container } = render(
         <UTieredMenu model={[{ label: "File" }, { label: "Edit" }, { label: "View" }]} />
       );
-      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"] > .u-tieredmenu-content > a');
+      const links = container.querySelectorAll<HTMLAnchorElement>(
+        '[role="menuitem"] > .u-tieredmenu-content > a'
+      );
       links[0].focus();
       fireEvent.keyDown(links[0], { code: "ArrowDown" });
       expect(document.activeElement).toBe(links[1]);
@@ -110,16 +112,22 @@ describe("UTieredMenu", () => {
 
     it("ArrowDown skips a disabled top-level item", () => {
       const { container } = render(
-        <UTieredMenu model={[{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]} />
+        <UTieredMenu
+          model={[{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]}
+        />
       );
-      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"] > .u-tieredmenu-content > a');
+      const links = container.querySelectorAll<HTMLAnchorElement>(
+        '[role="menuitem"] > .u-tieredmenu-content > a'
+      );
       links[0].focus();
       fireEvent.keyDown(links[0], { code: "ArrowDown" });
       expect(document.activeElement).toBe(links[2]);
     });
 
     it("opens a submenu and focuses its first item on Enter/Space", () => {
-      const { container } = render(<UTieredMenu model={[{ label: "File", items: [{ label: "New" }] }]} />);
+      const { container } = render(
+        <UTieredMenu model={[{ label: "File", items: [{ label: "New" }] }]} />
+      );
       const item = container.querySelector('[role="menuitem"]') as HTMLElement;
       const link = item.querySelector(".u-tieredmenu-content > a") as HTMLAnchorElement;
       link.focus();
@@ -134,7 +142,9 @@ describe("UTieredMenu", () => {
     });
 
     it("closes the innermost open submenu on Escape and refocuses its trigger", () => {
-      const { container } = render(<UTieredMenu model={[{ label: "File", items: [{ label: "New" }] }]} />);
+      const { container } = render(
+        <UTieredMenu model={[{ label: "File", items: [{ label: "New" }] }]} />
+      );
       const item = container.querySelector('[role="menuitem"]') as HTMLElement;
       const link = item.querySelector(".u-tieredmenu-content > a") as HTMLAnchorElement;
       link.focus();
@@ -166,8 +176,12 @@ describe("UTieredMenu", () => {
 
       // Move down within the open submenu to "Open" (has its own nested submenu).
       fireEvent.keyDown(newLink, { code: "ArrowDown" });
-      const openItemLi = fileItem.querySelector(".u-tieredmenu-submenu > li:nth-child(2)") as HTMLElement;
-      const openLink = openItemLi.querySelector<HTMLAnchorElement>(":scope > .u-tieredmenu-content > a") as HTMLAnchorElement;
+      const openItemLi = fileItem.querySelector(
+        ".u-tieredmenu-submenu > li:nth-child(2)"
+      ) as HTMLElement;
+      const openLink = openItemLi.querySelector<HTMLAnchorElement>(
+        ":scope > .u-tieredmenu-content > a"
+      ) as HTMLAnchorElement;
       expect(document.activeElement).toBe(openLink);
 
       // Open the nested submenu via Enter, landing focus on "Recent".

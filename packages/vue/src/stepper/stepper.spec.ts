@@ -150,7 +150,9 @@ describe("UStepPanel vertical separator (GAP-063)", () => {
 describe("Stepper vertical StepItem layout CSS (GAP-063)", () => {
   const css = stepperStyleModule.css as string;
   const rule = (selector: string) => {
-    const m = css.match(new RegExp(`^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{([^}]*)\\}`, "m"));
+    const m = css.match(
+      new RegExp(`^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{([^}]*)\\}`, "m")
+    );
     return m ? m[1].trim() : null;
   };
 
@@ -166,12 +168,16 @@ describe("Stepper vertical StepItem layout CSS (GAP-063)", () => {
 
   it("makes the panel a grid, offsets content, handles RTL and last-item padding", () => {
     expect(rule(".u-step-item .u-step-panel")).toBe("display: grid; grid-template-rows: 1fr;");
-    expect(rule(".u-step-item .u-step-panel-content")).toBe("width: 100%; margin-inline-start: 1rem;");
+    expect(rule(".u-step-item .u-step-panel-content")).toBe(
+      "width: 100%; margin-inline-start: 1rem;"
+    );
     expect(rule(".u-step-item .u-stepper-separator:dir(rtl)")).toBe("left: -18px;");
     expect(rule(".u-step-item:last-of-type .u-step-panel")).toBe("padding-inline-start: 2rem;");
   });
 
   it("declares the hidden-panel rule after the grid rule so inactive panels stay hidden", () => {
-    expect(css.indexOf('.u-step-panel[data-u-hidden="true"]')).toBeGreaterThan(css.indexOf(".u-step-item .u-step-panel {"));
+    expect(css.indexOf('.u-step-panel[data-u-hidden="true"]')).toBeGreaterThan(
+      css.indexOf(".u-step-item .u-step-panel {")
+    );
   });
 });
