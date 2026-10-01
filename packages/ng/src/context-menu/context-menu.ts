@@ -10,7 +10,7 @@ import {
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { UBaseComponent, UOverlay, type UMenuItem } from "@ultimate/ng-core";
-import { ESCAPE_PRIORITIES, escapeRegistry } from "@ultimate/uix-utils/escape";
+import { ESCAPE_PRIORITIES, displayOrderRegistry, escapeRegistry } from "@ultimate/uix-utils/escape";
 import { ZIndex } from "@ultimate/uix-utils/zindex";
 import { contextMenuStyleModule } from "./context-menu-style";
 
@@ -115,7 +115,7 @@ export class UContextMenu extends UBaseComponent {
   private documentClickListener: ((event: MouseEvent) => void) | null = null;
   private documentContextMenuListener: ((event: MouseEvent) => void) | null = null;
   private windowResizeListener: (() => void) | null = null;
-  private registeredEscape = false;
+  private displayOrder: number | undefined;
   private static instanceCount = 0;
   private readonly instanceUid = ++UContextMenu.instanceCount;
 
@@ -228,20 +228,27 @@ export class UContextMenu extends UBaseComponent {
     }
   }
 
+  /**
+   * Keys Escape by open order in the "menu" display-order group shared with
+   * `UMenu` popups (React/Vue ContextMenu's `useDisplayOrder`/
+   * `createDisplayOrderMixin` parity), so the most recently opened menu of
+   * either kind closes first and the two never share an `escapeRegistry` key.
+   */
   private registerEscape(): void {
-    if (this.registeredEscape) {
+    if (this.displayOrder !== undefined) {
       return;
     }
-    this.registeredEscape = true;
-    escapeRegistry.register(ESCAPE_PRIORITIES.MENU, this.instanceUid, () => this.hide());
+    this.displayOrder = displayOrderRegistry.register("menu", this.instanceUid);
+    escapeRegistry.register(ESCAPE_PRIORITIES.MENU, this.displayOrder, () => this.hide());
   }
 
   private unregisterEscape(): void {
-    if (!this.registeredEscape) {
+    if (this.displayOrder === undefined) {
       return;
     }
-    escapeRegistry.unregister(ESCAPE_PRIORITIES.MENU, this.instanceUid);
-    this.registeredEscape = false;
+    escapeRegistry.unregister(ESCAPE_PRIORITIES.MENU, this.displayOrder);
+    displayOrderRegistry.unregister("menu", this.instanceUid);
+    this.displayOrder = undefined;
   }
 
   ngOnDestroy(): void {
