@@ -23,7 +23,9 @@
 | Splitter | **Confirmed safe** | `ngAfterContentInit()` (a lifecycle hook that does run server-side) calls only `this.panels()`/`this.panelSizes.set(...)`/`this.destroyRef.onDestroy(...)` — zero `window`/`document` access. All `document.addEventListener` calls live in `bindMouseListeners()`/`bindTouchListeners()`, reachable only from mouse/touch event handlers. |
 | StyleClass | **Confirmed safe** | `document.querySelector` (in `resolveTarget()`) and all `document`/`window.addEventListener` calls are reachable only from `onClick()` (a `@HostListener("click")` handler), never from a lifecycle hook. |
 
-**This table is the binding basis for Tasks 1-9 below — no task re-derives this evidence; each verification task cites its own row directly.**
+**This table is the binding basis for Tasks 1-9 below — no task re-derives this evidence; each verification task cites its own row directly.** (Re-checked against HEAD 2026-10-01: still accurate. Destroy paths — which also run server-side — only remove listeners that were actually registered, so they are safe too.)
+
+**Verification method — corrected 2026-10-01 (pre-dispatch check, user decision; see Spec §12):** the test sketches below mount under `PLATFORM_ID: 'server'` and assert "does not throw". Unit tests run in jsdom, where `window` and `document` always exist, so such assertions can never fail and prove nothing; the "Tooltip spec pattern" they point to does not exist (`tooltip.spec.ts` has no `PLATFORM_ID` override; `tooltip.ts:101` guards with `isPlatformBrowser(this.platformId)`). **Every task instead uses spy-based tests:** provide `{ provide: PLATFORM_ID, useValue: "server" }`, spy on the browser-global APIs the component touches (e.g. `window`/`document` `addEventListener`/`removeEventListener`, `window.getComputedStyle`, `document.querySelector`, and `window.location` reads where relevant), then mount, run change detection (including any lifecycle hooks the component has) and destroy the fixture, and assert **zero** calls. Task 1's tests must fail against the current `ScrollPanel`/`ContextMenu` before the fix and pass after; Task 1 also keeps a browser-platform test proving `global()` still registers its listener client-side. Tasks 2-9 add the same spy-based test for their component with no production change. Breadcrumb (Task 2) is guarded by `typeof window`, not `PLATFORM_ID`, so its test asserts the guarded `window.location` read is not reached when `window` is undefined, or otherwise documents the guard precisely — the implementer chooses the narrowest real assertion and explains it. The real Playwright SSR harness is not changed.
 
 ## Global Constraints
 
@@ -93,7 +95,7 @@ In `packages/ng/src/context-menu/context-menu.ts`:
 
 - [ ] **Step 4: Full suite + dependency ceiling**
 
-`pnpm test`, `pnpm run ceiling:validate`.
+`pnpm --filter @ultimate/ng test`, ng typecheck, `pnpm run ceiling:validate` (corrected 2026-10-01: originally `pnpm test`).
 
 ---
 
@@ -197,7 +199,8 @@ describe("SSR safety verification (Spec §5 tier 2, GAP-065)", () => {
 
 - Task 1's fix makes `ScrollPanel` and `ContextMenu` render without throwing under a simulated server `PLATFORM_ID`.
 - Tasks 2-9 each add one verification test confirming the already-safe behavior, with zero production-code changes (verify via `git diff` showing only test-file additions for Tasks 2-9).
-- `pnpm test`, `pnpm run ceiling:validate` pass after every task.
+- `pnpm --filter @ultimate/ng test`, the ng typecheck and `pnpm run ceiling:validate` pass after every task (corrected 2026-10-01: originally `pnpm test`; the full-monorepo run has pre-existing unrelated failures).
+- Every new SSR test is spy-based and non-vacuous (see "Verification method" above); Task 1's tests are shown failing before the fix.
 - React and Vue files are untouched (verify via `git status`).
 
 ## Documentation/Ledger Updates

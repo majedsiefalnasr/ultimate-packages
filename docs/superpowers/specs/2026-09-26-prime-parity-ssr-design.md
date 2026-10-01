@@ -93,3 +93,10 @@ None upstream. **Internal sequencing within this gap's own scope:** the 8 not-ye
 ## 11. Explicit Out-of-Scope Items
 
 React/Vue SSR behavior (Parity Confirmed). Track E's original 8-component proof set (already verified). Angular Tooltip's own *visibility* defect (unrelated to SSR-safety, tracked separately by GAP-066).
+
+---
+
+## 12. Implementation-Stage Corrections (2026-10-01)
+
+- **Verification method.** The Plan's test sketches mounted each component under a server `PLATFORM_ID` and asserted "does not throw". Unit tests run in jsdom, where `window` and `document` always exist, so those assertions cannot fail and would not evidence §5/§9. User decision: every task uses spy-based unit tests — under a server `PLATFORM_ID`, spy on the browser-global APIs the component touches and assert zero calls through mount, change detection and destroy. The two fixes' tests must fail before the fix. The Playwright SSR harness (`apps/playground-angular`, `ng-ssr-chromium`) is not changed.
+- **Tier-2 tracing.** The Plan-stage investigation (Plan's evidence table, re-checked at HEAD 2026-10-01) is the §5 tier-2 lifecycle tracing for the 8 remaining components: none reaches `window`/`document` from a server-executed lifecycle hook, so per the Plan's Global Constraints they receive verification tests, not guards. Their destroy paths also only remove listeners that were registered.
