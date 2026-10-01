@@ -82,6 +82,8 @@ None upstream. **Internal sequencing within this gap's own scope:** the 8 not-ye
 | Each of the 8 remaining components' confirmed window/document access is guarded by `isPlatformBrowser`; no SSR crash, after its own tracing step completes | GAP-065 (tier 2, fix) |
 | React's and Vue's own equivalent components are unaffected by any work under this Spec | GAP-065 (non-regression, per §2.4) |
 
+(Note 2026-10-01: rows 3-4 are satisfied per §12 — the tier-2 tracing found none of the 8 reaches a browser global from a server-executed path, so they received spy-based verification tests instead of guards.)
+
 ---
 
 ## 10. Evidence/Source References

@@ -197,7 +197,7 @@ describe("SSR safety verification (Spec §5 tier 2, GAP-065)", () => {
 
 ## Completion Criteria
 
-- Task 1's fix makes `ScrollPanel` and `ContextMenu` render without throwing under a simulated server `PLATFORM_ID`.
+- Task 1's fix stops `ScrollPanel` and `ContextMenu` from touching browser globals under a server `PLATFORM_ID` (spy-based; corrected 2026-10-01 from "render without throwing", which jsdom cannot detect).
 - Tasks 2-9 each add one verification test confirming the already-safe behavior, with zero production-code changes (verify via `git diff` showing only test-file additions for Tasks 2-9).
 - `pnpm --filter @ultimate/ng test`, the ng typecheck and `pnpm run ceiling:validate` pass after every task (corrected 2026-10-01: originally `pnpm test`; the full-monorepo run has pre-existing unrelated failures).
 - Every new SSR test is spy-based and non-vacuous (see "Verification method" above); Task 1's tests are shown failing before the fix.
