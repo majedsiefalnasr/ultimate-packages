@@ -91,4 +91,195 @@ describe("UTieredMenu", () => {
     expect(wrapper.emitted("item-select")).toBeTruthy();
     expect(wrapper.find('[role="menu"]').exists()).toBe(false);
   });
+
+  describe("keyboard navigation (GAP-054)", () => {
+    const rootLink = (wrapper: ReturnType<typeof mount>, index: number) =>
+      wrapper.findAll(".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a")[index];
+
+    it("carries ARIA roles for menu/menuitem", () => {
+      const wrapper = mount(UTieredMenu, { props: { model: items } });
+      expect(wrapper.find(".u-tieredmenu-root-list").attributes("role")).toBe("menu");
+      const rootLinks = wrapper.findAll(
+        ".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a"
+      );
+      rootLinks.forEach((link) => expect(link.attributes("role")).toBeUndefined());
+    });
+
+    it("moves focus with ArrowDown/ArrowUp among root items (same axis at every level)", async () => {
+      const wrapper = mount(UTieredMenu, { props: { model: items }, attachTo: document.body });
+      const file = rootLink(wrapper, 0);
+      const edit = rootLink(wrapper, 1);
+
+      (file.element as HTMLElement).focus();
+      await file.trigger("keydown", { code: "ArrowDown" });
+      expect(document.activeElement).toBe(edit.element);
+
+      // Wraps around.
+      await edit.trigger("keydown", { code: "ArrowDown" });
+      expect(document.activeElement).toBe(file.element);
+
+      await file.trigger("keydown", { code: "ArrowUp" });
+      expect(document.activeElement).toBe(edit.element);
+
+      wrapper.unmount();
+    });
+
+    it("skips disabled items in roving focus", async () => {
+      const model = [{ label: "One" }, { label: "Two", disabled: true }, { label: "Three" }];
+      const wrapper = mount(UTieredMenu, { props: { model }, attachTo: document.body });
+      const one = rootLink(wrapper, 0);
+      const three = rootLink(wrapper, 2);
+
+      (one.element as HTMLElement).focus();
+      await one.trigger("keydown", { code: "ArrowDown" });
+      expect(document.activeElement).toBe(three.element);
+
+      wrapper.unmount();
+    });
+
+    it("opens a submenu and focuses its first item on Enter/Space", async () => {
+      const wrapper = mount(UTieredMenu, { props: { model: items }, attachTo: document.body });
+      const file = rootLink(wrapper, 0);
+      (file.element as HTMLElement).focus();
+      await file.trigger("keydown", { code: "Enter" });
+
+      const fileItem = wrapper.findAll(".u-tieredmenu-root-list > li")[0];
+      expect(fileItem.attributes("data-u-open")).toBe("true");
+
+      const firstSubItemLink = fileItem.find(
+        ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+      );
+      expect(document.activeElement).toBe(firstSubItemLink.element);
+
+      wrapper.unmount();
+    });
+
+    it("closes the innermost open submenu on Escape and refocuses its trigger", async () => {
+      const wrapper = mount(UTieredMenu, { props: { model: items }, attachTo: document.body });
+      const file = rootLink(wrapper, 0);
+      (file.element as HTMLElement).focus();
+      await file.trigger("keydown", { code: "Enter" });
+
+      const fileItem = wrapper.findAll(".u-tieredmenu-root-list > li")[0];
+      const firstSubItemLink = fileItem.find(
+        ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+      );
+      expect(document.activeElement).toBe(firstSubItemLink.element);
+
+      await firstSubItemLink.trigger("keydown", { code: "Escape" });
+
+      expect(fileItem.attributes("data-u-open")).toBe("false");
+      expect(document.activeElement).toBe(file.element);
+
+      wrapper.unmount();
+    });
+
+    it("closes only the innermost submenu when nested two levels deep via real keyboard navigation", async () => {
+      const wrapper = mount(UTieredMenu, { props: { model: items }, attachTo: document.body });
+      // File (root) -> Open (submenu item 2, has nested "Recent") -> Recent (nested submenu).
+      const file = rootLink(wrapper, 0);
+      (file.element as HTMLElement).focus();
+      await file.trigger("keydown", { code: "Enter" });
+
+      const fileItem = wrapper.findAll(".u-tieredmenu-root-list > li")[0];
+      const newLink = fileItem.find(
+        ".u-tieredmenu-submenu > li:nth-child(1) > .u-tieredmenu-item-content > a"
+      );
+      expect(document.activeElement).toBe(newLink.element);
+
+      // Move down within the open submenu to "Open" (has its own nested submenu).
+      await newLink.trigger("keydown", { code: "ArrowDown" });
+      const openItemLi = fileItem.find(".u-tieredmenu-submenu > li:nth-child(2)");
+      const openLink = openItemLi.find(":scope > .u-tieredmenu-item-content > a");
+      expect(document.activeElement).toBe(openLink.element);
+
+      // Open the nested submenu via Enter, landing focus on "Recent".
+      await openLink.trigger("keydown", { code: "Enter" });
+      expect(openItemLi.attributes("data-u-open")).toBe("true");
+      const recentLink = openItemLi.find(
+        ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+      );
+      expect(document.activeElement).toBe(recentLink.element);
+
+      // Escape from the deepest level closes only that level, not the parent "File" menu.
+      await recentLink.trigger("keydown", { code: "Escape" });
+      expect(openItemLi.attributes("data-u-open")).toBe("false");
+      expect(document.activeElement).toBe(openLink.element);
+      expect(fileItem.attributes("data-u-open")).toBe("true");
+
+      wrapper.unmount();
+    });
+
+    describe("index mapping with a separator/hidden item before the target (GAP-054 fix-loop)", () => {
+      const modelWithSeparator = [
+        { label: "New" },
+        { separator: true },
+        { label: "Open", items: [{ label: "Recent" }] },
+        { label: "Exit" },
+      ];
+
+      it("opens the submenu on Enter for a group item positioned after a separator", async () => {
+        const wrapper = mount(UTieredMenu, {
+          props: { model: modelWithSeparator },
+          attachTo: document.body,
+        });
+        // "Open" is rendered link index 1 (separator has no <a>), but model index 2.
+        const openLink = wrapper.findAll(
+          ".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a"
+        )[1];
+        (openLink.element as HTMLElement).focus();
+        await openLink.trigger("keydown", { code: "Enter" });
+
+        const openLi = openLink.element.closest("li") as HTMLElement;
+        expect(openLi.getAttribute("data-u-open")).toBe("true");
+
+        wrapper.unmount();
+      });
+
+      it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", async () => {
+        const wrapper = mount(UTieredMenu, {
+          props: { model: modelWithSeparator },
+          attachTo: document.body,
+        });
+        const openLink = wrapper.findAll(
+          ".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a"
+        )[1];
+        (openLink.element as HTMLElement).focus();
+        await openLink.trigger("keydown", { code: "Enter" });
+
+        const openLi = wrapper
+          .findAll(".u-tieredmenu-root-list > li")
+          .find((li) => li.element === openLink.element.closest("li"))!;
+        const recentLink = openLi.find(
+          ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+        );
+        expect(document.activeElement).toBe(recentLink.element);
+
+        await recentLink.trigger("keydown", { code: "Escape" });
+
+        expect(document.activeElement).toBe(openLink.element);
+
+        wrapper.unmount();
+      });
+
+      it("ArrowUp from an item after a hidden item does not get stuck", async () => {
+        const model = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "B" },
+          { label: "C" },
+        ];
+        const wrapper = mount(UTieredMenu, { props: { model }, attachTo: document.body });
+        const links = wrapper.findAll(
+          ".u-tieredmenu-root-list > li > .u-tieredmenu-item-content > a"
+        );
+        const [a, b] = links;
+        (b.element as HTMLElement).focus();
+        await b.trigger("keydown", { code: "ArrowUp" });
+        expect(document.activeElement).toBe(a.element);
+
+        wrapper.unmount();
+      });
+    });
+  });
 });

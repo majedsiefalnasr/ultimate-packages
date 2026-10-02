@@ -20,6 +20,7 @@ export interface UToggleButtonProps {
   id?: string;
   inputId?: string;
   autoFocus?: boolean;
+  tabIndex?: number;
   className?: string;
 }
 
@@ -53,6 +54,7 @@ export function UToggleButton({
   id,
   inputId,
   autoFocus = false,
+  tabIndex,
   className,
 }: UToggleButtonProps): React.ReactElement {
   const { cx } = useComponentBase({ componentName: "toggle-button", styleModule: toggleButtonStyleModule });
@@ -88,6 +90,7 @@ export function UToggleButton({
         disabled={disabled}
         readOnly={readOnly}
         autoFocus={autoFocus}
+        tabIndex={tabIndex}
         aria-invalid={invalid}
         onChange={toggle}
         onKeyDown={onKeyDown}

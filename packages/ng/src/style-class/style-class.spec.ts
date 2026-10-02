@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, PLATFORM_ID } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { describe, expect, it, vi } from "vitest";
 import { UStyleClass } from "./style-class";
@@ -240,5 +240,46 @@ describe("UStyleClass", () => {
 
     fixture.nativeElement.remove();
     removeSpy.mockRestore();
+  });
+
+  describe("SSR safety (GAP-065)", () => {
+    @Component({
+      standalone: true,
+      imports: [UStyleClass],
+      template: `
+        <button uStyleClass="@next" toggleClass="active">Toggle</button>
+        <div id="target"></div>
+      `,
+    })
+    class SsrHostComponent {}
+
+    it("reaches no browser globals on the server platform through mount, change detection and destroy", () => {
+      TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+      // TestBed.createComponent itself calls document.querySelector("#rootN") to
+      // locate the test host element, so only queries beyond that are the directive's.
+      const docQuery = vi.spyOn(document, "querySelector");
+      const spies = {
+        winAdd: vi.spyOn(window, "addEventListener"),
+        winRemove: vi.spyOn(window, "removeEventListener"),
+        docAdd: vi.spyOn(document, "addEventListener"),
+        docRemove: vi.spyOn(document, "removeEventListener"),
+      };
+      try {
+        const fixture = TestBed.createComponent(SsrHostComponent);
+        fixture.detectChanges();
+        fixture.detectChanges();
+        fixture.destroy();
+
+        for (const [spyName, spy] of Object.entries(spies)) {
+          expect(spy, spyName).not.toHaveBeenCalled();
+        }
+        const directiveQueries = docQuery.mock.calls.filter(
+          ([selector]) => !/^#root\d+$/.test(selector)
+        );
+        expect(directiveQueries).toEqual([]);
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
   });
 });

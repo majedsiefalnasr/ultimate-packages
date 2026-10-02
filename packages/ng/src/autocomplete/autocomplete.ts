@@ -153,8 +153,8 @@ export class UAutoComplete extends UBaseInput {
 
   @ViewChild("input") private inputRef?: ElementRef<HTMLInputElement>;
 
-  protected readonly id = `u_autocomplete_${++UAutoComplete.instanceCount}`;
   private static instanceCount = 0;
+  protected readonly id = `u_autocomplete_${++UAutoComplete.instanceCount}`;
 
   protected readonly overlayVisible = signal(false);
   protected readonly focusedOptionIndex = signal(-1);

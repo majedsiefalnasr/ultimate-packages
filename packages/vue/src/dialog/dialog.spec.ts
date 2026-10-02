@@ -48,6 +48,23 @@ describe("UDialog — controlled contract (v-model:visible)", () => {
   });
 });
 
+describe("UDialog — role override (Spec §5.2, GAP-049)", () => {
+  it("defaults to role=dialog when no role override is supplied", async () => {
+    const wrapper = mount(UDialog, { props: { visible: true }, attachTo: document.body });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(document.querySelector('[role="dialog"]')).toBeTruthy();
+    wrapper.unmount();
+  });
+
+  it("renders the supplied role override when set", async () => {
+    const wrapper = mount(UDialog, { props: { visible: true, role: "alertdialog" }, attachTo: document.body });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(document.querySelector('[role="alertdialog"]')).toBeTruthy();
+    expect(document.querySelector('[role="dialog"]')).toBeNull();
+    wrapper.unmount();
+  });
+});
+
 describe("UDialog — feature boundary (spec §15, regression against silent scope creep)", () => {
   it("exposes no draggable prop, renders no drag handle", () => {
     const wrapper = mount(UDialog, { props: { visible: true }, attachTo: document.body });

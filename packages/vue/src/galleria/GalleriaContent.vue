@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="cx('itemWrapper')">
+    <div :class="cx('itemWrapper')" data-u-galleria-content tabindex="-1" @keydown="onKeyDown">
       <button
         v-if="showItemNavigators && value.length > 1"
         type="button"
@@ -31,7 +31,10 @@
         :key="index"
         :class="cx('thumbnailItem', { active: index === activeIndex })"
         :aria-current="index === activeIndex ? 'true' : null"
+        role="button"
+        tabindex="0"
         @click="$emit('goTo', index)"
+        @keydown="onThumbnailKeyDown($event, index)"
       >
         <slot name="thumbnail" :item="item">
           <slot name="item" :item="item" />
@@ -61,6 +64,57 @@ export default {
     isBackwardDisabled: { type: Boolean, required: true },
     cx: { type: Function, required: true },
   },
-  emits: ["navForward", "navBackward", "goTo"],
+  emits: ["navForward", "navBackward", "goTo", "escape"],
+  methods: {
+    // Handles keyboard navigation on the content viewport: ArrowLeft/ArrowRight move to the
+    // previous/next item, Home/End jump to the first/last item, and Escape is forwarded to the
+    // parent UGalleria (which owns fullscreen state) via the "escape" emit. Ignored when the
+    // event originates from a focused editable descendant (e.g. an <input> inside a custom item
+    // template) so typing in projected content never triggers gallery navigation.
+    onKeyDown(event) {
+      if (this.isEditableTarget(event.target)) return;
+      switch (event.code) {
+        case "ArrowLeft":
+          event.preventDefault();
+          this.$emit("navBackward");
+          break;
+        case "ArrowRight":
+          event.preventDefault();
+          this.$emit("navForward");
+          break;
+        case "Home":
+          event.preventDefault();
+          this.$emit("goTo", 0);
+          break;
+        case "End":
+          event.preventDefault();
+          this.$emit("goTo", this.value.length - 1);
+          break;
+        case "Escape":
+          this.$emit("escape");
+          break;
+        default:
+          break;
+      }
+    },
+    isEditableTarget(target) {
+      if (!(target instanceof HTMLElement)) return false;
+      const tagName = target.tagName;
+      return (
+        tagName === "INPUT" ||
+        tagName === "TEXTAREA" ||
+        tagName === "SELECT" ||
+        target.isContentEditable
+      );
+    },
+    // Handles Enter/Space on a focused thumbnail: activates it the same way the existing click
+    // handler does (Spec §5.1, GAP-050 Task 7). No-op for any other key.
+    onThumbnailKeyDown(event, index) {
+      if (event.code === "Enter" || event.code === "Space") {
+        event.preventDefault();
+        this.$emit("goTo", index);
+      }
+    },
+  },
 };
 </script>

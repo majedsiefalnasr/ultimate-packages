@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
-import { describe, expect, it } from "vitest";
+import { PLATFORM_ID } from "@angular/core";
+import { describe, expect, it, vi } from "vitest";
 import { UBreadcrumb } from "./breadcrumb";
 import type { UMenuItem } from "@ultimate/ng-core";
 
@@ -96,5 +97,31 @@ describe("UBreadcrumb", () => {
     const separators = fixture.nativeElement.querySelectorAll('[role="separator"]');
     // items.length includes home item; separators = items.length - 1
     expect(separators.length).toBe(items.length - 1);
+  });
+  describe("SSR safety (GAP-065)", () => {
+    // isCurrent() is guarded by `typeof window`, not PLATFORM_ID, and runs from
+    // the [attr.aria-current] template binding during server rendering. jsdom
+    // always defines `window` (and `window.location` is unforgeable, so it
+    // cannot be spied), so the narrowest real assertion is to make `window`
+    // undefined for the render: without the guard, `window.location` throws.
+    it("renders without reaching window.location when window is undefined", () => {
+      TestBed.configureTestingModule({
+        providers: [provideRouter([]), { provide: PLATFORM_ID, useValue: "server" }],
+      });
+      const fixture = TestBed.createComponent(UBreadcrumb);
+      fixture.componentRef.setInput("model", items);
+      fixture.componentRef.setInput("home", home);
+      vi.stubGlobal("window", undefined);
+      try {
+        expect(typeof window).toBe("undefined");
+        expect(() => fixture.detectChanges()).not.toThrow();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+      expect(fixture.nativeElement.querySelectorAll("a").length).toBe(3);
+      const last = fixture.nativeElement.querySelectorAll("a")[2];
+      expect(last.hasAttribute("aria-current")).toBe(false);
+      fixture.destroy();
+    });
   });
 });

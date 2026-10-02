@@ -120,7 +120,11 @@ export function UCarousel<T>({
       role="region"
       className={[cx("root", { vertical: isVertical }), className].filter(Boolean).join(" ")}
     >
-      <div className={cx("content")}>
+      <div
+        className={cx("content")}
+        data-u-carousel-content
+        aria-live={autoplayInterval > 0 ? "polite" : "off"}
+      >
         <div className={cx("contentInner")}>
           {showNavigators && (
             <button

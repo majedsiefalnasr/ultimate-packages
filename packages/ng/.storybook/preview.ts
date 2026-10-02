@@ -1,4 +1,5 @@
-import type { Preview } from "@storybook/angular";
+import { applicationConfig, type Preview } from "@storybook/angular";
+import { ComponentIdGenerator } from "@ultimate/ng-core";
 import { applyUltimateTheme } from "@ultimate/themes";
 
 /**
@@ -13,6 +14,9 @@ import { applyUltimateTheme } from "@ultimate/themes";
 applyUltimateTheme();
 
 const preview: Preview = {
+  // `UTooltip`/`UDialog` inject `ComponentIdGenerator` (GAP-006), which the
+  // consuming application must provide at bootstrap.
+  decorators: [applicationConfig({ providers: [ComponentIdGenerator] })],
   parameters: {
     controls: {
       matchers: {

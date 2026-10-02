@@ -54,19 +54,10 @@ const css = /*css*/ `
         background: dt('fileupload.content.highlight.background');
     }
 
-    .u-file-upload-progress-bar {
+    .u-file-upload .u-progress-bar {
         width: 100%;
-        height: 0.5rem;
-        border-radius: 1rem;
-        background: dt('progressbar.background');
-        overflow: hidden;
+        height: 0.25rem;
         margin-bottom: 0.75rem;
-    }
-
-    .u-file-upload-progress-bar-value {
-        height: 100%;
-        background: dt('progressbar.value.background');
-        transition: width 0.2s ease;
     }
 
     .u-file-upload-file {
@@ -137,8 +128,6 @@ const classes = {
     "u-file-upload-content",
     { "u-file-upload-highlight": Boolean(params.highlight) },
   ],
-  progressBar: "u-file-upload-progress-bar",
-  progressBarValue: "u-file-upload-progress-bar-value",
   file: "u-file-upload-file",
   fileInfo: "u-file-upload-file-info",
   fileName: "u-file-upload-file-name",

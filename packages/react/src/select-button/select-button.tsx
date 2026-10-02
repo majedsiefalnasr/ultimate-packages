@@ -80,6 +80,9 @@ export function USelectButton<T = unknown>({
 }: USelectButtonProps<T>): React.ReactElement {
   const { cx } = useComponentBase({ componentName: "select-button", styleModule: selectButtonStyleModule });
 
+  const groupRef = React.useRef<HTMLDivElement>(null);
+  const [focusedIndex, setFocusedIndex] = React.useState(0);
+
   const getOptionLabel = (option: unknown): string =>
     resolve(optionLabel, option, (o) => String(o));
   const getOptionValue = (option: unknown): unknown => resolve(optionValue, option, (o) => o);
@@ -92,6 +95,38 @@ export function USelectButton<T = unknown>({
       return Array.isArray(value) && (value as unknown[]).some((v) => v === optionVal);
     }
     return value === optionVal;
+  };
+
+  // Roving tab stop: a native-disabled input cannot hold focus, so the stop
+  // falls back to the first enabled option when the tracked one is unusable.
+  const firstEnabledIndex = options.findIndex((o) => !isOptionDisabled(o));
+  const tabStopIndex =
+    focusedIndex < options.length && !isOptionDisabled(options[focusedIndex])
+      ? focusedIndex
+      : firstEnabledIndex;
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const step =
+      event.code === "ArrowRight" || event.code === "ArrowDown"
+        ? 1
+        : event.code === "ArrowLeft" || event.code === "ArrowUp"
+          ? -1
+          : 0;
+    const inputs = groupRef.current?.querySelectorAll<HTMLInputElement>("input");
+    if (step === 0 || disabled || !inputs || inputs.length !== options.length) {
+      return;
+    }
+    event.preventDefault();
+    const target = Array.from(inputs).indexOf(event.target as HTMLInputElement);
+    const from = target >= 0 ? target : tabStopIndex;
+    for (let i = 1; i <= options.length; i++) {
+      const next = (((from + step * i) % options.length) + options.length) % options.length;
+      if (!isOptionDisabled(options[next])) {
+        setFocusedIndex(next);
+        inputs[next].focus();
+        return;
+      }
+    }
   };
 
   const handleOptionClick = (event: React.SyntheticEvent, option: unknown) => {
@@ -128,7 +163,9 @@ export function USelectButton<T = unknown>({
 
   return (
     <div
+      ref={groupRef}
       role="group"
+      onKeyDown={handleKeyDown}
       aria-labelledby={ariaLabelledBy}
       className={[cx("root", { fluid: false }), className].filter(Boolean).join(" ")}
     >
@@ -138,7 +175,11 @@ export function USelectButton<T = unknown>({
           <UToggleButton
             key={`${label}_${index}`}
             checked={isSelected(option)}
-            onChange={(event) => handleOptionClick(event.originalEvent, option)}
+            onChange={(event) => {
+              setFocusedIndex(index);
+              handleOptionClick(event.originalEvent, option);
+            }}
+            tabIndex={!disabled && index === tabStopIndex ? 0 : -1}
             onLabel={label}
             offLabel={label}
             disabled={disabled || isOptionDisabled(option)}

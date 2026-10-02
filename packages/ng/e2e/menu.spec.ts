@@ -72,12 +72,15 @@ test.describe("Ng/Menu", () => {
 
   test("Popup story: visual regression", async ({ page }) => {
     await page.goto(storyUrl("ng-menu--popup"));
+    await page.getByRole("button", { name: "Toggle Menu" }).click();
     await expect(page.getByRole("menu")).toBeVisible();
     await expect(page).toHaveScreenshot();
   });
 
   test("Popup story: accessibility scan", async ({ page }, testInfo) => {
     await page.goto(storyUrl("ng-menu--popup"));
+    await page.getByRole("button", { name: "Toggle Menu" }).click();
+    await expect(page.getByRole("menu")).toBeVisible();
     await runAccessibilityScan(page, testInfo, "ng-menu--popup");
   });
 });

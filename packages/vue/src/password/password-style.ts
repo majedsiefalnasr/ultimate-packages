@@ -73,6 +73,22 @@ const css = /*css*/ `
         color: dt('password.meter.text.color');
     }
 
+    /* Visually hidden, still exposed to assistive tech. Same declarations as
+       PrimeVue's .p-hidden-accessible (packages/core/src/base/style/BaseStyle.js:7-19). */
+    .u-password-hidden-accessible {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        opacity: 0;
+        overflow: hidden;
+        padding: 0;
+        pointer-events: none;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+    }
+
     .u-password-mask-icon,
     .u-password-unmask-icon,
     .u-password-clear-icon {
@@ -110,6 +126,7 @@ const classes = {
   meterLabel: (params: PasswordClassesParams = {}) =>
     params.strength ? `u-password-meter-label u-password-meter-label-${params.strength}` : "u-password-meter-label",
   meterText: "u-password-meter-text",
+  hiddenAccessible: "u-password-hidden-accessible",
 };
 
 /** `createBaseComponent`-shaped style module for `UPassword`. */

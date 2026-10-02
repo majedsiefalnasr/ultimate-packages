@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!(fullScreen && d_fullScreenActive)" :class="cx('root')">
+  <div v-if="!(fullScreen && d_fullScreenActive)" :class="cx('root')" role="region">
     <UGalleriaContent
       :value="value"
       :activeIndex="d_activeIndex"
@@ -12,6 +12,7 @@
       @navForward="navForward"
       @navBackward="navBackward"
       @goTo="goTo"
+      @escape="onContentEscape"
     >
       <template #item="slotProps"><slot name="item" v-bind="slotProps" /></template>
       <template v-if="$slots.thumbnail" #thumbnail="slotProps"><slot name="thumbnail" v-bind="slotProps" /></template>
@@ -35,6 +36,7 @@
           @navForward="navForward"
           @navBackward="navBackward"
           @goTo="goTo"
+          @escape="onContentEscape"
         >
           <template #item="slotProps"><slot name="item" v-bind="slotProps" /></template>
           <template v-if="$slots.thumbnail" #thumbnail="slotProps"><slot name="thumbnail" v-bind="slotProps" /></template>
@@ -152,6 +154,13 @@ export default {
     closeFullScreen() {
       this.d_fullScreenActive = false;
       this.$emit("update:fullScreenActive", false);
+    },
+    // Local Escape handler forwarded from the content viewport's keydown handler: closes
+    // fullscreen mode only when active, no-op otherwise (nothing to dismiss).
+    onContentEscape() {
+      if (this.d_fullScreenActive) {
+        this.closeFullScreen();
+      }
     },
     startAutoplay() {
       this.stopAutoplay();

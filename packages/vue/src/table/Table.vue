@@ -3,6 +3,21 @@
     <table :class="cx('table')">
       <thead :class="cx('thead')" role="rowgroup">
         <tr role="row">
+          <th v-if="selectionColumn && selectionMode">
+            <input
+              v-if="selectionMode === 'multiple'"
+              type="checkbox"
+              :checked="allSelected"
+              @click="toggleAllSelection"
+            />
+          </th>
+          <!-- Minor finding 3 (fix-loop integration review): the
+               expansion-toggle and edit-actions columns each render a <td>
+               per body row but had no matching header <th> at all, leaving
+               the header row's cell count short of the body rows' — added
+               empty <th> cells here so counts match, mirroring the
+               selection column's own already-correct <th>. -->
+          <th v-if="dataKey"></th>
           <th
             v-for="col in columns"
             :key="col.field"
@@ -10,16 +25,27 @@
             :aria-sort="ariaSortFor(col.field)"
             @click="sortColumn(col.field)"
           >{{ col.header }}</th>
+          <th v-if="editMode === 'row'"></th>
         </tr>
       </thead>
-      <tbody v-if="!virtualScrollerOptions" :class="cx('tbody')" role="rowgroup">
+      <tbody v-if="!virtualScrollerOptions && loading" :class="cx('tbody')" role="rowgroup">
+        <tr>
+          <td data-u-table-loading :colspan="totalColumnCount"></td>
+        </tr>
+      </tbody>
+      <tbody v-else-if="!virtualScrollerOptions && value.length === 0" :class="cx('tbody')" role="rowgroup">
+        <tr>
+          <td :colspan="totalColumnCount">{{ emptyMessage }}</td>
+        </tr>
+      </tbody>
+      <tbody v-else-if="!virtualScrollerOptions" :class="cx('tbody')" role="rowgroup">
         <template v-for="(entry, index) in groupedRows" :key="index">
           <tr
             v-if="rowGroupMode === 'subheader' && entry.isGroupHeader"
             data-u-table-group-header
             :class="cx('rowGroupHeader')"
           >
-            <td :colspan="columns.length">{{ entry.row[groupRowsBy] }}</td>
+            <td :colspan="totalColumnCount">{{ entry.row[groupRowsBy] }}</td>
           </tr>
           <tr
             :class="cx('row')"
@@ -27,16 +53,51 @@
             tabindex="0"
             :aria-selected="isSelected(entry.row)"
             @click="selectRow(entry.row)"
-            @keydown="onRowKeyDown"
+            @keydown="onRowKeyDown($event, entry.row)"
           >
-            <td v-for="col in columns" :key="col.field">{{ entry.row[col.field] }}</td>
-            <td v-if="editMode === 'row'">
+            <td v-if="selectionColumn && selectionMode">
+              <input
+                :type="selectionMode === 'multiple' ? 'checkbox' : 'radio'"
+                :checked="isSelected(entry.row)"
+                @click.stop="selectRow(entry.row)"
+              />
+            </td>
+            <td v-if="dataKey">
+              <button
+                type="button"
+                data-u-table-row-toggle
+                @click.stop="toggleRowExpansion($event, entry.row)"
+              >{{ isRowExpanded(entry.row) ? "-" : "+" }}</button>
+            </td>
+            <template v-for="col in columns" :key="col.field">
+              <td
+                v-if="rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy && entry.isGroupHeader"
+                data-u-table-group-cell
+                :rowspan="entry.groupSize"
+              >{{ renderCell(entry.row, col, index) }}</td>
+              <td v-else-if="isRowEditing(entry.row) && !(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)" data-u-table-cell-editor>
+                <input
+                  :value="draftValue(entry.row, col.field)"
+                  @input="onDraftInput(entry.row, col.field, $event)"
+                  @click.stop
+                />
+              </td>
+              <td v-else-if="!(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)">{{ renderCell(entry.row, col, index) }}</td>
+            </template>
+            <td v-if="editMode === 'row' && isRowEditing(entry.row)">
+              <button type="button" data-u-table-row-edit-save @click.stop="saveRowEdit(entry.row)">Save</button>
+              <button type="button" data-u-table-row-edit-cancel @click.stop="cancelRowEdit(entry.row)">Cancel</button>
+            </td>
+            <td v-else-if="editMode === 'row'">
               <button
                 type="button"
                 data-u-table-row-edit-init
                 @click.stop="initRowEdit(entry.row)"
               >Edit</button>
             </td>
+          </tr>
+          <tr v-if="dataKey && isRowExpanded(entry.row)" data-u-table-row-expansion>
+            <td :colspan="totalColumnCount"></td>
           </tr>
         </template>
       </tbody>
@@ -64,7 +125,7 @@
                 width: '100%',
               }"
               @click="selectRow(entry.value)"
-              @keydown="onRowKeyDown"
+              @keydown="onRowKeyDown($event, entry.value)"
             >
               <!--
                 Known limitation: onRowKeyDown walks nextElementSibling/
@@ -76,7 +137,7 @@
                 This is intentional (a row outside the window isn't in the
                 DOM to focus), not a bug.
               -->
-              <td v-for="col in columns" :key="col.field">{{ entry.value[col.field] }}</td>
+              <td v-for="col in columns" :key="col.field">{{ renderCell(entry.value, col, entry.index) }}</td>
             </tr>
           </tbody>
         </table>
@@ -100,6 +161,13 @@ import UPaginator from "../paginator/Paginator.vue";
 import UScroller from "../scroller/Scroller.vue";
 
 /**
+ * @typedef {Object} UTableColumn
+ * @property {string} field
+ * @property {string} header
+ * @property {(row: unknown, options: { field: string; rowIndex: number }) => import("vue").VNode | string} [body]
+ */
+
+/**
  * Sort execution is entangled with row-value resolution per uix-data's
  * SortMeta doc comment, so it lives here rather than as a shared primitive.
  * Mirrors Angular's `compareValues`/React's `compareValues` (identical
@@ -108,6 +176,30 @@ import UScroller from "../scroller/Scroller.vue";
 function resolveCell(row, field) {
   return row[field];
 }
+
+/**
+ * Renders a column's body function output when supplied, else falls back to
+ * the raw field value (spec §5.1, matching Angular's/React's `renderCell`).
+ * @param {unknown} row
+ * @param {UTableColumn} col
+ * @param {number} rowIndex
+ */
+function renderCell(row, col, rowIndex) {
+  return col.body ? col.body(row, { field: col.field, rowIndex }) : row[col.field];
+}
+
+/**
+ * Default empty-state message (Spec §5.6, GAP-046), kept identical across
+ * all 3 frameworks. Real PrimeNG's own Table component has no hardcoded
+ * default text for its empty region — it renders purely via a
+ * content-projected template with no built-in fallback string. The closest
+ * verified real-Prime default text is the global locale's `emptyMessage`
+ * translation key (confirmed via the pinned `primeng-21.1.9.tar.gz`
+ * tarball, `packages/primeng/src/config/primeng.ts`:
+ * `emptyMessage: 'No results found'`), matching Angular Task 10's and
+ * React Task 11's own sourcing.
+ */
+const DEFAULT_EMPTY_MESSAGE = "No results found";
 
 function compareValues(a, b) {
   if (a == null && b == null) return 0;
@@ -257,6 +349,36 @@ export default {
        * symmetry); no consumer reads this yet.
        */
       d_editingMeta: {},
+      /**
+       * Row-level committed-value overrides (GAP-043, Spec §5.3), keyed by
+       * `dataKey`-resolved row identity: `value` is a one-way prop with no
+       * corresponding `update:value` emit on this component's declared
+       * surface, so a save commits by recording a fresh row object
+       * (immutable update, matching this codebase's established
+       * immutable-update convention everywhere else) here rather than
+       * mutating `value`. `effectiveValue` layers this over `value` for
+       * every downstream reader (sort/filter/select/group), so no parallel
+       * rendering path exists.
+       */
+      d_committedRows: {},
+      /**
+       * Internal edit-in-progress array, seeded once from the `editingRows`
+       * prop (lazy-init, like a `defaultValue`) and thereafter the sole
+       * source `isRowEditing` reads (GAP-043, Spec §5.3) — mirrors the same
+       * fix applied to Angular's `_editingRowKeys`/React's
+       * `internalEditingRows` in this task: `editingRows` is a one-way prop
+       * with no round-trip guarantee within a single test/consumer tick, so
+       * `initRowEdit`/`saveRowEdit`/`cancelRowEdit` update this local array
+       * immediately in addition to emitting `update:editingRows` — never
+       * mutating the `editingRows` prop array itself.
+       */
+      d_editingRows: [...this.editingRows],
+      /**
+       * Default empty-state message (Spec §5.6, GAP-046). Not itself a
+       * prop — this task's scope is the boolean `loading` flag and default
+       * message only, matching Angular's/React's own Task 10/11 scope.
+       */
+      emptyMessage: DEFAULT_EMPTY_MESSAGE,
     };
   },
   computed: {
@@ -267,8 +389,48 @@ export default {
      * `multiSortMeta` entries in priority order (first entry is primary
      * key).
      */
+    /**
+     * `value` with any `d_committedRows` overrides (GAP-043, Spec §5.3)
+     * layered on top, by `dataKey`-resolved identity. Every downstream
+     * derived view (`sortedValue`/`filteredValue`/`pagedValue`/
+     * `groupedRows`) is built from this instead of `value` directly, so a
+     * saved edit is visible everywhere `value` would have been read, with
+     * no parallel rendering path — and `value` itself is never mutated.
+     */
+    effectiveValue() {
+      if (!this.dataKey || Object.keys(this.d_committedRows).length === 0) return this.value;
+      return this.value.map((row) => {
+        const override = this.d_committedRows[String(resolveCell(row, this.dataKey))];
+        return override ?? row;
+      });
+    },
     sortedValue() {
-      return this.applySortTo(this.value);
+      return this.applySortTo(this.effectiveValue);
+    },
+    /**
+     * Header select-all checkbox state (GAP-042, Spec §5.2): checked only
+     * when there is at least one row and every row is currently selected —
+     * an empty `value` is never considered "all selected".
+     */
+    allSelected() {
+      return this.value.length > 0 && this.value.every((row) => this.isSelected(row));
+    },
+    /**
+     * Total header/body cell count (Minor finding 3, fix-loop integration
+     * review): `columns.length` plus one for each of the selection,
+     * expansion-toggle, and edit-actions columns that are actually rendered.
+     * Used consistently everywhere a `colspan` is set (loading row, empty
+     * row, subheader-group row, row-expansion placeholder row) so none of
+     * them under-counts once those extra columns are present — previously
+     * all four used the bare `columns.length`, ignoring the extra columns
+     * entirely.
+     */
+    totalColumnCount() {
+      let count = this.columns.length;
+      if (this.selectionColumn && this.selectionMode) count++;
+      if (this.dataKey) count++;
+      if (this.editMode === "row") count++;
+      return count;
     },
     /**
      * Applies `filters` (filter-then-sort) via `matchesFilterEntry`/
@@ -285,7 +447,7 @@ export default {
       const fields = Object.keys(this.filters);
       if (fields.length === 0) return this.sortedValue;
 
-      const filtered = this.value.filter((row) =>
+      const filtered = this.effectiveValue.filter((row) =>
         fields.every((field) => matchesFilterEntry(row, field, this.filters[field]))
       );
       return this.applySortTo(filtered);
@@ -317,10 +479,18 @@ export default {
      * When `groupRowsBy` is unset, this degrades to `pagedValue` unchanged
      * (no boundaries ever detected), preserving every prior task's
      * ungrouped rendering.
+     *
+     * `groupSize` (GAP-045) is the count of consecutive rows, starting at
+     * this entry, that share this row's `groupRowsBy` value — meaningful
+     * only on an `isGroupHeader: true` entry. Computed via the same
+     * boundary detection as `isGroupHeader` (a forward scan from each
+     * header to the next), so `"rowspan"` mode's `rowspan` attribute reuses
+     * the identical group boundaries `"subheader"` mode already renders —
+     * no parallel grouping algorithm.
      */
     groupedRows() {
       if (!this.groupRowsBy) {
-        return this.pagedValue.map((row) => ({ row, isGroupHeader: false }));
+        return this.pagedValue.map((row) => ({ row, isGroupHeader: false, groupSize: 1 }));
       }
 
       const meta = [{ field: this.groupRowsBy, order: 1 }, ...this.multiSortMeta];
@@ -332,16 +502,37 @@ export default {
         return 0;
       });
 
-      return rows.map((row, index) => {
+      const withHeaders = rows.map((row, index) => {
         const previous = rows[index - 1];
         const isGroupHeader =
           index === 0 ||
           !equals(resolveCell(row, this.groupRowsBy), resolveCell(previous, this.groupRowsBy));
-        return { row, isGroupHeader };
+        return { row, isGroupHeader, groupSize: 1 };
       });
+
+      let currentHeaderIndex = -1;
+      withHeaders.forEach((entry, index) => {
+        if (entry.isGroupHeader) {
+          currentHeaderIndex = index;
+        } else if (currentHeaderIndex !== -1) {
+          withHeaders[currentHeaderIndex].groupSize++;
+        }
+      });
+
+      return withHeaders;
     },
   },
   methods: {
+    /**
+     * Renders a column's body function output when supplied, else falls
+     * back to the raw field value (spec §5.1). Exposed as a method (rather
+     * than calling the module-level `renderCell` helper directly from the
+     * template) so the template can invoke it the same way it already calls
+     * `ariaSortFor`/`isSelected`/etc.
+     */
+    renderCell(row, col, rowIndex) {
+      return renderCell(row, col, rowIndex);
+    },
     /**
      * Re-emits UPaginator's own `page` event as Table's `page` event.
      * UPaginator owns its internal `d_first`/`d_rows` mutate-then-emit
@@ -429,6 +620,24 @@ export default {
       return this.isRowEqual(this.selection, row);
     },
     /**
+     * Header select-all checkbox click handler (GAP-042, Spec §5.2):
+     * selects every row if not all are already selected, otherwise
+     * deselects all — same dual-emit pattern as `selectRow`.
+     *
+     * Minor finding 5 (fix-loop integration review): emits from
+     * `effectiveValue` (the post-edit merged rows), not raw `value` —
+     * matching `selectRow`'s own already-correct behavior. With
+     * `compareSelectionBy="deepEquals"`, emitting the stale raw `value` row
+     * object here would make an edited-then-select-all'd row compare
+     * unequal to the currently-rendered (merged) row and show as
+     * unselected.
+     */
+    toggleAllSelection() {
+      const next = this.allSelected ? [] : [...this.effectiveValue];
+      this.$emit("update:selection", next);
+      this.$emit("selection-change", next);
+    },
+    /**
      * Computes the next selection value and emits it rather than mutating
      * `this.selection` directly (Vue props are one-way, same discipline as
      * `sortColumn`): single mode always emits the clicked row; multiple
@@ -463,25 +672,70 @@ export default {
      * `@HostListener`/React's `querySelectorAll`), the vocabulary does not.
      * Only moves `.focus()` between sibling `tbody [role="row"]` elements —
      * never the header row, since this handler is bound per data row.
-     * Enter/selection-toggle behavior is already covered by `@click`, so it
-     * is intentionally out of scope here.
+     *
+     * Also handles keyboard selection (GAP-047, Spec §5.7): Space/Enter
+     * toggle the focused row's selection by reusing the same `selectRow`
+     * toggle logic the row-click handler and selection-column controls
+     * already share (no duplicated toggle logic), and Ctrl+A/Cmd+A selects
+     * every row when `selectionMode` is exactly `"multiple"` (emitting
+     * `effectiveValue` — see Minor finding 5 below). When `selectionMode` is
+     * not `"multiple"` (including unset), Ctrl+A does nothing and does not
+     * call `preventDefault()` — the browser's native "select all text"
+     * behavior is only swallowed when Ctrl+A actually did something (Review
+     * Focus item 3).
+     *
+     * Important finding 2 (fix-loop integration review): the Space/Enter/
+     * Ctrl+A branches only apply when the keydown genuinely originated from
+     * the row element itself (`event.target === event.currentTarget`) — not
+     * when it bubbled up from a child control (the cell-editor `<input>`,
+     * or the expand/edit/save/cancel buttons). Without this guard, typing a
+     * space in the editor input got swallowed into a row-selection toggle
+     * instead of appearing in the input, Ctrl+A selected all rows instead
+     * of the input's text, and Space/Enter on a focused button got
+     * hijacked instead of activating the button. Arrow/Home/End navigation
+     * below is unaffected — it already only moves focus among sibling rows
+     * via direct sibling traversal, so a bubbled event from a child
+     * control is already inert there.
      */
-    onRowKeyDown(event) {
-      const row = event.currentTarget;
+    onRowKeyDown(event, row) {
+      if (event.target !== event.currentTarget) {
+        if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") return;
+        if (event.code === "Space" || event.code === "Enter") return;
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") {
+        if (this.selectionMode === "multiple") {
+          event.preventDefault();
+          const next = [...this.effectiveValue];
+          this.$emit("update:selection", next);
+          this.$emit("selection-change", next);
+        }
+        return;
+      }
+
+      if (event.code === "Space" || event.code === "Enter") {
+        if (this.selectionMode) {
+          event.preventDefault();
+          this.selectRow(row);
+        }
+        return;
+      }
+
+      const rowElement = event.currentTarget;
 
       let target;
       switch (event.key) {
         case "ArrowDown":
-          target = row.nextElementSibling;
+          target = rowElement.nextElementSibling;
           break;
         case "ArrowUp":
-          target = row.previousElementSibling;
+          target = rowElement.previousElementSibling;
           break;
         case "Home":
-          target = row.parentElement.firstElementChild;
+          target = rowElement.parentElement.firstElementChild;
           break;
         case "End":
-          target = row.parentElement.lastElementChild;
+          target = rowElement.parentElement.lastElementChild;
           break;
         default:
           return;
@@ -501,7 +755,118 @@ export default {
      * `selection`/etc.
      */
     initRowEdit(row) {
-      this.$emit("update:editingRows", [...this.editingRows, row]);
+      const next = [...this.d_editingRows, row];
+      this.d_editingRows = next;
+      this.$emit("update:editingRows", next);
+    },
+    /**
+     * True when `row` (identity via `dataKey`, matching every other
+     * key-map/array editing check in this file) is present in
+     * `d_editingRows` (spec §11.3's own array-prop idiom, mirrored locally —
+     * see `d_editingRows`'s own doc comment) — drives whether each column's
+     * cell renders the plain `renderCell` output or the editable
+     * `data-u-table-cell-editor` input (GAP-043, Spec §5.3).
+     */
+    isRowEditing(row) {
+      const key = String(resolveCell(row, this.dataKey));
+      return this.d_editingRows.some((r) => String(resolveCell(r, this.dataKey)) === key);
+    },
+    /**
+     * Reads a field's current draft value for `row` from `d_editingMeta`
+     * (keyed by `rowIndex`, matching this store's own pre-existing keying
+     * doc comment above), falling back to the live (`effectiveValue`
+     * -resolved) cell value the first time the row enters edit mode, before
+     * any keystroke has populated `d_editingMeta` (GAP-043, Spec §5.3).
+     */
+    draftValue(row, field) {
+      const index = this.effectiveValue.indexOf(row);
+      const rowDraft = this.d_editingMeta[index];
+      return rowDraft && field in rowDraft ? rowDraft[field] : resolveCell(row, field);
+    },
+    /**
+     * Updates one field's draft value for `row` in `d_editingMeta` from the
+     * cell editor `<input>`'s `input` event, without touching `value`/
+     * `effectiveValue` at all (Spec §5.3's "edits must not mutate the source
+     * data until explicitly saved" contract).
+     */
+    onDraftInput(row, field, event) {
+      const index = this.effectiveValue.indexOf(row);
+      this.d_editingMeta = {
+        ...this.d_editingMeta,
+        [index]: { ...this.d_editingMeta[index], [field]: event.target.value },
+      };
+    },
+    /**
+     * Commits `row`'s accumulated `d_editingMeta` draft into
+     * `d_committedRows` as a new row object (immutable update), emits
+     * `row-edit-save` with the committed row, and exits edit mode: `row` is
+     * removed from the `editingRows` array and the resulting array is
+     * emitted via `update:editingRows` — never mutating the `editingRows`
+     * prop directly, matching `initRowEdit`'s own one-way-prop discipline.
+     */
+    saveRowEdit(row) {
+      const index = this.effectiveValue.indexOf(row);
+      const draft = this.d_editingMeta[index];
+      const key = String(resolveCell(row, this.dataKey));
+      let committedRow = row;
+      if (draft) {
+        committedRow = { ...(this.d_committedRows[key] ?? row), ...draft };
+        this.d_committedRows = { ...this.d_committedRows, [key]: committedRow };
+      }
+      this.$emit("row-edit-save", committedRow);
+      this.exitRowEdit(row, index);
+    },
+    /**
+     * Discards `row`'s `d_editingMeta` draft (no mutation to `value`/
+     * `d_committedRows` at all), emits `row-edit-cancel` with the original
+     * row, and exits edit mode the same way `saveRowEdit` does.
+     */
+    cancelRowEdit(row) {
+      const index = this.effectiveValue.indexOf(row);
+      this.$emit("row-edit-cancel", row);
+      this.exitRowEdit(row, index);
+    },
+    exitRowEdit(row, index) {
+      const { [index]: _discardedDraft, ...remainingDrafts } = this.d_editingMeta;
+      this.d_editingMeta = remainingDrafts;
+      const key = String(resolveCell(row, this.dataKey));
+      const next = this.d_editingRows.filter((r) => String(resolveCell(r, this.dataKey)) !== key);
+      this.d_editingRows = next;
+      this.$emit("update:editingRows", next);
+    },
+    /**
+     * Row-expansion state check (GAP-044, Spec §5.4), matching the
+     * key-map shape Angular's/React's `expandedRowKeys` use (distinct from
+     * Vue's own array-prop `editingRows` idiom — the plan's Task 15 fixes
+     * this shape explicitly): a row is expanded when its `dataKey`-resolved
+     * identity is present (truthy) in `expandedRowKeys`.
+     */
+    isRowExpanded(row) {
+      const key = String(resolveCell(row, this.dataKey));
+      return !!this.expandedRowKeys[key];
+    },
+    /**
+     * Row-expansion toggle (GAP-044, Spec §5.4), reusing the same key-map
+     * read/write pattern already established by Angular's/React's
+     * `expandedRowKeys`: the row's `dataKey`-resolved identity is flipped in
+     * a shallow-copied map (spread, so a duplicate `dataKey` value across
+     * two rows is last-write-wins — no new uniqueness validation, matching
+     * Review Focus item 5 and the existing selection key-map's own
+     * precedent), the merged map is emitted via `update:expandedRowKeys`,
+     * and `row-expand`/`row-collapse` fire according to the row's new
+     * state.
+     */
+    toggleRowExpansion(event, row) {
+      const key = String(resolveCell(row, this.dataKey));
+      const wasExpanded = !!this.expandedRowKeys[key];
+      const next = { ...this.expandedRowKeys, [key]: !wasExpanded };
+      this.$emit("update:expandedRowKeys", next);
+
+      if (wasExpanded) {
+        this.$emit("row-collapse", { originalEvent: event, data: row });
+      } else {
+        this.$emit("row-expand", { originalEvent: event, data: row });
+      }
     },
   },
 };

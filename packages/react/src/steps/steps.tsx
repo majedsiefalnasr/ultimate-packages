@@ -30,8 +30,59 @@ export const USteps = React.forwardRef<HTMLElement, UStepsProps>(function USteps
   ref
 ) {
   const { cx } = useComponentBase({ componentName: "steps", styleModule: stepsStyleModule });
+  const listRef = React.useRef<HTMLOListElement>(null);
 
   const isItemDisabled = (item: UMenuItem, index: number) => !!item.disabled || (readonly && index !== activeIndex);
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    const links = Array.from(listRef.current?.querySelectorAll("a") ?? []);
+    if (links.length === 0) return;
+    // `links` holds rendered items only; pair each with its model index so
+    // `isItemDisabled` (which compares against `activeIndex`) stays correct.
+    const rendered = model
+      .map((item, modelIndex) => ({ item, modelIndex }))
+      .filter(({ item }) => item.visible !== false);
+    const isEnabled = (index: number) => !isItemDisabled(rendered[index].item, rendered[index].modelIndex);
+    const currentIndex = links.indexOf(document.activeElement as HTMLAnchorElement);
+
+    let targetIndex: number | undefined;
+    switch (event.code) {
+      case "ArrowRight":
+        for (let i = currentIndex + 1; i < links.length; i++) {
+          if (isEnabled(i)) {
+            targetIndex = i;
+            break;
+          }
+        }
+        break;
+      case "ArrowLeft":
+        for (let i = currentIndex - 1; i >= 0; i--) {
+          if (isEnabled(i)) {
+            targetIndex = i;
+            break;
+          }
+        }
+        break;
+      case "Home":
+        targetIndex = links.findIndex((_, i) => isEnabled(i));
+        break;
+      case "End":
+        for (let i = links.length - 1; i >= 0; i--) {
+          if (isEnabled(i)) {
+            targetIndex = i;
+            break;
+          }
+        }
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+    if (targetIndex !== undefined && targetIndex >= 0) {
+      links[targetIndex].focus();
+    }
+  };
 
   const onItemClick = (event: React.MouseEvent, item: UMenuItem, index: number) => {
     if (readonly || item.disabled) {
@@ -47,7 +98,7 @@ export const USteps = React.forwardRef<HTMLElement, UStepsProps>(function USteps
 
   return (
     <nav ref={ref} className={[cx("root"), className].filter(Boolean).join(" ")}>
-      <ol className={cx("list")}>
+      <ol ref={listRef} className={cx("list")} onKeyDown={onKeyDown}>
         {model.map((item, index) => {
           if (item.visible === false) return null;
           const active = index === activeIndex;

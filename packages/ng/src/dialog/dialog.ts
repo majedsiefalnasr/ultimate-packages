@@ -28,6 +28,7 @@ import {
   displayOrderRegistry,
   escapeRegistry,
 } from "@ultimate/uix-utils/escape";
+import { scrollLockRegistry } from "@ultimate/uix-utils/scroll-lock";
 import { UButton } from "../button/button";
 import { dialogStyleModule } from "./dialog-style";
 
@@ -150,7 +151,7 @@ let dialogDisplayOrderUid = 0;
         <div
           #root
           [class]="cx('root')"
-          role="dialog"
+          [attr.role]="role()"
           [attr.aria-modal]="modal()"
           [attr.aria-labelledby]="header() ? ariaLabelledBy : null"
         >
@@ -201,6 +202,12 @@ export class UDialog extends UBaseComponent {
   closeOnEscape = input(true, { transform: booleanAttribute });
   /** Defines if background should be blocked when dialog is displayed. */
   modal = input(true, { transform: booleanAttribute });
+  /**
+   * ARIA role override for the dialog's root element. Defaults to
+   * `"dialog"`; `UConfirmDialog` overrides this to `"alertdialog"` to
+   * match real upstream's own `p-confirmdialog` composition (GAP-049).
+   */
+  role = input<"dialog" | "alertdialog">("dialog");
 
   /** Notifies changes in the visibility state of the component. */
   visibleChange = output<boolean>();
@@ -216,6 +223,16 @@ export class UDialog extends UBaseComponent {
   private readonly displayOrderUid = ++dialogDisplayOrderUid;
   private registeredDisplayOrder: number | undefined;
   private destroyed = false;
+
+  /**
+   * Unique key for this instance's registration with the shared
+   * `scrollLockRegistry` (`@ultimate/uix-utils/scroll-lock`), matching
+   * `UBlockUI`'s own established pattern (`block-ui.ts`) exactly: a fresh
+   * `Math.random()`-derived string per instance, not scoped to any shared
+   * counter (deliberately not `dialogDisplayOrderUid`, which already serves
+   * the unrelated display-order/Escape-priority registry above).
+   */
+  private readonly scrollLockId = `u-dialog-${Math.random().toString(36).slice(2)}`;
 
   /**
    * Consumers must provide `ComponentIdGenerator` (from `@ultimate/ng-core`)
@@ -258,6 +275,7 @@ export class UDialog extends UBaseComponent {
       }
 
       this.syncEscapeRegistration(visible);
+      this.syncScrollLock(visible);
 
       if (visible && !this.wasVisible) {
         this.triggerElement = (this.document.activeElement as HTMLElement) ?? null;
@@ -313,6 +331,24 @@ export class UDialog extends UBaseComponent {
   }
 
   /**
+   * Registers/unregisters this instance with the shared `scrollLockRegistry`
+   * (`@ultimate/uix-utils/scroll-lock`) as `visible` toggles, matching
+   * `UBlockUI`'s own already-proven pairing of `register`/`unregister` calls
+   * around a boolean state transition (`block-ui.ts`). The registry's own
+   * reference-counting keeps `document.body` scroll-locked as long as at
+   * least one id remains registered, so multiple simultaneously-open
+   * `UDialog` instances correctly keep scroll locked until the last one
+   * closes.
+   */
+  private syncScrollLock(visible: boolean): void {
+    if (visible) {
+      scrollLockRegistry.register(this.scrollLockId);
+    } else {
+      scrollLockRegistry.unregister(this.scrollLockId);
+    }
+  }
+
+  /**
    * Force-unregisters this instance from both shared registries if it is
    * destroyed while still visible and still registered (e.g. an
    * `@if`/`*ngIf`-gated dialog torn down directly, or a router navigation
@@ -322,6 +358,10 @@ export class UDialog extends UBaseComponent {
    * — would never fire, permanently leaking this instance's
    * `escapeRegistry`/`displayOrderRegistry` entries and silently swallowing
    * every future Escape keypress meant for any dialog opened afterward.
+   * `scrollLockRegistry.unregister` is called unconditionally alongside it —
+   * idempotent per the registry's own reference-counting contract (safe to
+   * call on an already-unregistered id), matching `UBlockUI`'s own
+   * unconditional destroy-time unregister call.
    */
   ngOnDestroy(): void {
     if (this.registeredDisplayOrder !== undefined) {
@@ -329,6 +369,7 @@ export class UDialog extends UBaseComponent {
       displayOrderRegistry.unregister("dialog", this.displayOrderUid);
       this.registeredDisplayOrder = undefined;
     }
+    scrollLockRegistry.unregister(this.scrollLockId);
   }
 
   protected close(): void {

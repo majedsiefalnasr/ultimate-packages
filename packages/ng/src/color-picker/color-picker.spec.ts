@@ -1,7 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, PLATFORM_ID } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule, FormControl } from "@angular/forms";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { UColorPicker } from "./color-picker";
 
 describe("UColorPicker", () => {
@@ -141,5 +141,33 @@ describe("UColorPicker", () => {
     input.click();
     fixture.detectChanges();
     expect(document.querySelector(".u-color-picker-panel")).toBeNull();
+  });
+
+  describe("SSR safety (GAP-065)", () => {
+    @Component({ standalone: true, imports: [UColorPicker], template: `<u-color-picker />` })
+    class SsrHostComponent {}
+
+    it("reaches no browser globals on the server platform through mount, change detection and destroy", async () => {
+      TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+      const spies = {
+        winAdd: vi.spyOn(window, "addEventListener"),
+        winRemove: vi.spyOn(window, "removeEventListener"),
+        docAdd: vi.spyOn(document, "addEventListener"),
+        docRemove: vi.spyOn(document, "removeEventListener"),
+      };
+      try {
+        const fixture = TestBed.createComponent(SsrHostComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        fixture.destroy();
+
+        for (const [spyName, spy] of Object.entries(spies)) {
+          expect(spy, spyName).not.toHaveBeenCalled();
+        }
+      } finally {
+        vi.restoreAllMocks();
+      }
+    });
   });
 });

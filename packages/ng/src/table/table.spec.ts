@@ -54,6 +54,61 @@ describe("UTable", () => {
   });
 });
 
+describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
+  interface Row { id: number; name: string; price: number }
+
+  it("renders a column's body function output instead of the raw field value", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Widget", price: 9.5 }]);
+    fixture.componentRef.setInput("columns", [
+      { field: "name", header: "Name" },
+      { field: "price", header: "Price", body: (row: Row) => `$${row.price.toFixed(2)}` },
+    ]);
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells[0].textContent?.trim()).toBe("Widget");
+    expect(cells[1].textContent?.trim()).toBe("$9.50");
+  });
+
+  it("passes { field, rowIndex } as the body function's second argument", () => {
+    const seen: { field: string; rowIndex: number }[] = [];
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "A", price: 1 },
+      { id: 2, name: "B", price: 2 },
+    ]);
+    fixture.componentRef.setInput("columns", [
+      { field: "name", header: "Name", body: (row: Row, options: { field: string; rowIndex: number }) => { seen.push(options); return row.name; } },
+    ]);
+    fixture.detectChanges();
+    expect(seen).toEqual([
+      { field: "name", rowIndex: 0 },
+      { field: "name", rowIndex: 1 },
+    ]);
+  });
+
+  it("falls back to the raw field value when no body function is supplied", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "Widget", price: 9.5 }]);
+    fixture.componentRef.setInput("columns", [{ field: "price", header: "Price" }]);
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells[0].textContent?.trim()).toBe("9.5");
+  });
+
+  it("calls the body function with undefined row[field] for a sparse row without throwing", () => {
+    interface SparseRow { id: number; name?: string }
+    const fixture = TestBed.createComponent(UTable<SparseRow>);
+    fixture.componentRef.setInput("value", [{ id: 1 }]);
+    fixture.componentRef.setInput("columns", [
+      { field: "name", header: "Name", body: (row: SparseRow) => row.name ?? "—" },
+    ]);
+    expect(() => fixture.detectChanges()).not.toThrow();
+    const cells = fixture.nativeElement.querySelectorAll("td");
+    expect(cells[0].textContent?.trim()).toBe("—");
+  });
+});
+
 describe("sorting", () => {
   it("sorts by sortField/sortOrder (single-sort) without mutating the input array", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -537,6 +592,85 @@ describe("selection", () => {
   });
 });
 
+describe("selection-column UI (Spec §5.2, GAP-042)", () => {
+  interface Row { id: number; name: string }
+
+  it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 2, name: "B" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.detectChanges();
+    const headerCheckbox = fixture.nativeElement.querySelector("thead input[type=checkbox]");
+    const rowCheckboxes = fixture.nativeElement.querySelectorAll("tbody input[type=checkbox]");
+    expect(headerCheckbox).toBeTruthy();
+    expect(rowCheckboxes.length).toBe(2);
+  });
+
+  it("renders a radio button per row and no header control when selectionMode is single and selectionColumn is true", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "single");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("tbody input[type=radio]")).toBeTruthy();
+    expect(fixture.nativeElement.querySelector("thead input")).toBeFalsy();
+  });
+
+  it("does not render a selection column when selectionColumn is false (default)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("input[type=checkbox]")).toBeFalsy();
+  });
+
+  it("header checkbox is unchecked and enabled when value is empty", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.detectChanges();
+    const headerCheckbox = fixture.nativeElement.querySelector("thead input[type=checkbox]");
+    expect(headerCheckbox.checked).toBe(false);
+    expect(headerCheckbox.disabled).toBe(false);
+  });
+
+  it("clicking a row checkbox toggles that row into the selection and emits selectionChange", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("tbody input[type=checkbox]").click();
+    expect(emitted).toEqual([[{ id: 1, name: "A" }]]);
+  });
+
+  it("clicking the header checkbox selects all rows; clicking again deselects all", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    fixture.componentRef.setInput("value", rows);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    const headerCheckbox = fixture.nativeElement.querySelector("thead input[type=checkbox]");
+    headerCheckbox.click();
+    expect(emitted[0]).toEqual(rows);
+  });
+});
+
 describe("keyboard navigation", () => {
   it("ArrowDown on a row moves focus to the next row", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -548,6 +682,78 @@ describe("keyboard navigation", () => {
     // tbody-scoped: by this task, Task 3's header row exists, so a bare
     // [role="row"] query would include it — this test must exercise
     // data-row-to-data-row navigation, not header-to-data-row.
+    const rows = fixture.nativeElement.querySelectorAll('tbody [role="row"]');
+    rows[0].focus();
+    rows[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.ownerDocument.activeElement).toBe(rows[1]);
+  });
+});
+
+describe("keyboard selection (Spec §5.7, GAP-047)", () => {
+  it("Space toggles the focused row's selection when selectionMode is set", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    const row = fixture.nativeElement.querySelector("tbody [role=row]");
+    row.dispatchEvent(new KeyboardEvent("keydown", { code: "Space" }));
+    expect(emitted).toEqual([[{ id: 1, name: "A" }]]);
+  });
+
+  it("Enter toggles the focused row's selection when selectionMode is set", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "single");
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement
+      .querySelector("tbody [role=row]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "Enter" }));
+    expect(emitted).toEqual([{ id: 1, name: "A" }]);
+  });
+
+  it("Ctrl+A selects all rows when selectionMode is multiple", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    fixture.componentRef.setInput("value", rows);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement
+      .querySelector("tbody [role=row]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true }));
+    expect(emitted).toEqual([rows]);
+  });
+
+  it("Ctrl+A does nothing when selectionMode is unset", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement
+      .querySelector("tbody [role=row]")
+      .dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true }));
+    expect(emitted).toEqual([]);
+  });
+
+  it("existing Arrow/Home/End keyboard navigation is unaffected by the new Space/Enter/Ctrl+A handling", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ]);
+    fixture.detectChanges();
     const rows = fixture.nativeElement.querySelectorAll('tbody [role="row"]');
     rows[0].focus();
     rows[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
@@ -727,6 +933,81 @@ describe("row editing (key-map, spec §11.1)", () => {
   });
 });
 
+describe("row/cell editing lifecycle (Spec §5.3, GAP-043)", () => {
+  it("entering edit mode on a row adds its key to editingRowKeys and renders an editable input", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", {});
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-init]").click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[data-u-table-cell-editor] input")).toBeTruthy();
+  });
+
+  it("saving an edit commits the new value and exits edit mode", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.value = "Changed";
+    input.dispatchEvent(new Event("input"));
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-save]").click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[data-u-table-cell-editor]")).toBeFalsy();
+    expect(fixture.nativeElement.textContent).toContain("Changed");
+  });
+
+  it("canceling an edit reverts to the original value and exits edit mode", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.value = "Changed";
+    input.dispatchEvent(new Event("input"));
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-cancel]").click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain("A");
+    expect(fixture.nativeElement.textContent).not.toContain("Changed");
+  });
+
+  it("a column body renderer sees the post-edit merged row after a save, not the stale pre-edit row (review fix)", () => {
+    // Regression test for the fix-loop round 1 finding: renderCell used to
+    // pass the raw, un-overridden `row` object straight to `col.body`,
+    // bypassing resolveCell's committedOverrides lookup entirely. A body
+    // renderer reading `row.name` directly (as real consumers do, matching
+    // the existing "column body renderer" describe block's own body
+    // signatures above) would therefore render the stale pre-edit value even
+    // after a save committed a new one.
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [
+      { field: "name", header: "Name", body: (row: Row) => `Name: ${row.name}` },
+    ]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.value = "Changed";
+    input.dispatchEvent(new Event("input"));
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-save]").click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain("Name: Changed");
+    expect(fixture.nativeElement.textContent).not.toContain("Name: A");
+  });
+});
+
 describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   it("groups adjacent rows sharing the same groupRowsBy value under subheader mode", () => {
     const fixture = TestBed.createComponent(UTable<{ group: string; name: string }>);
@@ -744,6 +1025,36 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
     for (const header of groupHeaders) {
       expect(header.classList.contains("u-table-row-group-header")).toBe(true);
     }
+  });
+});
+
+describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
+  interface Row2 { id: number; category: string; name: string }
+
+  it("spans consecutive rows sharing the same groupRowsBy value under one cell", () => {
+    const fixture = TestBed.createComponent(UTable<Row2>);
+    fixture.componentRef.setInput("value", [
+      { id: 1, category: "Fruit", name: "Apple" },
+      { id: 2, category: "Fruit", name: "Banana" },
+      { id: 3, category: "Veg", name: "Carrot" },
+    ]);
+    fixture.componentRef.setInput("columns", [{ field: "category", header: "Category" }, { field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("rowGroupMode", "rowspan");
+    fixture.componentRef.setInput("groupRowsBy", "category");
+    fixture.detectChanges();
+    const categoryCells = fixture.nativeElement.querySelectorAll("td[data-u-table-group-cell]");
+    expect(categoryCells.length).toBe(2); // one spanned cell per group, not per row
+    expect(categoryCells[0].getAttribute("rowspan")).toBe("2");
+    expect(categoryCells[1].getAttribute("rowspan")).toBe("1");
+  });
+
+  it("renders ungrouped when groupRowsBy is unset, matching subheader mode's own fallback", () => {
+    const fixture = TestBed.createComponent(UTable<Row2>);
+    fixture.componentRef.setInput("value", [{ id: 1, category: "Fruit", name: "Apple" }]);
+    fixture.componentRef.setInput("columns", [{ field: "category", header: "Category" }]);
+    fixture.componentRef.setInput("rowGroupMode", "rowspan");
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect(fixture.nativeElement.querySelector("[data-u-table-group-header]")).toBeFalsy();
   });
 });
 
@@ -945,5 +1256,301 @@ describe("filtering — custom mode, Angular registration contract (Spec §3.4.1
     const cells = fixture.nativeElement.querySelectorAll("td");
     expect(cells.length).toBe(1);
     expect(cells[0].textContent?.trim()).toBe("Alice");
+  });
+});
+
+describe("loading/empty states (Spec §5.6, GAP-046)", () => {
+  it("shows a loading indicator when loading is true", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("[data-u-table-loading]")).toBeTruthy();
+  });
+
+  it("shows a default empty-state message when value is empty and loading is false", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain("No results found");
+  });
+
+  it("does not show the empty-state message when value has rows", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).not.toContain("No results found");
+  });
+
+  it("does not show the empty-state message while loading is true, even with an empty value", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).not.toContain("No results found");
+  });
+
+  it("preserves existing selection when loading toggles to true", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", [{ id: 1, name: "A" }]);
+    fixture.detectChanges();
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.selection()).toEqual([{ id: 1, name: "A" }]);
+  });
+});
+
+describe("row expansion (Spec §5.4, GAP-044)", () => {
+  interface Row { id: number; name: string }
+
+  it("toggles a row's expanded state and renders expanded content via the expandedRowTemplate", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("expandedRowKeys", {});
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-toggle]").click();
+    expect(fixture.componentInstance.expandedRowKeysChange).toBeTruthy();
+  });
+
+  it("emits onRowExpand when a row is expanded and onRowCollapse when collapsed", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    const expandEvents: unknown[] = [];
+    fixture.componentInstance.onRowExpand.subscribe((e: unknown) => expandEvents.push(e));
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-toggle]").click();
+    expect(expandEvents.length).toBe(1);
+  });
+
+  it("does not throw when dataKey maps to a duplicate value across two rows", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 1, name: "B" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    expect(() => fixture.detectChanges()).not.toThrow();
+  });
+});
+
+describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
+  interface Row { id: number; name: string }
+
+  it("clicking the expand-toggle button does not also toggle row selection (Important finding 1)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-toggle]").click();
+    expect(emitted).toEqual([]);
+  });
+
+  it("clicking Edit/Save/Cancel does not also toggle row selection (Important finding 1)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", {});
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-init]").click();
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector("[data-u-table-row-edit-save]").click();
+    fixture.detectChanges();
+
+    expect(emitted).toEqual([]);
+  });
+
+  it("typing a space in the cell editor input does not toggle selection, and the character appears in the input (Important finding 2)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.focus();
+    const keydownEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+    input.dispatchEvent(keydownEvent);
+    input.value = "A ";
+    input.dispatchEvent(new Event("input"));
+
+    expect(emitted).toEqual([]);
+    expect(input.value).toBe("A ");
+  });
+
+  it("Ctrl+A while focused inside the cell editor input does not trigger select-all-rows (Important finding 2)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 2, name: "B" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
+    input.focus();
+    input.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true, bubbles: true }));
+
+    expect(emitted).toEqual([]);
+  });
+
+  it("clicking into the cell editor input does not toggle row selection (Important finding 2)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("editingRowKeys", { "1": true });
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selection", []);
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectionChange.subscribe((v: unknown) => emitted.push(v));
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector("[data-u-table-cell-editor] input").click();
+
+    expect(emitted).toEqual([]);
+  });
+
+  it("colspan on loading/empty/subheader-group rows accounts for the selection, expansion-toggle, and edit-actions columns (Minor finding 3)", () => {
+    const fixture = TestBed.createComponent(UTable<{ group: string; name: string }>);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("loading", true);
+    fixture.detectChanges();
+    // base columns.length (1) + selection (1) + expansion-toggle (1) + edit-actions (1) = 4
+    const loadingCell = fixture.nativeElement.querySelector("[data-u-table-loading]");
+    expect(loadingCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("empty-state row colspan also accounts for selection/expansion/edit-actions columns (Minor finding 3)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", []);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.detectChanges();
+    const emptyCell = fixture.nativeElement.querySelector("tbody td[colspan]");
+    expect(emptyCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("row-expansion placeholder row colspan accounts for the selection and edit-actions columns too (Minor finding 3)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.componentRef.setInput("expandedRowKeys", { "1": true });
+    fixture.detectChanges();
+    // base columns.length (1) + selection (1) + expansion-toggle (1) + edit-actions (1) = 4
+    const expansionRow = fixture.nativeElement.querySelector("[data-u-table-row-expansion] td");
+    expect(expansionRow.getAttribute("colspan")).toBe("4");
+  });
+
+  it("header row has matching th cells for the expansion-toggle and edit-actions columns (Minor finding 3)", () => {
+    const fixture = TestBed.createComponent(UTable<Row>);
+    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }]);
+    fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("dataKey", "id");
+    fixture.componentRef.setInput("selectionMode", "multiple");
+    fixture.componentRef.setInput("selectionColumn", true);
+    fixture.componentRef.setInput("editMode", "row");
+    fixture.detectChanges();
+    const headerCells = fixture.nativeElement.querySelectorAll("thead tr th");
+    const bodyRowCells = fixture.nativeElement.querySelectorAll("tbody tr:first-child > *");
+    expect(headerCells.length).toBe(bodyRowCells.length);
+  });
+
+  it("virtual-scroll rowIndex uses the absolute dataset index, not the visible-window-relative index (Minor finding 4)", () => {
+    let resizeObserverCallback: ResizeObserverCallback | undefined;
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(cb: ResizeObserverCallback) {
+          resizeObserverCallback = cb;
+        }
+        observe(target: Element) {
+          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        }
+        disconnect() {}
+      }
+    );
+
+    const fixture = TestBed.createComponent(UTable<Row>);
+    const rowsData = Array.from({ length: 200 }, (_, i) => ({ id: i, name: `Row ${i}` }));
+    const seenRowIndexes: number[] = [];
+    fixture.componentRef.setInput("value", rowsData);
+    fixture.componentRef.setInput("virtualScroll", true);
+    fixture.componentRef.setInput("virtualScrollItemSize", 30);
+    fixture.componentRef.setInput("columns", [
+      {
+        field: "name",
+        header: "Name",
+        body: (row: Row, options: { rowIndex: number }) => {
+          seenRowIndexes.push(options.rowIndex);
+          return row.name;
+        },
+      },
+    ]);
+    fixture.detectChanges();
+    const scrollerRoot = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
+    Object.defineProperty(scrollerRoot, "offsetHeight", { value: 200, configurable: true });
+    resizeObserverCallback?.(
+      [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
+    fixture.detectChanges();
+
+    // Scroll well into the dataset so the visible window's row indexes no
+    // longer start at 0 — this is the case that distinguishes a
+    // window-relative $index (which would reset to 0 here) from the item's
+    // real absolute dataset index (React/Vue's own semantics).
+    seenRowIndexes.length = 0;
+    Object.defineProperty(scrollerRoot, "scrollTop", { value: 3000, writable: true, configurable: true });
+    scrollerRoot.dispatchEvent(new Event("scroll"));
+    fixture.detectChanges();
+
+    expect(seenRowIndexes.length).toBeGreaterThan(0);
+    // first visible absolute index = floor(3000/30) = 100
+    expect(Math.min(...seenRowIndexes)).toBe(100);
+
+    vi.unstubAllGlobals();
   });
 });

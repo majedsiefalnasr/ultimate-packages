@@ -132,3 +132,101 @@ describe("UGalleria", () => {
     expect(onFullScreenActiveChange).toHaveBeenCalledWith(false);
   });
 });
+
+describe("keyboard navigation, Escape, role=region (Spec §5.1, GAP-050)", () => {
+  it("has role=region on the root element", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    expect(container.querySelector("[role=region]")).toBeTruthy();
+  });
+
+  it("ArrowRight advances to the next item", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const content = container.querySelector("[data-u-galleria-content]") as HTMLElement;
+    fireEvent.keyDown(content, { code: "ArrowRight" });
+    expect(getActiveItemImage(container).src).toContain("b.png");
+  });
+
+  it("ArrowLeft goes to the previous item", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const content = container.querySelector("[data-u-galleria-content]") as HTMLElement;
+    fireEvent.keyDown(content, { code: "ArrowRight" });
+    expect(getActiveItemImage(container).src).toContain("b.png");
+    fireEvent.keyDown(content, { code: "ArrowLeft" });
+    expect(getActiveItemImage(container).src).toContain("a.png");
+  });
+
+  it("Home jumps to the first item, End jumps to the last", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const content = container.querySelector("[data-u-galleria-content]") as HTMLElement;
+    fireEvent.keyDown(content, { code: "End" });
+    expect(getActiveItemImage(container).src).toContain("c.png");
+    fireEvent.keyDown(content, { code: "Home" });
+    expect(getActiveItemImage(container).src).toContain("a.png");
+  });
+
+  it("Escape closes fullscreen mode when active", () => {
+    const onFullScreenActiveChange = vi.fn();
+    render(
+      <UGalleria
+        value={items}
+        itemTemplate={itemTemplate}
+        fullScreen
+        fullScreenActive
+        onFullScreenActiveChange={onFullScreenActiveChange}
+      />
+    );
+    const content = document.querySelector("[data-u-galleria-content]") as HTMLElement;
+    fireEvent.keyDown(content, { code: "Escape" });
+    expect(onFullScreenActiveChange).toHaveBeenCalledWith(false);
+  });
+
+  it("Escape does nothing when fullscreen mode is not active", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const content = container.querySelector("[data-u-galleria-content]") as HTMLElement;
+    expect(() => fireEvent.keyDown(content, { code: "Escape" })).not.toThrow();
+    expect(document.querySelector(".u-galleria-mask")).not.toBeInTheDocument();
+  });
+
+  it("does not navigate when ArrowLeft/ArrowRight are pressed while a focused input inside a custom item template has focus", () => {
+    const onActiveIndexChange = vi.fn();
+    const inputItemTemplate = (item: string) => <input className="item-input" defaultValue={item} />;
+    const { container } = render(
+      <UGalleria value={items} itemTemplate={inputItemTemplate} onActiveIndexChange={onActiveIndexChange} />
+    );
+    const input = container.querySelector(".item-input") as HTMLInputElement;
+    input.focus();
+    fireEvent.change(input, { target: { value: "typed" } });
+    fireEvent.keyDown(input, { code: "ArrowRight" });
+    expect(onActiveIndexChange).not.toHaveBeenCalled();
+    expect(input.value).toBe("typed");
+  });
+});
+
+describe("thumbnail keyboard activation (Spec §5.1, GAP-050 Task 7)", () => {
+  it("makes the thumbnail focusable", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const thumbnail = container.querySelector(".u-galleria-thumbnail-item") as HTMLElement;
+    expect(thumbnail.tabIndex).toBe(0);
+  });
+
+  it("Enter on a focused thumbnail activates it the same as a click", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const thumbnails = container.querySelectorAll(".u-galleria-thumbnail-item");
+    fireEvent.keyDown(thumbnails[2], { code: "Enter" });
+    expect(getActiveItemImage(container).src).toContain("c.png");
+  });
+
+  it("Space on a focused thumbnail activates it the same as a click", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const thumbnails = container.querySelectorAll(".u-galleria-thumbnail-item");
+    fireEvent.keyDown(thumbnails[1], { code: "Space" });
+    expect(getActiveItemImage(container).src).toContain("b.png");
+  });
+
+  it("existing click behavior on the thumbnail is unchanged", () => {
+    const { container } = render(<UGalleria value={items} itemTemplate={itemTemplate} />);
+    const thumbnails = container.querySelectorAll(".u-galleria-thumbnail-item");
+    fireEvent.click(thumbnails[2]);
+    expect(getActiveItemImage(container).src).toContain("c.png");
+  });
+});

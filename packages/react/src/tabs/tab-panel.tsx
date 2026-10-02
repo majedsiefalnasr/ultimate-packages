@@ -5,6 +5,10 @@ export interface UTabPanelProps {
   header?: React.ReactNode;
   /** Whether this tab is disabled. */
   disabled?: boolean;
+  /** Whether the tab renders a close button. */
+  closable?: boolean;
+  /** Replaces the default close glyph inside the close button. */
+  closeIcon?: React.ReactNode;
   children?: React.ReactNode;
 }
 

@@ -372,6 +372,112 @@ describe("UDialog", () => {
   });
 });
 
+describe("scroll-lock (Spec §5.1, GAP-048)", () => {
+  // UOverlay appends each dialog's DOM directly to document.body, and
+  // scrollLockRegistry mutates document.body's classList directly (see
+  // packages/uix-utils/src/scroll-lock/registry.ts) — neither is torn down
+  // by TestBed between tests, so a failing assertion mid-suite could leave
+  // document.body locked for later tests. Clean up both explicitly, mirroring
+  // the established afterEach precedent in the "UDialog" describe block above.
+  afterEach(() => {
+    document.querySelectorAll('[role="dialog"]').forEach((el) => el.remove());
+    document.body.classList.remove("u-overflow-hidden");
+  });
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [ComponentIdGenerator] });
+  });
+
+  it("locks background scroll while the dialog is visible", () => {
+    const fixture = TestBed.createComponent(UDialog);
+    fixture.componentRef.setInput("visible", true);
+    fixture.detectChanges();
+    expect(document.body.classList.contains("u-overflow-hidden")).toBe(true);
+  });
+
+  it("restores background scroll when the dialog closes", () => {
+    const fixture = TestBed.createComponent(UDialog);
+    fixture.componentRef.setInput("visible", true);
+    fixture.detectChanges();
+    fixture.componentRef.setInput("visible", false);
+    fixture.detectChanges();
+    expect(document.body.classList.contains("u-overflow-hidden")).toBe(false);
+  });
+
+  it("keeps scroll locked while a second dialog remains open after the first closes", () => {
+    // Both instances created via independent TestBed.createComponent(UDialog)
+    // calls, per the brief's own literal test shape — confirmed by direct
+    // run (not assumed) that this is safe here: unlike Vue's mount(), which
+    // scopes useId()-derived ids per independent app root and previously
+    // collided in an analogous two-instance scroll-lock test (see
+    // dialog.spec.ts's Vue counterpart, "spec §16"), each
+    // TestBed.createComponent(UDialog) call here creates a genuinely
+    // independent component instance/injector, and this component's lockId
+    // is a fresh Math.random()-derived string per instance (matching
+    // BlockUI's own established pattern in block-ui.ts), not derived from
+    // any shared or app-root-scoped id source — so no cross-instance
+    // collision analogous to Vue's exists for this counter.
+    const a = TestBed.createComponent(UDialog);
+    const b = TestBed.createComponent(UDialog);
+    a.componentRef.setInput("visible", true);
+    a.detectChanges();
+    b.componentRef.setInput("visible", true);
+    b.detectChanges();
+    a.componentRef.setInput("visible", false);
+    a.detectChanges();
+    expect(document.body.classList.contains("u-overflow-hidden")).toBe(true);
+    b.componentRef.setInput("visible", false);
+    b.detectChanges();
+    expect(document.body.classList.contains("u-overflow-hidden")).toBe(false);
+  });
+
+  it("unregisters the scroll lock on destroy even if the dialog was never explicitly closed", () => {
+    const fixture = TestBed.createComponent(UDialog);
+    fixture.componentRef.setInput("visible", true);
+    fixture.detectChanges();
+    fixture.destroy();
+    const next = TestBed.createComponent(UDialog);
+    next.componentRef.setInput("visible", true);
+    next.detectChanges();
+    next.componentRef.setInput("visible", false);
+    next.detectChanges();
+    expect(document.body.classList.contains("u-overflow-hidden")).toBe(false);
+  });
+});
+
+describe("role override (Spec §5.2, GAP-049)", () => {
+  // UOverlay (appendTo="body", the default) moves the mask/root element
+  // containing [role] to document.body, so — matching every other bare
+  // TestBed.createComponent(UDialog) test in this file (see the
+  // "scroll-lock" describe block above, which queries document.body rather
+  // than fixture.nativeElement for the same reason — fixture.nativeElement
+  // is left empty once UOverlay relocates the content) — assertions here
+  // query document.body, not fixture.nativeElement.
+  afterEach(() => {
+    document.querySelectorAll('[role="dialog"], [role="alertdialog"]').forEach((el) => el.remove());
+  });
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [ComponentIdGenerator] });
+  });
+
+  it("defaults to role=dialog when no role override is supplied", () => {
+    const fixture = TestBed.createComponent(UDialog);
+    fixture.componentRef.setInput("visible", true);
+    fixture.detectChanges();
+    expect(document.querySelector("[role=dialog]")).toBeTruthy();
+  });
+
+  it("renders the supplied role override when set", () => {
+    const fixture = TestBed.createComponent(UDialog);
+    fixture.componentRef.setInput("visible", true);
+    fixture.componentRef.setInput("role", "alertdialog");
+    fixture.detectChanges();
+    expect(document.querySelector("[role=alertdialog]")).toBeTruthy();
+    expect(document.querySelector("[role=dialog]")).toBeFalsy();
+  });
+});
+
 describe("UDialog without ComponentIdGenerator provided", () => {
   afterEach(() => {
     document.querySelectorAll('[role="dialog"]').forEach((el) => el.remove());

@@ -21,7 +21,7 @@
           ref="container"
           v-focustrap="{ disabled: !modal }"
           :class="cx('root')"
-          role="dialog"
+          :role="role"
           :aria-labelledby="ariaLabelledById"
           :aria-modal="modal"
         >

@@ -27,7 +27,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 | 0 | Baseline/Provenance/Repository | Complete | Confirmed — `docs/architecture/{PROVENANCE,DEPENDENCIES,COMPATIBILITY,checksums.json}` all populated with commit SHAs/tarball hashes for PrimeNG/PrimeVue/PrimeReact/4×`@primeuix/*`. |
 | 1 | UltimateUIX Foundation | Complete | Confirmed — `uix-utils`, `uix-styled`, `uix-styles` (base module only, ADR-017), `uix-motion` all have `package.json`, `src/`, tests, provenance JSON. |
 | 2 | UltimateNG | Complete | Confirmed — `ng-core` + `ng` build; proof set expanded from the original 5 components to 8 (Button/Checkbox/Dialog/Menu/Tooltip/Paginator/Scroller/Table). GAP-003 (style-injection no-op) resolved (commit `680876f`). GAP-006 (Tooltip `aria-describedby`, commit `7f814ae`), GAP-007 (Angular Escape-priority stacking, commit `cfdd4cb`), GAP-009/GAP-023 (per-component secondary entry points, commit `62575fb`), and GAP-010 (provenance spec reconciliation, commit `f6ee470`) are all now resolved by the Blueprint Completion workstream (2026-09-13) — see their own entries below. |
-| 3 | UltimateReact | Complete | Confirmed — `react-core` + `react`, full 8-component proof set, per-component subpath exports present (unlike `ng`). |
+| 3 | UltimateReact | Complete | Confirmed — `react-core` + `react`, full 8-component proof set, per-component subpath exports present (`ng` has 70 secondary entry points since GAP-070, 2026-10-01). |
 | 4 | UltimateVue | Complete | Confirmed — `vue-core` + `vue`, full 8-component proof set + `v-ripple`/`v-tooltip` directives, Options-API `extends` mixin architecture (ADR-032). |
 | 5 | Themes | Complete, with a footnoted exception | Confirmed — `packages/themes` (Aura preset, 8-component proof set). Footnote in `ROADMAP.md` itself: React components use hand-written static CSS, not `dt()` token calls — cross-framework theme consistency is proven at the `react-core` registration layer only, not through a real React component's CSS. GAP-003a (the contradiction this created against ADR-023) is now moot, since GAP-003 itself is resolved. |
 | 6 | Component Metadata | Complete | Confirmed — `@ultimate/component-schema` (versioned `ComponentMetadata` schema) and `@ultimate/component-metadata` (8 real, source-verified records) both have substantial real `src/`. GAP-027 (this document's own §4) already correctly marks this resolved; this row was simply never updated to match. |
@@ -672,6 +672,672 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Source/evidence:** `docs/superpowers/plans/2026-09-02-paginator-component-implementation.md` Task 15 (line 1577 onward); `docs/architecture/research/2026-09-16-phase-a-prime-migration-inventory.md` §3/§4; `find packages/ng/src packages/react/src packages/vue/src -maxdepth 1 -type d` (re-run, one directory depth, no Select/Dropdown-equivalent directory found).
 - **Architectural decision required:** No — the blocker's resolution path (build Select first) is already named, not an open fork.
 
+### Prime-vs-Ultimate parity audit (new, added during Scope Freeze / GAP-stage reconciliation)
+
+Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit (Batches 1–6, Consolidated Pass 1, Findings Decision/Scope Triage, Human Decision Sheet, six-plus residual-Unverified verifications, and the Final Scope Ledger/reconciliation). Each entry's own "Source/evidence" field cites the specific audit artifact its finding and human decision trace back to. None of these gaps invents new evidence beyond what that audit already established — this section only registers the audit's own already-approved INCLUDE scope as formal gap-registry entries, per the approved GAP-stage authorization.
+
+#### GAP-041 — Table column templates/rendering API does not exist in any framework
+
+- **Status:** RESOLVED (2026-10-01, Table Plan — `1e2fd3c`, `c3f26d7`, `19a27ae`, `8a2f33d`)
+- **Type:** Component, Data, Architecture
+- **Blocking level:** HIGH
+- **Current evidence:** Table's own Spec (`docs/superpowers/specs/2026-09-02-table-component-design.md` §17) flagged the column-template/slot API surface as "needs implementation-time verification" but this was never carried into the implementation Plan — no column-definition object, render-function signature, or header/footer/empty/loading template slot mechanism exists in `packages/{ng,react,vue}/src/table/`.
+- **Expected state:** A real, framework-appropriate column-templating mechanism (e.g. Angular content-projection/`ng-template`, React render-prop/children-function, Vue slots) letting consumers render custom cell/header/footer content — the mechanism real PrimeNG/PrimeReact/PrimeVue's own Table/DataTable all provide.
+- **Why it matters:** This is the traced root cause blocking GC-D2 (checkbox/radio selection UI) and the templated half of the loading/empty-states gap (GAP-046) — several other Table gaps cannot be scoped concretely until this API shape is settled.
+- **What it blocks:** GAP-042 (Table checkbox/radio selection UI) fully; GAP-046's templated-empty-state half partially (soft sequencing preference only, not a hard block).
+- **Dependencies:** None upstream. Blocks GAP-042 downstream (hard dependency).
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** None yet — this is genuinely new API-shape work, not an extension of an existing mechanism.
+- **Recommended resolution direction:** Directional only, per GAP-stage rules — the exact column-template API shape is intentionally **not designed here**; that belongs to this gap's own future Spec.
+- **Source/evidence:** `docs/superpowers/specs/2026-09-02-table-component-design.md` §17; Batch 4 Findings Triage (`data-findings-triage.md`); Consolidated Pass 1 Report §3/§6 (GC-D1); Final Decision Ledger / Final Scope Ledger (GC-D1 — INCLUDE).
+- **Architectural decision required:** No — this is scoped, evidence-based implementation work, not an architectural fork.
+
+#### GAP-042 — Table checkbox/radio selection UI does not exist in any framework
+
+- **Status:** RESOLVED (2026-10-01, Table Plan — `1d33554`, `7a4dcbb`, `ba37cbf`)
+- **Type:** Component, Data
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real PrimeNG/PrimeReact/PrimeVue's `TableCheckbox`/equivalent is a template-consumed class with no template host in any of Ultimate's three Table ports — confirmed structurally: no selection-column UI mechanism exists.
+- **Expected state:** A real checkbox/radio selection-column UI, consistent with real Prime's own template-consumed selection-column pattern.
+- **Why it matters:** Selection UI is one of Table's most commonly used capabilities; its absence blocks any consumer needing built-in multi/single-row selection controls.
+- **What it blocks:** Nothing further downstream within this audit's own scope.
+- **Dependencies:** **Fully dependent on GAP-041** — cannot be scoped or implemented before GAP-041's column-template mechanism exists.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** None yet — depends on GAP-041's own template mechanism as its host.
+- **Recommended resolution direction:** Directional only — sequence strictly after GAP-041's Spec/Plan settles the template API shape.
+- **Source/evidence:** Batch 4 Findings Triage (`data-findings-triage.md`); Consolidated Pass 1 Report §3/§6 (GC-D2); Final Decision Ledger / Final Scope Ledger (GC-D2 — INCLUDE, dependent on GC-D1).
+- **Architectural decision required:** No.
+
+#### GAP-043 — Table row/cell editing lifecycle (save/cancel/validation) not implemented in any framework
+
+- **Status:** RESOLVED (2026-10-01, Table Plan — `025b928`, `c04b361`, `135c0fe`, `8a2f33d`)
+- **Type:** Component, Data
+- **Blocking level:** MEDIUM
+- **Current evidence:** The Table implementation Plan's own task text (Angular Task 10 / React Task 16 / Vue Task 22) explicitly, symmetrically defers save/cancel/cell-editor UI across all three frameworks — confirmed by direct Plan-text read during Batch 4 triage.
+- **Expected state:** A real row/cell editing lifecycle (enter-edit, save, cancel, validation-state UI), framework-native per each framework's own editing-state model (Angular's key-map/DOM-forms-validity, React's controlled/uncontrolled `editingRows`, Vue's array-prop) — these framework-native shapes are already settled by the original Table Spec §11 and are not reopened here.
+- **Why it matters:** Row/cell editing is a core Table capability real Prime provides in all three frameworks; its absence is a genuine, previously-deferred capability gap now explicitly included by human decision.
+- **What it blocks:** Nothing further downstream within this audit's own scope.
+- **Dependencies:** Independent of GAP-041/GAP-042.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** None yet.
+- **Recommended resolution direction:** Directional only — a dedicated Spec is needed; the framework-native editing-state model per framework is already settled by the original Table Spec §11.
+- **Source/evidence:** `docs/superpowers/plans/2026-09-02-table-component-implementation.md` Angular Task 10 / React Task 16 / Vue Task 22 (as cited by Batch 4 triage); Batch 4 Findings Triage (`data-findings-triage.md`); Consolidated Pass 1 Report §3/§6 (GC-D3); Final Decision Ledger / Final Scope Ledger (GC-D3 — INCLUDE). **Supersession notice:** Batch 4's own triage classified this Deferred at the time, on the grounds of the Plan's own disclosed deferral; the final human decision explicitly overrides that classification to INCLUDE — the Deferred classification is superseded, not reopened as a competing status.
+- **Architectural decision required:** No.
+
+#### GAP-044 — Table row expansion (`expandedRowKeys`/`onRowExpand`) not implemented in any framework
+
+- **Status:** RESOLVED (2026-10-01, Table Plan — `788935a`, `c994080`, `1bd39be`; expanded rows render an empty placeholder, no expansion-content template yet)
+- **Type:** Component, Data
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real PrimeNG's `expandedRowKeys`/`onRowExpand` is a genuine Prime API; confirmed never named in-scope or out-of-scope anywhere in Table's Spec or Plan — a spec-coverage blind spot, not a disclosed exclusion.
+- **Expected state:** A real row-expansion mechanism, likely following the same expanded-row key-map pattern already precedented by Table's own existing selection key-map.
+- **Why it matters:** Row expansion (nested detail rows) is a common Table capability with no Ultimate equivalent in any framework.
+- **What it blocks:** Nothing further downstream within this audit's own scope.
+- **Dependencies:** Independent.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** Table's own existing selection key-map pattern is the direct structural precedent for an expanded-row key-map.
+- **Recommended resolution direction:** Directional only — a dedicated Spec should scope the expanded-row key-map/state model, following the existing selection key-map's own shape.
+- **Source/evidence:** Batch 4 Findings Triage (`data-findings-triage.md`); Consolidated Pass 1 Report §3/§6 (GC-D4); Final Decision Ledger / Final Scope Ledger (GC-D4 — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-045 — Table `rowGroupMode: "rowspan"` declared but not implemented (Angular/React); never declared at all (Vue)
+
+- **Status:** RESOLVED (2026-10-01, Table Plan — `7e15a57`, `f4b5f9a`, `76690cc`)
+- **Type:** Component, Data
+- **Blocking level:** MEDIUM
+- **Current evidence:** The Table implementation Plan's own Angular/React tasks declare the accepting type `'subheader' | 'rowspan'` but only implement the `subheader` branch — a provable type-vs-implementation contract defect, confirmed by direct Plan/source comparison during Batch 4 triage. Vue's own task never declared `rowspan` as an option at all — a distinct, additional asymmetry from Angular/React's own type-vs-implementation gap.
+- **Expected state:** All three frameworks support `rowGroupMode: "rowspan"` — per this GAP-stage's own human decision explicitly naming Angular + React + Vue in scope, resolving the framework-asymmetry question the audit's own prior ledger had left open.
+- **Why it matters:** `rowspan` grouping is a real, named Table capability (declared in Angular/React's own type signature) that was never completed; Vue's own omission of the type entirely is a related but separate asymmetry now also brought into scope.
+- **What it blocks:** Nothing further downstream within this audit's own scope.
+- **Dependencies:** Independent.
+- **Framework scope:** Angular, React, Vue (all three, per this GAP-stage's explicit human decision).
+- **Existing reusable infrastructure:** The already-implemented `subheader` branch is the direct structural template for `rowspan`'s own implementation.
+- **Recommended resolution direction:** Directional only — complete the `rowspan` branch for Angular/React using the `subheader` branch as the template; add the `rowspan` option to Vue for the first time, matching Angular/React's completed shape.
+- **Source/evidence:** Batch 4 Findings Triage (`data-findings-triage.md`); Consolidated Pass 1 Report §3/§6 (GC-D5); Final Decision Ledger §4.9 (flagged Vue asymmetry as unresolved); Final Scope Ledger (GC-D5 — INCLUDE, Angular + React + Vue, resolving the prior ledger's own flagged open question).
+- **Architectural decision required:** No.
+
+#### GAP-046 — Table loading/empty states not implemented in any framework
+
+- **Status:** RESOLVED (2026-10-01, Table Plan — `085bd95`, `f45467c`, `b72591d`)
+- **Type:** Component, Data, Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real PrimeNG has `loading`/`loadingIcon`/`showLoader` with a real mask overlay; confirmed never named in-scope or out-of-scope anywhere in Table's Spec or Plan.
+- **Expected state:** A `loading` boolean flag (independently implementable now) and a fully-templated empty-state variant (soft-sequences after GAP-041's template mechanism, not a hard block).
+- **Why it matters:** Loading/empty-state feedback is a baseline expectation for any data-table component; its complete absence is a genuine, previously-undisclosed gap.
+- **What it blocks:** Nothing further downstream within this audit's own scope.
+- **Dependencies:** The boolean-flag half is independent; the fully-templated empty-state half has a **soft sequencing preference** (not a hard dependency) toward GAP-041's own template mechanism landing first.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** None yet for the boolean flag; the templated half will reuse GAP-041's own mechanism once it exists.
+- **Recommended resolution direction:** Directional only — the boolean `loading` flag can proceed independently of GAP-041; the templated empty-state variant should be scoped alongside or after GAP-041's own Spec.
+- **Source/evidence:** Batch 4 Findings Triage (`data-findings-triage.md`); Consolidated Pass 1 Report §3/§6 (GC-D6); Final Decision Ledger / Final Scope Ledger (GC-D6 — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-047 — Table keyboard selection/select-all not implemented in any framework
+
+- **Status:** RESOLVED (2026-10-01, Table Plan — `8e77055`, `d2b8315`, `d1d409b`; integration fixes `b62984e`, `7d40345`, `1b7871a`)
+- **Type:** Component, Data, Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real PrimeNG's row keydown handler explicitly handles Space/Enter (select) and Ctrl/Cmd+A (select-all); Ultimate's existing keyboard handler covers Arrow/Home/End only — confirmed via direct source comparison during Batch 4 triage. Real PrimeNG's own Ctrl+A condition checks `selectionMode`, not checkbox-column presence, confirming this is independent of GAP-042 (selection-column UI).
+- **Expected state:** The existing Arrow/Home/End keydown handler extended to also handle Space/Enter (select) and Ctrl/Cmd+A (select-all).
+- **Why it matters:** Keyboard-only selection is an accessibility-relevant capability real Prime provides that Ultimate currently lacks in all three frameworks.
+- **What it blocks:** Nothing further downstream within this audit's own scope.
+- **Dependencies:** **Confirmed independent of GAP-042** — real PrimeNG's own condition for Ctrl+A checks `selectionMode`, not checkbox-column presence, verified via direct source read.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** The already-working Arrow/Home/End keydown handler is the direct extension point — no new mechanism needed, only new key handling within the existing handler.
+- **Recommended resolution direction:** Directional only — extend the existing keydown handler; no new Spec needed given the extension shape is already fully precedented.
+- **Source/evidence:** Batch 4 Findings Triage (`data-findings-triage.md`); Consolidated Pass 1 Report §3/§6 (GC-D7); Final Decision Ledger / Final Scope Ledger (GC-D7 — INCLUDE, confirmed independent of GC-D2).
+- **Architectural decision required:** No.
+
+#### GAP-048 — Angular Dialog has no scroll-lock; existing `scrollLockRegistry` infrastructure is unwired
+
+- **Status:** RESOLVED (2026-10-01, Overlay Plan — `a3d3ddf`)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Current evidence:** The shared `scrollLockRegistry` infrastructure already exists and is already proven working via Angular's own `BlockUI` component — confirmed via direct source read during the Overlay Batch 2 triage. `UDialog` does not consume it.
+- **Expected state:** `UDialog` wired to the existing `scrollLockRegistry`, mirroring `BlockUI`'s own already-working consumption pattern.
+- **Why it matters:** Background-scroll leakage while a modal dialog is open is a real accessibility/UX defect; the fix mechanism already exists and is already proven, making this a pure wiring gap.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** `scrollLockRegistry`, already proven via `BlockUI`.
+- **Recommended resolution direction:** Directional only — wire `UDialog` to `scrollLockRegistry`, following `BlockUI`'s own already-working pattern; no new Spec needed given the mechanism is fully precedented.
+- **Source/evidence:** Overlay Findings Triage (`overlay-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (Angular Dialog scroll-lock — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-049 — Angular and Vue ConfirmDialog hardcode `role="dialog"`, diverging from their own real upstream's `role="alertdialog"`
+
+- **Status:** RESOLVED (2026-10-01, Overlay Plan — `5cefdb6` Angular, `8ac8d7f` Vue; React N/A)
+- **Type:** Component, Accessibility, Framework
+- **Blocking level:** LOW
+- **Current evidence:** Both Angular's `UDialog` and Vue's `Dialog.vue` hardcode `role="dialog"` with no override capability, diverging from their own real upstream's `role="alertdialog"` for the confirm-dialog use case — confirmed via direct source comparison during the Overlay Batch 2 triage. **React is confirmed correctly excluded** — PrimeReact's own real `ConfirmDialog`/`Dialog` also never sets `role="alertdialog"`, verified via direct source read; React has zero divergence from its own upstream on this point.
+- **Expected state:** Either `UDialog`'s/`Dialog.vue`'s `role` becomes configurable, or `ConfirmDialog` gains its own role override — a small API-surface addition, not an architectural fork.
+- **Why it matters:** `role="alertdialog"` vs. `role="dialog"` is an accessibility-semantics difference; real Prime's own Angular/Vue references use the more specific role for confirm-style dialogs.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Angular, Vue. **React is explicitly out of scope** — confirmed to already match its own real upstream's (lacking) behavior.
+- **Existing reusable infrastructure:** `UDialog`'s/`Dialog.vue`'s existing role-rendering mechanism is the direct extension point.
+- **Recommended resolution direction:** Directional only — add a role-override capability at implementation-plan level; the fix shape is not architecturally ambiguous, so no dedicated Spec is expected to be required.
+- **Source/evidence:** Overlay Findings Triage (`overlay-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (Angular + Vue ConfirmDialog role semantics — INCLUDE, React N/A).
+- **Architectural decision required:** No.
+
+#### GAP-050 — Galleria lacks keyboard navigation, a local Escape handler, and `role="region"` in all three frameworks
+
+- **Status:** RESOLVED (2026-10-01, Display Plan — `f8fa6a7`, `e945772`, `1403db7`; thumbnail keyboard activation `e5bebbe`, `4f28a9c`, `3c76eca`)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real Prime has full ArrowLeft/Right/Home/End/Enter/Space keyboard support in all three frameworks; Ultimate has none, confirmed during Panel/Layout/Display Batch 5 triage. Ultimate's fullscreen mode is a redesigned (non-native) overlay, removing the "browser handles Escape" reasoning real Prime's native-fullscreen approach relies on — so a local Escape handler is genuinely needed. Real PrimeNG's Galleria root genuinely has `role="region"` (confirmed via dedicated root-element extraction during triage, correcting an earlier claim of documentation drift); Ultimate's own root is missing it.
+- **Expected state:** Full keyboard navigation (matching real Prime's key set), a local Escape handler for the redesigned fullscreen overlay, and `role="region"` on the root element.
+- **Why it matters:** Three related but distinct accessibility gaps in the same component, all confirmed by direct evidence, merged into one finding per the original Batch 5 triage's own consolidation decision.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** Accordion's own already-shipped keyboard-handling pattern and `USplitButton`'s own local-Escape-handler pattern are the direct structural precedents for the two respective sub-fixes.
+- **Recommended resolution direction:** Directional only — add keyboard handlers (Accordion's pattern), a local Escape handler (`USplitButton`'s pattern), and the missing `role="region"` attribute.
+- **Source/evidence:** Panel Findings Triage (`panel-findings-triage.md`); Consolidated Pass 1 Report §3/§6 (GC-P1); Final Decision Ledger / Final Scope Ledger (GC-P1 — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-051 — Carousel lacks `aria-live` on the autoplay content wrapper in all three frameworks
+
+- **Status:** RESOLVED (2026-10-01, Display Plan — `d753aeb`, `cf2cbb9`, `d3b2482`; static `autoplayInterval > 0` condition, `aria-live="off"` otherwise, per user ruling)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Current evidence:** Real PrimeNG conditionally sets `aria-live` on the content wrapper for autoplay; Ultimate has none in any framework, confirmed via corroborated binary-safe grep during Batch 5 triage.
+- **Expected state:** One conditional ARIA attribute (`aria-live`) on the autoplay content wrapper, matching real Prime.
+- **Why it matters:** Autoplay content changes are otherwise not announced to assistive technology.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** **Independent from GAP-050** — same omission *pattern*, no shared mechanism, per the Batch 5 triage's explicit non-merge decision.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** None needed — a single conditional attribute addition.
+- **Recommended resolution direction:** Directional only — add the conditional `aria-live` attribute; no Spec needed.
+- **Source/evidence:** Panel Findings Triage (`panel-findings-triage.md`); Consolidated Pass 1 Report §3/§6 (GC-P2); Final Decision Ledger / Final Scope Ledger (GC-P2 — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-052 — Steps lacks keyboard navigation in all three frameworks
+
+- **Status:** RESOLVED (2026-10-01, Navigation Plan — `b46aa6a`, `1301b7f`, `ed7c8c5`; hidden-item fix `9df8a0b`, `20518e7`, `41f2b21`)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real Prime has a full ArrowRight/Left/Home/End system for Steps; Ultimate has none in any framework, confirmed during Navigation Batch 3 triage, and undisclosed anywhere.
+- **Expected state:** A roving-focus keyboard handler matching real Prime's key set.
+- **Why it matters:** Steps is a navigation component; keyboard operability is a baseline accessibility expectation real Prime already meets.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** The same roving-focus keyboard-handler shape already used elsewhere in this registry's Navigation-family gaps (GAP-054, GAP-056) is the direct structural precedent.
+- **Recommended resolution direction:** Directional only — add a roving-focus keyboard handler, following the same shape as GAP-054/GAP-056.
+- **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (Steps keyboard navigation — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-053 — Angular Steps lacks `routerLink` integration
+
+- **Status:** RESOLVED (2026-10-01, Navigation Plan — `9dd5a33`, `a169b00`; Breadcrumb's own defect is GAP-073)
+- **Type:** Component, Framework (Angular)
+- **Blocking level:** LOW
+- **Current evidence:** Real PrimeNG Steps has router integration; internally inconsistent with Angular's own sibling Breadcrumb, which has router integration — confirmed during Navigation Batch 3 triage. **(Corrected 2026-09-30:** this entry originally described Breadcrumb's pattern as "already correctly" implemented and "already-working". Implementation found Breadcrumb's pattern — `[attr.href]` and `[routerLink]` co-located on one anchor — has a latent defect: Angular's `RouterLink` host binding overwrites the `[attr.href]` fallback. That Breadcrumb defect is tracked separately as GAP-073 and is not part of GAP-053.)
+- **Expected state:** Steps supports `routerLink`, with navigation only for clickable items, matching real PrimeNG 21.1.9's `isClickableRouterLink` (`item.routerLink && !readonly && !item.disabled`).
+- **Why it matters:** Internal cross-component inconsistency within Angular's own Navigation family — Breadcrumb has router integration, Steps does not, despite both having a real upstream equivalent.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Independent from GAP-073 (Breadcrumb's own href defect).
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** Breadcrumb's router wiring is the historical template, but not its co-located binding shape (see GAP-073). The shipped implementation uses an `@if`/`@else` structural branch so `RouterLink` is present only on clickable items.
+- **Recommended resolution direction:** Directional only — add router integration to Steps via the structural-branch pattern, gated on PrimeNG's `isClickableRouterLink` condition. (Implemented during the Navigation Plan, commits `9dd5a33` and `a169b00`; RESOLVED 2026-10-01.)
+- **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (Angular Steps routerLink — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-054 — Menubar/TieredMenu/MegaMenu/PanelMenu lack keyboard navigation in all three frameworks
+
+- **Status:** RESOLVED (2026-10-01, Navigation Plan — Angular `862cde5`..`fd843a9`, React `b7dd0b8`..`3410b8f`, Vue `b6317e7`..`b4126e6`; index-mapping fixes `c5aa8a9`, `41d20ae`, `228ab75`)
+- **Type:** Component, Accessibility
+- **Blocking level:** HIGH
+- **Current evidence:** Real Prime has extensive keyboard systems for all four components (confirmed at source-line level for Menubar/MegaMenu during Navigation Batch 3 triage); Ultimate has zero keyboard navigation for any of the four, in any framework. This is one systemic finding covering all four components, per the original Batch 3 finding's own framing — not four independent gaps, since all four share the identical omission and the identical fix shape (roving-focus keyboard handler).
+- **Expected state:** Roving-focus keyboard navigation for all four components, in all three frameworks.
+- **Why it matters:** This is the largest single Navigation-family gap in the audit by component count; comments claiming this "matches `UMenu`'s own reduction pattern" understate the gap — `UMenu` itself retains basic Arrow navigation, while these four retain none.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. **Independent from GAP-055** (Dock keyboard navigation) — same omission *pattern* only, different component, no shared mechanism.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** None directly reusable — this requires new keyboard-handling logic for each of the four components, though the four may share one implementation approach given the systemic nature of the finding.
+- **Recommended resolution direction:** Directional only — one plan covering all four components' keyboard-navigation addition, given the shared root pattern; may still require framework-specific task breakdown within that one plan.
+- **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (Menubar/TieredMenu/MegaMenu/PanelMenu keyboard navigation — INCLUDE, one systemic finding).
+- **Architectural decision required:** No.
+
+#### GAP-055 — Dock lacks keyboard navigation in all three frameworks
+
+- **Status:** RESOLVED (2026-10-01, Navigation Plan — `2dce580`, `0004242`, `3f481c9`)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real Prime Dock has full roving keyboard navigation; Ultimate is mouse-only in all three frameworks, confirmed during Navigation Batch 3 triage and undisclosed anywhere.
+- **Expected state:** Roving-focus keyboard navigation between Dock action items, matching real Prime.
+- **Why it matters:** Dock is otherwise entirely mouse-dependent, a real accessibility gap.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** **Independent from GAP-054** — different component, same omission *pattern* only.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** The same roving-focus keyboard-handler shape used elsewhere in this registry's Navigation-family gaps.
+- **Recommended resolution direction:** Directional only — add keyboard navigation, following the same roving-focus shape as GAP-052/GAP-056.
+- **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (Dock keyboard navigation — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-056 — SpeedDial lacks keyboard navigation between action items in all three frameworks
+
+- **Status:** RESOLVED (2026-10-01, Navigation Plan — `481fe7c`, `2cad7b2`, `94084f4`)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real Prime SpeedDial has full roving keyboard navigation between action items; Ultimate implements only Escape-to-close, in all three frameworks, confirmed during Navigation Batch 3 triage and undisclosed anywhere.
+- **Expected state:** Roving-focus keyboard navigation between SpeedDial action items, matching real Prime.
+- **Why it matters:** SpeedDial's action items are currently only mouse-operable once opened. **Explicitly distinct from SpeedDial's layout-fidelity question** (positioning/radius/direction math), which was separately, fully verified as Parity Confirmed this audit — this gap concerns keyboard navigation only.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** The same roving-focus keyboard-handler shape used elsewhere in this registry's Navigation-family gaps.
+- **Recommended resolution direction:** Directional only — add keyboard navigation between action items; layout math itself needs no changes (already Parity Confirmed, not part of this gap).
+- **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); SpeedDial layout-fidelity verification (`speeddial-layout-verification.md` — Parity Confirmed, cited here only to disclaim scope overlap); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (SpeedDial keyboard navigation — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-057 — React Tabs lacks `scrollable` overflow support
+
+- **Status:** RESOLVED (2026-10-01, Navigation Plan — `54cd1a9`, `13653e5`; Angular/Vue overflow defects are GAP-071/GAP-072)
+- **Type:** Component, Framework (React)
+- **Blocking level:** LOW
+- **Current evidence (corrected 2026-09-30, during Implementation — the original text below was carried forward from an unverified Batch 3 triage claim and did not match real source):** Real PrimeReact 10.9.9 TabView has an opt-in `scrollable` prop (default `false`) that, when enabled, renders prev/next navigator buttons only while scrolling in that direction is possible (`scrollLeft !== 0` for prev; not at scroll end for next), recomputed via a `useEffect` with no dependency array (i.e., after every render) and on the strip's own `scroll` event — no `ResizeObserver`. React's own `UTabView` has none of this: no scroll container, no navigators, no `scrollable` prop at all. **The original claim that "Angular's `showNavigators`/Vue's `TabList.vue` already correctly implement the equivalent" is INCORRECT as a description of automatic/continuous overflow detection** — direct source inspection (this Implementation-stage re-verification) found: Ultimate Angular's `UTabList.updateButtonState()` is only ever called from its own `scroll` listener, never at component load and never on resize, so it never shows a navigator on initial overflow at all (a real, separate defect — now tracked by GAP-071). Ultimate Vue's `TabList.vue` calls `updateButtonState()` once in `mounted()` (so it does correctly show the Next button on initial overflow) plus on `scroll`, but never on resize (a real, separate gap — now tracked by GAP-072). Neither Angular nor Vue has a `ResizeObserver`. Real PrimeNG/PrimeVue (unlike PrimeReact) do have `ResizeObserver`-driven continuous overflow detection, but that is not what Ultimate Angular/Vue currently implement, and is not GAP-057's own parity target (GAP-057's target is real PrimeReact, which itself has no `ResizeObserver`).
+- **Expected state:** React Tabs gains an opt-in `scrollable` prop (default `false`, matching real PrimeReact's own default) that, when `true`, wraps the tab-header strip in a horizontally-scrollable container and renders prev/next navigator buttons only while scrolling in that direction is possible — recomputed on render/update and on the strip's own `scroll` event, matching real PrimeReact's own recalculation behavior exactly. No `ResizeObserver` is introduced for GAP-057 (out of scope for this GAP; see GAP-071/GAP-072 for the separate Angular/Vue resize-reactivity findings, which do not block or extend GAP-057).
+- **Why it matters:** React is the sole outlier among Ultimate's three frameworks for having zero overflow-scrolling capability, and its own real upstream (PrimeReact) has a clear, directly portable API shape to match.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** **Independent from GAP-058** (`closable`) — confirmed no shared root cause, different Prime-availability shape. **Independent from GAP-071/GAP-072** — those are separate, newly-discovered Angular/Vue-specific findings that do not block, extend, or get folded into GAP-057's own React-only scope.
+- **Framework scope:** React only.
+- **Existing reusable infrastructure:** None directly reusable — Ultimate's own Angular/Vue implementations do not match real PrimeReact's own behavior closely enough to port as-is (see corrected Current evidence above); real PrimeReact 10.9.9's own `TabView.js`/`TabViewBase.js` source is the actual parity target.
+- **Recommended resolution direction:** Port real PrimeReact 10.9.9's own `scrollable` prop (default `false`) and navigator-visibility/recalculation behavior directly — do not port Ultimate Angular's or Vue's own current implementation, since neither matches real PrimeReact's behavior and Angular's own has an independent defect (GAP-071).
+- **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (React Tabs scrollable — INCLUDE); Implementation-stage re-verification (2026-09-30) against real PrimeReact 10.9.9 (`.vendor-cache/primereact-10.9.9.tar.gz`, `components/lib/tabview/{TabView,TabViewBase}.js`) and real Ultimate source (`packages/ng/src/tabs/{tabs,tab-list}.ts`, `packages/vue/src/tabs/{TabList.vue,BaseTabs.ts}`).
+- **Architectural decision required:** No — resolved by user decision (2026-09-30): use real PrimeReact's own `scrollable` (opt-in, default `false`) semantics, not Ultimate's own `showNavigators` (always-on) convention; recalculate on render/update + scroll only, no `ResizeObserver`.
+
+#### GAP-058 — React Tabs lacks per-tab `closable` support
+
+- **Status:** RESOLVED (2026-10-01, Navigation Plan — `fd1c773`, `ba5d7ce`; known limitations listed under Expected state)
+- **Type:** Component, Framework (React)
+- **Blocking level:** LOW
+- **Current evidence:** Real PrimeReact TabView/TabPanel has a genuine per-tab close capability; React's `UTabPanel` omits it entirely, confirmed during Navigation Batch 3 triage and undisclosed. **Angular/Vue are correctly N/A** — real PrimeNG's/PrimeVue's newer Tabs family never had this concept at all, confirmed independently per-framework.
+- **Expected state:** React Tabs supports per-tab closing, matching real PrimeReact 10.9.9's own API. **Decisions recorded (user rulings, 2026-09-30, during Implementation; see Navigation Spec §12 and Plan Task 25):** (1) `closable` (default `false`) and `closeIcon` are props on `UTabPanel`; (2) `onTabClose` and cancellable `onBeforeTabClose` (returning `false` cancels) are props on `UTabView`, with payload `{ originalEvent, index }` where `index` is the original panel index; (3) the close control is a native `<button type="button" aria-label="Close">` placed beside the header button inside the tab `<li>` (a disclosed deviation from PrimeReact's focusable SVG); (4) PrimeReact-compatible active-tab re-pick after every close (first enabled visible tab at/after the closed index, else the nearest before, including after closing a non-active tab), and closed-tab identity by the child's React key, falling back to its original index. **Known limitations, not part of the GAP-058 contract:** a controlled parent removing children inside `onTabClose` is an unsupported/undefined mutation-timing edge case (the re-pick uses the pre-removal panel list; PrimeReact is also unreliable here); and the close button sits inside an element with `role="tab"`, whose children ARIA treats as presentational — an accessibility follow-up requiring dedicated verification with a real screen reader, not a demonstrated GAP-058 acceptance failure.
+- **Why it matters:** This is genuinely React-specific — no cross-framework Ultimate template exists, since Angular/Vue correctly never had this feature to draw from.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** **Independent from GAP-057** (`scrollable`).
+- **Framework scope:** React only. **Angular/Vue explicitly out of scope** — confirmed their own real upstream never had this feature.
+- **Existing reusable infrastructure:** None — no cross-framework Ultimate template exists for this specific feature.
+- **Recommended resolution direction:** Directional only — port real PrimeReact's own close-button/close-icon pattern directly, since no Ultimate cross-framework precedent exists.
+- **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (React Tabs closable — INCLUDE, Angular/Vue N/A).
+- **Architectural decision required:** No.
+
+#### GAP-059 — SelectButton lacks roving-tabindex keyboard behavior (React)
+
+- **Status:** RESOLVED (2026-10-01, React only — Form/Accessibility Plan `f2b8d41`; Angular reclassified as matching PrimeNG; real-browser Space double-toggle is GAP-075)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real PrimeReact 10.9.9 implements roving-tabindex on SelectButton (`SelectButton.js:16,101`; `SelectButtonItem.js:41-94`); React's SelectButton port lacks it entirely, confirmed during Batch 6 triage. **Vue is intentionally, correctly excluded** — real PrimeVue itself lacks this mechanism, independently confirmed via corroborated extraction (not inferred from PrimeNG/PrimeReact). **(Corrected 2026-09-30, Implementation-stage source check:** this entry originally also claimed real PrimeNG implements roving-tabindex and scoped Angular in. Real PrimeNG 21.1.9 SelectButton has none — each option is a `p-togglebutton` with tabindex 0 (−1 when disabled) handling only Enter/Space (`togglebutton.ts:54,87-100`); its `changeTabIndexes` method (`selectbutton.ts:267`) is never called outside its own spec. Ultimate Angular already matches PrimeNG; by user decision Angular is reclassified as matching upstream, like Vue.)
+- **Expected state:** Roving-tabindex keyboard behavior for React SelectButton, matching real PrimeReact: first enabled option initially tabbable (PrimeReact: first option); ArrowRight/ArrowDown move focus to the next option, ArrowLeft/ArrowUp to the previous, wrapping at both ends; arrows move focus only; Space selects. Two Ultimate differences by user decision: arrow keys on a component with no tabbable option are a no-op instead of throwing (PrimeReact would throw); and disabled options are skipped, because Ultimate's `USelectButton` composes `UToggleButton`, whose native-disabled checkbox input cannot receive focus (PrimeReact renders its own focusable item per option). `UToggleButton` gains one optional `tabIndex` prop to support this.
+- **Why it matters:** Roving-tabindex is a real accessibility pattern real PrimeReact provides; Ultimate's React port currently lacks it.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** React only. **Vue and Angular explicitly out of scope** — both confirmed to already match their own real upstream's (lacking) behavior, not an oversight.
+- **Existing reusable infrastructure:** None directly reusable — new roving-tabindex logic needed for React.
+- **Recommended resolution direction:** Directional only — add PrimeReact-matching roving-tabindex keyboard behavior to React only.
+- **Source/evidence:** Batch 6 Triage (`batch6-triage.md`, GC-B6-01); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (GC-B6-01 — INCLUDE, Angular + React only, as originally decided; Angular removed 2026-09-30, see Current evidence); Form/Accessibility Spec §12.
+- **Architectural decision required:** No.
+
+#### GAP-060 — FileUpload progress bar lacks ARIA attributes in all three frameworks
+
+- **Status:** RESOLVED (2026-10-01, Form/Accessibility Plan — `e47233c`, `84afe79`, `e0d955d`, `cff02d6`)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** All three real Prime frameworks compose their own real ProgressBar component for upload-progress; Ultimate's own `UProgressBar` sibling already has correct ARIA in every framework; FileUpload's own implementation task, identically in all three frameworks, rendered a bare `div` instead — confirmed during Batch 6 triage. **One shared root cause, three framework-local instances** — not three separate gaps.
+- **Expected state:** FileUpload composes the already-existing, already-correct `UProgressBar` (`showValue` false) in place of the bare `div`, in all three frameworks, under the existing `uploading` render condition. Added 2026-09-30 by user decision: a FileUpload-scoped rule gives the composed bar Prime's thin `0.25rem` height (`@primeuix/styles` fileupload), and the dead bare-div CSS is removed; `UProgressBar`'s own styles are unchanged, so the bar now takes `UProgressBar`'s colours, radius and transition (accepted).
+- **Why it matters:** This is the most mechanical fix in the entire audit — the correct, accessible component already exists and is already used correctly elsewhere in the same codebase; FileUpload simply didn't reuse it.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** `UProgressBar`, already correct and already shipped in all three frameworks.
+- **Recommended resolution direction:** Directional only — compose `UProgressBar` in place of the bare `div`; no new Spec needed.
+- **Source/evidence:** Batch 6 Triage (`batch6-triage.md`, GC-B6-02); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (GC-B6-02 — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-061 — Vue Password lacks disclosure-pattern ARIA attributes
+
+- **Status:** RESOLVED (2026-10-01, Form/Accessibility Plan — `36eab26`; related follow-ups GAP-074, GAP-076)
+- **Type:** Component, Accessibility, Framework (Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Genuinely PrimeVue-specific richness (`aria-haspopup`, `aria-expanded`, `aria-controls`, two `aria-live` regions) — independently confirmed absent from PrimeNG/PrimeReact too, confirmed during Batch 6 triage, so Angular/React correctly match their own baselines by *not* having it.
+- **Expected state:** Vue's Password gains the disclosure-pattern ARIA real PrimeVue 4.5.5 uses (`Password.vue:13-15,44-45,57-58`): on the **input**, `aria-haspopup` (= `feedback`), `aria-expanded` (= strength overlay open) and `aria-controls` (= the overlay's id, only while open); the strength overlay gets an id plus `role="dialog"` and `aria-live="polite"`; a visually hidden `aria-live="polite"` span shows the current strength text (`infoText`), always rendered. The mask/unmask toggle icons are unchanged. **(Corrected 2026-09-30, Implementation-stage source check:** this entry originally placed the ARIA on the "overlay-toggle", which the Plan read as the mask toggle; real PrimeVue puts it on the input and ties it to the strength-meter overlay. User decision: follow real PrimeVue.)
+- **Why it matters:** This is genuinely Vue-specific richness real PrimeVue provides that Ultimate's Vue port currently lacks; Angular/React are correctly unaffected since their own real upstream never had this either.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Vue only. **Angular/React explicitly out of scope** — confirmed their own real upstream never had this feature.
+- **Existing reusable infrastructure:** The same disclosure-pattern ARIA approach already used elsewhere in this codebase for overlay-disclosure ARIA is the direct precedent.
+- **Recommended resolution direction:** Directional only — add real PrimeVue's input/overlay disclosure ARIA and two `aria-live` regions to Vue's Password.
+- **Source/evidence:** Batch 6 Triage (`batch6-triage.md`, GC-B6-03); Consolidated Pass 1 Report §3/§6; Final Decision Ledger / Final Scope Ledger (GC-B6-03 — INCLUDE, Vue only).
+- **Architectural decision required:** No.
+
+#### GAP-062 — Vue Tabs lacks PageUp/PageDown scroll-into-view keyboard support
+
+- **Status:** RESOLVED (2026-10-01, Vue Plan — `3345962`)
+- **Type:** Component, Accessibility, Framework (Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Real PrimeVue's `Tab.vue` implements `onPageDownKey`/`onPageUpKey` to scroll the tab list into view without changing selection; Ultimate's Vue `Tab.vue` omits both entirely, confirmed during the Vue Tabs/Stepper residual verification.
+- **Expected state:** PageUp/PageDown scroll-into-view-only behavior, ported exactly — must not change the selected tab as a side effect, per the human decision's own explicit clarification. Real PrimeVue 4.5.5 `Tab.vue:88-95,122-123`: PageDown scrolls the last tab into view, PageUp the first, via `scrollIntoView({ block: 'nearest' })`, with `preventDefault()` and no focus change. (Clarified 2026-09-30 after the Implementation-stage source check; the Plan's original snippet scrolled the current tab instead.)
+- **Why it matters:** Real PrimeVue's own keyboard mechanism (`findNextTab`/`findPrevTab`/`findFirstTab`/`findLastTab`, confirmed to live in `Tab.vue` not `TabList.vue`) is otherwise already matched by Ultimate's Vue port; this is the one confirmed missing piece.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Vue only.
+- **Existing reusable infrastructure:** The existing `findNextTab`/`findPrevTab`/`findFirstTab`/`findLastTab` mechanism already in `Tab.vue` is the direct extension point.
+- **Recommended resolution direction:** Directional only — port the scroll-into-view-only behavior exactly; do not change selection as a side effect.
+- **Source/evidence:** Vue Tabs/Stepper residual verification (`vue-tabs-stepper-verification.md`); Final Decision Ledger / Final Scope Ledger (Vue Tabs PageUp/PageDown — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-063 — Vue Stepper lacks vertical-mode separator rendering
+
+- **Status:** RESOLVED (2026-10-01, Vue Plan — `bd4c025`, `41a219c`, including the widened vertical StepItem layout; horizontal separators are GAP-077)
+- **Type:** Component, Framework (Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Real PrimeVue's `StepPanel.vue` has a real `updateSeparator()` method rendering a `StepperSeparator` between vertical steps (except after the last); Ultimate's `StepPanel.vue` has zero separator logic anywhere in the Stepper family, confirmed by exhaustive grep during the Vue Tabs/Stepper residual verification.
+- **Expected state:** The `updateSeparator()` mechanism ported, with `StepperSeparator` rendering wired in for vertical-mode Steppers. "Vertical" means the panel sits inside a `StepItem` (PrimeVue `StepPanel.vue`: `isVertical = !!$pcStepItem`); the separator renders inside a content wrapper before the panel content, for every vertical step except the last. Supporting pieces Ultimate lacks and this gap adds (user decision 2026-09-30): `StepItem` provides its context to descendants, a stable step marker attribute, a small internal separator element, and vertical separator/content-wrapper CSS based on `@primeuix/styles` 2.0.3 stepper (`.p-stepitem .p-stepper-separator`, `.p-stepitem .p-steppanel-content-wrapper`). Widened 2026-09-30 by user decision after the Task 2 review: also the PrimeUIX vertical StepItem layout (item as a column, panel as a grid, content indent, RTL offset, last-item padding), because Ultimate's pre-existing row layout left the separator beside the header instead of under the step number.
+- **Why it matters:** This is a real, visible rendering gap for vertical-orientation Steppers. **(Corrected 2026-09-30, Implementation-stage source check:** this entry originally said PrimeVue's other Stepper-family files already match Ultimate exactly. Real PrimeVue `Step.vue:9,43-49` also renders a separator after each horizontal step header except the last, which Ultimate's `Step.vue` lacks; that horizontal gap is registered separately as GAP-077 and is not part of GAP-063.)
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Vue only.
+- **Existing reusable infrastructure:** Real PrimeVue's own `updateSeparator()` mechanism is the direct porting template.
+- **Recommended resolution direction:** Directional only — port `updateSeparator()` and wire in `StepperSeparator` rendering for vertical-mode Steppers.
+- **Source/evidence:** Vue Tabs/Stepper residual verification (`vue-tabs-stepper-verification.md`); Final Decision Ledger / Final Scope Ledger (Vue Stepper vertical separator — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-064 — Aura preset has per-component token coverage for only 5 of ~88 comparable components (76 registered after the Batches 1-3 tranche, 2026-10-01)
+
+- **Status:** PARTIAL (2026-10-01: Batches 1-3 tranche delivered, `b9ec863`..`cf341df`, 76 modules registered; remaining scope in the Progress note below)
+- **Type:** Styling, Component, Architecture
+- **Blocking level:** MEDIUM
+- **Current evidence:** Real Prime's shared `@primeuix/themes` package has 88 per-component preset modules; Ultimate has 5 (`checkbox`/`button`/`menu`/`tooltip`/`dialog` — the original Phase 5 proof set), confirmed during the Aura token-completeness residual verification. The other ~83 components have real, working, but hardcoded (non-themeable) CSS instead — confirmed via Accordion as a representative sample, self-disclosed in-code, recurring in 54 of Vue's own style-module files. **The `base`-tier foundation tokens are Parity Confirmed and explicitly not part of this gap** — see the separate Parity Confirmed entry in the Final Scope Ledger.
+- **Progress (2026-10-01, Theming Plan — Batches 1-3 tranche, commits `b9ec863`..`cf341df`):** 71 further Aura preset modules ported verbatim from `@primeuix/themes` 2.0.3 and registered in `auraPreset.components` (76 registered in total, including the original 5), each with a `themes.json` provenance entry and CI-enforced fidelity against a committed upstream JSON fixture (`packages/themes/test/fixtures/aura-upstream-tokens.json`; the original 5 proof-set modules are not in the fixture). Status remains PARTIAL. Still open: (a) wiring components' style files to consume the new modules (no component re-themes yet); (b) upstream modules with Ultimate components but not ported — `tabview`/`tabmenu` (React `UTabView`/`UTabMenu`), `badge` (ng/vue), `inputgroup` (ng/vue), `paginator` (all three); (c) `ripple` (inclusion undecided); (d) InputMask has no upstream module (uses `inputtext` tokens, ported); (e) out of scope by decision: `editor` (DECISION-B), tree family (DECISION-D), `datatable` (Table Plan), `virtualscroller`; (f) the `@ultimate/themes` bundle grew from 5.23 KB to about 13.1 KB gzip, failing `size:validate` until the branch's two-step baseline update (see the Theming Plan).
+- **Expected state:** Per-component Aura preset modules for the ~83 components built since Phase 5's original 5-component proof set, enabling theme-level customization for them via the same `dt()`-based mechanism the original 5 already use.
+- **Why it matters:** The original 5-component scope boundary (Phase 5 Spec §108/§203/§245) was fully, explicitly disclosed at the time it was written — but it was never revisited or re-affirmed as Phase C's real component count grew roughly 15x beyond that original proof set. This gap registers that unrevisited extension, not the original (still-valid) boundary.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** **Independent from GAP-065** (Material/Lara/Nora catalog breadth) — kept explicitly separate per the human decision's own instruction; these are two genuinely distinct capabilities (per-component token depth within Aura vs. catalog-family breadth).
+- **Framework scope:** Angular, React, Vue (shared, framework-neutral `@ultimate/themes` package).
+- **Existing reusable infrastructure:** The original 5-component proof set's own `dt()`-based pattern is the direct template for each new per-component preset module.
+- **Recommended resolution direction:** Directional only — a dedicated Spec is needed to scope exact component sequencing/coverage; this is a substantial body of work (~83 components), not a simple mechanical extension.
+- **Source/evidence:** Aura token-completeness residual verification (`aura-token-verification.md`); Final Decision Ledger / Final Scope Ledger (Aura per-component preset coverage — INCLUDE).
+- **Architectural decision required:** No.
+
+#### GAP-065 — Post-Track-E: 10 Angular components have unguarded `window`/`document` access, unsafe under SSR
+
+- **Status:** RESOLVED (2026-10-01, SSR Plan — all 10 confirmed: 2 fixed `38560be`, 8 verified safe `72a8afa`..`16690f1`; see Outcome. Scroller, outside this scope, is GAP-080)
+- **Type:** Component, Framework (Angular), Architecture
+- **Blocking level:** HIGH
+- **Current evidence:** `ScrollPanel`'s `ngAfterViewInit` and `ContextMenu`'s `ngOnInit` are **confirmed, fully lifecycle-traced** to unconditionally call `window`/`document` APIs with zero `isPlatformBrowser` guard — both hooks genuinely execute during Angular Universal SSR (Angular's own `ngOnInit`/`ngAfterViewInit` genuinely run server-side, by Angular's own design), meaning a real server-render crash (`ReferenceError`) would occur, confirmed during the Post-Track-E SSR residual verification. 8 further files (`Breadcrumb`, `ColorPicker`, `ConfirmPopup`, `Knob`, `Popover`, `Slider`, `Splitter`, `StyleClass`) share the identical missing-guard pattern but were **not** each individually lifecycle-traced to their own exact triggering hook in the verification pass. Track E's own Plan (`docs/superpowers/plans/2026-09-11-phase-10-track-e-ssr-hydration-implementation.md`, lines 12/570) explicitly, fixedly scoped SSR verification to an 8-component proof set (Button/Checkbox/Dialog/Menu/Paginator/Scroller/Table/Tooltip) — never widened to cover these 10 components, confirmed via direct Plan-text read.
+- **Outcome (2026-10-01, SSR Plan `3dbf819`..`16690f1`; marked RESOLVED at the branch closeout 2026-10-01):** all 10 now confirmed. `ScrollPanel` and `ContextMenu` were fixed with the `isPlatformBrowser(this.platformId)` guard (`38560be`; `scroll-panel.ts:121`, `context-menu.ts:124`; `ContextMenu`'s `global` still registers client-side). The other 8 were lifecycle-traced (the Plan's evidence table, re-checked at HEAD) and found to reach `window`/`document` only from user-event or imperative paths, never from server-executed hooks or teardown, so per the Plan's Global Constraints they received verification tests, not guards (one test-only commit each, `72a8afa`..`16690f1`). All tests are spy-based under a server `PLATFORM_ID` (Spec §12): they assert zero browser-global calls through mount, change detection and destroy; the two fixes' tests were shown failing before the fix, and mutation checks confirm the verification tests fail if a server-reachable global call is added. Related but separate: SSR style injection (GAP-078); Scroller's unguarded `ResizeObserver` (a Track E proof-set component outside this scope) is GAP-080.
+- **Expected state:** The already-proven `isPlatformBrowser(this.platformId)` guard pattern (already used correctly by the proof-set's own `Tooltip`, via `UBaseComponent`'s existing `inject(PLATFORM_ID)`) applied to all 10 components. **(Superseded 2026-10-01 by the Outcome above and Spec §12: guards on the 2 confirmed defects; verification tests on the 8 that the tracing found safe.)**
+- **Why it matters:** This is a real, undisclosed SSR-crash defect for `ScrollPanel`/`ContextMenu` (fully confirmed), with 8 further components sharing the identical pattern but needing individual confirmation before the same fix can be applied with equal confidence.
+- **What it blocks:** Nothing further downstream, but the 8 unconfirmed components must not be treated as equally certain to `ScrollPanel`/`ContextMenu` until traced.
+- **Dependencies:** **Explicitly separate from React/Vue's own equivalent-risk-class finding** (Parity Confirmed — see the Final Scope Ledger's own separate entry) — React's `useEffect` and Vue's `mounted()` are both, by each framework's own SSR architecture, client-only execution contexts that never fire during server rendering, directly traced for representative components, not inferred from Angular's finding. Angular SSR and React/Vue SSR are kept as separate rows per explicit instruction.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** `UBaseComponent`'s existing `inject(PLATFORM_ID)` plus `isPlatformBrowser` from `@angular/common`, already proven via `Tooltip`.
+- **Recommended resolution direction:** Directional only — apply the already-proven guard pattern to `ScrollPanel` and `ContextMenu` immediately once implementation is authorized; **complete individual lifecycle-tracing for the remaining 8 files as a prerequisite step within the same future plan**, per the human decision's own explicit condition, before applying the fix to them with the same confidence.
+- **Source/evidence:** Post-Track-E SSR residual verification (`ssr-post-track-e-verification.md`); `docs/superpowers/plans/2026-09-11-phase-10-track-e-ssr-hydration-implementation.md` lines 12/570; Final Decision Ledger / Final Scope Ledger (Post-Track-E Angular SSR safety — INCLUDE; React/Vue SSR — Parity Confirmed, kept as a separate row).
+- **Architectural decision required:** No.
+
+#### GAP-066 — Angular `UTooltip` has the same visibility defect GAP-039 fixed for Vue, but was never itself registered or fixed
+
+- **Status:** RESOLVED (2026-10-01, Existing Commitments Plan — `1f1e505`; Tooltip/Dialog screenshot baselines still to be regenerated in the Linux container before merge, see the branch closeout record)
+- **Type:** Component, Framework (Angular), Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** GAP-039's own resolved entry (§3, Cross-cutting: Overlay/Interaction) explicitly discloses this: *"Angular's `UTooltip` has the same effective visibility defect, confirmed by its own existing e2e test... This was not fixed as part of GAP-039's resolution — GAP-039 was scoped to Vue only... Angular's gap remains a separately disclosed, not-yet-registered fact; it is not tracked by this entry."* Angular's own existing Playwright assertion (`packages/ng/e2e/tooltip.spec.ts`, `expect(computedDisplay).toBe("none")`) already proves the defect in a real browser. The confirmed, already-proven fix mechanism (adding the companion inline `display` style GAP-039 added to Vue's `showTooltip()`) is directly applicable, since Angular imports the identical shared `uix-styles/tooltip` base CSS.
+- **Expected state:** Angular's `UTooltip` gains the same one-line inline-`display`-style fix GAP-039 already applied to Vue, and its existing e2e assertion is converted from asserting the known failure to asserting correct visibility, mirroring GAP-039's own Vue fix exactly.
+- **Why it matters:** This is a real, already-proven-in-browser defect with an already-proven fix mechanism sitting one component away — the lowest-risk item in this entire GAP set, but genuinely unregistered until now, per GAP-039's own explicit disclosure.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Not a duplicate of GAP-039 — GAP-039 explicitly, textually excludes Angular from its own resolved scope.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** GAP-039's own approved Spec/Plan/fix (commit history: `b8042a9`, `95b6139`, `897cc17`, `26feee7`, `2cae72b`) is the direct, already-proven template — the identical inline-style fix, applied to `packages/ng/src/tooltip/tooltip.ts` in place of `packages/vue/src/tooltip/tooltip.ts`.
+- **Recommended resolution direction:** Directional only — apply GAP-039's own already-proven fix mechanism to Angular's `showTooltip()`-equivalent, and convert `packages/ng/e2e/tooltip.spec.ts`'s existing assertion the same way GAP-039 converted Vue's.
+- **Source/evidence:** GAP-039 (this document, §3, Cross-cutting: Overlay/Interaction) — its own text discloses and disclaims tracking this; `packages/ng/e2e/tooltip.spec.ts`; Final Decision Ledger / Final Scope Ledger (Angular Tooltip visibility — COMPLETE EXISTING COMMITMENT).
+- **Architectural decision required:** No — this is a behavioral bug with an already-proven fix, not a fork, exactly matching GAP-039's own reasoning.
+
+#### GAP-067 — Angular `UMenu` popup mode is inert; `USplitButton` hand-rolls its own overlay instead of using it
+
+- **Status:** RESOLVED (2026-10-01, Existing Commitments Plan — `a314711`, `9ee1f91`, `1814c34`; consumer-facing changes in MIGRATION.md §8; Menu screenshot baselines still to be regenerated)
+- **Type:** Component, Framework (Angular), Architecture
+- **Blocking level:** MEDIUM
+- **Current evidence:** `UMenu`'s own doc comment (`packages/ng/src/menu/menu.ts:38-44`) explicitly discloses: *"`popup` is accepted as an input per the Interfaces section, but this task's file list has no popup-overlay component to render into, so it is currently inert beyond flagging the `u-menu-overlay` style-class variant... A future task can extend this component's input/output surface for the popup overlay, submenu nesting, and the additional key handlers."* This was named as expected future work at the time `UMenu` shipped, not discovered fresh by the Prime-vs-Ultimate parity audit. `USplitButton` currently implements its own hand-rolled overlay state as a workaround rather than delegating to `UMenu`'s popup mode, confirmed during the Findings Decision/Scope Triage. React's and Vue's own `UMenu`/`USplitButton` equivalents already have working popup mechanisms (Portal+escape-registry+z-index), confirmed as the direct cross-framework template.
+- **Expected state:** `UMenu`'s popup-overlay mechanism built out (input/output surface extended per its own doc comment's named scope), after which `USplitButton` can be simplified to delegate to it, matching React/Vue's own already-working shape.
+- **Why it matters:** This is a real, previously-named (not undisclosed) piece of unfinished work — `UMenu`'s own doc comment named the deferral at the time it shipped — that `USplitButton` currently works around with duplicated, hand-rolled overlay logic instead of a shared mechanism.
+- **What it blocks:** Nothing further downstream; `USplitButton`'s current workaround is functional, just duplicated.
+- **Dependencies:** None upstream. `USplitButton`'s own simplification is downstream of this gap's resolution, not a separate blocking dependency.
+- **Framework scope:** Angular only. React's and Vue's own equivalents already have working popup mechanisms and are unaffected.
+- **Existing reusable infrastructure:** React's and Vue's own working Portal+escape-registry+z-index popup mechanisms are the direct cross-framework template for what Angular's `UMenu` needs to build out.
+- **Recommended resolution direction:** Directional only, per GAP-stage rules — build out `UMenu`'s popup-overlay mechanism using the React/Vue pattern as the template, then simplify `USplitButton` to delegate to it. Exact task breakdown belongs to this gap's own future Plan, not designed here.
+- **Source/evidence:** `packages/ng/src/menu/menu.ts:38-44` (UMenu's own disclosing doc comment); `packages/ng/src/split-button/` (USplitButton's current hand-rolled overlay workaround); Findings Decision/Scope Triage (`pass1-decision-triage.md`, lines 42/56); Final Decision Ledger / Final Scope Ledger (Angular UMenu popup + SplitButton workaround — COMPLETE EXISTING COMMITMENT); pre-Spec tracking reconciliation (this session) confirming no prior GAP/ADR tracked this finding.
+- **Architectural decision required:** No — this is scoped, already-named implementation work, not an architectural fork.
+
+#### GAP-068 — React/Vue tsup per-component subpath exports are broken for components beyond the original proof set
+
+- **Status:** RESOLVED (2026-10-01, Existing Commitments Plan — `8647317` Vue, `5ba681e` React; Vue's declarations remain unresolvable, GAP-079)
+- **Type:** Packaging, Framework (React, Vue)
+- **Blocking level:** MEDIUM
+- **Current evidence:** `tsup.config.ts`'s `entry` map is stale relative to the components actually shipped since it was last updated — confirmed empirically via a real build during the Overlay Findings Triage: the main package barrel (`@ultimate/{react,vue}`) is fully unaffected, since esbuild bundles everything transitively through the barrel regardless of the `entry` map's own contents; only the per-component subpath exports (`@ultimate/{react,vue}/<component>`) fail for components added after the map was last updated. One shared root cause (`tsup.config.ts`'s own `entry` map), two framework-local instances (React and Vue each maintain their own stale map).
+- **Expected state:** `tsup.config.ts`'s `entry` map extended in both packages to cover every currently-shipped component, restoring working per-component subpath exports for all of them, matching each framework's own already-correct convention for its original proof-set components.
+- **Why it matters:** This is a real, silent packaging regression — consumers importing a newer component via its own subpath (rather than the main barrel) currently get a broken import, with no build-time signal, since the main barrel's own successful build masks the subpath-specific failure.
+- **What it blocks:** Nothing further downstream; the main barrel import path remains fully functional as a workaround in the interim.
+- **Dependencies:** None. The React and Vue instances share one root cause but can be fixed independently per framework.
+- **Framework scope:** React, Vue. Angular is unaffected — its own per-component export mechanism (`ng-packagr` secondary entry points, GAP-009/GAP-023) is a structurally different, separately-tracked mechanism, not the same defect.
+- **Existing reusable infrastructure:** Each framework's own already-correct `entry` map for its original proof-set components is the direct template — this is a mechanical extension of an existing, working pattern, not new tooling.
+- **Recommended resolution direction:** Directional only, per GAP-stage rules — extend `tsup.config.ts`'s `entry` map in both packages to cover every currently-shipped component. Exact task breakdown belongs to this gap's own future Plan, not designed here.
+- **Source/evidence:** `packages/react/tsup.config.ts`; `packages/vue/tsup.config.ts`; Overlay Findings Triage (`overlay-findings-triage.md` — real-build verification distinguishing barrel-level success from subpath-level failure); Final Decision Ledger / Final Scope Ledger (React/Vue tsup per-component subpath artifacts — COMPLETE EXISTING COMMITMENT); pre-Spec tracking reconciliation (this session) confirming no prior GAP/ADR tracked this finding.
+- **Architectural decision required:** No — this is a mechanical extension of an already-working, already-correct pattern, not an architectural fork.
+
+#### GAP-069 — Angular Dock lacks `routerLink` integration
+
+- **Status:** RESOLVED (2026-10-01, Navigation Plan — `2ce8d59`)
+- **Type:** Component, Framework (Angular)
+- **Blocking level:** LOW
+- **Current evidence:** Real PrimeNG Dock has router integration; Angular's Dock lacks it, internally inconsistent with Angular's own Menu/Breadcrumb/TieredMenu/MegaMenu/Steps, which all already expose a `routerLink` binding (Steps' own version tracked separately by GAP-053; Breadcrumb's binding has a known href/`RouterLink` conflict, tracked separately as GAP-073). Confirmed during Navigation Batch 3 triage; independently re-confirmed as its own distinct, unregistered finding during the Prime parity audit's Spec-stage Scope Reconciliation (this session), which found no existing GAP covered it — GAP-055 as committed covers Dock keyboard navigation only, with no `routerLink` content anywhere in its body.
+- **Expected state:** Dock accepts a `routerLink`-equivalent per-item navigation binding, with the `RouterLink` directive present only on enabled items with a `routerLink` (structural `@if`/`@else` branch, as shipped for Steps under GAP-053). **(Corrected 2026-09-30:** this entry originally called the Breadcrumb/Menu/Steps pattern "already-working". Breadcrumb's co-located `[attr.href]`+`[routerLink]` binding has a latent href-clobbering defect, tracked separately as GAP-073, not part of GAP-069.)
+- **Why it matters:** Internal cross-component inconsistency within Angular's own Navigation family — Breadcrumb/Menu/TieredMenu/MegaMenu/Steps all have router integration; Dock does not, despite having a real upstream equivalent.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. **Independent from GAP-055** — GAP-055 remains strictly Dock keyboard navigation, not broadened by this entry.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** Steps' own shipped structural-branch `routerLink` pattern (GAP-053) is the direct template, not Breadcrumb's co-located binding (see GAP-073).
+- **Recommended resolution direction:** Directional only — apply Steps' structural-branch `routerLink` pattern to Dock. (Implemented during the Navigation Plan, commit `2ce8d59`; RESOLVED 2026-10-01.)
+- **Source/evidence:** Navigation Findings Triage (`navigation-findings-triage.md`); Final Decision Ledger / Final Scope Ledger (Angular Dock routerLink — INCLUDE); `docs/superpowers/specs/2026-09-26-prime-parity-navigation-design.md` §12 (original disclosure of this then-unregistered finding); Scope Reconciliation Report (this session, confirming no prior GAP covered it).
+- **Architectural decision required:** No.
+
+#### GAP-070 — Angular per-component `ng-packagr` secondary entry points not extended to components shipped after the original proof set
+
+- **Status:** RESOLVED (2026-10-01, Existing Commitments Plan — prerequisites `4a47883`, `29a3390`; `8a46cc4`: 61 new entry points, 70 subpaths, 11 unbuildable subpaths removed; 14 components barrel-only per Spec §5.4; duplicate-class hazard is GAP-081)
+- **Type:** Packaging, Framework (Angular)
+- **Blocking level:** MEDIUM
+- **Current evidence:** GAP-009's own RESOLVED scope covers only the original proof-set components (`checkbox`, `paginator`, `scroller`, `tooltip`, `autofocus`, `badge`, `fluid`, `ripple`, `input-number` — 9 components as of the Angular Form Foundation workstream's own addition), with `button`/`dialog`/`menu`/`table`/`input-text` permanently excluded by a confirmed `ng-packagr@21.2.7`/`@angular/compiler-cli@21.2.22` `ShimReferenceTagger` defect (triggered when one secondary entry point's own compilation unit directly imports another secondary entry point's root class). GAP-009's own text makes no claim about any Angular component built after that workstream — the ~90+ components shipped since (Phase C batches and later) have never been evaluated against this same convention. Confirmed via direct GAP-009 text re-read during the Prime parity audit's Spec-stage Scope Reconciliation (this session) that no existing GAP tracks this extension.
+- **Characterization (2026-10-01, Existing Commitments Plan Task 6; evidence `docs/architecture/research/2026-10-01-gap-070-ng-secondary-entry-characterization.md`):** after the build prerequisites (TS2729 `4a47883`, `@angular/cdk` peer `29a3390`), real ng-packagr builds of all 75 candidates found 61 that build as their own secondary entry point and 14 that fail with the same crash. **Corrected trigger** (refines GAP-009's wording, which is left unchanged per the Plan): ng-packagr sets each secondary entry's `rootDir` to the entry file's own directory, so any source file outside that component's `src/` directory reached by the entry's compilation fails (TS6059); when that file is an Angular component, the diagnostic surfaces as the `ShimReferenceTagger` `referencedFiles` crash, whether or not the imported component is itself an entry point. In practice, a component with any relative import into another component directory cannot be its own entry point. **CI:** `scripts/provenance/pack-install-integrity.mjs` (CI "Pack/install integrity (affected)") fails for `@ultimate/ng` at `a869ad5` on 144 missing export paths (72 advertised subpaths never built). **User decisions (2026-10-01):** add entry points for the 61, and remove the 11 advertised subpaths that can never build (`textarea`, `select-button`, `file-upload`, `split-button`, `drawer`, `confirm-dialog`, `confirm-popup`, `dynamic-dialog`, `overlay-badge`, `panel`, `scroll-top`; still importable from the `@ultimate/ng` barrel), so every advertised subpath is built and the integrity check can pass. The duplicate-class hazard between the barrel and subpaths is GAP-081.
+- **Expected state:** Every Angular component shipped after the original proof set is first characterized against the same confirmed `ShimReferenceTagger` trigger condition GAP-009 already established (does the component's own compilation unit directly import another secondary entry point's root class?); components that do **not** hit that trigger receive a real `ng-packagr` secondary entry point, matching the existing convention; components that **do** hit the trigger are excluded on the same already-established basis as `button`/`dialog`/`menu`/`table`/`input-text`, not treated as a new, separate defect.
+- **Why it matters:** Angular currently has real per-component packaging parity with React/Vue for only its own original 9-component proof set; every newer component ships via the main barrel only, an unevaluated (not necessarily incorrect, but unconfirmed) state.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None upstream from any other GAP. **Internal prerequisite:** the characterization step (does each newer component hit the `ShimReferenceTagger` trigger?) must complete before that specific component's own secondary-entry-point addition — do not assume every newer component requires one before checking.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** GAP-009's own already-established trigger-condition characterization method and its own existing `ng-package.json`-per-component convention are the direct template for both the characterization step and the eventual fix.
+- **Recommended resolution direction:** Directional only — characterize each newer component against the existing trigger condition first; add secondary entry points only to those that pass; leave those that fail excluded, following GAP-009's own existing precedent and reasoning, not a new investigation.
+- **Source/evidence:** GAP-009 (this document, §3, Foundation/architecture — referenced as existing authoritative context, not modified); Final Decision Ledger / Final Scope Ledger (Angular ng-packagr/export/build mechanism — COMPLETE EXISTING COMMITMENT); `docs/superpowers/specs/2026-09-26-prime-parity-existing-commitments-design.md` §1 (original disclosure of this then-unregistered extension); Scope Reconciliation Report (this session, confirming no prior GAP covered it).
+- **Architectural decision required:** No — this is a mechanical characterization-then-extension of an already-established, already-understood defect boundary, not a new architectural question.
+
+**Note on GC-D1's own template-shape scope:** GAP-041's exact column-template API shape is intentionally left undesigned here, deferred to its own future Spec, per the GAP-stage's own explicit constraint. (Superseded: the Table Spec/Plan designed and delivered it; GAP-041 RESOLVED 2026-10-01.)
+
+#### GAP-071 — Angular Tabs never performs initial or resize-triggered overflow detection
+
+- **Status:** MISSING
+- **Type:** Component, Framework (Angular)
+- **Blocking level:** LOW
+- **Current evidence:** Discovered during GAP-057's own Implementation-stage re-verification (2026-09-30), not part of GAP-057's original scope. `packages/ng/src/tabs/tab-list.ts`'s `updateButtonState()` (the method that decides whether the prev/next navigator buttons render, via `isPrevButtonEnabled()`/`isNextButtonEnabled()` signals gating `@if (showNavigators() && ...)` in the template) is called **only** from the component's own `onScroll` handler — there is no `ngAfterViewInit`/`afterNextRender` call and no `ResizeObserver` anywhere in the file. Both enabled-state signals initialize to `false`. Consequence: when `UTabs` first renders with overflowing tab labels, **neither navigator button appears** — a button only shows up after the user has already scrolled the strip by some other means (trackpad/shift-wheel; the CSS sets `overflow-x: auto`). This does not match real PrimeNG 21.1.9's own `Tabs`/`TabList`, which calls `updateButtonState()` from `onAfterViewInit` and binds a real `ResizeObserver` (`packages/primeng/src/tabs/tablist.ts`, confirmed during the same re-verification) — nor does it match Ultimate's own doc comment in `tab-list.ts:10-11`, which claims the component "Reads `scrollable`" (a separate, distinct documentation defect — see the note below, not folded into this GAP).
+- **Expected state:** `UTabList`'s navigator-button visibility is correctly computed at least once when the component first renders with content already present (matching real PrimeNG's own `onAfterViewInit` call), so an overflowing tab strip shows its navigator(s) immediately, not only after a manual scroll. Whether resize-reactivity (a real `ResizeObserver`, matching real PrimeNG) is added is a separate implementation-scope question for whichever Plan picks this GAP up — not decided here.
+- **Why it matters:** This is a real, user-visible defect independent of any Prime-parity audit finding: a tab strip that overflows on first render is currently unusable via its own navigator buttons until the user discovers an unrelated manual-scroll gesture.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** **Independent from GAP-057/GAP-058/GAP-072** — discovered incidentally during GAP-057's own React-only implementation work, but is its own separate Angular-only defect, not a prerequisite for or extension of any of those three.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** Real PrimeNG 21.1.9's own `onAfterViewInit`/`ResizeObserver` pattern (`packages/primeng/src/tabs/tablist.ts`) is the direct upstream template, if resize-reactivity is included in whatever Plan resolves this.
+- **Recommended resolution direction:** Directional only — at minimum, call the existing `updateButtonState()` method once during Angular's own view-init lifecycle (not just on scroll); investigate whether to also add `ResizeObserver` parity with real PrimeNG as part of the same fix, or defer that separately.
+- **Source/evidence:** GAP-057's own Implementation-stage re-verification (2026-09-30) — direct source inspection of `packages/ng/src/tabs/{tabs,tab-list}.ts` and real PrimeNG 21.1.9 (`.vendor-cache/primeng-21.1.9.tar.gz`, `packages/primeng/src/tabs/tablist.ts`); confirmed zero existing test coverage for this behavior in `packages/ng/src/tabs/tabs.spec.ts`.
+- **Architectural decision required:** No — user-authorized (2026-09-30) as its own tracked GAP, not folded into GAP-057.
+- **Note (separate documentation defect, not part of this GAP):** `packages/ng/src/tabs/tab-list.ts:10-11`'s own doc comment claims the component "Reads `scrollable`," but `UTabs` has no `scrollable` input at all anywhere in its actual source. This is a pre-existing documentation-only defect, independently discovered during the same re-verification. Per explicit user instruction, it is **not** folded into GAP-071 or GAP-072 without a separate scope-reconciliation step confirming it belongs to one of them — it remains unregistered and untracked as its own item pending that reconciliation.
+
+#### GAP-072 — Vue Tabs never re-evaluates overflow on resize (initial mount check only)
+
+- **Status:** MISSING
+- **Type:** Component, Framework (Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Discovered during GAP-057's own Implementation-stage re-verification (2026-09-30), not part of GAP-057's original scope. `packages/vue/src/tabs/TabList.vue`'s `updateButtonState()` is called from `mounted()` (so it does correctly compute navigator visibility once, when the component first renders with content already present) and from the component's own `scroll` handler — but there is no `updated()` hook and no `ResizeObserver` anywhere in the file. Consequence: a Vue Tabs instance that starts non-overflowing but later overflows (window resize, container resize, dynamic tab addition) never re-shows a navigator button until the user manually scrolls the strip by some other means. This partially, not fully, matches real PrimeVue 4.5.5's own `TabList.vue`, which calls `updateButtonState()` from `mounted()`, `updated()`, `scroll`, **and** a real `ResizeObserver` (`packages/primevue/src/tablist/TabList.vue`, confirmed during the same re-verification) — Ultimate Vue has only the first and third of those four triggers.
+- **Expected state:** `TabList.vue`'s navigator-button visibility is re-evaluated when the tab list's own content changes size after initial mount (at minimum on Vue's own `updated()` lifecycle hook; whether a real `ResizeObserver` is added for full real-PrimeVue parity is a separate implementation-scope question for whichever Plan picks this GAP up — not decided here).
+- **Why it matters:** A real, user-visible defect independent of any Prime-parity audit finding: a Vue Tabs instance whose overflow state changes after mount (the common real-world case — window resize, responsive layouts, dynamically added tabs) currently has no way to regain correct navigator visibility without an unrelated manual-scroll gesture.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** **Independent from GAP-057/GAP-058/GAP-071** — discovered incidentally during GAP-057's own React-only implementation work, but is its own separate Vue-only defect, not a prerequisite for or extension of any of those three.
+- **Framework scope:** Vue only.
+- **Existing reusable infrastructure:** Real PrimeVue 4.5.5's own `mounted()`/`updated()`/`scroll`/`ResizeObserver` pattern (`packages/primevue/src/tablist/TabList.vue`) is the direct upstream template, if full resize-reactivity is included in whatever Plan resolves this.
+- **Recommended resolution direction:** Directional only — at minimum, add an `updated()` hook calling the existing `updateButtonState()` method; investigate whether to also add `ResizeObserver` parity with real PrimeVue as part of the same fix, or defer that separately.
+- **Source/evidence:** GAP-057's own Implementation-stage re-verification (2026-09-30) — direct source inspection of `packages/vue/src/tabs/{TabList.vue,BaseTabs.ts}` and real PrimeVue 4.5.5 (`.vendor-cache/`, `packages/primevue/src/tablist/TabList.vue`); confirmed zero existing test coverage for this behavior in `packages/vue/src/tabs/tabs.spec.ts`. Also confirmed: `BaseTabs.ts` declares a `scrollable` prop (default `false`) that is never actually read anywhere in `TabList.vue`'s own logic — a related but distinct dead-prop observation, noted here for completeness but not itself the subject of this GAP (which is about resize-reactivity, not the unused prop).
+- **Architectural decision required:** No — user-authorized (2026-09-30) as its own tracked GAP, not folded into GAP-057.
+
+#### GAP-073 — Angular Breadcrumb's `url`/`#` href fallback is overwritten by the `RouterLink` directive
+
+- **Status:** MISSING
+- **Type:** Component, Framework (Angular)
+- **Blocking level:** LOW
+- **Current evidence:** Discovered during the Navigation Plan's GAP-053 implementation (2026-09-30) and confirmed in its reviews; registered on user instruction after the Navigation Plan final review. Not part of GAP-053 or GAP-069. `packages/ng/src/breadcrumb/breadcrumb.ts` co-locates `[attr.href]="…routerLink ? null : (…url ?? '#')"` and `[routerLink]="…disabled ? null : (…routerLink ?? null)"` on the same `<a>`, for both the home item (lines 48-49) and each model item (lines 73-74). Angular's `RouterLink` directive is structurally present on every such anchor, even when bound to `null`, and its own host binding (`[attr.href]: reactiveHref()`) overwrites the template's `[attr.href]`. Consequence: items without a `routerLink` (or disabled items) do not get their intended `url`/`#` href fallback. `packages/ng/src/breadcrumb/breadcrumb.spec.ts` has no `href` assertions, so the defect is untested. The same defect was found and fixed in Steps (GAP-053, commit `9dd5a33`) and avoided from the start in Dock (GAP-069, commit `2ce8d59`), both via an `@if`/`@else` structural branch.
+- **Expected state:** Breadcrumb anchors without an active `routerLink` render their `url` (or `#`) href, and `RouterLink` is present only on anchors that should route.
+- **Why it matters:** Breadcrumb links configured with `url` instead of `routerLink` do not produce the intended href.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Independent from GAP-053 and GAP-069.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** The structural-branch pattern shipped in `packages/ng/src/steps/steps.ts` and `packages/ng/src/dock/dock.ts`.
+- **Recommended resolution direction:** Directional only — apply the same structural-branch pattern to Breadcrumb's home and model item anchors, with `href`-asserting regression tests. Scope is limited to the href/`RouterLink` co-location defect; Breadcrumb's other behavior (including `aria-current` matching) is out of scope.
+- **Source/evidence:** Navigation Plan Task 4 (GAP-053) implementation and review findings; Navigation Plan final review (2026-09-30); direct source inspection of `breadcrumb.ts` and Angular router 21.2.22's `RouterLink` host binding.
+- **Architectural decision required:** No — user-authorized (2026-09-30) as a separate GAP, not fixed as part of GAP-053 or GAP-069.
+
+#### GAP-074 — `hidden-accessible` classes are used but never styled (Angular, React, Vue)
+
+- **Status:** MISSING
+- **Type:** Accessibility, Styling, Framework (Angular, React, Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Discovered during the Form/Accessibility Plan's GAP-061 task (2026-09-30); registered on user instruction. Several components mark content as visually hidden with a `p-hidden-accessible` or `u-hidden-accessible` class, but no stylesheet, style module or theme in the source packages defines either class (only built `storybook-static` output contains a `clip` rule). Real Prime relies on its shared base CSS (`.p-hidden-accessible`) for this. Usages: `packages/vue/src/rating/Rating.vue:9` and `packages/ng/src/rating/rating.ts:45` (`p-hidden-accessible` wrapping each star's radio input); `packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx:93` (`u-hidden-accessible` `aria-live` label text); `packages/vue-core/src/focus-trap/focus-trap.ts:33` and `packages/react-core/src/focus-trap/focus-trap.tsx:65,75` (`u-hidden-accessible` empty focus sentinels). Consequence: content meant for assistive technology only (radio inputs, live label text) can render visibly unless the consuming app supplies CSS for these classes.
+- **Expected state:** Every element marked hidden-accessible is visually hidden but still available to assistive technology, in all three frameworks.
+- **Why it matters:** Visible stray inputs or duplicate label text in Rating/TriStateCheckbox; the hidden-accessible contract is silently broken.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Not part of GAP-061: Vue Password's new live span is hidden by a Password-scoped rule (user decision 2026-09-30).
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** None — no shared base stylesheet currently defines utility classes.
+- **Recommended resolution direction:** Directional only — decide whether to define one shared hidden-accessible utility (and normalise the `p-`/`u-` prefixes) or scope a rule per component; add visual-hiding assertions. Exact approach belongs to this gap's own Spec.
+- **Source/evidence:** Form/Accessibility Plan Task 6 stop report (`task-6-report.md`, 2026-09-30) and controller re-verification (repo-wide search of source packages).
+- **Architectural decision required:** Possibly — whether a shared utility-class layer is introduced.
+
+#### GAP-075 — React `UToggleButton` toggles twice on Space in real browsers
+
+- **Status:** MISSING
+- **Type:** Component, Accessibility, Framework (React)
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found by the Form/Accessibility Plan's Task 2 (GAP-059) review (2026-09-30); pre-existing since `13d92bb` (Phase C Batch 1); registered on user instruction. `packages/react/src/toggle-button/toggle-button.tsx:71-75` (as of `f2b8d41`) calls `toggle()` on a Space/Enter `keydown` but never calls `preventDefault()`. The element is a native `<input type="checkbox">`, so in a real browser Space also fires `click`/`change` on keyup, and the input's `onChange={toggle}` runs a second time — by then the parent has re-rendered, so the second call reverses the first. Real PrimeReact 10.9.9 `ToggleButton.js:47-50` toggles on Space and calls `event.preventDefault()`, suppressing the native toggle. Effect: in `USelectButton` single mode with `allowEmpty`, Space selects an option and immediately deselects it; standalone `UToggleButton` flips twice. jsdom does not simulate the keyup click, so the existing unit tests (including GAP-059's "Space selects exactly once") cannot detect it.
+- **Expected state:** Space toggles `UToggleButton` exactly once in real browsers, matching PrimeReact, with a browser-level (e.g. Playwright) regression check.
+- **Why it matters:** Keyboard activation of ToggleButton and SelectButton is unreliable, undermining GAP-059's keyboard support.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Not part of GAP-059.
+- **Framework scope:** React only (Angular/Vue not examined as part of this finding).
+- **Existing reusable infrastructure:** PrimeReact's own Space handling as the reference.
+- **Recommended resolution direction:** Directional only — prevent the native Space activation when toggling on keydown (or rely solely on the native change path), and add a real-browser test.
+- **Source/evidence:** Form/Accessibility Plan Task 2 review (2026-09-30); controller verification of PrimeReact `ToggleButton.js:47-50` and `git log` for `13d92bb`.
+- **Architectural decision required:** No.
+
+#### GAP-076 — Vue Password has no `ariaLabelledby` prop
+
+- **Status:** MISSING
+- **Type:** Component, Accessibility, Framework (Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Found by the Form/Accessibility Plan's Task 6 (GAP-061) review (2026-09-30); pre-existing; registered on user instruction. Real PrimeVue 4.5.5 binds `:aria-labelledby="ariaLabelledby"` on the Password input (`packages/primevue/src/password/Password.vue:11`). Ultimate's `packages/vue/src/password/BasePassword.ts` declares `inputId` and `ariaLabel` (`:38-39`) but no `ariaLabelledby`, so consumers cannot label the input by reference. GAP-061 deliberately added no new public props.
+- **Expected state:** Vue Password accepts `ariaLabelledby` and binds it to the input's `aria-labelledby`, matching PrimeVue.
+- **Why it matters:** Referencing a visible label element is a standard labelling path; without it consumers must duplicate label text in `ariaLabel`.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Not part of GAP-061.
+- **Framework scope:** Vue only (Angular/React Password not examined as part of this finding).
+- **Existing reusable infrastructure:** The existing `ariaLabel` prop/binding pattern in the same component.
+- **Recommended resolution direction:** Directional only — add the prop and binding with a test.
+- **Source/evidence:** Form/Accessibility Plan Task 6 review (2026-09-30); PrimeVue `Password.vue:11`; `BasePassword.ts:38-39`.
+- **Architectural decision required:** No.
+
+#### GAP-078 — Component style injection uses the global `document`, so SSR output carries no component CSS (Angular, React, Vue)
+
+- **Status:** MISSING
+- **Type:** Styling, Architecture, Framework (Angular, React, Vue)
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found during the SSR Plan (GAP-065) Task 1 review (2026-10-01); registered on user instruction. All three frameworks' style sheets create `<style>` elements only when a global `document` exists and append them to the global `document.head`: `packages/ng-core/src/basecomponent/style-sheet.ts:18-19` (`NgCoreStyleSheet`, called from `UBaseComponent.ngOnInit`), `packages/react-core/src/styling/react-style-sheet.ts:6-7`, `packages/vue-core/src/styling/vue-style-sheet.ts:12-13`. Angular's injected `DOCUMENT`/`Renderer2` (both available on `UBaseComponent`) are not used. Consequences: under SSR with no global `document`, no component CSS is written into the server-rendered HTML (styles appear only after client bootstrap); if a server polyfills a global `document`, styles go into that shared object rather than the per-request document; registration is a module-level singleton shared across requests. Track E's SSR harness deliberately does not assert `<style>` presence.
+- **Expected state:** A decided SSR styling strategy — e.g. styles emitted into each request's document/HTML, or an explicit documented client-only styling contract — consistent across the three frameworks.
+- **Why it matters:** Unstyled server-rendered markup until hydration, and potential cross-request style state.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Not part of GAP-065 (which concerns crashes from unguarded browser globals).
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** Angular `DOCUMENT`/`Renderer2` on `UBaseComponent`; each framework's own SSR style-collection mechanisms.
+- **Recommended resolution direction:** Directional only — decide the SSR styling contract in its own Spec.
+- **Source/evidence:** SSR Plan Task 1 and final reviews (2026-10-01, ledger `.superpowers/sdd/2026-09-27-prime-parity-ssr/progress.md`); the three style-sheet files above.
+- **Architectural decision required:** Yes — the SSR styling strategy.
+
+#### GAP-079 — Vue's shipped type declarations are unresolvable for consumers
+
+- **Status:** MISSING
+- **Type:** Packaging, Framework (Vue)
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found during the Existing Commitments Plan's GAP-068 work (2026-10-01); pre-existing; registered on user instruction. `@ultimate/vue` emits declarations per file with `vue-tsc --emitDeclarationOnly` followed by `scripts/rename-dts.mjs` (`packages/vue/package.json` `build` script), which renames `.d.ts` to `.d.mts` but leaves relative import specifiers unrewritten. A scratch consumer (TypeScript, `moduleResolution: Bundler`) importing `@ultimate/vue/button` fails with TS2307 "Cannot find module './Button.vue'" and on `./base-button` — the emitted `.d.mts` files reference SFC and extensionless paths that do not resolve to emitted declaration files. This predates GAP-068's new subpath entries (the proof-set `button` subpath already shipped this way). Evidence: `.superpowers/sdd/2026-09-27-prime-parity-existing-commitments/task-4-5-report.md` (Task 4 resumed section). The same declaration build also ships 91 Storybook `*.stories.d.mts` files, and its `.d.mts` files keep `sourceMappingURL` comments naming the pre-rename `.d.ts.map` files (React shows the same comment leftover).
+- **Expected state:** Every exported `@ultimate/vue` subpath and the barrel type-check for consumers under `Bundler` and `NodeNext` resolution, with props/emits types intact.
+- **Why it matters:** TypeScript consumers of `@ultimate/vue` get unresolved-module errors or `any`-typed components.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Related: React's equivalent was fixed within GAP-068 by rewriting relative specifiers in React's `scripts/rename-dts.mjs`; Vue additionally needs `.vue` declaration handling.
+- **Framework scope:** Vue only.
+- **Existing reusable infrastructure:** React's specifier rewrite in `packages/react/scripts/rename-dts.mjs` (GAP-068).
+- **Recommended resolution direction:** Directional only — make Vue's declaration build emit resolvable specifiers (including SFC declarations), verified by a consumer type-check.
+- **Source/evidence:** GAP-068 Task 4 stop report (2026-10-01); `packages/vue/package.json` build script; `packages/vue/scripts/rename-dts.mjs`.
+- **Architectural decision required:** No.
+
+#### GAP-080 — Angular Scroller creates a `ResizeObserver` in `ngAfterViewInit` without a browser guard (SSR)
+
+- **Status:** MISSING
+- **Type:** Component, Framework (Angular), SSR
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found during the Existing Commitments Plan's GAP-070 prerequisite work (2026-10-01) and confirmed in review; pre-existing on `main` (`2bd2538`); registered on user instruction. `packages/ng/src/scroller/scroller.ts:141` runs `this.resizeObserver = new ResizeObserver(...)` in `UScroller.ngAfterViewInit` with no `isPlatformBrowser` guard; `ngAfterViewInit` runs during server rendering, where `ResizeObserver` is undefined. The Angular SSR playground's build-time prerender logs `ERROR ReferenceError: ResizeObserver is not defined at ngAfterViewInit` (via `apps/playground-angular/src/app/proof-page.component.ts:90`). The build still exits 0 and the `ng-ssr-chromium` Playwright project passes (it checks browser console/pageerror only), so CI does not catch it. It surfaced only once `@ultimate/ng` could be built again (TS2729 and `@angular/cdk` fixes, `4a47883`/`29a3390`). Scroller is one of Track E's eight proof-set components, which GAP-065's scope deliberately excluded.
+- **Expected state:** No browser-only API is reached from Scroller's server-executed lifecycle hooks; the observer is created only in the browser, with a spy-based server test as in GAP-065.
+- **Why it matters:** Server rendering of any page with a Scroller logs an error and skips the rest of `ngAfterViewInit`.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Same defect class as GAP-065.
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** The `isPlatformBrowser(this.platformId)` guard and spy-based server test pattern from GAP-065 (`38560be`).
+- **Recommended resolution direction:** Directional only — guard the observer creation (and its cleanup) for the browser; consider whether the CI SSR job should fail on server-side prerender errors.
+- **Source/evidence:** Existing Commitments Plan Tasks 5b/5c review (2026-10-01, ledger `.superpowers/sdd/2026-09-27-prime-parity-existing-commitments/progress.md`); `scroller.ts:141`; playground prerender log.
+- **Architectural decision required:** No.
+
+#### GAP-081 — Angular primary barrel and secondary entry points ship separate copies of the same component classes
+
+- **Status:** MISSING
+- **Type:** Packaging, Architecture, Framework (Angular)
+- **Blocking level:** MEDIUM
+- **Current evidence:** Confirmed during GAP-070's characterization (2026-10-01); pre-existing for GAP-009's nine secondary entry points; registered on user instruction. The primary `@ultimate/ng` bundle (`fesm2022/ultimate-ng.mjs`) contains every component's code and imports none of the package's subpaths, while each subpath bundle contains its own copy — e.g. `class UCheckbox` and `class UTabs` each appear in both the primary bundle and their subpath bundle. An application importing a component from both `@ultimate/ng` and its subpath loads two distinct classes (separate DI tokens, `instanceof` mismatches, duplicated code). GAP-070 widens the affected set from 9 to 70 subpaths. Evidence: `docs/architecture/research/2026-10-01-gap-070-ng-secondary-entry-characterization.md`.
+- **Expected state:** One class identity per component regardless of import path (e.g. the primary barrel re-exports from its subpaths), or a documented single supported import style.
+- **Why it matters:** Mixed import styles silently break DI and type identity, and grow bundles.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** Related to GAP-070 (more subpaths) and its corrected trigger (components cannot import across directories inside secondary entries).
+- **Framework scope:** Angular only.
+- **Existing reusable infrastructure:** None yet.
+- **Recommended resolution direction:** Directional only — decide the Angular packaging model in its own Spec.
+- **Source/evidence:** Existing Commitments Plan Task 6 characterization and review (2026-10-01).
+- **Architectural decision required:** Yes — the Angular packaging model (Open Architectural Decisions §5, DECISION-F).
+
+#### GAP-077 — Vue Stepper lacks horizontal separators between step headers
+
+- **Status:** MISSING
+- **Type:** Component, Framework (Vue)
+- **Blocking level:** LOW
+- **Current evidence:** Found by the Vue Plan's Implementation-stage source check (2026-09-30); registered on user instruction. Real PrimeVue 4.5.5 `step/Step.vue` renders `<StepperSeparator v-if="isSeparatorVisible" />` after each step header (`:9`), with `updateState()` setting `isSeparatorVisible = index !== stepLen - 1` when the step is inside a `StepList` (`:43-49`). Ultimate's `packages/vue/src/stepper/Step.vue` renders no separator, although `stepper-style.ts` already defines a horizontal `.u-stepper-separator` rule (line 19 as of `41a219c`; before GAP-063 it was unused, and GAP-063's internal `StepperSeparator.vue` now uses it only in vertical mode, with vertical overrides). This contradicts the earlier audit claim (Vue Plan Spec §4/§8, GAP-063's original text) that Ultimate's `Step` already matches PrimeVue exactly.
+- **Expected state:** Horizontal Steppers render a separator between consecutive step headers, none after the last, matching PrimeVue.
+- **Why it matters:** Visible rendering gap in the default (horizontal) Stepper layout.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** Can reuse the step marker and internal separator element added by GAP-063.
+- **Framework scope:** Vue only (Angular/React Stepper not examined as part of this finding).
+- **Existing reusable infrastructure:** `.u-stepper-separator` CSS; GAP-063's internal `StepperSeparator.vue` and `data-u-step` marker (shipped in `bd4c025`).
+- **Recommended resolution direction:** Directional only — port `Step.vue`'s separator rendering for steps inside `StepList`.
+- **Source/evidence:** Vue Plan pre-dispatch source check (ledger `.superpowers/sdd/2026-09-27-prime-parity-vue/progress.md`); PrimeVue `Step.vue:9,43-49`; Ultimate `Step.vue`, `stepper-style.ts:19` (as of `41a219c`).
+- **Architectural decision required:** No.
+
 ---
 
 ## 4. Resolved gaps
@@ -750,6 +1416,14 @@ Listed here only where the repository shows genuine, unresolved forks requiring 
 - **Affected areas:** Every package.
 - **Recommendation:** None — correctly deferred per Blueprint §34's own stated gate ("before the first stable public release"), not urgent now.
 
+### DECISION-F — Angular packaging model: primary barrel vs secondary entry points (GAP-081)
+
+- **Question:** Should the Angular primary `@ultimate/ng` barrel re-export from its secondary entry points (one class identity per component), or should consumers be told to use a single import style?
+- **Current evidence:** Registered 2026-10-01 with GAP-081. The primary bundle contains every component's code while each of the 70 secondary entry points (GAP-070) ships its own copy, so mixing import styles loads two copies of a class. ng-packagr's per-entry `rootDir` also prevents components with cross-directory imports from being secondary entries (GAP-070's corrected trigger), which constrains any model.
+- **Options:** Not enumerated here — to be framed in GAP-081's own Spec.
+- **Affected areas:** `@ultimate/ng` packaging, consumer imports, bundle size.
+- **Recommendation:** None yet — open fork; decide before the first stable public release.
+
 ---
 
 ## 6. Dependency graph of major gaps
@@ -813,7 +1487,7 @@ Gaps that unlock the most other work and should be resolved before the workstrea
 - ~~**GAP-003 / GAP-003a** (Angular style injection)~~ — **RESOLVED** (commit `680876f`); no longer a blocker.
 - ~~**GAP-018** (Angular `BaseModelHolder`/`BaseInput`)~~ — **RESOLVED** (`BaseModelHolder` slice via `UModelHolder`/`UInputText`; `BaseInput` slice via GAP-038, see below) — the foundation tier for the ~20-component native-input Form family is now fully built and proven by two real consumers (`UInputText`, `UInputNumber`).
 - ~~**GAP-038** (Angular `BaseInput` tier + `UInputNumber`)~~ — **RESOLVED** (this workstream, ADR-047) — unblocks `Password`/`InputMask`/`AutoComplete`/`DatePicker`/`Select` migration whenever each is individually scheduled.
-- ~~**GAP-009 / GAP-023** (Angular secondary entry points)~~ — **RESOLVED** (commit `62575fb`, Blueprint Completion, 2026-09-13) for 8 of 12 components; `button`/`dialog`/`menu`/`table` permanently excluded by an upstream `ng-packagr` defect (see GAP-009's entry).
+- ~~**GAP-009 / GAP-023** (Angular secondary entry points)~~ — **RESOLVED** (commit `62575fb`, Blueprint Completion, 2026-09-13) for 8 of 12 components; `button`/`dialog`/`menu`/`table` permanently excluded by an upstream `ng-packagr` defect (see GAP-009's entry). Extended to 70 subpaths by GAP-070 (2026-10-01).
 Why here: each is small, evidence-backed, has a proven pattern to copy from a sibling framework, and unblocks a materially larger downstream body of work.
 
 ### Group: Component-enabling foundations
@@ -826,7 +1500,7 @@ Why here: each is small, evidence-backed, has a proven pattern to copy from a si
 - Visualization/Editor — blocked on DECISION-B (external dependency policy), still genuinely open.
 
 ### Group: Framework parity
-- No forced-parity work is recommended — GAP-024/GAP-025 document that current divergence is evidence-based and correct. The only real parity item, GAP-009/GAP-023 (Angular exports), is now resolved (8 of 12 components; see Foundation blockers above).
+- No forced-parity work is recommended — GAP-024/GAP-025 document that current divergence is evidence-based and correct. The only real parity item, GAP-009/GAP-023 (Angular exports), is now resolved (8 of 12 components, extended to 70 subpaths by GAP-070 on 2026-10-01; see Foundation blockers above).
 
 ### Group: Platform tooling (Phases 6-9) — **all four now RESOLVED (see §2's corrected phase table)**
 - ~~**GAP-027** (component metadata)~~ — RESOLVED. ~~**GAP-028** (CLI)~~ — RESOLVED, with disclosed follow-ups. ~~**GAP-029** (MCP)~~ — RESOLVED, with disclosed follow-ups. ~~**GAP-030** (AI Skills/LLM context)~~ — RESOLVED (its one disclosed follow-up, GAP-036, is itself now resolved too). This entire group, sequenced here as future work when this document was first written, has since landed in full.
@@ -869,7 +1543,9 @@ The great majority of gaps in this registry can be started without waiting on an
 
 ### Open Architectural Decisions
 
-Four remain genuinely open (§5): external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower still — Table's own composition question is substantially answered by real implementation, OrderList/PickList/DataView's relationship to it is resolved (2026-09-21, no new foundation required), and Table's own fuller filter-operator vocabulary is resolved (2026-09-23, all 18 `FilterMatchMode` values dispatched in all 3 frameworks); the remainder is TreeTable specifically, gated on the separate DECISION-D), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), and package-naming finalization (DECISION-E, correctly deferred to pre-1.0). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
+The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`.
+
+Five remain genuinely open (§5): external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower still — Table's own composition question is substantially answered by real implementation, OrderList/PickList/DataView's relationship to it is resolved (2026-09-21, no new foundation required), and Table's own fuller filter-operator vocabulary is resolved (2026-09-23, all 18 `FilterMatchMode` values dispatched in all 3 frameworks); the remainder is TreeTable specifically, gated on the separate DECISION-D), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), package-naming finalization (DECISION-E, correctly deferred to pre-1.0), and the Angular packaging model (DECISION-F, GAP-081, registered 2026-10-01). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
 
 ### Recommended Next Research
 

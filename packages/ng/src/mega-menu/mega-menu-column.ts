@@ -13,13 +13,23 @@ import type { UMegaMenuGroup } from "./mega-menu-item";
  * responsibility into `UMegaMenu` itself, keeping this component a flat,
  * non-recursive leaf-group renderer, since a MegaMenu overlay group is
  * itself not further nested per this task's own `UMegaMenuItem` shape).
+ *
+ * ArrowDown/ArrowUp roving focus (GAP-054, Spec §5.3) is scoped to this
+ * group's own flat leaf-item list, delegated on this component's own
+ * `<ul role="menu">`, matching `UMenubarSub`'s established
+ * delegate-on-the-ancestor-`<ul>` pattern. Disabled leaf items are skipped
+ * (`[attr.tabindex]="item.disabled ? -1 : 0"`, already present below).
+ * Escape is deliberately NOT handled here: this component never
+ * `stopPropagation()`s on it, letting it bubble untouched up through the
+ * overlay to `UMegaMenu`'s own root `<ul>`, which owns the single
+ * `openItem` this hard-2-level structure ever needs to close.
  */
 @Component({
   standalone: true,
   selector: "u-mega-menu-column-group",
   imports: [RouterModule],
   template: `
-    <ul [class]="cx('submenu')" role="menu">
+    <ul [class]="cx('submenu')" role="menu" (keydown)="onKeydown($event)">
       @if (group.label) {
         <li [class]="cx('submenuLabel')" role="presentation">{{ group.label }}</li>
       }
@@ -70,5 +80,49 @@ export class UMegaMenuColumnGroup extends UBaseComponent {
     }
     item.command?.({ originalEvent: event, item });
     this.itemSelect.emit({ originalEvent: event, item });
+  }
+
+  /** Items that actually render their own direct-child `<a>` (excludes hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
+  private renderedItems(): UMenuItem[] {
+    return (this.group.items ?? []).filter((candidate) => candidate.visible !== false);
+  }
+
+  /** ArrowDown/ArrowUp roving focus among this group's own flat leaf items; Escape is intentionally left unhandled so it bubbles to `UMegaMenu`'s own root `<ul>`. */
+  protected onKeydown(event: KeyboardEvent): void {
+    const links = this.getItemLinks();
+    const index = links.indexOf(event.target as HTMLAnchorElement);
+    if (index === -1) return; // Not one of this group's own item links.
+
+    const current = this.renderedItems()[index];
+    if (!current) return;
+
+    switch (event.code) {
+      case "ArrowDown":
+        event.preventDefault();
+        this.moveFocus(current, 1);
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        this.moveFocus(current, -1);
+        break;
+    }
+  }
+
+  private getItemLinks(): HTMLAnchorElement[] {
+    const ul = (this.el.nativeElement as HTMLElement).querySelector("ul");
+    return ul ? Array.from(ul.querySelectorAll<HTMLAnchorElement>(":scope > li > .u-megamenu-item-content > a")) : [];
+  }
+
+  private moveFocus(current: UMenuItem, direction: 1 | -1): void {
+    const items = this.group.items ?? [];
+    const enabled = items.filter((candidate) => candidate.visible !== false && !candidate.disabled);
+    if (enabled.length === 0) return;
+    const currentIndex = enabled.indexOf(current);
+    const startIndex = currentIndex === -1 ? 0 : currentIndex;
+    const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
+    const nextItem = enabled[nextIndex];
+    const links = this.getItemLinks();
+    const targetIndex = this.renderedItems().indexOf(nextItem);
+    links[targetIndex]?.focus();
   }
 }

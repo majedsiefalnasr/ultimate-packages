@@ -2,15 +2,26 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  ViewChild,
   ViewChildren,
   ViewEncapsulation,
   type QueryList,
   booleanAttribute,
   computed,
   input,
+  numberAttribute,
+  output,
+  signal,
 } from "@angular/core";
+import { NgTemplateOutlet, isPlatformBrowser } from "@angular/common";
 import { RouterModule } from "@angular/router";
-import { ComponentIdGenerator, UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
+import { ComponentIdGenerator, UBaseComponent, UOverlay, type UMenuItem } from "@ultimate/ng-core";
+import {
+  ESCAPE_PRIORITIES,
+  displayOrderRegistry,
+  escapeRegistry,
+} from "@ultimate/uix-utils/escape";
+import { ZIndex } from "@ultimate/uix-utils/zindex";
 import { URipple } from "../ripple";
 import { UTooltip } from "../tooltip";
 import { menuStyleModule } from "./menu-style";
@@ -22,26 +33,33 @@ import { menuStyleModule } from "./menu-style";
  * `<li role="none"><a role="menuitem">`, or `<li role="separator">` for
  * separator entries.
  *
- * Deliberately excludes upstream's much larger surface — `popup` overlay
- * positioning/`show()`/`hide()`/`toggle()`, `appendTo`/overlay-append,
- * `autoZIndex`/`baseZIndex`/z-index stacking, motion (`pMotion`/
+ * Popup mode (GAP-067): with `popup` set, the menu is hidden until opened
+ * imperatively via `toggle(event)`/`show(event)`/`hide(event?)` (e.g.
+ * `(click)="menu.toggle($event)"`), matching `UPopover`'s API shape and
+ * React `UMenu`'s handle. The panel is wrapped in `UOverlay` (appended to
+ * `appendTo`, default `document.body`), absolutely positioned below the
+ * triggering element via `getBoundingClientRect()` (as `UPopover` does —
+ * no flip-on-overflow), and stacked with `ZIndex.set("menu", panel,
+ * baseZIndex)` (`UOverlay` has no `baseZIndex` input). It closes on outside
+ * click, window resize, item click (after the item's `command`, matching
+ * React `menu.tsx`'s `onItemClick`), and Escape when `closeOnEscape` is set.
+ * Escape registers at `ESCAPE_PRIORITIES.MENU` keyed by
+ * `displayOrderRegistry` open order (React's `useDisplayOrder`, Angular
+ * `UImage`'s precedent), so one Escape closes only the most recently opened
+ * popup. Emits `onShow`/`onHide` synchronously from `show`/`hide` (no
+ * motion). Inline mode (`popup` false) is unaffected: the methods are
+ * no-ops and `closeOnEscape` has no effect.
+ *
+ * Still deliberately excludes upstream's `autoZIndex`, motion (`pMotion`/
  * `computedMotionOptions`), submenu support (`hasSubMenu()`/
  * `submenuLabel`/nested `item.items`), `start`/`end`/`header`/`item`/
  * `submenuheader` `TemplateRef` content-projection slots, `styleClass`/
- * `style` inline-style inputs, `ariaLabel`/`ariaLabelledBy`, document
- * click/resize/scroll listener wiring, `MenuItemContent`'s separate
- * `[pMenuItemContent]` child component split, `command`-passthrough via a
- * dedicated `itemClick()` orchestration layer beyond a plain click handler,
- * and the `Home`/`End`/`Enter`/`Space`/`Escape`/`Tab` key handlers real
- * PrimeNG's `onListKeyDown()` also implements — none of these appear in
- * this task's Interfaces section, which defines a smaller, spec-mandated
- * signal-input surface: `model`, `popup` (`popup` is accepted as an input
- * per the Interfaces section, but this task's file list has no popup-overlay
- * component to render into, so it is currently inert beyond flagging the
- * `u-menu-overlay` style-class variant — matching `MenuStyle`'s own
- * `classes.root` popup branch). A future task can extend this component's
- * input/output surface for the popup overlay, submenu nesting, and the
- * additional key handlers.
+ * `style` inline-style inputs, `ariaLabel`/`ariaLabelledBy`, scroll
+ * listener wiring, `MenuItemContent`'s separate `[pMenuItemContent]` child
+ * component split, and the `Home`/`End`/`Enter`/`Space`/`Tab` (and
+ * list-local `Escape`) key handlers real PrimeNG's `onListKeyDown()`
+ * implements. A future task can extend the surface for submenu nesting and
+ * the additional key handlers.
  *
  * DISCREPANCY (brief vs. real extracted source) — roving tabindex: real
  * PrimeNG's `Menu` does NOT move native DOM focus between `<li>`/`<a>`
@@ -96,46 +114,57 @@ import { menuStyleModule } from "./menu-style";
 @Component({
   standalone: true,
   selector: "u-menu",
-  imports: [RouterModule, URipple, UTooltip],
+  imports: [NgTemplateOutlet, RouterModule, UOverlay, URipple, UTooltip],
   // UMenu's [uTooltip] binding transitively requires ComponentIdGenerator
   // (GAP-006 fix); providing it here means UMenu consumers don't inherit
   // that requirement themselves, matching how UDialog documents its own
   // top-level requirement instead.
   providers: [ComponentIdGenerator],
   template: `
-    <div [class]="cx('root', classesParams())">
-      <ul
-        role="menu"
-        [class]="cx('list')"
-        (keydown.arrowDown)="onArrowDown($event)"
-        (keydown.arrowUp)="onArrowUp($event)"
-      >
-        @for (item of model(); track $index) {
-          @if (item.separator) {
-            <li role="separator" [class]="cx('separator')"></li>
-          } @else {
-            <li role="none" [class]="cx('item', itemClassesParams(item))">
-              <a
-                role="menuitem"
-                #menuItemLink
-                [class]="cx('itemLink')"
-                [tabindex]="$index === firstFocusableIndex() ? 0 : -1"
-                [attr.aria-disabled]="item.disabled || null"
-                [routerLink]="item.disabled ? null : (item.routerLink ?? null)"
-                [uTooltip]="item.tooltip"
-                uRipple
-                (click)="onItemClick($event, item)"
-              >
-                @if (item.icon) {
-                  <span [class]="item.icon + ' ' + cx('itemIcon')"></span>
-                }
-                <span [class]="cx('itemLabel')">{{ item.label }}</span>
-              </a>
-            </li>
+    @if (popup()) {
+      @if (render()) {
+        <div uOverlay [visible]="visible()" [appendTo]="overlayAppendTo()">
+          <ng-container [ngTemplateOutlet]="menuPanel" />
+        </div>
+      }
+    } @else {
+      <ng-container [ngTemplateOutlet]="menuPanel" />
+    }
+    <ng-template #menuPanel>
+      <div #panel [class]="cx('root', classesParams())">
+        <ul
+          role="menu"
+          [class]="cx('list')"
+          (keydown.arrowDown)="onArrowDown($event)"
+          (keydown.arrowUp)="onArrowUp($event)"
+        >
+          @for (item of model(); track $index) {
+            @if (item.separator) {
+              <li role="separator" [class]="cx('separator')"></li>
+            } @else {
+              <li role="none" [class]="cx('item', itemClassesParams(item))">
+                <a
+                  role="menuitem"
+                  #menuItemLink
+                  [class]="cx('itemLink')"
+                  [tabindex]="$index === firstFocusableIndex() ? 0 : -1"
+                  [attr.aria-disabled]="item.disabled || null"
+                  [routerLink]="item.disabled ? null : (item.routerLink ?? null)"
+                  [uTooltip]="item.tooltip"
+                  uRipple
+                  (click)="onItemClick($event, item)"
+                >
+                  @if (item.icon) {
+                    <span [class]="item.icon + ' ' + cx('itemIcon')"></span>
+                  }
+                  <span [class]="cx('itemLabel')">{{ item.label }}</span>
+                </a>
+              </li>
+            }
           }
-        }
-      </ul>
-    </div>
+        </ul>
+      </div>
+    </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -148,6 +177,23 @@ export class UMenu extends UBaseComponent {
   model = input<UMenuItem[]>([]);
   /** Defines if menu would displayed as a popup. */
   popup = input(false, { transform: booleanAttribute });
+  /** Target element to attach the popup overlay to; defaults to `document.body`. */
+  appendTo = input<HTMLElement | (() => HTMLElement)>();
+  /** Base z-index value to use in layering of the popup. */
+  baseZIndex = input(0, { transform: numberAttribute });
+  /** Whether Escape closes the popup; has no effect in inline mode. */
+  closeOnEscape = input(true, { transform: booleanAttribute });
+
+  /** Callback to invoke when the popup is shown. */
+  onShow = output<void>();
+  /** Callback to invoke when the popup is hidden. */
+  onHide = output<void>();
+
+  protected readonly visible = signal(false);
+  protected readonly render = signal(false);
+
+  /** `appendTo` resolved at each `show()`, so a function form is re-evaluated per open. */
+  protected readonly overlayAppendTo = signal<"body" | HTMLElement>("body");
 
   /**
    * Model index of the first rendered `<a role="menuitem">` (i.e. the first
@@ -164,6 +210,63 @@ export class UMenu extends UBaseComponent {
   });
 
   @ViewChildren("menuItemLink") private menuItemLinks?: QueryList<ElementRef<HTMLAnchorElement>>;
+  @ViewChild("panel") private panelRef?: ElementRef<HTMLElement>;
+
+  private target: HTMLElement | null = null;
+  private documentClickListener: ((event: MouseEvent) => void) | null = null;
+  private windowResizeListener: (() => void) | null = null;
+  private zIndexedPanel: HTMLElement | null = null;
+  private displayOrder: number | undefined;
+  private static instanceCount = 0;
+  private readonly instanceUid = ++UMenu.instanceCount;
+
+  /** Toggles the popup open/closed, anchored to the event's triggering element. No-op in inline mode. */
+  toggle(event: Event): void {
+    if (this.visible()) {
+      this.hide(event);
+    } else {
+      this.show(event);
+    }
+  }
+
+  /** Shows the popup, anchored to the event's triggering element. No-op in inline mode. */
+  show(event: Event): void {
+    if (!this.popup() || this.visible()) {
+      return;
+    }
+    // The opening event is left to propagate (React parity): other popups'
+    // outside-click listeners close them and app-level document listeners
+    // still see it. This popup's own listener ignores it because its target
+    // lies inside `this.target` (the event's currentTarget).
+    this.target = (event.currentTarget ?? event.target) as HTMLElement | null;
+    const appendTo = this.appendTo();
+    this.overlayAppendTo.set(typeof appendTo === "function" ? appendTo() : (appendTo ?? "body"));
+    this.visible.set(true);
+    this.render.set(true);
+    if (isPlatformBrowser(this.platformId)) {
+      this.bindDismissListeners();
+      if (this.closeOnEscape()) {
+        this.registerEscape();
+      }
+      queueMicrotask(() => this.align());
+    }
+    this.onShow.emit();
+  }
+
+  /**
+   * Hides the popup. `event` is accepted for parity with `show`/`toggle`
+   * and React's `hide(event?)` handle; it is not read.
+   */
+  hide(event?: Event): void {
+    void event;
+    if (!this.visible()) {
+      return;
+    }
+    this.visible.set(false);
+    this.render.set(false);
+    this.releasePopupResources();
+    this.onHide.emit();
+  }
 
   protected classesParams() {
     return { popup: this.popup() };
@@ -179,6 +282,9 @@ export class UMenu extends UBaseComponent {
       return;
     }
     item.command?.(event);
+    if (this.popup()) {
+      this.hide();
+    }
   }
 
   protected onArrowDown(event: Event): void {
@@ -231,5 +337,64 @@ export class UMenu extends UBaseComponent {
     links[currentIndex].setAttribute("tabindex", "-1");
     nextLink.setAttribute("tabindex", "0");
     nextLink.focus();
+  }
+
+  private align(): void {
+    const panel = this.panelRef?.nativeElement;
+    if (!this.visible() || !panel) {
+      return;
+    }
+    if (this.target) {
+      const targetRect = this.target.getBoundingClientRect();
+      panel.style.position = "absolute";
+      panel.style.top = `${targetRect.bottom + window.scrollY}px`;
+      panel.style.left = `${targetRect.left + window.scrollX}px`;
+    }
+    ZIndex.set("menu", panel, this.baseZIndex());
+    this.zIndexedPanel = panel;
+  }
+
+  private bindDismissListeners(): void {
+    this.documentClickListener = (event: MouseEvent) => {
+      const eventTarget = event.target as Node;
+      const panel = this.panelRef?.nativeElement;
+      if (panel?.contains(eventTarget) || this.target?.contains(eventTarget)) {
+        return;
+      }
+      this.hide();
+    };
+    document.addEventListener("click", this.documentClickListener);
+    this.windowResizeListener = () => this.hide();
+    window.addEventListener("resize", this.windowResizeListener);
+  }
+
+  private registerEscape(): void {
+    this.displayOrder = displayOrderRegistry.register("menu", this.instanceUid);
+    escapeRegistry.register(ESCAPE_PRIORITIES.MENU, this.displayOrder, () => this.hide());
+  }
+
+  /** Unbinds listeners, Escape/display-order registration and z-index; safe to call repeatedly. */
+  private releasePopupResources(): void {
+    if (this.documentClickListener) {
+      document.removeEventListener("click", this.documentClickListener);
+      this.documentClickListener = null;
+    }
+    if (this.windowResizeListener) {
+      window.removeEventListener("resize", this.windowResizeListener);
+      this.windowResizeListener = null;
+    }
+    if (this.displayOrder !== undefined) {
+      escapeRegistry.unregister(ESCAPE_PRIORITIES.MENU, this.displayOrder);
+      displayOrderRegistry.unregister("menu", this.instanceUid);
+      this.displayOrder = undefined;
+    }
+    if (this.zIndexedPanel) {
+      ZIndex.clear(this.zIndexedPanel);
+      this.zIndexedPanel = null;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.releasePopupResources();
   }
 }

@@ -57,3 +57,104 @@ describe("USteps", () => {
     expect(labels).toEqual(["One", "Three"]);
   });
 });
+
+describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
+  it("ArrowRight moves focus to the next enabled step", async () => {
+    const model = [{ label: "A" }, { label: "B" }, { label: "C" }];
+    const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
+    const links = wrapper.findAll("a");
+    links[0].element.focus();
+    await links[0].trigger("keydown", { code: "ArrowRight" });
+    expect(document.activeElement).toBe(links[1].element);
+    wrapper.unmount();
+  });
+
+  it("ArrowLeft moves focus to the previous enabled step", async () => {
+    const model = [{ label: "A" }, { label: "B" }];
+    const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
+    const links = wrapper.findAll("a");
+    links[1].element.focus();
+    await links[1].trigger("keydown", { code: "ArrowLeft" });
+    expect(document.activeElement).toBe(links[0].element);
+    wrapper.unmount();
+  });
+
+  it("Home moves focus to the first enabled step, End to the last", async () => {
+    const model = [{ label: "A" }, { label: "B" }, { label: "C" }];
+    const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
+    const links = wrapper.findAll("a");
+    links[1].element.focus();
+    await links[1].trigger("keydown", { code: "End" });
+    expect(document.activeElement).toBe(links[2].element);
+    await links[2].trigger("keydown", { code: "Home" });
+    expect(document.activeElement).toBe(links[0].element);
+    wrapper.unmount();
+  });
+
+  it("ArrowRight skips a disabled step", async () => {
+    const model = [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }];
+    const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
+    const links = wrapper.findAll("a");
+    links[0].element.focus();
+    await links[0].trigger("keydown", { code: "ArrowRight" });
+    expect(document.activeElement).toBe(links[2].element);
+    wrapper.unmount();
+  });
+
+  describe("with a hidden item (rendered-link index vs model index)", () => {
+    it("ArrowRight from A skips the disabled step and reaches C", async () => {
+      const model = [
+        { label: "A" },
+        { label: "H", visible: false },
+        { label: "B", disabled: true },
+        { label: "C" },
+      ];
+      const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
+      const links = wrapper.findAll("a");
+      links[0].element.focus();
+      await links[0].trigger("keydown", { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[2].element);
+      wrapper.unmount();
+    });
+
+    it("Home skips hidden/disabled items and reaches the first valid step", async () => {
+      const model = [
+        { label: "H", visible: false },
+        { label: "B", disabled: true },
+        { label: "C" },
+        { label: "D" },
+      ];
+      const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
+      const links = wrapper.findAll("a");
+      links[2].element.focus();
+      await links[2].trigger("keydown", { code: "Home" });
+      expect(document.activeElement).toBe(links[1].element);
+      wrapper.unmount();
+    });
+
+    it("End skips hidden/disabled items and reaches the last valid step", async () => {
+      const model = [
+        { label: "A" },
+        { label: "B" },
+        { label: "H", visible: false },
+        { label: "D", disabled: true },
+      ];
+      const wrapper = mount(USteps, { props: { model, readonly: false }, attachTo: document.body });
+      const links = wrapper.findAll("a");
+      links[0].element.focus();
+      await links[0].trigger("keydown", { code: "End" });
+      expect(document.activeElement).toBe(links[1].element);
+      wrapper.unmount();
+    });
+
+    it("readonly: a hidden item before the active step does not shift the active comparison", async () => {
+      const model = [{ label: "H", visible: false }, { label: "B" }, { label: "C" }];
+      const wrapper = mount(USteps, { props: { model, activeStep: 2 }, attachTo: document.body });
+      const links = wrapper.findAll("a");
+      links[0].element.focus();
+      await links[0].trigger("keydown", { code: "End" });
+      expect(document.activeElement).toBe(links[1].element);
+      wrapper.unmount();
+    });
+  });
+});

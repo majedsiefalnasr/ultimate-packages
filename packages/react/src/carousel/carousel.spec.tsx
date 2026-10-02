@@ -79,4 +79,22 @@ describe("UCarousel", () => {
       expect(() => vi.advanceTimersByTime(5000)).not.toThrow();
     });
   });
+
+  describe("aria-live on autoplay content wrapper (Spec §5.2, GAP-051)", () => {
+    it("sets aria-live=polite on the content wrapper when autoplayInterval is greater than 0", () => {
+      const { container } = render(
+        <UCarousel value={items} itemTemplate={(item) => item} autoplayInterval={3000} />
+      );
+      expect(container.querySelector("[data-u-carousel-content]")?.getAttribute("aria-live")).toBe(
+        "polite"
+      );
+    });
+
+    it("sets aria-live=off (not absent) when autoplayInterval is 0 (autoplay disabled), matching real PrimeReact's own always-rendered attribute", () => {
+      const { container } = render(<UCarousel value={items} itemTemplate={(item) => item} />);
+      expect(container.querySelector("[data-u-carousel-content]")?.getAttribute("aria-live")).toBe(
+        "off"
+      );
+    });
+  });
 });

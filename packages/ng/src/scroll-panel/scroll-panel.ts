@@ -11,6 +11,7 @@ import {
   input,
   numberAttribute,
 } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { UBaseComponent } from "@ultimate/ng-core";
 import { uuid } from "@ultimate/uix-utils/uuid";
 import { scrollPanelStyleModule } from "./scroll-panel-style";
@@ -115,6 +116,12 @@ export class UScrollPanel extends UBaseComponent implements AfterViewInit, OnDes
   private documentMouseUpListener?: (event: MouseEvent) => void;
 
   ngAfterViewInit(): void {
+    // Measuring (moveBar/calculateContainerHeight) and the resize listener
+    // all need browser globals — skip the whole setup server-side.
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.moveBar();
     this.calculateContainerHeight();
 

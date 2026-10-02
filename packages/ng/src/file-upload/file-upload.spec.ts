@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { UFileUpload } from "./file-upload";
+import { fileUploadStyleModule } from "./file-upload-style";
 
 function makeFile(name: string, size: number, type = "text/plain"): File {
   const file = new File([new Uint8Array(size)], name, { type });
@@ -260,5 +261,31 @@ describe("UFileUpload", () => {
     fixture.detectChanges();
 
     expect(fixture.componentInstance.handled).toEqual({ files: expect.any(Array) });
+  });
+  describe("progress ARIA via UProgressBar composition (Spec §5.2, GAP-060)", () => {
+    it("renders a role=progressbar element with the current progress as aria-valuenow while uploading", () => {
+      const fixture = TestBed.createComponent(UFileUpload);
+      fixture.detectChanges();
+      fixture.componentInstance["uploading"].set(true);
+      fixture.componentInstance["progress"].set(42);
+      fixture.detectChanges();
+      const bar = fixture.nativeElement.querySelector("[role=progressbar]");
+      expect(bar).toBeTruthy();
+      expect(bar.getAttribute("aria-valuenow")).toBe("42");
+    });
+
+    it("renders no progressbar when not uploading", () => {
+      const fixture = TestBed.createComponent(UFileUpload);
+      fixture.detectChanges();
+      fixture.componentInstance["progress"].set(42);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector("[role=progressbar]")).toBeNull();
+    });
+
+    it("scopes the composed progress bar to Prime's thin FileUpload height", () => {
+      const css = fileUploadStyleModule.css.replace(/\s+/g, " ");
+      expect(css).toContain(".u-file-upload .u-progress-bar { width: 100%; height: 0.25rem;");
+      expect(css).not.toContain("u-file-upload-progress-bar");
+    });
   });
 });

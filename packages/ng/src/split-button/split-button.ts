@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostListener,
+  ViewChild,
   ViewEncapsulation,
   booleanAttribute,
-  computed,
   input,
   output,
 } from "@angular/core";
@@ -32,10 +31,13 @@ import { splitButtonStyleModule } from "./split-button-style";
  * wanting nested secondary-item support could swap in `UTieredMenu`
  * without changing this component's own public API shape.
  *
- * `UMenu` (read-only reference, already Built) exposes no output event for
- * item selection — it only ever invokes each `UMenuItem.command` callback
- * directly. `menuModel` below wraps every item's own `command` so the
- * popup closes after any item is chosen, without modifying `UMenu` itself.
+ * The popup is `UMenu`'s own popup mode (GAP-067): the dropdown button
+ * calls `menu.toggle($event)`, so anchoring, body-append (`UOverlay`),
+ * z-index, outside-click/resize dismissal, close-after-item-command, and
+ * Escape (via the shared `escapeRegistry` at `ESCAPE_PRIORITIES.MENU`,
+ * arbitrated by open order across instances) all come from `UMenu`. This
+ * component only forwards `UMenu`'s `onShow`/`onHide` and closes the popup
+ * when the default command button is clicked.
  */
 @Component({
   standalone: true,
@@ -63,13 +65,15 @@ import { splitButtonStyleModule } from "./split-button-style";
         [outlined]="outlined()"
         [size]="size()"
         [disabled]="disabled()"
-        (onClick)="onDropdownButtonClick($event)"
+        (onClick)="menu.toggle($event)"
       ></u-button>
-      @if (expanded) {
-        <div [class]="cx('menuContainer')">
-          <u-menu [model]="menuModel()" [popup]="true"></u-menu>
-        </div>
-      }
+      <u-menu
+        #menu
+        [model]="model()"
+        [popup]="true"
+        (onShow)="onShow.emit()"
+        (onHide)="onHide.emit()"
+      ></u-menu>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,48 +109,10 @@ export class USplitButton extends UBaseComponent {
   /** Callback to execute when the popup menu is hidden. */
   onHide = output<void>();
 
-  protected expanded = false;
-
-  /**
-   * `model()` items wrapped so selecting any of them closes the popup —
-   * `UMenu` itself has no selection output to hook (see class doc comment).
-   */
-  protected readonly menuModel = computed<UMenuItem[]>(() =>
-    this.model().map((item) => ({
-      ...item,
-      command: (event: unknown) => {
-        this.hide();
-        item.command?.(event);
-      },
-    }))
-  );
+  @ViewChild("menu", { static: true }) private menu!: UMenu;
 
   protected onDefaultButtonClick(event: MouseEvent): void {
-    if (this.expanded) {
-      this.hide();
-    }
+    this.menu.hide();
     this.onClick.emit(event);
-  }
-
-  protected onDropdownButtonClick(_event: MouseEvent): void {
-    this.expanded ? this.hide() : this.show();
-  }
-
-  private show(): void {
-    this.expanded = true;
-    this.onShow.emit();
-  }
-
-  private hide(): void {
-    if (!this.expanded) return;
-    this.expanded = false;
-    this.onHide.emit();
-  }
-
-  @HostListener("document:keydown.escape")
-  protected onEscape(): void {
-    if (this.expanded) {
-      this.hide();
-    }
   }
 }

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import { UFileUpload } from "./index";
+import { fileUploadStyleModule } from "./file-upload-style";
 
 function makeFile(name: string, size: number, type = "text/plain"): File {
   return new File([new Uint8Array(size)], name, { type });
@@ -142,5 +143,46 @@ describe("UFileUpload", () => {
     expect(wrapper.emitted("upload-handler")).toBeTruthy();
     const payload = wrapper.emitted("upload-handler")?.[0][0] as { files: File[] };
     expect(payload.files.length).toBe(1);
+  });
+  describe("progress ARIA via UProgressBar composition (Spec §5.2, GAP-060)", () => {
+    class InFlightXhr {
+      upload = {
+        addEventListener: (_type: string, handler: (event: ProgressEvent) => void) => {
+          this.progressHandler = handler;
+        },
+      };
+      progressHandler: ((event: ProgressEvent) => void) | null = null;
+      onreadystatechange: (() => void) | null = null;
+      readyState = 0;
+      status = 200;
+      withCredentials = false;
+      open = vi.fn();
+      send = vi.fn(() => {
+        this.progressHandler?.({ lengthComputable: true, loaded: 42, total: 100 } as ProgressEvent);
+      });
+    }
+
+    it("renders a role=progressbar element with the current progress as aria-valuenow while uploading", async () => {
+      globalThis.XMLHttpRequest = InFlightXhr as unknown as typeof XMLHttpRequest;
+      const wrapper = mount(UFileUpload, { props: { url: "/upload", auto: true } });
+      const input = wrapper.find('input[type="file"]').element as HTMLInputElement;
+      setInputFiles(input, [makeFile("a.txt", 100)]);
+      await wrapper.find('input[type="file"]').trigger("change");
+
+      const bar = wrapper.find("[role=progressbar]");
+      expect(bar.exists()).toBe(true);
+      expect(bar.attributes("aria-valuenow")).toBe("42");
+    });
+
+    it("renders no progressbar when not uploading", () => {
+      const wrapper = mount(UFileUpload, { props: { url: "/upload" } });
+      expect(wrapper.find("[role=progressbar]").exists()).toBe(false);
+    });
+
+    it("scopes the composed progress bar to Prime's thin FileUpload height", () => {
+      const css = fileUploadStyleModule.css.replace(/\s+/g, " ");
+      expect(css).toContain(".u-file-upload .u-progress-bar { width: 100%; height: 0.25rem;");
+      expect(css).not.toContain("u-file-upload-progress-bar");
+    });
   });
 });

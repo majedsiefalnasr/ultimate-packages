@@ -161,4 +161,29 @@ describe("UCarousel", () => {
       expect(() => vi.advanceTimersByTime(5000)).not.toThrow();
     });
   });
+
+  describe("aria-live on autoplay content wrapper (Spec §5.2, GAP-051)", () => {
+    interface Item {
+      id: number;
+    }
+
+    it("sets aria-live=polite on the content wrapper when autoplayInterval is greater than 0", () => {
+      const fixture = TestBed.createComponent(UCarousel<Item>);
+      fixture.componentRef.setInput("value", [{ id: 1 }, { id: 2 }]);
+      fixture.componentRef.setInput("autoplayInterval", 3000);
+      fixture.detectChanges();
+      expect(
+        fixture.nativeElement.querySelector("[data-u-carousel-content]").getAttribute("aria-live")
+      ).toBe("polite");
+    });
+
+    it("sets aria-live=off (not absent) when autoplayInterval is 0 (autoplay disabled), matching real PrimeNG's own always-rendered attribute", () => {
+      const fixture = TestBed.createComponent(UCarousel<Item>);
+      fixture.componentRef.setInput("value", [{ id: 1 }, { id: 2 }]);
+      fixture.detectChanges();
+      expect(
+        fixture.nativeElement.querySelector("[data-u-carousel-content]").getAttribute("aria-live")
+      ).toBe("off");
+    });
+  });
 });

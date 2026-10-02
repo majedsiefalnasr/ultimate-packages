@@ -1,7 +1,7 @@
 /// <reference types="@testing-library/jest-dom" />
 import * as React from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, cleanup, act } from "@testing-library/react";
+import { render, cleanup, act, screen, fireEvent } from "@testing-library/react";
 import { UTable } from "./table";
 import { UTable as SubpathExport } from "./index";
 import * as PaginatorModule from "../paginator/paginator";
@@ -136,8 +136,179 @@ describe("selection", () => {
   });
 });
 
+describe("selection-column UI (Spec §5.2, GAP-042)", () => {
+  it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }, { id: 2, name: "B" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selectionColumn
+        onSelectionChange={vi.fn()}
+      />
+    );
+    const headerCheckbox = container.querySelector("thead input[type=checkbox]");
+    const rowCheckboxes = container.querySelectorAll("tbody input[type=checkbox]");
+    expect(headerCheckbox).toBeTruthy();
+    expect(rowCheckboxes.length).toBe(2);
+  });
+
+  it("renders a radio button per row and no header control when selectionMode is single and selectionColumn is true", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="single"
+        selectionColumn
+        onSelectionChange={vi.fn()}
+      />
+    );
+    expect(container.querySelector("tbody input[type=radio]")).toBeTruthy();
+    expect(container.querySelector("thead input")).toBeFalsy();
+  });
+
+  it("does not render a selection column when selectionColumn is false (default)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        onSelectionChange={vi.fn()}
+      />
+    );
+    expect(container.querySelector("input[type=checkbox]")).toBeFalsy();
+  });
+
+  it("header checkbox is unchecked and enabled when value is empty", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selectionColumn
+        onSelectionChange={vi.fn()}
+      />
+    );
+    const headerCheckbox = container.querySelector("thead input[type=checkbox]") as HTMLInputElement;
+    expect(headerCheckbox.checked).toBe(false);
+    expect(headerCheckbox.disabled).toBe(false);
+  });
+
+  it("clicking a row checkbox toggles that row into the selection and calls onSelectionChange", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selectionColumn
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    fireEvent.click(container.querySelector("tbody input[type=checkbox]") as HTMLInputElement);
+    expect(onSelectionChange).toHaveBeenCalledWith([{ id: 1, name: "A" }]);
+  });
+
+  it("clicking the header checkbox selects all rows; clicking again deselects all", () => {
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={rows}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selectionColumn
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const headerCheckbox = container.querySelector("thead input[type=checkbox]") as HTMLInputElement;
+    fireEvent.click(headerCheckbox);
+    expect(onSelectionChange).toHaveBeenCalledWith(rows);
+  });
+});
+
 describe("keyboard navigation", () => {
   it("ArrowDown on a row moves focus to the next row", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        columns={[{ field: "name", header: "Name" }]}
+      />
+    );
+    const rows = container.querySelectorAll('tbody [role="row"]');
+    (rows[0] as HTMLElement).focus();
+    (rows[0] as HTMLElement).dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })
+    );
+    expect(document.activeElement).toBe(rows[1]);
+  });
+});
+
+describe("keyboard selection (Spec §5.7, GAP-047)", () => {
+  it("Space toggles the focused row's selection when selectionMode is set", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const row = container.querySelector("tbody [role=row]") as HTMLElement;
+    fireEvent.keyDown(row, { code: "Space" });
+    expect(onSelectionChange).toHaveBeenCalledWith([{ id: 1, name: "A" }]);
+  });
+
+  it("Enter toggles the focused row's selection when selectionMode is set", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="single"
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const row = container.querySelector("tbody [role=row]") as HTMLElement;
+    fireEvent.keyDown(row, { code: "Enter" });
+    expect(onSelectionChange).toHaveBeenCalledWith({ id: 1, name: "A" });
+  });
+
+  it("Ctrl+A selects all rows when selectionMode is multiple", () => {
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={rows}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const row = container.querySelector("tbody [role=row]") as HTMLElement;
+    fireEvent.keyDown(row, { code: "KeyA", ctrlKey: true });
+    expect(onSelectionChange).toHaveBeenCalledWith(rows);
+  });
+
+  it("Ctrl+A does nothing when selectionMode is unset", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const row = container.querySelector("tbody [role=row]") as HTMLElement;
+    fireEvent.keyDown(row, { code: "KeyA", ctrlKey: true });
+    expect(onSelectionChange).not.toHaveBeenCalled();
+  });
+
+  it("existing Arrow/Home/End keyboard navigation is unaffected by the new Space/Enter/Ctrl+A handling", () => {
     const { container } = render(
       <UTable<Row>
         value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
@@ -345,6 +516,56 @@ describe("row editing (controlled editingRows, spec §11.2)", () => {
   });
 });
 
+describe("row/cell editing lifecycle (Spec §5.3, GAP-043)", () => {
+  it("entering edit mode on a row adds its key to editingRows and renders an editable input", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{}}
+      />
+    );
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-init]") as HTMLElement);
+    expect(container.querySelector("[data-u-table-cell-editor] input")).toBeTruthy();
+  });
+
+  it("saving an edit commits the new value and exits edit mode", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "Changed" } });
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-save]") as HTMLElement);
+    expect(container.querySelector("[data-u-table-cell-editor]")).toBeFalsy();
+    expect(container.textContent).toContain("Changed");
+  });
+
+  it("canceling an edit reverts to the original value and exits edit mode", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "Changed" } });
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-cancel]") as HTMLElement);
+    expect(container.textContent).toContain("A");
+    expect(container.textContent).not.toContain("Changed");
+  });
+});
+
 describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   it("groups adjacent rows sharing the same groupRowsBy value under subheader mode", () => {
     const { container } = render(
@@ -360,6 +581,50 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
       />
     );
     expect(container.querySelectorAll("[data-u-table-group-header]").length).toBe(2);
+  });
+});
+
+describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
+  interface RowspanRow {
+    id: number;
+    category: string;
+    name: string;
+  }
+
+  it("spans consecutive rows sharing the same groupRowsBy value under one cell", () => {
+    const { container } = render(
+      <UTable<RowspanRow>
+        value={[
+          { id: 1, category: "Fruit", name: "Apple" },
+          { id: 2, category: "Fruit", name: "Banana" },
+          { id: 3, category: "Veg", name: "Carrot" },
+        ]}
+        columns={[
+          { field: "category", header: "Category" },
+          { field: "name", header: "Name" },
+        ]}
+        rowGroupMode="rowspan"
+        groupRowsBy="category"
+      />
+    );
+    const categoryCells = container.querySelectorAll("td[data-u-table-group-cell]");
+    expect(categoryCells.length).toBe(2); // one spanned cell per group, not per row
+    expect(categoryCells[0].getAttribute("rowspan")).toBe("2");
+    expect(categoryCells[1].getAttribute("rowspan")).toBe("1");
+  });
+
+  it("renders ungrouped when groupRowsBy is unset, matching subheader mode's own fallback", () => {
+    let container!: HTMLElement;
+    expect(() => {
+      container = render(
+        <UTable<RowspanRow>
+          value={[{ id: 1, category: "Fruit", name: "Apple" }]}
+          columns={[{ field: "category", header: "Category" }]}
+          rowGroupMode="rowspan"
+        />
+      ).container;
+    }).not.toThrow();
+    expect(container.querySelector("[data-u-table-group-header]")).toBeFalsy();
   });
 });
 
@@ -777,5 +1042,372 @@ describe("real child-component composition (regression guard, Task 24)", () => {
     } finally {
       vi.unstubAllGlobals();
     }
+  });
+});
+
+describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
+  interface Row {
+    id: number;
+    name: string;
+    price: number;
+  }
+
+  it("renders a column's body function output instead of the raw field value", () => {
+    render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Widget", price: 9.5 }]}
+        columns={[
+          { field: "name", header: "Name" },
+          { field: "price", header: "Price", body: (row) => `$${row.price.toFixed(2)}` },
+        ]}
+      />
+    );
+    const cells = screen.getAllByRole("cell");
+    expect(cells[0]).toHaveTextContent("Widget");
+    expect(cells[1]).toHaveTextContent("$9.50");
+  });
+
+  it("passes { field, rowIndex } as the body function's second argument", () => {
+    const seen: { field: string; rowIndex: number }[] = [];
+    render(
+      <UTable<Row>
+        value={[
+          { id: 1, name: "A", price: 1 },
+          { id: 2, name: "B", price: 2 },
+        ]}
+        columns={[
+          {
+            field: "name",
+            header: "Name",
+            body: (row, options) => {
+              seen.push(options);
+              return row.name;
+            },
+          },
+        ]}
+      />
+    );
+    expect(seen).toEqual([
+      { field: "name", rowIndex: 0 },
+      { field: "name", rowIndex: 1 },
+    ]);
+  });
+
+  it("falls back to the raw field value when no body function is supplied", () => {
+    render(<UTable<Row> value={[{ id: 1, name: "Widget", price: 9.5 }]} columns={[{ field: "price", header: "Price" }]} />);
+    expect(screen.getAllByRole("cell")[0]).toHaveTextContent("9.5");
+  });
+
+  it("can return a React element from the body function", () => {
+    render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Widget", price: 9.5 }]}
+        columns={[{ field: "name", header: "Name", body: (row) => <strong>{row.name}</strong> }]}
+      />
+    );
+    expect(screen.getByText("Widget").tagName).toBe("STRONG");
+  });
+});
+
+describe("loading/empty states (Spec §5.6, GAP-046)", () => {
+  it("shows a loading indicator when loading is true", () => {
+    const { container } = render(
+      <UTable<Row> value={[]} columns={[{ field: "name", header: "Name" }]} loading />
+    );
+    expect(container.querySelector("[data-u-table-loading]")).toBeTruthy();
+  });
+
+  it("shows a default empty-state message when value is empty and loading is false", () => {
+    render(<UTable<Row> value={[]} columns={[{ field: "name", header: "Name" }]} />);
+    expect(screen.getByText("No results found")).toBeTruthy();
+  });
+
+  it("does not show the empty-state message when value has rows", () => {
+    render(
+      <UTable<Row> value={[{ id: 1, name: "A" }]} columns={[{ field: "name", header: "Name" }]} />
+    );
+    expect(screen.queryByText("No results found")).toBeNull();
+  });
+
+  it("does not show the empty-state message while loading is true, even with an empty value", () => {
+    render(
+      <UTable<Row> value={[]} columns={[{ field: "name", header: "Name" }]} loading />
+    );
+    expect(screen.queryByText("No results found")).toBeNull();
+  });
+
+  it("preserves existing selection when loading toggles to true and back", () => {
+    const { rerender } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selection={[{ id: 1, name: "A" }]}
+      />
+    );
+    // Table is fully controlled (no internal selection state) — toggling
+    // `loading` on and back off must not have mutated the `selection` prop
+    // the parent is still passing back in, matching Angular's own
+    // component-instance-state assertion adapted to React's controlled
+    // model.
+    rerender(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selection={[{ id: 1, name: "A" }]}
+        loading
+      />
+    );
+    rerender(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        selectionMode="multiple"
+        selection={[{ id: 1, name: "A" }]}
+      />
+    );
+    const row = screen.getAllByRole("row")[1];
+    expect(row).toHaveAttribute("aria-selected", "true");
+  });
+});
+
+describe("row expansion (Spec §5.4, GAP-044)", () => {
+  interface Row { id: number; name: string }
+
+  it("toggles a row's expanded state via expandedRowKeys/onExpandedRowKeysChange", () => {
+    const onExpandedRowKeysChange = vi.fn();
+    render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        expandedRowKeys={{}}
+        onExpandedRowKeysChange={onExpandedRowKeysChange}
+      />
+    );
+    fireEvent.click(screen.getByRole("button", { name: "+" }));
+    expect(onExpandedRowKeysChange).toHaveBeenCalledWith({ "1": true });
+  });
+
+  it("emits onRowExpand when a row is expanded and onRowCollapse when collapsed", () => {
+    const onRowExpand = vi.fn();
+    const onRowCollapse = vi.fn();
+    const { rerender } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        expandedRowKeys={{}}
+        onRowExpand={onRowExpand}
+        onRowCollapse={onRowCollapse}
+      />
+    );
+    fireEvent.click(screen.getByRole("button", { name: "+" }));
+    expect(onRowExpand).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        expandedRowKeys={{ "1": true }}
+        onRowExpand={onRowExpand}
+        onRowCollapse={onRowCollapse}
+      />
+    );
+    fireEvent.click(screen.getByRole("button", { name: "-" }));
+    expect(onRowCollapse).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not throw when dataKey maps to a duplicate value across two rows", () => {
+    expect(() =>
+      render(
+        <UTable<Row>
+          value={[{ id: 1, name: "A" }, { id: 1, name: "B" }]}
+          columns={[{ field: "name", header: "Name" }]}
+          dataKey="id"
+        />
+      )
+    ).not.toThrow();
+  });
+});
+
+describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
+  it("typing a space in the cell editor input does not toggle selection, and the character appears in the input (Important finding 2)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.keyDown(input, { code: "Space" });
+    fireEvent.change(input, { target: { value: "A " } });
+
+    expect(onSelectionChange).not.toHaveBeenCalled();
+    expect(input.value).toBe("A ");
+  });
+
+  it("Ctrl+A while focused inside the cell editor input does not trigger select-all-rows (Important finding 2)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }, { id: 2, name: "B" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.keyDown(input, { code: "KeyA", ctrlKey: true });
+
+    expect(onSelectionChange).not.toHaveBeenCalled();
+  });
+
+  it("clicking into the cell editor input does not toggle row selection (Important finding 2)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.click(input);
+
+    expect(onSelectionChange).not.toHaveBeenCalled();
+  });
+
+  it("colspan on loading/empty/subheader-group rows accounts for the selection, expansion-toggle, and edit-actions columns (Minor finding 3)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        selectionMode="multiple"
+        selectionColumn
+        editMode="row"
+        loading
+      />
+    );
+    const loadingCell = container.querySelector("[data-u-table-loading]") as HTMLElement;
+    // base columns.length (1) + selection (1) + expansion-toggle (1) + edit-actions (1) = 4
+    expect(loadingCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("empty-state row colspan also accounts for selection/expansion/edit-actions columns (Minor finding 3)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        selectionMode="multiple"
+        selectionColumn
+        editMode="row"
+      />
+    );
+    const emptyCell = container.querySelector("tbody td[colspan]") as HTMLElement;
+    expect(emptyCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("row-expansion placeholder row colspan accounts for the selection and edit-actions columns too (Minor finding 3)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        selectionMode="multiple"
+        selectionColumn
+        editMode="row"
+        expandedRowKeys={{ "1": true }}
+      />
+    );
+    const expansionCell = container.querySelector("[data-u-table-row-expansion] td") as HTMLElement;
+    expect(expansionCell.getAttribute("colspan")).toBe("4");
+  });
+
+  it("header row has matching th cells for the expansion-toggle and edit-actions columns (Minor finding 3)", () => {
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        selectionMode="multiple"
+        selectionColumn
+        editMode="row"
+      />
+    );
+    const headerCells = container.querySelectorAll("thead tr th");
+    const bodyRowCells = container.querySelectorAll("tbody tr:first-child > *");
+    expect(headerCells.length).toBe(bodyRowCells.length);
+  });
+
+  it("selecting all rows via the header checkbox emits the post-edit merged (effectiveValue) rows, not raw value (Minor finding 5)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selectionColumn
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+        compareSelectionBy="deepEquals"
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "Changed" } });
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-save]") as HTMLElement);
+
+    const headerCheckbox = container.querySelector("thead input[type=checkbox]") as HTMLInputElement;
+    fireEvent.click(headerCheckbox);
+
+    expect(onSelectionChange).toHaveBeenCalledWith([{ id: 1, name: "Changed" }]);
+  });
+
+  it("Ctrl+A select-all-rows emits the post-edit merged (effectiveValue) rows, not raw value (Minor finding 5)", () => {
+    const onSelectionChange = vi.fn();
+    const { container } = render(
+      <UTable<Row>
+        value={[{ id: 1, name: "A" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        dataKey="id"
+        editMode="row"
+        editingRows={{ "1": true }}
+        selectionMode="multiple"
+        selection={[]}
+        onSelectionChange={onSelectionChange}
+        compareSelectionBy="deepEquals"
+      />
+    );
+    const input = container.querySelector("[data-u-table-cell-editor] input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "Changed" } });
+    fireEvent.click(container.querySelector("[data-u-table-row-edit-save]") as HTMLElement);
+
+    const row = container.querySelector('tbody [role="row"]') as HTMLElement;
+    fireEvent.keyDown(row, { code: "KeyA", ctrlKey: true });
+
+    expect(onSelectionChange).toHaveBeenCalledWith([{ id: 1, name: "Changed" }]);
   });
 });

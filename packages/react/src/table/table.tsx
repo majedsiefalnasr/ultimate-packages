@@ -8,10 +8,26 @@ import type { PaginatorPageChangeEvent } from "../paginator/paginator";
 import { UScroller } from "../scroller/scroller";
 import { tableStyleModule } from "./table-style";
 
-export interface UTableColumn {
+export interface UTableColumn<T = unknown> {
   field: string;
   header: string;
+  body?: (row: T, options: { field: string; rowIndex: number }) => React.ReactNode;
 }
+
+/**
+ * Default empty-state message (Spec §5.6, GAP-046). Real PrimeNG's own
+ * Table component (React's real-source reference stays PrimeReact, but this
+ * text value is cross-framework, matching Angular Task 10's own sourcing)
+ * has no hardcoded default text for its empty region — it renders purely
+ * via a content-projected template with no built-in fallback string. The
+ * closest verified real-Prime default text is the global locale's
+ * `emptyMessage` translation key (confirmed via the pinned
+ * `primeng-21.1.9.tar.gz` tarball, `packages/primeng/src/config/
+ * primeng.ts`: `emptyMessage: 'No results found'`), which this constant
+ * matches, kept identical across all 3 frameworks per the plan's
+ * cross-framework consistency precedent.
+ */
+const DEFAULT_EMPTY_MESSAGE = "No results found";
 
 export interface UTableSortEvent {
   sortField?: string;
@@ -22,7 +38,7 @@ export interface UTableSortEvent {
 export interface UTableProps<T> {
   value: T[];
   dataKey?: string;
-  columns: UTableColumn[];
+  columns: UTableColumn<T>[];
   sortMode?: SortMode;
   sortField?: string;
   sortOrder?: 1 | 0 | -1;
@@ -48,6 +64,7 @@ export interface UTableProps<T> {
   selection?: T | T[];
   onSelectionChange?: (selection: T | T[]) => void;
   compareSelectionBy?: "equals" | "deepEquals";
+  selectionColumn?: boolean;
   paginator?: boolean;
   first?: number;
   rows?: number;
@@ -73,12 +90,23 @@ export interface UTableProps<T> {
   cellEditValidator?: (event: { newValue: unknown; oldValue: unknown }) => boolean;
   onCellEditComplete?: (event: { newValue: unknown; oldValue: unknown }) => void;
   onCellEditCancel?: (event: { newValue: unknown; oldValue: unknown }) => void;
+  expandedRowKeys?: Record<string, boolean>;
+  onExpandedRowKeysChange?: (expandedRowKeys: Record<string, boolean>) => void;
+  onRowExpand?: (event: { originalEvent: React.SyntheticEvent; data: T }) => void;
+  onRowCollapse?: (event: { originalEvent: React.SyntheticEvent; data: T }) => void;
   rowGroupMode?: "subheader" | "rowspan";
   groupRowsBy?: string;
+  loading?: boolean;
 }
 
 function resolveCell<T>(row: T, field: string): unknown {
   return (row as Record<string, unknown>)[field];
+}
+
+function renderCell<T>(row: T, col: UTableColumn<T>, rowIndex: number): React.ReactNode {
+  return col.body
+    ? col.body(row, { field: col.field, rowIndex })
+    : String(resolveCell(row, col.field));
 }
 
 function compareValues(a: unknown, b: unknown): number {
@@ -318,6 +346,7 @@ export function UTable<T>({
   selection,
   onSelectionChange,
   compareSelectionBy = "equals",
+  selectionColumn = false,
   paginator = false,
   first = 0,
   rows = 0,
@@ -330,22 +359,75 @@ export function UTable<T>({
   editingRows,
   onRowEditChange,
   onRowEditInit,
+  onRowEditSave,
+  onRowEditCancel,
+  expandedRowKeys,
+  onExpandedRowKeysChange,
+  onRowExpand,
+  onRowCollapse,
   rowGroupMode,
   groupRowsBy,
+  loading = false,
 }: UTableProps<T>) {
   const { cx } = useComponentBase({ componentName: "table", styleModule: tableStyleModule });
 
-  const [internalEditingRows, setInternalEditingRows] = React.useState<Record<string, boolean>>({});
-  const resolvedEditingRows = onRowEditChange ? editingRows ?? {} : editingRows ?? internalEditingRows;
+  const [internalEditingRows, setInternalEditingRows] = React.useState<Record<string, boolean>>(
+    editingRows ?? {}
+  );
+  const resolvedEditingRows = onRowEditChange ? editingRows ?? {} : internalEditingRows;
+
+  /**
+   * Row-expansion key-map state (GAP-044, Spec §5.4), matching the
+   * controlled/uncontrolled duality already established for `editingRows`/
+   * `onRowEditChange`: when `onExpandedRowKeysChange` is supplied, the map
+   * is fully parent-owned via the `expandedRowKeys` prop; otherwise an
+   * internal `useState` fallback takes over so the toggle still works
+   * standalone.
+   */
+  const [internalExpandedRowKeys, setInternalExpandedRowKeys] = React.useState<Record<string, boolean>>({});
+  const resolvedExpandedRowKeys = onExpandedRowKeysChange
+    ? expandedRowKeys ?? {}
+    : expandedRowKeys ?? internalExpandedRowKeys;
 
   /**
    * Always-internal cell-edit dirty-value tracking (spec §11.2), keyed by
-   * `dataKey`-or-`rowIndex`. Scaffolded per the row-edit-lifecycle scope
-   * documented on the class doc comment — no consumer reads this yet.
+   * `dataKey`-or-`rowIndex` then by field (GAP-043, Spec §5.3): the cell
+   * editor's `<input>` binds to this draft store, never to `value` directly,
+   * so keystrokes never mutate the source array until `saveRowEdit` commits
+   * them. This is the exact scaffold Task 16 left for this purpose — no
+   * parallel draft-tracking store was introduced.
    */
   const [editingMeta, setEditingMeta] = React.useState<Record<string, Record<string, unknown>>>({});
-  void editingMeta;
-  void setEditingMeta;
+
+  /**
+   * Row-level committed-value overrides (GAP-043, Spec §5.3): `value` is a
+   * plain, parent-owned prop with no corresponding "next value" callback on
+   * this component's declared surface (`onRowEditSave` reports the row that
+   * was saved, per spec §4.2's real-PrimeReact-matching signature, but does
+   * not hand back a whole replacement array), so a save commits by
+   * recording a fresh row object (immutable update) here, keyed by
+   * `dataKey`-or-`rowIndex` identity. `resolveEditRowKey`'s callers layer
+   * this over `value` for rendering, sorting, filtering, selection, and
+   * grouping alike — no parallel rendering path, and `value` itself is
+   * never mutated.
+   */
+  const [committedRows, setCommittedRows] = React.useState<Record<string, T>>({});
+
+  /**
+   * `value` with any `committedRows` overrides (GAP-043, Spec §5.3) layered
+   * on top, by `dataKey`-resolved identity. Every downstream derived view
+   * (`sortedValue`/`filteredValue`/`pagedValue`/`groupedRows`) is built from
+   * this instead of `value` directly, so a saved edit is visible everywhere
+   * `value` would have been read, with no parallel rendering path — and
+   * `value` itself is never mutated.
+   */
+  const effectiveValue = React.useMemo(() => {
+    if (!dataKey || Object.keys(committedRows).length === 0) return value;
+    return value.map((row) => {
+      const override = committedRows[String(resolveCell(row, dataKey))];
+      return override ?? row;
+    });
+  }, [value, dataKey, committedRows]);
 
   const applySort = React.useCallback(
     (input: T[]): T[] => {
@@ -370,16 +452,16 @@ export function UTable<T>({
     [sortMode, sortField, sortOrder, multiSortMeta]
   );
 
-  const sortedValue = React.useMemo(() => applySort(value), [value, applySort]);
+  const sortedValue = React.useMemo(() => applySort(effectiveValue), [effectiveValue, applySort]);
 
   const filteredValue = React.useMemo(() => {
     const fields = Object.keys(filters);
     if (fields.length === 0) return sortedValue;
 
     return applySort(
-      value.filter((row) => fields.every((field) => matchesFilterEntry(row, field, filters[field])))
+      effectiveValue.filter((row) => fields.every((field) => matchesFilterEntry(row, field, filters[field])))
     );
-  }, [value, filters, applySort, sortedValue]);
+  }, [effectiveValue, filters, applySort, sortedValue]);
 
   const isRowEqual = React.useCallback(
     (a: T, b: T): boolean =>
@@ -410,6 +492,54 @@ export function UTable<T>({
     onSelectionChange(next);
   };
 
+  /**
+   * Selection-column checkbox/radio click handler (GAP-042, Spec §5.2):
+   * stops propagation so the enclosing row's own `onClick={() =>
+   * handleRowClick(row)}` doesn't also fire and double-toggle the same row,
+   * then delegates to the same `handleRowClick` toggle logic rather than
+   * duplicating it.
+   */
+  const handleSelectionInputClick = (event: React.MouseEvent, row: T) => {
+    event.stopPropagation();
+    handleRowClick(row);
+  };
+
+  /**
+   * Header select-all checkbox state (GAP-042, Spec §5.2): checked only when
+   * there is at least one row and every row is currently selected — an empty
+   * `value` is never considered "all selected".
+   */
+  const allSelected = value.length > 0 && value.every((row) => isSelected(row));
+
+  /**
+   * Header select-all checkbox click handler (GAP-042, Spec §5.2): selects
+   * every row if not all are already selected, otherwise deselects all
+   * (clears the selection).
+   *
+   * Minor finding 5 (fix-loop integration review): emits from
+   * `effectiveValue` (the post-edit merged rows), not raw `value` — matching
+   * `handleRowClick`'s own already-correct behavior. With
+   * `compareSelectionBy="deepEquals"`, emitting the stale raw `value` row
+   * object here would make an edited-then-select-all'd row compare unequal
+   * to the currently-rendered (merged) row and show as unselected.
+   */
+  const handleToggleAllSelection = () => {
+    if (!onSelectionChange) return;
+    onSelectionChange(allSelected ? [] : [...effectiveValue]);
+  };
+
+  /**
+   * Total header/body cell count (Minor finding 3, fix-loop integration
+   * review): `columns.length` plus one for each of the selection,
+   * expansion-toggle, and edit-actions columns that are actually rendered.
+   * Used consistently everywhere a `colSpan` is set (loading row, empty row,
+   * subheader-group row, row-expansion placeholder row) so none of them
+   * under-counts once those extra columns are present — previously all four
+   * used the bare `columns.length`, ignoring the extra columns entirely.
+   */
+  const totalColumnCount =
+    columns.length + (selectionColumn && selectionMode ? 1 : 0) + (dataKey ? 1 : 0) + (editMode === "row" ? 1 : 0);
+
   const ariaSortFor = (field: string): "ascending" | "descending" | undefined => {
     if (sortMode === "multiple") {
       const entry = multiSortMeta.find((m) => m.field === field);
@@ -427,16 +557,61 @@ export function UTable<T>({
    * `currentTarget`/`parentElement` here vs. Angular's `@HostListener`),
    * the vocabulary does not. Only moves `.focus()` between `tbody
    * [role="row"]` elements — never the header row, since this handler is
-   * bound per data row. Enter/selection-toggle behavior is already covered
-   * by `onClick`, so it is intentionally out of scope here.
+   * bound per data row.
+   *
+   * Also handles keyboard selection (GAP-047, Spec §5.7): Space/Enter
+   * toggle the focused row's selection by reusing the same
+   * `handleRowClick` toggle logic the row-click handler and
+   * selection-column controls already share (no duplicated toggle logic),
+   * and Ctrl+A/Cmd+A selects every row when `selectionMode` is exactly
+   * `"multiple"` (emitting `effectiveValue` — see Minor finding 5 below).
+   * When `selectionMode` is not `"multiple"` (including unset), Ctrl+A does
+   * nothing and does not call `preventDefault()` — the browser's native
+   * "select all text" behavior is only swallowed when Ctrl+A actually did
+   * something (Review Focus item 3).
+   *
+   * Important finding 2 (fix-loop integration review): the Space/Enter/
+   * Ctrl+A branches only apply when the keydown genuinely originated from
+   * the row element itself (`event.target === event.currentTarget`) — not
+   * when it bubbled up from a child control (the cell-editor `<input>`, or
+   * the expand/edit/save/cancel buttons). Without this guard, typing a space
+   * in the editor input got swallowed into a row-selection toggle instead of
+   * appearing in the input, Ctrl+A selected all rows instead of the input's
+   * text, and Space/Enter on a focused button got hijacked instead of
+   * activating the button. Arrow/Home/End navigation below is unaffected —
+   * it already only moves focus among sibling rows and only actually acts
+   * when the focused row element is found in the row list, so a bubbled
+   * event from a child control that isn't itself a `[role="row"]` is
+   * already a no-op there.
    */
-  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>) => {
-    const row = event.currentTarget;
-    const rowGroup = row.parentElement;
+  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>, row: T) => {
+    if (event.target !== event.currentTarget) {
+      if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") return;
+      if (event.code === "Space" || event.code === "Enter") return;
+    }
+
+    if ((event.ctrlKey || event.metaKey) && event.code === "KeyA") {
+      if (selectionMode === "multiple" && onSelectionChange) {
+        event.preventDefault();
+        onSelectionChange([...effectiveValue]);
+      }
+      return;
+    }
+
+    if (event.code === "Space" || event.code === "Enter") {
+      if (selectionMode) {
+        event.preventDefault();
+        handleRowClick(row);
+      }
+      return;
+    }
+
+    const rowElement = event.currentTarget;
+    const rowGroup = rowElement.parentElement;
     if (!rowGroup) return;
 
     const rows = Array.from(rowGroup.querySelectorAll<HTMLElement>(':scope > [role="row"]'));
-    const index = rows.indexOf(row);
+    const index = rows.indexOf(rowElement);
     if (index === -1) return;
 
     let target: HTMLElement | undefined;
@@ -479,9 +654,17 @@ export function UTable<T>({
    * previous row's via `uix-data`'s shared `equals` (2-arg form) to detect
    * group boundaries. When `groupRowsBy` is unset, this degrades to
    * `pagedValue` unchanged (no boundaries ever detected).
+   *
+   * `groupSize` (GAP-045) is the count of consecutive rows, starting at this
+   * entry, that share this row's `groupRowsBy` value — meaningful only on an
+   * `isGroupHeader: true` entry. Computed via the same boundary detection as
+   * `isGroupHeader` (a forward scan from each header to the next), so
+   * `"rowspan"` mode's `rowSpan` attribute reuses the identical group
+   * boundaries `"subheader"` mode already renders — no parallel grouping
+   * algorithm.
    */
-  const groupedRows = React.useMemo((): { row: T; isGroupHeader: boolean }[] => {
-    if (!groupRowsBy) return pagedValue.map((row) => ({ row, isGroupHeader: false }));
+  const groupedRows = React.useMemo((): { row: T; isGroupHeader: boolean; groupSize: number }[] => {
+    if (!groupRowsBy) return pagedValue.map((row) => ({ row, isGroupHeader: false, groupSize: 1 }));
 
     const meta: SortMeta[] = [{ field: groupRowsBy, order: 1 }, ...multiSortMeta];
     const rows = [...pagedValue].sort((a, b) => {
@@ -492,12 +675,23 @@ export function UTable<T>({
       return 0;
     });
 
-    return rows.map((row, index) => {
+    const withHeaders = rows.map((row, index) => {
       const previous = rows[index - 1];
       const isGroupHeader =
         index === 0 || !equals(resolveCell(row, groupRowsBy), resolveCell(previous, groupRowsBy));
-      return { row, isGroupHeader };
+      return { row, isGroupHeader, groupSize: 1 };
     });
+
+    let currentHeaderIndex = -1;
+    withHeaders.forEach((entry, index) => {
+      if (entry.isGroupHeader) {
+        currentHeaderIndex = index;
+      } else if (currentHeaderIndex !== -1) {
+        withHeaders[currentHeaderIndex].groupSize++;
+      }
+    });
+
+    return withHeaders;
   }, [groupRowsBy, pagedValue, multiSortMeta]);
 
   /**
@@ -515,6 +709,104 @@ export function UTable<T>({
       onRowEditChange(next);
     } else {
       setInternalEditingRows(next);
+    }
+  };
+
+  /**
+   * Reads a field's current draft value for `row` from `editingMeta`,
+   * falling back to the live (`effectiveValue`-resolved) cell value the
+   * first time the row enters edit mode, before any keystroke has populated
+   * `editingMeta` (GAP-043, Spec §5.3).
+   */
+  const draftValue = (row: T, field: string): unknown => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    const rowDraft = editingMeta[key];
+    return rowDraft && field in rowDraft ? rowDraft[field] : resolveCell(row, field);
+  };
+
+  /**
+   * Updates one field's draft value for `row` in `editingMeta` from the
+   * cell editor `<input>`'s `onChange`, without touching `value`/
+   * `effectiveValue` at all (Spec §5.3's "edits must not mutate the source
+   * data until explicitly saved" contract).
+   */
+  const handleDraftChange = (row: T, field: string, next: string) => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    setEditingMeta((current) => ({ ...current, [key]: { ...current[key], [field]: next } }));
+  };
+
+  /**
+   * Commits `row`'s accumulated `editingMeta` draft into `committedRows` as
+   * a new row object (immutable update, matching this codebase's
+   * established immutable-update convention), calls `onRowEditSave` with
+   * the committed row (spec §4.2's real-PrimeReact-matching signature), and
+   * exits edit mode the same way `initRowEdit` entered it (controlled via
+   * `onRowEditChange` when supplied, else the internal `useState` setter).
+   */
+  const saveRowEdit = (row: T) => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    const draft = editingMeta[key];
+    let committedRow = row;
+    if (draft) {
+      committedRow = { ...(committedRows[key] ?? row), ...draft } as T;
+      setCommittedRows((current) => ({ ...current, [key]: committedRow }));
+    }
+    onRowEditSave?.(committedRow);
+    exitRowEdit(row);
+  };
+
+  /**
+   * Discards `row`'s `editingMeta` draft (no mutation to `value`/
+   * `committedRows` at all), calls `onRowEditCancel` with the original row,
+   * and exits edit mode the same way `saveRowEdit` does.
+   */
+  const cancelRowEdit = (row: T) => {
+    onRowEditCancel?.(row);
+    exitRowEdit(row);
+  };
+
+  const exitRowEdit = (row: T) => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    setEditingMeta((current) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to omit the row's key
+      const { [key]: _discardedDraft, ...rest } = current;
+      return rest;
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to omit the row's key
+    const { [key]: _wasEditing, ...remainingKeys } = resolvedEditingRows;
+    if (onRowEditChange) {
+      onRowEditChange(remainingKeys);
+    } else {
+      setInternalEditingRows(remainingKeys);
+    }
+  };
+
+  /**
+   * Row-expansion toggle (GAP-044, Spec §5.4), reusing the same key-map
+   * read/write pattern already established by `initRowEdit`/
+   * `editingRows`: the row's `dataKey`-resolved identity is flipped in a
+   * shallow-copied map (spread, so a duplicate `dataKey` value across two
+   * rows is last-write-wins — no new uniqueness validation, matching
+   * Angular Task 13's own precedent), the merged map is handed to
+   * `onExpandedRowKeysChange` if supplied (else the internal `useState`
+   * fallback), and `onRowExpand`/`onRowCollapse` fire according to the
+   * row's new state.
+   */
+  const toggleRowExpansion = (event: React.SyntheticEvent, row: T) => {
+    const key = String(resolveCell(row, dataKey ?? ""));
+    const wasExpanded = !!resolvedExpandedRowKeys[key];
+    const next = { ...resolvedExpandedRowKeys, [key]: !wasExpanded };
+
+    if (onExpandedRowKeysChange) {
+      onExpandedRowKeysChange(next);
+    } else {
+      setInternalExpandedRowKeys(next);
+    }
+
+    if (wasExpanded) {
+      onRowCollapse?.({ originalEvent: event, data: row });
+    } else {
+      onRowExpand?.({ originalEvent: event, data: row });
     }
   };
 
@@ -541,6 +833,24 @@ export function UTable<T>({
       <table className={cx("table") as string}>
         <thead className={cx("thead") as string} role="rowgroup">
           <tr role="row">
+            {selectionColumn && selectionMode && (
+              <th>
+                {selectionMode === "multiple" && (
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={handleToggleAllSelection}
+                  />
+                )}
+              </th>
+            )}
+            {/* Minor finding 3 (fix-loop integration review): the
+                expansion-toggle and edit-actions columns each render a <td>
+                per body row but had no matching header <th> at all, leaving
+                the header row's cell count short of the body rows' — added
+                empty <th> cells here so counts match, mirroring the
+                selection column's own already-correct <th>. */}
+            {dataKey && <th />}
             {columns.map((col) => (
               <th
                 key={col.field}
@@ -551,15 +861,30 @@ export function UTable<T>({
                 {col.header}
               </th>
             ))}
+            {editMode === "row" && <th />}
           </tr>
         </thead>
-        {!virtualScrollerOptions && (
+        {!virtualScrollerOptions && loading && (
           <tbody className={cx("tbody") as string} role="rowgroup">
-            {groupedRows.map(({ row, isGroupHeader }, index) => (
+            <tr>
+              <td data-u-table-loading colSpan={totalColumnCount} />
+            </tr>
+          </tbody>
+        )}
+        {!virtualScrollerOptions && !loading && value.length === 0 && (
+          <tbody className={cx("tbody") as string} role="rowgroup">
+            <tr>
+              <td colSpan={totalColumnCount}>{DEFAULT_EMPTY_MESSAGE}</td>
+            </tr>
+          </tbody>
+        )}
+        {!virtualScrollerOptions && !loading && value.length > 0 && (
+          <tbody className={cx("tbody") as string} role="rowgroup">
+            {groupedRows.map(({ row, isGroupHeader, groupSize }, index) => (
               <React.Fragment key={index}>
                 {rowGroupMode === "subheader" && isGroupHeader && (
                   <tr data-u-table-group-header className={cx("rowGroupHeader") as string}>
-                    <td colSpan={columns.length}>{String(resolveCell(row, groupRowsBy ?? ""))}</td>
+                    <td colSpan={totalColumnCount}>{String(resolveCell(row, groupRowsBy ?? ""))}</td>
                   </tr>
                 )}
                 <tr
@@ -568,26 +893,99 @@ export function UTable<T>({
                   tabIndex={0}
                   aria-selected={isSelected(row)}
                   onClick={() => handleRowClick(row)}
-                  onKeyDown={handleRowKeyDown}
+                  onKeyDown={(event) => handleRowKeyDown(event, row)}
                 >
-                  {columns.map((col) => (
-                    <td key={col.field}>{String(resolveCell(row, col.field))}</td>
-                  ))}
-                  {editMode === "row" && (
+                  {selectionColumn && selectionMode && (
+                    <td>
+                      <input
+                        type={selectionMode === "multiple" ? "checkbox" : "radio"}
+                        checked={isSelected(row)}
+                        onChange={() => {}}
+                        onClick={(event) => handleSelectionInputClick(event, row)}
+                      />
+                    </td>
+                  )}
+                  {dataKey && (
                     <td>
                       <button
                         type="button"
-                        data-u-table-row-edit-init
+                        data-u-table-row-toggle
                         onClick={(event) => {
                           event.stopPropagation();
-                          initRowEdit(row);
+                          toggleRowExpansion(event, row);
                         }}
                       >
-                        Edit
+                        {resolvedExpandedRowKeys[String(resolveCell(row, dataKey))] ? "-" : "+"}
                       </button>
                     </td>
                   )}
+                  {columns.map((col) => {
+                    if (rowGroupMode === "rowspan" && groupRowsBy && col.field === groupRowsBy) {
+                      return (
+                        isGroupHeader && (
+                          <td key={col.field} data-u-table-group-cell rowSpan={groupSize}>
+                            {renderCell(row, col, index)}
+                          </td>
+                        )
+                      );
+                    }
+                    if (resolvedEditingRows[String(resolveCell(row, dataKey ?? ""))]) {
+                      return (
+                        <td key={col.field} data-u-table-cell-editor>
+                          <input
+                            value={draftValue(row, col.field) as string}
+                            onChange={(event) => handleDraftChange(row, col.field, event.target.value)}
+                            onClick={(event) => event.stopPropagation()}
+                          />
+                        </td>
+                      );
+                    }
+                    return <td key={col.field}>{renderCell(row, col, index)}</td>;
+                  })}
+                  {editMode === "row" &&
+                    (resolvedEditingRows[String(resolveCell(row, dataKey ?? ""))] ? (
+                      <td>
+                        <button
+                          type="button"
+                          data-u-table-row-edit-save
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            saveRowEdit(row);
+                          }}
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          data-u-table-row-edit-cancel
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            cancelRowEdit(row);
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </td>
+                    ) : (
+                      <td>
+                        <button
+                          type="button"
+                          data-u-table-row-edit-init
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            initRowEdit(row);
+                          }}
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    ))}
                 </tr>
+                {dataKey && resolvedExpandedRowKeys[String(resolveCell(row, dataKey))] && (
+                  <tr data-u-table-row-expansion>
+                    <td colSpan={totalColumnCount} />
+                  </tr>
+                )}
               </React.Fragment>
             ))}
           </tbody>
@@ -616,11 +1014,11 @@ export function UTable<T>({
                     // ArrowDown/ArrowUp/Home/End stop at the edges of what's mounted,
                     // not the edges of the full `value` dataset. This is intentional
                     // (a row outside the window isn't in the DOM to focus), not a bug.
-                    onKeyDown={handleRowKeyDown}
+                    onKeyDown={(event) => handleRowKeyDown(event, value as T)}
                     style={{ position: "absolute", top: getItemOptions(index).index * itemSize, width: "100%" }}
                   >
                     {columns.map((col) => (
-                      <td key={col.field}>{String(resolveCell(value as T, col.field))}</td>
+                      <td key={col.field}>{renderCell(value as T, col, index)}</td>
                     ))}
                   </tr>
                 ))}

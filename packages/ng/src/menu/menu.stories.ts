@@ -46,10 +46,20 @@ export const WithDisabledItem: Story = {
   },
 };
 
-/** Popup style-class variant, per UMenu's `popup` input. */
+/**
+ * Popup mode (GAP-067): hidden until opened; the trigger button's `(click)`
+ * calls `menu.toggle($event)` on a template-ref'd `<u-menu #menu>`, the same
+ * imperative pattern as the Popover stories.
+ */
 export const Popup: Story = {
   args: {
     model: defaultItems,
-    popup: true,
   },
+  render: (args) => ({
+    props: args,
+    template: `
+      <button type="button" (click)="menu.toggle($event)">Toggle Menu</button>
+      <u-menu #menu [popup]="true" [model]="model"></u-menu>
+    `,
+  }),
 };

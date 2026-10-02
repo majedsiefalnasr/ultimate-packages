@@ -74,4 +74,16 @@ describe("UCarousel", () => {
       expect(() => vi.advanceTimersByTime(5000)).not.toThrow();
     });
   });
+
+  describe("aria-live on autoplay content wrapper (Spec §5.2, GAP-051)", () => {
+    it("sets aria-live=polite on the content wrapper when autoplayInterval is greater than 0", () => {
+      const wrapper = mountCarousel({ autoplayInterval: 3000 });
+      expect(wrapper.find("[data-u-carousel-content]").attributes("aria-live")).toBe("polite");
+    });
+
+    it("sets aria-live=off (not absent) when autoplayInterval is 0 (autoplay disabled), matching real PrimeVue's own always-rendered attribute", () => {
+      const wrapper = mountCarousel();
+      expect(wrapper.find("[data-u-carousel-content]").attributes("aria-live")).toBe("off");
+    });
+  });
 });

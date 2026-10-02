@@ -22,6 +22,31 @@ import type { UMegaMenuItem } from "./mega-menu-item";
  * Real PrimeNG's `MegaMenu` (`extends BaseComponent`, no import of
  * `primeng/menu`) is a standalone, independent component — it does NOT
  * compose or wrap `Menu`.
+ *
+ * Carries real ARIA roles (`menubar`/`menu`/`menuitem`) and roving-focus
+ * keyboard navigation (GAP-054, Spec §5.3), matching the same shape already
+ * established by this component's own siblings `UMenubar`/`UTieredMenu`.
+ * Unlike those two, MegaMenu is a genuine hard 2-level structure (confirmed
+ * by `UMegaMenuColumnGroup`'s own doc comment: a column group's leaf items
+ * are flat, "not further nested") — so its Escape handling needs only a
+ * single `openItem` check at this root level, not a recursive per-level
+ * chain. ArrowRight/ArrowLeft move focus horizontally among root items;
+ * Enter/Space on a column-having item opens its overlay and moves focus to
+ * the overlay's first leaf item; Escape closes the open overlay (wherever
+ * focus currently is inside it) and returns focus to its own root trigger.
+ * Disabled items are always skipped in roving focus (`[attr.tabindex]=
+ * "item.disabled ? -1 : 0"`, the same pattern `UPanelMenu` already
+ * established).
+ *
+ * The `(keydown)` handler is bound on this root `<ul>` — not on each root
+ * item's own `<a>` — for the same reason established while fixing GAP-054
+ * for Menubar/TieredMenu: a root item's own overlay content (rendered by
+ * `u-mega-menu-column-group`) is a DOM *sibling* of that item's own `<a>`
+ * (both live inside the same `<li>`), so a keydown fired from inside the
+ * overlay could never bubble through the `<a>` to reach a root-level
+ * listener bound there. Binding on the root `<ul>` — a genuine DOM ancestor
+ * of the entire overlay — lets Escape (and any other key) reach this
+ * handler via bubbling regardless of how deep inside the overlay focus is.
  */
 @Component({
   standalone: true,
@@ -29,7 +54,7 @@ import type { UMegaMenuItem } from "./mega-menu-item";
   imports: [RouterModule, UMegaMenuColumnGroup],
   template: `
     <nav [class]="cx('root')" [attr.aria-label]="ariaLabel()">
-      <ul [class]="cx('rootList')" role="menubar">
+      <ul [class]="cx('rootList')" role="menubar" (keydown)="onKeydown($event)">
         @for (item of model(); track $index) {
           @if (item.visible !== false) {
             <li
@@ -140,5 +165,96 @@ export class UMegaMenu extends UBaseComponent {
   protected handleItemSelect(event: { originalEvent: MouseEvent; item: UMenuItem }): void {
     this.openItem = null;
     this.onItemSelect.emit(event);
+  }
+
+  /**
+   * Root-level keydown handling, delegated on the root `<ul>` (see the
+   * class doc comment for why). Escape is handled unconditionally here —
+   * regardless of whether the event target is a root item's own `<a>` or a
+   * leaf item deep inside the open overlay — since MegaMenu's hard 2-level
+   * structure means this root level's own `openItem` is always the single,
+   * innermost thing to close; there is no further-up level beyond it.
+   * ArrowRight/ArrowLeft and Enter/Space only act when the event target
+   * resolves to one of this root list's own item `<a>`s (not a leaf item
+   * inside an overlay, which is handled by `UMegaMenuColumnGroup` itself).
+   */
+  protected onKeydown(event: KeyboardEvent): void {
+    if (event.code === "Escape") {
+      if (this.openItem) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.closeAndRefocus(this.openItem);
+      }
+      return;
+    }
+
+    const item = this.resolveOwnItem(event.target);
+    if (!item) return; // Not a root item's own trigger — nothing else to do at this level.
+
+    switch (event.code) {
+      case "ArrowRight":
+        event.preventDefault();
+        this.moveFocus(item, 1);
+        break;
+      case "ArrowLeft":
+        event.preventDefault();
+        this.moveFocus(item, -1);
+        break;
+      case "Enter":
+      case "Space":
+        if (this.hasColumns(item) && !item.disabled) {
+          event.preventDefault();
+          this.openItem = item;
+          this.focusFirstOverlayItem();
+        }
+        break;
+    }
+  }
+
+  /** Resolves the root `UMegaMenuItem` this event's target `<a>` belongs to, or `null` if it isn't one of this root list's own direct-child item links. */
+  private resolveOwnItem(target: EventTarget | null): UMegaMenuItem | null {
+    const links = this.getRootLinks();
+    const index = links.indexOf(target as HTMLAnchorElement);
+    return index === -1 ? null : (this.renderedRootItems()[index] ?? null);
+  }
+
+  private getRootLinks(): HTMLAnchorElement[] {
+    const rootList = (this.el.nativeElement as HTMLElement).querySelector('ul[role="menubar"]');
+    return rootList
+      ? Array.from(rootList.querySelectorAll<HTMLAnchorElement>(":scope > li > .u-megamenu-item-content > a"))
+      : [];
+  }
+
+  /** Root items that actually render their own direct-child `<a>` (excludes hidden items), in the same order `getRootLinks()` returns their DOM nodes. */
+  private renderedRootItems(): UMegaMenuItem[] {
+    return this.model().filter((candidate) => candidate.visible !== false);
+  }
+
+  private moveFocus(current: UMegaMenuItem, direction: 1 | -1): void {
+    const enabled = this.model().filter((candidate) => candidate.visible !== false && !candidate.disabled);
+    if (enabled.length === 0) return;
+    const currentIndex = enabled.indexOf(current);
+    const startIndex = currentIndex === -1 ? 0 : currentIndex;
+    const nextIndex = (startIndex + direction + enabled.length) % enabled.length;
+    const nextItem = enabled[nextIndex];
+    const links = this.getRootLinks();
+    const targetIndex = this.renderedRootItems().indexOf(nextItem);
+    links[targetIndex]?.focus();
+  }
+
+  private focusFirstOverlayItem(): void {
+    setTimeout(() => {
+      const rootList = (this.el.nativeElement as HTMLElement).querySelector('ul[role="menubar"]');
+      const openLi = rootList?.querySelector(':scope > li[data-u-open="true"]');
+      const firstLeafLink = openLi?.querySelector<HTMLAnchorElement>(".u-megamenu-submenu a");
+      firstLeafLink?.focus();
+    });
+  }
+
+  private closeAndRefocus(item: UMegaMenuItem): void {
+    this.openItem = null;
+    const links = this.getRootLinks();
+    const targetIndex = this.renderedRootItems().indexOf(item);
+    setTimeout(() => links[targetIndex]?.focus());
   }
 }

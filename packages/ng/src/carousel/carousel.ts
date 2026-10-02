@@ -56,7 +56,11 @@ export interface UCarouselPageEvent {
   selector: "u-carousel",
   imports: [CommonModule],
   template: `
-    <div [class]="cx('content')">
+    <div
+      [class]="cx('content')"
+      data-u-carousel-content
+      [attr.aria-live]="autoplayInterval() > 0 ? 'polite' : 'off'"
+    >
       <div [class]="cx('contentInner')">
         @if (showNavigators()) {
           <button

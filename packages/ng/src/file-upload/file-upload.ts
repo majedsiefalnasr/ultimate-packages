@@ -12,6 +12,7 @@ import {
   signal,
 } from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
+import { UProgressBar } from "../progress-bar/progress-bar";
 import { fileUploadStyleModule } from "./file-upload-style";
 
 export interface UFileUploadSelectEvent {
@@ -83,6 +84,7 @@ export interface UFileUploadHandlerEvent {
 @Component({
   standalone: true,
   selector: "u-file-upload",
+  imports: [UProgressBar],
   template: `
     <div [class]="cx('header')">
       <button
@@ -116,9 +118,7 @@ export interface UFileUploadHandlerEvent {
       />
     </div>
     @if (uploading()) {
-      <div [class]="cx('progressBar')">
-        <div [class]="cx('progressBarValue')" [style.width.%]="progress()"></div>
-      </div>
+      <u-progress-bar [value]="progress()" [showValue]="false" />
     }
     @for (msg of messages(); track msg) {
       <div [class]="cx('message')">{{ msg }}</div>

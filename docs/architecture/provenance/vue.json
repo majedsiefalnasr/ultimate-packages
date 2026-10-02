@@ -436,5 +436,11 @@
     "ultimateDestination": "packages/vue/src/organization-chart/organization-chart-style.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "packages/primevue/src/stepper/StepperSeparator.vue",
+    "ultimateDestination": "packages/vue/src/stepper/StepperSeparator.vue",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "GAP-063 (Prime-parity Vue Plan). Mirrors PrimeVue 4.5.5's StepperSeparator.vue: a single span carrying the stepper style module's separator class. Ultimate differences: built on vue-core's createBaseComponent with the stepper style module (no $pcStepper inject or pass-through ptmo binding), renamed UStepperSeparator, internal to UStepPanel's vertical layout and not exported from index.ts."
   }
 ]

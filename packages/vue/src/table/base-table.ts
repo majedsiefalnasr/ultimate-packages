@@ -1,6 +1,6 @@
 import { createBaseComponent } from "@ultimate/vue-core";
 import { tableStyleModule } from "./table-style";
-import type { ComponentOptions } from "vue";
+import type { ComponentOptions, PropType } from "vue";
 
 export function createBaseTable(): ComponentOptions {
   return {
@@ -17,6 +17,7 @@ export function createBaseTable(): ComponentOptions {
       selectionMode: { type: String, default: undefined },
       selection: { type: [Object, Array], default: undefined },
       compareSelectionBy: { type: String, default: "equals" },
+      selectionColumn: { type: Boolean, default: false },
       paginator: { type: Boolean, default: false },
       first: { type: Number, default: 0 },
       rows: { type: Number, default: 0 },
@@ -26,8 +27,12 @@ export function createBaseTable(): ComponentOptions {
       lazy: { type: Boolean, default: false },
       editMode: { type: String, default: undefined },
       editingRows: { type: Array, default: () => [] },
-      rowGroupMode: { type: String, default: undefined },
+      expandedRowKeys: { type: Object, default: () => ({}) },
+      // Widened for GAP-045: this task adds "rowspan" for the first time —
+      // Vue's own rowGroupMode never declared it (only "subheader" existed).
+      rowGroupMode: { type: String as PropType<"subheader" | "rowspan">, default: undefined },
       groupRowsBy: { type: String, default: undefined },
+      loading: { type: Boolean, default: false },
     },
     emits: [
       "sort",
@@ -37,6 +42,11 @@ export function createBaseTable(): ComponentOptions {
       "page",
       "lazy-load",
       "update:editingRows",
+      "row-edit-save",
+      "row-edit-cancel",
+      "update:expandedRowKeys",
+      "row-expand",
+      "row-collapse",
     ],
   };
 }

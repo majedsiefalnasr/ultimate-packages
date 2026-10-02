@@ -361,8 +361,160 @@ describe("selection", () => {
   });
 });
 
+describe("selection-column UI (Spec §5.2, GAP-042)", () => {
+  it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }, { id: 2, name: "B" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selectionColumn: true,
+      },
+    });
+    const headerCheckbox = wrapper.find("thead input[type=checkbox]");
+    const rowCheckboxes = wrapper.findAll("tbody input[type=checkbox]");
+    expect(headerCheckbox.exists()).toBe(true);
+    expect(rowCheckboxes.length).toBe(2);
+  });
+
+  it("renders a radio button per row and no header control when selectionMode is single and selectionColumn is true", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "single",
+        selectionColumn: true,
+      },
+    });
+    expect(wrapper.find("tbody input[type=radio]").exists()).toBe(true);
+    expect(wrapper.find("thead input").exists()).toBe(false);
+  });
+
+  it("does not render a selection column when selectionColumn is false (default)", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+      },
+    });
+    expect(wrapper.find("input[type=checkbox]").exists()).toBe(false);
+  });
+
+  it("header checkbox is unchecked and enabled when value is empty", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selectionColumn: true,
+      },
+    });
+    const headerCheckbox = wrapper.find("thead input[type=checkbox]");
+    expect((headerCheckbox.element as HTMLInputElement).checked).toBe(false);
+    expect((headerCheckbox.element as HTMLInputElement).disabled).toBe(false);
+  });
+
+  it("clicking a row checkbox toggles that row into the selection and emits selection-change", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        dataKey: "id",
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selection: [],
+        selectionColumn: true,
+      },
+    });
+    await wrapper.find("tbody input[type=checkbox]").trigger("click");
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([[{ id: 1, name: "A" }]]);
+  });
+
+  it("clicking the header checkbox selects all rows; clicking again deselects all", async () => {
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const wrapper = mount(UTable, {
+      props: {
+        value: rows,
+        dataKey: "id",
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selection: [],
+        selectionColumn: true,
+      },
+    });
+    await wrapper.find("thead input[type=checkbox]").trigger("click");
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([rows]);
+  });
+});
+
 describe("keyboard navigation", () => {
   it("ArrowDown on a row moves focus to the next row", async () => {
+    const wrapper = mount(UTable, {
+      attachTo: document.body,
+      props: {
+        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        columns: [{ field: "name", header: "Name" }],
+      },
+    });
+    const rows = wrapper.findAll('tbody [role="row"]');
+    (rows[0].element as HTMLElement).focus();
+    await rows[0].trigger("keydown", { key: "ArrowDown" });
+    expect(document.activeElement).toBe(rows[1].element);
+    wrapper.unmount();
+  });
+});
+
+describe("keyboard selection (Spec §5.7, GAP-047)", () => {
+  it("Space toggles the focused row's selection when selectionMode is set", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selection: [],
+      },
+    });
+    await wrapper.find("tbody [role=row]").trigger("keydown", { code: "Space" });
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([[{ id: 1, name: "A" }]]);
+  });
+
+  it("Enter toggles the focused row's selection when selectionMode is set", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "single",
+      },
+    });
+    await wrapper.find("tbody [role=row]").trigger("keydown", { code: "Enter" });
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([{ id: 1, name: "A" }]);
+  });
+
+  it("Ctrl+A selects all rows when selectionMode is multiple", async () => {
+    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const wrapper = mount(UTable, {
+      props: {
+        value: rows,
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+      },
+    });
+    await wrapper.find("tbody [role=row]").trigger("keydown", { code: "KeyA", ctrlKey: true });
+    expect(wrapper.emitted("selection-change")?.[0]).toEqual([rows]);
+  });
+
+  it("Ctrl+A does nothing when selectionMode is unset", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+      },
+    });
+    await wrapper.find("tbody [role=row]").trigger("keydown", { code: "KeyA", ctrlKey: true });
+    expect(wrapper.emitted("selection-change")).toBeUndefined();
+  });
+
+  it("existing Arrow/Home/End keyboard navigation is unaffected by the new Space/Enter/Ctrl+A handling", async () => {
     const wrapper = mount(UTable, {
       attachTo: document.body,
       props: {
@@ -512,6 +664,60 @@ describe("row editing (v-model:editingRows array, spec §11.3)", () => {
   });
 });
 
+describe("row/cell editing lifecycle (Spec §5.3, GAP-043)", () => {
+  it("entering edit mode on a row adds it to editingRows and renders an editable input", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [],
+      },
+    });
+    await wrapper.find("[data-u-table-row-edit-init]").trigger("click");
+    await wrapper.setProps({ editingRows: wrapper.emitted("update:editingRows")?.[0]?.[0] as unknown[] });
+    expect(wrapper.find("[data-u-table-cell-editor] input").exists()).toBe(true);
+  });
+
+  it("saving an edit commits the new value and exits edit mode", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [row],
+      },
+    });
+    const input = wrapper.find("[data-u-table-cell-editor] input");
+    await input.setValue("Changed");
+    await wrapper.find("[data-u-table-row-edit-save]").trigger("click");
+    expect(wrapper.find("[data-u-table-cell-editor]").exists()).toBe(false);
+    expect(wrapper.text()).toContain("Changed");
+  });
+
+  it("canceling an edit reverts to the original value and exits edit mode", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [row],
+      },
+    });
+    const input = wrapper.find("[data-u-table-cell-editor] input");
+    await input.setValue("Changed");
+    await wrapper.find("[data-u-table-row-edit-cancel]").trigger("click");
+    expect(wrapper.text()).toContain("A");
+    expect(wrapper.text()).not.toContain("Changed");
+  });
+});
+
 describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
   it("groups adjacent rows sharing the same groupRowsBy value under subheader mode", () => {
     const wrapper = mount(UTable, {
@@ -527,6 +733,44 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
       },
     });
     expect(wrapper.findAll("[data-u-table-group-header]").length).toBe(2);
+  });
+});
+
+describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
+  it("spans consecutive rows sharing the same groupRowsBy value under one cell", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [
+          { id: 1, category: "Fruit", name: "Apple" },
+          { id: 2, category: "Fruit", name: "Banana" },
+          { id: 3, category: "Veg", name: "Carrot" },
+        ],
+        columns: [
+          { field: "category", header: "Category" },
+          { field: "name", header: "Name" },
+        ],
+        rowGroupMode: "rowspan",
+        groupRowsBy: "category",
+      },
+    });
+    const categoryCells = wrapper.findAll("td[data-u-table-group-cell]");
+    expect(categoryCells.length).toBe(2); // one spanned cell per group, not per row
+    expect(categoryCells[0].attributes("rowspan")).toBe("2");
+    expect(categoryCells[1].attributes("rowspan")).toBe("1");
+  });
+
+  it("renders ungrouped when groupRowsBy is unset, matching subheader mode's own fallback", () => {
+    let wrapper;
+    expect(() => {
+      wrapper = mount(UTable, {
+        props: {
+          value: [{ id: 1, category: "Fruit", name: "Apple" }],
+          columns: [{ field: "category", header: "Category" }],
+          rowGroupMode: "rowspan",
+        },
+      });
+    }).not.toThrow();
+    expect(wrapper!.find("[data-u-table-group-header]").exists()).toBe(false);
   });
 });
 
@@ -573,5 +817,340 @@ describe("real child-component composition (regression guard, Task 24)", () => {
     });
     const scrollerComponent = wrapper.findComponent(UScrollerReal);
     expect(scrollerComponent.exists()).toBe(true);
+  });
+});
+
+describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
+  interface Row {
+    id: number;
+    name: string;
+    price: number;
+  }
+
+  it("renders a column's body function output instead of the raw field value", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "Widget", price: 9.5 }],
+        columns: [
+          { field: "name", header: "Name" },
+          { field: "price", header: "Price", body: (row: Row) => `$${row.price.toFixed(2)}` },
+        ],
+      },
+    });
+    const cells = wrapper.findAll("td");
+    expect(cells[0].text()).toBe("Widget");
+    expect(cells[1].text()).toBe("$9.50");
+  });
+
+  it("passes { field, rowIndex } as the body function's second argument", () => {
+    const seen: { field: string; rowIndex: number }[] = [];
+    mount(UTable, {
+      props: {
+        value: [
+          { id: 1, name: "A", price: 1 },
+          { id: 2, name: "B", price: 2 },
+        ],
+        columns: [
+          {
+            field: "name",
+            header: "Name",
+            body: (row: Row, options: { field: string; rowIndex: number }) => {
+              seen.push(options);
+              return row.name;
+            },
+          },
+        ],
+      },
+    });
+    expect(seen).toEqual([
+      { field: "name", rowIndex: 0 },
+      { field: "name", rowIndex: 1 },
+    ]);
+  });
+
+  it("falls back to the raw field value when no body function is supplied", () => {
+    const wrapper = mount(UTable, { props: { value: [{ id: 1, name: "Widget", price: 9.5 }], columns: [{ field: "price", header: "Price" }] } });
+    expect(wrapper.find("td").text()).toBe("9.5");
+  });
+});
+
+describe("loading/empty states (Spec §5.6, GAP-046)", () => {
+  interface Row {
+    id: number;
+    name: string;
+  }
+
+  it("shows a loading indicator when loading is true", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+        loading: true,
+      },
+    });
+    expect(wrapper.find("[data-u-table-loading]").exists()).toBe(true);
+  });
+
+  it("shows a default empty-state message when value is empty and loading is false", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+      },
+    });
+    expect(wrapper.text()).toContain("No results found");
+  });
+
+  it("does not show the empty-state message when value has rows", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+      },
+    });
+    expect(wrapper.text()).not.toContain("No results found");
+  });
+
+  it("does not show the empty-state message while loading is true, even with an empty value", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+        loading: true,
+      },
+    });
+    expect(wrapper.text()).not.toContain("No results found");
+  });
+
+  it("preserves existing selection when loading toggles to true", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        selectionMode: "multiple",
+        selection: [{ id: 1, name: "A" }],
+      },
+    });
+    await wrapper.setProps({ loading: true });
+    expect(wrapper.props("selection")).toEqual([{ id: 1, name: "A" }]);
+  });
+});
+
+describe("row expansion (Spec §5.4, GAP-044)", () => {
+  interface Row {
+    id: number;
+    name: string;
+  }
+
+  it("toggles a row's expanded state via expandedRowKeys/update:expandedRowKeys", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        expandedRowKeys: {},
+      },
+    });
+    await wrapper.find("[data-u-table-row-toggle]").trigger("click");
+    expect(wrapper.emitted("update:expandedRowKeys")).toEqual([[{ "1": true }]]);
+  });
+
+  it("emits row-expand when a row is expanded and row-collapse when collapsed", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }] as Row[],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        expandedRowKeys: {},
+      },
+    });
+    await wrapper.find("[data-u-table-row-toggle]").trigger("click");
+    expect(wrapper.emitted("row-expand")).toHaveLength(1);
+
+    await wrapper.setProps({ expandedRowKeys: { "1": true } });
+    await wrapper.find("[data-u-table-row-toggle]").trigger("click");
+    expect(wrapper.emitted("row-collapse")).toHaveLength(1);
+  });
+
+  it("does not throw when dataKey maps to a duplicate value across two rows", () => {
+    expect(() =>
+      mount(UTable, {
+        props: {
+          value: [{ id: 1, name: "A" }, { id: 1, name: "B" }] as Row[],
+          columns: [{ field: "name", header: "Name" }],
+          dataKey: "id",
+        },
+      })
+    ).not.toThrow();
+  });
+});
+
+describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
+  it("typing a space in the cell editor input does not toggle selection, and the character appears in the input (Important finding 2)", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [row],
+        selectionMode: "multiple",
+        selection: [],
+      },
+    });
+    const input = wrapper.find("[data-u-table-cell-editor] input");
+    await input.trigger("keydown", { code: "Space" });
+    await input.setValue("A ");
+
+    expect(wrapper.emitted("selection-change")).toBeUndefined();
+    expect((input.element as HTMLInputElement).value).toBe("A ");
+  });
+
+  it("Ctrl+A while focused inside the cell editor input does not trigger select-all-rows (Important finding 2)", async () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }, { id: 2, name: "B" }],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [{ id: 1, name: "A" }],
+        selectionMode: "multiple",
+        selection: [],
+      },
+    });
+    const input = wrapper.find("[data-u-table-cell-editor] input");
+    await input.trigger("keydown", { code: "KeyA", ctrlKey: true });
+
+    expect(wrapper.emitted("selection-change")).toBeUndefined();
+  });
+
+  it("clicking into the cell editor input does not toggle row selection (Important finding 2)", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [row],
+        selectionMode: "multiple",
+        selection: [],
+      },
+    });
+    await wrapper.find("[data-u-table-cell-editor] input").trigger("click");
+
+    expect(wrapper.emitted("selection-change")).toBeUndefined();
+  });
+
+  it("colspan on loading/empty/subheader-group rows accounts for the selection, expansion-toggle, and edit-actions columns (Minor finding 3)", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        selectionMode: "multiple",
+        selectionColumn: true,
+        editMode: "row",
+        loading: true,
+      },
+    });
+    const loadingCell = wrapper.find("[data-u-table-loading]");
+    // base columns.length (1) + selection (1) + expansion-toggle (1) + edit-actions (1) = 4
+    expect(loadingCell.attributes("colspan")).toBe("4");
+  });
+
+  it("empty-state row colspan also accounts for selection/expansion/edit-actions columns (Minor finding 3)", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        selectionMode: "multiple",
+        selectionColumn: true,
+        editMode: "row",
+      },
+    });
+    const emptyCell = wrapper.find("tbody td[colspan]");
+    expect(emptyCell.attributes("colspan")).toBe("4");
+  });
+
+  it("row-expansion placeholder row colspan accounts for the selection and edit-actions columns too (Minor finding 3)", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        selectionMode: "multiple",
+        selectionColumn: true,
+        editMode: "row",
+        expandedRowKeys: { "1": true },
+      },
+    });
+    const expansionCell = wrapper.find("[data-u-table-row-expansion] td");
+    expect(expansionCell.attributes("colspan")).toBe("4");
+  });
+
+  it("header row has matching th cells for the expansion-toggle and edit-actions columns (Minor finding 3)", () => {
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "A" }],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        selectionMode: "multiple",
+        selectionColumn: true,
+        editMode: "row",
+      },
+    });
+    const headerCells = wrapper.findAll("thead tr th");
+    const bodyRowCells = wrapper.findAll("tbody tr:first-child > *");
+    expect(headerCells.length).toBe(bodyRowCells.length);
+  });
+
+  it("selecting all rows via the header checkbox emits the post-edit merged (effectiveValue) rows, not raw value (Minor finding 5)", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [row],
+        selectionMode: "multiple",
+        selectionColumn: true,
+        selection: [],
+        compareSelectionBy: "deepEquals",
+      },
+    });
+    const input = wrapper.find("[data-u-table-cell-editor] input");
+    await input.setValue("Changed");
+    await wrapper.find("[data-u-table-row-edit-save]").trigger("click");
+
+    await wrapper.find("thead input[type=checkbox]").trigger("click");
+
+    expect(wrapper.emitted("selection-change")?.at(-1)?.[0]).toEqual([{ id: 1, name: "Changed" }]);
+  });
+
+  it("Ctrl+A select-all-rows emits the post-edit merged (effectiveValue) rows, not raw value (Minor finding 5)", async () => {
+    const row = { id: 1, name: "A" };
+    const wrapper = mount(UTable, {
+      props: {
+        value: [row],
+        columns: [{ field: "name", header: "Name" }],
+        dataKey: "id",
+        editMode: "row",
+        editingRows: [row],
+        selectionMode: "multiple",
+        selection: [],
+        compareSelectionBy: "deepEquals",
+      },
+    });
+    const input = wrapper.find("[data-u-table-cell-editor] input");
+    await input.setValue("Changed");
+    await wrapper.find("[data-u-table-row-edit-save]").trigger("click");
+
+    await wrapper.find('tbody [role="row"]').trigger("keydown", { code: "KeyA", ctrlKey: true });
+
+    expect(wrapper.emitted("selection-change")?.at(-1)?.[0]).toEqual([{ id: 1, name: "Changed" }]);
   });
 });

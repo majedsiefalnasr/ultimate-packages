@@ -15,7 +15,7 @@ PrimeNG 21.1.9 is the design reference, not a runtime dependency (no `primeng` i
 - **Button (`UButton`, `u-button`)** — native `<button>` host, disabled/loading state (renders a `USpinnerIcon` while loading), ripple effect via `URipple`.
 - **Checkbox (`UCheckbox`, `u-checkbox`)** — binary (boolean) checkbox implementing `ControlValueAccessor`, works with both Reactive Forms and template-driven `ngModel`.
 - **Dialog (`UDialog`, `u-dialog`)** — modal overlay wiring `UOverlay` (body-append + z-index) and `UFocusTrap` (Tab-cycling) together, with `@ultimate/uix-motion`-driven enter/leave animation, Escape-key dismissal, and focus-return-on-close.
-- **Menu (`UMenu`, `u-menu`)** — flat, non-popup `role="menu"` list of `UMenuItem` entries with roving-tabindex keyboard navigation, `routerLink` navigation, and opt-in per-item `[uTooltip]` support via `UMenuItem.tooltip`.
+- **Menu (`UMenu`, `u-menu`)** — flat `role="menu"` list of `UMenuItem` entries, inline or as a popup (`[popup]="true"` plus `toggle()`/`show()`/`hide()`, GAP-067), with roving-tabindex keyboard navigation, `routerLink` navigation, and opt-in per-item `[uTooltip]` support via `UMenuItem.tooltip`.
 - **Tooltip (`UTooltip`, `[uTooltip]`)** — attribute directive showing a positioned `role="tooltip"` element on hover/focus.
 
 Also exported (Angular-facing primitives consumed by the components above, not independently prioritized components):
@@ -126,16 +126,16 @@ Naming migration: every component's PrimeNG selector/class prefix (`p-*`) is ren
 
 ### Menu (`UMenu`, `u-menu`)
 
-**PrimeNG foundation:** adapted from `Menu` in PrimeNG's `menu/menu.ts`, rendering a flat, non-popup `role="menu"` list — no submenu nesting, popup-overlay positioning, or the `Home`/`End`/`Enter`/`Space`/`Tab` key handlers upstream's `onListKeyDown()` also implements. The most significant deviation: real PrimeNG's `Menu` does not move native DOM focus between items at all — it keeps native focus on the root `<ul>` and tracks a `focusedOptionIndex` signal published via `aria-activedescendant` (a virtual-focus pattern). `UMenu` instead implements a literal roving-tabindex pattern — moving `tabindex="0"`/`"-1"` between `<a>` elements and calling `.focus()` directly — because this package's own spec test asserts `document.activeElement` actually moves on ArrowDown, an explicit, different resolution documented in `docs/architecture/provenance/ng.json`. `[uTooltip]`/`[routerLink]` are applied directly on `UMenu`'s own `<a>` (real PrimeNG applies them via a separate `MenuItemContent` child component it doesn't have here). Unlike real PrimeNG (which gates its tooltip behind `showOnEllipsis` truncation-detection — out of `UTooltip`'s scope), `UMenu` exposes an Ultimate-specific, opt-in `UMenuItem.tooltip` field instead of binding `[uTooltip]` to `item.label` unconditionally.
+**PrimeNG foundation:** adapted from `Menu` in PrimeNG's `menu/menu.ts`, rendering a flat `role="menu"` list (inline or popup) — no submenu nesting, or the `Home`/`End`/`Enter`/`Space`/`Tab` key handlers upstream's `onListKeyDown()` also implements. The most significant deviation: real PrimeNG's `Menu` does not move native DOM focus between items at all — it keeps native focus on the root `<ul>` and tracks a `focusedOptionIndex` signal published via `aria-activedescendant` (a virtual-focus pattern). `UMenu` instead implements a literal roving-tabindex pattern — moving `tabindex="0"`/`"-1"` between `<a>` elements and calling `.focus()` directly — because this package's own spec test asserts `document.activeElement` actually moves on ArrowDown, an explicit, different resolution documented in `docs/architecture/provenance/ng.json`. `[uTooltip]`/`[routerLink]` are applied directly on `UMenu`'s own `<a>` (real PrimeNG applies them via a separate `MenuItemContent` child component it doesn't have here). Unlike real PrimeNG (which gates its tooltip behind `showOnEllipsis` truncation-detection — out of `UTooltip`'s scope), `UMenu` exposes an Ultimate-specific, opt-in `UMenuItem.tooltip` field instead of binding `[uTooltip]` to `item.label` unconditionally.
 
 **Ultimate behavior:** renders `model()` (an array of `UMenuItem`, from `@ultimate/ng-core`) as `<li role="none"><a role="menuitem">` entries, or `<li role="separator">` for `{ separator: true }` entries. Initial `tabindex="0"` is seeded on the first non-separator item (not literally model index 0, since a leading separator renders no anchor). ArrowDown/ArrowUp move focus between enabled items, skipping disabled ones and wrapping at the ends. Items with a `routerLink` navigate via `RouterModule`, except when `disabled` (routerLink is suppressed so a disabled item is never a real navigable link); items with a `tooltip` field show a `[uTooltip]` on hover/focus (opt-in — not derived from `label`). `disabled` items get `aria-disabled` and don't fire `command()`.
 
 **Public API:**
 
-| Member  | Type          | Kind  | Notes                                                                                                                                           |
-| ------- | ------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `model` | `UMenuItem[]` | input | default `[]`; see `UMenuItem` in `@ultimate/ng-core`                                                                                            |
-| `popup` | `boolean`     | input | default `false`; currently only toggles the `u-menu-overlay` style class — no popup-overlay component exists yet in this package to render into |
+| Member  | Type          | Kind  | Notes                                                                                                                                                    |
+| ------- | ------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `model` | `UMenuItem[]` | input | default `[]`; see `UMenuItem` in `@ultimate/ng-core`                                                                                                     |
+| `popup` | `boolean`     | input | default `false`; when `true` the menu stays hidden until `toggle(event)`/`show(event)` and renders in an overlay appended to `appendTo` (default `body`) |
 
 **Styling:** consumes `style` from `@ultimate/uix-styles/menu`; class-name slots (`root`, `list`, `separator`, `item`, `itemLink`, `itemIcon`, `itemLabel`, …) are resolved locally in `menu-style.ts`.
 
@@ -161,9 +161,9 @@ Naming migration: every component's PrimeNG selector/class prefix (`p-*`) is ren
 
 ## Dependencies
 
-Depends on `@ultimate/ng-core`, `@ultimate/uix-utils`, `@ultimate/uix-styled`, `@ultimate/uix-motion`, `@ultimate/uix-styles` (workspace), and `tslib`. Peers on `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/platform-browser`, `@angular/router`, and `rxjs`.
+Depends on `@ultimate/ng-core`, `@ultimate/uix-utils`, `@ultimate/uix-styled`, `@ultimate/uix-motion`, `@ultimate/uix-styles` (workspace), and `tslib`. Peers on `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/platform-browser`, `@angular/router`, `@angular/cdk`, and `rxjs`.
 
-`@angular/router` is a genuine (non-optional) peer dependency: `UMenu` directly imports `RouterModule` and binds `routerLink` in its template. `@angular/cdk/drag-drop` is used by OrderList and PickList for their optional drag/drop mode; button controls remain the default interaction.
+`@angular/router` is a genuine (non-optional) peer dependency: `UMenu` directly imports `RouterModule` and binds `routerLink` in its template. `@angular/cdk/drag-drop` is used by OrderList and PickList for their optional drag/drop mode; button controls remain the default interaction. `@angular/cdk` is a peer dependency (matching PrimeNG), so applications install it alongside Angular.
 
 ## Provenance
 

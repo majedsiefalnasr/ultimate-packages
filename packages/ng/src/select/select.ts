@@ -159,8 +159,8 @@ export class USelect extends UBaseInput {
   /** Callback to invoke when the selection is cleared via the clear icon. */
   onClear = output<void>();
 
-  protected readonly id = `u_select_${++USelect.instanceCount}`;
   private static instanceCount = 0;
+  protected readonly id = `u_select_${++USelect.instanceCount}`;
 
   protected readonly overlayVisible = signal(false);
   protected readonly focusedOptionIndex = signal(-1);

@@ -57,4 +57,77 @@ describe("UDock", () => {
     const { container } = render(<UDock model={model} />);
     expect(container.querySelectorAll('[role="menuitem"]').length).toBe(1);
   });
+
+  describe("keyboard navigation (Spec §5.4, GAP-055)", () => {
+    it("ArrowRight/ArrowLeft move focus among dock items", () => {
+      const model: UMenuItem[] = [{ label: "Finder" }, { label: "Mail" }];
+      const { container } = render(<UDock model={model} />);
+      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]');
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[1]);
+    });
+
+    it("wraps ArrowLeft from the first item to the last item", () => {
+      const model: UMenuItem[] = [{ label: "Finder" }, { label: "Mail" }, { label: "Trash" }];
+      const { container } = render(<UDock model={model} />);
+      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]');
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowLeft" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("Home/End jump to the first/last item", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }, { label: "C" }];
+      const { container } = render(<UDock model={model} />);
+      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]');
+      links[1].focus();
+      fireEvent.keyDown(links[1], { code: "End" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("uses ArrowUp/ArrowDown instead when position is left or right", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }];
+      const { container } = render(<UDock model={model} position="left" />);
+      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]');
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowDown" });
+      expect(document.activeElement).toBe(links[1]);
+    });
+
+    it("does not move focus on ArrowRight/ArrowLeft when position is left or right", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }];
+      const { container } = render(<UDock model={model} position="left" />);
+      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]');
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[0]);
+    });
+
+    it("skips disabled items when moving focus", () => {
+      const model: UMenuItem[] = [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }];
+      const { container } = render(<UDock model={model} />);
+      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]');
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[2]);
+    });
+
+    it("maps focus correctly when a hidden item precedes the target item", () => {
+      const model: UMenuItem[] = [
+        { label: "A" },
+        { label: "Hidden", visible: false },
+        { label: "B" },
+        { label: "C" },
+      ];
+      const { container } = render(<UDock model={model} />);
+      const links = container.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]');
+      // Rendered links are [A, B, C] (Hidden is skipped). Focusing A and
+      // pressing ArrowRight must move to the rendered B (links[1]), not
+      // mis-map into C by indexing against the full 4-item model.
+      links[0].focus();
+      fireEvent.keyDown(links[0], { code: "ArrowRight" });
+      expect(document.activeElement).toBe(links[1]);
+    });
+  });
 });
