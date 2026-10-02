@@ -68,8 +68,14 @@ export function UToggleButton({
     onChange({ originalEvent, value, target: { name, id, value } });
   };
 
+  // PrimeReact 10.9.9 ToggleButton.js:47-51: toggle on Space and prevent the
+  // default action, so the native checkbox does not also toggle on keyup.
+  // Enter keeps its existing behavior (a native checkbox does not activate on Enter).
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === " " || event.key === "Enter") {
+    if (event.key === " ") {
+      toggle(event);
+      event.preventDefault();
+    } else if (event.key === "Enter") {
       toggle(event);
     }
   };
