@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { provideRouter } from "@angular/router";
+import { provideRouter, Router } from "@angular/router";
 import { PLATFORM_ID } from "@angular/core";
 import { describe, expect, it, vi } from "vitest";
 import { UBreadcrumb } from "./breadcrumb";
@@ -98,6 +98,37 @@ describe("UBreadcrumb", () => {
     // items.length includes home item; separators = items.length - 1
     expect(separators.length).toBe(items.length - 1);
   });
+  describe("href vs RouterLink (GAP-073)", () => {
+    it("renders the url href for an item with url and no routerLink", () => {
+      const fixture = setup([{ label: "Docs", url: "/docs" }], {});
+      expect(fixture.nativeElement.querySelector("a").getAttribute("href")).toBe("/docs");
+    });
+
+    it("renders # for an item with neither url nor routerLink", () => {
+      const fixture = setup([{ label: "Plain" }], {});
+      expect(fixture.nativeElement.querySelector("a").getAttribute("href")).toBe("#");
+    });
+
+    it("renders the home url href", () => {
+      const fixture = setup([], { home: { icon: "pi pi-home", url: "/" } });
+      expect(fixture.nativeElement.querySelector("a").getAttribute("href")).toBe("/");
+    });
+
+    it("keeps RouterLink for an enabled routerLink item", () => {
+      const fixture = setup([{ label: "Category", routerLink: "/category" }], {});
+      expect(fixture.nativeElement.querySelector("a").getAttribute("href")).toBe("/category");
+    });
+
+    it("renders a disabled routerLink item as a plain href that does not navigate", () => {
+      const fixture = setup([{ label: "Locked", routerLink: "/locked", disabled: true }], {});
+      const navigateByUrl = vi.spyOn(TestBed.inject(Router), "navigateByUrl");
+      const link: HTMLAnchorElement = fixture.nativeElement.querySelector("a");
+      expect(link.getAttribute("href")).toBe("#");
+      link.click();
+      expect(navigateByUrl).not.toHaveBeenCalled();
+    });
+  });
+
   describe("SSR safety (GAP-065)", () => {
     // isCurrent() is guarded by `typeof window`, not PLATFORM_ID, and runs from
     // the [attr.aria-current] template binding during server rendering. jsdom
