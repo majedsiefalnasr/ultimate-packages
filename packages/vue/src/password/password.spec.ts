@@ -141,4 +141,24 @@ describe("UPassword", () => {
       }
     });
   });
+  describe("ariaLabelledby (GAP-076)", () => {
+    it("binds ariaLabelledby to the input's aria-labelledby", () => {
+      const wrapper = mount(UPassword, { props: { modelValue: "", ariaLabelledby: "pw-label" } });
+      expect(wrapper.find("input").attributes("aria-labelledby")).toBe("pw-label");
+    });
+
+    it("renders no aria-labelledby attribute when the prop is not set", () => {
+      const wrapper = mount(UPassword, { props: { modelValue: "" } });
+      expect(wrapper.find("input").attributes()).not.toHaveProperty("aria-labelledby");
+    });
+
+    it("keeps aria-label working alongside aria-labelledby", () => {
+      const wrapper = mount(UPassword, {
+        props: { modelValue: "", ariaLabel: "Password", ariaLabelledby: "pw-label" },
+      });
+      const input = wrapper.find("input");
+      expect(input.attributes("aria-label")).toBe("Password");
+      expect(input.attributes("aria-labelledby")).toBe("pw-label");
+    });
+  });
 });
