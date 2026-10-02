@@ -11,12 +11,14 @@ import type { StyleModule } from "@ultimate/vue-core";
  */
 const css = /*css*/ `
 .u-stepper { display: flex; flex-direction: column; }
-.u-step-list { display: flex; position: relative; }
+.u-step-list { display: flex; position: relative; justify-content: space-between; align-items: center; }
 .u-step { display: flex; flex-direction: column; align-items: center; position: relative; flex: 0 0 auto; }
 .u-step-header { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; border: none; cursor: pointer; }
 .u-step[data-u-disabled="true"] .u-step-header { cursor: default; pointer-events: none; opacity: 0.6; }
 .u-step-number { display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 2rem; height: 2rem; }
 .u-stepper-separator { flex: 1 1 0; height: 2px; margin: 0 0.5rem; background: currentColor; opacity: 0.3; }
+.u-step-list .u-step { flex-direction: row; flex: 1 1 auto; }
+.u-step-list .u-step:last-of-type { flex: initial; }
 .u-step-item .u-step-panel-content-wrapper { display: flex; flex: 1 1 auto; min-height: 0; }
 .u-step-item .u-step-panel-content { width: 100%; margin-inline-start: 1rem; }
 .u-step-item .u-stepper-separator { flex: 0 0 auto; width: 2px; height: auto; margin: 0 0 0 1.625rem; position: relative; left: -2px; }

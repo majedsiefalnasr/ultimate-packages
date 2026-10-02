@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { mount } from "@vue/test-utils";
+import { mount, type VueWrapper } from "@vue/test-utils";
 import { nextTick } from "vue";
 import { stepperStyleModule } from "./stepper-style";
 import { UStepper, UStepList, UStep, UStepPanels, UStepPanel, UStepItem } from "./index";
@@ -138,10 +138,10 @@ describe("UStepPanel vertical separator (GAP-063)", () => {
     expect(panels[1].isVisible()).toBe(false);
   });
 
-  it("horizontal mode renders no separators and no content wrapper", async () => {
+  it("horizontal mode renders no panel separators and no content wrapper", async () => {
     const wrapper = mountStepper();
     await nextTick();
-    expect(wrapper.findAll(".u-stepper-separator").length).toBe(0);
+    expect(wrapper.findAll('[role="tabpanel"] .u-stepper-separator').length).toBe(0);
     expect(wrapper.find(".u-step-panel-content-wrapper").exists()).toBe(false);
     expect(wrapper.find('[role="tabpanel"]').html()).toContain("Panel One");
   });
@@ -179,5 +179,99 @@ describe("Stepper vertical StepItem layout CSS (GAP-063)", () => {
     expect(css.indexOf('.u-step-panel[data-u-hidden="true"]')).toBeGreaterThan(
       css.indexOf(".u-step-item .u-step-panel {")
     );
+  });
+});
+
+describe("UStep horizontal separators (GAP-077)", () => {
+  function mountHorizontal(count = 3) {
+    return mount({
+      components: { UStepper, UStepList, UStep },
+      data() {
+        return { count };
+      },
+      template: `
+        <UStepper :value="1">
+          <UStepList>
+            <UStep v-for="n in count" :key="n" :value="n">Step {{ n }}</UStep>
+          </UStepList>
+        </UStepper>
+      `,
+    });
+  }
+
+  const stepSepCounts = (w: VueWrapper) =>
+    w.findAll("[data-u-step]").map((s) => s.findAll(".u-stepper-separator").length);
+
+  it("renders a separator after every step header except the last", async () => {
+    const wrapper = mountHorizontal(3);
+    await nextTick();
+    expect(stepSepCounts(wrapper)).toEqual([1, 1, 0]);
+    const firstStep = wrapper.find("[data-u-step]").element;
+    const kids = Array.from(firstStep.children);
+    expect(kids[0].classList.contains("u-step-header")).toBe(true);
+    expect(kids[1].classList.contains("u-stepper-separator")).toBe(true);
+  });
+
+  it("renders no separator for a single step", async () => {
+    const wrapper = mountHorizontal(1);
+    await nextTick();
+    expect(stepSepCounts(wrapper)).toEqual([0]);
+  });
+
+  it("moves the separator-less position when steps are added or removed", async () => {
+    const wrapper = mountHorizontal(3);
+    await nextTick();
+    (wrapper.vm as unknown as { count: number }).count = 4;
+    await nextTick();
+    await nextTick();
+    expect(stepSepCounts(wrapper)).toEqual([1, 1, 1, 0]);
+    (wrapper.vm as unknown as { count: number }).count = 2;
+    await nextTick();
+    await nextTick();
+    expect(stepSepCounts(wrapper)).toEqual([1, 0]);
+  });
+
+  it("renders no step-header separator for vertical steps (StepItem layout)", async () => {
+    const wrapper = mount({
+      components: { UStepper, UStepItem, UStep, UStepPanel },
+      template: `
+        <UStepper :value="1">
+          <UStepItem v-for="n in 3" :key="n" :value="n">
+            <UStep :value="n">Step {{ n }}</UStep>
+            <UStepPanel :value="n">Content {{ n }}</UStepPanel>
+          </UStepItem>
+        </UStepper>
+      `,
+    });
+    await nextTick();
+    expect(stepSepCounts(wrapper)).toEqual([0, 0, 0]);
+  });
+});
+
+describe("Stepper horizontal layout CSS (GAP-077)", () => {
+  const css = stepperStyleModule.css as string;
+  const rule = (selector: string) => {
+    const m = css.match(
+      new RegExp(`^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{([^}]*)\\}`, "m")
+    );
+    return m ? m[1].trim() : null;
+  };
+
+  it("spaces steps across a centred list row", () => {
+    expect(rule(".u-step-list")).toBe(
+      "display: flex; position: relative; justify-content: space-between; align-items: center;"
+    );
+  });
+
+  it("lays horizontal steps out as growing rows, last step not growing", () => {
+    expect(rule(".u-step-list .u-step")).toBe("flex-direction: row; flex: 1 1 auto;");
+    expect(rule(".u-step-list .u-step:last-of-type")).toBe("flex: initial;");
+  });
+
+  it("leaves the global .u-step rule and the vertical rules unchanged", () => {
+    expect(rule(".u-step")).toBe(
+      "display: flex; flex-direction: column; align-items: center; position: relative; flex: 0 0 auto;"
+    );
+    expect(rule(".u-step-item .u-step")).toBe("flex: initial; align-items: flex-start;");
   });
 });

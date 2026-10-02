@@ -4,6 +4,7 @@
       <span :class="cx('stepNumber')">{{ value }}</span>
       <span :class="cx('stepTitle')"><slot></slot></span>
     </button>
+    <UStepperSeparator v-if="isSeparatorVisible" />
   </div>
 </template>
 
@@ -17,15 +18,33 @@
 // `isStepDisabled` computed.
 import { createBaseComponent } from "@ultimate/vue-core";
 import { stepperStyleModule } from "./stepper-style";
+import UStepperSeparator from "./StepperSeparator.vue";
 
 export default {
   name: "UStep",
   extends: createBaseComponent({ componentName: "stepper", styleModule: stepperStyleModule }),
   inheritAttrs: false,
-  inject: ["$pcStepper"],
+  components: { UStepperSeparator },
+  inject: {
+    $pcStepper: { from: "$pcStepper" },
+    $pcStepList: { from: "$pcStepList", default: null },
+  },
   props: {
     value: { type: [String, Number], required: true },
     disabled: { type: Boolean, default: false },
+  },
+  data() {
+    return { isSeparatorVisible: false };
+  },
+  mounted() {
+    this.$pcStepList?.registerStep(this);
+    this.updateSeparator();
+  },
+  updated() {
+    this.updateSeparator();
+  },
+  beforeUnmount() {
+    this.$pcStepList?.unregisterStep(this);
   },
   computed: {
     active() {
@@ -38,6 +57,16 @@ export default {
   methods: {
     onStepClick() {
       this.$pcStepper.updateValue(this.value);
+    },
+    // Mirrors PrimeVue 4.5.5 Step.vue:43-49: inside a step list, every step
+    // except the last shows a separator after its header.
+    updateSeparator() {
+      if (!this.$el || !this.$pcStepList?.$el) {
+        this.isSeparatorVisible = false;
+        return;
+      }
+      const steps = Array.from(this.$pcStepList.$el.querySelectorAll("[data-u-step]"));
+      this.isSeparatorVisible = steps.indexOf(this.$el) !== steps.length - 1;
     },
   },
 };
