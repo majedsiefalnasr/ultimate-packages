@@ -4,7 +4,10 @@
 
 **Goal:** `@ultimate/vue`'s shipped type declarations resolve for TypeScript consumers under `Bundler` and `NodeNext` (GAP-079). Vue stops shipping Storybook declarations, and neither React nor Vue ships declaration maps any more (Spec §12 decision (a)).
 
-**Architecture:** Vue's `scripts/rename-dts.mjs` gains React's specifier resolver (GAP-068): every relative specifier in the emitted `.d.mts` files is rewritten to an explicit `.mjs` specifier pointing at an emitted declaration, and an unresolvable one fails the build. `.vue` specifiers are looked up like extensionless ones (`./Button.vue` → `Button.vue.d.mts` → `./Button.vue.mjs`). The declaration builds' `tsconfig.dts.json` files exclude stories (Vue) and set `declarationMap: false` (React and Vue). Runtime JavaScript and its source maps are untouched.
+**Architecture:** Vue's `scripts/rename-dts.mjs` adopts React's resolve-and-guard approach (GAP-068) for extensionless specifiers: every relative specifier in the emitted `.d.mts` files is rewritten to an explicit `.mjs` specifier pointing at an emitted declaration, and an unresolvable one fails the build. It differs from React in two places:
+
+- `.vue` specifiers are looked up like extensionless ones (`./Button.vue` → `Button.vue.d.mts` → `./Button.vue.mjs`). React's `EXTENSIONED` leaves `.vue` alone.
+- Relative `.js` specifiers keep Vue's existing `.js` → `.mjs` rewrite, now verified against the emitted declaration. React leaves `.js` unchanged, which is safe there only because its declarations contain none. The declaration builds' `tsconfig.dts.json` files exclude stories (Vue) and set `declarationMap: false` (React and Vue). Runtime JavaScript and its source maps are untouched.
 
 **Tech Stack:** Node ESM build scripts, `vue-tsc`/`tsc` `--emitDeclarationOnly`, tsup, Vitest, pnpm pack.
 
@@ -21,7 +24,7 @@
 ## Review Focus
 
 1. A relative specifier that points at a directory (`./button`) must become `./button/index.mjs`, not `./button.mjs`. Covered by a Task 1 unit test.
-2. Bare package specifiers (`vue`, `@ultimate/vue-core`) must never be rewritten. Covered by a Task 1 unit test.
+2. A relative `.js` specifier (`./button/index.js`, which the current Vue script rewrites) must still become `./button/index.mjs`, in `from` and `import()` forms, and must fail the build when no matching declaration exists. Covered by Task 1 regression tests. Bare package specifiers (`vue`, `@ultimate/vue-core`) are never rewritten; a Task 1 test covers that too.
 3. A relative specifier with no emitted declaration must fail the build, not ship silently. Covered by a Task 1 unit test (non-zero exit).
 4. Component exports must keep real prop types, not `any`. Covered by the Task 3 `@ts-expect-error` check.
 5. Turning off declaration maps must not change any runtime `.mjs.map`. Covered by the Task 2 before/after file-list diff.
@@ -38,7 +41,8 @@
 **Interfaces:**
 
 - Consumes: the script's existing behavior of running with `cwd` = `packages/vue` and operating on `./dist` (it is invoked as `node scripts/rename-dts.mjs` by the `build` script).
-- Produces: after the script, every relative specifier in `dist/**/*.d.mts` is either already extensioned (`.js`/`.mjs`/`.ts`/`.json` family) or rewritten to `X.mjs` / `X/index.mjs`. The script exits 1 with a list on stderr when one cannot be resolved.
+- Produces: after the script, every relative specifier in `dist/**/*.d.mts` that is extensionless, `.vue`, `.js` or `.mjs` ends in `.mjs` and points at an emitted `.d.mts`. Relative `.cjs`/`.ts`/`.cts`/`.mts`/`.json` specifiers are left as they are. The script exits 1 with a list on stderr when a specifier cannot be resolved.
+- Behavior preserved from the current script (`packages/vue/scripts/rename-dts.mjs:43`, `from "./x.js"` → `from "./x.mjs"`): relative `.js` specifiers still become `.mjs`, now also in `import()`/side-effect forms and only when `x.d.mts` exists.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -51,6 +55,9 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 
+// `__dirname` is available in this package's Vitest setup even though the
+// package is `"type": "module"`: packages/vue/test/exports.test.ts:25-43
+// already uses it and passes. Keep the same mechanism here.
 const SCRIPT = join(__dirname, "..", "scripts", "rename-dts.mjs");
 
 /** Writes `files` under <tmp>/dist, runs the script with cwd=<tmp>, returns the result. */
@@ -121,13 +128,49 @@ describe("packages/vue/scripts/rename-dts.mjs (GAP-079)", () => {
     expect(r.status).toBe(1);
     expect(r.stderr).toContain(`"./missing"`);
   });
+
+  // Regression: the previous script rewrote `from "./x.js"` to `from "./x.mjs"`
+  // (tsup's DTS rollup emitted `.js` cross-entry specifiers). That behavior
+  // must be kept, not skipped just because `.js` is an extension.
+  it("keeps rewriting a relative .js specifier to .mjs (from form)", () => {
+    const r = run({
+      "index.d.ts": `export { UButton } from "./button/index.js";\n`,
+      "button/index.d.ts": `export declare const UButton: 1;\n`,
+    });
+    expect(r.status).toBe(0);
+    expect(r.read("index.d.mts")).toContain(`from "./button/index.mjs"`);
+  });
+
+  it("rewrites a relative .js specifier in import() form too", () => {
+    const r = run({
+      "index.d.ts": `export type T = import("./shared.js").S;\n`,
+      "shared.d.ts": `export type S = 1;\n`,
+    });
+    expect(r.status).toBe(0);
+    expect(r.read("index.d.mts")).toContain(`import("./shared.mjs")`);
+  });
+
+  it("fails the build for a relative .js specifier with no matching declaration", () => {
+    const r = run({ "index.d.ts": `export * from "./gone.js";\n` });
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain(`"./gone.js"`);
+  });
+
+  it("leaves a relative .mjs specifier that already resolves unchanged", () => {
+    const r = run({
+      "index.d.ts": `export * from "./button/index.mjs";\n`,
+      "button/index.d.ts": `export declare const x: 1;\n`,
+    });
+    expect(r.status).toBe(0);
+    expect(r.read("index.d.mts")).toContain(`from "./button/index.mjs"`);
+  });
 });
 ```
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
 Run: `pnpm --filter @ultimate/vue test -- test/rename-dts.test.ts`
-Expected: the rewrite tests and the "fails the build" test FAIL (the current script only rewrites `.js` specifiers and never exits non-zero). The bare-specifier test passes.
+Expected: the extensionless, directory, `.vue`, parent/`import()`, both "fails the build" and the `.js` `import()` tests FAIL. The current script only rewrites `.js` in `from` form and never exits non-zero. Three tests already pass and must keep passing: the bare-specifier test, the `.js` `from`-form regression test (the current behavior being preserved) and the `.mjs` unchanged test.
 
 - [ ] **Step 3: Implement**
 
@@ -137,8 +180,9 @@ Replace the whole content of `packages/vue/scripts/rename-dts.mjs` with:
 #!/usr/bin/env node
 // Post-processes the declaration files `vue-tsc` emits into `dist` (this
 // package's `build` script: `vue-tsc -p tsconfig.dts.json --declaration
-// --emitDeclarationOnly --outDir dist`). Two steps, mirroring
-// packages/react/scripts/rename-dts.mjs (GAP-068):
+// --emitDeclarationOnly --outDir dist`). Two steps; step 2 follows
+// packages/react/scripts/rename-dts.mjs (GAP-068) for extensionless
+// specifiers and additionally handles `.vue` and `.js` specifiers:
 //
 // 1. Rename the emitted `.d.ts` / `.d.ts.map` files to `.d.mts` / `.d.mts.map`
 //    so they match this package's `.mjs` exports map.
@@ -150,10 +194,14 @@ Replace the whole content of `packages/vue/scripts/rename-dts.mjs` with:
 //      `./x`      -> `./x.mjs`        when `x.d.mts` exists
 //      `./x`      -> `./x/index.mjs`  when `x/index.d.mts` exists
 //      `./X.vue`  -> `./X.vue.mjs`    when `X.vue.d.mts` exists
+//      `./x.js`   -> `./x.mjs`        when `x.d.mts` exists (this script's
+//                                     earlier behavior, for tsup's `.js`
+//                                     cross-entry specifiers; kept)
+//      `./x.mjs`  unchanged           when `x.d.mts` exists
 //    TypeScript maps `./x.mjs` to `x.d.mts`. Bare/package specifiers and
-//    relative specifiers that already carry a JS/TS/JSON extension are left
-//    alone. A relative specifier that resolves to nothing is a build error
-//    (non-zero exit), so this defect cannot silently return.
+//    relative `.cjs`/TS/JSON specifiers are left alone. Any other relative
+//    specifier that resolves to nothing is a build error (non-zero exit), so
+//    this defect cannot silently return.
 import { existsSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
@@ -176,18 +224,28 @@ function renameDtsToMts(dir) {
 // Matches the specifier in `from "..."`, `import("...")` and side-effect
 // `import "..."`; only relative (`./`, `../`) specifiers are rewritten.
 const SPECIFIER = /(\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(["'])(\.{1,2}\/[^"']*|\.{1,2})\2/g;
-// `.vue` is deliberately absent: an SFC specifier is resolved like an
-// extensionless one, against the emitted `X.vue.d.mts`.
-const EXTENSIONED = /\.(?:[cm]?js|[cm]?ts|json)$/;
+// A relative specifier naming a JS module (`.js`/`.mjs`) must map to an
+// emitted declaration; other extensions (`.cjs`, TS, JSON) are left alone.
+// `.vue` is deliberately in neither list: an SFC specifier is resolved like
+// an extensionless one, against the emitted `X.vue.d.mts`.
+const JS_MODULE = /\.m?js$/;
+const LEFT_ALONE = /\.(?:cjs|[cm]?ts|json)$/;
 
 const unresolved = [];
 
 function resolveSpecifier(file, specifier) {
-  if (EXTENSIONED.test(specifier)) {
+  const target = resolve(dirname(file), specifier);
+
+  if (JS_MODULE.test(specifier)) {
+    if (existsSync(`${target.replace(JS_MODULE, "")}.d.mts`)) {
+      return specifier.replace(JS_MODULE, ".mjs");
+    }
+    unresolved.push(`${file}: "${specifier}"`);
     return specifier;
   }
-
-  const target = resolve(dirname(file), specifier);
+  if (LEFT_ALONE.test(specifier)) {
+    return specifier;
+  }
 
   if (existsSync(`${target}.d.mts`)) {
     return `${specifier}.mjs`;
@@ -236,7 +294,7 @@ if (unresolved.length > 0) {
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `pnpm --filter @ultimate/vue test -- test/rename-dts.test.ts`
-Expected: all 6 tests PASS.
+Expected: all 10 tests PASS.
 
 - [ ] **Step 5: Build the real package and confirm no unresolved specifiers remain**
 

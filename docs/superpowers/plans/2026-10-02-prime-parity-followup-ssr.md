@@ -169,24 +169,32 @@ If all three entries pass, record that, skip Steps 2-5, and go to Step 6 without
 
 - [ ] **Step 2: Inspect the actual workspace dependency graph**
 
-In one of the Step 1 worktrees, list the workspace packages each failing playground really needs, transitively:
+Do not assume any selector is correct before this step (Plan Review constraint). Work in one of the Step 1 worktrees.
+
+1. **Confirm the real package names and paths.** List every workspace package with its name and directory:
 
 ```bash
-pnpm --filter "playground-angular..." exec -- node -e "console.log(require('./package.json').name)"
-pnpm --filter "playground-react..." exec -- node -e "console.log(require('./package.json').name)"
-pnpm --filter "playground-vue..." exec -- node -e "console.log(require('./package.json').name)"
+pnpm ls -r --depth -1 --json | node -e "const a=JSON.parse(require('fs').readFileSync(0,'utf8'));for(const p of a)console.log(p.name, p.path)"
 ```
 
-(`<name>...` selects the package and all of its workspace dependencies.) Cross-check each list against the `dependencies` of the playground's `package.json` and of every `@ultimate/*` package it reaches. Record the three lists in the ledger. Note whether the Angular list contains React or Vue packages; if it does, find the dependency edge that pulls them in and record it.
+Record the name of each matrix entry's package (the job filters by `${{ matrix.dir }}`, i.e. `playground-angular`, `playground-react`, `playground-vue`). At planning time each name equalled its directory name under `apps/`. Re-confirm it here, and use the confirmed name, not the directory, in every selector below.
+
+2. **Confirm what a selector actually selects.** For each confirmed name `NAME`, list the packages that the dependency-inclusive selector `NAME...` picks (the package plus all of its workspace dependencies):
+
+```bash
+pnpm --filter "NAME..." exec -- node -e "console.log(require('./package.json').name)"
+```
+
+3. **Cross-check against the declared graph.** Compare each list with the `dependencies` of the playground's `package.json` and of every `@ultimate/*` package it reaches. Record the three lists in the ledger. If a list contains packages the playground does not reach through declared dependencies (e.g. React or Vue packages in the Angular list), find and record the edge that pulls them in, or record that the selector over-selects. Either way, do not use that selector unchanged.
 
 - [ ] **Step 3: Choose and apply the minimal step**
 
-From the inspected graph, pick the single step that builds exactly the playground plus the workspace packages it depends on, each once, in dependency order. With pnpm, a dependency-inclusive filter does this in one command: `--filter "<dir>..."` runs `build` in topological order and skips packages without a `build` script. Before using it, confirm from Step 2:
+Derive the command from the Step 2 graph. It must build exactly the playground plus the workspace packages it really depends on, each exactly once, in dependency order. One candidate is a dependency-inclusive filter on the confirmed package name (`--filter "NAME..."`), which runs `build` in topological order and skips packages without a `build` script. Use it only if Step 2 confirmed that:
 
 - it selects no package outside the real graph;
 - no package `build` script in the graph itself builds another package (which would build it twice).
 
-If either check fails, use the narrowest filter set that satisfies both instead (for example, the dependency packages via `--filter "<dir>^..."` plus a separate playground build), and record why. Edit only the `Build harness` step's `run:` line in `track-e-ssr-hydration` in the main working tree, and update its step name if it no longer describes what runs. Record the chosen command and the reasoning in the ledger.
+If either check fails, build the exact package set from Step 2 instead (for example, explicit `--filter` arguments naming each required package plus the playground), and record why. If the per-entry package sets differ, the command must still be expressible as one `run:` line parameterized by `${{ matrix.dir }}` or a per-entry matrix value; record how. Edit only the `Build harness` step's `run:` line in `track-e-ssr-hydration` in the main working tree, and update its step name if it no longer describes what runs. Record the chosen command and the reasoning in the ledger.
 
 - [ ] **Step 4: Commit the workflow change**
 
