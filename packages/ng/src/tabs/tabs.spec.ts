@@ -1,6 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, PLATFORM_ID } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { UTab } from "./tab";
 import { UTabList } from "./tab-list";
 import { UTabPanel } from "./tab-panel";
@@ -28,6 +28,39 @@ import { UTabs } from "./tabs";
 class TestHostComponent {
   value: number | undefined = 0;
 }
+
+// jsdom has no ResizeObserver; UTabList creates one on init, so every test in
+// this file needs the stub. `observers` records each instance for assertions.
+let observers: { cb: ResizeObserverCallback; observed: Element[]; disconnected: boolean }[];
+
+beforeEach(() => {
+  observers = [];
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      private readonly rec: {
+        cb: ResizeObserverCallback;
+        observed: Element[];
+        disconnected: boolean;
+      };
+      constructor(cb: ResizeObserverCallback) {
+        this.rec = { cb, observed: [], disconnected: false };
+        observers.push(this.rec);
+      }
+      observe(target: Element) {
+        this.rec.observed.push(target);
+      }
+      disconnect() {
+        this.rec.disconnected = true;
+      }
+    }
+  );
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
 describe("Tabs family (UTabs/UTabList/UTab/UTabPanels/UTabPanel)", () => {
   function setup() {
@@ -102,5 +135,72 @@ describe("Tabs family (UTabs/UTabList/UTab/UTabPanels/UTabPanel)", () => {
     tabs[2].click();
     fixture.detectChanges();
     expect(tabs[2].getAttribute("aria-selected")).toBe("false");
+  });
+});
+
+describe("UTabList overflow navigators (GAP-071)", () => {
+  function mockWidths(scrollWidth: number, clientWidth: number) {
+    vi.spyOn(Element.prototype, "scrollWidth", "get").mockReturnValue(scrollWidth);
+    vi.spyOn(Element.prototype, "clientWidth", "get").mockReturnValue(clientWidth);
+  }
+
+  function nextButton(fixture: { nativeElement: HTMLElement }) {
+    return fixture.nativeElement.querySelector('button[aria-label="Next"]');
+  }
+
+  it("shows the next navigator on first render when the tabs overflow", () => {
+    mockWidths(500, 100);
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    fixture.detectChanges();
+    expect(nextButton(fixture)).not.toBeNull();
+  });
+
+  it("shows no navigator on first render when the tabs fit", () => {
+    mockWidths(100, 100);
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    fixture.detectChanges();
+    expect(nextButton(fixture)).toBeNull();
+    expect(fixture.nativeElement.querySelector('button[aria-label="Previous"]')).toBeNull();
+  });
+
+  it("re-computes navigator visibility when the tab list resizes", () => {
+    mockWidths(100, 100);
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    expect(observers).toHaveLength(1);
+    expect(observers[0].observed[0]).toBe(fixture.nativeElement.querySelector("u-tab-list"));
+
+    vi.restoreAllMocks();
+    mockWidths(500, 100);
+    observers[0].cb([], {} as ResizeObserver);
+    fixture.detectChanges();
+    expect(nextButton(fixture)).not.toBeNull();
+  });
+
+  it("disconnects the observer on destroy", () => {
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    fixture.destroy();
+    expect(observers[0].disconnected).toBe(true);
+  });
+
+  it("creates no observer when showNavigators is false", () => {
+    TestBed.overrideTemplate(
+      TestHostComponent,
+      `<u-tabs [value]="value" [showNavigators]="false"><u-tab-list><u-tab [value]="0">A</u-tab></u-tab-list></u-tabs>`
+    );
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    expect(observers).toHaveLength(0);
+  });
+
+  it("creates no ResizeObserver on the server platform and destroys cleanly", () => {
+    TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    expect(() => fixture.destroy()).not.toThrow();
+    expect(observers).toHaveLength(0);
   });
 });

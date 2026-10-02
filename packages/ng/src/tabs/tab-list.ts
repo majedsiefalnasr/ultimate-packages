@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, ViewEncapsulation, computed, inject, signal } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+  ViewEncapsulation,
+  computed,
+  inject,
+  signal,
+} from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
 import { UTabs } from "./tabs";
 import { tabsStyleModule } from "./tabs-style";
@@ -7,8 +19,8 @@ import { tabsStyleModule } from "./tabs-style";
  * Ultimate-owned adaptation of PrimeNG's `TabList` component (see
  * `.vendor-extracted/ng/tabs/tablist.ts`). Renders the horizontal strip of
  * `UTab` triggers plus an active-indicator bar, with optional
- * prev/next scroll navigators for overflow. Reads `scrollable`/
- * `tabindex`/`showNavigators` from its nearest ancestor `UTabs` via
+ * prev/next scroll navigators for overflow. Reads `tabindex`/
+ * `showNavigators` from its nearest ancestor `UTabs` via
  * Angular DI, matching real PrimeNG's own `pcTabs = inject(...)` pattern.
  */
 @Component({
@@ -34,7 +46,7 @@ import { tabsStyleModule } from "./tabs-style";
     "[class]": "cx('tabListRoot')",
   },
 })
-export class UTabList extends UBaseComponent {
+export class UTabList extends UBaseComponent implements AfterViewInit, OnDestroy {
   protected override readonly componentName = "tabs";
   protected override readonly styleModule = tabsStyleModule;
 
@@ -47,6 +59,32 @@ export class UTabList extends UBaseComponent {
   protected readonly showNavigators = computed(() => this.pcTabs.showNavigators());
   protected readonly isPrevButtonEnabled = signal(false);
   protected readonly isNextButtonEnabled = signal(false);
+
+  private resizeObserver?: ResizeObserver;
+
+  // Matches PrimeNG 21.1.9 tablist.ts:148-152 — compute navigator state once
+  // the view exists, and keep it current on resize, in the browser only.
+  ngAfterViewInit(): void {
+    if (this.showNavigators() && isPlatformBrowser(this.platformId)) {
+      this.updateButtonState();
+      this.bindResizeObserver();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.unbindResizeObserver();
+  }
+
+  private bindResizeObserver(): void {
+    this.unbindResizeObserver();
+    this.resizeObserver = new ResizeObserver(() => this.updateButtonState());
+    this.resizeObserver.observe(this.el.nativeElement);
+  }
+
+  private unbindResizeObserver(): void {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = undefined;
+  }
 
   protected onScroll(): void {
     if (this.showNavigators()) this.updateButtonState();
