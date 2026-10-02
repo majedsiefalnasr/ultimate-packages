@@ -28,6 +28,38 @@ function mountTabs(value = 0) {
   );
 }
 
+// jsdom has no ResizeObserver; UTabList now binds one when showNavigators is on.
+let observers: { cb: ResizeObserverCallback; observed: Element[]; disconnected: boolean }[];
+
+beforeEach(() => {
+  observers = [];
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      private readonly rec: {
+        cb: ResizeObserverCallback;
+        observed: Element[];
+        disconnected: boolean;
+      };
+      constructor(cb: ResizeObserverCallback) {
+        this.rec = { cb, observed: [], disconnected: false };
+        observers.push(this.rec);
+      }
+      observe(target: Element) {
+        this.rec.observed.push(target);
+      }
+      disconnect() {
+        this.rec.disconnected = true;
+      }
+    }
+  );
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
+
 describe("Tabs family (UTabs/UTabList/UTab/UTabPanels/UTabPanel)", () => {
   it("renders all tabs and panels, only the active panel visible", () => {
     const wrapper = mountTabs();
@@ -160,5 +192,79 @@ describe("Tabs family (UTabs/UTabList/UTab/UTabPanels/UTabPanel)", () => {
       expect(scrollSpy).toHaveBeenCalledTimes(2);
       expect(scrollSpy.mock.instances[0]).toBe(tab.element);
     });
+  });
+});
+
+describe("UTabList overflow re-evaluation (GAP-072)", () => {
+  function mockWidths(scrollWidth: number, clientWidth: number) {
+    vi.restoreAllMocks();
+    vi.spyOn(Element.prototype, "scrollWidth", "get").mockReturnValue(scrollWidth);
+    vi.spyOn(Element.prototype, "clientWidth", "get").mockReturnValue(clientWidth);
+  }
+
+  function mountDynamic(showNavigators = true) {
+    return mount(
+      {
+        components: { UTabs, UTabList, UTab },
+        data() {
+          return { count: 2, showNavigators };
+        },
+        template: `
+          <UTabs :value="0" :showNavigators="showNavigators">
+            <UTabList>
+              <UTab v-for="n in count" :key="n" :value="n - 1">Header {{ n }}</UTab>
+            </UTabList>
+          </UTabs>
+        `,
+      },
+      { attachTo: document.body }
+    );
+  }
+
+  const live = () => observers.filter((o) => !o.disconnected).length;
+
+  it("re-shows the next navigator when tabs are added after mount", async () => {
+    mockWidths(100, 100);
+    const wrapper = mountDynamic();
+    expect(wrapper.find('button[aria-label="Next"]').exists()).toBe(false);
+
+    mockWidths(500, 100);
+    await wrapper.setData({ count: 8 });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('button[aria-label="Next"]').exists()).toBe(true);
+  });
+
+  it("re-computes navigator visibility when the tab list resizes", async () => {
+    mockWidths(100, 100);
+    const wrapper = mountDynamic();
+    expect(observers).toHaveLength(1);
+    expect(observers[0].observed[0]).toBe(wrapper.find('[role="tablist"]').element);
+
+    mockWidths(500, 100);
+    observers[0].cb([], {} as ResizeObserver);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('button[aria-label="Next"]').exists()).toBe(true);
+  });
+
+  it("keeps at most one live observer when showNavigators toggles", async () => {
+    const wrapper = mountDynamic(true);
+    expect(live()).toBe(1);
+    await wrapper.setData({ showNavigators: false });
+    expect(live()).toBe(0);
+    await wrapper.setData({ showNavigators: true });
+    expect(live()).toBe(1);
+    await wrapper.setData({ showNavigators: true });
+    expect(live()).toBe(1);
+  });
+
+  it("binds no observer when showNavigators starts false", () => {
+    mountDynamic(false);
+    expect(observers).toHaveLength(0);
+  });
+
+  it("disconnects the observer before unmount", () => {
+    const wrapper = mountDynamic();
+    wrapper.unmount();
+    expect(live()).toBe(0);
   });
 });
