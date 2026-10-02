@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, PLATFORM_ID, ViewChild } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { applyUltimateTheme } from "@ultimate/themes";
@@ -398,5 +398,41 @@ describe("UScroller content template (Task 1)", () => {
     // plan does not suppress one for the other, matching real upstream's
     // structurally-independent loader/content-dispatch regions.
     expect(fixture.nativeElement.querySelector("[data-test-content-template]")).not.toBeNull();
+  });
+});
+
+describe("UScroller SSR safety (GAP-080)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("reaches no ResizeObserver or layout measurement on the server platform", async () => {
+    const constructed = vi.fn();
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor() {
+          constructed();
+        }
+        observe() {}
+        disconnect() {}
+      }
+    );
+    const offsetHeight = vi.spyOn(HTMLElement.prototype, "offsetHeight", "get");
+    TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: "server" }] });
+
+    const fixture = TestBed.createComponent(UScroller);
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 10 }, (_, i) => i)
+    );
+    fixture.componentRef.setInput("itemSize", 20);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(() => fixture.destroy()).not.toThrow();
+
+    expect(constructed).not.toHaveBeenCalled();
+    expect(offsetHeight).not.toHaveBeenCalled();
   });
 });
