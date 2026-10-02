@@ -1,6 +1,6 @@
 # Specification — F2 Form / Accessibility: React ToggleButton Space Activation, Vue Password `ariaLabelledby` (GAP-075–GAP-076)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Approved for Plan creation (Spec Review 2026-10-02, approved as written; Plan requirements in §12).
 **Date:** 2026-10-02
 **Branch:** `feature/prime-parity-followup`
 **Origin:** post-closeout scope lock (`docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §6–§7), GAP-075, GAP-076. Parity baseline: ADR-048 (PrimeReact 10.9.9, PrimeVue 4.5.5).
@@ -110,3 +110,9 @@ GAP-075 and GAP-076 are independent of each other and of F1, F3, F4 and F5.
 ## 11. Explicit Out-of-Scope Items
 
 Angular/Vue ToggleButton; Angular/React Password; Enter-key behavior; other SelectButton/Password features; newer commercial Prime releases (ADR-048).
+
+---
+
+## 12. Spec Review Notes (2026-10-02)
+
+Approved as written, no scope change. Plan requirement: GAP-075's browser coverage must verify that the observable state (checked state / selected option) changes exactly once per Space press, not only that `preventDefault()` was called.

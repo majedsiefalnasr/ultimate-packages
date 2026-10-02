@@ -1,6 +1,6 @@
 # Specification — F4 SSR: Angular Scroller Browser Guard (GAP-080) and CI SSR Build-Order Verification
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Approved for Plan creation (Spec Review 2026-10-02; decision in §12).
 **Date:** 2026-10-02
 **Branch:** `feature/prime-parity-followup`
 **Origin:** post-closeout scope lock (`docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §6–§7), GAP-080, branch closeout deferred item 6 (`docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`). Parity baseline: ADR-048 (PrimeNG 21.1.9).
@@ -68,11 +68,11 @@ GAP-080: Angular only. CI verification: the job's matrix (`playground-angular`, 
 ### 5.2 CI SSR build-order verification
 
 1. Reproduce the job as CI would run it:
-   - a fresh clone of `feature/prime-parity-followup` (no existing `dist`);
+   - a clean checkout/worktree of `feature/prime-parity-followup` with no existing `dist` (the repository has no remote, so a clone from a remote is not possible);
    - Node 24.15.0 and `pnpm install --frozen-lockfile`;
    - then exactly `pnpm --filter <dir> run build` for each of the three matrix entries.
 2. Record the result per entry (pass/fail, first error) in this Spec's Plan ledger and in the closeout record.
-3. Remediation if the failure is confirmed: **open question for Spec Review, §12.**
+3. Remediation if the failure is confirmed: the minimal `ci.yml` fix decided in §12, re-verified by the same reproduction.
 
 ---
 
@@ -102,7 +102,7 @@ GAP-080 is independent. The CI verification is independent of GAP-080's code cha
 | Browser-platform tests: existing Scroller tests pass unchanged                                                                                                                                   | GAP-080 (non-regression) |
 | `apps/playground-angular` production build/prerender log contains no `ResizeObserver is not defined`                                                                                             | GAP-080                  |
 | `ng-ssr-chromium` Playwright project still passes                                                                                                                                                | Non-regression           |
-| Clean-checkout reproduction of `track-e-ssr-hydration`'s build step recorded for all three matrix entries                                                                                        | CI verification          |
+| Clean-checkout reproduction of `track-e-ssr-hydration`'s build step recorded for all three matrix entries; if it failed, the §12 fix makes all three pass in the same reproduction               | CI verification          |
 
 ---
 
@@ -118,11 +118,13 @@ GAP-078; failing CI on prerender errors; React/Vue SSR; other CI jobs; newer com
 
 ---
 
-## 12. Open Question for Spec Review
+## 12. Spec Review Decision (2026-10-02)
 
-If the clean-checkout reproduction confirms the build fails:
+The open question is decided as **(b)**. If the clean-checkout reproduction confirms the build fails, record the result and apply the minimal workflow fix in this phase. Constraints on the fix:
 
-- **(a) Record only.** The result goes into the closeout record; any workflow change becomes later operational work.
-- **(b) Record and apply the minimal workflow fix in this phase.** In `track-e-ssr-hydration`, build each playground's workspace dependencies before the playground (e.g. `pnpm --filter "<dir>..." run build`), then re-verify by the same reproduction. This touches `ci.yml` only.
+- It is chosen only after inspecting the actual pnpm workspace dependency graph of each playground. No command is fixed in advance.
+- It uses the smallest correct dependency-build step and does not build any package twice.
+- It touches `.github/workflows/ci.yml` only.
+- It is re-verified by the same clean-checkout reproduction.
 
-Recommendation: (b). Without it the SSR job, which is the CI evidence for GAP-080 and the earlier GAP-065 work, cannot run green on a clean checkout. The change is one workflow step and adds no new check.
+No new GAP is created for the build-order issue.

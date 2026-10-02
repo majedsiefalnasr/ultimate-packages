@@ -1,6 +1,6 @@
 # Specification — F5 Vue Declarations / Packaging: Resolvable Vue Types, Story Declarations, Declaration Source Maps (GAP-079)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Approved for Plan creation (Spec Review 2026-10-02; decision in §12).
 **Date:** 2026-10-02
 **Branch:** `feature/prime-parity-followup`
 **Origin:** post-closeout scope lock (`docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §6–§7), GAP-079 (the Vue remainder of GAP-068), branch closeout deferred items 4 and 5 (`docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`).
@@ -53,11 +53,11 @@
 
 ## 5. Required Behavior
 
-1. **Resolvable declarations.** Every relative specifier in `@ultimate/vue`'s emitted `.d.mts` files resolves to an emitted declaration file. That includes extensionless module specifiers and `.vue` SFC specifiers. A TypeScript consumer can then type-check imports from the barrel and from every subpath under both `moduleResolution: Bundler` and `NodeNext`.
+1. **Resolvable declarations.** Every relative specifier in `@ultimate/vue`'s emitted `.d.mts` files resolves to an emitted declaration file. That includes extensionless module specifiers and `.vue` SFC specifiers. A TypeScript consumer can then type-check imports from the barrel and from every currently exported subpath (every key of `packages/vue/package.json` `exports`, not arbitrary file paths) under both `moduleResolution: Bundler` and `NodeNext`.
 2. **Types intact.** Component exports keep real prop and emit types, not `any`.
 3. **Build guard.** Like React's `rename-dts.mjs`, Vue's declaration step fails the build when a relative specifier resolves to no emitted declaration file, so the defect cannot silently return.
 4. **No story declarations.** `@ultimate/vue`'s `dist` contains no `*.stories.d.mts` or their maps, mirroring React's `tsconfig.dts.json` excludes.
-5. **No stale map references.** No shipped `.d.mts` in `@ultimate/react` or `@ultimate/vue` references a declaration map that does not exist under that name. The mechanism is the **open question for Spec Review, §12.**
+5. **No stale map references.** No shipped `.d.mts` in `@ultimate/react` or `@ultimate/vue` references a declaration map: declaration maps are no longer emitted for either package (§12). Runtime JavaScript source maps are unaffected.
 
 ---
 
@@ -81,14 +81,14 @@ React and Vue keep `splitting: false` and their current output size (closeout de
 
 ## 9. Acceptance Criteria
 
-| Criterion                                                                                                                                                                    | Traces to              |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| A scratch consumer installing the packed `@ultimate/vue` tarball type-checks imports from the barrel and every subpath with zero errors under `Bundler` and under `NodeNext` | GAP-079                |
-| In that consumer, passing a wrongly typed prop to a component (e.g. `UButton`) is a type error                                                                               | GAP-079 (types intact) |
-| Vue's build exits non-zero if any relative declaration specifier is unresolved (covered by a test or a deliberate negative check in the Plan)                                | GAP-079 (guard)        |
-| `find packages/vue/dist -name "*.stories.d.mts*"` returns nothing                                                                                                            | Story declarations     |
-| No `.d.mts` in `packages/{react,vue}/dist` contains a `sourceMappingURL` to a missing file                                                                                   | Source maps            |
-| `integrity:pack-install` passes for `@ultimate/vue` and `@ultimate/react`; existing Vue and React tests pass                                                                 | Non-regression         |
+| Criterion                                                                                                                                                                             | Traces to              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| A scratch consumer installing the packed `@ultimate/vue` tarball type-checks imports from the barrel and every exported subpath with zero errors under `Bundler` and under `NodeNext` | GAP-079                |
+| In that consumer, passing a wrongly typed prop to a component (e.g. `UButton`) is a type error                                                                                        | GAP-079 (types intact) |
+| Vue's build exits non-zero if any relative declaration specifier is unresolved (covered by a test or a deliberate negative check in the Plan)                                         | GAP-079 (guard)        |
+| `find packages/vue/dist -name "*.stories.d.mts*"` returns nothing                                                                                                                     | Story declarations     |
+| No `.d.mts` in `packages/{react,vue}/dist` contains a `sourceMappingURL` and no `.d.mts.map` ships; the set of `.mjs.map` files is unchanged                                          | Source maps            |
+| `integrity:pack-install` passes for `@ultimate/vue` and `@ultimate/react`; existing Vue and React tests pass                                                                          | Non-regression         |
 
 ---
 
@@ -104,11 +104,9 @@ Code splitting and output size; `exports` maps; Angular packaging (GAP-081); run
 
 ---
 
-## 12. Open Question for Spec Review
+## 12. Spec Review Decision (2026-10-02)
 
-How to remove the stale declaration source-map references:
+The open question is decided as **(a)**: the React and Vue declaration builds stop emitting declaration maps. Constraints:
 
-- **(a) Stop emitting declaration maps** for the React and Vue declaration builds (`declarationMap: false` in their `tsconfig.dts.json`). No `.d.mts.map` ships and no comment is left behind.
-- **(b) Keep them and rewrite** each `sourceMappingURL` comment and map `file` field to the renamed names in `rename-dts.mjs`.
-
-Recommendation: (a). The maps' `sources` point at `../../src`, which is not published, so consumers cannot use them for go-to-definition today, and (b) would ship maps that still cannot resolve. Workspace development resolves source directly and does not depend on these maps.
+- The change affects declaration maps (`.d.mts.map` and the `.d.mts` `sourceMappingURL` comments) only. Runtime JavaScript output and its source maps (`.mjs.map`) are unchanged, and the Plan verifies this.
+- The packages' `exports` maps are unchanged.

@@ -1,6 +1,6 @@
 # Specification — F1 Tabs / Navigation: Tabs Overflow Detection and Breadcrumb Links (GAP-071–GAP-073)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Approved for Plan creation (Spec Review 2026-10-02, approved as written; Plan requirements in §12).
 **Date:** 2026-10-02
 **Branch:** `feature/prime-parity-followup`
 **Origin:** post-closeout scope lock (`docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §6–§7), GAP-071, GAP-072, GAP-073. Parity baseline: ADR-048 (PrimeNG 21.1.9, PrimeVue 4.5.5).
@@ -124,3 +124,9 @@ GAP-071, GAP-072 and GAP-073 are independent of each other and of F2–F5.
 ## 11. Explicit Out-of-Scope Items
 
 Angular `scrollable` input; Vue `scrollable` prop; PrimeVue's ink-bar observer; React Tabs; Breadcrumb `aria-current` and any other Breadcrumb behavior; newer commercial Prime releases (ADR-048).
+
+---
+
+## 12. Spec Review Notes (2026-10-02)
+
+Approved as written, no scope change. Plan requirement: GAP-072's observer must never be bound twice: when `showNavigators` changes (or on any rebind), an existing observer is disconnected before a new one is created.

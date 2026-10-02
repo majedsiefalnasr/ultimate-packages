@@ -1,6 +1,6 @@
 # Specification — F3 Vue Stepper: Horizontal Separators (GAP-077)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Approved for Plan creation (Spec Review 2026-10-02, approved as written; Plan requirements in §12).
 **Date:** 2026-10-02
 **Branch:** `feature/prime-parity-followup`
 **Origin:** post-closeout scope lock (`docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §6–§7), GAP-077 (split out of GAP-063). Parity baseline: ADR-048 (PrimeVue 4.5.5, `@primeuix/styles` 2.0.3).
@@ -115,3 +115,9 @@ Depends only on GAP-063's shipped pieces (§4). Independent of F1, F2, F4 and F5
 ## 11. Explicit Out-of-Scope Items
 
 Vertical Stepper changes; `isCompleted`; Angular/React Stepper; Stepper Aura tokens; newer commercial Prime releases (ADR-048).
+
+---
+
+## 12. Spec Review Notes (2026-10-02)
+
+Approved as written, no scope change. Plan requirement: The Plan must verify both the horizontal separator/layout behavior and the vertical Stepper (GAP-063) non-regression.

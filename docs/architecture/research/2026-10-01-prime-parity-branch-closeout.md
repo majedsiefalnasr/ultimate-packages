@@ -24,7 +24,7 @@ None of these items is unresolved implementation scope. Each was explicitly defe
 4. **Vue Storybook declarations.** The Vue declaration build also ships 91 `*.stories.d.mts` files (see GAP-079).
 5. **Source-map comments.** The renamed `.d.mts` files in React and Vue keep `sourceMappingURL` comments naming the old `.d.ts.map` files, and those maps point at unpublished `../src` (see GAP-079).
 6. **CI SSR job build order.** The `.github/workflows/ci.yml` `track-e-ssr-hydration` job builds the playground app with no step that builds `@ultimate/ng` first. Unverified locally; confirm on the first CI run of this branch.
-7. **Local Node version (environment follow-up).** CI and this branch's checks use Node 20. Angular 21 packages reject local Node 23 (`ERR_PNPM_UNSUPPORTED_ENGINE`), while the root `engines` field declares `>=20.0.0` and there is no `.nvmrc`. User decision at closeout: no repository change now.
+7. **Local Node version (environment follow-up).** This branch's local checks used Node 20.19.2. In CI, the main `ci` job uses Node 20, while the Storybook (`track-a-browser-visual-a11y`) and SSR (`track-e-ssr-hydration`) jobs use Node 24.15.0 (`.github/workflows/ci.yml:30,150,205`; corrected 2026-10-02 — this line previously said all CI uses Node 20). Angular 21 packages reject local Node 23 (`ERR_PNPM_UNSUPPORTED_ENGINE`), while the root `engines` field declares `>=20.0.0` and there is no `.nvmrc`. User decision at closeout: no repository change now.
 
 ## Branch-level checks (Node 20.19.2, pnpm 9.6.0, `--base-ref main`, after `c9be11c`)
 
