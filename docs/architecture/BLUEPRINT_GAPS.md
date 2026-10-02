@@ -1231,7 +1231,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Existing reusable infrastructure:** None — no shared base stylesheet currently defines utility classes.
 - **Recommended resolution direction:** Directional only — decide whether to define one shared hidden-accessible utility (and normalise the `p-`/`u-` prefixes) or scope a rule per component; add visual-hiding assertions. Exact approach belongs to this gap's own Spec.
 - **Source/evidence:** Form/Accessibility Plan Task 6 stop report (`task-6-report.md`, 2026-09-30) and controller re-verification (repo-wide search of source packages).
-- **Architectural decision required:** Possibly — whether a shared utility-class layer is introduced.
+- **Architectural decision required:** Possibly — whether a shared utility-class layer is introduced. **Decided 2026-10-02 (user):** one shared `u-hidden-accessible` utility registered through `@ultimate/uix-styled`; scope in `docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §7. Not in the next implementation phase.
 
 #### GAP-075 — React `UToggleButton` toggles twice on Space in real browsers
 
@@ -1279,7 +1279,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Existing reusable infrastructure:** Angular `DOCUMENT`/`Renderer2` on `UBaseComponent`; each framework's own SSR style-collection mechanisms.
 - **Recommended resolution direction:** Directional only — decide the SSR styling contract in its own Spec.
 - **Source/evidence:** SSR Plan Task 1 and final reviews (2026-10-01, ledger `.superpowers/sdd/2026-09-27-prime-parity-ssr/progress.md`); the three style-sheet files above.
-- **Architectural decision required:** Yes — the SSR styling strategy.
+- **Architectural decision required:** Yes — the SSR styling strategy. **Decided 2026-10-02 (user):** the proposed contract — Angular writes into the injected per-request `DOCUMENT`; React/Vue stay client-only, documented; see `docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §7. Not in the next implementation phase.
 
 #### GAP-079 — Vue's shipped type declarations are unresolvable for consumers
 
@@ -1430,7 +1430,7 @@ Listed here only where the repository shows genuine, unresolved forks requiring 
 - **Spike evidence (2026-10-01):** package-specifier re-exports build and give one class identity per component, provided barrel-only components also import subpath components by package specifier; every component can then be a secondary entry, including GAP-009's excluded four. Results and per-option evidence: `docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §2.
 - **Options:** (1) barrel re-exports from subpaths; (2) PrimeNG-style subpath-only packaging; (3) current model plus one documented canonical import style. Not yet chosen.
 - **Affected areas:** `@ultimate/ng` packaging, consumer imports, bundle size.
-- **Recommendation:** None yet — open fork; decide before the first stable public release.
+- **Decision (2026-10-02, user):** Option 1 — the barrel re-exports its existing secondary entries by package specifier, the 13 cross-directory relative imports become package-specifier imports, both import styles are preserved, a test-only path mapping is added and the hand-written `exports` map is kept accurate. Options 2 and 3 rejected. Implementation (GAP-081) is a later dedicated packaging phase. See `docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §7.
 
 ---
 
@@ -1553,7 +1553,7 @@ The great majority of gaps in this registry can be started without waiting on an
 
 The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`.
 
-Five remain genuinely open (§5): external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower still — Table's own composition question is substantially answered by real implementation, OrderList/PickList/DataView's relationship to it is resolved (2026-09-21, no new foundation required), and Table's own fuller filter-operator vocabulary is resolved (2026-09-23, all 18 `FilterMatchMode` values dispatched in all 3 frameworks); the remainder is TreeTable specifically, gated on the separate DECISION-D), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), package-naming finalization (DECISION-E, correctly deferred to pre-1.0), and the Angular packaging model (DECISION-F, GAP-081, registered 2026-10-01). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
+Five were open (§5) at the 2026-10-01 closeout; DECISION-F was decided on 2026-10-02 (Option 1), leaving four: external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower still — Table's own composition question is substantially answered by real implementation, OrderList/PickList/DataView's relationship to it is resolved (2026-09-21, no new foundation required), and Table's own fuller filter-operator vocabulary is resolved (2026-09-23, all 18 `FilterMatchMode` values dispatched in all 3 frameworks); the remainder is TreeTable specifically, gated on the separate DECISION-D), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), and package-naming finalization (DECISION-E, correctly deferred to pre-1.0). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
 
 ### Recommended Next Research
 

@@ -109,3 +109,18 @@ The key-mismatch components' token references currently resolve to nothing in An
 | F5 Vue declarations / packaging | GAP-079, plus the `.stories.d.mts` and source-map follow-ups                              | Vue remainder of GAP-068                                                               |
 
 Decision items, not implementation scope until approved: DECISION-F/GAP-081 (§2), GAP-078 (§3), GAP-074 (§4), GAP-064's next tranche (§5).
+
+## 7. User decisions (2026-10-02)
+
+1. **Parity baseline:** ADR-048 approved as written.
+2. **DECISION-F:** Option 1. The barrel re-exports the existing secondary entries by package specifier, and the 13 cross-directory relative imports become package-specifier imports. Existing barrel and subpath imports keep working, a test-only path mapping is added, and the hand-written `exports` map stays accurate. Target: no duplicate component classes, no duplicate-class `NG0912` collisions, and pack/install integrity intact. Option 2 (subpath-only, no barrel removal) and Option 3 are rejected. GAP-081 is implemented later, in its own packaging Spec and Plan.
+3. **GAP-078:** §3's contract approved.
+   - Angular: target the injected `DOCUMENT`, scope registration per document, emit each style once per document, and reuse server styles on hydration. Tests must cover multiple documents, duplicate registration, server rendering and hydration reuse.
+   - React and Vue: client-only and documented; no server-side collector.
+   - Not in the next implementation phase.
+4. **GAP-074:** §4's architecture approved (one shared `u-hidden-accessible` registered through `@ultimate/uix-styled`, following the GAP-078 registration contract; no component-local copies). Not in the next implementation phase.
+5. **GAP-064:** stays PARTIAL. §5's reconciled scope is kept for a later dedicated theming phase with its own visual verification; nothing from it is implemented now, including the naming-mapping fix.
+6. **GAP-076:** Vue only; no Angular Password GAP.
+7. **Minor observations:** as recorded under GAP-071/GAP-072; no new GAPs.
+8. **Next implementation phase:** exactly F1–F5 (§6). GAP-064, GAP-074, GAP-078 and GAP-081 are excluded from it.
+9. **Process:** five Specs (one per family), Spec Review, five Plans, Plan Review, then Implementation. The phase starts from `main` after `feature/prime-parity-audit-gaps` has been merged.
