@@ -3,7 +3,7 @@ import { DOCUMENT } from "@angular/common";
 import { cn } from "@ultimate/uix-utils/classnames";
 import { css, registerThemeVariables } from "@ultimate/uix-styled";
 import { UltimateConfig } from "../config/ultimate-config";
-import { ngCoreStyleSheet } from "./style-sheet";
+import { ngCoreStyleSheetFor } from "./style-sheet";
 
 /**
  * Ultimate-owned, scoped-down reimplementation of PrimeNG's own
@@ -47,14 +47,17 @@ export abstract class UBaseComponent {
   }
 
   ngOnInit(): void {
+    // Per-document registry (GAP-078): the injected DOCUMENT is the
+    // per-request document under SSR and the real document in the browser.
+    const sheet = ngCoreStyleSheetFor(this.document);
     // Theme variable DEFINITIONS first — the structural CSS below refers to
     // them via dt()-resolved var(--u-*) references, which resolve to nothing
     // unless something also defines the properties. Idempotent per its own
     // has() guards; see registerThemeVariables' doc comment.
-    registerThemeVariables(ngCoreStyleSheet, this.componentName);
+    registerThemeVariables(sheet, this.componentName);
 
-    if (!ngCoreStyleSheet.has(this.componentName)) {
-      ngCoreStyleSheet.add(this.componentName, css`${this.styleModule.css}`);
+    if (!sheet.has(this.componentName)) {
+      sheet.add(this.componentName, css`${this.styleModule.css}`);
     }
   }
 }

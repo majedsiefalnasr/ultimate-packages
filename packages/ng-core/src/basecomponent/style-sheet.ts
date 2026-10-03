@@ -1,33 +1,57 @@
 import { StyleSheet, type StyleMeta } from "@ultimate/uix-styled";
-import { createStyleElement } from "@ultimate/uix-utils";
+
+/** Attribute that identifies a registered `<style>` element by its style key. */
+export const NG_CORE_STYLE_KEY_ATTR = "data-u-style";
 
 /**
- * `ng-core`-only subclass of `@ultimate/uix-styled`'s `StyleSheet<HTMLStyleElement>`,
- * overriding `createStyleElement` to append a real `<style>` element to
- * `document.head` — matching `react-core`'s `ReactStyleSheet` and
- * `vue-core`'s `VueStyleSheet`, which both already do this (see
- * `packages/react-core/src/styling/react-style-sheet.ts`,
- * `packages/vue-core/src/styling/vue-style-sheet.ts`). The base `StyleSheet`
- * class's own `createStyleElement` is a no-op stub, so without this
- * override `ngCoreStyleSheet.add()` only ever recorded CSS into its
- * in-memory `_styles` Map and never wrote anything to the DOM. SSR-guarded
- * via the same `typeof document` check both sibling implementations use.
+ * `ng-core`'s `StyleSheet<HTMLStyleElement>` for ONE document (GAP-078).
+ * Writes into that document's `<head>` (the injected Angular `DOCUMENT`,
+ * per request under SSR) instead of the global `document`, and adopts an
+ * existing `<style>` with the same key (server-rendered HTML being
+ * hydrated) instead of creating a duplicate. PrimeNG 21.1.9's `UseStyle`
+ * likewise writes into the injected `DOCUMENT`.
  */
 class NgCoreStyleSheet extends StyleSheet<HTMLStyleElement> {
+  constructor(private readonly doc: Document | undefined) {
+    super();
+  }
+
   override createStyleElement(meta: StyleMeta): HTMLStyleElement | undefined {
-    if (typeof document === "undefined") return undefined;
-    return createStyleElement(meta.css ?? "", meta.attrs, document.head);
+    const head = this.doc?.head;
+    if (!head) return undefined;
+    const key = meta.name ?? "";
+    // Compare attribute values instead of building a CSS selector, so keys
+    // with selector-special characters are still found.
+    const existing = Array.from(head.querySelectorAll("style")).find(
+      (el) => el.getAttribute(NG_CORE_STYLE_KEY_ATTR) === key
+    );
+    if (existing) return existing;
+    const el = this.doc!.createElement("style");
+    el.setAttribute(NG_CORE_STYLE_KEY_ATTR, key);
+    el.textContent = meta.css ?? "";
+    head.appendChild(el);
+    return el;
   }
 }
 
+const sheets = new WeakMap<Document, NgCoreStyleSheet>();
+
+/** The style registry for `doc`: one per document, inert when `doc` is undefined. */
+export function ngCoreStyleSheetFor(doc: Document | undefined): StyleSheet<HTMLStyleElement> {
+  if (!doc) return new NgCoreStyleSheet(undefined);
+  let sheet = sheets.get(doc);
+  if (!sheet) {
+    sheet = new NgCoreStyleSheet(doc);
+    sheets.set(doc, sheet);
+  }
+  return sheet;
+}
+
 /**
- * Shared `@ultimate/uix-styled` `StyleSheet` instance used to register
- * `ng-core`/`ng` component style modules.
- *
- * `StyleSheet` (see `packages/uix-styled/src/stylesheet/index.ts`) is a
- * plain class, not an Angular-injectable, `providedIn: 'root'` service —
- * so `ng-core` owns a single module-level instance here and every
- * `UBaseComponent` subclass registers against it, keeping registration
- * idempotent per `componentName` across all component instances.
+ * The registry for the global `document` (inert when there is none, e.g.
+ * on the server). Kept for existing callers and tests; components use
+ * `ngCoreStyleSheetFor(this.document)`.
  */
-export const ngCoreStyleSheet = new NgCoreStyleSheet();
+export const ngCoreStyleSheet = ngCoreStyleSheetFor(
+  typeof document === "undefined" ? undefined : document
+);
