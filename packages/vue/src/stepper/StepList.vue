@@ -6,11 +6,11 @@
 
 <script>
 // Ultimate-owned adaptation of PrimeVue's `StepList` component (see
-// `.vendor-extracted/vue/steplist/StepList.vue`). Pure content-projection
-// wrapper for a horizontal row of `UStep` children (`UStepItem` is the
-// vertical-layout grouping and is used directly under `UStepper`) —
-// this family's 2nd member, built after `UStepper` per the documented
-// container-first order — no state of its own.
+// `.vendor-extracted/vue/steplist/StepList.vue`). Wraps the horizontal
+// row of `UStep` children (`UStepItem` is the vertical-layout grouping
+// used directly under `UStepper`). Provides `$pcStepList` and a step
+// registry so each `UStep` can show its horizontal separator (mirroring
+// PrimeVue's design).
 import { createBaseComponent } from "@ultimate/vue-core";
 import { stepperStyleModule } from "./stepper-style";
 
