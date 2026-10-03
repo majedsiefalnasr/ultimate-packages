@@ -53,3 +53,14 @@ All per-task minor findings and their "keep deferred" dispositions remain as tri
 - inherited prettier failures in touched files (no new ones added).
 
 No new GAPs were created from them.
+
+## Post-merge Category A closeout (2026-10-03)
+
+Done against `main` `986dbcc` after the follow-up merge, with no runtime code changes:
+
+- **Size baseline (`PERFORMANCE.md`):** the 8 rows the gate reads for packages that grew (`ng-core`, `ng`, `react-core`, `react`, `themes`, `uix-utils`, `vue-core`, `vue`) were re-measured on `986dbcc` with Node 20.19.2 and recorded with a re-baseline note. The approach is the one prepared at the first closeout; the prepared patch's values were stale because F1–F5 changed the output. All 17 rows match a fresh measurement within the gate's ±0.005 KB integrity tolerance.
+- **Linux screenshot baselines:** the Angular Tooltip, Dialog and Menu visual tests were re-run in `mcr.microsoft.com/playwright:v1.63.0-jammy` (the `fb74a8b` procedure) with `--update-snapshots=changed`. 9 baselines changed: Menu Popup, Tooltip Default and Tooltip Right Position, in Chromium, Firefox and WebKit. Menu Popup now shows the real popup overlay (GAP-067); Tooltip Right Position reflects GAP-066. The other 18, including every Dialog baseline, were already correct and stayed byte-identical. A verification run without updates passed 27/27.
+- **Clipped Tooltip story:** accepted as-is. The Tooltip Default baseline records the tooltip partly above the viewport. No story change and no new GAP.
+- **`MIGRATION.md` §8:** the follow-up phase's consumer-facing changes were added (GAP-079, GAP-075, GAP-076, GAP-073, declaration maps and story declarations no longer shipped).
+
+Still open after this patch: the real CI run, which happens on push. Category B (GAP-074, GAP-078, GAP-081) and Category C (GAP-082, GAP-064, inherited repo debt) are unchanged.

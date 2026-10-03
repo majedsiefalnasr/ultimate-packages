@@ -84,6 +84,8 @@ Phase 10 Track B extends `scripts/provenance/measure-package-size.mjs`'s package
 
 Real Stage-1 baseline, measured 2026-09-09 against commit `62480b6` (Node v22.22.2, pnpm 9.6.0) via `pnpm run build && pnpm run size:measure`.
 
+Re-baselined rows (`ng-core`, `ng`, `react-core`, `react`, `themes`, `uix-utils`, `vue-core`, `vue`), measured 2026-10-03 against commit `986dbcc` (Node v20.19.2, pnpm 9.6.0) via `pnpm run build && pnpm run size:measure`: Prime-parity component additions (Phase C on `main`, then the Prime-parity audit and follow-up phases' Aura preset modules, 61 additional `ng` secondary entry points and per-component React/Vue subpaths) grew these barrels past the 15% gate. All other rows are unchanged from the Stage-1 baseline.
+
 ### Package size
 
 | Package | dist/ size | dist/ file count | index.mjs gzip size |
@@ -93,18 +95,18 @@ Real Stage-1 baseline, measured 2026-09-09 against commit `62480b6` (Node v22.22
 | packages/component-metadata | 165.0 KB | 3 | 7.93 KB |
 | packages/component-schema | 29.3 KB | 3 | 2.37 KB |
 | packages/mcp | 93.0 KB | 5 | 2.97 KB |
-| packages/ng-core | 112.5 KB | 6 | 10.51 KB |
-| packages/ng | 400.7 KB | 6 | 32.91 KB |
-| packages/react-core | 67.0 KB | 3 | 6.64 KB |
-| packages/react | 370.6 KB | 27 | 10.60 KB |
-| packages/themes | 110.7 KB | 3 | 5.23 KB |
+| packages/ng-core | 190.0 KB | 6 | 16.53 KB |
+| packages/ng | 5281.3 KB | 286 | 202.86 KB |
+| packages/react-core | 73.8 KB | 3 | 6.76 KB |
+| packages/react | 3390.8 KB | 439 | 87.16 KB |
+| packages/themes | 482.9 KB | 3 | 13.14 KB |
 | packages/uix-data | 7.0 KB | 3 | 0.34 KB |
 | packages/uix-motion | 32.8 KB | 3 | 2.06 KB |
 | packages/uix-styled | 117.2 KB | 3 | 8.45 KB |
 | packages/uix-styles | 195.7 KB | 33 | 0.65 KB |
-| packages/uix-utils | 395.6 KB | 30 | 14.12 KB |
-| packages/vue-core | 82.2 KB | 3 | 8.22 KB |
-| packages/vue | 643.5 KB | 90 | 19.68 KB |
+| packages/uix-utils | 397.4 KB | 30 | 14.16 KB |
+| packages/vue-core | 105.7 KB | 3 | 8.66 KB |
+| packages/vue | 5282.9 KB | 575 | 132.30 KB |
 
 ### Coverage
 
