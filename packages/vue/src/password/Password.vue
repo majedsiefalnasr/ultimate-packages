@@ -62,7 +62,7 @@
         <div :class="cx('meterText')">{{ infoText }}</div>
       </div>
     </UPortal>
-    <span :class="cx('hiddenAccessible')" aria-live="polite">{{ infoText }}</span>
+    <span class="u-hidden-accessible" aria-live="polite">{{ infoText }}</span>
   </div>
 </template>
 

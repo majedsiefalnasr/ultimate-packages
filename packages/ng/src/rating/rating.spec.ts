@@ -5,6 +5,20 @@ import { describe, expect, it } from "vitest";
 import { URating } from "./rating";
 
 describe("URating", () => {
+  it("wraps each star's radio input in the shared u-hidden-accessible class (GAP-074)", () => {
+    @Component({
+      standalone: true,
+      imports: [URating],
+      template: `<u-rating [stars]="5" />`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const host: HTMLElement = fixture.nativeElement;
+    expect(host.querySelectorAll(".u-hidden-accessible input[type=radio]").length).toBeGreaterThan(0);
+    expect(host.querySelector(".p-hidden-accessible")).toBeNull();
+  });
+
   it("renders one option per star", () => {
     @Component({
       standalone: true,

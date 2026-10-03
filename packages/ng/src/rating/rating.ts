@@ -42,7 +42,7 @@ export interface URatingRateEvent {
         [class]="cx('option', optionClassesParams(star))"
         (click)="onOptionClick($event, star + 1)"
       >
-        <span class="p-hidden-accessible">
+        <span class="u-hidden-accessible">
           <input
             type="radio"
             [value]="star + 1"
