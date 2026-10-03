@@ -208,8 +208,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build harness (${{ matrix.dir }})
-        run: pnpm --filter ${{ matrix.dir }} run build
+      - name: Build harness and its workspace dependencies (${{ matrix.dir }})
+        run: pnpm --filter-prod "${{ matrix.dir }}..." run build
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
