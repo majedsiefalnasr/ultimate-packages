@@ -555,6 +555,8 @@ Expected: the new tests fail (export missing / rule not registered).
 
 - [ ] **Step 3: Implement**
 
+Before writing it, check the type import: `packages/uix-styled/src/stylesheet/index.ts` ends with `export default StyleSheet;` (verified on `cdcc65e`), and `theme-variables.ts` already uses `import type StyleSheet from "./index";`, so the default-import form below is correct. Re-check that line before writing.
+
 Create `packages/uix-styled/src/stylesheet/hidden-accessible.ts`:
 
 ```ts
@@ -686,7 +688,7 @@ import { storyUrl } from "./accessibility-envelope";
  * wrapper is visually hidden (1x1, clipped) but still in the accessibility
  * tree. Uses the existing Vue Rating story. No screenshots.
  */
-test("Rating's hidden radio inputs are visually hidden but exposed to assistive tech", async ({
+test("Rating's radio inputs are visually hidden yet discoverable by role (accessibility tree)", async ({
   page,
 }) => {
   await page.goto(storyUrl("vue-rating--default"));
@@ -697,7 +699,16 @@ test("Rating's hidden radio inputs are visually hidden but exposed to assistive 
   expect(box!.width).toBeLessThanOrEqual(1);
   expect(box!.height).toBeLessThanOrEqual(1);
   expect(await wrapper.evaluate((el) => getComputedStyle(el).position)).toBe("absolute");
-  await expect(page.getByRole("radio").first()).toBeAttached();
+  // Semantic check, not just DOM attachment: with the hidden-accessible CSS
+  // applied, the radios must still be exposed through the browser's
+  // accessibility tree. getByRole resolves against computed roles and
+  // excludes hidden elements by default, so finding them here shows the
+  // visual hiding did not remove them from assistive technology.
+  // (aria-hidden, display:none or visibility:hidden would remove them; the
+  // 1x1 clip used here must not).
+  const radios = page.getByRole("radio");
+  expect(await radios.count()).toBeGreaterThan(0);
+  await expect(radios.first()).toBeAttached();
 });
 ```
 
@@ -769,20 +780,29 @@ Record in the report:
 - the `build` script (`packages/ng/package.json`: `ng-packagr -p ng-package.json`, no `-c`);
 - the `ng-packagr` source lines showing that without `-c` it reads its bundled `tsconfig.ngc.json`: `node_modules/.pnpm/ng-packagr@21.2.7*/node_modules/ng-packagr/src/lib/ts/tsconfig.js:45-82`.
 
-Then build twice at this commit and compare:
+Then run the **clean build comparison** below with label `t5`. Task 6 runs the same procedure with label `t6`. Both sides of a comparison run in this same working tree (identical absolute paths), with the same Node and pnpm, the same source except the two mapping keys, and no reused `dist` or build cache.
 
-```bash
-export PATH="$HOME/.nvm/versions/node/v20.19.2/bin:$PATH"
-pnpm --filter-prod "@ultimate/ng^..." run build
-pnpm --filter @ultimate/ng run build
-(cd packages/ng/dist && find . -type f -print0 | sort -z | xargs -0 shasum -a 256) | shasum -a 256 | tee /tmp/claude-501/gap081-with-mapping.txt
-git stash push -m "gap081-mapping-probe" -- packages/ng/tsconfig.json
-pnpm --filter @ultimate/ng run build
-(cd packages/ng/dist && find . -type f -print0 | sort -z | xargs -0 shasum -a 256) | shasum -a 256 | tee /tmp/claude-501/gap081-without-mapping.txt
-git stash list --format='%H %gs'
-```
+**Clean build comparison (label `L` = `t5` or `t6`):**
 
-Then restore the mapping with `git stash apply <that stash's SHA>` and drop that one entry by its SHA (never a bare `git stash pop`). Also confirm `git diff packages/ng/tsconfig.json` shows the mapping again. Expected: the two hashes are identical, which proves the mapping does not affect the build. (Alternatively, do the without-mapping build in a scratch worktree at this commit with the mapping removed, and avoid the stash entirely.)
+1. Environment: `export PATH="$HOME/.nvm/versions/node/v20.19.2/bin:$PATH"`. Record `node -v` and `pnpm -v` in the report; they must be the same for both sides.
+2. Build the dependencies once; both sides share them and they do not change: `pnpm --filter-prod "@ultimate/ng^..." run build`.
+3. **Side A (mapping present):**
+   1. Check that only build output would be removed: `git clean -ndX -- packages/ng/dist` must list only `packages/ng/dist`. Then `git clean -fdX -- packages/ng/dist` and confirm `packages/ng/dist` no longer exists.
+   2. Find and record any build cache: `ls -d packages/ng/.angular packages/ng/node_modules/.cache node_modules/.cache/ng-packagr 2>/dev/null`. Delete only directories that list prints, and record what was deleted. An empty result means there was no cache.
+   3. Build: `pnpm --filter @ultimate/ng run build`.
+   4. Write a per-file manifest: `(cd packages/ng/dist && find . -type f | LC_ALL=C sort | xargs shasum -a 256) | tee /tmp/claude-501/gap081-L-A.txt`, using the literal file name for label `L`, e.g. `gap081-t5-A.txt`.
+4. **Side B (mapping absent):**
+   1. Remove only the `baseUrl` and `paths` keys from `packages/ng/tsconfig.json`, by editing the file. `git diff packages/ng/tsconfig.json` (against the side A state) must show only those lines.
+   2. Repeat 3.1, 3.2 and 3.3.
+   3. Write the manifest to `/tmp/claude-501/gap081-L-B.txt`.
+   4. Restore the mapping exactly. If it is already committed, `git restore packages/ng/tsconfig.json`; otherwise re-add the same keys. `git diff` of that file must then match side A again.
+5. **Compare:** `diff /tmp/claude-501/gap081-L-A.txt /tmp/claude-501/gap081-L-B.txt`. Expected: no output, meaning the same file list and the same hash for every file.
+6. **Non-determinism, handled explicitly and not ignored:** if any file differs, build side A a second time (steps 3.1–3.4, manifest `gap081-L-A2.txt`) and diff A against A2.
+   - A file may be excluded only if it also differs between the two identical side-A builds. That proves the difference is build non-determinism, such as a timestamp or random identifier.
+   - For each excluded file, record the path and the differing content (`diff` of the two side-A copies) in the report.
+   - Any file that differs between A and B but not between A and A2 is a real effect of the mapping. That **fails** the comparison: stop and report.
+
+This proves `packages/ng/tsconfig.json`'s development mapping does not affect the published `ng-packagr` output.
 
 - [ ] **Step 3: Typecheck and tests with the mapping (no source change yet)**
 
@@ -849,7 +869,7 @@ Expected: both succeed.
 - `pnpm run integrity:pack-install -- @ultimate/ng`: expected OK.
 - `git diff cdcc65e -- packages/ng/package.json`: expected no change (the `exports` map is unchanged).
 - Barrel export set unchanged: compare the sorted export names of `dist/types/ultimate-ng.d.ts` before (Task 5 build) and after. Expected identical, with `UInputNumber` still absent from the barrel.
-- **Build isolation:** hash `packages/ng/dist` (Task 5 Step 2 command, file `/tmp/claude-501/gap081-final-with-mapping.txt`). Then rebuild with the mapping removed (stash-by-SHA or scratch worktree, as in Task 5) and hash again to `/tmp/claude-501/gap081-final-without-mapping.txt`. Expected: identical. The only difference from the Task 5 baseline comes from this task's source changes.
+- **Build isolation:** run Task 5's **clean build comparison** procedure with label `t6`, on this task's final source, after the measurements above. Expected: `gap081-t6-A.txt` and `gap081-t6-B.txt` are identical, apart from files proven non-deterministic by the A/A2 rule and listed in the report. This is the authoritative proof for the shipped state; Task 5's `t5` run is the baseline. Afterwards, rebuild side A (mapping present) so `packages/ng/dist` is the normal build for the steps below.
 
 - [ ] **Step 5: Tests and Storybook**
 
