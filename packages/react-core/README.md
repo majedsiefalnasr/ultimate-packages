@@ -39,6 +39,15 @@ function Example() {
 }
 ```
 
+### Server rendering and styles
+
+Component styles are injected on the client only: they are registered on
+first mount into the document `<head>`. Server-rendered HTML therefore
+contains no component CSS, and markup is unstyled until hydration
+(accepted; matches PrimeReact 10.9.9). Angular
+(`@ultimate/ng-core`) differs: it writes styles into the per-request
+document during server rendering and adopts them on hydration (GAP-078).
+
 ## Intentional deviations (spec §32)
 
 - **Escape handling** — preserved behavior, independently reimplemented (not ported) in `react-core`; verifiably more correct than Angular's current `UDialog` Escape handling (see `escape` above, ADR-020, ADR-026).

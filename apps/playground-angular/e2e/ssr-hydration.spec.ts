@@ -25,8 +25,9 @@ import { expect, test } from "@playwright/test";
  *   (e) the component's own post-hydration interaction/assertion, per the
  *       plan's binding interaction table (identical across Tasks 5/6/7).
  *
- * No `<style>` tag presence is asserted anywhere in this file (spec §D.3's
- * explicit non-assertion). No ID-normalization/workaround for
+ * GAP-078: the last describe block asserts that server HTML carries keyed
+ * `<style data-u-style>` elements and that hydration adopts them (each key
+ * once). No ID-normalization/workaround for
  * `ComponentIdGenerator`-produced IDs is applied anywhere below — none of
  * these 8 components' assertions depend on a specific generated ID value.
  *
@@ -379,5 +380,34 @@ test.describe("Ng SSR/Hydration — Determinism", () => {
     // determinism violation to fix at the fixture-data source, not to
     // launder past this check.
     expect(bodyA).toBe(bodyB);
+  });
+});
+
+test.describe("GAP-078 server-rendered styles", () => {
+  test("server HTML contains keyed theme and component styles, adopted once after hydration", async ({
+    page,
+  }) => {
+    const errors = captureUnexpectedErrors(page);
+
+    const response = await page.request.get(HARNESS_URL);
+    const body = await response.text();
+    expect(body).toContain('data-u-style="u-common-variables"');
+    expect(body).toContain('data-u-style="button"');
+
+    await page.goto(HARNESS_URL);
+    await page.waitForSelector('[data-hydrated="true"]');
+
+    const counts = await page.evaluate(() => {
+      const c: Record<string, number> = {};
+      for (const el of Array.from(document.querySelectorAll("style[data-u-style]"))) {
+        const k = el.getAttribute("data-u-style")!;
+        c[k] = (c[k] ?? 0) + 1;
+      }
+      return c;
+    });
+    expect(Object.keys(counts).length).toBeGreaterThan(1);
+    for (const [key, n] of Object.entries(counts)) expect(n, key).toBe(1);
+
+    assertNoHydrationErrors(errors);
   });
 });

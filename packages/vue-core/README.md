@@ -40,6 +40,15 @@ export default {
 };
 ```
 
+### Server rendering and styles
+
+Component styles are injected on the client only: they are registered on
+first mount into the document `<head>`. Server-rendered HTML therefore
+contains no component CSS, and markup is unstyled until hydration
+(accepted; matches PrimeVue 4.5.5). Angular
+(`@ultimate/ng-core`) differs: it writes styles into the per-request
+document during server rendering and adopts them on hydration (GAP-078).
+
 ## Intentional deviations (spec §32)
 
 - **Base architecture** — Options-API `extends` mixin, preserving PrimeVue's own structural mechanism, independently authored (ADR-032).
