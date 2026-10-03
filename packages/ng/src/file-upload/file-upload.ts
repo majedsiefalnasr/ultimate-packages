@@ -12,7 +12,7 @@ import {
   signal,
 } from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
-import { UProgressBar } from "../progress-bar/progress-bar";
+import { UProgressBar } from "@ultimate/ng/progress-bar";
 import { fileUploadStyleModule } from "./file-upload-style";
 
 export interface UFileUploadSelectEvent {

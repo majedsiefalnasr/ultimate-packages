@@ -16,7 +16,7 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { UBaseComponent } from "@ultimate/ng-core";
-import { UListbox, UListboxChangeEvent } from "../listbox/listbox";
+import { UListbox, UListboxChangeEvent } from "@ultimate/ng/listbox";
 import { orderListStyleModule } from "./order-list-style";
 
 let nextOrderListId = 0;

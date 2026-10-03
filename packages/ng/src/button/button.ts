@@ -7,7 +7,7 @@ import {
   output,
 } from "@angular/core";
 import { UBaseComponent, USpinnerIcon } from "@ultimate/ng-core";
-import { URipple } from "../ripple";
+import { URipple } from "@ultimate/ng/ripple";
 import { buttonStyleModule } from "./button-style";
 
 /**

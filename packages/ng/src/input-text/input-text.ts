@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NgControl } from "@angular/forms";
 import { UModelHolder } from "@ultimate/ng-core";
 import { cn } from "@ultimate/uix-utils/classnames";
-import { UFluid } from "../fluid/fluid";
+import { UFluid } from "@ultimate/ng/fluid";
 import { inputTextStyleModule } from "./input-text-style";
 
 /**

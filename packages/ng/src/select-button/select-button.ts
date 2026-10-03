@@ -10,7 +10,7 @@ import {
 } from "@angular/core";
 import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from "@angular/forms";
 import { UBaseEditableHolder } from "@ultimate/ng-core";
-import { UToggleButton } from "../toggle-button/toggle-button";
+import { UToggleButton } from "@ultimate/ng/toggle-button";
 import { selectButtonStyleModule } from "./select-button-style";
 
 export interface USelectButtonChangeEvent {

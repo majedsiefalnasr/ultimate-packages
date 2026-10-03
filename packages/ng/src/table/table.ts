@@ -12,8 +12,8 @@ import { UBaseComponent } from "@ultimate/ng-core";
 import { equals } from "@ultimate/uix-data";
 import type { FilterMetadata, SelectionMode, SortMeta, SortMode } from "@ultimate/uix-data";
 import { deepEquals } from "@ultimate/uix-utils/object";
-import { PaginatorPageChangeEvent, UPaginator } from "../paginator/paginator";
-import { UScroller } from "../scroller/scroller";
+import { PaginatorPageChangeEvent, UPaginator } from "@ultimate/ng/paginator";
+import { UScroller } from "@ultimate/ng/scroller";
 import { tableStyleModule } from "./table-style";
 
 export interface UTableColumn<T = unknown> {
