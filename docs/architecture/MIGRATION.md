@@ -91,3 +91,12 @@ Recorded at implementation time (2026-10-01) so the first release's changelog an
 - **`@ultimate/ng` — `UMenu` popup mode is functional.** `popup` previously had no effect (the menu always rendered); with `popup` set, the menu now stays hidden until `toggle()`/`show()` is called. Templates that set `popup` without a trigger must add one. (GAP-067.)
 - **`@ultimate/react` — per-file type declarations.** Declarations are now emitted per source file (`tsc`) with explicit `.mjs` relative specifiers instead of one bundled `.d.mts` per entry; the public types are unchanged, but tooling that read the old bundled files directly may notice the new layout. All 87 subpaths now have built files. (GAP-068, `5ba681e`.)
 - **`@ultimate/vue` — all component subpaths now built** (94); previously only the proof-set subpaths existed. (GAP-068, `8647317`.)
+
+Added at the follow-up phase closeout (`feature/prime-parity-followup`, merged 2026-10-03), same status — unreleased, no changesets:
+
+- **`@ultimate/vue` — type declarations now resolve for consumers.** Every relative specifier in the shipped `.d.mts` files now points at an emitted declaration (e.g. `./Button.vue.mjs`), so imports from the barrel and every exported subpath type-check under `moduleResolution: Bundler` and `NodeNext`; previously consumers got TS2307. Component props are still untyped (GAP-082). (GAP-079, `041e7eb`.)
+- **`@ultimate/react`, `@ultimate/vue` — declaration maps are no longer shipped.** No `.d.mts.map` files and no `sourceMappingURL` comments in `.d.mts`; the maps pointed at unpublished source and could not be used. Runtime `.mjs` files and their source maps are unchanged. (`6360a83`.)
+- **`@ultimate/vue` — Storybook story declarations are no longer shipped** (`*.stories.d.mts`). (`6360a83`.)
+- **`@ultimate/vue` — `UPassword` accepts `ariaLabelledby`,** bound to the input's `aria-labelledby`, matching PrimeVue. (GAP-076, `c786c15`.)
+- **`@ultimate/react` — `UToggleButton` toggles once per Space press.** Space previously toggled twice in real browsers (ending unchanged); it now toggles once and prevents the native activation, matching PrimeReact. `USelectButton` options behave the same way. Enter is unchanged. (GAP-075, `f52e842`.)
+- **`@ultimate/ng` — `UBreadcrumb` links keep their `url` or `#` href.** Items without a `routerLink`, and disabled items, previously lost their `href`; they now render `url` (or `#`) and carry no `RouterLink`. (GAP-073, `90602d3`.)
