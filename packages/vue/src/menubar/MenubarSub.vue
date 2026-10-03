@@ -81,7 +81,10 @@ export default {
   name: "UMenubarSub",
   extends: createBaseComponent({ componentName: "menubar", styleModule: menubarStyleModule }),
   props: {
-    items: { type: Array, default: () => [] },
+    items: {
+      type: /** @type {import('vue').PropType<readonly unknown[]>} */ (Array),
+      default: () => [],
+    },
     root: { type: Boolean, default: false },
   },
   emits: ["item-select"],

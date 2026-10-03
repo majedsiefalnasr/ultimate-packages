@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { splitterStyleModule } from "./splitter-style";
@@ -17,7 +18,7 @@ export function createBaseSplitter() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "splitter", styleModule: splitterStyleModule }),
     props: {
-      panels: { type: Array, default: () => [] },
+      panels: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       layout: { type: String, default: "horizontal" },
       gutterSize: { type: Number, default: 4 },
       step: { type: Number, default: 5 },

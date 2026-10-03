@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { panelMenuStyleModule } from "./panel-menu-style";
@@ -16,7 +17,7 @@ export function createBasePanelMenu() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "panel-menu", styleModule: panelMenuStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       multiple: { type: Boolean, default: false },
     },
   });

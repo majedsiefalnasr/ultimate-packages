@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { breadcrumbStyleModule } from "./breadcrumb-style";
@@ -18,7 +19,7 @@ export function createBaseBreadcrumb() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "breadcrumb", styleModule: breadcrumbStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       home: { type: Object, default: null },
       homeAriaLabel: { type: String, default: null },
     },

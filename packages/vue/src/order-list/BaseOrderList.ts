@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { orderListStyleModule } from "./order-list-style";
@@ -9,7 +10,7 @@ export function createBaseOrderList() {
       styleModule: orderListStyleModule,
     }),
     props: {
-      modelValue: { type: Array, default: () => [] },
+      modelValue: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       dataKey: { type: String, default: null },
       metaKeySelection: { type: Boolean, default: false },
       autoOptionFocus: { type: Boolean, default: true },

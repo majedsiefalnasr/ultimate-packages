@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { autoCompleteStyleModule } from "./autocomplete-style";
@@ -14,7 +15,7 @@ export function createBaseAutoComplete() {
   return defineComponent({
     extends: createBaseInput(),
     props: {
-      suggestions: { type: Array, default: () => [] },
+      suggestions: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       optionLabel: { type: [String, Function], default: null },
       minLength: { type: Number, default: 1 },
       delay: { type: Number, default: 300 },

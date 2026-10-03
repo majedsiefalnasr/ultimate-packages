@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { stepsStyleModule } from "./steps-style";
@@ -8,7 +9,7 @@ export function createBaseSteps() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "steps", styleModule: stepsStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       readonly: { type: Boolean, default: true },
       activeStep: { type: Number, default: 0 },
     },

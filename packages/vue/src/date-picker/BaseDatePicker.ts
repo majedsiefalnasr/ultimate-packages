@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { datePickerStyleModule } from "./date-picker-style";
@@ -21,12 +22,15 @@ export function createBaseDatePicker() {
       inputId: { type: String, default: null },
       minDate: { type: Date, default: null },
       maxDate: { type: Date, default: null },
-      disabledDates: { type: Array, default: () => [] },
+      disabledDates: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       showIcon: { type: Boolean, default: false },
       showClear: { type: Boolean, default: false },
-      dayNames: { type: Array, default: () => ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] },
+      dayNames: {
+        type: Array as PropType<readonly unknown[]>,
+        default: () => ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+      },
       monthNames: {
-        type: Array,
+        type: Array as PropType<readonly unknown[]>,
         default: () => [
           "January",
           "February",

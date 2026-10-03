@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { speedDialStyleModule } from "./speed-dial-style";
@@ -11,7 +12,7 @@ export function createBaseSpeedDial() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "speed-dial", styleModule: speedDialStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       visible: { type: Boolean, default: false },
       icon: { type: String, default: undefined },
       direction: { type: String, default: "up" },

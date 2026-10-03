@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { meterGroupStyleModule } from "./meter-group-style";
@@ -13,7 +14,7 @@ export function createBaseMeterGroup() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "meter-group", styleModule: meterGroupStyleModule }),
     props: {
-      value: { type: Array, default: () => [] },
+      value: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       min: { type: Number, default: 0 },
       max: { type: Number, default: 100 },
       orientation: { type: String, default: "horizontal" },

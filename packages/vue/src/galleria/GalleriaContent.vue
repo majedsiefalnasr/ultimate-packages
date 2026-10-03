@@ -55,7 +55,10 @@
 export default {
   name: "UGalleriaContent",
   props: {
-    value: { type: Array, required: true },
+    value: {
+      type: /** @type {import('vue').PropType<readonly unknown[]>} */ (Array),
+      required: true,
+    },
     activeIndex: { type: Number, required: true },
     activeItem: { default: undefined },
     showItemNavigators: { type: Boolean, required: true },

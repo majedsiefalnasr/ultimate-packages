@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { menubarStyleModule } from "./menubar-style";
@@ -15,7 +16,7 @@ export function createBaseMenubar() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "menubar", styleModule: menubarStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       ariaLabel: { type: String, default: null },
     },
   });

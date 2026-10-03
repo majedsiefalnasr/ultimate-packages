@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { splitButtonStyleModule } from "./split-button-style";
@@ -19,7 +20,7 @@ export function createBaseSplitButton() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "split-button", styleModule: splitButtonStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       label: { type: String, default: null },
       icon: { type: String, default: null },
       iconPos: { type: String, default: "left" },

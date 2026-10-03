@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { carouselStyleModule } from "./carousel-style";
@@ -12,7 +13,7 @@ export function createBaseCarousel() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "carousel", styleModule: carouselStyleModule }),
     props: {
-      value: { type: Array, default: () => [] },
+      value: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       page: { type: Number, default: 0 },
       numVisible: { type: Number, default: 1 },
       numScroll: { type: Number, default: 1 },

@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { multiSelectStyleModule } from "./multi-select-style";
@@ -20,7 +21,7 @@ export function createBaseMultiSelect() {
   return defineComponent({
     extends: createBaseInput(),
     props: {
-      options: { type: Array, default: () => [] },
+      options: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       optionLabel: { type: [String, Function], default: null },
       optionValue: { type: [String, Function], default: null },
       optionDisabled: { type: [String, Function], default: null },

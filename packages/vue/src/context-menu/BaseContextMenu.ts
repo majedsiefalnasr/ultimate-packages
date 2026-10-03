@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { contextMenuStyleModule } from "./context-menu-style";
@@ -7,7 +8,7 @@ export function createBaseContextMenu() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "context-menu", styleModule: contextMenuStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       global: { type: Boolean, default: false },
     },
   });

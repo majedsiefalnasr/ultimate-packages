@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { tieredMenuStyleModule } from "./tiered-menu-style";
@@ -20,7 +21,7 @@ export function createBaseTieredMenu() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "tiered-menu", styleModule: tieredMenuStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       popup: { type: Boolean, default: false },
     },
   });

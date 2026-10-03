@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { dataViewStyleModule } from "./data-view-style";
@@ -6,13 +7,13 @@ export function createBaseDataView() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "data-view", styleModule: dataViewStyleModule }),
     props: {
-      value: { type: Array, default: () => [] },
+      value: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       layout: { type: String, default: "list" },
       paginator: { type: Boolean, default: false },
       first: { type: Number, default: 0 },
       rows: { type: Number, default: 0 },
       totalRecords: { type: Number, default: undefined },
-      rowsPerPageOptions: { type: Array, default: () => [] },
+      rowsPerPageOptions: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       paginatorPosition: { type: String, default: "bottom" },
       alwaysShowPaginator: { type: Boolean, default: true },
       currentPageReportTemplate: { type: String, default: "{first} to {last} of {totalRecords}" },

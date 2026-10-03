@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { megaMenuStyleModule } from "./mega-menu-style";
@@ -16,7 +17,7 @@ export function createBaseMegaMenu() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "mega-menu", styleModule: megaMenuStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       ariaLabel: { type: String, default: null },
     },
   });

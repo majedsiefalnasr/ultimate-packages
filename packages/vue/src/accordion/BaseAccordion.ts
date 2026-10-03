@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { accordionStyleModule } from "./accordion-style";
@@ -11,7 +12,10 @@ export function createBaseAccordion() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "accordion", styleModule: accordionStyleModule }),
     props: {
-      value: { type: [String, Number, Array], default: undefined },
+      value: {
+        type: [String, Number, Array] as PropType<string | number | readonly unknown[]>,
+        default: undefined,
+      },
       multiple: { type: Boolean, default: false },
       selectOnFocus: { type: Boolean, default: false },
     },

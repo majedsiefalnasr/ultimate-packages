@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { inputChipsStyleModule } from "./input-chips-style";
@@ -22,7 +23,7 @@ export function createBaseInputChips() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "input-chips", styleModule: inputChipsStyleModule }),
     props: {
-      modelValue: { type: Array, default: null },
+      modelValue: { type: Array as PropType<readonly unknown[]>, default: null },
       max: { type: Number, default: null },
       separator: { type: [String, Object], default: null },
       addOnBlur: { type: Boolean, default: null },

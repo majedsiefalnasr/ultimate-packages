@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { timelineStyleModule } from "./timeline-style";
@@ -9,7 +10,7 @@ export function createBaseTimeline() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "timeline", styleModule: timelineStyleModule }),
     props: {
-      value: { type: Array, default: () => [] },
+      value: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       align: { type: String, default: "left" },
       layout: { type: String, default: "vertical" },
     },

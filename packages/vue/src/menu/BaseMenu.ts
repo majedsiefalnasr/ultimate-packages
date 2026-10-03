@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { menuStyleModule } from "./menu-style";
@@ -12,7 +13,7 @@ export function createBaseMenu() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "menu", styleModule: menuStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       popup: { type: Boolean, default: false },
       appendTo: { type: [String, Object], default: "body" },
       autoZIndex: { type: Boolean, default: true },
