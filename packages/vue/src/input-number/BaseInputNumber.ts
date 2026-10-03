@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { inputNumberStyleModule } from "./input-number-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseInputNumber.vue's real
@@ -13,8 +13,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // InputNumber.vue's class doc comment for the full cut rationale, mirroring
 // UInputNumber's Angular precedent of documenting its own exclusions
 // in-line rather than silently dropping surface).
-export function createBaseInputNumber(): ComponentOptions {
-  return {
+export function createBaseInputNumber() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
       locale: { type: String, default: undefined },
@@ -45,5 +45,5 @@ export function createBaseInputNumber(): ComponentOptions {
     mounted() {
       registerComponentStyle("input-number", inputNumberStyleModule);
     },
-  };
+  });
 }

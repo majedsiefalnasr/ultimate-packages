@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent, registerComponentStyle } from "@ultimate/vue-core";
 import { fileUploadStyleModule } from "./file-upload-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseComponent(), matching verified BaseFileUpload.vue's
@@ -13,8 +13,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // value) — same tier URating/UKnob extend for their own non-editable-value
 // reasons, though FileUpload's own reason (no bindable scalar value at all)
 // differs from Rating/Knob's (editable value, but simpler base needed).
-export function createBaseFileUpload(): ComponentOptions {
-  return {
+export function createBaseFileUpload() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "file-upload", styleModule: fileUploadStyleModule }),
     props: {
       name: { type: String, default: "files" },
@@ -43,5 +43,5 @@ export function createBaseFileUpload(): ComponentOptions {
     mounted() {
       registerComponentStyle("file-upload", fileUploadStyleModule);
     },
-  };
+  });
 }

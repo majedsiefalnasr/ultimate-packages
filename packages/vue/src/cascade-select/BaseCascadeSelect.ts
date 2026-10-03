@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { cascadeSelectStyleModule } from "./cascade-select-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseCascadeSelect.vue's real
@@ -16,8 +16,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // Same createBaseInput()-parameterless-signature cx()/mounted()-shadow fix
 // documented in packages/vue/src/checkbox/BaseCheckbox.ts applies
 // identically here.
-export function createBaseCascadeSelect(): ComponentOptions {
-  return {
+export function createBaseCascadeSelect() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
       options: { type: Array, default: () => [] },
@@ -40,5 +40,5 @@ export function createBaseCascadeSelect(): ComponentOptions {
     mounted() {
       registerComponentStyle("cascade-select", cascadeSelectStyleModule);
     },
-  };
+  });
 }

@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { selectStyleModule } from "./select-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseSelect.vue's real chain
@@ -11,8 +11,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // Same createBaseInput()-parameterless-signature cx()/mounted()-shadow fix
 // documented in packages/vue/src/checkbox/BaseCheckbox.ts/
 // packages/vue/src/autocomplete/BaseAutoComplete.ts applies identically here.
-export function createBaseSelect(): ComponentOptions {
-  return {
+export function createBaseSelect() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
       options: { type: Array, default: () => [] },
@@ -40,5 +40,5 @@ export function createBaseSelect(): ComponentOptions {
     mounted() {
       registerComponentStyle("select", selectStyleModule);
     },
-  };
+  });
 }

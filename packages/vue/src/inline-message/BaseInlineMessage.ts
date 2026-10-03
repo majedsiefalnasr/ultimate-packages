@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { inlineMessageStyleModule } from "./inline-message-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...) directly — InlineMessage is a
 // status/display component, not a form control, matching real extracted
@@ -17,12 +17,12 @@ import type { ComponentOptions } from "vue";
 // deliberately does NOT implement a `sticky`/`life`/auto-dismiss
 // mechanism, since doing so would port behavior real InlineMessage does
 // not actually have.
-export function createBaseInlineMessage(): ComponentOptions {
-  return {
+export function createBaseInlineMessage() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "inline-message", styleModule: inlineMessageStyleModule }),
     props: {
       severity: { type: String, default: "error" },
       icon: { type: String, default: undefined },
     },
-  };
+  });
 }

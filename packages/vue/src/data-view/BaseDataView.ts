@@ -1,9 +1,9 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
-import type { ComponentOptions } from "vue";
 import { dataViewStyleModule } from "./data-view-style";
 
-export function createBaseDataView(): ComponentOptions {
-  return {
+export function createBaseDataView() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "data-view", styleModule: dataViewStyleModule }),
     props: {
       value: { type: Array, default: () => [] },
@@ -27,5 +27,5 @@ export function createBaseDataView(): ComponentOptions {
       itemTemplate: { type: Function, default: (item: unknown) => String(item) },
     },
     emits: ["page", "lazy-load", "update:first", "update:rows"],
-  };
+  });
 }

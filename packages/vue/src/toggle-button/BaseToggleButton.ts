@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
 import { toggleButtonStyleModule } from "./toggle-button-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseEditableHolder(), matching verified BaseToggleButton.vue's
@@ -25,8 +25,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // an empty `{componentName: "", styleModule: {css: "", classes: {}}}`, so
 // cx()/mounted() are shadowed locally with real closures over
 // toggleButtonStyleModule, matching Checkbox/RadioButton's established fix.
-export function createBaseToggleButton(): ComponentOptions {
-  return {
+export function createBaseToggleButton() {
+  return defineComponent({
     extends: createBaseEditableHolder(),
     props: {
       onIcon: { type: String, default: null },
@@ -51,5 +51,5 @@ export function createBaseToggleButton(): ComponentOptions {
     mounted() {
       registerComponentStyle("toggle-button", toggleButtonStyleModule);
     },
-  };
+  });
 }

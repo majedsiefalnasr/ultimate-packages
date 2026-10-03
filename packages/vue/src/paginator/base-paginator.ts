@@ -1,9 +1,9 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { paginatorStyleModule } from "./paginator-style";
-import type { ComponentOptions } from "vue";
 
-export function createBasePaginator(): ComponentOptions {
-  return {
+export function createBasePaginator() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "paginator", styleModule: paginatorStyleModule }),
     props: {
       first: { type: Number, default: 0 },
@@ -26,5 +26,5 @@ export function createBasePaginator(): ComponentOptions {
         this.d_rows = newValue;
       },
     },
-  };
+  });
 }

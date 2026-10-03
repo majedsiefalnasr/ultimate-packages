@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { passwordStyleModule } from "./password-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BasePassword.vue's real
@@ -17,8 +17,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // "", classes: {}}}`, so cx()/mounted() are shadowed locally with real
 // closures over passwordStyleModule, matching Checkbox/RadioButton/
 // ToggleButton/ToggleSwitch's established fix.
-export function createBasePassword(): ComponentOptions {
-  return {
+export function createBasePassword() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
       feedback: { type: Boolean, default: true },
@@ -50,5 +50,5 @@ export function createBasePassword(): ComponentOptions {
     mounted() {
       registerComponentStyle("password", passwordStyleModule);
     },
-  };
+  });
 }

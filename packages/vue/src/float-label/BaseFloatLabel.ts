@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { floatLabelStyleModule } from "./float-label-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...) directly — matching verified
 // BaseFloatLabel.vue's own `extends: BaseComponent` chain (one tier, not
@@ -10,11 +10,11 @@ import type { ComponentOptions } from "vue";
 // (packages/vue/src/badge/base-badge.ts), which extends
 // createBaseComponent directly for the same "display/layout primitive, no
 // editable state" reason.
-export function createBaseFloatLabel(): ComponentOptions {
-  return {
+export function createBaseFloatLabel() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "float-label", styleModule: floatLabelStyleModule }),
     props: {
       variant: { type: String, default: "over" },
     },
-  };
+  });
 }

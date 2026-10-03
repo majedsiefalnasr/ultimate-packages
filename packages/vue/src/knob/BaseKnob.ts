@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
 import { knobStyleModule } from "./knob-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseEditableHolder(), matching verified BaseKnob.vue's real
@@ -8,8 +8,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // BaseEditableHolder, ... }` — confirmed against
 // .vendor-extracted/vue/knob/BaseKnob.vue — same tier URating/USlider
 // already extend, NOT BaseInput.
-export function createBaseKnob(): ComponentOptions {
-  return {
+export function createBaseKnob() {
+  return defineComponent({
     extends: createBaseEditableHolder(),
     props: {
       size: { type: Number, default: 100 },
@@ -37,5 +37,5 @@ export function createBaseKnob(): ComponentOptions {
     mounted() {
       registerComponentStyle("knob", knobStyleModule);
     },
-  };
+  });
 }

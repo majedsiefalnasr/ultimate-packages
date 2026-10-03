@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { meterGroupStyleModule } from "./meter-group-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...) directly — MeterGroup is a display-only
 // segmented-bar primitive, not a form control, matching real extracted
@@ -9,8 +9,8 @@ import type { ComponentOptions } from "vue";
 // verbatim; `labelPosition` is fixed at 'end' (see UMeterGroup's own doc
 // comment) — same "smaller surface than upstream" precedent as every
 // sibling component.
-export function createBaseMeterGroup(): ComponentOptions {
-  return {
+export function createBaseMeterGroup() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "meter-group", styleModule: meterGroupStyleModule }),
     props: {
       value: { type: Array, default: () => [] },
@@ -18,5 +18,5 @@ export function createBaseMeterGroup(): ComponentOptions {
       max: { type: Number, default: 100 },
       orientation: { type: String, default: "horizontal" },
     },
-  };
+  });
 }

@@ -1,10 +1,10 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { drawerStyleModule } from "./drawer-style";
-import type { ComponentOptions } from "vue";
 
 /** Real upstream `BaseDrawer.vue`'s prop surface, scoped to this capability's spec-mandated fields — no `blockScroll`/breakpoints/passthrough (matches every sibling component's already-established "smaller surface than upstream" precedent). */
-export function createBaseDrawer(): ComponentOptions {
-  return {
+export function createBaseDrawer() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "drawer", styleModule: drawerStyleModule }),
     props: {
       visible: { type: Boolean, default: false },
@@ -17,5 +17,5 @@ export function createBaseDrawer(): ComponentOptions {
       appendTo: { type: [String, Object], default: "body" },
       ariaCloseLabel: { type: String, default: "Close" },
     },
-  };
+  });
 }

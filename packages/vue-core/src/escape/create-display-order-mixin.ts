@@ -1,5 +1,5 @@
+import { defineComponent } from "vue";
 import { displayOrderRegistry } from "@ultimate/uix-utils/escape";
-import type { ComponentOptions } from "vue";
 
 export interface CreateDisplayOrderMixinOptions {
   group: string;
@@ -24,10 +24,7 @@ let uidCounter = 0;
 // directly at call time, the same way createGlobalEscapeKeyMixin's own
 // `priority` getters are plain closures re-read on demand rather than
 // reactive refs).
-export function createDisplayOrderMixin({
-  group,
-  isVisible,
-}: CreateDisplayOrderMixinOptions): ComponentOptions {
+export function createDisplayOrderMixin({ group, isVisible }: CreateDisplayOrderMixinOptions) {
   const uid = ++uidCounter;
   let registered = false;
 
@@ -44,7 +41,7 @@ export function createDisplayOrderMixin({
     registered = false;
   }
 
-  return {
+  return defineComponent({
     mounted() {
       register.call(this);
     },
@@ -73,5 +70,5 @@ export function createDisplayOrderMixin({
     beforeUnmount() {
       unregister.call(this);
     },
-  };
+  });
 }

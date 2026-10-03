@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { overlayBadgeStyleModule } from "./overlay-badge-style";
-import type { ComponentOptions } from "vue";
 
 /**
  * Prop surface verified against real upstream `BaseOverlayBadge.vue`
@@ -13,13 +13,13 @@ import type { ComponentOptions } from "vue";
  * real PrimeVue's own prop surface, not Angular's — Option B: reference the
  * real framework source, not a sibling framework's port).
  */
-export function createBaseOverlayBadge(): ComponentOptions {
-  return {
+export function createBaseOverlayBadge() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "overlay-badge", styleModule: overlayBadgeStyleModule }),
     props: {
       value: { type: [String, Number], default: null },
       severity: { type: String, default: null },
       size: { type: String, default: null },
     },
-  };
+  });
 }

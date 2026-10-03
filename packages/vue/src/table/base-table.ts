@@ -1,9 +1,10 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { tableStyleModule } from "./table-style";
-import type { ComponentOptions, PropType } from "vue";
+import type { PropType } from "vue";
 
-export function createBaseTable(): ComponentOptions {
-  return {
+export function createBaseTable() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "table", styleModule: tableStyleModule }),
     props: {
       value: { type: Array, default: () => [] },
@@ -48,5 +49,5 @@ export function createBaseTable(): ComponentOptions {
       "row-expand",
       "row-collapse",
     ],
-  };
+  });
 }

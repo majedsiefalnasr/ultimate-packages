@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
 import { toggleSwitchStyleModule } from "./toggle-switch-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseEditableHolder(), matching verified BaseToggleSwitch.vue's
@@ -18,12 +19,14 @@ import type { ClassValue } from "@ultimate/vue-core";
 // cx()/mounted() are shadowed locally with real closures over
 // toggleSwitchStyleModule, matching Checkbox/RadioButton/ToggleButton's
 // established fix.
-export function createBaseToggleSwitch(): ComponentOptions {
-  return {
+export function createBaseToggleSwitch() {
+  return defineComponent({
     extends: createBaseEditableHolder(),
     props: {
-      trueValue: { default: true },
-      falseValue: { default: false },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Vue infers PropType<unknown> as undefined; these props accept any value (GAP-082)
+      trueValue: { type: null as unknown as PropType<any>, default: true },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Vue infers PropType<unknown> as undefined; these props accept any value (GAP-082)
+      falseValue: { type: null as unknown as PropType<any>, default: false },
       readonly: { type: Boolean, default: false },
       tabindex: { type: Number, default: null },
       inputId: { type: String, default: null },
@@ -44,5 +47,5 @@ export function createBaseToggleSwitch(): ComponentOptions {
     mounted() {
       registerComponentStyle("toggle-switch", toggleSwitchStyleModule);
     },
-  };
+  });
 }

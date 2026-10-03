@@ -1,9 +1,9 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
-import type { ComponentOptions } from "vue";
 import { orderListStyleModule } from "./order-list-style";
 
-export function createBaseOrderList(): ComponentOptions {
-  return {
+export function createBaseOrderList() {
+  return defineComponent({
     extends: createBaseComponent({
       componentName: "order-list",
       styleModule: orderListStyleModule,
@@ -30,5 +30,5 @@ export function createBaseOrderList(): ComponentOptions {
       moveBottomButtonProps: { type: Object, default: () => ({}) },
     },
     emits: ["update:modelValue"],
-  };
+  });
 }

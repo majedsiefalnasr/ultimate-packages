@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { carouselStyleModule } from "./carousel-style";
-import type { ComponentOptions } from "vue";
 
 // Props verified against real .vendor-extracted/vue/carousel/BaseCarousel.vue:
 // value/page/numVisible/numScroll/circular/showIndicators/showNavigators/
@@ -8,8 +8,8 @@ import type { ComponentOptions } from "vue";
 // `verticalViewPortHeight`/prev-next `ButtonProps` passthrough/
 // `contentClass`/indicator style-class overrides are excluded — same
 // "smaller surface than upstream" precedent as every sibling component.
-export function createBaseCarousel(): ComponentOptions {
-  return {
+export function createBaseCarousel() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "carousel", styleModule: carouselStyleModule }),
     props: {
       value: { type: Array, default: () => [] },
@@ -22,5 +22,5 @@ export function createBaseCarousel(): ComponentOptions {
       autoplayInterval: { type: Number, default: 0 },
       orientation: { type: String, default: "horizontal" },
     },
-  };
+  });
 }

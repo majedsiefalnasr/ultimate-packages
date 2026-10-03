@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { inputMaskStyleModule } from "./input-mask-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseInputMask.vue's real
@@ -8,8 +8,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // BaseEditableHolder extends BaseComponent. Real BaseInputMask.vue's own
 // prop set (slotChar, mask, placeholder, autoClear, unmask, readonly) is
 // ported below verbatim.
-export function createBaseInputMask(): ComponentOptions {
-  return {
+export function createBaseInputMask() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
       slotChar: { type: String, default: "_" },
@@ -32,5 +32,5 @@ export function createBaseInputMask(): ComponentOptions {
     mounted() {
       registerComponentStyle("input-mask", inputMaskStyleModule);
     },
-  };
+  });
 }

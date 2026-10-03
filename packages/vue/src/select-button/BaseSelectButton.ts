@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
 import { selectButtonStyleModule } from "./select-button-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseEditableHolder(), matching verified BaseSelectButton.vue's
@@ -12,8 +12,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // Same createBaseInput()-parameterless-signature cx()/mounted()-shadow fix
 // documented in packages/vue/src/checkbox/BaseCheckbox.ts/
 // packages/vue/src/toggle-button/BaseToggleButton.ts applies identically here.
-export function createBaseSelectButton(): ComponentOptions {
-  return {
+export function createBaseSelectButton() {
+  return defineComponent({
     extends: createBaseEditableHolder(),
     props: {
       options: { type: Array, default: () => [] },
@@ -35,5 +35,5 @@ export function createBaseSelectButton(): ComponentOptions {
     mounted() {
       registerComponentStyle("select-button", selectButtonStyleModule);
     },
-  };
+  });
 }

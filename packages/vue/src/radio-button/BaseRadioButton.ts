@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { radioButtonStyleModule } from "./radio-button-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseRadioButton.vue's real
@@ -10,11 +11,12 @@ import type { ClassValue } from "@ultimate/vue-core";
 // packages/vue/src/checkbox/BaseCheckbox.ts's own doc comment for the full
 // createBaseInput()-parameterless-signature finding this file reuses
 // verbatim).
-export function createBaseRadioButton(): ComponentOptions {
-  return {
+export function createBaseRadioButton() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
-      value: { default: null },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Vue infers PropType<unknown> as undefined; these props accept any value (GAP-082)
+      value: { type: null as unknown as PropType<any>, default: null },
       binary: { type: Boolean, default: false },
       readonly: { type: Boolean, default: false },
       tabindex: { type: Number, default: null },
@@ -38,5 +40,5 @@ export function createBaseRadioButton(): ComponentOptions {
     mounted() {
       registerComponentStyle("radio-button", radioButtonStyleModule);
     },
-  };
+  });
 }

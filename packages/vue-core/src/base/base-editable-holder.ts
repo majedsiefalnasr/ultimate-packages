@@ -1,5 +1,6 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseComponent, type BaseComponentOptions } from "./base-component";
-import type { ComponentOptions } from "vue";
 
 // Layered on createBaseComponent via `extends:`, matching verified
 // BaseEditableHolder.vue's own `extends: BaseComponent` chain. The
@@ -11,12 +12,14 @@ import type { ComponentOptions } from "vue";
 // to exclude here since PrimeReact's own Checkbox has no forms integration).
 export function createBaseEditableHolder(
   base: Partial<BaseComponentOptions> = { componentName: "", styleModule: { css: "", classes: {} } }
-): ComponentOptions {
-  return {
+) {
+  return defineComponent({
     extends: createBaseComponent(base as BaseComponentOptions),
     props: {
-      modelValue: { default: undefined },
-      defaultValue: { default: undefined },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Vue infers PropType<unknown> as undefined; these props accept any value (GAP-082)
+      modelValue: { type: null as unknown as PropType<any>, default: undefined },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Vue infers PropType<unknown> as undefined; these props accept any value (GAP-082)
+      defaultValue: { type: null as unknown as PropType<any>, default: undefined },
     },
     emits: ["update:modelValue", "value-change"],
     data() {
@@ -81,5 +84,5 @@ export function createBaseEditableHolder(
         this.$emit("value-change", value);
       },
     },
-  };
+  });
 }

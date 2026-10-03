@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { textareaStyleModule } from "./textarea-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseTextarea.vue's real
@@ -10,8 +10,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // BaseTextarea.vue's own single local prop addition on top of BaseInput
 // (confirmed: BaseTextarea.vue declares `props: { autoResize: Boolean }`
 // and nothing else of its own).
-export function createBaseTextarea(): ComponentOptions {
-  return {
+export function createBaseTextarea() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
       autoResize: { type: Boolean, default: false },
@@ -30,5 +30,5 @@ export function createBaseTextarea(): ComponentOptions {
     mounted() {
       registerComponentStyle("textarea", textareaStyleModule);
     },
-  };
+  });
 }

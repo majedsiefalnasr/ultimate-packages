@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { badgeStyleModule } from "./badge-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...) directly — Badge is a display-only
 // primitive with no editable/input state, matching the real extracted
@@ -17,13 +17,13 @@ import type { ComponentOptions } from "vue";
 // PrimeVue's Vue Badge has neither; this Vue realization follows real
 // PrimeVue's own prop surface (Option B: reference the real framework
 // source, not a sibling framework's port), not Angular's.
-export function createBaseBadge(): ComponentOptions {
-  return {
+export function createBaseBadge() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "badge", styleModule: badgeStyleModule }),
     props: {
       value: { type: [String, Number], default: null },
       severity: { type: String, default: null },
       size: { type: String, default: null },
     },
-  };
+  });
 }

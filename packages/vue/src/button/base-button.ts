@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { buttonStyleModule } from "./button-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...), matching verified BaseButton.vue's own
 // extends: BaseComponent chain exactly (spec §7, §18). Prop surface verified
@@ -17,8 +17,8 @@ import type { ComponentOptions } from "vue";
 // still wants a clean, typed, explicit prop for this, so `ariaLabel` is kept
 // as its own declared prop here (also matches this task's own spec'd test
 // contract, which passes `ariaLabel` as a prop, not an arbitrary attr).
-export function createBaseButton(): ComponentOptions {
-  return {
+export function createBaseButton() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "button", styleModule: buttonStyleModule }),
     props: {
       label: { type: String, default: null },
@@ -49,5 +49,5 @@ export function createBaseButton(): ComponentOptions {
     inject: {
       pcFluid: { default: undefined },
     },
-  };
+  });
 }
