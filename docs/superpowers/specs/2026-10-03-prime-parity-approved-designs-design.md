@@ -1,6 +1,6 @@
 # Specification — Approved-Design Implementation: SSR Style Injection, Shared Hidden-Accessible Utility, Angular Barrel Re-exports (GAP-078, GAP-074, GAP-081)
 
-**Status:** Spec stage — awaiting Spec Review.
+**Status:** Implemented on `feature/prime-parity-approved-designs` (closeout 2026-10-03); GAP-074, GAP-078 and GAP-081 RESOLVED.
 **Date:** 2026-10-03
 **Branch:** `feature/prime-parity-approved-designs` (from `main` `cdcc65e`)
 **Origin:** approved designs in `docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §2–§4, user decisions §7.2–§7.4 (2026-10-02), and the post-merge inventory (2026-10-03). Parity baseline: ADR-048.
