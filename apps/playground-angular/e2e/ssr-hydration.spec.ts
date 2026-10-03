@@ -26,7 +26,7 @@ import { expect, test } from "@playwright/test";
  *       plan's binding interaction table (identical across Tasks 5/6/7).
  *
  * GAP-078: the last describe block asserts that server HTML carries keyed
- * `<style data-u-style>` elements and that hydration adopts them (each key
+ * `<style data-u-ng-style>` elements and that hydration adopts them (each key
  * once). No ID-normalization/workaround for
  * `ComponentIdGenerator`-produced IDs is applied anywhere below — none of
  * these 8 components' assertions depend on a specific generated ID value.
@@ -391,17 +391,17 @@ test.describe("GAP-078 server-rendered styles", () => {
 
     const response = await page.request.get(HARNESS_URL);
     const body = await response.text();
-    expect(body).toContain('data-u-style="u-common-variables"');
-    expect(body).toContain('data-u-style="button"');
-    expect(body).toContain('data-u-style="u-hidden-accessible"');
+    expect(body).toContain('data-u-ng-style="u-common-variables"');
+    expect(body).toContain('data-u-ng-style="button"');
+    expect(body).toContain('data-u-ng-style="u-hidden-accessible"');
 
     await page.goto(HARNESS_URL);
     await page.waitForSelector('[data-hydrated="true"]');
 
     const counts = await page.evaluate(() => {
       const c: Record<string, number> = {};
-      for (const el of Array.from(document.querySelectorAll("style[data-u-style]"))) {
-        const k = el.getAttribute("data-u-style")!;
+      for (const el of Array.from(document.querySelectorAll("style[data-u-ng-style]"))) {
+        const k = el.getAttribute("data-u-ng-style")!;
         c[k] = (c[k] ?? 0) + 1;
       }
       return c;

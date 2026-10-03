@@ -1,7 +1,11 @@
 import { StyleSheet, type StyleMeta } from "@ultimate/uix-styled";
 
-/** Attribute that identifies a registered `<style>` element by its style key. */
-export const NG_CORE_STYLE_KEY_ATTR = "data-u-style";
+/**
+ * Attribute that identifies a registered `<style>` element by its style key.
+ * Distinct from Vue's `data-u-style` so a page hosting both frameworks never
+ * adopts the other's elements.
+ */
+export const NG_CORE_STYLE_KEY_ATTR = "data-u-ng-style";
 
 /**
  * `ng-core`'s `StyleSheet<HTMLStyleElement>` for ONE document (GAP-078).
@@ -25,7 +29,11 @@ class NgCoreStyleSheet extends StyleSheet<HTMLStyleElement> {
     const existing = Array.from(head.querySelectorAll("style")).find(
       (el) => el.getAttribute(NG_CORE_STYLE_KEY_ATTR) === key
     );
-    if (existing) return existing;
+    if (existing) {
+      const css = meta.css ?? "";
+      if (existing.textContent !== css) existing.textContent = css;
+      return existing;
+    }
     const el = this.doc!.createElement("style");
     el.setAttribute(NG_CORE_STYLE_KEY_ATTR, key);
     el.textContent = meta.css ?? "";

@@ -72,6 +72,36 @@ describe("ngCoreStyleSheetFor (GAP-078)", () => {
     expect(keyed(doc, odd)).toHaveLength(1);
   });
 
+  it("does not adopt a Vue-owned <style data-u-style> with the same key", () => {
+    const doc = newDoc();
+    const vue = doc.createElement("style");
+    vue.setAttribute("data-u-style", "button");
+    vue.textContent = "vue css";
+    doc.head.appendChild(vue);
+    const sheet = ngCoreStyleSheetFor(doc);
+    sheet.add("button", ".ng{}");
+    const own = keyed(doc, "button");
+    expect(own).toHaveLength(1);
+    expect(own[0]).not.toBe(vue);
+    expect(sheet.get("button")?.element).toBe(own[0]);
+    expect(vue.textContent).toBe("vue css");
+    expect(vue.getAttribute("data-u-style")).toBe("button");
+    expect(vue.hasAttribute(NG_CORE_STYLE_KEY_ATTR)).toBe(false);
+  });
+
+  it("refreshes the CSS of an adopted element in place when it differs", () => {
+    const doc = newDoc();
+    const server = doc.createElement("style");
+    server.setAttribute(NG_CORE_STYLE_KEY_ATTR, "probe-h");
+    server.textContent = ".stale{}";
+    doc.head.appendChild(server);
+    const sheet = ngCoreStyleSheetFor(doc);
+    sheet.add("probe-h", ".fresh{}");
+    expect(keyed(doc, "probe-h")).toHaveLength(1);
+    expect(sheet.get("probe-h")?.element).toBe(server);
+    expect(server.textContent).toBe(".fresh{}");
+  });
+
   it("is inert without a document", () => {
     const sheet = ngCoreStyleSheetFor(undefined);
     expect(() => sheet.add("probe-g", ".g{}")).not.toThrow();

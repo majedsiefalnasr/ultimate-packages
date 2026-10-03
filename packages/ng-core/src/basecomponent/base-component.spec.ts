@@ -61,7 +61,7 @@ describe("UBaseComponent", () => {
     fixture.detectChanges();
     expect(
       Array.from(document.head.querySelectorAll("style")).filter(
-        (s) => s.getAttribute("data-u-style") === "u-hidden-accessible"
+        (s) => s.getAttribute("data-u-ng-style") === "u-hidden-accessible"
       )
     ).toHaveLength(1);
   });
@@ -120,7 +120,7 @@ describe("UBaseComponent", () => {
     fixture.detectChanges();
     expect(
       Array.from(doc.head.querySelectorAll("style")).some(
-        (s) => s.getAttribute("data-u-style") === "test-component"
+        (s) => s.getAttribute("data-u-ng-style") === "test-component"
       )
     ).toBe(true);
     expect(docSpy).not.toHaveBeenCalled();

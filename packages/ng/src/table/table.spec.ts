@@ -1084,9 +1084,9 @@ describe("theme token consistency", () => {
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.detectChanges();
 
-    // ngCoreStyleSheet's <style> elements carry no identifying attribute
-    // (its StyleSheet instance is constructed with no `attrs` option), so
-    // the registered element is located by its known, unique `.u-table-table`
+    // ngCoreStyleSheet's <style> elements carry the Angular-only
+    // `data-u-ng-style` key attribute, but the registered element is
+    // located by its known, unique `.u-table-table`
     // selector — matching the DOM-lookup approach used on the React/Vue
     // side of this same assertion (packages/themes/test/
     // cross-framework-consistency.test.ts uses the same nested

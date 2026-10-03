@@ -20,8 +20,9 @@ class VueStyleSheet extends StyleSheet<HTMLStyleElement> {
   }
 }
 
-// A single module-level instance, matching ngCoreStyleSheet's and
-// reactCoreStyleSheet's singleton pattern.
+// A single module-level instance, like reactCoreStyleSheet. (Angular keeps
+// one registry per document; ngCoreStyleSheet is the browser document's
+// registry.)
 export const vueCoreStyleSheet = new VueStyleSheet();
 
 // Registers styleModule with vueCoreStyleSheet exactly once per componentName
