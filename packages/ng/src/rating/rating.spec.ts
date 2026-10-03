@@ -15,7 +15,9 @@ describe("URating", () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const host: HTMLElement = fixture.nativeElement;
-    expect(host.querySelectorAll(".u-hidden-accessible input[type=radio]").length).toBeGreaterThan(0);
+    expect(host.querySelectorAll(".u-hidden-accessible input[type=radio]").length).toBeGreaterThan(
+      0
+    );
     expect(host.querySelector(".p-hidden-accessible")).toBeNull();
   });
 
