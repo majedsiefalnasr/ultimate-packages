@@ -17,6 +17,11 @@ export { default as ThemeService } from "./service/index";
 
 export { default as StyleSheet, type StyleSheetProps, type StyleMeta } from "./stylesheet/index";
 export { registerThemeVariables } from "./stylesheet/theme-variables";
+export {
+  HIDDEN_ACCESSIBLE_KEY,
+  hiddenAccessibleCss,
+  registerHiddenAccessible,
+} from "./stylesheet/hidden-accessible";
 
 export * from "./utils/index";
 

@@ -22,8 +22,8 @@ import {
   escapeRegistry,
 } from "@ultimate/uix-utils/escape";
 import { ZIndex } from "@ultimate/uix-utils/zindex";
-import { URipple } from "../ripple";
-import { UTooltip } from "../tooltip";
+import { URipple } from "@ultimate/ng/ripple";
+import { UTooltip } from "@ultimate/ng/tooltip";
 import { menuStyleModule } from "./menu-style";
 
 /**

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, booleanAttribute, input } from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
-import { UBadge } from "../badge/badge";
+import { UBadge } from "@ultimate/ng/badge";
 import { overlayBadgeStyleModule } from "./overlay-badge-style";
 
 /**

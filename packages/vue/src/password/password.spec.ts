@@ -109,13 +109,13 @@ describe("UPassword", () => {
 
     it("renders an always-present hidden live span tracking infoText", async () => {
       const wrapper = mount(UPassword, { props: { modelValue: "" } });
-      const span = wrapper.find("span.u-password-hidden-accessible");
+      const span = wrapper.find("span.u-hidden-accessible");
       expect(span.exists()).toBe(true);
       expect(span.attributes("aria-live")).toBe("polite");
       expect(span.text()).toBe("Enter a password");
       await wrapper.find("input").trigger("focus");
       await wrapper.find("input").setValue("abc");
-      expect(wrapper.find("span.u-password-hidden-accessible").text()).toBe("Weak");
+      expect(wrapper.find("span.u-hidden-accessible").text()).toBe("Weak");
     });
 
     it("keeps disclosure ARIA off the mask toggle icons", () => {
@@ -126,19 +126,10 @@ describe("UPassword", () => {
       }
     });
 
-    it("defines the visually-hidden rule in the Password style module", () => {
+    it("does not define its own visually-hidden rule (uses the shared u-hidden-accessible)", () => {
       const css = passwordStyleModule.css.replace(/\s+/g, " ");
-      expect(css).toContain(".u-password-hidden-accessible {");
-      for (const decl of [
-        "clip: rect(0 0 0 0)",
-        "height: 1px",
-        "width: 1px",
-        "margin: -1px",
-        "overflow: hidden",
-        "position: absolute",
-      ]) {
-        expect(css).toContain(decl);
-      }
+      expect(css).not.toContain("u-password-hidden-accessible");
+      expect(css).not.toContain("clip: rect(0 0 0 0)");
     });
   });
   describe("ariaLabelledby (GAP-076)", () => {

@@ -27,7 +27,8 @@ describe("useComponentStyle", () => {
   it("registers the style module once per component name on mount", () => {
     renderHook(() => useComponentStyle("test-button", { css: ".u-button {}", classes: {} }));
     expect(reactCoreStyleSheet.has("test-button")).toBe(true);
-    expect(document.head.querySelector("style")?.textContent).toContain(".u-button");
+    const texts = [...document.head.querySelectorAll("style")].map((el) => el.textContent);
+    expect(texts.some((t) => t?.includes(".u-button"))).toBe(true);
   });
 
   it("does not re-register (no duplicate <style> tags) on re-render", () => {
@@ -48,7 +49,9 @@ describe("useComponentStyle", () => {
       classes: {},
     };
     renderHook(() => useComponentStyle("dt-test-component", styleModule));
-    const styleEl = document.head.querySelector("style");
+    const styleEl = [...document.head.querySelectorAll("style")].find((el) =>
+      el.textContent?.includes("--u-test-token-value")
+    );
     expect(styleEl?.textContent).toContain("var(--u-test-token-value");
     expect(styleEl?.textContent).not.toContain("dt(");
   });

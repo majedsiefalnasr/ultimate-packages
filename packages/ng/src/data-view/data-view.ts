@@ -11,7 +11,7 @@ import {
   signal,
 } from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
-import { UPaginator, type PaginatorPageChangeEvent } from "../paginator/paginator";
+import { UPaginator, type PaginatorPageChangeEvent } from "@ultimate/ng/paginator";
 import { dataViewStyleModule } from "./data-view-style";
 
 type MatchMode =

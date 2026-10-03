@@ -106,9 +106,9 @@ describe("UButton", () => {
     fixture.componentRef.setInput("label", "Save");
     fixture.detectChanges();
 
-    // ngCoreStyleSheet's <style> elements carry no identifying attribute
-    // (its StyleSheet instance is constructed with no `attrs` option), so
-    // the registered element is located by its known, unique `.u-button`
+    // ngCoreStyleSheet's <style> elements carry the Angular-only
+    // `data-u-ng-style` key attribute, but the registered element is
+    // located by its known, unique `.u-button`
     // selector — matching the DOM-lookup approach used on the React/Vue
     // side of this same assertion.
     const styleEl = Array.from(document.head.querySelectorAll("style")).find((el) =>

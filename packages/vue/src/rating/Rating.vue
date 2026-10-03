@@ -6,7 +6,7 @@
       :class="cx('option', { focused: focusedIndex === star })"
       tabindex="-1"
     >
-      <span class="p-hidden-accessible">
+      <span class="u-hidden-accessible">
         <input
           type="radio"
           :value="star"

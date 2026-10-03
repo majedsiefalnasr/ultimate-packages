@@ -36,8 +36,9 @@ function componentKey(componentName: string): string {
  *
  * Both tiers are idempotent via `StyleSheet.has()`, so repeated mounts of the
  * same or different components never inject duplicate `<style>` elements.
- * SSR-safety is inherited: each `*-core` package's `StyleSheet` subclass
- * already guards `createStyleElement` on `typeof document`.
+ * SSR-safety is inherited from the `sheet` passed in: the React and Vue
+ * cores guard `createStyleElement` on `typeof document`, and Angular passes
+ * the registry of its injected document (inert when there is no document).
  *
  * Called from each framework's existing structural-CSS registration site, so
  * variables land in `document.head` before (or alongside) the structural CSS

@@ -20,7 +20,7 @@ PrimeReact's full passthrough (`pt`/`ptm`/`ptmo`) system (~150 lines of resoluti
 - `focus-trap` — `FocusTrap`, a component (not a directive, unlike Angular's `ng-core` `UFocusTrap` attribute directive `[uFocusTrap]`) that wraps its `children` between two invisible, `tabIndex={0}` sentinel `<span>`s. Tabbing past the last real focusable descendant lands on the trailing sentinel, which redirects focus back to the first focusable element (and vice versa for the leading sentinel), using `@ultimate/uix-utils`'s `getFirstFocusableElement`/`getLastFocusableElement`. This sentinel-span mechanism matches verified upstream PrimeReact `FocusTrap.js` (not keydown interception) — see ADR-025. Supports `autoFocus`, `disabled`, and selector overrides (`autoFocusSelector`, `firstFocusableSelector`).
 - `scroll-lock` — `useScrollLock()` → `{ register, unregister }`, a private, module-scoped `Set`-based registry coordinating body-scroll blocking across multiple simultaneous overlay instances (scroll stays blocked as long as at least one id is registered). This replaces PrimeReact's verified `document.primeDialogParams` global-mutation pattern with an encapsulated alternative — no property added to `document`.
 - `motion` — `useMotion(elementRef, visible, options?)`, a React lifecycle wrapper around `@ultimate/uix-motion`'s imperative, Promise-based `createMotion(element, options)`: calls `.enter()`/`.leave()` on visibility change and `.cancel()` on unmount. **No `react-transition-group` dependency** — verified upstream PrimeReact `CSSTransition.js` wraps the real `react-transition-group` npm package; `react-core` reuses the already-framework-agnostic `@ultimate/uix-motion` package instead, so no new runtime dependency was introduced for motion in this package (see ADR-028).
-- `styling` — `ReactStyleSheet` (in `react-style-sheet.ts`), a React-only subclass of `@ultimate/uix-styled`'s `StyleSheet<HTMLStyleElement>` overriding `createStyleElement` to delegate to `@ultimate/uix-utils/dom`'s `createStyleElement(css, attrs, document.head)`, SSR-guarded (`typeof document === "undefined"` returns `undefined`). A single module-level instance, `reactCoreStyleSheet`, mirrors Angular's `ngCoreStyleSheet` singleton pattern. `useComponentStyle(componentName, styleModule)` is the mount-effect hook that registers a component's CSS with this singleton exactly once per name (`has()`/`add()` guard). This closes a real gap found during this phase's research: Angular's own `ngCoreStyleSheet` equivalent has an independently-tracked styling gap (not fixed by Phase 3 — recorded as a Phase 2 follow-up instead), while React gets a working DOM-injection adapter from day one (see ADR-029).
+- `styling` — `ReactStyleSheet` (in `react-style-sheet.ts`), a React-only subclass of `@ultimate/uix-styled`'s `StyleSheet<HTMLStyleElement>` overriding `createStyleElement` to delegate to `@ultimate/uix-utils/dom`'s `createStyleElement(css, attrs, document.head)`, SSR-guarded (`typeof document === "undefined"` returns `undefined`). A single module-level instance, `reactCoreStyleSheet`, serves every React component (Angular keeps one registry per document; its `ngCoreStyleSheet` is the browser document's registry). `useComponentStyle(componentName, styleModule)` is the mount-effect hook that registers a component's CSS with this singleton exactly once per name (`has()`/`add()` guard). This closes a real gap found during this phase's research: Angular's own `ngCoreStyleSheet` equivalent has an independently-tracked styling gap (not fixed by Phase 3 — recorded as a Phase 2 follow-up instead), while React gets a working DOM-injection adapter from day one (see ADR-029).
 - `icons` — five standalone icon components, each rendering its own inline `<svg role="img">`: `USpinnerIcon` (used by `UButton`'s loading state), `UTimesIcon` (used by `UDialog`'s close button), `UCheckIcon` (used by `UCheckbox`'s checked state), `UWindowMaximizeIcon`, and `UWindowMinimizeIcon` (ported for provenance completeness — verified upstream PrimeReact `Dialog.js` imports both, but no Phase 3 component renders a maximize/minimize toggle; not currently consumed by any `react` component). All share a base `IconProps` shape (`className`, `spin`, etc.) matching the individual icon's own prop surface.
 
 ## Usage
@@ -38,6 +38,15 @@ function Example() {
   return <div className={cx("root")} />;
 }
 ```
+
+### Server rendering and styles
+
+Component styles are injected on the client only: they are registered on
+first mount into the document `<head>`. Server-rendered HTML therefore
+contains no component CSS, and markup is unstyled until hydration
+(accepted; matches PrimeReact 10.9.9). Angular
+(`@ultimate/ng-core`) differs: it writes styles into the per-request
+document during server rendering and adopts them on hydration (GAP-078).
 
 ## Intentional deviations (spec §32)
 

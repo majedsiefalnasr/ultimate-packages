@@ -3,6 +3,12 @@ import { mount } from "@vue/test-utils";
 import { URating } from "./index";
 
 describe("URating", () => {
+  it("wraps each star's radio input in the shared u-hidden-accessible class (GAP-074)", () => {
+    const wrapper = mount(URating, { props: { modelValue: null, stars: 5 } });
+    expect(wrapper.findAll(".u-hidden-accessible input[type=radio]").length).toBeGreaterThan(0);
+    expect(wrapper.find(".p-hidden-accessible").exists()).toBe(false);
+  });
+
   it("renders one option per star", () => {
     const wrapper = mount(URating, { props: { modelValue: null, stars: 5 } });
     expect(wrapper.findAll('input[type="radio"]').length).toBe(5);

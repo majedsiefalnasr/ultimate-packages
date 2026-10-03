@@ -8,6 +8,7 @@ class ReactStyleSheet extends StyleSheet<HTMLStyleElement> {
   }
 }
 
-// Single module-level instance, matching Angular's ngCoreStyleSheet singleton
-// pattern — every Ultimate React component registers against this one instance.
+// Single module-level instance — every Ultimate React component registers
+// against this one instance. (Angular keeps one registry per document;
+// ngCoreStyleSheet is the browser document's registry.)
 export const reactCoreStyleSheet = new ReactStyleSheet();

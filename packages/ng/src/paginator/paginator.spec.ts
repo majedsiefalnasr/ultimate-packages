@@ -190,8 +190,9 @@ describe("UPaginator", () => {
     fixture.componentRef.setInput("rows", 10);
     fixture.detectChanges();
 
-    // ngCoreStyleSheet's <style> elements carry no identifying attribute,
-    // matching UButton's own Angular test — located by its known, unique
+    // ngCoreStyleSheet's <style> elements carry the Angular-only
+    // `data-u-ng-style` key attribute; matching UButton's own Angular test,
+    // the element is located by its known, unique
     // .u-paginator selector.
     const styleEl = Array.from(document.head.querySelectorAll("style")).find((el) =>
       (el.textContent ?? "").includes(".u-paginator {")

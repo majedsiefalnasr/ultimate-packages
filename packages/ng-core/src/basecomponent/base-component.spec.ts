@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ChangeDetectionStrategy, PLATFORM_ID } from "@angular/core";
+import { DOCUMENT } from "@angular/common";
 import { TestBed } from "@angular/core/testing";
 import { describe, expect, it, vi } from "vitest";
 import { UBaseComponent } from "./base-component";
@@ -55,6 +56,16 @@ describe("UBaseComponent", () => {
     addSpy.mockRestore();
   });
 
+  it("registers the shared u-hidden-accessible rule into the component's document (GAP-074)", () => {
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    expect(
+      Array.from(document.head.querySelectorAll("style")).filter(
+        (s) => s.getAttribute("data-u-ng-style") === "u-hidden-accessible"
+      )
+    ).toHaveLength(1);
+  });
+
   it("resolves dt() calls in registered CSS into var(--u-*, ...) references", () => {
     // Define a test component that uses dt() calls in its CSS
     @Component({
@@ -94,5 +105,25 @@ describe("UBaseComponent", () => {
     expect(registeredCss).not.toContain("dt(");
 
     addSpy.mockRestore();
+  });
+
+  it("registers its style module into the injected DOCUMENT, not the global document (GAP-078)", () => {
+    const doc = document.implementation.createHTMLDocument("server");
+    const docSpy = vi.spyOn(document.head, "appendChild");
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: DOCUMENT, useValue: doc },
+        { provide: PLATFORM_ID, useValue: "server" },
+      ],
+    });
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    expect(
+      Array.from(doc.head.querySelectorAll("style")).some(
+        (s) => s.getAttribute("data-u-ng-style") === "test-component"
+      )
+    ).toBe(true);
+    expect(docSpy).not.toHaveBeenCalled();
+    docSpy.mockRestore();
   });
 });
