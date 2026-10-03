@@ -1,10 +1,12 @@
-import { css, registerThemeVariables } from "@ultimate/uix-styled";
+import { css, registerHiddenAccessible, registerThemeVariables } from "@ultimate/uix-styled";
 import { useMountEffect } from "../hooks";
 import { reactCoreStyleSheet } from "./react-style-sheet";
 import type { StyleModule } from "../base/component-base";
 
 export function useComponentStyle(componentName: string, styleModule: StyleModule): void {
   useMountEffect(() => {
+    registerHiddenAccessible(reactCoreStyleSheet);
+
     // Theme variable DEFINITIONS first — the structural CSS below refers to
     // them via dt()-resolved var(--u-*) references, which resolve to nothing
     // unless something also defines the properties. Idempotent per its own

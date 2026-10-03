@@ -393,6 +393,7 @@ test.describe("GAP-078 server-rendered styles", () => {
     const body = await response.text();
     expect(body).toContain('data-u-style="u-common-variables"');
     expect(body).toContain('data-u-style="button"');
+    expect(body).toContain('data-u-style="u-hidden-accessible"');
 
     await page.goto(HARNESS_URL);
     await page.waitForSelector('[data-hydrated="true"]');

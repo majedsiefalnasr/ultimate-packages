@@ -1,4 +1,10 @@
-import { StyleSheet, css, registerThemeVariables, type StyleMeta } from "@ultimate/uix-styled";
+import {
+  StyleSheet,
+  css,
+  registerHiddenAccessible,
+  registerThemeVariables,
+  type StyleMeta,
+} from "@ultimate/uix-styled";
 import { createStyleElement } from "@ultimate/uix-utils/dom";
 import type { StyleModule } from "../base/base-component";
 
@@ -26,6 +32,8 @@ export const vueCoreStyleSheet = new VueStyleSheet();
 // matching react-core's/ng-core's identical has()/add(componentName,
 // styleModule.css) call shape.
 export function registerComponentStyle(componentName: string, styleModule: StyleModule): void {
+  registerHiddenAccessible(vueCoreStyleSheet);
+
   // Theme variable DEFINITIONS first — the structural CSS below refers to
   // them via dt()-resolved var(--u-*) references, which resolve to nothing
   // unless something also defines the properties. Idempotent per its own

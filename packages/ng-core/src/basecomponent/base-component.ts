@@ -1,7 +1,7 @@
 import { Directive, ElementRef, PLATFORM_ID, Renderer2, inject, input } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { cn } from "@ultimate/uix-utils/classnames";
-import { css, registerThemeVariables } from "@ultimate/uix-styled";
+import { css, registerHiddenAccessible, registerThemeVariables } from "@ultimate/uix-styled";
 import { UltimateConfig } from "../config/ultimate-config";
 import { ngCoreStyleSheetFor } from "./style-sheet";
 
@@ -55,6 +55,7 @@ export abstract class UBaseComponent {
     // unless something also defines the properties. Idempotent per its own
     // has() guards; see registerThemeVariables' doc comment.
     registerThemeVariables(sheet, this.componentName);
+    registerHiddenAccessible(sheet);
 
     if (!sheet.has(this.componentName)) {
       sheet.add(this.componentName, css`${this.styleModule.css}`);

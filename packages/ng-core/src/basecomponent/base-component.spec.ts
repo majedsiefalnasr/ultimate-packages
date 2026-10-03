@@ -56,6 +56,16 @@ describe("UBaseComponent", () => {
     addSpy.mockRestore();
   });
 
+  it("registers the shared u-hidden-accessible rule into the component's document (GAP-074)", () => {
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.detectChanges();
+    expect(
+      Array.from(document.head.querySelectorAll("style")).filter(
+        (s) => s.getAttribute("data-u-style") === "u-hidden-accessible"
+      )
+    ).toHaveLength(1);
+  });
+
   it("resolves dt() calls in registered CSS into var(--u-*, ...) references", () => {
     // Define a test component that uses dt() calls in its CSS
     @Component({
