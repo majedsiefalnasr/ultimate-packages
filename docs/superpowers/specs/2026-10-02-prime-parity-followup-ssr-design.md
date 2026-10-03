@@ -1,6 +1,6 @@
 # Specification — F4 SSR: Angular Scroller Browser Guard (GAP-080) and CI SSR Build-Order Verification
 
-**Status:** Approved for Plan creation (Spec Review 2026-10-02; decision in §12).
+**Status:** Implemented on `feature/prime-parity-followup` (closeout 2026-10-03); GAP-080 RESOLVED; CI SSR build-order fix applied. Spec Review 2026-10-02 notes in §12.
 **Date:** 2026-10-02
 **Branch:** `feature/prime-parity-followup`
 **Origin:** post-closeout scope lock (`docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §6–§7), GAP-080, branch closeout deferred item 6 (`docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`). Parity baseline: ADR-048 (PrimeNG 21.1.9).

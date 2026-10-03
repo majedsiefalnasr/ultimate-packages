@@ -1,6 +1,6 @@
 # Specification — F5 Vue Declarations / Packaging: Resolvable Vue Types, Story Declarations, Declaration Source Maps (GAP-079)
 
-**Status:** Approved for Plan creation (Spec Review 2026-10-02; decision in §12).
+**Status:** Implemented on `feature/prime-parity-followup` (closeout 2026-10-03); GAP-079 RESOLVED for declaration resolvability; the typed-props acceptance row is out of scope and tracked as GAP-082. Spec Review 2026-10-02 notes in §12.
 **Date:** 2026-10-02
 **Branch:** `feature/prime-parity-followup`
 **Origin:** post-closeout scope lock (`docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §6–§7), GAP-079 (the Vue remainder of GAP-068), branch closeout deferred items 4 and 5 (`docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`).

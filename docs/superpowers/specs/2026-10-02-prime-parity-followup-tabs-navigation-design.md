@@ -1,6 +1,6 @@
 # Specification — F1 Tabs / Navigation: Tabs Overflow Detection and Breadcrumb Links (GAP-071–GAP-073)
 
-**Status:** Approved for Plan creation (Spec Review 2026-10-02, approved as written; Plan requirements in §12).
+**Status:** Implemented on `feature/prime-parity-followup` (closeout 2026-10-03); GAP-071–GAP-073 RESOLVED. Spec Review 2026-10-02 notes in §12.
 **Date:** 2026-10-02
 **Branch:** `feature/prime-parity-followup`
 **Origin:** post-closeout scope lock (`docs/architecture/research/2026-10-01-prime-parity-scope-lock.md` §6–§7), GAP-071, GAP-072, GAP-073. Parity baseline: ADR-048 (PrimeNG 21.1.9, PrimeVue 4.5.5).
