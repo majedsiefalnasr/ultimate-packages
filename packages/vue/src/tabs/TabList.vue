@@ -58,12 +58,23 @@ export default {
     "$pcTabs.d_value"() {
       this.$nextTick(() => this.updateInkBar());
     },
+    showNavigators(newValue) {
+      newValue ? this.bindResizeObserver() : this.unbindResizeObserver();
+    },
   },
   mounted() {
     if (this.showNavigators) {
       this.updateButtonState();
+      this.bindResizeObserver();
     }
     this.$nextTick(() => this.updateInkBar());
+  },
+  // PrimeVue 4.5.5 TabList.vue:84-86 — re-check after any re-render (e.g. tabs added).
+  updated() {
+    if (this.showNavigators) this.updateButtonState();
+  },
+  beforeUnmount() {
+    this.unbindResizeObserver();
   },
   methods: {
     onScroll() {
@@ -81,6 +92,19 @@ export default {
       const pos = el.scrollLeft + el.clientWidth;
       const lastPos = el.scrollWidth - el.clientWidth;
       el.scrollLeft = pos >= lastPos ? lastPos : pos;
+    },
+    // PrimeVue 4.5.5 TabList.vue:120-127. Always disconnects an existing
+    // observer first, so rebinding never leaves two live observers.
+    bindResizeObserver() {
+      this.unbindResizeObserver();
+      const el = this.$refs.tabListEl;
+      if (!el) return;
+      this.resizeObserver = new ResizeObserver(() => this.updateButtonState());
+      this.resizeObserver.observe(el);
+    },
+    unbindResizeObserver() {
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = undefined;
     },
     updateButtonState() {
       const el = this.$refs.content;

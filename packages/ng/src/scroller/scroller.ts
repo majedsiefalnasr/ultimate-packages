@@ -1,4 +1,4 @@
-import { NgTemplateOutlet } from "@angular/common";
+import { NgTemplateOutlet, isPlatformBrowser } from "@angular/common";
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -132,6 +132,10 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
   private resizeObserver?: ResizeObserver;
 
   ngAfterViewInit(): void {
+    // PrimeNG 21.1.9 scroller.ts:679-680 runs all view-init work only under
+    // isPlatformBrowser; ngAfterViewInit also runs during server rendering,
+    // where ResizeObserver and layout do not exist (GAP-080).
+    if (!isPlatformBrowser(this.platformId)) return;
     // Measures the root viewport element's offsetHeight — matching real
     // PrimeNG's elementViewChild.nativeElement.offsetHeight measurement
     // exactly (scroller.ts:854, pinned commit

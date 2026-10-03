@@ -1170,7 +1170,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-071 — Angular Tabs never performs initial or resize-triggered overflow detection
 
-- **Status:** MISSING
+- **Status:** RESOLVED (2026-10-03, F1 — `f0d446a`; navigator state computed on view init and kept current by a browser-only `ResizeObserver`; `tab-list.ts` comment corrected)
 - **Type:** Component, Framework (Angular)
 - **Blocking level:** LOW
 - **Current evidence:** Discovered during GAP-057's own Implementation-stage re-verification (2026-09-30), not part of GAP-057's original scope. `packages/ng/src/tabs/tab-list.ts`'s `updateButtonState()` (the method that decides whether the prev/next navigator buttons render, via `isPrevButtonEnabled()`/`isNextButtonEnabled()` signals gating `@if (showNavigators() && ...)` in the template) is called **only** from the component's own `onScroll` handler — there is no `ngAfterViewInit`/`afterNextRender` call and no `ResizeObserver` anywhere in the file. Both enabled-state signals initialize to `false`. Consequence: when `UTabs` first renders with overflowing tab labels, **neither navigator button appears** — a button only shows up after the user has already scrolled the strip by some other means (trackpad/shift-wheel; the CSS sets `overflow-x: auto`). This does not match real PrimeNG 21.1.9's own `Tabs`/`TabList`, which calls `updateButtonState()` from `onAfterViewInit` and binds a real `ResizeObserver` (`packages/primeng/src/tabs/tablist.ts`, confirmed during the same re-verification) — nor does it match Ultimate's own doc comment in `tab-list.ts:10-11`, which claims the component "Reads `scrollable`" (a separate, distinct documentation defect — see the note below, not folded into this GAP).
@@ -1187,7 +1187,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-072 — Vue Tabs never re-evaluates overflow on resize (initial mount check only)
 
-- **Status:** MISSING
+- **Status:** RESOLVED (2026-10-03, F1 — `a7fd362`; `updated()`, `ResizeObserver`, `showNavigators` watcher, disconnect before rebind; the unused `scrollable` prop remains a cleanup note)
 - **Type:** Component, Framework (Vue)
 - **Blocking level:** LOW
 - **Current evidence:** Discovered during GAP-057's own Implementation-stage re-verification (2026-09-30), not part of GAP-057's original scope. `packages/vue/src/tabs/TabList.vue`'s `updateButtonState()` is called from `mounted()` (so it does correctly compute navigator visibility once, when the component first renders with content already present) and from the component's own `scroll` handler — but there is no `updated()` hook and no `ResizeObserver` anywhere in the file. Consequence: a Vue Tabs instance that starts non-overflowing but later overflows (window resize, container resize, dynamic tab addition) never re-shows a navigator button until the user manually scrolls the strip by some other means. This partially, not fully, matches real PrimeVue 4.5.5's own `TabList.vue`, which calls `updateButtonState()` from `mounted()`, `updated()`, `scroll`, **and** a real `ResizeObserver` (`packages/primevue/src/tablist/TabList.vue`, confirmed during the same re-verification) — Ultimate Vue has only the first and third of those four triggers.
@@ -1203,7 +1203,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-073 — Angular Breadcrumb's `url`/`#` href fallback is overwritten by the `RouterLink` directive
 
-- **Status:** MISSING
+- **Status:** RESOLVED (2026-10-03, F1 — `90602d3`; structural `@if`/`@else` anchor split for home and model items)
 - **Type:** Component, Framework (Angular)
 - **Blocking level:** LOW
 - **Current evidence:** Discovered during the Navigation Plan's GAP-053 implementation (2026-09-30) and confirmed in its reviews; registered on user instruction after the Navigation Plan final review. Not part of GAP-053 or GAP-069. `packages/ng/src/breadcrumb/breadcrumb.ts` co-locates `[attr.href]="…routerLink ? null : (…url ?? '#')"` and `[routerLink]="…disabled ? null : (…routerLink ?? null)"` on the same `<a>`, for both the home item (lines 48-49) and each model item (lines 73-74). Angular's `RouterLink` directive is structurally present on every such anchor, even when bound to `null`, and its own host binding (`[attr.href]: reactiveHref()`) overwrites the template's `[attr.href]`. Consequence: items without a `routerLink` (or disabled items) do not get their intended `url`/`#` href fallback. `packages/ng/src/breadcrumb/breadcrumb.spec.ts` has no `href` assertions, so the defect is untested. The same defect was found and fixed in Steps (GAP-053, commit `9dd5a33`) and avoided from the start in Dock (GAP-069, commit `2ce8d59`), both via an `@if`/`@else` structural branch.
@@ -1235,7 +1235,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-075 — React `UToggleButton` toggles twice on Space in real browsers
 
-- **Status:** MISSING
+- **Status:** RESOLVED (2026-10-03, F2 — `f52e842`; Space toggles then `preventDefault()`, matching PrimeReact 10.9.9; real-browser state-per-press tests in Chromium, Firefox, WebKit)
 - **Type:** Component, Accessibility, Framework (React)
 - **Blocking level:** MEDIUM
 - **Current evidence:** Found by the Form/Accessibility Plan's Task 2 (GAP-059) review (2026-09-30); pre-existing since `13d92bb` (Phase C Batch 1); registered on user instruction. `packages/react/src/toggle-button/toggle-button.tsx:71-75` (as of `f2b8d41`) calls `toggle()` on a Space/Enter `keydown` but never calls `preventDefault()`. The element is a native `<input type="checkbox">`, so in a real browser Space also fires `click`/`change` on keyup, and the input's `onChange={toggle}` runs a second time — by then the parent has re-rendered, so the second call reverses the first. Real PrimeReact 10.9.9 `ToggleButton.js:47-50` toggles on Space and calls `event.preventDefault()`, suppressing the native toggle. Effect: in `USelectButton` single mode with `allowEmpty`, Space selects an option and immediately deselects it; standalone `UToggleButton` flips twice. jsdom does not simulate the keyup click, so the existing unit tests (including GAP-059's "Space selects exactly once") cannot detect it.
@@ -1251,7 +1251,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-076 — Vue Password has no `ariaLabelledby` prop
 
-- **Status:** MISSING
+- **Status:** RESOLVED (2026-10-03, F2 — `c786c15`; Vue only, per decision)
 - **Type:** Component, Accessibility, Framework (Vue)
 - **Blocking level:** LOW
 - **Current evidence:** Found by the Form/Accessibility Plan's Task 6 (GAP-061) review (2026-09-30); pre-existing; registered on user instruction. Real PrimeVue 4.5.5 binds `:aria-labelledby="ariaLabelledby"` on the Password input (`packages/primevue/src/password/Password.vue:11`). Ultimate's `packages/vue/src/password/BasePassword.ts` declares `inputId` and `ariaLabel` (`:38-39`) but no `ariaLabelledby`, so consumers cannot label the input by reference. GAP-061 deliberately added no new public props.
@@ -1283,14 +1283,14 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-079 — Vue's shipped type declarations are unresolvable for consumers
 
-- **Status:** MISSING
+- **Status:** RESOLVED for declaration/package resolvability (2026-10-03, F5 — `041e7eb`, `6360a83`; every exported subpath type-checks under `Bundler` and `NodeNext`; declaration maps and story declarations no longer shipped). Typed component props are out of scope for this GAP and tracked as GAP-082.
 - **Type:** Packaging, Framework (Vue)
 - **Blocking level:** MEDIUM
 - **Current evidence:** Found during the Existing Commitments Plan's GAP-068 work (2026-10-01); pre-existing; registered on user instruction. `@ultimate/vue` emits declarations per file with `vue-tsc --emitDeclarationOnly` followed by `scripts/rename-dts.mjs` (`packages/vue/package.json` `build` script), which renames `.d.ts` to `.d.mts` but leaves relative import specifiers unrewritten. A scratch consumer (TypeScript, `moduleResolution: Bundler`) importing `@ultimate/vue/button` fails with TS2307 "Cannot find module './Button.vue'" and on `./base-button` — the emitted `.d.mts` files reference SFC and extensionless paths that do not resolve to emitted declaration files. This predates GAP-068's new subpath entries (the proof-set `button` subpath already shipped this way). Evidence: `.superpowers/sdd/2026-09-27-prime-parity-existing-commitments/task-4-5-report.md` (Task 4 resumed section). The same declaration build also ships 91 Storybook `*.stories.d.mts` files, and its `.d.mts` files keep `sourceMappingURL` comments naming the pre-rename `.d.ts.map` files (React shows the same comment leftover).
 - **Expected state:** Every exported `@ultimate/vue` subpath and the barrel type-check for consumers under `Bundler` and `NodeNext` resolution, with props/emits types intact.
 - **Why it matters:** TypeScript consumers of `@ultimate/vue` get unresolved-module errors or `any`-typed components.
 - **What it blocks:** Nothing further downstream.
-- **Dependencies:** None. Related: React's equivalent was fixed within GAP-068 by rewriting relative specifiers in React's `scripts/rename-dts.mjs`; Vue additionally needs `.vue` declaration handling.
+- **Dependencies:** None. Follow-up: typed Vue component props, GAP-082 (out of scope here). Related: React's equivalent was fixed within GAP-068 by rewriting relative specifiers in React's `scripts/rename-dts.mjs`; Vue additionally needs `.vue` declaration handling.
 - **Framework scope:** Vue only.
 - **Existing reusable infrastructure:** React's specifier rewrite in `packages/react/scripts/rename-dts.mjs` (GAP-068).
 - **Recommended resolution direction:** Directional only — make Vue's declaration build emit resolvable specifiers (including SFC declarations), verified by a consumer type-check.
@@ -1299,7 +1299,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-080 — Angular Scroller creates a `ResizeObserver` in `ngAfterViewInit` without a browser guard (SSR)
 
-- **Status:** MISSING
+- **Status:** RESOLVED (2026-10-03, F4 — `ea28372`; view-init work browser-only, matching PrimeNG 21.1.9; CI SSR build-order fix `8edc668`)
 - **Type:** Component, Framework (Angular), SSR
 - **Blocking level:** MEDIUM
 - **Current evidence:** Found during the Existing Commitments Plan's GAP-070 prerequisite work (2026-10-01) and confirmed in review; pre-existing on `main` (`2bd2538`); registered on user instruction. `packages/ng/src/scroller/scroller.ts:141` runs `this.resizeObserver = new ResizeObserver(...)` in `UScroller.ngAfterViewInit` with no `isPlatformBrowser` guard; `ngAfterViewInit` runs during server rendering, where `ResizeObserver` is undefined. The Angular SSR playground's build-time prerender logs `ERROR ReferenceError: ResizeObserver is not defined at ngAfterViewInit` (via `apps/playground-angular/src/app/proof-page.component.ts:90`). The build still exits 0 and the `ng-ssr-chromium` Playwright project passes (it checks browser console/pageerror only), so CI does not catch it. It surfaced only once `@ultimate/ng` could be built again (TS2729 and `@angular/cdk` fixes, `4a47883`/`29a3390`). Scroller is one of Track E's eight proof-set components, which GAP-065's scope deliberately excluded.
@@ -1331,7 +1331,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-077 — Vue Stepper lacks horizontal separators between step headers
 
-- **Status:** MISSING
+- **Status:** RESOLVED (2026-10-03, F3 — `96332a0`, `bcaa306`, `bcbc06c`; horizontal separators + scoped row layout; vertical GAP-063 layout unchanged)
 - **Type:** Component, Framework (Vue)
 - **Blocking level:** LOW
 - **Current evidence:** Found by the Vue Plan's Implementation-stage source check (2026-09-30); registered on user instruction. Real PrimeVue 4.5.5 `step/Step.vue` renders `<StepperSeparator v-if="isSeparatorVisible" />` after each step header (`:9`), with `updateState()` setting `isSeparatorVisible = index !== stepLen - 1` when the step is inside a `StepList` (`:43-49`). Ultimate's `packages/vue/src/stepper/Step.vue` renders no separator, although `stepper-style.ts` already defines a horizontal `.u-stepper-separator` rule (line 19 as of `41a219c`; before GAP-063 it was unused, and GAP-063's internal `StepperSeparator.vue` now uses it only in vertical mode, with vertical overrides). This contradicts the earlier audit claim (Vue Plan Spec §4/§8, GAP-063's original text) that Ultimate's `Step` already matches PrimeVue exactly.
@@ -1344,6 +1344,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Recommended resolution direction:** Directional only — port `Step.vue`'s separator rendering for steps inside `StepList`.
 - **Source/evidence:** Vue Plan pre-dispatch source check (ledger `.superpowers/sdd/2026-09-27-prime-parity-vue/progress.md`); PrimeVue `Step.vue:9,43-49`; Ultimate `Step.vue`, `stepper-style.ts:19` (as of `41a219c`).
 - **Architectural decision required:** No.
+
+#### GAP-082 — Vue components ship without typed public props
+
+- **Status:** MISSING
+- **Type:** Packaging, Component, Framework (Vue)
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found by the F5 consumer type-check (2026-10-03, Prime-parity follow-up phase). After GAP-079, `@ultimate/vue`'s declarations resolve for consumers, but the Vue component base factories return an untyped `ComponentOptions` (e.g. `packages/vue/src/button/base-button.ts:20`, `createBaseButton(): ComponentOptions`), and components extend them (`extends: createBaseButton()`). `vue-tsc` therefore emits each component as `DefineComponent` with an empty props type (e.g. `packages/vue/dist/button/Button.vue.d.mts`), across approximately 95 component bases. A consumer passing a wrongly typed prop (e.g. a number for `UButton`'s `label`) gets no TypeScript error. Pre-existing; not caused by GAP-079 (before it, the declarations did not resolve at all).
+- **Expected state:** Each exported Vue component's declaration carries its real props (and emits) types, so wrong prop types are compile-time errors for consumers.
+- **Why it matters:** TypeScript consumers of `@ultimate/vue` get no prop checking or editor completion for component props.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** Follows GAP-079 (resolvable declarations are a prerequisite, now met).
+- **Framework scope:** Vue only.
+- **Existing reusable infrastructure:** Vue's `defineComponent` typing; the F5 consumer type-check method (pack, install into a scratch consumer, type-check every exported subpath, `@ts-expect-error` on a wrong prop).
+- **Recommended resolution direction:** Directional only — needs a dedicated architectural/retyping phase covering the base-factory pattern across ~95 components. Intentionally not included in F5 (user decision 2026-10-03).
+- **Source/evidence:** F5 Task 3 consumer check and final whole-branch review (2026-10-03); `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`.
+- **Architectural decision required:** Yes — how Vue base factories expose typed props (affects every Vue component).
 
 ---
 
@@ -1551,7 +1567,7 @@ The great majority of gaps in this registry can be started without waiting on an
 
 ### Open Architectural Decisions
 
-The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`.
+The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`. The Prime-parity follow-up phase (`feature/prime-parity-followup`, closeout 2026-10-03) resolved GAP-071–GAP-073, GAP-075–GAP-077, GAP-079 (declaration resolvability only) and GAP-080, and registered GAP-082 (typed Vue props); GAP-064 stays PARTIAL and GAP-074, GAP-078 and GAP-081 remain open with approved designs. Record: `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`.
 
 Five were open (§5) at the 2026-10-01 closeout; DECISION-F was decided on 2026-10-02 (Option 1), leaving four: external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower still — Table's own composition question is substantially answered by real implementation, OrderList/PickList/DataView's relationship to it is resolved (2026-09-21, no new foundation required), and Table's own fuller filter-operator vocabulary is resolved (2026-09-23, all 18 `FilterMatchMode` values dispatched in all 3 frameworks); the remainder is TreeTable specifically, gated on the separate DECISION-D), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), and package-naming finalization (DECISION-E, correctly deferred to pre-1.0). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
 

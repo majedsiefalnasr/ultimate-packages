@@ -8,6 +8,7 @@
       :value="dValue"
       :placeholder="placeholder"
       :disabled="disabled"
+      :aria-labelledby="ariaLabelledby"
       :aria-label="ariaLabel"
       :aria-haspopup="feedback"
       :aria-expanded="overlayVisible"

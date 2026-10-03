@@ -56,6 +56,23 @@ describe("UToggleButton", () => {
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ value: true }));
   });
 
+  it("prevents the default action of a Space keydown so the native activation cannot toggle again (GAP-075)", () => {
+    const onChange = vi.fn();
+    render(<UToggleButton checked={false} onChange={onChange} />);
+    const notPrevented = fireEvent.keyDown(screen.getByRole("checkbox", { hidden: true }), {
+      key: " ",
+    });
+    expect(notPrevented).toBe(false);
+    expect(onChange).toHaveBeenCalledOnce();
+  });
+
+  it("does not toggle on Space when disabled", () => {
+    const onChange = vi.fn();
+    render(<UToggleButton checked={false} onChange={onChange} disabled />);
+    fireEvent.keyDown(screen.getByRole("checkbox", { hidden: true }), { key: " " });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it("forwards tabIndex to the input", () => {
     render(<UToggleButton checked={false} onChange={() => {}} tabIndex={-1} />);
     expect(screen.getByRole("checkbox", { hidden: true })).toHaveAttribute("tabindex", "-1");

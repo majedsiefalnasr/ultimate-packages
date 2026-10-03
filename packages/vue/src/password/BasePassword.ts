@@ -37,6 +37,7 @@ export function createBasePassword(): ComponentOptions {
       disabled: { type: Boolean, default: false },
       inputId: { type: String, default: null },
       ariaLabel: { type: String, default: null },
+      ariaLabelledby: { type: String, default: null },
       appendTo: { type: [String, Object], default: "body" },
     },
     methods: {
