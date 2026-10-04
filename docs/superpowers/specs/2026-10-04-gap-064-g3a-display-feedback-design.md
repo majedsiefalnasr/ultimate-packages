@@ -1,6 +1,6 @@
 # Specification — GAP-064 G3-A: Display Primitives (F5) and Feedback (F4) Use Their Aura Tokens
 
-**Status:** Draft for Spec Review.
+**Status:** Approved (Spec Review 2026-10-04); decisions and clarifications in §13.
 **Date:** 2026-10-04
 **Branch:** `feature/gap-064-g3a-display-feedback` (from `main` `fa5c150`)
 **Origin:** GAP-064 (PARTIAL), G3 tranche G3-A. Decisions: ADR-051, D-G3-1..9 and the additional rulings in `docs/architecture/research/2026-10-04-gap-064-g3-research.md` §11. Parity baseline: ADR-048.
@@ -172,7 +172,7 @@ Each G3-A style module's `css` becomes, in this order:
 
 1. **Ported groups.** The supported upstream rule groups of §4.4, with selectors rewritten by the §4.3 mapping. Declarations are unchanged, including every `dt('…')` call and every literal value, in upstream order. Keyframes are renamed per §4.3.
 2. **Adapted groups.** The parity-exception groups (§5.3), with the exact selector rewrite given there.
-3. **Retained Ultimate-only rules.** Only those listed in §5.3 (PX-A4, PX-A5), unchanged.
+3. **Retained Ultimate-only rules.** Only those listed in §5.3 (PX-A4, PX-A5, PX-A6), with exactly the text given there.
 
 **Removed:** every other current hand-written rule — every rule whose selector targets a mapped class.
 
@@ -188,11 +188,58 @@ Location: the CSS stays in each framework's own style module. See §12 item 1.
   - `.p-metergroup-label-list-horizontal` → `.u-meter-group-label-list:not(.u-meter-group-label-list-vertical)`.
   - This covers 5 groups.
 - **PX-A3, Skeleton animation.** Ultimate adds `u-skeleton-wave` when `animation="wave"` (the default) and omits it for `"none"`. Upstream instead animates `.p-skeleton::after` by default and removes the animation with `.p-skeleton-animation-none`. The `.p-skeleton::after` group (and its RTL variant) is ported as `.u-skeleton-wave::after`, and the animation-none group is not needed.
-- **PX-A4, Toast position offsets (retained literals).** The four Ultimate-only rules `.u-toast-top-right / -top-left / -bottom-right / -bottom-left { … 1rem … }` are retained. Upstream sets these offsets (`20px`) through component inline styles, not tokens, so no token exists for the role (D-G3-8). The upstream `.p-toast-top-center`, `-bottom-center` and `-center` groups are ported by identical name.
+- **PX-A4, Toast root positioning (retained literals).**
+  - **Evidence.** Upstream supplies the root's `position: fixed` and the per-position offsets (`20px` / `50%`) through component inline styles, not CSS or tokens: PrimeNG `toast/style/toaststyle.ts` and PrimeVue `toast/style/ToastStyle.js` `inlineStyles.root`. The stacking order is managed at runtime by `ZIndexUtils`. Upstream `.p-toast` CSS sets only `width`, `white-space` and `word-break`.
+  - **Rules.** Ultimate expresses these in CSS, so the following rules are retained, with exactly this text, in both frameworks (D-G3-8: no token has these roles):
+    ```css
+    .u-toast {
+      position: fixed;
+      z-index: 1200;
+      max-width: calc(100vw - 2rem);
+    }
+    .u-toast-top-right {
+      top: 1rem;
+      right: 1rem;
+    }
+    .u-toast-top-left {
+      top: 1rem;
+      left: 1rem;
+    }
+    .u-toast-bottom-right {
+      bottom: 1rem;
+      right: 1rem;
+    }
+    .u-toast-bottom-left {
+      bottom: 1rem;
+      left: 1rem;
+    }
+    .u-toast-top-center {
+      top: 1rem;
+      left: 50%;
+    }
+    .u-toast-bottom-center {
+      bottom: 1rem;
+      left: 50%;
+    }
+    .u-toast-center {
+      top: 50%;
+      left: 50%;
+    }
+    ```
+  - **Transforms and widths.** The `transform` and `min-width` of the center positions come from the ported upstream `.p-toast-top-center`, `-bottom-center` and `-center` groups (identical-name mapping), so they are not repeated in the retained rules. The toast width comes from the ported `.p-toast` group (`dt('toast.width')`).
+  - **Recorded differences:**
+    - offsets of `1rem` vs upstream `20px`;
+    - a fixed `z-index: 1200` vs runtime `ZIndexUtils`;
+    - the Ultimate-only responsive `max-width`.
+  - **Dropped.** The current `display: flex; flex-direction: column; gap: 0.5rem` on `.u-toast` is not retained. Upstream spaces messages with the ported `.p-toast-message { margin: 0 0 1rem 0 }`.
 - **PX-A5, Ultimate-only layout rules (retained literals).** These are retained unchanged; no upstream rule or Aura token has the same role:
   - `.u-chip-label { line-height: 1.5; padding: 0.25rem 0; }`;
   - `.u-terminal-welcome-message { margin-bottom: 0.5rem; }`;
   - `.u-terminal-command { display: block; margin-bottom: 0.25rem; }`.
+- **PX-A6, Skeleton root `position: relative` (retained literal).**
+  - **Evidence.** Upstream supplies `position: relative` on the skeleton root through component inline styles: PrimeNG `skeleton/style/skeletonstyle.ts` and PrimeVue `skeleton/style/SkeletonStyle.js` `inlineStyles.root`. The ported `::after` group is absolutely positioned and depends on it.
+  - **Rule.** Retained in both frameworks, with exactly this text: `.u-skeleton { position: relative; }`.
+- **Not a G3-A exception: Chip's upstream inline style.** Chip's upstream inline style (`display: none` when not visible) has no CSS counterpart. Ultimate removes the chip from the DOM instead. No rule is needed.
 
 ### 5.4 Feature exclusions (D-G3-3; recorded, not ported)
 
@@ -233,17 +280,18 @@ The other missing ng/vue entries are pre-existing and out of scope.
 
 ## 7. Affected Files
 
-| File(s)                                                                         | Change                                                                                                             |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| The 27 style modules in §4.1                                                    | `css` replaced per §5.2/§5.3. `classes` unchanged.                                                                 |
-| The 9 ⚠ registration sites in §4.1                                              | Key literal only.                                                                                                  |
-| `docs/architecture/provenance/{ng,vue}.json`                                    | 27 entries (§5.5).                                                                                                 |
-| `packages/themes/test/fixtures/primeuix-styles-g3a.json` (new)                  | Upstream structural CSS of the 14 keys, generated from the pinned `@primeuix/styles` 2.0.3 tarball; no hand edits. |
-| `packages/{ng,vue}/src/g3a-aura-styles.spec.ts` (new)                           | C1–C4 tests, including the explicit mapping/exception data.                                                        |
-| Verification-only stories (§8 C5) in `packages/{ng,vue}/src/<dir>/*.stories.ts` | Test infrastructure.                                                                                               |
-| `packages/{ng,vue}/e2e/g3a-aura-styles.spec.ts` and `*-snapshots/`              | Screenshot and accessibility coverage.                                                                             |
-| `docs/architecture/ACCESSIBILITY_BASELINE.md`                                   | Only for violations you approve at the review gate.                                                                |
-| `docs/architecture/BLUEPRINT_GAPS.md`, closeout record                          | At closeout; GAP-064 stays PARTIAL.                                                                                |
+| File(s)                                                                         | Change                                                                                                                                   |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| The 27 style modules in §4.1                                                    | `css` replaced per §5.2/§5.3. `classes` unchanged.                                                                                       |
+| The 9 ⚠ registration sites in §4.1                                              | Key literal only.                                                                                                                        |
+| `docs/architecture/provenance/{ng,vue}.json`                                    | 27 entries (§5.5).                                                                                                                       |
+| `packages/themes/test/fixtures/primeuix-styles-g3a.json` (new)                  | Upstream structural CSS of the **14 unique keys**, generated from the pinned `@primeuix/styles` 2.0.3 tarball; no hand edits.            |
+| `packages/themes/test/g3a-upstream-fidelity.test.ts` (new)                      | C3. Reads the 27 style modules' `css` source text (no package imports) and holds the explicit mapping, omitted-group and exception data. |
+| `packages/{ng,vue}/src/g3a-aura-styles.spec.ts` (new)                           | C1, C2 and the C3 dynamic-class checks (runtime mounts).                                                                                 |
+| Verification-only stories (§8 C5) in `packages/{ng,vue}/src/<dir>/*.stories.ts` | Test infrastructure.                                                                                                                     |
+| `packages/{ng,vue}/e2e/g3a-aura-styles.spec.ts` and `*-snapshots/`              | Screenshot and accessibility coverage.                                                                                                   |
+| `docs/architecture/ACCESSIBILITY_BASELINE.md`                                   | Only for violations you approve at the review gate.                                                                                      |
+| `docs/architecture/BLUEPRINT_GAPS.md`, closeout record                          | At closeout; GAP-064 stays PARTIAL.                                                                                                      |
 
 Any other file found necessary is reported at Plan Review.
 
@@ -253,16 +301,33 @@ All are checked in both frameworks. Generated-style checks use the rendered `<st
 
 1. **C1 — Keys.** Each of the 5 renamed components, mounted alone, produces exactly one structural element and one `<key>-variables` element under its Aura key, and none under the old hyphenated key. The 22 already-correct components keep their key.
 2. **C2 — Variable resolution.** Every G3-A component is mounted with representative props, covering every severity/size/layout/mode variant that §4.4 ports. Every `var(--u-…)` referenced by its structural CSS is defined by a registered element.
-   - The exception list is **empty** for all 27 components. This is asserted bidirectionally, using the Tranche 1 pattern.
-   - The structural CSS contains at least one `var(--u-<key>-` reference.
-3. **C3 — Upstream fidelity and mapping.** The upstream fixture contains the 14 modules' CSS, generated from the tarball. For each component, apply the §4.3 mapping (and the §5.3 selector rewrites) to the fixture's supported groups. Then:
-   - every resulting rule is present in the registered CSS, with identical declarations (whitespace-normalised);
-   - none of the §5.4 omitted groups is present;
-   - the retained Ultimate-only rules are exactly PX-A4 and PX-A5;
-   - no other rule exists;
-   - every renamed keyframe is defined and referenced.
-   - The mapping, the omitted-group list and the exception list are data in the test, so they are explicit and testable.
-4. **C4 — DOM unchanged.** For every G3-A component, the diff touches only the `css` string of its style module and, for the 9 sites, the key literal. Templates, `classes` resolvers and component classes are unchanged. This is checked by a scoped diff in verification.
+   - The unresolved-token exception list is **empty** for all 27 components. This is asserted bidirectionally, using the Tranche 1 pattern.
+   - **Own-token invariant.** The **ported structural CSS** of each component contains at least one `var(--u-<key>-` reference. The ported structural CSS is the §5.2 items 1 and 2 (ported plus adapted groups). The invariant does not apply to the retained Ultimate-only rules (PX-A4, PX-A5, PX-A6), which are literal-only by design.
+3. **C3 — Upstream fidelity, mapping and exactness.**
+   - **The fixture** contains the CSS of the **14 unique Aura keys** (14 `@primeuix/styles` modules), generated from the tarball. **All 27 framework style files** (13 Angular + 14 Vue) are validated against that same fixture. Angular and Vue are each checked separately, with their own mapping data (identical for shared keys).
+   - **Static exactness** (`packages/themes/test/g3a-upstream-fidelity.test.ts`). For each style file, take the fixture's supported groups and apply the §4.3 mapping and the §5.3 selector rewrites. Then:
+     - every supported upstream group is present after mapping, with identical declarations (whitespace-normalised, `dt()` calls compared as written);
+     - none of the §5.4 omitted groups is present;
+     - PX-A4, PX-A5 and PX-A6 are the **only** retained Ultimate-only rules, with exactly the §5.3 text;
+     - **no other rule exists**. No unrelated old hand-written CSS may survive merely because it existed before G3-A;
+     - every upstream `@keyframes` used by a ported group is present under its renamed `u-` name, every ported `animation` reference uses the renamed name, and no `p-` keyframe name remains.
+   - **Dynamic-class coverage** (`packages/{ng,vue}/src/g3a-aura-styles.spec.ts`). The mapping is verified against **actually emitted classes, not static literal scans**. Each component is mounted with representative values for every dynamic class template, and the test checks that the mapped class appears on the rendered element **and** that the mapped selector exists in the registered CSS. The templates covered are at least:
+     - `u-toast-${position}`, all 7 positions;
+     - `u-toast-message-${severity}`, all 6 severities;
+     - `u-message-${severity}`, 6;
+     - `u-tag-${severity}`, 6;
+     - `u-inline-message-${severity}`, Vue, 6;
+     - `u-timeline-${layout}`, vertical and horizontal.
+   - **Data, not convention.** The mapping, the dynamic-variant table, the omitted-group list and the exception list are data in the tests, so they are explicit and testable.
+   - **Authoritative coverage evidence.** The pre-correction static class-match counts from the research are not coverage evidence. For Message, Tag, InlineMessage and Toast, the six-severity verification stories (C5) and these dynamic-class checks are the authoritative mechanism.
+4. **C4 — DOM unchanged.** Within the affected existing component implementation files:
+   - templates/DOM are unchanged;
+   - `classes` resolvers are unchanged;
+   - props/inputs/emits are unchanged;
+   - only the style module `css` and the nine approved registration key literals change.
+
+   This is checked by a scoped diff in verification. C4 does not restrict the separately listed new or changed test, fixture, provenance, story, e2e and documentation files (§7).
+
 5. **C5 — Screenshots (D-G3-7).**
    - **Before:** a Docker-recorded screenshot ("before" state) exists for every G3-A story exercising changed CSS, in all three browsers per framework, before any CSS change. The changed CSS of each component is exercised by at least one story.
    - **Verification-only stories** are added where coverage is missing, and listed in the review record. Initial set:
@@ -311,3 +376,40 @@ All are checked in both frameworks. Generated-style checks use the rendered `<st
 3. **Verification-only stories (C5).** Approve the initial set. In particular, the Avatar data-URI image story replaces the network-dependent "Image" story in the screenshot set; the existing story is left unchanged.
 4. **Accessibility scans (C6).** Add axe scans for the G3-A stories (recommended, because colours change). Any resulting violations come to the review gate.
 5. **Timeline `align`.** Record the ignored `align` input as a GAP-064 follow-up, not a G3-A fix.
+
+## 13. Spec Review Decisions (2026-10-04)
+
+1. **Ported CSS location: (a).** Each framework's existing style module holds its own copy. No shared `@ultimate/uix-styles/<key>` subpaths and no new exports. The duplication is intentional for this tranche and is not refactored into a shared package in G3-A.
+2. **Provenance: approved.** Entries are added for all 27 G3-A style files (`reference-derived`, Option-B wording). The broader pre-existing provenance gap is not repaired here.
+3. **Verification-only stories: approved.**
+   - Toast with deterministic sticky messages of all six severities. These must render visible Toast content.
+   - Message, Tag and Vue InlineMessage, each with all six severities.
+   - Timeline horizontal.
+   - Avatar xl.
+   - Avatar with a local data-URI image.
+   - The existing CDN Avatar Image story stays unchanged; only the deterministic story is part of the screenshot contract.
+4. **Accessibility: approved.** The existing axe scan envelope is added to the G3-A screenshot stories. No violation is pre-baselined. New violations come to the mandatory visual/accessibility review gate, and only explicitly approved ones enter `ACCESSIBILITY_BASELINE.md`.
+5. **Timeline `align`: follow-up.** Not fixed in G3-A. Recorded as a GAP-064 follow-up: both frameworks accept the input, neither emits an alignment class, so the upstream alignment groups are correctly excluded (FX-A3). No new GAP unless a later architectural review requires independent tracking.
+6. **Clarifications applied:**
+   - **A:** dynamic-class coverage in C3, using emitted classes, not literal scans.
+   - **B:** the C2 own-token invariant applies to the ported structural CSS only.
+   - **C:** C3 exactness; no old hand-written CSS survives.
+   - **D:** C4 scope.
+   - **E:** 14 unique keys in the fixture, 27 style files validated against it.
+   - **F:** the six-severity stories and dynamic checks are the authoritative coverage for Message, Tag, InlineMessage and Toast.
+7. **Unchanged:**
+   - no new Aura modules, no new GAP IDs;
+   - no DOM/class restructuring, no React changes;
+   - no Ripple, DataTable/VirtualScroller or TabView/TabMenu;
+   - no Tranche 1 follow-up implementation, no Timeline `align` implementation;
+   - no broader provenance cleanup, no runtime JS additions.
+
+   The five renamed registrations are exactly `overlaybadge`, `progressbar`, `progressspinner`, `metergroup` and Vue `inlinemessage`.
+
+8. **Spec Review final check (correction, evidence-backed).** The draft's "retained rules are exactly PX-A4/PX-A5" would have removed CSS that upstream supplies through component **inline styles** rather than stylesheets. Because Ultimate expresses those declarations in CSS, they must be retained:
+   - **Toast root positioning:** `position: fixed`, the per-position offsets, and the stacking `z-index`.
+   - **Skeleton root `position: relative`.**
+
+   PX-A4 is restated with its exact retained text, and PX-A6 is added. All upstream `inlineStyles` in the G3-A keys were checked (PrimeNG 21.1.9 and PrimeVue 4.5.5): only toast, skeleton and chip have any. Chip's needs no rule, because Ultimate removes the element from the DOM.
+
+   This correction follows the approved D-G3-8 rule (retain literals with no token role, recorded as parity exceptions). It does not change any architectural decision.
