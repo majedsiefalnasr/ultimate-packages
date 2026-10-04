@@ -136,5 +136,11 @@
     "ultimateDestination": "packages/uix-styled/src/utils/themeUtils.ts",
     "modificationStatus": "rebranded",
     "modificationDescription": "DOM-visible data-primevue-style-id attribute renamed to data-u-style-id (2 occurrences, in getCommonStyleSheet and getStyleSheet); default @layer name changed from 'primeui' to 'ultimate' in getLayerOrder's fallback and in transformCSS's layerOptions.name/order defaults (2 occurrences). 4 literal string changes across 3 locations total. No other logic changed — Phase 5 rebrand pass."
+  },
+  {
+    "originalPath": "packages/primeng/src/base/style/basestyle.ts",
+    "ultimateDestination": "packages/uix-styled/src/stylesheet/hidden-accessible.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "PrimeNG 21.1.9 basestyle.ts `.p-hidden-accessible` rule and its `input, select` companion (lines 7-21), copied with the class renamed to `u-hidden-accessible`. Adds Ultimate-authored HIDDEN_ACCESSIBLE_KEY and registerHiddenAccessible(), which registers the rule once per StyleSheet so each core can load it from its existing style-registration point (GAP-074)."
   }
 ]

@@ -262,5 +262,17 @@
     "ultimateDestination": "packages/vue-core/src/escape/create-display-order-mixin.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored test, mirroring use-display-order.ts's own spec file's three assertions (increasing order across successive mounts, no registration when not visible on mount, unregister-on-unmount frees the slot for reuse) plus one Options-API-specific addition: updated() does not re-register (mounted() registers once and the value is stable across reactive re-renders, unlike createGlobalEscapeKeyMixin's updated()-driven re-registration, which display-order registration does not need)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/styling/hidden-accessible.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the shared u-hidden-accessible rule is registered once on mount without a theme (GAP-074)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/styling/ssr-contract.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the client-only styling contract: a server render emits no <style> and registers nothing (GAP-078)."
   }
 ]
