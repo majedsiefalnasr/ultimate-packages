@@ -1,11 +1,18 @@
 #!/usr/bin/env node
-// GAP-082 consumer type-check. Packs the built @ultimate/vue and its workspace
-// runtime dependencies, installs them into a scratch consumer, and type-checks
-// the consumer fixtures with vue-tsc under moduleResolution Bundler and NodeNext
-// (skipLibCheck: false). Imports resolve through the packages' `exports` maps.
-// The fixtures in test/consumer-types pin both directions: valid usage must
-// produce no errors, and every @vue-expect-error / @ts-expect-error marker must
-// be consumed (an unused marker, TS2578, means prop types were lost).
+// Consumer type-check (GAP-082, extended by GAP-083). Packs the built
+// @ultimate/vue and its workspace runtime dependencies once, then runs two
+// isolated passes, each in its own scratch consumer with its own install:
+//   - workspace: `vue` pinned to the workspace-installed version;
+//   - floor: `vue` pinned to the supported floor (ADR-050), derived by
+//     vue-floor.mjs from both packages' peerDependencies.vue and the
+//     compatibility manifest, which must agree.
+// Each pass type-checks, with vue-tsc under moduleResolution Bundler and NodeNext
+// (skipLibCheck: false), an import of every public export key of @ultimate/vue
+// and of @ultimate/vue-core (resolved through their `exports` maps), the
+// fixtures in test/consumer-types and the props invariant.
+// The fixtures pin both directions: valid usage must produce no errors, and every
+// @vue-expect-error / @ts-expect-error marker must be consumed (an unused marker,
+// TS2578, means prop types were lost).
 // Exhaustive invariant: for every exported SFC component, every prop key its built
 // runtime declares (merged through `extends`/`mixins`) must exist in the declared
 // `$props` type, so full or partial erasure of prop types fails with the missing
@@ -13,12 +20,14 @@
 // The assertion fails closed: an `any`-typed component, a non-constructor export, or a
 // `$props` with a string index signature is reported instead of passing vacuously, and
 // the source-derived component list must equal the installed package's runtime components.
+// A pass fails if its consumer did not install exactly the requested `vue` version.
 // Requires a prior `pnpm run build`. `--diagnostics` also prints vue-tsc's
 // extended diagnostics (check time, memory) for the size/cost record.
 import { execFileSync, spawnSync } from "node:child_process";
 import {
   copyFileSync,
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
@@ -28,6 +37,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { readVueFloorRanges, resolveVueFloor } from "./vue-floor.mjs";
 
 const VUE_DIR = join(fileURLToPath(import.meta.url), "..", "..");
 const PACKAGES_DIR = join(VUE_DIR, "..");
@@ -35,6 +45,19 @@ const FIXTURES_DIR = join(VUE_DIR, "test", "consumer-types");
 const VUE_TSC = join(VUE_DIR, "node_modules", ".bin", "vue-tsc");
 const DIAGNOSTICS = process.argv.includes("--diagnostics");
 const REQUIRED_FIXTURES = ["ValidUsage.vue", "InvalidUsage.vue"];
+const VUE_CORE_DIR = join(PACKAGES_DIR, "vue-core");
+const MANIFEST_PATH = join(
+  PACKAGES_DIR,
+  "..",
+  "docs",
+  "architecture",
+  "compatibility-manifest.json"
+);
+// Packages whose every public export key each pass imports directly.
+const CHECKED_PACKAGES = [
+  ["@ultimate/vue", VUE_DIR],
+  ["@ultimate/vue-core", VUE_CORE_DIR],
+];
 
 function readManifest(dir) {
   return JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
@@ -145,9 +168,16 @@ function pack(dir, destination) {
   return output.trim().split("\n").pop();
 }
 
-function writeConsumer(consumerDir, tarballs) {
+function writeConsumer(consumerDir, tarballs, vueVersion) {
   const overrides = Object.fromEntries([...tarballs].map(([name, tgz]) => [name, `file:${tgz}`]));
-  const vueVersion = readManifest(join(VUE_DIR, "node_modules", "vue")).version;
+  const dependencies = { vue: vueVersion };
+  for (const [name] of CHECKED_PACKAGES) {
+    if (!tarballs.has(name))
+      throw new Error(
+        `[validate-consumer-types] ${name} is not in @ultimate/vue's runtime closure`
+      );
+    dependencies[name] = `file:${tarballs.get(name)}`;
+  }
   writeFileSync(
     join(consumerDir, "package.json"),
     JSON.stringify(
@@ -155,7 +185,7 @@ function writeConsumer(consumerDir, tarballs) {
         name: "ultimate-vue-consumer-types",
         private: true,
         type: "module",
-        dependencies: { "@ultimate/vue": `file:${tarballs.get("@ultimate/vue")}`, vue: vueVersion },
+        dependencies,
         pnpm: { overrides },
       },
       null,
@@ -163,14 +193,22 @@ function writeConsumer(consumerDir, tarballs) {
     )
   );
 
-  const exportKeys = Object.keys(readManifest(VUE_DIR).exports).filter(
-    (key) => key !== "./package.json"
-  );
-  const imports = exportKeys.map((key, i) => {
-    const specifier = key === "." ? "@ultimate/vue" : `@ultimate/vue/${key.slice(2)}`;
-    return `import * as m${i} from "${specifier}";`;
+  const imports = [];
+  const bindings = [];
+  const entryCounts = {};
+  CHECKED_PACKAGES.forEach(([name, dir], pkgIndex) => {
+    const exportKeys = Object.keys(readManifest(dir).exports).filter(
+      (key) => key !== "./package.json"
+    );
+    exportKeys.forEach((key, i) => {
+      const binding = `m${pkgIndex}_${i}`;
+      const specifier = key === "." ? name : `${name}/${key.slice(2)}`;
+      imports.push(`import * as ${binding} from "${specifier}";`);
+      bindings.push(binding);
+    });
+    entryCounts[name] = exportKeys.length;
   });
-  imports.push(`export const allEntries = [${exportKeys.map((_, i) => `m${i}`).join(", ")}];`);
+  imports.push(`export const allEntries = [${bindings.join(", ")}];`);
   writeFileSync(join(consumerDir, "all-entries.ts"), `${imports.join("\n")}\n`);
 
   for (const file of REQUIRED_FIXTURES)
@@ -206,51 +244,76 @@ function writeConsumer(consumerDir, tarballs) {
       )
     );
   }
-  return exportKeys.length;
+  return entryCounts;
+}
+
+// One isolated pass: its own consumer directory and install, both module modes.
+// Returns true when every mode type-checks.
+function runPass(workDir, tarballs, pass, vueVersion) {
+  const label = `${pass} vue ${vueVersion}`;
+  const consumerDir = join(workDir, `consumer-${pass}`);
+  mkdirSync(consumerDir, { recursive: true });
+  const entryCounts = writeConsumer(consumerDir, tarballs, vueVersion);
+  execFileSync("pnpm", ["install", "--no-lockfile", "--prefer-offline"], {
+    cwd: consumerDir,
+    stdio: "ignore",
+  });
+  const installed = readManifest(join(consumerDir, "node_modules", "vue")).version;
+  if (installed !== vueVersion) {
+    console.error(
+      `[validate-consumer-types] FAIL (${label}): consumer installed vue ${installed}, expected ${vueVersion}`
+    );
+    return false;
+  }
+  const invariant = writePropsInvariant(consumerDir);
+  const entries = CHECKED_PACKAGES.map(([name]) => `${entryCounts[name]} ${name}`).join(" + ");
+
+  let ok = true;
+  for (const mode of ["bundler", "nodenext"]) {
+    const args = ["-p", `tsconfig.${mode}.json`, ...(DIAGNOSTICS ? ["--extendedDiagnostics"] : [])];
+    const run = spawnSync(VUE_TSC, args, { cwd: consumerDir, encoding: "utf8" });
+    const output = `${run.stdout}${run.stderr}`.trim();
+    if (run.status === 0) {
+      console.log(
+        `[validate-consumer-types] OK (${label}, ${mode}): ${entries} entry points, fixtures, and props invariant ` +
+          `(${invariant.total - invariant.propless.length} prop-bearing components, ${invariant.keyCount} runtime prop keys typed; ` +
+          `${invariant.propless.length} propless: ${invariant.propless.join(", ")})`
+      );
+      if (DIAGNOSTICS)
+        console.log(
+          output
+            .split("\n")
+            .filter((l) => /^(Types|Memory used|Check time|Total time):/.test(l))
+            .join("\n")
+        );
+    } else {
+      ok = false;
+      console.error(`[validate-consumer-types] FAIL (${label}, ${mode}):\n${output}`);
+    }
+  }
+  return ok;
 }
 
 function main() {
+  const floor = resolveVueFloor(
+    readVueFloorRanges({ vueDir: VUE_DIR, vueCoreDir: VUE_CORE_DIR, manifestPath: MANIFEST_PATH })
+  );
+  const workspaceVue = readManifest(join(VUE_DIR, "node_modules", "vue")).version;
+  const passes = [
+    ["workspace", workspaceVue],
+    ["floor", floor],
+  ];
+
   const workDir = mkdtempSync(join(tmpdir(), "ultimate-vue-consumer-types-"));
   let failed = false;
   try {
     const packDir = join(workDir, "packs");
-    const consumerDir = join(workDir, "consumer");
-    execFileSync("mkdir", ["-p", packDir, consumerDir]);
+    mkdirSync(packDir, { recursive: true });
     const tarballs = new Map();
     for (const [name, dir] of runtimeClosure()) tarballs.set(name, pack(dir, packDir));
-    const entryCount = writeConsumer(consumerDir, tarballs);
-    execFileSync("pnpm", ["install", "--no-lockfile", "--prefer-offline"], {
-      cwd: consumerDir,
-      stdio: "ignore",
-    });
-    const invariant = writePropsInvariant(consumerDir);
-
-    for (const mode of ["bundler", "nodenext"]) {
-      const args = [
-        "-p",
-        `tsconfig.${mode}.json`,
-        ...(DIAGNOSTICS ? ["--extendedDiagnostics"] : []),
-      ];
-      const run = spawnSync(VUE_TSC, args, { cwd: consumerDir, encoding: "utf8" });
-      const output = `${run.stdout}${run.stderr}`.trim();
-      if (run.status === 0) {
-        console.log(
-          `[validate-consumer-types] OK (${mode}): ${entryCount} entry points, fixtures, and props invariant ` +
-            `(${invariant.total - invariant.propless.length} prop-bearing components, ${invariant.keyCount} runtime prop keys typed; ` +
-            `${invariant.propless.length} propless: ${invariant.propless.join(", ")})`
-        );
-        if (DIAGNOSTICS)
-          console.log(
-            output
-              .split("\n")
-              .filter((l) => /^(Types|Memory used|Check time|Total time):/.test(l))
-              .join("\n")
-          );
-      } else {
-        failed = true;
-        console.error(`[validate-consumer-types] FAIL (${mode}):\n${output}`);
-      }
-    }
+    // Every pass runs, even after an earlier one fails.
+    for (const [pass, vueVersion] of passes)
+      if (!runPass(workDir, tarballs, pass, vueVersion)) failed = true;
   } finally {
     rmSync(workDir, { recursive: true, force: true });
   }
