@@ -1,5 +1,6 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseEditableHolder } from "./base-editable-holder";
-import type { ComponentOptions } from "vue";
 
 // Layered on createBaseEditableHolder via `extends:`, matching verified
 // BaseInput.vue's own `extends: BaseEditableHolder` chain — a real
@@ -7,13 +8,13 @@ import type { ComponentOptions } from "vue";
 // verification gap closed (spec §7, §19). Matches the same ambient-Fluid-
 // context pattern already independently confirmed for Button (spec §18) and
 // Angular's UButton (ADR-018).
-export function createBaseInput(): ComponentOptions {
-  return {
+export function createBaseInput() {
+  return defineComponent({
     extends: createBaseEditableHolder(),
     props: {
-      size: { default: null },
-      fluid: { default: null },
-      variant: { default: null },
+      size: { type: null as unknown as PropType<string | null>, default: null },
+      fluid: { type: null as unknown as PropType<boolean | null>, default: null },
+      variant: { type: null as unknown as PropType<string | null>, default: null },
     },
     inject: {
       pcFluid: { default: undefined },
@@ -26,5 +27,5 @@ export function createBaseInput(): ComponentOptions {
         return this.fluid ?? !!(this as unknown as { pcFluid?: boolean }).pcFluid;
       },
     },
-  };
+  });
 }

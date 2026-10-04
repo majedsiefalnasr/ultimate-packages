@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
 import { ratingStyleModule } from "./rating-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseEditableHolder(), matching verified BaseRating.vue's
@@ -12,8 +12,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // Same createBaseInput()-parameterless-signature cx()/mounted()-shadow fix
 // documented in packages/vue/src/checkbox/BaseCheckbox.ts/
 // packages/vue/src/select-button/BaseSelectButton.ts applies identically here.
-export function createBaseRating(): ComponentOptions {
-  return {
+export function createBaseRating() {
+  return defineComponent({
     extends: createBaseEditableHolder(),
     props: {
       stars: { type: Number, default: 5 },
@@ -32,5 +32,5 @@ export function createBaseRating(): ComponentOptions {
     mounted() {
       registerComponentStyle("rating", ratingStyleModule);
     },
-  };
+  });
 }

@@ -229,3 +229,44 @@ Status: Accepted (user decision, 2026-10-01, post-closeout reconciliation of `fe
 **Newer releases are reference only.** As of 2026-10-01 the current upstream majors — PrimeNG `22.x`, PrimeVue `5.x`, PrimeReact `11.x`, `@primeuix/themes`/`@primeuix/styles` `3.x` — are published under the commercial "PrimeUI License", not MIT. They may be read for research and context only. Nothing is incorporated from them, and a behavior present only in a post-baseline release does not create a new Ultimate GAP. This extends `PROVENANCE.md`'s existing "architectural reference only" treatment of PrimeReact `11.1.0` to all post-baseline Prime releases.
 
 **Scope boundary.** New post-baseline Prime features are outside the current parity scope unless a new scope is explicitly authorized. Moving the baseline to a newer version is itself a separate decision that would need a licensing review.
+
+## ADR-049 — Vue component prop types flow from inferred typed factories; type-only typing; contract-based nullability
+
+Status: Accepted (user decision, 2026-10-03, GAP-082 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-03-gap-082-typed-vue-props-research.md`.
+
+**Context.** `@ultimate/vue` components ship empty or partial prop types. The 95 Vue base factories (90 in `packages/vue`, 5 in `packages/vue-core`) are annotated `: ComponentOptions`, which erases the props that every SFC inherits through `extends:` (ADR-032).
+
+**Decision.** Component prop types are generated from the existing runtime prop declarations:
+
+- **Inferred typed factories.** Each factory returns `defineComponent({...})` with an inferred return type. SFCs keep their plain JavaScript `<script>` and their `extends:` chains. No hand-written parallel declarations (the PrimeVue model) are added. No SFC is converted to TypeScript or `<script setup>`.
+- **Type-only typing.** Adding type information must not change runtime behavior. Where a prop's inferred type is wrong or too narrow, the prop is typed with a type-only `PropType` cast that keeps its runtime `type` behavior unchanged. That means no new Vue prop validation, no Boolean casting and no new development warnings. In JavaScript SFCs the cast is a JSDoc type cast.
+- **Array props** accept both mutable and readonly arrays (`readonly unknown[]`, or the equivalent member in a union type).
+- **Nullability rule.** A prop's public type includes `null` when `null` is a valid value of that prop's runtime/public contract.
+  - `default: null` alone is not sufficient evidence.
+  - Vue's runtime acceptance of `null` is not sufficient either, since every non-required prop accepts it.
+  - Evidence is the component's own handling of `null` as a meaningful value. Example: `base-input.ts` treats a `null` `size`, `variant` or `fluid` as "unset, inherit".
+  - PrimeVue `4.5.5`'s declaration of the corresponding prop is a reference where one exists.
+  - Props typed `any` because of Vue's inference behavior (the editable-holder model/default values and the checkbox/radio/toggle values) accept `null` naturally.
+
+**Scope.** This decision provides real prop types and compile-time rejection of wrong prop value types, keeps existing emit typing, and must not introduce false type errors in valid existing consumer code. Out of scope:
+
+- typed slots
+- emit payload typing
+- literal-union / `HintedString` enum precision
+- `pt`/`dt`/`unstyled` typing
+- unknown-prop rejection
+- PrimeVue declaration parity
+
+**Rejected.**
+
+- Hand-written parallel declarations: type/runtime drift, pipeline rework.
+- TypeScript SFC conversion: unnecessary for the contract, large surface.
+- `<script setup>`/`defineProps`: conflicts with ADR-032.
+- Runtime `String`/`Boolean` types for the type-less props: adds development warnings, and Boolean casting changes a bare `fluid` attribute from `""` to `true`.
+
+**Consequences.**
+
+- Factory return types become specific component types, a type-only public API change. A factory result is no longer assignable to `ComponentOptions`.
+- `@ultimate/vue` declarations grow from about 194 KB to about 610 KB.
+- A consumer type-check that imports every entry point costs about 1.7 s → 2.5 s and about 245 MB → 400 MB.
+- The runtime JavaScript barrel's gzip size grows by about 0.75%.

@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { inputChipsStyleModule } from "./input-chips-style";
-import type { ComponentOptions } from "vue";
 
 // TIER FINDING (per this task's brief — "verify, don't assume; different
 // capabilities have landed on different tiers throughout this batch"):
@@ -18,11 +19,11 @@ import type { ComponentOptions } from "vue";
 // a form control — matching this package's own `UCheckbox`/`UDatePicker`
 // precedent of extending createBaseInput() would be a real deviation from
 // verified source, not a neutral choice.
-export function createBaseInputChips(): ComponentOptions {
-  return {
+export function createBaseInputChips() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "input-chips", styleModule: inputChipsStyleModule }),
     props: {
-      modelValue: { type: Array, default: null },
+      modelValue: { type: Array as PropType<readonly unknown[]>, default: null },
       max: { type: Number, default: null },
       separator: { type: [String, Object], default: null },
       addOnBlur: { type: Boolean, default: null },
@@ -34,5 +35,5 @@ export function createBaseInputChips(): ComponentOptions {
       ariaLabelledby: { type: String, default: null },
       ariaLabel: { type: String, default: null },
     },
-  };
+  });
 }

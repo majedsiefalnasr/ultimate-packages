@@ -1,16 +1,17 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { galleriaStyleModule } from "./galleria-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...) directly — Galleria is a display-only
 // collection viewer with its own internal navigation/fullscreen state, not
 // a form control, matching real extracted PrimeVue's own
 // BaseGalleria.vue's `extends: BaseComponent`.
-export function createBaseGalleria(): ComponentOptions {
-  return {
+export function createBaseGalleria() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "galleria", styleModule: galleriaStyleModule }),
     props: {
-      value: { type: Array, default: () => [] },
+      value: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       activeIndex: { type: Number, default: 0 },
       showItemNavigators: { type: Boolean, default: true },
       showThumbnails: { type: Boolean, default: true },
@@ -19,5 +20,5 @@ export function createBaseGalleria(): ComponentOptions {
       fullScreen: { type: Boolean, default: false },
       fullScreenActive: { type: Boolean, default: false },
     },
-  };
+  });
 }

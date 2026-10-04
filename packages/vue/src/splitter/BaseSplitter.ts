@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { splitterStyleModule } from "./splitter-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...) directly — Splitter is a drag-resize
 // layout component, not a form control, matching real extracted PrimeVue's
@@ -13,15 +14,15 @@ import type { ComponentOptions } from "vue";
 // surface" precedent as this session's `UAccordion`/`UPanelMenu`
 // reductions, disclosed here rather than silently presented as matching
 // upstream's own children-based shape.
-export function createBaseSplitter(): ComponentOptions {
-  return {
+export function createBaseSplitter() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "splitter", styleModule: splitterStyleModule }),
     props: {
-      panels: { type: Array, default: () => [] },
+      panels: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       layout: { type: String, default: "horizontal" },
       gutterSize: { type: Number, default: 4 },
       step: { type: Number, default: 5 },
     },
     emits: ["resizestart", "resizeend"],
-  };
+  });
 }

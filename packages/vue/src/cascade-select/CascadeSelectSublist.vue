@@ -48,9 +48,15 @@
 export default {
   name: "CascadeSelectSublist",
   props: {
-    nodes: { type: Array, required: true },
+    nodes: {
+      type: /** @type {import('vue').PropType<readonly unknown[]>} */ (Array),
+      required: true,
+    },
     depth: { type: Number, required: true },
-    activePath: { type: Array, required: true },
+    activePath: {
+      type: /** @type {import('vue').PropType<readonly unknown[]>} */ (Array),
+      required: true,
+    },
     selectedValue: { default: null },
     getLabel: { type: Function, required: true },
     getValue: { type: Function, required: true },

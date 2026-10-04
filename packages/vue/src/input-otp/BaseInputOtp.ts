@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { inputOtpStyleModule } from "./input-otp-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseInputOtp.vue's real
@@ -8,8 +8,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // BaseEditableHolder extends BaseComponent. Real BaseInputOtp.vue's own
 // prop set (readonly, tabindex, length, mask, integerOnly) is ported below
 // verbatim on top of createBaseInput()'s size/fluid/variant/resolved*.
-export function createBaseInputOtp(): ComponentOptions {
-  return {
+export function createBaseInputOtp() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
       readonly: { type: Boolean, default: false },
@@ -31,5 +31,5 @@ export function createBaseInputOtp(): ComponentOptions {
     mounted() {
       registerComponentStyle("input-otp", inputOtpStyleModule);
     },
-  };
+  });
 }

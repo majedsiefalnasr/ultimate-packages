@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { tieredMenuStyleModule } from "./tiered-menu-style";
-import type { ComponentOptions } from "vue";
 
 // Props verified against real .vendor-extracted/vue/tieredmenu/BaseTieredMenu.vue
 // (this task's Step 1) — matches: model, popup. Real BaseTieredMenu.vue
@@ -16,12 +17,12 @@ import type { ComponentOptions } from "vue";
 // $parentInstance: this } }` — the passthrough-system inject/provide
 // wiring this project's "Option B" posture excludes entirely (spec §7);
 // not reproduced here.
-export function createBaseTieredMenu(): ComponentOptions {
-  return {
+export function createBaseTieredMenu() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "tiered-menu", styleModule: tieredMenuStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       popup: { type: Boolean, default: false },
     },
-  };
+  });
 }

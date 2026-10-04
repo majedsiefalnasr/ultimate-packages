@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
 import { sliderStyleModule } from "./slider-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseEditableHolder(), matching verified BaseSlider.vue's
@@ -8,8 +8,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // BaseEditableHolder, ... }` — confirmed against
 // .vendor-extracted/vue/slider/BaseSlider.vue — same tier URating/
 // USelectButton already extend, NOT BaseInput.
-export function createBaseSlider(): ComponentOptions {
-  return {
+export function createBaseSlider() {
+  return defineComponent({
     extends: createBaseEditableHolder(),
     props: {
       min: { type: Number, default: 0 },
@@ -31,5 +31,5 @@ export function createBaseSlider(): ComponentOptions {
     mounted() {
       registerComponentStyle("slider", sliderStyleModule);
     },
-  };
+  });
 }

@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { splitButtonStyleModule } from "./split-button-style";
-import type { ComponentOptions } from "vue";
 
 // Props verified against real .vendor-extracted/vue/splitbutton/BaseSplitButton.vue
 // (this task's Step 1) — reduced to this task's own smaller surface
@@ -15,11 +16,11 @@ import type { ComponentOptions } from "vue";
 // `provide() { return { $parentInstance: this } }` — the
 // passthrough-system inject/provide wiring this project's "Option B"
 // posture excludes entirely (spec §7); not reproduced here.
-export function createBaseSplitButton(): ComponentOptions {
-  return {
+export function createBaseSplitButton() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "split-button", styleModule: splitButtonStyleModule }),
     props: {
-      model: { type: Array, default: () => [] },
+      model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       label: { type: String, default: null },
       icon: { type: String, default: null },
       iconPos: { type: String, default: "left" },
@@ -29,5 +30,5 @@ export function createBaseSplitButton(): ComponentOptions {
       size: { type: String, default: null },
       disabled: { type: Boolean, default: false },
     },
-  };
+  });
 }

@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { datePickerStyleModule } from "./date-picker-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseDatePicker.vue's real
@@ -12,8 +13,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // Same createBaseInput()-parameterless-signature cx()/mounted()-shadow fix
 // documented in packages/vue/src/select/BaseSelect.ts applies identically
 // here.
-export function createBaseDatePicker(): ComponentOptions {
-  return {
+export function createBaseDatePicker() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
       placeholder: { type: String, default: null },
@@ -21,12 +22,15 @@ export function createBaseDatePicker(): ComponentOptions {
       inputId: { type: String, default: null },
       minDate: { type: Date, default: null },
       maxDate: { type: Date, default: null },
-      disabledDates: { type: Array, default: () => [] },
+      disabledDates: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       showIcon: { type: Boolean, default: false },
       showClear: { type: Boolean, default: false },
-      dayNames: { type: Array, default: () => ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] },
+      dayNames: {
+        type: Array as PropType<readonly unknown[]>,
+        default: () => ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+      },
       monthNames: {
-        type: Array,
+        type: Array as PropType<readonly unknown[]>,
         default: () => [
           "January",
           "February",
@@ -54,5 +58,5 @@ export function createBaseDatePicker(): ComponentOptions {
     mounted() {
       registerComponentStyle("date-picker", datePickerStyleModule);
     },
-  };
+  });
 }

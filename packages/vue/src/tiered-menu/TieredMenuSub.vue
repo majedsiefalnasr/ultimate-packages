@@ -92,7 +92,10 @@ export default {
   name: "UTieredMenuSub",
   extends: createBaseComponent({ componentName: "tiered-menu", styleModule: tieredMenuStyleModule }),
   props: {
-    items: { type: Array, default: () => [] },
+    items: {
+      type: /** @type {import('vue').PropType<readonly unknown[]>} */ (Array),
+      default: () => [],
+    },
     root: { type: Boolean, default: false },
   },
   emits: ["item-select"],

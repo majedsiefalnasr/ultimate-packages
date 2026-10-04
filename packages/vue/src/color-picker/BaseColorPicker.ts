@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
 import { colorPickerStyleModule } from "./color-picker-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseEditableHolder(), matching verified
@@ -8,8 +8,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // 'BaseColorPicker', extends: BaseEditableHolder, ... }` — confirmed against
 // .vendor-extracted/vue/colorpicker/BaseColorPicker.vue — same tier
 // URating/USlider/UKnob already extend, NOT BaseInput.
-export function createBaseColorPicker(): ComponentOptions {
-  return {
+export function createBaseColorPicker() {
+  return defineComponent({
     extends: createBaseEditableHolder(),
     props: {
       format: { type: String, default: "hex" },
@@ -27,5 +27,5 @@ export function createBaseColorPicker(): ComponentOptions {
     mounted() {
       registerComponentStyle("color-picker", colorPickerStyleModule);
     },
-  };
+  });
 }

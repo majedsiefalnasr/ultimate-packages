@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { messageStyleModule } from "./message-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...) directly — Message is a status/display
 // component (severity banner), not a form control, matching real extracted
@@ -9,8 +9,8 @@ import type { ComponentOptions } from "vue";
 // all match verbatim; `closeButtonProps` (an arbitrary bag of button props)
 // is excluded — same "smaller surface than upstream" precedent as every
 // sibling component.
-export function createBaseMessage(): ComponentOptions {
-  return {
+export function createBaseMessage() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "message", styleModule: messageStyleModule }),
     props: {
       severity: { type: String, default: "info" },
@@ -20,5 +20,5 @@ export function createBaseMessage(): ComponentOptions {
       closeIcon: { type: String, default: undefined },
       closeAriaLabel: { type: String, default: "Close" },
     },
-  };
+  });
 }

@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { dialogStyleModule } from "./dialog-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent({ componentName, styleModule }) directly —
 // Dialog has no editable-holder/input tier need (unlike Checkbox, Task 19),
@@ -18,8 +18,8 @@ import type { ComponentOptions } from "vue";
 // YAGNI). ariaCloseLabel is this implementation's own addition, replacing
 // upstream's `$primevue.config.locale.aria.close` (Option B — no
 // PrimeVueService global config, spec §7).
-export function createBaseDialog(): ComponentOptions {
-  return {
+export function createBaseDialog() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "dialog", styleModule: dialogStyleModule }),
     props: {
       visible: { type: Boolean, default: false },
@@ -40,5 +40,5 @@ export function createBaseDialog(): ComponentOptions {
       appendTo: { type: [String, Object], default: "body" },
       ariaCloseLabel: { type: String, default: "Close" },
     },
-  };
+  });
 }

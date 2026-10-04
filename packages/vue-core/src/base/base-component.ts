@@ -1,5 +1,5 @@
+import { defineComponent } from "vue";
 import { classNames } from "@ultimate/uix-utils";
-import type { ComponentOptions } from "vue";
 import { registerComponentStyle } from "../styling/vue-style-sheet";
 
 export type ClassValue = string | Record<string, boolean> | (string | Record<string, boolean>)[];
@@ -27,10 +27,10 @@ function resolveClassValue(
 // Each Ultimate component's own Base*.ts file calls this once and `extends:`
 // the result, matching verified BaseComponent.vue's own extends: mechanism
 // exactly (spec §7) — informed by, not copied from, PrimeVue's real source.
-export function createBaseComponent(options: BaseComponentOptions): ComponentOptions {
+export function createBaseComponent(options: BaseComponentOptions) {
   const { componentName, styleModule } = options;
 
-  return {
+  return defineComponent({
     methods: {
       cx(key: string, params?: Record<string, unknown>) {
         return resolveClassValue(styleModule.classes[key], params);
@@ -39,5 +39,5 @@ export function createBaseComponent(options: BaseComponentOptions): ComponentOpt
     mounted() {
       registerComponentStyle(componentName, styleModule);
     },
-  };
+  });
 }

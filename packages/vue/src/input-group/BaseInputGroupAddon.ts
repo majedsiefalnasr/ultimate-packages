@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { inputGroupAddonStyleModule } from "./input-group-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...) directly — matching verified
 // BaseInputGroupAddon.vue's own `extends: BaseComponent` chain: real
@@ -12,11 +12,11 @@ import type { ComponentOptions } from "vue";
 // applied the ordinary Vue way, via the consumer's own `style` attribute on
 // the component, already covered by BaseComponent's passthrough — no
 // dedicated prop needed).
-export function createBaseInputGroupAddon(): ComponentOptions {
-  return {
+export function createBaseInputGroupAddon() {
+  return defineComponent({
     extends: createBaseComponent({
       componentName: "input-group-addon",
       styleModule: inputGroupAddonStyleModule,
     }),
-  };
+  });
 }

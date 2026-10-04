@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { autoCompleteStyleModule } from "./autocomplete-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseAutoComplete.vue's real
@@ -10,11 +11,11 @@ import type { ClassValue } from "@ultimate/vue-core";
 // createBaseInput()-parameterless-signature cx()/mounted()-shadow fix
 // documented in `packages/vue/src/checkbox/BaseCheckbox.ts`/
 // `packages/vue/src/password/BasePassword.ts` applies identically here.
-export function createBaseAutoComplete(): ComponentOptions {
-  return {
+export function createBaseAutoComplete() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
-      suggestions: { type: Array, default: () => [] },
+      suggestions: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       optionLabel: { type: [String, Function], default: null },
       minLength: { type: Number, default: 1 },
       delay: { type: Number, default: 300 },
@@ -37,5 +38,5 @@ export function createBaseAutoComplete(): ComponentOptions {
     mounted() {
       registerComponentStyle("autocomplete", autoCompleteStyleModule);
     },
-  };
+  });
 }

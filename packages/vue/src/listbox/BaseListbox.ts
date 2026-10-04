@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
 import { listboxStyleModule } from "./listbox-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseEditableHolder(), matching verified BaseListbox.vue's
@@ -12,11 +13,11 @@ import type { ClassValue } from "@ultimate/vue-core";
 // Same createBaseInput()-parameterless-signature cx()/mounted()-shadow fix
 // documented in packages/vue/src/checkbox/BaseCheckbox.ts applies
 // identically here.
-export function createBaseListbox(): ComponentOptions {
-  return {
+export function createBaseListbox() {
+  return defineComponent({
     extends: createBaseEditableHolder(),
     props: {
-      options: { type: Array, default: () => [] },
+      options: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       optionLabel: { type: [String, Function], default: null },
       optionValue: { type: [String, Function], default: null },
       optionDisabled: { type: [String, Function], default: null },
@@ -37,5 +38,5 @@ export function createBaseListbox(): ComponentOptions {
     mounted() {
       registerComponentStyle("listbox", listboxStyleModule);
     },
-  };
+  });
 }

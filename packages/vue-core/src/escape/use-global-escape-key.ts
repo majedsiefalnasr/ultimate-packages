@@ -1,5 +1,5 @@
+import { defineComponent } from "vue";
 import { escapeRegistry } from "@ultimate/uix-utils/escape";
-import type { ComponentOptions } from "vue";
 
 export interface CreateGlobalEscapeKeyMixinOptions {
   callback: (event: KeyboardEvent) => void;
@@ -15,7 +15,7 @@ export function createGlobalEscapeKeyMixin({
   callback,
   when,
   priority,
-}: CreateGlobalEscapeKeyMixinOptions): ComponentOptions {
+}: CreateGlobalEscapeKeyMixinOptions) {
   const [primary, getSecondary] = priority;
   let registeredSecondary: number | undefined;
 
@@ -32,7 +32,7 @@ export function createGlobalEscapeKeyMixin({
     registeredSecondary = undefined;
   }
 
-  return {
+  return defineComponent({
     mounted() {
       register();
     },
@@ -43,5 +43,5 @@ export function createGlobalEscapeKeyMixin({
     beforeUnmount() {
       unregister();
     },
-  };
+  });
 }

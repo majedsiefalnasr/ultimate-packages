@@ -42,7 +42,10 @@ export default {
   props: {
     item: { type: Object, required: true },
     id: { type: String, required: true },
-    focusedOptionId: { type: [String, Number], default: null },
+    focusedOptionId: {
+      type: /** @type {import('vue').PropType<string | number | null>} */ ([String, Number]),
+      default: null,
+    },
   },
   computed: {
     visible() {

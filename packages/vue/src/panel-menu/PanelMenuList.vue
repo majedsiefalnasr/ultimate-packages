@@ -118,7 +118,10 @@ export default {
   name: "UPanelMenuList",
   extends: createBaseComponent({ componentName: "panel-menu", styleModule: panelMenuStyleModule }),
   props: {
-    items: { type: Array, default: () => [] },
+    items: {
+      type: /** @type {import('vue').PropType<readonly unknown[]>} */ (Array),
+      default: () => [],
+    },
     nodeKey: { type: String, default: "" },
     expandedItems: { type: Object, required: true },
     multiple: { type: Boolean, default: false },

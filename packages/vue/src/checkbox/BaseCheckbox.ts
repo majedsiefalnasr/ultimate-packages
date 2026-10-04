@@ -1,6 +1,7 @@
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { checkboxStyleModule } from "./checkbox-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseCheckbox.vue's real
@@ -9,7 +10,7 @@ import type { ClassValue } from "@ultimate/vue-core";
 //
 // Implementation-time verification finding (Global Constraints: "verify,
 // don't assume" — createBaseInput's real, shipped signature is
-// `createBaseInput(): ComponentOptions`, taking NO parameters (confirmed
+// `createBaseInput()` (a `defineComponent(...)` result), taking NO parameters (confirmed
 // against packages/vue-core/src/base/base-input.ts and its own
 // base-input.spec.ts, which only ever calls `createBaseInput()`). It always
 // internally calls `createBaseEditableHolder()` with THAT function's own
@@ -40,15 +41,18 @@ import type { ClassValue } from "@ultimate/vue-core";
 // verifiable in this file, matching the same "verify sync in mounted"
 // pattern the brief's own Checkbox.vue draft already uses for
 // updateIndeterminate().
-export function createBaseCheckbox(): ComponentOptions {
-  return {
+export function createBaseCheckbox() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
-      value: { default: null },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Vue infers PropType<unknown> as undefined; these props accept any value (GAP-082)
+      value: { type: null as unknown as PropType<any>, default: null },
       binary: { type: Boolean, default: false },
       indeterminate: { type: Boolean, default: false },
-      trueValue: { default: true },
-      falseValue: { default: false },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Vue infers PropType<unknown> as undefined; these props accept any value (GAP-082)
+      trueValue: { type: null as unknown as PropType<any>, default: true },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Vue infers PropType<unknown> as undefined; these props accept any value (GAP-082)
+      falseValue: { type: null as unknown as PropType<any>, default: false },
       disabled: { type: Boolean, default: false },
       readonly: { type: Boolean, default: false },
       required: { type: Boolean, default: false },
@@ -71,5 +75,5 @@ export function createBaseCheckbox(): ComponentOptions {
     mounted() {
       registerComponentStyle("checkbox", checkboxStyleModule);
     },
-  };
+  });
 }

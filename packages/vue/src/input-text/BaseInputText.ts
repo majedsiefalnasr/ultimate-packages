@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { inputTextStyleModule } from "./input-text-style";
-import type { ComponentOptions } from "vue";
 import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseInput(), matching verified BaseInputText.vue's real
@@ -14,8 +14,8 @@ import type { ClassValue } from "@ultimate/vue-core";
 // packages/vue/src/checkbox/BaseCheckbox.ts applies identically here: cx()/
 // mounted() are shadowed locally with real closures over
 // inputTextStyleModule.
-export function createBaseInputText(): ComponentOptions {
-  return {
+export function createBaseInputText() {
+  return defineComponent({
     extends: createBaseInput(),
     props: {
       disabled: { type: Boolean, default: false },
@@ -33,5 +33,5 @@ export function createBaseInputText(): ComponentOptions {
     mounted() {
       registerComponentStyle("input-text", inputTextStyleModule);
     },
-  };
+  });
 }

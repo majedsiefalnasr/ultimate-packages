@@ -1,6 +1,6 @@
+import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { avatarStyleModule } from "./avatar-style";
-import type { ComponentOptions } from "vue";
 
 // extends: createBaseComponent(...) directly — Avatar is a display-only
 // primitive with no editable/input state, matching the real extracted
@@ -11,8 +11,8 @@ import type { ComponentOptions } from "vue";
 // Prop surface verified against the real extracted
 // (via extract-primevue-source.mjs primevue root) BaseAvatar.vue:
 // label/icon/image/size/shape/ariaLabelledby/ariaLabel all match verbatim.
-export function createBaseAvatar(): ComponentOptions {
-  return {
+export function createBaseAvatar() {
+  return defineComponent({
     extends: createBaseComponent({ componentName: "avatar", styleModule: avatarStyleModule }),
     props: {
       label: { type: String, default: null },
@@ -23,5 +23,5 @@ export function createBaseAvatar(): ComponentOptions {
       ariaLabelledby: { type: String, default: null },
       ariaLabel: { type: String, default: null },
     },
-  };
+  });
 }

@@ -1347,7 +1347,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-082 — Vue components ship without typed public props
 
-- **Status:** MISSING
+- **Status:** RESOLVED (2026-10-04, `feature/gap-082-typed-vue-props` — `3249079`, `f146ea8`, `145ca81`, `2e45411`, `ec3112f`, `bb4d1a4`, `0eebd1b`; ADR-049: factories return inferred `defineComponent(...)` types, type-only typing with no runtime change, readonly-accepting array props, contract-based nullability; all 88 prop-bearing exported components expose their 661 runtime prop keys; CI-enforced consumer type-check in `packages/vue` `validate`. Record: `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`)
 - **Type:** Packaging, Component, Framework (Vue)
 - **Blocking level:** MEDIUM
 - **Current evidence:** Found by the F5 consumer type-check (2026-10-03, Prime-parity follow-up phase). After GAP-079, `@ultimate/vue`'s declarations resolve for consumers, but the Vue component base factories return an untyped `ComponentOptions` (e.g. `packages/vue/src/button/base-button.ts:20`, `createBaseButton(): ComponentOptions`), and components extend them (`extends: createBaseButton()`). `vue-tsc` therefore emits each component as `DefineComponent` with an empty props type (e.g. `packages/vue/dist/button/Button.vue.d.mts`), across approximately 95 component bases. A consumer passing a wrongly typed prop (e.g. a number for `UButton`'s `label`) gets no TypeScript error. Pre-existing; not caused by GAP-079 (before it, the declarations did not resolve at all).
@@ -1360,6 +1360,30 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Recommended resolution direction:** Directional only — needs a dedicated architectural/retyping phase covering the base-factory pattern across ~95 components. Intentionally not included in F5 (user decision 2026-10-03).
 - **Source/evidence:** F5 Task 3 consumer check and final whole-branch review (2026-10-03); `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`.
 - **Architectural decision required:** Yes — how Vue base factories expose typed props (affects every Vue component).
+
+#### GAP-083 — `@ultimate/vue` declarations do not type-check against Vue 3.5.0, the lower bound of its peer range
+
+- **Status:** MISSING
+- **Type:** Packaging, Compatibility, Framework (Vue)
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found by the GAP-082 final whole-branch review (2026-10-04); pre-existing, not introduced by GAP-082.
+  - `@ultimate/vue` and `@ultimate/vue-core` declare the peer range `vue: ^3.5.0` (`packages/vue/package.json`, `packages/vue-core/package.json`; ADR-042). The workspace develops against `^3.5.13`, and Vue 3.5.42 is installed.
+  - The shipped SFC declarations (emitted by `vue-tsc` 2.2.12) reference Vue's `DefineComponent` with 20 type arguments.
+  - A consumer type-check of the built package against Vue 3.5.0 reports 198 × TS2707: "DefineComponent requires between 0 and 19 type arguments". The affected component types are lost.
+  - `main` already emitted the same `DefineComponent` form before GAP-082; GAP-082 only adds more such references.
+  - Not yet established: the earliest 3.5.x release that accepts the 20-argument form, and whether `@ultimate/vue-core`'s bundled declarations fail the same way.
+- **Expected state:** Every Vue version inside the declared peer range type-checks `@ultimate/vue`'s declarations, or the peer range states the real minimum.
+- **Why it matters:** Consumers on early Vue 3.5.x releases, which the peer range allows, get type errors in library declarations and lose component prop types.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Related: GAP-079 (declaration resolvability), GAP-082 (typed props, whose consumer check runs only against the workspace Vue version).
+- **Framework scope:** Vue only.
+- **Existing reusable infrastructure:** GAP-082's consumer type-check (`packages/vue/scripts/validate-consumer-types.mjs`), which installs the packed package with a pinned `vue` version.
+- **Recommended resolution direction:** Directional only. A dedicated research/architecture phase decides between:
+  1. raising the minimum supported Vue version;
+  2. making the declarations compatible with Vue 3.5.0;
+  3. adding an explicit minimum-version compatibility check.
+- **Source/evidence:** GAP-082 final whole-branch review (2026-10-04); `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`; ADR-042.
+- **Architectural decision required:** Yes — the supported Vue floor vs declaration compatibility.
 
 ---
 
@@ -1567,7 +1591,7 @@ The great majority of gaps in this registry can be started without waiting on an
 
 ### Open Architectural Decisions
 
-The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`. The Prime-parity follow-up phase (`feature/prime-parity-followup`, closeout 2026-10-03) resolved GAP-071–GAP-073, GAP-075–GAP-077, GAP-079 (declaration resolvability only) and GAP-080, and registered GAP-082 (typed Vue props); GAP-064 stays PARTIAL and GAP-074, GAP-078 and GAP-081 remain open with approved designs. Record: `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`. The approved-designs phase (`feature/prime-parity-approved-designs`, closeout 2026-10-03) resolved GAP-074, GAP-078 and GAP-081; GAP-064 (PARTIAL) and GAP-082 remain open. Record: `docs/architecture/research/2026-10-03-prime-parity-approved-designs-closeout.md`.
+The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`. The Prime-parity follow-up phase (`feature/prime-parity-followup`, closeout 2026-10-03) resolved GAP-071–GAP-073, GAP-075–GAP-077, GAP-079 (declaration resolvability only) and GAP-080, and registered GAP-082 (typed Vue props); GAP-064 stays PARTIAL and GAP-074, GAP-078 and GAP-081 remain open with approved designs. Record: `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`. The approved-designs phase (`feature/prime-parity-approved-designs`, closeout 2026-10-03) resolved GAP-074, GAP-078 and GAP-081; GAP-064 (PARTIAL) and GAP-082 remain open. Record: `docs/architecture/research/2026-10-03-prime-parity-approved-designs-closeout.md`. GAP-082 (typed Vue props) was resolved on `feature/gap-082-typed-vue-props` (closeout 2026-10-04), which registered GAP-083 (Vue 3.5.0 declaration compatibility, pre-existing). Record: `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`.
 
 Five were open (§5) at the 2026-10-01 closeout; DECISION-F was decided on 2026-10-02 (Option 1), leaving four: external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower still — Table's own composition question is substantially answered by real implementation, OrderList/PickList/DataView's relationship to it is resolved (2026-09-21, no new foundation required), and Table's own fuller filter-operator vocabulary is resolved (2026-09-23, all 18 `FilterMatchMode` values dispatched in all 3 frameworks); the remainder is TreeTable specifically, gated on the separate DECISION-D), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), and package-naming finalization (DECISION-E, correctly deferred to pre-1.0). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
 
