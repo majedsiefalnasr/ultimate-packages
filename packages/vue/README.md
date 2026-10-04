@@ -46,4 +46,4 @@ See `packages/vue-core/README.md`'s deviation list for foundation-tier deviation
 
 ## Dependencies
 
-Depends on `@ultimate/vue-core`, `@ultimate/uix-utils`, `@ultimate/uix-styled`, `@ultimate/uix-motion`, and `@ultimate/uix-styles` (workspace). Peers on `vue` (`^3.5.0`).
+Depends on `@ultimate/vue-core`, `@ultimate/uix-utils`, `@ultimate/uix-styled`, `@ultimate/uix-motion`, and `@ultimate/uix-styles` (workspace). Peers on `vue` (`^3.5.2`, Ultimate's supported floor; see ADR-050).

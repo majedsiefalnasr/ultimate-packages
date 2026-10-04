@@ -105,3 +105,7 @@ Added on `feature/gap-082-typed-vue-props` (2026-10-03), same status — unrelea
 
 - **`@ultimate/vue` — component props are typed in the shipped declarations.** Every exported component's declaration now carries its real prop types, so passing a wrong prop value type (e.g. `<UButton :label="123" />`) is a TypeScript error. Array props accept mutable and readonly arrays. A prop accepts `null` only where `null` is part of its contract (ADR-049). Passing `null` to a prop whose contract does not include `null` is now a TypeScript error, e.g. `:placeholder="null"`, or `v-model` on `UInputChips` with a `T[] | null` ref. Runtime behavior is unchanged. Consumer code that previously compiled with wrongly typed props must be corrected. (GAP-082.)
 - **`@ultimate/vue`, `@ultimate/vue-core` — `createBase*` factory return types.** The exported base factories now return their inferred component types instead of `ComponentOptions`. Using a factory result as a `ComponentOptions` value (annotation, parameter or spread) is now a TypeScript error; `extends: createBaseX()` is unaffected. (GAP-082.)
+
+Added on `feature/gap-083-vue-floor-compat` (2026-10-04), same status — unreleased, no changesets:
+
+- **`@ultimate/vue`, `@ultimate/vue-core` — minimum Vue version is now 3.5.2.** The `vue` peer range changes from `^3.5.0` to `^3.5.2`. The shipped declarations use Vue 3.5.2's `DefineComponent` type, which Vue 3.5.0 and 3.5.1 cannot type-check. Applications on Vue 3.5.0 or 3.5.1 must upgrade Vue. The CLI and MCP compatibility checks report the same floor. (GAP-083, ADR-050.)
