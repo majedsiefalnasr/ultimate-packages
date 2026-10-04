@@ -1,6 +1,6 @@
 # Specification — Typed Vue Component Props (GAP-082)
 
-**Status:** Approved for Plan creation (Spec Review 2026-10-03; decisions in §12).
+**Status:** Implemented on `feature/gap-082-typed-vue-props` (closeout 2026-10-04); GAP-082 RESOLVED; GAP-083 registered. Spec Review decisions in §12.
 **Date:** 2026-10-03
 **Branch:** `feature/gap-082-typed-vue-props` (from `main` `5e76fd5`)
 **Origin:** GAP-082 (`docs/architecture/BLUEPRINT_GAPS.md`); decision ADR-049; evidence `docs/architecture/research/2026-10-03-gap-082-typed-vue-props-research.md`. Parity baseline: ADR-048 (PrimeVue `4.5.5`, reference only).
