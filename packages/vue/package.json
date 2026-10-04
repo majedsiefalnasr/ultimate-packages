@@ -518,6 +518,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "typecheck": "vue-tsc --noEmit",
+    "validate": "node scripts/validate-consumer-types.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   }

@@ -100,3 +100,8 @@ Added at the follow-up phase closeout (`feature/prime-parity-followup`, merged 2
 - **`@ultimate/vue` — `UPassword` accepts `ariaLabelledby`,** bound to the input's `aria-labelledby`, matching PrimeVue. (GAP-076, `c786c15`.)
 - **`@ultimate/react` — `UToggleButton` toggles once per Space press.** Space previously toggled twice in real browsers (ending unchanged); it now toggles once and prevents the native activation, matching PrimeReact. `USelectButton` options behave the same way. Enter is unchanged. (GAP-075, `f52e842`.)
 - **`@ultimate/ng` — `UBreadcrumb` links keep their `url` or `#` href.** Items without a `routerLink`, and disabled items, previously lost their `href`; they now render `url` (or `#`) and carry no `RouterLink`. (GAP-073, `90602d3`.)
+
+Added on `feature/gap-082-typed-vue-props` (2026-10-03), same status — unreleased, no changesets:
+
+- **`@ultimate/vue` — component props are typed in the shipped declarations.** Every exported component's declaration now carries its real prop types, so passing a wrong prop value type (e.g. `<UButton :label="123" />`) is a TypeScript error. Array props accept mutable and readonly arrays. A prop accepts `null` only where `null` is part of its contract (ADR-049). Runtime behavior is unchanged. Consumer code that previously compiled with wrongly typed props must be corrected. (GAP-082.)
+- **`@ultimate/vue`, `@ultimate/vue-core` — `createBase*` factory return types.** The exported base factories now return their inferred component types instead of `ComponentOptions`. Using a factory result as a `ComponentOptions` value (annotation, parameter or spread) is now a TypeScript error; `extends: createBaseX()` is unaffected. (GAP-082.)

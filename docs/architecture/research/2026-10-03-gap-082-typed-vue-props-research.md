@@ -106,6 +106,21 @@ The cause of the declaration growth: each SFC declaration inlines its full inher
 
 An earlier `du`-based figure of "+12%" was wrong; the table above uses byte counts.
 
+Final (after Tasks 1–5), measured on the built package at the end of GAP-082:
+
+| Metric                                                                              | Final                                                          |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `@ultimate/vue` `.d.mts` bytes                                                      | 622,975 (about 623 KB)                                         |
+| vue-core `index.d.mts`                                                              | 21,507 bytes (about 21.5 KB)                                   |
+| Barrel `index.mjs` gzip                                                             | 136,916 bytes (about 136.9 KB; `size:measure` shows 133.71 KB) |
+| `npm pack` tarball                                                                  | 1,078,737 bytes (about 1079 KB)                                |
+| Consumer type-check, `Bundler`, `skipLibCheck: false`, all 94 entry points (1 run)  | Check time 2.87 s, Memory used 448,325 K                       |
+| Consumer type-check, `NodeNext`, `skipLibCheck: false`, all 94 entry points (1 run) | Check time 3.29 s, Memory used 441,459 K                       |
+
+The consumer type-check figures come from `validate-consumer-types.mjs --diagnostics`; they include the fixtures and the per-key props invariant over all exported components, so they are not comparable one-to-one with the earlier import-only typecheck rows. Both modes report 88 prop-bearing components, 661 runtime prop keys typed and 16 propless components.
+
+`size:validate` compares against `origin/main`; this repository has no remote, so it is externally unexercisable locally — `size:measure` and the barrel gzip above stand in.
+
 Not measured:
 
 - editor responsiveness
