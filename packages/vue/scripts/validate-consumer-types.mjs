@@ -10,11 +10,15 @@
 // runtime declares (merged through `extends`/`mixins`) must exist in the declared
 // `$props` type, so full or partial erasure of prop types fails with the missing
 // keys named. Components that declare no runtime props are reported as propless.
+// The assertion fails closed: an `any`-typed component, a non-constructor export, or a
+// `$props` with a string index signature is reported instead of passing vacuously, and
+// the source-derived component list must equal the installed package's runtime components.
 // Requires a prior `pnpm run build`. `--diagnostics` also prints vue-tsc's
 // extended diagnostics (check time, memory) for the size/cost record.
 import { execFileSync, spawnSync } from "node:child_process";
 import {
   copyFileSync,
+  existsSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
@@ -30,6 +34,7 @@ const PACKAGES_DIR = join(VUE_DIR, "..");
 const FIXTURES_DIR = join(VUE_DIR, "test", "consumer-types");
 const VUE_TSC = join(VUE_DIR, "node_modules", ".bin", "vue-tsc");
 const DIAGNOSTICS = process.argv.includes("--diagnostics");
+const REQUIRED_FIXTURES = ["ValidUsage.vue", "InvalidUsage.vue"];
 
 function readManifest(dir) {
   return JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
@@ -72,18 +77,23 @@ function exportedComponents() {
 const RUNTIME_PROPS_SCRIPT = `
 import * as vue from "@ultimate/vue";
 const names = JSON.parse(process.argv[2]);
+// Components are objects with a render/ssrRender function; this excludes the
+// U* directive objects (UKeyFilter, UStyleClass).
+const components = Object.entries(vue)
+  .filter(([name, value]) => /^U[A-Z]/.test(name) && value && typeof value === "object" && (typeof value.render === "function" || typeof value.ssrRender === "function"))
+  .map(([name]) => name)
+  .sort();
 function keys(c, seen = new Set()) {
   if (!c || typeof c !== "object" || seen.has(c)) return [];
   seen.add(c);
   const own = Array.isArray(c.props) ? c.props : Object.keys(c.props ?? {});
   return [...keys(c.extends, seen), ...(c.mixins ?? []).flatMap((m) => keys(m, seen)), ...own];
 }
-const out = {};
+const props = {};
 for (const name of names) {
-  if (!vue[name]) throw new Error("@ultimate/vue does not export " + name);
-  out[name] = [...new Set(keys(vue[name]))].sort();
+  if (vue[name]) props[name] = [...new Set(keys(vue[name]))].sort();
 }
-process.stdout.write(JSON.stringify(out));
+process.stdout.write(JSON.stringify({ components, props }));
 `;
 
 // One type-level assertion per exported component: no runtime prop key may be
@@ -91,22 +101,31 @@ process.stdout.write(JSON.stringify(out));
 function writePropsInvariant(consumerDir) {
   const components = exportedComponents();
   writeFileSync(join(consumerDir, "runtime-props.mjs"), RUNTIME_PROPS_SCRIPT);
-  const runtimeProps = JSON.parse(
+  const runtime = JSON.parse(
     execFileSync(process.execPath, ["runtime-props.mjs", JSON.stringify(components)], {
       cwd: consumerDir,
       encoding: "utf8",
     })
   );
+  const runtimeProps = runtime.props;
+  const missing = components.filter((name) => !runtime.components.includes(name));
+  const extra = runtime.components.filter((name) => !components.includes(name));
+  if (missing.length > 0 || extra.length > 0)
+    throw new Error(
+      "[validate-consumer-types] component list from src/*/index.ts differs from the installed package's runtime components" +
+        ` (missing at runtime: ${missing.join(", ") || "none"}; not found in source: ${extra.join(", ") || "none"})`
+    );
   const propless = components.filter((name) => runtimeProps[name].length === 0);
   const lines = [
     'import type * as V from "@ultimate/vue";',
-    "type Props<C> = C extends abstract new (...args: any) => infer I ? (I extends { $props: infer P } ? P : never) : never;",
+    "type Props<C> = C extends abstract new (...args: any) => infer I ? (I extends { $props: infer P } ? P : {}) : {};",
     "type Missing<C, K extends string> = Exclude<K, keyof Props<C>>;",
+    'type Check<C, K extends string> = 0 extends 1 & C ? "any-typed component" : string extends keyof Props<C> ? "index-signature $props" : Missing<C, K>;',
     ...components
       .filter((name) => runtimeProps[name].length > 0)
       .map(
         (name) =>
-          `export const ${name}_missingProps: never = null as unknown as Missing<typeof V.${name}, ${runtimeProps[
+          `export const ${name}_missingProps: never = null as unknown as Check<typeof V.${name}, ${runtimeProps[
             name
           ]
             .map((key) => JSON.stringify(key))
@@ -154,6 +173,11 @@ function writeConsumer(consumerDir, tarballs) {
   imports.push(`export const allEntries = [${exportKeys.map((_, i) => `m${i}`).join(", ")}];`);
   writeFileSync(join(consumerDir, "all-entries.ts"), `${imports.join("\n")}\n`);
 
+  for (const file of REQUIRED_FIXTURES)
+    if (!existsSync(join(FIXTURES_DIR, file)))
+      throw new Error(
+        `[validate-consumer-types] missing required fixture ${file} in ${FIXTURES_DIR}`
+      );
   const fixtures = readdirSync(FIXTURES_DIR).filter(
     (file) => file.endsWith(".vue") || file.endsWith(".ts")
   );

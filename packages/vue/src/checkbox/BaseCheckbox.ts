@@ -10,7 +10,7 @@ import type { ClassValue } from "@ultimate/vue-core";
 //
 // Implementation-time verification finding (Global Constraints: "verify,
 // don't assume" — createBaseInput's real, shipped signature is
-// `createBaseInput(): ComponentOptions`, taking NO parameters (confirmed
+// `createBaseInput()` (a `defineComponent(...)` result), taking NO parameters (confirmed
 // against packages/vue-core/src/base/base-input.ts and its own
 // base-input.spec.ts, which only ever calls `createBaseInput()`). It always
 // internally calls `createBaseEditableHolder()` with THAT function's own
