@@ -31,7 +31,7 @@ import { iconFieldStyleModule, inputIconStyleModule } from "./icon-field-style";
   },
 })
 export class UIconField extends UBaseComponent {
-  protected override readonly componentName = "icon-field";
+  protected override readonly componentName = "iconfield";
   protected override readonly styleModule = iconFieldStyleModule;
 
   /** Position of the icon relative to the input. */

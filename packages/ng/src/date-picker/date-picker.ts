@@ -165,7 +165,7 @@ const DEFAULT_MONTH_NAMES = [
   encapsulation: ViewEncapsulation.None,
 })
 export class UDatePicker extends UBaseInput {
-  protected override readonly componentName = "date-picker";
+  protected override readonly componentName = "datepicker";
   protected override readonly styleModule = datePickerStyleModule;
 
   /** Format string used to render the input's text value. */

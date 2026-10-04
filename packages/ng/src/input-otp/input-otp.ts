@@ -78,7 +78,7 @@ import { inputOtpStyleModule } from "./input-otp-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UInputOtp extends UBaseEditableHolder {
-  protected override readonly componentName = "input-otp";
+  protected override readonly componentName = "inputotp";
   protected override readonly styleModule = inputOtpStyleModule;
 
   /** Number of characters to initiate. */

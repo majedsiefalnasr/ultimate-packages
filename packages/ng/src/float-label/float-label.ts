@@ -38,7 +38,7 @@ import { floatLabelStyleModule } from "./float-label-style";
   },
 })
 export class UFloatLabel extends UBaseComponent {
-  protected override readonly componentName = "float-label";
+  protected override readonly componentName = "floatlabel";
   protected override readonly styleModule = floatLabelStyleModule;
 
   /** Defines the positioning of the label relative to the input. */

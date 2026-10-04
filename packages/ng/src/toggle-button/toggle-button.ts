@@ -59,7 +59,7 @@ import { toggleButtonStyleModule } from "./toggle-button-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UToggleButton extends UBaseEditableHolder {
-  protected override readonly componentName = "toggle-button";
+  protected override readonly componentName = "togglebutton";
   protected override readonly styleModule = toggleButtonStyleModule;
 
   /** Label for the on state. */

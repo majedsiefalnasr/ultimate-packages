@@ -26,7 +26,7 @@ import { inputGroupAddonStyleModule, inputGroupStyleModule } from "./input-group
   },
 })
 export class UInputGroup extends UBaseComponent {
-  protected override readonly componentName = "input-group";
+  protected override readonly componentName = "inputgroup";
   protected override readonly styleModule = inputGroupStyleModule;
 }
 

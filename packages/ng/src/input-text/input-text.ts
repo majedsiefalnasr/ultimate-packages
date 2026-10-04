@@ -83,7 +83,7 @@ import { inputTextStyleModule } from "./input-text-style";
   },
 })
 export class UInputText extends UModelHolder {
-  protected override readonly componentName = "input-text";
+  protected override readonly componentName = "inputtext";
   protected override readonly styleModule = inputTextStyleModule;
 
   private readonly ngControl = inject(NgControl, { optional: true, self: true });
