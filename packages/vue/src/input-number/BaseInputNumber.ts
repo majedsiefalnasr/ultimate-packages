@@ -44,7 +44,7 @@ export function createBaseInputNumber() {
       },
     },
     mounted() {
-      registerComponentStyle("input-number", inputNumberStyleModule);
+      registerComponentStyle("inputnumber", inputNumberStyleModule, ["inputtext"]);
     },
   });
 }

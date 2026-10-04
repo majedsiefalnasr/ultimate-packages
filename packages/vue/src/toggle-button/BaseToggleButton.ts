@@ -49,7 +49,7 @@ export function createBaseToggleButton() {
       },
     },
     mounted() {
-      registerComponentStyle("toggle-button", toggleButtonStyleModule);
+      registerComponentStyle("togglebutton", toggleButtonStyleModule);
     },
   });
 }
