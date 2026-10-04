@@ -168,11 +168,16 @@ The 9 sites marked ⚠ in §4.1 register the Aura key: `overlaybadge`, `progress
 
 ### 5.2 Structural CSS per component
 
-Each G3-A style module's `css` becomes, in this order:
+Each G3-A style module's `css` becomes, in this canonical order (§13 item 10):
 
-1. **Ported groups.** The supported upstream rule groups of §4.4, with selectors rewritten by the §4.3 mapping. Declarations are unchanged, including every `dt('…')` call and every literal value, in upstream order. Keyframes are renamed per §4.3.
-2. **Adapted groups.** The parity-exception groups (§5.3), with the exact selector rewrite given there.
-3. **Retained Ultimate-only rules.** Only those listed in §5.3 (PX-A4, PX-A5, PX-A6), with exactly the text given there.
+1. **Upstream-derived groups, in upstream source order.** These are:
+   - the supported upstream rule groups of §4.4, with selectors rewritten by the §4.3 mapping;
+   - the parity-exception groups (§5.3), with the exact selector rewrite given there;
+   - the keyframes used by them, renamed per §4.3.
+
+   They are interleaved exactly as upstream orders them. Declarations are unchanged, including every `dt('…')` call and every literal value.
+
+2. **Retained Ultimate-only rules.** Only those listed in §5.3 (PX-A4, PX-A5, PX-A6), with exactly the text given there and in that order. None of them redeclares a property of an upstream-derived rule on the same selector, so appending them does not change the upstream cascade.
 
 **Removed:** every other current hand-written rule — every rule whose selector targets a mapped class.
 
@@ -415,3 +420,4 @@ All are checked in both frameworks. Generated-style checks use the rendered `<st
    This correction follows the approved D-G3-8 rule (retain literals with no token role, recorded as parity exceptions). It does not change any architectural decision.
 
 9. **Count correction (found while writing the Plan, by dry-running the Plan's port module against the vendored upstream source).** ProgressBar has **7** upstream rule groups (5 ported + 2 adapted, PX-A1), not 13. The research parser had counted the inner frames of the two `@-webkit-keyframes` blocks as rule groups. §4.4 is corrected. All other §4.4 counts are confirmed. The keyframes themselves are unaffected: the four used keyframes, including the `-webkit-` ones, are still ported and renamed.
+10. **Canonical C3 order (Plan Review, 2026-10-04).** The ported, adapted and keyframe groups keep **upstream source order**, so the cascade among same-specificity upstream rules is preserved. The retained PX-A4/A5/A6 rules follow, in §5.3 order. §5.2 is updated accordingly. The draft's grouping into "ported, then adapted, then retained" was not intended as a reordering of upstream rules.
