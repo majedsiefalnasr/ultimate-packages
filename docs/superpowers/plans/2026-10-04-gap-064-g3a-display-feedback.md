@@ -17,6 +17,7 @@
 
 ## Global Constraints
 
+- **Immutable baseline:** `fa5c150` (local `main` after Tranche 1; the branch point) is the comparison point for every scope diff, size check and regression argument in this plan. `git fetch origin main` may only refresh remote metadata and never changes the baseline.
 - **Node:** run every host command with Node 24.15.0: `export PATH=$HOME/.nvm/versions/node/v24.15.0/bin:$PATH`. Tests are per-package only.
 - **Inventory.** 27 style files (13 Angular + 14 Vue) and 14 unique Aura keys:
   - `avatar`, `chip`, `tag`, `skeleton`, `overlaybadge`, `knob`, `progressbar`, `progressspinner`, `metergroup`, `timeline`, `terminal`, `message`, `toast`;
@@ -27,10 +28,8 @@
 - **C4 — DOM unchanged.** In existing component implementation files only the style module's `css` string and the 9 key literals change. Templates, `classes` resolvers and props/inputs/emits stay unchanged.
 - **The CSS stays in each framework's own style module** (no `@ultimate/uix-styles` subpaths, no new exports). The Angular/Vue duplication is intentional.
 - **C3 exactness.** Each style module's `css` is exactly the `g3a-port.mjs` expected list:
-  1. the ported groups;
-  2. the used keyframes, renamed `p-`→`u-`;
-  3. the adapted groups;
-  4. the retained rules PX-A4/PX-A5/PX-A6.
+  1. every non-omitted upstream group — ported rules, adapted rules (PX-A1..A3) and used keyframes (renamed `p-`→`u-`) — **in upstream source order** (canonical ordering, Plan Review correction 3);
+  2. then the retained rules PX-A4/PX-A5/PX-A6, in the exact order listed in Spec §5.3. A test proves these appended rules never redeclare a property of an upstream-derived rule on the same selector, so their position cannot change the cascade.
 
   No old hand-written CSS survives.
 
@@ -583,7 +582,7 @@ This task records the pre-change state in Linux Docker (D-G3-7). It must run on 
 
 **Interfaces:**
 
-- Produces: `/tmp/g3a-docker/run.sh`, with modes `before | stable | full | update <grep>`. Task 8 reuses it.
+- Produces: `/tmp/g3a-docker/run.sh`, with modes `before | stable | g3a | regression | update <grep>`. Task 8 reuses it: `g3a` for the targeted G3-A validation, `regression` for the existing suite.
 
 - [ ] **Step 1: Write the container script**
 
@@ -592,7 +591,11 @@ mkdir -p /tmp/g3a-docker
 cat > /tmp/g3a-docker/run.sh <<'EOF'
 #!/bin/bash
 # GAP-064 G3-A Docker runner (inside mcr.microsoft.com/playwright:v1.63.0-jammy).
-# usage: bash /io/run.sh before|stable|full|update "<grep>"
+# usage: bash /io/run.sh before|stable|g3a|regression|update "<grep>"
+#   g3a        = TARGETED G3-A run: only the two g3a-aura-styles specs (visual + a11y), ng/vue projects.
+#   regression = EXISTING suite: every other spec in all 9 Storybook projects (ng, vue AND react) plus the
+#                3 SSR projects, with the G3-A specs excluded. React is regression coverage only —
+#                React is out of G3-A scope and must show no change.
 set -uo pipefail
 export CI=true
 mkdir -p /work && tar -xf /io/src.tar -C /work && cd /work
@@ -602,7 +605,7 @@ pnpm install --frozen-lockfile > /io/install.log 2>&1 || { echo "install failed"
 pnpm run build > /io/build.log 2>&1 || { echo "build failed"; exit 1; }
 SPECS="packages/ng/e2e/g3a-aura-styles.spec.ts packages/vue/e2e/g3a-aura-styles.spec.ts"
 G3A="--project=ng-chromium --project=ng-firefox --project=ng-webkit --project=vue-chromium --project=vue-firefox --project=vue-webkit"
-ALL="$G3A --project=react-chromium --project=react-firefox --project=react-webkit"
+REGRESSION="$G3A --project=react-chromium --project=react-firefox --project=react-webkit --project=ng-ssr-chromium --project=react-ssr-chromium --project=vue-ssr-chromium"
 SNAP="packages/ng/e2e/g3a-aura-styles.spec.ts-snapshots packages/vue/e2e/g3a-aura-styles.spec.ts-snapshots"
 case "$1" in
   before)
@@ -610,10 +613,12 @@ case "$1" in
     tar -cf /io/snapshots.tar $SNAP ;;
   stable)
     npx playwright test $SPECS $G3A -g "G3-A visual" --reporter=list > /io/stable.log 2>&1; echo "stable exit $?" ;;
-  full)
-    npx playwright test $ALL --reporter=list > /io/full.log 2>&1; echo "full exit $?"
-    cp test-results/.last-run.json /io/ 2>/dev/null
-    tar -cf /io/results.tar test-results ;;
+  g3a)
+    npx playwright test $SPECS $G3A --reporter=list > /io/g3a.log 2>&1; echo "g3a exit $?"
+    tar -cf /io/g3a-results.tar test-results ;;
+  regression)
+    npx playwright test $REGRESSION --grep-invert "G3-A" --reporter=list > /io/regression.log 2>&1; echo "regression exit $?"
+    tar -cf /io/regression-results.tar test-results ;;
   update)
     npx playwright test $SPECS $G3A -g "$2" --update-snapshots=changed --reporter=list > /io/update.log 2>&1; echo "update exit $?"
     tar -cf /io/snapshots.tar $SNAP ;;
@@ -670,8 +675,9 @@ git commit -m "test(gap-064): record G3-A pre-change baselines in Linux Docker"
   - `RETAINED: Record<string, string[]>`;
   - `COUNTS: Record<string, [ported: number, omitted: number]>`;
   - `norm(css: string): string`;
-  - `expected(key): { ported: string[]; keyframes: string[]; adapted: string[]; omitted: string[] }`;
-  - `expectedCss(key): string[]`, the full ordered rule list;
+  - `expected(key): { ordered: string[]; upstreamIndex: number[]; ported: string[]; keyframes: string[]; adapted: string[]; omitted: string[] }`, where `ordered` is the canonical upstream-source-order list, `upstreamIndex[i]` is the fixture group index of `ordered[i]`, and the other arrays are for counting only;
+  - `expectedCss(key): string[]`, i.e. `ordered` followed by the retained rules;
+  - `declarations(ruleText): { selector: string; props: string[] }`;
   - `actualRules(fw, key): string[]`.
 - CLI: `node packages/themes/test/utils/g3a-port.mjs <ng|vue> <key>` prints the exact `css` body to paste (Tasks 5–6).
 
@@ -895,35 +901,70 @@ function mapSelector(key, selector) {
   return { selector: s.replace(/\.p-/g, ".u-"), adapted };
 }
 
+/**
+ * Canonical C3 ordering (Plan Review correction 3): `ordered` keeps the
+ * UPSTREAM SOURCE ORDER of every non-omitted group — ported rules, adapted
+ * (PX-A1..A3) rules and used keyframes interleaved exactly as upstream wrote
+ * them — so the cascade between same-specificity rules is upstream's. The
+ * category arrays (ported/adapted/keyframes/omitted) exist only for counting.
+ */
 export function expected(key) {
   const groups = parseGroups(FIXTURE.modules[key]);
   const ported = [];
   const adapted = [];
   const omitted = [];
-  for (const g of groups.filter((x) => !x.keyframes)) {
+  const mapped = []; // { kind: "rule" | "keyframes", index, text, name? } in upstream order
+  for (const [index, g] of groups.entries()) {
+    if (g.keyframes) {
+      mapped.push({
+        kind: "keyframes",
+        index,
+        name: renameKeyframeRefs(g.head.split(/\s+/)[1]),
+        text: norm(`${renameKeyframeRefs(g.head)}{${g.body}}`),
+      });
+      continue;
+    }
     const classes = [...g.head.matchAll(/\.(p-[a-z0-9-]+)/g)].map((m) => m[1]);
     if (classes.some((c) => (NOT_RENDERED[key] ?? []).includes(c))) {
       omitted.push(norm(g.head));
       continue;
     }
     const m = mapSelector(key, g.head);
-    (m.adapted ? adapted : ported).push(norm(`${m.selector}{${renameKeyframeRefs(g.body)}}`));
+    const text = norm(`${m.selector}{${renameKeyframeRefs(g.body)}}`);
+    (m.adapted ? adapted : ported).push(text);
+    mapped.push({ kind: "rule", index, text });
   }
   const used = [...ported, ...adapted].join("\n");
-  const keyframes = groups
-    .filter((x) => x.keyframes)
-    .map((x) => ({
-      name: renameKeyframeRefs(x.head.split(/\s+/)[1]),
-      text: norm(`${renameKeyframeRefs(x.head)}{${x.body}}`),
-    }))
-    .filter((k) => new RegExp(`\\b${k.name}(?![a-z0-9-])`).test(used))
-    .map((k) => k.text);
-  return { ported, keyframes, adapted, omitted };
+  const isUsed = (name) => new RegExp(`\\b${name}(?![a-z0-9-])`).test(used);
+  const keyframes = mapped
+    .filter((x) => x.kind === "keyframes" && isUsed(x.name))
+    .map((x) => x.text);
+  const kept = mapped.filter((x) => x.kind === "rule" || isUsed(x.name));
+  return {
+    ordered: kept.map((x) => x.text),
+    upstreamIndex: kept.map((x) => x.index),
+    ported,
+    keyframes,
+    adapted,
+    omitted,
+  };
 }
 
+/** The exact rule list of a style module: upstream-ordered port, then the retained rules (§5.3), in RETAINED order. */
 export function expectedCss(key) {
-  const e = expected(key);
-  return [...e.ported, ...e.keyframes, ...e.adapted, ...(RETAINED[key] ?? []).map(norm)];
+  return [...expected(key).ordered, ...(RETAINED[key] ?? []).map(norm)];
+}
+
+/** Property names declared by a normalized rule text, keyed by selector. */
+export function declarations(ruleText) {
+  const open = ruleText.indexOf("{");
+  const selector = ruleText.slice(0, open);
+  const props = ruleText
+    .slice(open + 1, -1)
+    .split(";")
+    .map((d) => d.split(":")[0].trim())
+    .filter(Boolean);
+  return { selector, props };
 }
 
 export function styleFile(fw, key) {
@@ -969,6 +1010,7 @@ import {
   RETAINED,
   actualCssText,
   actualRules,
+  declarations,
   expected,
   expectedCss,
   norm,
@@ -998,6 +1040,35 @@ describe("G3-A upstream fixture", () => {
     }
   });
 
+  it("canonical order is upstream source order (Plan Review correction 3)", () => {
+    for (const key of KEYS) {
+      const e = expected(key);
+      // `ordered` holds exactly the categorised groups, nothing more ...
+      expect([...e.ordered].sort(), key).toEqual(
+        [...e.ported, ...e.adapted, ...e.keyframes].sort()
+      );
+      // ... and every entry keeps its upstream position: source indices strictly increase.
+      expect(e.upstreamIndex.length, key).toBe(e.ordered.length);
+      e.upstreamIndex.forEach((idx: number, i: number) => {
+        if (i > 0) expect(idx, `${key} entry ${i}`).toBeGreaterThan(e.upstreamIndex[i - 1]);
+      });
+    }
+  });
+
+  it("appended retained rules never redeclare a property of an upstream-derived rule on the same selector", () => {
+    for (const key of KEYS) {
+      const upstream = expected(key)
+        .ordered.filter((r) => !r.startsWith("@"))
+        .map(declarations);
+      for (const retained of (RETAINED[key] ?? []).map(norm).map(declarations)) {
+        const clash = upstream
+          .filter((u) => u.selector === retained.selector)
+          .flatMap((u) => u.props.filter((p) => retained.props.includes(p)));
+        expect(clash, `${key} ${retained.selector}`).toEqual([]);
+      }
+    }
+  });
+
   const vendor = join(REPO, ".vendor-extracted/uix-styles-full/src");
   describe.skipIf(!existsSync(vendor))("fixture vs .vendor-extracted source", () => {
     it.each(KEYS)("%s matches the vendored source", (key) => {
@@ -1009,7 +1080,7 @@ describe("G3-A upstream fixture", () => {
 });
 
 describe.each(CASES)("$fw $key style module (C3)", ({ fw, key }) => {
-  it("contains exactly the ported, keyframe, adapted and retained rules, in order", () => {
+  it("contains exactly the upstream-ordered port followed by the retained rules", () => {
     expect(actualRules(fw, key)).toEqual(expectedCss(key));
   });
 
@@ -1161,7 +1232,16 @@ const CASES: Case[] = [
   { type: UToast, key: "toast", mounts: POSITIONS.map((position) => ({ position })) },
 ];
 
+/**
+ * Tranche 1 / GAP-078 isolation pattern: exactly ONE configureTestingModule +
+ * createComponent per call, on a TestBed that has just been reset, with a new
+ * Document injected as DOCUMENT. A new Document is a new per-document style
+ * registry (ngCoreStyleSheetFor), so every mount starts with an empty <head>.
+ * The explicit resetTestingModule() makes this independent of the builder's
+ * own per-test teardown and is the only supported way to re-provide DOCUMENT.
+ */
 function mount(type: Type<unknown>, inputs: Inputs, toastMessages = false) {
+  TestBed.resetTestingModule();
   const doc = document.implementation.createHTMLDocument("g3a");
   TestBed.configureTestingModule({
     providers: [
@@ -1232,6 +1312,19 @@ describe("GAP-064 G3-A — Angular", () => {
   it("toast with messages of all six severities resolves every variable (C2)", () => {
     const { doc } = mount(UToast, {}, true);
     expect(unresolved(doc, "toast")).toEqual([]);
+  });
+
+  it("isolates styles per document: two mounts, two registries, nothing in the global document", () => {
+    const globalBefore = document.head.querySelectorAll(`style[${KEY_ATTR}="progressbar"]`).length;
+    const first = mount(UProgressBar, { value: 40 }).doc;
+    const second = mount(UProgressBar, { value: 40 }).doc;
+    expect(first).not.toBe(second);
+    expect(count(first, "progressbar")).toBe(1);
+    expect(count(second, "progressbar")).toBe(1);
+    expect(count(second, "progressbar-variables")).toBe(1);
+    expect(document.head.querySelectorAll(`style[${KEY_ATTR}="progressbar"]`).length).toBe(
+      globalBefore
+    );
   });
 
   describe("dynamic classes are emitted and styled (C3, §13.6 A/F)", () => {
@@ -1534,7 +1627,7 @@ Run:
 
 Expected RED:
 
-- **C1** fails for the renamed keys: `overlaybadge`, `progressbar`, `progressspinner`, `metergroup`, and Vue `inlinemessage`.
+- **C1** fails for the renamed keys: `overlaybadge`, `progressbar`, `progressspinner`, `metergroup`, and Vue `inlinemessage`. The Angular per-document isolation test also fails, because it counts the `progressbar` key, which isn't registered until Task 5. Its other assertions — two distinct documents, nothing written into the global document — must already hold. If they don't, **stop and report**: the isolation pattern itself would be broken.
 - **C2** fails for every component whose current CSS references no `var(--u-<key>-…)`, or references invented names. That is most of the 27 cases, and toast/message/tag fail on invented names such as `--u-toast-info-bg`.
 - **The dynamic "selector styled" rows** pass or fail depending on the current hand-written selectors.
 - **Every "class emitted" assertion must PASS**, because the DOM is unchanged.
@@ -1740,42 +1833,66 @@ git commit -m "docs(gap-064): record provenance for the G3-A style modules"
 - Create: `docs/superpowers/plans/2026-10-04-gap-064-g3a-visual-review.md` (record)
 - Modify (only after approval): `packages/{ng,vue}/e2e/g3a-aura-styles.spec.ts-snapshots/*.png`, and `docs/architecture/ACCESSIBILITY_BASELINE.md` (approved rows only)
 
-- [ ] **Step 1: Full Docker run on the ported code**
+- [ ] **Step 1a: Targeted G3-A run (the intended changes)**
 
 ```bash
 git archive -o /tmp/g3a-docker/src.tar HEAD
-docker run --rm -v /tmp/g3a-docker:/io mcr.microsoft.com/playwright:v1.63.0-jammy bash /io/run.sh full
-mkdir -p /tmp/g3a-docker/results && tar -xf /tmp/g3a-docker/results.tar -C /tmp/g3a-docker/results
+docker run --rm -v /tmp/g3a-docker:/io mcr.microsoft.com/playwright:v1.63.0-jammy bash /io/run.sh g3a
+mkdir -p /tmp/g3a-docker/g3a && tar -xf /tmp/g3a-docker/g3a-results.tar -C /tmp/g3a-docker/g3a
 ```
+
+This runs only the two `g3a-aura-styles` specs (visual + accessibility) on the ng and vue projects.
 
 Expected:
 
-- Screenshot failures only in `g3a-aura-styles` "G3-A visual" tests (the intended changes).
-- **Every other existing screenshot passes.**
-- No non-screenshot failure apart from a retry-passing flake.
+- screenshot mismatches only in "G3-A visual" tests — the G3-A changes under review;
+- every "G3-A accessibility" test runs and writes its envelope.
 
-Any other failure is **UNEXPECTED**.
+Any non-screenshot failure, apart from a retry-passing flake, is **UNEXPECTED**.
 
-- [ ] **Step 2: Accessibility on the same run**
-
-For each of `ng`, `vue` and `react`:
+- [ ] **Step 1b: Existing regression suite (must stay clean)**
 
 ```bash
-node scripts/provenance/validate-accessibility-baseline.mjs --check "/tmp/g3a-docker/results/test-results/accessibility/<fw>/**/*.json"
+docker run --rm -v /tmp/g3a-docker:/io mcr.microsoft.com/playwright:v1.63.0-jammy bash /io/run.sh regression
+mkdir -p /tmp/g3a-docker/regression && tar -xf /tmp/g3a-docker/regression-results.tar -C /tmp/g3a-docker/regression
 ```
 
-Record every new violation verbatim: rule, story, target and ratio. Do not change `ACCESSIBILITY_BASELINE.md`.
+This runs every **existing** spec in all 9 Storybook projects (ng, vue, react × chromium/firefox/webkit) plus the 3 SSR projects, with the G3-A specs excluded (`--grep-invert "G3-A"`). React is **regression coverage only**: React is out of G3-A scope, has no G3-A changes, and must show none.
+
+Expected: **0 failures**, apart from retry-passing flakes (record each). Any screenshot or test failure here is **UNEXPECTED**: an existing baseline changed, or a regression elsewhere. Investigate and record it. Never update a regression-suite baseline in this task.
+
+- [ ] **Step 2: Accessibility, both runs**
+
+- Targeted G3-A envelopes (ng, vue):
+
+  ```bash
+  node scripts/provenance/validate-accessibility-baseline.mjs --check "/tmp/g3a-docker/g3a/test-results/accessibility/<ng|vue>/**/*.json"
+  ```
+
+- Existing-suite envelopes (ng, vue, react — regression):
+
+  ```bash
+  node scripts/provenance/validate-accessibility-baseline.mjs --check "/tmp/g3a-docker/regression/test-results/accessibility/<ng|vue|react>/**/*.json"
+  ```
+
+Expected:
+
+- the regression set reports OK for all three frameworks;
+- the G3-A set may report new violations, which are recorded verbatim (rule, story, target, ratio) for the review gate.
+
+Do not change `ACCESSIBILITY_BASELINE.md`.
 
 - [ ] **Step 3: Write the review record**
 
 Create `docs/superpowers/plans/2026-10-04-gap-064-g3a-visual-review.md` with these sections:
 
 1. Environment: image, architecture, Node, pnpm, durations.
-2. Changed G3-A screenshots: per test, the project, the paths of the expected/actual/diff images under `/tmp/g3a-docker/results/test-results/`, and a one-line description of the visible change.
+2. Targeted G3-A run (Step 1a). Changed G3-A screenshots: per test, the project, the paths of the expected/actual/diff images under `/tmp/g3a-docker/g3a/test-results/`, and a one-line description of the visible change.
 3. Unchanged G3-A screenshots. For each, state whether the change is "inside tolerance" (record it explicitly) or truly identical.
-4. UNEXPECTED items, each with its investigated cause.
-5. Accessibility results.
-6. The C5 coverage checklist: which story exercises which ported/adapted/retained group family.
+4. Existing regression suite (Step 1b): pass/flaky/fail counts per project, including React (regression only), and every flake.
+5. UNEXPECTED items from either run, each with its investigated cause.
+6. Accessibility results, targeted and regression separately.
+7. The C5 coverage checklist: which story exercises which ported/adapted/retained group family.
 
 Copy the PNG artifacts into the git-ignored SDD workspace so they survive later runs.
 
@@ -1801,7 +1918,11 @@ git status --short
 
 Expected: only approved PNGs are modified. Add any approved accessibility rows to `ACCESSIBILITY_BASELINE.md`, in its existing format, with the note `GAP-064 G3-A — upstream Aura parity exception (user-approved <date>)`.
 
-Then re-run Step 1 (`full`) on an export that includes these changes. Expected: 0 failures, apart from retry-passing flakes. Re-run Step 2: ng/vue/react OK.
+Then, on an export that includes these changes (`git archive -o /tmp/g3a-docker/src.tar "$(git write-tree)"` after staging them), re-run:
+
+- **Step 1a (`g3a`).** Expected: 0 failures.
+- **Step 1b (`regression`).** Expected: still 0 failures, apart from retry-passing flakes.
+- **Step 2, both sets.** Expected: ng/vue/react OK.
 
 - [ ] **Step 6: Commit**
 
@@ -1861,12 +1982,14 @@ Anything else: **stop and report**.
 
 - [ ] **Step 3: Size gate (C7)**
 
+The **immutable baseline for G3-A is `fa5c150`**: local `main` after GAP-064 Tranche 1 and the branch point. Every scope, size and regression comparison in this plan uses it explicitly. `git fetch origin main` may be run only to refresh remote metadata, never to choose the baseline. `origin/main` (still `f05bd9b`, before Tranche 1) is **not** the comparison point. The npm script `size:validate` defaults to `--base-ref origin/main`, so call the validator directly with the pinned ref:
+
 ```bash
-git fetch origin main
-pnpm run build && pnpm run size:measure && pnpm run size:validate
+pnpm run build && pnpm run size:measure
+node scripts/provenance/validate-bundle-size.mjs --base-ref fa5c150
 ```
 
-Expected: pass. Record the change for ng and vue. If any package is above 15%, **stop and report**; no override.
+Expected: pass. Record the per-package change for ng and vue against `fa5c150`. If any package is above 15%, **stop and report**; no override, and no `PERFORMANCE.md` edit.
 
 - [ ] **Step 4: Record and commit**
 
@@ -1890,7 +2013,13 @@ git commit -m "docs(gap-064): record G3-A verification results"
 ```markdown
 Added for GAP-064 G3-A (`feature/gap-064-g3a-display-feedback`), same status — unreleased, no changesets:
 
-- **`@ultimate/ng`, `@ultimate/vue` — Display and Feedback components now use their Aura tokens.** Avatar, Chip, Tag, Skeleton, OverlayBadge, Knob, ProgressBar, ProgressSpinner, MeterGroup, Timeline, Terminal, Message and Toast (and Vue InlineMessage) render with the upstream Aura structural styles and follow theme customization; their previous hand-written colors and spacing are replaced. Visual appearance changes accordingly. (GAP-064 G3-A; DOM and classes unchanged.)
+- **`@ultimate/ng`, `@ultimate/vue` — Display and Feedback components now use their Aura tokens.** Avatar, Chip, Tag, Skeleton, OverlayBadge, Knob, ProgressBar, ProgressSpinner, MeterGroup, Timeline, Terminal, Message and Toast (and Vue InlineMessage) now take their applicable structural styling from the upstream Aura styles (`@primeuix/styles` 2.0.3), mapped to Ultimate's existing DOM, and follow theme customization. The hand-written rules those upstream styles cover are replaced, so visual appearance changes accordingly. A small set of documented Ultimate-specific rules remains:
+  - the Toast root positioning, offsets and stacking (Spec PX-A4);
+  - the Chip label and Terminal welcome/command layout (PX-A5);
+  - the Skeleton root positioning (PX-A6).
+
+  The other approved parity exceptions and feature exclusions are listed in the G3-A Spec (§5.3–§5.4). (GAP-064 G3-A; DOM and classes unchanged.)
+
 - **Generated `<style>` keys changed** for OverlayBadge, ProgressBar, ProgressSpinner, MeterGroup and Vue InlineMessage (for example `progress-bar` → `progressbar`); these keys are internal, not a supported contract.
 ```
 
@@ -1905,6 +2034,47 @@ git commit -m "docs(gap-064): record G3-A consumer-visible changes in MIGRATION"
 ```
 
 ---
+
+## Plan Review (2026-10-04)
+
+**Result of the first review: Changes Requested.** Five corrections were applied in this revision:
+
+1. **Task 4 — Angular TestBed isolation.**
+   - `mount()` now follows the proven Tranche 1 / GAP-078 pattern explicitly. It calls `TestBed.resetTestingModule()`, then exactly one `configureTestingModule` with a **new `Document`** as `DOCUMENT` (server `PLATFORM_ID`), then one `createComponent`. A TestBed is never re-provided after instantiation.
+   - A new test proves real per-document behaviour. Two mounts give two distinct documents, each with its own registry holding exactly one `progressbar` and one `progressbar-variables` element, and nothing is written into the global document.
+2. **Task 8 — Two separate validations.**
+   - `g3a` is the targeted run: the G3-A specs only, visual and accessibility, on ng and vue.
+   - `regression` is the existing suite: every other spec in all 9 Storybook projects plus the 3 SSR projects, with the G3-A specs excluded. It must stay at 0 failures, apart from recorded retry-passing flakes.
+   - React is named explicitly as regression coverage, not G3-A coverage. Accessibility is validated per run.
+   - The old `full` mode is removed.
+3. **Task 3 — Explicit C3 ordering contract.**
+   - The canonical output is **upstream source order**: ported, adapted and used keyframes interleaved exactly as upstream wrote them, so the cascade is preserved. The retained PX-A4/A5/A6 rules come after, in Spec §5.3 order.
+   - `expected()` returns `ordered` plus `upstreamIndex`. A test asserts strictly increasing source indices.
+   - A second test asserts that no appended retained rule redeclares a property of an upstream-derived rule on the same selector, so the appended position cannot alter the cascade.
+   - Spec §5.2 is updated to match (Spec §13 item 10).
+4. **Task 9 — Immutable baseline.** `fa5c150` is the explicit baseline for scope, size and regression reasoning (Global Constraints). Size validation calls the validator with `--base-ref fa5c150`, because the `size:validate` npm script would default to `origin/main` (`f05bd9b`, before Tranche 1). `git fetch` only refreshes metadata.
+5. **Task 10 — MIGRATION wording.** The text no longer implies that all hand-written styling disappears. It says that the _applicable structural styling_ becomes upstream Aura-derived, and names the retained documented exceptions (PX-A4/A5/A6) and the Spec's exception and exclusion lists.
+
+**Final consistency check against the approved Spec.** Each requirement below is covered:
+
+| Spec requirement                                      | Where the Plan covers it                                          |
+| ----------------------------------------------------- | ----------------------------------------------------------------- |
+| §4.1 inventory and the 9 renames                      | Global Constraints; Tasks 5–6                                     |
+| §4.3 mapping and dynamic classes (§13 A, F)           | `g3a-port.mjs` PREFIX_RENAMES / NOT_RENDERED; Task 4 dynamic rows |
+| §4.4 counts, including the corrected ProgressBar 7/7  | `COUNTS` plus a pin test; verified by dry run                     |
+| §5.2 canonical order                                  | `expected().ordered`, ordering tests                              |
+| §5.3 PX-A1..A6                                        | REWRITES and RETAINED, with exact text                            |
+| §5.4 FX-A1..A7                                        | NOT_RENDERED, and keyframes dropped when unused                   |
+| §5.5 provenance                                       | Task 7                                                            |
+| §8 C1 / C2 (own-token invariant on ported CSS, §13 B) | Task 4; the Task 3 own-token test                                 |
+| C3 exactness (§13 C)                                  | Task 3                                                            |
+| C4 scope (§13 D)                                      | Task 5/6 diff filters; Task 9                                     |
+| C5 / C6                                               | Tasks 1, 2, 8                                                     |
+| C7                                                    | Task 9, against `fa5c150`                                         |
+| C8 / C9                                               | Tasks 8–9                                                         |
+| 14 keys vs 27 files (§13 E)                           | Fixture of 14 keys; 27 fidelity cases                             |
+
+No Spec requirement is uncovered. No new scope, architecture or runtime change was introduced by this revision.
 
 ## After this plan
 
