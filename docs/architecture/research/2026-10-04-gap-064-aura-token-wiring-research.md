@@ -132,8 +132,8 @@ Screenshot specs exist only for Angular badge, paginator and table, Vue paginato
 Recorded as ADR-051 (D1, D2).
 
 - **D1 = A.** Where a component's style key differs from the upstream preset key, its `componentName` is renamed to the upstream key: the key-mismatch components (15 Angular, 16 Vue; `input-text` → `inputtext`, …) and `input-group` → `inputgroup` in both frameworks.
-  - The rename affects stylesheet registration and preset lookup only.
-  - Its one other observable effect is the `<style>` key attribute value (§3.6). That is not a documented consumer contract and has no test dependency.
+  - The rename changes the structural-stylesheet key and the preset lookup key. It also changes an observable internal runtime artifact: the generated `<style>` key attribute value (`data-u-ng-style` in Angular, `data-u-style` in Vue, and the `<key>-variables` form; §3.6).
+  - Contract boundary, to be established by tests in the Tranche 1 Spec: no exported API or signature change; Angular `componentName` stays `protected`; Vue's key stays an internal argument; Angular SSR hydration reuse stays safe because server and client use the same renamed key. No evidence establishes the generated style keys as a public consumer contract.
   - B is rejected because it changes React. C is rejected because it adds an API that upstream does not have.
 - **D2 = (a).** Vue InputNumber also registers the variables of the `inputtext` preset key, in addition to `inputnumber`. Its DOM and component structure do not change.
 - **D3 = Accept.** Adding the `badge` and `paginator` modules may change React rendering, because React already reads those shared token paths (in practice `UPaginator`, including where `UTable`/`UDataView` embed it). This is an intentional incidental effect. Tranche 1 includes React visual verification for it. No React tokenization scope is created.
