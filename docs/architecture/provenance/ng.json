@@ -436,5 +436,83 @@
     "ultimateDestination": "packages/ng/src/data-view/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "src/avatar/index.ts",
+    "ultimateDestination": "packages/ng/src/avatar/avatar-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 avatar, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A1."
+  },
+  {
+    "originalPath": "src/chip/index.ts",
+    "ultimateDestination": "packages/ng/src/chip/chip-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 chip, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5."
+  },
+  {
+    "originalPath": "src/tag/index.ts",
+    "ultimateDestination": "packages/ng/src/tag/tag-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tag, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+  },
+  {
+    "originalPath": "src/skeleton/index.ts",
+    "ultimateDestination": "packages/ng/src/skeleton/skeleton-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 skeleton, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A3, PX-A6, FX-A2."
+  },
+  {
+    "originalPath": "src/overlaybadge/index.ts",
+    "ultimateDestination": "packages/ng/src/overlay-badge/overlay-badge-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 overlaybadge, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+  },
+  {
+    "originalPath": "src/knob/index.ts",
+    "ultimateDestination": "packages/ng/src/knob/knob-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 knob, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+  },
+  {
+    "originalPath": "src/progressbar/index.ts",
+    "ultimateDestination": "packages/ng/src/progress-bar/progress-bar-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 progressbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A1."
+  },
+  {
+    "originalPath": "src/progressspinner/index.ts",
+    "ultimateDestination": "packages/ng/src/progress-spinner/progress-spinner-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 progressspinner, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+  },
+  {
+    "originalPath": "src/metergroup/index.ts",
+    "ultimateDestination": "packages/ng/src/meter-group/meter-group-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 metergroup, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A2."
+  },
+  {
+    "originalPath": "src/timeline/index.ts",
+    "ultimateDestination": "packages/ng/src/timeline/timeline-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 timeline, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A3."
+  },
+  {
+    "originalPath": "src/terminal/index.ts",
+    "ultimateDestination": "packages/ng/src/terminal/terminal-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 terminal, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5, FX-A4."
+  },
+  {
+    "originalPath": "src/message/index.ts",
+    "ultimateDestination": "packages/ng/src/message/message-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 message, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A5."
+  },
+  {
+    "originalPath": "src/toast/index.ts",
+    "ultimateDestination": "packages/ng/src/toast/toast-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 toast, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A4, FX-A7."
   }
 ]
