@@ -220,5 +220,11 @@
     "ultimateDestination": "packages/ng-core/src/base-input/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/basecomponent/style-sheet.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the per-document style registry (GAP-078): styles land in the given document, one registry per document, one element per key, adoption of server-rendered keyed <style> elements (including partial server output and selector-special keys), and no adoption of Vue-owned data-u-style elements."
   }
 ]

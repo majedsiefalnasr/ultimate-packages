@@ -274,5 +274,17 @@
     "ultimateDestination": "packages/react-core/src/icons/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent. Exposed only via the single root package entry point — no ./icons subpath export (spec §3, tightened)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/styling/hidden-accessible.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the shared u-hidden-accessible rule is registered once on first mount without a theme (GAP-074)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/styling/ssr-contract.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the client-only styling contract: a server render emits no <style> and registers nothing (GAP-078)."
   }
 ]
