@@ -93,6 +93,7 @@ export class UMessage extends UBaseComponent implements OnInit, OnDestroy {
   private autoCloseTimer?: ReturnType<typeof setTimeout>;
 
   ngOnInit(): void {
+    super.ngOnInit();
     const life = this.life();
     if (life) {
       this.autoCloseTimer = setTimeout(() => this.visible.set(false), life);

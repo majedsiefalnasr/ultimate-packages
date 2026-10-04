@@ -57,7 +57,7 @@ export interface UMeterItem {
   encapsulation: ViewEncapsulation.None,
 })
 export class UMeterGroup extends UBaseComponent {
-  protected override readonly componentName = "meter-group";
+  protected override readonly componentName = "metergroup";
   protected override readonly styleModule = meterGroupStyleModule;
 
   /** Current value of the metergroup. */

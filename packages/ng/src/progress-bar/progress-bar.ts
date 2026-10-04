@@ -45,7 +45,7 @@ import { progressBarStyleModule } from "./progress-bar-style";
   },
 })
 export class UProgressBar extends UBaseComponent {
-  protected override readonly componentName = "progress-bar";
+  protected override readonly componentName = "progressbar";
   protected override readonly styleModule = progressBarStyleModule;
 
   /** Current value of the progress. */
