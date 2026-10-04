@@ -1066,7 +1066,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Existing reusable infrastructure:** The original 5-component proof set's own `dt()`-based pattern is the direct template for each new per-component preset module.
 - **Recommended resolution direction:** Directional only — a dedicated Spec is needed to scope exact component sequencing/coverage; this is a substantial body of work (~83 components), not a simple mechanical extension.
 - **Source/evidence:** Aura token-completeness residual verification (`aura-token-verification.md`); Final Decision Ledger / Final Scope Ledger (Aura per-component preset coverage — INCLUDE).
-- **Architectural decision required:** No.
+- **Architectural decision required:** No. **Decided 2026-10-04 (user), ADR-051:** key-mismatch components (and InputGroup) are renamed to the upstream preset key; Vue InputNumber also registers the `inputtext` variables. Tranche 1 is the key mismatch, Vue InputNumber and the `badge`/`inputgroup`/`paginator` modules, with React `UPaginator` visual verification as an accepted incidental effect. The 46 Angular / 48 Vue hand-written components follow in per-family specs (upstream structural CSS by default). Ripple is excluded. Evidence, decisions D1–D6 and out-of-scope findings are in `docs/architecture/research/2026-10-04-gap-064-aura-token-wiring-research.md`. Status unchanged.
 
 #### GAP-065 — Post-Track-E: 10 Angular components have unguarded `window`/`document` access, unsafe under SSR
 

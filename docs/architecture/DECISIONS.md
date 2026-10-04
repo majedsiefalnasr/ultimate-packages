@@ -295,3 +295,27 @@ Status: Accepted (user decision, 2026-10-04, GAP-083 Architecture Discussion). E
 - The `vue` peer range of both packages becomes `^3.5.2`. Applications on Vue 3.5.0 or 3.5.1 must upgrade.
 - `validate` runs one more consumer type-check, at the floor version.
 - The floor is now an explicit, checked contract instead of an assumption.
+
+## ADR-051 — Component style keys equal the upstream Aura preset key; components may register additional preset keys' variables
+
+Status: Accepted (user decision, 2026-10-04, GAP-064 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-04-gap-064-aura-token-wiring-research.md`.
+
+**Context.** A component's `componentName` is both its structural-stylesheet key and the key `registerThemeVariables` passes to `Theme.getComponent()`, which reads `preset.components[name]` without normalization. `dt()` emits `var(--u-…)` references with no fallback. Fifteen Angular and sixteen Vue components, and InputGroup in both frameworks, register hyphenated keys (`input-text`) while the Aura preset uses the upstream keys (`inputtext`). Their token variables are therefore never defined. Separately, Vue `InputNumber` renders a plain `<input>` whose CSS uses only `inputtext.*` tokens; upstream obtains those variables from a child InputText.
+
+**Decision.**
+
+- **Style key equals preset key.** An Angular or Vue component whose structural CSS consumes an Aura preset module registers under that module's upstream key, matching PrimeNG 21.1.9 and PrimeVue 4.5.5 (`name = 'inputtext'`, …). Where it differs today, `componentName` is renamed. The shared lookup (`registerThemeVariables`, `Theme`) is unchanged, so React is unaffected.
+- **Additional preset keys.** A component may also register the theme variables of further preset keys that its structural CSS consumes, without registering any structural CSS under those keys. The first and only current use is Vue `InputNumber`, which registers `inputnumber` and `inputtext`. Its DOM and component structure do not change.
+- Sub-parts without an upstream module (`input-icon`, `input-group-addon`, `button-group`, Vue `menuitem`) keep their keys, as upstream does.
+
+**Rejected.**
+
+- Normalizing names (stripping hyphens) inside `registerThemeVariables`. It is one line, but it would also change React, which registers through the same function and is outside GAP-064, and it departs from upstream's exact-key lookup.
+- A separate optional `themeKey` alongside `componentName`. It adds an API that upstream does not have, for no benefit over renaming.
+- Rendering Vue `InputNumber`'s input as a child InputText. That is a structural component change, not a theming change.
+
+**Consequences.**
+
+- The key also appears as the value of the generated `<style>` elements' key attribute (`data-u-ng-style` in Angular, `data-u-style` in Vue, and `<key>-variables` for the variable block). For renamed components that value changes. It is not a documented consumer contract, and Angular SSR hydration reuse (GAP-078) is unaffected because server and client use the same key.
+- No exported signature changes. Angular's `componentName` is `protected`, and Vue's is an internal `createBaseComponent` argument.
+- New Angular or Vue components whose structural CSS consumes an Aura preset module register under that module's upstream key.
