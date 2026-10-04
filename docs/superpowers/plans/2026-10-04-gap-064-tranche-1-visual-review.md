@@ -490,6 +490,8 @@ Affected tests (spec :: story, count of browser runs):
 
 ## 6. Task 1 tests that did NOT change (pass against their pre-change baseline)
 
+> **Superseded in part:** the RadioButton "unchanged" observation below is superseded by Section 16 (diagnosis: RadioButton did change; recorded only per the Section 20 user decisions).
+
 | Test            | Projects | Observation                                                                                              |
 | --------------- | -------- | -------------------------------------------------------------------------------------------------------- |
 | Ng/DatePicker   | ng x3    | Unchanged.                                                                                               |
@@ -512,6 +514,8 @@ DatePicker and RadioButton were presumably already registered under the correct 
 - **Ng/React Paginator stories** only show page links; no first/prev/next/last or dropdown controls render in those stories (same before and after), so those parts of the ported module are not exercised by screenshots.
 
 ## 8. Accessibility baseline check (Step 2)
+
+> **Superseded:** the Angular Badge failure below was resolved by the approved parity exception recorded in Section 15 and by the two Badge rows in `docs/architecture/ACCESSIBILITY_BASELINE.md`; the CI-form re-run is in Section 20.
 
 The brief's command `pnpm run accessibility:validate` fails immediately because the script requires an envelope glob (`FAIL: missing required <glob> argument for --check`). It was therefore run the way CI does (`.github/workflows/ci.yml` line 198), once per framework, against the envelopes written by the browser run:
 
@@ -871,3 +875,87 @@ The only change to `docs/architecture/ACCESSIBILITY_BASELINE.md` is the two appr
 ## 21. Final state
 
 Committed state: 134 PNGs (120 + 14), `docs/architecture/ACCESSIBILITY_BASELINE.md` (2 Badge rows) and this record. Containers and exported source trees were removed. No source, test, story, CSS, Playwright config or screenshot tolerance change. Nothing pushed.
+
+## 22. Verification (Task 7: contract boundary, scope and gates)
+
+Run on branch `feature/gap-064-aura-token-wiring` at `8f402ef`, Node 24.15.0, `main` = `origin/main` = `f05bd9b`. No source changes were made.
+
+### 22.1 Built Vue declarations (C4)
+
+`pnpm --filter @ultimate/vue run build` succeeded (385 `.d.mts` files in `packages/vue/dist`).
+
+| Check                                                                    | Result                              |
+| ------------------------------------------------------------------------ | ----------------------------------- |
+| `grep -rlE "<style-key literals>" packages/vue/dist --include='*.d.mts'` | no output (exit 1), as expected     |
+| `grep -rho "componentName[^;,]*" packages/vue-core/dist ... \| sort -u`  | `componentName: string` (only line) |
+
+### 22.2 Unit suites and gates
+
+| Command                                    | Result                                                            |
+| ------------------------------------------ | ----------------------------------------------------------------- |
+| `pnpm --filter @ultimate/uix-styled test`  | pass: 6 files, 15 tests                                           |
+| `pnpm --filter @ultimate/vue-core test`    | pass: 20 files, 102 tests                                         |
+| `pnpm --filter @ultimate/vue test`         | pass: 95 files, 953 tests                                         |
+| `pnpm --filter @ultimate/react test`       | pass: 87 files, 856 tests                                         |
+| `pnpm --filter @ultimate/react-core test`  | pass: 15 files, 69 tests                                          |
+| `pnpm --filter @ultimate/themes test`      | pass: 17 files, 586 tests                                         |
+| `pnpm --filter @ultimate/ng test`          | pass: 90 files, 950 tests                                         |
+| `pnpm --filter @ultimate/ng-core test`     | pass: 15 files, 62 tests                                          |
+| `pnpm run typecheck`                       | pass (all packages)                                               |
+| `pnpm --filter @ultimate/vue run validate` | pass (bundler and nodenext, workspace Vue 3.5.42 and floor 3.5.2) |
+| `pnpm run provenance:validate`             | FAIL, pre-existing on `main` (see below)                          |
+| `pnpm run lint`                            | FAIL, pre-existing on `main` (see below)                          |
+
+Deviations from the brief's command form (controller rulings): the Angular suites were run as `pnpm --filter <pkg> test` without `-- --watch=false` (the `ng test` schema rejects the forwarded option; `pnpm` rejects a bare `--watch=false`). Both ran once and exited.
+
+**`provenance:validate`.** Output: `OK: all 7 required baseline entries present`, then `FAIL: packages/ng/src/accordion/accordion-style.ts has no entry in docs/architecture/provenance/ng.json`. It is the only failure. A temporary `git worktree` at `main` (`f05bd9b`), removed afterwards, fails with the identical message. Pre-existing, unrelated to GAP-064, not fixed.
+
+**`lint`.** `pnpm run lint` (`eslint .`) reports 58,533 problems on this working tree. Almost all come from the gitignored `packages/{ng,react,vue}/storybook-static/` build output, which exists only locally (and does not exist in a fresh checkout or the `main` worktree). Excluding it (`--ignore-pattern '**/storybook-static/**'`) leaves 60 problems (59 errors, 1 warning) in 9 files. The `main` worktree reports the same 60 problems, and a comparison of every `file:line:column rule` tuple between `main` and this branch is identical. Files: `react/src/terminal/terminal.tsx`, `react/src/timeline/timeline.tsx`, `themes/test/contract.test.ts`, `themes/test/dark-mode.test.ts`, `uix-styled/src/stylesheet/index.ts`, `uix-utils/test/escape.test.ts`, `vue/src/animate-on-scroll/animate-on-scroll.ts`, `vue/src/scroll-panel/scroll-panel.spec.ts`, `vue/src/style-class/style-class.ts`. None of these were touched by this branch. Pre-existing, not fixed.
+
+### 22.3 Untouched packages
+
+`git diff main --stat -- packages/uix-styled packages/react packages/react-core packages/ng-core` is **not** empty: it lists 9 files, all PNG baselines under `packages/react/e2e/*-snapshots/` (React Paginator Default and Middle Page, and React Table Paginated, x3 browsers). They are the regenerated baselines of Section 13 (Task 6, commit `8f402ef`), which the plan itself expects (Task 6: "React `paginator`" and "`table` in all three frameworks"; the final Reference section lists "`@ultimate/react` — Paginator ... appearance changes too"). There is no source, test, config or package-manifest change in `uix-styled`, `react`, `react-core` or `ng-core`. The brief's "no output" expectation is therefore met for source and not literally for these baselines.
+
+### 22.4 Scope boundary
+
+`git diff main --name-only` lists 202 paths, classified:
+
+| Paths                                                                                                                                                                                                                                                                                                                                            | Attributable to                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| `docs/architecture/research/...gap-064-aura-token-wiring-research.md`, `DECISIONS.md` (ADR-051), `BLUEPRINT_GAPS.md`                                                                                                                                                                                                                             | research and decision commits `0eeb9e2`, `849496b`        |
+| `docs/superpowers/specs/...-design.md`, `docs/superpowers/plans/...-aura-key-wiring.md`                                                                                                                                                                                                                                                          | Spec and Plan commits `98b616e`, `6745665`, `0fba343`     |
+| `docs/superpowers/plans/...-visual-review.md`, `docs/architecture/ACCESSIBILITY_BASELINE.md` (2 Badge rows)                                                                                                                                                                                                                                      | Task 6 (`8f402ef`) and Task 7 (this record)               |
+| `packages/{ng,vue}/e2e/aura-token-wiring.spec.ts`, `packages/{ng,vue}/src/aura-token-wiring.spec.ts`, `packages/ng/src/{input-text,input-number}/*.stories.ts`, 102 Task 1 snapshot PNGs                                                                                                                                                         | Task 1 (`a33c219`)                                        |
+| `packages/themes/src/presets/aura/{badge,input-group,paginator,index}.ts`, `packages/themes/test/{aura-badge-inputgroup-paginator-presets,cross-framework-consistency}.test.ts`, `test/fixtures/aura-upstream-tokens.json`, `packages/themes/README.md`, `docs/architecture/PACKAGE_ARCHITECTURE.md`, `docs/architecture/provenance/themes.json` | Task 2 (`c5af819`)                                        |
+| `packages/vue-core/src/styling/{vue-style-sheet.ts,additional-preset-keys.spec.ts}`, `packages/vue-core/README.md`                                                                                                                                                                                                                               | Task 3 (`adb7507`)                                        |
+| 17 Vue `Base*.ts` files under `packages/vue/src/`                                                                                                                                                                                                                                                                                                | Task 4 (`000c894`)                                        |
+| 17 Angular component files under `packages/ng/src/`, `apps/playground-angular/{src/app/proof-page.component.ts,e2e/ssr-hydration.spec.ts}`                                                                                                                                                                                                       | Task 5 (`57f93a0`)                                        |
+| 39 regenerated PNG baselines (ng badge 9, ng paginator 6, ng table 3, vue paginator 9, vue table 3, react paginator 6, react table 3)                                                                                                                                                                                                            | Task 6 (`8f402ef`); that commit changed 134 PNGs in total |
+
+No path is unattributed. `git diff main -- packages/ng/src packages/vue/src | grep -E "^[-+][^-+]" | grep -vE "componentName|registerComponentStyle|^\+\+\+|^---"` printed 531 lines, none of them removals, all from four new files: the two new spec files `packages/{ng,vue}/src/aura-token-wiring.spec.ts` and the two new Angular stories `input-text.stories.ts` and `input-number.stories.ts` (all Task 1). Every changed line in the existing component files matches `componentName|registerComponentStyle`. No CSS, template or other component line changed.
+
+### 22.5 Size gate
+
+`git fetch origin main` (no change; `origin/main` = `f05bd9b`), `pnpm run build` (exit 0), `pnpm run size:measure` (exit 0), `pnpm run size:validate` (exit 0): `all packages passed the bundle-size gate`. No override and no `PERFORMANCE.md` edit.
+
+| Package            | Baseline gzip | Now gzip | Change |
+| ------------------ | ------------- | -------- | ------ |
+| ai                 | 3.35 KB       | 3.3 KB   | -0.1%  |
+| cli                | 0.05 KB       | 0.1 KB   | 5.5%   |
+| component-metadata | 7.93 KB       | 7.9 KB   | 0.0%   |
+| component-schema   | 2.37 KB       | 2.4 KB   | 0.2%   |
+| mcp                | 2.97 KB       | 3.0 KB   | 0.0%   |
+| ng-core            | 16.53 KB      | 16.9 KB  | 2.2%   |
+| ng                 | 202.86 KB     | 64.3 KB  | -68.3% |
+| react-core         | 6.76 KB       | 6.8 KB   | 0.3%   |
+| react              | 87.16 KB      | 87.2 KB  | 0.0%   |
+| themes             | 13.14 KB      | 13.5 KB  | 3.1%   |
+| uix-data           | 0.34 KB       | 0.3 KB   | -1.2%  |
+| uix-motion         | 2.06 KB       | 2.1 KB   | -0.2%  |
+| uix-styled         | 8.45 KB       | 8.6 KB   | 2.3%   |
+| uix-styles         | 0.65 KB       | 0.7 KB   | 0.2%   |
+| uix-utils          | 14.16 KB      | 14.2 KB  | 0.0%   |
+| vue-core           | 8.66 KB       | 8.8 KB   | 2.1%   |
+| vue                | 132.3 KB      | 133.7 KB | 1.1%   |
+
+`@ultimate/themes` grew by the three new modules (13.14 to 13.5 KB, +3.1%), as expected. `ng-core` (+2.2%) and `uix-styled` (+2.3%) show growth although this branch changes no source in either package; the gate's baseline values (read from the `origin/main` reference) differ from what `main` builds today. The `ng` baseline (202.86 KB) is likewise far from the current build, so it was not a like-for-like comparison. These are baseline-drift observations, not changes from this branch, and all are within the 15% threshold.
