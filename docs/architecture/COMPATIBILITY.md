@@ -16,7 +16,7 @@ Pinned Phase 0 baselines. Re-verify immediately before Phase 1 kickoff per the s
 ## Peer/framework compatibility
 
 - Angular: `^21.0.7` and up (PrimeNG 21.1.9 peer range)
-- Vue: `^3.5.2` (Ultimate's supported floor, ADR-050; PrimeVue 4.5.5 itself declares `^3.5.0`)
+- Vue: `^3.5.2` (Ultimate's supported floor, ADR-050; PrimeVue 4.5.5 declares `^3.5.0` through `@primevue/core`)
 - React: `^17.0.0 || ^18.0.0 || ^19.0.0` (PrimeReact 10.9.9 peer range)
 
 ## Rejected candidates

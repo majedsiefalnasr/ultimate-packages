@@ -4,14 +4,14 @@ Classification model and direct-dependency facts established in Phase 0. Full tr
 
 ## Runtime — retained, legitimate framework ecosystem (never vendor)
 
-| Package                                                                 | Version range                       | Framework line                                                            |
-| ----------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------- |
-| `@angular/core`, `common`, `forms`, `cdk`, `router`, `platform-browser` | `^21.x`                             | Angular (per PrimeNG 21.1.9 peer range)                                   |
-| `rxjs`                                                                  | per Angular 21 peer range           | Angular                                                                   |
-| `tslib`                                                                 | per Angular 21 peer range           | Angular                                                                   |
-| Vue 3.x                                                                 | `^3.5.2`                            | Vue (Ultimate's supported floor, ADR-050; PrimeVue 4.5.5 declares ^3.5.0) |
-| `react`, `react-dom`                                                    | `^17.0.0 \|\| ^18.0.0 \|\| ^19.0.0` | React                                                                     |
-| `react-transition-group`                                                | per PrimeReact 10.9.9               | React (PrimeReact's only non-framework runtime dep)                       |
+| Package                                                                 | Version range                       | Framework line                                                                                       |
+| ----------------------------------------------------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `@angular/core`, `common`, `forms`, `cdk`, `router`, `platform-browser` | `^21.x`                             | Angular (per PrimeNG 21.1.9 peer range)                                                              |
+| `rxjs`                                                                  | per Angular 21 peer range           | Angular                                                                                              |
+| `tslib`                                                                 | per Angular 21 peer range           | Angular                                                                                              |
+| Vue 3.x                                                                 | `^3.5.2`                            | Vue (Ultimate's supported floor, ADR-050; PrimeVue 4.5.5 declares `^3.5.0` through `@primevue/core`) |
+| `react`, `react-dom`                                                    | `^17.0.0 \|\| ^18.0.0 \|\| ^19.0.0` | React                                                                                                |
+| `react-transition-group`                                                | per PrimeReact 10.9.9               | React (PrimeReact's only non-framework runtime dep)                                                  |
 
 ## UIX — candidates for Ultimate-owned adaptation (seed for `UltimateUIX`, not permanent external deps)
 

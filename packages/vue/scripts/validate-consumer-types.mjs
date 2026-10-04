@@ -247,10 +247,21 @@ function writeConsumer(consumerDir, tarballs, vueVersion) {
   return entryCounts;
 }
 
-// One isolated pass: its own consumer directory and install, both module modes.
-// Returns true when every mode type-checks.
+// One isolated pass. Returns true when every mode type-checks. Any error inside
+// the pass is reported under the pass's label and fails only this pass, so the
+// other pass still runs and reports.
 function runPass(workDir, tarballs, pass, vueVersion) {
   const label = `${pass} vue ${vueVersion}`;
+  try {
+    return checkPass(workDir, tarballs, pass, vueVersion, label);
+  } catch (error) {
+    console.error(`[validate-consumer-types] FAIL (${label}): ${error.message}`);
+    return false;
+  }
+}
+
+// The pass body: its own consumer directory and install, both module modes.
+function checkPass(workDir, tarballs, pass, vueVersion, label) {
   const consumerDir = join(workDir, `consumer-${pass}`);
   mkdirSync(consumerDir, { recursive: true });
   const entryCounts = writeConsumer(consumerDir, tarballs, vueVersion);
