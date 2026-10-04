@@ -26,3 +26,18 @@ export const Success: Story = {
     template: `<UInlineMessage v-bind="args">Saved successfully.</UInlineMessage>`,
   }),
 };
+
+/** GAP-064 G3-A verification story: all six severities. */
+export const AllSeverities: Story = {
+  render: () => ({
+    components: { UInlineMessage },
+    template: `
+      <UInlineMessage severity="success">Success</UInlineMessage>
+      <UInlineMessage severity="info">Info</UInlineMessage>
+      <UInlineMessage severity="warn">Warn</UInlineMessage>
+      <UInlineMessage severity="error">Error</UInlineMessage>
+      <UInlineMessage severity="secondary">Secondary</UInlineMessage>
+      <UInlineMessage severity="contrast">Contrast</UInlineMessage>
+    `,
+  }),
+};

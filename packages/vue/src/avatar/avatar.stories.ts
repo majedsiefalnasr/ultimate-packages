@@ -28,3 +28,16 @@ export const Circle: Story = {
 export const Large: Story = {
   args: { label: "AB", size: "large", shape: "circle" },
 };
+
+/** GAP-064 G3-A verification story (Spec §13.3): extra-large size. */
+export const Xl: Story = {
+  args: { label: "AB", size: "xlarge" },
+};
+
+/** GAP-064 G3-A verification story: deterministic local image (no network). */
+export const LocalImage: Story = {
+  args: {
+    image:
+      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='64' height='64' fill='%2360a5fa'/></svg>",
+  },
+};

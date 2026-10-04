@@ -16,3 +16,17 @@ export const Default: Story = {
 export const Severity: Story = {
   render: () => ({ template: `<u-tag severity="success">Success</u-tag>` }),
 };
+
+/** GAP-064 G3-A verification story: all six severities. */
+export const AllSeverities: Story = {
+  render: () => ({
+    template: `
+      <u-tag severity="success" value="Success"></u-tag>
+      <u-tag severity="info" value="Info"></u-tag>
+      <u-tag severity="warn" value="Warn"></u-tag>
+      <u-tag severity="danger" value="Danger"></u-tag>
+      <u-tag severity="secondary" value="Secondary"></u-tag>
+      <u-tag severity="contrast" value="Contrast"></u-tag>
+    `,
+  }),
+};

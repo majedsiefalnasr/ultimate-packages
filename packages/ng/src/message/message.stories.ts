@@ -24,3 +24,17 @@ export const Closable: Story = {
     template: `<u-message [severity]="severity" [closable]="closable">This message can be closed.</u-message>`,
   }),
 };
+
+/** GAP-064 G3-A verification story: all six severities. */
+export const AllSeverities: Story = {
+  render: () => ({
+    template: `
+      <u-message severity="success">Success message</u-message>
+      <u-message severity="info">Info message</u-message>
+      <u-message severity="warn">Warn message</u-message>
+      <u-message severity="error">Error message</u-message>
+      <u-message severity="secondary">Secondary message</u-message>
+      <u-message severity="contrast">Contrast message</u-message>
+    `,
+  }),
+};
