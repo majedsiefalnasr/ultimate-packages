@@ -18,7 +18,7 @@ export function createBaseTable() {
       selectionMode: { type: String, default: undefined },
       selection: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- selection accepts an arbitrary keyed record or an array of rows (GAP-082)
-        type: [Object, Array] as PropType<Record<string, any> | readonly unknown[]>,
+        type: [Object, Array] as PropType<Record<string, any> | readonly unknown[] | null>,
         default: undefined,
       },
       compareSelectionBy: { type: String, default: "equals" },

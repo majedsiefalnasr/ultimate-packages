@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { buttonStyleModule } from "./button-style";
@@ -41,7 +42,7 @@ export function createBaseButton() {
       size: { type: String, default: null },
       variant: { type: String, default: null },
       plain: { type: Boolean, default: false },
-      fluid: { type: Boolean, default: null },
+      fluid: { type: Boolean as PropType<boolean | null>, default: null },
       ariaLabel: { type: String, default: null },
       tooltip: { type: String, default: null },
       tooltipOptions: { type: Object, default: null },

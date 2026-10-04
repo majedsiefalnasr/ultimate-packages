@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { overlayBadgeStyleModule } from "./overlay-badge-style";
@@ -17,7 +18,7 @@ export function createBaseOverlayBadge() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "overlay-badge", styleModule: overlayBadgeStyleModule }),
     props: {
-      value: { type: [String, Number], default: null },
+      value: { type: [String, Number] as PropType<string | number | null>, default: null },
       severity: { type: String, default: null },
       size: { type: String, default: null },
     },

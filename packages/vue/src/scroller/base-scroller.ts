@@ -9,7 +9,7 @@ export function createBaseScroller() {
     props: {
       items: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       itemSize: { type: Number, default: 0 },
-      numToleratedItems: { type: Number, default: null },
+      numToleratedItems: { type: Number as PropType<number | null>, default: null },
     },
   });
 }

@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { toastStyleModule } from "./toast-style";
@@ -11,7 +12,7 @@ export function createBaseToast() {
     extends: createBaseComponent({ componentName: "toast", styleModule: toastStyleModule }),
     props: {
       /** Matches only messages published via `UToastService` carrying the same `group` (undefined matches undefined) — matching real PrimeVue's own `group` field, used when a component tree has multiple toasts. */
-      group: { type: String, default: null },
+      group: { type: String as PropType<string | null>, default: null },
       position: { type: String, default: "top-right" },
       life: { type: Number, default: 3000 },
     },

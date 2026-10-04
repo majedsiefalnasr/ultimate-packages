@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { badgeStyleModule } from "./badge-style";
@@ -21,7 +22,7 @@ export function createBaseBadge() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "badge", styleModule: badgeStyleModule }),
     props: {
-      value: { type: [String, Number], default: null },
+      value: { type: [String, Number] as PropType<string | number | null>, default: null },
       severity: { type: String, default: null },
       size: { type: String, default: null },
     },

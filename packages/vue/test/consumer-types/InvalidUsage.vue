@@ -22,6 +22,8 @@
   <UTable :value="[]" :selection="5" />
   <!-- @vue-expect-error UAccordion value (union with Array) is a string, number or array -->
   <UAccordion :value="{ a: 1 }" />
+  <!-- @vue-expect-error UPickList.ariaLabelledby is non-nullable (research §7 row 150) -->
+  <UPickList :ariaLabelledby="null" />
 </template>
 
 <script setup lang="ts">
@@ -29,6 +31,7 @@ import { h } from "vue";
 import { UAccordion } from "@ultimate/vue/accordion";
 import { UButton } from "@ultimate/vue/button";
 import { UInputText } from "@ultimate/vue/input-text";
+import { UPickList } from "@ultimate/vue/pick-list";
 import { UScroller } from "@ultimate/vue/scroller";
 import { UTable } from "@ultimate/vue/table";
 import { UTieredMenuSub } from "@ultimate/vue/tiered-menu";

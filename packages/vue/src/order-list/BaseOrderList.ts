@@ -22,7 +22,7 @@ export function createBaseOrderList() {
       tabindex: { type: Number, default: 0 },
       disabled: { type: Boolean, default: false },
       ariaLabel: { type: String, default: "Order list" },
-      ariaLabelledby: { type: String, default: null },
+      ariaLabelledby: { type: String as PropType<string | null>, default: null },
 
       buttonProps: { type: Object, default: () => ({}) },
       moveUpButtonProps: { type: Object, default: () => ({}) },

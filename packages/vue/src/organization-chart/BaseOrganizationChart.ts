@@ -12,10 +12,12 @@ export function createBaseOrganizationChart() {
     }),
     props: {
       value: { type: null, default: null },
-      selectionKeys: { type: Object, default: null },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- preserves the existing inferred public type (GAP-082)
+      selectionKeys: { type: Object as PropType<Record<string, any> | null>, default: null },
       selectionMode: { type: String as PropType<SelectionMode>, default: null },
       collapsible: { type: Boolean, default: false },
-      collapsedKeys: { type: Object, default: null },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- preserves the existing inferred public type (GAP-082)
+      collapsedKeys: { type: Object as PropType<Record<string, any> | null>, default: null },
     },
     emits: ["update:selectionKeys", "update:collapsedKeys"],
   });

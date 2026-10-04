@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { inputNumberStyleModule } from "./input-number-style";
@@ -23,12 +24,12 @@ export function createBaseInputNumber() {
       useGrouping: { type: Boolean, default: true },
       minFractionDigits: { type: Number, default: undefined },
       maxFractionDigits: { type: Number, default: undefined },
-      min: { type: Number, default: null },
-      max: { type: Number, default: null },
+      min: { type: Number as PropType<number | null>, default: null },
+      max: { type: Number as PropType<number | null>, default: null },
       step: { type: Number, default: 1 },
       allowEmpty: { type: Boolean, default: true },
-      prefix: { type: String, default: null },
-      suffix: { type: String, default: null },
+      prefix: { type: String as PropType<string | null>, default: null },
+      suffix: { type: String as PropType<string | null>, default: null },
       placeholder: { type: String, default: null },
       readonly: { type: Boolean, default: false },
       disabled: { type: Boolean, default: false },

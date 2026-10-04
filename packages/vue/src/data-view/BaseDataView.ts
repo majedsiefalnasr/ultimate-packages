@@ -17,7 +17,7 @@ export function createBaseDataView() {
       paginatorPosition: { type: String, default: "bottom" },
       alwaysShowPaginator: { type: Boolean, default: true },
       currentPageReportTemplate: { type: String, default: "{first} to {last} of {totalRecords}" },
-      sortField: { type: String, default: null },
+      sortField: { type: String as PropType<string | null>, default: null },
       sortOrder: { type: Number, default: 1 },
       lazy: { type: Boolean, default: false },
       loading: { type: Boolean, default: false },

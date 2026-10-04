@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
 import { inputMaskStyleModule } from "./input-mask-style";
@@ -14,7 +15,7 @@ export function createBaseInputMask() {
     props: {
       slotChar: { type: String, default: "_" },
       mask: { type: String, default: null },
-      placeholder: { type: String, default: null },
+      placeholder: { type: String as PropType<string | null>, default: null },
       autoClear: { type: Boolean, default: true },
       unmask: { type: Boolean, default: false },
       readonly: { type: Boolean, default: false },

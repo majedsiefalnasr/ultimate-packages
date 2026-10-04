@@ -23,6 +23,11 @@
   <UAccordion :value="0" />
   <UAccordion :value="readonlyKeys" />
   <UOrderList v-model="mutableRows" />
+  <UInputText :size="null" :variant="null" :fluid="null" />
+  <UOverlayBadge :value="null" />
+  <UTable :value="mutableRows" :selection="null" />
+  <UInputNumber :min="null" :max="null" />
+  <UChip :label="null" />
 </template>
 
 <script setup lang="ts">
@@ -31,8 +36,11 @@ import { UButton as UBarrelButton } from "@ultimate/vue";
 import { UAccordion } from "@ultimate/vue/accordion";
 import { UButton } from "@ultimate/vue/button";
 import { UCheckbox } from "@ultimate/vue/checkbox";
+import { UChip } from "@ultimate/vue/chip";
+import { UInputNumber } from "@ultimate/vue/input-number";
 import { UInputText } from "@ultimate/vue/input-text";
 import { UOrderList } from "@ultimate/vue/order-list";
+import { UOverlayBadge } from "@ultimate/vue/overlay-badge";
 import { URadioButton } from "@ultimate/vue/radio-button";
 import { UScroller } from "@ultimate/vue/scroller";
 import { USelect } from "@ultimate/vue/select";

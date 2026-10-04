@@ -1,3 +1,4 @@
+import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { chipStyleModule } from "./chip-style";
@@ -9,7 +10,7 @@ export function createBaseChip() {
   return defineComponent({
     extends: createBaseComponent({ componentName: "chip", styleModule: chipStyleModule }),
     props: {
-      label: { type: [String, Number], default: null },
+      label: { type: [String, Number] as PropType<string | number | null>, default: null },
       icon: { type: String, default: null },
       image: { type: String, default: null },
       alt: { type: String, default: null },
