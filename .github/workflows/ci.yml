@@ -27,44 +27,55 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24.15.0"
           cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Dependency vulnerability scan
+        if: ${{ !cancelled() }}
         run: pnpm run audit:validate
 
       - name: License scan
+        if: ${{ !cancelled() }}
         run: pnpm run license:validate
 
       - name: Install-script policy check
+        if: ${{ !cancelled() }}
         run: pnpm run install-script-policy:validate
 
       - name: Lint
+        if: ${{ !cancelled() }}
         run: pnpm run lint
 
       - name: Format check
+        if: ${{ !cancelled() }}
         run: pnpm run format:check
 
-      - name: Typecheck
-        run: pnpm run typecheck
-
       - name: Build
+        if: ${{ !cancelled() }}
         run: pnpm run build
 
+      - name: Typecheck
+        if: ${{ !cancelled() }}
+        run: pnpm run typecheck
+
       - name: Validate generated artifacts
+        if: ${{ !cancelled() }}
         run: pnpm run validate
 
       - name: Test
+        if: ${{ !cancelled() }}
         run: pnpm run test
 
       - name: Determine affected packages
+        if: ${{ !cancelled() }}
         id: affected
         run: pnpm run affected:packages -- --base-ref origin/main
 
       - name: Pack/install integrity (affected)
+        if: ${{ !cancelled() }}
         env:
           AFFECTED_PACKAGES: ${{ steps.affected.outputs.packages }}
         run: |
@@ -75,60 +86,77 @@ jobs:
           done
 
       - name: CodeQL init
+        if: ${{ !cancelled() }}
         uses: github/codeql-action/init@v3
         with:
           languages: javascript-typescript
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: CodeQL analyze
+        if: ${{ !cancelled() }}
         id: codeql-analyze
         uses: github/codeql-action/analyze@v3
 
       - name: Resolve SARIF path
+        if: ${{ !cancelled() }}
         env:
           SARIF_OUTPUT_DIR: ${{ steps.codeql-analyze.outputs.sarif-output }}
         run: echo "SARIF_PATH=$SARIF_OUTPUT_DIR/javascript-typescript.sarif" >> "$GITHUB_ENV"
 
       - name: SAST baseline validation
+        if: ${{ !cancelled() }}
         run: pnpm run sast:validate -- "$SARIF_PATH"
 
       - name: Bundle-size measurement
+        if: ${{ !cancelled() }}
         run: pnpm run size:measure
 
       - name: Bundle-size regression check
+        if: ${{ !cancelled() }}
         run: pnpm run size:validate
 
       - name: Coverage measurement
+        if: ${{ !cancelled() }}
         run: pnpm run coverage:measure
 
       - name: Coverage regression check
+        if: ${{ !cancelled() }}
         run: pnpm run coverage:validate
 
       - name: Provenance scripts self-tests
+        if: ${{ !cancelled() }}
         run: pnpm run test:scripts
 
       - name: Provenance validation
+        if: ${{ !cancelled() }}
         run: pnpm run provenance:validate -- --base-ref origin/main
 
       - name: Package boundary validation
+        if: ${{ !cancelled() }}
         run: pnpm run boundary:validate
 
       - name: Prime dependency-ceiling validation
+        if: ${{ !cancelled() }}
         run: pnpm run ceiling:validate
 
       - name: Compatibility manifest validation
+        if: ${{ !cancelled() }}
         run: pnpm run compatibility-manifest:validate
 
       - name: CLI package boundary validation
+        if: ${{ !cancelled() }}
         run: pnpm run boundary:validate:cli
 
       - name: MCP package boundary validation
+        if: ${{ !cancelled() }}
         run: pnpm run boundary:validate:mcp
 
       - name: AI package boundary validation
+        if: ${{ !cancelled() }}
         run: pnpm run boundary:validate:ai
 
       - name: AGENTS.md pointer validation
+        if: ${{ !cancelled() }}
         run: pnpm run agents-md-pointers:validate
 
   track-a-browser-visual-a11y:
