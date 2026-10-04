@@ -1,6 +1,6 @@
 # Specification — Vue Floor `^3.5.2` and Floor Compatibility Check (GAP-083)
 
-**Status:** Approved at Spec Review (2026-10-04); decisions in §12. Next gate: Implementation Plan.
+**Status:** Implemented on `feature/gap-083-vue-floor-compat` (closeout 2026-10-04); GAP-083 RESOLVED. Spec Review decisions in §12.
 **Date:** 2026-10-04
 **Branch:** `feature/gap-083-vue-floor-compat` (from `main` `770d44e`)
 **Origin:** GAP-083 (`docs/architecture/BLUEPRINT_GAPS.md`); decision ADR-050, amending ADR-042; evidence `docs/architecture/research/2026-10-04-gap-083-vue-floor-compat-research.md`.
