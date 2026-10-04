@@ -135,7 +135,7 @@ Counts are upstream rule groups. Angular equals Vue.
 | skeleton            | 4 / 5                    | the `.p-skeleton-animation-none::after` group (subsumed by PX-A3)                                                                 | PX-A3                       |
 | overlaybadge        | 3 / 3                    | —                                                                                                                                 | —                           |
 | knob                | 5 / 5                    | —                                                                                                                                 | —                           |
-| progressbar         | 13 / 13                  | —                                                                                                                                 | PX-A1 (2 groups)            |
+| progressbar         | 7 / 7                    | —                                                                                                                                 | PX-A1 (2 groups)            |
 | progressspinner     | 4 / 4                    | —                                                                                                                                 | —                           |
 | metergroup          | 17 / 17                  | —                                                                                                                                 | PX-A2 (5 groups)            |
 | timeline            | 18 / 30                  | FX-A3: 12 `left` / `right` / `alternate` / `bottom` groups                                                                        | —                           |
@@ -413,3 +413,5 @@ All are checked in both frameworks. Generated-style checks use the rendered `<st
    PX-A4 is restated with its exact retained text, and PX-A6 is added. All upstream `inlineStyles` in the G3-A keys were checked (PrimeNG 21.1.9 and PrimeVue 4.5.5): only toast, skeleton and chip have any. Chip's needs no rule, because Ultimate removes the element from the DOM.
 
    This correction follows the approved D-G3-8 rule (retain literals with no token role, recorded as parity exceptions). It does not change any architectural decision.
+
+9. **Count correction (found while writing the Plan, by dry-running the Plan's port module against the vendored upstream source).** ProgressBar has **7** upstream rule groups (5 ported + 2 adapted, PX-A1), not 13. The research parser had counted the inner frames of the two `@-webkit-keyframes` blocks as rule groups. §4.4 is corrected. All other §4.4 counts are confirmed. The keyframes themselves are unaffected: the four used keyframes, including the `-webkit-` ones, are still ported and renamed.
