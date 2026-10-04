@@ -12,7 +12,7 @@ import { meterGroupStyleModule } from "./meter-group-style";
 // sibling component.
 export function createBaseMeterGroup() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "meter-group", styleModule: meterGroupStyleModule }),
+    extends: createBaseComponent({ componentName: "metergroup", styleModule: meterGroupStyleModule }),
     props: {
       value: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       min: { type: Number, default: 0 },

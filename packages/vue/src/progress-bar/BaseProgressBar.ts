@@ -7,7 +7,7 @@ import { progressBarStyleModule } from "./progress-bar-style";
 // PrimeVue's own BaseProgressBar.vue's `extends: BaseComponent`.
 export function createBaseProgressBar() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "progress-bar", styleModule: progressBarStyleModule }),
+    extends: createBaseComponent({ componentName: "progressbar", styleModule: progressBarStyleModule }),
     props: {
       value: { type: Number, default: 0 },
       showValue: { type: Boolean, default: true },
