@@ -1,6 +1,6 @@
 # Specification — Aura Token Wiring, Tranche 1: Upstream Style Keys, Additional Preset Keys, Badge/InputGroup/Paginator Modules (GAP-064)
 
-**Status:** Approved (Spec Review 2026-10-04); decisions in §13.
+**Status:** Implemented on `feature/gap-064-aura-token-wiring` (closeout 2026-10-04); Tranche 1 complete, GAP-064 stays PARTIAL (G3 open). Spec Review decisions in §13.
 **Date:** 2026-10-04
 **Branch:** `feature/gap-064-aura-token-wiring` (from `main` `f05bd9b`)
 **Origin:** GAP-064 (`docs/architecture/BLUEPRINT_GAPS.md`, stays PARTIAL after this tranche). Decisions: ADR-051, plus D1–D6 in `docs/architecture/research/2026-10-04-gap-064-aura-token-wiring-research.md` §6. Parity baseline: ADR-048.
