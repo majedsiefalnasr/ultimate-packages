@@ -19,7 +19,7 @@
   },
   {
     "framework": "vue",
-    "frameworkVersionRange": "^3.5.0",
+    "frameworkVersionRange": "^3.5.2",
     "ultimateFrameworkPackage": { "name": "@ultimate/vue", "versionRange": "^0.1.0" },
     "uixVersionRange": "^0.1.0",
     "themeVersionRange": "^0.1.0",

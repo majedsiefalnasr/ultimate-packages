@@ -61,4 +61,4 @@ document during server rendering and adopts them on hydration (GAP-078).
 
 ## Dependencies
 
-Depends on `@ultimate/uix-utils`, `@ultimate/uix-styled`, and `@ultimate/uix-motion` (workspace). Peers on `vue` (`^3.5.0`).
+Depends on `@ultimate/uix-utils`, `@ultimate/uix-styled`, and `@ultimate/uix-motion` (workspace). Peers on `vue` (`^3.5.2`, Ultimate's supported floor; see ADR-050).

@@ -26,7 +26,7 @@
     "@ultimate/uix-utils": "workspace:*"
   },
   "peerDependencies": {
-    "vue": "^3.5.0"
+    "vue": "^3.5.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "5.2.4",
