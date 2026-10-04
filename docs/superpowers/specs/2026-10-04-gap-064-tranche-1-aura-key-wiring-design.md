@@ -1,6 +1,6 @@
 # Specification — Aura Token Wiring, Tranche 1: Upstream Style Keys, Additional Preset Keys, Badge/InputGroup/Paginator Modules (GAP-064)
 
-**Status:** Draft for Spec Review.
+**Status:** Approved (Spec Review 2026-10-04); decisions in §13.
 **Date:** 2026-10-04
 **Branch:** `feature/gap-064-aura-token-wiring` (from `main` `f05bd9b`)
 **Origin:** GAP-064 (`docs/architecture/BLUEPRINT_GAPS.md`, stays PARTIAL after this tranche). Decisions: ADR-051, plus D1–D6 in `docs/architecture/research/2026-10-04-gap-064-aura-token-wiring-research.md` §6. Parity baseline: ADR-048.
@@ -182,7 +182,7 @@ These stay undefined after Tranche 1, exactly as today. See §12, item 2.
 1. Add `packages/themes/src/presets/aura/badge.ts`, `input-group.ts` and `paginator.ts`, following the file naming of the existing modules (`input-text.ts` → key `inputtext`):
    - port each from `@primeuix/themes` 2.0.3 (`aura/badge`, `aura/inputgroup`, `aura/paginator`);
    - transcribe all sections and values as-is;
-   - type each against the `ComponentTokens` contract, extended locally where upstream has sections outside `root`/`colorScheme` (the `inline-message.ts` precedent).
+   - type each following the existing module precedents: a local extension of `ComponentTokens` where upstream has a `colorScheme` split (`inline-message.ts`), and a flat local interface where it has none (`breadcrumb.ts`). This applies to Badge (split) and to InputGroup and Paginator (no split). Corrected at Spec Review; the Draft named only the `ComponentTokens` form.
 2. Register them in `auraPreset.components` as `badge`, `inputgroup` and `paginator`.
 3. Update the preset's doc comment to the new count: 79 registered modules.
 4. **Provenance.** Add one `docs/architecture/provenance/themes.json` entry per file, matching the existing Aura entries' shape (`originalPath`, `ultimateDestination`, `modificationStatus: "reference-derived"`, `modificationDescription`).
@@ -359,3 +359,21 @@ Unless stated otherwise, criteria are checked on the generated `<style>` element
    - Fixing them means changing those components' CSS toward upstream, which is G3-style work.
    - E3 matches upstream and needs no action.
 3. **Test fixtures outside the component sources.** The two Angular stories (§7) and the `UInputText` added to the Angular SSR proof page are needed only for verification (criteria 5–6). Please confirm they are acceptable as Tranche 1 test fixtures.
+
+## 13. Spec Review Decisions (2026-10-04)
+
+1. **§5.2 API: option (a).** `registerComponentStyle` gets an optional, additive third parameter, `additionalPresetKeys`.
+   - When it is omitted, existing call sites behave identically.
+   - It registers additional theme variables only, never structural CSS under an additional key.
+   - The updated exported signature and its backward compatibility are verified.
+   - No further abstraction, and the logic does not move into Vue `InputNumber`.
+2. **E1 Ultimate-only token paths: kept as an explicit, bidirectional exception list.** That is 20 Angular and 19 Vue references.
+   - The tests prove that every listed exception is observed and unresolved, and that every observed unresolved reference is listed.
+   - They are not fixed in Tranche 1.
+   - The FileUpload Button/Message dependencies (E2) stay out of scope.
+   - The exception list must not mask variables the new Badge/InputGroup/Paginator modules should supply. Those components have no exceptions, and module-port verification stays independent (upstream-fidelity test).
+3. **Verification fixtures approved.** These are test infrastructure, not scope expansion:
+   - the Angular InputText and InputNumber Storybook stories;
+   - `UInputText` on the Angular SSR proof page;
+   - any corresponding verification-only fixture C1–C8 need.
+4. **`MIGRATION.md`.** No migration change is required at Spec Review. It is decided at Plan Review, once it is clear whether the generated-style-key and token behavior is consumer-visible enough to warrant a note.
