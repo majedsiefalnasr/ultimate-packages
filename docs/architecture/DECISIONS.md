@@ -182,6 +182,8 @@ Status: Accepted (Phase 4 spec, confirmed by implementation). Verified PrimeVue'
 
 Status: Accepted (Phase 4 spec, confirmed by implementation). `primevue@4.5.5` itself declares no `peerDependencies` field; the real Vue version constraint lives on its exact-pinned dependency `@primevue/core@4.5.5`, whose own `peerDependencies` field is `{ "vue": "^3.5.0" }` (verified via `npm view`, matching Phase 3 §27's exact methodology for React). `@ultimate/vue` and `@ultimate/vue-core` adopt this as their initial peer range — chosen as real, version-scoped, verified evidence, not because Ultimate is bound to track PrimeVue's cadence going forward (same independent-ownership posture as Phase 3's React policy).
 
+**Amended by ADR-050 (2026-10-04):** the supported Vue floor is now `^3.5.2`.
+
 ## ADR-043 — `@ultimate/uix-data` introduced as a narrow, evidence-verified shared Data foundation
 
 Status: Accepted (uix-data spec, confirmed by implementation). Six sequential architecture research passes, each verified against real pinned PrimeNG 21.1.9, PrimeReact 10.9.9, and PrimeVue 4.5.5 source, established that a shared framework-neutral Data contract is supported by evidence only for a narrow set of concepts — not a universal Data-component abstraction. `@ultimate/uix-data` (package name provisional) was created as a new dedicated package, sibling to `uix-utils`/`uix-styled`/`uix-styles`/`uix-motion`, exposing exactly six items: `equals` (re-exported unchanged from `@ultimate/uix-utils/object`, per the same "verify zero load-bearing framework coupling, then centralize" pattern established by ADR-036), `SelectionMode`, `SortMeta`/`SortMode`, `FilterMatchMode`/`FilterMetadata` (simple non-operator shape only — the operator/constraints variant is verifiably real but differently normalized between PrimeReact and PrimeNG, and is deferred until real `Table` implementation evidence justifies it), `PaginationState`/`getPageCount`, and `calculateNumItemsInViewport`/`calculateLast` (the latter adopting Angular's verified real zero-guard, which PrimeReact's and PrimeVue's real implementations lack and would otherwise divide `0/0` into `NaN`). Hierarchical (Tree-family: Tree/TreeTable/TreeSelect/OrganizationChart) identity/selection/expansion was verified structurally incompatible across frameworks — PrimeNG mutates `TreeNode` object references in place, while PrimeReact and PrimeVue both use external `{[key]: boolean}` key-maps — and is explicitly excluded from any shared contract, remaining framework-native unless future evidence establishes genuine shared semantics. A final consumption-readiness pass, simulating real usage against actual Prime call sites, confirmed no additional primitive was needed: candidates including a sort-toggle cycle (verified present in React/Vue's real source but entirely absent from Angular's), page-link display math (verified identical across all three but classified as a rendering concern), and live-state-coupled virtualization helpers (`calculateFirst` family, called with 5-7 mutable instance fields in real source) were each investigated and rejected as either failing the cross-framework-identity bar or smuggling framework-owned state into a package that must remain pure.
@@ -270,3 +272,26 @@ Status: Accepted (user decision, 2026-10-03, GAP-082 Architecture Discussion). E
 - `@ultimate/vue` declarations grow from about 194 KB to about 610 KB.
 - A consumer type-check that imports every entry point costs about 1.7 s → 2.5 s and about 245 MB → 400 MB.
 - The runtime JavaScript barrel's gzip size grows by about 0.75%.
+
+## ADR-050 — Vue floor raised to `^3.5.2` (amends ADR-042)
+
+Status: Accepted (user decision, 2026-10-04, GAP-083 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-04-gap-083-vue-floor-compat-research.md`.
+
+**Context.** ADR-042 set the `vue` peer range of `@ultimate/vue` and `@ultimate/vue-core` to `^3.5.0`, following `@primevue/core@4.5.5`. Their shipped declarations reference Vue's `DefineComponent` with 20 type arguments. Vue 3.5.2 added the 20th type parameter (`TypeEl extends Element = any`); Vue 3.5.0 and 3.5.1 accept at most 19. A consumer type-check of the packed packages therefore fails on Vue 3.5.0 and 3.5.1 (TS2707, in both packages, and the component types are lost) and passes on 3.5.2 and later.
+
+**Decision.**
+
+- The supported Vue floor for `@ultimate/vue` and `@ultimate/vue-core` is `^3.5.2`. Vue 3.5.0 and 3.5.1 are excluded because they cannot consume the emitted declarations.
+- `validate` enforces the floor: a consumer type-check installs the packed packages with `vue@3.5.2` and type-checks the declarations of both packages. It is in addition to the existing consumer check against the workspace Vue version (GAP-082), which stays.
+- This ADR supersedes ADR-042's floor only. ADR-042's posture stands: Ultimate chooses its Vue range on its own evidence and does not track PrimeVue's.
+
+**Rejected.**
+
+- 19-argument declarations that keep `^3.5.0`, by post-processing the emitted files or building them against older Vue types. Technically feasible (the research probe passed on every 3.5.x release), but it couples declaration generation to Vue's internal type shape, and each future change to that shape could need the same treatment.
+- Hand-written declarations with a project-owned `DefineComponent` alias (the PrimeVue `4.5.5` model). It reverses ADR-049, which chose inferred factory types to avoid type/runtime drift.
+
+**Consequences.**
+
+- The `vue` peer range of both packages becomes `^3.5.2`. Applications on Vue 3.5.0 or 3.5.1 must upgrade.
+- `validate` runs one more consumer type-check, at the floor version.
+- The floor is now an explicit, checked contract instead of an assumption.
