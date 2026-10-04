@@ -27,7 +27,7 @@ describe("checkFrameworkCompatibility", () => {
   });
 
   it("evaluates ONLY frameworkVersionRange — never claims to evaluate ultimateFrameworkPackage/uix/theme/metadataSchema/cli axes (spec §7.4's corrected terminology)", () => {
-    const result = checkFrameworkCompatibility({ framework: "vue", frameworkVersion: "3.5.0" });
+    const result = checkFrameworkCompatibility({ framework: "vue", frameworkVersion: "3.5.2" });
     expect("code" in result).toBe(false);
     if ("code" in result) return;
     // Structural check: result shape is exactly {compatible, reason?} — no
@@ -36,6 +36,21 @@ describe("checkFrameworkCompatibility", () => {
     for (const key of Object.keys(result)) {
       expect(["compatible", "reason"]).toContain(key);
     }
+  });
+
+  it("reports Vue 3.5.2, the supported floor (ADR-050), as compatible", () => {
+    const result = checkFrameworkCompatibility({ framework: "vue", frameworkVersion: "3.5.2" });
+    expect("code" in result).toBe(false);
+    if ("code" in result) return;
+    expect(result.compatible).toBe(true);
+  });
+
+  it("reports Vue 3.5.1, below the supported floor (ADR-050), as incompatible with a reason", () => {
+    const result = checkFrameworkCompatibility({ framework: "vue", frameworkVersion: "3.5.1" });
+    expect("code" in result).toBe(false);
+    if ("code" in result) return;
+    expect(result.compatible).toBe(false);
+    expect(result.reason).toBeDefined();
   });
 
   it("rejects an unknown framework value with a structured invalid-input error (case 1)", () => {

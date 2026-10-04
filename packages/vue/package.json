@@ -494,7 +494,7 @@
     "@ultimate/vue-core": "workspace:*"
   },
   "peerDependencies": {
-    "vue": "^3.5.0"
+    "vue": "^3.5.2"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

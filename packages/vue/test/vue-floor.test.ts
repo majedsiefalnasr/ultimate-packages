@@ -68,13 +68,13 @@ describe("readVueFloorRanges", () => {
     expect(readVueFloorRanges(paths)).toEqual(ranges(undefined, undefined, undefined));
   });
 
-  it("the repository's real floor statements agree", () => {
+  it("the repository's real floor statements agree on ^3.5.2 (ADR-050)", () => {
     const repo = join(__dirname, "..", "..", "..");
     const real = readVueFloorRanges({
       vueDir: join(repo, "packages", "vue"),
       vueCoreDir: join(repo, "packages", "vue-core"),
       manifestPath: join(repo, "docs", "architecture", "compatibility-manifest.json"),
     });
-    expect(() => resolveVueFloor(real)).not.toThrow();
+    expect(resolveVueFloor(real)).toBe("3.5.2");
   });
 });
