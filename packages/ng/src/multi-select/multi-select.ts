@@ -126,7 +126,7 @@ export interface UMultiSelectChangeEvent {
   encapsulation: ViewEncapsulation.None,
 })
 export class UMultiSelect extends UBaseEditableHolder {
-  protected override readonly componentName = "multi-select";
+  protected override readonly componentName = "multiselect";
   protected override readonly styleModule = multiSelectStyleModule;
 
   /** Available options to choose from. */

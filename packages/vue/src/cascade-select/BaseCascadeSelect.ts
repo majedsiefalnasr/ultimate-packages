@@ -39,7 +39,7 @@ export function createBaseCascadeSelect() {
       },
     },
     mounted() {
-      registerComponentStyle("cascade-select", cascadeSelectStyleModule);
+      registerComponentStyle("cascadeselect", cascadeSelectStyleModule);
     },
   });
 }

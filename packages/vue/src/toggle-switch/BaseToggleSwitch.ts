@@ -45,7 +45,7 @@ export function createBaseToggleSwitch() {
       },
     },
     mounted() {
-      registerComponentStyle("toggle-switch", toggleSwitchStyleModule);
+      registerComponentStyle("toggleswitch", toggleSwitchStyleModule);
     },
   });
 }

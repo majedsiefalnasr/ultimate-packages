@@ -9,6 +9,6 @@ import { iftaLabelStyleModule } from "./ifta-label-style";
 // — only slot projection.
 export function createBaseIftaLabel() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "ifta-label", styleModule: iftaLabelStyleModule }),
+    extends: createBaseComponent({ componentName: "iftalabel", styleModule: iftaLabelStyleModule }),
   });
 }

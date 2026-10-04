@@ -53,7 +53,7 @@ import { toggleSwitchStyleModule } from "./toggle-switch-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UToggleSwitch extends UBaseEditableHolder {
-  protected override readonly componentName = "toggle-switch";
+  protected override readonly componentName = "toggleswitch";
   protected override readonly styleModule = toggleSwitchStyleModule;
 
   /** Value in checked state. */

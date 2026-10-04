@@ -126,7 +126,7 @@ interface ProcessedOption {
   encapsulation: ViewEncapsulation.None,
 })
 export class UCascadeSelect extends UBaseEditableHolder {
-  protected override readonly componentName = "cascade-select";
+  protected override readonly componentName = "cascadeselect";
   protected override readonly styleModule = cascadeSelectStyleModule;
 
   /** Available options to choose from — may be nested via `optionGroupChildren`. */

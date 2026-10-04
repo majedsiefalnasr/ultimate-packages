@@ -502,5 +502,23 @@
     "ultimateDestination": "packages/themes/src/presets/aura/tooltip.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset tooltip module (.vendor-extracted/themes/src/presets/aura/tooltip/index.ts); root sizing tokens and colorScheme.light/dark values are transcribed as-is, including the real upstream finding that light and dark tooltip colors are identical — ported faithfully, not \"corrected\". Retyped against Ultimate's own ComponentTokens<T> contract (Task 8) instead of @primeuix/themes' generated .d.ts types."
+  },
+  {
+    "originalPath": "src/presets/aura/badge.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/badge.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset badge module (.vendor-extracted/themes/src/presets/aura/badge/index.ts); all top-level sections and values are transcribed as-is (GAP-064 Tranche 1). Upstream's badge module has a colorScheme split (colorScheme.light/dark transcribed as-is), so it is typed against the ComponentTokens contract via a local BadgeComponentTokens extension because the contract only models root + colorScheme and upstream also has dot, sm, lg and xl sections outside the split."
+  },
+  {
+    "originalPath": "src/presets/aura/input-group.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/input-group.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset inputgroup module (.vendor-extracted/themes/src/presets/aura/inputgroup/index.ts); all top-level sections and values are transcribed as-is (GAP-064 Tranche 1). Upstream's inputgroup module has no colorScheme split, so it is typed with a flat local InputGroupComponentTokens interface."
+  },
+  {
+    "originalPath": "src/presets/aura/paginator.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/paginator.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset paginator module (.vendor-extracted/themes/src/presets/aura/paginator/index.ts); all top-level sections and values are transcribed as-is (GAP-064 Tranche 1). Upstream's paginator module has no colorScheme split, so it is typed with a flat local PaginatorComponentTokens interface."
   }
 ]

@@ -109,3 +109,10 @@ Added on `feature/gap-082-typed-vue-props` (2026-10-03), same status — unrelea
 Added on `feature/gap-083-vue-floor-compat` (2026-10-04), same status — unreleased, no changesets:
 
 - **`@ultimate/vue`, `@ultimate/vue-core` — minimum Vue version is now 3.5.2.** The `vue` peer range changes from `^3.5.0` to `^3.5.2`. The shipped declarations use Vue 3.5.2's `DefineComponent` type, which Vue 3.5.0 and 3.5.1 cannot type-check. Applications on Vue 3.5.0 or 3.5.1 must upgrade Vue. The CLI and MCP compatibility checks report the same floor. (GAP-083, ADR-050.)
+
+Added for GAP-064 Tranche 1 (`feature/gap-064-aura-token-wiring`), same status — unreleased, no changesets:
+
+- **`@ultimate/ng`, `@ultimate/vue` — Aura tokens now apply to 16 Angular and 17 Vue form components, and to Badge, InputGroup and Paginator.** These components (CascadeSelect, ColorPicker, DatePicker, FileUpload, FloatLabel, IconField, IftaLabel, InputGroup, InputNumber, InputOtp, InputText, MultiSelect, RadioButton, SelectButton, ToggleButton, ToggleSwitch; Vue also InputChips) previously referenced theme variables that were never defined. They now render with their Aura values and follow theme customization. Visual appearance changes accordingly. (ADR-051.)
+- **`@ultimate/react` — Paginator** now receives the Aura `paginator` variables it already referenced, so its appearance changes too.
+- **Generated `<style>` keys changed** for the components above (`data-u-ng-style` / `data-u-style`, for example `input-text` → `inputtext`, `input-text-variables` → `inputtext-variables`). These keys are internal, not a supported contract; CSS or scripts that selected these elements by key must use the new values.
+- **`@ultimate/vue-core` — `registerComponentStyle` takes an optional third parameter, `additionalPresetKeys`** (additive; existing calls unchanged).

@@ -3,6 +3,7 @@ import { primitive, semantic } from "./base";
 import { accordion } from "./accordion";
 import { autocomplete } from "./autocomplete";
 import { avatar } from "./avatar";
+import { badge } from "./badge";
 import { blockUI } from "./block-ui";
 import { breadcrumb } from "./breadcrumb";
 import { button } from "./button";
@@ -32,6 +33,7 @@ import { imageCompare } from "./image-compare";
 import { inlineMessage } from "./inline-message";
 import { inplace } from "./inplace";
 import { inputChips } from "./input-chips";
+import { inputGroup } from "./input-group";
 import { inputNumber } from "./input-number";
 import { inputOtp } from "./input-otp";
 import { inputText } from "./input-text";
@@ -46,6 +48,7 @@ import { multiSelect } from "./multi-select";
 import { orderList } from "./order-list";
 import { organizationChart } from "./organization-chart";
 import { overlayBadge } from "./overlay-badge";
+import { paginator } from "./paginator";
 import { panel } from "./panel";
 import { panelMenu } from "./panel-menu";
 import { password } from "./password";
@@ -91,7 +94,8 @@ import { tooltip } from "./tooltip";
  * Image, ImageCompare, Inplace, Message, MeterGroup, Panel, ProgressBar,
  * ProgressSpinner, ScrollPanel, Skeleton, Splitter, Tag, Terminal, Timeline,
  * Toolbar, Toast), InlineMessage, the Data family (3 modules:
- * OrderList, PickList, DataView) and OrganizationChart. Ported (Option B —
+ * OrderList, PickList, DataView), OrganizationChart, and GAP-064 Tranche 1
+ * (3 modules: Badge, InputGroup, Paginator). Ported (Option B —
  * reference, not verbatim copy) from `@primeuix/themes@2.0.3`'s Aura preset; see `docs/architecture/provenance/themes.json`
  * for per-file provenance detail. Each module is registered under upstream's
  * own preset key (e.g. `radiobutton`), which is the name the dt engine looks
@@ -104,6 +108,7 @@ export const auraPreset = definePreset({
     accordion,
     autocomplete,
     avatar,
+    badge,
     blockui: blockUI,
     breadcrumb,
     button,
@@ -133,6 +138,7 @@ export const auraPreset = definePreset({
     inlinemessage: inlineMessage,
     inplace,
     inputchips: inputChips,
+    inputgroup: inputGroup,
     inputnumber: inputNumber,
     inputotp: inputOtp,
     inputtext: inputText,
@@ -147,6 +153,7 @@ export const auraPreset = definePreset({
     orderlist: orderList,
     organizationchart: organizationChart,
     overlaybadge: overlayBadge,
+    paginator,
     panel,
     panelmenu: panelMenu,
     password,

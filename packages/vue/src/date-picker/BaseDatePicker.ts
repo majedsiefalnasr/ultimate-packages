@@ -56,7 +56,7 @@ export function createBaseDatePicker() {
       },
     },
     mounted() {
-      registerComponentStyle("date-picker", datePickerStyleModule);
+      registerComponentStyle("datepicker", datePickerStyleModule);
     },
   });
 }
