@@ -1,6 +1,6 @@
 # Specification — GAP-064 G3-C1: Navigation (Breadcrumb, Dock, Steps, Stepper, Tabs) Uses Its Aura Tokens
 
-**Status:** Approved at Spec Review (2026-10-05) — decisions recorded in §15.
+**Status:** Approved at Spec Review (2026-10-05) — decisions recorded in §15; Amendment A1 from Plan Review (2026-10-06) in §16.
 **Date:** 2026-10-05
 **Branch:** `feature/gap-064-g3c-menus-navigation` (from `main` `2c8ef45`)
 **Origin:** GAP-064 (PARTIAL), G3-C sub-tranche C1. Research and decisions: `docs/architecture/research/2026-10-05-gap-064-g3c-menus-navigation-research.md` (commit `6721085`), §9 C-1..C-11. G3-wide decisions: ADR-051, D-G3-1..9 (`2026-10-04-gap-064-g3-research.md` §11). Parity baseline: ADR-048.
@@ -74,19 +74,19 @@ No C1 component has screenshot or accessibility coverage. The only C1 e2e test i
 
 ## 4. Selector mapping (D-G3-1, C-1, C-3)
 
-Applied to selectors only, in order, before the generic `.p-` → `.u-` rule; declarations unchanged. "class" replaces a whole class token (not followed by `[a-z0-9-]`); "expand" turns one selector part into a list.
+Applied to selectors only, in order, before the generic `.p-` → `.u-` rule; declarations unchanged. "text" replaces one exact upstream selector (PX-C2 only); "class" replaces a whole class token (not followed by `[a-z0-9-]`); "expand" turns one selector part into a list.
 
 | Key        | Mapping (identical for Angular and Vue)                                                                                                                                                                                                                                                                                                          |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | breadcrumb | generic only                                                                                                                                                                                                                                                                                                                                     |
 | dock       | generic only                                                                                                                                                                                                                                                                                                                                     |
-| steps      | `.p-disabled` → `.u-steps-item-disabled` (C-1)                                                                                                                                                                                                                                                                                                   |
+| steps      | **text** `.p-steps-item-link:not(.p-disabled):focus-visible` → `.u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible` (PX-C2, §6.5); then `.p-disabled` → `.u-steps-item-disabled` (C-1)                                                                                                                                   |
 | stepper    | `.p-steppanel-content-wrapper` → `.u-step-panel-content-wrapper`; `.p-steppanel-content` → `.u-step-panel-content`; `.p-steppanels` → `.u-step-panels`; `.p-steppanel` → `.u-step-panel`; `.p-stepitem-active` → `.u-step-item-active`; `.p-stepitem` → `.u-step-item`; `.p-steplist` → `.u-step-list`; `.p-disabled` → `.u-step-disabled` (C-1) |
 | tabs       | `.p-tablist-viewport` → `.u-tablist-content` (C-3); **expand** `.p-tablist-nav-button` → `.u-tablist-prev-button`, `.u-tablist-next-button` (C-3); `.p-disabled` → `.u-tab-disabled` (C-1)                                                                                                                                                       |
 
 Normative examples:
 
-- Steps #9: `.u-steps-item-link:not(.u-steps-item-disabled):focus-visible` — upstream puts `p-disabled` on the item, never on the link, so the `:not()` always matches, exactly as upstream; specificity unchanged.
+- Steps #9 (PX-C2, Plan Review amendment A1): `.u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible` — the disabled filter moves to the item, the element that carries the disabled class (§6.5). Upstream's `.p-steps-item-link:not(.p-disabled)` filter never excludes anything, because upstream also puts `p-disabled` on the item. Specificity 0,3,0 → 0,4,0; no other rule styles the link's focus.
 - Tabs #7: `.u-tablist-prev-button, .u-tablist-next-button { all: unset; position: absolute !important; … }`; #8/#9 expand the same way with `:focus-visible` / `:hover`. Each expanded selector has the specificity of the upstream one.
 - Tabs #3 and #6 both land on `.u-tablist-content` (the element carries both roles upstream).
 - Stepper #24 (Vue): `.u-step-item .u-step-panel-content { … }`.
@@ -105,7 +105,7 @@ Numbers are upstream source order in `@primeuix/styles` 2.0.3. ✓ = ported (D1)
 
 ### 5.3 steps — 15 groups; ported 14 / 14
 
-1 `.p-steps` ✓ · 2 `-list` ✓ · 3 `-item` ✓ · 4 `.p-steps-item.p-disabled, .p-steps-item.p-disabled *` ✓ (mapped) · 5 `-item:before` ✓ · 6 `-item:first-child::before` ✓ · 7 `-item:last-child::before` ✓ · 8 `-item-link` ✓ · 9 `-item-link:not(.p-disabled):focus-visible` ✓ (mapped) · 10 `-item-label` ✓ · 11 `-item-number` ✓ · 12 `-item-number::after` ✓ · **13 `.p-steps:not(.p-readonly) .p-steps-item` ✗ FX-C4** — Ultimate emits no readonly class (approved exclusion "Steps/Stepper readonly classes"); its only declaration is `cursor: pointer`, and the item links are anchors with `href`, which already show a pointer · 14 `-item-active .p-steps-item-number` ✓ · 15 `-item-active .p-steps-item-label` ✓.
+1 `.p-steps` ✓ · 2 `-list` ✓ · 3 `-item` ✓ · 4 `.p-steps-item.p-disabled, .p-steps-item.p-disabled *` ✓ (mapped) · 5 `-item:before` ✓ · 6 `-item:first-child::before` ✓ · 7 `-item:last-child::before` ✓ · 8 `-item-link` ✓ · 9 `-item-link:not(.p-disabled):focus-visible` ✓ (adapted, PX-C2) · 10 `-item-label` ✓ · 11 `-item-number` ✓ · 12 `-item-number::after` ✓ · **13 `.p-steps:not(.p-readonly) .p-steps-item` ✗ FX-C4** — Ultimate emits no readonly class (approved exclusion "Steps/Stepper readonly classes"); its only declaration is `cursor: pointer`, and the item links are anchors with `href`, which already show a pointer · 14 `-item-active .p-steps-item-number` ✓ · 15 `-item-active .p-steps-item-label` ✓.
 
 ### 5.4 stepper — 28 groups; ported Angular 25 / Vue 27
 
@@ -151,6 +151,26 @@ and the same pair for `.u-dock-item-disabled` (dock), `.u-step-disabled` (steppe
 ### 6.2 D4 / D6
 
 None in C1 (no JS-driven upstream role, no base-module exclusion is touched).
+
+### 6.5 PX-C2 — Steps focus-ring exclusion moved to the item (Plan Review amendment A1)
+
+Adapted D1 selector (steps group 9 only, both frameworks); a CSS selector adaptation only, with no new class, DOM change or runtime/JS behaviour.
+
+|                                  | Selector                                                                     | Specificity |
+| -------------------------------- | ---------------------------------------------------------------------------- | ----------- |
+| Upstream (pinned 2.0.3, group 9) | `.p-steps-item-link:not(.p-disabled):focus-visible`                          | 0,3,0       |
+| Plain C-1 mapping (rejected)     | `.u-steps-item-link:not(.u-steps-item-disabled):focus-visible`               | 0,3,0       |
+| **PX-C2 (ported)**               | `.u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible` | 0,4,0       |
+
+**Invariant:** a disabled Steps item stays excluded from the focus ring, even though PX-C1 removes its opacity dimming.
+
+**Evidence (2026-10-06):**
+
+1. **Upstream source.** PrimeVue `steps/style/StepsStyle.js` and PrimeNG `steps/style/stepsstyle.ts` both put `p-disabled` in the `item` classes and only `p-steps-item-link` on the link, so upstream's `:not(.p-disabled)` on the link never excludes anything (inert upstream, as Stepper group 6 is).
+2. **Ultimate DOM** (Angular and Vue, rebuilt Storybook, `*-steps--default`): `u-steps-item-disabled` on items 1–2 and never on a link; link `tabindex` `0,-1,-1`. A second Tab never lands on a disabled link.
+3. **Rendered behaviour** (Chromium, Firefox, WebKit × ng, vue; the would-be ported Steps CSS injected; transitions settled). Every enabled link reached by Tab is `:focus-visible` with `outline: solid 1px rgb(16, 185, 129)`, the token ring. A disabled link focused programmatically after keyboard use is also `:focus-visible`. With the plain mapping it gets the same token ring (6/6). With PX-C2 it gets no token ring: `outline-color: rgba(0, 0, 0, 0)`, `box-shadow: none` (6/6). The remaining `outline-style: auto` is the UA ring, made transparent by ported group 8's `outline-color: transparent`, so nothing is visible.
+
+Recorded in provenance with PX-C1 for `steps` (Plan Task 7).
 
 ### 6.3 D5 — retained Ultimate-only rules (C-8, exact list)
 
@@ -225,7 +245,7 @@ Verification-only stories (both frameworks), each needed because its CSS is othe
 | Dock TopPosition                                         | groups 7 (`-top`)                |
 | Dock RightPosition                                       | groups 9–10 (`-right`)           |
 | Dock WithDisabledItem                                    | D3 dock                          |
-| Steps WithDisabledItem                                   | group 4 (PX-C1), group 9 mapping |
+| Steps WithDisabledItem                                   | group 4 (PX-C1), group 9 (PX-C2) |
 | Stepper Vertical (`UStepItem`)                           | groups 18–28; Angular R-C3       |
 | Tabs WithDisabledTab                                     | D3 tabs, groups 14–15 mapping    |
 | Tabs WithNavigators (overflowing tabs, `showNavigators`) | groups 3–12 (C-3)                |
@@ -236,8 +256,8 @@ Total **17 stories per framework**. Interaction-state screenshot (no extra story
 
 - **Breadcrumb:** disabled item `opacity` = resolved `disabled.opacity`, link `pointer-events: none`; hovered enabled label colour = `breadcrumb.item.hover.color`.
 - **Dock:** for each of top/bottom/left/right the root box sits on that viewport edge; disabled item `opacity` = `disabled.opacity`; hovering an enabled link gives `transform` scale 1.5 (R-C2).
-- **Steps:** active number background = `steps.item.number.active.background`; disabled item `opacity` = 1 (PX-C1).
-- **Stepper:** active number background = `stepper.step.number.active.background`; disabled step `opacity` = `disabled.opacity`; **vertical: exactly one panel visible** (Angular R-C3, Vue `v-show`); separator before the active step = `stepper.separator.active.background` (Vue).
+- **Steps:** active number colour = `steps.item.number.active.color`, inactive = `steps.item.number.color` (the Aura backgrounds are equal, so colour is the discriminating property); disabled item `opacity` = 1 (PX-C1); a keyboard-focused enabled link shows the token ring and a focused disabled item's link does not (PX-C2).
+- **Stepper:** active number colour = `stepper.step.number.active.color`, inactive = `stepper.step.number.color`; disabled step `opacity` = `disabled.opacity`; **vertical: exactly one panel visible** (Angular R-C3, Vue `v-show`); separator before the active step = `stepper.separator.active.background` (Vue).
 - **Tabs:** active tab colour = `tabs.tab.active.color`; disabled tab `opacity` = `disabled.opacity`; with navigators, prev/next buttons are visible, absolutely positioned at the inline-start/end edges inside the tablist box; active-bar `height` = `tabs.active.bar.height`.
 - **Mandatory regression:** `packages/vue/e2e/stepper.spec.ts` unchanged and passing.
 
@@ -260,7 +280,7 @@ Authoritative: direct comparison of the `index.mjs` gzip size of `packages/ng` a
 
 ## 13. Affected files (at implementation; none changed by this Spec)
 
-10 style modules; the C1 fixture, data module and fidelity test under `packages/themes/test/`; per-framework runtime specs; verification stories in the five component story files; per-framework C1 e2e specs and snapshots; the C1 accessibility validator, its test and evidence file; provenance JSON (10 entries); `ACCESSIBILITY_BASELINE.md` only for approved rows; review record; `MIGRATION.md` if approved at Plan Review; `.github/workflows/ci.yml` per SR-C1-2.
+10 style modules; the C1 fixture, data module and fidelity test under `packages/themes/test/`; per-framework runtime specs; verification stories in the five component story files; per-framework C1 e2e specs and snapshots; the C1 accessibility validator, its test and evidence file; provenance JSON (10 entries); `ACCESSIBILITY_BASELINE.md` only for approved rows; review record; `MIGRATION.md` (approved at Plan Review); the `@primeuix/styles` entry of `docs/architecture/PROVENANCE.md`, one sentence (approved at Plan Review); `.github/workflows/ci.yml` per SR-C1-2.
 
 ## 14. Open items for Spec Review (resolved — see §15)
 
@@ -283,3 +303,12 @@ Spec approved with these decisions; wording in §3–§13 updated accordingly.
 | SR-C1-5 | **`MIGRATION.md`** left for Plan Review.                                                                                                                                                                                        | —                                                                                                                                                                                                                  |
 
 Unchanged by Spec Review: counts (Angular 90/79/11, Vue 90/81/9), FX-C1..FX-C6, D3 set, D5 = R-C1..R-C3, the 15% gate against `2c8ef45`, frozen G3-A/G3-B tooling, §12 scope.
+
+## 16. Amendment A1 — Plan Review (2026-10-06)
+
+Plan Review approved the Plan with `MIGRATION.md` (Task 11), the one-sentence `PROVENANCE.md` entry, browser-only checks for the Tabs navigators and the Stepper `:has()` groups, and subagent-driven execution. It re-confirmed PX-C1 (applies to explicitly disabled items and to every non-active item of a readonly Steps; items stay non-interactive). It required one amendment before implementation:
+
+- **PX-C2 (§4, §5.3, §6.5):** the Steps group 9 focus selector is adapted so the disabled filter sits on the item. This was chosen by the user over keeping upstream's inert text, and verified against the upstream source, the Ultimate DOM and three browsers (§6.5).
+- **§9.3** Steps/Stepper checks use the discriminating colour tokens (consistency with the Plan; the Aura active/inactive number backgrounds are equal), and Steps adds the PX-C2 focus check.
+
+Unchanged: counts, FX-C1..FX-C6, D3, D5, PX-C1, the size gate, frozen tooling, scope. No CSS, component, story, baseline or CI change is made by this amendment.

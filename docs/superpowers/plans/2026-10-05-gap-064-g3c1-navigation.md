@@ -16,7 +16,7 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-05-gap-064-g3c1-navigation-design.md` (Approved at Spec Review, `b31f2bb`; §15 decisions SR-C1-1..5). Research and decisions: `docs/architecture/research/2026-10-05-gap-064-g3c-menus-navigation-research.md` §9 C-1..C-11 (`6721085`). ADR-051.
 
-**Status:** Draft — awaiting Plan Review. Implementation not started; requires separate authorization.
+**Status:** Approved at Plan Review (2026-10-06; decisions under "Plan Review Decisions", Spec Amendment A1 / PX-C2 applied). Implementation authorized from Task 1, with both hard gates.
 
 ## Global Constraints
 
@@ -52,9 +52,10 @@
 
 1. **Steps parity (PX-C1).** Disabled Steps items — including every non-active item of a readonly (default) Steps — lose their dimming (`0.6` → `1`). Steps Default therefore changes visually; this is approved, not a regression. Pinned by the Task 1 Steps layout test (`opacity: 1`) and the Task 4 state rows.
 2. **Angular vertical Stepper (R-C3).** Ported group 22 sets `display: grid` on `.u-step-item .u-step-panel`; without R-C3 every inactive Angular panel would show. Pinned by the Task 1 Stepper layout test (exactly one visible panel) and the Task 4 `[hidden]` row.
-3. **Tabs navigators (C-3).** The prev/next buttons carry only `u-tablist-prev-button` / `u-tablist-next-button`; the expanded selector list must position them absolutely at the tablist's inline edges. jsdom cannot overflow, so this is pinned in the browser only (Task 1 Tabs layout test); see Plan Review item 3.
+3. **Tabs navigators (C-3).** The prev/next buttons carry only `u-tablist-prev-button` / `u-tablist-next-button`; the expanded selector list must position them absolutely at the tablist's inline edges. jsdom cannot overflow, so this is pinned in the browser only (Task 1 Tabs layout test); PR-C1-3.
 4. **Dock magnification (R-C1/R-C2).** Upstream sets `cursor: default` and token size on the link; Ultimate's documented hover magnification must survive. Pinned by the Dock hover screenshot, the Dock layout test and the Task 4 `data-u-active` row.
 5. **Vue horizontal separators (GAP-077).** `packages/vue/e2e/stepper.spec.ts` checks separators sit between headers on one row; the ported groups 2, 3, 15 replace the current layout literals.
+6. **Steps focus exclusion (PX-C2, PR-C1-7).** The only adapted D1 selector in C1. A disabled item's link must not get the token focus ring, although PX-C1 restores its opacity. Pinned by the Task 3 PX-C2 test, the Task 4 rows and the Task 1 keyboard focus check in all three browsers.
 
 ---
 
@@ -460,6 +461,23 @@ test("Ng/Steps G3-C1 layout", async ({ page }) => {
   // PX-C1 (SR-C1-1): a disabled Steps item is not dimmed, as upstream.
   await expect(items.nth(1)).toHaveClass(/\bu-steps-item-disabled\b/);
   await expect(items.nth(1)).toHaveCSS("opacity", "1");
+
+  // PX-C2 (Spec §6.5): an enabled link reached by keyboard shows the token focus
+  // ring; the disabled item's link, focused after keyboard use, does not.
+  const link = (i: number) => items.nth(i).locator(".u-steps-item-link");
+  await page.keyboard.press("Tab");
+  await expect(link(0)).toBeFocused();
+  expect(await link(0).evaluate((el) => el.matches(":focus-visible"))).toBe(true);
+  await expect(link(0)).toHaveCSS("outline-style", "solid");
+  await expect(link(0)).toHaveCSS(
+    "outline-color",
+    await color(page, "--u-steps-item-link-focus-ring-color")
+  );
+  await link(1).focus();
+  await expect(link(1)).toBeFocused();
+  expect(await link(1).evaluate((el) => el.matches(":focus-visible"))).toBe(true);
+  await expect(link(1)).toHaveCSS("outline-color", "rgba(0, 0, 0, 0)");
+  await expect(link(1)).toHaveCSS("box-shadow", "none");
 });
 
 test("Ng/Stepper G3-C1 layout", async ({ page }) => {
@@ -779,12 +797,20 @@ export const KEYS = ["breadcrumb", "dock", "steps", "stepper", "tabs"];
 /**
  * Spec §4 selector mapping, applied in order to every selector of a D1 group,
  * then the generic `.p-` → `.u-` rule. Entry kinds:
+ *   "text"   — replace one exact upstream selector (PX-C2 only, Spec §6.5);
  *   "class"  — replace a whole class token (not followed by [a-z0-9-]);
  *   "expand" — turn one selector of a list into one selector per target (C-3).
  * Identical for Angular and Vue.
  */
 const SHARED = {
-  steps: [["class", ".p-disabled", ".u-steps-item-disabled"]],
+  steps: [
+    [
+      "text",
+      ".p-steps-item-link:not(.p-disabled):focus-visible",
+      ".u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible",
+    ],
+    ["class", ".p-disabled", ".u-steps-item-disabled"],
+  ],
   stepper: [
     ["class", ".p-steppanel-content-wrapper", ".u-step-panel-content-wrapper"],
     ["class", ".p-steppanel-content", ".u-step-panel-content"],
@@ -871,7 +897,8 @@ const token = (from) => new RegExp(`${escape(from)}(?![a-z0-9-])`, "g");
 export function mapSelector(fw, key, selector) {
   let parts = selector.split(",").map((p) => p.trim());
   for (const [kind, from, to] of MAPPING[fw][key] ?? []) {
-    if (kind === "class") parts = parts.map((p) => p.replace(token(from), to));
+    if (kind === "text") parts = parts.map((p) => (p === from ? to : p));
+    else if (kind === "class") parts = parts.map((p) => p.replace(token(from), to));
     else
       parts = parts.flatMap((p) =>
         token(from).test(p) ? to.map((t) => p.replace(token(from), t)) : [p]
@@ -1044,8 +1071,8 @@ describe("G3-C1 upstream fixture and data model (Spec §8)", () => {
 
   it("Spec §4 normative mapping examples", () => {
     for (const fw of FRAMEWORKS as Fw[]) {
-      expect(mapSelector(fw, "steps", ".p-steps-item-link:not(.p-disabled):focus-visible")).toBe(
-        ".u-steps-item-link:not(.u-steps-item-disabled):focus-visible"
+      expect(mapSelector(fw, "steps", ".p-steps-item.p-disabled, .p-steps-item.p-disabled *")).toBe(
+        ".u-steps-item.u-steps-item-disabled, .u-steps-item.u-steps-item-disabled *"
       );
       expect(mapSelector(fw, "tabs", ".p-tablist-nav-button:hover")).toBe(
         ".u-tablist-prev-button:hover, .u-tablist-next-button:hover"
@@ -1059,6 +1086,22 @@ describe("G3-C1 upstream fixture and data model (Spec §8)", () => {
       expect(mapSelector(fw, "stepper", ".p-stepitem.p-stepitem-active")).toBe(
         ".u-step-item.u-step-item-active"
       );
+    }
+  });
+
+  it("PX-C2: steps group 9 is the only adapted selector; its focus filter sits on the item", () => {
+    const ADAPTED = ".u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible";
+    for (const fw of FRAMEWORKS as Fw[]) {
+      const group9 = expected(fw, "steps").d1.find((r: { n: number }) => r.n === 9);
+      expect(group9.text.startsWith(`${ADAPTED}{`), fw).toBe(true);
+      // The plain C-1 mapping (inert, as upstream) never appears.
+      expect(expectedCss(fw, "steps").join("\n")).not.toContain(
+        ".u-steps-item-link:not(.u-steps-item-disabled)"
+      );
+      // Declarations are upstream's, unchanged.
+      const upstream = parseGroups(FIXTURE.modules.steps)[8];
+      expect(norm(upstream.head)).toBe(".p-steps-item-link:not(.p-disabled):focus-visible");
+      expect(bodyOf(group9.text)).toBe(bodyOf(norm(`${upstream.head}{${upstream.body}}`)));
     }
   });
 
@@ -1172,7 +1215,7 @@ git commit -m "test(gap-064): add the G3-C1 upstream fixture, data module and fi
 
 - Create: `packages/ng/src/g3c1-aura-styles.spec.ts`, `packages/vue/src/g3c1-aura-styles.spec.ts`
 
-State rows assert two things: the selector text is styled (appears in the generated CSS) and it matches exactly the expected rendered elements. jsdom cannot evaluate `:hover`/`:focus-visible` (stripped, as in G3-B), cannot overflow (so Tabs navigators are not rendered — browser-only, Plan Review item 3) and has no reliable `:has()` (the four Stepper `:has()` groups are browser-only, Plan Review item 4).
+State rows assert two things: the selector text is styled (appears in the generated CSS) and it matches exactly the expected rendered elements. jsdom cannot evaluate `:hover`/`:focus-visible` (stripped, as in G3-B), cannot overflow (so Tabs navigators are not rendered — browser-only, PR-C1-3) and has no reliable `:has()` (the three Stepper `:has()` groups 14, 18, 27 are browser-only, PR-C1-4).
 
 - [ ] **Step 1: Angular spec `packages/ng/src/g3c1-aura-styles.spec.ts`**
 
@@ -1414,13 +1457,22 @@ const ROWS: StateRow[] = [
     expected: [1, 2],
   },
   {
-    name: "steps focus ring mapping matches every link (as upstream)",
+    name: "steps focus ring excludes the disabled item's link (PX-C2)",
     key: "steps",
     type: USteps,
     inputs: STEPS(false),
     all: ".u-steps-item-link",
-    selector: ".u-steps-item-link:not(.u-steps-item-disabled):focus-visible",
-    expected: [0, 1, 2],
+    selector: ".u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible",
+    expected: [0, 2],
+  },
+  {
+    name: "steps readonly: focus ring only on the active item's link (PX-C2)",
+    key: "steps",
+    type: USteps,
+    inputs: STEPS(true),
+    all: ".u-steps-item-link",
+    selector: ".u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible",
+    expected: [0],
   },
   {
     name: "steps active number",
@@ -1741,12 +1793,20 @@ const ROWS: StateRow[] = [
     expected: [1, 2],
   },
   {
-    name: "steps focus ring mapping matches every link (as upstream)",
+    name: "steps focus ring excludes the disabled item's link (PX-C2)",
     key: "steps",
     node: steps(false),
     all: ".u-steps-item-link",
-    selector: ".u-steps-item-link:not(.u-steps-item-disabled):focus-visible",
-    expected: [0, 1, 2],
+    selector: ".u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible",
+    expected: [0, 2],
+  },
+  {
+    name: "steps readonly: focus ring only on the active item's link (PX-C2)",
+    key: "steps",
+    node: steps(true),
+    all: ".u-steps-item-link",
+    selector: ".u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible",
+    expected: [0],
   },
   {
     name: "steps active number",
@@ -2024,7 +2084,7 @@ git commit -m "feat(gap-064): port Navigation Aura structural CSS to Vue (G3-C1)
 **Files:**
 
 - Modify: `docs/architecture/provenance/ng.json`, `docs/architecture/provenance/vue.json` (append 5 entries each, after the last G3-B entry)
-- Modify (only if approved at Plan Review, item 2): `docs/architecture/PROVENANCE.md` (`@primeuix/styles` entry)
+- Modify (approved at Plan Review, PR-C1-2): `docs/architecture/PROVENANCE.md` (`@primeuix/styles` entry)
 
 - [ ] **Step 1: Append the entries**
 
@@ -2045,11 +2105,11 @@ Each entry has this shape (G3-A/G3-B wording):
 | ---------- | ------------------------------------------------ | ------------------------------------------------ |
 | breadcrumb | C-7 disabled base role, FX-C1                    | C-7 disabled base role, FX-C1                    |
 | dock       | C-7 disabled base role, R-C1, R-C2, FX-C2, FX-C3 | C-7 disabled base role, R-C1, R-C2, FX-C2, FX-C3 |
-| steps      | PX-C1, FX-C4                                     | PX-C1, FX-C4                                     |
+| steps      | PX-C1, PX-C2, FX-C4                              | PX-C1, PX-C2, FX-C4                              |
 | stepper    | C-7 disabled base role, R-C3, FX-C5, FX-C6       | C-7 disabled base role, FX-C5                    |
 | tabs       | C-7 disabled base role                           | C-7 disabled base role                           |
 
-- [ ] **Step 2 (only if Plan Review item 2 is approved): update `PROVENANCE.md`**
+- [ ] **Step 2 (approved, PR-C1-2): update `PROVENANCE.md`**
 
 In the `@primeuix/styles` entry's Modification status, after the GAP-064 G3-B sentence (G3-B Amendment A2), add: `GAP-064 G3-C1: 5 keys (breadcrumb, dock, steps, stepper, tabs), 10 ng/vue style files.` Nothing else in the file changes.
 
@@ -2061,13 +2121,12 @@ npx prettier --check docs/architecture/provenance/ng.json docs/architecture/prov
 pnpm run provenance:validate -- --base-ref 2c8ef45
 ```
 
-Expected: `ng.json:5`, `vue.json:5`; Prettier clean for the JSON files (`PROVENANCE.md` Prettier state compared with `2c8ef45`: no new debt); `provenance:validate --base-ref 2c8ef45` passes if Step 2 was applied. Without Step 2 it fails with "diff touches a Prime-derived package path but does not update docs/architecture/PROVENANCE.md" — record it and report at Task 10 (this is why Plan Review item 2 exists).
+Expected: `ng.json:5`, `vue.json:5`; Prettier clean for the JSON files (`PROVENANCE.md` Prettier state compared with `2c8ef45`: no new debt); `provenance:validate --base-ref 2c8ef45` passes (Step 2 updates `PROVENANCE.md`; without it the check fails with "diff touches a Prime-derived package path but does not update docs/architecture/PROVENANCE.md", G3-B Amendment A2).
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add docs/architecture/provenance/ng.json docs/architecture/provenance/vue.json
-git add docs/architecture/PROVENANCE.md   # only if Step 2 was approved and applied
+git add docs/architecture/provenance/ng.json docs/architecture/provenance/vue.json docs/architecture/PROVENANCE.md
 git commit -m "docs(gap-064): record provenance for the G3-C1 style modules"
 ```
 
@@ -2359,7 +2418,7 @@ git diff 2c8ef45 --stat -- packages/react packages/react-core packages/uix-style
 git diff 2c8ef45 --quiet -- scripts/provenance/validate-g3a-accessibility.mjs scripts/provenance/validate-g3a-accessibility.test.mjs scripts/provenance/validate-g3b-accessibility.mjs scripts/provenance/validate-g3b-accessibility.test.mjs scripts/provenance/validate-accessibility-baseline.mjs packages/themes/test/utils/g3a-port.mjs packages/themes/test/utils/g3b-port.mjs packages/ng/e2e/g3a-aura-styles.spec.ts packages/vue/e2e/g3a-aura-styles.spec.ts packages/ng/e2e/g3b-aura-styles.spec.ts packages/vue/e2e/g3b-aura-styles.spec.ts packages/vue/e2e/stepper.spec.ts && echo "frozen tooling unchanged"
 ```
 
-Expected: the second command prints nothing; `frozen tooling unchanged`; every path in the first is one of: the 10 style modules; the 8 story files of Task 1; the two G3-C1 e2e specs with their snapshots; `packages/themes/test/{fixtures/primeuix-styles-g3c1.json,utils/g3c1-port.mjs,g3c1-upstream-fidelity.test.ts}`; the 2 runtime specs; the 2 provenance JSON files; `PROVENANCE.md` (only if Plan Review item 2 approved); the G3-C1 validator and its test; `.github/workflows/ci.yml`; `ACCESSIBILITY_BASELINE.md` (only if approved rows); the research/spec/plan/record/evidence docs; `MIGRATION.md` (only if Task 11 is approved). Anything else: stop and report.
+Expected: the second command prints nothing; `frozen tooling unchanged`; every path in the first is one of: the 10 style modules; the 8 story files of Task 1; the two G3-C1 e2e specs with their snapshots; `packages/themes/test/{fixtures/primeuix-styles-g3c1.json,utils/g3c1-port.mjs,g3c1-upstream-fidelity.test.ts}`; the 2 runtime specs; the 2 provenance JSON files; `PROVENANCE.md` (one sentence, PR-C1-2); the G3-C1 validator and its test; `.github/workflows/ci.yml`; `ACCESSIBILITY_BASELINE.md` (only if approved rows); the research/spec/plan/record/evidence docs; `MIGRATION.md` (Task 11). Anything else: stop and report.
 
 - [ ] **Step 4: Size gate (C8, hard stop)**
 
@@ -2390,7 +2449,7 @@ git commit -m "docs(gap-064): record G3-C1 verification results"
 
 ---
 
-### Task 11 (only if approved at Plan Review, item 1): `MIGRATION.md` note
+### Task 11 (approved at Plan Review, PR-C1-1): `MIGRATION.md` note
 
 Strictly limited to G3-C1 consumer-visible behaviour, API and CSS implications. No other `MIGRATION.md` edits.
 
@@ -2437,15 +2496,24 @@ git commit -m "docs(gap-064): record G3-C1 consumer-visible changes in MIGRATION
 | C9 / §12 scope; C10 regression incl. `stepper.spec.ts`             | Task 6 Step 5; Task 9 Step 1; Task 10 Steps 2–3                      |
 | C11 provenance                                                     | Task 7                                                               |
 | §12 stop conditions                                                | Global Constraints "Stop rules"; per-step expectations               |
-| §15 SR-C1-5 MIGRATION at Plan Review                               | Task 11 (conditional)                                                |
+| §15 SR-C1-5 MIGRATION at Plan Review                               | Task 11 (approved, PR-C1-1)                                          |
+| §6.5 / §16 PX-C2 Steps focus exclusion                             | Task 3 mapping + test; Task 4 rows; Task 1 focus check; Task 7       |
 
-## Open items for Plan Review
+## Plan Review Decisions (2026-10-06, user)
 
-1. **`MIGRATION.md` (SR-C1-5).** Approve Task 11 (G3-A/G3-B precedent; text above, strictly G3-C1), or drop it.
-2. **`PROVENANCE.md` `@primeuix/styles` entry (Task 7 Step 2).** Not listed in Spec §13. G3-B Amendment A2 showed that `provenance:validate --base-ref` (as CI runs it) fails whenever a diff touches a Prime-derived package path without updating `PROVENANCE.md`. Recommended: approve the one-sentence G3-C1 addition, so CI's provenance job does not fail on this branch. Without it, the failure is recorded as expected at Task 10.
-3. **Tabs navigators verified in the browser only.** jsdom has no layout, so the navigators are never rendered there; the C-3 navigator mapping is asserted by the Task 1 Tabs layout test in all three browsers and by the static fidelity test (test-location note, as G3-B Plan Review decision 1).
-4. **Stepper `:has()` groups (14, 18, 27) verified in the browser only.** jsdom's `:has()` support is not relied on; these groups are covered by the static fidelity test and by the Stepper screenshots/layout test (Vue separator check, vertical Stepper).
-5. **Execution method.** Subagent-driven (`superpowers:subagent-driven-development`), fresh implementation + review per task, with the two hard gates: no baseline or accessibility change before Task 9's review, and no continuation past any hard stop without explicit user authorization. `ci.yml` changes only in Task 8; the branch is not pushed before Task 10.
+The Plan is approved. Implementation is authorized from Task 1 once this record and Spec Amendment A1 are committed. Unchanged and still binding: TDD order, the counts invariant, FX-C1..FX-C6, the three D5 rules, the 15% hard stop against `2c8ef45`, the G3-A/G3-B tooling freeze, and every scope and stop condition.
+
+| ID      | Decision                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Effect in this Plan                                                                                                                                                                                                                                                               |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| PR-C1-1 | **`MIGRATION.md` approved.** Task 11 uses the drafted G3-C1-only note, strictly limited to the consumer-visible Navigation/Aura changes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Task 11 is unconditional.                                                                                                                                                                                                                                                         |
+| PR-C1-2 | **`PROVENANCE.md` approved.** One sentence for G3-C1 in the existing `@primeuix/styles` entry; nothing else in the file.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Task 7 Step 2 is unconditional; `provenance:validate --base-ref 2c8ef45` must pass.                                                                                                                                                                                               |
+| PR-C1-3 | **Tabs navigators: browser-only verification accepted.** The jsdom limitation stays documented; positioning is verified in all three browsers (Task 1 Tabs layout test) and by the static fidelity test.                                                                                                                                                                                                                                                                                                                                                                                                                                                              | No jsdom navigator row.                                                                                                                                                                                                                                                           |
+| PR-C1-4 | **Stepper `:has()` groups (14, 18, 27): browser-only verification accepted.** No unreliable jsdom assertions; static fidelity plus browser layout/screenshot coverage.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | No jsdom `:has()` row.                                                                                                                                                                                                                                                            |
+| PR-C1-5 | **Execution: subagent-driven**, preserving both hard gates: no screenshot or accessibility-baseline change before the Task 9 review, and no continuation past any hard stop without explicit authorization.                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `ci.yml` changes only in Task 8; no push before Task 10.                                                                                                                                                                                                                          |
+| PR-C1-6 | **PX-C1 confirmed.** Disabled Steps items use `opacity: 1` instead of the previous dimming. This applies to explicitly disabled items and to every non-active item of a readonly (default) Steps. Items stay non-interactive, and the change is intentional upstream parity, not a regression.                                                                                                                                                                                                                                                                                                                                                                        | Task 1 Steps layout test; Task 4 readonly row; Task 9 record flags it.                                                                                                                                                                                                            |
+| PR-C1-7 | **Steps focus selector amended before implementation (Spec Amendment A1, PX-C2).** Upstream's `:not(.p-disabled)` on the link is inert, because upstream (PrimeVue, PrimeNG) and Ultimate both put the disabled class on the item. The user chose to move the filter to the item: `.u-steps-item:not(.u-steps-item-disabled) .u-steps-item-link:focus-visible`. This is a CSS selector adaptation only, with no runtime/JS change. Invariant: a disabled Steps item stays excluded from the focus ring although PX-C1 removes its dimming. Verified 2026-10-06 against the pinned upstream source, the Ultimate DOM and Chromium/Firefox/WebKit × ng/vue (Spec §6.5). | Task 3: `"text"` mapping kind, PX-C2 fidelity test. Task 4: PX-C2 rows (`[0, 2]`, readonly `[0]`). Task 1: keyboard focus check (enabled link has the token ring; the disabled item's link has `outline-color: rgba(0, 0, 0, 0)`). Task 7: PX-C2 in the steps provenance entries. |
+
+**Verification evidence for PR-C1-7** (git-ignored workspace `.superpowers/sdd/2026-10-05-gap-064-g3c-research/sim/`): `verify-steps-focus.mjs` and its output `verify-steps-focus.out` (12 runs: 2 frameworks × 3 browsers × the plain and the PX-C2 selector, on freshly rebuilt Storybooks). With the plain mapping, the disabled link shows the token ring in 6/6 runs. With PX-C2 it shows no ring in 6/6 runs, while the enabled link keeps the ring in 12/12 runs. The data module was re-run with PX-C2: counts unchanged, 0 problems, and the fidelity test is green on style files built from its output.
 
 ## After this plan
 
