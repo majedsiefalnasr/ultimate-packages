@@ -64,6 +64,7 @@ const classes = {
     `u-toast-message-${(params?.["severity"] as string) ?? "info"}`,
   ],
   messageContent: "u-toast-message-content",
+  messageText: "u-toast-message-text",
   summary: "u-toast-summary",
   detail: "u-toast-detail",
   closeButton: "u-toast-close-button",

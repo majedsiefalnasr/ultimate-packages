@@ -53,23 +53,27 @@ let nextId = 0;
     @for (message of messages(); track message.id) {
       <div [class]="cx('message', { severity: message.severity })" role="alert" aria-live="assertive" aria-atomic="true">
         <div [class]="cx('messageContent')">
-          @if (message.summary) {
-            <div [class]="cx('summary')">{{ message.summary }}</div>
-          }
-          @if (message.detail) {
-            <div [class]="cx('detail')">{{ message.detail }}</div>
+          <div [class]="cx('messageText')">
+            @if (message.summary) {
+              <div [class]="cx('summary')">{{ message.summary }}</div>
+            }
+            @if (message.detail) {
+              <div [class]="cx('detail')">{{ message.detail }}</div>
+            }
+          </div>
+          @if (message.closable !== false) {
+            <div>
+              <button
+                type="button"
+                [class]="cx('closeButton')"
+                aria-label="Close"
+                (click)="remove(message.id)"
+              >
+                &times;
+              </button>
+            </div>
           }
         </div>
-        @if (message.closable !== false) {
-          <button
-            type="button"
-            [class]="cx('closeButton')"
-            aria-label="Close"
-            (click)="remove(message.id)"
-          >
-            &times;
-          </button>
-        }
       </div>
     }
   `,
