@@ -198,7 +198,7 @@ jobs:
             --project=${{ matrix.framework }}-chromium \
             --project=${{ matrix.framework }}-firefox \
             --project=${{ matrix.framework }}-webkit \
-            --grep-invert "G3-A|G3-B"
+            --grep-invert "G3-A|G3-B|G3-C1"
 
       - name: Accessibility baseline validation (${{ matrix.framework }})
         run: node scripts/provenance/validate-accessibility-baseline.mjs --check "test-results/accessibility/${{ matrix.framework }}/**/*.json"
@@ -277,6 +277,36 @@ jobs:
           path: |
             test-results/accessibility/${{ matrix.framework }}/
             test-results/g3b-accessibility/
+
+      # GAP-064 G3-C1 Spec §10 (SR-C1-2): differential accessibility contract for
+      # the G3-C1 verification stories (same contract as G3-A/G3-B, own story set
+      # and evidence list). The visual and layout tests in this run stay a hard gate.
+      - name: Run G3-C1 verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3c1-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-C1 differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        # An explicit bash shell adds pipefail, so the validator's exit code
+        # survives the pipe into tee.
+        shell: bash
+        run: |
+          mkdir -p test-results/g3c1-accessibility
+          node scripts/provenance/validate-g3c1-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3c1-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-C1 accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3c1-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3c1-accessibility/
 
   track-e-ssr-hydration:
     runs-on: ubuntu-latest
