@@ -1046,7 +1046,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-064 — Aura preset has per-component token coverage for only 5 of ~88 comparable components (76 registered after the Batches 1-3 tranche, 2026-10-01)
 
-- **Status:** PARTIAL (2026-10-01: Batches 1-3 tranche delivered, `b9ec863`..`cf341df`, 76 modules registered. 2026-10-04: **Tranche 1 complete** on `feature/gap-064-aura-token-wiring`, `0eeb9e2`..`1211b4c`; 79 modules registered. Remaining: G3 — 46 Angular / 48 Vue hand-written-CSS components; see the Tranche 1 progress note and follow-ups below)
+- **Status:** PARTIAL (2026-10-01: Batches 1-3 tranche delivered, `b9ec863`..`cf341df`, 76 modules registered. 2026-10-04: **Tranche 1 complete** on `feature/gap-064-aura-token-wiring`, `0eeb9e2`..`1211b4c`; 79 modules registered. 2026-10-05: G3-A (F5 Display + F4 Feedback, 13 Angular / 14 Vue) merged to `main` `fe86fe4`; **G3-B complete** (F1 Containers & Panels, 10 Angular / 10 Vue), merged to local `main` `f008a73`. Remaining: G3-C, G3-D, G3-E — 23 Angular / 24 Vue hand-written-CSS components; see the Tranche 1 and G3-B progress notes and follow-ups below)
 - **Type:** Styling, Component, Architecture
 - **Blocking level:** MEDIUM
 - **Current evidence:** Real Prime's shared `@primeuix/themes` package has 88 per-component preset modules; Ultimate has 5 (`checkbox`/`button`/`menu`/`tooltip`/`dialog` — the original Phase 5 proof set), confirmed during the Aura token-completeness residual verification. The other ~83 components have real, working, but hardcoded (non-themeable) CSS instead — confirmed via Accordion as a representative sample, self-disclosed in-code, recurring in 54 of Vue's own style-module files. **The `base`-tier foundation tokens are Parity Confirmed and explicitly not part of this gap** — see the separate Parity Confirmed entry in the Final Scope Ledger.
@@ -1083,6 +1083,32 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   9. **`MIGRATION.md` wording (approved text, unchanged):**
      - InputGroup is named twice;
      - it implies that an old `input-text-variables` element existed, but before Tranche 1 that element was never created.
+- **Progress (2026-10-05, G3-B — complete; record `docs/architecture/research/2026-10-05-gap-064-g3b-closeout.md`):**
+  - **Scope.** F1 Containers & Panels: accordion, blockui, card, divider, fieldset, inplace, panel, scrollpanel, splitter, toolbar. That is 10 Angular and 10 Vue style modules.
+  - **Port.** Each module's `css` is now the applicable `@primeuix/styles` 2.0.3 structural CSS, with selectors mapped to the existing DOM: 76 of 89 upstream groups per framework, plus the Spec §5.9 D3–D5 categories.
+  - **Keys.** `blockui` and `scrollpanel` keys (ADR-051).
+  - **Visual baselines.** 138 accepted; U2 intentionally unaccepted.
+  - **Accessibility.** 0 introduced violations; no baseline rows.
+  - **Size.** ng +0.19%, vue +0.69%.
+  - **Merge.** Local `--no-ff` merge `f008a73`, not pushed.
+  - **Still open:** G3-C (F2), G3-D (F3 + F8) and G3-E (F6 + F7). GAP-064 stays PARTIAL.
+- **Follow-ups (recorded at G3-B closeout, 2026-10-05; not implemented, not separate GAPs):**
+  1. **U1 — Angular ScrollPanel story.**
+     - The inline, unstyled `<u-scroll-panel>` root keeps the story from creating the intended clipped 200×200 panel, so the hover screenshots do not show the scroll bars.
+     - This is pre-existing and not a G3-B regression.
+     - The browser layout checks remain the authoritative verification.
+     - Open.
+  2. **U2 — Vue Card WithHeaderAndFooter WebKit screenshot.**
+     - It depends on an external CDN image, and two update attempts captured a broken render.
+     - The baseline is intentionally not accepted, and the test is unchanged.
+     - It is the single known failing G3-B visual test, so the CI vue visual job stays red until the story is made deterministic.
+     - The rejected capture is in local `stash@{0}`.
+     - Open.
+  3. **Vue BlockUI story.**
+     - The story's inline `height`/`border` do not reach the container, because of the existing `inheritAttrs: false` (G3-B Spec §14).
+     - Open.
+
+  Separate and pre-existing, not a G3-B follow-up: `provenance:validate` fails on the missing `ng.json` entry for `packages/ng/src/accordion/accordion.spec.ts`.
 - **Expected state:** Per-component Aura preset modules for the ~83 components built since Phase 5's original 5-component proof set, enabling theme-level customization for them via the same `dt()`-based mechanism the original 5 already use.
 - **Why it matters:** The original 5-component scope boundary (Phase 5 Spec §108/§203/§245) was fully, explicitly disclosed at the time it was written — but it was never revisited or re-affirmed as Phase C's real component count grew roughly 15x beyond that original proof set. This gap registers that unrevisited extension, not the original (still-valid) boundary.
 - **What it blocks:** Nothing further downstream.
@@ -1616,7 +1642,7 @@ The great majority of gaps in this registry can be started without waiting on an
 
 ### Open Architectural Decisions
 
-The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`. The Prime-parity follow-up phase (`feature/prime-parity-followup`, closeout 2026-10-03) resolved GAP-071–GAP-073, GAP-075–GAP-077, GAP-079 (declaration resolvability only) and GAP-080, and registered GAP-082 (typed Vue props); GAP-064 stays PARTIAL and GAP-074, GAP-078 and GAP-081 remain open with approved designs. Record: `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`. The approved-designs phase (`feature/prime-parity-approved-designs`, closeout 2026-10-03) resolved GAP-074, GAP-078 and GAP-081; GAP-064 (PARTIAL) and GAP-082 remain open. Record: `docs/architecture/research/2026-10-03-prime-parity-approved-designs-closeout.md`. GAP-082 (typed Vue props) was resolved on `feature/gap-082-typed-vue-props` (closeout 2026-10-04), which registered GAP-083 (Vue 3.5.0 declaration compatibility, pre-existing). GAP-083 was resolved on `feature/gap-083-vue-floor-compat` (closeout 2026-10-04) by raising the Vue floor to `^3.5.2` (ADR-050). Record: `docs/architecture/research/2026-10-04-gap-083-vue-floor-closeout.md`. Record: `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`. GAP-064 Tranche 1 (Aura key wiring: upstream style keys, Vue InputNumber additional preset key, `badge`/`inputgroup`/`paginator` modules) was completed on `feature/gap-064-aura-token-wiring` (closeout 2026-10-04, ADR-051); GAP-064 stays PARTIAL with G3 (46 Angular / 48 Vue hand-written-CSS components) open. Record: `docs/architecture/research/2026-10-04-gap-064-tranche-1-closeout.md`.
+The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`. The Prime-parity follow-up phase (`feature/prime-parity-followup`, closeout 2026-10-03) resolved GAP-071–GAP-073, GAP-075–GAP-077, GAP-079 (declaration resolvability only) and GAP-080, and registered GAP-082 (typed Vue props); GAP-064 stays PARTIAL and GAP-074, GAP-078 and GAP-081 remain open with approved designs. Record: `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`. The approved-designs phase (`feature/prime-parity-approved-designs`, closeout 2026-10-03) resolved GAP-074, GAP-078 and GAP-081; GAP-064 (PARTIAL) and GAP-082 remain open. Record: `docs/architecture/research/2026-10-03-prime-parity-approved-designs-closeout.md`. GAP-082 (typed Vue props) was resolved on `feature/gap-082-typed-vue-props` (closeout 2026-10-04), which registered GAP-083 (Vue 3.5.0 declaration compatibility, pre-existing). GAP-083 was resolved on `feature/gap-083-vue-floor-compat` (closeout 2026-10-04) by raising the Vue floor to `^3.5.2` (ADR-050). Record: `docs/architecture/research/2026-10-04-gap-083-vue-floor-closeout.md`. Record: `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`. GAP-064 Tranche 1 (Aura key wiring: upstream style keys, Vue InputNumber additional preset key, `badge`/`inputgroup`/`paginator` modules) was completed on `feature/gap-064-aura-token-wiring` (closeout 2026-10-04, ADR-051); GAP-064 stays PARTIAL with G3 (46 Angular / 48 Vue hand-written-CSS components) open. Record: `docs/architecture/research/2026-10-04-gap-064-tranche-1-closeout.md`. GAP-064 G3-B (F1 Containers & Panels, 10 Angular / 10 Vue) was completed on `feature/gap-064-g3b-containers` (closeout 2026-10-05) and merged to local `main` `f008a73`. GAP-064 stays PARTIAL with G3-C..E open, and three story follow-ups (U1, U2, Vue BlockUI) are recorded. Record: `docs/architecture/research/2026-10-05-gap-064-g3b-closeout.md`.
 
 Five were open (§5) at the 2026-10-01 closeout; DECISION-F was decided on 2026-10-02 (Option 1), leaving four: external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower still — Table's own composition question is substantially answered by real implementation, OrderList/PickList/DataView's relationship to it is resolved (2026-09-21, no new foundation required), and Table's own fuller filter-operator vocabulary is resolved (2026-09-23, all 18 `FilterMatchMode` values dispatched in all 3 frameworks); the remainder is TreeTable specifically, gated on the separate DECISION-D), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), and package-naming finalization (DECISION-E, correctly deferred to pre-1.0). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
 
