@@ -427,3 +427,35 @@ Nothing here is implemented by this Spec. CI and `validate-g3a-accessibility.mjs
 9. **Clarification applied before commit: fidelity data model.** §5.9 separates six categories: the 13 omitted component groups (D2, FX-B1..B7); B-2 base-role additions (D3); B-3 inline-role additions (D4); the three retained Ultimate-only rules (D5); and the base mask-animation exclusion FX-B8 (D6), which is not one of the 89 component groups. §5.7 marks FX-B8 accordingly. The 89 / 76 / 13 counts are unchanged.
 
 **Next gate:** Implementation Plan — not started; requires separate authorization.
+
+## 14. Amendment A1 — BlockUI layout check compares the mask with the container's inside-the-border box (user-approved 2026-10-05)
+
+**Trigger.** Plan Task 8 Step 3, the post-port Docker run (HEAD `ee637c2`). `Ng/BlockUI G3-B layout` failed in Chromium, Firefox and WebKit, on every retry. The mask's `x` differed from the container's `x` by 1px, against the 0.5px limit. Everything else passed:
+
+- all 150 accessibility scans;
+- Vue layout 7/7;
+- the other 6 Angular layout tests.
+
+**Cause.**
+
+- In Angular, the host `<u-block-ui>` **is** the `.u-blockui-container`, and the Angular BlockUI stories put `border: 1px dashed` on that same element.
+- The ported mask (PX-B3 base role, then upstream `position: absolute`) is `top: 0; left: 0; width: 100%; height: 100%`.
+- An absolutely positioned element is laid out against its containing block's **padding box**, i.e. inside the border. So the mask is inset by the 1px border, exactly as upstream's `.p-blockui-mask.p-overlay-mask` would be.
+- The C6 check compared the mask with the container's **outer border box**. The expectation was wrong, not the CSS.
+
+**Why Vue passed.**
+
+- `BlockUI.vue` sets `inheritAttrs: false`, so the story's inline `style` (border and height) never reaches the Vue container, and the Vue check ran against a borderless container.
+- That does not invalidate the correction: with no border, the inside-the-border box and the border box coincide.
+
+**Decision (user, Option A).**
+
+1. The Angular and Vue BlockUI layout checks compare the mask's box with the container's **inside-the-border box**: the border box inset by the container's computed border widths.
+2. The **0.5px tolerance is unchanged**. This corrects the geometry being compared; it does not weaken the threshold.
+3. The full-screen and unblocked parts of the check are unchanged.
+4. No CSS, runtime, DOM or story change. The Angular story border stays, and the tolerance is not loosened to 1px.
+5. The Plan Task 8 post-port Docker verification is rerun in all three browsers after the correction.
+
+C6's BlockUI requirement ("the blocked mask's box equals the container's box") is read as the container's inside-the-border box. The full-screen viewport requirement is unchanged.
+
+**Follow-up observation (not G3-B scope, not an acceptance criterion, never a reason for a baseline change).** The Vue BlockUI stories' inline `height` and `border` do not reach the rendered BlockUI container, because of the existing `inheritAttrs: false` in `BlockUI.vue`. The Vue story is not modified in G3-B.

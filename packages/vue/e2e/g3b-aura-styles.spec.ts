@@ -85,6 +85,26 @@ async function box(locator: Locator) {
   return b!;
 }
 
+/** The element's box inside its border: where an absolutely positioned inset-0 / 100% child is laid out (Spec §14). */
+async function insideBorderBox(locator: Locator): Promise<Box> {
+  return locator.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    const [top, right, bottom, left] = [
+      cs.borderTopWidth,
+      cs.borderRightWidth,
+      cs.borderBottomWidth,
+      cs.borderLeftWidth,
+    ].map(parseFloat);
+    return {
+      x: r.x + left,
+      y: r.y + top,
+      width: r.width - left - right,
+      height: r.height - top - bottom,
+    };
+  });
+}
+
 type Box = { x: number; y: number; width: number; height: number };
 function expectInside(inner: Box, outer: Box) {
   expect(inner.x).toBeGreaterThanOrEqual(outer.x - 0.5);
@@ -121,7 +141,7 @@ test("Vue/BlockUI G3-B layout", async ({ page }) => {
   const container = page.locator(".u-blockui-container");
   const mask = container.locator(".u-blockui-mask");
   await expect(mask).toHaveCount(1);
-  const c = await box(container);
+  const c = await insideBorderBox(container);
   const m = await box(mask);
   for (const k of ["x", "y", "width", "height"] as const)
     expect(Math.abs(m[k] - c[k]), k).toBeLessThanOrEqual(0.5);

@@ -3223,6 +3223,44 @@ Also recorded: `ci.yml` changes only in Task 8, and the branch is not pushed bef
 
 **Next gate:** implementation authorization — not started.
 
+## Plan Amendment A1 — BlockUI layout check geometry (user-approved 2026-10-05; Spec §14)
+
+During Task 8 Step 3 the `Ng/BlockUI G3-B layout` test failed by 1px in all three browsers. The cause is in the test, not the CSS: the story's 1px border is on the same `.u-blockui-container` that the absolutely positioned mask is laid out inside. Full analysis in Spec §14.
+
+The correction applies to both e2e specs (Task 1 files) and is committed on its own, before Task 8 resumes.
+
+**1. Add this helper** next to `box()` in `packages/ng/e2e/g3b-aura-styles.spec.ts` and `packages/vue/e2e/g3b-aura-styles.spec.ts`:
+
+```ts
+/** The element's box inside its border: where an absolutely positioned inset-0 / 100% child is laid out (Spec §14). */
+async function insideBorderBox(locator: Locator): Promise<Box> {
+  return locator.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    const [top, right, bottom, left] = [
+      cs.borderTopWidth,
+      cs.borderRightWidth,
+      cs.borderBottomWidth,
+      cs.borderLeftWidth,
+    ].map(parseFloat);
+    return {
+      x: r.x + left,
+      y: r.y + top,
+      width: r.width - left - right,
+      height: r.height - top - bottom,
+    };
+  });
+}
+```
+
+**2. Change the comparison.** In both `<Fw>/BlockUI G3-B layout` tests, replace `const c = await box(container);` with `const c = await insideBorderBox(container);`.
+
+The loop and its `toBeLessThanOrEqual(0.5)` are unchanged. The full-screen and unblocked parts are unchanged.
+
+**3. Commit, then resume Task 8.** Commit the correction together with this amendment and Spec §14 (`test(gap-064): compare the BlockUI mask with the container's inside-the-border box`). Then resume Task 8 at Step 3 (the post-port Docker run in all three browsers) and continue through Step 7. The validator, its test and the `ci.yml` edit already in the working tree are kept and are committed in Task 8 Step 7 as planned.
+
+**Unchanged:** the CSS, runtime, DOM and stories; the 0.5px tolerance; the Angular story border; everything else in Task 8. The Vue BlockUI story observation (`inheritAttrs: false` drops its inline `height`/`border`) is a follow-up only (Spec §14).
+
 ## After this plan
 
 Final Review and Closeout are a separate gate: GAP-064 progress note (G3-A, G3-B complete; G3-C..E open; status stays PARTIAL), the closeout record, and merge/push decisions.
