@@ -109,3 +109,23 @@ Added on `feature/gap-082-typed-vue-props` (2026-10-03), same status — unrelea
 Added on `feature/gap-083-vue-floor-compat` (2026-10-04), same status — unreleased, no changesets:
 
 - **`@ultimate/vue`, `@ultimate/vue-core` — minimum Vue version is now 3.5.2.** The `vue` peer range changes from `^3.5.0` to `^3.5.2`. The shipped declarations use Vue 3.5.2's `DefineComponent` type, which Vue 3.5.0 and 3.5.1 cannot type-check. Applications on Vue 3.5.0 or 3.5.1 must upgrade Vue. The CLI and MCP compatibility checks report the same floor. (GAP-083, ADR-050.)
+
+Added for GAP-064 Tranche 1 (`feature/gap-064-aura-token-wiring`), same status — unreleased, no changesets:
+
+- **`@ultimate/ng`, `@ultimate/vue` — Aura tokens now apply to 16 Angular and 17 Vue form components, and to Badge, InputGroup and Paginator.** These components (CascadeSelect, ColorPicker, DatePicker, FileUpload, FloatLabel, IconField, IftaLabel, InputGroup, InputNumber, InputOtp, InputText, MultiSelect, RadioButton, SelectButton, ToggleButton, ToggleSwitch; Vue also InputChips) previously referenced theme variables that were never defined. They now render with their Aura values and follow theme customization. Visual appearance changes accordingly. (ADR-051.)
+- **`@ultimate/react` — Paginator** now receives the Aura `paginator` variables it already referenced, so its appearance changes too.
+- **Generated `<style>` keys changed** for the components above (`data-u-ng-style` / `data-u-style`, for example `input-text` → `inputtext`, `input-text-variables` → `inputtext-variables`). These keys are internal, not a supported contract; CSS or scripts that selected these elements by key must use the new values.
+- **`@ultimate/vue-core` — `registerComponentStyle` takes an optional third parameter, `additionalPresetKeys`** (additive; existing calls unchanged).
+
+Added for GAP-064 G3-A (`feature/gap-064-g3a-display-feedback`), same status — unreleased, no changesets:
+
+- **`@ultimate/ng`, `@ultimate/vue` — Display and Feedback components now use their Aura tokens.** Avatar, Chip, Tag, Skeleton, OverlayBadge, Knob, ProgressBar, ProgressSpinner, MeterGroup, Timeline, Terminal, Message and Toast (and Vue InlineMessage) now take their applicable structural styling from the upstream Aura styles (`@primeuix/styles` 2.0.3), mapped to Ultimate's existing DOM, and follow theme customization. The hand-written rules those upstream styles cover are replaced, so visual appearance changes accordingly. A small set of documented Ultimate-specific rules remains:
+  - the Toast root positioning, offsets and stacking (Spec PX-A4);
+  - the Chip label and Terminal welcome/command layout (PX-A5);
+  - the Skeleton root positioning (PX-A6).
+
+  The other approved parity exceptions and feature exclusions are listed in the G3-A Spec (§5.3–§5.4). (GAP-064 G3-A; with the approved Toast markup/class exception from Amendment A2.)
+
+- **Legacy `--u-*` variables removed.** 42 legacy Ultimate-specific `--u-*` variable names (for example `--u-toast-info-bg`, `--u-tag-bg`, `--u-message-info-bg`) are no longer read by the affected G3-A style modules. They are no longer used or supported. None of them is documented as a public or consumer compatibility contract, and no aliases, shims or compatibility variables are provided. Use the corresponding Aura token/theme customization instead.
+
+- **Generated `<style>` keys changed** for OverlayBadge, ProgressBar, ProgressSpinner, MeterGroup and Vue InlineMessage (for example `progress-bar` → `progressbar`); these keys are internal, not a supported contract.

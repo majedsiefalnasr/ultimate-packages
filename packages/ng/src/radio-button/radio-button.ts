@@ -75,7 +75,7 @@ import { radioButtonStyleModule } from "./radio-button-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class URadioButton extends UBaseEditableHolder {
-  protected override readonly componentName = "radio-button";
+  protected override readonly componentName = "radiobutton";
   protected override readonly styleModule = radioButtonStyleModule;
 
   /** Value of the radio button — compared against the written control value to derive `checked` (non-binary mode). */

@@ -4,17 +4,18 @@
  * `UBaseComponent`'s `styleModule: {css, classes}` contract. No
  * `@ultimate/uix-styles/tag` entry exists yet, so `css`/`classes` are
  * authored locally (same precedent as `messageStyleModule`).
+ * GAP-064 G3-A: the css below is the applicable @primeuix/styles 2.0.3 structural CSS mapped to this component's DOM (see packages/themes/test/utils/g3a-port.mjs).
  */
 const css = /*css*/ `
-.u-tag { display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: var(--u-tag-bg, #6b7280); color: var(--u-tag-color, #fff); }
-.u-tag-rounded { border-radius: 9999px; }
-.u-tag-success { background: var(--u-tag-success-bg, #22c55e); }
-.u-tag-info { background: var(--u-tag-info-bg, #3b82f6); }
-.u-tag-warn { background: var(--u-tag-warn-bg, #f59e0b); }
-.u-tag-danger { background: var(--u-tag-danger-bg, #ef4444); }
-.u-tag-secondary { background: var(--u-tag-secondary-bg, #6b7280); }
-.u-tag-contrast { background: var(--u-tag-contrast-bg, #18181b); }
-.u-tag-icon { flex-shrink: 0; }
+.u-tag{display: inline-flex;align-items: center;justify-content: center;background: dt('tag.primary.background');color: dt('tag.primary.color');font-size: dt('tag.font.size');font-weight: dt('tag.font.weight');padding: dt('tag.padding');border-radius: dt('tag.border.radius');gap: dt('tag.gap');}
+.u-tag-icon{font-size: dt('tag.icon.size');width: dt('tag.icon.size');height: dt('tag.icon.size');}
+.u-tag-rounded{border-radius: dt('tag.rounded.border.radius');}
+.u-tag-success{background: dt('tag.success.background');color: dt('tag.success.color');}
+.u-tag-info{background: dt('tag.info.background');color: dt('tag.info.color');}
+.u-tag-warn{background: dt('tag.warn.background');color: dt('tag.warn.color');}
+.u-tag-danger{background: dt('tag.danger.background');color: dt('tag.danger.color');}
+.u-tag-secondary{background: dt('tag.secondary.background');color: dt('tag.secondary.color');}
+.u-tag-contrast{background: dt('tag.contrast.background');color: dt('tag.contrast.color');}
 `;
 
 const classes = {

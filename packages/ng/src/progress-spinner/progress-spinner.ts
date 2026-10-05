@@ -29,7 +29,7 @@ import { progressSpinnerStyleModule } from "./progress-spinner-style";
   },
 })
 export class UProgressSpinner extends UBaseComponent {
-  protected override readonly componentName = "progress-spinner";
+  protected override readonly componentName = "progressspinner";
   protected override readonly styleModule = progressSpinnerStyleModule;
 
   /** Width of the circle stroke. */

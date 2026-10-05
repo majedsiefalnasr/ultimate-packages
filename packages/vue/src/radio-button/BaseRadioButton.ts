@@ -38,7 +38,7 @@ export function createBaseRadioButton() {
       },
     },
     mounted() {
-      registerComponentStyle("radio-button", radioButtonStyleModule);
+      registerComponentStyle("radiobutton", radioButtonStyleModule);
     },
   });
 }

@@ -122,4 +122,31 @@ describe("UToast", () => {
     expect(wrapper.find(".u-toast-close-button").exists()).toBe(false);
     wrapper.unmount();
   });
+
+  it("renders the upstream-aligned message structure (GAP-064 G3-A A2)", async () => {
+    const wrapper = mount(UToast);
+    toastEventBus.emit("add", { severity: "warn", summary: "S", detail: "D" });
+    await wrapper.vm.$nextTick();
+
+    const content = wrapper.find(".u-toast-message > .u-toast-message-content").element;
+    const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
+    expect(rest).toHaveLength(0);
+    expect(text.className).toBe("u-toast-message-text");
+    expect(Array.from(text.children, (c) => c.className)).toEqual(["u-toast-summary", "u-toast-detail"]);
+    expect(container.tagName).toBe("DIV");
+    expect(container.classList).toHaveLength(0);
+    expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
+    wrapper.unmount();
+  });
+
+  it("omits the close-button container for a non-closable message (GAP-064 G3-A A2)", async () => {
+    const wrapper = mount(UToast);
+    toastEventBus.emit("add", { severity: "info", summary: "S", closable: false });
+    await wrapper.vm.$nextTick();
+
+    const content = wrapper.find(".u-toast-message > .u-toast-message-content").element;
+    expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
+    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
+    wrapper.unmount();
+  });
 });

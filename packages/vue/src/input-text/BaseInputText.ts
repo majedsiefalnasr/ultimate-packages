@@ -31,7 +31,7 @@ export function createBaseInputText() {
       },
     },
     mounted() {
-      registerComponentStyle("input-text", inputTextStyleModule);
+      registerComponentStyle("inputtext", inputTextStyleModule);
     },
   });
 }

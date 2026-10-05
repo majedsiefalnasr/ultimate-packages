@@ -93,7 +93,7 @@ interface Hsb {
   encapsulation: ViewEncapsulation.None,
 })
 export class UColorPicker extends UBaseEditableHolder {
-  protected override readonly componentName = "color-picker";
+  protected override readonly componentName = "colorpicker";
   protected override readonly styleModule = colorPickerStyleModule;
 
   /** Format to use in value binding. */

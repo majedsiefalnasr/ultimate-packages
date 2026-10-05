@@ -35,7 +35,7 @@ import { overlayBadgeStyleModule } from "./overlay-badge-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UOverlayBadge extends UBaseComponent {
-  protected override readonly componentName = "overlay-badge";
+  protected override readonly componentName = "overlaybadge";
   protected override readonly styleModule = overlayBadgeStyleModule;
 
   /** Value to display inside the badge. */

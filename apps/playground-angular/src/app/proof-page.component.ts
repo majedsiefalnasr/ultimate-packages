@@ -4,6 +4,7 @@ import {
   UButton,
   UCheckbox,
   UDialog,
+  UInputText,
   UMenu,
   UPaginator,
   UScroller,
@@ -34,7 +35,8 @@ const SCROLLER_ITEMS: readonly string[] = ["Row 1", "Row 2", "Row 3", "Row 4", "
 type SortOrder = 1 | 0 | -1;
 
 /**
- * Single standalone page rendering all 8 `@ultimate/ng` components with
+ * Single standalone page rendering the 8 Track E `@ultimate/ng` components plus
+ * `UInputText` (GAP-064 Tranche 1 SSR key check) with
  * static fixture data, for Track E's SSR/hydration verification harness.
  * Imports every component from `@ultimate/ng`'s root barrel (the package
  * has no per-component subpath exports).
@@ -42,7 +44,17 @@ type SortOrder = 1 | 0 | -1;
 @Component({
   selector: "app-proof-page",
   standalone: true,
-  imports: [UButton, UCheckbox, UDialog, UMenu, UPaginator, UScroller, UTable, UTooltip],
+  imports: [
+    UButton,
+    UCheckbox,
+    UDialog,
+    UInputText,
+    UMenu,
+    UPaginator,
+    UScroller,
+    UTable,
+    UTooltip,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main>
@@ -100,6 +112,11 @@ type SortOrder = 1 | 0 | -1;
           (sortFieldChange)="onTableSortFieldChange($event)"
           (sortOrderChange)="onTableSortOrderChange($event)"
         />
+      </section>
+
+      <section aria-labelledby="input-text-heading">
+        <h2 id="input-text-heading">InputText</h2>
+        <input uInputText aria-labelledby="input-text-heading" data-testid="input-text" />
       </section>
 
       <section aria-labelledby="tooltip-heading">

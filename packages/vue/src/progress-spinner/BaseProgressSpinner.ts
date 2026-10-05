@@ -8,7 +8,7 @@ import { progressSpinnerStyleModule } from "./progress-spinner-style";
 export function createBaseProgressSpinner() {
   return defineComponent({
     extends: createBaseComponent({
-      componentName: "progress-spinner",
+      componentName: "progressspinner",
       styleModule: progressSpinnerStyleModule,
     }),
     props: {

@@ -85,7 +85,7 @@ export interface USelectButtonChangeEvent {
   encapsulation: ViewEncapsulation.None,
 })
 export class USelectButton extends UBaseEditableHolder {
-  protected override readonly componentName = "select-button";
+  protected override readonly componentName = "selectbutton";
   protected override readonly styleModule = selectButtonStyleModule;
 
   /** Available options to choose from. */

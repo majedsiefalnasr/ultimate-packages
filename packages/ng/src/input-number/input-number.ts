@@ -103,7 +103,7 @@ import { inputNumberStyleModule } from "./input-number-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UInputNumber extends UBaseInput {
-  protected override readonly componentName = "input-number";
+  protected override readonly componentName = "inputnumber";
   protected override readonly styleModule = inputNumberStyleModule;
 
   /**

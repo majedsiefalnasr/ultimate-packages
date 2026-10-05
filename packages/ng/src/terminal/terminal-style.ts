@@ -4,15 +4,16 @@
  * `UBaseComponent`'s `styleModule: {css, classes}` contract. No
  * `@ultimate/uix-styles/terminal` entry exists yet, so `css`/`classes` are
  * authored locally (same precedent as `messageStyleModule`).
+ * GAP-064 G3-A: the css below is the applicable @primeuix/styles 2.0.3 structural CSS mapped to this component's DOM (see packages/themes/test/utils/g3a-port.mjs).
  */
 const css = /*css*/ `
-.u-terminal { background: var(--u-terminal-bg, #1e1e1e); color: var(--u-terminal-color, #f3f4f6); font-family: monospace; padding: 0.75rem; border-radius: 6px; overflow-y: auto; max-height: 20rem; }
-.u-terminal-welcome-message { margin-bottom: 0.5rem; }
-.u-terminal-command { display: block; margin-bottom: 0.25rem; }
-.u-terminal-command-response { white-space: pre-wrap; }
-.u-terminal-prompt { display: flex; align-items: center; }
-.u-terminal-prompt-label { margin-right: 0.5rem; }
-.u-terminal-prompt-value { flex: 1; background: transparent; border: none; outline: none; color: inherit; font: inherit; }
+.u-terminal{display: block;height: dt('terminal.height');overflow: auto;background: dt('terminal.background');color: dt('terminal.color');border: 1px solid dt('terminal.border.color');padding: dt('terminal.padding');border-radius: dt('terminal.border.radius');}
+.u-terminal-prompt{display: flex;align-items: center;}
+.u-terminal-prompt-value{flex: 1 1 auto;border: 0 none;background: transparent;color: inherit;padding: 0;outline: 0 none;font-family: inherit;font-feature-settings: inherit;font-size: 1rem;}
+.u-terminal-prompt-label{margin-inline-end: dt('terminal.prompt.gap');}
+.u-terminal-command-response{margin: dt('terminal.command.response.margin');}
+.u-terminal-welcome-message{margin-bottom: 0.5rem;}
+.u-terminal-command{display: block;margin-bottom: 0.25rem;}
 `;
 
 const classes = {

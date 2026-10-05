@@ -27,6 +27,6 @@ import { iftaLabelStyleModule } from "./ifta-label-style";
   },
 })
 export class UIftaLabel extends UBaseComponent {
-  protected override readonly componentName = "ifta-label";
+  protected override readonly componentName = "iftalabel";
   protected override readonly styleModule = iftaLabelStyleModule;
 }

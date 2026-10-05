@@ -32,7 +32,16 @@ export const vueCoreStyleSheet = new VueStyleSheet();
 // object) and builds the StyleMeta + calls createStyleElement internally,
 // matching react-core's/ng-core's identical has()/add(componentName,
 // styleModule.css) call shape.
-export function registerComponentStyle(componentName: string, styleModule: StyleModule): void {
+//
+// additionalPresetKeys (ADR-051): further Aura preset keys whose theme
+// VARIABLES this component's structural CSS consumes. Only their variables
+// are registered — never structural CSS under those keys, which belong to
+// their own components.
+export function registerComponentStyle(
+  componentName: string,
+  styleModule: StyleModule,
+  additionalPresetKeys: readonly string[] = []
+): void {
   registerHiddenAccessible(vueCoreStyleSheet);
 
   // Theme variable DEFINITIONS first — the structural CSS below refers to
@@ -40,6 +49,9 @@ export function registerComponentStyle(componentName: string, styleModule: Style
   // unless something also defines the properties. Idempotent per its own
   // has() guards; see registerThemeVariables' doc comment.
   registerThemeVariables(vueCoreStyleSheet, componentName);
+  for (const presetKey of additionalPresetKeys) {
+    registerThemeVariables(vueCoreStyleSheet, presetKey);
+  }
 
   if (vueCoreStyleSheet.has(componentName)) return;
   vueCoreStyleSheet.add(componentName, css`${styleModule.css}`);

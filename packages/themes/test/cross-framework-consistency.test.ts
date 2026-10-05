@@ -304,6 +304,27 @@ describe("cross-framework theme consistency", () => {
       const resolvedToken = dt("paginator.background");
       expect(reactCss).toContain(resolvedToken);
     });
+
+    it("React's real UPaginator has its paginator variables defined (GAP-064 D3)", async () => {
+      const { UPaginator } = await import("@ultimate/react/paginator");
+
+      render(
+        React.createElement(UPaginator, {
+          first: 0,
+          rows: 10,
+          totalRecords: 95,
+          onPageChange: () => {},
+        })
+      );
+
+      // react-core's <style> elements carry no key attribute; Vue's carry
+      // data-u-style, so excluding those leaves React's registrations.
+      const reactCss = Array.from(document.head.querySelectorAll("style:not([data-u-style])"))
+        .map((el) => el.textContent ?? "")
+        .join("\n");
+      expect(reactCss).toContain("--u-paginator-background:");
+      expect(reactCss).toContain("--u-paginator-nav-button-selected-background:");
+    });
   });
 
   describe("React and Vue's real UTable renders resolve the same datatable.* tokens", () => {

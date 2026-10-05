@@ -17,3 +17,13 @@ export const Default: Story = {
     </u-timeline>`,
   }),
 };
+
+/** GAP-064 G3-A verification story: horizontal layout. */
+export const Horizontal: Story = {
+  render: () => ({
+    props: { events: ["Ordered", "Shipped", "Delivered"] },
+    template: `<u-timeline [value]="events" layout="horizontal">
+      <ng-template #content let-event>{{ event }}</ng-template>
+    </u-timeline>`,
+  }),
+};

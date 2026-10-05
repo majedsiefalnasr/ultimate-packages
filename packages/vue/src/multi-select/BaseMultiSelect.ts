@@ -44,7 +44,7 @@ export function createBaseMultiSelect() {
       },
     },
     mounted() {
-      registerComponentStyle("multi-select", multiSelectStyleModule);
+      registerComponentStyle("multiselect", multiSelectStyleModule);
     },
   });
 }

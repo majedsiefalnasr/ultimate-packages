@@ -29,7 +29,7 @@ export function createBaseInputOtp() {
       },
     },
     mounted() {
-      registerComponentStyle("input-otp", inputOtpStyleModule);
+      registerComponentStyle("inputotp", inputOtpStyleModule);
     },
   });
 }

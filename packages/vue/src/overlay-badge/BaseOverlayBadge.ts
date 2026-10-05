@@ -16,7 +16,7 @@ import { overlayBadgeStyleModule } from "./overlay-badge-style";
  */
 export function createBaseOverlayBadge() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "overlay-badge", styleModule: overlayBadgeStyleModule }),
+    extends: createBaseComponent({ componentName: "overlaybadge", styleModule: overlayBadgeStyleModule }),
     props: {
       value: { type: [String, Number] as PropType<string | number | null>, default: null },
       severity: { type: String, default: null },

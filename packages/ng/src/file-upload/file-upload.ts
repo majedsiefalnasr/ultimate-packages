@@ -157,7 +157,7 @@ export interface UFileUploadHandlerEvent {
   encapsulation: ViewEncapsulation.None,
 })
 export class UFileUpload extends UBaseComponent {
-  protected override readonly componentName = "file-upload";
+  protected override readonly componentName = "fileupload";
   protected override readonly styleModule = fileUploadStyleModule;
 
   @ViewChild("fileInput") private readonly fileInputRef?: ElementRef<HTMLInputElement>;

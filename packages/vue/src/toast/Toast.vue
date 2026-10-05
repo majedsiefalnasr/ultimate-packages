@@ -9,18 +9,21 @@
       aria-atomic="true"
     >
       <div :class="cx('messageContent')">
-        <div v-if="message.summary" :class="cx('summary')">{{ message.summary }}</div>
-        <div v-if="message.detail" :class="cx('detail')">{{ message.detail }}</div>
+        <div :class="cx('messageText')">
+          <div v-if="message.summary" :class="cx('summary')">{{ message.summary }}</div>
+          <div v-if="message.detail" :class="cx('detail')">{{ message.detail }}</div>
+        </div>
+        <div v-if="message.closable !== false">
+          <button
+            type="button"
+            :class="cx('closeButton')"
+            aria-label="Close"
+            @click="remove(message.id)"
+          >
+            &times;
+          </button>
+        </div>
       </div>
-      <button
-        v-if="message.closable !== false"
-        type="button"
-        :class="cx('closeButton')"
-        aria-label="Close"
-        @click="remove(message.id)"
-      >
-        &times;
-      </button>
     </div>
   </div>
 </template>

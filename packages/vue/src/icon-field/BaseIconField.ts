@@ -8,6 +8,6 @@ import { iconFieldStyleModule } from "./icon-field-style";
 // own at all — verified: real BaseIconField.vue declares no `props` block).
 export function createBaseIconField() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "icon-field", styleModule: iconFieldStyleModule }),
+    extends: createBaseComponent({ componentName: "iconfield", styleModule: iconFieldStyleModule }),
   });
 }

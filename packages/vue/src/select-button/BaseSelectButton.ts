@@ -34,7 +34,7 @@ export function createBaseSelectButton() {
       },
     },
     mounted() {
-      registerComponentStyle("select-button", selectButtonStyleModule);
+      registerComponentStyle("selectbutton", selectButtonStyleModule);
     },
   });
 }
