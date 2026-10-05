@@ -161,6 +161,15 @@ test("Vue/Steps G3-C1 layout", async ({ page }) => {
   expect(await link(1).evaluate((el) => el.matches(":focus-visible"))).toBe(true);
   await expect(link(1)).toHaveCSS("outline-color", "rgba(0, 0, 0, 0)");
   await expect(link(1)).toHaveCSS("box-shadow", "none");
+
+  // PX-C1 interaction parity (Spec §17): the disabled item now receives pointer events
+  // (upstream `pointer-events: auto`), but a real click changes neither the active step nor the URL.
+  await expect(link(1)).toHaveCSS("pointer-events", "auto");
+  const url = page.url();
+  await link(1).click({ force: true });
+  await expect(items.nth(0)).toHaveAttribute("aria-current", "step");
+  await expect(items.nth(1)).not.toHaveAttribute("aria-current", "step");
+  expect(page.url()).toBe(url);
 });
 
 test("Vue/Stepper G3-C1 layout", async ({ page }) => {
@@ -187,6 +196,14 @@ test("Vue/Stepper G3-C1 layout", async ({ page }) => {
   await expect(page.locator(".u-step-item")).toHaveCount(3);
   await expect(page.locator(".u-step-panel:visible")).toHaveCount(1);
   await expect(page.locator(".u-step-item-active .u-step-panel")).toBeVisible();
+
+  // GAP-063 intent, retargeted (Spec §17): the vertical step header stays left-aligned in its
+  // step without the old `align-items: flex-start` override.
+  const step = page.locator(".u-step-item .u-step").first();
+  const stepBox = await box(step);
+  const headerBox = await box(step.locator(".u-step-header"));
+  const padLeft = await step.evaluate((el) => parseFloat(getComputedStyle(el).paddingLeft));
+  expect(Math.abs(headerBox.x - (stepBox.x + padLeft))).toBeLessThanOrEqual(0.5);
 });
 
 test("Vue/Tabs G3-C1 layout", async ({ page }) => {
