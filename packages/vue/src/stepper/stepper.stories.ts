@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { UStepper, UStepList, UStep, UStepPanels, UStepPanel } from "./index";
+import { UStepper, UStepItem, UStepList, UStep, UStepPanels, UStepPanel } from "./index";
 
 const meta: Meta<typeof UStepper> = {
   title: "Vue/Stepper",
@@ -47,6 +47,29 @@ export const Linear: Story = {
           <UStepPanel :value="2">Payment details</UStepPanel>
           <UStepPanel :value="3">Confirmation</UStepPanel>
         </UStepPanels>
+      </UStepper>
+    `,
+  }),
+};
+
+/** GAP-064 G3-C1 verification story (Spec §9.2): vertical layout with step items. */
+export const Vertical: Story = {
+  render: () => ({
+    components: { UStepper, UStepItem, UStep, UStepPanel },
+    template: `
+      <UStepper :value="1">
+        <UStepItem :value="1">
+          <UStep :value="1">Personal</UStep>
+          <UStepPanel :value="1">Personal details</UStepPanel>
+        </UStepItem>
+        <UStepItem :value="2">
+          <UStep :value="2">Payment</UStep>
+          <UStepPanel :value="2">Payment details</UStepPanel>
+        </UStepItem>
+        <UStepItem :value="3">
+          <UStep :value="3">Confirmation</UStep>
+          <UStepPanel :value="3">Confirmation</UStepPanel>
+        </UStepItem>
       </UStepper>
     `,
   }),
