@@ -424,7 +424,7 @@ All are checked in both frameworks. Generated-style checks use the rendered `<st
 
 ## 14. Proposed Amendment A1 — CI accessibility contract for the G3-A verification stories
 
-**Status: APPROVED (Spec Review, 2026-10-05; decisions in §14.10). IMPLEMENTED and locally VERIFIED; the local verification was accepted on 2026-10-05 (§14.11). Real-CI validation is pending.** It is implemented as §14.8 lists. `scripts/provenance/validate-accessibility-baseline.mjs` is unchanged.
+**Status: APPROVED (Spec Review, 2026-10-05; decisions in §14.10). IMPLEMENTED and VERIFIED: the local verification is in §14.11, and the real-CI verification passed in run `37289718639` after the CI visual-environment fix (`docs/superpowers/specs/2026-10-05-ci-visual-environment-design.md` §10). Both were accepted on 2026-10-05.** It is implemented as §14.8 lists. `scripts/provenance/validate-accessibility-baseline.mjs` is unchanged.
 
 ### 14.1 Problem (evidence)
 
@@ -561,3 +561,145 @@ A1 is **approved**. The review questions in §14.9 are resolved as follows.
 
 - **Expected job state:** the ng and vue jobs stay red only on the 6 held Toast screenshots (decision 9). Everything else is green, including the strict contract. The validator output file `test-results/g3a-accessibility/<fw>-validation.txt` is produced, ready for the artifact upload.
 - **What this does not show:** an actual GitHub Actions run (`always()`/`!cancelled()` semantics, artifact upload) cannot be exercised locally. It is verified on the first CI run after push.
+
+## 15. Proposed Amendment A2 — Toast structural mismatch (U2)
+
+**Status: Option B SELECTED by the user (2026-10-05). The decisions are made explicit and testable in §15.6, pending Spec approval.** No Toast source, story, screenshot or baseline has been changed. The 6 `Toast AllSeverities` screenshots stay held, and they are the only G3-A visual failures in CI run `37289718639`.
+
+### 15.1 Evidence: the two DOM structures
+
+| Level | Upstream (PrimeVue 4.5.5 `ToastMessage.vue`; PrimeNG 21.1.9 `toast.ts`, same structure) | Ultimate (ng `toast.ts` template, vue `Toast.vue`; identical) |
+| ----- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 1 | `.p-toast-message` (`display: grid; grid-template-rows: 1fr`) | `.u-toast-message` (same ported rule) |
+| 2 | `.p-toast-message-content` (`display: flex`, row) | `.u-toast-message-content` (same ported rule) |
+| 3 | `.p-toast-message-icon` (severity icon) | — not rendered (FX-A7) |
+| 3 | `.p-toast-message-text` (`flex: 1 1 auto; display: flex; flex-direction: column; gap: dt('toast.text.gap')`) | — **no wrapper**: summary and detail are direct children of content (FX-A7 omits the rule) |
+| 4 | `.p-toast-summary`, `.p-toast-detail` | `.u-toast-summary`, `.u-toast-detail` |
+| 3 | an unclassed `div` holding `.p-toast-close-button`, **inside** the content row | `.u-toast-close-button` is a **sibling** of the content element, directly inside the grid message |
+| 4 | `.p-toast-close-icon` (TimesIcon svg) | — the button's text is `&times;` (FX-A7) |
+
+### 15.2 Why the ported CSS breaks (source-backed)
+
+1. **Summary and detail sit on one line.** Content is a flex row. Upstream stacks summary over detail through the column `.p-toast-message-text` wrapper, which Ultimate does not render.
+2. **The close × overlaps the summary.** The ported `.u-toast-close-button` has `position: relative; margin: -25% 0 0 0; right: -25%`, and percentages resolve against the containing block's width.
+   - Upstream, the containing block is the small unclassed `div`, about the button's own 1.75rem, so the offsets are a few pixels toward the top-right corner.
+   - In Ultimate, the containing block is the whole message (`dt('toast.width')`, 25rem), so the offsets are about 100px. The button also lands in an implicit second grid row, so it is pulled up over the content.
+3. Everything else is upstream-correct as ported: the severity colours, border, blur, radius, shadow and token-driven font weights.
+
+### 15.3 Options (decision belongs to the user; not chosen here)
+
+**Option A — structural CSS adaptation, DOM unchanged (C4 holds).**
+Add Ultimate-specific adapted rules, recorded as a new parity exception PX-A7:
+- Text stacking: map the `.p-toast-message-text` declarations onto `.u-toast-message-content` (`flex-direction: column; gap: dt('toast.text.gap')`), because Ultimate's content element plays both roles when no icon renders. This part is a faithful re-mapping.
+- Close-button placement: there is no upstream rule that fits a sibling button inside a grid message. It needs **invented** values, for example `.u-toast-message { grid-template-columns: 1fr auto }` with a hand-chosen margin or offset for the button. That is a visual/design decision and not upstream-derived.
+
+Consequences:
+- `g3a-port.mjs` gains REWRITES and RETAINED entries, and the toast COUNTS, the fidelity data and the C3 exact-content expectations change.
+- The close button's position is an approximation of upstream, not parity.
+- The 6 accessibility fingerprints for Toast summary contrast keep their current targets, so the A1 evidence is unaffected.
+
+**Option B — align the Toast markup with upstream (C4 scope exception for Toast only).**
+Change the ng and vue Toast templates to upstream's structure. Each message becomes `content > [ .u-toast-message-text > (summary, detail) ] + [ div > close button ]`, with a new `messageText: "u-toast-message-text"` class.
+
+Consequences:
+- The upstream `.p-toast-message-text` group becomes portable verbatim, so FX-A7 shrinks to message-icon, close-icon and the animations. The close-button rules then work as written upstream, with no invented values.
+- `g3a-port.mjs`: `p-toast-message-text` moves out of NOT_RENDERED; the toast COUNTS go from 36 to 37 ported; the fidelity data is regenerated from the unchanged fixture.
+- **C4 exception:** two templates gain one wrapper `div` and one container `div` per message. There is no role, ARIA, class-removal or behaviour change. The existing unit tests (`toast.spec.ts`, ng and vue) select by class only and need no change. The DOM-unchanged check (C4) needs an explicit allowance for exactly these elements.
+- **Accessibility identity change (needs its own ruling):** the axe targets of the 6 pre-existing Toast summary contrast rows change from `.u-toast-message-<sev> > .u-toast-message-content > .u-toast-summary` to a path that includes `.u-toast-message-text`. Under A1 the old 6 fingerprints become STALE and the new ones are reported as INTRODUCED, so the G3-A check fails. Three possible rulings:
+  - (i) Re-identify the 6 rows in the pre-existing evidence file through a reviewed edit documenting the target-path change. Same violation, new identity; needs explicit approval, because A1 forbids adding rows to silence new violations.
+  - (ii) Treat them as introduced and approve them as Aura parity rows in `ACCESSIBILITY_BASELINE.md`.
+  - (iii) Another ruling of your choice.
+
+**Option C — take Toast out of G3-A.** Restore Toast's pre-port CSS (fa5c150) and the six Toast baselines, drop Toast from the G3-A counts, provenance and tests, and record it as a GAP-064 follow-up for a later tranche.
+
+Consequences:
+- G3-A closes without Toast parity.
+- The fa5c150 CSS contains legacy `--u-toast-*` variables, which interacts with the Task 10 legacy-variable removal statement.
+
+### 15.4 Recommendation (for review only)
+
+Option B, if a narrow C4 exception is acceptable. It is the only option that reaches upstream parity without invented layout values, and the rest of G3-A follows the same "port upstream CSS verbatim" principle (D-G3-1).
+
+It does reopen a Spec Review decision (§13.7, "no DOM/class restructuring"), and it needs ruling (i) or (ii) for the 6 accessibility identities. Both are explicitly yours to decide.
+
+### 15.5 Unchanged by any option
+
+- No other G3-A component, baseline or accessibility row changes.
+- The A1 CI contract, both validators and the CI environment are unchanged.
+- React is not affected.
+- After approval: a Plan addendum, then implementation, then a Task-8-style review gate for the 6 Toast screenshots and the Toast accessibility results.
+
+### 15.6 Decisions for Option B (user, 2026-10-05), made explicit and testable
+
+**D-A2-1: Markup.** This is the only permitted DOM change. Angular `toast.ts` and Vue `Toast.vue` render each message exactly as:
+
+```html
+<div class="u-toast-message u-toast-message-{severity}" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="u-toast-message-content">
+    <div class="u-toast-message-text">
+      <div class="u-toast-summary">…</div>  <!-- only if message.summary (unchanged condition) -->
+      <div class="u-toast-detail">…</div>   <!-- only if message.detail (unchanged condition) -->
+    </div>
+    <div>                                    <!-- only if message.closable !== false; unclassed, as upstream -->
+      <button type="button" class="u-toast-close-button" aria-label="Close">&times;</button>
+    </div>
+  </div>
+</div>
+```
+
+- New elements: one `.u-toast-message-text` wrapper and one unclassed close-button container per message, in that order inside `.u-toast-message-content`, as in upstream.
+- Unchanged:
+  - the root element and its position class;
+  - the message element, its role, ARIA attributes and dynamic severity class;
+  - the summary/detail/close conditions and texts, the close button's attributes and click handler;
+  - the `group`, `life`/`sticky`, add/remove/remove-all behaviour;
+  - all inputs/props/emits and the public API.
+- `classes` gains exactly one entry, `messageText: "u-toast-message-text"`. No entry is removed or renamed.
+- No severity icon and no close-icon element are added; FX-A7 stays for those.
+
+**D-A2-2: C4 exception (Toast only).** C4 is relaxed for the Toast implementation files only (`packages/ng/src/toast/toast.ts`, `packages/ng/src/toast/toast-style.ts`, `packages/vue/src/toast/Toast.vue`, `packages/vue/src/toast/toast-style.ts`), and only for the D-A2-1 template change and the one `classes` entry. C4 stays in force for every other G3-A component. The verification DOM-unchanged diff is extended with exactly these allowances; any other template or class-map change in the G3-A component files fails it.
+
+**D-A2-3: CSS.**
+- The upstream `.p-toast-message-text` group (`flex: 1 1 auto; display: flex; flex-direction: column; gap: dt('toast.text.gap')`) is ported **verbatim** as `.u-toast-message-text`, in upstream source order.
+- `g3a-port.mjs`:
+  - `p-toast-message-text` leaves `NOT_RENDERED`;
+  - `COUNTS.toast` goes from `[36, 6]` to `[37, 5]`;
+  - FX-A7 becomes "message-icon, close-icon, enter/leave/leave-to animations".
+- No other Toast rule is added, edited or invented. The close-button rules stay exactly as ported, including `margin: -25% 0 0 0; right: -25%`, which now resolves against the upstream-shaped container.
+- PX-A4 and PX-A6 are unchanged.
+- The `toast.text.gap` token exists in the Aura preset (`packages/themes/src/presets/aura/toast.ts`), so C2 still holds.
+
+**D-A2-4: Accessibility identity mapping.** The 6 Toast summary contrast rows stay **pre-existing**. They are not Aura parity exceptions, and they are not added to `ACCESSIBILITY_BASELINE.md`.
+- In `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` the 6 old fingerprints are **replaced** by their post-markup fingerprints. A new section records an explicit old → new table, with the reason "Toast DOM alignment (Amendment A2); same rule, story, severity element and violation".
+- The new identities are taken from the **post-implementation axe run**, not predicted.
+- A mapping is valid only if all of these hold:
+  - exactly 6 old rows map one-to-one to exactly 6 new rows;
+  - each pair has the same rule (`color-contrast`), the same story (`<fw>-toast--all-severities`) and the same element (`.u-toast-summary` of the same severity: success, warn, error);
+  - the only difference in each target is the added `.u-toast-message-text` path segment.
+- Anything else is **not** a re-identification. That includes a different rule, element or severity, a 7th Toast row, or a change in any other Toast row. Such a row is a new violation, and the G3-A differential check must fail on it. Reclassifying it requires a separate explicit decision.
+- `validate-g3a-accessibility.mjs` is unchanged. It keeps treating the 6 rows as pre-existing purely through the updated evidence file.
+
+**D-A2-5: Acceptance criteria for the implementation (verified before the screenshot review gate).**
+
+1. The Angular and Vue Toast DOM matches D-A2-1 exactly. Verified by:
+   - unit assertions on the element order and classes in `toast.spec.ts`, ng and vue: `.u-toast-message-content > .u-toast-message-text > .u-toast-summary`/`.u-toast-detail`, and `.u-toast-message-content > div > .u-toast-close-button`;
+   - the scoped C4 diff.
+2. Summary and detail stack. In the rendered Toast story, the summary's bounding box lies above the detail's (smaller `top`) and they do not overlap. Checked from the review screenshots and recorded in the review record.
+3. The close button sits inside `.u-toast-message-content`, at the end of the row, through the upstream rules only. The diff adds no Toast CSS beyond D-A2-3, and the button's box does not intersect the summary or detail boxes.
+4. Severity and position behaviour is unchanged:
+   - the existing Toast unit tests pass unmodified;
+   - the G3-A runtime C1, C2 and C3 tests pass, including the `u-toast-${position}` and `u-toast-message-${severity}` dynamic rows;
+   - the fidelity test passes with the updated toast counts.
+5. The 6 pre-existing Toast contrast rows are classified as pre-existing through the D-A2-4 mapping. The G3-A differential check passes: ng 93/93, vue 102/102.
+6. No new accessibility violation is introduced. The differential check shows 0 introduced, the strict validator passes for ng, vue and react, and any mapping that fails D-A2-4's validity rule stops the work for review.
+7. The 6 held Toast screenshots are re-run in the baseline environment (Docker `mcr.microsoft.com/playwright:v1.63.0-jammy`, arm64) only after implementation, then go to a Task-8-style user review. No baseline is regenerated or approved automatically.
+
+**D-A2-6: Sequence after Spec approval:**
+1. Plan addendum, with its own review.
+2. Implementation (the TDD order puts the D-A2-5.1 structure tests first).
+3. Verification.
+4. Accessibility identity mapping from the real run.
+5. The Toast screenshot/accessibility review gate (user).
+6. Commit.
+
+Pushing to the draft PR #1 for CI is done only on explicit instruction.

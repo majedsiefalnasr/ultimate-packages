@@ -1,6 +1,6 @@
 # CI Visual Rendering Environment — Design (Proposed)
 
-**Status:** APPROVED (2026-10-05) with option (a), the native arm64 runner. The amd64 emulation experiment (§5 b) is **not** run. It is implemented in `.github/workflows/ci.yml` (`track-a-browser-visual-a11y` only), with real-CI verification against §7 pending. The baselines and the validators are unchanged.
+**Status:** APPROVED (2026-10-05) with option (a), the native arm64 runner. The amd64 emulation experiment (§5 b) is **not** run. It is implemented in `ae71bc5` (`.github/workflows/ci.yml`, `track-a-browser-visual-a11y` only). **The §7 verification gate PASSED** in run `37289718639`, accepted 2026-10-05; see §10. The baselines and the validators are unchanged.
 **Date:** 2026-10-05.
 **Scope owner:** CI / visual-baseline infrastructure. This is **not** part of GAP-064 G3-A. The G3-A work only exposed it.
 
@@ -89,3 +89,22 @@ If a criterion is not met, stop and report it. No threshold, baseline or validat
 ## 9. Relationship to GAP-064 / A1
 
 A1 stays **not fully CI-verified** until §7 criteria 3–5 are observed in a real run. Once this proposal is approved and implemented, that same run is the evidence that closes A1's CI verification.
+
+## 10. Verification outcome (accepted 2026-10-05)
+
+Real CI run `37289718639` on commit `ae71bc5` (draft PR #1). All §7 criteria are met:
+
+| § 7 criterion | Result |
+| ------------- | ------ |
+| 1. Existing visual suite passes | Strict Playwright run (`--grep-invert "G3-A"`): Angular 309, Vue 282, React 216 passed; 0 failed, 0 flaky. |
+| 2. Same image and architecture as the baselines | All three jobs ran on `ubuntu-24.04-arm` (runner image `ubuntu24-arm64/20260927.135`), inside `mcr.microsoft.com/playwright:v1.63.0-jammy` (pulled digest `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847`). |
+| 3. Strict accessibility check runs and passes | **Ran**: Angular OK (261 nodes), Vue OK (219), React OK (198), 0 new violations. |
+| 4. G3-A differential check | Angular 93/93, Vue 102/102 reports, 0 introduced, 0 stale. React correctly skips the G3-A steps. |
+| 5. G3-A visual failures | Exactly the 6 held `Toast AllSeverities` screenshots (Angular and Vue × chromium, firefox, webkit). Angular 183 passed, Vue 201 passed. |
+| 6. Artifacts | `accessibility-reports-*` (Angular 93, Vue 75, React 72 files), `playwright-report-*` (all three) and `g3a-accessibility-reports-*` (Angular 94, Vue 103, including the validation output) all uploaded. |
+
+- No baseline, threshold, validator, G3-A source or story, or Toast workaround was introduced. Commit `ae71bc5` changes only the job's runner, its container and the removed browser-install step, plus this spec.
+- **Outside this change's scope:**
+  - The `ci` job and the React/Vue `track-e-ssr-hydration` jobs still fail. These are the known, separately tracked issues from run `37188652979`.
+  - The `pnpm install` step prints a non-blocking optional native-build warning (`msgpackr-extract`), which does not affect this outcome.
+

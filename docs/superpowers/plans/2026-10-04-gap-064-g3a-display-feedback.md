@@ -2096,7 +2096,7 @@ Spec §14 (Amendment A1) was added and approved during Task 8, after the Plan wa
   - `scripts/provenance/validate-g3a-accessibility.mjs` and its `.test.mjs`;
   - `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md`.
 - **Status:** implemented and locally verified. The user accepted the local verification on 2026-10-05; see Spec §14.11.
-- **Pending:** real GitHub Actions validation, covering:
+- **Real CI: PASSED** (accepted on 2026-10-05). The first PR run `37286219584` exposed a pre-existing rendering-environment mismatch: x86_64 runner vs arm64 Docker baselines. That was fixed separately (`ae71bc5`, `docs/superpowers/specs/2026-10-05-ci-visual-environment-design.md`). Run `37289718639` then verified every point in the original checklist below, with the G3-A visual failures limited to the 6 held Toast screenshots. Original pending checklist:
   - the strict accessibility check;
   - the G3-A differential check, with 93/93 ng and 102/102 vue reports;
   - the artifact upload;
@@ -2104,3 +2104,537 @@ Spec §14 (Amendment A1) was added and approved during Task 8, after the Plan wa
 
   Any discrepancy found there is reported, never adapted ad hoc.
 - **Task 9 impact:** the G3-A part of the `track-a-browser-visual-a11y` job is expected to stay red on the 6 held Toast screenshots until U2 is resolved.
+
+---
+
+## Plan Addendum A2: Toast markup alignment (Tasks 11–16)
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this addendum task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Status:** READY FOR PLAN REVIEW (2026-10-05). The structure was approved, with the Task 11 stacking-assertion correction applied; execution is subagent-driven. Tasks 11–16 run **before** the original Tasks 9 and 10, which follow unchanged once U2 is closed.
+
+**Goal:** Resolve U2. Align the Angular and Vue Toast markup with upstream (Spec §15.6 D-A2-1) so that the ported upstream Toast CSS lays out correctly, without invented CSS values.
+
+**Architecture:** Each Toast template gains one `.u-toast-message-text` wrapper around the summary and detail, and one unclassed close-button container, both inside `.u-toast-message-content`. The upstream `.p-toast-message-text` group moves from "not rendered" to "ported verbatim". The 6 pre-existing Toast contrast rows are re-identified in the evidence file through a checked old → new mapping. Screenshots go to a user review gate before any baseline changes.
+
+**Tech Stack:** Angular 21 (vitest via `ng test`), Vue 3 (vitest + @vue/test-utils), Playwright 1.63.0 in Docker `mcr.microsoft.com/playwright:v1.63.0-jammy` (arm64), Node 24.15.0 on the host.
+
+**Spec:** `docs/superpowers/specs/2026-10-04-gap-064-g3a-display-feedback-design.md` §15, with §15.6 D-A2-1..6 binding.
+
+### Global Constraints (Addendum A2)
+
+- The only DOM change is D-A2-1, in `packages/ng/src/toast/toast.ts` and `packages/vue/src/toast/Toast.vue`. The C4 exception covers only those files plus the two `toast-style.ts` files (D-A2-2).
+- `classes` gains exactly `messageText: "u-toast-message-text"`. Nothing is removed or renamed.
+- CSS: only the verbatim upstream `.p-toast-message-text` group is added, as `.u-toast-message-text`. No other Toast rule is added, edited or invented (D-A2-3).
+- `scripts/provenance/validate-accessibility-baseline.mjs` and `scripts/provenance/validate-g3a-accessibility.mjs` stay unchanged.
+- No changes to:
+  - `ACCESSIBILITY_BASELINE.md`;
+  - other G3-A components, baselines, thresholds;
+  - `.github/workflows/ci.yml`.
+- The existing Toast unit tests stay unmodified. The new tests are additions.
+- Every Docker run uses `mcr.microsoft.com/playwright:v1.63.0-jammy` on this arm64 host, through `.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/run.sh` copied to `/tmp/g3a-docker/run.sh`.
+- No screenshot baseline is created, updated or approved before the Task 15 user gate.
+- No push to `main`, and no merge of PR #1. A push to the PR branch happens only on explicit instruction.
+
+### Review Focus (Addendum A2)
+
+1. **A non-closable message** (`closable: false`) must render no close-button container at all, not an empty `div`. Pinned by the Task 11 unit tests.
+2. **A message without detail** must render the text wrapper with the summary only, and still stack and lay out. Pinned by the Task 11 unit tests.
+3. **An RTL document:** the ported `:dir(rtl)` close-button rule must keep working against the new container. It is not in the story set. Recorded as a known, untested input in the Task 15 review record. No new test, since the Spec adds no RTL story.
+4. **Message-count changes:** a removed message must not leave an orphan wrapper. Covered because the wrapper sits inside the per-message `@for`/`v-for` element. The existing "remove" unit tests keep passing unmodified.
+5. **Accessibility identity drift beyond the 6 rows:** any other Toast fingerprint change must fail the mapping check. Pinned by the Task 14 mapping script.
+
+### Task 11: Toast structure tests (RED) and the layout e2e test
+
+**Files:**
+- Modify (append tests only): `packages/ng/src/toast/toast.spec.ts`, `packages/vue/src/toast/toast.spec.ts`
+- Modify (append one test each): `packages/ng/e2e/g3a-aura-styles.spec.ts`, `packages/vue/e2e/g3a-aura-styles.spec.ts`
+- Modify (SDD workspace, not committed): `.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/run.sh`, adding a `layout` mode
+- Commit first, as its own docs commit: the approved Spec §15 (A2), this addendum, and the uncommitted CI-verification records (G3-A Spec §14 status, the Plan A1 record, `docs/superpowers/specs/2026-10-05-ci-visual-environment-design.md` §10).
+
+**Interfaces:**
+- Produces: the structure test names `"renders the upstream-aligned message structure (GAP-064 G3-A A2)"` and `"omits the close-button container for a non-closable message (GAP-064 G3-A A2)"` (ng and vue); the e2e test titles `Ng/Toast AllSeverities G3-A layout` and `Vue/Toast AllSeverities G3-A layout`.
+
+- [ ] **Step 0: Commit the approved documents**
+
+```bash
+git add docs/superpowers/specs/2026-10-04-gap-064-g3a-display-feedback-design.md docs/superpowers/plans/2026-10-04-gap-064-g3a-display-feedback.md docs/superpowers/specs/2026-10-05-ci-visual-environment-design.md
+git commit -m "docs(gap-064): approve Toast markup amendment A2 and record CI verification"
+```
+
+- [ ] **Step 1: Append the Angular structure tests** to `packages/ng/src/toast/toast.spec.ts`, inside the existing `describe("UToast", …)`:
+
+```ts
+  it("renders the upstream-aligned message structure (GAP-064 G3-A A2)", () => {
+    @Component({ standalone: true, imports: [UToast], template: `<u-toast></u-toast>` })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    TestBed.inject(UToastService).add({ severity: "warn", summary: "S", detail: "D" });
+    fixture.detectChanges();
+
+    const content = fixture.nativeElement.querySelector(
+      ".u-toast-message > .u-toast-message-content"
+    ) as HTMLElement;
+    const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
+    expect(rest).toHaveLength(0);
+    expect(text.className).toBe("u-toast-message-text");
+    expect(Array.from(text.children, (c) => c.className)).toEqual(["u-toast-summary", "u-toast-detail"]);
+    expect(container.tagName).toBe("DIV");
+    expect(container.classList).toHaveLength(0);
+    expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
+  });
+
+  it("omits the close-button container for a non-closable message (GAP-064 G3-A A2)", () => {
+    @Component({ standalone: true, imports: [UToast], template: `<u-toast></u-toast>` })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    TestBed.inject(UToastService).add({ severity: "info", summary: "S", closable: false });
+    fixture.detectChanges();
+
+    const content = fixture.nativeElement.querySelector(
+      ".u-toast-message > .u-toast-message-content"
+    ) as HTMLElement;
+    expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
+    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
+  });
+```
+
+- [ ] **Step 2: Append the Vue structure tests** to `packages/vue/src/toast/toast.spec.ts`, inside the existing `describe("UToast", …)`:
+
+```ts
+  it("renders the upstream-aligned message structure (GAP-064 G3-A A2)", async () => {
+    const wrapper = mount(UToast);
+    toastEventBus.emit("add", { severity: "warn", summary: "S", detail: "D" });
+    await wrapper.vm.$nextTick();
+
+    const content = wrapper.find(".u-toast-message > .u-toast-message-content").element;
+    const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
+    expect(rest).toHaveLength(0);
+    expect(text.className).toBe("u-toast-message-text");
+    expect(Array.from(text.children, (c) => c.className)).toEqual(["u-toast-summary", "u-toast-detail"]);
+    expect(container.tagName).toBe("DIV");
+    expect(container.classList).toHaveLength(0);
+    expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
+    wrapper.unmount();
+  });
+
+  it("omits the close-button container for a non-closable message (GAP-064 G3-A A2)", async () => {
+    const wrapper = mount(UToast);
+    toastEventBus.emit("add", { severity: "info", summary: "S", closable: false });
+    await wrapper.vm.$nextTick();
+
+    const content = wrapper.find(".u-toast-message > .u-toast-message-content").element;
+    expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
+    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
+    wrapper.unmount();
+  });
+```
+
+- [ ] **Step 3: Run both and confirm RED**
+
+Run, with `export PATH=$HOME/.nvm/versions/node/v24.15.0/bin:$PATH`:
+- `pnpm --filter @ultimate/ng exec ng test --project=ng --include=src/toast/toast.spec.ts --watch=false`
+- `pnpm --filter @ultimate/vue test -- toast.spec`
+
+Expected:
+- **only** the 4 new tests fail: the first content child is `u-toast-summary`, not `u-toast-message-text`;
+- every pre-existing Toast test passes.
+
+- [ ] **Step 4: Append the measured-layout e2e test (D-A2-5.2/5.3)** to `packages/ng/e2e/g3a-aura-styles.spec.ts`, after the `for` loop. Use the identical body in `packages/vue/e2e/g3a-aura-styles.spec.ts`, with title `Vue/Toast AllSeverities G3-A layout` and story `vue-toast--all-severities`.
+
+```ts
+// GAP-064 G3-A Amendment A2 (Spec §15.6 D-A2-5.2/5.3): measured layout of
+// every Toast message: summary stacked above detail; the close button inside
+// the content row, after the text column, overlapping neither text box.
+test("Ng/Toast AllSeverities G3-A layout", async ({ page }) => {
+  await page.goto(storyUrl("ng-toast--all-severities"));
+  const messages = page.locator(".u-toast-message");
+  await expect(messages).toHaveCount(6);
+  for (let i = 0; i < 6; i++) {
+    const message = messages.nth(i);
+    await expect(message.locator(".u-toast-message-content .u-toast-close-button")).toHaveCount(1);
+    const box = async (selector: string) => {
+      const b = await message.locator(selector).boundingBox();
+      expect(b, selector).not.toBeNull();
+      return b!;
+    };
+    const summary = await box(".u-toast-summary");
+    const detail = await box(".u-toast-detail");
+    const text = await box(".u-toast-message-text");
+    const close = await box(".u-toast-close-button");
+    const outer = await box(":scope");
+    expect(detail.y).toBeGreaterThanOrEqual(summary.y + summary.height - 0.5);
+    expect(close.x).toBeGreaterThanOrEqual(text.x + text.width - 0.5);
+    expect(close.x).toBeGreaterThanOrEqual(Math.max(summary.x + summary.width, detail.x + detail.width) - 0.5);
+    expect(close.x + close.width).toBeLessThanOrEqual(outer.x + outer.width + 0.5);
+    expect(close.y).toBeGreaterThanOrEqual(outer.y - 0.5);
+  }
+});
+```
+
+- [ ] **Step 5: Add the `layout` mode** to the SDD runner, before `esac` in `.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/run.sh`:
+
+```bash
+  layout)
+    npx playwright test $SPECS $G3A -g "Toast AllSeverities G3-A layout" --reporter=list > /io/layout.log 2>&1; echo "layout exit $?" ;;
+```
+
+Then run the layout test on the Task 11 tree (RED evidence for the e2e test). Docker runs go in the background, as in earlier tasks.
+
+```bash
+mkdir -p /tmp/g3a-docker && cp .superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/run.sh /tmp/g3a-docker/run.sh
+git archive -o /tmp/g3a-docker/src.tar HEAD   # run after Step 6's commit
+docker run --rm -v /tmp/g3a-docker:/io mcr.microsoft.com/playwright:v1.63.0-jammy bash /io/run.sh layout
+grep -E "^\s+[0-9]+ (passed|failed)" /tmp/g3a-docker/layout.log
+```
+
+Expected: `6 failed` (ng and vue × 3 browsers). Each failure must be a layout assertion: `close.x` at or before the text's right edge, or summary and detail on one row. A failure for any other reason (a missing element or a timeout) is **UNEXPECTED**: stop and report it.
+
+- [ ] **Step 6: Commit the RED tests**
+
+```bash
+git add packages/ng/src/toast/toast.spec.ts packages/vue/src/toast/toast.spec.ts packages/ng/e2e/g3a-aura-styles.spec.ts packages/vue/e2e/g3a-aura-styles.spec.ts
+git commit -m "test(gap-064): add Toast structure and measured-layout tests for amendment A2 (RED)"
+```
+
+### Task 12: Port the upstream text-column CSS (port data + both style modules)
+
+**Files:**
+- Modify: `packages/themes/test/utils/g3a-port.mjs`, around lines 80–87 (`NOT_RENDERED.toast`) and line 140 (`COUNTS.toast`)
+- Modify: the `css` template only in `packages/ng/src/toast/toast-style.ts` and `packages/vue/src/toast/toast-style.ts`
+- Modify (docs): Spec §4.3 toast row, §4.4 toast row (`36 / 42` → `37 / 42`; FX-A7 "5 groups …") and §5.4 FX-A7 ("message-icon, close-icon, and enter/leave/leave-to animations")
+
+**Interfaces:**
+- Consumes: the `g3a-port.mjs` CLI `node packages/themes/test/utils/g3a-port.mjs <ng|vue> toast`.
+- Produces: the `.u-toast-message-text{flex: 1 1 auto;display: flex;flex-direction: column;gap: dt('toast.text.gap');}` rule in both style modules.
+
+- [ ] **Step 1: Update the port data**
+
+In `NOT_RENDERED.toast`, delete the line `"p-toast-message-text",`. Change `toast: [36, 6],` to `toast: [37, 5],`.
+
+- [ ] **Step 2: Run the fidelity test and confirm RED**
+
+Run: `pnpm --filter @ultimate/themes test -- g3a-upstream-fidelity`
+Expected: only the `ng toast` and `vue toast` "contains exactly" cases fail, because the style files still lack the text rule. If any other case fails, STOP.
+
+- [ ] **Step 3: Regenerate both CSS templates**
+
+Run `node packages/themes/test/utils/g3a-port.mjs ng toast` and paste the output verbatim between the backticks of `const css` in `packages/ng/src/toast/toast-style.ts`. Do the same with `vue` for `packages/vue/src/toast/toast-style.ts`. Then:
+
+```bash
+git diff -U0 -- packages/ng/src/toast/toast-style.ts packages/vue/src/toast/toast-style.ts | grep -E '^[+-][^+-]'
+```
+
+Expected: exactly two added lines, one per file, each `+.u-toast-message-text{flex: 1 1 auto;display: flex;flex-direction: column;gap: dt('toast.text.gap');}`, and no removed lines.
+
+- [ ] **Step 4: Run GREEN checks**
+
+- `pnpm --filter @ultimate/themes test -- g3a-upstream-fidelity`: all pass.
+- `pnpm --filter @ultimate/ng exec ng test --project=ng --include=src/g3a-aura-styles.spec.ts --watch=false`: all pass (C2: `toast.text.gap` resolves).
+- `pnpm --filter @ultimate/vue test -- g3a-aura-styles`: all pass.
+
+- [ ] **Step 5: Update the three Spec rows** named under Files, matching the counts in Step 1. No other Spec text changes.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add packages/themes/test/utils/g3a-port.mjs packages/ng/src/toast/toast-style.ts packages/vue/src/toast/toast-style.ts docs/superpowers/specs/2026-10-04-gap-064-g3a-display-feedback-design.md
+git commit -m "feat(gap-064): port the upstream Toast text-column rule (amendment A2)"
+```
+
+### Task 13: Align the Toast markup (GREEN) and prove the markup diff is bounded
+
+**Files:**
+- Modify: the `template` of `packages/ng/src/toast/toast.ts`; the `<template>` of `packages/vue/src/toast/Toast.vue`
+- Modify: the `classes` of `packages/ng/src/toast/toast-style.ts` and `packages/vue/src/toast/toast-style.ts` (one added entry each)
+
+**Interfaces:**
+- Consumes: the Task 11 structure tests; the Task 12 `.u-toast-message-text` rule.
+- Produces: the D-A2-1 DOM, plus `classes.messageText`.
+
+- [ ] **Step 1: Add the class entry** after `messageContent: "u-toast-message-content",` in both `toast-style.ts` files:
+
+```ts
+  messageText: "u-toast-message-text",
+```
+
+- [ ] **Step 2: Angular template.** Replace the `messageContent` div and the `@if (message.closable !== false) { … }` block inside the message `div` of `packages/ng/src/toast/toast.ts` with:
+
+```html
+        <div [class]="cx('messageContent')">
+          <div [class]="cx('messageText')">
+            @if (message.summary) {
+              <div [class]="cx('summary')">{{ message.summary }}</div>
+            }
+            @if (message.detail) {
+              <div [class]="cx('detail')">{{ message.detail }}</div>
+            }
+          </div>
+          @if (message.closable !== false) {
+            <div>
+              <button
+                type="button"
+                [class]="cx('closeButton')"
+                aria-label="Close"
+                (click)="remove(message.id)"
+              >
+                &times;
+              </button>
+            </div>
+          }
+        </div>
+```
+
+- [ ] **Step 3: Vue template.** Replace lines 11–23 of `packages/vue/src/toast/Toast.vue` (the `messageContent` div and the close `button`) with:
+
+```html
+      <div :class="cx('messageContent')">
+        <div :class="cx('messageText')">
+          <div v-if="message.summary" :class="cx('summary')">{{ message.summary }}</div>
+          <div v-if="message.detail" :class="cx('detail')">{{ message.detail }}</div>
+        </div>
+        <div v-if="message.closable !== false">
+          <button
+            type="button"
+            :class="cx('closeButton')"
+            aria-label="Close"
+            @click="remove(message.id)"
+          >
+            &times;
+          </button>
+        </div>
+      </div>
+```
+
+The button keeps its existing attribute lines, and only `v-if` moves from the button to the container.
+
+- [ ] **Step 4: Run GREEN**
+
+- `pnpm --filter @ultimate/ng exec ng test --project=ng --include=src/toast/toast.spec.ts --watch=false`: all pass, including the 2 new tests.
+- `pnpm --filter @ultimate/vue test -- toast.spec`: all pass.
+- `pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false`, `pnpm --filter @ultimate/vue test`, `pnpm --filter @ultimate/ng run typecheck`, `pnpm --filter @ultimate/vue run typecheck`: all pass.
+- `pnpm --filter @ultimate/themes test -- g3a-upstream-fidelity` and both `g3a-aura-styles` runtime specs: all pass.
+
+- [ ] **Step 5: Bounded markup-diff check (D-A2-2)**
+
+```bash
+for f in packages/ng/src/toast/toast.ts packages/vue/src/toast/Toast.vue; do echo "== $f"; git diff -w -U0 fa5c150 -- "$f" | grep -E '^[+-][^+-]' | sed -E 's/^([+-])[[:space:]]+/\1/'; done
+```
+
+Expected output, exactly. It was obtained by a dry run of these exact templates against the current files (2026-10-05):
+
+```text
+== packages/ng/src/toast/toast.ts
++<div [class]="cx('messageText')">
++<div>
++</div>
++</div>
+== packages/vue/src/toast/Toast.vue
++<div :class="cx('messageText')">
++<div v-if="message.closable !== false">
+-v-if="message.closable !== false"
++</div>
++</div>
+```
+
+Here ng adds only the wrapper and the container, and nothing is removed. Vue adds the same two elements and moves `v-if` from the button to the container. Any other line fails the check.
+
+```bash
+git diff -U0 fa5c150 -- packages/ng/src packages/vue/src ':!packages/ng/src/toast' ':!packages/vue/src/toast' ':!*.spec.ts' ':!*.stories.ts' | grep -E '^[+-][^+-]' | grep -vE '^[+-]\s*(\.|\[|@|0%|[0-9]+%|from|to|\}|[a-z-]+:)' | grep -vE 'componentName: "|componentName = "|GAP-064 G3-A: the css below|super\.ngOnInit\(\);'
+```
+
+Expected: no output. Outside Toast, the G3-A components still change only CSS, the approved key literals, the comment and the approved `super.ngOnInit()`.
+
+```bash
+git diff -U0 fa5c150 -- packages/ng/src/toast/toast-style.ts packages/vue/src/toast/toast-style.ts | grep -E '^[+-][^+-]' | grep -vE '^[+-]\s*(\.|\[|@|0%|[0-9]+%|from|to|\}|[a-z-]+:)' | grep -vE 'GAP-064 G3-A: the css below'
+```
+
+Expected: exactly `+  messageText: "u-toast-message-text",` twice. The rest is CSS.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add packages/ng/src/toast/toast.ts packages/ng/src/toast/toast-style.ts packages/vue/src/toast/Toast.vue packages/vue/src/toast/toast-style.ts
+git commit -m "feat(gap-064): align Toast markup with upstream (amendment A2)"
+```
+
+### Task 14: Post-implementation Docker run, layout proof, and the accessibility identity mapping
+
+**Files:**
+- Create (SDD workspace, not committed): `.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/toast-identity-map.mjs`
+- Modify: `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` (written by the script)
+
+**Interfaces:**
+- Consumes: the Task 13 tree; `run.sh` modes `g3a`, `regression` and `layout`; the validator exports `BASELINE_PATH`, `loadBaseline`, `readEnvelopes`, `parseBaselineFingerprints`.
+- Produces: the updated evidence file with 200 rows and a bullet-list mapping section, and the Task 15 review inputs under `/tmp/g3a-docker/a2/`.
+
+- [ ] **Step 1: Run the G3-A and regression suites in Docker** (background) on `HEAD` after Task 13:
+
+```bash
+git archive -o /tmp/g3a-docker/src.tar HEAD
+docker run --rm -v /tmp/g3a-docker:/io mcr.microsoft.com/playwright:v1.63.0-jammy bash /io/run.sh g3a
+mkdir -p /tmp/g3a-docker/a2 && tar -xf /tmp/g3a-docker/g3a-results.tar -C /tmp/g3a-docker/a2 && cp /tmp/g3a-docker/g3a.log /tmp/g3a-docker/a2/g3a.log
+docker run --rm -v /tmp/g3a-docker:/io mcr.microsoft.com/playwright:v1.63.0-jammy bash /io/run.sh regression
+cp /tmp/g3a-docker/regression.log /tmp/g3a-docker/a2/regression.log
+```
+
+Expected:
+- **g3a:** failures are exactly the 6 `Toast AllSeverities G3-A visual` screenshots, which are still held, and both `Toast AllSeverities G3-A layout` tests **pass** in all 3 browsers.
+- **regression:** 0 failed (record retry-passing flakes).
+- Anything else is UNEXPECTED: stop and report it.
+
+- [ ] **Step 2: Create the identity-mapping script** at `.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/toast-identity-map.mjs`. The mapping is written as a bullet list, never a table: the evidence parser reads the first cell of **every** table row as a fingerprint, so a table would re-list the old identities.
+
+```js
+// GAP-064 G3-A Amendment A2 (Spec §15.6 D-A2-4): re-identify the 6 pre-existing
+// Toast summary contrast rows after the Toast DOM alignment. Fails (exit 1),
+// writing nothing, unless the change is exactly the approved one-to-one mapping.
+// usage (repo root): node .superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/toast-identity-map.mjs <post-run-root>
+import { readFileSync, writeFileSync } from "node:fs";
+import {
+  BASELINE_PATH,
+  loadBaseline,
+  parseBaselineFingerprints,
+  readEnvelopes,
+} from "../../../../scripts/provenance/validate-accessibility-baseline.mjs";
+
+const EVIDENCE = "docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md";
+const OLD = /^color-contrast:(ng|vue)-toast--all-severities:\.u-toast-message-(success|warn|error) > \.u-toast-message-content > \.u-toast-summary$/;
+const toNew = (old) => old.replace(/ > \.u-toast-summary$/, " > .u-toast-message-text > .u-toast-summary");
+
+const root = process.argv[2];
+const baseline = loadBaseline(BASELINE_PATH);
+const text = readFileSync(EVIDENCE, "utf8");
+const listed = parseBaselineFingerprints(text);
+const observed = new Set();
+for (const fw of ["ng", "vue"]) {
+  for (const e of readEnvelopes(`${root}/test-results/accessibility/${fw}/**/*.json`)) {
+    if (!baseline.has(e.fingerprint)) observed.add(e.fingerprint);
+  }
+}
+const stale = [...listed].filter((f) => !observed.has(f)).sort();
+const unlisted = [...observed].filter((f) => !listed.has(f)).sort();
+const expected = stale.map(toNew).sort();
+const ok =
+  stale.length === 6 &&
+  stale.every((f) => OLD.test(f)) &&
+  unlisted.length === 6 &&
+  unlisted.every((f, i) => f === expected[i]);
+if (!ok) {
+  console.error("NOT the approved re-identification. Stale (listed, not observed):");
+  stale.forEach((f) => console.error(`  - ${f}`));
+  console.error("Unlisted (observed, in neither list):");
+  unlisted.forEach((f) => console.error(`  + ${f}`));
+  process.exit(1);
+}
+let out = text;
+for (const old of stale) {
+  const story = old.split(":")[1];
+  const row = out.split("\n").find((l) => l.startsWith(`| ${old} |`));
+  out = out.replace(
+    row,
+    `| ${toNew(old)} | color-contrast | ${story} | Pre-existing before the G3-A port (bdc0041); re-identified after the Amendment A2 Toast DOM alignment (see "Identity mapping"). |`
+  );
+}
+out =
+  out.trimEnd() +
+  "\n\n## Identity mapping (Amendment A2, Spec §15.6 D-A2-4)\n\n" +
+  "Same rule, story, severity element and violation. Only the axe target path gained `.u-toast-message-text`, because of the approved Toast DOM alignment. Derived from the post-implementation Docker run, not predicted.\n\n" +
+  stale.map((o) => `- \`${o}\` → \`${toNew(o)}\``).join("\n") +
+  "\n";
+writeFileSync(EVIDENCE, out);
+console.log(`re-identified 6 rows; ${parseBaselineFingerprints(out).size} listed`);
+```
+
+- [ ] **Step 3: Run the mapping**
+
+```bash
+export PATH=$HOME/.nvm/versions/node/v24.15.0/bin:$PATH
+node .superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/toast-identity-map.mjs /tmp/g3a-docker/a2
+```
+
+Expected: `re-identified 6 rows; 200 listed`. **Exit 1 means stop.** Report the printed `-`/`+` lists. The evidence file is not touched, and nothing is reclassified without a separate decision (D-A2-4).
+
+- [ ] **Step 4: Run the unchanged validators on the post-run envelopes.** Use a scratch copy of the repo-root layout, the same method as Spec §14.11:
+
+```bash
+W=/tmp/g3a-docker/a2-check
+mkdir -p $W/docs/architecture/research $W/packages/ng/e2e $W/packages/vue/e2e
+cp docs/architecture/ACCESSIBILITY_BASELINE.md $W/docs/architecture/
+cp docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md $W/docs/architecture/research/
+cp packages/ng/e2e/g3a-aura-styles.spec.ts $W/packages/ng/e2e/
+cp packages/vue/e2e/g3a-aura-styles.spec.ts $W/packages/vue/e2e/
+cp -R /tmp/g3a-docker/a2/test-results $W/
+(cd $W && node "$OLDPWD/scripts/provenance/validate-g3a-accessibility.mjs" ng && node "$OLDPWD/scripts/provenance/validate-g3a-accessibility.mjs" vue)
+```
+
+Expected:
+- `OK: ng 93/93 reports, 0 introduced violations, 0 stale pre-existing row(s)`;
+- `OK: vue 102/102 reports, 0 introduced violations, 0 stale pre-existing row(s)`.
+
+Then run the strict validator on the regression envelopes:
+
+```bash
+mkdir -p /tmp/g3a-docker/a2-regression && tar -xf /tmp/g3a-docker/regression-results.tar -C /tmp/g3a-docker/a2-regression
+for fw in ng vue react; do node scripts/provenance/validate-accessibility-baseline.mjs --check "/tmp/g3a-docker/a2-regression/test-results/accessibility/$fw/**/*.json"; done
+```
+
+Expected: `OK … zero new violations` for ng, vue and react.
+
+- [ ] **Step 5: Commit the evidence update**
+
+```bash
+git add docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md
+git commit -m "docs(gap-064): re-identify the 6 pre-existing Toast contrast rows after amendment A2"
+```
+
+### Task 15: Toast review gate (HARD USER STOP)
+
+**Files:**
+- Modify: `docs/superpowers/plans/2026-10-04-gap-064-g3a-visual-review.md` (append the section "Amendment A2: Toast review")
+
+- [ ] **Step 1: Copy the review artifacts** (the expected, actual and diff PNGs of the 6 Toast visual tests from `/tmp/g3a-docker/a2/test-results/`) to `.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/a2-artifacts/`. Inspect each chromium "actual" image.
+
+- [ ] **Step 2: Append to the review record:**
+  - the environment;
+  - the Task 14 counts;
+  - the layout-test results (D-A2-5.2/5.3). The assertion `detail.y >= summary.y + summary.height - 0.5`, which passes for all 6 messages in all 3 browsers for each framework, is recorded as the explicit proof that summary and detail are vertically stacked without overlap. The close-button assertions are recorded alongside it;
+  - a one-line visual description per Toast screenshot (ng and vue × 3 browsers);
+  - the mapping output (D-A2-5.5);
+  - the validator results (D-A2-5.6);
+  - the Review Focus item 3 note (RTL untested);
+  - the bounded-diff output from Task 13 Step 5.
+
+- [ ] **Step 3: STOP.** Report the record and the artifacts. Wait for the user's explicit approval of the 6 Toast baselines. No baseline change happens without it.
+
+### Task 16: Accept the approved Toast baselines (only after the Task 15 approval)
+
+**Files:**
+- Modify: the 6 `Toast-AllSeverities-G3-A-visual-1-<ng|vue>-<browser>.png` files under `packages/{ng,vue}/e2e/g3a-aura-styles.spec.ts-snapshots/`; the review record.
+
+- [ ] **Step 1: Update only the approved PNGs in Docker**
+
+```bash
+git archive -o /tmp/g3a-docker/src.tar HEAD
+docker run --rm -v /tmp/g3a-docker:/io mcr.microsoft.com/playwright:v1.63.0-jammy bash /io/run.sh update "Toast AllSeverities G3-A visual"
+tar -xf /tmp/g3a-docker/snapshots.tar -C .
+git status --short
+```
+
+Expected: exactly 6 modified PNGs, all Toast AllSeverities.
+
+- [ ] **Step 2: Re-verify** on the staged tree (`git archive -o /tmp/g3a-docker/src.tar "$(git write-tree)"` after `git add` of the 6 PNGs). Expected:
+  - `run.sh g3a`: 0 failures;
+  - `run.sh regression`: 0 failures, apart from recorded retry-passing flakes;
+  - the Task 14 Step 4 validators: unchanged OK.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add packages/ng/e2e/g3a-aura-styles.spec.ts-snapshots packages/vue/e2e/g3a-aura-styles.spec.ts-snapshots docs/superpowers/plans/2026-10-04-gap-064-g3a-visual-review.md
+git commit -m "test(gap-064): accept reviewed Toast baselines after amendment A2"
+```
+
+After this, the original Task 9 (verification vs `fa5c150`) and Task 10 (MIGRATION) follow. Task 9's C4 step uses the Task 13 Step 5 bounded-diff commands in place of the original unbounded Toast check.
