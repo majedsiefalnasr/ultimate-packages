@@ -474,3 +474,112 @@ The regression node counts differ slightly from the first run (vue 219 → 217, 
 - The validator has exactly two modes, `--check` and `--report` (PD-11). `--check` fails on **any** fingerprint absent from `ACCESSIBILITY_BASELINE.md`. It has no notion of "introduced relative to a base ref".
 - Consequence: once the G3-A specs land, the ng and vue `track-a-browser-visual-a11y` jobs fail on the 200 excluded pre-existing rows. The G3-A stories add new story IDs, so their page-level and DOM debt becomes visible to the check. The ng and vue jobs also fail on the 6 held Toast screenshots until U2 is resolved.
 - The current CI contract cannot express "baseline only newly introduced violations". Per the user's ruling this is reported as a CI/validation-contract issue. No unrelated accessibility debt was added to the baseline, and no validator or CI change was made.
+
+## Amendment A2: Toast review
+
+**Status: awaiting the user's decision.** This section is the Task 15 review gate for Plan Addendum A2 (Toast markup alignment, Spec §15.6 D-A2-1..6). It records evidence only. No baseline PNG has been changed, no Docker run was made for this section, and nothing is committed by it. The 6 Toast baselines stay held until the user approves them explicitly.
+
+### A2.1 Environment and commits
+
+- **Environment:** Docker `mcr.microsoft.com/playwright:v1.63.0-jammy`, aarch64, node v24.20.0, pnpm 9.6.0, `CI=true`. Source commit: `75671c4`.
+- **Implementation commits:**
+  - `04713a6` docs (amendment A2 approved, CI verification recorded);
+  - `fb8468f` RED tests (Toast structure and measured-layout tests);
+  - `b1281be` the `.u-toast-message-text` CSS, a verbatim upstream port, `COUNTS.toast` `[37, 5]`;
+  - `75671c4` the markup (ng `toast.ts`, vue `Toast.vue`, and the one `messageText` class entry in each `toast-style.ts`);
+  - `98dcd5d` the evidence re-identification (6 Toast contrast rows).
+- **Artifacts** (git-ignored SDD workspace; each directory holds `*-expected.png` (the held baseline), `*-actual.png` (post-A2) and `*-diff.png`): `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/a2-artifacts/`, 6 directories named `g3a-aura-styles-{Ng,Vue}-Toast-AllSeverities-G3-A-visual-{ng,vue}-{chromium,firefox,webkit}`.
+
+### A2.2 RED evidence (Task 11)
+
+- **Unit:** ng and vue each have 12 Toast tests. Only the 2 new ones failed. The failure was that the first content child was `u-toast-summary`, not `u-toast-message-text`.
+- **Docker layout run on `fb8468f`:** 6/6 failed at `expect(message.locator(".u-toast-message-content .u-toast-close-button")).toHaveCount(1)`, Received 0. This is the containment assertion, because the old close button was outside the content row. The box assertions (stacking and close-button geometry) were **not reached** in RED.
+- **Note on the plan's prediction:** the plan predicted a failure at a box assertion. That prediction was imprecise. The controller recorded a ruling accepting the containment failure as a valid RED. Earlier evidence of the stacking failure comes from the Task 8 pre-A2 screenshots (section 5, U2), where summary and detail sat on one row, not from this RED run.
+
+### A2.3 GREEN evidence (Task 13)
+
+- ng `toast.spec` 12/12; full ng 1033 pass.
+- vue full 1048 pass.
+- Both typechecks clean.
+- Fidelity 99/99; runtime ng 81/81, vue 93/93.
+
+### A2.4 Bounded-diff output (Task 13 Step 5)
+
+- **Check 1** (`git diff -w -U0 fa5c150` on the Toast templates):
+  - ng: `+<div [class]="cx('messageText')">`, `+<div>`, `+</div>`, `+</div>`.
+  - vue: `+<div :class="cx('messageText')">`, `+<div v-if="message.closable !== false">`, `-v-if="message.closable !== false"`, `+</div>`, `+</div>`.
+- **Check 2** (other G3-A components): empty.
+- **Check 3** (Toast style modules): exactly `+  messageText: "u-toast-message-text",`, twice (one per framework).
+
+### A2.5 Task 14 Docker run on `75671c4`
+
+| Run | Result |
+| --- | ------ |
+| `g3a` | **390 passed, 6 failed.** The 6 failures are exactly the held `Ng/Toast AllSeverities G3-A visual` and `Vue/Toast AllSeverities G3-A visual` in chromium, firefox and webkit, all `toHaveScreenshot`. |
+| `Ng/Toast AllSeverities G3-A layout`, `Vue/Toast AllSeverities G3-A layout` | **PASSED in all 3 browsers each (6/6).** |
+| Regression | **835 passed, 0 failed, 0 flaky.** |
+
+### A2.6 Layout proof (D-A2-5.2 and D-A2-5.3)
+
+- **Stacking, the explicit proof:** the assertion `detail.y >= summary.y + summary.height - 0.5` passed for **all 6 messages in all 3 browsers, for each framework**. Summary and detail are vertically stacked without overlap.
+- **Close-button assertions, also passed:**
+  - the button is inside `.u-toast-message-content` (count 1);
+  - `close.x >= text right edge - 0.5`;
+  - `close.x >= max(summary right edge, detail right edge) - 0.5`;
+  - the button's right edge is within the message;
+  - `close.y >= message top - 0.5`.
+
+### A2.7 Visual description (6 Toast screenshots)
+
+Each PNG is 1280x720 with the 6 messages (success, info, warn, error, secondary, contrast) stacked in the top-right corner. Compared with the held expected PNG, every actual shows the summary above the detail, the close button at the top-right end of the row, and no overlap in any message.
+
+| Framework | Browser | Actual (post-A2) |
+| --------- | ------- | ---------------- |
+| ng | chromium | Serif UI font (same as the held baseline). Light severity-tinted fill, thin same-hue border, small radius, faint shadow. Normal-weight coloured summary above a dark-grey detail, 68px cards on a 16px gap. Small "x" at the top-right in the severity colour. Contrast card is dark navy. |
+| ng | firefox | Sans-serif font. Same light tinted fill and thin border. Summary above detail with a visible gap between them, 74px cards on a 16px gap. "x" at the top-right in the severity colour. Contrast card is dark navy. |
+| ng | webkit | Sans-serif font, close glyph slightly larger than in firefox. Summary above detail, 73px cards on a 16px gap. "x" at the top-right. Contrast card is dark navy with a faint lighter edge on its corners. |
+| vue | chromium | Pixel-for-pixel the same look as ng chromium. |
+| vue | firefox | Same look as ng firefox. |
+| vue | webkit | Same look as ng webkit. |
+
+**Differences from the held baseline (expected PNG), as seen:**
+- The held baseline has solid, saturated tinted fills, bold summaries, a coloured detail line, a soft drop shadow, no border, 58 to 64px cards on a tight 8px gap, and a near-black contrast card.
+- The post-A2 render has pale tinted fills with a thin border, normal-weight summaries, a dark-grey neutral detail, taller cards on a 16px gap, and a navy contrast card.
+- These differences come from the G3-A port (the Aura Toast rules), not from A2 alone. Summary and detail were already stacked in the held baseline. A2 removes the Task 8 defect (summary and detail on one row, close button overlapping the summary) that kept the Toast baselines held.
+
+### A2.8 Accessibility identity mapping (D-A2-5.5)
+
+The mapping script exited 0 with `re-identified 6 rows; 200 listed`. Each of the 6 mappings adds only the `.u-toast-message-text` path segment. They are listed in `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` under "Identity mapping":
+
+- `color-contrast:ng-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-summary` → `color-contrast:ng-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:ng-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-summary` → `color-contrast:ng-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:ng-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-summary` → `color-contrast:ng-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:vue-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-summary` → `color-contrast:vue-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:vue-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-summary` → `color-contrast:vue-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:vue-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-summary` → `color-contrast:vue-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+
+### A2.9 Validator results (D-A2-5.6; scripts unchanged)
+
+- **G3-A differential:** ng OK 93/93, 0 introduced, 0 stale. vue OK 102/102, 0 introduced, 0 stale.
+- **Strict validator:** ng OK 261, vue OK 219, react OK 198 nodes, zero new violations.
+- No row was added to `ACCESSIBILITY_BASELINE.md`.
+
+### A2.10 Review Focus item 3: RTL
+
+RTL is **untested**, because no story covers it. The ported `:dir(rtl)` close-button rule is unchanged by A2.
+
+### A2.11 Decision requested
+
+Approve the **6 Toast baselines** (ng and vue, each in chromium, firefox and webkit), to be updated by Task 16 in Docker with the same image and environment as A2.1. No baseline changes until the user approves. This record states the evidence only and makes no recommendation.
+
+### A2.12 User approval and final verification (2026-10-05)
+
+- **Approved by the user:** the 6 Toast AllSeverities baselines (ng and vue × chromium, firefox, webkit).
+- **Update:** `run.sh update "Toast AllSeverities G3-A visual"` on `98dcd5d` → 6 passed. Exactly the 6 Toast PNGs changed, and no other baseline.
+- **Re-verification** on the staged tree `958dc40`, in Docker `mcr.microsoft.com/playwright:v1.63.0-jammy` on arm64:
+  - G3-A run: **396 passed, 0 failed**. That covers 195 visual, 195 accessibility and 6 layout tests; the 6 Toast screenshots now match.
+  - Regression: **835 passed, 0 failed, 0 flaky**.
+- **Accessibility** (unchanged validators):
+  - G3-A differential: ng OK 93/93, vue OK 102/102, 0 introduced, 0 stale.
+  - Strict: ng OK (261), vue OK (219), react OK (198), zero new violations.
+- **U2 is resolved.** G3-A has no remaining visual failures.
