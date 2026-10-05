@@ -96,3 +96,31 @@ for (const { name, story, ready, count } of STORIES) {
     await runAccessibilityScan(page, testInfo, story);
   });
 }
+
+// GAP-064 G3-A Amendment A2 (Spec §15.6 D-A2-5.2/5.3): measured layout of
+// every Toast message: summary stacked above detail; the close button inside
+// the content row, after the text column, overlapping neither text box.
+test("Vue/Toast AllSeverities G3-A layout", async ({ page }) => {
+  await page.goto(storyUrl("vue-toast--all-severities"));
+  const messages = page.locator(".u-toast-message");
+  await expect(messages).toHaveCount(6);
+  for (let i = 0; i < 6; i++) {
+    const message = messages.nth(i);
+    await expect(message.locator(".u-toast-message-content .u-toast-close-button")).toHaveCount(1);
+    const box = async (selector: string) => {
+      const b = await message.locator(selector).boundingBox();
+      expect(b, selector).not.toBeNull();
+      return b!;
+    };
+    const summary = await box(".u-toast-summary");
+    const detail = await box(".u-toast-detail");
+    const text = await box(".u-toast-message-text");
+    const close = await box(".u-toast-close-button");
+    const outer = await box(":scope");
+    expect(detail.y).toBeGreaterThanOrEqual(summary.y + summary.height - 0.5);
+    expect(close.x).toBeGreaterThanOrEqual(text.x + text.width - 0.5);
+    expect(close.x).toBeGreaterThanOrEqual(Math.max(summary.x + summary.width, detail.x + detail.width) - 0.5);
+    expect(close.x + close.width).toBeLessThanOrEqual(outer.x + outer.width + 0.5);
+    expect(close.y).toBeGreaterThanOrEqual(outer.y - 0.5);
+  }
+});

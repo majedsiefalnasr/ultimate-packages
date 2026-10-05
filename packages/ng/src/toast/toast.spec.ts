@@ -173,4 +173,39 @@ describe("UToast", () => {
 
     expect(fixture.nativeElement.querySelector(".u-toast-close-button")).toBeFalsy();
   });
+
+  it("renders the upstream-aligned message structure (GAP-064 G3-A A2)", () => {
+    @Component({ standalone: true, imports: [UToast], template: `<u-toast></u-toast>` })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    TestBed.inject(UToastService).add({ severity: "warn", summary: "S", detail: "D" });
+    fixture.detectChanges();
+
+    const content = fixture.nativeElement.querySelector(
+      ".u-toast-message > .u-toast-message-content"
+    ) as HTMLElement;
+    const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
+    expect(rest).toHaveLength(0);
+    expect(text.className).toBe("u-toast-message-text");
+    expect(Array.from(text.children, (c) => c.className)).toEqual(["u-toast-summary", "u-toast-detail"]);
+    expect(container.tagName).toBe("DIV");
+    expect(container.classList).toHaveLength(0);
+    expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
+  });
+
+  it("omits the close-button container for a non-closable message (GAP-064 G3-A A2)", () => {
+    @Component({ standalone: true, imports: [UToast], template: `<u-toast></u-toast>` })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    TestBed.inject(UToastService).add({ severity: "info", summary: "S", closable: false });
+    fixture.detectChanges();
+
+    const content = fixture.nativeElement.querySelector(
+      ".u-toast-message > .u-toast-message-content"
+    ) as HTMLElement;
+    expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
+    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
+  });
 });
