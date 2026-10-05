@@ -2515,6 +2515,245 @@ The Plan is approved. Implementation is authorized from Task 1 once this record 
 
 **Verification evidence for PR-C1-7** (git-ignored workspace `.superpowers/sdd/2026-10-05-gap-064-g3c-research/sim/`): `verify-steps-focus.mjs` and its output `verify-steps-focus.out` (12 runs: 2 frameworks × 3 browsers × the plain and the PX-C2 selector, on freshly rebuilt Storybooks). With the plain mapping, the disabled link shows the token ring in 6/6 runs. With PX-C2 it shows no ring in 6/6 runs, while the enabled link keeps the ring in 12/12 runs. The data module was re-run with PX-C2: counts unchanged, 0 problems, and the fidelity test is green on style files built from its output.
 
+## Plan Amendment A1 — Task 6 stop: Stepper CSS-text tests and PX-C1 click protection (user-approved 2026-10-06; Spec §17)
+
+Task 6 stopped at Step 2: 7 of 21 tests in `packages/vue/src/stepper/stepper.spec.ts` (the "Stepper vertical StepItem layout CSS (GAP-063)" and "Stepper horizontal layout CSS (GAP-077)" blocks) assert the old hand-written CSS text. All 14 behaviour tests in that file pass. The user decided: retarget, never delete; preserve each test's intent; add explicit PX-C1 interaction protection. Test-only; no CSS, component, story, baseline or CI change. Executed inside Task 6 as its own commit, before Task 6 Step 3, by the Task 6 implementer.
+
+**A1.1 — `packages/vue/src/stepper/stepper.spec.ts`, both CSS describe blocks.** Replace each block's `rule` helper with this whitespace-insensitive version, which normalizes a rule body to `prop: value; prop: value;`:
+
+```ts
+const rule = (selector: string) => {
+  const m = css.match(
+    new RegExp(`^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*\\{([^}]*)\\}`, "m")
+  );
+  return m
+    ? m[1]
+        .split(";")
+        .map((d) => d.trim())
+        .filter(Boolean)
+        .map((d) => `${d};`)
+        .join(" ")
+    : null;
+};
+```
+
+Then retarget the 7 tests exactly as below. Titles are kept, except the 4th GAP-063 test whose title described the removed rule.
+
+GAP-063 block:
+
+```ts
+it("lays the step item out as a column, active item growing", () => {
+  expect(rule(".u-step-item")).toBe("display: flex; flex-direction: column; flex: initial;");
+  expect(rule(".u-step-item.u-step-item-active")).toBe("flex: 1 1 auto;");
+});
+
+it("keeps the vertical step header left-aligned without touching the global .u-step rule", () => {
+  // G3-C1 (upstream group 21): the vertical override is `flex: initial` only; the header's
+  // left alignment is asserted in the browser (G3-C1 e2e Stepper layout test, Spec §17).
+  expect(rule(".u-step-item .u-step")).toBe("flex: initial;");
+  expect(rule(".u-step")).toContain("align-items: center;");
+});
+
+it("makes the panel a grid, offsets content, handles RTL and last-item padding", () => {
+  expect(rule(".u-step-item .u-step-panel")).toBe("display: grid; grid-template-rows: 1fr;");
+  expect(rule(".u-step-item .u-step-panel-content")).toBe(
+    "width: 100%; padding: dt('stepper.steppanel.padding'); margin-inline-start: 1rem;"
+  );
+  expect(rule(".u-step-item .u-stepper-separator:dir(rtl)")).toBe(
+    "left: calc(-9 * dt('stepper.separator.size'));"
+  );
+  expect(rule(".u-step-item:last-of-type .u-step-panel")).toBe(
+    "padding-inline-start: dt('stepper.step.number.size');"
+  );
+});
+
+it("keeps inactive vertical panels hidden although the grid rule sets display", async () => {
+  // G3-C1 drops the old `[data-u-hidden]` rule (Spec §6.4): v-show hides inactive panels
+  // with an inline `display: none`, which no stylesheet rule (incl. the grid rule) overrides.
+  const wrapper = mount({
+    components: { UStepper, UStepItem, UStep, UStepPanel },
+    template: `
+        <UStepper :value="1">
+          <UStepItem v-for="n in 3" :key="n" :value="n">
+            <UStep :value="n">Step {{ n }}</UStep>
+            <UStepPanel :value="n">Content {{ n }}</UStepPanel>
+          </UStepItem>
+        </UStepper>
+      `,
+  });
+  await nextTick();
+  expect(rule(".u-step-item .u-step-panel")).toContain("display: grid;");
+  const panels = wrapper.findAll('[role="tabpanel"]');
+  expect(panels).toHaveLength(3);
+  expect((panels[0].element as HTMLElement).style.display).toBe("");
+  expect((panels[1].element as HTMLElement).style.display).toBe("none");
+  expect((panels[2].element as HTMLElement).style.display).toBe("none");
+});
+```
+
+GAP-077 block:
+
+```ts
+it("spaces steps across a centred list row", () => {
+  expect(rule(".u-step-list")).toBe(
+    "position: relative; display: flex; justify-content: space-between; align-items: center; margin: 0; padding: 0; list-style-type: none; overflow-x: auto;"
+  );
+});
+
+it("lays horizontal steps out as growing rows, last step not growing", () => {
+  // G3-C1 (upstream groups 2-3): `.u-step` itself is the growing flex row (no column
+  // override any more), and the last step does not grow.
+  expect(rule(".u-step")).toContain("display: flex;");
+  expect(rule(".u-step")).toContain("flex: 1 1 auto;");
+  expect(rule(".u-step")).not.toContain("flex-direction: column");
+  expect(rule(".u-step:last-of-type")).toBe("flex: initial;");
+});
+
+it("leaves the global .u-step rule and the vertical rules unchanged", () => {
+  expect(rule(".u-step")).toBe(
+    "position: relative; display: flex; flex: 1 1 auto; align-items: center; gap: dt('stepper.step.gap'); padding: dt('stepper.step.padding');"
+  );
+  expect(rule(".u-step-item .u-step")).toBe("flex: initial;");
+});
+```
+
+Nothing else in the file changes. The imports already include `mount`, `nextTick`, `UStepItem`, `UStep`, `UStepPanel` and `UStepper`.
+
+**A1.2 — PX-C1 interaction parity, Vue `packages/vue/src/steps/steps.spec.ts`.** Add `import { nextTick } from "vue";`. Strengthen the existing readonly test in place: same title, same click target, plus the default-prevented and unchanged-active assertions.
+
+```ts
+it("when readonly, non-active items are disabled and clicking them does not emit select", async () => {
+  const wrapper = mount(USteps, { props: { model: items } });
+  const secondLink = wrapper.findAll("a")[1];
+  expect(secondLink.attributes("aria-disabled")).toBe("true");
+  const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+  secondLink.element.dispatchEvent(click);
+  await nextTick();
+  expect(wrapper.emitted("select")).toBeUndefined();
+  expect(click.defaultPrevented).toBe(true);
+  expect(wrapper.findAll("li")[0].attributes("aria-current")).toBe("step");
+  expect(wrapper.findAll("li")[1].attributes("aria-current")).toBeUndefined();
+});
+```
+
+Add directly after it:
+
+```ts
+// G3-C1 PX-C1: disabled items are no longer dimmed and no longer get `pointer-events: none`
+// (upstream parity), so the click guard alone keeps them non-interactive (Spec §17).
+it("an explicitly disabled item stays non-interactive when not readonly", async () => {
+  let called = false;
+  const model = [
+    { label: "One" },
+    { label: "Two", disabled: true, command: () => (called = true) },
+    { label: "Three" },
+  ];
+  const wrapper = mount(USteps, { props: { model, readonly: false, activeStep: 0 } });
+  const secondLink = wrapper.findAll("a")[1];
+  expect(secondLink.attributes("aria-disabled")).toBe("true");
+  expect(secondLink.attributes("tabindex")).toBe("-1");
+  const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+  secondLink.element.dispatchEvent(click);
+  await nextTick();
+  expect(wrapper.emitted("select")).toBeUndefined();
+  expect(called).toBe(false);
+  expect(click.defaultPrevented).toBe(true);
+  expect(wrapper.findAll("li")[0].attributes("aria-current")).toBe("step");
+  expect(wrapper.findAll("li")[1].attributes("aria-current")).toBeUndefined();
+});
+```
+
+**A1.3 — PX-C1 interaction parity, Angular `packages/ng/src/steps/steps.spec.ts`** (same contract, same risk). Strengthen the existing readonly test in place:
+
+```ts
+it("when readonly, non-active items are disabled and clicking them does not emit onSelect", () => {
+  const fixture = setup();
+  let emitted: unknown;
+  fixture.componentInstance.onSelect.subscribe((e: unknown) => (emitted = e));
+  const secondLink: HTMLAnchorElement = fixture.nativeElement.querySelectorAll("a")[1];
+  expect(secondLink.getAttribute("aria-disabled")).toBe("true");
+  const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+  secondLink.dispatchEvent(click);
+  fixture.detectChanges();
+  expect(emitted).toBeUndefined();
+  expect(click.defaultPrevented).toBe(true);
+  const listItems = fixture.nativeElement.querySelectorAll("li");
+  expect(listItems[0].getAttribute("aria-current")).toBe("step");
+  expect(listItems[1].getAttribute("aria-current")).toBeNull();
+});
+```
+
+Add directly after it:
+
+```ts
+// G3-C1 PX-C1: disabled items are no longer dimmed and no longer get `pointer-events: none`
+// (upstream parity), so the click guard alone keeps them non-interactive (Spec §17).
+it("an explicitly disabled item stays non-interactive when not readonly", () => {
+  let called = false;
+  const model: UMenuItem[] = [
+    { label: "One" },
+    { label: "Two", disabled: true, command: () => (called = true) },
+    { label: "Three" },
+  ];
+  const fixture = setup(model, 0, false);
+  let emitted: unknown;
+  fixture.componentInstance.onSelect.subscribe((e: unknown) => (emitted = e));
+  const secondLink: HTMLAnchorElement = fixture.nativeElement.querySelectorAll("a")[1];
+  expect(secondLink.getAttribute("aria-disabled")).toBe("true");
+  expect(secondLink.getAttribute("tabindex")).toBe("-1");
+  const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+  secondLink.dispatchEvent(click);
+  fixture.detectChanges();
+  expect(emitted).toBeUndefined();
+  expect(called).toBe(false);
+  expect(click.defaultPrevented).toBe(true);
+  const listItems = fixture.nativeElement.querySelectorAll("li");
+  expect(listItems[0].getAttribute("aria-current")).toBe("step");
+  expect(listItems[1].getAttribute("aria-current")).toBeNull();
+});
+```
+
+**A1.4 — Browser checks in both G3-C1 e2e specs** (`packages/{ng,vue}/e2e/g3c1-aura-styles.spec.ts`, layout tests only; no screenshot or story change). In `<Fw>/Steps G3-C1 layout`, append at the end:
+
+```ts
+// PX-C1 interaction parity (Spec §17): the disabled item now receives pointer events
+// (upstream `pointer-events: auto`), but a real click changes neither the active step nor the URL.
+await expect(link(1)).toHaveCSS("pointer-events", "auto");
+const url = page.url();
+await link(1).click({ force: true });
+await expect(items.nth(0)).toHaveAttribute("aria-current", "step");
+await expect(items.nth(1)).not.toHaveAttribute("aria-current", "step");
+expect(page.url()).toBe(url);
+```
+
+In `<Fw>/Stepper G3-C1 layout`, append at the end, after the vertical visible-panel checks:
+
+```ts
+// GAP-063 intent, retargeted (Spec §17): the vertical step header stays left-aligned in its
+// step without the old `align-items: flex-start` override.
+const step = page.locator(".u-step-item .u-step").first();
+const stepBox = await box(step);
+const headerBox = await box(step.locator(".u-step-header"));
+const padLeft = await step.evaluate((el) => parseFloat(getComputedStyle(el).paddingLeft));
+expect(Math.abs(headerBox.x - (stepBox.x + padLeft))).toBeLessThanOrEqual(0.5);
+```
+
+`force: true` skips Playwright's actionability check, which treats `aria-disabled` as disabled; the click is still a real pointer event at the element's centre. These layout checks run in Task 8 Step 3 (`c1`), Task 9 and Task 10; a failure there is UNEXPECTED (stop).
+
+**A1.5 — Run and commit (inside Task 6, before its Step 3).**
+
+```bash
+pnpm --filter @ultimate/vue exec vitest run src/stepper src/steps
+pnpm --filter @ultimate/ng exec ng test --project=ng --include="src/steps/**/*.spec.ts" --watch=false
+npx prettier --check packages/vue/src/stepper/stepper.spec.ts packages/vue/src/steps/steps.spec.ts packages/ng/src/steps/steps.spec.ts packages/ng/e2e/g3c1-aura-styles.spec.ts packages/vue/e2e/g3c1-aura-styles.spec.ts
+git add packages/vue/src/stepper/stepper.spec.ts packages/vue/src/steps/steps.spec.ts packages/ng/src/steps/steps.spec.ts packages/ng/e2e/g3c1-aura-styles.spec.ts packages/vue/e2e/g3c1-aura-styles.spec.ts
+git commit -m "test(gap-064): retarget Stepper CSS tests to G3-C1 and pin the Steps click guard"
+```
+
+Expected: with the 5 ported Vue style files in the working tree, `src/stepper` and `src/steps` are all green (21/21 stepper), and the ng steps spec is green. This commit contains only the 5 test files. The Vue style files are committed afterwards by Task 6 Step 6 as planned. Then continue with Task 6 Step 3.
+
+**Verification evidence** (git-ignored `.superpowers/sdd/2026-10-05-gap-064-g3c-research/sim/verify-task6-amendment.mjs` and `.out`; Storybooks built from the ported CSS; Chromium/Firefox/WebKit × ng/vue, 6/6): the disabled Steps link has `pointer-events: auto`, `opacity: 1`. A forced real click leaves `aria-current` on item 0 and the URL unchanged. The vertical header's left edge minus the step's left edge plus padding = 0, with exactly one visible panel.
+
 ## After this plan
 
 Final Review and Closeout are a separate gate: GAP-064 progress note (G3-A, G3-B, G3-C1 complete; G3-C2, G3-D, G3-E open; status stays PARTIAL), the closeout record, and merge/push decisions. G3-C2 (Menus) starts only after its own authorization.

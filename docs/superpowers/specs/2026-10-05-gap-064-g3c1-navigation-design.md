@@ -312,3 +312,12 @@ Plan Review approved the Plan with `MIGRATION.md` (Task 11), the one-sentence `P
 - **§9.3** Steps/Stepper checks use the discriminating colour tokens (consistency with the Plan; the Aura active/inactive number backgrounds are equal), and Steps adds the PX-C2 focus check.
 
 Unchanged: counts, FX-C1..FX-C6, D3, D5, PX-C1, the size gate, frozen tooling, scope. No CSS, component, story, baseline or CI change is made by this amendment.
+
+## 17. Amendment A2 — Task 6 stop (2026-10-06, user decision)
+
+Task 6 stopped on the Plan stop rule "an existing spec asserts a removed literal": 7 GAP-063/GAP-077 tests in `packages/vue/src/stepper/stepper.spec.ts` pinned the old hand-written Vue Stepper CSS text, which §6.4 replaces with upstream groups. The user decided:
+
+- **The 7 tests are kept and retargeted to the G3-C1 contract, not deleted.** They stay GAP-063/GAP-077 regression coverage with the same intent. Their `rule()` helper becomes whitespace-insensitive. The ported values are asserted, including the `dt()` forms; `-18px` and `2rem` are unchanged values now token-driven. The removed `[data-u-hidden]` ordering check becomes a behaviour check that inactive vertical panels keep v-show's inline `display: none`, which no stylesheet rule overrides. The vertical header left alignment, formerly an `align-items: flex-start` literal, is asserted in the browser.
+- **PX-C1 is two explicit contracts.** _Visual parity:_ disabled Steps items are not dimmed (`opacity: 1`). _Interaction parity:_ disabled Steps items stay non-interactive. Since upstream group 4 restores `pointer-events: auto`, clicks now reach the link, and only the existing click guard (`onItemClick`: readonly or `item.disabled` → `preventDefault`, no `select`/`onSelect`, no `command`) blocks them. A click on a disabled item must not change the active step (`aria-current`) or navigate. This is pinned by unit tests in both frameworks and a real-pointer browser check. No new JS behaviour.
+
+Verified 2026-10-06 on Storybooks built from the ported CSS, in Chromium, Firefox and WebKit × ng/vue (6/6): the disabled link has `pointer-events: auto`, `opacity: 1`. A forced real click leaves `aria-current` on the active item and the URL unchanged. The vertical header's left edge equals its step's left edge plus padding (Δ = 0), with exactly one panel visible. Test-only amendment; no CSS, component, story, baseline or CI change.
