@@ -1,6 +1,6 @@
 # Specification — GAP-064 G3-C1: Navigation (Breadcrumb, Dock, Steps, Stepper, Tabs) Uses Its Aura Tokens
 
-**Status:** Draft — awaiting Spec Review.
+**Status:** Approved at Spec Review (2026-10-05) — decisions recorded in §15.
 **Date:** 2026-10-05
 **Branch:** `feature/gap-064-g3c-menus-navigation` (from `main` `2c8ef45`)
 **Origin:** GAP-064 (PARTIAL), G3-C sub-tranche C1. Research and decisions: `docs/architecture/research/2026-10-05-gap-064-g3c-menus-navigation-research.md` (commit `6721085`), §9 C-1..C-11. G3-wide decisions: ADR-051, D-G3-1..9 (`2026-10-04-gap-064-g3-research.md` §11). Parity baseline: ADR-048.
@@ -144,7 +144,9 @@ Upstream Breadcrumb, Dock, Step and Tab put `p-disabled` on the item and rely on
 
 and the same pair for `.u-dock-item-disabled` (dock), `.u-step-disabled` (stepper) and `.u-tab-disabled` (tabs). Declarations equal the upstream base groups exactly (no recorded difference).
 
-**Not for Steps:** upstream steps group 4 (`.p-steps-item.p-disabled, .p-steps-item.p-disabled * { opacity: 1; pointer-events: auto; user-select: auto; cursor: auto }`) explicitly cancels the base role at higher specificity, so upstream disabled steps are not dimmed. Porting group 4 (mapped) reproduces that; a base-role rule would be inert. **Parity change recorded as PX-C1:** disabled Steps items are no longer dimmed (today `opacity: 0.6`); click/keyboard activation remains blocked by Ultimate's existing JS guard (`isItemDisabled`) and `tabindex="-1"`.
+**Not for Steps:** upstream steps group 4 (`.p-steps-item.p-disabled, .p-steps-item.p-disabled * { opacity: 1; pointer-events: auto; user-select: auto; cursor: auto }`) explicitly cancels the base role at higher specificity, so upstream disabled steps are not dimmed. Porting group 4 (mapped) reproduces that; a base-role rule would be inert. **Parity change PX-C1 (approved, SR-C1-1):** disabled Steps items are no longer dimmed (today `opacity: 0.6`, after the port `1`) — an intentional, documented parity change, not a regression. Click/keyboard activation remains blocked by Ultimate's existing JS guard (`isItemDisabled`) and `tabindex="-1"`, both unchanged.
+
+**Dock disabled opacity (approved, SR-C1-4):** the current literal `0.5` becomes `dt('disabled.opacity')` (Aura `0.6`) through the dock D3 pair; the literal is not kept as an Ultimate-only exception.
 
 ### 6.2 D4 / D6
 
@@ -212,7 +214,7 @@ The categories map to the reader's distinction as: **upstream parity rules** = D
 10. **C10 — Regression:** unit suites, typecheck, Angular SSR, every existing screenshot outside §9.2 unchanged, G3-A and G3-B visual/accessibility contracts still pass, **and `packages/vue/e2e/stepper.spec.ts` passes unchanged.**
 11. **C11 — Provenance:** one `reference-derived` entry per changed style file (10) in `docs/architecture/provenance/{ng,vue}.json`.
 
-### 9.2 Screenshot matrix (proposal; finalised at Spec Review/Plan)
+### 9.2 Screenshot matrix (approved, SR-C1-3)
 
 Existing stories (both frameworks): Breadcrumb Default, WithoutHome, WithDisabledItem; Dock Default, LeftPosition; Steps Default, NotReadonly; Stepper Default, Linear; Tabs Default — **10 per framework**.
 
@@ -244,7 +246,7 @@ Total **17 stories per framework**. Interaction-state screenshot (no extra story
 - A **new, tranche-scoped validator** for C1 (same contract as G3-A/G3-B: completeness per story × 3 browsers, FAIL on violations in neither `ACCESSIBILITY_BASELINE.md` nor a C1 pre-existing evidence list, STALE informational, read-only), reusing the frozen fingerprint helpers. `validate-g3a-accessibility.mjs`, `validate-g3b-accessibility.mjs`, `validate-accessibility-baseline.mjs`, `g3a-port.mjs` and `g3b-port.mjs` stay byte-identical.
 - Story identity: the 17 stories per framework (§9.2), titles containing a C1 tag (Plan fixes the exact tag, e.g. `G3-C1`), one scan per story.
 - Pre-existing separation: fingerprints observed both before and after the port go to a dated C1 evidence file; introduced rows go to the review gate; only approved rows enter `ACCESSIBILITY_BASELINE.md`.
-- **CI:** not wired by this Spec. Because CI's strict scan currently selects `--grep-invert "G3-A|G3-B"`, adding C1 e2e tests without CI wiring would place them in the strict scan, where pre-existing rows would fail it. **Open item §14.2** decides whether the Plan includes the CI wiring (G3-B precedent) or whether C1 tests stay out of CI until a later gate.
+- **CI (approved, SR-C1-2 — G3-B model):** CI's strict scan currently selects `--grep-invert "G3-A|G3-B"`; without wiring, C1 e2e tests would enter it and fail on pre-existing rows. The Plan therefore (i) extends the strict selection to exclude `G3-C1` as well, and (ii) adds the dedicated C1 accessibility scan and validation step. G3-A/G3-B validators and tooling stay byte-identical; no CI change beyond what isolates and validates C1.
 
 ## 11. Size gate
 
@@ -258,12 +260,26 @@ Authoritative: direct comparison of the `index.mjs` gzip size of `packages/ng` a
 
 ## 13. Affected files (at implementation; none changed by this Spec)
 
-10 style modules; the C1 fixture, data module and fidelity test under `packages/themes/test/`; per-framework runtime specs; verification stories in the five component story files; per-framework C1 e2e specs and snapshots; the C1 accessibility validator, its test and evidence file; provenance JSON (10 entries); `ACCESSIBILITY_BASELINE.md` only for approved rows; review record; `MIGRATION.md` if approved at Plan Review; CI only per §14.2.
+10 style modules; the C1 fixture, data module and fidelity test under `packages/themes/test/`; per-framework runtime specs; verification stories in the five component story files; per-framework C1 e2e specs and snapshots; the C1 accessibility validator, its test and evidence file; provenance JSON (10 entries); `ACCESSIBILITY_BASELINE.md` only for approved rows; review record; `MIGRATION.md` if approved at Plan Review; `.github/workflows/ci.yml` per SR-C1-2.
 
-## 14. Open items for Spec Review
+## 14. Open items for Spec Review (resolved — see §15)
 
 1. **Steps parity change (PX-C1):** confirm that disabled Steps items follow upstream (not dimmed), rather than keeping Ultimate's dimming as a retained rule (which would fail C-8's "no upstream role covers it" test, since upstream group 4 covers it).
 2. **CI wiring (§10):** (a) the Plan includes C1 CI wiring (strict `--grep-invert "G3-A|G3-B|G3-C1"` + C1 steps), as G3-B did — recommended, otherwise CI's strict scan fails on C1's pre-existing rows; or (b) no CI change in C1.
 3. **Story matrix (§9.2):** approve the 7 verification stories and the Dock hover screenshot.
 4. **Dock disabled opacity:** today 0.5 → `disabled.opacity` (Aura 0.6) via D3; confirm (follows C-7).
 5. **`MIGRATION.md`:** decided at Plan Review.
+
+## 15. Spec Review decisions (2026-10-05)
+
+Spec approved with these decisions; wording in §3–§13 updated accordingly.
+
+| ID      | Decision                                                                                                                                                                                                                        | Effect                                                                                                                                                                                                             |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| SR-C1-1 | **PX-C1 approved.** Disabled Steps items follow upstream and are not dimmed (upstream group 4 sets `opacity: 1`); keeping the dimming would violate C-8. Existing interaction protection (JS guard, `tabindex="-1"`) unchanged. | The `0.6` → `1` change is an intentional, documented parity change, reviewed as such at the visual gate; not a regression. No Steps D3, no Steps D5.                                                               |
+| SR-C1-2 | **CI option (a).** C1 is wired into CI on the G3-B model: strict selection excludes `G3-C1` in addition to `G3-A` and `G3-B`; a dedicated C1 accessibility scan + validation step is added.                                     | G3-A/G3-B validators and tooling byte-identical; the CI diff is limited to isolating and validating C1.                                                                                                            |
+| SR-C1-3 | **Story matrix approved:** the 7 verification stories and the Dock hover interaction screenshot (§9.2).                                                                                                                         | Stories stay verification-focused; no unrelated story changes. Coverage retained for Dock positions/disabled, Steps disabled, vertical Stepper, Tabs disabled, Tabs navigators/overflow, Dock hover magnification. |
+| SR-C1-4 | **Dock disabled opacity approved:** literal `0.5` → `dt('disabled.opacity')` (`0.6`), a consequence of C-7.                                                                                                                     | The literal is not preserved as an Ultimate-only exception.                                                                                                                                                        |
+| SR-C1-5 | **`MIGRATION.md`** left for Plan Review.                                                                                                                                                                                        | —                                                                                                                                                                                                                  |
+
+Unchanged by Spec Review: counts (Angular 90/79/11, Vue 90/81/9), FX-C1..FX-C6, D3 set, D5 = R-C1..R-C3, the 15% gate against `2c8ef45`, frozen G3-A/G3-B tooling, §12 scope.
