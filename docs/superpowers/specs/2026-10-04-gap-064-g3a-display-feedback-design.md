@@ -116,7 +116,7 @@ The mapping was derived by comparing every upstream class (renamed `p-` → `u-`
 | terminal        | —                                                                                                                                                                           | `p-terminal-input`                                                                                                            |
 | message         | —                                                                                                                                                                           | `p-message-content-wrapper`, `-close-icon`, `-outlined`, `-simple`, `-sm`, `-lg`, `-enter-active`, `-leave-active`            |
 | inlinemessage   | `p-inlinemessage` → `u-inline-message` and every `p-inlinemessage-*` → `u-inline-message-*` (text, icon, info, success, warn, error, secondary, contrast)                   | `p-inlinemessage-icon-only`                                                                                                   |
-| toast           | —                                                                                                                                                                           | `p-toast-message-icon`, `-message-text`, `-close-icon`, `-message-enter-active`, `-message-leave-active`, `-message-leave-to` |
+| toast           | —                                                                                                                                                                           | `p-toast-message-icon`, `-close-icon`, `-message-enter-active`, `-message-leave-active`, `-message-leave-to` |
 
 Notes:
 
@@ -142,7 +142,7 @@ Counts are upstream rule groups. Angular equals Vue.
 | terminal            | 5 / 6                    | FX-A4: `.p-terminal-input::-ms-clear`                                                                                             | —                           |
 | message             | 25 / 53                  | FX-A5: 28 groups for content-wrapper, close-icon, outlined, simple, sm, lg and the enter/leave animations, plus their 2 keyframes | —                           |
 | inlinemessage (Vue) | 15 / 16                  | FX-A6: `.p-inlinemessage-icon-only .p-inlinemessage-text`                                                                         | —                           |
-| toast               | 36 / 42                  | FX-A7: 6 groups for message-icon, message-text, close-icon and the enter/leave animations, plus 2 keyframes                       | —                           |
+| toast               | 37 / 42                  | FX-A7: 5 groups for message-icon, close-icon and the enter/leave animations, plus 2 keyframes                                     | —                           |
 
 ### 4.5 Tokens
 
@@ -255,7 +255,7 @@ Location: the CSS stays in each framework's own style module. See §12 item 1.
 - **FX-A4:** Terminal `-ms-clear`. This is a legacy IE pseudo-element on a class Ultimate doesn't render.
 - **FX-A5:** Message content-wrapper, close-icon, outlined/simple variants, sm/lg sizes, and enter/leave animations. Ultimate renders none of these.
 - **FX-A6:** InlineMessage icon-only.
-- **FX-A7:** Toast message-icon, message-text, close-icon, and enter/leave/leave-to animations. Ultimate renders no severity icon, text wrapper, close icon or animation classes.
+- **FX-A7:** Toast message-icon, close-icon, and enter/leave/leave-to animations. Ultimate renders no severity icon, close icon or animation classes.
 
 ### 5.5 Provenance
 

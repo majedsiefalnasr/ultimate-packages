@@ -79,7 +79,6 @@ export const NOT_RENDERED = {
   inlinemessage: ["p-inlinemessage-icon-only"],
   toast: [
     "p-toast-message-icon",
-    "p-toast-message-text",
     "p-toast-close-icon",
     "p-toast-message-enter-active",
     "p-toast-message-leave-active",
@@ -137,7 +136,7 @@ export const COUNTS = {
   terminal: [5, 1],
   message: [25, 28],
   inlinemessage: [15, 1],
-  toast: [36, 6],
+  toast: [37, 5],
 };
 
 /** Whitespace normalisation only; never touches parentheses or operators (calc() stays valid). */

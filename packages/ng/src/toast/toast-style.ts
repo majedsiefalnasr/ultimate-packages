@@ -10,6 +10,7 @@ const css = /*css*/ `
 .u-toast{width: dt('toast.width');white-space: pre-line;word-break: break-word;}
 .u-toast-message{margin: 0 0 1rem 0;display: grid;grid-template-rows: 1fr;}
 .u-toast-message-content{display: flex;align-items: flex-start;padding: dt('toast.content.padding');gap: dt('toast.content.gap');min-height: 0;overflow: hidden;transition: padding 250ms ease-in;}
+.u-toast-message-text{flex: 1 1 auto;display: flex;flex-direction: column;gap: dt('toast.text.gap');}
 .u-toast-summary{font-weight: dt('toast.summary.font.weight');font-size: dt('toast.summary.font.size');}
 .u-toast-detail{font-weight: dt('toast.detail.font.weight');font-size: dt('toast.detail.font.size');}
 .u-toast-close-button{display: flex;align-items: center;justify-content: center;overflow: hidden;position: relative;cursor: pointer;background: transparent;transition: background dt('toast.transition.duration'), color dt('toast.transition.duration'), outline-color dt('toast.transition.duration'), box-shadow dt('toast.transition.duration');outline-color: transparent;color: inherit;width: dt('toast.close.button.width');height: dt('toast.close.button.height');border-radius: dt('toast.close.button.border.radius');margin: -25% 0 0 0;right: -25%;padding: 0;border: none;user-select: none;}
