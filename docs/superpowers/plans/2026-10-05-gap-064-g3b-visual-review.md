@@ -248,7 +248,7 @@ The 138 accepted baselines are 73 Ng (69 + the 4 U1 tests) and 65 Vue, committed
 
 ## Verification (Plan Task 10)
 
-Run on branch `feature/gap-064-g3b-containers`, HEAD `cb6ec1b` (2026-10-05), Node 24.15.0 on the host. Raw logs live under `.superpowers/sdd/2026-10-05-gap-064-g3b-containers/` (`local-test-results/t10-*.log`, `docker/ci-*.log`, `task-10-*.log`). The working tree held exactly one modified, unstaged file throughout: the rejected U2 capture `packages/vue/e2e/g3b-aura-styles.spec.ts-snapshots/Vue-Card-WithHeaderAndFooter-G3-B-visual-1-vue-webkit.png`. It was not staged, committed or reverted. Docker used `git archive HEAD`, so the CI simulation saw the committed pre-port U2 baseline.
+Run on branch `feature/gap-064-g3b-containers`, tested at `cb6ec1b` (2026-10-05), Node 24.15.0 on the host. Raw logs live under `.superpowers/sdd/2026-10-05-gap-064-g3b-containers/` (`local-test-results/t10-*.log`, `docker/ci-*.log`, `task-10-*.log`). The working tree held exactly one modified, unstaged file throughout: the rejected U2 capture `packages/vue/e2e/g3b-aura-styles.spec.ts-snapshots/Vue-Card-WithHeaderAndFooter-G3-B-visual-1-vue-webkit.png`. It was not staged, committed or reverted. Docker used `git archive HEAD`, so the CI simulation saw the committed pre-port U2 baseline.
 
 ### Step 1: suites, typecheck, SSR (host)
 
@@ -272,7 +272,7 @@ Note: the plan's `pnpm --filter @ultimate/ng test --watch=false` is rejected by 
 | Framework | Step         | Exit | Detail                                                              |
 | --------- | ------------ | ---- | ------------------------------------------------------------------- |
 | ng        | strict run   | 0    | 308 passed, 1 flaky (passed on retry)                               |
-| ng        | strict check | 0    | zero new violations outside `ACCESSIBILITY_BASELINE.md` (198 nodes) |
+| ng        | strict check | 0    | zero new violations outside `ACCESSIBILITY_BASELINE.md` (260 nodes) |
 | ng        | G3-A run     | 0    | 189 passed                                                          |
 | ng        | G3-A check   | 0    | OK, 93/93 reports, 0 introduced, 0 stale                            |
 | ng        | G3-B run     | 0    | 174 passed                                                          |
@@ -284,7 +284,7 @@ Note: the plan's `pnpm --filter @ultimate/ng test --watch=false` is rejected by 
 | vue       | G3-B run     | 1    | 173 passed, 1 failed: the U2 exception below, nothing else          |
 | vue       | G3-B check   | 0    | OK, 75/75 reports, 0 introduced, 0 stale                            |
 | react     | strict run   | 0    | 216 passed                                                          |
-| react     | strict check | 0    | zero new violations outside `ACCESSIBILITY_BASELINE.md` (260 nodes) |
+| react     | strict check | 0    | zero new violations outside `ACCESSIBILITY_BASELINE.md` (198 nodes) |
 
 **Single expected exception (user ruling U2, 2026-10-05):** `[vue-webkit] packages/vue/e2e/g3b-aura-styles.spec.ts:44 Vue/Card WithHeaderAndFooter G3-B visual`. Screenshot mismatch of 2157 pixels on all three attempts, the same pixel count as the reviewed stable retries in "Task 9 decisions and final evidence". Cause: the story's external CDN image (`primefaces.org`). Its baseline was intentionally not accepted, so the committed pre-port baseline is compared against the post-port render. The test was not weakened, skipped or altered. No other test failed in the G3-B runs: all layout and accessibility tests passed in all three browsers per framework.
 
