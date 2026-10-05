@@ -2111,7 +2111,7 @@ Spec §14 (Amendment A1) was added and approved during Task 8, after the Plan wa
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this addendum task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** READY FOR PLAN REVIEW (2026-10-05). The structure was approved, with the Task 11 stacking-assertion correction applied; execution is subagent-driven. Tasks 11–16 run **before** the original Tasks 9 and 10, which follow unchanged once U2 is closed.
+**Status:** APPROVED at Plan Review (2026-10-05) and EXECUTED. Tasks 11–16 are complete (`04713a6`..`ea5e039`), and the 6 Toast baselines were approved by the user at the Task 15 gate. Execution was subagent-driven. Tasks 11–16 run **before** the original Tasks 9 and 10, which follow unchanged once U2 is closed.
 
 **Goal:** Resolve U2. Align the Angular and Vue Toast markup with upstream (Spec §15.6 D-A2-1) so that the ported upstream Toast CSS lays out correctly, without invented CSS values.
 

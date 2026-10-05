@@ -231,6 +231,9 @@ jobs:
 
       - name: G3-A differential accessibility validation (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        # An explicit bash shell adds pipefail, so the validator's exit code
+        # survives the pipe into tee.
+        shell: bash
         run: |
           mkdir -p test-results/g3a-accessibility
           node scripts/provenance/validate-g3a-accessibility.mjs ${{ matrix.framework }} 2>&1 \

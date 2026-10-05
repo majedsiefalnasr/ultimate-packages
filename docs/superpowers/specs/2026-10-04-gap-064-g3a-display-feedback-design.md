@@ -460,7 +460,7 @@ New steps after the existing strict check and the upload of its reports, guarded
 2. `node scripts/provenance/validate-g3a-accessibility.mjs <fw>` (new, tranche-scoped, no write mode).
 3. Upload `test-results/accessibility/<fw>/` as `g3a-accessibility-reports-<fw>`.
 
-`validate-g3a-accessibility.mjs` **imports** the existing validator's exported `loadBaseline`, `readEnvelopes` and `BASELINE_PATH`, so fingerprinting is identical by construction. It reads two lists:
+`validate-g3a-accessibility.mjs` **imports** the existing validator's exported `BASELINE_PATH`, `computeFingerprint` and `parseBaselineFingerprints`, so fingerprinting is identical by construction. It reads two lists:
 
 - `ACCESSIBILITY_BASELINE.md`, the global baseline. It holds the 9 approved G3-A parity rows.
 - `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` (new):
@@ -564,7 +564,7 @@ A1 is **approved**. The review questions in §14.9 are resolved as follows.
 
 ## 15. Proposed Amendment A2 — Toast structural mismatch (U2)
 
-**Status: Option B SELECTED by the user (2026-10-05). The decisions are made explicit and testable in §15.6, pending Spec approval.** No Toast source, story, screenshot or baseline has been changed. The 6 `Toast AllSeverities` screenshots stay held, and they are the only G3-A visual failures in CI run `37289718639`.
+**Status: Option B APPROVED (Spec Review, 2026-10-05) and IMPLEMENTED.** It was implemented by Plan Addendum A2, Tasks 11–16 (`04713a6`..`ea5e039`). The 6 Toast baselines were approved by the user and updated in `ea5e039`, and U2 is resolved. The review evidence is in the visual review record, "Amendment A2: Toast review".
 
 ### 15.1 Evidence: the two DOM structures
 

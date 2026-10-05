@@ -1,6 +1,6 @@
 # GAP-064 G3-A Visual and Accessibility Review Record (Plan Task 8, Step 3)
 
-**Status:** decisions (a)-(d) were taken by the user on 2026-10-04 and applied, apart from the held Toast items. The changes are staged and uncommitted, awaiting the user's review. Toast AllSeverities (U2) remains **blocked pending a Spec amendment**. Sections 1-7 and "Decisions requested" are the original pre-decision evidence. The outcome is in the final section, "Decisions taken and final verification".
+**Status:** the user took decisions (a)–(d) on 2026-10-04, and they were applied and committed in `d5a9513`. Toast AllSeverities (U2) was resolved by Spec Amendment A2; the user approved the 6 Toast baselines, which are committed in `ea5e039`. See "Amendment A2: Toast review" and "Verification (Task 9)". Sections 1–7 and "Decisions requested" are the original pre-decision evidence. The outcome is in the final section, "Decisions taken and final verification".
 
 **Branch / HEAD under review:** `feature/gap-064-g3a-display-feedback` @ `193fc33` (targeted and regression runs). The "pre-port" accessibility comparison run is `bdc0041`, the last commit before the CSS port.
 
@@ -477,7 +477,7 @@ The regression node counts differ slightly from the first run (vue 219 → 217, 
 
 ## Amendment A2: Toast review
 
-**Status: awaiting the user's decision.** This section is the Task 15 review gate for Plan Addendum A2 (Toast markup alignment, Spec §15.6 D-A2-1..6). It records evidence only. No baseline PNG has been changed, no Docker run was made for this section, and nothing is committed by it. The 6 Toast baselines stay held until the user approves them explicitly.
+**Status: APPROVED by the user (2026-10-05).** This section is the Task 15 review gate for Plan Addendum A2 (Toast markup alignment, Spec §15.6 D-A2-1..6). A2.1–A2.11 are the evidence presented at the gate. The approval, the update of the 6 Toast baselines and the final re-verification are in A2.12.
 
 ### A2.1 Environment and commits
 
@@ -621,6 +621,8 @@ Command forms. `pnpm --filter <pkg> test --watch=false` fails on pnpm 9.6.0 with
 ### Step 3: size gate (C7)
 
 `pnpm run build && pnpm run size:measure` succeeded, then `node scripts/provenance/validate-bundle-size.mjs --base-ref fa5c150` printed `all packages passed the bundle-size gate` (exit 0). No package is above 15%; no override was used and `PERFORMANCE.md` was not edited.
+
+**Known verification limitation (deferred, user-ruled 2026-10-05):** the gate reports the Angular package at -68.2%. That is an artifact of a stale recorded starting size, not a real reduction: `PERFORMANCE.md` at `fa5c150` records 202.86 KB, while the current measure is 64.42 KB. So for `@ultimate/ng` this pass gives no strong guarantee about growth. The baseline is not regenerated here, and no new performance task is opened in G3-A. This is the existing GAP-064 Tranche 1 follow-up "PERFORMANCE.md drift".
 
 | Package | Baseline (fa5c150) | Now | Change |
 | --- | --- | --- | --- |
