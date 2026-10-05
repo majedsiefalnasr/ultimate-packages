@@ -104,9 +104,9 @@ These are the 200 axe violation fingerprints (`rule:story:target`) that the 65 G
 | landmark-one-main:ng-timeline--horizontal:html | landmark-one-main | ng-timeline--horizontal | Pre-existing before the G3-A port (bdc0041) and still present after it. |
 | page-has-heading-one:ng-timeline--horizontal:html | page-has-heading-one | ng-timeline--horizontal | Pre-existing before the G3-A port (bdc0041) and still present after it. |
 | region:ng-timeline--horizontal:#storybook-root | region | ng-timeline--horizontal | Pre-existing before the G3-A port (bdc0041) and still present after it. |
-| color-contrast:ng-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-summary | color-contrast | ng-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
-| color-contrast:ng-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-summary | color-contrast | ng-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
-| color-contrast:ng-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-summary | color-contrast | ng-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
+| color-contrast:ng-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-message-text > .u-toast-summary | color-contrast | ng-toast--all-severities | Pre-existing before the G3-A port (bdc0041); re-identified after the Amendment A2 Toast DOM alignment (see "Identity mapping"). |
+| color-contrast:ng-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-message-text > .u-toast-summary | color-contrast | ng-toast--all-severities | Pre-existing before the G3-A port (bdc0041); re-identified after the Amendment A2 Toast DOM alignment (see "Identity mapping"). |
+| color-contrast:ng-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-message-text > .u-toast-summary | color-contrast | ng-toast--all-severities | Pre-existing before the G3-A port (bdc0041); re-identified after the Amendment A2 Toast DOM alignment (see "Identity mapping"). |
 | landmark-one-main:ng-toast--all-severities:html | landmark-one-main | ng-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
 | page-has-heading-one:ng-toast--all-severities:html | page-has-heading-one | ng-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
 | landmark-one-main:vue-avatar--circle:html | landmark-one-main | vue-avatar--circle | Pre-existing before the G3-A port (bdc0041) and still present after it. |
@@ -209,8 +209,19 @@ These are the 200 axe violation fingerprints (`rule:story:target`) that the 65 G
 | landmark-one-main:vue-timeline--horizontal:html | landmark-one-main | vue-timeline--horizontal | Pre-existing before the G3-A port (bdc0041) and still present after it. |
 | page-has-heading-one:vue-timeline--horizontal:html | page-has-heading-one | vue-timeline--horizontal | Pre-existing before the G3-A port (bdc0041) and still present after it. |
 | region:vue-timeline--horizontal:#storybook-root | region | vue-timeline--horizontal | Pre-existing before the G3-A port (bdc0041) and still present after it. |
-| color-contrast:vue-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-summary | color-contrast | vue-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
-| color-contrast:vue-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-summary | color-contrast | vue-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
-| color-contrast:vue-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-summary | color-contrast | vue-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
+| color-contrast:vue-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-message-text > .u-toast-summary | color-contrast | vue-toast--all-severities | Pre-existing before the G3-A port (bdc0041); re-identified after the Amendment A2 Toast DOM alignment (see "Identity mapping"). |
+| color-contrast:vue-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-message-text > .u-toast-summary | color-contrast | vue-toast--all-severities | Pre-existing before the G3-A port (bdc0041); re-identified after the Amendment A2 Toast DOM alignment (see "Identity mapping"). |
+| color-contrast:vue-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-message-text > .u-toast-summary | color-contrast | vue-toast--all-severities | Pre-existing before the G3-A port (bdc0041); re-identified after the Amendment A2 Toast DOM alignment (see "Identity mapping"). |
 | landmark-one-main:vue-toast--all-severities:html | landmark-one-main | vue-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
 | page-has-heading-one:vue-toast--all-severities:html | page-has-heading-one | vue-toast--all-severities | Pre-existing before the G3-A port (bdc0041) and still present after it. |
+
+## Identity mapping (Amendment A2, Spec §15.6 D-A2-4)
+
+Same rule, story, severity element and violation. Only the axe target path gained `.u-toast-message-text`, because of the approved Toast DOM alignment. Derived from the post-implementation Docker run, not predicted.
+
+- `color-contrast:ng-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-summary` → `color-contrast:ng-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:ng-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-summary` → `color-contrast:ng-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:ng-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-summary` → `color-contrast:ng-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:vue-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-summary` → `color-contrast:vue-toast--all-severities:.u-toast-message-error > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:vue-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-summary` → `color-contrast:vue-toast--all-severities:.u-toast-message-success > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
+- `color-contrast:vue-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-summary` → `color-contrast:vue-toast--all-severities:.u-toast-message-warn > .u-toast-message-content > .u-toast-message-text > .u-toast-summary`
