@@ -245,3 +245,79 @@ The 138 accepted baselines are 73 Ng (69 + the 4 U1 tests) and 65 Vue, committed
 - **U1:** the Angular ScrollPanel story does not create the intended 200x200 clipped panel because the `<u-scroll-panel>` custom-element root is inline and unstyled, so the hover screenshots do not visually demonstrate scroll-bar visibility. This is pre-existing story behaviour, not a G3-B regression. The browser layout checks remain the authoritative verification of bar visibility, position and hidden state. No G3-B CSS change is required or authorized.
 - **U2:** the Vue Card WithHeaderAndFooter story loads its header image from an external CDN (`primefaces.org`), which makes its screenshot network-dependent (unstable first attempt in webkit; both baseline-update attempts captured the broken render). A follow-up is needed to make the story deterministic, with no story change in G3-B.
 - **Spec §14 observation:** the Vue BlockUI stories' inline `height` and `border` do not reach the rendered BlockUI container because of the existing `inheritAttrs: false` in `BlockUI.vue`. Not G3-B scope, not an acceptance criterion, never a reason for a baseline change; the Vue story is not modified in G3-B.
+
+## Verification (Plan Task 10)
+
+Run on branch `feature/gap-064-g3b-containers`, HEAD `cb6ec1b` (2026-10-05), Node 24.15.0 on the host. Raw logs live under `.superpowers/sdd/2026-10-05-gap-064-g3b-containers/` (`local-test-results/t10-*.log`, `docker/ci-*.log`, `task-10-*.log`). The working tree held exactly one modified, unstaged file throughout: the rejected U2 capture `packages/vue/e2e/g3b-aura-styles.spec.ts-snapshots/Vue-Card-WithHeaderAndFooter-G3-B-visual-1-vue-webkit.png`. It was not staged, committed or reverted. Docker used `git archive HEAD`, so the CI simulation saw the committed pre-port U2 baseline.
+
+### Step 1: suites, typecheck, SSR (host)
+
+| Check                                                 | Result                                                        |
+| ----------------------------------------------------- | ------------------------------------------------------------- |
+| `@ultimate/uix-styled test`                           | 6 files, 15 tests passed                                      |
+| `@ultimate/themes test` (includes G3-B fidelity test) | 19 files, 783 tests passed                                    |
+| `@ultimate/vue-core test`                             | 20 files, 102 tests passed                                    |
+| `@ultimate/vue test`                                  | 97 files, 1097 tests passed                                   |
+| `@ultimate/react test`                                | 87 files, 856 tests passed                                    |
+| `@ultimate/ng test`                                   | 92 files, 1083 tests passed                                   |
+| `@ultimate/ng-core test`                              | 15 files, 62 tests passed                                     |
+| `pnpm run test:scripts`                               | 134 tests, 134 pass, 0 fail (includes G3-B validator test)    |
+| `pnpm run typecheck`                                  | exit 0 (ng, vue, react and all other packages)                |
+| `playground-angular` build + `ng-ssr-chromium`        | build exit 0; 10 of 10 passed (SSR/hydration, GAP-078 styles) |
+
+Note: the plan's `pnpm --filter @ultimate/ng test --watch=false` is rejected by pnpm (`Unknown option: 'watch'`). The ng and ng-core suites were therefore run as `pnpm --filter ... test -- --watch=false`. The SSR step ran on the host without needing anything unavailable.
+
+### Step 2: CI simulation (Spec §9.6), Docker `mcr.microsoft.com/playwright:v1.63.0-jammy`, native arm64
+
+| Framework | Step         | Exit | Detail                                                              |
+| --------- | ------------ | ---- | ------------------------------------------------------------------- |
+| ng        | strict run   | 0    | 308 passed, 1 flaky (passed on retry)                               |
+| ng        | strict check | 0    | zero new violations outside `ACCESSIBILITY_BASELINE.md` (198 nodes) |
+| ng        | G3-A run     | 0    | 189 passed                                                          |
+| ng        | G3-A check   | 0    | OK, 93/93 reports, 0 introduced, 0 stale                            |
+| ng        | G3-B run     | 0    | 174 passed                                                          |
+| ng        | G3-B check   | 0    | OK, 75/75 reports, 0 introduced, 0 stale                            |
+| vue       | strict run   | 0    | 281 passed, 1 flaky (passed on retry)                               |
+| vue       | strict check | 0    | zero new violations outside `ACCESSIBILITY_BASELINE.md` (211 nodes) |
+| vue       | G3-A run     | 0    | 207 passed                                                          |
+| vue       | G3-A check   | 0    | OK, 102/102 reports, 0 introduced, 0 stale                          |
+| vue       | G3-B run     | 1    | 173 passed, 1 failed: the U2 exception below, nothing else          |
+| vue       | G3-B check   | 0    | OK, 75/75 reports, 0 introduced, 0 stale                            |
+| react     | strict run   | 0    | 216 passed                                                          |
+| react     | strict check | 0    | zero new violations outside `ACCESSIBILITY_BASELINE.md` (260 nodes) |
+
+**Single expected exception (user ruling U2, 2026-10-05):** `[vue-webkit] packages/vue/e2e/g3b-aura-styles.spec.ts:44 Vue/Card WithHeaderAndFooter G3-B visual`. Screenshot mismatch of 2157 pixels on all three attempts, the same pixel count as the reviewed stable retries in "Task 9 decisions and final evidence". Cause: the story's external CDN image (`primefaces.org`). Its baseline was intentionally not accepted, so the committed pre-port baseline is compared against the post-port render. The test was not weakened, skipped or altered. No other test failed in the G3-B runs: all layout and accessibility tests passed in all three browsers per framework.
+
+Flaky tests in the strict runs (both passed on a retry, runs exit 0, none in G3-A/G3-B scope): `[ng-webkit] button.spec.ts:69 Ng/Button Disabled story: accessibility scan` and `[vue-firefox] menu.spec.ts:100 Vue/Menu Default story: accessibility scan`.
+
+### Step 3: scope and DOM (C4, C9), committed state `git diff fe86fe4 HEAD`
+
+- Every changed path is in the allowed set: the 20 style modules; the 4 key files; the stories (13 files, 232 insertions, 0 deletions); the two G3-B e2e specs and their 156 snapshots; `packages/themes/test/{fixtures/primeuix-styles-g3b.json, utils/g3b-port.mjs, g3b-upstream-fidelity.test.ts}`; the two runtime specs; `docs/architecture/provenance/{ng,vue}.json`; `scripts/provenance/validate-g3b-accessibility.mjs` and its test; `.github/workflows/ci.yml`; the research docs, spec, plan (with Amendment A1) and this record. `MIGRATION.md` is not changed (Task 11 follows). `ACCESSIBILITY_BASELINE.md` and `PERFORMANCE.md` are unchanged.
+- Component files: the only non-style, non-story source changes are the 4 key literals (`block-ui`→`blockui`, `scroll-panel`→`scrollpanel` in `packages/ng/src/block-ui/block-ui.ts`, `packages/ng/src/scroll-panel/scroll-panel.ts`, `packages/vue/src/block-ui/BaseBlockUI.ts`, `packages/vue/src/scroll-panel/BaseScrollPanel.ts`). Each is a one-line diff of the literal. No template, `classes`, input/prop/emit change.
+- `git diff fe86fe4 HEAD --stat -- packages/react packages/react-core packages/uix-styled packages/uix-styles packages/themes/src packages/ng-core packages/vue-core`: empty.
+- G3-A tooling (`validate-g3a-accessibility.mjs`, `validate-accessibility-baseline.mjs`, `g3a-port.mjs`, both G3-A e2e specs): `G3-A tooling unchanged`.
+
+### Step 4: size gate (C8, B-7)
+
+**Authoritative (Plan Review decision 2): direct build comparison.** `fe86fe4` built in a git worktree (`pnpm install --frozen-lockfile && pnpm run build`) and measured with `measure-package-size.mjs`, against the current build (HEAD `cb6ec1b`). The worktree was removed afterwards.
+
+| Package        | `index.mjs` gzip, `fe86fe4` | `index.mjs` gzip, current | Growth           | dist/ size `fe86fe4` → current |
+| -------------- | --------------------------- | ------------------------- | ---------------- | ------------------------------ |
+| `packages/ng`  | 64.42 KB                    | 64.54 KB                  | +0.12 KB, +0.19% | 3152.2 KB → 3170.8 KB (+0.59%) |
+| `packages/vue` | 136.15 KB                   | 137.09 KB                 | +0.94 KB, +0.69% | 5809.2 KB → 5861.4 KB (+0.90%) |
+
+Both are far below the 15% hard stop.
+
+**Additional check only: `validate-bundle-size.mjs --base-ref fe86fe4`** (exit 0, "all packages passed the bundle-size gate"). Rows: `ng: OK (202.86 KB -> 64.5 KB, -68.2%)` (the recorded Angular baseline in `PERFORMANCE.md` is stale, so this row is not meaningful as growth; known G3-A deferred limitation), `vue: OK (132.3 KB -> 137.1 KB, 3.6%)`, `ng-core: 2.2%`, `themes: 3.1%`, `uix-styled: 2.3%`, `vue-core: 2.1%`, `cli: 5.5%` (0.05 KB absolute), all other packages at or below 0.3%. No package is above 15%.
+
+`pnpm run size:measure` and the build did not modify any tracked file (`git status --short` still shows only the U2 PNG). `PERFORMANCE.md` was not edited.
+
+### Pre-existing failures (recorded, not fixed)
+
+- **`pnpm run provenance:validate`: exit 1.** `[provenance:validate] FAIL: packages/ng/src/accordion/accordion.spec.ts has no entry in docs/architecture/provenance/ng.json`. The validator requires an entry for every ng/vue source file and reports a spec file that has no entry; this gap predates G3-B (the plan lists "missing ng/vue entries" as known on `main`). G3-B added its entries only for the 20 style modules (Task 7).
+- **`pnpm run lint`: exit 1.** 58534 problems, dominated by generated output (`packages/{ng,react,vue}/storybook-static`, minified bundles) and lint debt in untouched source (`no-unused-expressions`, `no-unused-vars`). Linting only the files changed between `fe86fe4` and `HEAD` yields one error: `packages/ng/src/scroll-panel/scroll-panel.ts:350:29 '_event' is defined but never used`. It is on a line G3-B did not touch (the only change in that file is the key literal at line 89), and the same error is reported for the `fe86fe4` version of the file.
+- **`pnpm run format:check`: exit 1** with Prettier debt across many files, including `BLUEPRINT_GAPS.md`, `DECISIONS.md`, `ACCESSIBILITY_BASELINE.md`, `PERFORMANCE.md` (documented debt) and, among files G3-B changed, `packages/ng/src/scroll-panel/scroll-panel.ts` and `packages/vue/src/scroll-panel/BaseScrollPanel.ts`, which fail Prettier at `fe86fe4` as well. All other G3-B-changed `.ts`, `.mjs`, `.json`, `.yml` and `.md` files pass Prettier.
+
+### Result
+
+All Task 10 checks pass, with the single user-ruled U2 exception (`Vue/Card WithHeaderAndFooter G3-B visual`, vue-webkit). No hard stop was triggered.
