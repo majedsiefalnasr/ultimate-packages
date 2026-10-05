@@ -86,7 +86,7 @@ import { scrollPanelStyleModule } from "./scroll-panel-style";
   },
 })
 export class UScrollPanel extends UBaseComponent implements AfterViewInit, OnDestroy {
-  protected override readonly componentName = "scroll-panel";
+  protected override readonly componentName = "scrollpanel";
   protected override readonly styleModule = scrollPanelStyleModule;
 
   /** Step factor to scroll the content while pressing the arrow keys. */

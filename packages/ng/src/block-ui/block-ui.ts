@@ -55,7 +55,7 @@ import { blockUiStyleModule } from "./block-ui-style";
   },
 })
 export class UBlockUI extends UBaseComponent {
-  protected override readonly componentName = "block-ui";
+  protected override readonly componentName = "blockui";
   protected override readonly styleModule = blockUiStyleModule;
 
   /** Current blocked state as a boolean. */
