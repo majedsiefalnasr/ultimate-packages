@@ -4,15 +4,14 @@
  * `createBaseComponent`'s `styleModule: {css, classes}` contract. No
  * `@ultimate/uix-styles/card` entry exists yet, so `css`/`classes` are
  * authored locally (same precedent as `overlayBadgeStyleModule`).
+ * GAP-064 G3-B: the css below is the applicable @primeuix/styles 2.0.3 structural CSS mapped to this component's DOM (see packages/themes/test/utils/g3b-port.mjs).
  */
 const css = /*css*/ `
-.u-card { background: var(--u-card-background, #fff); color: var(--u-card-color, inherit); box-shadow: var(--u-card-shadow, 0 1px 3px rgba(0,0,0,0.12)); border-radius: 6px; }
-.u-card-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
-.u-card-caption { display: flex; flex-direction: column; gap: 0.25rem; }
-.u-card-title { font-size: 1.5rem; font-weight: 700; }
-.u-card-subtitle { color: var(--u-card-subtitle-color, #6c757d); font-weight: 400; }
-.u-card-content { padding: 0; }
-.u-card-footer { padding-top: 0.5rem; }
+.u-card{background: dt('card.background');color: dt('card.color');box-shadow: dt('card.shadow');border-radius: dt('card.border.radius');display: flex;flex-direction: column;}
+.u-card-caption{display: flex;flex-direction: column;gap: dt('card.caption.gap');}
+.u-card-body{padding: dt('card.body.padding');display: flex;flex-direction: column;gap: dt('card.body.gap');}
+.u-card-title{font-size: dt('card.title.font.size');font-weight: dt('card.title.font.weight');}
+.u-card-subtitle{color: dt('card.subtitle.color');}
 `;
 
 const classes = {
