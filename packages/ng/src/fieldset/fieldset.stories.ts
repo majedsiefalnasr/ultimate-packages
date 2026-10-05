@@ -32,3 +32,16 @@ export const Toggleable: Story = {
     `,
   }),
 };
+
+/** GAP-064 G3-B verification story (Spec §8 C5): toggleable, initially collapsed. */
+export const Collapsed: Story = {
+  args: { legend: "Collapsed Fieldset", toggleable: true, collapsed: true },
+  render: (args) => ({
+    props: args,
+    template: `
+      <u-fieldset [legend]="legend" [toggleable]="toggleable" [collapsed]="collapsed">
+        <p>Content within the fieldset.</p>
+      </u-fieldset>
+    `,
+  }),
+};

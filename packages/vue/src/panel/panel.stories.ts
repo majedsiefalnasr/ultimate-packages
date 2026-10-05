@@ -26,3 +26,23 @@ export const Toggleable: Story = {
     template: `<UPanel v-bind="args"><p>Panel content.</p></UPanel>`,
   }),
 };
+
+/** GAP-064 G3-B verification story (Spec §8 C5): toggleable, initially collapsed. */
+export const Collapsed: Story = {
+  args: { header: "Collapsed Panel", toggleable: true, collapsed: true },
+  render: (args) => ({
+    components: { UPanel },
+    setup: () => ({ args }),
+    template: `<UPanel v-bind="args"><p>Panel content.</p></UPanel>`,
+  }),
+};
+
+/** GAP-064 G3-B verification story (Spec §8 C5): footer slot (Vue renders the footer wrapper). */
+export const WithFooter: Story = {
+  args: { header: "Panel with Footer" },
+  render: (args) => ({
+    components: { UPanel },
+    setup: () => ({ args }),
+    template: `<UPanel v-bind="args"><p>Panel content.</p><template #footer>Footer content</template></UPanel>`,
+  }),
+};

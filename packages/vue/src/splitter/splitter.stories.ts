@@ -18,3 +18,14 @@ export const Default: Story = {
     </USplitter>`,
   }),
 };
+
+/** GAP-064 G3-B verification story (Spec §8 C5): vertical layout. */
+export const Vertical: Story = {
+  render: () => ({
+    components: { USplitter },
+    setup: () => ({ panels: [{ label: "Top panel" }, { label: "Bottom panel", minSize: 20 }] }),
+    template: `<USplitter :panels="panels" layout="vertical" style="height: 200px;">
+      <template #default="{ item }">{{ item.label }}</template>
+    </USplitter>`,
+  }),
+};

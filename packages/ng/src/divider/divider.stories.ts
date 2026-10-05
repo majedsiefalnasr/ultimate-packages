@@ -32,3 +32,29 @@ export const Vertical: Story = {
     `,
   }),
 };
+
+/** GAP-064 G3-B verification story (Spec §8 C5): horizontal divider with content. */
+export const WithContent: Story = {
+  render: () => ({
+    template: `
+      <div>
+        <p>Content above</p>
+        <u-divider><b>Label</b></u-divider>
+        <p>Content below</p>
+      </div>
+    `,
+  }),
+};
+
+/** GAP-064 G3-B verification story (Spec §8 C5): vertical divider with content. */
+export const WithContentVertical: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; height: 4rem;">
+        <span>Left</span>
+        <u-divider [layout]="'vertical'"><b>OR</b></u-divider>
+        <span>Right</span>
+      </div>
+    `,
+  }),
+};
