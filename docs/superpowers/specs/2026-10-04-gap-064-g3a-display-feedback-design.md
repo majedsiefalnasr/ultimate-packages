@@ -421,3 +421,143 @@ All are checked in both frameworks. Generated-style checks use the rendered `<st
 
 9. **Count correction (found while writing the Plan, by dry-running the Plan's port module against the vendored upstream source).** ProgressBar has **7** upstream rule groups (5 ported + 2 adapted, PX-A1), not 13. The research parser had counted the inner frames of the two `@-webkit-keyframes` blocks as rule groups. §4.4 is corrected. All other §4.4 counts are confirmed. The keyframes themselves are unaffected: the four used keyframes, including the `-webkit-` ones, are still ported and renamed.
 10. **Canonical C3 order (Plan Review, 2026-10-04).** The ported, adapted and keyframe groups keep **upstream source order**, so the cascade among same-specificity upstream rules is preserved. The retained PX-A4/A5/A6 rules follow, in §5.3 order. §5.2 is updated accordingly. The draft's grouping into "ported, then adapted, then retained" was not intended as a reordering of upstream rules.
+
+## 14. Proposed Amendment A1 — CI accessibility contract for the G3-A verification stories
+
+**Status: APPROVED (Spec Review, 2026-10-05; decisions in §14.10). IMPLEMENTED and locally VERIFIED; the local verification was accepted on 2026-10-05 (§14.11). Real-CI validation is pending.** It is implemented as §14.8 lists. `scripts/provenance/validate-accessibility-baseline.mjs` is unchanged.
+
+### 14.1 Problem (evidence)
+
+- CI job `track-a-browser-visual-a11y` (matrix `ng`, `react`, `vue`):
+  - runs **every** spec in `<fw>-chromium`, `<fw>-firefox` and `<fw>-webkit`, which includes `packages/{ng,vue}/e2e/g3a-aura-styles.spec.ts`;
+  - then runs `validate-accessibility-baseline.mjs --check "test-results/accessibility/<fw>/**/*.json"`.
+- That check fails on any fingerprint absent from `ACCESSIBILITY_BASELINE.md`.
+- The G3-A accessibility tests scan 65 new story IDs (31 ng, 34 vue). None of them overlaps the story IDs scanned by the existing specs (31 ng, 25 vue; checked on the Task 8 Docker envelopes).
+- Those new IDs expose 200 pre-existing page-level/DOM rows that predate the port. Task 8 decision (c) excludes them from the global baseline, so the unchanged job would fail for `ng` and `vue`.
+
+### 14.2 Decision (user, 2026-10-04): change what CI scans, not the validator
+
+- **Repository contract (unchanged semantics):** strict `--check` over the established accessibility suite only.
+- **G3-A acceptance contract (new, tranche-scoped):** differential validation of the G3-A verification stories.
+- `validate-accessibility-baseline.mjs` is not modified. It gains no historical-commit comparison.
+
+### 14.3 Which specs each contract covers
+
+| Contract | Playwright selection | Specs covered |
+| -------- | -------------------- | ------------- |
+| Strict (existing step, input narrowed) | the existing project flags plus `--grep-invert "G3-A"` | **ng:** aura-token-wiring, auto-focus, badge, button, checkbox, dialog, fluid, menu, paginator, ripple, scroller, table, tooltip. **vue:** aura-token-wiring, button, checkbox, dialog, hidden-accessible, menu, paginator, ripple, scroller, stepper, table, tooltip. **react:** all specs, unaffected (no G3-A spec). |
+| G3-A differential (new steps, `ng` and `vue` only) | `packages/<fw>/e2e/g3a-aura-styles.spec.ts` on the same 3 projects | the 31 ng and 34 vue G3-A stories, visual and accessibility |
+
+- Every G3-A test title contains "G3-A" (`<Fw>/<Name> G3-A visual|accessibility`), and no existing test title does.
+- This exact selection was exercised in Task 8. The Docker `regression` mode (`--grep-invert "G3-A"`, all 9 Storybook projects) gave strict `--check` OK for ng (261 nodes), vue (217) and react (197).
+- Excluding the G3-A tests from the strict run excludes nothing that the strict contract covers today. Before G3-A, those specs did not exist.
+
+### 14.4 How the G3-A differential validation runs
+
+New steps after the existing strict check and the upload of its reports, guarded by `if: matrix.framework != 'react'`:
+
+1. `npx playwright test packages/<fw>/e2e/g3a-aura-styles.spec.ts --project=<fw>-chromium --project=<fw>-firefox --project=<fw>-webkit`
+2. `node scripts/provenance/validate-g3a-accessibility.mjs <fw>` (new, tranche-scoped, no write mode).
+3. Upload `test-results/accessibility/<fw>/` as `g3a-accessibility-reports-<fw>`.
+
+`validate-g3a-accessibility.mjs` **imports** the existing validator's exported `loadBaseline`, `readEnvelopes` and `BASELINE_PATH`, so fingerprinting is identical by construction. It reads two lists:
+
+- `ACCESSIBILITY_BASELINE.md`, the global baseline. It holds the 9 approved G3-A parity rows.
+- `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` (new):
+  - The 200 pre-existing fingerprints, in the same table format (`| fingerprint | rule | story | note |`), parsed by the exported parser.
+  - Derivation: the unique rows observed both in the pre-port run (`bdc0041`) and the post-port run, recorded in the Task 8 review record.
+  - The file is evidence of pre-existing debt and is explicitly **not** a baseline. It is read only by the G3-A script.
+
+The script then performs these checks:
+
+| Check | Rule | Outcome on violation |
+| ----- | ---- | -------------------- |
+| Completeness | Every story ID in the pre-existing list has an envelope for each of chromium, firefox and webkit (93 ng / 102 vue files). Every G3-A story has at least the page-level rows, so the list names all 65 stories. | FAIL |
+| Introduced | `envelope fingerprints − ACCESSIBILITY_BASELINE.md − pre-existing list` must be empty. | FAIL, printing each rule, story and target |
+| Approved exceptions | The 9 G3-A rows are satisfied through `ACCESSIBILITY_BASELINE.md`, like every other baselined row. | none (accounted) |
+| Pre-existing still present | Count by rule. | informational |
+| Pre-existing no longer observed | List of rows (debt fixed). | informational; the list may be pruned by a reviewed human edit |
+
+### 14.5 Why a genuinely new G3-A violation cannot be ignored
+
+- Any fingerprint not in the global baseline and not in the frozen pre-existing list fails the step. The step is not `continue-on-error`.
+- The completeness check makes a skipped, filtered or crashed scan fail. An empty or partial glob cannot pass vacuously.
+- Both lists change only through human-authored, reviewed git diffs. The script has no write, populate or update mode (PD-11 precedent).
+- The strict contract for the established suite is unchanged, so G3-A cannot hide a regression there.
+- **Known limitation, shared with the strict validator:** fingerprints are `rule:story:target` and carry no contrast ratio. A worsened ratio on an already-listed fingerprint is invisible to both checks. Example: the ProgressBar label row, 3.67 → 2.53, recorded in the Task 8 review record.
+
+### 14.6 Side effects to note
+
+- **Toast:** the new G3-A step also runs the G3-A visual tests. It fails on the 6 held Toast screenshots until U2 is resolved. This is intended, because U2 blocks closeout.
+- **Approved rows only used by the G3-A check:** the 9 approved rows stay in `ACCESSIBILITY_BASELINE.md`, as approved. The narrowed strict scan no longer reads them, and the G3-A script does. An unused baseline row never fails the strict check.
+- **Clean test-results:** Playwright's `test-results` directory is per run. The script additionally filters envelopes to the G3-A story set, so the result does not depend on whether the earlier strict run's envelopes are still present.
+- **Tranche scope:** the pre-existing list and the script are G3-A specific. Later tranches (G3-B onward) decide separately whether to reuse or generalise them.
+
+### 14.7 Alternatives rejected
+
+- **Add the 200 rows to `ACCESSIBILITY_BASELINE.md`:** rejected by the user in Task 8 decision (c).
+- **Add a base-ref comparison mode to the validator:** rejected by the user. It broadens a general-purpose validator for a tranche-specific need.
+- **Run a live pre-port comparison in CI** (check out `bdc0041`, build, scan): rejected. It doubles the job's install/build/Storybook time and pins CI to a historic commit forever. The frozen pre-existing list is the same evidence, captured once and reviewed.
+- **Redirect G3-A envelopes to a separate directory through an env var in the test helper:** not needed. Selecting by test title and filtering by story set separates them without editing test code.
+
+### 14.8 Files this amendment would touch, once approved through Plan Review
+
+| File | Change |
+| ---- | ------ |
+| `.github/workflows/ci.yml` | add `--grep-invert "G3-A"` to the existing run step; add 3 G3-A steps for ng and vue |
+| `scripts/provenance/validate-g3a-accessibility.mjs` | new, read-only |
+| `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` | new, 200 rows, evidence |
+| `scripts/provenance/validate-accessibility-baseline.mjs` | **unchanged** |
+| `ACCESSIBILITY_BASELINE.md` | **unchanged** beyond the 9 already-approved rows |
+
+### 14.9 Questions for review
+
+1. Is the location of the pre-existing list right? The proposal uses `docs/architecture/research/` because it is dated evidence (AGENTS.md tier 6). The alternative is next to the script.
+2. Is a separate step in the same job acceptable, or should G3-A run as its own CI job?
+3. Should the step print the pre-existing rows that are no longer observed, but never fail on them? The proposal says yes.
+
+### 14.10 Spec Review decisions for A1 (2026-10-05)
+
+A1 is **approved**. The review questions in §14.9 are resolved as follows.
+
+1. **Pre-existing list location:** `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` stays where it is. It is evidence of historical debt, not an accessibility baseline and not CI configuration, so it is not moved next to the validator.
+2. **CI placement:** the G3-A differential validation runs as additional steps inside the existing `track-a-browser-visual-a11y` job. There is no separate job and no duplicated browser/environment setup.
+3. **Strict contract:** `validate-accessibility-baseline.mjs --check` is unchanged. The existing strict scan uses exactly the proven selection `--grep-invert "G3-A"`.
+4. **Differential contract** (`validate-g3a-accessibility.mjs`, Angular and Vue, read-only). How each case is treated:
+
+   | Case | Result |
+   | ---- | ------ |
+   | missing report | **FAIL** |
+   | violation in neither `ACCESSIBILITY_BASELINE.md` nor the pre-existing list | **FAIL** |
+   | violation in `ACCESSIBILITY_BASELINE.md` | PASS |
+   | violation documented as pre-existing | PASS |
+   | pre-existing entry no longer observed | **STALE**, informational, never fails |
+
+   The script never modifies either list.
+5. **Coverage invariant:** all 65 G3-A stories in all three browsers, so ng 31 × 3 = 93 reports, vue 34 × 3 = 102, 195 in total. A missing or skipped report can never produce a pass.
+6. **Approved exceptions:** the 9 G3-A Aura parity rows live only in `ACCESSIBILITY_BASELINE.md` and are not duplicated in the pre-existing file.
+7. **Known limitation kept:** the identity contract stays `rule + story + target`. Detecting contrast-ratio changes is out of scope.
+8. **CI artifacts:** the G3-A accessibility reports and the differential-validator output are uploaded.
+9. **Toast:** the 6 held Toast screenshots keep failing the G3-A visual gate until U2 is resolved. That failure is neither weakened nor bypassed.
+
+
+### 14.11 A1 verification (2026-10-05)
+
+- **Evidence regenerated.** The Task 8 envelopes in `/tmp` had been deleted, so both trees were re-run in Docker:
+  - pre-port `bdc0041`: 390 passed, 228 unique rows;
+  - Task 8 accepted state `f6b9627`: 384 passed and 6 failed (the held Toast tests), 200 rows.
+
+  The regenerated set reproduces the Task 8 record exactly: 0 introduced, 28 removed, and the same counts per rule.
+- **Script tests:** `node --test scripts/provenance/validate-g3a-accessibility.test.mjs` passes 8/8 (missing report, introduced violation, stale, story-table size, story-id mismatch, framework guard, read-only). `pnpm run test:scripts` passes 126/126.
+- **Detection check:** run against the pre-port envelopes, the script FAILS on exactly the 28 rows in neither list (13 ng, 15 vue unique fingerprints). Run against the post-port envelopes, it passes: ng 93/93, vue 102/102, 0 introduced, 0 stale.
+- **Workflow lint:** `actionlint .github/workflows/ci.yml` is clean.
+- **End-to-end simulation** of the edited `track-a-browser-visual-a11y` steps, in Docker `mcr.microsoft.com/playwright:v1.63.0-jammy`, on the full working state (tree `cc9ce06`; `runner: .superpowers/sdd/…/docker/run.sh ci <fw>`):
+
+| Framework | Strict run (`--grep-invert "G3-A"`) | Strict `--check` | G3-A run | G3-A differential check |
+| --------- | ----------------------------------- | ---------------- | -------- | ----------------------- |
+| ng        | 309 passed                          | OK, 261 nodes    | 183 passed, **3 failed** (Toast AllSeverities × 3 browsers) | OK, 93/93 reports, 0 introduced, 0 stale |
+| vue       | 282 passed                          | OK, 219 nodes    | 201 passed, **3 failed** (Toast AllSeverities × 3 browsers) | OK, 102/102 reports, 0 introduced, 0 stale |
+| react     | 216 passed                          | OK, 198 nodes    | step skipped (no G3-A spec) | step skipped |
+
+- **Expected job state:** the ng and vue jobs stay red only on the 6 held Toast screenshots (decision 9). Everything else is green, including the strict contract. The validator output file `test-results/g3a-accessibility/<fw>-validation.txt` is produced, ready for the artifact upload.
+- **What this does not show:** an actual GitHub Actions run (`always()`/`!cancelled()` semantics, artifact upload) cannot be exercised locally. It is verified on the first CI run after push.

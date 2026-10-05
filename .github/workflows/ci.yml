@@ -187,12 +187,15 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox webkit
 
+      # The G3-A verification specs run in their own steps below (GAP-064
+      # G3-A Spec §14); the strict baseline contract covers every other spec.
       - name: Run Playwright projects (${{ matrix.framework }})
         run: |
           npx playwright test \
             --project=${{ matrix.framework }}-chromium \
             --project=${{ matrix.framework }}-firefox \
-            --project=${{ matrix.framework }}-webkit
+            --project=${{ matrix.framework }}-webkit \
+            --grep-invert "G3-A"
 
       - name: Accessibility baseline validation (${{ matrix.framework }})
         run: node scripts/provenance/validate-accessibility-baseline.mjs --check "test-results/accessibility/${{ matrix.framework }}/**/*.json"
@@ -210,6 +213,34 @@ jobs:
         with:
           name: playwright-report-${{ matrix.framework }}
           path: playwright-report/
+
+      # GAP-064 G3-A Spec §14: differential accessibility contract for the
+      # G3-A verification stories (introduced violations must be baselined;
+      # pre-existing ones are evidence-listed, never baselined). The visual
+      # tests in this run stay a hard gate.
+      - name: Run G3-A verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3a-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-A differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          mkdir -p test-results/g3a-accessibility
+          node scripts/provenance/validate-g3a-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3a-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-A accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3a-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3a-accessibility/
 
   track-e-ssr-hydration:
     runs-on: ubuntu-latest

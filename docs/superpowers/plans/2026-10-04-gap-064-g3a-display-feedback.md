@@ -2084,3 +2084,23 @@ Final Review and Closeout are a separate gate. That gate covers:
 - recording Timeline `align` as a follow-up in `BLUEPRINT_GAPS.md`;
 - the closeout record;
 - the merge/push decisions.
+
+---
+
+## Execution record: Spec Amendment A1 (CI accessibility contract)
+
+Spec §14 (Amendment A1) was added and approved during Task 8, after the Plan was approved, and then implemented. It is not one of Tasks 1–10.
+
+- **Files changed:**
+  - `.github/workflows/ci.yml`: `--grep-invert "G3-A"` on the existing run, plus 3 G3-A steps for ng and vue;
+  - `scripts/provenance/validate-g3a-accessibility.mjs` and its `.test.mjs`;
+  - `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md`.
+- **Status:** implemented and locally verified. The user accepted the local verification on 2026-10-05; see Spec §14.11.
+- **Pending:** real GitHub Actions validation, covering:
+  - the strict accessibility check;
+  - the G3-A differential check, with 93/93 ng and 102/102 vue reports;
+  - the artifact upload;
+  - `!cancelled()`/`always()` step behaviour.
+
+  Any discrepancy found there is reported, never adapted ad hoc.
+- **Task 9 impact:** the G3-A part of the `track-a-browser-visual-a11y` job is expected to stay red on the 6 held Toast screenshots until U2 is resolved.
