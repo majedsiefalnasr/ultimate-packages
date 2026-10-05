@@ -526,5 +526,65 @@
     "ultimateDestination": "packages/vue/src/inline-message/inline-message-style.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 inlinemessage, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A6."
+  },
+  {
+    "originalPath": "src/accordion/index.ts",
+    "ultimateDestination": "packages/vue/src/accordion/accordion-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 accordion, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B1, PX-B5, PX-B11, FX-B1."
+  },
+  {
+    "originalPath": "src/blockui/index.ts",
+    "ultimateDestination": "packages/vue/src/block-ui/block-ui-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 blockui, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B3, PX-B4."
+  },
+  {
+    "originalPath": "src/card/index.ts",
+    "ultimateDestination": "packages/vue/src/card/card-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 card, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); no exceptions."
+  },
+  {
+    "originalPath": "src/divider/index.ts",
+    "ultimateDestination": "packages/vue/src/divider/divider-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 divider, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B6, FX-B3, FX-B4."
+  },
+  {
+    "originalPath": "src/fieldset/index.ts",
+    "ultimateDestination": "packages/vue/src/fieldset/fieldset-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 fieldset, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B9, FX-B1."
+  },
+  {
+    "originalPath": "src/inplace/index.ts",
+    "ultimateDestination": "packages/vue/src/inplace/inplace-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 inplace, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B2, PX-B5."
+  },
+  {
+    "originalPath": "src/panel/index.ts",
+    "ultimateDestination": "packages/vue/src/panel/panel-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 panel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B7, FX-B1."
+  },
+  {
+    "originalPath": "src/scrollpanel/index.ts",
+    "ultimateDestination": "packages/vue/src/scroll-panel/scroll-panel-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 scrollpanel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions unresolved-token exception (Spec §5.6)."
+  },
+  {
+    "originalPath": "src/splitter/index.ts",
+    "ultimateDestination": "packages/vue/src/splitter/splitter-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 splitter, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B9, FX-B6, FX-B7."
+  },
+  {
+    "originalPath": "src/toolbar/index.ts",
+    "ultimateDestination": "packages/vue/src/toolbar/toolbar-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 toolbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); no exceptions."
   }
 ]

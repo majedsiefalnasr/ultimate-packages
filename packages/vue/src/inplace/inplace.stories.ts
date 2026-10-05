@@ -23,3 +23,35 @@ export const Default: Story = {
     `,
   }),
 };
+
+/** GAP-064 G3-B verification story (Spec §8 C5): disabled display. */
+export const Disabled: Story = {
+  render: () => ({
+    components: { UInplace },
+    template: `
+      <UInplace disabled>
+        <template #display>Click to Edit</template>
+        <template #content="{ closeCallback }">
+          <input type="text" value="Editable content" />
+          <button type="button" @click="closeCallback">Close</button>
+        </template>
+      </UInplace>
+    `,
+  }),
+};
+
+/** GAP-064 G3-B verification story (Spec §8 C5): active (content shown). */
+export const Active: Story = {
+  render: () => ({
+    components: { UInplace },
+    template: `
+      <UInplace active>
+        <template #display>Click to Edit</template>
+        <template #content="{ closeCallback }">
+          <input type="text" value="Editable content" />
+          <button type="button" @click="closeCallback">Close</button>
+        </template>
+      </UInplace>
+    `,
+  }),
+};

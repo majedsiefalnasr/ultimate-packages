@@ -22,3 +22,33 @@ export const Default: Story = {
     `,
   }),
 };
+
+/** GAP-064 G3-B verification story (Spec §8 C5): disabled display. */
+export const Disabled: Story = {
+  render: () => ({
+    template: `
+      <u-inplace [disabled]="true">
+        <span displayContent>Click to Edit</span>
+        <ng-template #content let-closeCallback="closeCallback">
+          <input type="text" value="Editable content" />
+          <button type="button" (click)="closeCallback($event)">Close</button>
+        </ng-template>
+      </u-inplace>
+    `,
+  }),
+};
+
+/** GAP-064 G3-B verification story (Spec §8 C5): active (content shown). */
+export const Active: Story = {
+  render: () => ({
+    template: `
+      <u-inplace [active]="true">
+        <span displayContent>Click to Edit</span>
+        <ng-template #content let-closeCallback="closeCallback">
+          <input type="text" value="Editable content" />
+          <button type="button" (click)="closeCallback($event)">Close</button>
+        </ng-template>
+      </u-inplace>
+    `,
+  }),
+};

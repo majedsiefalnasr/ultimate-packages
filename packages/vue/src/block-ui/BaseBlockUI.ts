@@ -9,7 +9,7 @@ import { blockUiStyleModule } from "./block-ui-style";
 // blocks its own default-slot content.
 export function createBaseBlockUI() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "block-ui", styleModule: blockUiStyleModule }),
+    extends: createBaseComponent({ componentName: "blockui", styleModule: blockUiStyleModule }),
     props: {
       blocked: { type: Boolean, default: false },
       fullScreen: { type: Boolean, default: false },

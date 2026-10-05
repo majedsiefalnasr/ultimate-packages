@@ -42,3 +42,18 @@ export const Multiple: Story = {
     `,
   }),
 };
+
+/** GAP-064 G3-B verification story (Spec §8 C5): an active and a disabled panel. */
+export const ActiveAndDisabled: Story = {
+  args: { panels, value: "0" },
+  render: (args) => ({
+    props: args,
+    template: `
+      <u-accordion [panels]="panels" [value]="value">
+        <ng-template #panelContent let-panel>
+          <p>Content for {{ panel.header }}.</p>
+        </ng-template>
+      </u-accordion>
+    `,
+  }),
+};
