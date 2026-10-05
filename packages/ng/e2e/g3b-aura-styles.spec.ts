@@ -124,18 +124,22 @@ test("Ng/Accordion G3-B layout", async ({ page }) => {
   await expect(panels).toHaveCount(3);
   const header = (i: number) => panels.nth(i).locator(".u-accordion-header");
   await expect(header(0)).toHaveCSS(
-    "background-color",
-    await resolved(page, "--u-accordion-header-active-background", "background-color")
+    "color",
+    await resolved(page, "--u-accordion-header-active-color", "color")
   );
   await expect(panels.nth(2)).toHaveCSS(
     "opacity",
     await resolved(page, "--u-disabled-opacity", "opacity")
   );
   await expect(header(2)).toHaveCSS("pointer-events", "none");
+  await expect(header(1)).toHaveCSS(
+    "color",
+    await resolved(page, "--u-accordion-header-color", "color")
+  );
   await header(1).hover();
   await expect(header(1)).toHaveCSS(
-    "background-color",
-    await resolved(page, "--u-accordion-header-hover-background", "background-color")
+    "color",
+    await resolved(page, "--u-accordion-header-hover-color", "color")
   );
 });
 

@@ -3261,6 +3261,37 @@ The loop and its `toBeLessThanOrEqual(0.5)` are unchanged. The full-screen and u
 
 **Unchanged:** the CSS, runtime, DOM and stories; the 0.5px tolerance; the Angular story border; everything else in Task 8. The Vue BlockUI story observation (`inheritAttrs: false` drops its inline `height`/`border`) is a follow-up only (Spec §14).
 
+## Plan Amendment A2 — final-review fix pass (user-approved 2026-10-05)
+
+The final whole-branch review found two issues. The user approved one scoped fix pass for both. Scope is exactly the items below; everything else is unchanged.
+
+**1. Accordion layout assertions discriminate by text colour.**
+
+- **Problem.** In Aura, the accordion header's `background`, `hoverBackground`, `activeBackground` and `activeHoverBackground` all resolve to `{content.background}` (`packages/themes/src/presets/aura/accordion.ts`), so the `background-color` assertions in both `<Fw>/Accordion G3-B layout` tests cannot fail. Header `color` is `{text.muted.color}`, while `hoverColor` and `activeColor` are `{text.color}`.
+- **Change**, in both `packages/ng/e2e/g3b-aura-styles.spec.ts` and `packages/vue/e2e/g3b-aura-styles.spec.ts`, inside the Accordion layout test only:
+  - the active-header assertion becomes `await expect(header(0)).toHaveCSS("color", await resolved(page, "--u-accordion-header-active-color", "color"));`
+  - before `await header(1).hover();`, add the rest-state assertion `await expect(header(1)).toHaveCSS("color", await resolved(page, "--u-accordion-header-color", "color"));`
+  - the hover assertion becomes `await expect(header(1)).toHaveCSS("color", await resolved(page, "--u-accordion-header-hover-color", "color"));`
+- **Unchanged:** the disabled-panel `opacity` and `pointer-events` assertions, every other test, the stories, CSS and baselines.
+- **Verification:** run the two Accordion layout tests in Docker in all three browsers of each framework; all pass. No screenshot baseline changes, and the G3-A tooling is unchanged.
+
+**2. Provenance.**
+
+- **Problem.** `provenance:validate -- --base-ref fe86fe4` (and CI with `--base-ref origin/main`) fails with "diff touches a Prime-derived package path but does not update docs/architecture/PROVENANCE.md". The `@primeuix/styles` entry still says only the `base` module (plus `virtualscroller`/`paginator`) was incorporated.
+- **Change:** update that entry's Modification status to also cover the per-component structural CSS ported, reference-derived, into each framework's own style modules:
+  - GAP-064 G3-A: 14 keys, 27 ng/vue style files;
+  - GAP-064 G3-B: 10 keys, 20 ng/vue style files.
+
+  It points to `docs/architecture/provenance/{ng,vue}.json` for the file-level entries. This is a documentation-only change, explicitly approved although `PROVENANCE.md` is outside the original G3-B file scope.
+
+- **Record correction:** in `docs/superpowers/plans/2026-10-05-gap-064-g3b-visual-review.md` (Task 10 "Pre-existing failures"), attribute the provenance failure to the actual cause: the stale `PROVENANCE.md` entry when run with `--base-ref`, as CI does. The unrelated older `accordion.spec.ts` manifest gap is noted separately, as what the run without `--base-ref` reports.
+
+**Follow-ups kept for closeout, not fixed in G3-B:**
+
+- U1: the Angular ScrollPanel story does not create the clipped panel.
+- U2: the Vue Card WebKit screenshot depends on an external CDN; it remains the known exception.
+- The Vue BlockUI story's `inheritAttrs: false` keeps its inline height/border from reaching the container.
+
 ## After this plan
 
 Final Review and Closeout are a separate gate: GAP-064 progress note (G3-A, G3-B complete; G3-C..E open; status stays PARTIAL), the closeout record, and merge/push decisions.
