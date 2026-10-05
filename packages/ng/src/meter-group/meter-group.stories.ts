@@ -30,6 +30,8 @@ export const Vertical: Story = {
         { label: "Photos", value: 15, color: "#22c55e" },
       ],
     },
-    template: `<u-meter-group [value]="value" orientation="vertical"></u-meter-group>`,
+    // The vertical meter fills its container's height, so the story gives it a fixed-height one
+    // (the host is a flex container too, so the inner root receives that height).
+    template: `<div style="display: flex; height: 12rem"><u-meter-group [value]="value" orientation="vertical" style="display: flex"></u-meter-group></div>`,
   }),
 };

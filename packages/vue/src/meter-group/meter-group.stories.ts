@@ -35,6 +35,7 @@ export const Vertical: Story = {
   render: (args) => ({
     components: { UMeterGroup },
     setup: () => ({ args }),
-    template: `<UMeterGroup v-bind="args" />`,
+    // The vertical meter fills its container's height, so the story gives it a fixed-height one.
+    template: `<div style="display: flex; height: 12rem"><UMeterGroup v-bind="args" /></div>`,
   }),
 };
