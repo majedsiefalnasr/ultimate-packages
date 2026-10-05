@@ -583,3 +583,60 @@ Approve the **6 Toast baselines** (ng and vue, each in chromium, firefox and web
   - G3-A differential: ng OK 93/93, vue OK 102/102, 0 introduced, 0 stale.
   - Strict: ng OK (261), vue OK (219), react OK (198), zero new violations.
 - **U2 is resolved.** G3-A has no remaining visual failures.
+
+## Verification (Task 9)
+
+Run on 2026-10-05 at HEAD `ea5e039` (branch `feature/gap-064-g3a-display-feedback`, clean working tree) with Node 24.15.0. The comparison baseline is the immutable `fa5c150`; `origin/main` was not used.
+
+### Step 1: suites, typecheck and SSR
+
+| Check | Result |
+| --- | --- |
+| `pnpm --filter @ultimate/uix-styled test` | 6 files, 15 tests passed |
+| `pnpm --filter @ultimate/themes test` | 18 files, 685 tests passed |
+| `pnpm --filter @ultimate/vue-core test` | 20 files, 102 tests passed |
+| `pnpm --filter @ultimate/vue test` | 96 files, 1048 tests passed |
+| `pnpm --filter @ultimate/react test` | 87 files, 856 tests passed |
+| `pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false` | 91 files, 1033 tests passed |
+| `pnpm --filter @ultimate/ng-core exec ng test --project=ng-core --watch=false` | 15 files, 62 tests passed |
+| `pnpm run typecheck` | exit 0 (all packages) |
+| SSR (`ng-ssr-chromium`, `react-ssr-chromium`, `vue-ssr-chromium`) | 835 passed, 0 failed, 0 flaky (controller's Docker regression run on tree `958dc40`, same content as HEAD) |
+
+Command forms. `pnpm --filter <pkg> test --watch=false` fails on pnpm 9.6.0 with `Unknown option: 'watch'`. It was confirmed for `@ultimate/ng-core` (first form tried) and was used as a known failure for `@ultimate/ng`. Both Angular packages therefore ran through `pnpm --filter <pkg> exec ng test --project=<name> --watch=false`. The host Playwright SSR command was not run: the visual baselines are Linux arm64 renders, so the SSR evidence is the Docker run above.
+
+### Step 2: scope and DOM checks (C4, C8)
+
+- `git diff fa5c150 --stat -- packages/react packages/react-core packages/uix-styled packages/uix-styles packages/themes/src packages/ng-core packages/vue-core` printed nothing.
+- `git diff fa5c150 --name-only` lists 268 paths, all within the allowed set:
+  - 27 style modules (13 ng, 14 vue);
+  - 195 snapshot PNGs (93 ng, 102 vue);
+  - the 9 key files and the other component sources named in the approved plan, plus the approved later additions (`packages/ng/src/message/message.ts`, the Toast markup files `toast.ts`, `Toast.vue` and `toast.spec.ts`);
+  - stories (including `meter-group.stories.ts`), e2e and runtime specs;
+  - `packages/themes/test/**` (fixture, `g3a-port.mjs`, fidelity test);
+  - `docs/architecture/provenance/{ng,vue}.json`, `ACCESSIBILITY_BASELINE.md`, `.github/workflows/ci.yml`;
+  - `scripts/provenance/validate-g3a-accessibility.mjs` and its `.test.mjs`;
+  - the research, spec, plan and record docs.
+- No path outside the allowed set.
+
+### Step 3: size gate (C7)
+
+`pnpm run build && pnpm run size:measure` succeeded, then `node scripts/provenance/validate-bundle-size.mjs --base-ref fa5c150` printed `all packages passed the bundle-size gate` (exit 0). No package is above 15%; no override was used and `PERFORMANCE.md` was not edited.
+
+| Package | Baseline (fa5c150) | Now | Change |
+| --- | --- | --- | --- |
+| ng | 202.86 KB | 64.4 KB | -68.2% |
+| vue | 132.3 KB | 136.2 KB | +2.9% |
+| ng-core | 16.53 KB | 16.9 KB | +2.2% |
+| vue-core | 8.66 KB | 8.8 KB | +2.1% |
+| react | 87.16 KB | 87.2 KB | 0.0% |
+| themes | 13.14 KB | 13.5 KB | +3.1% |
+| uix-styled | 8.45 KB | 8.6 KB | +2.3% |
+
+The ng figure is a stale baseline, not a G3-A reduction. `PERFORMANCE.md` at `fa5c150` records ng as 5281.3 KB total with 202.86 KB (4th column), while the current measure is 3152.2 KB with 64.42 KB. G3-A touches 13 ng style modules and five small ng component sources, none of which can remove 60% of the package.
+
+### Pre-existing failures (recorded, not fixed)
+
+- **`pnpm run provenance:validate`** exits 1. The 7 required baseline entries are present, then it fails first on `packages/ng/src/accordion/accordion-style.ts`: "has no entry in docs/architecture/provenance/ng.json". The file is not in the G3-A diff, so this predates G3-A.
+- **`pnpm run lint`** (`eslint .`) exits 1 with 58533 problems. None are in a G3-A-touched file (a `comm` of the lint-failing files against the 268 touched paths found no tracked overlap). The failures are in:
+  - 41 tracked source and test files across `ng/src`, `react/src`, `vue/src`, `themes/test`, `uix-styled/src`, `uix-utils/test`, `component-schema` and `mcp/src` (for example `packages/ng/src/popover/popover.ts`, `packages/react/src/select/select.tsx`, `packages/themes/test/contract.test.ts`), none touched by G3-A;
+  - the git-ignored build output under `packages/{ng,react,vue}/storybook-static`, which `eslint .` lints because it is not excluded. This accounts for nearly all of the 58533 problems (minified bundles: `no-unused-expressions`, `no-undef` for `URL` and `location`, `no-unused-vars`).
