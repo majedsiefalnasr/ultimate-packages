@@ -225,6 +225,12 @@ test("Ng/TieredMenu visibility and nested placement G3-C2 layout", async ({ page
 
 test("Ng/TieredMenu popup overlay (group 21, computed only) G3-C2 layout", async ({ page }) => {
   await go(page, "ng-tieredmenu--popup");
+  await expect(page.locator("u-tiered-menu")).toBeAttached();
+  await page.waitForFunction(
+    () =>
+      typeof (window as unknown as { ng?: { getComponent?: unknown } }).ng?.getComponent ===
+      "function"
+  );
   await page.evaluate(() => {
     const host = document.querySelector("u-tiered-menu");
     // Angular dev-mode debug API: show the popup with the existing toggle() (no story change, D-C2-4).
