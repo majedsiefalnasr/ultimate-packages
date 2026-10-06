@@ -40,7 +40,7 @@ import { tieredMenuStyleModule } from "./tiered-menu-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UTieredMenu extends UBaseComponent {
-  protected override readonly componentName = "tiered-menu";
+  protected override readonly componentName = "tieredmenu";
   protected override readonly styleModule = tieredMenuStyleModule;
 
   /** An array of menuitems. */

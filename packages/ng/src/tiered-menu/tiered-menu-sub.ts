@@ -89,7 +89,7 @@ const ITEM_LINK_SELECTOR = ":scope > li > .u-tieredmenu-item-content > a";
   encapsulation: ViewEncapsulation.None,
 })
 export class UTieredMenuSub extends UBaseComponent {
-  protected override readonly componentName = "tiered-menu";
+  protected override readonly componentName = "tieredmenu";
   protected override readonly styleModule = tieredMenuStyleModule;
 
   @Input() items: UMenuItem[] = [];

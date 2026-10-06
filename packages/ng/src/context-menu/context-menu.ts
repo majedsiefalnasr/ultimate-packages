@@ -105,7 +105,7 @@ import { contextMenuStyleModule } from "./context-menu-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UContextMenu extends UBaseComponent {
-  protected override readonly componentName = "context-menu";
+  protected override readonly componentName = "contextmenu";
   protected override readonly styleModule = contextMenuStyleModule;
 
   /** An array of menuitems. */

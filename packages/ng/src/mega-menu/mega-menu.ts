@@ -110,7 +110,7 @@ import type { UMegaMenuItem } from "./mega-menu-item";
   encapsulation: ViewEncapsulation.None,
 })
 export class UMegaMenu extends UBaseComponent {
-  protected override readonly componentName = "mega-menu";
+  protected override readonly componentName = "megamenu";
   protected override readonly styleModule = megaMenuStyleModule;
 
   /** An array of menuitems, each root item's own `items` a 2D column grid. */
