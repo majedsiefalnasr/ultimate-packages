@@ -25,3 +25,23 @@ export const Default: Story = {
 export const Popup: Story = {
   args: { model: defaultItems, popup: true },
 };
+
+/** GAP-064 G3-C2 verification story (Spec §9.1): disabled items, icons, separators and two nested levels. */
+export const ItemStates: Story = {
+  args: {
+    model: [
+      {
+        label: "File",
+        icon: "pi pi-file",
+        items: [
+          { label: "New", icon: "pi pi-plus" },
+          { separator: true },
+          { label: "Open", icon: "pi pi-folder-open", items: [{ label: "Recent" }] },
+        ],
+      },
+      { label: "Edit", icon: "pi pi-pencil", disabled: true, items: [{ label: "Undo" }] },
+      { separator: true },
+      { label: "Archived", url: "#archived", disabled: true },
+    ],
+  },
+};

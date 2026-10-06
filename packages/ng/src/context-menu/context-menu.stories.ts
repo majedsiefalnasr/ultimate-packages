@@ -38,3 +38,19 @@ export const Global: Story = {
     template: `<div>Right-click anywhere on the page.<u-context-menu [model]="model" [global]="global"></u-context-menu></div>`,
   }),
 };
+
+/** GAP-064 G3-C2 verification story (Spec §9.1): icons, a separator and a disabled item; host trigger as Default. */
+export const ItemStates: Story = {
+  args: {
+    model: [
+      { label: "Copy", icon: "pi pi-copy" },
+      { label: "Paste", icon: "pi pi-clone" },
+      { separator: true },
+      { label: "Delete", icon: "pi pi-trash", disabled: true },
+    ],
+  },
+  render: (args) => ({
+    props: args,
+    template: `<p style="margin: 0 0 0.5rem;">Right-click inside the dashed box.</p><u-context-menu [model]="model" style="display: block; min-height: 6rem; border: 1px dashed #999;"></u-context-menu>`,
+  }),
+};
