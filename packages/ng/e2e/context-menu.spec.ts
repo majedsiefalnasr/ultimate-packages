@@ -59,7 +59,7 @@ test.describe("Ng/ContextMenu C2-0", () => {
     await open(page, "ng-contextmenu--global");
     for (let run = 0; run < 3; run++) {
       await page.mouse.click(300, 200, { button: "right" });
-      expect(await menuTopLeft(page)).toEqual({ x: 301, y: 201 });
+      await expect.poll(() => menuTopLeft(page)).toEqual({ x: 301, y: 201 });
       await page.mouse.click(1200, 680); // outside left-click dismisses
       await expect(page.locator(".u-contextmenu")).toHaveCount(0);
     }
@@ -68,9 +68,9 @@ test.describe("Ng/ContextMenu C2-0", () => {
   test("Global: a second right-click while open repositions the menu", async ({ page }) => {
     await open(page, "ng-contextmenu--global");
     await page.mouse.click(300, 200, { button: "right" });
-    expect(await menuTopLeft(page)).toEqual({ x: 301, y: 201 });
+    await expect.poll(() => menuTopLeft(page)).toEqual({ x: 301, y: 201 });
     await page.mouse.click(500, 320, { button: "right" });
-    expect(await menuTopLeft(page)).toEqual({ x: 501, y: 321 });
+    await expect.poll(() => menuTopLeft(page)).toEqual({ x: 501, y: 321 });
   });
 
   test("Default: a right-click inside the host hit area opens the menu at the pointer", async ({
@@ -83,7 +83,7 @@ test.describe("Ng/ContextMenu C2-0", () => {
     const x = Math.round(host!.x + 40);
     const y = Math.round(host!.y + 30);
     await page.mouse.click(x, y, { button: "right" });
-    expect(await menuTopLeft(page)).toEqual({ x: x + 1, y: y + 1 });
+    await expect.poll(() => menuTopLeft(page)).toEqual({ x: x + 1, y: y + 1 });
     await page.mouse.click(1200, 680);
     await expect(page.locator(".u-contextmenu")).toHaveCount(0);
   });
@@ -107,6 +107,13 @@ test.describe("Ng/ContextMenu C2-0", () => {
       point.y <= host!.y + host!.height;
     expect(insideHost, `point ${point.x},${point.y} must be outside the host`).toBe(false);
     await page.mouse.click(point.x, point.y, { button: "right" });
+    // let a regression's post-render open land before asserting the negative
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+        )
+    );
     await expect(page.locator(".u-contextmenu")).toHaveCount(0);
   });
 });
