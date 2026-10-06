@@ -627,7 +627,7 @@
     "originalPath": "@primeuix/styles@2.0.3 contextmenu",
     "ultimateDestination": "packages/ng/src/context-menu/context-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 contextmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M3; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 contextmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M3"
   },
   {
     "originalPath": "n/a",
@@ -645,7 +645,7 @@
     "originalPath": "@primeuix/styles@2.0.3 megamenu",
     "ultimateDestination": "packages/ng/src/mega-menu/mega-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 megamenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M2, FX-M4, FX-M5, FX-M6, FX-M7, PX-M5; Ultimate-only D5 rule R-M1; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 megamenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4, FX-M5, FX-M6, FX-M7, PX-M5; item-focus groups ported as :has(:focus-visible) adaptations (Spec §20); Ultimate-only D5 rule R-M1"
   },
   {
     "originalPath": "n/a",
@@ -663,7 +663,7 @@
     "originalPath": "@primeuix/styles@2.0.3 menubar",
     "ultimateDestination": "packages/ng/src/menubar/menubar-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 menubar, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M2, FX-M4; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 menubar, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4; item-focus groups ported as :has(:focus-visible) adaptations (Spec §20); F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
   },
   {
     "originalPath": "n/a",
@@ -699,7 +699,7 @@
     "originalPath": "@primeuix/styles@2.0.3 tieredmenu",
     "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tieredmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M2, PX-M1, PX-M2; Ultimate-only D5 rule R-M3; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tieredmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, PX-M1, PX-M2; item-focus groups ported as :has(:focus-visible) adaptations (Spec §20); Ultimate-only D5 rule R-M3; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
   },
   {
     "originalPath": "packages/primeng/src/tieredmenu/tieredmenu.ts",
