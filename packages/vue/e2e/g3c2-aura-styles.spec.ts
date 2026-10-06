@@ -9,7 +9,6 @@ import { runAccessibilityScan, storyUrl } from "./accessibility-envelope";
  * unreachable or invisible (F-3a, F-3b) are before-state evidence; only
  * after-port results are acceptance criteria. All evidence runs use --retries=0.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- read by the Task 8 selector-reach block
 const FW = "vue";
 const HOST: Record<string, string> = {};
 
@@ -85,15 +84,19 @@ export async function scenario(
     return;
   }
   // expanded: PanelMenu, expand every enabled collapsed header that has children, level by level.
+  const expanded = page.locator(".u-panelmenu-item-expanded");
+  await expect(page.locator(".u-panelmenu-header-link").first()).toBeVisible(); // story mounted
   for (let round = 0; round < 4; round++) {
     const closed = page.locator(
       ".u-panelmenu-item:not(.u-panelmenu-item-expanded):not(.u-panelmenu-item-disabled) > .u-panelmenu-header-content:has(.u-panelmenu-submenu-icon) .u-panelmenu-header-link"
     );
     const n = await closed.count();
     if (n === 0) break;
+    const before = await expanded.count();
     await closed.first().click();
+    await expect(expanded).toHaveCount(before + 1); // wait for the expansion before re-reading
   }
-  await expect(page.locator(".u-panelmenu-item-expanded").first()).toBeVisible();
+  await expect(expanded.first()).toBeVisible();
 }
 
 for (const { name, story, ready } of STORIES) {
@@ -357,3 +360,99 @@ test("Vue/ContextMenu disabled item guard G3-C2 x3b", async ({ page }) => {
   await item.locator(".u-contextmenu-item-link").dispatchEvent("click");
   await expect(page.locator(".u-contextmenu")).toBeVisible(); // a disabled item never selects/hides
 });
+
+const ATTR = FW === "ng" ? "data-u-ng-style" : "data-u-style";
+const REACH: ReadonlyArray<{
+  key: string;
+  runs: ReadonlyArray<[string, Parameters<typeof scenario>[2]]>;
+}> = [
+  {
+    key: "tieredmenu",
+    runs: [
+      ["tieredmenu--item-states", "rest"],
+      ["tieredmenu--item-states", "openL2"],
+    ],
+  },
+  { key: "contextmenu", runs: [["contextmenu--item-states", "contextHover"]] },
+  {
+    key: "menubar",
+    runs: [
+      ["menubar--item-states", "rest"],
+      ["menubar--item-states", "openL2"],
+    ],
+  },
+  {
+    key: "megamenu",
+    runs: [
+      ["megamenu--item-states", "rest"],
+      ["megamenu--item-states", "openL1"],
+    ],
+  },
+  {
+    key: "panelmenu",
+    runs: [
+      ["panelmenu--item-states", "rest"],
+      ["panelmenu--item-states", "expanded"],
+    ],
+  },
+];
+/** ADR-052 X-1 class K: emitted by a cited source under a state no story exercises. */
+const K: Record<string, Record<string, string>> = {
+  tieredmenu: {
+    ".u-tieredmenu-overlay":
+      "tiered-menu-style.ts classes.root: u-tieredmenu-overlay when popup is shown (D-C2-4; computed-style evidence only)",
+  },
+};
+const STATE =
+  /::?(before|after|-webkit-[a-z-]+)\b|:(hover|focus-visible|focus|active|dir\([a-z]+\))/g;
+
+for (const r of REACH) {
+  test(`${FW === "ng" ? "Ng" : "Vue"}/${r.key} selector reach G3-C2 reach`, async ({ page }) => {
+    const hit = new Map<string, string>();
+    let parts: string[] = [];
+    for (const [story, state] of r.runs) {
+      await go(page, `${FW}-${story}`);
+      await scenario(page, r.key, state);
+      // the "rest" scenario returns immediately, so wait for the story mount and its structural sheet
+      await expect(page.locator(`style[${ATTR}="${r.key}"]`)).toBeAttached();
+      await expect(page.locator(`.u-${r.key}`).first()).toBeAttached();
+      const res = await page.evaluate(
+        ([key, attr, re]) => {
+          const sheet = (
+            document.querySelector(`style[${attr}="${key}"]`) as HTMLStyleElement | null
+          )?.sheet;
+          if (!sheet) return null;
+          const all: string[] = [];
+          for (const rule of Array.from(sheet.cssRules) as CSSStyleRule[]) {
+            if (!rule.selectorText) continue;
+            let depth = 0,
+              cur = "";
+            for (const ch of rule.selectorText) {
+              if (ch === "(") depth++;
+              if (ch === ")") depth--;
+              if (ch === "," && !depth) {
+                all.push(cur.trim());
+                cur = "";
+              } else cur += ch;
+            }
+            all.push(cur.trim());
+          }
+          return all.map((s) => ({
+            s,
+            n: document.querySelectorAll(s.replace(new RegExp(re, "g"), "") || "*").length,
+          }));
+        },
+        [r.key, ATTR, STATE.source] as const
+      );
+      expect(res, `structural sheet for ${r.key}`).not.toBeNull();
+      parts = [...new Set([...parts, ...res!.map((x) => x.s)])];
+      for (const x of res!) if (x.n > 0 && !hit.has(x.s)) hit.set(x.s, `${story}/${state}`);
+    }
+    const unreached = parts.filter((s) => !hit.has(s) && !(K[r.key] ?? {})[s]);
+    expect(unreached, "selector parts with no R evidence and no K citation").toEqual([]);
+    test.info().annotations.push({
+      type: "reach",
+      description: `${parts.length} parts; R ${hit.size}; K ${parts.filter((s) => (K[r.key] ?? {})[s]).length}`,
+    });
+  });
+}
