@@ -2,8 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Injector,
   ViewChild,
   ViewEncapsulation,
+  afterNextRender,
+  inject,
   input,
   output,
   signal,
@@ -122,6 +125,7 @@ export class UContextMenu extends UBaseComponent {
   private displayOrder: number | undefined;
   private static instanceCount = 0;
   private readonly instanceUid = ++UContextMenu.instanceCount;
+  private readonly injector = inject(Injector);
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -165,7 +169,11 @@ export class UContextMenu extends UBaseComponent {
     this.registerEscape();
     const pageX = event.pageX;
     const pageY = event.pageY;
-    queueMicrotask(() => this.position(pageX, pageY));
+    // The list only exists once Angular renders the @if (render()) block, so
+    // position after the next render (PrimeNG positions in onBeforeEnter,
+    // once its container exists). position() is unchanged and still returns
+    // early if the menu was hidden before this runs.
+    afterNextRender(() => this.position(pageX, pageY), { injector: this.injector });
     this.onShow.emit();
   }
 
