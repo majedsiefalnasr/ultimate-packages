@@ -221,9 +221,9 @@ test("Ng/TieredMenu visibility and nested placement G3-C2 layout", async ({ page
   const n = await box(nested);
   expect(Math.abs(n.x - (p.x + p.width))).toBeLessThanOrEqual(1); // inset-inline-start: 100% (LTR)
   const content = page.locator(".u-tieredmenu-item-open > .u-tieredmenu-item-content").first();
-  expect(await css(content, "background-color")).toBe(
-    await resolved(page, "--u-tieredmenu-item-active-background", "background-color")
-  );
+  await expect
+    .poll(() => css(content, "background-color"))
+    .toBe(await resolved(page, "--u-tieredmenu-item-active-background", "background-color"));
 });
 
 test("Ng/TieredMenu popup overlay (group 21, computed only) G3-C2 layout", async ({ page }) => {
@@ -292,9 +292,9 @@ test("Ng/ContextMenu focus and separator G3-C2 layout", async ({ page }) => {
   await go(page, "ng-contextmenu--item-states");
   await scenario(page, "contextmenu", "contextHover");
   const content = page.locator(".u-contextmenu-item-focused > .u-contextmenu-item-content");
-  expect(await css(content, "background-color")).toBe(
-    await resolved(page, "--u-contextmenu-item-focus-background", "background-color")
-  );
+  await expect
+    .poll(() => css(content, "background-color"))
+    .toBe(await resolved(page, "--u-contextmenu-item-focus-background", "background-color"));
   const sep = page.locator(".u-contextmenu-separator").first();
   expect(await css(sep, "border-top-color")).toBe(
     await resolved(page, "--u-contextmenu-separator-border-color", "border-top-color")
