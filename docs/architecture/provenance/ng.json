@@ -604,5 +604,23 @@
     "ultimateDestination": "packages/ng/src/tabs/tabs-style.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tabs, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role."
+  },
+  {
+    "originalPath": "packages/primeng/src/contextmenu/contextmenu.ts",
+    "ultimateDestination": "packages/ng/src/context-menu/context-menu.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 ContextMenu. ContextMenu→UContextMenu: flat UMenuItem list (no nested submenus), native contextmenu trigger on the document (global) or on the u-context-menu host element (Ultimate adaptation; no target input), body-appended via UOverlay, dismissed on outside click, Escape and resize, positioned at pageX/pageY + 1 with viewport flip and 0 clamp after the list renders (afterNextRender; upstream positions in onBeforeEnter). Excludes nested submenus, roving/virtual keyboard focus, touch long-press, breakpoints styling, router-link items and scroll-aware flip/fit."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/context-menu/context-menu.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers rendering on right-click, native-menu suppression, item selection, disabled items, outside-click and Escape dismissal, SSR safety (GAP-065), Escape arbitration with UMenu popups (GAP-067), and post-render positioning, flip, repositioning and early-hide (GAP-064 C2-0)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/context-menu/context-menu.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored ContextMenu stories: Default (host-element trigger with an inline-styled hit area) and Global (document trigger)."
   }
 ]
