@@ -609,7 +609,7 @@
     "originalPath": "packages/primeng/src/contextmenu/contextmenu.ts",
     "ultimateDestination": "packages/ng/src/context-menu/context-menu.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 ContextMenu. ContextMenu→UContextMenu: flat UMenuItem list (no nested submenus), native contextmenu trigger on the document (global) or on the u-context-menu host element (Ultimate adaptation; no target input), body-appended via UOverlay, dismissed on outside click, Escape and resize, positioned at pageX/pageY + 1 with viewport flip and 0 clamp after the list renders (afterNextRender; upstream positions in onBeforeEnter). Excludes nested submenus, roving/virtual keyboard focus, touch long-press, breakpoints styling, router-link items and scroll-aware flip/fit."
+    "modificationDescription": "Adapted from primeng@21.1.9 ContextMenu. ContextMenu→UContextMenu: flat UMenuItem list (no nested submenus), native contextmenu trigger on the document (global) or on the u-context-menu host element (Ultimate adaptation; no target input), body-appended via UOverlay, dismissed on outside click, Escape and resize, positioned at pageX/pageY + 1 with viewport flip and 0 clamp after the list renders (afterNextRender; upstream positions in onBeforeEnter). Excludes nested submenus, roving/virtual keyboard focus, touch long-press, breakpoints styling, router-link items and scroll-aware flip/fit. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "n/a",
@@ -621,6 +621,102 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/context-menu/context-menu.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored ContextMenu stories: Default (host-element trigger with an inline-styled hit area) and Global (document trigger)."
+    "modificationDescription": "Ultimate-authored ContextMenu stories: Default (host-element trigger with an inline-styled hit area) and Global (document trigger). Also includes the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 contextmenu",
+    "ultimateDestination": "packages/ng/src/context-menu/context-menu-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 contextmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M3; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/g3c2-aura-styles.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-C2 menu style modules (TieredMenu, ContextMenu, Menubar, MegaMenu, PanelMenu): registration under the Aura key, token resolution, and state selectors matching the rendered state classes (AC1, AC2, AC7)."
+  },
+  {
+    "originalPath": "packages/primeng/src/megamenu/megamenu.ts",
+    "ultimateDestination": "packages/ng/src/mega-menu/mega-menu-column.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 MegaMenu. UMegaMenuColumn: the column list inside a MegaMenu panel, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 megamenu",
+    "ultimateDestination": "packages/ng/src/mega-menu/mega-menu-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 megamenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M2, FX-M4, FX-M5, FX-M6, FX-M7, PX-M5; Ultimate-only D5 rule R-M1; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/mega-menu/mega-menu.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored MegaMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+  },
+  {
+    "originalPath": "packages/primeng/src/megamenu/megamenu.ts",
+    "ultimateDestination": "packages/ng/src/mega-menu/mega-menu.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 MegaMenu. MegaMenu→UMegaMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 menubar",
+    "ultimateDestination": "packages/ng/src/menubar/menubar-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 menubar, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M2, FX-M4; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/menubar/menubar.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored Menubar stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+  },
+  {
+    "originalPath": "packages/primeng/src/panelmenu/panelmenu.ts",
+    "ultimateDestination": "packages/ng/src/panel-menu/panel-menu-list.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 PanelMenu. UPanelMenuList: the recursive item list inside a PanelMenu, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 panelmenu",
+    "ultimateDestination": "packages/ng/src/panel-menu/panel-menu-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 panelmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M2, PX-M3, PX-M4; Ultimate-only D5 rules R-M4, R-M5; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/panel-menu/panel-menu.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored PanelMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+  },
+  {
+    "originalPath": "packages/primeng/src/panelmenu/panelmenu.ts",
+    "ultimateDestination": "packages/ng/src/panel-menu/panel-menu.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 PanelMenu. PanelMenu→UPanelMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 tieredmenu",
+    "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tieredmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M2, PX-M1, PX-M2; Ultimate-only D5 rule R-M3; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+  },
+  {
+    "originalPath": "packages/primeng/src/tieredmenu/tieredmenu.ts",
+    "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu-sub.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 TieredMenuSub. TieredMenuSub→UTieredMenuSub: the nested submenu list, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored TieredMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+  },
+  {
+    "originalPath": "packages/primeng/src/tieredmenu/tieredmenu.ts",
+    "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 TieredMenu. TieredMenu→UTieredMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
   }
 ]

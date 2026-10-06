@@ -145,3 +145,10 @@ Added for GAP-064 G3-C1 (`feature/gap-064-g3c-menus-navigation`), same status �
 Added for GAP-064 C2-0 (`feature/gap-064-c2-0-runtime-fixes`), same status — unreleased, no changesets:
 
 - **`@ultimate/ng` — `UContextMenu` now opens at the pointer.** The menu previously appeared at the top-left corner of the page, because its position was computed before the menu list existed. It now opens at the right-click's page coordinates + 1px, flipped to stay inside the viewport. No API change. In non-global mode the trigger is a right-click on the `<u-context-menu>` host element, which renders no content of its own: give the host a hit area (for example `display: block` with a height) or use `global`. Placement still does not account for page scroll (a known divergence from PrimeNG).
+
+Added for GAP-064 G3-C2 (`feature/gap-064-g3c2-menus`), same status — unreleased, no changesets:
+
+- **`@ultimate/ng`, `@ultimate/vue` — Menu components now use their Aura tokens.** TieredMenu, ContextMenu, Menubar, MegaMenu and PanelMenu take their applicable structural styling from the upstream Aura styles (`@primeuix/styles` 2.0.3), so theme tokens now apply. Disabled items are dimmed with `disabled.opacity` (except MegaMenu column items, a separately tracked defect). Nested TieredMenu submenus are placed with `inset-inline-start`, so they open on the correct side in RTL; they do not flip at the viewport edge.
+- **Defect corrections.** PanelMenu now renders (its root list was hidden by the previous CSS). In Angular, TieredMenu and Menubar submenus now become visible when opened.
+- **Generated `<style>` keys changed** for TieredMenu (`tiered-menu` → `tieredmenu`), ContextMenu (`context-menu` → `contextmenu`), MegaMenu (`mega-menu` → `megamenu`) and PanelMenu (`panel-menu` → `panelmenu`); these keys are internal, not a supported contract.
+- **Not changed:** the TieredMenu popup is still not anchored to its trigger; PanelMenu expand/collapse is not animated; MegaMenu has no `scrollHeight` option.
