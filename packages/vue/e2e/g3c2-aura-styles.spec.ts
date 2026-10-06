@@ -171,6 +171,16 @@ for (const o of OPEN) {
   });
 }
 
+/** Spec §9.2 / §20: ContextMenu Global story, right-click at fixed coordinates (as the C2-0 spec), pointer parked (X-6). */
+test("Vue/ContextMenu Global open G3-C2 open", async ({ page }) => {
+  await go(page, "vue-contextmenu--global");
+  await page.mouse.click(300, 200, { button: "right" });
+  await page.mouse.move(0, 0); // X-6: park the pointer so no item shows hover residue
+  await expect(page.locator(".u-contextmenu")).toBeVisible();
+  await expect(page.locator(".u-contextmenu-item-focused")).toHaveCount(0);
+  await expect(page).toHaveScreenshot();
+});
+
 /** The computed value of `property` when set to `var(<variable>)` on a probe element. */
 async function resolved(page: Page, variable: string, property: string): Promise<string> {
   return page.evaluate(
@@ -258,6 +268,51 @@ test("Vue/ContextMenu focus and separator G3-C2 layout", async ({ page }) => {
   const sep = page.locator(".u-contextmenu-separator").first();
   expect(await css(sep, "border-top-color")).toBe(
     await resolved(page, "--u-contextmenu-separator-border-color", "border-top-color")
+  );
+});
+
+/**
+ * Spec §20 (C-1): keyboard focus on an enabled item link gives the item content the Aura focus
+ * background. Focus arrives through real Tab presses, so `:focus-visible` matches as for a keyboard user.
+ */
+async function expectKeyboardFocusBackground(page: Page, key: string, link: Locator) {
+  await expect(link).toBeVisible();
+  for (let i = 0; i < 30 && !(await link.evaluate((el) => el === document.activeElement)); i++)
+    await page.keyboard.press("Tab");
+  await expect(link).toBeFocused();
+  expect(await link.evaluate((el) => el.matches(":focus-visible"))).toBe(true);
+  const content = link.locator("xpath=..");
+  await expect
+    .poll(() => css(content, "background-color"))
+    .toBe(await resolved(page, `--u-${key}-item-focus-background`, "background-color"));
+}
+
+const FIRST_ENABLED_LINK = (key: string, link: string) =>
+  `.u-${key}-root-list > .u-${key}-item:not(.u-${key}-item-disabled) > .u-${key}-item-content > ${link}`;
+for (const [label, key, story] of [
+  ["TieredMenu", "tieredmenu", "vue-tieredmenu--item-states"],
+  ["Menubar", "menubar", "vue-menubar--item-states"],
+  ["MegaMenu", "megamenu", "vue-megamenu--item-states"],
+] as const)
+  test(`Vue/${label} keyboard focus indicator (Spec §20) G3-C2 layout`, async ({ page }) => {
+    await go(page, story);
+    await expectKeyboardFocusBackground(
+      page,
+      key,
+      page.locator(FIRST_ENABLED_LINK(key, `a.u-${key}-item-link`)).first()
+    );
+  });
+
+test("Vue/PanelMenu top-level keyboard focus indicator (PX-M3) G3-C2 layout", async ({ page }) => {
+  await go(page, "vue-panelmenu--item-states");
+  await expectKeyboardFocusBackground(
+    page,
+    "panelmenu",
+    page
+      .locator(
+        ".u-panelmenu-item:not(.u-panelmenu-item .u-panelmenu-item):not(.u-panelmenu-item-disabled) > .u-panelmenu-header-content > .u-panelmenu-header-link"
+      )
+      .first()
   );
 });
 
@@ -391,7 +446,16 @@ test("Vue/ContextMenu disabled item guard G3-C2 x3b", async ({ page }) => {
   await scenario(page, "contextmenu", "contextOpen");
   const item = page.locator(".u-contextmenu-item-disabled").first();
   expect(await css(item, "opacity")).toBe(await resolved(page, "--u-disabled-opacity", "opacity"));
-  await item.locator(".u-contextmenu-item-link").dispatchEvent("click");
+  const link = item.locator(".u-contextmenu-item-link");
+  expect(await css(link, "pointer-events")).toBe("none");
+  const urlBefore = page.url();
+  // CSS layer: a real pointer click at the link centre is a no-op (the menu stays open, no navigation).
+  const b = await box(link);
+  await page.mouse.click(b.x + b.width / 2, b.y + b.height / 2);
+  await expect(page.locator(".u-contextmenu")).toBeVisible();
+  expect(page.url()).toBe(urlBefore);
+  // JS guard, separately: a click event dispatched straight to the link.
+  await link.dispatchEvent("click");
   await expect(page.locator(".u-contextmenu")).toBeVisible(); // a disabled item never selects/hides
 });
 
@@ -471,14 +535,17 @@ for (const r of REACH) {
             }
             all.push(cur.trim());
           }
-          return all.map((s) => ({
-            s,
-            n: document.querySelectorAll(s.replace(new RegExp(re, "g"), "") || "*").length,
-          }));
+          return all.map((s) => {
+            const stripped = s.replace(new RegExp(re, "g"), "");
+            return { s, stripped, n: stripped ? document.querySelectorAll(stripped).length : 0 };
+          });
         },
         [r.key, ATTR, STATE.source] as const
       );
       expect(res, `structural sheet for ${r.key}`).not.toBeNull();
+      // A part that strips to nothing must fail, never fall back to `*` (Spec §20).
+      for (const x of res!)
+        expect(x.stripped, `selector part "${x.s}" strips to empty`).not.toBe("");
       parts = [...new Set([...parts, ...res!.map((x) => x.s)])];
       for (const x of res!) if (x.n > 0 && !hit.has(x.s)) hit.set(x.s, `${story}/${state}`);
     }
