@@ -586,5 +586,35 @@
     "ultimateDestination": "packages/vue/src/toolbar/toolbar-style.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 toolbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); no exceptions."
+  },
+  {
+    "originalPath": "src/breadcrumb/index.ts",
+    "ultimateDestination": "packages/vue/src/breadcrumb/breadcrumb-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 breadcrumb, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, FX-C1."
+  },
+  {
+    "originalPath": "src/dock/index.ts",
+    "ultimateDestination": "packages/vue/src/dock/dock-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dock, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, R-C1, R-C2, FX-C2, FX-C3."
+  },
+  {
+    "originalPath": "src/steps/index.ts",
+    "ultimateDestination": "packages/vue/src/steps/steps-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 steps, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions PX-C1, PX-C2, FX-C4."
+  },
+  {
+    "originalPath": "src/stepper/index.ts",
+    "ultimateDestination": "packages/vue/src/stepper/stepper-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 stepper, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, FX-C5."
+  },
+  {
+    "originalPath": "src/tabs/index.ts",
+    "ultimateDestination": "packages/vue/src/tabs/tabs-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tabs, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role."
   }
 ]

@@ -151,9 +151,16 @@ describe("Stepper vertical StepItem layout CSS (GAP-063)", () => {
   const css = stepperStyleModule.css as string;
   const rule = (selector: string) => {
     const m = css.match(
-      new RegExp(`^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{([^}]*)\\}`, "m")
+      new RegExp(`^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*\\{([^}]*)\\}`, "m")
     );
-    return m ? m[1].trim() : null;
+    return m
+      ? m[1]
+          .split(";")
+          .map((d) => d.trim())
+          .filter(Boolean)
+          .map((d) => `${d};`)
+          .join(" ")
+      : null;
   };
 
   it("lays the step item out as a column, active item growing", () => {
@@ -162,23 +169,46 @@ describe("Stepper vertical StepItem layout CSS (GAP-063)", () => {
   });
 
   it("keeps the vertical step header left-aligned without touching the global .u-step rule", () => {
-    expect(rule(".u-step-item .u-step")).toBe("flex: initial; align-items: flex-start;");
-    expect(rule(".u-step")).toContain("align-items: center");
+    // G3-C1 (upstream group 21): the vertical override is `flex: initial` only; the header's
+    // left alignment is asserted in the browser (G3-C1 e2e Stepper layout test, Spec §17).
+    expect(rule(".u-step-item .u-step")).toBe("flex: initial;");
+    expect(rule(".u-step")).toContain("align-items: center;");
   });
 
   it("makes the panel a grid, offsets content, handles RTL and last-item padding", () => {
     expect(rule(".u-step-item .u-step-panel")).toBe("display: grid; grid-template-rows: 1fr;");
     expect(rule(".u-step-item .u-step-panel-content")).toBe(
-      "width: 100%; margin-inline-start: 1rem;"
+      "width: 100%; padding: dt('stepper.steppanel.padding'); margin-inline-start: 1rem;"
     );
-    expect(rule(".u-step-item .u-stepper-separator:dir(rtl)")).toBe("left: -18px;");
-    expect(rule(".u-step-item:last-of-type .u-step-panel")).toBe("padding-inline-start: 2rem;");
+    expect(rule(".u-step-item .u-stepper-separator:dir(rtl)")).toBe(
+      "left: calc(-9 * dt('stepper.separator.size'));"
+    );
+    expect(rule(".u-step-item:last-of-type .u-step-panel")).toBe(
+      "padding-inline-start: dt('stepper.step.number.size');"
+    );
   });
 
-  it("declares the hidden-panel rule after the grid rule so inactive panels stay hidden", () => {
-    expect(css.indexOf('.u-step-panel[data-u-hidden="true"]')).toBeGreaterThan(
-      css.indexOf(".u-step-item .u-step-panel {")
-    );
+  it("keeps inactive vertical panels hidden although the grid rule sets display", async () => {
+    // G3-C1 drops the old `[data-u-hidden]` rule (Spec §6.4): v-show hides inactive panels
+    // with an inline `display: none`, which no stylesheet rule (incl. the grid rule) overrides.
+    const wrapper = mount({
+      components: { UStepper, UStepItem, UStep, UStepPanel },
+      template: `
+        <UStepper :value="1">
+          <UStepItem v-for="n in 3" :key="n" :value="n">
+            <UStep :value="n">Step {{ n }}</UStep>
+            <UStepPanel :value="n">Content {{ n }}</UStepPanel>
+          </UStepItem>
+        </UStepper>
+      `,
+    });
+    await nextTick();
+    expect(rule(".u-step-item .u-step-panel")).toContain("display: grid;");
+    const panels = wrapper.findAll('[role="tabpanel"]');
+    expect(panels).toHaveLength(3);
+    expect((panels[0].element as HTMLElement).style.display).toBe("");
+    expect((panels[1].element as HTMLElement).style.display).toBe("none");
+    expect((panels[2].element as HTMLElement).style.display).toBe("none");
   });
 });
 
@@ -252,26 +282,37 @@ describe("Stepper horizontal layout CSS (GAP-077)", () => {
   const css = stepperStyleModule.css as string;
   const rule = (selector: string) => {
     const m = css.match(
-      new RegExp(`^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{([^}]*)\\}`, "m")
+      new RegExp(`^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*\\{([^}]*)\\}`, "m")
     );
-    return m ? m[1].trim() : null;
+    return m
+      ? m[1]
+          .split(";")
+          .map((d) => d.trim())
+          .filter(Boolean)
+          .map((d) => `${d};`)
+          .join(" ")
+      : null;
   };
 
   it("spaces steps across a centred list row", () => {
     expect(rule(".u-step-list")).toBe(
-      "display: flex; position: relative; justify-content: space-between; align-items: center;"
+      "position: relative; display: flex; justify-content: space-between; align-items: center; margin: 0; padding: 0; list-style-type: none; overflow-x: auto;"
     );
   });
 
   it("lays horizontal steps out as growing rows, last step not growing", () => {
-    expect(rule(".u-step-list .u-step")).toBe("flex-direction: row; flex: 1 1 auto;");
-    expect(rule(".u-step-list .u-step:last-of-type")).toBe("flex: initial;");
+    // G3-C1 (upstream groups 2-3): `.u-step` itself is the growing flex row (no column
+    // override any more), and the last step does not grow.
+    expect(rule(".u-step")).toContain("display: flex;");
+    expect(rule(".u-step")).toContain("flex: 1 1 auto;");
+    expect(rule(".u-step")).not.toContain("flex-direction: column");
+    expect(rule(".u-step:last-of-type")).toBe("flex: initial;");
   });
 
-  it("leaves the global .u-step rule and the vertical rules unchanged", () => {
+  it("pins the global .u-step rule and the vertical override", () => {
     expect(rule(".u-step")).toBe(
-      "display: flex; flex-direction: column; align-items: center; position: relative; flex: 0 0 auto;"
+      "position: relative; display: flex; flex: 1 1 auto; align-items: center; gap: dt('stepper.step.gap'); padding: dt('stepper.step.padding');"
     );
-    expect(rule(".u-step-item .u-step")).toBe("flex: initial; align-items: flex-start;");
+    expect(rule(".u-step-item .u-step")).toBe("flex: initial;");
   });
 });

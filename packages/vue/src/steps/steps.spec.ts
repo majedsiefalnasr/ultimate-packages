@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 import { USteps } from "./index";
 
 const items = [{ label: "Personal" }, { label: "Payment" }, { label: "Confirmation" }];
@@ -28,8 +29,37 @@ describe("USteps", () => {
     const wrapper = mount(USteps, { props: { model: items } });
     const secondLink = wrapper.findAll("a")[1];
     expect(secondLink.attributes("aria-disabled")).toBe("true");
-    await secondLink.trigger("click");
+    const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+    secondLink.element.dispatchEvent(click);
+    await nextTick();
     expect(wrapper.emitted("select")).toBeUndefined();
+    expect(click.defaultPrevented).toBe(true);
+    expect(wrapper.findAll("li")[0].attributes("aria-current")).toBe("step");
+    expect(wrapper.findAll("li")[1].attributes("aria-current")).toBeUndefined();
+  });
+
+  // G3-C1 PX-C1: disabled items are not dimmed and keep `pointer-events: auto` (upstream parity;
+  // the pre-port rules never matched these items), so the click guard alone keeps them
+  // non-interactive (Spec §17).
+  it("an explicitly disabled item stays non-interactive when not readonly", async () => {
+    let called = false;
+    const model = [
+      { label: "One" },
+      { label: "Two", disabled: true, command: () => (called = true) },
+      { label: "Three" },
+    ];
+    const wrapper = mount(USteps, { props: { model, readonly: false, activeStep: 0 } });
+    const secondLink = wrapper.findAll("a")[1];
+    expect(secondLink.attributes("aria-disabled")).toBe("true");
+    expect(secondLink.attributes("tabindex")).toBe("-1");
+    const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+    secondLink.element.dispatchEvent(click);
+    await nextTick();
+    expect(wrapper.emitted("select")).toBeUndefined();
+    expect(called).toBe(false);
+    expect(click.defaultPrevented).toBe(true);
+    expect(wrapper.findAll("li")[0].attributes("aria-current")).toBe("step");
+    expect(wrapper.findAll("li")[1].attributes("aria-current")).toBeUndefined();
   });
 
   it("when not readonly, clicking a non-active item emits select with the item and index", async () => {

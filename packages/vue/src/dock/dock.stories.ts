@@ -23,3 +23,21 @@ export const Default: Story = {
 export const LeftPosition: Story = {
   args: { model, position: "left" },
 };
+
+/** GAP-064 G3-C1 verification story (Spec §9.2): top position. */
+export const TopPosition: Story = {
+  args: { model, position: "top" },
+};
+
+/** GAP-064 G3-C1 verification story (Spec §9.2): right position. */
+export const RightPosition: Story = {
+  args: { model, position: "right" },
+};
+
+/** GAP-064 G3-C1 verification story (Spec §9.2): a disabled item. */
+export const WithDisabledItem: Story = {
+  args: {
+    model: [model[0], { ...model[1], disabled: true }, model[2], model[3]],
+    position: "bottom",
+  },
+};

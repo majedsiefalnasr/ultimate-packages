@@ -5,7 +5,11 @@ import { USteps } from "./steps";
 import type { UMenuItem } from "@ultimate/ng-core";
 
 describe("USteps", () => {
-  const items: UMenuItem[] = [{ label: "Personal" }, { label: "Payment" }, { label: "Confirmation" }];
+  const items: UMenuItem[] = [
+    { label: "Personal" },
+    { label: "Payment" },
+    { label: "Confirmation" },
+  ];
 
   function setup(model: UMenuItem[] = items, activeIndex = 0, readonly = true) {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
@@ -44,16 +48,51 @@ describe("USteps", () => {
     const fixture = setup();
     let emitted: unknown;
     fixture.componentInstance.onSelect.subscribe((e: unknown) => (emitted = e));
-    const secondLink = fixture.nativeElement.querySelectorAll("a")[1];
+    const secondLink: HTMLAnchorElement = fixture.nativeElement.querySelectorAll("a")[1];
     expect(secondLink.getAttribute("aria-disabled")).toBe("true");
-    secondLink.click();
+    const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+    secondLink.dispatchEvent(click);
+    fixture.detectChanges();
     expect(emitted).toBeUndefined();
+    expect(click.defaultPrevented).toBe(true);
+    const listItems = fixture.nativeElement.querySelectorAll("li");
+    expect(listItems[0].getAttribute("aria-current")).toBe("step");
+    expect(listItems[1].getAttribute("aria-current")).toBeNull();
+  });
+
+  // G3-C1 PX-C1: disabled items are not dimmed and keep `pointer-events: auto` (upstream parity;
+  // the pre-port rules never matched these items), so the click guard alone keeps them
+  // non-interactive (Spec §17).
+  it("an explicitly disabled item stays non-interactive when not readonly", () => {
+    let called = false;
+    const model: UMenuItem[] = [
+      { label: "One" },
+      { label: "Two", disabled: true, command: () => (called = true) },
+      { label: "Three" },
+    ];
+    const fixture = setup(model, 0, false);
+    let emitted: unknown;
+    fixture.componentInstance.onSelect.subscribe((e: unknown) => (emitted = e));
+    const secondLink: HTMLAnchorElement = fixture.nativeElement.querySelectorAll("a")[1];
+    expect(secondLink.getAttribute("aria-disabled")).toBe("true");
+    expect(secondLink.getAttribute("tabindex")).toBe("-1");
+    const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+    secondLink.dispatchEvent(click);
+    fixture.detectChanges();
+    expect(emitted).toBeUndefined();
+    expect(called).toBe(false);
+    expect(click.defaultPrevented).toBe(true);
+    const listItems = fixture.nativeElement.querySelectorAll("li");
+    expect(listItems[0].getAttribute("aria-current")).toBe("step");
+    expect(listItems[1].getAttribute("aria-current")).toBeNull();
   });
 
   it("when not readonly, clicking a non-active item emits onSelect with the item and index", () => {
     const fixture = setup(items, 0, false);
     let emitted: { item: UMenuItem; index: number } | undefined;
-    fixture.componentInstance.onSelect.subscribe((e: { item: UMenuItem; index: number }) => (emitted = e));
+    fixture.componentInstance.onSelect.subscribe(
+      (e: { item: UMenuItem; index: number }) => (emitted = e)
+    );
     const secondLink = fixture.nativeElement.querySelectorAll("a")[1];
     secondLink.click();
     expect(emitted?.index).toBe(1);
@@ -70,7 +109,11 @@ describe("USteps", () => {
   });
 
   it("skips items with visible: false", () => {
-    const model: UMenuItem[] = [{ label: "One" }, { label: "Hidden", visible: false }, { label: "Three" }];
+    const model: UMenuItem[] = [
+      { label: "One" },
+      { label: "Hidden", visible: false },
+      { label: "Three" },
+    ];
     const fixture = setup(model);
     const labels = Array.from(fixture.nativeElement.querySelectorAll(".u-steps-item-label")).map(
       (el: unknown) => (el as HTMLElement).textContent
@@ -142,7 +185,12 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
     });
 
     it("Home skips hidden/disabled items and reaches the first valid step", () => {
-      const fixture = setup([{ label: "H", visible: false }, { label: "B", disabled: true }, { label: "C" }, { label: "D" }]);
+      const fixture = setup([
+        { label: "H", visible: false },
+        { label: "B", disabled: true },
+        { label: "C" },
+        { label: "D" },
+      ]);
       const links = fixture.nativeElement.querySelectorAll("a");
       links[2].focus();
       press(links[2], "Home");
@@ -150,7 +198,12 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
     });
 
     it("End skips hidden/disabled items and reaches the last valid step", () => {
-      const fixture = setup([{ label: "A" }, { label: "B" }, { label: "H", visible: false }, { label: "D", disabled: true }]);
+      const fixture = setup([
+        { label: "A" },
+        { label: "B" },
+        { label: "H", visible: false },
+        { label: "D", disabled: true },
+      ]);
       const links = fixture.nativeElement.querySelectorAll("a");
       links[0].focus();
       press(links[0], "End");
