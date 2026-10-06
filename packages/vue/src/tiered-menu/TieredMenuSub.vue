@@ -90,7 +90,7 @@ const ITEM_LINK_SELECTOR = ":scope > li > .u-tieredmenu-item-content > a";
 
 export default {
   name: "UTieredMenuSub",
-  extends: createBaseComponent({ componentName: "tiered-menu", styleModule: tieredMenuStyleModule }),
+  extends: createBaseComponent({ componentName: "tieredmenu", styleModule: tieredMenuStyleModule }),
   props: {
     items: {
       type: /** @type {import('vue').PropType<readonly unknown[]>} */ (Array),

@@ -52,7 +52,7 @@ const ITEM_LINK_SELECTOR = ":scope > li > .u-megamenu-item-content > a";
 
 export default {
   name: "UMegaMenuColumnGroup",
-  extends: createBaseComponent({ componentName: "mega-menu", styleModule: megaMenuStyleModule }),
+  extends: createBaseComponent({ componentName: "megamenu", styleModule: megaMenuStyleModule }),
   props: {
     group: { type: Object, required: true },
   },
