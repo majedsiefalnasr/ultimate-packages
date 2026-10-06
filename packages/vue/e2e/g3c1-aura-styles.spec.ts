@@ -251,4 +251,26 @@ test("Vue/Stepper separator G3-C1 layout", async ({ page }) => {
     "background-color",
     await resolved(page, "--u-stepper-separator-background", "background-color")
   );
+
+  // Spec §9.3 (final-review fix F1): once step 2 is active, the separator before it uses the
+  // active colour (group 14); the inactive one after it keeps the rest colour.
+  await page.locator(".u-step-list .u-step-header").nth(1).click();
+  await expect(page.locator(".u-step").nth(1)).toHaveClass(/\bu-step-active\b/);
+  await expect(separators.first()).toHaveCSS(
+    "background-color",
+    await resolved(page, "--u-stepper-separator-active-background", "background-color")
+  );
+  await expect(separators.nth(1)).toHaveCSS(
+    "background-color",
+    await resolved(page, "--u-stepper-separator-background", "background-color")
+  );
+
+  // Group 27 (vertical): once item 2 is active, item 1's separator uses the active colour.
+  await page.goto(storyUrl("vue-stepper--vertical"));
+  await page.locator(".u-step-item .u-step-header").nth(1).click();
+  await expect(page.locator(".u-step-item").nth(1)).toHaveClass(/\bu-step-item-active\b/);
+  await expect(page.locator(".u-step-item").first().locator(".u-stepper-separator")).toHaveCSS(
+    "background-color",
+    await resolved(page, "--u-stepper-separator-active-background", "background-color")
+  );
 });

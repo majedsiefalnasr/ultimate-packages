@@ -60,8 +60,9 @@ describe("USteps", () => {
     expect(listItems[1].getAttribute("aria-current")).toBeNull();
   });
 
-  // G3-C1 PX-C1: disabled items are no longer dimmed and no longer get `pointer-events: none`
-  // (upstream parity), so the click guard alone keeps them non-interactive (Spec §17).
+  // G3-C1 PX-C1: disabled items are not dimmed and keep `pointer-events: auto` (upstream parity;
+  // the pre-port rules never matched these items), so the click guard alone keeps them
+  // non-interactive (Spec §17).
   it("an explicitly disabled item stays non-interactive when not readonly", () => {
     let called = false;
     const model: UMenuItem[] = [

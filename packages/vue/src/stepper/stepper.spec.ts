@@ -309,7 +309,7 @@ describe("Stepper horizontal layout CSS (GAP-077)", () => {
     expect(rule(".u-step:last-of-type")).toBe("flex: initial;");
   });
 
-  it("leaves the global .u-step rule and the vertical rules unchanged", () => {
+  it("pins the global .u-step rule and the vertical override", () => {
     expect(rule(".u-step")).toBe(
       "position: relative; display: flex; flex: 1 1 auto; align-items: center; gap: dt('stepper.step.gap'); padding: dt('stepper.step.padding');"
     );

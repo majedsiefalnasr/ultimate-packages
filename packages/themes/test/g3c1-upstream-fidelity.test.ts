@@ -8,6 +8,7 @@ import {
   FIXTURE,
   FRAMEWORKS,
   KEYS,
+  MAPPING,
   OMITTED,
   REPO,
   RETAINED,
@@ -128,6 +129,11 @@ describe("G3-C1 upstream fixture and data model (Spec §8)", () => {
       const upstream = parseGroups(FIXTURE.modules.steps)[8];
       expect(norm(upstream.head)).toBe(".p-steps-item-link:not(.p-disabled):focus-visible");
       expect(bodyOf(group9.text)).toBe(bodyOf(norm(`${upstream.head}{${upstream.body}}`)));
+      // Exactly one mapping entry of kind "text" exists across all keys: the group 9 adaptation.
+      const textEntries = Object.values((MAPPING as Record<Fw, Record<string, unknown[][]>>)[fw])
+        .flat()
+        .filter((e) => e[0] === "text");
+      expect(textEntries, fw).toHaveLength(1);
     }
   });
 
