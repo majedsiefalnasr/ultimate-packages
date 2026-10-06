@@ -254,7 +254,7 @@ const CANDIDATE_KEY = {
   "R-M4": "panelmenu",
 };
 /** Gate outcome (Plan Task 7). Until then every candidate ships provisionally. */
-export const KEPT = ["R-M1", "R-M2", "R-M3", "R-M4"];
+export const KEPT = ["R-M1", "R-M3", "R-M4"];
 const RET = {};
 for (const id of KEPT) (RET[CANDIDATE_KEY[id]] ??= []).push(...CANDIDATES[id]);
 export const RETAINED = { ng: RET, vue: RET };

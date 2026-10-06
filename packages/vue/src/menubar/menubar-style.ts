@@ -34,7 +34,6 @@ const css = /*css*/ `
 .u-menubar-submenu .u-menubar-item{position: relative;}
 .u-menubar-submenu > .u-menubar-item-open > .u-menubar-submenu{display: block;left: 100%;top: 0;}
 .u-menubar .u-menubar-item-open > .u-menubar-submenu{display: flex;flex-direction: column;}
-.u-menubar-submenu{top: 100%;left: 0;}
 `;
 
 /** Params `UMenubarSub` passes into `cx('item', params)`. */

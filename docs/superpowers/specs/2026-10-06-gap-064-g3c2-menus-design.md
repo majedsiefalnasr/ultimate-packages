@@ -450,3 +450,12 @@ Found by the Plan self-review; a Spec and accounting correction only.
   - expanding an item renders its nested list (visible; `display: grid` at the top level);
   - collapsing the item removes the nested list from the DOM;
   - no `display: none` assertion on a rendered collapsed list.
+
+## 17. Gate results (Plan Task 7, 2026-10-06)
+
+Run on the ported CSS (commits a0ab161, af4dd8a), Chromium/Firefox/WebKit × Angular/Vue, local Storybooks. Raw data: `.superpowers/sdd/2026-10-06-gap-064-g3c2-menus/gates.json`.
+
+- **G-1 (R-M2):** dropped — user decision 2026-10-06: Spec §6.3 (ii) overrides the Plan's mechanical G-1 rule; with R-M2 the first-level submenu box is `[0,720,210,79]` (viewport bottom: no positioned ancestor, so `top: 100%` resolves against the viewport); without it `[29,57,210,79]`, the upstream static position, in all 6 combinations.
+- **G-2 (PX-M3):** passed — header-content background equals `panelmenu.item.focus.background` on Tab in all 6 combinations; disabled headers are not focusable. PX-M3 text unchanged (gate read after a 600 ms wait for the 0.2 s background transition; user decision 2026-10-06 after a first run read mid-transition in Chromium/WebKit).
+- **G-3:** R-M1 kept (kept per C-5; the evidence is a computed `display` difference only (flex vs block), with no box change, so condition (ii) is weak (user decision 2026-10-06)); R-M3 kept (`.u-tieredmenu` computes `inline-block` at 202×113 with it and `block` at 1248×113 without it, in all 6 combinations); R-M4 kept (the glyph computes `transform: matrix(0, 1, -1, 0, 0, 0)` with it and `transform: none` without it, in all 6 combinations, so no ported group already rotates the glyph).
+- **Final D5:** R-M1, R-M3, R-M4. `KEPT` in `g3c2-port.mjs` equals this list.
