@@ -459,3 +459,32 @@ Run on the ported CSS (commits a0ab161, af4dd8a), Chromium/Firefox/WebKit × Ang
 - **G-2 (PX-M3):** passed — header-content background equals `panelmenu.item.focus.background` on Tab in all 6 combinations; disabled headers are not focusable. PX-M3 text unchanged (gate read after a 600 ms wait for the 0.2 s background transition; user decision 2026-10-06 after a first run read mid-transition in Chromium/WebKit).
 - **G-3:** R-M1 kept (kept per C-5; the evidence is a computed `display` difference only (flex vs block), with no box change, so condition (ii) is weak (user decision 2026-10-06)); R-M3 kept (`.u-tieredmenu` computes `inline-block` at 202×113 with it and `block` at 1248×113 without it, in all 6 combinations); R-M4 kept (the glyph computes `transform: matrix(0, 1, -1, 0, 0, 0)` with it and `transform: none` without it, in all 6 combinations, so no ported group already rotates the glyph).
 - **Final D5:** R-M1, R-M3, R-M4. `KEPT` in `g3c2-port.mjs` equals this list.
+
+## 19. Amendment A2 — Task 10 review decisions and R-M5 (user-approved 2026-10-06)
+
+Found by the Task 10 visual review (`docs/superpowers/plans/2026-10-06-gap-064-g3c2-visual-review.md`).
+
+**U-1 and U-2 (port regressions, PanelMenu, both frameworks).** Ultimate renders the PanelMenu top-level list as `ul.u-panelmenu-submenu` (`role="tree"`) directly under the root, where upstream places its panels directly in `.p-panelmenu`.
+
+- U-1: the ported group 29 (`.u-panelmenu-item .u-panelmenu-submenu { …; list-style: none }`) resets nested lists only. The top-level list keeps the browser list styling (disc bullets, 40 px indent, 16 px top margin). The pre-port rule `.u-panelmenu-submenu { margin: 0; padding-left: …; list-style: none }` covered it.
+- U-2: the panels are `li` children of that list, so the ported `.u-panelmenu { display: flex; flex-direction: column; gap: dt('panelmenu.gap') }` never spaces them, and their borders touch.
+
+**Decision: add D5 candidate R-M5**, an Ultimate-only, CSS-only root-list layout rule. It restores the upstream root flex/column layout and gap on the existing DOM with the existing `panelmenu.gap` token:
+
+| Framework | R-M5                                                                                                                                                                    |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Angular   | `.u-panelmenu > u-panel-menu-list > .u-panelmenu-submenu { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: dt('panelmenu.gap'); }` |
+| Vue       | `.u-panelmenu > .u-panelmenu-submenu { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: dt('panelmenu.gap'); }`                     |
+
+- **Narrowest selector.** The child combinator from `.u-panelmenu` (through the Angular host `u-panel-menu-list`) matches only the top-level list. Nested lists are rendered conditionally inside an expanded `li.u-panelmenu-item` (§18 A1) and are never a child of the root, so R-M5 cannot target them.
+- No DOM, template, class, runtime or API change; no new token. R-M5 is D5, so it is emitted last (§8 order).
+- **Gate G-4 (root-list layout and gap).** With R-M5, in Chromium/Firefox/WebKit × Angular/Vue, the top-level list computes `list-style-type: none`, `margin` 0, `padding` 0, `display: flex`, `flex-direction: column`, and a `row-gap` equal to the resolved `panelmenu.gap`. The vertical distance between consecutive top-level panels equals that gap. No nested list matches the R-M5 selector, collapsed or expanded. Without R-M5 (neutralized), U-1/U-2 reappear. R-M5 is kept only if G-4 shows both §6.3 conditions; otherwise this amendment returns to the user.
+- **Re-verification.** PanelMenu verification is re-run: root-list layout and gap, expansion, collapse (nested list removed from the DOM), the accessibility differential, and regression against the approved non-PanelMenu states. The 24 PanelMenu screenshots are re-captured and stay unaccepted until a fresh user review passes.
+
+**Other Task 10 decisions.**
+
+- The 75 non-PanelMenu screenshots (63 expected token/structure changes, 12 F-3b corrections) are approved as baselines. R-M2 stays dropped (§17); the resulting 9 px Menubar/MegaMenu overlay overlap does not override that ruling.
+- The 16 introduced PanelMenu `region` fingerprints (ng 7, vue 9; exposed by the F-3a correction) are accepted as upstream Aura parity exceptions. They are recorded as rows in `docs/architecture/ACCESSIBILITY_BASELINE.md` following the established pattern, tagged `GAP-064 G3-C2 — upstream Aura parity exception (user-approved 2026-10-06)`. The row-level evidence stays in the review record. The G3-C2 validator is unchanged.
+- U-3 (MegaMenu disabled column item not dimmed; pre-existing, the column item never receives `u-megamenu-item-disabled`) is recorded as a new, separately authorized gap and is not fixed in G3-C2.
+
+No other scope expansion.
