@@ -1120,6 +1120,14 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Follow-ups (recorded at G3-C1 closeout, 2026-10-06; not implemented, not separate GAPs):**
   1. **Dock screenshots** do not evidence the port: the Aura container renders near-white on white, below tolerance. The Dock layout tests are authoritative. Open.
   2. **Accessibility-scan race:** one post-merge run hit "Axe is already running" in an Angular Dock scan (Firefox), which passed on retry. Open.
+- **Progress (2026-10-07, G3-C2 — complete on `feature/gap-064-g3c2-menus`, not merged or pushed; record `docs/architecture/research/2026-10-07-gap-064-g3c2-closeout.md`):**
+  - **Scope.** F2 Menus sub-tranche: tieredmenu, contextmenu, menubar, megamenu, panelmenu. That is 5 Angular and 5 Vue style modules, with the ADR-051 key renames at 14 sites (Angular 7, Vue 7).
+  - **Port.** Each module's `css` is now the applicable `@primeuix/styles` 2.0.3 structural CSS mapped to the existing DOM. Per framework, 109 of 177 upstream groups are ported and 68 omitted (Spec §20). It adds the disabled base role, runtime-role CSS (ADR-052 X-4), four retained Ultimate-only rules (R-M1, R-M3, R-M4, R-M5; R-M2 dropped), and `:has(:focus-visible)` keyboard-focus adaptations (PX-M3 and Spec §20). It corrects F-3a (PanelMenu rendered invisible) and F-3b (Angular TieredMenu/Menubar submenus never shown).
+  - **Visual baselines.** 105 accepted after user review: 75 at Task 10, 24 PanelMenu after R-M5, and 6 ContextMenu Global.
+  - **Accessibility.** 16 introduced PanelMenu `region` rows approved as upstream Aura parity exceptions.
+  - **Size.** Angular fesm2022 total +0.81%, Vue +1.51%.
+  - **Still open:** G3-D (F3 + F8) and G3-E (F6 + F7). GAP-064 stays PARTIAL.
+  - **New gaps registered at this closeout:** GAP-084, GAP-085, GAP-086. Accepted coverage gaps (no permanent test): the MegaMenu column grid, Menubar first-level submenu placement, PanelMenu re-expand, and disabled-parent hover.
 - **Expected state:** Per-component Aura preset modules for the ~83 components built since Phase 5's original 5-component proof set, enabling theme-level customization for them via the same `dt()`-based mechanism the original 5 already use.
 - **Why it matters:** The original 5-component scope boundary (Phase 5 Spec §108/§203/§245) was fully, explicitly disclosed at the time it was written — but it was never revisited or re-affirmed as Phase C's real component count grew roughly 15x beyond that original proof set. This gap registers that unrevisited extension, not the original (still-valid) boundary.
 - **What it blocks:** Nothing further downstream.
@@ -1447,6 +1455,63 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** GAP-082 final whole-branch review (2026-10-04); `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`; ADR-042.
 - **Architectural decision required:** Yes — the supported Vue floor vs declaration compatibility.
 
+#### GAP-084 — Vue TieredMenu, Menubar and MegaMenu never show the open state for a plain, non-reactive `model` array
+
+- **Status:** OPEN (registered 2026-10-07 at the GAP-064 G3-C2 closeout; pre-existing, not introduced by G3-C2)
+- **Type:** Framework behavior (Vue), Component correctness
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found by the G3-C2 Task 6 runtime spec (jsdom).
+  - Each sub-menu stores the hovered item in reactive component data (`this.openItem = item`). It then compares the stored reactive proxy with the raw item: `isOpen(item) { return this.openItem === item; }` (`packages/vue/src/tiered-menu/TieredMenuSub.vue:118`, `packages/vue/src/menubar/MenubarSub.vue:107`, `packages/vue/src/mega-menu/MegaMenu.vue:128`).
+  - When `model` is a plain array, so its items are raw objects, the comparison is never true, and the open class and submenu never appear.
+  - With `reactive([...])` (as a `ref([...])` consumer passes) the open state works. This is why Storybook stories and the existing component specs do not show it.
+  - Not yet established: a reproduction in a real consumer application.
+- **Expected state:** Hover and click open the item for any `model` array, reactive or not.
+- **Why it matters:** A consumer passing a constant item array gets a menu whose submenus never open.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Vue only.
+- **Existing reusable infrastructure:** The G3-C2 runtime spec (`packages/vue/src/g3c2-aura-styles.spec.ts`) already mounts these components and can pin the fix.
+- **Recommended resolution direction:** Directional only, for example comparing with `toRaw` or by a stable key.
+- **Source/evidence:** G3-C2 Task 6 report and user decision (2026-10-06); `docs/architecture/research/2026-10-07-gap-064-g3c2-closeout.md`.
+- **Architectural decision required:** No.
+
+#### GAP-085 — Disabled MegaMenu column items are not dimmed
+
+- **Status:** OPEN (registered 2026-10-07 at the GAP-064 G3-C2 closeout; pre-existing, not introduced by G3-C2)
+- **Type:** Component correctness, Visual
+- **Blocking level:** LOW
+- **Current evidence:** Found by the G3-C2 Task 10 visual review (U-3).
+  - The disabled item "Item A2" in a MegaMenu column is not dimmed in either framework. Column items render `aria-disabled` and `tabindex="-1"` (`packages/ng/src/mega-menu/mega-menu-column.ts:45-46`, `packages/vue/src/mega-menu/MegaMenuColumnGroup.vue:12`), but never receive the `u-megamenu-item-disabled` class that the D3 disabled role targets.
+  - Root-level disabled items are dimmed correctly.
+- **Expected state:** Disabled column items carry the disabled class and are dimmed like root items.
+- **Why it matters:** Disabled column items look enabled.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None.
+- **Framework scope:** Angular, Vue.
+- **Existing reusable infrastructure:** The G3-C2 `ItemStates` story and x3b layout tests.
+- **Recommended resolution direction:** Directional only: emit the disabled class on column items.
+- **Source/evidence:** `docs/superpowers/plans/2026-10-06-gap-064-g3c2-visual-review.md` (U-3); G3-C2 Spec §19.
+- **Architectural decision required:** No.
+
+#### GAP-086 — ContextMenu has no keyboard navigation
+
+- **Status:** OPEN (registered 2026-10-07 at the GAP-064 G3-C2 closeout; pre-existing, not introduced by G3-C2)
+- **Type:** Accessibility, Component behavior
+- **Blocking level:** MEDIUM
+- **Current evidence:** Found while implementing the G3-C2 Spec §20 keyboard-focus test.
+  - ContextMenu item links are `tabindex="-1"` (`packages/ng/src/context-menu/context-menu.ts:85`, `packages/vue/src/context-menu/ContextMenu.vue:21`), and the menu has no key handler.
+  - In a real browser, neither Tab nor the arrow keys focus an item or set the focused class, so the menu can only be operated with a pointer.
+  - Upstream ContextMenu supports keyboard navigation.
+- **Expected state:** Keyboard users can move through, activate and close ContextMenu items, with the focused-item styling.
+- **Why it matters:** WCAG 2.1.1 (keyboard).
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Related: GAP-064 G3-C2 (focused-item CSS already ported).
+- **Framework scope:** Angular, Vue.
+- **Existing reusable infrastructure:** The focused-class emission (`u-contextmenu-item-focused`) and its ported styling.
+- **Recommended resolution direction:** Directional only. A runtime change, which needs its own Spec.
+- **Source/evidence:** G3-C2 final-review fix report and user decision (2026-10-06); `docs/architecture/research/2026-10-07-gap-064-g3c2-closeout.md`.
+- **Architectural decision required:** No.
+
 ---
 
 ## 4. Resolved gaps
@@ -1653,7 +1718,7 @@ The great majority of gaps in this registry can be started without waiting on an
 
 ### Open Architectural Decisions
 
-The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`. The Prime-parity follow-up phase (`feature/prime-parity-followup`, closeout 2026-10-03) resolved GAP-071–GAP-073, GAP-075–GAP-077, GAP-079 (declaration resolvability only) and GAP-080, and registered GAP-082 (typed Vue props); GAP-064 stays PARTIAL and GAP-074, GAP-078 and GAP-081 remain open with approved designs. Record: `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`. The approved-designs phase (`feature/prime-parity-approved-designs`, closeout 2026-10-03) resolved GAP-074, GAP-078 and GAP-081; GAP-064 (PARTIAL) and GAP-082 remain open. Record: `docs/architecture/research/2026-10-03-prime-parity-approved-designs-closeout.md`. GAP-082 (typed Vue props) was resolved on `feature/gap-082-typed-vue-props` (closeout 2026-10-04), which registered GAP-083 (Vue 3.5.0 declaration compatibility, pre-existing). GAP-083 was resolved on `feature/gap-083-vue-floor-compat` (closeout 2026-10-04) by raising the Vue floor to `^3.5.2` (ADR-050). Record: `docs/architecture/research/2026-10-04-gap-083-vue-floor-closeout.md`. Record: `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`. GAP-064 Tranche 1 (Aura key wiring: upstream style keys, Vue InputNumber additional preset key, `badge`/`inputgroup`/`paginator` modules) was completed on `feature/gap-064-aura-token-wiring` (closeout 2026-10-04, ADR-051); GAP-064 stays PARTIAL with G3 (46 Angular / 48 Vue hand-written-CSS components) open. Record: `docs/architecture/research/2026-10-04-gap-064-tranche-1-closeout.md`. GAP-064 G3-B (F1 Containers & Panels, 10 Angular / 10 Vue) was completed on `feature/gap-064-g3b-containers` (closeout 2026-10-05) and merged to local `main` `f008a73`. GAP-064 stays PARTIAL with G3-C..E open, and three story follow-ups (U1, U2, Vue BlockUI) are recorded. Record: `docs/architecture/research/2026-10-05-gap-064-g3b-closeout.md`. GAP-064 G3-C1 (F2 Navigation: breadcrumb, dock, steps, stepper, tabs, 5 Angular / 5 Vue) was completed on `feature/gap-064-g3c-menus-navigation` (closeout 2026-10-06) and merged to local `main` `3cf9b4b`. GAP-064 stays PARTIAL with G3-C2 (Menus), G3-D and G3-E open. Record: `docs/architecture/research/2026-10-06-gap-064-g3c1-closeout.md`.
+The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`. The Prime-parity follow-up phase (`feature/prime-parity-followup`, closeout 2026-10-03) resolved GAP-071–GAP-073, GAP-075–GAP-077, GAP-079 (declaration resolvability only) and GAP-080, and registered GAP-082 (typed Vue props); GAP-064 stays PARTIAL and GAP-074, GAP-078 and GAP-081 remain open with approved designs. Record: `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`. The approved-designs phase (`feature/prime-parity-approved-designs`, closeout 2026-10-03) resolved GAP-074, GAP-078 and GAP-081; GAP-064 (PARTIAL) and GAP-082 remain open. Record: `docs/architecture/research/2026-10-03-prime-parity-approved-designs-closeout.md`. GAP-082 (typed Vue props) was resolved on `feature/gap-082-typed-vue-props` (closeout 2026-10-04), which registered GAP-083 (Vue 3.5.0 declaration compatibility, pre-existing). GAP-083 was resolved on `feature/gap-083-vue-floor-compat` (closeout 2026-10-04) by raising the Vue floor to `^3.5.2` (ADR-050). Record: `docs/architecture/research/2026-10-04-gap-083-vue-floor-closeout.md`. Record: `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`. GAP-064 Tranche 1 (Aura key wiring: upstream style keys, Vue InputNumber additional preset key, `badge`/`inputgroup`/`paginator` modules) was completed on `feature/gap-064-aura-token-wiring` (closeout 2026-10-04, ADR-051); GAP-064 stays PARTIAL with G3 (46 Angular / 48 Vue hand-written-CSS components) open. Record: `docs/architecture/research/2026-10-04-gap-064-tranche-1-closeout.md`. GAP-064 G3-B (F1 Containers & Panels, 10 Angular / 10 Vue) was completed on `feature/gap-064-g3b-containers` (closeout 2026-10-05) and merged to local `main` `f008a73`. GAP-064 stays PARTIAL with G3-C..E open, and three story follow-ups (U1, U2, Vue BlockUI) are recorded. Record: `docs/architecture/research/2026-10-05-gap-064-g3b-closeout.md`. GAP-064 G3-C1 (F2 Navigation: breadcrumb, dock, steps, stepper, tabs, 5 Angular / 5 Vue) was completed on `feature/gap-064-g3c-menus-navigation` (closeout 2026-10-06) and merged to local `main` `3cf9b4b`. GAP-064 stays PARTIAL with G3-C2 (Menus), G3-D and G3-E open. Record: `docs/architecture/research/2026-10-06-gap-064-g3c1-closeout.md`. GAP-064 G3-C2 (F2 Menus: tieredmenu, contextmenu, menubar, megamenu, panelmenu, 5 Angular / 5 Vue) was completed on `feature/gap-064-g3c2-menus` (closeout 2026-10-07; not merged or pushed). GAP-064 stays PARTIAL with G3-D and G3-E open, and GAP-084–GAP-086 were registered. Record: `docs/architecture/research/2026-10-07-gap-064-g3c2-closeout.md`.
 
 Five were open (§5) at the 2026-10-01 closeout; DECISION-F was decided on 2026-10-02 (Option 1), leaving four: external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower still — Table's own composition question is substantially answered by real implementation, OrderList/PickList/DataView's relationship to it is resolved (2026-09-21, no new foundation required), and Table's own fuller filter-operator vocabulary is resolved (2026-09-23, all 18 `FilterMatchMode` values dispatched in all 3 frameworks); the remainder is TreeTable specifically, gated on the separate DECISION-D), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), and package-naming finalization (DECISION-E, correctly deferred to pre-1.0). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
 
