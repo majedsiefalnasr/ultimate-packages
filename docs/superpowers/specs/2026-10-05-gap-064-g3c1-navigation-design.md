@@ -321,3 +321,19 @@ Task 6 stopped on the Plan stop rule "an existing spec asserts a removed literal
 - **PX-C1 is two explicit contracts.** _Visual parity:_ disabled Steps items are not dimmed (`opacity: 1`). _Interaction parity:_ disabled Steps items stay non-interactive. Since upstream group 4 restores `pointer-events: auto`, clicks now reach the link, and only the existing click guard (`onItemClick`: readonly or `item.disabled` → `preventDefault`, no `select`/`onSelect`, no `command`) blocks them. A click on a disabled item must not change the active step (`aria-current`) or navigate. This is pinned by unit tests in both frameworks and a real-pointer browser check. No new JS behaviour.
 
 Verified 2026-10-06 on Storybooks built from the ported CSS, in Chromium, Firefox and WebKit × ng/vue (6/6): the disabled link has `pointer-events: auto`, `opacity: 1`. A forced real click leaves `aria-current` on the active item and the URL unchanged. The vertical header's left edge equals its step's left edge plus padding (Δ = 0), with exactly one panel visible. Test-only amendment; no CSS, component, story, baseline or CI change.
+
+## 18. Errata (2026-10-06, final review)
+
+Append-only corrections found by the final whole-branch review. No decision text above is edited and no decision changes. No CSS, component, story, baseline or CI change.
+
+**E1 — Angular size metric (§11, Plan Global Constraints "Size (C8)").** §11 names `index.mjs` gzip as authoritative. For Angular that file (`packages/ng/dist/fesm2022/ultimate-ng.mjs`) is the package barrel and excludes the component style modules, which ng-packagr emits as secondary entries; it is blind to G3-C1. The corrected authoritative Angular size metric is the sum of per-file gzip of all `packages/ng/dist/fesm2022/*.mjs`: **320743 B → 323162 B, +0.75%, within the 15% gate.** Vue is unchanged: `packages/vue/dist/index.mjs`, +1.24%. The five C1 entries individually (information; the gate is per package): Breadcrumb +10.3%, Dock +2.7%, Stepper +19.2%, Steps +18.1%, Tabs +13.4%. Status: **pending user acknowledgement at closeout.**
+
+**E2 — Pre-port disabled-state facts (no decision changes).** Verified at `2c8ef45`: `data-u-disabled` is emitted only on the Breadcrumb link (`<a>`), the Stepper `u-step` and the Tab (`u-tab`). Dock and Steps items never carry it. Consequently the old Dock (`opacity: 0.5`) and Steps (`opacity: 0.6`, `pointer-events: none`) dimming rules never matched, Breadcrumb's rule (attribute on the link, selector on the item) never matched either, and Tabs and the Stepper (step header only) were dimmed at 0.6. Statements affected:
+
+- §3.2 "(plus `data-u-disabled` attributes)": only Breadcrumb (link), Stepper (`u-step`) and Tabs (`u-tab`) emit it; Dock and Steps items do not.
+- §6.1 PX-C1 "today `opacity: 0.6`": the old Steps rule never matched, so disabled Steps items were already undimmed.
+- §6.1 / §15 SR-C1-4 and §14.4 "today 0.5": the old Dock rule never matched, so Dock disabled items were already undimmed; the `disabled.opacity` change from D3 is the first dimming they receive.
+- §6.4 Dock `[data-u-disabled]` row: inert, like the Breadcrumb row.
+- §17 "clicks now reach the link": clicks always reached the link, because the old `pointer-events: none` rule never matched; the click guard was always the only protection.
+
+Consequence: the PX-C1 and SR-C1-4 decisions stand. The visible pre/post difference is: Breadcrumb and Dock disabled items are now dimmed; Steps disabled items were and remain undimmed.
