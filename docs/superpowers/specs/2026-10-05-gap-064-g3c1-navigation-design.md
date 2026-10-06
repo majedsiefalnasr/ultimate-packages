@@ -337,3 +337,12 @@ Append-only corrections found by the final whole-branch review. No decision text
 - §17 "clicks now reach the link": clicks always reached the link, because the old `pointer-events: none` rule never matched; the click guard was always the only protection.
 
 Consequence: the PX-C1 and SR-C1-4 decisions stand. The visible pre/post difference is: Breadcrumb and Dock disabled items are now dimmed; Steps disabled items were and remain undimmed.
+
+**E3 — Angular Stepper separator groups have no runtime reach (fidelity-accounting correction; user-approved 2026-10-06).** Found by the cross-tranche selector-reach audit (`docs/architecture/research/2026-10-06-gap-064-cross-tranche-study.md` §2, finding F-1).
+
+- **Fact.** Angular `UStep` and `UStepItem` render no separator element. `UStepperSeparator` is exported but never placed by the component, and `UStep`'s only projection slot sits inside the step title. In every Angular Stepper story, before and after activating step 2, `.u-stepper-separator` matches 0 elements.
+- **Affected groups (§5.4).** 14 `.p-step:has(~ .p-step-active) .p-stepper-separator`, 15 `.p-stepper-separator`, 25 `.p-stepitem .p-stepper-separator`, 26 `.p-stepitem .p-stepper-separator:dir(rtl)` and 27 `.p-stepitem:has(~ .p-stepitem-active) .p-stepper-separator` are marked "✓" for Angular. They ship in the Angular CSS but have **no runtime reach**.
+- **Corrected accounting.** Angular: **74 effective groups + 5 dead groups** of the 79 shipped (11 omitted, unchanged), instead of 79 effective. Vue is unchanged: **81 effective, 9 omitted** (the separators render, and group 14 was verified after activating step 2).
+- **Classification.** A fidelity-accounting correction, not a runtime defect: the dead rules match nothing and change no behaviour.
+- **Unchanged by E3.** The Angular CSS, `packages/themes/test/utils/g3c1-port.mjs`, the fidelity data and counts (the five groups stay in D1, because the fidelity test requires the data to equal the shipped CSS), `docs/architecture/provenance/ng.json` and the tests. Removing the five groups from the Angular CSS and moving them to D2 is a separate implementation decision.
+- **Related, pre-existing and unchanged.** "Angular renders no Stepper separators" (§12) remains a pre-existing feature gap outside G3-C1.
