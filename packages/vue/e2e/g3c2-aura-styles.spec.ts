@@ -174,6 +174,8 @@ for (const o of OPEN) {
 /** Spec §9.2 / §20: ContextMenu Global story, right-click at fixed coordinates (as the C2-0 spec), pointer parked (X-6). */
 test("Vue/ContextMenu Global open G3-C2 open", async ({ page }) => {
   await go(page, "vue-contextmenu--global");
+  // Global renders no DOM of its own; Storybook marks the story shown once it has mounted (listener bound).
+  await expect(page.locator("body.sb-show-main")).toBeAttached();
   await page.mouse.click(300, 200, { button: "right" });
   await page.mouse.move(0, 0); // X-6: park the pointer so no item shows hover residue
   await expect(page.locator(".u-contextmenu")).toBeVisible();
