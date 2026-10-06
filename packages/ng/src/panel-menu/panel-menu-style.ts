@@ -38,6 +38,7 @@ const css = /*css*/ `
 .u-panelmenu-item:not(.u-panelmenu-item .u-panelmenu-item) > u-panel-menu-list > .u-panelmenu-submenu{min-height: 0;}
 .u-panelmenu-submenu-icon{transition: transform 0.2s;}
 .u-panelmenu-item-expanded > .u-panelmenu-header-content .u-panelmenu-submenu-icon{transform: rotate(90deg);}
+.u-panelmenu > u-panel-menu-list > .u-panelmenu-submenu{margin: 0;padding: 0;list-style: none;display: flex;flex-direction: column;gap: dt('panelmenu.gap');}
 `;
 
 /** Params `UPanelMenu` passes into `cx('item', params)`. */

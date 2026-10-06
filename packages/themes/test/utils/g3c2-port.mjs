@@ -237,8 +237,8 @@ export const RUNTIME_ROLE = {
   vue: RUNTIME({ tm: "", mb: "" }),
 };
 
-/** D5 candidates — Spec §6.3 (R-M1..R-M4), exact text. RETAINED is the gate-approved subset (Plan Task 7). */
-export const CANDIDATES = {
+/** D5 candidates — Spec §6.3 (R-M1..R-M4) and §19 (R-M5), exact text. KEPT is the gate-approved subset. */
+const CANDIDATE_RULES = (h) => ({
   "R-M1": [".u-megamenu-column { display: flex; flex-direction: column; }"],
   "R-M2": [".u-menubar-submenu { top: 100%; left: 0; }"],
   "R-M3": [".u-tieredmenu { display: inline-block; }"],
@@ -246,18 +246,36 @@ export const CANDIDATES = {
     ".u-panelmenu-submenu-icon { transition: transform 0.2s; }",
     ".u-panelmenu-item-expanded > .u-panelmenu-header-content .u-panelmenu-submenu-icon { transform: rotate(90deg); }",
   ],
+  "R-M5": [
+    `.u-panelmenu > ${h.pm}.u-panelmenu-submenu { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: dt('panelmenu.gap'); }`,
+  ],
+});
+const FW_CANDIDATES = {
+  ng: CANDIDATE_RULES({ pm: "u-panel-menu-list > " }),
+  vue: CANDIDATE_RULES({ pm: "" }),
 };
+/** Framework-neutral view: every candidate text of either framework (allow-list for the D5 test). */
+export const CANDIDATES = Object.fromEntries(
+  Object.keys(FW_CANDIDATES.vue).map((id) => [
+    id,
+    [...new Set([...FW_CANDIDATES.ng[id], ...FW_CANDIDATES.vue[id]])],
+  ])
+);
 const CANDIDATE_KEY = {
   "R-M1": "megamenu",
   "R-M2": "menubar",
   "R-M3": "tieredmenu",
   "R-M4": "panelmenu",
+  "R-M5": "panelmenu",
 };
-/** Gate outcome (Plan Task 7). Until then every candidate ships provisionally. */
-export const KEPT = ["R-M1", "R-M3", "R-M4"];
-const RET = {};
-for (const id of KEPT) (RET[CANDIDATE_KEY[id]] ??= []).push(...CANDIDATES[id]);
-export const RETAINED = { ng: RET, vue: RET };
+/** Gate outcome (Plan Task 7; Spec §17, §19.1). */
+export const KEPT = ["R-M1", "R-M3", "R-M4", "R-M5"];
+const retained = (fw) => {
+  const out = {};
+  for (const id of KEPT) (out[CANDIDATE_KEY[id]] ??= []).push(...FW_CANDIDATES[fw][id]);
+  return out;
+};
+export const RETAINED = { ng: retained("ng"), vue: retained("vue") };
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const token = (from) => new RegExp(`${escape(from)}(?![a-z0-9-])`, "g");

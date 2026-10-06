@@ -334,6 +334,39 @@ test("Ng/PanelMenu render, expand and collapse (F-3a, Spec §18 A1) G3-C2 layout
   await expect(childList(files)).toHaveCount(0); // collapsing removes the nested list from the DOM
 });
 
+test("Ng/PanelMenu root list layout and gap (R-M5, G-4) G3-C2 layout", async ({ page }) => {
+  await go(page, "ng-panelmenu--item-states");
+  await expect(page.locator(".u-panelmenu-header-link").first()).toBeVisible(); // story mounted
+  const rootList = page.locator(".u-panelmenu > u-panel-menu-list > .u-panelmenu-submenu");
+  await expect(rootList).toHaveCount(1);
+  expect(await css(rootList, "list-style-type")).toBe("none");
+  for (const p of ["margin-top", "margin-left", "padding-top", "padding-left"])
+    expect(await css(rootList, p), p).toBe("0px");
+  expect(await css(rootList, "display")).toBe("flex");
+  expect(await css(rootList, "flex-direction")).toBe("column");
+  const gap = await resolved(page, "--u-panelmenu-gap", "row-gap");
+  expect(await css(rootList, "row-gap")).toBe(gap);
+  const panels = rootList.locator(":scope > li.u-panelmenu-item");
+  const first = await box(panels.nth(0));
+  const second = await box(panels.nth(1));
+  expect(
+    Math.abs(second.y - (first.y + first.height) - Number.parseFloat(gap))
+  ).toBeLessThanOrEqual(1);
+  // Nested lists exist once expanded, but the root-list selector never matches them.
+  await scenario(page, "panelmenu", "expanded");
+  await expect(rootList).toHaveCount(1);
+  const nested = page.locator(".u-panelmenu-item .u-panelmenu-submenu");
+  expect(await nested.count()).toBeGreaterThanOrEqual(1);
+  // Collapse: the nested list leaves the DOM and the root-list selector still matches exactly one element.
+  const nestedBefore = await nested.count();
+  await page
+    .locator(".u-panelmenu-item-expanded > .u-panelmenu-header-content .u-panelmenu-header-link")
+    .first()
+    .click();
+  await expect.poll(() => nested.count()).toBeLessThan(nestedBefore);
+  await expect(rootList).toHaveCount(1);
+});
+
 const X3B: ReadonlyArray<{
   key: string;
   story: string;
