@@ -375,3 +375,37 @@ Unrelated CI debt is not fixed under this rule. Any change to the named pre-exis
 ### Execution boundary
 
 Not authorized by this gate: the C2 Spec or Plan, a C2 implementation branch, parity CSS changes, removal of the five Angular Stepper dead groups, E3 tooling or fidelity-data changes, and unrelated CI debt. Next: the C2-0 Spec and Plan. The C2 parity Spec begins only after the C2-0 scope and its evidence are settled.
+
+## 11. Amendments from the C2-0 Spec Review (2026-10-06, user)
+
+Append-only. These amend §10 where stated; nothing else in §10 changes.
+
+### X-12 correction — provenance evidence
+
+**Fact.** `scripts/provenance/validate-provenance.mjs` calls `process.exit(1)` on the first source file without a manifest entry. At `95f3c65`, 362 Angular and 473 Vue source files have no entry; `packages/ng/src/accordion/accordion.spec.ts` is only the first one the validator reaches. Its output cannot establish completeness for any file.
+
+**Corrected X-12 provenance clause** (replaces "Provenance validation reports no FAIL beyond the named pre-existing one" in §10 X-12):
+
+1. **Repository-wide provenance validation** (`provenance:validate`) is classified as **pre-existing debt**. It is red, it is expected to stay red, and its output is not tranche evidence. The tranche does not fix the validator or the missing entries.
+2. **Tranche-level changed-file provenance completeness** is the authoritative provenance evidence: every source file the tranche changes has a matching `ultimateDestination` entry in `docs/architecture/provenance/{ng,vue}.json`. It is verified directly over the tranche's changed-file list (relative to the tranche's branch point) and recorded at closeout.
+
+The repository-wide validator is never claimed to establish completeness.
+
+### Pre-existing defect recorded (separate decision, Angular + Vue together)
+
+**TieredMenu popup mode has no positioning, in Angular or Vue.**
+
+- `toggle()` and `show()` take no event.
+- `.u-tieredmenu-overlay { top: -9999px; left: -9999px }` is only an off-screen initial CSS position; no anchoring logic exists.
+- Verified: after `toggle()`, the Angular popup renders at (−9999, −9999) in Chromium, Firefox and WebKit.
+- A story-only trigger cannot make the popup visibly positioned.
+
+Removed from C2-0 (OI-1 = (b)). Not implemented. A future decision treats both frameworks together.
+
+### Known divergence recorded (follow-up)
+
+**Angular ContextMenu placement is not scroll-aware.** PrimeNG 21.1.9's flip/fit uses `document.scrollingElement` scroll offsets. Ultimate compares `pageX`/`pageY` with `innerWidth`/`innerHeight` and clamps at 0. C2-0 is timing-only (OI-2) and keeps Ultimate's algorithm unchanged.
+
+### G3-C research factual correction (OI-4)
+
+The G3-C research statement (`2026-10-05-gap-064-g3c-menus-navigation-research.md` §3.1) that Ultimate positions the TieredMenu popup in JavaScript is false for both Angular and Vue. The current implementation uses the off-screen CSS position and contains no popup anchoring logic. Documentation correction only.
