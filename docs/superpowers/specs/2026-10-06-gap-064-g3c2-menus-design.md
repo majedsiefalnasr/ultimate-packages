@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-06
 **Branch:** `feature/gap-064-g3c2-menus` (from `main` `3d0203d`)
-**Status:** **Approved** (user, 2026-10-06). Spec Review decisions OI-1..OI-4 are recorded in §16. Implementation needs an approved Plan.
+**Status:** **Approved** (user, 2026-10-06), **amended by A1 (PR-7, §18)**. Spec Review decisions OI-1..OI-4 are recorded in §16. Implementation needs an approved Plan.
 **Governing records:**
 
 - ADR-052 (normative: X-1, X-2, X-3, X-3b, X-4, X-6, X-12), ADR-051, D-G3-1..9.
@@ -19,7 +19,7 @@ In scope:
 
 1. **Fidelity port:** 100 of 177 upstream rule groups per framework (D1), with 77 recorded omissions (D2). See §5.
 2. **Style-key renames (ADR-051, C-11):** 11 sites (§3.1).
-3. **Runtime-role CSS (ADR-052 X-4, C-4):** roles 1, 1b, 2, 3 and 4 (§6.2). No new JavaScript or runtime state.
+3. **Runtime-role CSS (ADR-052 X-4, C-4):** roles 1, 2, 3 and 4 (§6.2). Role 1b is excluded under X-1 (§18 A1). No new JavaScript or runtime state.
 4. **Pre-existing defect corrections, kept separate from the fidelity port (§7):** F-3a (PanelMenu renders nothing) and F-3b (Angular TieredMenu/Menubar submenus never show).
 5. **Verification:** verification-only stories (D-C2-6), screenshots, layout and computed-style checks, the X-1 reach test, a G3-C2 differential accessibility validator, and the retry-aware evidence rule (§9).
 6. **Provenance, `MIGRATION.md` and the size gate.**
@@ -184,16 +184,17 @@ This applies to `<key>` ∈ {tieredmenu, contextmenu, menubar, megamenu, panelme
 
 ### 6.2 D4 — runtime-role CSS (ADR-052 X-4, C-4; exact text)
 
-Upstream applies roles 1 and 1b as **inline styles**, which beat every stylesheet rule. Their CSS form is therefore placed **after D1**, with specificity at least that of the D1 rule it must override. §8 gives the order.
+Upstream applies role 1 as **inline styles**, which beat every stylesheet rule. Its CSS form is therefore placed **after D1**, with specificity at least that of the D1 rule it must override. §8 gives the order.
 
-| Role                                 | Rule (Vue form; the Angular form inserts the host shown in brackets)                                                             | Overrides / reason                                                                                                                                           |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1 TieredMenu visibility              | `.u-tieredmenu-item:not(.u-tieredmenu-item-open) > [u-tiered-menu-sub >] .u-tieredmenu-submenu { display: none; }`               | Group 2 (`display: flex`, 0,1,0). An open submenu keeps group 2's `display: flex; flex-direction: column`.                                                   |
-| 1 Menubar visibility                 | `.u-menubar .u-menubar-item-open > [u-menubar-sub >] .u-menubar-submenu { display: flex; flex-direction: column; }`              | Group 22 (`display: none`) and group 25 (`display: block`, 0,3,0). Equal or higher specificity plus later order reproduce upstream's inline `display: flex`. |
-| 1b PanelMenu visibility              | `.u-panelmenu .u-panelmenu-item:not(.u-panelmenu-item-expanded) > [u-panel-menu-list >] .u-panelmenu-submenu { display: none; }` | Group 28 mapped (`display: grid`, 0,4,0). Upstream's `v-show`; the `p-collapsible` transition is excluded (PX-M4).                                           |
-| 2 TieredMenu popup initial placement | `.u-tieredmenu-overlay { position: absolute; top: -9999px; left: -9999px; }`                                                     | C-4 role 2. Anchoring and `minWidth` are excluded (PX-M2).                                                                                                   |
-| 3 ContextMenu root                   | `.u-contextmenu { position: absolute; }`                                                                                         | PrimeNG `inlineStyles.root`. JavaScript positioning comes from C2-0 and is unchanged.                                                                        |
-| 4 TieredMenu nested placement        | `.u-tieredmenu-submenu { inset-inline-start: 100%; top: 0; }`                                                                    | `nestedPosition()` default result (D-C2-3). The overflow flip is excluded (PX-M1).                                                                           |
+Role 1b (PanelMenu collapsed-list visibility) is **excluded under ADR-052 X-1** (§18, Amendment A1, PR-7).
+
+| Role                                 | Rule (Vue form; the Angular form inserts the host shown in brackets)                                                | Overrides / reason                                                                                                                                           |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1 TieredMenu visibility              | `.u-tieredmenu-item:not(.u-tieredmenu-item-open) > [u-tiered-menu-sub >] .u-tieredmenu-submenu { display: none; }`  | Group 2 (`display: flex`, 0,1,0). An open submenu keeps group 2's `display: flex; flex-direction: column`.                                                   |
+| 1 Menubar visibility                 | `.u-menubar .u-menubar-item-open > [u-menubar-sub >] .u-menubar-submenu { display: flex; flex-direction: column; }` | Group 22 (`display: none`) and group 25 (`display: block`, 0,3,0). Equal or higher specificity plus later order reproduce upstream's inline `display: flex`. |
+| 2 TieredMenu popup initial placement | `.u-tieredmenu-overlay { position: absolute; top: -9999px; left: -9999px; }`                                        | C-4 role 2. Anchoring and `minWidth` are excluded (PX-M2).                                                                                                   |
+| 3 ContextMenu root                   | `.u-contextmenu { position: absolute; }`                                                                            | PrimeNG `inlineStyles.root`. JavaScript positioning comes from C2-0 and is unchanged.                                                                        |
+| 4 TieredMenu nested placement        | `.u-tieredmenu-submenu { inset-inline-start: 100%; top: 0; }`                                                       | `nestedPosition()` default result (D-C2-3). The overflow flip is excluded (PX-M1).                                                                           |
 
 **PX list (recorded parity exceptions):**
 
@@ -226,17 +227,17 @@ None is approved as retained until its gate evidence (§8) shows both conditions
 | `[data-u-disabled="true"] .<key>-item-link { cursor; pointer-events; opacity: 0.6 }` (all five) | Replaced by D3 (`disabled.opacity` 0.6 on the item).                                                                                                                      |
 | `[data-u-open="true"] > .<key>-submenu/-overlay { display: block }`                             | Replaced by D4 role 1 (class-based, host-aware) and MegaMenu group 22.                                                                                                    |
 | `.u-<key>-submenu { …; display: none; min-width: 12rem; … }` literals                           | Replaced by D1 groups and D4.                                                                                                                                             |
-| `.u-panelmenu-submenu { padding-left: 1.25rem; display: none }`                                 | Replaced by group 17 (`panelmenu.submenu.indent`) and D4 role 1b; corrects F-3a.                                                                                          |
+| `.u-panelmenu-submenu { padding-left: 1.25rem; display: none }`                                 | Replaced by group 17 (`panelmenu.submenu.indent`); removing it corrects F-3a (§7, §18 A1).                                                                                |
 | `.u-panelmenu-panel + .u-panelmenu-panel { margin-top: 2px }`                                   | Dead: `u-panelmenu-panel` is never emitted (RC-3).                                                                                                                        |
 | `.u-contextmenu { top: 0; left: 0 }`                                                            | **Dropped** (OI-2). C2-0 positions the menu after render and before paint, and the upstream runtime role needs only `position: absolute` (D4 role 3). Not a D5 candidate. |
 | Layout literals (`display: flex; align-items: center; gap: 0.5rem`, …)                          | Replaced by the corresponding D1 groups.                                                                                                                                  |
 
 ## 7. Pre-existing defect corrections (separate from the fidelity port)
 
-| ID   | Defect (verified)                                                                                                                            | Correction                                                                                           | Evidence required                                                                                       |
-| ---- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| F-3a | PanelMenu renders nothing in either framework: the root list `ul.u-panelmenu-submenu` is hidden by `.u-panelmenu-submenu { display: none }`. | D4 role 1b hides only lists under a collapsed item; the root list (not under an item) stays visible. | Before: `.u-panelmenu` 0 px tall. After: top-level items visible (non-zero box) in both frameworks.     |
-| F-3b | Angular TieredMenu/Menubar submenus never become visible: the host between `li` and `ul` defeats `item[data-u-open="true"] > submenu`.       | D4 role 1 host-aware selectors (ADR-052 X-4 role 5).                                                 | Before: Angular open submenu `display: none`, 0×0. After: `display: flex`, non-zero box, three engines. |
+| ID   | Defect (verified)                                                                                                                            | Correction                                                                                                                                                                                                                  | Evidence required                                                                                       |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| F-3a | PanelMenu renders nothing in either framework: the root list `ul.u-panelmenu-submenu` is hidden by `.u-panelmenu-submenu { display: none }`. | The port removes the old `.u-panelmenu-submenu { display: none }` rule (§6.4), so the root list renders. Nested lists are rendered only while their item is expanded (both frameworks), so no hide rule is needed (§18 A1). | Before: `.u-panelmenu` 0 px tall. After: top-level items visible (non-zero box) in both frameworks.     |
+| F-3b | Angular TieredMenu/Menubar submenus never become visible: the host between `li` and `ul` defeats `item[data-u-open="true"] > submenu`.       | D4 role 1 host-aware selectors (ADR-052 X-4 role 5).                                                                                                                                                                        | Before: Angular open submenu `display: none`, 0×0. After: `display: flex`, non-zero box, three engines. |
 
 These are reported as defect corrections in `MIGRATION.md` and the closeout, not as parity changes.
 
@@ -303,7 +304,9 @@ The stories add no component, input or runtime change. They are verification-onl
 - **MegaMenu:** overlay hidden when closed and `display: block` when open; grid/column layout per G-3.
 - **PanelMenu:**
   - `.u-panelmenu` has a non-zero box (F-3a);
-  - a collapsed nested list is hidden, and an expanded one is `display: grid` at the top level and visible at nested levels;
+  - the root list renders (the component has a non-zero box);
+  - expanding an item renders its nested list, which is visible and, at the top level, `display: grid` (group 28);
+  - collapsing that item again removes the nested list from the rendered DOM. No assertion expects a CSS `display: none` on an already-rendered collapsed list (§18 A1);
   - the nested indent equals `panelmenu.submenu.indent`;
   - focus ring per gate G-2.
 - **All five (X-3b):**
@@ -424,3 +427,26 @@ The Spec is approved with these rulings:
 4. **OI-4: one combined `ItemStates` story per component per framework (10 stories)**, combining disabled items, icons, separators (not MegaMenu) and the applicable nested states. PanelMenu includes top-level and nested disabled and icon coverage. Verification-only, with no component or runtime change.
 
 Unchanged boundaries: no DOM, template, runtime or public API changes; no TieredMenu popup anchoring; no nested-menu overflow flipping; no G3-D/G3-E; no React or Ripple; no repository-wide CI, provenance, lint or format remediation; no change to the repository-wide Playwright retry policy. AC12 stays mandatory.
+
+## 18. Amendment A1 — PR-7: PanelMenu role 1b excluded under ADR-052 X-1 (user-approved 2026-10-06)
+
+Found by the Plan self-review; a Spec and accounting correction only.
+
+**Evidence (both frameworks, line by line):**
+
+- Angular `packages/ng/src/panel-menu/panel-menu-list.ts:105`: `@if (hasItems(item) && isExpanded(item)) { <u-panel-menu-list …> }`.
+- Vue `packages/vue/src/panel-menu/PanelMenuList.vue:26–27`: `<UPanelMenuList v-if="hasItems(item) && isExpanded(item, i)" …>`.
+- At rest, only top-level items render (research addendum §3).
+
+**Decision.** D4 role 1b (`.u-panelmenu .u-panelmenu-item:not(.u-panelmenu-item-expanded) > [u-panel-menu-list >] .u-panelmenu-submenu { display: none; }`) is removed from both frameworks and recorded as an explicit upstream exclusion under X-1:
+
+> PanelMenu nested list is conditionally rendered only while its parent item is expanded; the collapsed-list state has no rendered DOM target in Ultimate, so the upstream collapsed-list visibility rule is unreachable and is excluded rather than ported.
+
+- **No DOM or template change** to make the upstream behaviour reachable, and no replacement CSS mechanism.
+- **F-3a stays corrected.** The port removes the old `.u-panelmenu-submenu { display: none }` rule, so the root list renders.
+- **Accounting.** Role 1b is a runtime role (upstream `v-show`), not one of the 177 upstream rule groups, so D1/D2 stay **100 ported / 77 omitted** per framework. The PanelMenu D4 set goes from 1 rule to **0**. The other D4 rules (TieredMenu 3, ContextMenu 1, Menubar 1) are unchanged. PX-M4 (no collapsible transition) still applies. The fidelity data loses the PanelMenu D4 entry.
+- **Verification (§9.3, updated in place):**
+  - the PanelMenu root list renders;
+  - expanding an item renders its nested list (visible; `display: grid` at the top level);
+  - collapsing the item removes the nested list from the DOM;
+  - no `display: none` assertion on a rendered collapsed list.
