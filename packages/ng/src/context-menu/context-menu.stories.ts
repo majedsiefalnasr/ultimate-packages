@@ -3,9 +3,11 @@ import { UContextMenu } from "./context-menu";
 import type { UMenuItem } from "@ultimate/ng-core";
 
 /**
- * `UContextMenu` activates on the host element's native `contextmenu`
- * (right-click) event — right-click inside the story's canvas area to open
- * it, matching real PrimeNG `ContextMenu`'s own activation mechanism.
+ * `UContextMenu` opens on a native `contextmenu` (right-click) event.
+ * Default: the trigger is the `<u-context-menu>` host element itself, which
+ * renders no content, so the story gives the host a visible hit area with
+ * inline style; right-click inside the dashed box. Global: `global: true`
+ * listens on the whole document; right-click anywhere.
  */
 const meta: Meta<UContextMenu> = {
   title: "Ng/ContextMenu",
@@ -25,7 +27,7 @@ export const Default: Story = {
   args: { model: items },
   render: (args) => ({
     props: args,
-    template: `<div style="padding: 2rem; border: 1px dashed #999;">Right-click here.<u-context-menu [model]="model"></u-context-menu></div>`,
+    template: `<p style="margin: 0 0 0.5rem;">Right-click inside the dashed box.</p><u-context-menu [model]="model" style="display: block; min-height: 6rem; border: 1px dashed #999;"></u-context-menu>`,
   }),
 };
 

@@ -2,8 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Injector,
   ViewChild,
   ViewEncapsulation,
+  afterNextRender,
+  inject,
   input,
   output,
   signal,
@@ -24,13 +27,20 @@ import { contextMenuStyleModule } from "./context-menu-style";
  * source: ContextMenu's real activation mechanism is the browser's native
  * `contextmenu` DOM event (right-click) — real source's `bindTriggerEventListener`
  * defaults `triggerEvent = 'contextmenu'` and listens either on `document`
- * (`global: true`) or on a given `target` element, calling `show(event)`
+ * (`global: true`) or on a given `target` element, calling `show(event)`,
  * which reads `event.pageX`/`event.pageY` to position the menu and calls
- * `event.preventDefault()` to suppress the browser's own native context
- * menu. This port keeps that same real mechanism: an optional `target`
- * input (an `ElementRef`/plain element — when unset, the host element
- * itself is the trigger) is listened to for `contextmenu`, positioning the
- * rendered menu at the click's page coordinates.
+ * `event.preventDefault()` to suppress the browser's own native context menu.
+ *
+ * This port has no `target` input. It supports two triggers:
+ * - `global: true` — listens for `contextmenu` on the whole document;
+ * - otherwise — a right-click on this component's own `<u-context-menu>` host
+ *   element (an Ultimate adaptation; PrimeNG has no host fallback). The host
+ *   renders no content of its own (the menu is appended to `document.body`),
+ *   so a consumer using this mode must give the host element a hit area, for
+ *   example `style="display: block; min-height: 6rem"`, or use `global`.
+ *
+ * The menu is positioned at the right-click's page coordinates once its list
+ * has rendered.
  *
  * Renders a flat `UMenuItem[]` list (no nested submenus) — matching
  * `UMenu`'s own established reduction of PrimeNG's real recursive
@@ -122,6 +132,7 @@ export class UContextMenu extends UBaseComponent {
   private displayOrder: number | undefined;
   private static instanceCount = 0;
   private readonly instanceUid = ++UContextMenu.instanceCount;
+  private readonly injector = inject(Injector);
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -165,7 +176,11 @@ export class UContextMenu extends UBaseComponent {
     this.registerEscape();
     const pageX = event.pageX;
     const pageY = event.pageY;
-    queueMicrotask(() => this.position(pageX, pageY));
+    // The list only exists once Angular renders the @if (render()) block, so
+    // position after the next render (PrimeNG positions in onBeforeEnter,
+    // once its container exists). position() is unchanged and still returns
+    // early if the menu was hidden before this runs.
+    afterNextRender(() => this.position(pageX, pageY), { injector: this.injector });
     this.onShow.emit();
   }
 
