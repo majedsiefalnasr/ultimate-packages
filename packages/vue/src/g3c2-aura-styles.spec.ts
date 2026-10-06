@@ -1,5 +1,5 @@
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { mount } from "@vue/test-utils";
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { h, nextTick, type VNode } from "vue";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { vueCoreStyleSheet } from "@ultimate/vue-core";
@@ -257,6 +257,8 @@ const ROWS: StateRow[] = [
 
 describe("GAP-064 G3-C2 — Vue", () => {
   beforeAll(() => applyUltimateTheme());
+  // Open ContextMenu overlays teleport to document.body; unmount so they do not leak into the next row.
+  enableAutoUnmount(afterEach);
   beforeEach(() => {
     vueCoreStyleSheet.clear();
     styles().forEach((s) => s.remove());
