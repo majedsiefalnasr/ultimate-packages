@@ -249,3 +249,72 @@ The base file is not Prettier-clean (known pre-existing debt), so Prettier was n
   - `node scripts/provenance/validate-g3c1-accessibility.mjs vue`: `OK: vue 51/51 reports, 0 introduced violations, 0 stale pre-existing row(s)`.
 
 Observation D1 (Dock screenshots pass while the ported Dock container composites to white) is not part of the decisions and remains open for the user's attention.
+
+## Verification (Plan Task 10, HEAD `dcf1e6a`, 2026-10-06)
+
+### Step 1: suites, typecheck, SSR (host, Node v24.15.0)
+
+| Command | Result |
+| --- | --- |
+| `@ultimate/uix-styled test` | 6 files, 15 tests passed |
+| `@ultimate/themes test` | 20 files, 839 tests passed (includes `g3c1-upstream-fidelity.test.ts`) |
+| `@ultimate/vue-core test` | 20 files, 102 tests passed |
+| `@ultimate/vue test` | 98 files, 1139 tests passed |
+| `@ultimate/react test` | 87 files, 856 tests passed |
+| `@ultimate/ng test -- --watch=false` | exit 0; 93 files, 1126 tests passed |
+| `@ultimate/ng-core test -- --watch=false` | exit 0; 15 files, 62 tests passed |
+| `pnpm run test:scripts` | exit 0; 142 pass, 0 fail |
+| `pnpm run typecheck` | exit 0 (react, ng, vue) |
+| `playground-angular` build + `TRACK_E_SSR_FRAMEWORK=ng npx playwright test --project=ng-ssr-chromium` | build exit 0; 10 passed |
+
+The brief's `pnpm --filter ... test --watch=false` form is rejected by pnpm 9 (`Unknown option: 'watch'`); the equivalent `test -- --watch=false` form was used for the two Angular packages.
+
+### Step 2: CI simulation (SR-C1-2), Docker `mcr.microsoft.com/playwright:v1.63.0-jammy`, archive of `dcf1e6a`
+
+Console log: `.superpowers/sdd/2026-10-05-gap-064-g3c1-navigation/docker/final-console.log`; per-step logs `ci-<fw>-*.log`.
+
+| Framework | Step | Exit | Detail |
+| --- | --- | --- | --- |
+| ng | strict run | 0 | 308 passed, 1 flaky (`[ng-webkit]` Dialog Default visual, passed on retry #1) |
+| ng | strict check | 0 | scanned 258 violation nodes, zero new |
+| ng | G3-A run / check | 0 / 0 | 189 passed; `93/93 reports, 0 introduced, 0 stale` |
+| ng | G3-B run / check | 0 / 0 | 174 passed; `75/75 reports, 0 introduced, 0 stale` |
+| ng | G3-C1 run / check | 0 / 0 | 120 passed; `51/51 reports, 0 introduced, 0 stale` |
+| vue | strict run | 0 | 282 passed (includes `packages/vue/e2e/stepper.spec.ts`) |
+| vue | strict check | 0 | scanned 219 violation nodes, zero new |
+| vue | G3-A run / check | 0 / 0 | 207 passed; `102/102 reports, 0 introduced, 0 stale` |
+| vue | G3-B run / check | **1** / 0 | 173 passed, 1 failed (U2, below); check `75/75 reports, 0 introduced, 0 stale` |
+| vue | G3-C1 run / check | 0 / 0 | 123 passed; `51/51 reports, 0 introduced, 0 stale` |
+| react | strict run / check | 0 / 0 | 216 passed; scanned 198 violation nodes, zero new |
+| vue | `stepper` (GAP-077 regression) | 0 | `stepper exit 0`, 3 passed |
+
+Recorded exit lines: `ci ng strict run exit 0`, `ci ng strict check exit 0`, `ci ng g3a run exit 0`, `ci ng g3a check exit 0`, `ci ng g3b run exit 0`, `ci ng g3b check exit 0`, `ci ng g3c1 run exit 0`, `ci ng g3c1 check exit 0`, `ci vue strict run exit 0`, `ci vue strict check exit 0`, `ci vue g3a run exit 0`, `ci vue g3a check exit 0`, `ci vue g3b run exit 1`, `ci vue g3b check exit 0`, `ci vue g3c1 run exit 0`, `ci vue g3c1 check exit 0`, `ci react strict run exit 0`, `ci react strict check exit 0`, `stepper exit 0`.
+
+U2 (known, pre-existing, G3-B exception): the single `ci vue g3b run` failure is `[vue-webkit] packages/vue/e2e/g3b-aura-styles.spec.ts:44 Vue/Card WithHeaderAndFooter G3-B visual` (2157 pixels differ, ratio 0.01, on all three attempts). The story loads an external CDN image, which is the recorded G3-B limitation. It is the only failure in the whole simulation and is unrelated to G3-C1. In this CI wiring it surfaces in the G3-B step (the G3-B specs are excluded from the strict run by `--grep-invert`), not in the vue strict run, which exited 0.
+
+### Step 3: scope and DOM (C4, C9)
+
+- `git diff 2c8ef45 --name-only`: 10 style modules (ng and vue: breadcrumb, dock, stepper, steps, tabs); 8 story files (dock, stepper, steps, tabs per framework); the two `g3c1-aura-styles.spec.ts` e2e specs with 72 snapshots; the two G3-C1 runtime specs (`packages/{ng,vue}/src/g3c1-aura-styles.spec.ts`); the three Amendment A1 specs (`packages/vue/src/stepper/stepper.spec.ts`, `packages/vue/src/steps/steps.spec.ts`, `packages/ng/src/steps/steps.spec.ts`); `packages/themes/test/{fixtures/primeuix-styles-g3c1.json,utils/g3c1-port.mjs,g3c1-upstream-fidelity.test.ts}`; `ng.json` and `vue.json` provenance; `PROVENANCE.md`; `validate-g3c1-accessibility.mjs` and its test; `.github/workflows/ci.yml`; `ACCESSIBILITY_BASELINE.md`; the research, evidence, spec, plan and this record. No other path appears.
+- `git diff 2c8ef45 --stat -- packages/react packages/react-core packages/uix-styled packages/uix-styles packages/themes/src packages/ng-core packages/vue-core`: empty.
+- Frozen tooling check (`validate-g3a/g3b-accessibility` and tests, `validate-accessibility-baseline.mjs`, `g3a-port.mjs`, `g3b-port.mjs`, the four G3-A/G3-B e2e specs, `packages/vue/e2e/stepper.spec.ts`): `frozen tooling unchanged`.
+- `MIGRATION.md` is not changed yet (Plan Task 11).
+
+### Step 4: size gate (C8)
+
+`pnpm run build && pnpm run size:measure` and `validate-bundle-size.mjs --base-ref 2c8ef45` (exit 0, "all packages passed the bundle-size gate"). The `ng` row (`202.86 KB -> 64.5 KB, -68.2%`) is not like-for-like because the Angular PERFORMANCE.md baseline is stale; `vue` shows `132.3 KB -> 138.7 KB, +4.9%` against its baseline. The authoritative gate is the direct comparison of a `2c8ef45` worktree build (`pnpm install --frozen-lockfile && pnpm run build`) against the current build, measured with `measure-package-size.mjs`:
+
+| Package | `index.mjs` gzip at `2c8ef45` | `index.mjs` gzip now | Growth | `dist/` size at `2c8ef45` -> now |
+| --- | --- | --- | --- | --- |
+| `packages/ng` | 64.54 KB | 64.54 KB | 0.0% | 3170.8 KB -> 3190.9 KB |
+| `packages/vue` | 137.09 KB | 138.75 KB | +1.2% | 5861.4 KB -> 5897.8 KB |
+
+Both are far below the 15% limit. The worktree was removed afterwards.
+
+### Pre-existing failures (recorded, not fixed)
+
+- U2: Vue Card WithHeaderAndFooter WebKit screenshot (external CDN image), described above.
+- `pnpm run provenance:validate` exits 1 with `packages/ng/src/accordion/accordion.spec.ts has no entry in docs/architecture/provenance/ng.json`. The same failure is present at `2c8ef45`; out of scope for G3-C1.
+- `pnpm run lint` exits 1 (69,537 problems). The reported files are mostly under `.superpowers/` (cloned upstream sources) and existing package-level code; no G3-C1 file is among them. Lint debt on main.
+- Prettier debt in `BLUEPRINT_GAPS.md`, `DECISIONS.md` and `ACCESSIBILITY_BASELINE.md` is unchanged.
+- The stale Angular `PERFORMANCE.md` size baseline (see Step 4).
+- One flaky ng WebKit screenshot (Dialog Default, outside G3-C1) passed on retry in the ng strict run.
