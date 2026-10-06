@@ -493,15 +493,22 @@ No other scope expansion. Applied in Task 10c: decisions 2 and 3 (baselines and 
 
 ---
 
-## PanelMenu re-review (R-M5) — pending user approval
+## PanelMenu re-review (R-M5) — approved (user decision 2026-10-06, with the pointer-park correction)
 
-**Status:** the 24 PanelMenu screenshots were re-captured at `ed9edff` (R-M5) and are **not** baselined or committed. This section states facts for the user's decision; it approves nothing. Review page: `<scratchpad>/g3c2-panelmenu-rereview.html` (composites `<scratchpad>/vr2/<Name>-<engine>.png`: old placeholder | new actual | diff).
+**Status: APPROVED (user decision 2026-10-06).** The user approved the 24 PanelMenu screenshots (Default, Multiple and ItemStates visual, plus ItemStates expanded open, x ng/vue x chromium/firefox/webkit) with one correction applied first: in the 6 expanded screenshots the capture pointer sat on the "Documents" trigger and left hover residue (O-2), so `scenario`'s expanded branch now parks the pointer with `page.mouse.move(0, 0)` before the capture (X-6; commit `45ceb30`, both specs). No PanelMenu CSS or runtime change was made. The 24 baselines are committed in the Task 10d commit. The per-screenshot table below was written at `ed9edff` before the correction: the hover background on Documents that it describes for the 6 expanded rows is gone in the approved baselines (see "Pointer-park correction and stability" below). Review page: `<scratchpad>/g3c2-panelmenu-rereview.html` (composites `<scratchpad>/vr2/<Name>-<engine>.png`: old placeholder | new actual | diff).
+
+### Pointer-park correction and stability (Task 10d)
+
+- Change: one line in each of `packages/ng/e2e/g3c2-aura-styles.spec.ts` and `packages/vue/e2e/g3c2-aura-styles.spec.ts`, immediately before the final `await expect(expanded.first()).toBeVisible();` of the expanded branch: `await page.mouse.move(0, 0); // X-6: park the pointer so the expanded capture has no hover residue`.
+- Stability: Docker (Playwright v1.63.0-jammy aarch64, `--retries=0`), `git archive` of `45ceb30`, grep `PanelMenu ItemStates expanded`, all 6 projects. Pass 1 = `update` (6/6 passed, wrote the 6 actuals, no baselines existed). Pass 2 = new runner mode `compare` against the pass-1 snapshots: **6/6 passed_first_attempt** (ng and vue x chromium/firefox/webkit). The two passes agree.
+- Comparison with the Task 10c expanded actuals (`docker/after2`), same size (1280x720) in all 6: the only difference is the Documents trigger band, one rectangular row band (x 37..1259; chromium y 55..88, 34 rows; firefox/webkit y 58..94). Inside it the hover background `rgb(241,245,249)` became the page white `rgb(255,255,255)` (chromium 41076 px, firefox 44663, webkit 44718; 0 hover-background pixels remain anywhere in the new images) and the label and chevron anti-aliased pixels moved from the hover text color to the normal color (for example `rgb(30,41,59)` to `rgb(51,65,85)`). Nothing outside the band differs and no glyph moved. Ng and Vue expanded baselines stay byte-identical per engine.
+- The 18 non-expanded PanelMenu baselines written by the final `update` are pixel-identical to the Task 10c actuals that were reviewed (0 differences in 18).
 
 ### U-1 / U-2 status
 
 - **U-1 fixed.** No bullets; the top-level panels start at x=16, y=16 (the story origin) instead of x=56, y=32. Checked in all 24 images (non-background bounding box starts at 16, 16).
 - **U-2 fixed.** 8 px between panels (`panelmenu.gap`) in every engine and story; borders no longer touch. Chromium panel borders at y=59 and 68, 111 and 120 (8 rows between each pair); firefox/webkit 62 and 71, 117 and 126. Expanded story: chromium 191 and 200, 243 and 252; firefox/webkit 200 and 209, 255 and 264.
-- **Nothing else unexpected.** Nested lists have no bullets and indent 16 px per level. Story-data effects only: the empty icon span (no icon font) shifts labels of items with an `icon` about 8 px right (as O-4), the expanded screenshot keeps the hover background on Documents (O-2), and panel height differs per engine (43 px chromium, 46 px firefox/webkit) because of text metrics (O-5).
+- **Nothing else unexpected.** Nested lists have no bullets and indent 16 px per level. Story-data effects only: the empty icon span (no icon font) shifts labels of items with an `icon` about 8 px right (as O-4), the expanded screenshot as first captured kept the hover background on Documents (O-2; removed by the pointer-park correction, see below), and panel height differs per engine (43 px chromium, 46 px firefox/webkit) because of text metrics (O-5).
 
 ### Results of this run (Docker `c2`, tree `git write-tree` with the 75 staged baselines, `--retries=0`)
 
@@ -542,6 +549,10 @@ Paths: After = `$W/after2/test-results/<dir>/<name>-1-actual.png`, Diff = `…-1
 | vue | PanelMenu ItemStates expanded | firefox  | missing baseline    | `…/g3c2-aura-styles-Vue-Panel-2e456-mStates-expanded-G3-C2-open-vue-firefox/Vue-PanelMenu-ItemStates-expanded-G3-C2-open-1-actual.png`  | none (no baseline)                                                                                                       | Byte-identical to Ng expanded in every engine.                                                                                                                                                                                                                                                                                    |
 | vue | PanelMenu ItemStates expanded | webkit   | missing baseline    | `…/g3c2-aura-styles-Vue-Panel-2e456-mStates-expanded-G3-C2-open-vue-webkit/Vue-PanelMenu-ItemStates-expanded-G3-C2-open-1-actual.png`   | none (no baseline)                                                                                                       | Byte-identical to Ng expanded in every engine.                                                                                                                                                                                                                                                                                    |
 
-### Decision requested
+### Final c2 result (Task 10d, `--retries=0`)
 
-Approve the 24 PanelMenu screenshots as baselines (18 re-captured, 6 new expanded), or name what to change. Nothing else is pending: decisions 2 and 3 are applied in the Task 10c commit and U-3 is carried to the closeout.
+Tree = `git write-tree` with the 24 PanelMenu PNGs staged (18 modified, 6 new), `run.sh c2`: `c2 exit 0`, **255 passed, 0 failed, 255 total, every test passed_first_attempt** (visual and open 99, layout 39, x3b 30, reach 30, accessibility 57). The 24 PanelMenu screenshot tests that failed by design in the 10c run (18 pixel diffs, 6 missing baselines) now pass against the approved baselines, and the 75 other visual/open tests still pass. Validator on these results: `OK: ng 30/30 reports, 0 introduced violations, 0 stale pre-existing row(s)`; `OK: vue 27/27 reports, 0 introduced violations, 0 stale pre-existing row(s)`.
+
+### Decision
+
+Approved by the user on 2026-10-06 with the pointer-park correction. Nothing is pending; U-3 stays carried to the closeout.
