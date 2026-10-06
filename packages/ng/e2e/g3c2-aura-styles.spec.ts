@@ -105,6 +105,7 @@ export async function scenario(
     await closed.first().click();
     await expect(expanded).toHaveCount(before + 1); // wait for the expansion before re-reading
   }
+  await page.mouse.move(0, 0); // X-6: park the pointer so the expanded capture has no hover residue
   await expect(expanded.first()).toBeVisible();
 }
 
