@@ -409,3 +409,7 @@ Removed from C2-0 (OI-1 = (b)). Not implemented. A future decision treats both f
 ### G3-C research factual correction (OI-4)
 
 The G3-C research statement (`2026-10-05-gap-064-g3c-menus-navigation-research.md` §3.1) that Ultimate positions the TieredMenu popup in JavaScript is false for both Angular and Vue. The current implementation uses the off-screen CSS position and contains no popup anchoring logic. Documentation correction only.
+
+### E3 accounting revised (E3a)
+
+Finding F-1 (§2.5) and the E3 correction (§10) classified Angular Stepper groups 14, 15, 25, 26 and 27 as dead. The C2-0 final review showed that the exported `UStepperSeparator` can be placed by consumers. G3-C1 Spec §18 **E3a** reconciles these groups with ADR-052 X-1: groups 15, 25, 26 and 27 are **K** (a consumer-placed `UStepperSeparator`), and group 14 is **X-shipped** (unreachable under supported composition). Only group 14 remains a removal candidate.
