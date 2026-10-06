@@ -8,6 +8,7 @@ import {
   COUNTS,
   FIXTURE,
   FRAMEWORKS,
+  KEPT,
   KEYS,
   OMITTED,
   REPO,
@@ -48,7 +49,7 @@ describe("G3-C2 upstream fixture and data model (Spec §5, §8)", () => {
   });
 
   it.each(FRAMEWORKS as Fw[])(
-    "%s: D1 + D2 = 177, disjoint, per-key counts pinned (100 + 77)",
+    "%s: D1 + D2 = 177, disjoint, per-key counts pinned (109 + 68, Spec §20)",
     (fw) => {
       let upstream = 0;
       let ported = 0;
@@ -86,6 +87,43 @@ describe("G3-C2 upstream fixture and data model (Spec §5, §8)", () => {
     const all = ["FX-M1", "FX-M2", "FX-M3", "FX-M4", "FX-M5", "FX-M6", "FX-M7"];
     expect([...tags("ng")].sort()).toEqual(all);
     expect([...tags("vue")].sort()).toEqual(all);
+  });
+
+  it("Spec §20 per-key counts: tieredmenu 25/21/4, menubar 44/24/20, megamenu 56/26/30, others unchanged", () => {
+    expect(COUNTS).toEqual({
+      tieredmenu: [25, 21],
+      contextmenu: [23, 12],
+      menubar: [44, 24],
+      megamenu: [56, 26],
+      panelmenu: [29, 26],
+    });
+    for (const fw of FRAMEWORKS as Fw[]) {
+      const omitted = (OMITTED as Record<Fw, Record<string, Record<number, string>>>)[fw];
+      const keysWithFxM2 = Object.entries(omitted)
+        .filter(([, groups]) => Object.values(groups).includes("FX-M2"))
+        .map(([key]) => key);
+      expect(keysWithFxM2, fw).toEqual(["panelmenu"]); // §20: FX-M2 applies only to PanelMenu 22–24
+    }
+  });
+
+  it("Spec §20 C-1: the item-focus groups are :has(:focus-visible) adaptations on the item link", () => {
+    const groupsByKey: [string, number[]][] = [
+      ["tieredmenu", [11, 12, 13]],
+      ["menubar", [13, 14, 15]],
+      ["megamenu", [11, 12, 13]],
+    ];
+    for (const fw of FRAMEWORKS as Fw[])
+      for (const [key, groups] of groupsByKey) {
+        const item = `.u-${key}-item:not(.u-${key}-item-disabled) > .u-${key}-item-content:has(.u-${key}-item-link:focus-visible)`;
+        const heads = [item, `${item} .u-${key}-item-icon`, `${item} .u-${key}-submenu-icon`];
+        const d1 = expected(fw, key).d1 as { n: number; text: string }[];
+        groups.forEach((n, i) => {
+          const rule = d1.find((r) => r.n === n);
+          expect(rule, `${fw} ${key} ${n}`).toBeDefined();
+          expect(rule!.text.startsWith(`${heads[i]}{`), `${fw} ${key} ${n}`).toBe(true);
+          expect(rule!.text, `${fw} ${key} ${n}`).toContain(`dt('${key}.`); // upstream declarations kept
+        });
+      }
   });
 
   it("Spec §4 normative mapping examples", () => {
@@ -180,14 +218,22 @@ describe("G3-C2 upstream fixture and data model (Spec §5, §8)", () => {
   });
 
   it("D5 is a subset of the Spec §6.3 candidates; no other Ultimate-only rule", () => {
-    const allowed = new Set(
-      Object.values(CANDIDATES as Record<string, string[]>)
-        .flat()
-        .map(norm)
-    );
-    for (const fw of FRAMEWORKS as Fw[])
+    for (const fw of FRAMEWORKS as Fw[]) {
+      const allowed = new Set(
+        Object.values((CANDIDATES as Rules)[fw])
+          .flat()
+          .map(norm)
+      );
       for (const rules of Object.values((RETAINED as Rules)[fw]))
-        for (const r of rules) expect(allowed.has(norm(r)), r).toBe(true);
+        for (const r of rules) expect(allowed.has(norm(r)), `${fw}: ${r}`).toBe(true);
+    }
+    // Literal Spec §19.1 gate outcome and the per-framework host form of R-M5 (Spec §19), not derived from the data.
+    expect(KEPT).toEqual(["R-M1", "R-M3", "R-M4", "R-M5"]);
+    const rM5 = (host: string) =>
+      `.u-panelmenu > ${host}.u-panelmenu-submenu { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: dt('panelmenu.gap'); }`;
+    expect((RETAINED as Rules).ng.panelmenu).toContain(rM5("u-panel-menu-list > "));
+    expect((RETAINED as Rules).vue.panelmenu).toContain(rM5(""));
+    expect((RETAINED as Rules).ng.panelmenu).not.toContain(rM5(""));
     expect(JSON.stringify(RETAINED)).not.toContain("top: 0; left: 0"); // OI-2 dropped
   });
 

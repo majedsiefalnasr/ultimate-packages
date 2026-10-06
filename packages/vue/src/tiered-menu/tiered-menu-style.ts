@@ -22,6 +22,9 @@ const css = /*css*/ `
 .u-tieredmenu-item-icon{color: dt('tieredmenu.item.icon.color');}
 .u-tieredmenu-submenu-icon{color: dt('tieredmenu.submenu.icon.color');margin-left: auto;font-size: dt('tieredmenu.submenu.icon.size');width: dt('tieredmenu.submenu.icon.size');height: dt('tieredmenu.submenu.icon.size');}
 .u-tieredmenu-submenu-icon:dir(rtl){margin-left: 0;margin-right: auto;}
+.u-tieredmenu-item:not(.u-tieredmenu-item-disabled) > .u-tieredmenu-item-content:has(.u-tieredmenu-item-link:focus-visible){color: dt('tieredmenu.item.focus.color');background: dt('tieredmenu.item.focus.background');}
+.u-tieredmenu-item:not(.u-tieredmenu-item-disabled) > .u-tieredmenu-item-content:has(.u-tieredmenu-item-link:focus-visible) .u-tieredmenu-item-icon{color: dt('tieredmenu.item.icon.focus.color');}
+.u-tieredmenu-item:not(.u-tieredmenu-item-disabled) > .u-tieredmenu-item-content:has(.u-tieredmenu-item-link:focus-visible) .u-tieredmenu-submenu-icon{color: dt('tieredmenu.submenu.icon.focus.color');}
 .u-tieredmenu-item:not(.u-tieredmenu-item-disabled) > .u-tieredmenu-item-content:hover{color: dt('tieredmenu.item.focus.color');background: dt('tieredmenu.item.focus.background');}
 .u-tieredmenu-item:not(.u-tieredmenu-item-disabled) > .u-tieredmenu-item-content:hover .u-tieredmenu-item-icon{color: dt('tieredmenu.item.icon.focus.color');}
 .u-tieredmenu-item:not(.u-tieredmenu-item-disabled) > .u-tieredmenu-item-content:hover .u-tieredmenu-submenu-icon{color: dt('tieredmenu.submenu.icon.focus.color');}

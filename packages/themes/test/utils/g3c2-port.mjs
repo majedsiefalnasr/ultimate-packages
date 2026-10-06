@@ -127,14 +127,32 @@ const STATES = (key) => [
   ["class", `.p-${key}-item-active`, `.u-${key}-item-open`],
   ["class", ".p-disabled", `.u-${key}-item-disabled`],
 ];
+/**
+ * Spec §20 (A3, C-1): the FX-M2 item-focus groups of TieredMenu, Menubar and MegaMenu are ported
+ * as `:has(:focus-visible)` adaptations (PanelMenu PX-M3 precedent): Ultimate emits no focus class
+ * but focuses the item link, so the focused-item background keys on the focused link.
+ */
+const ITEM_FOCUS = (key) => {
+  const item = `.u-${key}-item:not(.u-${key}-item-disabled) > .u-${key}-item-content:has(.u-${key}-item-link:focus-visible)`;
+  const from = `.p-${key}-item.p-focus > .p-${key}-item-content`;
+  return [
+    ["text", from, item],
+    ["text", `${from} .p-${key}-item-icon`, `${item} .u-${key}-item-icon`],
+    ["text", `${from} .p-${key}-submenu-icon`, `${item} .u-${key}-submenu-icon`],
+  ];
+};
 const SHARED = {
-  tieredmenu: STATES("tieredmenu"),
+  tieredmenu: [...ITEM_FOCUS("tieredmenu"), ...STATES("tieredmenu")],
   contextmenu: [
     ["drop", ".p-contextmenu-submenu"],
     ["class", ".p-focus", ".u-contextmenu-item-focused"],
     ...STATES("contextmenu"),
   ],
-  megamenu: [["class", ".p-megamenu-horizontal", ".u-megamenu"], ...STATES("megamenu")],
+  megamenu: [
+    ...ITEM_FOCUS("megamenu"),
+    ["class", ".p-megamenu-horizontal", ".u-megamenu"],
+    ...STATES("megamenu"),
+  ],
 };
 export const MAPPING = {
   ng: {
@@ -145,22 +163,23 @@ export const MAPPING = {
         ".p-menubar-submenu > .p-menubar-item-active > .p-menubar-submenu",
         ".u-menubar-submenu > .u-menubar-item-open > u-menubar-sub > .u-menubar-submenu",
       ],
+      ...ITEM_FOCUS("menubar"),
       ...STATES("menubar"),
     ],
     panelmenu: PANEL_TEXT(`${TOP} > u-panel-menu-list > .u-panelmenu-submenu`),
   },
   vue: {
     ...SHARED,
-    menubar: STATES("menubar"),
+    menubar: [...ITEM_FOCUS("menubar"), ...STATES("menubar")],
     panelmenu: PANEL_TEXT(`${TOP} > .u-panelmenu-submenu`),
   },
 };
 
 const range = (a, b, tag) =>
   Object.fromEntries(Array.from({ length: b - a + 1 }, (_, i) => [a + i, tag]));
-/** D2 — Spec §5: omitted upstream group numbers (1-based source order) with their FX tag. Identical in both frameworks. */
+/** D2 — Spec §5 (amended by §20: FX-M2 now only PanelMenu 22–24): omitted upstream group numbers (1-based source order) with their FX tag. Identical in both frameworks. */
 const OMIT = {
-  tieredmenu: { ...range(11, 13, "FX-M2"), ...range(22, 25, "FX-M1") },
+  tieredmenu: range(22, 25, "FX-M1"),
   contextmenu: {
     3: "FX-M3",
     9: "FX-M3",
@@ -172,7 +191,6 @@ const OMIT = {
   },
   menubar: {
     2: "FX-M4",
-    ...range(13, 15, "FX-M2"),
     ...range(26, 30, "FX-M4"),
     ...range(31, 44, "FX-M1"),
   },
@@ -181,7 +199,6 @@ const OMIT = {
     28: "FX-M4",
     29: "FX-M4",
     ...range(43, 45, "FX-M4"),
-    ...range(11, 13, "FX-M2"),
     25: "FX-M7",
     ...range(30, 35, "FX-M5"),
     ...range(37, 42, "FX-M6"),
@@ -193,15 +210,15 @@ export const OMITTED = { ng: OMIT, vue: OMIT };
 
 /** Spec §5.6 counts: [upstream groups, D1 ported] (identical in both frameworks). */
 export const COUNTS = {
-  tieredmenu: [25, 18],
+  tieredmenu: [25, 21],
   contextmenu: [23, 12],
-  menubar: [44, 21],
-  megamenu: [56, 23],
+  menubar: [44, 24],
+  megamenu: [56, 26],
   panelmenu: [29, 26],
 };
 export const TOTALS = {
-  ng: { upstream: 177, ported: 100, omitted: 77 },
-  vue: { upstream: 177, ported: 100, omitted: 77 },
+  ng: { upstream: 177, ported: 109, omitted: 68 },
+  vue: { upstream: 177, ported: 109, omitted: 68 },
 };
 
 const DISABLED_ROLE = (sel) => [
@@ -254,13 +271,8 @@ const FW_CANDIDATES = {
   ng: CANDIDATE_RULES({ pm: "u-panel-menu-list > " }),
   vue: CANDIDATE_RULES({ pm: "" }),
 };
-/** Framework-neutral view: every candidate text of either framework (allow-list for the D5 test). */
-export const CANDIDATES = Object.fromEntries(
-  Object.keys(FW_CANDIDATES.vue).map((id) => [
-    id,
-    [...new Set([...FW_CANDIDATES.ng[id], ...FW_CANDIDATES.vue[id]])],
-  ])
-);
+/** Per-framework candidate texts (allow-list for the D5 test); Angular and Vue differ in the host form of R-M5. */
+export const CANDIDATES = FW_CANDIDATES;
 const CANDIDATE_KEY = {
   "R-M1": "megamenu",
   "R-M2": "menubar",

@@ -19,6 +19,9 @@ const css = /*css*/ `
 .u-megamenu-item-label{line-height: 1;}
 .u-megamenu-item-icon{color: dt('megamenu.item.icon.color');}
 .u-megamenu-submenu-icon{color: dt('megamenu.submenu.icon.color');font-size: dt('megamenu.submenu.icon.size');width: dt('megamenu.submenu.icon.size');height: dt('megamenu.submenu.icon.size');}
+.u-megamenu-item:not(.u-megamenu-item-disabled) > .u-megamenu-item-content:has(.u-megamenu-item-link:focus-visible){color: dt('megamenu.item.focus.color');background: dt('megamenu.item.focus.background');}
+.u-megamenu-item:not(.u-megamenu-item-disabled) > .u-megamenu-item-content:has(.u-megamenu-item-link:focus-visible) .u-megamenu-item-icon{color: dt('megamenu.item.icon.focus.color');}
+.u-megamenu-item:not(.u-megamenu-item-disabled) > .u-megamenu-item-content:has(.u-megamenu-item-link:focus-visible) .u-megamenu-submenu-icon{color: dt('megamenu.submenu.icon.focus.color');}
 .u-megamenu-item:not(.u-megamenu-item-disabled) > .u-megamenu-item-content:hover{color: dt('megamenu.item.focus.color');background: dt('megamenu.item.focus.background');}
 .u-megamenu-item:not(.u-megamenu-item-disabled) > .u-megamenu-item-content:hover .u-megamenu-item-icon{color: dt('megamenu.item.icon.focus.color');}
 .u-megamenu-item:not(.u-megamenu-item-disabled) > .u-megamenu-item-content:hover .u-megamenu-submenu-icon{color: dt('megamenu.submenu.icon.focus.color');}
