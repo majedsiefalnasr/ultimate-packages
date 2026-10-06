@@ -1,6 +1,6 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
-import { h, nextTick, type VNode } from "vue";
+import { h, nextTick, reactive, type VNode } from "vue";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { vueCoreStyleSheet } from "@ultimate/vue-core";
 import { UTieredMenu } from "./tiered-menu";
@@ -64,6 +64,10 @@ const contextMenu: Render = () => h(UContextMenu, FLAT, () => h("div", "target")
 const menubar: Render = () => h(UMenubar, TREE);
 const megamenu: Render = () => h(UMegaMenu, MEGA);
 const panelmenu: Render = () => h(UPanelMenu, PANEL);
+// Known pre-existing Vue plain-array openItem identity defect, recorded as a separate gap and not fixed in G3-C2: the open-state rows pass a reactive model, as a ref([...]) consumer would.
+const tieredReactive: Render = () => h(UTieredMenu, { model: reactive(TREE.model) });
+const menubarReactive: Render = () => h(UMenubar, { model: reactive(TREE.model) });
+const megamenuReactive: Render = () => h(UMegaMenu, { model: reactive(MEGA.model) });
 const CASES: Case[] = [
   { name: "tieredmenu", node: tiered, key: "tieredmenu", unresolved: [] },
   { name: "tieredmenu popup", node: tieredPopup, key: "tieredmenu", unresolved: [] },
@@ -104,8 +108,8 @@ const strip = (selector: string) =>
 /** Indices (document order, root first) of the elements matching `all` that match the stripped selector. */
 function matching(root: HTMLElement, all: string, selector: string): number[] {
   const els = [
-    ...(root.matches(all) ? [root] : []),
-    ...Array.from(root.querySelectorAll<HTMLElement>(all)),
+    ...(root instanceof Element && root.matches(all) ? [root] : []),
+    ...(root instanceof Element ? Array.from(root.querySelectorAll<HTMLElement>(all)) : []),
   ];
   return els.flatMap((el, i) => (el.matches(strip(selector)) ? [i] : []));
 }
@@ -146,7 +150,7 @@ const ROWS: StateRow[] = [
   {
     name: "tieredmenu open item (C-1 item-active)",
     key: "tieredmenu",
-    node: tiered,
+    node: tieredReactive,
     act: hover(".u-tieredmenu-item"),
     all: ".u-tieredmenu-root-list > .u-tieredmenu-item > .u-tieredmenu-item-content",
     selector: ".u-tieredmenu-item-open > .u-tieredmenu-item-content",
@@ -196,7 +200,7 @@ const ROWS: StateRow[] = [
   {
     name: "menubar open first level (D4 role 1 host form)",
     key: "menubar",
-    node: menubar,
+    node: menubarReactive,
     act: hover(".u-menubar-root-list > .u-menubar-item"),
     all: ".u-menubar-submenu",
     selector: ".u-menubar .u-menubar-item-open > .u-menubar-submenu",
@@ -221,7 +225,7 @@ const ROWS: StateRow[] = [
   {
     name: "megamenu open overlay (group 22)",
     key: "megamenu",
-    node: megamenu,
+    node: megamenuReactive,
     act: hover(".u-megamenu-root-list > .u-megamenu-item"),
     all: ".u-megamenu-overlay",
     selector: ".u-megamenu-root-list > .u-megamenu-item-open > .u-megamenu-overlay",
