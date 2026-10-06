@@ -291,3 +291,87 @@ The study was accepted as the current research result. The rulings below are rec
 10. **Follow-ups:** U1, U2, Vue BlockUI, the `ng.json` provenance entry, the Axe race, F-1 and any G3-A/B/C1 correction stay subject to their own decision gates. None is fixed automatically.
 
 **Next gate:** the cross-tranche decision gate (exact convention wording, X-6, the F-1 corrective scope, the F-3c/F-3d runtime-fix scope). Not implementation authorization.
+
+## 10. Cross-tranche decision gate — normative rulings (2026-10-06, user)
+
+These rulings are authoritative for G3-C2, G3-D and G3-E. They supersede the provisional wording in §3 and §9 where the two differ. In particular, §9's numbering note is resolved: the DOM-admissibility rule stays **X-2**, and the inline-style/runtime-role wording belongs under **X-4**. There is no X-13. Conventions without a ruling here (X-5, X-7, X-8, X-9, X-10, X-11) stay proposals until decided.
+
+### X-1 — Selector reachability (approved)
+
+For each tranche and each framework, every selector part a ported style module emits belongs to exactly one class. A selector part is a top-level comma part, read inside its at-rule.
+
+- **R (reached):** matches at least one element in at least one named verification story, with that story's documented state applied.
+- **K (conditional):** every class or attribute it needs is emitted by a cited source location under a named state that no story exercises. The tranche Spec lists it with the reason.
+- **X (excluded):** not emitted, and recorded as an FX omission (D2).
+
+State pseudo-classes and pseudo-elements are removed before matching. Combinators are evaluated against the actual rendered DOM, including framework-generated host elements such as Angular component hosts. A selector that matches only upstream markup and cannot match Ultimate's rendered DOM is not R evidence. Static textual fidelity to upstream selectors is never reachability evidence.
+
+The tranche-scoped reach test runs inside that tranche's existing verification specs; there is no separate CI step.
+
+### X-2 — DOM-admissibility gate (approved)
+
+> A parity tranche must not introduce, remove, reorder, or structurally alter rendered DOM solely to make upstream CSS selectors match. Existing framework-generated host elements may be accounted for when evaluating selector reachability, but they must not be removed or bypassed by changing component structure. Any DOM change required for behavioral parity must be separately authorized as a runtime/component correction, with its own evidence and scope.
+
+- CSS adaptation to the existing DOM is allowed within a parity tranche.
+- A DOM or runtime change is not ordinary CSS parity work and needs separate authorization.
+
+### X-3 — Value-qualified state selectors (approved)
+
+- A selector addressing a state attribute uses the value the component emits, for example `[data-u-open="true"]`, or the corresponding negated value.
+- A presence-only attribute selector is allowed only for an attribute the component actually adds or removes entirely, such as `hidden`, with rendered evidence for both states in both frameworks.
+- Evidence: both frameworks render the literal `data-u-disabled="false"` on enabled menu items (§4.1).
+
+### X-3b — Disabled appearance vs interaction guard (approved)
+
+The visual disabled state and interaction protection are verified separately. `pointer-events` alone is never treated as the complete interaction guard.
+
+### X-4 — C-4 extension: runtime styling and positioning roles (approved)
+
+Each tranche's research lists every runtime styling or positioning responsibility in the pinned PrimeVue 4.5.5 / PrimeNG 21.1.9 source (`inlineStyles`, `nestedPosition`, `absolutePosition`, `addStyle`, runtime CSS variables). Each one is mapped to CSS keyed on state Ultimate already emits, kept as Ultimate's existing mechanism, or excluded. No new JavaScript or runtime state is introduced by a CSS port.
+
+For **G3-C2**, C-4 covers:
+
+1. submenu visibility;
+2. the TieredMenu popup's initial off-screen placement;
+3. ContextMenu root positioning;
+4. nested submenu placement: upstream `nestedPosition()`'s default result (`inset-inline-start: 100%; top: 0`) expressed in CSS on the existing open state. Upstream's viewport-overflow flip is JavaScript-driven and is not introduced; the C2 Spec states the overflow decision explicitly;
+5. Angular host-aware visibility adaptation.
+
+Role 5 is **not** an exclusion or a PX. It is a CSS adaptation to Ultimate's existing rendered DOM, with no DOM change, no JavaScript change and no new runtime state. Where Angular inserts an existing component host between the item and the submenu, selectors account for that host, for example `.u-tieredmenu-item[data-u-open="true"] > u-tiered-menu-sub > .u-tieredmenu-submenu`. Vue keeps the direct-child form where its rendered DOM supports it.
+
+The Angular F-3b corrections are **pre-existing defect corrections inside C2**, not fidelity omissions.
+
+### X-6 — Deterministic open-state screenshots (approved; refines C-10 and D-G3-7, replaces neither)
+
+Applies to every C2, D and E story whose verified CSS is visible only in an open or interaction state.
+
+1. Open through the real trigger, using fixed coordinates where applicable.
+2. Park the pointer at (0, 0) before capturing any resting state (this accounts for Firefox pointer residue).
+3. Before a screenshot: verify the expected state attribute, verify a non-`none` computed `display` and a non-zero box, and wait for the existing motion-settle period.
+4. Keep one baseline per engine × framework. Compare geometry within an engine, never across engines.
+
+### X-12 — Per-tranche CI evidence (approved)
+
+A tranche counts as CI-verified without the whole repository CI being green, when the merge commit's run shows:
+
+- **Green by status:** Build, Typecheck, Coverage measurement; the strict Playwright projects (ng, vue, react) and the accessibility baseline validation; the new tranche's verification and differential accessibility steps (ng, vue); every earlier tranche's steps, except the named pre-existing failure (vue G3-B step, U2).
+- **Checked in the logs:** Provenance validation reports no FAIL beyond the named pre-existing one (`accordion.spec.ts`); the provenance script self-tests add the new tests to the pass count, with exactly the 3 named pre-existing failures; Vue and React coverage percentages do not drop run over run by more than the gate threshold.
+- **Recorded at closeout:** `coverage:validate`, lint on the changed files, the Docker tranche run, the full regression run, the X-1 reach test, and the size measurement.
+
+Unrelated CI debt is not fixed under this rule. Any change to the named pre-existing failure lists needs a separate decision.
+
+### Corrections and scoped steps
+
+- **G3-C1 Errata E3 (approved, documentation only).** Angular is 74 effective + 5 dead groups (14, 15, 25, 26, 27), instead of 79 effective. Vue is 81 effective, 9 omitted. Recorded in G3-C1 Spec §18, the G3-C1 closeout addendum and `BLUEPRINT_GAPS.md`, together with the corrected GAP-064 `Status:` header. No CSS, `g3c1-port.mjs`, fidelity-data or D2 change. Removing or reclassifying the five groups is a separate implementation decision.
+- **D-G3-4 factual correction (recorded, not implemented).** Ultimate renders no popover or confirm-popup arrow (§4.2). The premise "Ultimate positions the arrow its own way" is wrong. The underlying decision (no new JavaScript to reproduce runtime variables) stands. Applied at G3-D research.
+- **D-G3-9 factual correction (recorded, not implemented).** There is no OrderList/PickList Listbox divergence: both frameworks render `u-listbox` (§4.3). The "preserve the divergence" statement is obsolete. Applied at G3-E research.
+- **C2-0 (approved as a separate corrective step before G3-C2).** A small, separately reviewed Spec and Plan covering only:
+  1. Angular ContextMenu positioning after the menu list has rendered, matching the verified PrimeNG 21.1.9 behaviour (`position()` on overlay enter);
+  2. the Angular ContextMenu non-global trigger, **Option (b)**: correct the inaccurate doc comment (the promised `target` input does not exist) and the Default story so they use the supported global or host-based trigger. **No new public input or API**;
+  3. the Angular TieredMenu Popup story: add a trigger button that calls the existing `toggle(event)`.
+
+  No Vue changes and no CSS changes. F-3a and F-3b stay in the C2 parity work.
+
+### Execution boundary
+
+Not authorized by this gate: the C2 Spec or Plan, a C2 implementation branch, parity CSS changes, removal of the five Angular Stepper dead groups, E3 tooling or fidelity-data changes, and unrelated CI debt. Next: the C2-0 Spec and Plan. The C2 parity Spec begins only after the C2-0 scope and its evidence are settled.
