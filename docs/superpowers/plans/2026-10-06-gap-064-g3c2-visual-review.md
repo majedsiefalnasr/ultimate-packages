@@ -556,3 +556,26 @@ Tree = `git write-tree` with the 24 PanelMenu PNGs staged (18 modified, 6 new), 
 ### Decision
 
 Approved by the user on 2026-10-06 with the pointer-park correction. Nothing is pending; U-3 stays carried to the closeout.
+
+## Final-review fixes (Spec §20, A3) — user decisions 2026-10-06
+
+### C-1 keyboard-focus adaptation
+
+Commit `542ac72` makes the TieredMenu, Menubar and MegaMenu focused-item rules show keyboard focus (`:focus-visible`), with tests in `68073d5` and `120701d`. The rules match only `:focus-visible`, so no rest or hover rendering changed: **no existing screenshot changed**. All 99 existing visual and open screenshots passed against the committed baselines (all 99 pixel-unchanged) in the Docker `c2` run on `120701d`.
+
+### The 6 ContextMenu Global open screenshots: approved
+
+The only new screenshots from the A3 round are `ContextMenu Global open G3-C2 open` (right-click at (300, 200), pointer parked at (0, 0), overlay visible, no focused item), ng and vue x chromium/firefox/webkit. The user approved all 6 on 2026-10-06 and they are now baselined. Docker `update` (Playwright v1.63.0-jammy aarch64) on `120701d` wrote exactly these 6 new PNGs and nothing else.
+
+### ContextMenu is pointer-only (new gap, not fixed here)
+
+ContextMenu items have `tabindex="-1"` and the component has no key handler. This is pre-existing: the focused class is set only by `mouseenter`. The user decided on 2026-10-06 that:
+
+- ContextMenu stays pointer-only for G3-C2 and no runtime change is made;
+- the hover-based focused-item test stays as the only focused-item check;
+- "ContextMenu has no keyboard navigation" is recorded as a NEW gap that needs its own separate authorization before any work starts.
+
+### Final results (`--retries=0`)
+
+- Docker `c2` on the tree from `git write-tree` with the 6 PNGs staged: `c2 exit 0`, **285 passed, 0 failed, 285 total, every test passed_first_attempt**. The earlier A3 run on `120701d` was 279 passed and 6 failed (the 6 missing Global baselines), so 279 + 6 = 285.
+- G3-C2 validator on these results: `OK: ng 30/30 reports, 0 introduced violations, 0 stale pre-existing row(s)`; `OK: vue 27/27 reports, 0 introduced violations, 0 stale pre-existing row(s)`.
