@@ -319,3 +319,71 @@ Status: Accepted (user decision, 2026-10-04, GAP-064 Architecture Discussion). E
 - The key also appears as the value of the generated `<style>` elements' key attribute (`data-u-ng-style` in Angular, `data-u-style` in Vue, and `<key>-variables` for the variable block). For renamed components that value changes. It is not a documented consumer contract, and Angular SSR hydration reuse (GAP-078) is unaffected because server and client use the same key.
 - No exported signature changes. Angular's `componentName` is `protected`, and Vue's is an internal `createBaseComponent` argument.
 - New Angular or Vue components whose structural CSS consumes an Aura preset module register under that module's upstream key.
+
+## ADR-052 — GAP-064 cross-tranche parity rules for the remaining G3 tranches (selector reachability, DOM admissibility, state selectors, runtime roles, open-state screenshots, tranche CI evidence)
+
+Status: Accepted (user decisions, 2026-10-06, GAP-064 cross-tranche decision gate and C2-0 Spec Review). Evidence: `docs/architecture/research/2026-10-06-gap-064-cross-tranche-study.md` (§2–§5 evidence; §10 rulings; §11 amendments). This ADR is the normative record of those rulings. The study is their evidence and history, not the authority. The rule text below is transcribed from the approved rulings without change of substance; X-12 is given in its §11-corrected form.
+
+**Context.** The selector-reach audit of the shipped G3-A, G3-B and G3-C1 CSS found that upstream selector text can be ported faithfully while a selector never reaches Ultimate's rendered DOM (G3-C1 Errata E2 and E3). It also found pre-existing component defects that a CSS port alone cannot evidence (study §4.1), and CI signals that a red global run masks (study §5, §11). The rules below apply to G3-C2, G3-D and G3-E. They extend, and do not reverse, ADR-051, D-G3-1..9 and C-1..C-11.
+
+**Decision.**
+
+**X-1 — Selector reachability.** For each tranche and each framework, every selector part a ported style module emits belongs to exactly one class. A selector part is a top-level comma part, read inside its at-rule.
+
+- **R (reached):** matches at least one element in at least one named verification story, with that story's documented state applied.
+- **K (conditional):** every class or attribute it needs is emitted by a cited source location under a named state that no story exercises. The tranche Spec lists it with the reason.
+- **X (excluded):** not emitted, and recorded as an FX omission (D2).
+
+State pseudo-classes and pseudo-elements are removed before matching. Combinators are evaluated against the actual rendered DOM, including framework-generated host elements such as Angular component hosts. A selector that matches only upstream markup and cannot match Ultimate's rendered DOM is not R evidence. Static textual fidelity to upstream selectors is never reachability evidence. The tranche-scoped reach test runs inside that tranche's existing verification specs; there is no separate CI step.
+
+**X-2 — DOM-admissibility gate.**
+
+> A parity tranche must not introduce, remove, reorder, or structurally alter rendered DOM solely to make upstream CSS selectors match. Existing framework-generated host elements may be accounted for when evaluating selector reachability, but they must not be removed or bypassed by changing component structure. Any DOM change required for behavioral parity must be separately authorized as a runtime/component correction, with its own evidence and scope.
+
+- CSS adaptation to the existing DOM is allowed within a parity tranche.
+- A DOM or runtime change is not ordinary CSS parity work and needs separate authorization.
+
+**X-3 — Value-qualified state selectors.**
+
+- A selector addressing a state attribute uses the value the component emits, for example `[data-u-open="true"]`, or the corresponding negated value.
+- A presence-only attribute selector is allowed only for an attribute the component actually adds or removes entirely, such as `hidden`, with rendered evidence for both states in both frameworks.
+
+**X-3b — Disabled appearance vs interaction guard.** The visual disabled state and interaction protection are verified separately. `pointer-events` alone is never treated as the complete interaction guard.
+
+**X-4 — C-4 extension: runtime styling and positioning roles.** Each tranche's research lists every runtime styling or positioning responsibility in the pinned PrimeVue 4.5.5 / PrimeNG 21.1.9 source (`inlineStyles`, `nestedPosition`, `absolutePosition`, `addStyle`, runtime CSS variables). Each one is mapped to CSS keyed on state Ultimate already emits, kept as Ultimate's existing mechanism, or excluded. No new JavaScript or runtime state is introduced by a CSS port.
+
+For **G3-C2**, C-4 covers:
+
+1. submenu visibility;
+2. the TieredMenu popup's initial off-screen placement;
+3. ContextMenu root positioning;
+4. nested submenu placement: upstream `nestedPosition()`'s default result (`inset-inline-start: 100%; top: 0`) expressed in CSS on the existing open state. Upstream's viewport-overflow flip is JavaScript-driven and is not introduced; the C2 Spec states the overflow decision explicitly;
+5. Angular host-aware visibility adaptation.
+
+Role 5 is not an exclusion or a PX. It is a CSS adaptation to Ultimate's existing rendered DOM, with no DOM change, no JavaScript change and no new runtime state. Where Angular inserts an existing component host between the item and the submenu, selectors account for that host, for example `.u-tieredmenu-item[data-u-open="true"] > u-tiered-menu-sub > .u-tieredmenu-submenu`. Vue keeps the direct-child form where its rendered DOM supports it. The Angular F-3b corrections are pre-existing defect corrections inside C2, not fidelity omissions.
+
+**X-6 — Deterministic open-state screenshots** (refines C-10 and D-G3-7, replaces neither). Applies to every C2, D and E story whose verified CSS is visible only in an open or interaction state.
+
+1. Open through the real trigger, using fixed coordinates where applicable.
+2. Park the pointer at (0, 0) before capturing any resting state (this accounts for Firefox pointer residue).
+3. Before a screenshot: verify the expected state attribute, verify a non-`none` computed `display` and a non-zero box, and wait for the existing motion-settle period.
+4. Keep one baseline per engine × framework. Compare geometry within an engine, never across engines.
+
+**X-12 — Per-tranche CI evidence.** A tranche counts as CI-verified without the whole repository CI being green, when the merge commit's run shows:
+
+- **Green by status:** Build, Typecheck, Coverage measurement; the strict Playwright projects (ng, vue, react) and the accessibility baseline validation; the new tranche's verification and differential accessibility steps (ng, vue); every earlier tranche's steps, except the named pre-existing failure (vue G3-B step, U2).
+- **Checked in the logs:** the provenance script self-tests add the new tests to the pass count, with exactly the 3 named pre-existing failures; Vue and React coverage percentages do not drop run over run by more than the gate threshold.
+- **Provenance:**
+  1. **Repository-wide provenance validation** (`provenance:validate`) is classified as **pre-existing debt**. It is red, it is expected to stay red, and its output is not tranche evidence. The tranche does not fix the validator or the missing entries.
+  2. **Tranche-level changed-file provenance completeness** is the authoritative provenance evidence: every source file the tranche changes has a matching `ultimateDestination` entry in `docs/architecture/provenance/{ng,vue}.json`. It is verified directly over the tranche's changed-file list (relative to the tranche's branch point) and recorded at closeout. The repository-wide validator is never claimed to establish completeness.
+- **Recorded at closeout:** `coverage:validate`, lint on the changed files, the Docker tranche run, the full regression run, the X-1 reach test, and the size measurement.
+
+Unrelated CI debt is not fixed under this rule. Any change to the named pre-existing failure lists needs a separate decision.
+
+**Not decided here.** The study's proposals X-5, X-7, X-8, X-9, X-10 and X-11 stay proposals until separately decided. The recorded factual corrections to D-G3-4 and D-G3-9 (study §10) are applied at G3-D and G3-E research.
+
+**Consequences.**
+
+- Every remaining G3 Spec states, per framework, the R/K/X class of each emitted selector part, and ships a reach test inside its verification specs.
+- Runtime or DOM corrections (for example C2-0) are separately specified and authorized, never folded into a CSS parity port.
+- Tranche closeouts cite the X-12 evidence set, not the overall CI status and not the repository-wide provenance validator.
