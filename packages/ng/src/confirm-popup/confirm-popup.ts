@@ -69,7 +69,7 @@ import { confirmPopupStyleModule } from "./confirm-popup-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UConfirmPopup extends UBaseComponent {
-  protected override readonly componentName = "confirm-popup";
+  protected override readonly componentName = "confirmpopup";
   protected override readonly styleModule = confirmPopupStyleModule;
 
   /** Matches only `UConfirmation` requests carrying the same `key` (undefined matches undefined). */
