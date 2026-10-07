@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-07
 **Branch:** `feature/gap-064-g3d-overlays-composites` (from `main` `c567039`, with the G3-D research `4eaceb3` merged)
-**Status:** **Draft, for Spec Review.** Implementation needs an approved Spec and an approved Plan.
+**Status:** **Approved** (Spec Review, user, 2026-10-07; OI-D1..OI-D4 resolved in §16). Implementation needs an approved Plan.
 **Governing records:**
 
 - ADR-052 (normative: X-1, X-2, X-3, X-3b, X-4, X-6, X-12), ADR-051, ADR-048, D-G3-1..9 (D-G3-4 and D-G3-9 as corrected by the cross-tranche study §10).
@@ -374,3 +374,12 @@ Stop and report, with no workaround, if:
 - **OI-D2 — SpeedDial disabled mapping (§6.1).** Upstream `p-disabled` is on the root and on items; this Spec maps the base role to the native `:disabled` trigger and actions (the only elements Ultimate disables). Confirm.
 - **OI-D3 — Drawer group 23 (`:dir(rtl)`).** Port it with an `Rtl` verification story (this Spec), or omit it as untested. Recommended: port.
 - **OI-D4 — Screenshot scoping.** ConfirmDialog to `.u-dialog` and Drawer to `.u-drawer`, so out-of-scope mask defects do not enter the baselines. Confirm.
+
+## 16. Spec Review decisions (2026-10-07, user)
+
+- **OI-D1 — approved.** Popover `top: 0; left: 0` is dropped; only `.u-popover { position: absolute; }` remains (R-1). D-0 owns runtime `top`/`left` anchoring; the port must not reintroduce static `top`/`left`.
+- **OI-D2 — approved.** SpeedDial disabled appearance maps to the native `:disabled` trigger and action buttons (§6.1). Disabled appearance and interaction protection stay separate (X-3b).
+- **OI-D3 — approved.** Drawer group 23 (`:dir(rtl)`) is ported, with the `Rtl` verification story. The existing physical Drawer placement rules (R-2: `margin-left: auto`, `margin-top: auto`) are preserved exactly and are not converted to logical properties.
+- **OI-D4 — approved.** ConfirmDialog screenshots are scoped to `.u-dialog`, Drawer screenshots to `.u-drawer`. The out-of-scope Dialog mask and Drawer backdrop defects must not affect G3-D baselines.
+- **Implementation lock.** The SpeedDial mask keeps the exact D3 → D1 → D4 → D5 cascade (§6.1, §8): the B-2 base mask role is not simplified or removed because D1 group 7 overrides one of its declarations.
+- **Confirmed unchanged:** 34/77 ported and 43/77 omitted; FX-D1..FX-D8; D-D2 and D-D3a `:has` forms; D-D3b; D-D3c fallback and PX-D3; D-D4; D-D5; D-D6; D-D7; F-D1..F-D3 as CSS-port defect corrections; D-0 as a completed prerequisite; no DOM/runtime/public API change; X-8 row policy undecided; ADR-053, GAP-094 and repository-wide provenance debt out of scope; GAP-084..086 and GAP-087..094 untouched; G3-A..G3-C2 tooling frozen.
