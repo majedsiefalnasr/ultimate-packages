@@ -180,8 +180,8 @@ const CANDIDATE_KEY = {
   "R-D4": "confirmdialog",
   "R-D5": "popover",
 };
-/** Gate outcome (Plan Task 8; Spec §8 G-D1). Provisional until Task 8 records the result. */
-export const KEPT = ["R-D1", "R-D2", "R-D3", "R-D4", "R-D5"];
+/** Gate outcome (Plan Task 8; Spec §8 G-D1, §17): R-D5 dropped (no difference in any engine); R-D4 pending user ruling. */
+export const KEPT = ["R-D1", "R-D2", "R-D3", "R-D4"];
 const retained = () => {
   const out = {};
   for (const id of KEPT) (out[CANDIDATE_KEY[id]] ??= []).push(...CANDIDATE_RULES[id]);

@@ -10,7 +10,6 @@ const css = /*css*/ `
 .u-popover{margin-block-start: dt('popover.gutter');background: dt('popover.background');color: dt('popover.color');border: 1px solid dt('popover.border.color');border-radius: dt('popover.border.radius');box-shadow: dt('popover.shadow');will-change: transform;}
 .u-popover-content{padding: dt('popover.content.padding');}
 .u-popover{position: absolute;}
-.u-popover-content{position: relative;}
 `;
 
 const classes = {

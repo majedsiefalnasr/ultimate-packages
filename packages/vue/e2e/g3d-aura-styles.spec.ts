@@ -343,9 +343,12 @@ for (const [pos, prop, value] of [
     if (pos === "right") expect(Math.abs(b.x + b.width - vp.width)).toBeLessThanOrEqual(1);
     if (pos === "bottom") expect(Math.abs(b.y + b.height - vp.height)).toBeLessThanOrEqual(1);
     if (WRAPPER) {
-      // F-D3 / G-D3 (Angular): the focus-trap wrapper fills the drawer.
+      // F-D3 / G-D3 (Angular): the focus-trap wrapper fills the drawer. The wrapper rule
+      // (`flex: 1 1 auto` in the drawer's flex column, D-D7) governs the drawer's inner box, so the
+      // reference is `clientHeight`; the border box also holds the drawer's ported borders.
       const w = await box(page.locator(WRAPPER));
-      expect(w.height, "wrapper fills the drawer").toBeGreaterThanOrEqual(b.height - 1);
+      const inner = await drawer.evaluate((el) => el.clientHeight);
+      expect(w.height, "wrapper fills the drawer").toBeGreaterThanOrEqual(inner - 1);
     }
   });
 

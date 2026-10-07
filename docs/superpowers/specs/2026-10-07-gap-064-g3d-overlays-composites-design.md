@@ -383,3 +383,25 @@ Stop and report, with no workaround, if:
 - **OI-D4 — approved.** ConfirmDialog screenshots are scoped to `.u-dialog`, Drawer screenshots to `.u-drawer`. The out-of-scope Dialog mask and Drawer backdrop defects must not affect G3-D baselines.
 - **Implementation lock.** The SpeedDial mask keeps the exact D3 → D1 → D4 → D5 cascade (§6.1, §8): the B-2 base mask role is not simplified or removed because D1 group 7 overrides one of its declarations.
 - **Confirmed unchanged:** 34/77 ported and 43/77 omitted; FX-D1..FX-D8; D-D2 and D-D3a `:has` forms; D-D3b; D-D3c fallback and PX-D3; D-D4; D-D5; D-D6; D-D7; F-D1..F-D3 as CSS-port defect corrections; D-0 as a completed prerequisite; no DOM/runtime/public API change; X-8 row policy undecided; ADR-053, GAP-094 and repository-wide provenance debt out of scope; GAP-084..086 and GAP-087..094 untouched; G3-A..G3-C2 tooling frozen.
+
+## 17. Gate results (Plan Task 8, 2026-10-07)
+
+Evidence: Linux Docker (`mcr.microsoft.com/playwright:v1.63.0-jammy`), Chromium, Firefox and WebKit, Angular and Vue, `--retries=0`. Source at `af68cb0` plus the Task 8 working-tree changes.
+
+- **G-D2 — SpeedDial trigger reachability: PASS, 6/6.** `SpeedDial closed, opened and closed by a real click (F-D1, G-D2)`.
+- **G-D3 — Angular Drawer wrapper: PASS after a test-contract correction (user ruling, 2026-10-07).** The first run failed 12/12 Angular runs: wrapper 720 px against drawer 726 − 1. Diagnosis: the wrapper equals the drawer's inner box exactly (320×720 left/right, 1274×160 top/bottom). The 6 px is the drawer's ported border width. The D-D7 rule (`flex: 1 1 auto` in the drawer's flex column) governs the inner box, so the assertion now compares with `clientHeight`. No CSS, DOM or runtime change. Rerun: `Drawer <pos> size, tokens and placement` 24/24 (4 positions × 3 engines × 2 frameworks), plus G-D2 6/6.
+- **G-D1 — candidates R-D2..R-D5** (override resets the candidate's properties; boxes, computed values and element screenshots compared):
+
+| Candidate | Angular (3 engines)                                                           | Vue (3 engines)                   | Decision           |
+| --------- | ----------------------------------------------------------------------------- | --------------------------------- | ------------------ |
+| R-D2      | hidden item `visibility` hidden → visible (pixels differ in Firefox)          | same (pixels differ in WebKit)    | Kept               |
+| R-D3      | footer and button boxes change (gap 8 px lost, buttons shrink); pixels differ | footer box changes; pixels differ | Kept               |
+| R-D4      | message box width 1158 → 271–295 px; pixels identical                         | no difference                     | Kept (user ruling) |
+| R-D5      | no difference                                                                 | no difference                     | Dropped            |
+
+Final `KEPT`: R-D1 (D-D3c fallback), R-D2, R-D3, R-D4. The 34/77 ported and 43/77 omitted accounting is unchanged (D5 rules are not upstream groups).
+
+**Follow-up gaps recorded (user rulings, 2026-10-07; out of G3-D scope, register at closeout):**
+
+- **SpeedDial closed-layout footprint.** Upstream normal-flow list. In `speeddial--default` (direction up, Chromium, both frameworks) the root grows from 1248×6 to 1248×198 and the element after the host moves from y = 22 to y = 214 (~192 px), open or closed. The PrimeVue showcase positions every SpeedDial with inline `position: absolute`. No approved upstream rule removes it; no G3-D change.
+- **Drawer content overflow.** The ported `.u-drawer-content { width: 100%; height: 100% }` plus content padding, without an upstream-style global `box-sizing: border-box`, makes the content box 40 px larger than the drawer's inner box: 360 inside 320 (left/right), 1314 inside 1274 (top/bottom). Measured on the Angular `Open`, `RightPosition`, `Top` and `Bottom` stories (Chromium). The Vue drawer uses the same ported rule. No G3-D change.
