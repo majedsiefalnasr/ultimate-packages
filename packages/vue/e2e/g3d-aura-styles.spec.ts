@@ -31,68 +31,73 @@ type Kind = "rest" | "none" | "click" | "speeddial";
 const STORIES: ReadonlyArray<{ name: string; story: string; ready: string; kind: Kind }> = [
   {
     name: "ConfirmDialog Default",
-    story: `${FW}-confirmdialog--default`,
+    story: "vue-confirmdialog--default",
     ready: ".u-dialog",
     kind: "click",
   },
   {
     name: "ConfirmDialog WithIcon",
-    story: `${FW}-confirmdialog--with-icon`,
+    story: "vue-confirmdialog--with-icon",
     ready: ".u-dialog",
     kind: "click",
   },
   {
     name: "ConfirmPopup Default",
-    story: `${FW}-confirmpopup--default`,
+    story: "vue-confirmpopup--default",
     ready: ".u-confirmpopup",
     kind: "click",
   },
   {
     name: "ConfirmPopup WithIcon",
-    story: `${FW}-confirmpopup--with-icon`,
+    story: "vue-confirmpopup--with-icon",
     ready: ".u-confirmpopup",
     kind: "click",
   },
-  { name: "Drawer Left", story: DRAWER.left, ready: ".u-drawer", kind: DRAWER_OPEN },
-  { name: "Drawer Right", story: DRAWER.right, ready: ".u-drawer", kind: DRAWER_OPEN },
-  { name: "Drawer Top", story: DRAWER.top, ready: ".u-drawer", kind: DRAWER_OPEN },
-  { name: "Drawer Bottom", story: DRAWER.bottom, ready: ".u-drawer", kind: DRAWER_OPEN },
-  { name: "Drawer Full", story: DRAWER.full, ready: ".u-drawer", kind: DRAWER_OPEN },
-  { name: "Drawer Rtl", story: DRAWER.rtl, ready: ".u-drawer", kind: DRAWER_OPEN },
-  { name: "Popover Default", story: `${FW}-popover--default`, ready: ".u-popover", kind: "click" },
+  { name: "Drawer Left", story: "vue-drawer--default", ready: ".u-drawer", kind: DRAWER_OPEN },
+  {
+    name: "Drawer Right",
+    story: "vue-drawer--right-position",
+    ready: ".u-drawer",
+    kind: DRAWER_OPEN,
+  },
+  { name: "Drawer Top", story: "vue-drawer--top", ready: ".u-drawer", kind: DRAWER_OPEN },
+  { name: "Drawer Bottom", story: "vue-drawer--bottom", ready: ".u-drawer", kind: DRAWER_OPEN },
+  { name: "Drawer Full", story: "vue-drawer--full", ready: ".u-drawer", kind: DRAWER_OPEN },
+  { name: "Drawer Rtl", story: "vue-drawer--rtl", ready: ".u-drawer", kind: DRAWER_OPEN },
+  { name: "Popover Default", story: "vue-popover--default", ready: ".u-popover", kind: "click" },
   {
     name: "Popover NonDismissable",
-    story: `${FW}-popover--non-dismissable`,
+    story: "vue-popover--non-dismissable",
     ready: ".u-popover",
     kind: "click",
   },
   {
     name: "SplitButton Default",
-    story: `${FW}-splitbutton--default`,
+    story: "vue-splitbutton--default",
     ready: ".u-splitbutton",
     kind: "rest",
   },
   {
     name: "SplitButton Disabled",
-    story: `${FW}-splitbutton--disabled`,
+    story: "vue-splitbutton--disabled",
     ready: ".u-splitbutton",
     kind: "rest",
   },
   {
     name: "SpeedDial Default",
-    story: `${FW}-speeddial--default`,
+    story: "vue-speeddial--default",
     ready: ".u-speeddial",
     kind: "speeddial",
   },
   {
     name: "SpeedDial Directions",
-    story: `${FW}-speeddial--directions`,
+    story: "vue-speeddial--directions",
     ready: ".u-speeddial",
     kind: "speeddial",
   },
   {
     name: "SpeedDial Mask",
-    story: `${FW}-speeddial--mask`,
+    story: "vue-speeddial--mask",
     ready: ".u-speeddial-mask",
     kind: "speeddial",
   },
@@ -230,11 +235,17 @@ for (const v of VISUAL) {
  */
 async function resolved(page: Page, value: string, property: string): Promise<string> {
   if (value.startsWith("--")) {
-    const defined = await page.evaluate(
-      (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim(),
-      value
-    );
-    expect(defined, `${value} is defined`).not.toBe("");
+    // Polled: the theme variables are injected when the component mounts, after navigation.
+    await expect
+      .poll(
+        () =>
+          page.evaluate(
+            (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim(),
+            value
+          ),
+        { message: `${value} is defined` }
+      )
+      .not.toBe("");
   }
   return page.evaluate(
     ([v, p]) => {
@@ -474,6 +485,12 @@ test(`${T}/SpeedDial disabled appearance and guards G3-D x3b`, async ({ page }) 
   await page.mouse.move(0, 0);
   const dAction = up.locator(".u-speeddial-action:disabled");
   await expect(dAction).toHaveCount(1);
+  // X-6: the open transition has settled before the action is measured or clicked.
+  await expect
+    .poll(() =>
+      dAction.evaluate((el) => getComputedStyle(el.closest(".u-speeddial-item")!).opacity)
+    )
+    .toBe("1");
   await expect.poll(() => dAction.evaluate((el) => getComputedStyle(el).opacity)).toBe(opacity);
   expect(await css(dAction, "pointer-events")).toBe("none");
   await dAction.click({ force: true });
