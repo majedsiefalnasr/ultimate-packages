@@ -3,6 +3,7 @@ import { DOCUMENT } from "@angular/common";
 import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 import { beforeAll, describe, expect, it } from "vitest";
+import { ComponentIdGenerator } from "@ultimate/ng-core";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { UConfirmDialog } from "./confirm-dialog";
 import { UConfirmPopup } from "./confirm-popup";
@@ -37,6 +38,7 @@ function mount(type: Type<unknown>, inputs: Record<string, unknown>) {
   TestBed.configureTestingModule({
     providers: [
       provideRouter([]), // SplitButton composes UMenu, whose template binds [routerLink]
+      ComponentIdGenerator, // ConfirmDialog composes UDialog, which injects it (confirm-dialog.spec.ts precedent)
       { provide: DOCUMENT, useValue: doc },
       { provide: PLATFORM_ID, useValue: "server" },
     ],
