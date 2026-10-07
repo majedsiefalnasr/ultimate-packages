@@ -718,5 +718,29 @@
     "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Adapted from primeng@21.1.9 TieredMenu. TieredMenu→UTieredMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "packages/primeng/src/popover/popover.ts",
+    "ultimateDestination": "packages/ng/src/popover/popover.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 Popover. Popover→UPopover: imperatively toggled overlay appended to body via UOverlay, dismissed on outside click (unless dismissable is false), Escape and resize, positioned below its target from getBoundingClientRect (top = target bottom, left = target left) after the overlay renders (afterNextRender; upstream aligns its container in the enter hook). GAP-064 D-0: placement now runs after render and targets the overlay container, not the inner content. Excludes the arrow, viewport flip (absolutePosition), focus-on-show, content templates and motion."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/popover/popover.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers toggling, show/hide events, outside-click and Escape dismissal, the non-dismissable mode, SSR safety (GAP-065), and post-render placement of the overlay container and early hide (GAP-064 D-0)."
+  },
+  {
+    "originalPath": "packages/primeng/src/confirmpopup/confirmpopup.ts",
+    "ultimateDestination": "packages/ng/src/confirm-popup/confirm-popup.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 ConfirmPopup. ConfirmPopup→UConfirmPopup: service-driven (UConfirmationService) popup appended to body via UOverlay, accept/reject via UButton, dismissed on outside click and resize, rejected on Escape, positioned below confirmation.target from getBoundingClientRect after the popup renders (afterNextRender; upstream aligns in the enter hook). GAP-064 D-0: placement now runs after render. Excludes the arrow, viewport flip, focus management beyond restoring focus to the target, templates and motion."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/confirm-popup/confirm-popup.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers rendering on a matching confirmation, accept/reject, outside-click and Escape dismissal, key matching, SSR safety (GAP-065), and post-render placement and early close (GAP-064 D-0)."
   }
 ]

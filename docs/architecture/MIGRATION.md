@@ -158,3 +158,7 @@ Added for GAP-064 G3-C2 (`feature/gap-064-g3c2-menus`), same status — unreleas
 Added for GAP-095 (`feature/gap-095-dependency-remediation`), same status — unreleased, no changesets:
 
 - **`@ultimate/mcp` — minimum `@modelcontextprotocol/sdk` is now `^1.31.0`** (was `^1.30.0`; security, GHSA-6qxp-vccf-f47h).
+
+Added for GAP-064 D-0 (`feature/gap-064-d0-runtime-fixes`), same status — unreleased, no changesets:
+
+- **`@ultimate/ng` — `UPopover` and `UConfirmPopup` now open below their trigger.** Both previously appeared at the top-left corner of the page, because their position was computed before the overlay existed. They now open with their left edge at the trigger's left and their top at the trigger's bottom, matching the Vue components. `UPopover` now positions its overlay container rather than the inner content element. No API change. Placement still does not flip at the viewport edges and renders no arrow (known divergences from PrimeNG).

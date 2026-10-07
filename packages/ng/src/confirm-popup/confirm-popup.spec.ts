@@ -1,6 +1,6 @@
 import { Component, PLATFORM_ID } from "@angular/core";
-import { TestBed } from "@angular/core/testing";
-import { describe, expect, it, vi } from "vitest";
+import { type ComponentFixture, TestBed } from "@angular/core/testing";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { UConfirmationService } from "@ultimate/ng-core";
 import { UConfirmPopup } from "./confirm-popup";
 
@@ -132,6 +132,63 @@ describe("UConfirmPopup", () => {
     expect(document.querySelector(".u-confirmpopup")).toBeNull();
 
     fixture.nativeElement.remove();
+  });
+
+  describe("positioning after render (GAP-064 D-0)", () => {
+    function setup(): { fixture: ComponentFixture<HostComponent>; button: HTMLButtonElement } {
+      const fixture = TestBed.createComponent(HostComponent);
+      document.body.appendChild(fixture.nativeElement);
+      fixture.detectChanges();
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector("button");
+      vi.spyOn(button, "getBoundingClientRect").mockReturnValue({
+        top: 16,
+        bottom: 52,
+        left: 16,
+        right: 92,
+        width: 76,
+        height: 36,
+        x: 16,
+        y: 16,
+      } as DOMRect);
+      return { fixture, button };
+    }
+
+    /** The confirmation arrives, queued microtasks drain, then the zoneless scheduler renders. */
+    async function render(fixture: ComponentFixture<HostComponent>) {
+      await Promise.resolve();
+      fixture.detectChanges();
+      await fixture.whenStable();
+    }
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+      document.querySelectorAll(".u-confirmpopup").forEach((el) => el.remove());
+    });
+
+    it("places the popup below confirmation.target once it has rendered, with a z-index", async () => {
+      const { fixture, button } = setup();
+      TestBed.inject(UConfirmationService).confirm({ message: "Delete?", target: button });
+      await render(fixture);
+
+      const root = document.querySelector<HTMLElement>(".u-confirmpopup");
+      expect(root).not.toBeNull();
+      expect(root!.style.top).toBe("52px");
+      expect(root!.style.left).toBe("16px");
+      expect(root!.style.zIndex).not.toBe("");
+
+      fixture.nativeElement.remove();
+    });
+
+    it("closed before its callback runs: no exception, no reappearance", async () => {
+      const { fixture, button } = setup();
+      const service = TestBed.inject(UConfirmationService);
+      service.confirm({ message: "Delete?", target: button });
+      service.close();
+      await render(fixture);
+      expect(document.querySelector(".u-confirmpopup")).toBeNull();
+
+      fixture.nativeElement.remove();
+    });
   });
 
   describe("SSR safety (GAP-065)", () => {

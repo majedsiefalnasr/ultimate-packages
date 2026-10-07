@@ -1,6 +1,6 @@
 import { Component, PLATFORM_ID, ViewChild } from "@angular/core";
-import { TestBed } from "@angular/core/testing";
-import { describe, expect, it, vi } from "vitest";
+import { type ComponentFixture, TestBed } from "@angular/core/testing";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { UPopover } from "./popover";
 
 @Component({
@@ -116,6 +116,69 @@ describe("UPopover", () => {
     expect(document.querySelector(".u-popover")).not.toBeNull();
 
     fixture.nativeElement.remove();
+  });
+
+  describe("positioning after render (GAP-064 D-0)", () => {
+    /**
+     * Mirrors the browser order: the click handler runs, queued microtasks
+     * drain, and only then does the zoneless scheduler render.
+     */
+    async function clickAndRender(fixture: ComponentFixture<HostComponent>) {
+      fixture.nativeElement.querySelector("button").click();
+      await Promise.resolve();
+      fixture.detectChanges();
+      await fixture.whenStable();
+    }
+
+    function setup(): ComponentFixture<HostComponent> {
+      const fixture = TestBed.createComponent(HostComponent);
+      document.body.appendChild(fixture.nativeElement);
+      fixture.detectChanges();
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector("button");
+      vi.spyOn(button, "getBoundingClientRect").mockReturnValue({
+        top: 16,
+        bottom: 40,
+        left: 16,
+        right: 124,
+        width: 108,
+        height: 24,
+        x: 16,
+        y: 16,
+      } as DOMRect);
+      return fixture;
+    }
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+      document.querySelectorAll(".u-popover").forEach((el) => el.remove());
+    });
+
+    it("places the overlay container below the target once it has rendered, with a z-index", async () => {
+      const fixture = setup();
+      await clickAndRender(fixture);
+
+      const root = document.querySelector<HTMLElement>(".u-popover");
+      expect(root).not.toBeNull();
+      expect(root!.style.top).toBe("40px");
+      expect(root!.style.left).toBe("16px");
+      expect(root!.style.zIndex).not.toBe("");
+      expect(document.querySelector<HTMLElement>(".u-popover-content")!.style.top).toBe("");
+
+      fixture.nativeElement.remove();
+    });
+
+    it("hidden before its callback runs: no exception, no reappearance", async () => {
+      const fixture = setup();
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector("button");
+      button.click();
+      button.click();
+      await Promise.resolve();
+      fixture.detectChanges();
+      await expect(fixture.whenStable()).resolves.not.toThrow();
+      expect(document.querySelector(".u-popover")).toBeNull();
+
+      fixture.nativeElement.remove();
+    });
   });
 
   describe("SSR safety (GAP-065)", () => {
