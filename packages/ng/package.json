@@ -318,10 +318,10 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@angular/build": "21.2.22",
+    "@angular/build": "21.2.25",
     "@angular/cdk": "21.2.14",
-    "@angular/cli": "21.2.22",
-    "@angular/compiler-cli": "21.2.22",
+    "@angular/cli": "21.2.25",
+    "@angular/compiler-cli": "21.2.25",
     "@axe-core/playwright": "4.13.0",
     "@storybook/addon-a11y": "10.6.0",
     "@storybook/angular": "10.6.0",

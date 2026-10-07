@@ -154,3 +154,7 @@ Added for GAP-064 G3-C2 (`feature/gap-064-g3c2-menus`), same status — unreleas
 - **Keyboard focus styling.** The ported item links no longer show the browser focus ring (upstream removes it). Keyboard focus is instead shown with the Aura focus background, applied to the item content when its link has `:focus-visible`: for TieredMenu, Menubar and MegaMenu items, and for PanelMenu top-level headers. Nested PanelMenu items keep the browser focus ring. ContextMenu applies its focused-item background while the pointer is over an item, as before.
 - **Menubar and MegaMenu overlays.** The first-level Menubar submenu and the MegaMenu overlay now sit at their static upstream position and overlap the bar's bottom edge by about 9 px; the MegaMenu overlay spans the bar from its left edge instead of sitting under its item.
 - **Not changed:** the TieredMenu popup is still not anchored to its trigger and has no `minWidth`, and its resting state is off-screen (`top`/`left` of `-9999px`) until it is shown programmatically, so it is invisible until then; PanelMenu expand/collapse is not animated; MegaMenu has no `scrollHeight` option.
+
+Added for GAP-095 (`feature/gap-095-dependency-remediation`), same status — unreleased, no changesets:
+
+- **`@ultimate/mcp` — minimum `@modelcontextprotocol/sdk` is now `^1.31.0`** (was `^1.30.0`; security, GHSA-6qxp-vccf-f47h).
