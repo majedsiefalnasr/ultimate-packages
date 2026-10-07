@@ -15,7 +15,7 @@ import { panelMenuStyleModule } from "./panel-menu-style";
 // entirely (spec §7); not reproduced here.
 export function createBasePanelMenu() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "panel-menu", styleModule: panelMenuStyleModule }),
+    extends: createBaseComponent({ componentName: "panelmenu", styleModule: panelMenuStyleModule }),
     props: {
       model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       multiple: { type: Boolean, default: false },

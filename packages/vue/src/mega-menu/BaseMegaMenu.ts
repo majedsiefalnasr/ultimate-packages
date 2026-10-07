@@ -15,7 +15,7 @@ import { megaMenuStyleModule } from "./mega-menu-style";
 // reproduced here.
 export function createBaseMegaMenu() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "mega-menu", styleModule: megaMenuStyleModule }),
+    extends: createBaseComponent({ componentName: "megamenu", styleModule: megaMenuStyleModule }),
     props: {
       model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       ariaLabel: { type: String, default: null },

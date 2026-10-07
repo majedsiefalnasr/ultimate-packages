@@ -63,7 +63,7 @@ import type { UMegaMenuGroup } from "./mega-menu-item";
   encapsulation: ViewEncapsulation.None,
 })
 export class UMegaMenuColumnGroup extends UBaseComponent {
-  protected override readonly componentName = "mega-menu";
+  protected override readonly componentName = "megamenu";
   protected override readonly styleModule = megaMenuStyleModule;
 
   @Input({ required: true }) group!: UMegaMenuGroup;

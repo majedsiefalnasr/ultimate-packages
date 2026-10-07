@@ -119,7 +119,7 @@ import { panelMenuStyleModule } from "./panel-menu-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UPanelMenuList extends UBaseComponent {
-  protected override readonly componentName = "panel-menu";
+  protected override readonly componentName = "panelmenu";
   protected override readonly styleModule = panelMenuStyleModule;
 
   @Input() items: UMenuItem[] = [];

@@ -116,7 +116,7 @@ const ITEM_LINK_SELECTOR = ":scope > li > .u-panelmenu-header-content > a";
 
 export default {
   name: "UPanelMenuList",
-  extends: createBaseComponent({ componentName: "panel-menu", styleModule: panelMenuStyleModule }),
+  extends: createBaseComponent({ componentName: "panelmenu", styleModule: panelMenuStyleModule }),
   props: {
     items: {
       type: /** @type {import('vue').PropType<readonly unknown[]>} */ (Array),

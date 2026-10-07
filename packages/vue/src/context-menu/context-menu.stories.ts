@@ -10,11 +10,7 @@ export default {
   component: UContextMenu,
 };
 
-const items = [
-  { label: "Copy" },
-  { label: "Paste" },
-  { label: "Delete", disabled: true },
-];
+const items = [{ label: "Copy" }, { label: "Paste" }, { label: "Delete", disabled: true }];
 
 export const Default = {
   render: () => ({
@@ -35,6 +31,26 @@ export const Global = {
     template: `
       <UContextMenu :model="items" global>
         <div>Right-click anywhere on the page.</div>
+      </UContextMenu>
+    `,
+  }),
+};
+
+/** GAP-064 G3-C2 verification story (Spec §9.1): icons, a separator and a disabled item. */
+export const ItemStates = {
+  render: () => ({
+    components: { UContextMenu },
+    data: () => ({
+      items: [
+        { label: "Copy", icon: "pi pi-copy" },
+        { label: "Paste", icon: "pi pi-clone" },
+        { separator: true },
+        { label: "Delete", icon: "pi pi-trash", disabled: true },
+      ],
+    }),
+    template: `
+      <UContextMenu :model="items">
+        <div style="padding: 2rem; border: 1px dashed #999;">Right-click here.</div>
       </UContextMenu>
     `,
   }),
