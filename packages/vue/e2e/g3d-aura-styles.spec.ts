@@ -483,3 +483,91 @@ test(`${T}/SpeedDial disabled appearance and guards G3-D x3b`, async ({ page }) 
   await up.locator('.u-speeddial-action[aria-label="Edit"]').click();
   expect(await page.evaluate(() => document.body.dataset.g3dCommand ?? null)).toBe("Edit");
 });
+
+const ATTR = FW === "ng" ? "data-u-ng-style" : "data-u-style";
+/** ADR-052 X-1: every emitted selector part must match the rendered DOM in a declared story and state. */
+const REACH: ReadonlyArray<{ key: string; runs: ReadonlyArray<readonly [string, Kind, string]> }> =
+  [
+    { key: "confirmdialog", runs: [[`${FW}-confirmdialog--with-icon`, "click", ".u-dialog"]] },
+    { key: "confirmpopup", runs: [[`${FW}-confirmpopup--with-icon`, "click", ".u-confirmpopup"]] },
+    {
+      key: "drawer",
+      runs: [
+        ...(["left", "right", "top", "bottom", "full", "rtl"] as const).map(
+          (p) => [DRAWER[p], DRAWER_OPEN, ".u-drawer"] as const
+        ),
+        // Vue renders `.u-drawer-footer` only with a footer slot (reach-only story, no screenshot).
+        ["vue-drawer--with-footer", DRAWER_OPEN, ".u-drawer"] as const,
+      ],
+    },
+    { key: "popover", runs: [[`${FW}-popover--default`, "click", ".u-popover"]] },
+    {
+      key: "splitbutton",
+      runs: [
+        [`${FW}-splitbutton--default`, "rest", ".u-splitbutton"],
+        [`${FW}-splitbutton--disabled`, "rest", ".u-splitbutton"],
+      ],
+    },
+    {
+      key: "speeddial",
+      runs: [
+        [`${FW}-speeddial--directions`, "speeddial", ".u-speeddial"],
+        [`${FW}-speeddial--mask`, "speeddial", ".u-speeddial-mask"],
+      ],
+    },
+  ];
+/** ADR-052 X-1 class K: emitted by a cited source under a state no story exercises (none expected). */
+const K: Record<string, Record<string, string>> = {};
+const STATE =
+  /::?(before|after|-webkit-[a-z-]+)\b|:(hover|focus-visible|focus|active|dir\([a-z]+\))/g;
+
+for (const r of REACH) {
+  test(`${T}/${r.key} selector reach G3-D reach`, async ({ page }) => {
+    const hit = new Map<string, string>();
+    let parts: string[] = [];
+    for (const [story, kind, ready] of r.runs) {
+      await go(page, story);
+      await state(page, kind, ready);
+      await expect(page.locator(`style[${ATTR}="${r.key}"]`)).toBeAttached();
+      const res = await page.evaluate(
+        ([key, attr, re]) => {
+          const sheet = (
+            document.querySelector(`style[${attr}="${key}"]`) as HTMLStyleElement | null
+          )?.sheet;
+          if (!sheet) return null;
+          const all: string[] = [];
+          for (const rule of Array.from(sheet.cssRules) as CSSStyleRule[]) {
+            if (!rule.selectorText) continue;
+            let depth = 0,
+              cur = "";
+            for (const ch of rule.selectorText) {
+              if (ch === "(") depth++;
+              if (ch === ")") depth--;
+              if (ch === "," && !depth) {
+                all.push(cur.trim());
+                cur = "";
+              } else cur += ch;
+            }
+            all.push(cur.trim());
+          }
+          return all.map((s) => {
+            const stripped = s.replace(new RegExp(re, "g"), "");
+            return { s, stripped, n: stripped ? document.querySelectorAll(stripped).length : 0 };
+          });
+        },
+        [r.key, ATTR, STATE.source] as const
+      );
+      expect(res, `structural sheet for ${r.key}`).not.toBeNull();
+      for (const x of res!)
+        expect(x.stripped, `selector part "${x.s}" strips to empty`).not.toBe("");
+      parts = [...new Set([...parts, ...res!.map((x) => x.s)])];
+      for (const x of res!) if (x.n > 0 && !hit.has(x.s)) hit.set(x.s, `${story}/${kind}`);
+    }
+    const unreached = parts.filter((s) => !hit.has(s) && !(K[r.key] ?? {})[s]);
+    expect(unreached, "selector parts with no R evidence and no K citation").toEqual([]);
+    test.info().annotations.push({
+      type: "reach",
+      description: `${parts.length} parts; R ${hit.size}`,
+    });
+  });
+}

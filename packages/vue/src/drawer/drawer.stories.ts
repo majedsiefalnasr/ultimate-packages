@@ -88,3 +88,26 @@ export const Rtl: Story = {
     `,
   }),
 };
+
+/**
+ * GAP-064 G3-D verification story (X-1 reach only; no screenshot): the Vue drawer renders
+ * `.u-drawer-footer` only when a footer slot is supplied.
+ */
+export const WithFooter: Story = {
+  render: () => ({
+    components: { UDrawer },
+    setup() {
+      const visible = ref(false);
+      return { visible };
+    },
+    template: `
+      <div>
+        <button @click="visible = true">Show drawer</button>
+        <UDrawer v-model:visible="visible" header="Footer">
+          Drawer body content.
+          <template #footer>Drawer footer.</template>
+        </UDrawer>
+      </div>
+    `,
+  }),
+};
