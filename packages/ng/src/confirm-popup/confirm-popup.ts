@@ -3,8 +3,10 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  Injector,
   ViewChild,
   ViewEncapsulation,
+  afterNextRender,
   computed,
   inject,
   input,
@@ -89,6 +91,7 @@ export class UConfirmPopup extends UBaseComponent {
   private registeredEscape = false;
   private static instanceCount = 0;
   private readonly instanceUid = ++UConfirmPopup.instanceCount;
+  private readonly injector = inject(Injector);
 
   constructor() {
     super();
@@ -110,7 +113,11 @@ export class UConfirmPopup extends UBaseComponent {
     this.render.set(true);
     this.bindDismissListeners();
     this.registerEscape();
-    queueMicrotask(() => this.align());
+    // The overlay only exists once Angular renders the @if (render()) block, so
+    // align after the next render (PrimeNG aligns in its enter hook, once its
+    // container exists; C2-0 precedent). align() is unchanged and still returns
+    // early if the overlay was hidden before this runs.
+    afterNextRender(() => this.align(), { injector: this.injector });
   }
 
   private hide(): void {

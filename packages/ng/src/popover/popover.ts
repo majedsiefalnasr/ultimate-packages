@@ -2,9 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Injector,
   ViewChild,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
+  inject,
   input,
   output,
   signal,
@@ -87,6 +90,7 @@ export class UPopover extends UBaseComponent {
   private registeredEscape = false;
   private static instanceCount = 0;
   private readonly instanceUid = ++UPopover.instanceCount;
+  private readonly injector = inject(Injector);
 
   /** Toggles the overlay open/closed, positioning it against `target` (or the click event's own target). */
   toggle(event: Event, target?: HTMLElement): void {
@@ -101,7 +105,11 @@ export class UPopover extends UBaseComponent {
     this.render.set(true);
     this.bindDismissListeners();
     this.registerEscape();
-    queueMicrotask(() => this.align());
+    // The overlay only exists once Angular renders the @if (render()) block, so
+    // align after the next render (PrimeNG aligns in its enter hook, once its
+    // container exists; C2-0 precedent). align() still returns early if the
+    // overlay was hidden before this runs.
+    afterNextRender(() => this.align(), { injector: this.injector });
     this.onShow.emit();
   }
 
@@ -127,7 +135,9 @@ export class UPopover extends UBaseComponent {
   }
 
   private align(): void {
-    const content = this.contentRef?.nativeElement;
+    // Position the overlay container (the uOverlay root), as PrimeNG's
+    // absolutePosition(this.container, …), UConfirmPopup and the Vue port do.
+    const content = this.contentRef?.nativeElement?.parentElement;
     if (!content || !this.target) {
       return;
     }
@@ -194,7 +204,7 @@ export class UPopover extends UBaseComponent {
   ngOnDestroy(): void {
     this.unbindDismissListeners();
     this.unregisterEscape();
-    const content = this.contentRef?.nativeElement;
+    const content = this.contentRef?.nativeElement?.parentElement;
     if (content) {
       ZIndex.clear(content);
     }
