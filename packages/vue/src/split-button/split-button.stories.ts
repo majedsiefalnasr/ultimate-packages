@@ -23,3 +23,8 @@ export const Default: Story = {
     model,
   },
 };
+
+/** GAP-064 G3-D verification story (Spec §9.1): the disabled state (Angular already has one). */
+export const Disabled: Story = {
+  args: { label: "Save", model, disabled: true },
+};

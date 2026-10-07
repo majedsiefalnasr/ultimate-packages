@@ -1,5 +1,6 @@
 import { Component, inject } from "@angular/core";
 import type { Meta, StoryObj } from "@storybook/angular";
+import { moduleMetadata } from "@storybook/angular";
 import { UConfirmationService } from "@ultimate/ng-core";
 import { UButton } from "../button/button";
 import { UConfirmDialog } from "./confirm-dialog";
@@ -14,7 +15,7 @@ import { UConfirmDialog } from "./confirm-dialog";
         confirmationService.confirm({
           header: 'Confirm',
           message: 'Are you sure you want to delete this item?',
-          accept: noop
+          accept: noop,
         })
       "
     ></u-button>
@@ -41,3 +42,33 @@ export default meta;
 type Story = StoryObj<ConfirmDialogDemo>;
 
 export const Default: Story = {};
+
+@Component({
+  selector: "g3d-confirm-dialog-icon-demo",
+  standalone: true,
+  imports: [UButton, UConfirmDialog],
+  template: `
+    <u-button
+      label="Delete"
+      (onClick)="
+        confirmationService.confirm({
+          header: 'Confirm',
+          message: 'Are you sure you want to delete this item?',
+          icon: 'pi pi-exclamation-triangle',
+          accept: noop,
+        })
+      "
+    ></u-button>
+    <u-confirm-dialog></u-confirm-dialog>
+  `,
+})
+class ConfirmDialogIconDemo {
+  protected readonly confirmationService = inject(UConfirmationService);
+  protected readonly noop = () => {};
+}
+
+/** GAP-064 G3-D verification story (Spec §9.1): a confirmation with an icon. */
+export const WithIcon: Story = {
+  decorators: [moduleMetadata({ imports: [ConfirmDialogIconDemo] })],
+  render: () => ({ template: `<g3d-confirm-dialog-icon-demo></g3d-confirm-dialog-icon-demo>` }),
+};
