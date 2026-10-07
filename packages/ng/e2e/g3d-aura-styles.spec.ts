@@ -223,8 +223,19 @@ for (const v of VISUAL) {
   });
 }
 
-/** The computed value of `property` when set to `value` (a `--variable` or a length) on a probe element. */
+/**
+ * The computed value of `property` when set to `value` (a `--variable` or a length) on a probe element.
+ * A `--variable` must be defined on the root, so an unregistered token cannot pass by both sides
+ * falling back to the property's initial value.
+ */
 async function resolved(page: Page, value: string, property: string): Promise<string> {
+  if (value.startsWith("--")) {
+    const defined = await page.evaluate(
+      (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim(),
+      value
+    );
+    expect(defined, `${value} is defined`).not.toBe("");
+  }
   return page.evaluate(
     ([v, p]) => {
       const probe = document.createElement("div");
