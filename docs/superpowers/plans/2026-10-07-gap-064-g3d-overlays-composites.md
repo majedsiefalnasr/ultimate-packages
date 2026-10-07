@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** **Draft, for Plan Review.** No implementation before Plan Review approval.
+**Status:** **Approved** (Plan Review, user, 2026-10-07; PR-1..PR-4 ruled, see "Plan Review decisions"). Execution: inline, task by task.
 
 **Goal:** Port the applicable `@primeuix/styles` 2.0.3 structural CSS of ConfirmDialog, ConfirmPopup, Drawer, Popover, SplitButton and SpeedDial onto the existing Angular and Vue DOM (34 groups per framework), perform the CSS-level defect corrections F-D1..F-D3, and prove every shipped selector reaches the rendered DOM.
 
@@ -1999,3 +1999,11 @@ After Task 12 the work stops for the final review and closeout authorization; me
 ## After this plan
 
 Final review and closeout (separately authorized), then merge and push decisions. G3-E remains after G3-D (D-G3-6).
+
+## Plan Review decisions (2026-10-07, user)
+
+- **PR-1 = (a).** Task 7 Step 4 updates the D-0 overlay-positioning e2e assertion to account for the computed `margin-block-start` gutter: the overlay top is compared with the trigger's bottom plus the computed margin. The upstream gutter rule stays; no parity exception is introduced. This is strictly a correction to the D-0 test contract.
+- **PR-2 — approved.** The SpeedDial `Directions` story uses five dials in a grid with 12rem vertical padding, as verification scaffolding only; it is not product layout behaviour.
+- **PR-3 — approved with conditions.** The `MIGRATION.md` update is limited to actual consumer-visible G3-D changes (overlay/composite styling parity, the retained SpeedDial PX-D3 action-styling difference, and any other actual G3-D consumer-visible effect), with no unrelated GAP-064 items or CI/debt changes. The exact wording is shown at the final review before the task is considered complete.
+- **PR-4 — approved.** Vue Drawer left coverage reuses the existing Vue `Default` story; no Vue `Left` story is created.
+- **SpeedDial layout check (user instruction).** During implementation, verify whether closed SpeedDial actions occupy layout space and push surrounding content. If it is existing Ultimate behaviour that needs a DOM/runtime/behavioural change, record a separate gap and do not fix it. If an already-approved upstream CSS rule resolves it within the CSS-only scope, it is ported normally. No runtime fix and no scope expansion.
