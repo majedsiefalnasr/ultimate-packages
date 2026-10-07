@@ -91,7 +91,15 @@ export async function runAccessibilityScan(
   writeFileSync(outPath, JSON.stringify(envelope, null, 2), "utf8");
 }
 
-/** Storybook's documented iframe-rendering URL for a single story. */
+/**
+ * Storybook's documented iframe-rendering URL for a single story.
+ *
+ * `globals=a11y.manual:!true` stops `@storybook/addon-a11y` from running its
+ * own automatic axe scan after each render. That scan lazily loads a second
+ * axe-core instance that replaces `window.axe` while `runAccessibilityScan`
+ * is running, so our scan could land on the addon's in-flight run and fail
+ * with "Axe is already running" (X-8 diagnostic, 2026-10-07).
+ */
 export function storyUrl(storyId: string): string {
-  return `http://localhost:6001/iframe.html?id=${storyId}&viewMode=story`;
+  return `http://localhost:6001/iframe.html?id=${storyId}&viewMode=story&globals=a11y.manual:!true`;
 }
