@@ -541,12 +541,12 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Production readiness (Phase 10)
 
 #### GAP-031 — No dependency/license/SAST scanning wired into CI
-- **Status:** RESOLVED as wiring; **not green in CI** (corrected 2026-10-07, CI-health registration). The scans are wired, and the license scan passes. On every `main` push since the first remote CI run (2026-10-04), the dependency scan fails on real advisories (GAP-095) and the SAST gate fails before evaluating findings (GAP-090). "CI-enforced" below means "wired as a failing step", not "passing".
+- **Status:** RESOLVED as wiring; **not green in CI** (corrected 2026-10-07, CI-health registration). The scans are wired, and the license scan passes. From the first remote CI run (2026-10-04) until GAP-095's remediation, the dependency scan failed on real advisories; it passes from `bde9bbb` (CI run 37607802835, GAP-095 RESOLVED 2026-10-07). The SAST gate still fails before evaluating findings (GAP-090). "CI-enforced" below means "wired as a failing step", not necessarily "passing".
 - **Type:** CI, Production, Licensing
 - **Blocking level:** HIGH (at the time this was open)
 - **Current evidence:** Resolved by Phase 10 Track B. `.github/workflows/ci.yml`'s main `ci` job now runs, in sequence: `pnpm audit --audit-level high --prod` (dependency scan), `license-checker-rseidelsohn --onlyAllow ...` (license scan), a real `github/codeql-action@v3` init+analyze step followed by a SARIF-consuming `sast:validate` step. `docs/architecture/SAST_BASELINE.md` (57 lines) contains 22 real, dated CodeQL findings with fingerprints/rule IDs/file:line references tied to a real `codeql database analyze` run.
-- **Expected state:** Blueprint §29. **Wiring met; gates not green** (GAP-090, GAP-095).
-- **Why it matters:** Historical — this gap directly blocked Production Hardening exit criteria. The wiring is resolved; the failing gates are tracked as GAP-090 and GAP-095.
+- **Expected state:** Blueprint §29. **Wiring met; dependency and license scans green; SAST gate not green** (GAP-090).
+- **Why it matters:** Historical — this gap directly blocked Production Hardening exit criteria. The wiring is resolved; the failing SAST gate is tracked as GAP-090 (the dependency-scan failure was GAP-095, resolved 2026-10-07).
 - **What it blocks:** Nothing — resolved.
 - **Dependencies:** None.
 - **Framework scope:** N/A.
@@ -1670,7 +1670,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-095 — Production dependency audit reports 1 critical and 6 high advisories
 
-- **Status:** OPEN (registered 2026-10-07, CI-health registration; security finding). Remediation is committed on `feature/gap-095-dependency-remediation`, pending merge; see "Remediation" below.
+- **Status:** RESOLVED (2026-10-07, `feature/gap-095-dependency-remediation` — `936c270`, `955090c`; merged to `main` as `bde9bbb`). Registered 2026-10-07 (CI-health registration; security finding). The "Dependency vulnerability scan" step passes in CI run 37607802835 at `bde9bbb` ("No known vulnerabilities found"); it failed at `d9c9f8c` (run 37596222464). The dev-only `@modelcontextprotocol/sdk@1.30.0` residual remains (see "Residual" below). The entry below is kept as the record at registration time; see "Remediation" and "Post-merge CI evidence".
 - **Type:** Security, Dependencies
 - **Blocking level:** HIGH
 - **Current evidence:** `pnpm audit --audit-level high --prod` ("Dependency vulnerability scan") fails: 12 findings at `4b9bfaa` (1 critical, 6 high, 5 moderate), up from 11 at `3d0203d`. The lockfile is unchanged between those commits, so the extra finding is a newly published advisory (GHSA-6qxp-vccf-f47h). The step has failed since the first remote CI run (8 findings, 2026-10-04).
@@ -1678,9 +1678,9 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **High:** `@angular/platform-server` 21.2.22 (GHSA-f67j-2jqw-jpq7, fixed 21.2.23) and `@angular/router` 21.2.22 (GHSA-ff3f-86qr-9cv3, fixed 21.2.24), in `playground-angular` (exact pins) and the workspace lockfile; `@modelcontextprotocol/sdk` 1.30.0 (GHSA-6qxp-vccf-f47h, fixed 1.31.0) in `@ultimate/mcp`; `fast-uri` 3.1.6 (two advisories, fixed 3.1.7) via the MCP SDK; `source-map-js` 1.2.1 (fixed 1.2.2) via `vue` in `playground-vue`.
   - **Moderate:** `fast-uri` (fixed 3.1.8), `ip-address` (two, fixed 10.7.1), `hono` (fixed 4.13.7), `@angular/ssr` (fixed 21.2.23).
   - Every fixed version lies inside the declared semver ranges of the packages that pull it in, except the playground apps' exact Angular pins.
-- **Expected state:** No unaddressed high or critical production advisory, or each is explicitly assessed and excepted.
+- **Expected state:** No unaddressed high or critical production advisory, or each is explicitly assessed and excepted. **Met** (`bde9bbb`).
 - **Why it matters:** Security exposure in the published `@ultimate/mcp` dependency tree and in the SSR playgrounds; the gate is red on every push.
-- **What it blocks:** A green dependency scan.
+- **What it blocks:** Nothing — resolved. (At registration: a green dependency scan.)
 - **Dependencies:** None. Related: GAP-031.
 - **Framework scope:** `@ultimate/mcp`, the playground apps, Angular workspace dependencies.
 - **Existing reusable infrastructure:** `audit:validate`.
@@ -1693,6 +1693,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **Corrected premise 2:** the Angular patch independently fixes the Angular advisory family (`@angular/router`, `@angular/platform-server`, `@angular/ssr`); it does not affect `proxy-addr`.
   - **Residual:** a second, dev-only copy of `@modelcontextprotocol/sdk@1.30.0` remains because `@angular/cli` 21.2.22 and 21.2.25 both pin it exactly. It is reachable only through the Angular CLI dev tooling, outside the production audit gate, and was deliberately not overridden. It clears only when `@angular/cli` raises that pin. The full `pnpm audit` (including dev dependencies) still reports other dev-only advisories (vite, vitest, undici 6.x, brace-expansion, webpack-dev-middleware and others), which are outside this gap.
   - **Verification:** `pnpm audit --prod` went from 12 findings (1 critical, 6 high, 5 moderate) to none, and `pnpm run audit:validate` passes. Build, typecheck and the unit suites for themes, ng, ng-core, vue, vue-core, react, react-core, mcp, cli, ai and component-metadata pass. The MCP boundary validation and the pack/install integrity check for `mcp`, `ng` and `ng-core` pass, and the built `ultimate-mcp` binary starts, initializes and lists its 5 tools. In Docker (`mcr.microsoft.com/playwright:v1.63.0-jammy`, `--retries=0`): the regression run (all non-G3-C2 specs plus the three SSR projects) is 1833 passed with only the known G3-B U2 Vue Card webkit screenshot failing, and no new visual diffs; the ng, vue and react CI simulations match the pre-change counts, with only U2 failing; the G3-C2 run (285 tests) failed once on a race in the accessibility scan ("Axe is already running", `vue-firefox` PanelMenu Default), not a screenshot diff, and passed 285/285 on two reruns of the same commit. Known inherited failures remain: the U2 screenshot and the provenance `accordion.spec.ts` entry.
+- **Post-merge CI evidence (2026-10-07, CI run 37607802835 at `bde9bbb`):** the "Dependency vulnerability scan" (`audit:validate`) passes with "No known vulnerabilities found"; the license scan, Build, Typecheck, bundle-size checks, Coverage measurement, the Angular SSR project and the Angular and React browser/visual/a11y jobs pass. Every remaining failure was already failing at `d9c9f8c` (run 37596222464) and is tracked elsewhere: Lint and Format check (GAP-092), Test (GAP-089), SAST baseline validation (GAP-090), Coverage regression check (GAP-091), provenance self-tests and validation (GAP-093, GAP-094), the React and Vue SSR projects (GAP-088), and the Vue browser job's single G3-B U2 failure (`[vue-webkit]` Card WithHeaderAndFooter, 173 passed). The Release run 37607802958 fails at the same "Select mode" step as before (GAP-087). No failure is attributable to the dependency remediation.
 
 ---
 
@@ -1865,7 +1866,7 @@ Why here: each is small, evidence-backed, has a proven pattern to copy from a si
 ### Group: Production hardening — **all CI-enforcement items now RESOLVED**
 - ~~**GAP-004/GAP-035**~~ (visual regression + real-browser testing) — RESOLVED by Phase 10 Track A.
 - ~~**GAP-005**~~ (accessibility scanning) — RESOLVED by Phase 10 Track A.
-- ~~**GAP-031/GAP-032/GAP-033**~~ (dependency/license/SAST scanning, bundle-size CI gate, coverage CI gate) — RESOLVED by Phase 10 Track B, all now genuinely CI-enforced. **Correction (2026-10-07):** all three are wired, and the bundle-size gate passes. The dependency scan, SAST and coverage gates have failed on every `main` push since the first remote CI run (GAP-090, GAP-091, GAP-095). The other red CI conditions are GAP-087–GAP-094, plus the G3-B U2 visual follow-up under GAP-064.
+- ~~**GAP-031/GAP-032/GAP-033**~~ (dependency/license/SAST scanning, bundle-size CI gate, coverage CI gate) — RESOLVED by Phase 10 Track B, all now genuinely CI-enforced. **Correction (2026-10-07):** all three are wired, and the bundle-size gate passes. The SAST and coverage gates have failed on every `main` push since the first remote CI run (GAP-090, GAP-091). The dependency scan failed until GAP-095's remediation and passes from `bde9bbb` (CI run 37607802835; GAP-095 RESOLVED 2026-10-07). The other red CI conditions are GAP-087–GAP-094, plus the G3-B U2 visual follow-up under GAP-064.
 - **GAP-011** (SECURITY/CONTRIBUTING/CHANGELOG) — already accurately marked PARTIALLY RESOLVED (Track D); unchanged by this reconciliation.
 - ~~**GAP-036**~~ (generate/commit `llms.txt`) — RESOLVED (commit `10435ca`, Blueprint Completion, 2026-09-13). **GAP-037** (PERFORMANCE.md Phase 3/4/5 sections) — LOW blocking level, mechanical, remains open.
 This entire group, sequenced here as future work when this document was first written, has since landed in full except for GAP-037.
