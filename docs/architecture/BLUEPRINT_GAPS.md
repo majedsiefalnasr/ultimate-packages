@@ -541,12 +541,12 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Production readiness (Phase 10)
 
 #### GAP-031 — No dependency/license/SAST scanning wired into CI
-- **Status:** RESOLVED
+- **Status:** RESOLVED as wiring; **not green in CI** (corrected 2026-10-07, CI-health registration). The scans are wired, and the license scan passes. On every `main` push since the first remote CI run (2026-10-04), the dependency scan fails on real advisories (GAP-095) and the SAST gate fails before evaluating findings (GAP-090). "CI-enforced" below means "wired as a failing step", not "passing".
 - **Type:** CI, Production, Licensing
 - **Blocking level:** HIGH (at the time this was open)
 - **Current evidence:** Resolved by Phase 10 Track B. `.github/workflows/ci.yml`'s main `ci` job now runs, in sequence: `pnpm audit --audit-level high --prod` (dependency scan), `license-checker-rseidelsohn --onlyAllow ...` (license scan), a real `github/codeql-action@v3` init+analyze step followed by a SARIF-consuming `sast:validate` step. `docs/architecture/SAST_BASELINE.md` (57 lines) contains 22 real, dated CodeQL findings with fingerprints/rule IDs/file:line references tied to a real `codeql database analyze` run.
-- **Expected state:** Blueprint §29. **Met.**
-- **Why it matters:** Historical — this gap directly blocked Production Hardening exit criteria; now resolved and CI-enforced.
+- **Expected state:** Blueprint §29. **Wiring met; gates not green** (GAP-090, GAP-095).
+- **Why it matters:** Historical — this gap directly blocked Production Hardening exit criteria. The wiring is resolved; the failing gates are tracked as GAP-090 and GAP-095.
 - **What it blocks:** Nothing — resolved.
 - **Dependencies:** None.
 - **Framework scope:** N/A.
@@ -571,12 +571,12 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-033 — Test suites run, but no coverage threshold is enforced anywhere in CI
-- **Status:** RESOLVED
+- **Status:** RESOLVED as wiring; **not green in CI** (corrected 2026-10-07, CI-health registration). The gate runs and exits 1 on every `main` push since the first remote CI run (2026-10-04). React and Vue fail because the coverage scope counts Storybook stories while the baselines predate them (GAP-091).
 - **Type:** CI, Testing
 - **Blocking level:** MEDIUM (at the time this was open)
 - **Current evidence:** Resolved by Phase 10 Track B — now genuinely CI-enforced. `@vitest/coverage-v8` is wired into all 15 Vitest-native packages plus `ng`/`ng-core`'s Angular-idiomatic equivalent (`ng test --coverage`). `scripts/provenance/validate-coverage.mjs` implements the same merge-base-anchored, two-step baseline lifecycle as GAP-032's bundle-size gate: `REGRESSION_THRESHOLD_POINTS = 2.0` (absolute percentage points), calls `process.exit(1)` on violation. `PERFORMANCE.md`'s "Coverage" table is the gate's baseline of record, covering all 17 publishable packages.
-- **Expected state:** Blueprint §40. **Met.**
-- **Why it matters:** Historical — tests running now genuinely equals tests enforced-at-a-threshold.
+- **Expected state:** Blueprint §40. **Wiring met; gate not green** (GAP-091).
+- **Why it matters:** Historical — the threshold is enforced, but its scope and baselines currently make it fail on non-regressions (GAP-091).
 - **What it blocks:** Nothing — resolved.
 - **Dependencies:** None.
 - **Framework scope:** All 17 publishable packages.
@@ -1512,6 +1512,182 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** G3-C2 final-review fix report and user decision (2026-10-06); `docs/architecture/research/2026-10-07-gap-064-g3c2-closeout.md`.
 - **Architectural decision required:** No.
 
+#### GAP-087 — Release workflow runs on Node 20, below the Angular 21 toolchain's Node requirement
+
+- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI infrastructure defect)
+- **Type:** CI, Release
+- **Blocking level:** HIGH (no release job can run)
+- **Current evidence:**
+  - `.github/workflows/release.yml` pins `node-version: "20"` in all three jobs (Select mode, Version, Publish).
+  - The "Select mode" job fails at "Install dependencies" with `ERR_PNPM_UNSUPPORTED_ENGINE`: `@angular-devkit/architect@0.2201.7` requires Node `^22.22.3 || ^24.15.0 || >=26.0.0`; the job runs `v20.20.2`. Version and Publish are then skipped.
+  - It has failed on every `main` push since the first remote CI run: `f05bd9b` (2026-10-04), `2c8ef45`, `3d0203d` and `4b9bfaa` (run 37590590050).
+  - The root `package.json` still declares `"node": ">=20.0.0"`.
+- **Expected state:** The release workflow's Node version satisfies every workspace dependency's engine range, and the declared Node policy matches it.
+- **Why it matters:** No version or publish job can run, so the release path is unexercised.
+- **What it blocks:** Releasing.
+- **Dependencies:** None. Related: the root `engines.node` declaration.
+- **Framework scope:** Repository-wide.
+- **Existing reusable infrastructure:** `ci.yml` already uses Node `24.15.0` for its jobs.
+- **Recommended resolution direction:** Directional only. A Node-version policy decision, then aligning `release.yml` and `engines`.
+- **Source/evidence:** Release runs 37456600129 and 37590590050; `.github/workflows/release.yml:27,55,83`.
+- **Architectural decision required:** Yes — the supported Node policy.
+
+#### GAP-088 — React and Vue SSR jobs start the Angular Storybook web server, which cannot build in those jobs
+
+- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI infrastructure defect)
+- **Type:** CI, Testing (Track E SSR/hydration)
+- **Blocking level:** HIGH (no React or Vue SSR test runs in CI)
+- **Current evidence:**
+  - `playwright.config.ts` always includes the three Track A Storybook `webServer` entries (`ng-storybook`, `react-storybook`, `vue-storybook`); only the Track E SSR servers are filtered by `TRACK_E_SSR_FRAMEWORK`.
+  - The `track-e-ssr-hydration (react|vue)` jobs build only their own harness closure. `[ng-storybook]` reports "An unhandled exception occurred: Broken build", and Playwright fails with `Timed out waiting 120000ms from config.webServer` before any SSR test runs.
+  - The Angular SSR job passes, because it builds the Angular packages.
+  - Failing on every `main` push since the first remote CI run (2026-10-04); `playwright.config.ts` is unchanged since `521b369`.
+- **Expected state:** Each SSR job starts only the servers its own projects need, and its SSR tests run.
+- **Why it matters:** React and Vue SSR/hydration verification (GAP-034) is not exercised in CI.
+- **What it blocks:** CI evidence for React/Vue SSR.
+- **Dependencies:** None. Related: GAP-034.
+- **Framework scope:** React, Vue (CI only).
+- **Existing reusable infrastructure:** The existing `TRACK_E_SSR_FRAMEWORK` filter for SSR servers.
+- **Recommended resolution direction:** Directional only: scope the Storybook servers by job, without weakening the SSR tests.
+- **Source/evidence:** CI runs 37438428821, 37456600014, 37590590099 (jobs `track-e-ssr-hydration (react, playground-react)` and `(vue, playground-vue)`).
+- **Architectural decision required:** No.
+
+#### GAP-089 — React package-exports test fails only in CI (missing built declarations)
+
+- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI-only defect, cause undetermined)
+- **Type:** CI, Testing, Packaging (React)
+- **Blocking level:** MEDIUM
+- **Current evidence:**
+  - In the `ci` job's Test step, `packages/react/test/exports.test.ts` fails 6 of 12 tests ("entry point builds" for the barrel and per-entry exports): the built `dist/*.d.mts` declarations are missing on the Linux runner.
+  - The same suite passes locally (React 856/856 at `91c4d22`).
+  - Failing since the first remote CI run (2026-10-04). An unverified hypothesis is a concurrent react↔themes build race.
+- **Expected state:** The exports test passes in CI as it does locally.
+- **Why it matters:** The CI Test step stays red, hiding other test regressions.
+- **What it blocks:** A green CI Test step.
+- **Dependencies:** None.
+- **Framework scope:** React.
+- **Existing reusable infrastructure:** None specific.
+- **Recommended resolution direction:** Directional only: establish the root cause before any change.
+- **Source/evidence:** CI runs 37188652979, 37456600014, 37590590099 (`ci` job, Test step).
+- **Architectural decision required:** No.
+
+#### GAP-090 — SAST baseline validation cannot find the CodeQL SARIF file
+
+- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI configuration defect)
+- **Type:** CI, Security tooling
+- **Blocking level:** MEDIUM (the SAST gate never evaluates findings)
+- **Current evidence:**
+  - CodeQL init and analyze succeed, but "SAST baseline validation" fails with `SARIF file not found at /home/runner/work/ultimate-packages/results/javascript-typescript.sarif`.
+  - Failing since the first remote CI run (2026-10-04).
+- **Expected state:** The validator reads the SARIF CodeQL actually produced and compares it with `docs/architecture/SAST_BASELINE.md`.
+- **Why it matters:** SAST findings are produced but never gated (see GAP-031).
+- **What it blocks:** A working SAST gate.
+- **Dependencies:** None. Related: GAP-031.
+- **Framework scope:** Repository-wide.
+- **Existing reusable infrastructure:** The existing "Resolve SARIF path" step and `sast:validate`.
+- **Recommended resolution direction:** Directional only: align the SARIF output path and the validator input.
+- **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job).
+- **Architectural decision required:** No.
+
+#### GAP-091 — The coverage gate fails because the coverage scope counts Storybook stories and the baselines predate them
+
+- **Status:** OPEN (registered 2026-10-07, CI-health registration; coverage-scope and baseline defect)
+- **Type:** CI, Testing
+- **Blocking level:** MEDIUM (the coverage gate is red on every push)
+- **Current evidence:**
+  - "Coverage regression check" fails: React `89.69% -> 77.7%`, Vue `92.13% -> 80.7%` at `3d0203d` and `-> 80.2%` at `4b9bfaa` (2-point threshold). The React failure is present since the first remote CI run (2026-10-04).
+  - The baselines (React 89.69%, Vue 92.13%) were measured 2026-09-09 at `62480b6` (`docs/architecture/PERFORMANCE.md`), before the packages had Storybook stories.
+  - **Vue, verified 2026-10-07.** `packages/vue/vitest.config.ts` sets no coverage include or exclude. All 91 `*.stories.ts` files, `e2e/accessibility-envelope.ts` and two `scripts/*.mjs` therefore count at 0%. A Linux Docker reproduction (Node 24.15.0) matches CI exactly: 80.68% (14983/18569 lines) at `3d0203d` and 80.21% (14986/18683) at `4b9bfaa`. Excluding those files, `src` is about 95.1%. The deficit is a measurement-scope effect, not an environment difference.
+  - **The 0.48-point Vue drop** between `3d0203d` and `4b9bfaa` is entirely the 114 uncovered lines that GAP-064 G3-C2 added to five Vue menu stories files (`mega-menu`, `panel-menu`, `menubar`, `tiered-menu`, `context-menu` `.stories.ts`), partly offset by 3 newly covered lines in `MenubarSub.vue`. No component source coverage changed.
+  - **React:** not yet verified; likely the same scope effect.
+  - **Local evidence correction.** The git-ignored local `packages/vue/coverage/coverage-summary.json` is the 2026-09-09 artifact. The local `coverage:validate` passes recorded in the G3-C2 Task 11 and closeout verification read stale artifacts without a fresh measurement, so they are not valid coverage evidence.
+- **Expected state:** The coverage scope and the baselines measure the same file set, and the gate fails only on real regressions.
+- **Why it matters:** The coverage gate cannot distinguish real regressions (see GAP-033), and adding stories lowers the reported number.
+- **What it blocks:** A working coverage gate.
+- **Dependencies:** None. Related: GAP-033, GAP-089.
+- **Framework scope:** React and Vue, and any package whose coverage scope includes stories.
+- **Existing reusable infrastructure:** `scripts/provenance/validate-coverage.mjs`; the `PERFORMANCE.md` coverage baselines.
+- **Recommended resolution direction:** Directional only: decide the coverage scope (excluding stories and non-source files), then re-baseline. No threshold change.
+- **Source/evidence:** CI runs 37188652979, 37456600014 and 37590590099 (`ci` job, including the printed per-file coverage tables); Docker reproduction, 2026-10-07.
+- **Architectural decision required:** Yes — the coverage scope and re-baselining.
+
+#### GAP-092 — Existing lint and format debt fails the CI Lint and Format steps
+
+- **Status:** OPEN (registered 2026-10-07, CI-health registration; inherited code debt)
+- **Type:** CI, Code quality
+- **Blocking level:** LOW
+- **Current evidence:**
+  - Lint: `✖ 60 problems (59 errors, 1 warning)` at `3d0203d` and at `4b9bfaa`. The errors are spread across existing files in `component-schema`, `mcp`, `ng` and `react`, for example `packages/ng/src/tiered-menu/tiered-menu.ts:73` (`no-unused-expressions`, from `494ff1ec`).
+  - Format: Prettier reports 490 files (495 at `3d0203d`).
+  - Both steps have failed since the first remote CI run (2026-10-04).
+- **Expected state:** Lint and Prettier pass, or the debt is explicitly baselined.
+- **Why it matters:** The steps are red on every push, so new violations are not visible.
+- **What it blocks:** Green Lint and Format steps.
+- **Dependencies:** None.
+- **Framework scope:** Repository-wide.
+- **Existing reusable infrastructure:** The existing ESLint and Prettier configuration.
+- **Recommended resolution direction:** Directional only: a dedicated clean-up or baseline decision, separate from feature work.
+- **Source/evidence:** CI runs 37188652979, 37456600014, 37590590099 (`ci` job).
+- **Architectural decision required:** No.
+
+#### GAP-093 — Provenance script self-tests need vendor tarballs that CI does not have
+
+- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI infrastructure defect)
+- **Type:** CI, Provenance tooling
+- **Blocking level:** LOW
+- **Current evidence:**
+  - "Provenance scripts self-tests" fail with `tar (child): .vendor-cache/primereact-10.9.9.tar.gz: Cannot open: No such file or directory` (and `primevue-4.5.5.tar.gz`). `.vendor-cache/` is git-ignored and is not populated in CI.
+  - Locally the cache is populated, so the failure is CI-only.
+  - Failing since the first remote CI run (2026-10-04).
+- **Expected state:** The self-tests either fetch the pinned tarballs or skip the real-extraction cases explicitly when the cache is absent.
+- **Why it matters:** The step is red on every push.
+- **What it blocks:** A green provenance self-test step.
+- **Dependencies:** None.
+- **Framework scope:** Repository-wide.
+- **Existing reusable infrastructure:** The pinned tarball versions in the provenance scripts.
+- **Recommended resolution direction:** Directional only.
+- **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job).
+- **Architectural decision required:** No.
+
+#### GAP-094 — `provenance:validate` fails on a missing manifest entry
+
+- **Status:** OPEN (registered 2026-10-07, CI-health registration; inherited provenance debt)
+- **Type:** CI, Provenance
+- **Blocking level:** LOW
+- **Current evidence:**
+  - "Provenance validation" fails with `packages/ng/src/accordion/accordion.spec.ts has no entry in docs/architecture/provenance/ng.json` (the first CI run reported `accordion-style.ts`; that entry has since been added).
+  - Recorded as pre-existing in the G3-B, G3-C1 and G3-C2 closeouts. The G3-C2 files all have entries (X-12 changed-file completeness).
+  - Failing since the first remote CI run (2026-10-04).
+- **Expected state:** Every tracked source file has a manifest entry and the validator passes.
+- **Why it matters:** The step is red on every push.
+- **What it blocks:** A green provenance validation step.
+- **Dependencies:** None.
+- **Framework scope:** Angular (current failure).
+- **Existing reusable infrastructure:** `docs/architecture/provenance/ng.json`.
+- **Recommended resolution direction:** Directional only: add the missing entries in a dedicated provenance task.
+- **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job); G3-B/G3-C1/G3-C2 closeouts.
+- **Architectural decision required:** No.
+
+#### GAP-095 — Production dependency audit reports 1 critical and 6 high advisories
+
+- **Status:** OPEN (registered 2026-10-07, CI-health registration; security finding)
+- **Type:** Security, Dependencies
+- **Blocking level:** HIGH
+- **Current evidence:** `pnpm audit --audit-level high --prod` ("Dependency vulnerability scan") fails: 12 findings at `4b9bfaa` (1 critical, 6 high, 5 moderate), up from 11 at `3d0203d`. The lockfile is unchanged between those commits, so the extra finding is a newly published advisory (GHSA-6qxp-vccf-f47h). The step has failed since the first remote CI run (8 findings, 2026-10-04).
+  - **Critical** `proxy-addr` 2.0.7 (GHSA-jqcg-44mw-7w3h, fixed 2.0.8), via `express@5.2.1` in the three private playground apps and via `@modelcontextprotocol/sdk@1.30.0` in `@ultimate/mcp`.
+  - **High:** `@angular/platform-server` 21.2.22 (GHSA-f67j-2jqw-jpq7, fixed 21.2.23) and `@angular/router` 21.2.22 (GHSA-ff3f-86qr-9cv3, fixed 21.2.24), in `playground-angular` (exact pins) and the workspace lockfile; `@modelcontextprotocol/sdk` 1.30.0 (GHSA-6qxp-vccf-f47h, fixed 1.31.0) in `@ultimate/mcp`; `fast-uri` 3.1.6 (two advisories, fixed 3.1.7) via the MCP SDK; `source-map-js` 1.2.1 (fixed 1.2.2) via `vue` in `playground-vue`.
+  - **Moderate:** `fast-uri` (fixed 3.1.8), `ip-address` (two, fixed 10.7.1), `hono` (fixed 4.13.7), `@angular/ssr` (fixed 21.2.23).
+  - Every fixed version lies inside the declared semver ranges of the packages that pull it in, except the playground apps' exact Angular pins.
+- **Expected state:** No unaddressed high or critical production advisory, or each is explicitly assessed and excepted.
+- **Why it matters:** Security exposure in the published `@ultimate/mcp` dependency tree and in the SSR playgrounds; the gate is red on every push.
+- **What it blocks:** A green dependency scan.
+- **Dependencies:** None. Related: GAP-031.
+- **Framework scope:** `@ultimate/mcp`, the playground apps, Angular workspace dependencies.
+- **Existing reusable infrastructure:** `audit:validate`.
+- **Recommended resolution direction:** Directional only: a dependency-update task (lockfile refresh plus the playground Angular pins, and a decision on `@ultimate/mcp`'s published `@modelcontextprotocol/sdk` range), separately authorized.
+- **Source/evidence:** CI runs 37188652979, 37456600014, 37590590099 (`ci` job); local `pnpm audit --prod --json` at `4b9bfaa` (2026-10-07).
+- **Architectural decision required:** Possibly — the published `@ultimate/mcp` dependency range.
+
 ---
 
 ## 4. Resolved gaps
@@ -1683,7 +1859,7 @@ Why here: each is small, evidence-backed, has a proven pattern to copy from a si
 ### Group: Production hardening — **all CI-enforcement items now RESOLVED**
 - ~~**GAP-004/GAP-035**~~ (visual regression + real-browser testing) — RESOLVED by Phase 10 Track A.
 - ~~**GAP-005**~~ (accessibility scanning) — RESOLVED by Phase 10 Track A.
-- ~~**GAP-031/GAP-032/GAP-033**~~ (dependency/license/SAST scanning, bundle-size CI gate, coverage CI gate) — RESOLVED by Phase 10 Track B, all now genuinely CI-enforced.
+- ~~**GAP-031/GAP-032/GAP-033**~~ (dependency/license/SAST scanning, bundle-size CI gate, coverage CI gate) — RESOLVED by Phase 10 Track B, all now genuinely CI-enforced. **Correction (2026-10-07):** all three are wired, and the bundle-size gate passes. The dependency scan, SAST and coverage gates have failed on every `main` push since the first remote CI run (GAP-090, GAP-091, GAP-095). The other red CI conditions are GAP-087–GAP-094, plus the G3-B U2 visual follow-up under GAP-064.
 - **GAP-011** (SECURITY/CONTRIBUTING/CHANGELOG) — already accurately marked PARTIALLY RESOLVED (Track D); unchanged by this reconciliation.
 - ~~**GAP-036**~~ (generate/commit `llms.txt`) — RESOLVED (commit `10435ca`, Blueprint Completion, 2026-09-13). **GAP-037** (PERFORMANCE.md Phase 3/4/5 sections) — LOW blocking level, mechanical, remains open.
 This entire group, sequenced here as future work when this document was first written, has since landed in full except for GAP-037.
