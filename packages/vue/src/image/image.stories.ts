@@ -11,7 +11,7 @@ type Story = StoryObj<typeof UImage>;
 
 export const Default: Story = {
   args: {
-    src: "https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg",
+    src: "/media/landscape-1.png",
     alt: "Image",
     width: "200",
   },
@@ -19,7 +19,7 @@ export const Default: Story = {
 
 export const WithPreview: Story = {
   args: {
-    src: "https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg",
+    src: "/media/landscape-1.png",
     alt: "Image",
     width: "200",
     preview: true,

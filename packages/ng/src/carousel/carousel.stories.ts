@@ -38,3 +38,35 @@ export const CircularWithAutoplay: Story = {
     `,
   }),
 };
+
+/** GAP-064 G3-E verification story: vertical orientation. */
+export const Vertical: Story = {
+  args: { value: items, numVisible: 1, numScroll: 1, orientation: "vertical" },
+  render: (args) => ({
+    props: args,
+    template: `
+      <u-carousel [value]="value" [numVisible]="numVisible" [numScroll]="numScroll" [orientation]="orientation">
+        <ng-template #item let-item>
+          <div style="padding: 2rem; text-align: center; border: 1px solid #ddd;">{{ item }}</div>
+        </ng-template>
+      </u-carousel>
+    `,
+  }),
+};
+
+/** GAP-064 G3-E verification story: RTL (upstream :dir(rtl) rules). */
+export const Rtl: Story = {
+  args: { value: items, numVisible: 3, numScroll: 1 },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div dir="rtl">
+        <u-carousel [value]="value" [numVisible]="numVisible" [numScroll]="numScroll">
+          <ng-template #item let-item>
+            <div style="padding: 1rem; text-align: center; border: 1px solid #ddd; margin: 0 0.5rem;">{{ item }}</div>
+          </ng-template>
+        </u-carousel>
+      </div>
+    `,
+  }),
+};

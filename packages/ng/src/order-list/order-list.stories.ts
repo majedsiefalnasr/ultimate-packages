@@ -32,3 +32,12 @@ export const Controlled: Story = {
   decorators: [moduleMetadata({ imports: [ControlledOrderListStory] })],
   render: () => ({ template: "<story-controlled-order-list />" }),
 };
+
+/** GAP-064 G3-E verification story: filter (PrimeNG canonical; Angular only). */
+export const Filter: Story = {
+  args: {
+    value: ["Apple", "Banana", "Cherry", "Date"].map((name) => ({ name })),
+    dataKey: "name",
+    filterBy: "name",
+  },
+};
