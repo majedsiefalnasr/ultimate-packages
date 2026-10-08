@@ -24,12 +24,17 @@ async function openFrom(page: Page, storyId: string, overlay: string) {
 async function expectAnchoredBelow(page: Page, storyId: string, overlay: string) {
   const { trigger, root } = await openFrom(page, storyId, overlay);
   // Measured after opening: the trigger's own box can change once it has been clicked.
+  // The overlay's own `margin-block-start` (the G3-D Aura gutter, PR-1) is subtracted,
+  // so the check measures the anchor D-0 positions, not the ported styling.
   await expect
     .poll(async () => {
       const t = await trigger.boundingBox();
       const r = await root.boundingBox();
       if (!t || !r) return null;
-      return { dx: Math.round(r.x - t.x), dy: Math.round(r.y - (t.y + t.height)) };
+      const gutter = await root.evaluate((el) =>
+        Number.parseFloat(getComputedStyle(el).marginBlockStart)
+      );
+      return { dx: Math.round(r.x - t.x), dy: Math.round(r.y - gutter - (t.y + t.height)) };
     })
     .toEqual({ dx: 0, dy: 0 });
   await expect(root).toHaveAttribute("style", /z-index:\s*\d+/);

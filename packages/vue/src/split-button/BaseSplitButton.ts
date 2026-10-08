@@ -18,7 +18,7 @@ import { splitButtonStyleModule } from "./split-button-style";
 // posture excludes entirely (spec §7); not reproduced here.
 export function createBaseSplitButton() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "split-button", styleModule: splitButtonStyleModule }),
+    extends: createBaseComponent({ componentName: "splitbutton", styleModule: splitButtonStyleModule }),
     props: {
       model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       label: { type: String, default: null },

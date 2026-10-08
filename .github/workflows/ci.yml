@@ -198,7 +198,7 @@ jobs:
             --project=${{ matrix.framework }}-chromium \
             --project=${{ matrix.framework }}-firefox \
             --project=${{ matrix.framework }}-webkit \
-            --grep-invert "G3-A|G3-B|G3-C1|G3-C2"
+            --grep-invert "G3-A|G3-B|G3-C1|G3-C2|G3-D"
 
       - name: Accessibility baseline validation (${{ matrix.framework }})
         run: node scripts/provenance/validate-accessibility-baseline.mjs --check "test-results/accessibility/${{ matrix.framework }}/**/*.json"
@@ -335,6 +335,34 @@ jobs:
           path: |
             test-results/accessibility/${{ matrix.framework }}/
             test-results/g3c2-accessibility/
+
+      # GAP-064 G3-D Spec §9.5 AC8: differential accessibility contract for
+      # the G3-D overlay and composite stories (same contract as G3-A..G3-C2, own story set
+      # and evidence list). The visual, open, layout, x3b and reach tests in this run stay a hard gate.
+      - name: Run G3-D verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3d-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-D differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        shell: bash
+        run: |
+          mkdir -p test-results/g3d-accessibility
+          node scripts/provenance/validate-g3d-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3d-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-D accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3d-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3d-accessibility/
 
   track-e-ssr-hydration:
     runs-on: ubuntu-latest

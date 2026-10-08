@@ -10,7 +10,7 @@ import { speedDialStyleModule } from "./speed-dial-style";
 // Angular/React `speed-dial` siblings' own explicit prop).
 export function createBaseSpeedDial() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "speed-dial", styleModule: speedDialStyleModule }),
+    extends: createBaseComponent({ componentName: "speeddial", styleModule: speedDialStyleModule }),
     props: {
       model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       visible: { type: Boolean, default: false },

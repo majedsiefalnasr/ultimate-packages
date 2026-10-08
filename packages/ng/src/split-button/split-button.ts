@@ -80,7 +80,7 @@ import { splitButtonStyleModule } from "./split-button-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class USplitButton extends UBaseComponent {
-  protected override readonly componentName = "split-button";
+  protected override readonly componentName = "splitbutton";
   protected override readonly styleModule = splitButtonStyleModule;
 
   /** MenuModel instance to define the overlay items. */

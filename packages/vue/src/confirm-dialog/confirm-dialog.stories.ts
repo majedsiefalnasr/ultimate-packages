@@ -33,3 +33,26 @@ export const Default = {
     `,
   }),
 };
+
+/** GAP-064 G3-D verification story (Spec §9.1): a confirmation with an icon. */
+export const WithIcon = {
+  render: () => ({
+    components: { UConfirmDialog },
+    methods: {
+      requestConfirm() {
+        confirmationEventBus.emit("confirm", {
+          header: "Confirm",
+          message: "Are you sure you want to delete this item?",
+          icon: "pi pi-exclamation-triangle",
+          accept: () => {},
+        });
+      },
+    },
+    template: `
+      <div>
+        <button @click="requestConfirm">Delete</button>
+        <UConfirmDialog />
+      </div>
+    `,
+  }),
+};

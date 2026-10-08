@@ -78,7 +78,7 @@ import { confirmDialogStyleModule } from "./confirm-dialog-style";
   encapsulation: ViewEncapsulation.None,
 })
 export class UConfirmDialog extends UBaseComponent {
-  protected override readonly componentName = "confirm-dialog";
+  protected override readonly componentName = "confirmdialog";
   protected override readonly styleModule = confirmDialogStyleModule;
 
   /** Matches only `UConfirmation` requests carrying the same `key` (undefined matches undefined). */

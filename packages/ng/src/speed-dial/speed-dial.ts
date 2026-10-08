@@ -69,7 +69,7 @@ type SpeedDialType = "linear" | "circle" | "semi-circle" | "quarter-circle";
   encapsulation: ViewEncapsulation.None,
 })
 export class USpeedDial extends UBaseComponent {
-  protected override readonly componentName = "speed-dial";
+  protected override readonly componentName = "speeddial";
   protected override readonly styleModule = speedDialStyleModule;
 
   /** MenuModel instance to define the action items. */
