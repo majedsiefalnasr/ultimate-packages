@@ -77,9 +77,9 @@ The Spec does not assume the existing or future source port is sufficient. **The
 
 ### 5.1 Media fixtures (G3E-1)
 
-- **Files:** five self-generated images (no third-party content): four 800 × 600 landscape images with distinct, high-contrast content (for Galleria, Image, ImageCompare left/right) and reuse of the same files as thumbnails. PNG or JPEG, each ≤ 40 KB. Generated once by a committed script or committed directly; their license is the repository's.
+- **Files:** four self-generated images (no third-party content): 800 × 600 landscape images with distinct, high-contrast content (for Galleria, Image, ImageCompare left/right) and reuse of the same files as thumbnails. PNG or JPEG, each ≤ 40 KB. Generated once by a committed script or committed directly; their license is the repository's.
 - **Location:** `tooling/prime-reference/fixtures/media/` (one copy).
-- **Served to:** both reference apps (Vite `publicDir` / Angular `assets`) and both Ultimate Storybooks under the same URL path (`/fixtures/media/<file>`), through each Storybook's `staticDirs`. This is the only Storybook configuration change (see OI-E2).
+- **Served to:** both reference apps (Vite `publicDir` / Angular `assets`) and both Ultimate Storybooks under the same URL path (`/media/<file>`; Plan Review PR-1), through each Storybook's `staticDirs`. This is the only Storybook configuration change (see OI-E2).
 - **Rule:** no verification case or G3-E story uses `primefaces.org` or any network URL.
 
 ### 5.2 Verification stories (G3E-2)
@@ -97,7 +97,7 @@ Only for approved canonical cases. Existing stories are reused where usable; the
 | picklist          | **new** `data-picklist--filter` (Angular only)                                                                                                                 | Same                                                                                                  |
 | organizationchart | **new** `panel-organizationchart--single-selection`, `--multiple-selection`, `--collapsible` (Vue)                                                             | Main states                                                                                           |
 
-New stories carry a "G3-E verification story" comment, render the same content as the matching reference case, and change no existing story's rendered output except the image source (G3E-1) and the §4.1 repair. The Angular Galleria host width (research §D) is handled in the case setup (wrapper element on both sides), not by changing the component.
+New stories carry a "G3-E verification story" comment, render the same content as the matching reference case, and change no existing story's rendered output except the image source (G3E-1) and the §4.1 repair. The Angular Galleria story keeps `max-width` on the component as it is today (Plan Review PR-5); each reference case mirrors its framework's story setup, so the rendered effect of that setup is part of the comparison, not hidden by a wrapper.
 
 ### 5.3 Harness (G3E-4)
 

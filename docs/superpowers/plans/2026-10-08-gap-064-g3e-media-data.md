@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Draft for Plan Review. No task may start before the Plan is approved.
+**Status:** **Approved** (Plan Review, user, 2026-10-08; PR-1..PR-5 ruled, see "Plan Review decisions"). Execution: Native (inline), task by task.
 
 **Goal:** Bring Carousel, Galleria, Image, ImageCompare, DataView, OrderList, OrganizationChart (Vue) and PickList to measured Prime parity for their canonical cases, judged by rendered comparison against PrimeNG 21.1.9 (Angular) and PrimeVue 4.5.5 (Vue), porting `@primeuix/styles` 2.0.3 (and, for Angular, PrimeNG-local CSS) only where the classified comparison calls for it.
 
@@ -25,7 +25,7 @@
 - **Authorized product changes (Spec §7):** style-module `css` only (generated from the data module), ADR-051 key renames `image-compare`→`imagecompare`, `data-view`→`dataview`, `order-list`→`orderlist`, `pick-list`→`picklist`, `organization-chart`→`organizationchart`, and A/B fixes that live in the style module. In component files only the `css` block, the registered key and one doc-comment line may change.
 - **Not authorized:** DOM, template, class-resolver, input/output/emit, runtime or public-API changes; Listbox, Paginator, Button changes; any global/base rule or `*, ::before, ::after` box-sizing rule (GAP-098); GAP-099..102 remediation; React; `inheritAttrs`/`$attrs` changes (Spec §14.7).
 - **PrimeNG-local CSS (OI-E1):** in the Angular port only, where Ultimate has the feature or host; G3-A..G3-D unchanged.
-- **Stories (G3E-2):** only those listed in Task 2; existing stories change only their image source (G3E-1), the Angular DataView repair (§4.1) and the Angular Galleria width wrapper (Spec §5.2).
+- **Stories (G3E-2):** only those listed in Task 2; existing stories change only their image source (G3E-1), and the Angular DataView repair (§4.1). The Angular Galleria `Default` story keeps `max-width` on the component (PR-5).
 - **Fixtures (G3E-1):** no `primefaces.org` or network URL in any G3-E story or reference case.
 - **Clock (G3E-4):** `page.clock` only in the harness and Ultimate regression specs; no product timing change.
 - **No-reference (G3E-7):** Vue DataView `loading` is recorded as `no Prime reference`, never compared, never verified/D/defect.
@@ -192,7 +192,7 @@ git commit -m "test(gap-064): add the G3-E local media fixtures and serve them"
 - Modify: `packages/{ng,vue}/src/image/image.stories.ts` (fixture `src` only)
 - Modify: `packages/{ng,vue}/src/image-compare/image-compare.stories.ts` (fixture `src`; add `Sized`, `Rtl`)
 - Modify: `packages/{ng,vue}/src/carousel/carousel.stories.ts` (add `Vertical`, `Rtl`)
-- Modify: `packages/{ng,vue}/src/galleria/galleria.stories.ts` (fixture `src`; Angular `Default` width wrapper; add `WithoutThumbnails`, `FullScreen`)
+- Modify: `packages/{ng,vue}/src/galleria/galleria.stories.ts` (fixture `src`; add `WithoutThumbnails`, `FullScreen`)
 - Modify: `packages/ng/src/data-view/data-view.stories.ts` (repair `Default`; add `Grid`, `Paginator`, `Empty`, `Loading`)
 - Modify: `packages/vue/src/data-view/data-view.stories.ts` (add `Grid`, `Paginator`, `Empty`; **no** `Loading` comparison story is needed, but see Step 4)
 - Modify: `packages/ng/src/order-list/order-list.stories.ts`, `packages/ng/src/pick-list/pick-list.stories.ts` (add `Filter`)
@@ -342,7 +342,7 @@ export const Rtl: Story = {
 };
 ```
 
-Galleria (`packages/ng/src/galleria/galleria.stories.ts`): set `images` to `["/media/landscape-1.png", "/media/landscape-2.png", "/media/landscape-3.png"]`; in `Default`, move `style="max-width: 40rem;"` from `<u-galleria>` to a wrapping `<div style="max-width: 40rem;">` (Spec §5.2). Append:
+Galleria (`packages/ng/src/galleria/galleria.stories.ts`): set `images` to `["/media/landscape-1.png", "/media/landscape-2.png", "/media/landscape-3.png"]`; `Default` keeps `style="max-width: 40rem;"` on `<u-galleria>` unchanged (PR-5). Append (same setup as `Default`: `max-width` on the component):
 
 ```ts
 /** GAP-064 G3-E verification story: item navigators without thumbnails. */
@@ -350,11 +350,9 @@ export const WithoutThumbnails: Story = {
   render: () => ({
     props: { images },
     template: `
-      <div style="max-width: 40rem;">
-        <u-galleria [value]="images" [showThumbnails]="false">
-          <ng-template #item let-item><img [src]="item" style="width: 100%; display: block;" /></ng-template>
-        </u-galleria>
-      </div>
+      <u-galleria [value]="images" [showThumbnails]="false" style="max-width: 40rem;">
+        <ng-template #item let-item><img [src]="item" style="width: 100%; display: block;" /></ng-template>
+      </u-galleria>
     `,
   }),
 };
@@ -2332,24 +2330,21 @@ const visible = ref(false);
   </p-carousel>
 </div>
 } @case ("galleria/item-thumbnails") {
-<div style="max-width: 40rem">
-  <p-galleria [value]="images" [showItemNavigators]="true">
-    <ng-template #item let-item
-      ><img [src]="item" style="width: 100%; display: block"
-    /></ng-template>
-    <ng-template #thumbnail let-item
-      ><img [src]="item" style="width: 5rem; display: block"
-    /></ng-template>
-  </p-galleria>
-</div>
+<p-galleria [value]="images" [showItemNavigators]="true" style="max-width: 40rem">
+  <ng-template #item let-item><img [src]="item" style="width: 100%; display: block" /></ng-template>
+  <ng-template #thumbnail let-item
+    ><img [src]="item" style="width: 5rem; display: block"
+  /></ng-template>
+</p-galleria>
 } @case ("galleria/no-thumbnails") {
-<div style="max-width: 40rem">
-  <p-galleria [value]="images" [showItemNavigators]="true" [showThumbnails]="false">
-    <ng-template #item let-item
-      ><img [src]="item" style="width: 100%; display: block"
-    /></ng-template>
-  </p-galleria>
-</div>
+<p-galleria
+  [value]="images"
+  [showItemNavigators]="true"
+  [showThumbnails]="false"
+  style="max-width: 40rem"
+>
+  <ng-template #item let-item><img [src]="item" style="width: 100%; display: block" /></ng-template>
+</p-galleria>
 } @case ("galleria/fullscreen") {
 <button type="button" (click)="visible = true">Show</button>
 <p-galleria [(visible)]="visible" [value]="images" [fullScreen]="true" [showItemNavigators]="true">
@@ -3268,7 +3263,17 @@ git commit -m "docs(gap-064): record G3-E migration notes, sizes and the draft c
 - **PR-2 — Four images.** Spec §5.1 says "five" images but describes four reused as thumbnails; the Plan generates four. Recommended: four.
 - **PR-3 — OrganizationChart `basic`.** The existing Vue story has two levels (Spec §6.8 said three). Under G3E-2 the existing story is reused and no new story is added. Recommended: two levels.
 - **PR-4 — Batch data come from the batch records.** The upstream group inventory, mapping and roles of each key are decided in that batch's Task A record and approved at its HARD USER STOP, then transcribed in Task B. This is the verification-first design, not an open placeholder. Recommended: confirm.
-- **PR-5 — Angular Galleria `Default` story width wrapper.** Moving `max-width: 40rem` from the inline host to a wrapping `div` changes the existing Angular story's rendered width (Spec §5.2 / research §D). Recommended: accept as case setup.
+- **PR-5 — Angular Galleria `max-width`.** Revised per Plan Review: the Angular story keeps `max-width` on the component; the PrimeNG reference cases put it on `<p-galleria>` the same way; Vue keeps its existing wrapper on both sides. No wrapper is introduced.
+
+## Plan Review decisions (2026-10-08, user)
+
+- **PR-1 — approved.** Fixtures at `/media/<file>`, consistent across the reference apps and the Ultimate stories.
+- **PR-2 — approved with correction.** Four fixtures; Spec §5.1 and this Plan both say four.
+- **PR-3 — approved.** The existing two-level OrganizationChart story is reused; no three-level story.
+- **PR-4 — approved.** No CSS rule list is predefined before rendered evidence. Each batch records observed → mapped → approved → ported → rerun; the batch HARD USER STOP authorizes its rule mapping.
+- **PR-5 — revised.** `max-width` stays on the Angular Galleria component (story geometry unchanged); reference cases mirror each framework's story setup.
+- **Execution:** Native (inline) approved.
+- **Constraints:** E-0 (Tasks 1–4) complete and verified before Task 5; no pre-authorized CSS mapping; GAP-102 not expanded; the other Vue components' fall-through observation not investigated; no DOM/runtime/API change to fit Prime selectors; every new difference classified (A/B/C/D) before any product change; a new architectural rule, ADR or second verification iteration is a stop; no unrelated CI/coverage/infrastructure work; no merge or push before final review and closeout.
 
 ## After this plan
 
