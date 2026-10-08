@@ -10,5 +10,33 @@ The axe violation fingerprints (`rule:story:target`) that the G3-E verification 
 - Introduced rows are **not** listed here; they go to the batch's review gate, and only approved ones enter `ACCESSIBILITY_BASELINE.md`.
 - Changes are human-authored, reviewed edits only. Remove a row once its debt is fixed (the check reports it as STALE). Never add a row to silence a violation introduced by a later change.
 
-| Fingerprint | Rule | Component/Story | Note |
-| ----------- | ---- | --------------- | ---- |
+| Fingerprint                                       | Rule                 | Component/Story         | Note                                                                        |
+| ------------------------------------------------- | -------------------- | ----------------------- | --------------------------------------------------------------------------- |
+| label:ng-imagecompare--rtl:input                  | label                | ng-imagecompare--rtl    | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| label:ng-imagecompare--sized:input                | label                | ng-imagecompare--sized  | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| label:vue-imagecompare--rtl:input                 | label                | vue-imagecompare--rtl   | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| label:vue-imagecompare--sized:input               | label                | vue-imagecompare--sized | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| landmark-one-main:ng-image--default:html          | landmark-one-main    | ng-image--default       | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| landmark-one-main:ng-image--with-preview:html     | landmark-one-main    | ng-image--with-preview  | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| landmark-one-main:ng-imagecompare--rtl:html       | landmark-one-main    | ng-imagecompare--rtl    | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| landmark-one-main:ng-imagecompare--sized:html     | landmark-one-main    | ng-imagecompare--sized  | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| landmark-one-main:vue-image--default:html         | landmark-one-main    | vue-image--default      | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| landmark-one-main:vue-image--with-preview:html    | landmark-one-main    | vue-image--with-preview | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| landmark-one-main:vue-imagecompare--rtl:html      | landmark-one-main    | vue-imagecompare--rtl   | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| landmark-one-main:vue-imagecompare--sized:html    | landmark-one-main    | vue-imagecompare--sized | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| page-has-heading-one:ng-image--default:html       | page-has-heading-one | ng-image--default       | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| page-has-heading-one:ng-image--with-preview:html  | page-has-heading-one | ng-image--with-preview  | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| page-has-heading-one:ng-imagecompare--rtl:html    | page-has-heading-one | ng-imagecompare--rtl    | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| page-has-heading-one:ng-imagecompare--sized:html  | page-has-heading-one | ng-imagecompare--sized  | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| page-has-heading-one:vue-image--default:html      | page-has-heading-one | vue-image--default      | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| page-has-heading-one:vue-image--with-preview:html | page-has-heading-one | vue-image--with-preview | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| page-has-heading-one:vue-imagecompare--rtl:html   | page-has-heading-one | vue-imagecompare--rtl   | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| page-has-heading-one:vue-imagecompare--sized:html | page-has-heading-one | vue-imagecompare--sized | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| region:ng-image--default:#storybook-root          | region               | ng-image--default       | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| region:ng-image--with-preview:img                 | region               | ng-image--with-preview  | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| region:ng-imagecompare--rtl:#storybook-root       | region               | ng-imagecompare--rtl    | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| region:ng-imagecompare--sized:#storybook-root     | region               | ng-imagecompare--sized  | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| region:vue-image--default:#storybook-root         | region               | vue-image--default      | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| region:vue-image--with-preview:img                | region               | vue-image--with-preview | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| region:vue-imagecompare--rtl:#storybook-root      | region               | vue-imagecompare--rtl   | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
+| region:vue-imagecompare--sized:#storybook-root    | region               | vue-imagecompare--sized | E-1 pre-existing before the port (Docker, c2efa39; chromium,firefox,webkit) |
