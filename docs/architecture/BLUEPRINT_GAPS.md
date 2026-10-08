@@ -1816,6 +1816,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** `docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §3.2 M1–M2, §6.5.
 - **Architectural decision required:** No.
 
+#### GAP-102 — Vue ImageCompare drops consumer `class`/`style` on its root
+
+- **Status:** OPEN (registered 2026-10-08 under user ruling G3E-3, G3-E Spec §4.2; classified as a product defect before any change)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Current evidence:** `packages/vue/src/image-compare/ImageCompare.vue` declares `inheritAttrs: false` and binds no `$attrs` on its root, so a consumer's `class` and `style` never reach `.u-image-compare`. The story `vue-imagecompare--default` (`style="width: 20rem;"`) renders a 57 px-wide root (rendered DOM, `cad9f85`). PrimeVue 4.5.5 binds `v-bind="ptmi('root')"`, and `ptmi` merges `$attrs` into the root; PrimeVue's own canonical cases rely on root classes (`BasicDoc.vue`, `ResponsiveDoc.vue`).
+- **Expected state:** Consumer `class`/`style` reach the ImageCompare root, as in PrimeVue.
+- **Why it matters:** Consumers cannot size or style the component; it renders at the slider's intrinsic width.
+- **What it blocks:** The Vue `imagecompare/root-style` parity case (G3-E E-1); other ImageCompare cases are compared inside a sized wrapper.
+- **Dependencies:** None. Observation only, not part of this GAP: the G3-B Vue BlockUI story follow-up shows the same `inheritAttrs: false` pattern; other components were not assessed.
+- **Framework scope:** Vue.
+- **Existing reusable infrastructure:** The G3-E ImageCompare harness cases.
+- **Recommended resolution direction:** Directional only; separate authorized remediation, not part of G3-E.
+- **Source/evidence:** `docs/superpowers/specs/2026-10-08-gap-064-g3e-media-data-design.md` §4.2; `docs/architecture/research/2026-10-08-gap-064-g3e-research.md` §A.1, §D.
+- **Architectural decision required:** No.
+
 ## 4. Resolved gaps
 
 ### `@ultimate/uix-data` — the shared Data foundation
