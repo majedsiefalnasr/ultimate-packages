@@ -724,5 +724,101 @@
     "ultimateDestination": "packages/vue/src/tiered-menu/TieredMenuSub.vue",
     "modificationStatus": "adapted",
     "modificationDescription": "Adapted from PrimeVue 4.5.5 TieredMenuSub. TieredMenuSub→UTieredMenuSub: the nested submenu list, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "packages/primevue/src/confirmdialog/BaseConfirmDialog.vue",
+    "ultimateDestination": "packages/vue/src/confirm-dialog/BaseConfirmDialog.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeVue 4.5.5 BaseConfirmDialog. BaseConfirmDialog: the shared options base for UConfirmDialog, composed with createBaseComponent. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 confirmdialog",
+    "ultimateDestination": "packages/vue/src/confirm-dialog/confirm-dialog-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmdialog, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); D-D2 content scoping by :has(> .u-confirmdialog-message) (PX-D6); D5 rules R-D3, R-D4; F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/confirm-dialog/confirm-dialog.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored ConfirmDialog stories, including the GAP-064 G3-D WithIcon verification story (Spec §9.1)."
+  },
+  {
+    "originalPath": "packages/primevue/src/confirmpopup/BaseConfirmPopup.vue",
+    "ultimateDestination": "packages/vue/src/confirm-popup/BaseConfirmPopup.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeVue 4.5.5 BaseConfirmPopup. BaseConfirmPopup: the shared options base for UConfirmPopup, composed with createBaseComponent. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 confirmpopup",
+    "ultimateDestination": "packages/vue/src/confirm-popup/confirm-popup-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmpopup, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1); F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/confirm-popup/confirm-popup.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored ConfirmPopup stories, including the GAP-064 G3-D WithIcon verification story (Spec §9.1)."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 drawer",
+    "ultimateDestination": "packages/vue/src/drawer/drawer-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 drawer, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D3, FX-D4 (no animation, no mask open class; PX-D2, PX-D7); Angular focus-trap wrapper rule (D-D7, ng only); F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/drawer/drawer.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored Drawer stories, including the GAP-064 G3-D position (Top, Bottom, Full) and Rtl verification stories (Spec §9.1), plus the reach-only WithFooter story (X-1)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/g3d-aura-styles.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-D overlay and composite style modules (ConfirmDialog, ConfirmPopup, Drawer, Popover, SplitButton, SpeedDial): registration under the Aura key, token resolution, and state selectors matching the rendered state classes (AC1, AC2)."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 popover",
+    "ultimateDestination": "packages/vue/src/popover/popover-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 popover, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1); OI-D1 position rule only; F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "packages/primevue/src/speeddial/BaseSpeedDial.vue",
+    "ultimateDestination": "packages/vue/src/speed-dial/BaseSpeedDial.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeVue 4.5.5 BaseSpeedDial. BaseSpeedDial: the shared options base for USpeedDial, composed with createBaseComponent. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 speeddial",
+    "ultimateDestination": "packages/vue/src/speed-dial/speed-dial-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 speeddial, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); base mask and disabled roles (B-2), D-D3a :has open state, D5 rules R-D1, R-D2; exceptions FX-D7, FX-D8 (PX-D3, PX-D4); F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/speed-dial/speed-dial.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored SpeedDial stories, including the GAP-064 G3-D Directions and Mask verification stories (Spec §9.1; PR-2 layout scaffolding)."
+  },
+  {
+    "originalPath": "packages/primevue/src/splitbutton/BaseSplitButton.vue",
+    "ultimateDestination": "packages/vue/src/split-button/BaseSplitButton.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeVue 4.5.5 BaseSplitButton. BaseSplitButton: the shared options base for USplitButton, composed with createBaseComponent. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 splitbutton",
+    "ultimateDestination": "packages/vue/src/split-button/split-button-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 splitbutton, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D5, FX-D6 (popup menu portaled; no fluid/rounded/raised variants; PX-D5); F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/split-button/split-button.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored SplitButton stories, including the GAP-064 G3-D Disabled verification story (Spec §9.1)."
   }
 ]

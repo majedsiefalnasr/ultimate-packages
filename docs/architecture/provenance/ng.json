@@ -735,12 +735,96 @@
     "originalPath": "packages/primeng/src/confirmpopup/confirmpopup.ts",
     "ultimateDestination": "packages/ng/src/confirm-popup/confirm-popup.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 ConfirmPopup. ConfirmPopup→UConfirmPopup: service-driven (UConfirmationService) popup appended to body via UOverlay, accept/reject via UButton, dismissed on outside click and resize, rejected on Escape, positioned below confirmation.target from getBoundingClientRect after the popup renders (afterNextRender; upstream aligns in the enter hook). GAP-064 D-0: placement now runs after render. Excludes the arrow, viewport flip, focus management beyond restoring focus to the target, templates and motion."
+    "modificationDescription": "Adapted from primeng@21.1.9 ConfirmPopup. ConfirmPopup→UConfirmPopup: service-driven (UConfirmationService) popup appended to body via UOverlay, accept/reject via UButton, dismissed on outside click and resize, rejected on Escape, positioned below confirmation.target from getBoundingClientRect after the popup renders (afterNextRender; upstream aligns in the enter hook). GAP-064 D-0: placement now runs after render. Excludes the arrow, viewport flip, focus management beyond restoring focus to the target, templates and motion. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/confirm-popup/confirm-popup.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers rendering on a matching confirmation, accept/reject, outside-click and Escape dismissal, key matching, SSR safety (GAP-065), and post-render placement and early close (GAP-064 D-0)."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 confirmdialog",
+    "ultimateDestination": "packages/ng/src/confirm-dialog/confirm-dialog-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmdialog, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); D-D2 content scoping by :has(> .u-confirmdialog-message) (PX-D6); D5 rules R-D3, R-D4; F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/confirm-dialog/confirm-dialog.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored ConfirmDialog stories, including the GAP-064 G3-D WithIcon verification story (Spec §9.1)."
+  },
+  {
+    "originalPath": "packages/primeng/src/confirmdialog/confirmdialog.ts",
+    "ultimateDestination": "packages/ng/src/confirm-dialog/confirm-dialog.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 ConfirmDialog (ConfirmDialog→UConfirmDialog), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 confirmpopup",
+    "ultimateDestination": "packages/ng/src/confirm-popup/confirm-popup-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmpopup, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1); F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/confirm-popup/confirm-popup.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored ConfirmPopup stories, including the GAP-064 G3-D WithIcon verification story (Spec §9.1)."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 drawer",
+    "ultimateDestination": "packages/ng/src/drawer/drawer-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 drawer, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D3, FX-D4 (no animation, no mask open class; PX-D2, PX-D7); Angular focus-trap wrapper rule (D-D7, ng only); F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/drawer/drawer.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored Drawer stories, including the GAP-064 G3-D position (Top, Bottom, Full) and Rtl verification stories (Spec §9.1)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/g3d-aura-styles.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-D overlay and composite style modules (ConfirmDialog, ConfirmPopup, Drawer, Popover, SplitButton, SpeedDial): registration under the Aura key, token resolution, and state selectors matching the rendered state classes (AC1, AC2)."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 popover",
+    "ultimateDestination": "packages/ng/src/popover/popover-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 popover, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1); OI-D1 position rule only; F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 speeddial",
+    "ultimateDestination": "packages/ng/src/speed-dial/speed-dial-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 speeddial, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); base mask and disabled roles (B-2), D-D3a :has open state, D5 rules R-D1, R-D2; exceptions FX-D7, FX-D8 (PX-D3, PX-D4); F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/speed-dial/speed-dial.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored SpeedDial stories, including the GAP-064 G3-D Directions and Mask verification stories (Spec §9.1; PR-2 layout scaffolding)."
+  },
+  {
+    "originalPath": "packages/primeng/src/speeddial/speeddial.ts",
+    "ultimateDestination": "packages/ng/src/speed-dial/speed-dial.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 SpeedDial (SpeedDial→USpeedDial), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 splitbutton",
+    "ultimateDestination": "packages/ng/src/split-button/split-button-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 splitbutton, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D5, FX-D6 (popup menu portaled; no fluid/rounded/raised variants; PX-D5); F-D1..F-D3 corrections recorded in the G3-D Spec §7"
+  },
+  {
+    "originalPath": "packages/primeng/src/splitbutton/splitbutton.ts",
+    "ultimateDestination": "packages/ng/src/split-button/split-button.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from primeng@21.1.9 SplitButton (SplitButton→USplitButton), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
   }
 ]
