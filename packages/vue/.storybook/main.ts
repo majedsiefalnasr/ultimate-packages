@@ -37,6 +37,8 @@ import vue from "@vitejs/plugin-vue";
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.ts"],
   addons: ["@storybook/addon-a11y"],
+  // GAP-064 G3-E (G3E-1, OI-E2): committed local media fixtures for verification stories.
+  staticDirs: [{ from: "../../../tooling/prime-reference/fixtures", to: "/" }],
   framework: {
     name: "@storybook/vue3-vite",
     options: {},
