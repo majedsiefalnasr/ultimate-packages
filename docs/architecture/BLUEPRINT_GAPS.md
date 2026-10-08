@@ -1742,6 +1742,78 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Existing reusable infrastructure:** The G3-D Drawer stories, layout tests and screenshots.
 - **Recommended resolution direction:** Directional only; a box-sizing decision needs its own Spec.
 - **Source/evidence:** `docs/architecture/research/2026-10-08-gap-064-g3d-closeout.md`; G3-D Spec §17.
+- **Rendered Prime evidence (2026-10-08 pilot):** reproduced against PrimeNG 21.1.9 and PrimeVue 4.5.5 in every position: drawer 320 × 720 → 324 × 726, content 316 → 360 wide, RTL content at x = −39, full drawer 720 → 722 tall (`docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §3.3 D1).
+- **Architectural decision required:** No.
+
+#### GAP-098 — Prime's global base style (`box-sizing: border-box`) is not applied in Ultimate
+
+- **Status:** OPEN (registered 2026-10-08 by user decision P-7 on the verification-first Playbook proposal; cross-cutting base-style / parity issue)
+- **Type:** Styling, Visual, Cross-cutting
+- **Blocking level:** MEDIUM
+- **Current evidence:**
+  - _Static (at `main` `4c099a9`):_ Prime's base style, `@primeuix/styles` 2.0.3 `base/index.ts`, starts with `*, ::before, ::after { box-sizing: border-box; }` and is loaded by every Prime app. Ultimate has a port of it in `packages/uix-styles/src/base/index.ts` (exported as `@ultimate/uix-styles/base`), but no source in `ng-core`, `vue-core`, `react-core`, `uix-styled`, `themes`, `ng`, `vue` or `react` imports it, and none of them declares a global `border-box` rule. A few React style modules set `border-box` locally (scroll-panel, multi-select, listbox, carousel, select).
+  - _Browser:_ the G3-D runs measured `box-sizing: content-box` on the Drawer, which causes GAP-097.
+- **Expected state:** Ultimate components render under the same box model Prime's own base layer gives them, so ported upstream sizing rules produce Prime's rendered sizes. How it is applied (global base registration, a scoped rule, or per-component adaptation) is for the remediation's own decision.
+- **Why it matters:** Upstream component CSS assumes `border-box`. Any component that combines a fixed or percentage width/height with padding or borders can render larger than in Prime. Per-component source-parity checks cannot detect a missing global layer.
+- **What it blocks:** Nothing directly. GAP-097 is one known effect; affected components will show up as differences in rendered Prime-parity verification (`docs/architecture/PARITY_PLAYBOOK.md`).
+- **Dependencies:** None. Related: GAP-097, GAP-064, GAP-074 / GAP-078 (the approved shared-registration and SSR style contracts any global registration would follow).
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** `@ultimate/uix-styles/base`; each core's `StyleSheet` registration.
+- **Recommended resolution direction:** Directional only. Remediation is separate, authorized work with its own Spec, because applying a global box model can change many components at once. It is not part of the Playbook work or the verification pilot. **Not** by importing Prime's global `*, ::before, ::after` rule as-is (user ruling 2026-10-08): that rule applies to every element on the page, so it would also change unrelated application content. The Spec must decide the Ultimate scoping/integration strategy.
+- **Source/evidence:** `docs/architecture/research/2026-10-08-prime-parity-verification-playbook-proposal.md` §1.2 and §11; GAP-097. Rendered evidence: the 2026-10-08 pilot measured `box-sizing` border-box (Prime) versus content-box (Ultimate) on every probed Drawer, Message and Tag part; it changes geometry visibly on the Drawer and not at all on Tag (`docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §3, §6).
+- **Architectural decision required:** Yes, at remediation time: where and how the base layer is applied.
+
+#### GAP-099 — Drawer close button and full-drawer border differ from Prime (three distinct defects)
+
+- **Status:** OPEN (registered 2026-10-08 by user ruling R-4 on the Prime-parity pilot; rendered-parity finding)
+- **Type:** Component, Visual
+- **Blocking level:** MEDIUM
+- **Current evidence:** Rendered comparison at `f3f57a5` (pilot report §3.3), Drawer cases left/right/top/bottom/full/RTL. Three separate defects with separate causes; each can be remediated separately:
+  1. **D3 — Angular close button renders no icon.** PrimeNG: 40 × 40 round text button with `TimesIcon`. Ultimate Angular: 26 × 18, no icon. Cause: the Drawer projects `<u-times-icon>` into `<u-button>`, but `UButton`'s template has no `<ng-content>`, so the icon is discarded. The header is 67 px tall instead of 80 as a consequence.
+  2. **D4 — Vue close button is an unstyled native button.** PrimeVue: rounded secondary text button (40 × 40). Ultimate Vue: plain `<button class="u-drawer-close-button">` with browser default styling (grey background, 2 px black border, square, 13.3 px font), 30 × 23. Cause: `Drawer.vue` renders a native button rather than a Button. Header 67 px instead of 80.
+  3. **D5 — Angular full drawer border.** PrimeNG renders the full drawer with a 3 px border (content offset 3 px); Ultimate Angular renders 1 px. Cause: PrimeNG adds its own `drawerstyle.ts` CSS layer ("For PrimeNG") on top of `@primeuix/styles`; Ultimate Angular ports only the shared layer. PrimeVue renders 1 px, so this is Angular-only.
+- **Expected state:** Each Drawer close button and the Angular full drawer render as their framework's Prime oracle does.
+- **Why it matters:** The close control is missing (Angular) or visibly unstyled (Vue) in every Drawer.
+- **What it blocks:** Drawer parity verification (Playbook status `open-gap`).
+- **Dependencies:** None. Related: GAP-097, GAP-098 (same component, different causes). D3's cause lies in `UButton` and may affect other components that project content into it.
+- **Framework scope:** D3 Angular; D4 Vue; D5 Angular.
+- **Existing reusable infrastructure:** `tooling/prime-reference/` Drawer cases (re-run to verify a fix).
+- **Recommended resolution direction:** Directional only; each item needs its own authorized remediation. Inspect the framework-specific Prime source (PrimeNG `drawer.ts`/`drawerstyle.ts`, PrimeVue `Drawer.vue`) before deciding the adaptation.
+- **Source/evidence:** `docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §3.3 D3–D5, §5.
+- **Architectural decision required:** No.
+
+#### GAP-100 — Vue Drawer does not move focus into the drawer when it opens
+
+- **Status:** OPEN (registered 2026-10-08 by user ruling R-4 on the Prime-parity pilot; rendered-parity behavior finding)
+- **Type:** Component, Behavior, Accessibility
+- **Blocking level:** MEDIUM
+- **Current evidence:** Pilot behavior script (pilot report §3.3 D6): after the trigger opens the drawer, PrimeVue 4.5.5 moves focus to the drawer; Ultimate Vue leaves focus on the trigger button. Escape and the close button behave the same in both.
+- **Expected state:** Focus moves into the drawer on open, as in PrimeVue.
+- **Why it matters:** Keyboard and screen-reader users stay outside the opened drawer.
+- **What it blocks:** Vue Drawer parity verification.
+- **Dependencies:** None. Related: GAP-099.
+- **Framework scope:** Vue. (Angular was not comparable: its stories open the drawer at load, without a trigger.)
+- **Existing reusable infrastructure:** The pilot Drawer behavior script.
+- **Recommended resolution direction:** Directional only; separate authorized remediation.
+- **Source/evidence:** `docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §3.3 D6.
+- **Architectural decision required:** No.
+
+#### GAP-101 — Message icon rendering differs from Prime (two distinct defects)
+
+- **Status:** OPEN (registered 2026-10-08 by user ruling R-4 on the Prime-parity pilot; rendered-parity finding)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Current evidence:** Rendered comparison at `f3f57a5` (pilot report §3.2). Two separate defects with separate causes:
+  1. **M1 — Vue renders a default severity icon slot.** Ultimate Vue Message always renders `span.u-message-icon` with a `pi pi-*` class per severity; PrimeVue 4.5.5 renders an icon only when `icon` is set. The text starts at x = 54 instead of 28; the icon itself is empty because no icon font is loaded. The Ultimate source comment claiming PrimeVue "auto-selects a default icon per severity" is contradicted by the pinned PrimeVue source.
+  2. **M2 — Close icon is a text glyph.** Prime renders its `TimesIcon` SVG; Ultimate renders the text `×` (Angular and Vue). The button box and focus ring match; the glyph differs visibly (found on the review image, not by the probe).
+- **Expected state:** Message renders icons as its framework's Prime oracle does.
+- **Why it matters:** Misaligned text (Vue) and a visibly different close control (both).
+- **What it blocks:** Message parity verification (Playbook status `open-gap`).
+- **Dependencies:** None.
+- **Framework scope:** M1 Vue; M2 Angular and Vue.
+- **Existing reusable infrastructure:** `tooling/prime-reference/` Message cases.
+- **Recommended resolution direction:** Directional only; separate authorized remediation per item.
+- **Source/evidence:** `docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §3.2 M1–M2, §6.5.
 - **Architectural decision required:** No.
 
 ## 4. Resolved gaps

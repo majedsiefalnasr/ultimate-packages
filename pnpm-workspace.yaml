@@ -1,3 +1,5 @@
 packages:
   - "packages/*"
   - "apps/*"
+  - "tooling/prime-reference/ng"
+  - "tooling/prime-reference/vue"

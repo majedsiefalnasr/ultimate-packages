@@ -71,6 +71,7 @@ Some architectural decisions are explicitly protected against reopening without 
 | Deep evidence for a specific past finding           | `docs/architecture/research/` (dated files)                                   |
 | Component-level facts (props, accessibility, tests) | `@ultimate/component-metadata` records, MCP tools, or direct component source |
 | Current component coverage                          | `docs/architecture/COMPONENT_INVENTORY.md`                                    |
+| Prime-parity verification process and status        | `docs/architecture/PARITY_PLAYBOOK.md`                                        |
 | Performance/bundle-size baselines                   | `docs/architecture/PERFORMANCE.md`                                            |
 | Release/migration process                           | `docs/architecture/MIGRATION.md`                                              |
 
