@@ -33,7 +33,7 @@ import {
 const PREEXISTING_PATH =
   "docs/architecture/research/2026-10-08-gap-064-g3e-accessibility-preexisting.md";
 const BROWSERS = ["chromium", "firefox", "webkit"];
-const EXPECTED_STORY_COUNT = { ng: 0, vue: 0 }; // raised per batch (Plan Tasks 5, 8, 11, 14)
+const EXPECTED_STORY_COUNT = { ng: 4, vue: 4 }; // raised per batch (Plan Tasks 5, 8, 11, 14)
 
 const PREFIX = "[validate-g3e-accessibility]";
 

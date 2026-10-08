@@ -20,7 +20,37 @@ const STORIES: ReadonlyArray<{
   kind: Kind;
   batch: string;
   trigger?: string;
-}> = [];
+}> = [
+  // E-1 (Image, ImageCompare)
+  {
+    name: "Image Default",
+    story: "vue-image--default",
+    ready: ".u-image",
+    kind: "rest",
+    batch: "E-1",
+  },
+  {
+    name: "Image WithPreview",
+    story: "vue-image--with-preview",
+    ready: ".u-image",
+    kind: "rest",
+    batch: "E-1",
+  },
+  {
+    name: "ImageCompare Sized",
+    story: "vue-imagecompare--sized",
+    ready: ".u-image-compare",
+    kind: "rest",
+    batch: "E-1",
+  },
+  {
+    name: "ImageCompare Rtl",
+    story: "vue-imagecompare--rtl",
+    ready: ".u-image-compare",
+    kind: "rest",
+    batch: "E-1",
+  },
+];
 
 const VISUAL: ReadonlyArray<{
   name: string;
@@ -29,7 +59,38 @@ const VISUAL: ReadonlyArray<{
   shot: string;
   batch: string;
   trigger?: string;
-}> = [];
+}> = [
+  // E-1 (Image, ImageCompare)
+  {
+    name: "Image Default rest",
+    story: "vue-image--default",
+    kind: "rest",
+    shot: ".u-image",
+    batch: "E-1",
+  },
+  {
+    name: "Image WithPreview open",
+    story: "vue-image--with-preview",
+    kind: "click",
+    shot: "page",
+    batch: "E-1",
+    trigger: ".u-image-preview-mask",
+  },
+  {
+    name: "ImageCompare Sized rest",
+    story: "vue-imagecompare--sized",
+    kind: "rest",
+    shot: ".u-image-compare",
+    batch: "E-1",
+  },
+  {
+    name: "ImageCompare Rtl rest",
+    story: "vue-imagecompare--rtl",
+    kind: "rest",
+    shot: ".u-image-compare",
+    batch: "E-1",
+  },
+];
 
 async function go(page: Page, story: string) {
   // G3E-4: freeze autoplay timers for the circular Carousel story (clock installed before navigation).
