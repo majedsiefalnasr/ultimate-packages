@@ -33,7 +33,7 @@ export interface VisualCase {
 export interface RecordedCase {
   id: string;
   section: string;
-  kind: "D" | "coverage-gap";
+  kind: "D" | "coverage-gap" | "no-prime-reference";
   reason: string;
   /** D cases are still rendered on the Prime side, for the record. */
   primeOnly?: boolean;

@@ -5,6 +5,7 @@ import { providePrimeNG } from "primeng/config";
 import { DrawerModule } from "primeng/drawer";
 import { MessageModule } from "primeng/message";
 import { TagModule } from "primeng/tag";
+import { G3ECases } from "./g3e";
 
 type Position = "left" | "right" | "top" | "bottom" | "full";
 
@@ -41,58 +42,64 @@ const DRAWERS: Record<
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [DrawerModule, MessageModule, TagModule],
+  imports: [DrawerModule, MessageModule, TagModule, G3ECases],
   template: `
-    @switch (id) {
-      @case ("tag/default") {
-        <p-tag value="New" />
-      }
-      @case ("tag/severities") {
-        <p-tag severity="success" value="Success" />
-        <p-tag severity="info" value="Info" />
-        <p-tag severity="warn" value="Warn" />
-        <p-tag severity="danger" value="Danger" />
-        <p-tag severity="secondary" value="Secondary" />
-        <p-tag severity="contrast" value="Contrast" />
-      }
-      @case ("message/default") {
-        <p-message severity="info">This is an informational message.</p-message>
-      }
-      @case ("message/severities") {
-        <p-message severity="success">Success message</p-message>
-        <p-message severity="info">Info message</p-message>
-        <p-message severity="warn">Warn message</p-message>
-        <p-message severity="error">Error message</p-message>
-        <p-message severity="secondary">Secondary message</p-message>
-        <p-message severity="contrast">Contrast message</p-message>
-      }
-      @case ("message/closable") {
-        <p-message severity="warn" [closable]="true">This message can be closed.</p-message>
-      }
-      <!-- Class D cases (no Ultimate support): rendered for the record only. -->
-      @case ("message/outlined") {
-        <p-message severity="info" variant="outlined">Outlined message</p-message>
-      }
-      @case ("message/simple") {
-        <p-message severity="info" variant="simple">Simple message</p-message>
-      }
-      @case ("message/sizes") {
-        <p-message severity="info" size="small">Small message</p-message>
-        <p-message severity="info" size="large">Large message</p-message>
-      }
-      @default {
-        @if (drawer) {
-          <!-- One-way binding, as in the @ultimate/ng Drawer stories. -->
-          <p-drawer [visible]="visible" [header]="drawer.header" [position]="drawer.position">{{
-            drawer.body
-          }}</p-drawer>
+    @if (g3e) {
+      <app-g3e [id]="g3e" />
+    } @else {
+      @switch (id) {
+        @case ("tag/default") {
+          <p-tag value="New" />
+        }
+        @case ("tag/severities") {
+          <p-tag severity="success" value="Success" />
+          <p-tag severity="info" value="Info" />
+          <p-tag severity="warn" value="Warn" />
+          <p-tag severity="danger" value="Danger" />
+          <p-tag severity="secondary" value="Secondary" />
+          <p-tag severity="contrast" value="Contrast" />
+        }
+        @case ("message/default") {
+          <p-message severity="info">This is an informational message.</p-message>
+        }
+        @case ("message/severities") {
+          <p-message severity="success">Success message</p-message>
+          <p-message severity="info">Info message</p-message>
+          <p-message severity="warn">Warn message</p-message>
+          <p-message severity="error">Error message</p-message>
+          <p-message severity="secondary">Secondary message</p-message>
+          <p-message severity="contrast">Contrast message</p-message>
+        }
+        @case ("message/closable") {
+          <p-message severity="warn" [closable]="true">This message can be closed.</p-message>
+        }
+        <!-- Class D cases (no Ultimate support): rendered for the record only. -->
+        @case ("message/outlined") {
+          <p-message severity="info" variant="outlined">Outlined message</p-message>
+        }
+        @case ("message/simple") {
+          <p-message severity="info" variant="simple">Simple message</p-message>
+        }
+        @case ("message/sizes") {
+          <p-message severity="info" size="small">Small message</p-message>
+          <p-message severity="info" size="large">Large message</p-message>
+        }
+        @default {
+          @if (drawer) {
+            <!-- One-way binding, as in the @ultimate/ng Drawer stories. -->
+            <p-drawer [visible]="visible" [header]="drawer.header" [position]="drawer.position">{{
+              drawer.body
+            }}</p-drawer>
+          }
         }
       }
     }
   `,
 })
 class App {
-  readonly id = location.hash.replace(/^#\//, "");
+  // G3-E routes are `g3e/<key>/<case>`; the smoke route `g3e/tag/default` reuses the pilot Tag case.
+  readonly id = location.hash.replace(/^#\//, "").replace(/^g3e\/(?=tag\/)/, "");
+  readonly g3e = this.id.startsWith("g3e/") ? this.id.slice(4) : "";
   readonly drawer = DRAWERS[this.id];
   visible = this.drawer?.visible ?? false;
 
