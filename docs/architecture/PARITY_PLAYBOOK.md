@@ -1,6 +1,6 @@
 # Prime-Parity Verification Playbook
 
-**Status:** normative (approved by the user 2026-10-08, decisions P-1..P-7 in `docs/architecture/research/2026-10-08-prime-parity-verification-playbook-proposal.md` §11).
+**Status:** normative (approved by the user 2026-10-08, decisions P-1..P-7 in `docs/architecture/research/2026-10-08-prime-parity-verification-playbook-proposal.md` §11; amended by the pilot rulings R-1..R-7 and the PrimeNG-CSS ruling, `docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §10).
 **Scope:** how Ultimate decides whether a component looks and behaves like its Prime counterpart. It answers one question:
 
 > Does the Ultimate component actually look and behave like the corresponding Prime component across its important user-visible states and variants?
@@ -22,7 +22,8 @@ A parity question is answered against a rendered reference, chosen by framework:
 
 - PrimeNG and PrimeVue share `@primeuix/styles` / `@primeuix/themes` 2.0.3. That is part of the diagnostic story; it does **not** prove they render identically.
 - For any Angular-specific DOM, layout, host-element, interaction or runtime behavior, PrimeNG is authoritative.
-- Whether a PrimeVue capture may stand in for Angular on a purely shared-styling case is **open** until the pilot (§12) reports. If the pilot shows identical renders for such cases, that fact is recorded per case. It never becomes a blanket rule for framework-specific behavior.
+- A PrimeVue capture may stand in for Angular only on a specific shared-styling case, and only where a PrimeNG-vs-PrimeVue comparison of that case shows equivalence. It never becomes a blanket rule. The pilot (2026-10-08) found identical renders for Tag and Message, and a difference for the full Drawer (§12).
+- **PrimeNG ships framework-specific CSS** beyond the shared `@primeuix/styles` (for example its own `drawerstyle.ts` layer). Shared PrimeUIX versions are not sufficient to reproduce PrimeNG. When a visual difference appears, inspect the framework-specific Prime source before deciding whether the Ultimate port is incomplete.
 - Newer Prime releases are never rendered as a reference (ADR-048).
 - React is outside this Playbook until a React parity scope is authorized.
 
@@ -100,13 +101,16 @@ Each run first compares an environment probe (computed `body` font-family, font-
 For each case and framework: open the reference route and the Ultimate story, apply the state with the X-6 helpers, screenshot the component root (the viewport for overlays), and probe up to four named parts:
 
 - **Geometry:** width, height, offset from the root (from the anchor, for overlays).
-- **Computed values:** `color`, `background-color`, border widths and colors, `border-radius`, `padding`, `font-size`, `font-weight`, `line-height`, `box-shadow` (none / present), `opacity`, `display` / `visibility`, `box-sizing`.
+- **Computed values:** `color`, `background-color`, border widths and colors, `border-radius`, `padding`, `font-size`, `font-weight`, `line-height`, `box-shadow` (none / present), `opacity`, `display` / `visibility`.
+- **Explanatory values:** `box-sizing`. Measured and reported separately, used to explain geometry differences, never a verdict by itself. The geometry it causes is still compared and stays material.
 
-Output: side-by-side and diff images, a JSON report, and a generated Markdown summary. The pixel-diff ratio is reported as advisory only.
+Output: side-by-side and diff images, a JSON report, and a generated Markdown summary. The pixel-diff ratio is reported as advisory only; it is not a numeric gate.
 
 ### 6.4 Verdict
 
 A case is a **Match** when geometry is within ±1 px, the probed values are equal, and the side-by-side review shows no visible difference. Otherwise it is a difference and is classified (§8). No CI gate is attached; CI gating is a later, separate decision.
+
+**A probe match is not enough when the images differ.** If the probe matches but any pixels differ, inspect the review image and decide whether the difference is harness/rendering noise, below the material threshold, a real visible difference, or an intentional one, then classify it before the case counts as a Match. A probe-only match never overrides a visible discrepancy (the pilot's Message close icon is the precedent).
 
 ## 7. Behavior
 
@@ -170,63 +174,64 @@ G3 source-port work (G3-A..G3-D) is closed and is not reopened. Their verificati
 
 ## 11. Status table
 
-All rows measured at `main` `4c099a9` (2026-10-08). No rendered Prime comparison exists yet for any component, so every Verification value is `pending`. "—" = no component in that framework.
+Rows measured at `main` `4c099a9` (2026-10-08). Drawer, Message and Tag were compared in the pilot at `f3f57a5` (no Ultimate source change from `4c099a9`; record: `research/2026-10-08-prime-parity-pilot-report.md`). Every other row has no rendered Prime comparison and stays `pending`. "—" = no component in that framework.
 
-| Key               | Tier | Tranche | Source ng / vue         | Verification ng / vue | Known gaps / notes                                       |
-| ----------------- | ---- | ------- | ----------------------- | --------------------- | -------------------------------------------------------- |
-| accordion         | A    | G3-B    | ported / ported         | pending / pending     |                                                          |
-| blockui           | C    | G3-B    | ported / ported         | pending / pending     | Vue story `inheritAttrs` (G3-B follow-up)                |
-| card              | C    | G3-B    | ported / ported         | pending / pending     | U2 Vue WebKit screenshot                                 |
-| divider           | C    | G3-B    | ported / ported         | pending / pending     |                                                          |
-| fieldset          | B    | G3-B    | ported / ported         | pending / pending     |                                                          |
-| inplace           | B    | G3-B    | ported / ported         | pending / pending     |                                                          |
-| panel             | B    | G3-B    | ported / ported         | pending / pending     |                                                          |
-| scrollpanel       | B    | G3-B    | ported / ported         | pending / pending     | U1 Angular story                                         |
-| splitter          | B    | G3-B    | ported / ported         | pending / pending     |                                                          |
-| toolbar           | C    | G3-B    | ported / ported         | pending / pending     |                                                          |
-| breadcrumb        | B    | G3-C1   | ported / ported         | pending / pending     |                                                          |
-| dock              | B    | G3-C1   | ported / ported         | pending / pending     | Screenshots below tolerance (C1 follow-up)               |
-| stepper           | A    | G3-C1   | ported / ported         | pending / pending     | Angular separator groups unreachable (cross-tranche F-1) |
-| steps             | B    | G3-C1   | ported / ported         | pending / pending     |                                                          |
-| tabs              | A    | G3-C1   | ported / ported         | pending / pending     |                                                          |
-| contextmenu       | A    | G3-C2   | ported / ported         | pending / pending     | GAP-086                                                  |
-| megamenu          | A    | G3-C2   | ported / ported         | pending / pending     | GAP-084 (Vue), GAP-085                                   |
-| menubar           | A    | G3-C2   | ported / ported         | pending / pending     | GAP-084 (Vue)                                            |
-| panelmenu         | A    | G3-C2   | ported / ported         | pending / pending     |                                                          |
-| tieredmenu        | A    | G3-C2   | ported / ported         | pending / pending     | GAP-084 (Vue)                                            |
-| confirmdialog     | B    | G3-D    | ported / ported         | pending / pending     |                                                          |
-| confirmpopup      | A    | G3-D    | ported / ported         | pending / pending     |                                                          |
-| drawer            | A    | G3-D    | ported / ported         | pending / pending     | GAP-097, GAP-098; pilot component                        |
-| popover           | A    | G3-D    | ported / ported         | pending / pending     |                                                          |
-| inlinemessage     | B    | G3-A    | — / ported              | — / pending           |                                                          |
-| message           | B    | G3-A    | ported / ported         | pending / pending     | Pilot component                                          |
-| toast             | A    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| avatar            | C    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| chip              | C    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| knob              | B    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| metergroup        | B    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| overlaybadge      | C    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| progressbar       | C    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| progressspinner   | C    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| skeleton          | C    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| tag               | C    | G3-A    | ported / ported         | pending / pending     | Pilot component                                          |
-| terminal          | C    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| timeline          | B    | G3-A    | ported / ported         | pending / pending     |                                                          |
-| splitbutton       | A    | G3-D    | ported / ported         | pending / pending     | SplitButton → `UMenu` (D-G3-9)                           |
-| speeddial         | A    | G3-D    | ported / ported         | pending / pending     | GAP-096                                                  |
-| carousel          | A    | G3-E    | not ported / not ported | pending / pending     | G3-E not started                                         |
-| galleria          | A    | G3-E    | not ported / not ported | pending / pending     | G3-E; Ultimate-specific structure (G3 research)          |
-| image             | B    | G3-E    | not ported / not ported | pending / pending     | G3-E                                                     |
-| imagecompare      | B    | G3-E    | not ported / not ported | pending / pending     | G3-E                                                     |
-| dataview          | B    | G3-E    | not ported / not ported | pending / pending     | G3-E; Ultimate-specific structure (G3 research)          |
-| orderlist         | B    | G3-E    | not ported / not ported | pending / pending     | G3-E; ng/vue Listbox divergence (D-G3-9)                 |
-| organizationchart | B    | G3-E    | — / not ported          | — / pending           | G3-E; Ultimate-specific structure (G3 research)          |
-| picklist          | B    | G3-E    | not ported / not ported | pending / pending     | G3-E; ng/vue Listbox divergence (D-G3-9)                 |
+| Key               | Tier | Tranche | Source ng / vue         | Verification ng / vue | Known gaps / notes                                                                                                                                                    |
+| ----------------- | ---- | ------- | ----------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| accordion         | A    | G3-B    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| blockui           | C    | G3-B    | ported / ported         | pending / pending     | Vue story `inheritAttrs` (G3-B follow-up)                                                                                                                             |
+| card              | C    | G3-B    | ported / ported         | pending / pending     | U2 Vue WebKit screenshot                                                                                                                                              |
+| divider           | C    | G3-B    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| fieldset          | B    | G3-B    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| inplace           | B    | G3-B    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| panel             | B    | G3-B    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| scrollpanel       | B    | G3-B    | ported / ported         | pending / pending     | U1 Angular story                                                                                                                                                      |
+| splitter          | B    | G3-B    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| toolbar           | C    | G3-B    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| breadcrumb        | B    | G3-C1   | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| dock              | B    | G3-C1   | ported / ported         | pending / pending     | Screenshots below tolerance (C1 follow-up)                                                                                                                            |
+| stepper           | A    | G3-C1   | ported / ported         | pending / pending     | Angular separator groups unreachable (cross-tranche F-1)                                                                                                              |
+| steps             | B    | G3-C1   | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| tabs              | A    | G3-C1   | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| contextmenu       | A    | G3-C2   | ported / ported         | pending / pending     | GAP-086                                                                                                                                                               |
+| megamenu          | A    | G3-C2   | ported / ported         | pending / pending     | GAP-084 (Vue), GAP-085                                                                                                                                                |
+| menubar           | A    | G3-C2   | ported / ported         | pending / pending     | GAP-084 (Vue)                                                                                                                                                         |
+| panelmenu         | A    | G3-C2   | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| tieredmenu        | A    | G3-C2   | ported / ported         | pending / pending     | GAP-084 (Vue)                                                                                                                                                         |
+| confirmdialog     | B    | G3-D    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| confirmpopup      | A    | G3-D    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| drawer            | A    | G3-D    | ported / ported         | open-gap / open-gap   | ng: GAP-097, GAP-098, GAP-099 (D3, D5); vue: GAP-097, GAP-098, GAP-099 (D4), GAP-100. C: no backdrop (D-D4/PX-D2). Coverage gaps: template; Angular two-way `visible` |
+| popover           | A    | G3-D    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| inlinemessage     | B    | G3-A    | — / ported              | — / pending           |                                                                                                                                                                       |
+| message           | B    | G3-A    | ported / ported         | open-gap / open-gap   | ng: GAP-101 (M2); vue: GAP-101 (M1, M2). D: outlined, simple, sizes. Coverage gap: icon                                                                               |
+| toast             | A    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| avatar            | C    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| chip              | C    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| knob              | B    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| metergroup        | B    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| overlaybadge      | C    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| progressbar       | C    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| progressspinner   | C    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| skeleton          | C    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| tag               | C    | G3-A    | ported / ported         | partial / partial     | default and severities Match (pixel-identical). Coverage gaps: pill/rounded, icon (no stories)                                                                        |
+| terminal          | C    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| timeline          | B    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
+| splitbutton       | A    | G3-D    | ported / ported         | pending / pending     | SplitButton → `UMenu` (D-G3-9)                                                                                                                                        |
+| speeddial         | A    | G3-D    | ported / ported         | pending / pending     | GAP-096                                                                                                                                                               |
+| carousel          | A    | G3-E    | not ported / not ported | pending / pending     | G3-E not started                                                                                                                                                      |
+| galleria          | A    | G3-E    | not ported / not ported | pending / pending     | G3-E; Ultimate-specific structure (G3 research)                                                                                                                       |
+| image             | B    | G3-E    | not ported / not ported | pending / pending     | G3-E                                                                                                                                                                  |
+| imagecompare      | B    | G3-E    | not ported / not ported | pending / pending     | G3-E                                                                                                                                                                  |
+| dataview          | B    | G3-E    | not ported / not ported | pending / pending     | G3-E; Ultimate-specific structure (G3 research)                                                                                                                       |
+| orderlist         | B    | G3-E    | not ported / not ported | pending / pending     | G3-E; ng/vue Listbox divergence (D-G3-9)                                                                                                                              |
+| organizationchart | B    | G3-E    | — / not ported          | — / pending           | G3-E; Ultimate-specific structure (G3 research)                                                                                                                       |
+| picklist          | B    | G3-E    | not ported / not ported | pending / pending     | G3-E; ng/vue Listbox divergence (D-G3-9)                                                                                                                              |
 
 Tiers: A 16, B 20, C 12. GAP-098 (global base box model) potentially affects every row.
 
 ## 12. Current state
 
-- **Pilot (approved, not started):** Drawer (Tier A, positive control for GAP-097 / GAP-098), Message (Tier B, with D cases), Tag (Tier C, negative control). It builds the shared runner, the PrimeVue reference app, and a minimal PrimeNG reference app for the same cases. Exit criteria: stable environment probe; the Drawer sizing difference detected; at least one genuine match; output useful for human review; effort per case and per component measured; Angular reference handling validated against PrimeNG well enough to confirm the harness architecture and to settle §1's open item. If the method misleads or costs too much, it is revised before G3-E.
-- **G3-E** starts only after the pilot passes and is approved.
+- **Pilot: accepted (user ruling R-1, 2026-10-08).** Drawer, Message and Tag, harness `tooling/prime-reference/` (`f3f57a5`), record `research/2026-10-08-prime-parity-pilot-report.md`. All nine exit criteria met. It reproduced GAP-097/GAP-098, showed a genuine Tag match, and registered GAP-099, GAP-100 and GAP-101. None of these is remediated by the pilot.
+- **Coverage gaps recorded (R-7), not implementation requirements:** Tag icon, Tag pill/rounded, Message icon, Drawer template, Angular Drawer two-way `visible` binding. Stories for them are added only when a specific parity work item requires the case.
+- **G3-E: authorized** under this Playbook, once the integration state of the Playbook and pilot branches is established. Cases come from the pinned PrimeNG/PrimeVue showcases; each framework is compared with its own oracle; differences are classified before any fix; CSS is not ported merely because Prime source contains it; stories are not created only to raise coverage.
 - **Backfill** of G3-A..G3-D follows, Tier A first.
