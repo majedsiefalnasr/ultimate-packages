@@ -1,7 +1,10 @@
 // G3E-1: generates the four 800 × 600 verification images (no third-party content).
 // Run once from the repository root: node tooling/prime-reference/fixtures/generate.mjs
 // Shapes only (no text), so the output does not depend on fonts.
+/* global document -- used inside page.evaluate, which runs in the browser */
+import { Buffer } from "node:buffer";
 import { writeFileSync } from "node:fs";
+import { URL } from "node:url";
 import { chromium } from "@playwright/test";
 
 const PALETTES = [
