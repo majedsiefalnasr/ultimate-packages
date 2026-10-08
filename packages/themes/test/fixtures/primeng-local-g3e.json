@@ -1,0 +1,18 @@
+{
+  "_meta": {
+    "source": "primeng@21.1.9 (MIT) packages/primeng/src/<key>/style/<key>style.ts",
+    "method": "one-off script from .vendor-cache/primeng-21.1.9.tar.gz; no hand edits",
+    "scope": "GAP-064 G3-E OI-E1: PrimeNG-local CSS appended after the shared @primeuix/styles import",
+    "purpose": "CI-runnable upstream snapshot for the G3-E fidelity test. Test data only, not shipped source."
+  },
+  "modules": {
+    "carousel": "",
+    "galleria": "",
+    "image": "",
+    "imagecompare": "",
+    "dataview": "",
+    "orderlist": "/* For PrimeNG */\n    .p-orderlist-controls-right .p-orderlist-controls {\n        order: 2;\n    }",
+    "organizationchart": "",
+    "picklist": ""
+  }
+}
