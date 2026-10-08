@@ -11,6 +11,7 @@ import {
   environment,
   load,
   probe,
+  settled,
   type Difference,
   type Side,
   type Target,
@@ -57,7 +58,11 @@ async function observe(browser: Browser, comp: G3EComponent, c: G3ECase, t: Targ
   const page = await load(browser, t);
   try {
     const all = sels(comp, Object.keys(comp.parts), t.fw, t.side);
+    // The environment is the page before the case's actions: a component may legitimately
+    // change <body> (e.g. scroll locking when an overlay opens), which is behavior, not environment.
+    const env = await environment(page, t.side);
     await run(page, all, c.actions);
+    await settled(page, t.clock);
     const parts = await probe(page, sels(comp, c.parts, t.fw, t.side));
     expect(
       parts[c.parts[0]].missing,
@@ -65,7 +70,7 @@ async function observe(browser: Browser, comp: G3EComponent, c: G3ECase, t: Targ
     ).toBeFalsy();
     await imagesLoaded(page, all[c.parts[0]]);
     return {
-      env: await environment(page, t.side),
+      env,
       parts,
       facts: await facts(page, all, c.facts),
       png: await capture(page, t.side, c.capture),

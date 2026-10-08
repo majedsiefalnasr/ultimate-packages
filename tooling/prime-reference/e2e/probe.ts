@@ -49,12 +49,18 @@ async function settle(page: Page): Promise<void> {
 async function settleClock(page: Page): Promise<void> {
   for (let stable = 0, i = 0; stable < 2 && i < 40; i++) {
     await page.clock.runFor(50);
+    // CSS transitions run on real time, not on the fake clock: give them real time as well.
+    await page.waitForTimeout(50);
     const idle = await page.evaluate(() =>
       document.getAnimations().every((a) => a.playState !== "running")
     );
     stable = idle ? stable + 1 : 0;
   }
 }
+
+/** Waits for animations to finish; with a paused clock (G3E-4), by advancing time in fixed steps. */
+export const settled = (page: Page, clock?: boolean): Promise<void> =>
+  clock ? settleClock(page) : settle(page);
 
 /** Loads a target in a fresh page and applies its open action and state (X-6: pointer parked). */
 export async function load(browser: Browser, t: Target): Promise<Page> {
@@ -63,7 +69,7 @@ export async function load(browser: Browser, t: Target): Promise<Page> {
   if (t.clock) await page.clock.install({ time: 0 });
   await page.goto(url(t));
   if (t.clock) await page.clock.pauseAt(1000);
-  const still = () => (t.clock ? settleClock(page) : settle(page));
+  const still = () => settled(page, t.clock);
   await page.locator(container(t.side)).waitFor({ state: "attached" });
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
