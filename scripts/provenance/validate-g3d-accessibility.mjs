@@ -3,7 +3,7 @@
 //
 // GAP-064 G3-D differential accessibility check (G3-D Spec §9.5 AC8). It
 // covers only the G3-D verification stories, which CI excludes from the
-// strict repository-wide scan (`--grep-invert "G3-A|G3-B|G3-C1|G3-D|G3-D"`). For one framework
+// strict repository-wide scan (`--grep-invert "G3-A|G3-B|G3-C1|G3-C2|G3-D"`). For one framework
 // (ng or vue) it reads the axe envelopes the G3-D spec wrote to
 // test-results/accessibility/<fw>/<browser>/<storyId>.json and:
 //

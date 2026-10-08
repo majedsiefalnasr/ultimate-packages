@@ -180,7 +180,7 @@ const CANDIDATE_KEY = {
   "R-D4": "confirmdialog",
   "R-D5": "popover",
 };
-/** Gate outcome (Plan Task 8; Spec §8 G-D1, §17): R-D5 dropped (no difference in any engine); R-D4 pending user ruling. */
+/** Gate outcome (Plan Task 8; Spec §8 G-D1, §17): R-D5 dropped (no difference in any engine); R-D4 kept (user ruling, 2026-10-07). */
 export const KEPT = ["R-D1", "R-D2", "R-D3", "R-D4"];
 const retained = () => {
   const out = {};
