@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-08
 **Branch:** `feature/gap-064-g3e-media-data` (from `main` `cad9f85`, with the G3-E research `ccb13f3` merged as `4951733`)
-**Status:** Draft for Spec Review. No Plan exists; implementation needs an approved Plan.
+**Status:** **Approved** (Spec Review, user, 2026-10-08; OI-E1..OI-E5 ruled in §14). Implementation needs an approved Plan.
 **Governing records:**
 
 - `docs/architecture/PARITY_PLAYBOOK.md` (normative process; framework-specific oracles; classification; status model).
@@ -233,3 +233,14 @@ G3-A..G3-D (their verification is a separate backfill); GAP-098..102 remediation
 - **OI-E3 — CI step (X-12).** Previous tranches added a CI step running their verification specs. Recommended: add the G3-E Ultimate regression specs the same way (regression evidence, not a parity gate); the parity harness stays out of CI.
 - **OI-E4 — GAP-102.** Registered with this Spec per G3E-3 (§4.2). Confirm the registration and its scope (ImageCompare only).
 - **OI-E5 — Galleria default.** Ultimate `showItemNavigators` defaults to `true`, Prime to `false`. Cases set it explicitly. Recommended: record as an observation in the E-2 record; any change of default is an API decision outside G3-E.
+
+## 14. Spec Review decisions (2026-10-08, user)
+
+1. **OI-E1 — PrimeNG-local CSS: approved.** Included in G3-E's Angular port where Ultimate has the corresponding feature or host. G3-E only; it supersedes the G3-B exclusion for this tranche only and does not change G3-A..G3-D. Resulting differences are evidence to classify, not automatic defects. No DOM or runtime change is authorized by this ruling.
+2. **OI-E2 — Fixture serving: approved.** One `staticDirs` entry in each Ultimate Storybook, as part of G3E-1. No further Storybook infrastructure.
+3. **OI-E3 — G3-E regression CI: approved.** A G3-E Ultimate regression CI step following the G3-A..G3-D pattern. Regression evidence only, not a parity gate. The Prime comparison harness stays out of CI. No unrelated CI-health work.
+4. **OI-E4 — GAP-102: confirmed.** Vue ImageCompare root `class`/`style` fall-through only. Not fixed in G3-E.
+5. **OI-E5 — Galleria default: approved.** Ultimate `showItemNavigators = true` vs Prime `false` is recorded as an observation; cases set the value explicitly; no API/default change in G3-E.
+6. **G3E-3 classifications approved:** Angular DataView `NG0950` = story/setup, repaired in E-0 only (no product change, no GAP); Vue ImageCompare 57 px = product defect A → GAP-102, with one canonical case exposing it.
+7. **Additional ruling — Vue fall-through pattern.** The observation that other Ultimate Vue components may drop `class`/`style` the same way does not expand G3-E: no audit, no broadening of GAP-102, no shared/base-component fix, no `inheritAttrs`/`$attrs`/DOM/runtime/API change. It is recorded only as a research observation and future investigation candidate; a broader investigation needs its own research/GAP scope.
+8. **Plan constraints:** keep the verification-first flow (before-port → classify → authorized work → after-port) and the one-iteration stop boundary; no implementation, CSS, story, baseline or CI change before the Plan is approved; the Plan does not expand scope from newly discovered patterns.
