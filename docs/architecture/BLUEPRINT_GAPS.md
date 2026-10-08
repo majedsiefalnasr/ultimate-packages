@@ -1128,6 +1128,15 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **Size.** Angular fesm2022 total +0.81%, Vue +1.51%.
   - **Still open:** G3-D (F3 + F8) and G3-E (F6 + F7). GAP-064 stays PARTIAL.
   - **New gaps registered at this closeout:** GAP-084, GAP-085, GAP-086. Accepted coverage gaps (no permanent test): the MegaMenu column grid, Menubar first-level submenu placement, PanelMenu re-expand, and disabled-parent hover.
+- **Progress (2026-10-08, G3-D — complete on `feature/gap-064-g3d-overlays-composites`, not merged or pushed; record `docs/architecture/research/2026-10-08-gap-064-g3d-closeout.md`):**
+  - **Scope.** F3 Overlays + F8 Composites: confirmdialog, confirmpopup, drawer, popover, splitbutton, speeddial. That is 6 Angular and 6 Vue style modules, with the ADR-051 key renames at 8 sites (Angular 4, Vue 4).
+  - **Port.** Each module's `css` is now the applicable `@primeuix/styles` 2.0.3 structural CSS mapped to the existing DOM. Per framework, 34 of 77 upstream groups are ported and 43 omitted (Spec §5). D5 rules R-D1..R-D4 kept, R-D5 dropped (Spec §17). Defect corrections F-D1 (SpeedDial trigger reachable), F-D2 (ConfirmDialog content), F-D3 (Angular Drawer content grows).
+  - **Visual baselines.** 102 updated after user review of all 12 groups.
+  - **Accessibility.** 36 introduced SpeedDial `region` rows accepted as environmental.
+  - **Size.** Angular fesm2022 total +0.34%, Vue +0.41%.
+  - **Known failure.** `Drawer full and RTL G3-D layout` fails in all engines (full drawer 2 px taller than the viewport), so the CI G3-D verification step stays red until GAP-097 is resolved (user decision 2026-10-08).
+  - **Still open:** G3-E (F6 + F7). GAP-064 stays PARTIAL.
+  - **New gaps registered at this closeout:** GAP-096, GAP-097.
 - **Expected state:** Per-component Aura preset modules for the ~83 components built since Phase 5's original 5-component proof set, enabling theme-level customization for them via the same `dt()`-based mechanism the original 5 already use.
 - **Why it matters:** The original 5-component scope boundary (Phase 5 Spec §108/§203/§245) was fully, explicitly disclosed at the time it was written — but it was never revisited or re-affirmed as Phase C's real component count grew roughly 15x beyond that original proof set. This gap registers that unrevisited extension, not the original (still-valid) boundary.
 - **What it blocks:** Nothing further downstream.
@@ -1697,6 +1706,44 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 ---
 
+#### GAP-096 — A closed SpeedDial occupies layout space and pushes following content
+
+- **Status:** OPEN (registered 2026-10-08 at the GAP-064 G3-D closeout; follow-up of the faithful G3-D port)
+- **Type:** Component layout, Visual
+- **Blocking level:** MEDIUM
+- **Current evidence:** Measured during G3-D Tasks 6–7 (Chromium, `speeddial--default`, direction up, both frameworks).
+  - Before G3-D the action list was absolutely positioned: the root was 1248 × 6 px and the element after the host sat at y = 22.
+  - After the port the list is in normal flow, as upstream: the root is 1248 × 198 px, open or closed, and the element after the host sits at y = 214 (about 192 px lower).
+  - Upstream's CSS also keeps the list in flow; the PrimeVue showcase positions every SpeedDial with an inline `position: absolute`. No approved upstream rule removes the footprint.
+- **Expected state:** A decided consumer contract for SpeedDial placement (documented consumer positioning, or a product-level positioning default).
+- **Why it matters:** Placing a SpeedDial inline moves the surrounding content even while it is closed.
+- **What it blocks:** Nothing further downstream.
+- **Dependencies:** None. Related: GAP-064 G3-D.
+- **Framework scope:** Angular, Vue.
+- **Existing reusable infrastructure:** The G3-D `Default` and `Directions` stories and screenshots.
+- **Recommended resolution direction:** Directional only; needs its own decision (documentation versus a positioning default).
+- **Source/evidence:** `docs/architecture/research/2026-10-08-gap-064-g3d-closeout.md`; MIGRATION.md §8 (G3-D).
+- **Architectural decision required:** No.
+
+#### GAP-097 — Drawer sizing under `content-box`: content overflow and a full Drawer taller than the viewport
+
+- **Status:** OPEN (registered 2026-10-08 at the GAP-064 G3-D closeout; follow-up of the faithful G3-D port)
+- **Type:** Component layout, Visual, CI
+- **Blocking level:** MEDIUM
+- **Current evidence:** Measured during G3-D (Chromium, Firefox and WebKit, both frameworks).
+  - The ported `.u-drawer-content { width: 100%; height: 100% }` plus content padding, without an upstream-style global `box-sizing: border-box`, makes the content box 40 px larger than the drawer's inner box: 360 inside 320 (left/right), 1314 inside 1274 (top/bottom).
+  - The ported full rule (`height: 100vh !important` with a 1 px border) makes a `full` Drawer 1280 × 722 in a 1280 × 720 viewport (inner box 1278 × 720, `content-box`).
+  - `Drawer full and RTL G3-D layout` therefore fails in every engine, and the CI step "Run G3-D verification specs" is red. The check is kept unchanged (user decision 2026-10-08); its RTL half does not run while the full assertion fails.
+- **Expected state:** Drawer content and the full Drawer fit their boxes, and the G3-D verification step passes without changing its assertions.
+- **Why it matters:** Visible overflow and a red CI step.
+- **What it blocks:** A green G3-D CI step.
+- **Dependencies:** None. Related: GAP-064 G3-D.
+- **Framework scope:** Angular, Vue.
+- **Existing reusable infrastructure:** The G3-D Drawer stories, layout tests and screenshots.
+- **Recommended resolution direction:** Directional only; a box-sizing decision needs its own Spec.
+- **Source/evidence:** `docs/architecture/research/2026-10-08-gap-064-g3d-closeout.md`; G3-D Spec §17.
+- **Architectural decision required:** No.
+
 ## 4. Resolved gaps
 
 ### `@ultimate/uix-data` — the shared Data foundation
@@ -1901,7 +1948,7 @@ The great majority of gaps in this registry can be started without waiting on an
 
 ### Open Architectural Decisions
 
-The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`. The Prime-parity follow-up phase (`feature/prime-parity-followup`, closeout 2026-10-03) resolved GAP-071–GAP-073, GAP-075–GAP-077, GAP-079 (declaration resolvability only) and GAP-080, and registered GAP-082 (typed Vue props); GAP-064 stays PARTIAL and GAP-074, GAP-078 and GAP-081 remain open with approved designs. Record: `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`. The approved-designs phase (`feature/prime-parity-approved-designs`, closeout 2026-10-03) resolved GAP-074, GAP-078 and GAP-081; GAP-064 (PARTIAL) and GAP-082 remain open. Record: `docs/architecture/research/2026-10-03-prime-parity-approved-designs-closeout.md`. GAP-082 (typed Vue props) was resolved on `feature/gap-082-typed-vue-props` (closeout 2026-10-04), which registered GAP-083 (Vue 3.5.0 declaration compatibility, pre-existing). GAP-083 was resolved on `feature/gap-083-vue-floor-compat` (closeout 2026-10-04) by raising the Vue floor to `^3.5.2` (ADR-050). Record: `docs/architecture/research/2026-10-04-gap-083-vue-floor-closeout.md`. Record: `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`. GAP-064 Tranche 1 (Aura key wiring: upstream style keys, Vue InputNumber additional preset key, `badge`/`inputgroup`/`paginator` modules) was completed on `feature/gap-064-aura-token-wiring` (closeout 2026-10-04, ADR-051); GAP-064 stays PARTIAL with G3 (46 Angular / 48 Vue hand-written-CSS components) open. Record: `docs/architecture/research/2026-10-04-gap-064-tranche-1-closeout.md`. GAP-064 G3-B (F1 Containers & Panels, 10 Angular / 10 Vue) was completed on `feature/gap-064-g3b-containers` (closeout 2026-10-05) and merged to local `main` `f008a73`. GAP-064 stays PARTIAL with G3-C..E open, and three story follow-ups (U1, U2, Vue BlockUI) are recorded. Record: `docs/architecture/research/2026-10-05-gap-064-g3b-closeout.md`. GAP-064 G3-C1 (F2 Navigation: breadcrumb, dock, steps, stepper, tabs, 5 Angular / 5 Vue) was completed on `feature/gap-064-g3c-menus-navigation` (closeout 2026-10-06) and merged to local `main` `3cf9b4b`. GAP-064 stays PARTIAL with G3-C2 (Menus), G3-D and G3-E open. Record: `docs/architecture/research/2026-10-06-gap-064-g3c1-closeout.md`. GAP-064 G3-C2 (F2 Menus: tieredmenu, contextmenu, menubar, megamenu, panelmenu, 5 Angular / 5 Vue) was completed on `feature/gap-064-g3c2-menus` (closeout 2026-10-07; not merged or pushed). GAP-064 stays PARTIAL with G3-D and G3-E open, and GAP-084–GAP-086 were registered. Record: `docs/architecture/research/2026-10-07-gap-064-g3c2-closeout.md`.
+The Prime-vs-Ultimate parity audit's GAP-041–GAP-070 were delivered on `feature/prime-parity-audit-gaps` (closeout 2026-10-01; GAP-064 PARTIAL); GAP-071–GAP-081 were registered during that work and remain open. Deferred items and branch-level check results: `docs/architecture/research/2026-10-01-prime-parity-branch-closeout.md`. The Prime-parity follow-up phase (`feature/prime-parity-followup`, closeout 2026-10-03) resolved GAP-071–GAP-073, GAP-075–GAP-077, GAP-079 (declaration resolvability only) and GAP-080, and registered GAP-082 (typed Vue props); GAP-064 stays PARTIAL and GAP-074, GAP-078 and GAP-081 remain open with approved designs. Record: `docs/architecture/research/2026-10-03-prime-parity-followup-closeout.md`. The approved-designs phase (`feature/prime-parity-approved-designs`, closeout 2026-10-03) resolved GAP-074, GAP-078 and GAP-081; GAP-064 (PARTIAL) and GAP-082 remain open. Record: `docs/architecture/research/2026-10-03-prime-parity-approved-designs-closeout.md`. GAP-082 (typed Vue props) was resolved on `feature/gap-082-typed-vue-props` (closeout 2026-10-04), which registered GAP-083 (Vue 3.5.0 declaration compatibility, pre-existing). GAP-083 was resolved on `feature/gap-083-vue-floor-compat` (closeout 2026-10-04) by raising the Vue floor to `^3.5.2` (ADR-050). Record: `docs/architecture/research/2026-10-04-gap-083-vue-floor-closeout.md`. Record: `docs/architecture/research/2026-10-04-gap-082-typed-vue-props-closeout.md`. GAP-064 Tranche 1 (Aura key wiring: upstream style keys, Vue InputNumber additional preset key, `badge`/`inputgroup`/`paginator` modules) was completed on `feature/gap-064-aura-token-wiring` (closeout 2026-10-04, ADR-051); GAP-064 stays PARTIAL with G3 (46 Angular / 48 Vue hand-written-CSS components) open. Record: `docs/architecture/research/2026-10-04-gap-064-tranche-1-closeout.md`. GAP-064 G3-B (F1 Containers & Panels, 10 Angular / 10 Vue) was completed on `feature/gap-064-g3b-containers` (closeout 2026-10-05) and merged to local `main` `f008a73`. GAP-064 stays PARTIAL with G3-C..E open, and three story follow-ups (U1, U2, Vue BlockUI) are recorded. Record: `docs/architecture/research/2026-10-05-gap-064-g3b-closeout.md`. GAP-064 G3-C1 (F2 Navigation: breadcrumb, dock, steps, stepper, tabs, 5 Angular / 5 Vue) was completed on `feature/gap-064-g3c-menus-navigation` (closeout 2026-10-06) and merged to local `main` `3cf9b4b`. GAP-064 stays PARTIAL with G3-C2 (Menus), G3-D and G3-E open. Record: `docs/architecture/research/2026-10-06-gap-064-g3c1-closeout.md`. GAP-064 G3-C2 (F2 Menus: tieredmenu, contextmenu, menubar, megamenu, panelmenu, 5 Angular / 5 Vue) was completed on `feature/gap-064-g3c2-menus` (closeout 2026-10-07; not merged or pushed). GAP-064 stays PARTIAL with G3-D and G3-E open, and GAP-084–GAP-086 were registered. Record: `docs/architecture/research/2026-10-07-gap-064-g3c2-closeout.md`. GAP-064 G3-D (F3 Overlays + F8 Composites: confirmdialog, confirmpopup, drawer, popover, splitbutton, speeddial, 6 Angular / 6 Vue) was completed on `feature/gap-064-g3d-overlays-composites` (closeout 2026-10-08; not merged or pushed). GAP-064 stays PARTIAL with G3-E open, and GAP-096–GAP-097 were registered. Record: `docs/architecture/research/2026-10-08-gap-064-g3d-closeout.md`.
 
 Five were open (§5) at the 2026-10-01 closeout; DECISION-F was decided on 2026-10-02 (Option 1), leaving four: external-runtime-dependency approval process (DECISION-B), Table/Data-component architecture (DECISION-C, now narrower still — Table's own composition question is substantially answered by real implementation, OrderList/PickList/DataView's relationship to it is resolved (2026-09-21, no new foundation required), and Table's own fuller filter-operator vocabulary is resolved (2026-09-23, all 18 `FilterMatchMode` values dispatched in all 3 frameworks); the remainder is TreeTable specifically, gated on the separate DECISION-D), the deliberately-protected Tree-family "do not reopen" marker (DECISION-D), and package-naming finalization (DECISION-E, correctly deferred to pre-1.0). **DECISION-A is now resolved by implementation** (Phase 10 Track A; ADR-044) — retained in §5 for historical continuity, not as an open item.
 
