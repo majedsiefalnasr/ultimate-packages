@@ -1744,6 +1744,24 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** `docs/architecture/research/2026-10-08-gap-064-g3d-closeout.md`; G3-D Spec §17.
 - **Architectural decision required:** No.
 
+#### GAP-098 — Prime's global base style (`box-sizing: border-box`) is not applied in Ultimate
+
+- **Status:** OPEN (registered 2026-10-08 by user decision P-7 on the verification-first Playbook proposal; cross-cutting base-style / parity issue)
+- **Type:** Styling, Visual, Cross-cutting
+- **Blocking level:** MEDIUM
+- **Current evidence:**
+  - _Static (at `main` `4c099a9`):_ Prime's base style, `@primeuix/styles` 2.0.3 `base/index.ts`, starts with `*, ::before, ::after { box-sizing: border-box; }` and is loaded by every Prime app. Ultimate has a port of it in `packages/uix-styles/src/base/index.ts` (exported as `@ultimate/uix-styles/base`), but no source in `ng-core`, `vue-core`, `react-core`, `uix-styled`, `themes`, `ng`, `vue` or `react` imports it, and none of them declares a global `border-box` rule. A few React style modules set `border-box` locally (scroll-panel, multi-select, listbox, carousel, select).
+  - _Browser:_ the G3-D runs measured `box-sizing: content-box` on the Drawer, which causes GAP-097.
+- **Expected state:** Ultimate components render under the same box model Prime's own base layer gives them, so ported upstream sizing rules produce Prime's rendered sizes. How it is applied (global base registration, a scoped rule, or per-component adaptation) is for the remediation's own decision.
+- **Why it matters:** Upstream component CSS assumes `border-box`. Any component that combines a fixed or percentage width/height with padding or borders can render larger than in Prime. Per-component source-parity checks cannot detect a missing global layer.
+- **What it blocks:** Nothing directly. GAP-097 is one known effect; affected components will show up as differences in rendered Prime-parity verification (`docs/architecture/PARITY_PLAYBOOK.md`).
+- **Dependencies:** None. Related: GAP-097, GAP-064, GAP-074 / GAP-078 (the approved shared-registration and SSR style contracts any global registration would follow).
+- **Framework scope:** Angular, React, Vue.
+- **Existing reusable infrastructure:** `@ultimate/uix-styles/base`; each core's `StyleSheet` registration.
+- **Recommended resolution direction:** Directional only. Remediation is separate, authorized work with its own Spec, because applying a global box model can change many components at once. It is not part of the Playbook work or the verification pilot.
+- **Source/evidence:** `docs/architecture/research/2026-10-08-prime-parity-verification-playbook-proposal.md` §1.2 and §11; GAP-097.
+- **Architectural decision required:** Yes, at remediation time: where and how the base layer is applied.
+
 ## 4. Resolved gaps
 
 ### `@ultimate/uix-data` — the shared Data foundation
