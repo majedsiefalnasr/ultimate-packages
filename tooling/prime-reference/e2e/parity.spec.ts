@@ -181,7 +181,12 @@ for (const comp of PILOT) {
             id: c.id,
             fw,
             kind: "visual",
-            verdict: differences.length ? "differs" : "match",
+            // Playbook §6.4: a probe match with differing pixels is not a Match until its image is reviewed.
+            verdict: differences.length
+              ? "differs"
+              : review.differing > 0
+                ? "review image"
+                : "match",
             differences,
             explanatory: compare(prime.parts, ult.parts, true),
             pixelRatio: review.ratio,
