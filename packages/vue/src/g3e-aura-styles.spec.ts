@@ -3,6 +3,8 @@ import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { h, nextTick, type VNode } from "vue";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { vueCoreStyleSheet } from "@ultimate/vue-core";
+import { UCarousel } from "./carousel";
+import { UGalleria } from "./galleria";
 import { UImage } from "./image";
 import { UImageCompare } from "./image-compare";
 
@@ -11,6 +13,11 @@ const KEY_ATTR = "data-u-style";
 const CASES: { key: string; node: () => VNode }[] = [
   { key: "image", node: () => h(UImage, { src: "/media/landscape-1.png" }) },
   { key: "imagecompare", node: () => h(UImageCompare) },
+  { key: "carousel", node: () => h(UCarousel, { value: ["Item 1", "Item 2", "Item 3"] }) },
+  {
+    key: "galleria",
+    node: () => h(UGalleria, { value: ["/media/landscape-1.png", "/media/landscape-2.png"] }),
+  },
 ];
 
 async function render(node: () => VNode) {

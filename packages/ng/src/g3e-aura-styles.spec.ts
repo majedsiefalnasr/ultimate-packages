@@ -3,6 +3,8 @@ import { DOCUMENT } from "@angular/common";
 import { TestBed } from "@angular/core/testing";
 import { beforeAll, describe, expect, it } from "vitest";
 import { applyUltimateTheme } from "@ultimate/themes";
+import { UCarousel } from "./carousel";
+import { UGalleria } from "./galleria";
 import { UImage } from "./image";
 import { UImageCompare } from "./image-compare";
 
@@ -14,6 +16,12 @@ const KEY_ATTR = "data-u-ng-style";
 const CASES: { key: string; type: Type<unknown>; inputs: Record<string, unknown> }[] = [
   { key: "image", type: UImage, inputs: { src: "/media/landscape-1.png" } },
   { key: "imagecompare", type: UImageCompare, inputs: {} },
+  { key: "carousel", type: UCarousel, inputs: { value: ["Item 1", "Item 2", "Item 3"] } },
+  {
+    key: "galleria",
+    type: UGalleria,
+    inputs: { value: ["/media/landscape-1.png", "/media/landscape-2.png"] },
+  },
 ];
 
 function mount(type: Type<unknown>, inputs: Record<string, unknown>) {

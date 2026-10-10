@@ -257,6 +257,22 @@ const REACH: ReadonlyArray<{ key: string; runs: ReadonlyArray<readonly [string, 
         ["ng-imagecompare--rtl", "rest", ".u-image-compare"],
       ],
     },
+    {
+      key: "carousel",
+      runs: [
+        ["ng-carousel--default", "rest", ".u-carousel"],
+        ["ng-carousel--vertical", "rest", ".u-carousel"],
+        ["ng-carousel--rtl", "rest", ".u-carousel"],
+      ],
+    },
+    {
+      key: "galleria",
+      runs: [
+        ["ng-galleria--default", "rest", ".u-galleria"],
+        ["ng-galleria--without-thumbnails", "rest", ".u-galleria"],
+        ["ng-galleria--full-screen", "fullscreen", ".u-galleria-mask"],
+      ],
+    },
   ];
 /** ADR-052 X-1 class K: emitted by a cited source under a state no story exercises. */
 const K: Record<string, Record<string, string>> = {};
@@ -283,6 +299,19 @@ for (const r of REACH) {
         }
         await expect(zoomOut).toBeDisabled();
         await expect(page.locator(".u-image-toolbar > button:disabled")).toBeVisible();
+      }
+      if ((r.key === "carousel" || r.key === "galleria") && story.endsWith("--default")) {
+        // E2-R1: navigate to the last page so the disabled Next and enabled Previous states exist.
+        const root = page.locator(ready).first();
+        const next = root.getByRole("button", { name: "Next", exact: true });
+        for (let step = 0; step < 10 && (await next.isEnabled()); step++) {
+          const before = await root.innerHTML();
+          await next.click();
+          // Wait for the framework to render this step before re-querying the disabled state.
+          await expect.poll(() => root.innerHTML()).not.toBe(before);
+        }
+        await expect(next).toBeDisabled();
+        await expect(root.getByRole("button", { name: "Previous", exact: true })).toBeEnabled();
       }
       await expect(page.locator(`style[${ATTR}="${r.key}"]`)).toBeAttached();
       const res = await page.evaluate(

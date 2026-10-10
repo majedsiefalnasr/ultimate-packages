@@ -45,3 +45,8 @@ const E1_COUNTS = { image: [16, 12], imagecompare: [12, 12] };
 it("E-1 counts are the approved record's literals", () => {
   expect({ image: COUNTS.image, imagecompare: COUNTS.imagecompare }).toEqual(E1_COUNTS);
 });
+
+const E2_COUNTS = { carousel: [17, 15], galleria: [67, 24] };
+it("E-2 counts are the approved record's literals", () => {
+  expect({ carousel: COUNTS.carousel, galleria: COUNTS.galleria }).toEqual(E2_COUNTS);
+});

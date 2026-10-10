@@ -51,7 +51,7 @@ export const DIRS = {
 };
 
 /** Keys whose batch has been ported (Plan Tasks 6, 9, 12, 15 append). */
-export const PORTED = ["image", "imagecompare"];
+export const PORTED = ["image", "imagecompare", "carousel", "galleria"];
 
 /**
  * Batch-record mapping, applied in order to every selector part of a D1 group, then the
@@ -75,30 +75,106 @@ const IMAGECOMPARE_MAPPING = [
   ["class", ".p-imagecompare-slider", ".u-image-compare-slider"],
   ["class", ".p-imagecompare", ".u-image-compare"],
 ];
+const CAROUSEL_MAPPING = [
+  ["class", ".p-carousel-content-container", ".u-carousel-content"],
+  ["class", ".p-carousel-content", ".u-carousel-content-inner"],
+];
+const NAV = [".u-galleria-prev-button", ".u-galleria-next-button"];
+const GALLERIA_MAPPING = [
+  ["text", ".p-galleria-nav-button", NAV.join(", ")],
+  [
+    "text",
+    ".p-galleria-nav-button:not(.p-disabled):hover",
+    NAV.map((b) => `${b}:not(:disabled):hover`).join(", "),
+  ],
+  [
+    "text",
+    ".p-galleria-nav-button:not(.p-disabled):focus-visible",
+    NAV.map((b) => `${b}:not(:disabled):focus-visible`).join(", "),
+  ],
+  [
+    "text",
+    ".p-galleria-mask .p-galleria-nav-button",
+    NAV.map((b) => `.u-galleria-mask ${b}`).join(", "),
+  ],
+  ["class", ".p-galleria-content", ".u-galleria"],
+  ["class", ".p-galleria-items-container", ".u-galleria-item-wrapper"],
+  ["class", ".p-galleria-items", ".u-galleria-item-container"],
+  ["class", ".p-galleria-item", ".u-galleria-item-container"],
+  ["class", ".p-galleria-thumbnails-content", ".u-galleria-thumbnail-list"],
+  ["class", ".p-galleria-thumbnail-items", ".u-galleria-thumbnail-list"],
+  ["class", ".p-galleria-thumbnail-item-current", ".u-galleria-thumbnail-item-active"],
+  ["class", ".p-galleria-thumbnail", ".u-galleria-thumbnail-item"],
+  ["class", ".p-galleria-close-icon", ".u-galleria-close-button svg"],
+];
 export const MAPPING = {
-  ng: { image: IMAGE_MAPPING, imagecompare: IMAGECOMPARE_MAPPING },
-  vue: { image: IMAGE_MAPPING, imagecompare: IMAGECOMPARE_MAPPING },
+  ng: {
+    image: IMAGE_MAPPING,
+    imagecompare: IMAGECOMPARE_MAPPING,
+    carousel: CAROUSEL_MAPPING,
+    galleria: GALLERIA_MAPPING,
+  },
+  vue: {
+    image: IMAGE_MAPPING,
+    imagecompare: IMAGECOMPARE_MAPPING,
+    carousel: CAROUSEL_MAPPING,
+    galleria: GALLERIA_MAPPING,
+  },
 };
 /** D2 — omitted upstream group numbers (1-based source order) with their FX-E tag. */
 const IMAGE_OMITTED = { 13: "FX-E1", 14: "FX-E1", 15: "FX-E2", 16: "FX-E2" };
+const CAROUSEL_OMITTED = { 16: "FX-E3", 17: "FX-E3" };
+const tag = (from, to, t) =>
+  Object.fromEntries(Array.from({ length: to - from + 1 }, (_, i) => [from + i, t]));
+const GALLERIA_OMITTED = {
+  8: "FX-E4",
+  ...tag(14, 17, "FX-E5"),
+  ...tag(18, 22, "FX-E6"),
+  24: "FX-E6",
+  25: "FX-E6",
+  27: "FX-E6",
+  ...tag(32, 54, "FX-E5"),
+  61: "FX-E6",
+  62: "FX-E6",
+  ...tag(63, 67, "FX-E7"),
+};
 export const OMITTED = {
-  ng: { image: IMAGE_OMITTED, imagecompare: {} },
-  vue: { image: IMAGE_OMITTED, imagecompare: {} },
+  ng: {
+    image: IMAGE_OMITTED,
+    imagecompare: {},
+    carousel: CAROUSEL_OMITTED,
+    galleria: GALLERIA_OMITTED,
+  },
+  vue: {
+    image: IMAGE_OMITTED,
+    imagecompare: {},
+    carousel: CAROUSEL_OMITTED,
+    galleria: GALLERIA_OMITTED,
+  },
 };
 /** Per key: [upstream groups, D1 ported] (literals from the approved batch records). */
-export const COUNTS = { image: [16, 12], imagecompare: [12, 12] };
+export const COUNTS = {
+  image: [16, 12],
+  imagecompare: [12, 12],
+  carousel: [17, 15],
+  galleria: [67, 24],
+};
 export const TOTALS = {
-  ng: { upstream: 28, ported: 24, omitted: 4 },
-  vue: { upstream: 28, ported: 24, omitted: 4 },
+  ng: { upstream: 112, ported: 63, omitted: 49 },
+  vue: { upstream: 112, ported: 63, omitted: 49 },
 };
 /** D3 — B-2 base roles, exact text, first in the module. */
 const IMAGE_BASE = [
   ".u-image-mask { background: dt('mask.background'); color: dt('mask.color'); position: fixed; top: 0; left: 0; width: 100%; height: 100%; }",
   ".u-image-toolbar > button:disabled { opacity: dt('disabled.opacity'); }",
 ];
+const GALLERIA_BASE = [
+  ".u-galleria-mask { background: dt('mask.background'); color: dt('mask.color'); }",
+  ".u-galleria-prev-button:disabled, .u-galleria-next-button:disabled { opacity: dt('disabled.opacity'); }",
+];
 export const BASE_ROLE = {
-  ng: { image: IMAGE_BASE, imagecompare: [] },
-  vue: { image: IMAGE_BASE, imagecompare: [] },
+  ng: { image: IMAGE_BASE, imagecompare: [], carousel: [], galleria: GALLERIA_BASE },
+  vue: { image: IMAGE_BASE, imagecompare: [], carousel: [], galleria: GALLERIA_BASE },
 };
 /** Each D3 rule's declarations equal its base group's, except recorded differences. */
 export const BASE_SOURCES = [
@@ -114,21 +190,60 @@ export const BASE_SOURCES = [
     source: ".p-disabled, .p-component:disabled",
     differences: "native disabled toolbar button selector",
   },
+  {
+    keys: ["galleria"],
+    ruleIndex: 0,
+    source: ".p-overlay-mask",
+    differences:
+      "background and colour only; position, inset and size come from ported group 55 (E-2 record §5)",
+  },
+  {
+    keys: ["galleria"],
+    ruleIndex: 1,
+    source: ".p-disabled, .p-component:disabled",
+    differences: "native disabled navigator button selector",
+  },
 ];
 /** D4 — ADR-052 X-4 runtime-role CSS, exact text, after D1 and L. */
+const CAROUSEL_RUNTIME = [".u-carousel-item-list { transition: transform 500ms ease 0s; }"];
+const GALLERIA_RUNTIME = [".u-galleria-mask { z-index: 1100; }"];
 export const RUNTIME_ROLE = {
-  ng: { image: [".u-image-mask { z-index: 1100; }"], imagecompare: [] },
-  vue: { image: [".u-image-mask { z-index: 1100; }"], imagecompare: [] },
+  ng: {
+    image: [".u-image-mask { z-index: 1100; }"],
+    imagecompare: [],
+    carousel: CAROUSEL_RUNTIME,
+    galleria: GALLERIA_RUNTIME,
+  },
+  vue: {
+    image: [".u-image-mask { z-index: 1100; }"],
+    imagecompare: [],
+    carousel: CAROUSEL_RUNTIME,
+    galleria: GALLERIA_RUNTIME,
+  },
 };
 /** L — OI-E1 PrimeNG-local rules ported into the Angular module (mapped text), per key. */
 export const LOCAL_RULES = {
-  ng: { image: [], imagecompare: [] },
-  vue: { image: [], imagecompare: [] },
+  ng: { image: [], imagecompare: [], carousel: [], galleria: [] },
+  vue: { image: [], imagecompare: [], carousel: [], galleria: [] },
 };
 /** D5 — retained Ultimate-only rules, exact text, last. */
+const CAROUSEL_RETAINED = [
+  ".u-carousel-item { flex-shrink: 0; box-sizing: border-box; }",
+  ".u-carousel-prev-button:disabled, .u-carousel-next-button:disabled { opacity: 0.5; cursor: default; pointer-events: none; }",
+];
 export const RETAINED = {
-  ng: { image: [], imagecompare: [".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }"] },
-  vue: { image: [], imagecompare: [".u-image-compare > span { position: absolute; inset: 0; }"] },
+  ng: {
+    image: [],
+    imagecompare: [".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }"],
+    carousel: CAROUSEL_RETAINED,
+    galleria: [],
+  },
+  vue: {
+    image: [],
+    imagecompare: [".u-image-compare > span { position: absolute; inset: 0; }"],
+    carousel: CAROUSEL_RETAINED,
+    galleria: [],
+  },
 };
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
