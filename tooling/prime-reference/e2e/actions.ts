@@ -11,6 +11,7 @@ export async function run(
     if ("click" in a) await page.locator(sel[a.click]).first().click();
     else if ("press" in a) await page.keyboard.press(a.press);
     else if ("hover" in a) await page.locator(sel[a.hover]).first().hover();
+    else if ("focus" in a) await page.locator(sel[a.focus]).first().focus();
     else if ("fill" in a) await page.locator(sel[a.fill[0]]).first().fill(a.fill[1]);
     else if ("range" in a)
       await page

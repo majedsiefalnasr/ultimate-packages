@@ -15,7 +15,8 @@ export type Action =
   | { range: [string, number] }
   | { fill: [string, string] }
   | { advance: number }
-  | { drag: [string, number, number] }; // part, from index, to index (Angular CDK drag on both sides)
+  | { drag: [string, number, number] } // part, from index, to index (Angular CDK drag on both sides)
+  | { focus: string };
 
 /** Observable facts compared Prime ↔ Ultimate. */
 export type Fact =
@@ -36,6 +37,8 @@ export interface G3ECase {
   open: Record<Framework, Open>;
   state?: State;
   clock?: boolean;
+  /** Screenshot with infinite CSS animations stopped (e.g. a loading spinner); probes are unaffected. */
+  still?: boolean;
   actions?: Action[];
   capture: "container" | "viewport";
   parts: string[];
@@ -811,6 +814,197 @@ G3E.push(
         section: "breakpoint",
         kind: "D",
         reason: "Needs a viewport change; not canonical at 1280 × 720.",
+      },
+    ],
+  }
+);
+
+G3E.push(
+  {
+    key: "dataview",
+    tier: "B",
+    batch: "E-4",
+    parts: {
+      root: [".p-dataview", ".u-data-view"],
+      // Step 3 (corrected after the first capture): grid layout renders .u-data-view-grid; Vue's empty
+      // message is a div directly under the root (DataView.vue), not inside the list.
+      content: [".p-dataview-content", ".u-data-view-list, .u-data-view-grid"],
+      paginator: [".p-paginator", ".u-paginator"],
+      empty: {
+        ng: [".p-dataview-empty-message", ".u-data-view-list > li"],
+        vue: [".p-dataview-empty-message", ".u-data-view > div:not([role])"],
+      },
+      loading: [".p-dataview-loading-overlay", ".u-data-view [role=status]"],
+    },
+    cases: [
+      {
+        id: "dataview/list",
+        batch: "E-4",
+        section: "Basic",
+        axis: "list",
+        prime: "dataview/list",
+        story: { ng: "data-dataview--default", vue: "data-dataview--default" },
+        open: none,
+        capture: "container",
+        parts: ["root", "content"],
+        kind: "visual",
+      },
+      {
+        id: "dataview/grid",
+        batch: "E-4",
+        section: "Layout",
+        axis: "grid",
+        prime: "dataview/grid",
+        story: { ng: "data-dataview--grid", vue: "data-dataview--grid" },
+        open: none,
+        capture: "container",
+        parts: ["root", "content"],
+        kind: "visual",
+      },
+      {
+        id: "dataview/paginator",
+        batch: "E-4",
+        section: "Pagination",
+        axis: "rows 2",
+        prime: "dataview/paginator",
+        story: { ng: "data-dataview--paginator", vue: "data-dataview--paginator" },
+        open: none,
+        capture: "container",
+        parts: ["root", "content", "paginator"],
+        kind: "visual",
+      },
+      {
+        id: "dataview/empty",
+        batch: "E-4",
+        section: "(emptyMessage)",
+        axis: "empty",
+        prime: "dataview/empty",
+        story: { ng: "data-dataview--empty", vue: "data-dataview--empty" },
+        open: none,
+        capture: "container",
+        parts: ["root", "empty"],
+        kind: "visual",
+      },
+      {
+        id: "dataview/loading",
+        batch: "E-4",
+        section: "Loading (PrimeNG overlay)",
+        axis: "loading",
+        prime: "dataview/loading",
+        story: { ng: "data-dataview--loading" },
+        open: none,
+        // Step 4 noise fix: PrimeNG's spinning loading icon made repeated captures differ.
+        still: true,
+        capture: "container",
+        parts: ["root", "loading"],
+        kind: "visual",
+      },
+    ],
+    recorded: [
+      {
+        id: "dataview/loading [vue]",
+        section: "Loading",
+        kind: "no-prime-reference",
+        reason: "PrimeVue 4.5.5 DataView renders no loading state (G3E-7).",
+      },
+      {
+        id: "dataview/sorting",
+        section: "Sorting",
+        kind: "D",
+        reason: "Demo header Select; no Ultimate header facet.",
+      },
+      {
+        id: "dataview/header-footer",
+        section: "(facets)",
+        kind: "D",
+        reason: "No header/footer template.",
+      },
+    ],
+  },
+  {
+    key: "organizationchart",
+    tier: "B",
+    batch: "E-4",
+    parts: {
+      root: [".p-organizationchart", ".u-organization-chart"],
+      node: [".p-organizationchart-node", ".u-organization-chart-node-content"],
+      children: [".p-organizationchart-node-children", ".u-organization-chart-children"],
+      // Step 3: Ultimate sets aria-selected on the outer node, not on the node content.
+      selected: [
+        ".p-organizationchart-node-selected",
+        '.u-organization-chart-node[aria-selected="true"] > .u-organization-chart-node-content',
+      ],
+      toggle: [
+        ".p-organizationchart-node-toggle-button",
+        ".u-organization-chart-node-content button",
+      ],
+    },
+    cases: [
+      {
+        id: "organizationchart/basic",
+        batch: "E-4",
+        section: "Basic",
+        axis: "two levels",
+        prime: "organizationchart/basic",
+        story: { vue: "panel-organizationchart--default" },
+        open: none,
+        capture: "container",
+        parts: ["root", "node", "children"],
+        kind: "visual",
+      },
+      {
+        id: "organizationchart/select",
+        batch: "E-4",
+        section: "Template (single)",
+        axis: "single selected",
+        prime: "organizationchart/single",
+        story: { vue: "panel-organizationchart--single-selection" },
+        open: none,
+        capture: "container",
+        parts: ["root", "selected"],
+        kind: "visual",
+      },
+      {
+        id: "organizationchart/multi",
+        batch: "E-4",
+        section: "Selection (multiple)",
+        axis: "two selected",
+        prime: "organizationchart/multiple",
+        story: { vue: "panel-organizationchart--multiple-selection" },
+        open: none,
+        capture: "container",
+        parts: ["root", "selected"],
+        facts: [{ texts: "selected" }],
+        kind: "visual",
+      },
+      {
+        id: "organizationchart/toggle",
+        batch: "E-4",
+        section: "Colored (collapsible)",
+        axis: "collapse root",
+        prime: "organizationchart/collapsible",
+        story: { vue: "panel-organizationchart--collapsible" },
+        open: none,
+        // Step 3: keyboard activation; in the PrimeVue reference the parent node is on top of the toggle's centre.
+        actions: [{ focus: "toggle" }, { press: "Enter" }],
+        capture: "container",
+        parts: ["root", "toggle"],
+        facts: [{ shown: "children" }],
+        kind: "behavior",
+      },
+    ],
+    recorded: [
+      {
+        id: "organizationchart/colored-template",
+        section: "Colored / Template",
+        kind: "D",
+        reason: "No Ultimate node styleClass or node template slot.",
+      },
+      {
+        id: "organizationchart [ng]",
+        section: "—",
+        kind: "D",
+        reason: "No Angular component (protected DECISION-D).",
       },
     ],
   }

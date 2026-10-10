@@ -73,7 +73,7 @@ async function observe(browser: Browser, comp: G3EComponent, c: G3ECase, t: Targ
       env,
       parts,
       facts: await facts(page, all, c.facts),
-      png: await capture(page, t.side, c.capture),
+      png: await capture(page, t.side, c.capture, c.still),
     };
   } finally {
     await page.close();

@@ -233,9 +233,14 @@ export function compare(
 export async function capture(
   page: Page,
   side: Side,
-  mode: "container" | "viewport"
+  mode: "container" | "viewport",
+  still = false
 ): Promise<Buffer> {
-  return mode === "viewport" ? page.screenshot() : page.locator(container(side)).screenshot();
+  // `still`: stop infinite CSS animations (e.g. a loading spinner) so repeated captures are identical.
+  const opts = { animations: still ? ("disabled" as const) : ("allow" as const) };
+  return mode === "viewport"
+    ? page.screenshot(opts)
+    : page.locator(container(side)).screenshot(opts);
 }
 
 /**

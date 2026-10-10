@@ -1,5 +1,6 @@
 import { Component, input, signal } from "@angular/core";
 import { CarouselModule } from "primeng/carousel";
+import { DataViewModule } from "primeng/dataview";
 import { GalleriaModule } from "primeng/galleria";
 import { ImageModule } from "primeng/image";
 import { ImageCompareModule } from "primeng/imagecompare";
@@ -21,6 +22,7 @@ import { PickListModule } from "primeng/picklist";
     GalleriaModule,
     OrderListModule,
     PickListModule,
+    DataViewModule,
   ],
   template: `
     @switch (id()) {
@@ -158,6 +160,51 @@ import { PickListModule } from "primeng/picklist";
           ><ng-template #item let-item>{{ item.name }}</ng-template></p-picklist
         >
       }
+      @case ("dataview/list") {
+        <p-dataview [value]="dvFruits" layout="list">
+          <ng-template #list let-items>
+            @for (item of items; track item.name) {
+              <div>{{ item.name }}</div>
+            }
+          </ng-template>
+        </p-dataview>
+      }
+      @case ("dataview/grid") {
+        <p-dataview [value]="dvFruits" layout="grid">
+          <ng-template #grid let-items>
+            @for (item of items; track item.name) {
+              <div>{{ item.name }}</div>
+            }
+          </ng-template>
+        </p-dataview>
+      }
+      @case ("dataview/paginator") {
+        <p-dataview [value]="six" [paginator]="true" [rows]="2">
+          <ng-template #list let-items>
+            @for (item of items; track item.name) {
+              <div>{{ item.name }}</div>
+            }
+          </ng-template>
+        </p-dataview>
+      }
+      @case ("dataview/empty") {
+        <p-dataview [value]="none">
+          <ng-template #list let-items>
+            @for (item of items; track item.name) {
+              <div>{{ item.name }}</div>
+            }
+          </ng-template>
+        </p-dataview>
+      }
+      @case ("dataview/loading") {
+        <p-dataview [value]="dvFruits" [loading]="true">
+          <ng-template #list let-items>
+            @for (item of items; track item.name) {
+              <div>{{ item.name }}</div>
+            }
+          </ng-template>
+        </p-dataview>
+      }
     }
   `,
 })
@@ -172,4 +219,7 @@ export class G3ECases {
   tgt: string[] = [];
   namedSrc = ["Apple", "Banana", "Cherry"].map((name) => ({ name }));
   namedTgt: { name: string }[] = [];
+  dvFruits = [{ name: "Apple" }, { name: "Banana" }];
+  six = ["Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig"].map((name) => ({ name }));
+  none: { name: string }[] = [];
 }

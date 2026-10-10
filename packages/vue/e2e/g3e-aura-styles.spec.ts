@@ -129,6 +129,63 @@ const STORIES: ReadonlyArray<{
     kind: "rest",
     batch: "E-3",
   },
+  // E-4 (DataView, OrganizationChart)
+  {
+    name: "DataView Default",
+    story: "data-dataview--default",
+    ready: ".u-data-view",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Grid",
+    story: "data-dataview--grid",
+    ready: ".u-data-view",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Paginator",
+    story: "data-dataview--paginator",
+    ready: ".u-data-view",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Empty",
+    story: "data-dataview--empty",
+    ready: ".u-data-view",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "OrganizationChart default",
+    story: "panel-organizationchart--default",
+    ready: ".u-organization-chart",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "OrganizationChart single-selection",
+    story: "panel-organizationchart--single-selection",
+    ready: ".u-organization-chart",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "OrganizationChart multiple-selection",
+    story: "panel-organizationchart--multiple-selection",
+    ready: ".u-organization-chart",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "OrganizationChart collapsible",
+    story: "panel-organizationchart--collapsible",
+    ready: ".u-organization-chart",
+    kind: "rest",
+    batch: "E-4",
+  },
 ];
 
 const VISUAL: ReadonlyArray<{
@@ -247,6 +304,63 @@ const VISUAL: ReadonlyArray<{
     kind: "rest",
     shot: ".u-pick-list",
     batch: "E-3",
+  },
+  // E-4 (DataView, OrganizationChart)
+  {
+    name: "DataView Default rest",
+    story: "data-dataview--default",
+    kind: "rest",
+    shot: ".u-data-view",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Grid rest",
+    story: "data-dataview--grid",
+    kind: "rest",
+    shot: ".u-data-view",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Paginator rest",
+    story: "data-dataview--paginator",
+    kind: "rest",
+    shot: ".u-data-view",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Empty rest",
+    story: "data-dataview--empty",
+    kind: "rest",
+    shot: ".u-data-view",
+    batch: "E-4",
+  },
+  {
+    name: "OrganizationChart default rest",
+    story: "panel-organizationchart--default",
+    kind: "rest",
+    shot: ".u-organization-chart",
+    batch: "E-4",
+  },
+  {
+    name: "OrganizationChart single-selection rest",
+    story: "panel-organizationchart--single-selection",
+    kind: "rest",
+    shot: ".u-organization-chart",
+    batch: "E-4",
+  },
+  {
+    name: "OrganizationChart multiple-selection rest",
+    story: "panel-organizationchart--multiple-selection",
+    kind: "rest",
+    shot: ".u-organization-chart",
+    batch: "E-4",
+  },
+  {
+    name: "OrganizationChart collapsible rest",
+    story: "panel-organizationchart--collapsible",
+    kind: "rest",
+    shot: ".u-organization-chart",
+    batch: "E-4",
   },
 ];
 

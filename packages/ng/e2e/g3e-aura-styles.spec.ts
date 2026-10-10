@@ -143,6 +143,42 @@ const STORIES: ReadonlyArray<{
     kind: "rest",
     batch: "E-3",
   },
+  // E-4 (DataView, OrganizationChart)
+  {
+    name: "DataView Default",
+    story: "data-dataview--default",
+    ready: ".u-data-view",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Grid",
+    story: "data-dataview--grid",
+    ready: ".u-data-view",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Paginator",
+    story: "data-dataview--paginator",
+    ready: ".u-data-view",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Empty",
+    story: "data-dataview--empty",
+    ready: ".u-data-view",
+    kind: "rest",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Loading",
+    story: "data-dataview--loading",
+    ready: ".u-data-view",
+    kind: "rest",
+    batch: "E-4",
+  },
 ];
 
 const VISUAL: ReadonlyArray<{
@@ -275,6 +311,42 @@ const VISUAL: ReadonlyArray<{
     kind: "rest",
     shot: ".u-pick-list",
     batch: "E-3",
+  },
+  // E-4 (DataView, OrganizationChart)
+  {
+    name: "DataView Default rest",
+    story: "data-dataview--default",
+    kind: "rest",
+    shot: ".u-data-view",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Grid rest",
+    story: "data-dataview--grid",
+    kind: "rest",
+    shot: ".u-data-view",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Paginator rest",
+    story: "data-dataview--paginator",
+    kind: "rest",
+    shot: ".u-data-view",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Empty rest",
+    story: "data-dataview--empty",
+    kind: "rest",
+    shot: ".u-data-view",
+    batch: "E-4",
+  },
+  {
+    name: "DataView Loading rest",
+    story: "data-dataview--loading",
+    kind: "rest",
+    shot: ".u-data-view",
+    batch: "E-4",
   },
 ];
 
