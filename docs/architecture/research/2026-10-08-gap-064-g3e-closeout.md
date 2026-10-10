@@ -1,7 +1,7 @@
 # GAP-064 G3-E closeout record (DRAFT) — Media and Data
 
 **Date:** 2026-10-11
-**Status:** **ACCEPTED as PARTIAL** (user, 2026-10-11): an accurate record of the executed G3-E work and its remaining limitations. G3-E is **executed, not fully complete**, and GAP-064 stays **PARTIAL**. Merge and push are **not** authorized (see §9).
+**Status:** **ACCEPTED as PARTIAL** (user, 2026-10-11): an accurate record of the executed G3-E work and its remaining limitations. G3-E is **executed, not fully complete**, and GAP-064 stays **PARTIAL**. Merge and push are **not** authorized (see §9 and §10).
 **Branch:** `feature/gap-064-g3e-media-data`, head `57a3ced` (plus this draft), branched from `main` `cad9f85`. Not merged, not pushed.
 **Scope:** Spec `docs/superpowers/specs/2026-10-08-gap-064-g3e-media-data-design.md`; Plan `docs/superpowers/plans/2026-10-08-gap-064-g3e-media-data.md`. Batch records:
 
@@ -37,14 +37,14 @@ No key reaches `verified`. Every canonical case in every batch was compared (no 
 
 ## 3. Coverage gaps, limitations and open items
 
-| Item                                                     | State                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **E1-B1** (ImageCompare `handle.border.style` reference) | **BLOCKED.** The reference is undefined in upstream Aura itself: the `@primeuix/themes` 2.0.3 schema has no `handle.borderStyle`, and the parallel WebKit rule uses the literal `solid`. The AC2 assertion fails in both unit suites (Angular 1187/1188, Vue 1191/1192). Evidence and the proposal ((a) a narrow, documented AC2 exemption, recommended, or (b) the literal `solid` as a mapping change) are in the E-1 record; it needs authorization. |
-| **E1-V2**                                                | **OPEN.** V2 was executed on 2026-10-11 (P3 packet; pinned image; `eb26604`): **PASS**, 2/2 in each of Chromium, Firefox and WebKit. Under the P3 packet the status stays B / OPEN until an explicit human disposition.                                                                                                                                                                                                                                 |
-| Vue OrderList narrow layout                              | Unverified follow-up (E-3 record). No narrow-width check exists in the plan; no GAP and no regression is claimed.                                                                                                                                                                                                                                                                                                                                       |
-| OrganizationChart toggle mouse click                     | Not verified (keyboard-only collapse case). Recorded limitation (E-4 record).                                                                                                                                                                                                                                                                                                                                                                           |
-| GAP-124 residuals                                        | The spinner does not animate (no `u-icon-spin` animation exists); non-text contrast 2.31:1, the same colours as Prime.                                                                                                                                                                                                                                                                                                                                  |
-| Scope exceptions                                         | One explicitly authorized template change: the DataView loading spinner (E4-V1, `dd18310`). Story-only changes: the Angular OrderList drag story (D-E3-1) and the Vue DataView stories (E4-V2).                                                                                                                                                                                                                                                         |
+| Item                                                     | State                                                                                                                                                                                           |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **E1-B1** (ImageCompare `handle.border.style` reference) | **RESOLVED** (user ruling (a), 2026-10-11): one documented AC2 exemption for the upstream-undefined reference; ported rule unchanged. Unit suites now 1188/1188 and 1192/1192.                  |
+| **E1-V2**                                                | **CLOSED** (2026-10-11): the prescribed V2 evidence (PASS, 2/2 in each engine) was accepted by the user. Scope: V2 evidence only; no claim of complete ImageCompare parity.                     |
+| Vue OrderList narrow layout                              | Unverified follow-up (E-3 record). No narrow-width check exists in the plan; no GAP and no regression is claimed.                                                                               |
+| OrganizationChart toggle mouse click                     | Not verified (keyboard-only collapse case). Recorded limitation (E-4 record).                                                                                                                   |
+| GAP-124 residuals                                        | The spinner does not animate (no `u-icon-spin` animation exists); non-text contrast 2.31:1, the same colours as Prime.                                                                          |
+| Scope exceptions                                         | One explicitly authorized template change: the DataView loading spinner (E4-V1, `dd18310`). Story-only changes: the Angular OrderList drag story (D-E3-1) and the Vue DataView stories (E4-V2). |
 
 ## 4. GAPs linked
 
@@ -95,3 +95,22 @@ All five G3 tranches have now been executed (G3-A..G3-E). G3-E itself leaves ope
   - GAP-124 is partly addressed.
   - The ImageCompare initial clip is the 50 % midpoint.
 - **Merge readiness: NOT READY.** The plan's verification expectation ("everything passes except U2 and GAP-097") is not met while the E1-B1 AC2 failure stands. E1-V2 also awaits its disposition. No merge or push until an authorized E1-B1 resolution passes the required tests and E1-V2 is dispositioned; then merge readiness is reassessed against the plan's criteria.
+
+## 10. E1 rulings and merge-readiness reassessment (2026-10-11)
+
+- **E1-B1 RESOLVED** (option (a)) and **E1-V2 CLOSED** (V2 evidence accepted); details and actual results are in the E-1 record.
+- **Plan merge-readiness criterion** (Task 18 Step 1: "everything passes except the known U2 and GAP-097 failures; harness noise 0"):
+
+  | Check                                                 | Result                                                     |
+  | ----------------------------------------------------- | ---------------------------------------------------------- |
+  | Unit suites (ng, vue, themes)                         | 1188/1188, 1192/1192, 962/962 (after the E1-B1 change)     |
+  | Typecheck                                             | Pass                                                       |
+  | Fidelity; validator unit test                         | 8/8; 10/10                                                 |
+  | G3-E regression spec and validator (Docker)           | ng 153/153, vue 162/162; ng 66/66, vue 69/69, 0 introduced |
+  | Harness E-1..E-4 after (Docker, `57a3ced`)            | Noise 0 everywhere                                         |
+  | Full regression and CI simulation (Docker, `57a3ced`) | Only GAP-097 ×6 and U2                                     |
+
+  The harness, full regression and CI simulation evidence from `57a3ced` stays valid: the only changes since are documentation, provenance JSON and the two unit spec files, none of which the end-to-end runs execute.
+
+- **Assessment:** the branch now **meets the plan's merge-readiness criteria**. G3-E is executed, with the E-1 items resolved and closed; its remaining open GAPs (GAP-102..130, GAP-124 PARTIAL) and recorded limitations stay open by design. **GAP-064 stays PARTIAL.**
+- **Merge and push remain separate user decisions** (plan: "closeout acceptance, merge and push are separate user decisions"). After a merge and push, ADR-052 X-12 asks for the merge commit's CI run to show the G3-E step green, with only the inherited failures.

@@ -849,7 +849,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/g3e-aura-styles.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 to E-4 style modules (Vue Image, ImageCompare, Carousel, Galleria, OrderList, PickList, DataView, OrganizationChart): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 to E-4 style modules (Vue Image, ImageCompare, Carousel, Galleria, OrderList, PickList, DataView, OrganizationChart): registration under the Aura key (AC1) and token resolution (AC2). AC2 exempts exactly one reference, --u-imagecompare-handle-border-style (E1-B1, user ruling 2026-10-11): the token is absent from the pinned @primeuix/themes 2.0.3 schema and upstream references it only in the Firefox slider-thumb rule."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 carousel",
