@@ -67,8 +67,15 @@ function unresolved(doc: Document, key: string): string[] {
   const defined = new Set(Array.from(all.matchAll(/(--u-[a-z0-9-]+)\s*:/g), (m) => m[1]));
   // E-1 §5 / X-4: scope.x is runtime state with an upstream 50% fallback, not a preset token.
   const hasInitialClip = cssFor(doc, key).includes("var(--u-imagecompare-scope-x, 50%)");
+  // E1-B1 (E-1 record; user ruling 2026-10-11): this exact reference only. `imagecompare.handle.border.style`
+  // is not a token in the pinned @primeuix/themes 2.0.3 Aura schema; upstream @primeuix/styles references it
+  // only in its Firefox `::-moz-range-thumb` rule (the WebKit thumb rule uses a literal `solid`). The port keeps
+  // that upstream rule verbatim, so this one upstream-undefined reference is expected to stay unresolved.
+  const upstreamUndefined = "--u-imagecompare-handle-border-style";
+  const hasFirefoxThumb = cssFor(doc, key).includes("::-moz-range-thumb");
   return [...refs]
     .filter((n) => !defined.has(n) && !(n === "--u-imagecompare-scope-x" && hasInitialClip))
+    .filter((n) => !(n === upstreamUndefined && hasFirefoxThumb))
     .sort();
 }
 
