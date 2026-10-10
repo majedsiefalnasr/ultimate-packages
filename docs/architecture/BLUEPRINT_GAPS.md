@@ -1858,6 +1858,45 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 ---
 
+#### GAP-103 — Vue Image preview does not restore focus to its preview button
+
+- **Status:** OPEN (registered 2026-10-08, user-approved E-1 Task 5 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** `image/preview-close`, Vue: PrimeVue returns focus to the preview button; Ultimate leaves it outside. `packages/vue/src/image/image.vue` closes without restoring trigger focus. Measured before the port at `c2efa39`; classification A in [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md) (Task 5 artifact `7c49568`).
+- **Expected state:** Closing the preview restores focus to the invoking button.
+- **What it blocks:** Complete E-1 Prime parity; does not block the separately approved CSS mapping.
+- **Scope boundary:** Runtime/template remediation requires separate authorization; no change is included in G3-E CSS porting. GAP-102 remains separate and unchanged.
+
+---
+
+#### GAP-104 — Vue ImageCompare root receives focus before the slider
+
+- **Status:** OPEN (registered 2026-10-08, user-approved E-1 Task 5 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** `imagecompare/focus`, Vue: Ultimate root receives a native outline; `BaseImageCompare.ts` defaults tabindex to 0 and `ImageCompare.vue` binds it on the root. PrimeVue first focuses the slider. Measured before the port at `c2efa39`; classification A in [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md) (Task 5 artifact `7c49568`).
+- **Expected state:** The first Tab targets the comparison slider, matching PrimeVue.
+- **What it blocks:** Complete E-1 Prime parity; does not block the separately approved CSS mapping.
+- **Scope boundary:** Runtime/template remediation requires separate authorization; no change is included in G3-E CSS porting. GAP-102 remains separate and unchanged.
+
+---
+
+#### GAP-105 — Image rotate and zoom toolbar controls use text glyphs instead of Prime SVG icons
+
+- **Status:** OPEN (registered 2026-10-08, user-approved E-1 Task 5 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `image/preview-open`, both frameworks: the review images show different rotate/zoom glyphs. `packages/ng/src/image/image.ts` and `packages/vue/src/image/image.vue` render character entities for these four controls, while Prime uses SVG icons. CSS sizing of the close icon cannot replace them. Measured before the port at `c2efa39`; classification A in [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md) (Task 5 artifact `7c49568`).
+- **Expected state:** The rotate/zoom controls use the corresponding Prime-derived SVG glyphs.
+- **What it blocks:** Complete E-1 Prime parity; does not block the separately approved CSS mapping.
+- **Scope boundary:** Runtime/template remediation requires separate authorization; no change is included in G3-E CSS porting. GAP-102 remains separate and unchanged.
+
+---
+
 ## 5. Open Architectural Decisions
 
 Listed here only where the repository shows genuine, unresolved forks requiring a decision — not implementation backlog. One should be handled at a time, later, not resolved by this document.
