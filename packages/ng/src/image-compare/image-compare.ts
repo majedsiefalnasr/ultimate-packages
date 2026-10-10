@@ -60,7 +60,7 @@ import { imageCompareStyleModule } from "./image-compare-style";
   },
 })
 export class UImageCompare extends UBaseComponent {
-  protected override readonly componentName = "image-compare";
+  protected override readonly componentName = "imagecompare";
   protected override readonly styleModule = imageCompareStyleModule;
 
   /** Index of the element in tabbing order. */

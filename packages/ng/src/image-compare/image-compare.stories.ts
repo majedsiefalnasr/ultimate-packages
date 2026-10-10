@@ -24,7 +24,7 @@ export const Default: Story = {
 export const Sized: Story = {
   render: () => ({
     template: `
-      <div style="width: 20rem;">
+      <div style="width: 20rem; display: flex;">
         <u-image-compare>
           <img left src="/media/landscape-1.png" alt="before" />
           <img right src="/media/landscape-2.png" alt="after" />
@@ -38,7 +38,7 @@ export const Sized: Story = {
 export const Rtl: Story = {
   render: () => ({
     template: `
-      <div dir="rtl" style="width: 20rem;">
+      <div dir="rtl" style="width: 20rem; display: flex;">
         <u-image-compare>
           <img left src="/media/landscape-1.png" alt="before" />
           <img right src="/media/landscape-2.png" alt="after" />

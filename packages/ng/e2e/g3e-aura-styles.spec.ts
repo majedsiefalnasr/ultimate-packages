@@ -140,7 +140,22 @@ for (const v of VISUAL) {
 const ATTR = "data-u-ng-style"; // the Angular core's style-element attribute
 /** ADR-052 X-1: every emitted selector part must match the rendered DOM in a declared story and state. */
 const REACH: ReadonlyArray<{ key: string; runs: ReadonlyArray<readonly [string, Kind, string]> }> =
-  [];
+  [
+    {
+      key: "image",
+      runs: [
+        ["ng-image--default", "rest", ".u-image"],
+        ["ng-image--with-preview", "click", ".u-image-mask"],
+      ],
+    },
+    {
+      key: "imagecompare",
+      runs: [
+        ["ng-imagecompare--sized", "rest", ".u-image-compare"],
+        ["ng-imagecompare--rtl", "rest", ".u-image-compare"],
+      ],
+    },
+  ];
 /** ADR-052 X-1 class K: emitted by a cited source under a state no story exercises. */
 const K: Record<string, Record<string, string>> = {};
 const STATE =
@@ -153,6 +168,20 @@ for (const r of REACH) {
     for (const [story, kind, ready] of r.runs) {
       await go(page, story);
       await state(page, kind, ready);
+      if (r.key === "image" && kind === "click") {
+        const zoomOut = page.getByRole("button", { name: "Zoom out", exact: true });
+        const preview = page.locator(".u-image-original");
+        for (let step = 0; step < 6 && (await zoomOut.isEnabled()); step++) {
+          const transform = await preview.evaluate((image: HTMLElement) => image.style.transform);
+          await zoomOut.click();
+          // Wait for Angular to render this zoom step before re-querying the disabled state.
+          await expect
+            .poll(() => preview.evaluate((image: HTMLElement) => image.style.transform))
+            .not.toBe(transform);
+        }
+        await expect(zoomOut).toBeDisabled();
+        await expect(page.locator(".u-image-toolbar > button:disabled")).toBeVisible();
+      }
       await expect(page.locator(`style[${ATTR}="${r.key}"]`)).toBeAttached();
       const res = await page.evaluate(
         ([key, attr, re]) => {

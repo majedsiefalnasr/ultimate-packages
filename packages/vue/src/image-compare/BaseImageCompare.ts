@@ -8,7 +8,7 @@ import { imageCompareStyleModule } from "./image-compare-style";
 export function createBaseImageCompare() {
   return defineComponent({
     extends: createBaseComponent({
-      componentName: "image-compare",
+      componentName: "imagecompare",
       styleModule: imageCompareStyleModule,
     }),
     props: {

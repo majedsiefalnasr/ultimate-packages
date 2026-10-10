@@ -51,32 +51,85 @@ export const DIRS = {
 };
 
 /** Keys whose batch has been ported (Plan Tasks 6, 9, 12, 15 append). */
-export const PORTED = [];
+export const PORTED = ["image", "imagecompare"];
 
 /**
  * Batch-record mapping, applied in order to every selector part of a D1 group, then the
  * generic `.p-` → `.u-` rule. Kinds: "text" (replace one exact part), "class" (replace a
  * token inside a part, followed by a non-name character).
  */
-export const MAPPING = { ng: {}, vue: {} };
+const IMAGE_MAPPING = [
+  [
+    "text",
+    ".p-image-preview:hover > .p-image-preview-mask",
+    ".u-image:has(> .u-image-preview-mask):hover > .u-image-preview-mask",
+  ],
+  ["text", ".p-image-action .p-icon", ".u-image-toolbar > button svg"],
+  ["text", ".p-image-action.p-disabled", ".u-image-toolbar > button:disabled"],
+  ["class", ".p-image-preview", ".u-image:has(> .u-image-preview-mask)"],
+  ["class", ".p-image-action", ".u-image-toolbar > button"],
+];
+const IMAGECOMPARE_MAPPING = [
+  ["text", ".p-imagecompare img + img", ".u-image-compare > span"],
+  ["text", ".p-imagecompare:dir(rtl) img + img", ".u-image-compare:dir(rtl) > span"],
+  ["class", ".p-imagecompare-slider", ".u-image-compare-slider"],
+  ["class", ".p-imagecompare", ".u-image-compare"],
+];
+export const MAPPING = {
+  ng: { image: IMAGE_MAPPING, imagecompare: IMAGECOMPARE_MAPPING },
+  vue: { image: IMAGE_MAPPING, imagecompare: IMAGECOMPARE_MAPPING },
+};
 /** D2 — omitted upstream group numbers (1-based source order) with their FX-E tag. */
-export const OMITTED = { ng: {}, vue: {} };
+const IMAGE_OMITTED = { 13: "FX-E1", 14: "FX-E1", 15: "FX-E2", 16: "FX-E2" };
+export const OMITTED = {
+  ng: { image: IMAGE_OMITTED, imagecompare: {} },
+  vue: { image: IMAGE_OMITTED, imagecompare: {} },
+};
 /** Per key: [upstream groups, D1 ported] (literals from the approved batch records). */
-export const COUNTS = {};
+export const COUNTS = { image: [16, 12], imagecompare: [12, 12] };
 export const TOTALS = {
-  ng: { upstream: 0, ported: 0, omitted: 0 },
-  vue: { upstream: 0, ported: 0, omitted: 0 },
+  ng: { upstream: 28, ported: 24, omitted: 4 },
+  vue: { upstream: 28, ported: 24, omitted: 4 },
 };
 /** D3 — B-2 base roles, exact text, first in the module. */
-export const BASE_ROLE = { ng: {}, vue: {} };
+const IMAGE_BASE = [
+  ".u-image-mask { background: dt('mask.background'); color: dt('mask.color'); position: fixed; top: 0; left: 0; width: 100%; height: 100%; }",
+  ".u-image-toolbar > button:disabled { opacity: dt('disabled.opacity'); }",
+];
+export const BASE_ROLE = {
+  ng: { image: IMAGE_BASE, imagecompare: [] },
+  vue: { image: IMAGE_BASE, imagecompare: [] },
+};
 /** Each D3 rule's declarations equal its base group's, except recorded differences. */
-export const BASE_SOURCES = [];
+export const BASE_SOURCES = [
+  {
+    keys: ["image"],
+    ruleIndex: 0,
+    source: ".p-overlay-mask",
+    differences: "background uses dt('mask.background') without --px wrapper (PX-B3)",
+  },
+  {
+    keys: ["image"],
+    ruleIndex: 1,
+    source: ".p-disabled, .p-component:disabled",
+    differences: "native disabled toolbar button selector",
+  },
+];
 /** D4 — ADR-052 X-4 runtime-role CSS, exact text, after D1 and L. */
-export const RUNTIME_ROLE = { ng: {}, vue: {} };
+export const RUNTIME_ROLE = {
+  ng: { image: [".u-image-mask { z-index: 1100; }"], imagecompare: [] },
+  vue: { image: [".u-image-mask { z-index: 1100; }"], imagecompare: [] },
+};
 /** L — OI-E1 PrimeNG-local rules ported into the Angular module (mapped text), per key. */
-export const LOCAL_RULES = { ng: {}, vue: {} };
+export const LOCAL_RULES = {
+  ng: { image: [], imagecompare: [] },
+  vue: { image: [], imagecompare: [] },
+};
 /** D5 — retained Ultimate-only rules, exact text, last. */
-export const RETAINED = { ng: {}, vue: {} };
+export const RETAINED = {
+  ng: { image: [], imagecompare: [".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }"] },
+  vue: { image: [], imagecompare: [".u-image-compare > span { position: absolute; inset: 0; }"] },
+};
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const token = (from) => new RegExp(`${escape(from)}(?![a-z0-9-])`, "g");

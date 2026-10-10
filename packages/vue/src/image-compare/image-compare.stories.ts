@@ -26,7 +26,7 @@ export const Sized: Story = {
   render: () => ({
     components: { UImageCompare },
     template: `
-      <div style="width: 20rem;">
+      <div style="width: 20rem; display: flex;">
         <UImageCompare>
           <template #left><img src="/media/landscape-1.png" alt="before" /></template>
           <template #right><img src="/media/landscape-2.png" alt="after" /></template>
@@ -41,7 +41,7 @@ export const Rtl: Story = {
   render: () => ({
     components: { UImageCompare },
     template: `
-      <div dir="rtl" style="width: 20rem;">
+      <div dir="rtl" style="width: 20rem; display: flex;">
         <UImageCompare>
           <template #left><img src="/media/landscape-1.png" alt="before" /></template>
           <template #right><img src="/media/landscape-2.png" alt="after" /></template>

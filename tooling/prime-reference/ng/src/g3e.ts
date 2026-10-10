@@ -20,7 +20,7 @@ import { ImageCompareModule } from "primeng/imagecompare";
         <p-image src="/media/landscape-1.png" alt="Image" width="200" [preview]="true" />
       }
       @case ("imagecompare/sized") {
-        <div style="width: 20rem">
+        <div style="width: 20rem; display: flex">
           <p-imagecompare>
             <ng-template #left><img src="/media/landscape-1.png" alt="before" /></ng-template>
             <ng-template #right><img src="/media/landscape-2.png" alt="after" /></ng-template>
@@ -28,7 +28,7 @@ import { ImageCompareModule } from "primeng/imagecompare";
         </div>
       }
       @case ("imagecompare/rtl") {
-        <div dir="rtl" style="width: 20rem">
+        <div dir="rtl" style="width: 20rem; display: flex">
           <p-imagecompare>
             <ng-template #left><img src="/media/landscape-1.png" alt="before" /></ng-template>
             <ng-template #right><img src="/media/landscape-2.png" alt="after" /></ng-template>

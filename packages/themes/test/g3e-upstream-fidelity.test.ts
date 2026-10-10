@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  COUNTS,
   FIXTURE,
   KEYS,
   NG_LOCAL,
@@ -38,4 +39,9 @@ describe("G3-E upstream fixture and data model", () => {
       }
     }
   );
+});
+
+const E1_COUNTS = { image: [16, 12], imagecompare: [12, 12] };
+it("E-1 counts are the approved record's literals", () => {
+  expect({ image: COUNTS.image, imagecompare: COUNTS.imagecompare }).toEqual(E1_COUNTS);
 });

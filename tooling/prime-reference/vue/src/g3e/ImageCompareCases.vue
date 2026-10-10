@@ -1,11 +1,11 @@
 <template>
-  <div v-if="c === 'sized'" style="width: 20rem">
+  <div v-if="c === 'sized'" style="width: 20rem; display: flex">
     <ImageCompare>
       <template #left><img src="/media/landscape-1.png" alt="before" /></template>
       <template #right><img src="/media/landscape-2.png" alt="after" /></template>
     </ImageCompare>
   </div>
-  <div v-else-if="c === 'rtl'" dir="rtl" style="width: 20rem">
+  <div v-else-if="c === 'rtl'" dir="rtl" style="width: 20rem; display: flex">
     <ImageCompare>
       <template #left><img src="/media/landscape-1.png" alt="before" /></template>
       <template #right><img src="/media/landscape-2.png" alt="after" /></template>

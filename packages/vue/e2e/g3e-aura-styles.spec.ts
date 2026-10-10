@@ -140,7 +140,22 @@ for (const v of VISUAL) {
 const ATTR = "data-u-style"; // the Vue core's style-element attribute
 /** ADR-052 X-1: every emitted selector part must match the rendered DOM in a declared story and state. */
 const REACH: ReadonlyArray<{ key: string; runs: ReadonlyArray<readonly [string, Kind, string]> }> =
-  [];
+  [
+    {
+      key: "image",
+      runs: [
+        ["vue-image--default", "rest", ".u-image"],
+        ["vue-image--with-preview", "click", ".u-image-mask"],
+      ],
+    },
+    {
+      key: "imagecompare",
+      runs: [
+        ["vue-imagecompare--sized", "rest", ".u-image-compare"],
+        ["vue-imagecompare--rtl", "rest", ".u-image-compare"],
+      ],
+    },
+  ];
 /** ADR-052 X-1 class K: emitted by a cited source under a state no story exercises. */
 const K: Record<string, Record<string, string>> = {};
 const STATE =
@@ -153,6 +168,14 @@ for (const r of REACH) {
     for (const [story, kind, ready] of r.runs) {
       await go(page, story);
       await state(page, kind, ready);
+      if (r.key === "image" && kind === "click") {
+        const zoomOut = page.getByRole("button", { name: "Zoom out", exact: true });
+        for (let step = 0; step < 6 && (await zoomOut.isEnabled()); step++) {
+          await zoomOut.click();
+        }
+        await expect(zoomOut).toBeDisabled();
+        await expect(page.locator(".u-image-toolbar > button:disabled")).toBeVisible();
+      }
       await expect(page.locator(`style[${ATTR}="${r.key}"]`)).toBeAttached();
       const res = await page.evaluate(
         ([key, attr, re]) => {
