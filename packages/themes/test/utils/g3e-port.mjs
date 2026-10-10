@@ -287,8 +287,14 @@ export const RETAINED = {
     imagecompare: [".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }"],
     carousel: CAROUSEL_RETAINED,
     galleria: [],
-    orderlist: [...DRAG_ITEM("order-list"), ORDERLIST_STRIPED],
+    // E3-V1 review fix: reset for the Angular drag-mode `ul` list (exact previous declaration).
+    orderlist: [
+      ".u-order-list-list { margin: 0; padding: 0; list-style: none; }",
+      ...DRAG_ITEM("order-list"),
+      ORDERLIST_STRIPED,
+    ],
     picklist: [
+      ".u-pick-list-list { margin: 0; padding: 0; list-style: none; }",
       ...DRAG_ITEM("pick-list"),
       ".u-pick-list > .u-pick-list-source { order: 0; }",
       ".u-pick-list > .u-pick-list-controls { order: 1; }",

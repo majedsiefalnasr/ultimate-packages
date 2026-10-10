@@ -5,6 +5,7 @@ export const pickListStyleModule = {
 .u-pick-list-controls{display: flex;flex-direction: column;justify-content: center;gap: dt('picklist.controls.gap');}
 .u-pick-list-source, .u-pick-list-target{flex: 1 1 50%;}
 .u-pick-list .u-listbox{height: 100%;}
+.u-pick-list-list{margin: 0;padding: 0;list-style: none;}
 .u-pick-list-item{display: block;padding: .5rem .75rem;cursor: pointer;}
 .u-pick-list-item-selected{outline: 2px solid currentColor;outline-offset: -2px;}
 .u-pick-list > .u-pick-list-source{order: 0;}
