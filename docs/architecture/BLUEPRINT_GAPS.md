@@ -2018,6 +2018,94 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **What it blocks:** Complete E-2 Prime parity.
 - **Scope boundary:** A design decision or runtime change; requires separate authorization.
 
+#### GAP-117 — OrderList and PickList controls render native buttons instead of Button
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-3 before-port comparison (Docker, `91508f5` and the corrected capture), cases `orderlist/default`, `orderlist/selected`, `picklist/selected`. Prime renders the reorder and transfer controls as `Button` (40×36, icon, `severity: secondary`, 6 px radius). Ultimate renders native text buttons (`Move up`, `All To Target`; about 93×21, grey, 2 px border, 13.3 px font). The Button-derived look cannot be mapped in a style port: `--u-button-*` variables register only when a `UButton` renders (G3-D Spec §6.3, D-D3c; same disposition as GAP-106). [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-4 (PX-E2).
+- **Expected state:** The controls render as Prime-equivalent icon buttons.
+- **What it blocks:** Complete E-3 Prime parity.
+- **Scope boundary:** Template change (compose `UButton`); requires separate authorization.
+
+#### GAP-118 — OrderList and PickList filter renders a native, unstyled input
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular (the filter exists only in the Angular OrderList and PickList).
+- **Current evidence:** `orderlist/filter`, `picklist/filter`: Prime renders the Listbox filter (InputText look, full width, 36 px, search icon). Ultimate renders its own `input[role=searchbox]` (177×21, 2 px border, 13.3 px font). The filter results are equal on both sides. InputText variables are not available to a style port, for the same reason as GAP-117. [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-5 (PX-E3).
+- **Expected state:** The filter matches Prime's Listbox filter.
+- **What it blocks:** Complete E-3 Prime parity.
+- **Scope boundary:** Template change; requires separate authorization.
+
+#### GAP-119 — Listbox option state styling: Angular state classes, combined selected-and-focused state, empty message
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular (state classes); Angular and Vue (combined state, empty message).
+- **Current evidence:** Found through OrderList and PickList, recorded against Listbox under the E-3 composition rule (Spec §6.5).
+  - Angular `listbox-style.ts` `classes.option` emits `p-listbox-option-selected`, `p-focus` and `p-disabled`, while its CSS styles `u-listbox-option-selected`, `-focused` and `-disabled`. Angular selection, focus and disabled highlights therefore never apply: `orderlist/selected` and `orderlist/focus` show a transparent option where Prime shows `rgb(209,250,229)` or `rgb(241,245,249)`. Vue emits the `u-` classes.
+  - In Vue, a clicked option (selected and focused) shows the focus colour instead of Prime's selected colour, because the combined state is missing.
+  - An empty Listbox shows "No results found" (PickList target), where Prime's is empty.
+  - [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-6, E3-7, E3-11.
+- **Expected state:** Listbox option states and the empty list render as Prime's.
+- **What it blocks:** Listbox parity, and therefore OrderList/PickList parity.
+- **Scope boundary:** Listbox change; not part of the E-3 OrderList/PickList port. Requires separate authorization.
+
+#### GAP-120 — OrderList and PickList options render checkboxes
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `orderlist/default`, `picklist/default`: Ultimate's composed Listbox runs in multiple mode and shows a checkbox per option; Prime's OrderList and PickList Listboxes show none. Review images `orderlist--default.vue`, `picklist--default.ng`. [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-8. The accessibility side of these checkboxes is GAP-123.
+- **Expected state:** OrderList/PickList options render without checkboxes, as in Prime.
+- **What it blocks:** Complete E-3 Prime parity.
+- **Scope boundary:** Listbox configuration or template change; requires separate authorization.
+
+#### GAP-121 — Angular PickList renders headings and stacked reorder controls inside each list
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular.
+- **Current evidence:** `picklist/default`: Ultimate Angular always renders "Source" and "Target" `h3` headings, and stacks its per-list reorder controls full-width inside each list section. Prime renders no headings by default and places icon controls beside each list. [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-9.
+- **Expected state:** The PickList structure matches Prime's.
+- **What it blocks:** Complete E-3 Prime parity.
+- **Scope boundary:** Template change; requires separate authorization.
+
+#### GAP-122 — Angular PickList DOM and Tab order: transfer controls after the target list
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular.
+- **Current evidence:** E-3 Step 3 Tab probe: Prime and Ultimate Vue go source listbox → transfer buttons → target. Ultimate Angular goes source listbox → target listbox → transfer buttons, because the transfer controls are rendered after the target section and only placed between the lists by CSS. [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-10.
+- **Expected state:** The DOM and keyboard order match Prime's.
+- **What it blocks:** Complete E-3 Prime parity; predictable keyboard order.
+- **Scope boundary:** Template change; requires separate authorization. The E-3 port keeps the visual order with retained `order` rules only.
+
+#### GAP-123 — Listbox option accessibility violations (unlabelled checkboxes, nested interactive)
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-3 before-port axe scans (Docker; Chromium, Firefox, WebKit) on the OrderList and PickList stories, both frameworks:
+  - `label` (25 rows): option checkbox inputs without an accessible name.
+  - `nested-interactive` (25 rows): `role="option"` elements containing focusable inputs.
+  - The rows come from the composed Listbox's multiple-mode options, not OrderList/PickList code. OrderList, PickList and Listbox code is unchanged since `main` `cad9f85`.
+  - The rows are recorded as pre-existing in `research/2026-10-08-gap-064-g3e-accessibility-preexisting.md`, so they are tracked, not silenced.
+  - `region`, `landmark-one-main` and `page-has-heading-one` rows come from the story shell and PickList section structure, and are not part of this gap.
+  - Precedent: GAP-112 (Galleria). Kept separate from GAP-119 (option state styling) and GAP-120 (checkbox presence, visual parity).
+  - [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) §7.
+- **Expected state:** Listbox options expose a valid accessibility tree (no unlabelled controls, no interactive content nested in options).
+- **What it blocks:** Accessibility conformance of Listbox, OrderList and PickList.
+- **Scope boundary:** Listbox change; requires separate authorization.
+
 ---
 
 ## 5. Open Architectural Decisions
