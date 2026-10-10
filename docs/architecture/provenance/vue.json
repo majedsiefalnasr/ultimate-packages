@@ -297,7 +297,7 @@
     "originalPath": "packages/primevue/src/orderlist/OrderList.vue",
     "ultimateDestination": "packages/vue/src/order-list/BaseOrderList.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-3: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primevue/src/orderlist/OrderList.vue",
@@ -324,16 +324,16 @@
     "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
   },
   {
-    "originalPath": "n/a",
+    "originalPath": "@primeuix/styles@2.0.3 orderlist",
     "ultimateDestination": "packages/vue/src/order-list/order-list-style.ts",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the root rule targets the section wrapper and the list rule targets .u-order-list-list. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the narrow responsive controls and striped rows (E3-R2). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e3-record.md."
   },
   {
     "originalPath": "packages/primevue/src/picklist/PickList.vue",
     "ultimateDestination": "packages/vue/src/pick-list/BasePickList.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native PickList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native PickList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-3: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primevue/src/picklist/PickList.vue",
@@ -360,10 +360,10 @@
     "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
   },
   {
-    "originalPath": "n/a",
+    "originalPath": "@primeuix/styles@2.0.3 picklist",
     "ultimateDestination": "packages/vue/src/pick-list/pick-list-style.ts",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for striped rows. Record: docs/architecture/research/2026-10-08-gap-064-g3e-e3-record.md."
   },
   {
     "originalPath": "packages/primevue/src/dataview/DataView.vue",
@@ -849,7 +849,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/g3e-aura-styles.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 and E-2 style modules (Vue Image, ImageCompare, Carousel, Galleria): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1, E-2 and E-3 style modules (Vue Image, ImageCompare, Carousel, Galleria, OrderList, PickList): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 carousel",
