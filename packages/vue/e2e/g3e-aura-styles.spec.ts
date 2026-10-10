@@ -100,6 +100,35 @@ const STORIES: ReadonlyArray<{
     kind: "fullscreen",
     batch: "E-2",
   },
+  // E-3 (OrderList, PickList)
+  {
+    name: "OrderList Default",
+    story: "data-orderlist--default",
+    ready: ".u-order-list",
+    kind: "rest",
+    batch: "E-3",
+  },
+  {
+    name: "OrderList Controlled",
+    story: "data-orderlist--controlled",
+    ready: ".u-order-list",
+    kind: "rest",
+    batch: "E-3",
+  },
+  {
+    name: "PickList Default",
+    story: "data-picklist--default",
+    ready: ".u-pick-list",
+    kind: "rest",
+    batch: "E-3",
+  },
+  {
+    name: "PickList Controlled",
+    story: "data-picklist--controlled",
+    ready: ".u-pick-list",
+    kind: "rest",
+    batch: "E-3",
+  },
 ];
 
 const VISUAL: ReadonlyArray<{
@@ -189,6 +218,35 @@ const VISUAL: ReadonlyArray<{
     kind: "fullscreen",
     shot: "page",
     batch: "E-2",
+  },
+  // E-3 (OrderList, PickList)
+  {
+    name: "OrderList Default rest",
+    story: "data-orderlist--default",
+    kind: "rest",
+    shot: ".u-order-list",
+    batch: "E-3",
+  },
+  {
+    name: "OrderList Controlled rest",
+    story: "data-orderlist--controlled",
+    kind: "rest",
+    shot: ".u-order-list",
+    batch: "E-3",
+  },
+  {
+    name: "PickList Default rest",
+    story: "data-picklist--default",
+    kind: "rest",
+    shot: ".u-pick-list",
+    batch: "E-3",
+  },
+  {
+    name: "PickList Controlled rest",
+    story: "data-picklist--controlled",
+    kind: "rest",
+    shot: ".u-pick-list",
+    batch: "E-3",
   },
 ];
 

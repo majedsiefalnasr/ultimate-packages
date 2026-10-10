@@ -3,6 +3,8 @@ import { CarouselModule } from "primeng/carousel";
 import { GalleriaModule } from "primeng/galleria";
 import { ImageModule } from "primeng/image";
 import { ImageCompareModule } from "primeng/imagecompare";
+import { OrderListModule } from "primeng/orderlist";
+import { PickListModule } from "primeng/picklist";
 
 /**
  * G3-E reference cases (route `#/g3e/<key>/<case>`, received here as `<key>/<case>`); one
@@ -12,7 +14,14 @@ import { ImageCompareModule } from "primeng/imagecompare";
 @Component({
   selector: "app-g3e",
   standalone: true,
-  imports: [ImageModule, ImageCompareModule, CarouselModule, GalleriaModule],
+  imports: [
+    ImageModule,
+    ImageCompareModule,
+    CarouselModule,
+    GalleriaModule,
+    OrderListModule,
+    PickListModule,
+  ],
   template: `
     @switch (id()) {
       @case ("image/default") {
@@ -124,6 +133,31 @@ import { ImageCompareModule } from "primeng/imagecompare";
           /></ng-template>
         </p-galleria>
       }
+      @case ("orderlist/basic") {
+        <p-orderlist [value]="fruits"
+          ><ng-template #item let-option>{{ option }}</ng-template></p-orderlist
+        >
+      }
+      @case ("orderlist/filter") {
+        <p-orderlist [value]="named" filterBy="name" dataKey="name"
+          ><ng-template #item let-option>{{ option.name }}</ng-template></p-orderlist
+        >
+      }
+      @case ("orderlist/dragdrop") {
+        <p-orderlist [value]="fruits" [dragdrop]="true"
+          ><ng-template #item let-option>{{ option }}</ng-template></p-orderlist
+        >
+      }
+      @case ("picklist/basic") {
+        <p-picklist [source]="src" [target]="tgt"
+          ><ng-template #item let-item>{{ item }}</ng-template></p-picklist
+        >
+      }
+      @case ("picklist/filter") {
+        <p-picklist [source]="namedSrc" [target]="namedTgt" filterBy="name" dataKey="name"
+          ><ng-template #item let-item>{{ item.name }}</ng-template></p-picklist
+        >
+      }
     }
   `,
 })
@@ -132,4 +166,10 @@ export class G3ECases {
   readonly items = Array.from({ length: 8 }, (_, i) => `Item ${i + 1}`);
   readonly images = ["/media/landscape-1.png", "/media/landscape-2.png", "/media/landscape-3.png"];
   readonly visible = signal(false);
+  fruits = ["Apple", "Banana", "Cherry", "Date"];
+  named = ["Apple", "Banana", "Cherry", "Date"].map((name) => ({ name }));
+  src = ["Apple", "Banana", "Cherry"];
+  tgt: string[] = [];
+  namedSrc = ["Apple", "Banana", "Cherry"].map((name) => ({ name }));
+  namedTgt: { name: string }[] = [];
 }

@@ -21,6 +21,20 @@ export async function run(
           el.dispatchEvent(new Event("input", { bubbles: true }));
         }, a.range[1]);
     else if ("advance" in a) await page.clock.runFor(a.advance);
+    else if ("drag" in a) {
+      // Explicit pointer steps: `dragTo` waits for a stable target, but CDK drag reflows the list.
+      const box = async (i: number) => {
+        const b = await page.locator(sel[a.drag[0]]).nth(i).boundingBox();
+        if (!b) throw new Error(`drag: ${a.drag[0]}[${i}] has no box`);
+        return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+      };
+      const from = await box(a.drag[1]);
+      const to = await box(a.drag[2]);
+      await page.mouse.move(from.x, from.y);
+      await page.mouse.down();
+      await page.mouse.move(to.x, to.y, { steps: 10 });
+      await page.mouse.up();
+    }
     await page.waitForTimeout(150);
   }
   await page.mouse.move(0, 0);
