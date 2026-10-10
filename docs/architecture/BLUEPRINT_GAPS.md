@@ -2108,14 +2108,17 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-124 — DataView loading shows the text "Loading" instead of a spinner
 
-- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; accounting only, remediation not authorized)
+- **Status:** PARTIAL (registered 2026-10-10, user-approved E-4 Task 14 gate. 2026-10-10: the spinner part was remediated under an explicitly authorized G3-E scope exception (E4-V1, Task 16 review); residuals below stay open)
 - **Type:** Component, Visual
 - **Blocking level:** LOW
 - **Framework scope:** Angular and Vue.
-- **Current evidence:** `dataview/loading` (Angular; Docker `docker-e4-r3`): PrimeNG renders a masked overlay with a spinner icon over the content. Ultimate renders `span[role="status"]` with the text "Loading" (`data-view.ts:87`, `DataView.vue:134`). Vue has no Prime reference for loading (G3E-7), but the template is the same. The E-4 port styles the element as the overlay; the text content stays. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-5.
-- **Expected state:** The loading state shows a spinner icon, as in Prime.
-- **What it blocks:** Complete E-4 Prime parity.
-- **Scope boundary:** Template change; requires separate authorization.
+- **Current evidence:**
+  - *Registration:* `dataview/loading` (Angular; Docker `docker-e4-r3`): PrimeNG renders a masked overlay with a spinner icon over the content. Ultimate rendered `span[role="status"]` with the text "Loading" (`data-view.ts:87`, `DataView.vue:134`). Vue has no Prime reference for loading (G3E-7), but the template is the same. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-5.
+  - *Remediation (E4-V1):* both templates now render the shared spinner icon (`aria-hidden`) and visually hidden "Loading" text inside the same `role="status"` live region. Confirmation (Docker `docker-e4-v1`): `dataview/loading` (ng) has 0 probe differences and noise 0; the G3-E accessibility validator has 0 introduced violations (the E4-V1 `color-contrast` rows are gone); Chromium's accessibility tree exposes `status` (polite, atomic) with the text "Loading" and no image node.
+  - *Residuals (open):* (1) the icon does not spin. No `u-icon-spin` animation is defined anywhere (the same for `UButton`'s loading icon), while Prime's spinner rotates; adding one is a base-level rule (GAP-098 boundary). (2) The icon is drawn in `mask.color` on the mask, a non-text contrast of 2.31:1, below WCAG 1.4.11's 3:1 if the icon is considered required. Prime uses the identical colours, and the project's automated gate (axe) has no non-text contrast rule.
+- **Expected state:** The loading state shows an animated spinner icon, as in Prime.
+- **What it blocks:** Complete E-4 Prime parity (animation).
+- **Scope boundary:** The remaining animation needs a base-level rule; it requires separate authorization.
 
 #### GAP-125 — DataView always renders a page report line
 

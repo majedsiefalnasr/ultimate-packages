@@ -369,13 +369,13 @@
     "originalPath": "packages/primevue/src/dataview/DataView.vue",
     "ultimateDestination": "packages/vue/src/data-view/BaseDataView.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-4: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primevue/src/dataview/DataView.vue",
     "ultimateDestination": "packages/vue/src/data-view/DataView.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-4 (E4-V1, authorized scope exception): the loading indicator renders the shared spinner icon (aria-hidden) with visually hidden status text instead of visible text (GAP-124)"
   },
   {
     "originalPath": "n/a",
@@ -396,16 +396,16 @@
     "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
   },
   {
-    "originalPath": "n/a",
+    "originalPath": "@primeuix/styles@2.0.3 dataview",
     "ultimateDestination": "packages/vue/src/data-view/data-view-style.ts",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e4-record.md."
   },
   {
     "originalPath": "packages/primevue/src/organizationchart/OrganizationChart.vue",
     "ultimateDestination": "packages/vue/src/organization-chart/BaseOrganizationChart.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native OrganizationChart; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native OrganizationChart; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-4: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primevue/src/organizationchart/OrganizationChart.vue",
@@ -432,10 +432,10 @@
     "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
   },
   {
-    "originalPath": "n/a",
+    "originalPath": "@primeuix/styles@2.0.3 organizationchart",
     "ultimateDestination": "packages/vue/src/organization-chart/organization-chart-style.ts",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 organizationchart: 9 of 18 upstream groups (table layout and connectors omitted, GAP-127), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained flex-tree layout and pseudo-element connector rules. Record: docs/architecture/research/2026-10-08-gap-064-g3e-e4-record.md."
   },
   {
     "originalPath": "packages/primevue/src/stepper/StepperSeparator.vue",
@@ -849,7 +849,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/g3e-aura-styles.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1, E-2 and E-3 style modules (Vue Image, ImageCompare, Carousel, Galleria, OrderList, PickList): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 to E-4 style modules (Vue Image, ImageCompare, Carousel, Galleria, OrderList, PickList, DataView, OrganizationChart): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 carousel",

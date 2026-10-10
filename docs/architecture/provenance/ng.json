@@ -408,10 +408,10 @@
     "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
   },
   {
-    "originalPath": "n/a",
+    "originalPath": "@primeuix/styles@2.0.3 dataview",
     "ultimateDestination": "packages/ng/src/data-view/data-view-style.ts",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1) and the Angular list reset. Record: docs/architecture/research/2026-10-08-gap-064-g3e-e4-record.md."
   },
   {
     "originalPath": "n/a",
@@ -429,7 +429,7 @@
     "originalPath": "packages/primeng/src/dataview/dataview.ts",
     "ultimateDestination": "packages/ng/src/data-view/data-view.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeNG 21.1.9 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeNG 21.1.9 source; disclosed cuts remain excluded. GAP-064 G3-E E-4: style key renamed to the Aura key (ADR-051). GAP-064 G3-E E-4 (E4-V1, authorized scope exception): the loading indicator renders the shared spinner icon (aria-hidden) with visually hidden status text instead of visible text (GAP-124)"
   },
   {
     "originalPath": "n/a",
@@ -855,7 +855,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/g3e-aura-styles.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1, E-2 and E-3 style modules (Angular Image, ImageCompare, Carousel, Galleria, OrderList, PickList): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 to E-4 style modules (Angular Image, ImageCompare, Carousel, Galleria, OrderList, PickList, DataView): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 carousel",
