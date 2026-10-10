@@ -1,5 +1,6 @@
 <script>
 import { createBaseDataView } from "./BaseDataView";
+import { SpinnerIcon as USpinnerIcon } from "@ultimate/vue-core";
 import Paginator from "../paginator/Paginator.vue";
 
 function field(item, path) {
@@ -23,7 +24,7 @@ function pageNumber(value) {
 export default {
   name: "UDataView",
   extends: createBaseDataView(),
-  components: { Paginator },
+  components: { Paginator, USpinnerIcon },
   data() {
     return { pageFirst: pageNumber(this.first), pageRows: pageNumber(this.rows) };
   },
@@ -131,7 +132,12 @@ export default {
 
 <template>
   <div :class="cx('root')" :aria-busy="loading">
-    <span v-if="loading" role="status" :class="loadingIcon">Loading</span>
+    <!-- GAP-124 (G3-E E4-V1 scope exception): spinner as in Prime; the status text stays for assistive technology. -->
+    <span v-if="loading" role="status" :class="loadingIcon"
+      ><USpinnerIcon spin aria-hidden="true" /><span class="u-hidden-accessible"
+        >Loading</span
+      ></span
+    >
     <Paginator
       v-if="showPaginator && paginatorPosition !== 'bottom'"
       :first="pageFirst"

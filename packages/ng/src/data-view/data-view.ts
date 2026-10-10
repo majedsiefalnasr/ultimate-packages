@@ -10,7 +10,7 @@ import {
   output,
   signal,
 } from "@angular/core";
-import { UBaseComponent } from "@ultimate/ng-core";
+import { UBaseComponent, USpinnerIcon } from "@ultimate/ng-core";
 import { UPaginator, type PaginatorPageChangeEvent } from "@ultimate/ng/paginator";
 import { dataViewStyleModule } from "./data-view-style";
 
@@ -78,13 +78,18 @@ function compare(a: unknown, b: unknown): number {
 @Component({
   selector: "u-data-view",
   standalone: true,
-  imports: [UPaginator],
+  imports: [UPaginator, USpinnerIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `
     <div [class]="cx('root')" [attr.aria-busy]="loading()">
       @if (loading()) {
-        <span role="status" [class]="loadingIcon()">Loading</span>
+        <!-- GAP-124 (G3-E E4-V1 scope exception): spinner as in Prime; the status text stays for assistive technology. -->
+        <span role="status" [class]="loadingIcon()"
+          ><u-spinner-icon spin aria-hidden="true" /><span class="u-hidden-accessible"
+            >Loading</span
+          ></span
+        >
       }
       @if (showPaginator() && paginatorPosition() !== "bottom") {
         <u-paginator
