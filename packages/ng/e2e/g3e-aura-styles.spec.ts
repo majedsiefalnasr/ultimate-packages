@@ -359,9 +359,40 @@ const REACH: ReadonlyArray<{ key: string; runs: ReadonlyArray<readonly [string, 
         ["ng-galleria--full-screen", "fullscreen", ".u-galleria-mask"],
       ],
     },
+    {
+      key: "orderlist",
+      runs: [
+        ["data-orderlist--default", "rest", ".u-order-list"],
+        ["data-orderlist--controlled", "rest", ".u-order-list"],
+        ["data-orderlist--filter", "rest", ".u-order-list"],
+        ["data-orderlist--with-drag-drop", "rest", ".u-order-list"],
+      ],
+    },
+    {
+      key: "picklist",
+      runs: [
+        ["data-picklist--default", "rest", ".u-pick-list"],
+        ["data-picklist--controlled", "rest", ".u-pick-list"],
+        ["data-picklist--filter", "rest", ".u-pick-list"],
+      ],
+    },
   ];
 /** ADR-052 X-1 class K: emitted by a cited source under a state no story exercises. */
-const K: Record<string, Record<string, string>> = {};
+const K: Record<string, Record<string, string>> = {
+  // E3-R1 (b): Ultimate-authored D5 rules; emission cited, state not exercised by any story.
+  orderlist: {
+    ".u-order-list.u-striped .u-order-list-item:nth-child(2n)":
+      "order-list.ts:94 [class.u-striped] (stripedRows) + order-list.ts:143 cx('listItem') (dragdrop); no story sets stripedRows",
+    '.u-order-list.u-striped .u-order-list-list [role="option"]:nth-child(2n)':
+      "order-list.ts:94 [class.u-striped] (stripedRows) + order-list.ts:159 cx('list') + listbox.ts:69 role=option; no story sets stripedRows",
+  },
+  picklist: {
+    ".u-pick-list-item":
+      "pick-list.ts:142 cx('listItem') in drag mode (dragdrop); no PickList drag story",
+    ".u-pick-list-item-selected":
+      "pick-list.ts:142 cx('itemSelected') for a selected item in drag mode (dragdrop); no PickList drag story",
+  },
+};
 const STATE =
   /::?(before|after|-webkit-[a-z-]+|-moz-[a-z-]+)\b|:(hover|focus-visible|focus|active|dir\([a-z]+\))/g;
 
@@ -385,6 +416,14 @@ for (const r of REACH) {
         }
         await expect(zoomOut).toBeDisabled();
         await expect(page.locator(".u-image-toolbar > button:disabled")).toBeVisible();
+      }
+      if (r.key === "orderlist" && story.endsWith("--with-drag-drop")) {
+        // E3-R1 (a): select one drag item so selected and unselected drag items both exist.
+        await page.locator(".u-order-list-item").first().click();
+        await expect(page.locator(".u-order-list-item-selected")).toHaveCount(1);
+        await expect(
+          page.locator(".u-order-list-item:not(.u-order-list-item-selected)")
+        ).toHaveCount(3);
       }
       if ((r.key === "carousel" || r.key === "galleria") && story.endsWith("--default")) {
         // E2-R1: navigate to the last page so the disabled Next and enabled Previous states exist.

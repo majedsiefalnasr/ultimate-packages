@@ -7,6 +7,8 @@ import { UCarousel } from "./carousel";
 import { UGalleria } from "./galleria";
 import { UImage } from "./image";
 import { UImageCompare } from "./image-compare";
+import { UOrderList } from "./order-list";
+import { UPickList } from "./pick-list";
 
 /**
  * GAP-064 G3-E (Plan Task 6: Aura keys and token resolution). Fresh document per mount under a server
@@ -22,6 +24,8 @@ const CASES: { key: string; type: Type<unknown>; inputs: Record<string, unknown>
     type: UGalleria,
     inputs: { value: ["/media/landscape-1.png", "/media/landscape-2.png"] },
   },
+  { key: "orderlist", type: UOrderList, inputs: { value: ["Apple", "Banana", "Cherry"] } },
+  { key: "picklist", type: UPickList, inputs: { source: ["Apple", "Banana"], target: ["Cherry"] } },
 ];
 
 function mount(type: Type<unknown>, inputs: Record<string, unknown>) {

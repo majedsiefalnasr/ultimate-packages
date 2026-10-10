@@ -6,7 +6,7 @@ import { orderListStyleModule } from "./order-list-style";
 export function createBaseOrderList() {
   return defineComponent({
     extends: createBaseComponent({
-      componentName: "order-list",
+      componentName: "orderlist",
       styleModule: orderListStyleModule,
     }),
     props: {

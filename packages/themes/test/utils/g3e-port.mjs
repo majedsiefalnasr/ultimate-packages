@@ -51,7 +51,7 @@ export const DIRS = {
 };
 
 /** Keys whose batch has been ported (Plan Tasks 6, 9, 12, 15 append). */
-export const PORTED = ["image", "imagecompare", "carousel", "galleria"];
+export const PORTED = ["image", "imagecompare", "carousel", "galleria", "orderlist", "picklist"];
 
 /**
  * Batch-record mapping, applied in order to every selector part of a D1 group, then the
@@ -107,18 +107,38 @@ const GALLERIA_MAPPING = [
   ["class", ".p-galleria-thumbnail", ".u-galleria-thumbnail-item"],
   ["class", ".p-galleria-close-icon", ".u-galleria-close-button svg"],
 ];
+const ORDERLIST_MAPPING_NG = [
+  ["text", ".p-orderlist .p-listbox", '.u-order-list > [data-pc-section="listcontainer"]'],
+  ["class", ".p-orderlist-controls", ".u-order-list-controls"],
+  ["class", ".p-orderlist", ".u-order-list"],
+];
+const ORDERLIST_MAPPING_VUE = [
+  ["text", ".p-orderlist .p-listbox", ".u-order-list-list"],
+  ["text", ".p-orderlist", ".u-order-list > section"],
+  ["class", ".p-orderlist-controls", ".u-order-list-controls"],
+];
+const PICKLIST_MAPPING = [
+  ["text", ".p-picklist .p-listbox", ".u-pick-list .u-listbox"],
+  ["text", ".p-picklist-list-container", ".u-pick-list-source, .u-pick-list-target"],
+  ["class", ".p-picklist-controls", ".u-pick-list-controls"],
+  ["class", ".p-picklist", ".u-pick-list"],
+];
 export const MAPPING = {
   ng: {
     image: IMAGE_MAPPING,
     imagecompare: IMAGECOMPARE_MAPPING,
     carousel: CAROUSEL_MAPPING,
     galleria: GALLERIA_MAPPING,
+    orderlist: ORDERLIST_MAPPING_NG,
+    picklist: PICKLIST_MAPPING,
   },
   vue: {
     image: IMAGE_MAPPING,
     imagecompare: IMAGECOMPARE_MAPPING,
     carousel: CAROUSEL_MAPPING,
     galleria: GALLERIA_MAPPING,
+    orderlist: ORDERLIST_MAPPING_VUE,
+    picklist: PICKLIST_MAPPING,
   },
 };
 /** D2 — omitted upstream group numbers (1-based source order) with their FX-E tag. */
@@ -144,12 +164,16 @@ export const OMITTED = {
     imagecompare: {},
     carousel: CAROUSEL_OMITTED,
     galleria: GALLERIA_OMITTED,
+    orderlist: {},
+    picklist: {},
   },
   vue: {
     image: IMAGE_OMITTED,
     imagecompare: {},
     carousel: CAROUSEL_OMITTED,
     galleria: GALLERIA_OMITTED,
+    orderlist: {},
+    picklist: {},
   },
 };
 /** Per key: [upstream groups, D1 ported] (literals from the approved batch records). */
@@ -158,10 +182,12 @@ export const COUNTS = {
   imagecompare: [12, 12],
   carousel: [17, 15],
   galleria: [67, 24],
+  orderlist: [3, 3],
+  picklist: [4, 4],
 };
 export const TOTALS = {
-  ng: { upstream: 112, ported: 63, omitted: 49 },
-  vue: { upstream: 112, ported: 63, omitted: 49 },
+  ng: { upstream: 119, ported: 70, omitted: 49 },
+  vue: { upstream: 119, ported: 70, omitted: 49 },
 };
 /** D3 — B-2 base roles, exact text, first in the module. */
 const IMAGE_BASE = [
@@ -173,8 +199,22 @@ const GALLERIA_BASE = [
   ".u-galleria-prev-button:disabled, .u-galleria-next-button:disabled { opacity: dt('disabled.opacity'); }",
 ];
 export const BASE_ROLE = {
-  ng: { image: IMAGE_BASE, imagecompare: [], carousel: [], galleria: GALLERIA_BASE },
-  vue: { image: IMAGE_BASE, imagecompare: [], carousel: [], galleria: GALLERIA_BASE },
+  ng: {
+    image: IMAGE_BASE,
+    imagecompare: [],
+    carousel: [],
+    galleria: GALLERIA_BASE,
+    orderlist: [],
+    picklist: [],
+  },
+  vue: {
+    image: IMAGE_BASE,
+    imagecompare: [],
+    carousel: [],
+    galleria: GALLERIA_BASE,
+    orderlist: [],
+    picklist: [],
+  },
 };
 /** Each D3 rule's declarations equal its base group's, except recorded differences. */
 export const BASE_SOURCES = [
@@ -213,23 +253,33 @@ export const RUNTIME_ROLE = {
     imagecompare: [],
     carousel: CAROUSEL_RUNTIME,
     galleria: GALLERIA_RUNTIME,
+    orderlist: [],
+    picklist: [],
   },
   vue: {
     image: [".u-image-mask { z-index: 1100; }"],
     imagecompare: [],
     carousel: CAROUSEL_RUNTIME,
     galleria: GALLERIA_RUNTIME,
+    orderlist: [],
+    picklist: [],
   },
 };
 /** L — OI-E1 PrimeNG-local rules ported into the Angular module (mapped text), per key. */
 export const LOCAL_RULES = {
-  ng: { image: [], imagecompare: [], carousel: [], galleria: [] },
-  vue: { image: [], imagecompare: [], carousel: [], galleria: [] },
+  ng: { image: [], imagecompare: [], carousel: [], galleria: [], orderlist: [], picklist: [] },
+  vue: { image: [], imagecompare: [], carousel: [], galleria: [], orderlist: [], picklist: [] },
 };
 /** D5 — retained Ultimate-only rules, exact text, last. */
 const CAROUSEL_RETAINED = [
   ".u-carousel-item { flex-shrink: 0; box-sizing: border-box; }",
   ".u-carousel-prev-button:disabled, .u-carousel-next-button:disabled { opacity: 0.5; cursor: default; pointer-events: none; }",
+];
+const ORDERLIST_STRIPED =
+  '.u-order-list.u-striped .u-order-list-item:nth-child(even), .u-order-list.u-striped .u-order-list-list [role="option"]:nth-child(even) { background: rgba(0, 0, 0, .06); }';
+const DRAG_ITEM = (k) => [
+  `.u-${k}-item { display: block; padding: .5rem .75rem; cursor: pointer; }`,
+  `.u-${k}-item-selected { outline: 2px solid currentColor; outline-offset: -2px; }`,
 ];
 export const RETAINED = {
   ng: {
@@ -237,12 +287,27 @@ export const RETAINED = {
     imagecompare: [".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }"],
     carousel: CAROUSEL_RETAINED,
     galleria: [],
+    orderlist: [...DRAG_ITEM("order-list"), ORDERLIST_STRIPED],
+    picklist: [
+      ...DRAG_ITEM("pick-list"),
+      ".u-pick-list > .u-pick-list-source { order: 0; }",
+      ".u-pick-list > .u-pick-list-controls { order: 1; }",
+      ".u-pick-list > .u-pick-list-target { order: 2; }",
+    ],
   },
   vue: {
     image: [],
     imagecompare: [".u-image-compare > span { position: absolute; inset: 0; }"],
     carousel: CAROUSEL_RETAINED,
     galleria: [],
+    orderlist: [
+      ".u-order-list.u-order-list-narrow .u-order-list-controls { flex-direction: row; flex-wrap: wrap; }",
+      // E3-R2 (i): Vue emits no u-order-list-item (no listItem class, no drag mode); that part is dropped.
+      '.u-order-list.u-striped .u-order-list-list [role="option"]:nth-child(even) { background: rgba(0, 0, 0, .06); }',
+    ],
+    picklist: [
+      '.u-pick-list.u-striped .u-pick-list-list [role="option"]:nth-child(even) { background: rgba(0, 0, 0, .06); }',
+    ],
   },
 };
 

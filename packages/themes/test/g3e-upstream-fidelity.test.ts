@@ -50,3 +50,8 @@ const E2_COUNTS = { carousel: [17, 15], galleria: [67, 24] };
 it("E-2 counts are the approved record's literals", () => {
   expect({ carousel: COUNTS.carousel, galleria: COUNTS.galleria }).toEqual(E2_COUNTS);
 });
+
+const E3_COUNTS = { orderlist: [3, 3], picklist: [4, 4] };
+it("E-3 counts are the approved record's literals", () => {
+  expect({ orderlist: COUNTS.orderlist, picklist: COUNTS.picklist }).toEqual(E3_COUNTS);
+});

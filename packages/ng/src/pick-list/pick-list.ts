@@ -209,7 +209,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
   `,
 })
 export class UPickList extends UBaseComponent {
-  protected override readonly componentName = "pick-list";
+  protected override readonly componentName = "picklist";
   protected override readonly styleModule = pickListStyleModule;
 
   source = input<unknown[]>([]);

@@ -177,7 +177,7 @@ function matches(value: unknown, query: unknown, mode: MatchMode, locale?: strin
   `,
 })
 export class UOrderList extends UBaseComponent implements AfterViewChecked {
-  protected override readonly componentName = "order-list";
+  protected override readonly componentName = "orderlist";
   protected override readonly styleModule = orderListStyleModule;
 
   value = input<unknown[]>([]);

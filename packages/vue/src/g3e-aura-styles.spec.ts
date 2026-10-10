@@ -7,6 +7,8 @@ import { UCarousel } from "./carousel";
 import { UGalleria } from "./galleria";
 import { UImage } from "./image";
 import { UImageCompare } from "./image-compare";
+import { UOrderList } from "./order-list";
+import { UPickList } from "./pick-list";
 
 /** GAP-064 G3-E (Plan Task 6: Aura keys and token resolution). No unresolved reference is allowed. */
 const KEY_ATTR = "data-u-style";
@@ -17,6 +19,11 @@ const CASES: { key: string; node: () => VNode }[] = [
   {
     key: "galleria",
     node: () => h(UGalleria, { value: ["/media/landscape-1.png", "/media/landscape-2.png"] }),
+  },
+  { key: "orderlist", node: () => h(UOrderList, { modelValue: ["Apple", "Banana", "Cherry"] }) },
+  {
+    key: "picklist",
+    node: () => h(UPickList, { modelValue: [["Apple", "Banana"], ["Cherry"]] }),
   },
 ];
 

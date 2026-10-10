@@ -331,9 +331,35 @@ const REACH: ReadonlyArray<{ key: string; runs: ReadonlyArray<readonly [string, 
         ["vue-galleria--full-screen", "fullscreen", ".u-galleria-mask"],
       ],
     },
+    {
+      key: "orderlist",
+      runs: [
+        ["data-orderlist--default", "rest", ".u-order-list"],
+        ["data-orderlist--controlled", "rest", ".u-order-list"],
+      ],
+    },
+    {
+      key: "picklist",
+      runs: [
+        ["data-picklist--default", "rest", ".u-pick-list"],
+        ["data-picklist--controlled", "rest", ".u-pick-list"],
+      ],
+    },
   ];
 /** ADR-052 X-1 class K: emitted by a cited source under a state no story exercises. */
-const K: Record<string, Record<string, string>> = {};
+const K: Record<string, Record<string, string>> = {
+  // E3-R1 (b): Ultimate-authored D5 rules; emission cited, state not exercised by any story.
+  orderlist: {
+    ".u-order-list.u-order-list-narrow .u-order-list-controls":
+      "OrderList.vue:170 u-order-list-narrow (responsive && narrow, matchMedia below breakpoint) + OrderList.vue:181 cx('controls'); not canonical at 1280x720",
+    '.u-order-list.u-striped .u-order-list-list [role="option"]:nth-child(2n)':
+      "OrderList.vue:170 u-striped (striped) + OrderList.vue:195 cx('list') + Listbox.vue:28 role=option; no story sets striped",
+  },
+  picklist: {
+    '.u-pick-list.u-striped .u-pick-list-list [role="option"]:nth-child(2n)':
+      "PickList.vue:180 u-striped (striped) + PickList.vue:205 cx('list') + Listbox.vue:28 role=option; no story sets striped",
+  },
+};
 const STATE =
   /::?(before|after|-webkit-[a-z-]+|-moz-[a-z-]+)\b|:(hover|focus-visible|focus|active|dir\([a-z]+\))/g;
 
