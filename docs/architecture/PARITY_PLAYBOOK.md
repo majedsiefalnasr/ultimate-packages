@@ -235,3 +235,46 @@ Tiers: A 16, B 20, C 12. GAP-098 (global base box model) potentially affects eve
 - **Coverage gaps recorded (R-7), not implementation requirements:** Tag icon, Tag pill/rounded, Message icon, Drawer template, Angular Drawer two-way `visible` binding. Stories for them are added only when a specific parity work item requires the case.
 - **G3-E: authorized** under this Playbook, once the integration state of the Playbook and pilot branches is established. Cases come from the pinned PrimeNG/PrimeVue showcases; each framework is compared with its own oracle; differences are classified before any fix; CSS is not ported merely because Prime source contains it; stories are not created only to raise coverage.
 - **Backfill** of G3-A..G3-D follows, Tier A first.
+
+## 13. Future infrastructure direction — Reproducible Prime Showcase Parity Corpus
+
+**Direction approved by the human, 2026-10-08; future infrastructure only.** This Playbook remains the parity methodology and execution framework. The project will evolve its reference infrastructure toward a **Reproducible Prime Showcase Parity Corpus**: a version-pinned, reproducible subset of parity-relevant canonical cases that makes the Prime side a stable oracle, reducing reliance on individually constructed reference cases. This decision authorizes documentation of the direction, not corpus implementation, new coverage or execution. It is outside the current G3-E scope and requires its own specification, review, plan and explicit execution authorization.
+
+### 13.1 Corpus and reference environment
+
+Keep three distinct concepts:
+
+1. **Prime Showcase:** the upstream product/demo surface, including documentation and integration material.
+2. **Parity corpus:** the selected, version-pinned canonical component cases extracted from that surface; not a clone of the entire Showcase.
+3. **Reference-app environment:** the controlled CSS, assets and runtime used to render that corpus against the framework-specific oracle (§1).
+
+The future corpus should include, where applicable, default states, meaningful variants, interaction states, transitions/open states, relevant layout/responsive cases, RTL, accessibility-relevant visual/behavioral states, and framework-specific behavior where Prime differs by framework. Existing case-selection rules and tier limits remain in force until separately amended; this direction does not automatically add cases, frameworks or viewport coverage.
+
+Documentation-only content, import demonstrations, accessibility documentation demos that are not themselves parity cases, irrelevant PT/headless demonstrations, integration demos, theming/documentation demonstrations and other demo-only material remain outside parity scope unless explicitly promoted by a later decision.
+
+The future rendering environment must explicitly account for, and make auditable where relevant:
+
+- Pinned Prime versions under ADR-048, Prime base CSS, and theme/preset inputs.
+- Typography declarations, font resources, actual font loading and evidence of the effective fonts used; matching computed family names alone does not establish font-file identity.
+- Browser/runtime versions, container/OS environment, viewport and device scale.
+- Local fixtures/assets, readiness/loading conditions, and other CSS/runtime inputs that can materially affect rendering.
+
+Case provenance and environment provenance must remain distinguishable. A Showcase font stack does not become canonical merely because a case originated in the Showcase; the corpus's environment contract must explicitly establish its typography target. This section chooses no font stack and defines no executable harness configuration.
+
+### 13.2 Existing evidence when the corpus is introduced
+
+Do not invalidate prior parity work or mandate a blanket re-audit of previous tranches. Classify existing evidence against the introduced corpus/environment before deciding on further work:
+
+| Category | Meaning | Consequence |
+| --- | --- | --- |
+| **Environment-valid** | Existing evidence used an equivalent controlled canonical environment | No automatic rerun |
+| **Environment-dependent** | The result materially depended on an incomplete or uncertain environment | Consider only a targeted, separately authorized rerun |
+| **Coverage gap** | A required corpus case/state was not represented in existing evidence | Consider later coverage under its own authorization |
+
+These categories concern evidence migration, not the A/B/C/D difference classes or verification-status promotion. No prior result is reclassified by this documentation decision.
+
+### 13.3 Current G3-E E1-V2 boundary
+
+The captured corrected Stage 2 environment remains the evidence under which the E1-V2 finding was established. This future direction does not reopen or resolve that finding. The fixture's typography target was settled separately by the 2026-10-08 human ruling ([typography P1 ruling](research/2026-10-08-gap-064-g3e-e1-v2-typography-p1-ruling.md)). No Inter integration, typography harness change or rerun is authorized by this direction.
+
+The later status of E1-V2 and Task 6 is recorded in the [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md), not here. Final closeout remains a separate human gate. The existing G3-E remediation Spec and Plan are not amended by this direction.

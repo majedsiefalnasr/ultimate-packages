@@ -16,6 +16,10 @@ Restated from Blueprint §35. See individual phase specs (`docs/superpowers/spec
 | 9     | AI Skills and LLM Context                                 | Complete [^5] |
 | 10    | Production Hardening                                      | Complete [^6] |
 
+## Future parity infrastructure
+
+**Reproducible Prime Showcase Parity Corpus** — future direction approved by the human on 2026-10-08; implementation is not authorized or part of current G3-E scope. The authoritative scope, environment reproducibility requirements, treatment of existing evidence and E1-V2 boundary live in [Parity Playbook §13](PARITY_PLAYBOOK.md#13-future-infrastructure-direction--reproducible-prime-showcase-parity-corpus). This adds no phase-completion or parity-status claim.
+
 [^1]: Cross-framework theme consistency is proven end-to-end for Vue and Angular. React's components under `packages/react/src/` do not yet source their CSS from `@ultimate/uix-styles` (they use hand-written static CSS with no `dt()` calls), so React's token resolution is proven at the `react-core` registration layer rather than through a real component's CSS. This is a pre-existing content gap in `packages/react`, not a defect in the theme pipeline; see `packages/themes/test/cross-framework-consistency.test.ts` and `packages/themes/README.md` (Scope) for detail.
 
 [^2]: The `ComponentMetadata` schema (`@ultimate/component-schema`) and a real, source-verified metadata proof set (`@ultimate/component-metadata`) are complete for 8 components — Button, Checkbox, Dialog, Menu, Tooltip, Paginator, Scroller, Table — across Angular/React/Vue. This is the closed proof set this plan scoped itself to, not the full ~115-component `COMPONENT_INVENTORY.md` backlog; migrating the remaining inventory into this schema is future work, not part of this plan's scope.
