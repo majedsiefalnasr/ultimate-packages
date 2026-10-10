@@ -1,7 +1,7 @@
 # GAP-064 G3-E closeout record (DRAFT) — Media and Data
 
 **Date:** 2026-10-11
-**Status:** **DRAFT for the closeout gate** (Plan Task 18 Step 3). Closeout acceptance, merge and push are separate user decisions; nothing here is final until that gate.
+**Status:** **ACCEPTED as PARTIAL** (user, 2026-10-11): an accurate record of the executed G3-E work and its remaining limitations. G3-E is **executed, not fully complete**, and GAP-064 stays **PARTIAL**. Merge and push are **not** authorized (see §9).
 **Branch:** `feature/gap-064-g3e-media-data`, head `57a3ced` (plus this draft), branched from `main` `cad9f85`. Not merged, not pushed.
 **Scope:** Spec `docs/superpowers/specs/2026-10-08-gap-064-g3e-media-data-design.md`; Plan `docs/superpowers/plans/2026-10-08-gap-064-g3e-media-data.md`. Batch records:
 
@@ -37,14 +37,14 @@ No key reaches `verified`. Every canonical case in every batch was compared (no 
 
 ## 3. Coverage gaps, limitations and open items
 
-| Item                                                 | State                                                                                                                                                                                           |
-| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **E1-B1** (ImageCompare `handle.border.style` token) | **BLOCKED.** Upstream Aura defines no such token. The G3-E runtime key assertion `imagecompare` AC2 fails in both unit suites (Angular 1187/1188, Vue 1191/1192 at `57a3ced`). Needs a ruling.  |
-| **E1-V2**                                            | **OPEN** by ruling; the V2 validator was never run.                                                                                                                                             |
-| Vue OrderList narrow layout                          | Unverified follow-up (E-3 record). No narrow-width check exists in the plan; no GAP and no regression is claimed.                                                                               |
-| OrganizationChart toggle mouse click                 | Not verified (keyboard-only collapse case). Recorded limitation (E-4 record).                                                                                                                   |
-| GAP-124 residuals                                    | The spinner does not animate (no `u-icon-spin` animation exists); non-text contrast 2.31:1, the same colours as Prime.                                                                          |
-| Scope exceptions                                     | One explicitly authorized template change: the DataView loading spinner (E4-V1, `dd18310`). Story-only changes: the Angular OrderList drag story (D-E3-1) and the Vue DataView stories (E4-V2). |
+| Item                                                     | State                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **E1-B1** (ImageCompare `handle.border.style` reference) | **BLOCKED.** The reference is undefined in upstream Aura itself: the `@primeuix/themes` 2.0.3 schema has no `handle.borderStyle`, and the parallel WebKit rule uses the literal `solid`. The AC2 assertion fails in both unit suites (Angular 1187/1188, Vue 1191/1192). Evidence and the proposal ((a) a narrow, documented AC2 exemption, recommended, or (b) the literal `solid` as a mapping change) are in the E-1 record; it needs authorization. |
+| **E1-V2**                                                | **OPEN.** V2 was executed on 2026-10-11 (P3 packet; pinned image; `eb26604`): **PASS**, 2/2 in each of Chromium, Firefox and WebKit. Under the P3 packet the status stays B / OPEN until an explicit human disposition.                                                                                                                                                                                                                                 |
+| Vue OrderList narrow layout                              | Unverified follow-up (E-3 record). No narrow-width check exists in the plan; no GAP and no regression is claimed.                                                                                                                                                                                                                                                                                                                                       |
+| OrganizationChart toggle mouse click                     | Not verified (keyboard-only collapse case). Recorded limitation (E-4 record).                                                                                                                                                                                                                                                                                                                                                                           |
+| GAP-124 residuals                                        | The spinner does not animate (no `u-icon-spin` animation exists); non-text contrast 2.31:1, the same colours as Prime.                                                                                                                                                                                                                                                                                                                                  |
+| Scope exceptions                                         | One explicitly authorized template change: the DataView loading spinner (E4-V1, `dd18310`). Story-only changes: the Angular OrderList drag story (D-E3-1) and the Vue DataView stories (E4-V2).                                                                                                                                                                                                                                                         |
 
 ## 4. GAPs linked
 
@@ -82,4 +82,16 @@ Task 17 adds the G3-E steps to `.github/workflows/ci.yml` (`57a3ced`): the G3-E 
 
 ## 8. GAP-064 status proposal (user decision)
 
-All five G3 tranches have now been executed (G3-A..G3-E). G3-E itself leaves open items: E1-B1 BLOCKED, E1-V2 OPEN, and GAP-102..130 (one PARTIAL). **Proposal: keep GAP-064 `PARTIAL`.** Record G3-E as executed with its open items, and decide separately whether the remaining items close GAP-064 or move to their own GAPs. The decision is the user's at the closeout gate.
+All five G3 tranches have now been executed (G3-A..G3-E). G3-E itself leaves open items: E1-B1 BLOCKED, E1-V2 OPEN, and GAP-102..130 (one PARTIAL). **Decision (2026-10-11): keep GAP-064 `PARTIAL`.** Record G3-E as executed with its open items, and decide separately whether the remaining items close GAP-064 or move to their own GAPs. The decision is the user's at the closeout gate.
+
+## 9. Closeout gate outcome and merge readiness (2026-10-11)
+
+- **Accepted as PARTIAL.** GAP-064 stays PARTIAL. No GAP is closed by this acceptance.
+- **MIGRATION wording reviewed** against the implementation and the batch records. Corrected:
+  - DataView items render as the plain text `itemTemplate` returns (not "your own markup").
+  - The Galleria full-screen overlap was observed at 1280 × 720 (not only "small viewports").
+  - Angular Listbox highlights still do not apply (GAP-119).
+  - The Vue OrderList narrow layout and the OrganizationChart pointer click are unverified.
+  - GAP-124 is partly addressed.
+  - The ImageCompare initial clip is the 50 % midpoint.
+- **Merge readiness: NOT READY.** The plan's verification expectation ("everything passes except U2 and GAP-097") is not met while the E1-B1 AC2 failure stands. E1-V2 also awaits its disposition. No merge or push until an authorized E1-B1 resolution passes the required tests and E1-V2 is dispositioned; then merge readiness is reassessed against the plan's criteria.
