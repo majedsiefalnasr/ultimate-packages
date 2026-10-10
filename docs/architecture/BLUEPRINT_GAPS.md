@@ -1897,6 +1897,85 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 ---
 
+#### GAP-106 — Carousel previous/next navigators render native buttons instead of Button
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** every `carousel/*` case, both frameworks: Prime renders the navigators as `Button` (`rounded`, `text`, `severity: secondary`; 40×40, round, slate text colour); Ultimate renders native buttons (20.5×21, square, browser grey, 2 px border). The Button look cannot be ported into the carousel module: `--u-button-*` variables register only when a `UButton` renders (G3-D Spec §6.3, D-D3c). Recorded as parity exception PX-E1, the same disposition as G3-D PX-D3. Measured before the port at `4ce9ac0`; [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-3.
+- **Expected state:** The navigators match Prime's rounded text secondary Button.
+- **What it blocks:** Complete E-2 Prime parity; does not block the approved positional group 8.
+- **Scope boundary:** Template or composition change; requires separate authorization. No change is included in G3-E CSS porting.
+
+#### GAP-107 — Carousel does not hide items outside the current page
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `carousel/next`, both frameworks: the first item is `visibility: hidden` in Prime and `visible` in Ultimate. Prime toggles `p-items-hidden` and `p-carousel-item-active` at runtime (upstream groups 16–17); Ultimate emits neither, so those groups cannot be mapped (FX-E3). The viewport clips the items visually; the observable effect is off-page items remaining in the accessibility tree. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-4.
+- **Expected state:** Items outside the current page are hidden from assistive technology, as in Prime.
+- **What it blocks:** Complete E-2 Prime parity.
+- **Scope boundary:** Runtime change (emitting the state classes); requires separate authorization.
+
+#### GAP-108 — Carousel has no vertical viewport height (`verticalViewPortHeight`)
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate, ruling E2-5 option (a); accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `carousel/vertical`, both frameworks: Prime clips the vertical viewport to its `verticalViewPortHeight` default of `300px` (applied inline at runtime), viewport 300 px tall; Ultimate shows all eight items stacked (viewport 672 px, root 740 px). Ultimate omits the input on purpose (`packages/vue/src/carousel/BaseCarousel.ts`, "smaller surface than upstream"). A CSS `height: 300px` runtime role was declined by the user. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-5.
+- **Expected state:** A vertical carousel clips to a configurable viewport height with Prime's default.
+- **What it blocks:** Complete E-2 Prime parity for the vertical orientation.
+- **Scope boundary:** Runtime/API addition; requires separate authorization.
+
+#### GAP-109 — Galleria navigator icons are text glyphs instead of Prime SVG chevrons
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `galleria/*`, both frameworks: Ultimate's previous/next navigators render the characters `‹` and `›`; Prime renders chevron SVG icons, sized by upstream group 8 (`.p-galleria-next-icon, .p-galleria-prev-icon`), which has no target element in Ultimate (FX-E4). Same class of finding as GAP-105 (Image toolbar), registered separately because the component differs. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-9.
+- **Expected state:** The navigators render Prime-derived SVG chevrons.
+- **What it blocks:** Complete E-2 Prime parity.
+- **Scope boundary:** Template change; requires separate authorization.
+
+#### GAP-110 — Galleria thumbnails are a flat list, not a thumbnail carousel
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; G3E-5 escalation; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `galleria/item-thumbnails`, `next`, `thumbnail-select`, both frameworks: Prime renders a thumbnail carousel (navigator buttons, a viewport, items sized by `numVisible`); the current thumbnail is 380.7 px (Angular) / 178 px (Vue) wide. Ultimate renders a scrolling `ul` of fixed 84 px items with no navigators. Parity needs new DOM/runtime (G3-E Spec §12, G3E-5), so upstream groups 18–22, 24, 25, 27 and 61–62 are not mapped (FX-E6). [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-10.
+- **Expected state:** Galleria thumbnails behave and render as Prime's thumbnail carousel.
+- **What it blocks:** Complete E-2 Prime parity for every thumbnail case.
+- **Scope boundary:** DOM/runtime change; requires separate authorization. The static thumbnail item styles (groups 23, 26, 28–31) are ported in G3-E.
+
+#### GAP-111 — Vue Galleria full screen does not close on Escape when focus is outside the content
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Vue.
+- **Current evidence:** `galleria/fullscreen-close`, Vue: after opening full screen and pressing Escape, the mask is still shown (`fact.shown:mask false → true`); Angular closes. The Vue Escape handler from the RESOLVED GAP-050 is attached to the content viewport's `keydown` (`packages/vue/src/galleria/Galleria.vue`), so it does not fire while focus is on the mask or close button. This is residual scope of GAP-050, not a duplicate of it. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-15.
+- **Expected state:** Escape closes the full-screen overlay wherever focus is inside it.
+- **What it blocks:** Complete E-2 Prime parity; full-screen keyboard dismissal in Vue.
+- **Scope boundary:** Runtime change; requires separate authorization. GAP-050 stays RESOLVED.
+
+#### GAP-112 — Galleria thumbnail and full-screen dialog accessibility violations
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-2 before-port axe scans (Docker, `351a5c7`; Chromium, Firefox, WebKit) on the Galleria Default and FullScreen stories, both frameworks: `aria-allowed-role` and `aria-command-name` on the `li[role="button"]` thumbnails, `list` on the thumbnail `ul`, `aria-dialog-name` on the full-screen mask, and `svg-img-alt` on the close icon. Component code is unchanged since `main` `cad9f85`; the rows are recorded as pre-existing in `research/2026-10-08-gap-064-g3e-accessibility-preexisting.md` so they are tracked, not silenced. `image-alt` rows come from story markup, not component code, and are not part of this gap. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) §6.
+- **Expected state:** Thumbnails are named, correctly-roled controls in a valid list; the full-screen dialog has an accessible name; the close icon is decorative or labelled.
+- **What it blocks:** Accessibility conformance of Galleria.
+- **Scope boundary:** Template change; requires separate authorization. Carousel shows no component-level violations (its rows are story-shell `landmark-one-main` / `page-has-heading-one` only).
+
+---
+
 ## 5. Open Architectural Decisions
 
 Listed here only where the repository shows genuine, unresolved forks requiring a decision — not implementation backlog. One should be handled at a time, later, not resolved by this document.
