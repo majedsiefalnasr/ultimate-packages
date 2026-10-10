@@ -50,6 +50,56 @@ const STORIES: ReadonlyArray<{
     kind: "rest",
     batch: "E-1",
   },
+  // E-2 (Carousel, Galleria)
+  {
+    name: "Carousel Default",
+    story: "vue-carousel--default",
+    ready: ".u-carousel",
+    kind: "rest",
+    batch: "E-2",
+  },
+  {
+    name: "Carousel CircularWithAutoplay",
+    story: "vue-carousel--circular-with-autoplay",
+    ready: ".u-carousel",
+    kind: "rest",
+    batch: "E-2",
+  },
+  {
+    name: "Carousel Vertical",
+    story: "vue-carousel--vertical",
+    ready: ".u-carousel",
+    kind: "rest",
+    batch: "E-2",
+  },
+  {
+    name: "Carousel Rtl",
+    story: "vue-carousel--rtl",
+    ready: ".u-carousel",
+    kind: "rest",
+    batch: "E-2",
+  },
+  {
+    name: "Galleria Default",
+    story: "vue-galleria--default",
+    ready: ".u-galleria",
+    kind: "rest",
+    batch: "E-2",
+  },
+  {
+    name: "Galleria WithoutThumbnails",
+    story: "vue-galleria--without-thumbnails",
+    ready: ".u-galleria",
+    kind: "rest",
+    batch: "E-2",
+  },
+  {
+    name: "Galleria FullScreen",
+    story: "vue-galleria--full-screen",
+    ready: ".u-galleria-mask",
+    kind: "fullscreen",
+    batch: "E-2",
+  },
 ];
 
 const VISUAL: ReadonlyArray<{
@@ -90,13 +140,65 @@ const VISUAL: ReadonlyArray<{
     shot: ".u-image-compare",
     batch: "E-1",
   },
+  // E-2 (Carousel, Galleria)
+  {
+    name: "Carousel Default rest",
+    story: "vue-carousel--default",
+    kind: "rest",
+    shot: ".u-carousel",
+    batch: "E-2",
+  },
+  {
+    name: "Carousel CircularWithAutoplay rest",
+    story: "vue-carousel--circular-with-autoplay",
+    kind: "rest",
+    shot: ".u-carousel",
+    batch: "E-2",
+  },
+  {
+    name: "Carousel Vertical rest",
+    story: "vue-carousel--vertical",
+    kind: "rest",
+    shot: ".u-carousel",
+    batch: "E-2",
+  },
+  {
+    name: "Carousel Rtl rest",
+    story: "vue-carousel--rtl",
+    kind: "rest",
+    shot: ".u-carousel",
+    batch: "E-2",
+  },
+  {
+    name: "Galleria Default rest",
+    story: "vue-galleria--default",
+    kind: "rest",
+    shot: ".u-galleria",
+    batch: "E-2",
+  },
+  {
+    name: "Galleria WithoutThumbnails rest",
+    story: "vue-galleria--without-thumbnails",
+    kind: "rest",
+    shot: ".u-galleria",
+    batch: "E-2",
+  },
+  {
+    name: "Galleria FullScreen open",
+    story: "vue-galleria--full-screen",
+    kind: "fullscreen",
+    shot: "page",
+    batch: "E-2",
+  },
 ];
 
-async function go(page: Page, story: string) {
+async function go(page: Page, story: string, freeze = true) {
   // G3E-4: freeze autoplay timers for the circular Carousel story (clock installed before navigation).
-  if (story.includes("circular")) await page.clock.install({ time: 0 });
+  // Not for accessibility scans: axe-core relies on timers and hangs on a paused clock.
+  const frozen = freeze && story.includes("circular");
+  if (frozen) await page.clock.install({ time: 0 });
   await page.goto(storyUrl(story));
-  if (story.includes("circular")) await page.clock.pauseAt(1000);
+  if (frozen) await page.clock.pauseAt(1000);
   await page.mouse.move(0, 0); // X-6: no pointer residue
 }
 
@@ -121,7 +223,7 @@ async function state(page: Page, kind: Kind, ready: string, trigger = TRIGGER) {
 
 for (const { name, story, ready, kind, batch, trigger } of STORIES) {
   test(`${T}/${name} G3-E ${batch} accessibility`, async ({ page }, testInfo) => {
-    await go(page, story);
+    await go(page, story, false);
     await state(page, kind, ready, trigger);
     await runAccessibilityScan(page, testInfo, story);
   });
