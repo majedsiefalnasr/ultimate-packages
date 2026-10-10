@@ -2161,6 +2161,28 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **What it blocks:** Complete E-4 Prime parity.
 - **Scope boundary:** Template change; requires separate authorization.
 
+#### GAP-129 — Vue Paginator renders an extra "1 of 3" page report
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 16 review; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** Found through DataView, recorded against Paginator under the E-4 composition rule (Spec §6.5). In `dataview/paginator` (Vue, review images `docker-e4-r3` and `docker-e4-after`), the Ultimate Paginator renders a "1 of 3" page report after the page links. PrimeVue renders none by default (its current-page report is opt-in through the template). Angular shows no such text. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-V3.
+- **Expected state:** The Vue Paginator shows a page report only when configured, as in PrimeVue.
+- **What it blocks:** Paginator parity (Vue), and therefore DataView parity.
+- **Scope boundary:** Paginator template/API change; requires separate authorization. Not part of the E-4 port.
+
+#### GAP-130 — Vue DataView empty message renders outside the content container
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 16 review; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** `dataview/empty` (Vue, after the E-4 port): the empty message is a `div` directly under the root (`DataView.vue:166`), outside the list/grid container. It does not take the ported content colour: Prime `rgb(51,65,85)` vs Ultimate `rgb(0,0,0)`. PrimeVue renders the empty message inside the content element; Angular renders it as an `li` inside the list. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-V4.
+- **Expected state:** The empty message renders inside the content container, as in Prime.
+- **What it blocks:** Complete E-4 Prime parity (Vue).
+- **Scope boundary:** Template change; requires separate authorization.
+
 ---
 
 ## 5. Open Architectural Decisions
