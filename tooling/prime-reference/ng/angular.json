@@ -16,7 +16,8 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.json",
-            "polyfills": []
+            "polyfills": [],
+            "assets": [{ "glob": "**/*", "input": "fixtures", "output": "/" }]
           },
           "configurations": {
             "development": { "optimization": false, "sourceMap": true }

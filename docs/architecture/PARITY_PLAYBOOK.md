@@ -218,14 +218,14 @@ Rows measured at `main` `4c099a9` (2026-10-08). Drawer, Message and Tag were com
 | timeline          | B    | G3-A    | ported / ported         | pending / pending     |                                                                                                                                                                       |
 | splitbutton       | A    | G3-D    | ported / ported         | pending / pending     | SplitButton → `UMenu` (D-G3-9)                                                                                                                                        |
 | speeddial         | A    | G3-D    | ported / ported         | pending / pending     | GAP-096                                                                                                                                                               |
-| carousel          | A    | G3-E    | not ported / not ported | pending / pending     | G3-E not started                                                                                                                                                      |
-| galleria          | A    | G3-E    | not ported / not ported | pending / pending     | G3-E; Ultimate-specific structure (G3 research)                                                                                                                       |
-| image             | B    | G3-E    | not ported / not ported | pending / pending     | G3-E                                                                                                                                                                  |
-| imagecompare      | B    | G3-E    | not ported / not ported | pending / pending     | G3-E                                                                                                                                                                  |
-| dataview          | B    | G3-E    | not ported / not ported | pending / pending     | G3-E; Ultimate-specific structure (G3 research)                                                                                                                       |
-| orderlist         | B    | G3-E    | not ported / not ported | pending / pending     | G3-E; ng/vue Listbox divergence (D-G3-9)                                                                                                                              |
-| organizationchart | B    | G3-E    | — / not ported          | — / pending           | G3-E; Ultimate-specific structure (G3 research)                                                                                                                       |
-| picklist          | B    | G3-E    | not ported / not ported | pending / pending     | G3-E; ng/vue Listbox divergence (D-G3-9)                                                                                                                              |
+| carousel          | A    | G3-E    | ported / ported         | open-gap / open-gap   | G3-E E-2 [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md); port `dda339a`, acceptance `51bb61b`. Every canonical case compared; `responsive`, `header-footer` are D. Open A: GAP-106 (PX-E1 native navigators), GAP-107 (off-page items not hidden), GAP-108 (vertical viewport height), GAP-114 (indicator arrow keys). |
+| galleria          | A    | G3-E    | ported / ported         | open-gap / open-gap   | G3-E E-2 [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md); port `dda339a`, acceptance `51bb61b`. Every canonical case compared; seven D cases. Open A: GAP-109 (nav glyphs), GAP-110 (flat thumbnail list), GAP-111 (Vue Escape), GAP-112 (thumbnail/dialog accessibility), GAP-113 (full-screen layout), GAP-115 (Angular Tab sequence), GAP-116 (Angular focus restoration). |
+| image             | B    | G3-E    | ported / ported         | open-gap / open-gap   | G3-E E-1 [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md); commit `0987331`. Open A: GAP-103 (Vue preview close focus), GAP-105 (toolbar glyphs); E1-V1 Angular preview eye shape (A, out of scope). Overlay line-height/display observations unresolved. |
+| imagecompare      | B    | G3-E    | ported / ported         | verified-with-differences / open-gap | G3-E E-1 [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md); commit `0987331`. Angular: every canonical case compared and Match after E1-V2 C1; `responsive` is D. E1-V2 CLOSED (2026-10-11: prescribed V2 evidence accepted; this does not claim complete ImageCompare parity); E1-B1 RESOLVED (2026-10-11: one documented AC2 exemption for the upstream-undefined `imagecompare.handle.border.style` reference; ported rule unchanged). Vue: GAP-102 (consumer style on root), GAP-104 (root focus). |
+| dataview          | B    | G3-E    | ported / ported         | open-gap / open-gap   | G3-E E-4 [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md); port `dd4c963`, acceptance `6a97c0b`; E4-V1 resolved under an authorized scope exception (spinner). Every canonical case compared; `sorting`, `header-footer` are D; Vue loading is no-prime-reference (G3E-7). Grid layout intentional (C, D-E4-1). Open A: GAP-124 (PARTIAL: spinner not animated), GAP-125 (page report), GAP-126 (Paginator icons, Paginator), GAP-129 (Vue Paginator page report, Paginator), GAP-130 (Vue empty message). |
+| orderlist         | B    | G3-E    | ported / ported         | open-gap / open-gap   | G3-E E-3 [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md); port `b71166c`, acceptance `d93a0eb`. Every canonical case compared; `controls-position`, `template` are D. Open A: GAP-117 (native controls), GAP-119 (Listbox option state), GAP-120 (option checkboxes), GAP-123 (Listbox accessibility); Angular GAP-118 (native filter). Listbox findings recorded against Listbox (composition rule). |
+| organizationchart | B    | G3-E    | — / ported              | D / open-gap          | G3-E E-4 [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md); port `dd4c963`, acceptance `6a97c0b`. Angular: D (no component, DECISION-D). Vue: every canonical case compared; `colored-template` is D. Open A: GAP-127 (table/connectors, G3E-5), GAP-128 (toggle glyph). Toggle mouse interaction not verified (recorded limitation). |
+| picklist          | B    | G3-E    | ported / ported         | open-gap / open-gap   | G3-E E-3 [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md); port `b71166c`, acceptance `d93a0eb`. Every canonical case compared; `template`, `responsive` are D. Open A: GAP-117, GAP-119, GAP-120, GAP-123; Angular GAP-118 (native filter), GAP-121 (headings, in-section controls), GAP-122 (DOM/Tab order). |
 
 Tiers: A 16, B 20, C 12. GAP-098 (global base box model) potentially affects every row.
 
@@ -235,3 +235,46 @@ Tiers: A 16, B 20, C 12. GAP-098 (global base box model) potentially affects eve
 - **Coverage gaps recorded (R-7), not implementation requirements:** Tag icon, Tag pill/rounded, Message icon, Drawer template, Angular Drawer two-way `visible` binding. Stories for them are added only when a specific parity work item requires the case.
 - **G3-E: authorized** under this Playbook, once the integration state of the Playbook and pilot branches is established. Cases come from the pinned PrimeNG/PrimeVue showcases; each framework is compared with its own oracle; differences are classified before any fix; CSS is not ported merely because Prime source contains it; stories are not created only to raise coverage.
 - **Backfill** of G3-A..G3-D follows, Tier A first.
+
+## 13. Future infrastructure direction — Reproducible Prime Showcase Parity Corpus
+
+**Direction approved by the human, 2026-10-08; future infrastructure only.** This Playbook remains the parity methodology and execution framework. The project will evolve its reference infrastructure toward a **Reproducible Prime Showcase Parity Corpus**: a version-pinned, reproducible subset of parity-relevant canonical cases that makes the Prime side a stable oracle, reducing reliance on individually constructed reference cases. This decision authorizes documentation of the direction, not corpus implementation, new coverage or execution. It is outside the current G3-E scope and requires its own specification, review, plan and explicit execution authorization.
+
+### 13.1 Corpus and reference environment
+
+Keep three distinct concepts:
+
+1. **Prime Showcase:** the upstream product/demo surface, including documentation and integration material.
+2. **Parity corpus:** the selected, version-pinned canonical component cases extracted from that surface; not a clone of the entire Showcase.
+3. **Reference-app environment:** the controlled CSS, assets and runtime used to render that corpus against the framework-specific oracle (§1).
+
+The future corpus should include, where applicable, default states, meaningful variants, interaction states, transitions/open states, relevant layout/responsive cases, RTL, accessibility-relevant visual/behavioral states, and framework-specific behavior where Prime differs by framework. Existing case-selection rules and tier limits remain in force until separately amended; this direction does not automatically add cases, frameworks or viewport coverage.
+
+Documentation-only content, import demonstrations, accessibility documentation demos that are not themselves parity cases, irrelevant PT/headless demonstrations, integration demos, theming/documentation demonstrations and other demo-only material remain outside parity scope unless explicitly promoted by a later decision.
+
+The future rendering environment must explicitly account for, and make auditable where relevant:
+
+- Pinned Prime versions under ADR-048, Prime base CSS, and theme/preset inputs.
+- Typography declarations, font resources, actual font loading and evidence of the effective fonts used; matching computed family names alone does not establish font-file identity.
+- Browser/runtime versions, container/OS environment, viewport and device scale.
+- Local fixtures/assets, readiness/loading conditions, and other CSS/runtime inputs that can materially affect rendering.
+
+Case provenance and environment provenance must remain distinguishable. A Showcase font stack does not become canonical merely because a case originated in the Showcase; the corpus's environment contract must explicitly establish its typography target. This section chooses no font stack and defines no executable harness configuration.
+
+### 13.2 Existing evidence when the corpus is introduced
+
+Do not invalidate prior parity work or mandate a blanket re-audit of previous tranches. Classify existing evidence against the introduced corpus/environment before deciding on further work:
+
+| Category | Meaning | Consequence |
+| --- | --- | --- |
+| **Environment-valid** | Existing evidence used an equivalent controlled canonical environment | No automatic rerun |
+| **Environment-dependent** | The result materially depended on an incomplete or uncertain environment | Consider only a targeted, separately authorized rerun |
+| **Coverage gap** | A required corpus case/state was not represented in existing evidence | Consider later coverage under its own authorization |
+
+These categories concern evidence migration, not the A/B/C/D difference classes or verification-status promotion. No prior result is reclassified by this documentation decision.
+
+### 13.3 Current G3-E E1-V2 boundary
+
+The captured corrected Stage 2 environment remains the evidence under which the E1-V2 finding was established. This future direction does not reopen or resolve that finding. The fixture's typography target was settled separately by the 2026-10-08 human ruling ([typography P1 ruling](research/2026-10-08-gap-064-g3e-e1-v2-typography-p1-ruling.md)). No Inter integration, typography harness change or rerun is authorized by this direction.
+
+The later status of E1-V2 and Task 6 is recorded in the [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md), not here. Final closeout remains a separate human gate. The existing G3-E remediation Spec and Plan are not amended by this direction.

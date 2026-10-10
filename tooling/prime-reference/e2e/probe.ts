@@ -20,6 +20,8 @@ export interface Target {
   ref: string;
   open: Open;
   state?: State;
+  /** G3E-4: install the Playwright clock before navigation (autoplay, transitions). */
+  clock?: boolean;
 }
 
 export const url = (t: Target): string =>
@@ -40,21 +42,45 @@ async function settle(page: Page): Promise<void> {
   });
 }
 
+/**
+ * G3E-4: with a paused clock, page timers only run when the test advances time, so settling
+ * advances the clock in fixed 50 ms steps until no animation runs (same steps every run).
+ */
+async function settleClock(page: Page): Promise<void> {
+  for (let stable = 0, i = 0; stable < 2 && i < 40; i++) {
+    await page.clock.runFor(50);
+    // CSS transitions run on real time, not on the fake clock: give them real time as well.
+    await page.waitForTimeout(50);
+    const idle = await page.evaluate(() =>
+      document.getAnimations().every((a) => a.playState !== "running")
+    );
+    stable = idle ? stable + 1 : 0;
+  }
+}
+
+/** Waits for animations to finish; with a paused clock (G3E-4), by advancing time in fixed steps. */
+export const settled = (page: Page, clock?: boolean): Promise<void> =>
+  clock ? settleClock(page) : settle(page);
+
 /** Loads a target in a fresh page and applies its open action and state (X-6: pointer parked). */
 export async function load(browser: Browser, t: Target): Promise<Page> {
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+  // G3E-4: freeze timers (autoplay, transitions); cases advance time explicitly.
+  if (t.clock) await page.clock.install({ time: 0 });
   await page.goto(url(t));
+  if (t.clock) await page.clock.pauseAt(1000);
+  const still = () => settled(page, t.clock);
   await page.locator(container(t.side)).waitFor({ state: "attached" });
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
-  await settle(page);
+  await still();
   if (t.open === "button") {
     await page.getByRole("button", { name: "Show drawer" }).click();
-    await settle(page);
+    await still();
   }
   await page.mouse.move(0, 0);
   if (t.state === "tab") await page.keyboard.press("Tab");
-  await settle(page);
+  await still();
   return page;
 }
 
@@ -207,9 +233,14 @@ export function compare(
 export async function capture(
   page: Page,
   side: Side,
-  mode: "container" | "viewport"
+  mode: "container" | "viewport",
+  still = false
 ): Promise<Buffer> {
-  return mode === "viewport" ? page.screenshot() : page.locator(container(side)).screenshot();
+  // `still`: stop infinite CSS animations (e.g. a loading spinner) so repeated captures are identical.
+  const opts = { animations: still ? ("disabled" as const) : ("allow" as const) };
+  return mode === "viewport"
+    ? page.screenshot(opts)
+    : page.locator(container(side)).screenshot(opts);
 }
 
 /**

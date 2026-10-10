@@ -4,21 +4,27 @@
  * `UBaseComponent`'s `styleModule: {css, classes}` contract. No
  * `@ultimate/uix-styles/carousel` entry exists yet, so `css`/`classes` are
  * authored locally (same precedent as `contextMenuStyleModule`).
+ * GAP-064 G3-E: generated from g3e-port.mjs (record E-2).
  */
 const css = /*css*/ `
-.u-carousel { display: flex; flex-direction: column; }
-.u-carousel-content { display: flex; flex-direction: column; }
-.u-carousel-content-inner { display: flex; flex-direction: row; align-items: center; }
-.u-carousel-vertical .u-carousel-content-inner { flex-direction: column; }
-.u-carousel-viewport { overflow: hidden; width: 100%; }
-.u-carousel-item-list { display: flex; flex-direction: row; transition: transform 500ms ease 0s; }
-.u-carousel-vertical .u-carousel-item-list { flex-direction: column; }
-.u-carousel-item { flex-shrink: 0; box-sizing: border-box; }
-.u-carousel-prev-button, .u-carousel-next-button { flex: 0 0 auto; }
-.u-carousel-prev-button:disabled, .u-carousel-next-button:disabled { opacity: 0.5; cursor: default; pointer-events: none; }
-.u-carousel-indicator-list { display: flex; flex-direction: row; justify-content: center; list-style: none; margin: 0.5rem 0 0; padding: 0; gap: 0.25rem; }
-.u-carousel-indicator-button { width: 0.75rem; height: 0.75rem; border-radius: 50%; border: 0 none; background: var(--u-carousel-indicator-background, #ccc); cursor: pointer; padding: 0; }
-.u-carousel-indicator[data-p-active="true"] .u-carousel-indicator-button { background: var(--u-carousel-indicator-active-background, #333); }
+.u-carousel{display: flex;flex-direction: column;}
+.u-carousel-content{display: flex;flex-direction: column;overflow: auto;}
+.u-carousel-content-inner{display: flex;flex-direction: row;gap: dt('carousel.content.gap');}
+.u-carousel-content-inner:dir(rtl){flex-direction: row-reverse;}
+.u-carousel-viewport{overflow: hidden;width: 100%;}
+.u-carousel-item-list{display: flex;flex-direction: row;}
+.u-carousel-item-list:dir(rtl){flex-direction: row-reverse;}
+.u-carousel-prev-button, .u-carousel-next-button{align-self: center;flex-shrink: 0;}
+.u-carousel-indicator-list{display: flex;flex-direction: row;justify-content: center;flex-wrap: wrap;padding: dt('carousel.indicator.list.padding');gap: dt('carousel.indicator.list.gap');margin: 0;list-style: none;}
+.u-carousel-indicator-button{display: flex;align-items: center;justify-content: center;background: dt('carousel.indicator.background');width: dt('carousel.indicator.width');height: dt('carousel.indicator.height');border: 0 none;transition: background dt('carousel.transition.duration'), color dt('carousel.transition.duration'), outline-color dt('carousel.transition.duration'), box-shadow dt('carousel.transition.duration');outline-color: transparent;border-radius: dt('carousel.indicator.border.radius');padding: 0;margin: 0;user-select: none;cursor: pointer;}
+.u-carousel-indicator-button:focus-visible{box-shadow: dt('carousel.indicator.focus.ring.shadow');outline: dt('carousel.indicator.focus.ring.width') dt('carousel.indicator.focus.ring.style') dt('carousel.indicator.focus.ring.color');outline-offset: dt('carousel.indicator.focus.ring.offset');}
+.u-carousel-indicator-button:hover{background: dt('carousel.indicator.hover.background');}
+.u-carousel-indicator-active .u-carousel-indicator-button{background: dt('carousel.indicator.active.background');}
+.u-carousel-vertical .u-carousel-content-inner{flex-direction: column;}
+.u-carousel-vertical .u-carousel-item-list{flex-direction: column;height: 100%;}
+.u-carousel-item-list{transition: transform 500ms ease 0s;}
+.u-carousel-item{flex-shrink: 0;box-sizing: border-box;}
+.u-carousel-prev-button:disabled, .u-carousel-next-button:disabled{opacity: 0.5;cursor: default;pointer-events: none;}
 `;
 
 /** Params passed into `cx('itemList', params)`. */

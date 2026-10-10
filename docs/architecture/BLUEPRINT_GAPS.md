@@ -1046,7 +1046,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-064 — Aura preset has per-component token coverage for only 5 of ~88 comparable components (76 registered after the Batches 1-3 tranche, 2026-10-01)
 
-- **Status:** PARTIAL (2026-10-01: Batches 1-3 tranche delivered, `b9ec863`..`cf341df`, 76 modules registered. 2026-10-04: **Tranche 1 complete** on `feature/gap-064-aura-token-wiring`, `0eeb9e2`..`1211b4c`; 79 modules registered. 2026-10-05: G3-A (F5 Display + F4 Feedback, 13 Angular / 14 Vue) merged to `main` `fe86fe4`; **G3-B complete** (F1 Containers & Panels, 10 Angular / 10 Vue), merged to `main` `f008a73`. 2026-10-06: **G3-C1 complete** (F2 Navigation, 5 Angular / 5 Vue), merged to `main` `3cf9b4b`. Remaining: G3-C2, G3-D, G3-E — 18 Angular / 19 Vue hand-written-CSS components; see the Tranche 1, G3-B and G3-C1 progress notes and follow-ups below, and the cross-tranche study `docs/architecture/research/2026-10-06-gap-064-cross-tranche-study.md`)
+- **Status:** PARTIAL (2026-10-01: Batches 1-3 tranche delivered, `b9ec863`..`cf341df`, 76 modules registered. 2026-10-04: **Tranche 1 complete** on `feature/gap-064-aura-token-wiring`, `0eeb9e2`..`1211b4c`; 79 modules registered. 2026-10-05: G3-A (F5 Display + F4 Feedback, 13 Angular / 14 Vue) merged to `main` `fe86fe4`; **G3-B complete** (F1 Containers & Panels, 10 Angular / 10 Vue), merged to `main` `f008a73`. 2026-10-06: **G3-C1 complete** (F2 Navigation, 5 Angular / 5 Vue), merged to `main` `3cf9b4b`. Remaining: G3-C2, G3-D, G3-E — 18 Angular / 19 Vue hand-written-CSS components; see the Tranche 1, G3-B and G3-C1 progress notes and follow-ups below, and the cross-tranche study `docs/architecture/research/2026-10-06-gap-064-cross-tranche-study.md`. 2026-10-11: **G3-E executed** (Media and Data: Image, ImageCompare, Carousel, Galleria, OrderList, PickList, DataView in both frameworks, OrganizationChart in Vue) on `feature/gap-064-g3e-media-data`, not merged; its closeout is accepted as **PARTIAL**. E1-B1 RESOLVED and E1-V2 CLOSED by user rulings (2026-10-11); GAP-102..130 stay open, with GAP-124 PARTIAL, so GAP-064 stays PARTIAL. See `docs/architecture/research/2026-10-08-gap-064-g3e-closeout.md`.)
 - **Type:** Styling, Component, Architecture
 - **Blocking level:** MEDIUM
 - **Current evidence:** Real Prime's shared `@primeuix/themes` package has 88 per-component preset modules; Ultimate has 5 (`checkbox`/`button`/`menu`/`tooltip`/`dialog` — the original Phase 5 proof set), confirmed during the Aura token-completeness residual verification. The other ~83 components have real, working, but hardcoded (non-themeable) CSS instead — confirmed via Accordion as a representative sample, self-disclosed in-code, recurring in 54 of Vue's own style-module files. **The `base`-tier foundation tokens are Parity Confirmed and explicitly not part of this gap** — see the separate Parity Confirmed entry in the Final Scope Ledger.
@@ -1816,6 +1816,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Source/evidence:** `docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §3.2 M1–M2, §6.5.
 - **Architectural decision required:** No.
 
+#### GAP-102 — Vue ImageCompare drops consumer `class`/`style` on its root
+
+- **Status:** OPEN (registered 2026-10-08 under user ruling G3E-3, G3-E Spec §4.2; classified as a product defect before any change)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Current evidence:** `packages/vue/src/image-compare/ImageCompare.vue` declares `inheritAttrs: false` and binds no `$attrs` on its root, so a consumer's `class` and `style` never reach `.u-image-compare`. The story `vue-imagecompare--default` (`style="width: 20rem;"`) renders a 57 px-wide root (rendered DOM, `cad9f85`). PrimeVue 4.5.5 binds `v-bind="ptmi('root')"`, and `ptmi` merges `$attrs` into the root; PrimeVue's own canonical cases rely on root classes (`BasicDoc.vue`, `ResponsiveDoc.vue`).
+- **Expected state:** Consumer `class`/`style` reach the ImageCompare root, as in PrimeVue.
+- **Why it matters:** Consumers cannot size or style the component; it renders at the slider's intrinsic width.
+- **What it blocks:** The Vue `imagecompare/root-style` parity case (G3-E E-1); other ImageCompare cases are compared inside a sized wrapper.
+- **Dependencies:** None. Observation only, not part of this GAP: the G3-B Vue BlockUI story follow-up shows the same `inheritAttrs: false` pattern; other components were not assessed.
+- **Framework scope:** Vue.
+- **Existing reusable infrastructure:** The G3-E ImageCompare harness cases.
+- **Recommended resolution direction:** Directional only; separate authorized remediation, not part of G3-E.
+- **Source/evidence:** `docs/superpowers/specs/2026-10-08-gap-064-g3e-media-data-design.md` §4.2; `docs/architecture/research/2026-10-08-gap-064-g3e-research.md` §A.1, §D.
+- **Architectural decision required:** No.
+
 ## 4. Resolved gaps
 
 ### `@ultimate/uix-data` — the shared Data foundation
@@ -1839,6 +1855,336 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Original gap:** The four pinned `@primeuix/*` npm tarballs ship only compiled `.mjs`/`.d.mts` output with no `src/` directory, and the upstream `primefaces/primeuix` GitHub repo's history never reached the exact pinned versions — a genuine "how do we get real source, not just compiled output" problem.
 - **What research established:** Every pinned tarball's `.mjs.map` sourcemap embeds a complete `sourcesContent` array — the original per-file TypeScript source at the exact pinned MIT baseline.
 - **What was implemented:** ADR-016 — `scripts/provenance/extract-source.mjs` deterministically recovers original source from the same checksummed tarballs Phase 0 already pinned, with no network access needed at extraction time. Confirmed present: `.vendor-extracted/{uix-motion,uix-motion-types,uix-styled,uix-styles-components,uix-styles-full,uix-utils}`.
+
+---
+
+#### GAP-103 — Vue Image preview does not restore focus to its preview button
+
+- **Status:** OPEN (registered 2026-10-08, user-approved E-1 Task 5 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** `image/preview-close`, Vue: PrimeVue returns focus to the preview button; Ultimate leaves it outside. `packages/vue/src/image/image.vue` closes without restoring trigger focus. Measured before the port at `c2efa39`; classification A in [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md) (Task 5 artifact `7c49568`).
+- **Expected state:** Closing the preview restores focus to the invoking button.
+- **What it blocks:** Complete E-1 Prime parity; does not block the separately approved CSS mapping.
+- **Scope boundary:** Runtime/template remediation requires separate authorization; no change is included in G3-E CSS porting. GAP-102 remains separate and unchanged.
+
+---
+
+#### GAP-104 — Vue ImageCompare root receives focus before the slider
+
+- **Status:** OPEN (registered 2026-10-08, user-approved E-1 Task 5 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** `imagecompare/focus`, Vue: Ultimate root receives a native outline; `BaseImageCompare.ts` defaults tabindex to 0 and `ImageCompare.vue` binds it on the root. PrimeVue first focuses the slider. Measured before the port at `c2efa39`; classification A in [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md) (Task 5 artifact `7c49568`).
+- **Expected state:** The first Tab targets the comparison slider, matching PrimeVue.
+- **What it blocks:** Complete E-1 Prime parity; does not block the separately approved CSS mapping.
+- **Scope boundary:** Runtime/template remediation requires separate authorization; no change is included in G3-E CSS porting. GAP-102 remains separate and unchanged.
+
+---
+
+#### GAP-105 — Image rotate and zoom toolbar controls use text glyphs instead of Prime SVG icons
+
+- **Status:** OPEN (registered 2026-10-08, user-approved E-1 Task 5 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `image/preview-open`, both frameworks: the review images show different rotate/zoom glyphs. `packages/ng/src/image/image.ts` and `packages/vue/src/image/image.vue` render character entities for these four controls, while Prime uses SVG icons. CSS sizing of the close icon cannot replace them. Measured before the port at `c2efa39`; classification A in [E-1 record](research/2026-10-08-gap-064-g3e-e1-record.md) (Task 5 artifact `7c49568`).
+- **Expected state:** The rotate/zoom controls use the corresponding Prime-derived SVG glyphs.
+- **What it blocks:** Complete E-1 Prime parity; does not block the separately approved CSS mapping.
+- **Scope boundary:** Runtime/template remediation requires separate authorization; no change is included in G3-E CSS porting. GAP-102 remains separate and unchanged.
+
+---
+
+#### GAP-106 — Carousel previous/next navigators render native buttons instead of Button
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** every `carousel/*` case, both frameworks: Prime renders the navigators as `Button` (`rounded`, `text`, `severity: secondary`; 40×40, round, slate text colour); Ultimate renders native buttons (20.5×21, square, browser grey, 2 px border). The Button look cannot be ported into the carousel module: `--u-button-*` variables register only when a `UButton` renders (G3-D Spec §6.3, D-D3c). Recorded as parity exception PX-E1, the same disposition as G3-D PX-D3. Measured before the port at `4ce9ac0`; [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-3.
+- **Expected state:** The navigators match Prime's rounded text secondary Button.
+- **What it blocks:** Complete E-2 Prime parity; does not block the approved positional group 8.
+- **Scope boundary:** Template or composition change; requires separate authorization. No change is included in G3-E CSS porting.
+
+#### GAP-107 — Carousel does not hide items outside the current page
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `carousel/next`, both frameworks: the first item is `visibility: hidden` in Prime and `visible` in Ultimate. Prime toggles `p-items-hidden` and `p-carousel-item-active` at runtime (upstream groups 16–17); Ultimate emits neither, so those groups cannot be mapped (FX-E3). The viewport clips the items visually; the observable effect is off-page items remaining in the accessibility tree. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-4.
+- **Expected state:** Items outside the current page are hidden from assistive technology, as in Prime.
+- **What it blocks:** Complete E-2 Prime parity.
+- **Scope boundary:** Runtime change (emitting the state classes); requires separate authorization.
+
+#### GAP-108 — Carousel has no vertical viewport height (`verticalViewPortHeight`)
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate, ruling E2-5 option (a); accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `carousel/vertical`, both frameworks: Prime clips the vertical viewport to its `verticalViewPortHeight` default of `300px` (applied inline at runtime), viewport 300 px tall; Ultimate shows all eight items stacked (viewport 672 px, root 740 px). Ultimate omits the input on purpose (`packages/vue/src/carousel/BaseCarousel.ts`, "smaller surface than upstream"). A CSS `height: 300px` runtime role was declined by the user. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-5.
+- **Expected state:** A vertical carousel clips to a configurable viewport height with Prime's default.
+- **What it blocks:** Complete E-2 Prime parity for the vertical orientation.
+- **Scope boundary:** Runtime/API addition; requires separate authorization.
+
+#### GAP-109 — Galleria navigator icons are text glyphs instead of Prime SVG chevrons
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `galleria/*`, both frameworks: Ultimate's previous/next navigators render the characters `‹` and `›`; Prime renders chevron SVG icons, sized by upstream group 8 (`.p-galleria-next-icon, .p-galleria-prev-icon`), which has no target element in Ultimate (FX-E4). Same class of finding as GAP-105 (Image toolbar), registered separately because the component differs. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-9.
+- **Expected state:** The navigators render Prime-derived SVG chevrons.
+- **What it blocks:** Complete E-2 Prime parity.
+- **Scope boundary:** Template change; requires separate authorization.
+
+#### GAP-110 — Galleria thumbnails are a flat list, not a thumbnail carousel
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; G3E-5 escalation; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `galleria/item-thumbnails`, `next`, `thumbnail-select`, both frameworks: Prime renders a thumbnail carousel (navigator buttons, a viewport, items sized by `numVisible`); the current thumbnail is 380.7 px (Angular) / 178 px (Vue) wide. Ultimate renders a scrolling `ul` of fixed 84 px items with no navigators. Parity needs new DOM/runtime (G3-E Spec §12, G3E-5), so upstream groups 18–22, 24, 25, 27 and 61–62 are not mapped (FX-E6). [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-10.
+- **Expected state:** Galleria thumbnails behave and render as Prime's thumbnail carousel.
+- **What it blocks:** Complete E-2 Prime parity for every thumbnail case.
+- **Scope boundary:** DOM/runtime change; requires separate authorization. The static thumbnail item styles (groups 23, 26, 28–31) are ported in G3-E.
+
+#### GAP-111 — Vue Galleria full screen does not close on Escape when focus is outside the content
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Vue.
+- **Current evidence:** `galleria/fullscreen-close`, Vue: after opening full screen and pressing Escape, the mask is still shown (`fact.shown:mask false → true`); Angular closes. The Vue Escape handler from the RESOLVED GAP-050 is attached to the content viewport's `keydown` (`packages/vue/src/galleria/Galleria.vue`), so it does not fire while focus is on the mask or close button. This is residual scope of GAP-050, not a duplicate of it. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-15.
+- **Expected state:** Escape closes the full-screen overlay wherever focus is inside it.
+- **What it blocks:** Complete E-2 Prime parity; full-screen keyboard dismissal in Vue.
+- **Scope boundary:** Runtime change; requires separate authorization. GAP-050 stays RESOLVED.
+
+#### GAP-112 — Galleria thumbnail and full-screen dialog accessibility violations
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 8 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-2 before-port axe scans (Docker, `351a5c7`; Chromium, Firefox, WebKit) on the Galleria Default and FullScreen stories, both frameworks: `aria-allowed-role` and `aria-command-name` on the `li[role="button"]` thumbnails, `list` on the thumbnail `ul`, `aria-dialog-name` on the full-screen mask, and `svg-img-alt` on the close icon. Component code is unchanged since `main` `cad9f85`; the rows are recorded as pre-existing in `research/2026-10-08-gap-064-g3e-accessibility-preexisting.md` so they are tracked, not silenced. `image-alt` rows come from story markup, not component code, and are not part of this gap. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) §6.
+- **Expected state:** Thumbnails are named, correctly-roled controls in a valid list; the full-screen dialog has an accessible name; the close icon is decorative or labelled.
+- **What it blocks:** Accessibility conformance of Galleria.
+- **Scope boundary:** Template change; requires separate authorization. Carousel shows no component-level violations (its rows are story-shell `landmark-one-main` / `page-has-heading-one` only).
+
+#### GAP-113 — Galleria full-screen layout: item sized to the viewport; close, Previous and thumbnails not visible
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 10 review; accounting only, remediation not authorized)
+- **Type:** Component, Visual parity
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-2 after-port comparison (Docker, `f948d16`), `galleria/fullscreen`: the item is 1280×960 at 0,0 in a 1280×720 viewport, while Prime centres an 800×600 galleria. In the accepted E-2 FullScreen regression screenshots of both frameworks, the thumbnail strip is below the viewport, the Previous navigator is not visible, and the close button is painted under the item container (ported group 4 makes the container `position: relative`, and it follows the absolutely positioned close button in DOM order). Vue already rendered this way before the port; Angular showed the close button and strip before the port only because the item was shifted up by 146 px. The port fixed the CSS-addressable parts (mask, close button, navigators). [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-13.
+- **Expected state:** The full-screen galleria is centred and sized like Prime's, with the close button, both navigators and the thumbnail strip visible.
+- **What it blocks:** Complete E-2 Prime parity; usable full-screen Galleria at common viewport sizes.
+- **Scope boundary:** The likely fix is the template's inline full-screen focus-trap wrapper (`width: 100%; height: 100%; display: flex; flex-direction: column`; Angular `galleria.ts`, Vue equivalent), which is outside G3-E's styling scope (G3E-5, Spec §12). Requires separate authorization. Acceptance of the E-2 screenshots records this state; it does not accept it.
+
+#### GAP-114 — Carousel indicators do not respond to arrow keys
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 10 review; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-2 after-port comparison (Docker, `f948d16`), `carousel/indicator`: after clicking the first indicator and pressing ArrowRight then Enter, Prime moves to and activates the second indicator (x 564); Ultimate stays on the first (x 524), both frameworks. Neither `packages/ng/src/carousel/carousel.ts` nor `packages/vue/src/carousel/Carousel.vue` handles key events on indicators. Before the port the indicator geometry difference masked this. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-19.
+- **Expected state:** Arrow keys move between indicators as in Prime.
+- **What it blocks:** Complete E-2 Prime parity; Carousel keyboard navigation.
+- **Scope boundary:** Runtime change; requires separate authorization.
+
+#### GAP-115 — Angular Galleria Tab sequence differs from Prime and Vue
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 10 review; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular.
+- **Current evidence:** `galleria/nav-focus` (Tab, Tab from the Default story): Prime and Ultimate Vue focus the Next navigator; Ultimate Angular does not (Next has no focus ring and the page scrolls to the thumbnail strip, `root.y` −357 after the port). The same scroll offset was present before the port (−312, Task 8 evidence), so the difference predates the port and is not attributed to it. The cause was not isolated: both templates declare the same tab stops. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-20.
+- **Expected state:** The Angular Tab sequence matches Prime's (Tab, Tab reaches the Next navigator).
+- **What it blocks:** Complete E-2 Prime parity; predictable keyboard order in Angular Galleria.
+- **Scope boundary:** Diagnosis, then a likely runtime or template change; requires separate authorization.
+
+#### GAP-116 — Angular Galleria returns focus to the invoker after closing full screen
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 10 review; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Framework scope:** Angular.
+- **Current evidence:** `galleria/fullscreen-close`, Angular: after Escape, focus lands on the Show button (`fact.focused: "root" → "show"`), where PrimeNG leaves focus on the document. No ADR, spec or record states that returning focus is intended: the Galleria docblock is silent, `closeFullScreen()` only clears the full-screen state, and `UFocusTrap` has no restore logic (Task 8 gate ruling). It is therefore not classified as an intentional C difference. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-16.
+- **Expected state:** Focus restoration after closing matches Prime, or a recorded design decision makes the difference intentional.
+- **What it blocks:** Complete E-2 Prime parity.
+- **Scope boundary:** A design decision or runtime change; requires separate authorization.
+
+#### GAP-117 — OrderList and PickList controls render native buttons instead of Button
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-3 before-port comparison (Docker, `91508f5` and the corrected capture), cases `orderlist/default`, `orderlist/selected`, `picklist/selected`. Prime renders the reorder and transfer controls as `Button` (40×36, icon, `severity: secondary`, 6 px radius). Ultimate renders native text buttons (`Move up`, `All To Target`; about 93×21, grey, 2 px border, 13.3 px font). The Button-derived look cannot be mapped in a style port: `--u-button-*` variables register only when a `UButton` renders (G3-D Spec §6.3, D-D3c; same disposition as GAP-106). [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-4 (PX-E2).
+- **Expected state:** The controls render as Prime-equivalent icon buttons.
+- **What it blocks:** Complete E-3 Prime parity.
+- **Scope boundary:** Template change (compose `UButton`); requires separate authorization.
+
+#### GAP-118 — OrderList and PickList filter renders a native, unstyled input
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular (the filter exists only in the Angular OrderList and PickList).
+- **Current evidence:** `orderlist/filter`, `picklist/filter`: Prime renders the Listbox filter (InputText look, full width, 36 px, search icon). Ultimate renders its own `input[role=searchbox]` (177×21, 2 px border, 13.3 px font). The filter results are equal on both sides. InputText variables are not available to a style port, for the same reason as GAP-117. [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-5 (PX-E3).
+- **Expected state:** The filter matches Prime's Listbox filter.
+- **What it blocks:** Complete E-3 Prime parity.
+- **Scope boundary:** Template change; requires separate authorization.
+
+#### GAP-119 — Listbox option state styling: Angular state classes, combined selected-and-focused state, empty message
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular (state classes); Angular and Vue (combined state, empty message).
+- **Current evidence:** Found through OrderList and PickList, recorded against Listbox under the E-3 composition rule (Spec §6.5).
+  - Angular `listbox-style.ts` `classes.option` emits `p-listbox-option-selected`, `p-focus` and `p-disabled`, while its CSS styles `u-listbox-option-selected`, `-focused` and `-disabled`. Angular selection, focus and disabled highlights therefore never apply: `orderlist/selected` and `orderlist/focus` show a transparent option where Prime shows `rgb(209,250,229)` or `rgb(241,245,249)`. Vue emits the `u-` classes.
+  - In Vue, a clicked option (selected and focused) shows the focus colour instead of Prime's selected colour, because the combined state is missing.
+  - An empty Listbox shows "No results found" (PickList target), where Prime's is empty.
+  - [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-6, E3-7, E3-11.
+- **Expected state:** Listbox option states and the empty list render as Prime's.
+- **What it blocks:** Listbox parity, and therefore OrderList/PickList parity.
+- **Scope boundary:** Listbox change; not part of the E-3 OrderList/PickList port. Requires separate authorization.
+
+#### GAP-120 — OrderList and PickList options render checkboxes
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `orderlist/default`, `picklist/default`: Ultimate's composed Listbox runs in multiple mode and shows a checkbox per option; Prime's OrderList and PickList Listboxes show none. Review images `orderlist--default.vue`, `picklist--default.ng`. [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-8. The accessibility side of these checkboxes is GAP-123.
+- **Expected state:** OrderList/PickList options render without checkboxes, as in Prime.
+- **What it blocks:** Complete E-3 Prime parity.
+- **Scope boundary:** Listbox configuration or template change; requires separate authorization.
+
+#### GAP-121 — Angular PickList renders headings and stacked reorder controls inside each list
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular.
+- **Current evidence:** `picklist/default`: Ultimate Angular always renders "Source" and "Target" `h3` headings, and stacks its per-list reorder controls full-width inside each list section. Prime renders no headings by default and places icon controls beside each list. [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-9.
+- **Expected state:** The PickList structure matches Prime's.
+- **What it blocks:** Complete E-3 Prime parity.
+- **Scope boundary:** Template change; requires separate authorization.
+
+#### GAP-122 — Angular PickList DOM and Tab order: transfer controls after the target list
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular.
+- **Current evidence:** E-3 Step 3 Tab probe: Prime and Ultimate Vue go source listbox → transfer buttons → target. Ultimate Angular goes source listbox → target listbox → transfer buttons, because the transfer controls are rendered after the target section and only placed between the lists by CSS. [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) E3-10.
+- **Expected state:** The DOM and keyboard order match Prime's.
+- **What it blocks:** Complete E-3 Prime parity; predictable keyboard order.
+- **Scope boundary:** Template change; requires separate authorization. The E-3 port keeps the visual order with retained `order` rules only.
+
+#### GAP-123 — Listbox option accessibility violations (unlabelled checkboxes, nested interactive)
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-3 Task 11 gate; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-3 before-port axe scans (Docker; Chromium, Firefox, WebKit) on the OrderList and PickList stories, both frameworks:
+  - `label` (25 rows): option checkbox inputs without an accessible name.
+  - `nested-interactive` (25 rows): `role="option"` elements containing focusable inputs.
+  - The rows come from the composed Listbox's multiple-mode options, not OrderList/PickList code. OrderList, PickList and Listbox code is unchanged since `main` `cad9f85`.
+  - The rows are recorded as pre-existing in `research/2026-10-08-gap-064-g3e-accessibility-preexisting.md`, so they are tracked, not silenced.
+  - `region`, `landmark-one-main` and `page-has-heading-one` rows come from the story shell and PickList section structure, and are not part of this gap.
+  - Precedent: GAP-112 (Galleria). Kept separate from GAP-119 (option state styling) and GAP-120 (checkbox presence, visual parity).
+  - [E-3 record](research/2026-10-08-gap-064-g3e-e3-record.md) §7.
+- **Expected state:** Listbox options expose a valid accessibility tree (no unlabelled controls, no interactive content nested in options).
+- **What it blocks:** Accessibility conformance of Listbox, OrderList and PickList.
+- **Scope boundary:** Listbox change; requires separate authorization.
+
+#### GAP-124 — DataView loading shows the text "Loading" instead of a spinner
+
+- **Status:** PARTIAL (registered 2026-10-10, user-approved E-4 Task 14 gate. 2026-10-10: the spinner part was remediated under an explicitly authorized G3-E scope exception (E4-V1, Task 16 review); residuals below stay open)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:**
+  - *Registration:* `dataview/loading` (Angular; Docker `docker-e4-r3`): PrimeNG renders a masked overlay with a spinner icon over the content. Ultimate rendered `span[role="status"]` with the text "Loading" (`data-view.ts:87`, `DataView.vue:134`). Vue has no Prime reference for loading (G3E-7), but the template is the same. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-5.
+  - *Remediation (E4-V1):* both templates now render the shared spinner icon (`aria-hidden`) and visually hidden "Loading" text inside the same `role="status"` live region. Confirmation (Docker `docker-e4-v1`): `dataview/loading` (ng) has 0 probe differences and noise 0; the G3-E accessibility validator has 0 introduced violations (the E4-V1 `color-contrast` rows are gone); Chromium's accessibility tree exposes `status` (polite, atomic) with the text "Loading" and no image node.
+  - *Residuals (open):* (1) the icon does not spin. No `u-icon-spin` animation is defined anywhere (the same for `UButton`'s loading icon), while Prime's spinner rotates; adding one is a base-level rule (GAP-098 boundary). (2) The icon is drawn in `mask.color` on the mask, a non-text contrast of 2.31:1, below WCAG 1.4.11's 3:1 if the icon is considered required. Prime uses the identical colours, and the project's automated gate (axe) has no non-text contrast rule.
+- **Expected state:** The loading state shows an animated spinner icon, as in Prime.
+- **What it blocks:** Complete E-4 Prime parity (animation).
+- **Scope boundary:** The remaining animation needs a base-level rule; it requires separate authorization.
+
+#### GAP-125 — DataView always renders a page report line
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `dataview/paginator`: Ultimate renders a polite live-region report ("1 to 2 of 6") under the paginator whenever pagination is on (`data-view.ts` and `DataView.vue`, `<span aria-live="polite">{{ report }}</span>`). Prime renders no report unless a current-page-report template is configured. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-9.
+- **Expected state:** The page report is shown only when configured, as in Prime.
+- **What it blocks:** Complete E-4 Prime parity.
+- **Scope boundary:** Template/API change; requires separate authorization.
+
+#### GAP-126 — Paginator first/prev/next/last buttons render no icon
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** Found through DataView, recorded against Paginator under the E-4 composition rule (Spec §6.5). In the DataView Paginator story, both frameworks render `button.u-paginator-first`, `-prev`, `-next` and `-last` as 40×40 buttons with correct `aria-label`s ("First Page", "Previous Page", …) but no content, so they are invisible. Prime renders angle icons. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-10.
+- **Expected state:** Paginator navigation buttons show Prime-equivalent icons.
+- **What it blocks:** Paginator parity and visible pagination controls (DataView and every Paginator consumer).
+- **Scope boundary:** Paginator template change; requires separate authorization. Not part of the E-4 port.
+
+#### GAP-127 — OrganizationChart has no table layout or connector elements
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; G3E-5 escalation; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** MEDIUM
+- **Framework scope:** Vue (Angular has no OrganizationChart, DECISION-D).
+- **Current evidence:** `organizationchart/basic`: PrimeVue lays the chart out as nested tables with connector cells (`.p-organizationchart-connector-down/left/right/top`). Ultimate renders a flex `div` tree and draws approximate connectors with pseudo-elements. Upstream groups 1–2 (table) and 11–14, 16–18 (connectors) cannot reach Ultimate's DOM; parity needs new DOM (Spec §12, G3E-5), so they are omitted (FX-E9, FX-E10), and Ultimate's pseudo-element connectors are kept as retained rules. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-13.
+- **Expected state:** The chart layout and connector lines match Prime's.
+- **What it blocks:** Complete E-4 Prime parity.
+- **Scope boundary:** DOM/template change; requires separate authorization (X-2).
+
+#### GAP-128 — OrganizationChart toggle uses a text glyph instead of a chevron icon
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** `organizationchart/toggle`: Ultimate's toggle is a native button containing a `−`/`+` text span (`OrganizationChart.vue`); PrimeVue renders `ChevronDownIcon`/`ChevronUpIcon`. Same class of finding as GAP-109 (Galleria glyphs). [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-14.
+- **Expected state:** The toggle shows Prime-equivalent chevron icons.
+- **What it blocks:** Complete E-4 Prime parity.
+- **Scope boundary:** Template change; requires separate authorization.
+
+#### GAP-129 — Vue Paginator renders an extra "1 of 3" page report
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 16 review; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** Found through DataView, recorded against Paginator under the E-4 composition rule (Spec §6.5). In `dataview/paginator` (Vue, review images `docker-e4-r3` and `docker-e4-after`), the Ultimate Paginator renders a "1 of 3" page report after the page links. PrimeVue renders none by default (its current-page report is opt-in through the template). Angular shows no such text. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-V3.
+- **Expected state:** The Vue Paginator shows a page report only when configured, as in PrimeVue.
+- **What it blocks:** Paginator parity (Vue), and therefore DataView parity.
+- **Scope boundary:** Paginator template/API change; requires separate authorization. Not part of the E-4 port.
+
+#### GAP-130 — Vue DataView empty message renders outside the content container
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 16 review; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** `dataview/empty` (Vue, after the E-4 port): the empty message is a `div` directly under the root (`DataView.vue:166`), outside the list/grid container. It does not take the ported content colour: Prime `rgb(51,65,85)` vs Ultimate `rgb(0,0,0)`. PrimeVue renders the empty message inside the content element; Angular renders it as an `li` inside the list. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-V4.
+- **Expected state:** The empty message renders inside the content container, as in Prime.
+- **What it blocks:** Complete E-4 Prime parity (Vue).
+- **Scope boundary:** Template change; requires separate authorization.
 
 ---
 

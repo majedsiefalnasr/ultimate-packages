@@ -1,6 +1,7 @@
 <template>
   <!-- Each case mirrors the content of the matching @ultimate/vue story (see ../../cases.ts). -->
-  <template v-if="id === 'tag/default'">
+  <component :is="g3e" v-if="g3e" :id="raw" />
+  <template v-else-if="id === 'tag/default'">
     <Tag value="New" />
   </template>
   <template v-else-if="id === 'tag/severities'">
@@ -52,7 +53,12 @@ import Message from "primevue/message";
 import Tag from "primevue/tag";
 import { ref } from "vue";
 
-const id = location.hash.replace(/^#\//, "");
+import { G3E_CASES } from "./g3e";
+
+const raw = location.hash.replace(/^#\//, "");
+// G3-E routes are `g3e/<key>/<case>`; the smoke route `g3e/tag/default` reuses the pilot Tag case.
+const id = raw.replace(/^g3e\/(?=tag\/)/, "");
+const g3e = raw.startsWith("g3e/") ? G3E_CASES[raw.split("/")[1]] : undefined;
 const visible = ref(false);
 
 const DRAWERS: Record<string, { header: string; position: string; body: string; rtl?: boolean }> = {

@@ -297,7 +297,7 @@
     "originalPath": "packages/primevue/src/orderlist/OrderList.vue",
     "ultimateDestination": "packages/vue/src/order-list/BaseOrderList.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native OrderList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-3: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primevue/src/orderlist/OrderList.vue",
@@ -324,16 +324,16 @@
     "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
   },
   {
-    "originalPath": "n/a",
+    "originalPath": "@primeuix/styles@2.0.3 orderlist",
     "ultimateDestination": "packages/vue/src/order-list/order-list-style.ts",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored OrderList test, story, barrel, or structural style."
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the root rule targets the section wrapper and the list rule targets .u-order-list-list. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the narrow responsive controls and striped rows (E3-R2). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e3-record.md."
   },
   {
     "originalPath": "packages/primevue/src/picklist/PickList.vue",
     "ultimateDestination": "packages/vue/src/pick-list/BasePickList.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native PickList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native PickList; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-3: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primevue/src/picklist/PickList.vue",
@@ -360,22 +360,22 @@
     "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
   },
   {
-    "originalPath": "n/a",
+    "originalPath": "@primeuix/styles@2.0.3 picklist",
     "ultimateDestination": "packages/vue/src/pick-list/pick-list-style.ts",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored PickList test, story, barrel, or structural style."
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for striped rows. Record: docs/architecture/research/2026-10-08-gap-064-g3e-e3-record.md."
   },
   {
     "originalPath": "packages/primevue/src/dataview/DataView.vue",
     "ultimateDestination": "packages/vue/src/data-view/BaseDataView.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-4: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primevue/src/dataview/DataView.vue",
     "ultimateDestination": "packages/vue/src/data-view/DataView.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native DataView; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-4 (E4-V1, authorized scope exception): the loading indicator renders the shared spinner icon (aria-hidden) with visually hidden status text instead of visible text (GAP-124)"
   },
   {
     "originalPath": "n/a",
@@ -396,16 +396,16 @@
     "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
   },
   {
-    "originalPath": "n/a",
+    "originalPath": "@primeuix/styles@2.0.3 dataview",
     "ultimateDestination": "packages/vue/src/data-view/data-view-style.ts",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e4-record.md."
   },
   {
     "originalPath": "packages/primevue/src/organizationchart/OrganizationChart.vue",
     "ultimateDestination": "packages/vue/src/organization-chart/BaseOrganizationChart.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Batch 3 framework-native OrganizationChart; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded."
+    "modificationDescription": "Batch 3 framework-native OrganizationChart; behavior referenced from the pinned PrimeVue 4.5.5 source; disclosed cuts remain excluded. GAP-064 G3-E E-4: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primevue/src/organizationchart/OrganizationChart.vue",
@@ -432,10 +432,10 @@
     "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
   },
   {
-    "originalPath": "n/a",
+    "originalPath": "@primeuix/styles@2.0.3 organizationchart",
     "ultimateDestination": "packages/vue/src/organization-chart/organization-chart-style.ts",
-    "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 organizationchart: 9 of 18 upstream groups (table layout and connectors omitted, GAP-127), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained flex-tree layout and pseudo-element connector rules. Record: docs/architecture/research/2026-10-08-gap-064-g3e-e4-record.md."
   },
   {
     "originalPath": "packages/primevue/src/stepper/StepperSeparator.vue",
@@ -820,5 +820,65 @@
     "ultimateDestination": "packages/vue/src/split-button/split-button.stories.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored SplitButton stories, including the GAP-064 G3-D Disabled verification story (Spec §9.1)."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 image",
+    "ultimateDestination": "packages/vue/src/image/image-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13–16 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e1-record.md."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 imagecompare",
+    "ultimateDestination": "packages/vue/src/image-compare/image-compare-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 imagecompare: 12 of 12 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs). The final D5 retained span rule `.u-image-compare > span { position: absolute; inset: 0; }` is Ultimate-authored, not an upstream declaration (the E1-V2 C1 adaptation is Angular-only). The approved Firefox thumb declaration references the undefined imagecompare.handle.border.style token (E1-B1). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e1-record.md."
+  },
+  {
+    "originalPath": "packages/primevue/src/imagecompare/BaseImageCompare.vue",
+    "ultimateDestination": "packages/vue/src/image-compare/BaseImageCompare.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeVue BaseImageCompare. BaseImageCompare: the shared options base for UImageCompare, composed with createBaseComponent. Version: the PrimeVue 4.5.5 source baseline recorded in docs/architecture/PROVENANCE.md; the vendor extract this file cites is not present locally. GAP-064 G3-E E-1: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/image-compare/image-compare.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored ImageCompare stories, including the GAP-064 G3-E Sized and Rtl verification stories (Spec §5.2); their wrapper is a flex container (D-E1-1(a)), the canonical PrimeNG showcase setup."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/g3e-aura-styles.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 to E-4 style modules (Vue Image, ImageCompare, Carousel, Galleria, OrderList, PickList, DataView, OrganizationChart): registration under the Aura key (AC1) and token resolution (AC2). AC2 exempts exactly one reference, --u-imagecompare-handle-border-style (E1-B1, user ruling 2026-10-11): the token is absent from the pinned @primeuix/themes 2.0.3 schema and upstream references it only in the Firefox slider-thumb rule."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 carousel",
+    "ultimateDestination": "packages/vue/src/carousel/carousel-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16–17 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e2-record.md."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 galleria",
+    "ultimateDestination": "packages/vue/src/galleria/galleria-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e2-record.md."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/image/image.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored Image stories, including the GAP-064 G3-E verification stories added in E-0 (Spec §5.2)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/carousel/carousel.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored Carousel stories, including the GAP-064 G3-E Vertical and Rtl verification stories added in E-0 (Spec §5.2)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/galleria/galleria.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored Galleria stories, including the GAP-064 G3-E WithoutThumbnails and FullScreen verification stories added in E-0 (Spec §5.2)."
   }
 ]

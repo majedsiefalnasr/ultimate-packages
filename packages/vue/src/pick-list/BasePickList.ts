@@ -5,7 +5,7 @@ import { pickListStyleModule } from "./pick-list-style";
 
 export function createBasePickList() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "pick-list", styleModule: pickListStyleModule }),
+    extends: createBaseComponent({ componentName: "picklist", styleModule: pickListStyleModule }),
     props: {
       modelValue: { type: Array as PropType<readonly unknown[]>, default: () => [[], []] },
       dataKey: { type: String, default: null },

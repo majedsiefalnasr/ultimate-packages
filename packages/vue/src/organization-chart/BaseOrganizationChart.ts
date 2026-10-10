@@ -7,7 +7,7 @@ import { organizationChartStyleModule } from "./organization-chart-style";
 export function createBaseOrganizationChart() {
   return defineComponent({
     extends: createBaseComponent({
-      componentName: "organization-chart",
+      componentName: "organizationchart",
       styleModule: organizationChartStyleModule,
     }),
     props: {

@@ -4,17 +4,24 @@
  * `createBaseComponent`'s `styleModule: {css, classes}` contract. No
  * `@ultimate/uix-styles/image` entry exists yet, so `css`/`classes` are
  * authored locally (same precedent as `cardStyleModule`).
+ * GAP-064 G3-E: generated from g3e-port.mjs (record E-1).
  */
 const css = /*css*/ `
-.u-image { position: relative; display: inline-block; }
-.u-image-preview-mask { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; color: #fff; opacity: 0; transition: opacity 0.15s; }
-.u-image:hover .u-image-preview-mask { opacity: 1; background: rgba(0, 0, 0, 0.5); }
-.u-image-preview-icon { width: 1.5rem; height: 1.5rem; }
-.u-image-mask { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.9); z-index: 1100; }
-.u-image-toolbar { position: absolute; top: 0; right: 0; display: flex; gap: 0.5rem; padding: 1rem; z-index: 1; }
-.u-image-toolbar button { background: rgba(255, 255, 255, 0.1); border: none; color: #fff; width: 2.5rem; height: 2.5rem; border-radius: 50%; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
-.u-image-toolbar button:disabled { opacity: 0.5; cursor: default; }
-.u-image-original { max-width: 90vw; max-height: 90vh; transition: transform 0.15s; }
+.u-image-mask{background: dt('mask.background');color: dt('mask.color');position: fixed;top: 0;left: 0;width: 100%;height: 100%;}
+.u-image-toolbar > button:disabled{opacity: dt('disabled.opacity');}
+.u-image-mask{display: flex;align-items: center;justify-content: center;}
+.u-image:has(> .u-image-preview-mask){position: relative;display: inline-flex;line-height: 0;}
+.u-image-preview-mask{position: absolute;inset-inline-start: 0;inset-block-start: 0;width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;opacity: 0;border: 0 none;padding: 0;cursor: pointer;background: transparent;color: dt('image.preview.mask.color');transition: background dt('image.transition.duration');}
+.u-image:has(> .u-image-preview-mask):hover > .u-image-preview-mask, .u-image-preview-mask:focus-visible{opacity: 1;cursor: pointer;background: dt('image.preview.mask.background');outline: 0 none;}
+.u-image-preview-icon{font-size: dt('image.preview.icon.size');width: dt('image.preview.icon.size');height: dt('image.preview.icon.size');}
+.u-image-toolbar{position: absolute;inset-block-start: dt('image.toolbar.position.top');inset-inline-end: dt('image.toolbar.position.right');inset-inline-start: dt('image.toolbar.position.left');inset-block-end: dt('image.toolbar.position.bottom');display: flex;z-index: 1;padding: dt('image.toolbar.padding');background: dt('image.toolbar.background');backdrop-filter: blur(dt('image.toolbar.blur'));border-color: dt('image.toolbar.border.color');border-style: solid;border-width: dt('image.toolbar.border.width');border-radius: dt('image.toolbar.border.radius');gap: dt('image.toolbar.gap');}
+.u-image-toolbar > button{display: inline-flex;justify-content: center;align-items: center;color: dt('image.action.color');background: transparent;width: dt('image.action.size');height: dt('image.action.size');margin: 0;padding: 0;border: 0 none;cursor: pointer;user-select: none;border-radius: dt('image.action.border.radius');outline-color: transparent;transition: background dt('image.transition.duration'), color dt('image.transition.duration'), outline-color dt('image.transition.duration'), box-shadow dt('image.transition.duration');}
+.u-image-toolbar > button:hover{color: dt('image.action.hover.color');background: dt('image.action.hover.background');}
+.u-image-toolbar > button:focus-visible{box-shadow: dt('image.action.focus.ring.shadow');outline: dt('image.action.focus.ring.width') dt('image.action.focus.ring.style') dt('image.action.focus.ring.color');outline-offset: dt('image.action.focus.ring.offset');}
+.u-image-toolbar > button svg{font-size: dt('image.action.icon.size');width: dt('image.action.icon.size');height: dt('image.action.icon.size');}
+.u-image-toolbar > button:disabled{pointer-events: auto;}
+.u-image-original{max-width: 100vw;max-height: 100vh;transition: transform 300ms;}
+.u-image-mask{z-index: 1100;}
 `;
 
 const classes = {

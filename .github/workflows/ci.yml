@@ -198,7 +198,7 @@ jobs:
             --project=${{ matrix.framework }}-chromium \
             --project=${{ matrix.framework }}-firefox \
             --project=${{ matrix.framework }}-webkit \
-            --grep-invert "G3-A|G3-B|G3-C1|G3-C2|G3-D"
+            --grep-invert "G3-A|G3-B|G3-C1|G3-C2|G3-D|G3-E"
 
       - name: Accessibility baseline validation (${{ matrix.framework }})
         run: node scripts/provenance/validate-accessibility-baseline.mjs --check "test-results/accessibility/${{ matrix.framework }}/**/*.json"
@@ -363,6 +363,34 @@ jobs:
           path: |
             test-results/accessibility/${{ matrix.framework }}/
             test-results/g3d-accessibility/
+
+      # GAP-064 G3-E Spec §8 / OI-E3: Ultimate regression evidence for the G3-E verification
+      # stories (screenshots, reach, differential accessibility). Not a Prime-parity gate:
+      # the Prime comparison harness (tooling/prime-reference) is not run in CI.
+      - name: Run G3-E verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3e-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-E differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        shell: bash
+        run: |
+          mkdir -p test-results/g3e-accessibility
+          node scripts/provenance/validate-g3e-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3e-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-E accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3e-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3e-accessibility/
 
   track-e-ssr-hydration:
     runs-on: ubuntu-latest

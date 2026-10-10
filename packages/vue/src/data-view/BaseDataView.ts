@@ -5,7 +5,7 @@ import { dataViewStyleModule } from "./data-view-style";
 
 export function createBaseDataView() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "data-view", styleModule: dataViewStyleModule }),
+    extends: createBaseComponent({ componentName: "dataview", styleModule: dataViewStyleModule }),
     props: {
       value: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       layout: { type: String, default: "list" },

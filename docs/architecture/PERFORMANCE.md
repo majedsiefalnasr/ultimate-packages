@@ -133,3 +133,23 @@ Real Stage-1 baseline, measured 2026-09-09 against commit `62480b6` (Node v22.22
 | uix-utils | 18.16 |
 | vue-core | 90.59 |
 | vue | 92.13 |
+
+## GAP-064 G3-E — X-10 size measurement
+
+Measured 2026-10-11 against branch head `57a3ced` (`feature/gap-064-g3e-media-data`) and its branch point `cad9f85` (Node v23.11.0, pnpm 9.6.0, gzip level 9). Both trees were built with `ng-packagr` (`@ultimate/ng`) and the full `@ultimate/vue` build script. The metric is the G3 tranche X-10 metric: Angular is the per-file gzip sum of `packages/ng/dist/fesm2022/*.mjs`; Vue is the gzip size of `packages/vue/dist/index.mjs`.
+
+| Package       | `cad9f85` (bytes) | `57a3ced` (bytes) | Change           |
+| ------------- | ----------------- | ----------------- | ---------------- |
+| @ultimate/ng  | 327557            | 329466            | +1909 (+0.583 %) |
+| @ultimate/vue | 143201            | 144597            | +1396 (+0.975 %) |
+
+Both are well below the 15 % X-10 limit. Per-batch measurements:
+
+| Batch | ng      | vue     |
+| ----- | ------- | ------- |
+| E-1   | +0.17 % | +0.40 % |
+| E-2   | +0.20 % | +0.25 % |
+| E-3   | +0.01 % | −0.07 % |
+| E-4   | +0.08 % | +0.28 % |
+
+The E-4 figures exclude the later E4-V1 spinner template change, which is included in the branch totals. Evidence: the G3-E batch records and `docs/architecture/research/2026-10-08-gap-064-g3e-closeout.md`.

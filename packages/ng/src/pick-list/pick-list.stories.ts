@@ -26,3 +26,13 @@ export const Controlled: Story = {
   decorators: [moduleMetadata({ imports: [ControlledPickListStory] })],
   render: () => ({ template: "<story-controlled-pick-list />" }),
 };
+
+/** GAP-064 G3-E verification story: filter (PrimeNG canonical; Angular only). */
+export const Filter: Story = {
+  args: {
+    source: ["Apple", "Banana", "Cherry"].map((name) => ({ name })),
+    target: [],
+    dataKey: "name",
+    filterBy: "name",
+  },
+};
