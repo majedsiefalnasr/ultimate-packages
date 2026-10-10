@@ -138,7 +138,7 @@ function compare(a: unknown, b: unknown): number {
   `,
 })
 export class UDataView<T = unknown> extends UBaseComponent implements OnChanges {
-  protected override readonly componentName = "data-view";
+  protected override readonly componentName = "dataview";
   protected override readonly styleModule = dataViewStyleModule;
 
   value = input<T[]>([]);

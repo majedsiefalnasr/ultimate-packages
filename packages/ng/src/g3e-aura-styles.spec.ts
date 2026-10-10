@@ -4,6 +4,7 @@ import { TestBed } from "@angular/core/testing";
 import { beforeAll, describe, expect, it } from "vitest";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { UCarousel } from "./carousel";
+import { UDataView } from "./data-view";
 import { UGalleria } from "./galleria";
 import { UImage } from "./image";
 import { UImageCompare } from "./image-compare";
@@ -26,6 +27,11 @@ const CASES: { key: string; type: Type<unknown>; inputs: Record<string, unknown>
   },
   { key: "orderlist", type: UOrderList, inputs: { value: ["Apple", "Banana", "Cherry"] } },
   { key: "picklist", type: UPickList, inputs: { source: ["Apple", "Banana"], target: ["Cherry"] } },
+  {
+    key: "dataview",
+    type: UDataView,
+    inputs: { value: [{ name: "Apple" }], itemTemplate: (item: { name: string }) => item.name },
+  },
 ];
 
 function mount(type: Type<unknown>, inputs: Record<string, unknown>) {

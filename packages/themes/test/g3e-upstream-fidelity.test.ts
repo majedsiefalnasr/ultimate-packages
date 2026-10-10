@@ -55,3 +55,10 @@ const E3_COUNTS = { orderlist: [3, 3], picklist: [4, 4] };
 it("E-3 counts are the approved record's literals", () => {
   expect({ orderlist: COUNTS.orderlist, picklist: COUNTS.picklist }).toEqual(E3_COUNTS);
 });
+
+const E4_COUNTS = { dataview: [7, 5], organizationchart: [18, 9] };
+it("E-4 counts are the approved record's literals", () => {
+  expect({ dataview: COUNTS.dataview, organizationchart: COUNTS.organizationchart }).toEqual(
+    E4_COUNTS
+  );
+});

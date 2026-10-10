@@ -448,6 +448,16 @@ const REACH: ReadonlyArray<{ key: string; runs: ReadonlyArray<readonly [string, 
         ["data-picklist--filter", "rest", ".u-pick-list"],
       ],
     },
+    {
+      key: "dataview",
+      runs: [
+        ["data-dataview--default", "rest", ".u-data-view"],
+        ["data-dataview--grid", "rest", ".u-data-view"],
+        ["data-dataview--paginator", "rest", ".u-data-view"],
+        ["data-dataview--empty", "rest", ".u-data-view"],
+        ["data-dataview--loading", "rest", ".u-data-view"],
+      ],
+    },
   ];
 /** ADR-052 X-1 class K: emitted by a cited source under a state no story exercises. */
 const K: Record<string, Record<string, string>> = {
@@ -463,6 +473,14 @@ const K: Record<string, Record<string, string>> = {
       "pick-list.ts:142 cx('listItem') in drag mode (dragdrop); no PickList drag story",
     ".u-pick-list-item-selected":
       "pick-list.ts:142 cx('itemSelected') for a selected item in drag mode (dragdrop); no PickList drag story",
+  },
+  // D-E4-3 (a): top paginator; emitted when paginatorPosition is top/both, which no story uses.
+  dataview: {
+    ".u-data-view > .u-paginator:not(.u-data-view-list ~ .u-paginator):not(.u-data-view-grid ~ .u-paginator)":
+      "data-view.ts:89 top u-paginator rendered when paginatorPosition !== 'bottom' (top/both); no story",
+    // E4-R1 (a): K, cited emission; not evidence of visual or behavioural parity.
+    ".u-data-view-grid ~ .u-paginator":
+      "data-view.ts:99 grid container + data-view.ts:115 bottom u-paginator (layout grid with paginator); no story combines grid and pagination",
   },
 };
 const STATE =

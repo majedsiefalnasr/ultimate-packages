@@ -459,6 +459,24 @@ const REACH: ReadonlyArray<{ key: string; runs: ReadonlyArray<readonly [string, 
         ["data-picklist--controlled", "rest", ".u-pick-list"],
       ],
     },
+    {
+      key: "dataview",
+      runs: [
+        ["data-dataview--default", "rest", ".u-data-view"],
+        ["data-dataview--grid", "rest", ".u-data-view"],
+        ["data-dataview--paginator", "rest", ".u-data-view"],
+        ["data-dataview--empty", "rest", ".u-data-view"],
+      ],
+    },
+    {
+      key: "organizationchart",
+      runs: [
+        ["panel-organizationchart--default", "rest", ".u-organization-chart"],
+        ["panel-organizationchart--single-selection", "rest", ".u-organization-chart"],
+        ["panel-organizationchart--multiple-selection", "rest", ".u-organization-chart"],
+        ["panel-organizationchart--collapsible", "rest", ".u-organization-chart"],
+      ],
+    },
   ];
 /** ADR-052 X-1 class K: emitted by a cited source under a state no story exercises. */
 const K: Record<string, Record<string, string>> = {
@@ -472,6 +490,17 @@ const K: Record<string, Record<string, string>> = {
   picklist: {
     '.u-pick-list.u-striped .u-pick-list-list [role="option"]:nth-child(2n)':
       "PickList.vue:180 u-striped (striped) + PickList.vue:205 cx('list') + Listbox.vue:28 role=option; no story sets striped",
+  },
+  // D-E4-3 (a): top paginator; emitted when paginatorPosition is top/both, which no story uses.
+  dataview: {
+    ".u-data-view > .u-paginator:not(.u-data-view-list ~ .u-paginator):not(.u-data-view-grid ~ .u-paginator)":
+      "DataView.vue:135 top u-paginator rendered when paginatorPosition !== 'bottom' (top/both); no story",
+    // E4-R1 (a): K, cited emission; not evidence of visual or behavioural parity.
+    ".u-data-view-grid ~ .u-paginator":
+      "DataView.vue:142 grid container + DataView.vue:167 bottom Paginator (layout grid with paginator); no story combines grid and pagination",
+    // E4-R1 (a): K, cited emission; not evidence of visual or behavioural parity.
+    '.u-data-view > [role="status"]':
+      "DataView.vue:134 span role=status (loading); no Vue loading story, and no Prime reference for Vue loading (G3E-7)",
   },
 };
 const STATE =

@@ -51,7 +51,16 @@ export const DIRS = {
 };
 
 /** Keys whose batch has been ported (Plan Tasks 6, 9, 12, 15 append). */
-export const PORTED = ["image", "imagecompare", "carousel", "galleria", "orderlist", "picklist"];
+export const PORTED = [
+  "image",
+  "imagecompare",
+  "carousel",
+  "galleria",
+  "orderlist",
+  "picklist",
+  "dataview",
+  "organizationchart",
+];
 
 /**
  * Batch-record mapping, applied in order to every selector part of a D1 group, then the
@@ -123,6 +132,50 @@ const PICKLIST_MAPPING = [
   ["class", ".p-picklist-controls", ".u-pick-list-controls"],
   ["class", ".p-picklist", ".u-pick-list"],
 ];
+const DATAVIEW_MAPPING = [
+  ["text", ".p-dataview-content", ".u-data-view-list, .u-data-view-grid"],
+  [
+    "text",
+    ".p-dataview-paginator-top",
+    ".u-data-view > .u-paginator:not(.u-data-view-list ~ .u-paginator):not(.u-data-view-grid ~ .u-paginator)",
+  ],
+  [
+    "text",
+    ".p-dataview-paginator-bottom",
+    ".u-data-view-list ~ .u-paginator, .u-data-view-grid ~ .u-paginator",
+  ],
+  ["text", ".p-dataview-loading-overlay", '.u-data-view > [role="status"]'],
+  ["class", ".p-dataview", ".u-data-view"],
+];
+const OC_NODE = ".u-organization-chart-node-content";
+const OC_TOGGLE = `${OC_NODE} > button`;
+const ORGANIZATIONCHART_MAPPING = [
+  ["text", ".p-organizationchart-node", OC_NODE],
+  [
+    "text",
+    ".p-organizationchart-node:has(.p-organizationchart-node-toggle-button)",
+    `${OC_NODE}:has(> button)`,
+  ],
+  [
+    "text",
+    ".p-organizationchart-node.p-organizationchart-node-selectable:not(.p-organizationchart-node-selected):hover",
+    `.u-organization-chart-node[aria-selected="false"] > ${OC_NODE}:hover`,
+  ],
+  [
+    "text",
+    ".p-organizationchart-node-selected",
+    `.u-organization-chart-node[aria-selected="true"] > ${OC_NODE}`,
+  ],
+  ["text", ".p-organizationchart-node-toggle-button", OC_TOGGLE],
+  ["text", ".p-organizationchart-node-toggle-button:hover", `${OC_TOGGLE}:hover`],
+  ["text", ".p-organizationchart-node-toggle-button:focus-visible", `${OC_TOGGLE}:focus-visible`],
+  ["text", ".p-organizationchart-node-toggle-button-icon", `${OC_TOGGLE} > span`],
+  [
+    "text",
+    ".p-organizationchart-node-selectable",
+    `.u-organization-chart-node[aria-selected] > ${OC_NODE}`,
+  ],
+];
 export const MAPPING = {
   ng: {
     image: IMAGE_MAPPING,
@@ -131,6 +184,7 @@ export const MAPPING = {
     galleria: GALLERIA_MAPPING,
     orderlist: ORDERLIST_MAPPING_NG,
     picklist: PICKLIST_MAPPING,
+    dataview: DATAVIEW_MAPPING,
   },
   vue: {
     image: IMAGE_MAPPING,
@@ -139,6 +193,8 @@ export const MAPPING = {
     galleria: GALLERIA_MAPPING,
     orderlist: ORDERLIST_MAPPING_VUE,
     picklist: PICKLIST_MAPPING,
+    dataview: DATAVIEW_MAPPING,
+    organizationchart: ORGANIZATIONCHART_MAPPING,
   },
 };
 /** D2 — omitted upstream group numbers (1-based source order) with their FX-E tag. */
@@ -158,6 +214,13 @@ const GALLERIA_OMITTED = {
   62: "FX-E6",
   ...tag(63, 67, "FX-E7"),
 };
+const DATAVIEW_OMITTED = { 2: "FX-E8", 4: "FX-E8" };
+const ORGANIZATIONCHART_OMITTED = {
+  1: "FX-E9",
+  2: "FX-E9",
+  ...tag(11, 14, "FX-E10"),
+  ...tag(16, 18, "FX-E10"),
+};
 export const OMITTED = {
   ng: {
     image: IMAGE_OMITTED,
@@ -166,6 +229,7 @@ export const OMITTED = {
     galleria: GALLERIA_OMITTED,
     orderlist: {},
     picklist: {},
+    dataview: DATAVIEW_OMITTED,
   },
   vue: {
     image: IMAGE_OMITTED,
@@ -174,6 +238,8 @@ export const OMITTED = {
     galleria: GALLERIA_OMITTED,
     orderlist: {},
     picklist: {},
+    dataview: DATAVIEW_OMITTED,
+    organizationchart: ORGANIZATIONCHART_OMITTED,
   },
 };
 /** Per key: [upstream groups, D1 ported] (literals from the approved batch records). */
@@ -184,15 +250,20 @@ export const COUNTS = {
   galleria: [67, 24],
   orderlist: [3, 3],
   picklist: [4, 4],
+  dataview: [7, 5],
+  organizationchart: [18, 9],
 };
 export const TOTALS = {
-  ng: { upstream: 119, ported: 70, omitted: 49 },
-  vue: { upstream: 119, ported: 70, omitted: 49 },
+  ng: { upstream: 126, ported: 75, omitted: 51 },
+  vue: { upstream: 144, ported: 84, omitted: 60 },
 };
 /** D3 — B-2 base roles, exact text, first in the module. */
 const IMAGE_BASE = [
   ".u-image-mask { background: dt('mask.background'); color: dt('mask.color'); position: fixed; top: 0; left: 0; width: 100%; height: 100%; }",
   ".u-image-toolbar > button:disabled { opacity: dt('disabled.opacity'); }",
+];
+const DATAVIEW_BASE = [
+  ".u-data-view > [role=\"status\"] { background: dt('mask.background'); color: dt('mask.color'); position: fixed; top: 0; left: 0; width: 100%; height: 100%; }",
 ];
 const GALLERIA_BASE = [
   ".u-galleria-mask { background: dt('mask.background'); color: dt('mask.color'); }",
@@ -206,6 +277,7 @@ export const BASE_ROLE = {
     galleria: GALLERIA_BASE,
     orderlist: [],
     picklist: [],
+    dataview: DATAVIEW_BASE,
   },
   vue: {
     image: IMAGE_BASE,
@@ -214,6 +286,8 @@ export const BASE_ROLE = {
     galleria: GALLERIA_BASE,
     orderlist: [],
     picklist: [],
+    dataview: DATAVIEW_BASE,
+    organizationchart: [],
   },
 };
 /** Each D3 rule's declarations equal its base group's, except recorded differences. */
@@ -243,6 +317,13 @@ export const BASE_SOURCES = [
     source: ".p-disabled, .p-component:disabled",
     differences: "native disabled navigator button selector",
   },
+  {
+    keys: ["dataview"],
+    ruleIndex: 0,
+    source: ".p-overlay-mask",
+    differences:
+      "loading overlay (E-4 record §5): the E-1 .u-image-mask text with the DataView status selector; group 7 sets position: absolute",
+  },
 ];
 /** D4 — ADR-052 X-4 runtime-role CSS, exact text, after D1 and L. */
 const CAROUSEL_RUNTIME = [".u-carousel-item-list { transition: transform 500ms ease 0s; }"];
@@ -255,6 +336,7 @@ export const RUNTIME_ROLE = {
     galleria: GALLERIA_RUNTIME,
     orderlist: [],
     picklist: [],
+    dataview: [],
   },
   vue: {
     image: [".u-image-mask { z-index: 1100; }"],
@@ -263,12 +345,31 @@ export const RUNTIME_ROLE = {
     galleria: GALLERIA_RUNTIME,
     orderlist: [],
     picklist: [],
+    dataview: [],
+    organizationchart: [],
   },
 };
 /** L — OI-E1 PrimeNG-local rules ported into the Angular module (mapped text), per key. */
 export const LOCAL_RULES = {
-  ng: { image: [], imagecompare: [], carousel: [], galleria: [], orderlist: [], picklist: [] },
-  vue: { image: [], imagecompare: [], carousel: [], galleria: [], orderlist: [], picklist: [] },
+  ng: {
+    image: [],
+    imagecompare: [],
+    carousel: [],
+    galleria: [],
+    orderlist: [],
+    picklist: [],
+    dataview: [],
+  },
+  vue: {
+    image: [],
+    imagecompare: [],
+    carousel: [],
+    galleria: [],
+    orderlist: [],
+    picklist: [],
+    dataview: [],
+    organizationchart: [],
+  },
 };
 /** D5 — retained Ultimate-only rules, exact text, last. */
 const CAROUSEL_RETAINED = [
@@ -280,6 +381,16 @@ const ORDERLIST_STRIPED =
 const DRAG_ITEM = (k) => [
   `.u-${k}-item { display: block; padding: .5rem .75rem; cursor: pointer; }`,
   `.u-${k}-item-selected { outline: 2px solid currentColor; outline-offset: -2px; }`,
+];
+// D-E4-1 (a): intentional grid layout (C); itemTemplate returns a string, so callers cannot lay items out.
+const DATAVIEW_GRID =
+  ".u-data-view-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .75rem; }";
+const ORGANIZATIONCHART_RETAINED = [
+  ".u-organization-chart { display: flex; justify-content: center; overflow: auto; }",
+  ".u-organization-chart-node { position: relative; display: flex; flex-direction: column; align-items: center; min-width: max-content; }",
+  ".u-organization-chart-children { position: relative; display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.5rem; padding-top: 1.5rem; }",
+  '.u-organization-chart-children::before { content: ""; position: absolute; top: 0; left: 12.5%; right: 12.5%; border-top: 1px solid currentColor; }',
+  '.u-organization-chart-children > .u-organization-chart-node::before { content: ""; position: absolute; top: -1.5rem; height: 1.5rem; border-left: 1px solid currentColor; }',
 ];
 export const RETAINED = {
   ng: {
@@ -300,6 +411,7 @@ export const RETAINED = {
       ".u-pick-list > .u-pick-list-controls { order: 1; }",
       ".u-pick-list > .u-pick-list-target { order: 2; }",
     ],
+    dataview: [".u-data-view-list { margin: 0; padding: 0; list-style: none; }", DATAVIEW_GRID],
   },
   vue: {
     image: [],
@@ -314,6 +426,8 @@ export const RETAINED = {
     picklist: [
       '.u-pick-list.u-striped .u-pick-list-list [role="option"]:nth-child(even) { background: rgba(0, 0, 0, .06); }',
     ],
+    dataview: [DATAVIEW_GRID],
+    organizationchart: ORGANIZATIONCHART_RETAINED,
   },
 };
 

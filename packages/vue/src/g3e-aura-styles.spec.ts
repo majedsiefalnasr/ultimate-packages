@@ -4,9 +4,11 @@ import { h, nextTick, type VNode } from "vue";
 import { applyUltimateTheme } from "@ultimate/themes";
 import { vueCoreStyleSheet } from "@ultimate/vue-core";
 import { UCarousel } from "./carousel";
+import { UDataView } from "./data-view";
 import { UGalleria } from "./galleria";
 import { UImage } from "./image";
 import { UImageCompare } from "./image-compare";
+import { UOrganizationChart } from "./organization-chart";
 import { UOrderList } from "./order-list";
 import { UPickList } from "./pick-list";
 
@@ -24,6 +26,16 @@ const CASES: { key: string; node: () => VNode }[] = [
   {
     key: "picklist",
     node: () => h(UPickList, { modelValue: [["Apple", "Banana"], ["Cherry"]] }),
+  },
+  { key: "dataview", node: () => h(UDataView, { value: [{ name: "Apple" }] }) },
+  {
+    key: "organizationchart",
+    node: () =>
+      h(UOrganizationChart, {
+        value: { label: "CEO", key: "0", children: [{ label: "CTO", key: "0_0" }] },
+        collapsible: true,
+        selectionMode: "single",
+      }),
   },
 ];
 
