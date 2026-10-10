@@ -820,5 +820,35 @@
     "ultimateDestination": "packages/vue/src/split-button/split-button.stories.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored SplitButton stories, including the GAP-064 G3-D Disabled verification story (Spec §9.1)."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 image",
+    "ultimateDestination": "packages/vue/src/image/image-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13–16 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e1-record.md."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 imagecompare",
+    "ultimateDestination": "packages/vue/src/image-compare/image-compare-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 imagecompare: 12 of 12 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs). The final D5 retained span rule `.u-image-compare > span { position: absolute; inset: 0; }` is Ultimate-authored, not an upstream declaration (the E1-V2 C1 adaptation is Angular-only). The approved Firefox thumb declaration references the undefined imagecompare.handle.border.style token (E1-B1). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e1-record.md."
+  },
+  {
+    "originalPath": "packages/primevue/src/imagecompare/BaseImageCompare.vue",
+    "ultimateDestination": "packages/vue/src/image-compare/BaseImageCompare.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeVue BaseImageCompare. BaseImageCompare: the shared options base for UImageCompare, composed with createBaseComponent. Version: the PrimeVue 4.5.5 source baseline recorded in docs/architecture/PROVENANCE.md; the vendor extract this file cites is not present locally. GAP-064 G3-E E-1: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/image-compare/image-compare.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored ImageCompare stories, including the GAP-064 G3-E Sized and Rtl verification stories (Spec §5.2); their wrapper is a flex container (D-E1-1(a)), the canonical PrimeNG showcase setup."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/src/g3e-aura-styles.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 style modules (Vue Image, ImageCompare): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
   }
 ]

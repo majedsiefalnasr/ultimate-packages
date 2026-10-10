@@ -826,5 +826,35 @@
     "ultimateDestination": "packages/ng/src/split-button/split-button.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Adapted from primeng@21.1.9 SplitButton (SplitButton→USplitButton), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 imagecompare",
+    "ultimateDestination": "packages/ng/src/image-compare/image-compare-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "GAP-064 G3-E E-1: 12 ImageCompare upstream groups ported with the approved selector mapping in packages/themes/test/utils/g3e-port.mjs. The final D5 retained span rule is Ultimate-authored, not an upstream declaration. E1-V2 C1 adapts that rule with top:auto, bottom:auto and height:100%, preserving the absolute span as image/clipping carrier; design and experiment evidence: docs/architecture/research/2026-10-08-gap-064-g3e-e1-v2-p2-production-proposal.md and docs/architecture/research/2026-10-08-gap-064-g3e-e1-v2-c1-experiment-result.md. The approved Firefox thumb declaration, undefined border-style token and E1-B1 assertions remain unchanged."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 image",
+    "ultimateDestination": "packages/ng/src/image/image-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13–16 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e1-record.md."
+  },
+  {
+    "originalPath": "packages/primeng/src/imagecompare/imagecompare.ts",
+    "ultimateDestination": "packages/ng/src/image-compare/image-compare.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeNG ImageCompare (ImageCompare→UImageCompare), adapted to Ultimate's DOM. Version: the PrimeNG 21.1.9 source baseline recorded in docs/architecture/PROVENANCE.md; the local vendor extract this file cites carries no version stamp. GAP-064 G3-E E-1: style key renamed to the Aura key (ADR-051)"
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/image-compare/image-compare.stories.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored ImageCompare stories, including the GAP-064 G3-E Sized and Rtl verification stories (Spec §5.2); their wrapper is a flex container (D-E1-1(a)), the canonical PrimeNG showcase setup."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/g3e-aura-styles.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 style modules (Angular Image, ImageCompare): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
   }
 ]
