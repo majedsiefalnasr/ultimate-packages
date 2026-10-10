@@ -2106,6 +2106,61 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **What it blocks:** Accessibility conformance of Listbox, OrderList and PickList.
 - **Scope boundary:** Listbox change; requires separate authorization.
 
+#### GAP-124 — DataView loading shows the text "Loading" instead of a spinner
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `dataview/loading` (Angular; Docker `docker-e4-r3`): PrimeNG renders a masked overlay with a spinner icon over the content. Ultimate renders `span[role="status"]` with the text "Loading" (`data-view.ts:87`, `DataView.vue:134`). Vue has no Prime reference for loading (G3E-7), but the template is the same. The E-4 port styles the element as the overlay; the text content stays. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-5.
+- **Expected state:** The loading state shows a spinner icon, as in Prime.
+- **What it blocks:** Complete E-4 Prime parity.
+- **Scope boundary:** Template change; requires separate authorization.
+
+#### GAP-125 — DataView always renders a page report line
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** `dataview/paginator`: Ultimate renders a polite live-region report ("1 to 2 of 6") under the paginator whenever pagination is on (`data-view.ts` and `DataView.vue`, `<span aria-live="polite">{{ report }}</span>`). Prime renders no report unless a current-page-report template is configured. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-9.
+- **Expected state:** The page report is shown only when configured, as in Prime.
+- **What it blocks:** Complete E-4 Prime parity.
+- **Scope boundary:** Template/API change; requires separate authorization.
+
+#### GAP-126 — Paginator first/prev/next/last buttons render no icon
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** Found through DataView, recorded against Paginator under the E-4 composition rule (Spec §6.5). In the DataView Paginator story, both frameworks render `button.u-paginator-first`, `-prev`, `-next` and `-last` as 40×40 buttons with correct `aria-label`s ("First Page", "Previous Page", …) but no content, so they are invisible. Prime renders angle icons. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-10.
+- **Expected state:** Paginator navigation buttons show Prime-equivalent icons.
+- **What it blocks:** Paginator parity and visible pagination controls (DataView and every Paginator consumer).
+- **Scope boundary:** Paginator template change; requires separate authorization. Not part of the E-4 port.
+
+#### GAP-127 — OrganizationChart has no table layout or connector elements
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; G3E-5 escalation; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** MEDIUM
+- **Framework scope:** Vue (Angular has no OrganizationChart, DECISION-D).
+- **Current evidence:** `organizationchart/basic`: PrimeVue lays the chart out as nested tables with connector cells (`.p-organizationchart-connector-down/left/right/top`). Ultimate renders a flex `div` tree and draws approximate connectors with pseudo-elements. Upstream groups 1–2 (table) and 11–14, 16–18 (connectors) cannot reach Ultimate's DOM; parity needs new DOM (Spec §12, G3E-5), so they are omitted (FX-E9, FX-E10), and Ultimate's pseudo-element connectors are kept as retained rules. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-13.
+- **Expected state:** The chart layout and connector lines match Prime's.
+- **What it blocks:** Complete E-4 Prime parity.
+- **Scope boundary:** DOM/template change; requires separate authorization (X-2).
+
+#### GAP-128 — OrganizationChart toggle uses a text glyph instead of a chevron icon
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-4 Task 14 gate; accounting only, remediation not authorized)
+- **Type:** Component, Visual
+- **Blocking level:** LOW
+- **Framework scope:** Vue.
+- **Current evidence:** `organizationchart/toggle`: Ultimate's toggle is a native button containing a `−`/`+` text span (`OrganizationChart.vue`); PrimeVue renders `ChevronDownIcon`/`ChevronUpIcon`. Same class of finding as GAP-109 (Galleria glyphs). [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-14.
+- **Expected state:** The toggle shows Prime-equivalent chevron icons.
+- **What it blocks:** Complete E-4 Prime parity.
+- **Scope boundary:** Template change; requires separate authorization.
+
 ---
 
 ## 5. Open Architectural Decisions
