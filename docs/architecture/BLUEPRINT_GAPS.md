@@ -1974,6 +1974,50 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **What it blocks:** Accessibility conformance of Galleria.
 - **Scope boundary:** Template change; requires separate authorization. Carousel shows no component-level violations (its rows are story-shell `landmark-one-main` / `page-has-heading-one` only).
 
+#### GAP-113 — Galleria full-screen layout: item sized to the viewport; close, Previous and thumbnails not visible
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 10 review; accounting only, remediation not authorized)
+- **Type:** Component, Visual parity
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-2 after-port comparison (Docker, `f948d16`), `galleria/fullscreen`: the item is 1280×960 at 0,0 in a 1280×720 viewport, while Prime centres an 800×600 galleria. In the accepted E-2 FullScreen regression screenshots of both frameworks, the thumbnail strip is below the viewport, the Previous navigator is not visible, and the close button is painted under the item container (ported group 4 makes the container `position: relative`, and it follows the absolutely positioned close button in DOM order). Vue already rendered this way before the port; Angular showed the close button and strip before the port only because the item was shifted up by 146 px. The port fixed the CSS-addressable parts (mask, close button, navigators). [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-13.
+- **Expected state:** The full-screen galleria is centred and sized like Prime's, with the close button, both navigators and the thumbnail strip visible.
+- **What it blocks:** Complete E-2 Prime parity; usable full-screen Galleria at common viewport sizes.
+- **Scope boundary:** The likely fix is the template's inline full-screen focus-trap wrapper (`width: 100%; height: 100%; display: flex; flex-direction: column`; Angular `galleria.ts`, Vue equivalent), which is outside G3-E's styling scope (G3E-5, Spec §12). Requires separate authorization. Acceptance of the E-2 screenshots records this state; it does not accept it.
+
+#### GAP-114 — Carousel indicators do not respond to arrow keys
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 10 review; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular and Vue.
+- **Current evidence:** E-2 after-port comparison (Docker, `f948d16`), `carousel/indicator`: after clicking the first indicator and pressing ArrowRight then Enter, Prime moves to and activates the second indicator (x 564); Ultimate stays on the first (x 524), both frameworks. Neither `packages/ng/src/carousel/carousel.ts` nor `packages/vue/src/carousel/Carousel.vue` handles key events on indicators. Before the port the indicator geometry difference masked this. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-19.
+- **Expected state:** Arrow keys move between indicators as in Prime.
+- **What it blocks:** Complete E-2 Prime parity; Carousel keyboard navigation.
+- **Scope boundary:** Runtime change; requires separate authorization.
+
+#### GAP-115 — Angular Galleria Tab sequence differs from Prime and Vue
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 10 review; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** MEDIUM
+- **Framework scope:** Angular.
+- **Current evidence:** `galleria/nav-focus` (Tab, Tab from the Default story): Prime and Ultimate Vue focus the Next navigator; Ultimate Angular does not (Next has no focus ring and the page scrolls to the thumbnail strip, `root.y` −357 after the port). The same scroll offset was present before the port (−312, Task 8 evidence), so the difference predates the port and is not attributed to it. The cause was not isolated: both templates declare the same tab stops. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-20.
+- **Expected state:** The Angular Tab sequence matches Prime's (Tab, Tab reaches the Next navigator).
+- **What it blocks:** Complete E-2 Prime parity; predictable keyboard order in Angular Galleria.
+- **Scope boundary:** Diagnosis, then a likely runtime or template change; requires separate authorization.
+
+#### GAP-116 — Angular Galleria returns focus to the invoker after closing full screen
+
+- **Status:** OPEN (registered 2026-10-10, user-approved E-2 Task 10 review; accounting only, remediation not authorized)
+- **Type:** Component, Accessibility
+- **Blocking level:** LOW
+- **Framework scope:** Angular.
+- **Current evidence:** `galleria/fullscreen-close`, Angular: after Escape, focus lands on the Show button (`fact.focused: "root" → "show"`), where PrimeNG leaves focus on the document. No ADR, spec or record states that returning focus is intended: the Galleria docblock is silent, `closeFullScreen()` only clears the full-screen state, and `UFocusTrap` has no restore logic (Task 8 gate ruling). It is therefore not classified as an intentional C difference. [E-2 record](research/2026-10-08-gap-064-g3e-e2-record.md) E2-16.
+- **Expected state:** Focus restoration after closing matches Prime, or a recorded design decision makes the difference intentional.
+- **What it blocks:** Complete E-2 Prime parity.
+- **Scope boundary:** A design decision or runtime change; requires separate authorization.
+
 ---
 
 ## 5. Open Architectural Decisions

@@ -855,6 +855,18 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/g3e-aura-styles.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 style modules (Angular Image, ImageCompare): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Covers the GAP-064 G3-E E-1 and E-2 style modules (Angular Image, ImageCompare, Carousel, Galleria): registration under the Aura key (AC1) and token resolution (AC2). The ImageCompare AC2 assertion fails until E1-B1 (undefined imagecompare.handle.border.style token) is resolved."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 carousel",
+    "ultimateDestination": "packages/ng/src/carousel/carousel-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16–17 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e2-record.md."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 galleria",
+    "ultimateDestination": "packages/ng/src/galleria/galleria-style.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e2-record.md."
   }
 ]
