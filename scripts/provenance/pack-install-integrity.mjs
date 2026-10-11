@@ -31,7 +31,7 @@ import { getTransitiveClosure } from "./workspace-graph.mjs";
 const REPO_ROOT = join(fileURLToPath(import.meta.url), "..", "..", "..");
 const PACKAGES_DIR = join(REPO_ROOT, "packages");
 
-function toScopedName(pkgName) {
+export function toScopedName(pkgName) {
   return pkgName.startsWith("@ultimate/") ? pkgName : `@ultimate/${pkgName}`;
 }
 
@@ -39,7 +39,7 @@ function toShortName(scopedName) {
   return scopedName.replace(/^@ultimate\//, "");
 }
 
-function packageRoot(scopedName) {
+export function packageRoot(scopedName) {
   return join(PACKAGES_DIR, toShortName(scopedName));
 }
 
@@ -90,7 +90,7 @@ export function topologicalSort(members, getDeps) {
   return sorted;
 }
 
-function getPackageDependenciesFromDisk(scopedName) {
+export function getPackageDependenciesFromDisk(scopedName) {
   const pkgJson = JSON.parse(readFileSync(join(packageRoot(scopedName), "package.json"), "utf8"));
   return Object.entries(pkgJson.dependencies || {})
     .filter(([, range]) => typeof range === "string" && range.startsWith("workspace:"))
@@ -101,7 +101,7 @@ function getPackageDependenciesFromDisk(scopedName) {
 
 // `pnpm pack` (unlike `npm pack`) has no `--json` flag in this pnpm
 // version — it prints the tarball's absolute path as plain stdout text.
-function packOne(scopedName, packDestDir) {
+export function packOne(scopedName, packDestDir) {
   const cwd = packageRoot(scopedName);
   const output = execFileSync("pnpm", ["pack", "--pack-destination", packDestDir], {
     cwd,
