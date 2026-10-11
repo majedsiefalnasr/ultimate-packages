@@ -2108,17 +2108,26 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-124 — DataView loading shows the text "Loading" instead of a spinner
 
-- **Status:** PARTIAL (registered 2026-10-10, user-approved E-4 Task 14 gate. 2026-10-10: the spinner part was remediated under an explicitly authorized G3-E scope exception (E4-V1, Task 16 review); residuals below stay open)
+- **Status:** PARTIAL (registered 2026-10-10, user-approved E-4 Task 14 gate. 2026-10-10: the spinner part was remediated under an explicitly authorized G3-E scope exception (E4-V1, Task 16 review); residuals below stay open. 2026-10-11: both residuals were remediated by the GAP-124 Spec/Plan (`docs/superpowers/specs/2026-10-11-gap-124-loading-spinner-design.md`), merged to `main` `e32c224`; the status stays **PARTIAL** by user decision, with the known limitations KL-1..KL-4 below; see the [verification record](research/2026-10-11-gap-124-verification.md))
 - **Type:** Component, Visual
 - **Blocking level:** LOW
 - **Framework scope:** Angular and Vue.
 - **Current evidence:**
   - *Registration:* `dataview/loading` (Angular; Docker `docker-e4-r3`): PrimeNG renders a masked overlay with a spinner icon over the content. Ultimate rendered `span[role="status"]` with the text "Loading" (`data-view.ts:87`, `DataView.vue:134`). Vue has no Prime reference for loading (G3E-7), but the template is the same. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-5.
   - *Remediation (E4-V1):* both templates now render the shared spinner icon (`aria-hidden`) and visually hidden "Loading" text inside the same `role="status"` live region. Confirmation (Docker `docker-e4-v1`): `dataview/loading` (ng) has 0 probe differences and noise 0; the G3-E accessibility validator has 0 introduced violations (the E4-V1 `color-contrast` rows are gone); Chromium's accessibility tree exposes `status` (polite, atomic) with the text "Loading" and no image node.
-  - *Residuals (open):* (1) the icon does not spin. No `u-icon-spin` animation is defined anywhere (the same for `UButton`'s loading icon), while Prime's spinner rotates; adding one is a base-level rule (GAP-098 boundary). (2) The icon is drawn in `mask.color` on the mask, a non-text contrast of 2.31:1, below WCAG 1.4.11's 3:1 if the icon is considered required. Prime uses the identical colours, and the project's automated gate (axe) has no non-text contrast rule.
-- **Expected state:** The loading state shows an animated spinner icon, as in Prime.
-- **What it blocks:** Complete E-4 Prime parity (animation).
-- **Scope boundary:** The remaining animation needs a base-level rule; it requires separate authorization.
+  - *Residuals at registration (2026-10-10; remediated 2026-10-11, see below):* (1) the icon does not spin. No `u-icon-spin` animation is defined anywhere (the same for `UButton`'s loading icon), while Prime's spinner rotates; adding one is a base-level rule (GAP-098 boundary). (2) The icon is drawn in `mask.color` on the mask, a non-text contrast of 2.31:1, below WCAG 1.4.11's 3:1 if the icon is considered required. Prime uses the identical colours, and the project's automated gate (axe) has no non-text contrast rule.
+  - *Remediation (GAP-124, merged `e32c224`):*
+    - **Item A (motion).** A shared, class-scoped `.u-icon-spin` rule (Prime's `BaseIconStyle` spin, 2 s linear) is registered from the Angular and Vue cores (`registerIconSpin`). Under `prefers-reduced-motion: reduce` the icon stays visible and stops rotating (an Ultimate difference from Prime). This applies to the Button and DataView loading icons, in Angular and Vue. User ruling D-124-1: the opt-in spin is outside the GAP-098 global-reset boundary; the GAP-098 ruling is unchanged. React-only documents are unchanged; three React checks prove it.
+    - **Item B (contrast).** The DataView loading icon uses `text.hover.color` (light `surface.800`, dark white), scoped to DataView. Measured in a browser on 10 declared surfaces, its non-text contrast is ≥ 3:1: minimum 3.67 (light `surface.300`); 5.13 on white; at least 19.62 on the default dark surface. Contrast is the minimum over every fully covered icon pixel against every adjacent mask pixel, with per-condition rounding ranges (Amendment A2). This differs visually from Prime by design.
+    - **Evidence.** Local runs and a Docker (Linux) CI simulation: GAP-124 suite 81/81 at `de7e66c`; contrast spec 162/162 (3 repeats × 6 projects); the three Angular DataView-loading baselines were reviewed and approved by the user. Actual post-merge GitHub Actions CI on `e32c224` (run 38137093707): the strict Playwright jobs that run the GAP-124 specs passed (Angular 369, Vue 321, React 219). The run concluded `failure` only on steps that failed identically on the previous `main` run 38118745630 (inherited); see the verification record §11.
+  - *Known limitations (why GAP-124 stays PARTIAL):*
+    - **KL-1:** a standalone spinning icon rotates only if an Angular or Vue Ultimate component has registered the rule in that document.
+    - **KL-2:** in a document that also renders an Angular or Vue Ultimate component, a React spinner rotates too (document-level class selector).
+    - **KL-3:** over darker or saturated light-scheme content under the mask (`surface.400`, `surface.500`, `primary.500`), the icon is below 3:1.
+    - **KL-4:** the thin spinner stroke (about 1.17 CSS px) renders fainter than its specified colour at low device pixel ratios. The 3:1 figure is for the specified colours.
+- **Expected state:** The loading state shows an animated spinner icon, as in Prime. Met for Angular and Vue, with the deliberate reduced-motion and colour differences above and the limitations KL-1..KL-4.
+- **What it blocks:** Nothing further. The deliberate differences are recorded in the Parity Playbook `dataview` row, whose classification is unchanged.
+- **Scope boundary:** Closing GAP-124, or any work on KL-1..KL-4, requires a separate user decision.
 
 #### GAP-125 — DataView always renders a page report line
 
