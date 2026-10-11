@@ -30,11 +30,12 @@ const rgb = (hex: string): Rgb =>
 /** B-AC6: soft-asserts that an L1 value lies in its rounding range. */
 function expectInRange(id: string, ratio: number, fill: string, surface: string, alpha: number) {
   const [lo, hi] = roundingRange(rgb(fill), rgb(surface), alpha);
+  const range = `[${lo.toFixed(3)}, ${hi.toFixed(3)}]`;
   expect
-    .soft(ratio, `${id} ≥ rounding range min ${lo.toFixed(3)}`)
+    .soft(ratio, `${id} ${ratio.toFixed(3)} ≥ min of ${range}`)
     .toBeGreaterThanOrEqual(lo - EPSILON);
   expect
-    .soft(ratio, `${id} ≤ rounding range max ${hi.toFixed(3)}`)
+    .soft(ratio, `${id} ${ratio.toFixed(3)} ≤ max of ${range}`)
     .toBeLessThanOrEqual(hi + EPSILON);
 }
 const ICON = '.u-data-view > [role="status"] svg';
@@ -46,6 +47,8 @@ const EXPECTED_COLOR: Record<Scheme, string> = {
 async function open(page: Page, scheme: Scheme) {
   await page.emulateMedia({ colorScheme: scheme, reducedMotion: "reduce" });
   await page.goto(storyUrl("data-dataview--loading"));
+  await expect(page.locator(ICON)).toBeVisible();
+  await page.waitForLoadState("networkidle");
   await expect(page.locator(ICON)).toBeVisible();
 }
 /** Spec §10 setup: a declared uniform surface under the mask; test-time inline styles only. */
@@ -119,6 +122,10 @@ test.describe("GAP-124 B layer L1 (device scale 4)", () => {
     await page
       .locator('.u-data-view > [role="status"]')
       .evaluate((el) => el.setAttribute("class", "my-loading"));
+    await expect(page.locator('.u-data-view > [role="status"]')).toHaveAttribute(
+      "class",
+      "my-loading"
+    );
     expect(await page.locator(ICON).evaluate((el) => getComputedStyle(el).color)).toBe(
       EXPECTED_COLOR.light
     );
