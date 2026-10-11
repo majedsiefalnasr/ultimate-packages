@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Revision 4 approved 2026-10-11; Amendment A2 (user ruling during Task 8): L1 tolerance is the per-condition rounding range (Spec B-AC6, §10, §16). Revision 4 replaces the Task 8 contrast measurement with the coverage-based method of Spec revision 4 §10 (B-AC7, KL-4). Amendment A1 is approved and folded into the Spec. Revision 2 corrected the React file boundary (R-AC4) and the Task 4 diff-check order; revision 3 updated the Spec reference. Execution method: `superpowers:subagent-driven-development` (user, 2026-10-11). Not committed. Nothing in this plan is authorized until the user gives final approval.
+**Status:** Revision 4 approved 2026-10-11; Amendment A2 (user ruling during Task 8): L1 tolerance is the per-condition rounding range (Spec B-AC6, §10, §16). Revision 4 replaces the Task 8 contrast measurement with the coverage-based method of Spec revision 4 §10 (B-AC7, KL-4). Amendment A1 is approved and folded into the Spec. Revision 2 corrected the React file boundary (R-AC4) and the Task 4 diff-check order; revision 3 updated the Spec reference. Execution method: `superpowers:subagent-driven-development` (user, 2026-10-11). Committed; executed via subagent-driven-development.
 
 **Goal:** Make Angular and Vue loading spinners rotate, stop under reduced motion (item A), and give the DataView loading icon ≥ 3:1 non-text contrast over declared surfaces (item B), without changing React-only documents.
 
