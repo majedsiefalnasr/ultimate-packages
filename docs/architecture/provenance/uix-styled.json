@@ -142,5 +142,17 @@
     "ultimateDestination": "packages/uix-styled/src/stylesheet/hidden-accessible.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "PrimeNG 21.1.9 basestyle.ts `.p-hidden-accessible` rule and its `input, select` companion (lines 7-21), copied with the class renamed to `u-hidden-accessible`. Adds Ultimate-authored HIDDEN_ACCESSIBLE_KEY and registerHiddenAccessible(), which registers the rule once per StyleSheet so each core can load it from its existing style-registration point (GAP-074)."
+  },
+  {
+    "originalPath": "packages/primeng/src/icons/baseicon/style/baseiconstyle.ts",
+    "ultimateDestination": "packages/uix-styled/src/stylesheet/icon-spin.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "PrimeNG 21.1.9 baseiconstyle.ts `.p-icon-spin` rule and `p-icon-spin` keyframes (identical in PrimeVue 4.5.5 packages/icons/src/baseicon/style/BaseIconStyle.js), renamed to `u-icon-spin`; -webkit- duplicates omitted; `.p-icon` display rules not ported. Adds an Ultimate-authored prefers-reduced-motion stop (GAP-124 D-124-6), ICON_SPIN_KEY and registerIconSpin(), which the Angular and Vue cores call once per StyleSheet (GAP-124 D-124-4)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/uix-styled/test/icon-spin.test.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the icon-spin rule text, its single class selector, its reduced-motion stop and once-per-sheet registration (GAP-124)."
   }
 ]
