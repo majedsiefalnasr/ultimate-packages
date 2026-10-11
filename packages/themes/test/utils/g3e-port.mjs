@@ -385,6 +385,13 @@ const DRAG_ITEM = (k) => [
 // D-E4-1 (a): intentional grid layout (C); itemTemplate returns a string, so callers cannot lay items out.
 const DATAVIEW_GRID =
   ".u-data-view-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .75rem; }";
+// GAP-124 B-2 (Spec 2026-10-11-gap-124-loading-spinner-design.md §6, SR-1): the loading icon takes a
+// colour with ≥ 3:1 non-text contrast (WCAG 2.2 SC 1.4.11) over the mask on the declared surfaces.
+// `text.hover.color` is used for a static, non-hover purpose ON PURPOSE: it is the existing semantic token
+// that is dark in the light scheme (surface.800) and white in the dark scheme, with the widest margin
+// (4.28:1 over surface.200, where `text.color` gives 3.03:1). Do not "correct" it to `text.color`.
+const DATAVIEW_LOADING_ICON =
+  ".u-data-view > [role=\"status\"] svg { color: dt('text.hover.color'); }";
 const ORGANIZATIONCHART_RETAINED = [
   ".u-organization-chart { display: flex; justify-content: center; overflow: auto; }",
   ".u-organization-chart-node { position: relative; display: flex; flex-direction: column; align-items: center; min-width: max-content; }",
@@ -411,7 +418,7 @@ export const RETAINED = {
       ".u-pick-list > .u-pick-list-controls { order: 1; }",
       ".u-pick-list > .u-pick-list-target { order: 2; }",
     ],
-    dataview: [".u-data-view-list { margin: 0; padding: 0; list-style: none; }", DATAVIEW_GRID],
+    dataview: [".u-data-view-list { margin: 0; padding: 0; list-style: none; }", DATAVIEW_GRID, DATAVIEW_LOADING_ICON],
   },
   vue: {
     image: [],
@@ -426,7 +433,7 @@ export const RETAINED = {
     picklist: [
       '.u-pick-list.u-striped .u-pick-list-list [role="option"]:nth-child(even) { background: rgba(0, 0, 0, .06); }',
     ],
-    dataview: [DATAVIEW_GRID],
+    dataview: [DATAVIEW_GRID, DATAVIEW_LOADING_ICON],
     organizationchart: ORGANIZATIONCHART_RETAINED,
   },
 };

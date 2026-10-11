@@ -9,6 +9,7 @@ export const dataViewStyleModule = {
 .u-data-view > [role="status"]{position: absolute;display: flex;align-items: center;justify-content: center;z-index: 2;}
 .u-data-view-list{margin: 0;padding: 0;list-style: none;}
 .u-data-view-grid{display: grid;grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));gap: .75rem;}
+.u-data-view > [role="status"] svg{color: dt('text.hover.color');}
 `,
   classes: {
     root: () => "u-data-view",

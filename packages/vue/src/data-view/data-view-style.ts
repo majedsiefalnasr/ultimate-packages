@@ -10,6 +10,7 @@ export const dataViewStyleModule: StyleModule = {
 .u-data-view-list ~ .u-paginator, .u-data-view-grid ~ .u-paginator{border-width: dt('dataview.paginator.bottom.border.width');border-color: dt('dataview.paginator.bottom.border.color');border-style: solid;}
 .u-data-view > [role="status"]{position: absolute;display: flex;align-items: center;justify-content: center;z-index: 2;}
 .u-data-view-grid{display: grid;grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));gap: .75rem;}
+.u-data-view > [role="status"] svg{color: dt('text.hover.color');}
 `,
   classes: {
     root: () => "u-data-view",
