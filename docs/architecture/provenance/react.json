@@ -322,5 +322,17 @@
     "ultimateDestination": "packages/react/src/organization-chart/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored OrganizationChart test, story, barrel, or structural style."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/button/gap-124-react-unchanged.spec.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies a loading UButton registers no u-icon-spin rule in React (GAP-124 D-124-5, R-AC1)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/e2e/gap-124-react-unchanged.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored browser test. Verifies a React-only Storybook page carries no icon-spin rule and the loading icon does not animate (GAP-124 R-AC3)."
   }
 ]
