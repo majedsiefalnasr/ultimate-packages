@@ -29,6 +29,31 @@ describe("registerIconSpin (GAP-124)", () => {
     expect(iconSpinCss).not.toContain("-webkit-");
   });
 
+  it("equals the Spec 5.1 rule exactly, modulo whitespace", () => {
+    const spec = `
+      .u-icon-spin {
+        animation: u-icon-spin 2s infinite linear;
+      }
+
+      @keyframes u-icon-spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(359deg);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .u-icon-spin {
+          animation: none;
+        }
+      }
+    `;
+    const normalise = (css: string) => css.replace(/\s+/g, " ").trim();
+    expect(normalise(iconSpinCss)).toBe(normalise(spec));
+  });
+
   it("selects only elements carrying .u-icon-spin", () => {
     const selectors = [...iconSpinCss.matchAll(/^\s*([^@{}\s][^{}]*?)\s*\{/gm)]
       .map((m) => m[1].trim())

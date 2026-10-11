@@ -417,6 +417,7 @@ test.describe("GAP-078 server-rendered styles", () => {
     for (const [key, n] of Object.entries(counts)) expect(n, key).toBe(1);
     expect(counts["inputtext"]).toBe(1);
     expect(counts["inputtext-variables"]).toBe(1);
+    expect(counts["u-icon-spin"]).toBe(1); // GAP-124
 
     assertNoHydrationErrors(errors);
   });

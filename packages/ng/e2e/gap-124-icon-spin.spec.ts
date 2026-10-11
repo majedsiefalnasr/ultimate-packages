@@ -51,6 +51,7 @@ for (const [story, selector, status] of CASES) {
       const icon = page.locator(selector).first();
       await expect(icon).toBeVisible();
       const normal = await restBox(icon);
+      expect((await animation(icon))[0]).toBe("u-icon-spin");
       await page.emulateMedia({ reducedMotion: "reduce" });
       expect((await animation(icon))[0]).toBe("none");
       await expect(icon).toBeVisible();
