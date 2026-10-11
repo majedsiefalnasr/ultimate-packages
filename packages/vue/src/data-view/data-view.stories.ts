@@ -23,3 +23,10 @@ export const Grid: Story = {
 export const Paginator: Story = { args: { value: six, paginator: true, rows: 2, itemTemplate } };
 /** GAP-064 G3-E verification story: empty value. */
 export const Empty: Story = { args: { value: [] } };
+/**
+ * GAP-124 test fixture: the loading overlay. PrimeVue 4.5.5 DataView renders no loading
+ * state (G3E-7), so this story is not a parity case; only the GAP-124 specs use it.
+ */
+export const Loading: Story = {
+  args: { value: [{ name: "Apple" }, { name: "Banana" }], itemTemplate, loading: true },
+};
