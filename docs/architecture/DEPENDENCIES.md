@@ -32,6 +32,17 @@ Classification model and direct-dependency facts established in Phase 0. Full tr
 
 `@angular/*`, `react`, `vue`, `rxjs`, `tslib` — the no-Prime-runtime-dependency rule targets Prime/PrimeUIX packages specifically, not the underlying frameworks.
 
+## Approved optional runtime dependencies (ADR-055)
+
+Non-framework runtime dependencies approved under the ADR-055 policy (DECISION-B). Each is an **optional peer dependency** (`peerDependencies` with `peerDependenciesMeta.optional`), loaded lazily by its consuming component only; consumers who do not use that component install nothing. Approval requires: a license on the CI license allowlist, a clean `pnpm audit --prod` for the package and its closure, a review of install scripts, a recorded bundle cost and an approved version range.
+
+| Package    | Approved range | Consuming component | License (npm metadata, 2026-10-11) | Policy checks recorded                                                                                       |
+| ---------- | -------------- | ------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `chart.js` | `^4.5`         | Chart               | MIT                                | **Not yet** — audit, install-script review and bundle cost pending; no package may declare it until recorded |
+| `quill`    | `^2.0.3`       | Editor              | BSD-3-Clause                       | **Not yet** — audit, install-script review and bundle cost pending; no package may declare it until recorded |
+
+No legal review is recorded for either package; whether company policy requires one (Blueprint §8) is not established.
+
 ## Excluded — out of scope for Phase 0 core
 
 `@primeuix/forms` (not a runtime dep of PrimeNG 21.1.9 or PrimeVue 4.5.5), `@primeuix/themes` (theme layer is a separate Phase 5 concern), `@primeuix/mcp` (standalone MCP server tool — depends on `zod` and `@modelcontextprotocol/sdk`, unrelated to UI component runtime).
@@ -39,3 +50,5 @@ Classification model and direct-dependency facts established in Phase 0. Full tr
 ## Flagged exclusion — copy-paste risk
 
 PrimeReact's repository root is its Next.js showcase app. Its dependencies (`next`, `chart.js`, `docsearch`, `xlsx`, `primeflex`, `quill`, `jspdf`, etc.) belong to the demo site, not the library, and must never be pulled into Ultimate's dependency tree during Phase 3 migration. Migrate only the library source directory (`components/lib`), never the showcase app's `package.json`.
+
+This exclusion still applies to copying the showcase's dependencies. Since 2026-10-11, `chart.js` and `quill` may enter Ultimate's dependency tree **only** as approved optional peer dependencies under ADR-055 (see "Approved optional runtime dependencies" above), never as a copy of the showcase's `package.json` entries.

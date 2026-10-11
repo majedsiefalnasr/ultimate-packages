@@ -380,10 +380,128 @@ Role 5 is not an exclusion or a PX. It is a CSS adaptation to Ultimate's existin
 
 Unrelated CI debt is not fixed under this rule. Any change to the named pre-existing failure lists needs a separate decision.
 
-**Not decided here.** The study's proposals X-5, X-7, X-8, X-9, X-10 and X-11 stay proposals until separately decided. The recorded factual corrections to D-G3-4 and D-G3-9 (study §10) are applied at G3-D and G3-E research.
+**Not decided here.** The study's proposals X-5, X-7, X-8, X-9, X-10 and X-11 stay proposals until separately decided. **Later decision (2026-10-11):** X-8 (a), the accessibility row policy, is decided by ADR-053 (AC-3a); X-8 (b), the scan-race fix, was already merged (`802f341`, at `b290919`). X-5, X-7, X-9, X-10 and X-11 remain undecided. The recorded factual corrections to D-G3-4 and D-G3-9 (study §10) are applied at G3-D and G3-E research.
 
 **Consequences.**
 
 - Every remaining G3 Spec states, per framework, the R/K/X class of each emitted selector part, and ships a reach test inside its verification specs.
 - Runtime or DOM corrections (for example C2-0) are separately specified and authorized, never folded into a CSS parity port.
 - Tranche closeouts cite the X-12 evidence set, not the overall CI status and not the repository-wide provenance validator.
+
+## ADR-053 — Accessibility acceptance policy for the first pre-1.0 publish (P-B, AC-1 to AC-7; decides the X-8 (a) row policy)
+
+Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-s5-accessibility-acceptance-research.md`.
+
+**Context.** Blueprint §30 makes accessibility regressions release blockers but does not say how pre-existing findings are treated. The user ruled on 2026-10-11 that every Blueprint §40 criterion applies to the first pre-1.0 publish, that an unmet criterion is an exception only when explicitly documented and approved, and that GAP-086, GAP-100, GAP-111, GAP-112, GAP-123 and every critical-severity component-level baseline finding (19 rows at `99364dc`) are required fixes. ADR-052 left the cross-tranche proposal X-8 undecided.
+
+**Decision.**
+
+- **Policy P-B, severity-tiered with documented exceptions**, measured by AC-1 to AC-7:
+  - **AC-1:** no new violations; the existing baseline gate stays green and extends to every in-scope component story.
+  - **AC-2:** zero critical component-level baseline rows. **AC-2a:** a critical row counts as fixed only when the component supports an accessible name and the documented story provides one, and the row's fingerprint disappears from a real scan.
+  - **AC-3:** zero serious WCAG A/AA component-level rows, except rows individually approved as exceptions. **AC-3a (decides X-8 (a)):** a row is eligible as an upstream-Aura parity exception only when the rule is `color-contrast`, both colours equal resolved upstream Aura tokens, and the element has the same upstream role. Eligibility is not approval.
+  - **AC-4:** every in-scope interactive component's primary interactions are keyboard-operable per its WAI-ARIA APG pattern, shown by committed keyboard e2e tests green in CI.
+  - **AC-5:** modal and overlay components move focus in, contain it while modal, and restore it on close, shown by committed e2e assertions green in CI.
+  - **AC-6:** the 246 Storybook-shell rows (`region`, `landmark-one-main`, `page-has-heading-one`) are one documented environmental class, not component defects. A non-shell row under these rules is a component finding.
+  - **AC-7:** a dated manual assistive-technology check (screen reader and browser named) for each required fix and each new component family.
+- **Required fixes (unchanged, not re-scoped):** GAP-086, GAP-100, GAP-111, GAP-112, GAP-123 and the 19 critical baseline rows (Checkbox `label`, Table `aria-required-children`).
+- **Approved dispositions:** fix the 7 `svg-img-alt` rows, the 3 Scroller `scrollable-region-focusable` rows, and GAP-114, GAP-115 and GAP-122. GAP-103 and GAP-104 are fixed or become explicitly approved exceptions. GAP-116 may be recorded as an intended-divergence exception, effective only once entered in the approved exception register (entered 2026-10-11 as `BLUEPRINT_GAPS.md` §10 EX-3).
+- **Contrast rows:** the 29 rows earlier approved as Aura parity exceptions (11 on 2026-10-04, 18 on 2026-10-06) are **candidates only**. Each must meet AC-3a and receive explicit publish-level approval. The 5 Button contrast rows are tested against AC-3a independently.
+- **AC-8 (high contrast, RTL):** a research spike is authorized. Both stay unresolved §40 items until a decision follows the evidence; missing evidence is not an accepted exception.
+
+**Not decided here.** The X-8 (b) scan-race fix was already decided and merged (`802f341`, merged at `b290919`); this ADR records only X-8 (a). The other ADR-052 proposals (X-5, X-7, X-9, X-10, X-11) stay undecided.
+
+**Consequences.**
+
+- `ACCESSIBILITY_BASELINE.md` rows leave the baseline only by real scans (its one-way-door contract is unchanged).
+- The required fixes and the approved dispositions each need their own Specs and normal approval gates.
+- Publish exceptions live in the exception register (gate G14), `BLUEPRINT_GAPS.md` §10, one row per approved exception.
+
+## ADR-054 — Tree-family components are implementation-eligible as framework-native components
+
+Status: Accepted (user decision, 2026-10-11, K-7 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-k7-tree-family-architecture-research.md`.
+
+**Context.** ADR-043 excludes Tree-family identity/selection/expansion from any shared contract and states the components remain framework-native. GAP-013 and DECISION-D's 2026-09-21 OrganizationChart clarification (`BLUEPRINT_GAPS.md`) nevertheless recorded the four components, or Angular OrganizationChart, as blocked or excluded from implementation. The 2026-10-11 scope ruling includes all remaining inventory areas. Re-verification against the pinned PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5 sources confirmed the divergent state models ADR-043 recorded. React and Vue OrganizationChart already ship with framework-local node types (G3-E, `dd4c963`).
+
+**Decision.**
+
+> Tree, TreeTable, TreeSelect and Angular OrganizationChart are implementation-eligible as framework-native components, each following its framework's upstream state model with framework-local types. ADR-043's exclusion of a shared hierarchical contract and DECISION-D's protection of that question remain unchanged.
+
+- Build order: Tree, then TreeSelect, then TreeTable, then Angular OrganizationChart. TreeTable's dependencies are addressed by its Spec.
+
+**Rejected.** A shared hierarchical contract in `uix-data` (reopens DECISION-D without new evidence); a shared type-only `TreeNode` (Angular's node type carries the contested state fields).
+
+**Consequences.**
+
+- No shared Tree type or contract enters any `uix-*` package.
+- If implementation surfaces genuine shared semantics, it is recorded as new evidence for DECISION-D and not acted on inside the implementation.
+- Each component goes through its own Spec, Spec Review, Plan and Plan Review. This ADR authorizes no implementation.
+
+## ADR-055 — External runtime dependency approval policy (DECISION-B); `chart.js` and `quill` approved as optional peers
+
+Status: Accepted (user decision, 2026-10-11, K-8 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-k8-decision-b-external-dependency-policy-research.md`. Does not amend ADR-004 or ADR-005.
+
+**Context.** ADR-004 covers Prime packages only, and no process existed for a non-Prime runtime dependency (DECISION-B). Chart (Chart.js) and Editor (Quill) are in scope. Upstream Prime packages load both libraries from the consumer's install without declaring them.
+
+**Decision.**
+
+- **Policy (option (a)).** A non-framework-ecosystem runtime dependency of a framework package requires a recorded approval with: a license on the CI license allowlist; a clean `pnpm audit --prod` for it and its closure; a review of install scripts (`onlyBuiltDependencies`); a recorded bundle cost; and an approved version range.
+- **Integration model I-1.** Such a dependency is an **optional peer dependency** (`peerDependencies` with `peerDependenciesMeta.optional`), loaded lazily by the consuming component only. Consumers who do not use that component install nothing.
+- **Approved cases.** `chart.js` `^4.5` (Chart) and `quill` `^2.0.3` (Editor), **subject to the policy checks being recorded and enforced**. Until the checks are recorded, neither may be declared by a package.
+- `DEPENDENCIES.md` gains an "approved optional runtime dependencies" category; the earlier copy-paste exclusion stays for PrimeReact's showcase dependencies.
+
+**Not established.** Whether company policy requires a legal review (Blueprint §8) is not known from the repository; no legal review is claimed.
+
+**Consequences.**
+
+- CI enforcement (a validator that rejects unapproved non-framework runtime dependencies or peers) is specified through its own Spec.
+- An Angular Chart must load Chart.js lazily, although PrimeNG imports it statically.
+- Chart and Editor still need their own Specs and Plans.
+
+## ADR-056 — No `config`, `passthrough` or shared `api` surface is needed for the approved component scope; icons are need-driven
+
+Status: Accepted (user decision, 2026-10-11, K-9 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-k9-config-passthrough-api-research.md`.
+
+**Context.** The remaining inventory lists `config` (full surface), `passthrough`, `api` (remaining surface) and the remaining icons. GAP-021 and ADR-018, ADR-024 and ADR-032 defer `config` and `passthrough` until real duplicate-pattern pressure. Research found that every upstream use in the components still to build maps to an established per-component Ultimate pattern, and that shipped components contain no passthrough usage.
+
+**Decision.**
+
+- Option N: no new `config`, `passthrough` or shared `api` surface is needed for the approved scope. GAP-021 and ADR-018, ADR-024 and ADR-032 are unchanged.
+- Remaining icons are in scope on a need-driven basis: those required by in-scope components, not every remaining upstream icon.
+- No new i18n/translation requirement is introduced; no current source requires one.
+
+**Consequences.**
+
+- In-scope component Specs follow the per-component precedents: English-default label inputs, `variant` through the base input tier, framework-local node types, and framework-native filtering and drag/drop.
+- `COMPONENT_INVENTORY.md` records the outcome for the cross-cutting rows.
+
+## ADR-057 — Performance benchmarks: Stage 1 protocol and P1–P8 measurement methods
+
+Status: Accepted (user decision, 2026-10-11, S-4 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-s4-performance-stage1-methods-research.md`.
+
+**Context.** Blueprint §31 requires established benchmarks. The user ruled all of P1–P8 in scope with two stages: Stage 1 records baselines; Stage 2 adds gates only where measured evidence supports them.
+
+**Decision.**
+
+- The common protocol and the P1–P8 methods in the evidence record are adopted: recorded identity and environment, production builds, warm-up and repeated runs, median/p95/interquartile range and variance statistics, same-commit run-to-run differences, and deterministic proxy metrics first. The suggested warm-up, run and iteration counts are starting values for the variance study, not requirements.
+- The playground applications are the benchmark harness, within the authorized scope of the work.
+- **Environment of record:** the pinned Playwright CI environment, with runner architecture and type recorded. Local Docker runs may supplement, never replace, CI evidence.
+- **No timing threshold is approved.** A Stage 2 threshold needs measured same-commit noise and a separate decision per category. The existing 15% bundle-size gate (P1) is unchanged.
+
+**Consequences.** Next is a Spec for the measurement harness and baseline recording. P8 for React and Vue depends on GAP-088.
+
+## ADR-058 — CLI quality and documented-API evidence bars for the first pre-1.0 publish
+
+Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-cli-quality-and-api-docs-evidence-research.md`.
+
+**Context.** The user ruled that every Blueprint §40 criterion, including CLI quality and documented APIs, applies to the first pre-1.0 publish, but no source gave a measurable bar. Code inspection found that `@ultimate/cli` and `@ultimate/mcp` read the compatibility manifest from the monorepo root, which an installed package does not contain (GAP-131).
+
+**Decision.**
+
+- **CLI bar CLI-1 to CLI-6:** unit tests per command and documented error exit; installed-package smoke tests for the CLI per framework fixture; an installed-package smoke test for MCP; every Blueprint §19 duty implemented or an approved exception; smoke tests with pnpm and npm at minimum; `--help` and README list every command, its arguments and exit codes. Installed-package CLI and MCP smoke tests are **required evidence**; the current pack/install check is insufficient because it never runs the published binaries.
+- **Approved first pre-1.0 publish exceptions:** the deferred `create` command and the `ai` stub. Neither is represented as implemented. They are entered in the exception register (gate G14), `BLUEPRINT_GAPS.md` §10 (EX-1, EX-2).
+- **GAP-131 is not covered by any exception:** it must be resolved before the CLI or MCP packages are published to consumers.
+- **Documented-API bar DOC-1 to DOC-5:** populated `api`, `accessibility` and `guidance` metadata for every in-scope shipped component and framework; an automated metadata-versus-API drift check; a generated API reference; story coverage of documented states; README validation.
+- **Generated API reference destination:** Storybook docs pages initially (consistent with ADR-044), kept composable with authored guidance.
+
+**Consequences.** CLI packaging and smoke-test work, and the metadata drift check and generated reference, each go through their own Spec and Plan gates; the documentation work is sequenced with the metadata coverage work.
