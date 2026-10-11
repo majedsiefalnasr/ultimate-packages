@@ -5,9 +5,9 @@
 // byte-for-byte into <package-dir>/dist/, so an installed @ultimate/cli or
 // @ultimate/mcp reads it from its own distribution. Run after tsup (which
 // cleans dist/). The canonical file is never modified.
-import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, realpathSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const REPO_ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 export const CANONICAL_MANIFEST = join(
@@ -30,7 +30,7 @@ export function copyCompatibilityManifest(packageDir) {
   return target;
 }
 
-if (process.argv[1] && import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   const packageDir = process.argv[2];
   if (!packageDir) {
     console.error(

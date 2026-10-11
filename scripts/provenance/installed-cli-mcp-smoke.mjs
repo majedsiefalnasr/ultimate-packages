@@ -7,7 +7,15 @@
 // the published binaries. pnpm only (OQ-1). The bare-name override behaviour
 // is probed before it is relied on (OQ-2).
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -287,7 +295,7 @@ export async function runSmoke() {
 }
 
 function isMainModule() {
-  return process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+  return process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href;
 }
 
 if (isMainModule()) {
