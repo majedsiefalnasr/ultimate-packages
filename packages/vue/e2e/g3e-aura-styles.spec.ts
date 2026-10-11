@@ -501,6 +501,9 @@ const K: Record<string, Record<string, string>> = {
     // E4-R1 (a): K, cited emission; not evidence of visual or behavioural parity.
     '.u-data-view > [role="status"]':
       "DataView.vue:134 span role=status (loading); no Vue loading story, and no Prime reference for Vue loading (G3E-7)",
+    // GAP-124 B-2: K, cited emission; not evidence of visual or behavioural parity.
+    '.u-data-view > [role="status"] svg':
+      "DataView.vue:136 span role=status (loading) + DataView.vue:137 <USpinnerIcon spin aria-hidden> renders the svg; no Vue G3-E loading story (the GAP-124 fixture is not in the G3-E suites, Spec A1-1); covered by gap-124-contrast.spec.ts",
   },
 };
 const STATE =
