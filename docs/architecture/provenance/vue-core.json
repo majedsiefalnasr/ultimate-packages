@@ -274,5 +274,11 @@
     "ultimateDestination": "packages/vue-core/src/styling/ssr-contract.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the client-only styling contract: a server render emits no <style> and registers nothing (GAP-078)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/styling/icon-spin.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the shared u-icon-spin rule is registered once on mount (GAP-124)."
   }
 ]

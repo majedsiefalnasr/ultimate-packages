@@ -2,6 +2,7 @@ import {
   StyleSheet,
   css,
   registerHiddenAccessible,
+  registerIconSpin,
   registerThemeVariables,
   type StyleMeta,
 } from "@ultimate/uix-styled";
@@ -43,6 +44,8 @@ export function registerComponentStyle(
   additionalPresetKeys: readonly string[] = []
 ): void {
   registerHiddenAccessible(vueCoreStyleSheet);
+  // GAP-124: the opt-in `.u-icon-spin` rule (class-scoped; see uix-styled icon-spin.ts).
+  registerIconSpin(vueCoreStyleSheet);
 
   // Theme variable DEFINITIONS first — the structural CSS below refers to
   // them via dt()-resolved var(--u-*) references, which resolve to nothing

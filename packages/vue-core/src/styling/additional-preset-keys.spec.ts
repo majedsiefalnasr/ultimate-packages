@@ -47,6 +47,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
     registerComponentStyle("alpha", alphaStyle);
     expect(keys()).toEqual([
       "u-hidden-accessible",
+      "u-icon-spin",
       "u-common-variables",
       "alpha-variables",
       "alpha",
@@ -57,6 +58,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
     registerComponentStyle("alpha", alphaStyle, []);
     expect(keys()).toEqual([
       "u-hidden-accessible",
+      "u-icon-spin",
       "u-common-variables",
       "alpha-variables",
       "alpha",
@@ -67,6 +69,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
     registerComponentStyle("alpha", alphaStyle, ["gamma", "beta"]);
     expect(keys()).toEqual([
       "u-hidden-accessible",
+      "u-icon-spin",
       "u-common-variables",
       "alpha-variables",
       "gamma-variables",
@@ -85,6 +88,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
     registerComponentStyle("alpha", alphaStyle, ["beta"]);
     expect(keys()).toEqual([
       "u-hidden-accessible",
+      "u-icon-spin",
       "u-common-variables",
       "alpha-variables",
       "beta-variables",
