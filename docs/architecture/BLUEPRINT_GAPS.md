@@ -2211,6 +2211,8 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Expected state:** Installed packages resolve the manifest from their own distribution, proven by the installed-package CLI and MCP smoke tests required by ADR-058 (CLI-2, CLI-3).
 - **What it blocks:** Publishing `@ultimate/cli` and `@ultimate/mcp` to consumers (first pre-1.0 publish).
 - **Scope boundary:** Packaging change plus smoke tests through their own Spec and Plan; requires separate authorization.
+- **Reproduced (2026-10-11, Task 3):** the installed-package smoke harness failed on unmodified packages: `init`, `add`, `theme` and `doctor` exited with ENOENT on `compatibility-manifest.json` (resolved inside `node_modules/.pnpm/…`) in the Angular, React and Vue consumers, and MCP `check_framework_compatibility` returned `manifest_unreadable` for all four calls; `generate Button` and MCP initialize passed (`fb24b59`).
+- **Fix (pending closeout):** `84ccb4d` (CLI), `fc0e221` (MCP), `ff65e99` (CI smoke step); installed-package smoke green locally (all checks PASS; packaged copy byte-identical in both tarballs). Status unchanged until closeout by user decision.
 
 ---
 

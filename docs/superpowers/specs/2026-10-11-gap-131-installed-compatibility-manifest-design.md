@@ -94,7 +94,7 @@ The existing unit fixtures (`packages/cli/test/fixtures/*-project`) are not reus
 | `ultimate add @ultimate/uix-utils` | Exit 0; the package present in `package.json`                                                          |
 | `ultimate theme aura`              | Exit 0; `@ultimate/themes` installed; theme entry file written                                         |
 | `ultimate doctor`                  | Exit 0; report ends with an "N of N known components reported" line, N being the metadata record count |
-| `ultimate generate button`         | Exit 0; non-empty snippet on stdout                                                                    |
+| `ultimate generate Button`         | Exit 0; non-empty snippet on stdout                                                                    |
 | All of the above                   | No output mentions `compatibility-manifest.json` as missing or unreadable                              |
 
 **MCP assertions, from one consumer, using the installed `ultimate-mcp` over stdio:**
@@ -160,3 +160,5 @@ Reviewed against ADR-058, GAP-131, the CLI/API-docs research (CLI-F1), the Phase
 | SR-7 | The installed-path description assumed npm's flat layout                                                                                          | §1 reworded                                                   |
 
 **Confirmed consistent (no change):** the copy runs after `tsup` (`clean: true`) and after `rename-dts.mjs`, which only renames `.d.ts` files; package builds run from each package directory (`pnpm -r --if-present run build`), so `../../scripts/…` resolves; `dist/` is already in `files`; the bundled `dist/index.mjs` and `dist/bin.mjs` and the source modules share one package root; MCP's existing path module and its tests' path mocking remain the seam; the reproduce-first condition (§6.1) is preserved.
+
+**Amendment A1 (approved at Plan Review):** `generate` uses the record name `Button` (case-sensitive match, `generate.ts:93`).
