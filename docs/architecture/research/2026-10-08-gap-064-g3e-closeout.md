@@ -114,3 +114,33 @@ All five G3 tranches have now been executed (G3-A..G3-E). G3-E itself leaves ope
 
 - **Assessment:** the branch now **meets the plan's merge-readiness criteria**. G3-E is executed, with the E-1 items resolved and closed; its remaining open GAPs (GAP-102..130, GAP-124 PARTIAL) and recorded limitations stay open by design. **GAP-064 stays PARTIAL.**
 - **Merge and push remain separate user decisions** (plan: "closeout acceptance, merge and push are separate user decisions"). After a merge and push, ADR-052 X-12 asks for the merge commit's CI run to show the G3-E step green, with only the inherited failures.
+
+## 11. Post-merge CI evidence (2026-10-11)
+
+**Merge:** `d3aabf5` on `main` is a `--no-ff` merge of `60fd82d` (the G3-E branch head) into the previous `main` `cad9f85`; its tree equals the branch head. It was pushed without force, and `origin/main` equals `main`. The feature branch `feature/gap-064-g3e-media-data` is kept.
+
+**CI run `38088748035` (workflow CI, push of `d3aabf5`), conclusion `failure`:**
+
+- **G3-E steps green in both frameworks:** `Run G3-E verification specs`, `G3-E differential accessibility validation` and `Upload G3-E accessibility reports` succeed in `track-a-browser-visual-a11y (ng)` and `(vue)` (ADR-052 X-12).
+- **The same 12 failing steps as the previous `main` CI run `37769369281` (`cad9f85`):** none were added and none were fixed by this merge. They are:
+  - `ci`: Test, Lint, Format check, Coverage regression check, Provenance validation, Provenance scripts self-tests, SAST baseline validation.
+  - `track-a-browser-visual-a11y (ng)`: Run G3-D verification specs.
+  - `track-a-browser-visual-a11y (vue)`: Run G3-B verification specs, Run G3-D verification specs.
+  - `track-e-ssr-hydration (react)` and `(vue)`: Run Playwright SSR project.
+- **G3-D Drawer failures = GAP-097.** In this run they are `Ng/Drawer full and RTL G3-D layout` (Chromium, Firefox, WebKit) and `Vue/Drawer full and RTL G3-D layout` (Chromium, Firefox, WebKit).
+- **G3-B Vue WebKit Card failure = U2.** In this run it is `Vue/Card WithHeaderAndFooter G3-B visual` (vue-webkit).
+- For these two groups, the comparison with the previous run is **by failing step**: the previous run's test names were not retrievable from its logs.
+- **React exports test:** `packages/react` `test/exports.test.ts` still reports **6 failed / 850 passed**, matching the previous run. G3-E does not change React.
+- **Long-standing red `ci` steps** (lint, format, coverage, provenance, SAST and the React test) stay registered as **GAP-087 through GAP-095**. They did not pass in this run.
+- **SSR hydration:** React and Vue fail as before; Angular passes.
+
+**Release workflow run `38088748055`: failure.** `pnpm install --frozen-lockfile` stops with `ERR_PNPM_UNSUPPORTED_ENGINE`: the job uses Node v20.20.2, while `@angular-devkit/architect` requires `^22.22.3 || ^24.15.0 || >=26.0.0`. This is an existing environment/toolchain issue (the Release runs on `cad9f85`, `4c099a9`, `c567039`, `b290919` and `0c010ca` fail the same way), not a G3-E regression.
+
+**Status after merge:**
+
+- **GAP-064 stays PARTIAL.** G3-E is executed and merged, not complete.
+- **Still open:** GAP-102 through GAP-130 (GAP-124 PARTIAL) and the reused GAP-098.
+- **Known limitations, unchanged:**
+  - GAP-124: the spinner does not animate and has a 2.31:1 non-text contrast on the mask.
+  - The Vue OrderList narrow layout is unverified.
+  - The OrganizationChart toggle's mouse activation is unverified.
