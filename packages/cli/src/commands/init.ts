@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { detectFramework } from "../detect-framework.js";
 import { matchCompatibility, type CompatibilityEntry } from "../compatibility.js";
+import { COMPATIBILITY_MANIFEST_PATH } from "../manifest-path.js";
 import { installPackage } from "../install-package.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -38,24 +39,6 @@ const CLI_PACKAGE_ROOT = findUp(__dirname, "package.json");
 
 /** This package's own `package.json`, read for `cliVersion` (spec §6.5). */
 const CLI_PACKAGE_JSON_PATH = join(CLI_PACKAGE_ROOT, "package.json");
-
-/**
- * Repo-root-relative location of the compatibility manifest (spec §6.4).
- * `packages/cli`'s own root is two levels under the repo root
- * (`packages/cli/`), which holds regardless of whether this module runs
- * from its source location (`src/commands/init.ts`) or a tsup-bundled
- * output (e.g. inlined into `dist/bin.mjs`) — both are located via
- * `findUp` from `package.json`, not a hardcoded traversal depth from
- * `__dirname` itself.
- */
-const MANIFEST_PATH = join(
-  CLI_PACKAGE_ROOT,
-  "..",
-  "..",
-  "docs",
-  "architecture",
-  "compatibility-manifest.json"
-);
 
 export interface InitResult {
   exitCode: number;
@@ -93,7 +76,7 @@ function readCliVersion(): string {
 }
 
 function readManifest(): CompatibilityEntry[] {
-  const raw = readFileSync(MANIFEST_PATH, "utf-8");
+  const raw = readFileSync(COMPATIBILITY_MANIFEST_PATH, "utf-8");
   return JSON.parse(raw) as CompatibilityEntry[];
 }
 

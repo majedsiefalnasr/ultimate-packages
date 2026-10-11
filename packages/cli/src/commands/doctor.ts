@@ -6,6 +6,7 @@ import { ALL_COMPONENTS } from "@ultimate/component-metadata";
 
 import { detectFramework, type Framework } from "../detect-framework.js";
 import { matchCompatibility, type CompatibilityEntry } from "../compatibility.js";
+import { COMPATIBILITY_MANIFEST_PATH } from "../manifest-path.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -26,15 +27,6 @@ function findUp(startDir: string, marker: string): string {
 
 const CLI_PACKAGE_ROOT = findUp(__dirname, "package.json");
 const CLI_PACKAGE_JSON_PATH = join(CLI_PACKAGE_ROOT, "package.json");
-const MANIFEST_PATH = join(
-  CLI_PACKAGE_ROOT,
-  "..",
-  "..",
-  "docs",
-  "architecture",
-  "compatibility-manifest.json"
-);
-
 const FRAMEWORK_DEPENDENCY_NAMES: Record<Framework, string> = {
   angular: "@angular/core",
   react: "react",
@@ -71,7 +63,7 @@ function readCliVersion(): string {
 }
 
 function readManifest(): CompatibilityEntry[] {
-  const raw = readFileSync(MANIFEST_PATH, "utf-8");
+  const raw = readFileSync(COMPATIBILITY_MANIFEST_PATH, "utf-8");
   return JSON.parse(raw) as CompatibilityEntry[];
 }
 
