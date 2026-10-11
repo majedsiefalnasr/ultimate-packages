@@ -892,5 +892,17 @@
     "ultimateDestination": "packages/ng/e2e/gap-124-icon-spin.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored browser test. Verifies Button and DataView loading icons rotate with normal motion and are static, visible and unchanged in size under reduced motion (GAP-124 A-AC1/A-AC2)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/e2e/non-text-contrast.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored browser-test helper. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement (Spec §10)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/e2e/gap-124-contrast.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored browser test. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement of the DataView loading icon (Spec §10)."
   }
 ]
