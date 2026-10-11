@@ -47,7 +47,7 @@ const EXPECTED_COLOR: Record<Scheme, string> = {
 async function open(page: Page, scheme: Scheme) {
   await page.emulateMedia({ colorScheme: scheme, reducedMotion: "reduce" });
   await page.goto(storyUrl("data-dataview--loading"));
-  await expect(page.locator(ICON)).toBeVisible();
+  await expect(page.locator(ICON)).toBeVisible({ timeout: 15_000 }); // first story load can exceed the 5 s default
   await page.waitForLoadState("networkidle");
   await expect(page.locator(ICON)).toBeVisible();
 }
