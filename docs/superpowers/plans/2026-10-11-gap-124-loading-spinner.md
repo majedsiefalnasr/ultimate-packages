@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Revision 4 for final approval. Revision 4 replaces the Task 8 contrast measurement with the coverage-based method of Spec revision 4 §10 (B-AC7, KL-4). Amendment A1 is approved and folded into the Spec. Revision 2 corrected the React file boundary (R-AC4) and the Task 4 diff-check order; revision 3 updated the Spec reference. Execution method: `superpowers:subagent-driven-development` (user, 2026-10-11). Not committed. Nothing in this plan is authorized until the user gives final approval.
+**Status:** Revision 4 approved 2026-10-11; Amendment A2 (user ruling during Task 8): L1 tolerance is the per-condition rounding range (Spec B-AC6, §10, §16). Revision 4 replaces the Task 8 contrast measurement with the coverage-based method of Spec revision 4 §10 (B-AC7, KL-4). Amendment A1 is approved and folded into the Spec. Revision 2 corrected the React file boundary (R-AC4) and the Task 4 diff-check order; revision 3 updated the Spec reference. Execution method: `superpowers:subagent-driven-development` (user, 2026-10-11). Not committed. Nothing in this plan is authorized until the user gives final approval.
 
 **Goal:** Make Angular and Vue loading spinners rotate, stop under reduced motion (item A), and give the DataView loading icon ≥ 3:1 non-text contrast over declared surfaces (item B), without changing React-only documents.
 
@@ -35,9 +35,9 @@
   - new dependencies: none (PNG decoding is done in the browser through canvas).
 - **Contrast thresholds:**
   - **Required conditions:** C-L1..C-L5 and C-D1..C-D5 are each asserted at layer L1 ≥ 3:1. L1 is the minimum over every fully covered icon pixel (`W − K ≥ 254` on every channel) against every adjacent mask pixel, at device scale 4.
-  - **Tolerance:** every L1 value is within ±0.10 of Spec §6.4.
+  - **Tolerance (A2):** every L1 value lies within its rounding range: min/max WCAG ratio over the mask composite with each channel rounded down or up and the fill with each channel −2/0/+2, plus a 0.005 margin (Spec B-AC6).
   - **Not covered:** N-L1..N-L3 are annotated, with the tolerance check only.
-  - **Negative control:** asserts < 3 (2.31 ± 0.10) in C-L1.
+  - **Negative control:** asserts < 3 and within its rounding range (about [2.24, 2.35]) in C-L1.
   - **Validity guards (B-AC7):** these fail closed.
   - **Layer L2:** the rendered anti-aliased contrast is reported only.
 - **Stop rules:**
@@ -915,7 +915,7 @@ git commit -m "fix(ng,vue): give the DataView loading icon 3:1 non-text contrast
 
 **Interfaces:**
 
-- Produces: `contrastRatio(a: Rgb, b: Rgb): number`, `measureIconContrast(page: Page, icon: Locator, options?: { validate?: boolean }): Promise<IconContrast>`, where `type Rgb = readonly [number, number, number]` and `interface IconContrast { ratio: number; corePixels: number; inkPixels: number; maxCoreDeviation: number; renderedMedian: number }`.
+- Produces: `roundingRange(fill: Rgb, surface: Rgb, alpha: number): [number, number]` (Amendment A2), `contrastRatio(a: Rgb, b: Rgb): number`, `measureIconContrast(page: Page, icon: Locator, options?: { validate?: boolean }): Promise<IconContrast>`, where `type Rgb = readonly [number, number, number]` and `interface IconContrast { ratio: number; corePixels: number; inkPixels: number; maxCoreDeviation: number; renderedMedian: number }`.
 
 - [ ] **Step 1: Write the helper**
 
@@ -956,6 +956,24 @@ const luminance = ([r, g, b]: Rgb): number =>
 export function contrastRatio(a: Rgb, b: Rgb): number {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
+}
+
+/**
+ * Spec B-AC6 (Amendment A2): the L1 range allowed by 8-bit compositing, with each channel of the
+ * mask composite rounded down or up, and by the ±2 core-colour guard (B-AC7).
+ */
+export function roundingRange(fill: Rgb, surface: Rgb, alpha: number): [number, number] {
+  const combos = (options: number[][]): Rgb[] =>
+    options.reduce<number[][]>(
+      (acc, opts) => acc.flatMap((a) => opts.map((o) => [...a, o])),
+      [[]]
+    ) as unknown as Rgb[];
+  const masks = combos(
+    surface.map((c) => [Math.floor(c * (1 - alpha)), Math.floor(c * (1 - alpha)) + 1])
+  );
+  const fills = combos(fill.map((c) => [-2, 0, 2].map((d) => Math.min(255, Math.max(0, c + d)))));
+  const ratios = fills.flatMap((f) => masks.map((m) => contrastRatio(f, m)));
+  return [Math.min(...ratios), Math.max(...ratios)];
 }
 
 const MARGIN = 6; // CSS px of mask captured around the icon box
@@ -1057,9 +1075,9 @@ export async function measureIconContrast(
 ```ts
 import { expect, test, type Page } from "@playwright/test";
 import { storyUrl } from "./accessibility-envelope";
-import { measureIconContrast } from "./non-text-contrast";
+import { measureIconContrast, roundingRange, type Rgb } from "./non-text-contrast";
 
-/** GAP-124 item B (Spec §6.4, §10). Expected values: Spec §6.4; tolerance ±0.10 (B-AC6). */
+/** GAP-124 item B (Spec §6.4, §10). Expected values: Spec §6.4; tolerance: per-condition rounding range (B-AC6, Amendment A2). */
 type Scheme = "light" | "dark";
 const REQUIRED: Array<[id: string, scheme: Scheme, surface: string, expected: number]> = [
   ["C-L1", "light", "#ffffff", 5.13],
@@ -1078,7 +1096,22 @@ const NOT_COVERED: Array<[id: string, surface: string, expected: number]> = [
   ["N-L2", "#64748b", 1.53],
   ["N-L3", "#10b981", 2.36],
 ];
-const TOLERANCE = 0.1;
+const EPSILON = 0.005;
+/** Specified icon fill (`text.hover.color`) and `mask.background` alpha per scheme (Spec §6.1). */
+const FILL: Record<Scheme, string> = { light: "#1e293b", dark: "#ffffff" };
+const ALPHA: Record<Scheme, number> = { light: 0.4, dark: 0.6 };
+const rgb = (hex: string): Rgb =>
+  [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)) as unknown as Rgb;
+/** B-AC6: soft-asserts that an L1 value lies in its rounding range. */
+function expectInRange(id: string, ratio: number, fill: string, surface: string, alpha: number) {
+  const [lo, hi] = roundingRange(rgb(fill), rgb(surface), alpha);
+  expect
+    .soft(ratio, `${id} ≥ rounding range min ${lo.toFixed(3)}`)
+    .toBeGreaterThanOrEqual(lo - EPSILON);
+  expect
+    .soft(ratio, `${id} ≤ rounding range max ${hi.toFixed(3)}`)
+    .toBeLessThanOrEqual(hi + EPSILON);
+}
 const ICON = '.u-data-view > [role="status"] svg';
 const EXPECTED_COLOR: Record<Scheme, string> = {
   light: "rgb(30, 41, 59)",
@@ -1116,12 +1149,10 @@ test.describe("GAP-124 B layer L1 (device scale 4)", () => {
         const m = await measureIconContrast(page, icon);
         note(
           id,
-          `${scheme} ${surface}: L1 ${m.ratio.toFixed(2)} (core ${m.corePixels}/${m.inkPixels})`
+          `${scheme} ${surface}: L1 ${m.ratio.toFixed(2)} (expected ${expected}; core ${m.corePixels}/${m.inkPixels})`
         );
         expect.soft(m.ratio, `${id} (${surface}) ≥ 3`).toBeGreaterThanOrEqual(3);
-        expect
-          .soft(Math.abs(m.ratio - expected), `${id} within ±${TOLERANCE} of ${expected}`)
-          .toBeLessThanOrEqual(TOLERANCE);
+        expectInRange(id, m.ratio, FILL[scheme], surface, ALPHA[scheme]);
       }
     });
   }
@@ -1135,11 +1166,9 @@ test.describe("GAP-124 B layer L1 (device scale 4)", () => {
       const m = await measureIconContrast(page, page.locator(ICON));
       note(
         id,
-        `light ${surface}: L1 ${m.ratio.toFixed(2)} (not covered; core ${m.corePixels}/${m.inkPixels})`
+        `light ${surface}: L1 ${m.ratio.toFixed(2)} (expected ${expected}; not covered; core ${m.corePixels}/${m.inkPixels})`
       );
-      expect
-        .soft(Math.abs(m.ratio - expected), `${id} within ±${TOLERANCE} of ${expected}`)
-        .toBeLessThanOrEqual(TOLERANCE);
+      expectInRange(id, m.ratio, FILL.light, surface, ALPHA.light);
     }
   });
 
@@ -1155,7 +1184,7 @@ test.describe("GAP-124 B layer L1 (device scale 4)", () => {
     const m = await measureIconContrast(page, icon);
     note("negative", `C-L1 with mask.color: L1 ${m.ratio.toFixed(2)}`);
     expect(m.ratio).toBeLessThan(3);
-    expect(Math.abs(m.ratio - 2.31)).toBeLessThanOrEqual(TOLERANCE);
+    expectInRange("negative", m.ratio, "#e2e8f0", "#ffffff", ALPHA.light);
   });
 
   test("GAP-124 B the color rule survives a custom loadingIcon class on the status region", async ({
@@ -1217,8 +1246,8 @@ Copy every annotation into `progress.md`, including:
 
 Stop rules:
 
-- _*Any C-* below 3:_* stop and return the color decision to the user.
-- **Any value outside ±0.10, or any validity-guard error (B-AC7):** stop and report the engine and value. Do not loosen the tolerance or the guards to make a run pass.
+- **Any C-\* below 3:** stop and return the color decision to the user.
+- **Any value outside its rounding range (A2), or any validity-guard error (B-AC7):** stop and report the engine and value. Do not loosen the tolerance or the guards to make a run pass.
 
 - [ ] **Step 5: Add provenance entries, then validate**
 
