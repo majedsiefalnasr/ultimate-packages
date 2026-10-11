@@ -5,19 +5,31 @@
 // isolation (via vi.doMock) without needing to mock node:fs's readFileSync
 // for the "malformed content" case (only the "file does not exist" case
 // needs the fs-level mock).
+//
+// GAP-131: the path is the copy built into this package's own dist/
+// (scripts/copy-compatibility-manifest.mjs). The package root is the nearest
+// directory containing package.json — the same in source, in the tsup bundle
+// and in an installed package. No fallback to the monorepo's docs/ directory.
+import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// This file lives at <repo-root>/packages/mcp/src/manifest-path.ts — resolve
-// relative to THIS file's location (not process.cwd(), which varies by
-// invocation context), matching the exact convention already established by
-// @ultimate/component-schema/src/validate.ts's own REPO_ROOT resolution.
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, "..", "..", "..");
+function findPackageRoot(startDir: string): string {
+  let dir = startDir;
+  for (;;) {
+    if (existsSync(join(dir, "package.json"))) {
+      return dir;
+    }
+    const parent = dirname(dir);
+    if (parent === dir) {
+      throw new Error(`manifest-path: could not locate "package.json" above ${startDir}`);
+    }
+    dir = parent;
+  }
+}
 
 export const COMPATIBILITY_MANIFEST_PATH = join(
-  REPO_ROOT,
-  "docs",
-  "architecture",
+  findPackageRoot(dirname(fileURLToPath(import.meta.url))),
+  "dist",
   "compatibility-manifest.json"
 );
