@@ -60,3 +60,19 @@ test("consumer package.json depends on the CLI and MCP tarballs and overrides ev
     "@ultimate/uix-utils": "file:/t/uix-utils.tgz",
   });
 });
+
+import { mentionsManifestFailure } from "./installed-cli-mcp-smoke.mjs";
+
+test("mentionsManifestFailure detects a missing compatibility manifest", () => {
+  assert.equal(
+    mentionsManifestFailure(
+      "Error: ENOENT: no such file or directory, open '/x/node_modules/docs/architecture/compatibility-manifest.json'"
+    ),
+    true
+  );
+  assert.equal(mentionsManifestFailure('{"code":"manifest_unreadable","message":"ENOENT"}'), true);
+  assert.equal(
+    mentionsManifestFailure("init: installed @ultimate/react and wrote ultimate.config.json."),
+    false
+  );
+});
