@@ -66,6 +66,16 @@ describe("UBaseComponent", () => {
     ).toHaveLength(1);
   });
 
+  it("registers the shared u-icon-spin rule into the component's document, once (GAP-124)", () => {
+    TestBed.createComponent(TestHostComponent).detectChanges();
+    TestBed.createComponent(TestHostComponent).detectChanges();
+    const spin = Array.from(document.head.querySelectorAll("style")).filter(
+      (s) => s.getAttribute("data-u-ng-style") === "u-icon-spin"
+    );
+    expect(spin).toHaveLength(1);
+    expect(spin[0].textContent).toContain("@keyframes u-icon-spin");
+  });
+
   it("resolves dt() calls in registered CSS into var(--u-*, ...) references", () => {
     // Define a test component that uses dt() calls in its CSS
     @Component({

@@ -394,6 +394,7 @@ test.describe("GAP-078 server-rendered styles", () => {
     expect(body).toContain('data-u-ng-style="u-common-variables"');
     expect(body).toContain('data-u-ng-style="button"');
     expect(body).toContain('data-u-ng-style="u-hidden-accessible"');
+    expect(body).toContain('data-u-ng-style="u-icon-spin"'); // GAP-124
     // GAP-064 Tranche 1 (ADR-051): a renamed component is server-rendered
     // under the upstream preset key and adopted once on hydration.
     expect(body).toContain('data-u-ng-style="inputtext"');
@@ -416,6 +417,7 @@ test.describe("GAP-078 server-rendered styles", () => {
     for (const [key, n] of Object.entries(counts)) expect(n, key).toBe(1);
     expect(counts["inputtext"]).toBe(1);
     expect(counts["inputtext-variables"]).toBe(1);
+    expect(counts["u-icon-spin"]).toBe(1); // GAP-124
 
     assertNoHydrationErrors(errors);
   });

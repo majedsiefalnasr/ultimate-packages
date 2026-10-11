@@ -1,7 +1,12 @@
 import { Directive, ElementRef, PLATFORM_ID, Renderer2, inject, input } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { cn } from "@ultimate/uix-utils/classnames";
-import { css, registerHiddenAccessible, registerThemeVariables } from "@ultimate/uix-styled";
+import {
+  css,
+  registerHiddenAccessible,
+  registerIconSpin,
+  registerThemeVariables,
+} from "@ultimate/uix-styled";
 import { UltimateConfig } from "../config/ultimate-config";
 import { ngCoreStyleSheetFor } from "./style-sheet";
 
@@ -56,6 +61,8 @@ export abstract class UBaseComponent {
     // has() guards; see registerThemeVariables' doc comment.
     registerThemeVariables(sheet, this.componentName);
     registerHiddenAccessible(sheet);
+    // GAP-124: the opt-in `.u-icon-spin` rule (class-scoped; see uix-styled icon-spin.ts).
+    registerIconSpin(sheet);
 
     if (!sheet.has(this.componentName)) {
       sheet.add(this.componentName, css`${this.styleModule.css}`);

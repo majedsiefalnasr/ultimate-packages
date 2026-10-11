@@ -22,6 +22,7 @@ export {
   hiddenAccessibleCss,
   registerHiddenAccessible,
 } from "./stylesheet/hidden-accessible";
+export { ICON_SPIN_KEY, iconSpinCss, registerIconSpin } from "./stylesheet/icon-spin";
 
 export * from "./utils/index";
 

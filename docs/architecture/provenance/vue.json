@@ -880,5 +880,23 @@
     "ultimateDestination": "packages/vue/src/galleria/galleria.stories.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored Galleria stories, including the GAP-064 G3-E WithoutThumbnails and FullScreen verification stories added in E-0 (Spec §5.2)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/e2e/gap-124-icon-spin.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored browser test. Verifies Button and DataView loading icons rotate with normal motion and are static, visible and unchanged in size under reduced motion (GAP-124 A-AC1/A-AC2)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/e2e/non-text-contrast.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored browser-test helper. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement (Spec §10)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/e2e/gap-124-contrast.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored browser test. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement of the DataView loading icon (Spec §10)."
   }
 ]
