@@ -880,5 +880,11 @@
     "ultimateDestination": "packages/vue/src/galleria/galleria.stories.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored Galleria stories, including the GAP-064 G3-E WithoutThumbnails and FullScreen verification stories added in E-0 (Spec §5.2)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue/e2e/gap-124-icon-spin.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored browser test. Verifies Button and DataView loading icons rotate with normal motion and are static, visible and unchanged in size under reduced motion (GAP-124 A-AC1/A-AC2)."
   }
 ]
