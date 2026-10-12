@@ -105,7 +105,18 @@ jobs:
         if: ${{ !cancelled() }}
         env:
           SARIF_OUTPUT_DIR: ${{ steps.codeql-analyze.outputs.sarif-output }}
-        run: echo "SARIF_PATH=$SARIF_OUTPUT_DIR/javascript-typescript.sarif" >> "$GITHUB_ENV"
+        run: |
+          if [ -z "$SARIF_OUTPUT_DIR" ]; then
+            echo "::error::CodeQL sarif-output directory is empty"
+            exit 1
+          fi
+          SARIF_PATH="$SARIF_OUTPUT_DIR/javascript.sarif"
+          if [ ! -f "$SARIF_PATH" ]; then
+            echo "::error::CodeQL SARIF file not found at $SARIF_PATH"
+            exit 1
+          fi
+          printf 'SARIF_PATH=%s\n' "$SARIF_PATH" >> "$GITHUB_ENV"
+          echo "Resolved CodeQL SARIF: $SARIF_PATH"
 
       - name: SAST baseline validation
         if: ${{ !cancelled() }}
