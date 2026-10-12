@@ -441,3 +441,56 @@ jobs:
         with:
           name: playwright-report-ssr-${{ matrix.framework }}
           path: playwright-report/
+
+  gap089-react-pack-install-verification:
+    if: >-
+      ${{
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.base.ref == 'main' &&
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        github.event.pull_request.head.ref == 'verify/gap-089-react-pack-install-8fc69cd'
+      }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout GAP-089 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 8fc69cdec45a73a3f0c6c4136b04bf9b93f2f4cb
+          persist-credentials: false
+
+      - name: Record runner and assert candidate SHA
+        env:
+          VERIFICATION_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -eu
+          echo "workflow_event_sha=$GITHUB_SHA"
+          echo "verification_pr_head_sha=$VERIFICATION_PR_HEAD_SHA"
+          candidate_sha=$(git rev-parse HEAD)
+          echo "checked_out_candidate_sha=$candidate_sha"
+          test "$candidate_sha" = "8fc69cdec45a73a3f0c6c4136b04bf9b93f2f4cb"
+          uname -srm
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.15.0"
+          cache: "pnpm"
+
+      - name: Record tool versions
+        run: |
+          node --version
+          pnpm --version
+
+      - name: Install candidate dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build candidate
+        run: pnpm run build
+
+      - name: React pack/install integrity at candidate
+        run: pnpm run integrity:pack-install -- react
