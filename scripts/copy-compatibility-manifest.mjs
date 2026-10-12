@@ -6,10 +6,10 @@
 // @ultimate/mcp reads it from its own distribution. Run after tsup (which
 // cleans dist/). The canonical file is never modified.
 import { copyFileSync, existsSync, mkdirSync, realpathSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const REPO_ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 export const CANONICAL_MANIFEST = join(
   REPO_ROOT,
   "docs",
