@@ -29,7 +29,7 @@
     "zod": "^3.25.0 || ^4.0.0"
   },
   "scripts": {
-    "build": "tsup && node scripts/rename-dts.mjs",
+    "build": "tsup && node scripts/rename-dts.mjs && node ../../scripts/copy-compatibility-manifest.mjs .",
     "test": "vitest run --typecheck",
     "test:coverage": "vitest run --coverage --typecheck",
     "typecheck": "tsc --noEmit"

@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { detectFramework } from "../detect-framework.js";
 import { matchCompatibility, type CompatibilityEntry } from "../compatibility.js";
+import { COMPATIBILITY_MANIFEST_PATH } from "../manifest-path.js";
 import { installPackage } from "../install-package.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -32,15 +33,6 @@ function findUp(startDir: string, marker: string): string {
 
 const CLI_PACKAGE_ROOT = findUp(__dirname, "package.json");
 const CLI_PACKAGE_JSON_PATH = join(CLI_PACKAGE_ROOT, "package.json");
-const MANIFEST_PATH = join(
-  CLI_PACKAGE_ROOT,
-  "..",
-  "..",
-  "docs",
-  "architecture",
-  "compatibility-manifest.json"
-);
-
 export interface AddResult {
   exitCode: number;
   message: string;
@@ -69,7 +61,7 @@ function readCliVersion(): string {
 }
 
 function readManifest(): CompatibilityEntry[] {
-  const raw = readFileSync(MANIFEST_PATH, "utf-8");
+  const raw = readFileSync(COMPATIBILITY_MANIFEST_PATH, "utf-8");
   return JSON.parse(raw) as CompatibilityEntry[];
 }
 

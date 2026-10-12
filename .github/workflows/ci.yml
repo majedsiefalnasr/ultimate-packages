@@ -85,6 +85,10 @@ jobs:
             echo "::endgroup::"
           done
 
+      - name: Installed-package smoke (CLI/MCP)
+        if: ${{ !cancelled() }}
+        run: pnpm run smoke:installed
+
       - name: CodeQL init
         if: ${{ !cancelled() }}
         uses: github/codeql-action/init@v3
