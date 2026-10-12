@@ -545,12 +545,12 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Production readiness (Phase 10)
 
 #### GAP-031 — No dependency/license/SAST scanning wired into CI
-- **Status:** RESOLVED as wiring; **not green in CI** (corrected 2026-10-07, CI-health registration). The scans are wired, and the license scan passes. From the first remote CI run (2026-10-04) until GAP-095's remediation, the dependency scan failed on real advisories; it passes from `bde9bbb` (CI run 37607802835, GAP-095 RESOLVED 2026-10-07). The SAST gate still fails before evaluating findings (GAP-090). "CI-enforced" below means "wired as a failing step", not necessarily "passing".
+- **Status:** RESOLVED as wiring. The scans are wired, and the license scan passes. From the first remote CI run (2026-10-04) until GAP-095's remediation, the dependency scan failed on real advisories; it passes from `bde9bbb` (CI run 37607802835, GAP-095 RESOLVED 2026-10-07). The SAST handoff now passes against real CodeQL output on GAP-090's PR run 38300808881; the overall CI run still failed on other required checks, with no exception granted. "CI-enforced" means the step remains a failing gate if its condition regresses, not that all CI is green.
 - **Type:** CI, Production, Licensing
 - **Blocking level:** HIGH (at the time this was open)
 - **Current evidence:** Resolved by Phase 10 Track B. `.github/workflows/ci.yml`'s main `ci` job now runs, in sequence: `pnpm audit --audit-level high --prod` (dependency scan), `license-checker-rseidelsohn --onlyAllow ...` (license scan), a real `github/codeql-action@v3` init+analyze step followed by a SARIF-consuming `sast:validate` step. `docs/architecture/SAST_BASELINE.md` (57 lines) contains 22 real, dated CodeQL findings with fingerprints/rule IDs/file:line references tied to a real `codeql database analyze` run.
-- **Expected state:** Blueprint §29. **Wiring met; dependency and license scans green; SAST gate not green** (GAP-090).
-- **Why it matters:** Historical — this gap directly blocked Production Hardening exit criteria. The wiring is resolved; the failing SAST gate is tracked as GAP-090 (the dependency-scan failure was GAP-095, resolved 2026-10-07).
+- **Expected state:** Blueprint §29. **Wiring met; dependency and license scans green; SAST handoff verified on PR run 38300808881** (GAP-090).
+- **Why it matters:** Historical — this gap directly blocked Production Hardening exit criteria. The wiring is resolved; the former SAST handoff failure is recorded as GAP-090 (the dependency-scan failure was GAP-095, resolved 2026-10-07).
 - **What it blocks:** Nothing — resolved.
 - **Dependencies:** None.
 - **Framework scope:** N/A.
@@ -1586,20 +1586,20 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-090 — SAST baseline validation cannot find the CodeQL SARIF file
 
-- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI configuration defect)
+- **Status:** RESOLVED (merged as PR #7 at `6d777328f9236839f66dcc90b60b3eec1a783812`; closeout recorded 2026-10-13).
 - **Type:** CI, Security tooling
-- **Blocking level:** MEDIUM (the SAST gate never evaluates findings)
+- **Blocking level:** MEDIUM (at registration; the SAST gate did not evaluate findings).
 - **Current evidence:**
-  - CodeQL init and analyze succeed, but "SAST baseline validation" fails with `SARIF file not found at /home/runner/work/ultimate-packages/results/javascript-typescript.sarif`.
-  - Failing since the first remote CI run (2026-10-04).
+  - Before the fix, CodeQL produced `results/javascript.sarif`, but "SAST baseline validation" was given `results/javascript-typescript.sarif` and failed; this occurred from the first remote CI run (2026-10-04).
+  - The one-step handoff repair in [PR #7](https://github.com/majedsiefalnasr/ultimate-packages/pull/7) was merged at `6d777328f9236839f66dcc90b60b3eec1a783812`. In [PR CI run 38300808881](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38300808881), CodeQL produced `/home/runner/work/ultimate-packages/results/javascript.sarif`; `Resolve SARIF path` confirmed that same regular file; the unchanged SAST baseline validator read it, exited 0, reported zero qualifying findings, and emitted no `NEW FINDING` diagnostics. The overall CI run failed on other required checks; none is excepted.
 - **Expected state:** The validator reads the SARIF CodeQL actually produced and compares it with `docs/architecture/SAST_BASELINE.md`.
-- **Why it matters:** SAST findings are produced but never gated (see GAP-031).
-- **What it blocks:** A working SAST gate.
+- **Why it matters:** The former path mismatch prevented the validator from gating real CodeQL findings (see GAP-031).
+- **What it blocks:** Nothing — resolved.
 - **Dependencies:** None. Related: GAP-031.
 - **Framework scope:** Repository-wide.
 - **Existing reusable infrastructure:** The existing "Resolve SARIF path" step and `sast:validate`.
-- **Recommended resolution direction:** Directional only: align the SARIF output path and the validator input.
-- **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job).
+- **Recommended resolution direction:** Implemented: resolve the existing `javascript.sarif` file inside CodeQL's output directory and fail explicitly when it is absent.
+- **Source/evidence:** Historical failures: CI runs 37188652979, 37590590099 (`ci` job). Resolution: [approved Specification](../superpowers/specs/2026-10-12-gap-090-codeql-sarif-handoff-design.md), [Implementation Plan](../superpowers/plans/2026-10-12-gap-090-codeql-sarif-handoff.md), PR #7 commit `44890f3994847fdc5dcdf047cab21032a09a3222`, merge `6d777328f9236839f66dcc90b60b3eec1a783812`, PR CI run 38300808881 (`ci` job, CodeQL analyze / Resolve SARIF path / SAST baseline validation steps), and approved Final Review.
 - **Architectural decision required:** No.
 
 #### GAP-091 — The coverage gate fails because the coverage scope counts Storybook stories and the baselines predate them
@@ -2366,7 +2366,7 @@ Why here: each is small, evidence-backed, has a proven pattern to copy from a si
 ### Group: Production hardening — **all CI-enforcement items now RESOLVED**
 - ~~**GAP-004/GAP-035**~~ (visual regression + real-browser testing) — RESOLVED by Phase 10 Track A.
 - ~~**GAP-005**~~ (accessibility scanning) — RESOLVED by Phase 10 Track A.
-- ~~**GAP-031/GAP-032/GAP-033**~~ (dependency/license/SAST scanning, bundle-size CI gate, coverage CI gate) — RESOLVED by Phase 10 Track B, all now genuinely CI-enforced. **Correction (2026-10-07):** all three are wired, and the bundle-size gate passes. The SAST and coverage gates have failed on every `main` push since the first remote CI run (GAP-090, GAP-091). The dependency scan failed until GAP-095's remediation and passes from `bde9bbb` (CI run 37607802835; GAP-095 RESOLVED 2026-10-07). The other red CI conditions are GAP-087–GAP-094, plus the G3-B U2 visual follow-up under GAP-064.
+- ~~**GAP-031/GAP-032/GAP-033**~~ (dependency/license/SAST scanning, bundle-size CI gate, coverage CI gate) — RESOLVED by Phase 10 Track B, all now genuinely CI-enforced. **Correction (2026-10-13):** all three are wired, and the bundle-size gate passes. The SAST handoff failed on `main` through `6d2836d` but passed against real CodeQL output in GAP-090's PR run 38300808881; its repair merged at `6d777328`. The coverage gate remains tracked as GAP-091. The dependency scan failed until GAP-095's remediation and passes from `bde9bbb` (CI run 37607802835; GAP-095 RESOLVED 2026-10-07). Other required CI failures remain unexcepted.
 - **GAP-011** (SECURITY/CONTRIBUTING/CHANGELOG) — already accurately marked PARTIALLY RESOLVED (Track D); unchanged by this reconciliation.
 - ~~**GAP-036**~~ (generate/commit `llms.txt`) — RESOLVED (commit `10435ca`, Blueprint Completion, 2026-09-13). **GAP-037** (PERFORMANCE.md Phase 3/4/5 sections) — LOW blocking level, mechanical, remains open.
 This entire group, sequenced here as future work when this document was first written, has since landed in full except for GAP-037.
