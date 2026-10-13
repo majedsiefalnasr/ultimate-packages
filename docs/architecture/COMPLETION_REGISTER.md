@@ -1,12 +1,12 @@
 # Ultimate Completion Register
 
-**Status:** C00 closed out after approved Final Review. **Last reviewed:** 2026-10-13 for the GAP-089 C01 update. **Baseline snapshot:** `main` and `origin/main` at `6d2836d0c0a5adc8e5978de4a91147b99388bd31` (PR #4).
+**Status:** C00 closed out after approved Final Review. **Last reviewed:** 2026-10-13 C00 delivery preflight. **Baseline snapshot:** `main` and `origin/main` at `6d2836d0c0a5adc8e5978de4a91147b99388bd31` (PR #4).
 
 ## Completion target and authority
 
 The target is the first **restricted pre-1.0 publish** with the approved component scope and every applicable [Blueprint §40](BLUEPRINT.md#40-definition-of-done-for-the-platform) readiness criterion met or individually excepted. [Blueprint §§41–43](BLUEPRINT.md#41-explicit-non-goals) and the [accepted decisions](DECISIONS.md) define boundaries. The S-1–S-5, N-1 and D-40 rulings are recorded in the [dated completion assessment](research/2026-10-11-final-project-completion-assessment.md); ADR-053–058 supersede its then-pending decision proposals. This register is a tier-5 index under [AGENTS.md §2](../../AGENTS.md#2-source-of-truth-hierarchy), not an architectural decision, Spec, Plan, or implementation authorization.
 
-**Overall:** Not complete. The current `main` CI is red, the Release run failed during Install dependencies and skipped the Select mode step, the approved component/metadata scope is unfinished, and several §40 criteria lack final evidence. The original ten phase deliverables are marked complete in [ROADMAP](ROADMAP.md), with explicit follow-ups; that status does not prove this publish milestone.
+**Overall:** Not complete. The current `main` CI is red; the Release workflow's Select mode job failed during Install dependencies before its Select mode step, and Version and Publish were skipped. The approved component/metadata scope is unfinished, and several §40 criteria lack final evidence. The original ten phase deliverables are marked complete in [ROADMAP](ROADMAP.md), with explicit follow-ups; that status does not prove this publish milestone.
 
 **E0 workflow evidence (2026-10-12):** [CI 38221832098](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38221832098) at `6d2836d` completed **failure**. Its 12 failing step names exactly match [baseline CI 38138916464](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38138916464): Lint, Format check, Test, SAST baseline validation, Coverage regression check, Provenance scripts self-tests, Provenance validation, Angular G3-D, Vue G3-B, Vue G3-D, React SSR, and Vue SSR. No failing check is approved as an exception. Build, Typecheck, installed CLI/MCP smoke, pack/install integrity, manifest and boundary validation passed in that run; each is verified for that run only. [Release 38221832118](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38221832118) at the same commit completed **failure** at Select mode → Install dependencies; Version and Publish were skipped. See [GAP-087](BLUEPRINT_GAPS.md#gap-087--release-workflow-runs-on-node-20-below-the-angular-21-toolchains-node-requirement).
 
@@ -32,11 +32,11 @@ C00 establishes this index. C01, C02, C03, C04, the early portion of C08 and the
 ### C01 — Restore trustworthy CI signals
 
 - **Criterion/objective:** Phase 0 CI foundation; §40 security/visual/package/accessibility evidence; §28 SSR. Diagnose and close the 12 failed steps, including GAP-088–093 and the named G3 failures. GAP-094 provenance content closes under C04.
-- **Status/evidence:** Blocked verification. E0 failed in exactly the 12 baseline steps; no failure excepted. Passing Build/Typecheck/smoke steps are verified at E0. GAP-089 is resolved and the root Test step passed at `cbc05f4a`; C01 remains incomplete because other CI checks still fail.
+- **Status/evidence:** Blocked verification. E0 failed in exactly the 12 baseline steps; no failure excepted. Passing Build/Typecheck/smoke steps are verified at E0. GAP-089 and GAP-090 are resolved; [CI 38408821381](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38408821381) at `35c1ebf` passed Test and SAST baseline validation. C01 remains incomplete because other CI checks still fail.
 - **Gate → next:** Focused failure characterization and any required CI-policy decision, then bounded Specs and Plans for repairs. No remediation authorized by this register.
 - **Dependencies/parallelism:** Starts independently; SSR restoration unblocks C10 P8; passing CI is prerequisite to C12 closeout. C04 owns provenance/security content.
-- **References:** [GAP-088–094](BLUEPRINT_GAPS.md#gap-088--react-and-vue-ssr-jobs-start-the-angular-storybook-web-server-which-cannot-build-in-those-jobs), [ADR-052](DECISIONS.md#adr-052--gap-064-cross-tranche-parity-rules-for-the-remaining-g3-tranches-selector-reachability-dom-admissibility-state-selectors-runtime-roles-open-state-screenshots-tranche-ci-evidence), [CI workflow](../../.github/workflows/ci.yml), Phase 10 CI/SSR/browser Specs and Plans in `docs/superpowers/`; no approved repair Spec/Plan.
-- **Decision/external:** Per-failure repair or explicitly approved exception; none granted. **Last reviewed:** 2026-10-13 for GAP-089.
+- **References:** [GAP-088–094](BLUEPRINT_GAPS.md#gap-088--react-and-vue-ssr-jobs-start-the-angular-storybook-web-server-which-cannot-build-in-those-jobs), [ADR-052](DECISIONS.md#adr-052--gap-064-cross-tranche-parity-rules-for-the-remaining-g3-tranches-selector-reachability-dom-admissibility-state-selectors-runtime-roles-open-state-screenshots-tranche-ci-evidence), [CI workflow](../../.github/workflows/ci.yml), Phase 10 CI/SSR/browser Specs and Plans in `docs/superpowers/`; GAP-090's approved [Spec](../superpowers/specs/2026-10-12-gap-090-codeql-sarif-handoff-design.md) and [Plan](../superpowers/plans/2026-10-12-gap-090-codeql-sarif-handoff.md) are executed for their scope. Remaining repairs retain separate gates.
+- **Decision/external:** Per-failure repair or explicitly approved exception; none granted. **Last reviewed:** 2026-10-13.
 
 ### C02 — Reconcile the component denominator
 
@@ -58,12 +58,12 @@ C00 establishes this index. C01, C02, C03, C04, the early portion of C08 and the
 
 ### C04 — Complete source provenance and security evidence
 
-- **Criterion/objective:** §40 licensing/provenance and security process; Phase 0 provenance exit. Complete GAP-094 scope/entries, GAP-093 self-tests and GAP-090 SAST evaluation.
-- **Status/evidence:** E0 license/dependency checks passed; provenance validation, self-tests and SAST baseline failed. CodeQL analysis passing does not mean baseline validation ran successfully.
+- **Criterion/objective:** §40 licensing/provenance and security process; Phase 0 provenance exit. Complete GAP-094 scope/entries and GAP-093 self-tests; GAP-090 SAST handoff is resolved.
+- **Status/evidence:** E0 license/dependency checks passed while provenance validation, self-tests and SAST baseline failed. GAP-090's SAST baseline validation subsequently passed with real SARIF in [CI 38408821381](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38408821381) at `35c1ebf`; provenance validation and self-tests still failed in that run.
 - **Gate → next:** Decide repository-wide provenance scope, then bounded Spec/Plan and evidence backfill; coordinate C01's CI diagnostics.
 - **Dependencies/parallelism:** Can start independently; source entries grow with C05–C07; closes before C12.
-- **References:** [GAP-090/093/094](BLUEPRINT_GAPS.md#gap-090--sast-baseline-validation-cannot-find-the-codeql-sarif-file), [PROVENANCE](PROVENANCE.md), [SAST_BASELINE](SAST_BASELINE.md), Phase 10 security/provenance Specs and Plans (original mechanism only).
-- **Decision/external:** Provenance scope; any company legal-review requirement remains unknown. **Last reviewed:** 2026-10-12.
+- **References:** [GAP-090/093/094](BLUEPRINT_GAPS.md#gap-090--sast-baseline-validation-cannot-find-the-codeql-sarif-file), GAP-090 approved [Spec](../superpowers/specs/2026-10-12-gap-090-codeql-sarif-handoff-design.md) and [Plan](../superpowers/plans/2026-10-12-gap-090-codeql-sarif-handoff.md), [PROVENANCE](PROVENANCE.md), [SAST_BASELINE](SAST_BASELINE.md), Phase 10 security/provenance Specs and Plans (original mechanism only).
+- **Decision/external:** Provenance scope; any company legal-review requirement remains unknown. **Last reviewed:** 2026-10-13.
 
 ### C05 — Close required shipped-component behavior and visual gaps
 
@@ -156,3 +156,4 @@ After a merged PR or approved closeout, verify actual source, merge commit and C
 | 2026-10-12 | `6d2836d` | Implemented C00–C12 index in the working tree for Final Review; records completed failed `main` CI and Release runs, GAP-131 RESOLVED, stale ROADMAP footnote 4, and no CI failure exceptions. | PRs #2–#4; CI 38221832098; Release 38221832118; ADR-053–058         |
 | 2026-10-12 | `6d2836d` | C00 locally closed out after approved Final Review; register and pointer remain uncommitted. C01 research/verification is next; no CI remediation or exception approved.                       | User-approved C00 Final Review; CI 38221832098; Release 38221832118 |
 | 2026-10-13 | `cbc05f4` | GAP-089 resolved after PR #5, the one-test Vue timeout follow-up, and a passing remote root Test step; C01 remains incomplete and no CI exception was added.                                   | CI 38406846324; PRs #5, #6 (evidence only), #10                     |
+| 2026-10-13 | `35c1ebf` | C00 delivery preflight confirmed GAP-090 resolved and the main Test and SAST steps passing; clarified the Release job's failed and skipped steps.                                              | CI 38408821381; PR #7; Release 38221832118                          |
