@@ -1567,21 +1567,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-089 — React package-exports test fails only in CI (missing built declarations)
 
-- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI-only defect, cause undetermined)
+- **Status:** RESOLVED (2026-10-13; root test ordering merged via PR #5 at `0ab75fff`, with a one-test Vue timeout follow-up at `cbc05f4a`; [closeout record](research/2026-10-13-gap-089-root-test-order-closeout.md)).
 - **Type:** CI, Testing, Packaging (React)
 - **Blocking level:** MEDIUM
-- **Current evidence:**
+- **Original evidence:**
   - In the `ci` job's Test step, `packages/react/test/exports.test.ts` fails 6 of 12 tests ("entry point builds" for the barrel and per-entry exports): the built `dist/*.d.mts` declarations are missing on the Linux runner.
   - The same suite passes locally (React 856/856 at `91c4d22`).
   - Failing since the first remote CI run (2026-10-04). An unverified hypothesis is a concurrent react↔themes build race.
 - **Expected state:** The exports test passes in CI as it does locally.
-- **Why it matters:** The CI Test step stays red, hiding other test regressions.
-- **What it blocks:** A green CI Test step.
+- **Why it mattered:** The CI Test step stayed red, hiding other test regressions.
+- **What it blocked:** A green CI Test step.
 - **Dependencies:** None.
 - **Framework scope:** React.
 - **Existing reusable infrastructure:** None specific.
-- **Recommended resolution direction:** Directional only: establish the root cause before any change.
-- **Source/evidence:** CI runs 37188652979, 37456600014, 37590590099 (`ci` job, Test step).
+- **Original recommended resolution direction:** Directional only: establish the root cause before any change.
+- **Original source/evidence:** CI runs 37188652979, 37456600014, 37590590099 (`ci` job, Test step).
+- **Resolution and verification:** The root `test` script now completes Themes' `pretest` and tests before recursively testing the other packages, preventing its rebuild from racing React's export assertions. [PR #5 CI attempt 3](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38247833439/attempts/3/job/115310933261) ran the changed root script at `8fc69cde` and passed Test, including React exports 12/12 and Vue 1,192/1,192. [PR #6's verification-only job](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38289045573/job/114944364581) passed React pack/install integrity at that candidate (177 manifest paths); PR #6 remains unmerged. The first post-merge Test at `0ab75fff` failed only on an intermittent 5-second Vue package-root import timeout; the same test passed in that run's separate coverage invocation. Commit `cbc05f4a` raises only that test's timeout to 10 seconds. [CI run 38406846324](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38406846324) at `cbc05f4a` passed the root Test step. Other CI checks remain separately tracked; this is not a whole-CI pass.
 - **Architectural decision required:** No.
 
 #### GAP-090 — SAST baseline validation cannot find the CodeQL SARIF file
