@@ -100,7 +100,12 @@ export function UImage({
       <img src={src} alt={alt} width={width} height={height} onError={onImageError} />
       {preview && (
         <button type="button" className={cx("previewMask")} aria-label="Zoom image" onClick={open}>
-          <svg viewBox="0 0 24 24" className={cx("previewIcon")} fill="currentColor" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            className={cx("previewIcon")}
+            fill="currentColor"
+            aria-hidden="true"
+          >
             <path d="M12 5c-7.633 0-11.65 6.61-11.816 6.89a1 1 0 0 0 0 1.02C.35 13.19 4.367 19.8 12 19.8s11.65-6.61 11.816-6.89a1 1 0 0 0 0-1.02C23.65 11.61 19.633 5 12 5zm0 12.8a4.9 4.9 0 1 1 0-9.8 4.9 4.9 0 0 1 0 9.8zm0-7.8a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8z" />
           </svg>
         </button>

@@ -16,7 +16,7 @@ Real pinned source for Table editing, row grouping, and OrderList/PickList drag/
 
 **Specific findings:**
 
-1. **Row editing reuses the `dataKey`-keyed key-map pattern already established for Tree's `expandedKeys`/`selectionKeys` and confirmed for Table's own row selection.** PrimeNG's `editingRowKeys: {[s: string]: boolean}` and PrimeReact's `editingRows` (same shape when `dataKey` is set, array-of-row-objects otherwise) are the same identity-keyed-map idiom already proven convergent in the prior report. This is not new evidence requiring a new primitive — it is the *same* primitive (`equals`/`dataKey` identity) applied to a different concern. No action needed.
+1. **Row editing reuses the `dataKey`-keyed key-map pattern already established for Tree's `expandedKeys`/`selectionKeys` and confirmed for Table's own row selection.** PrimeNG's `editingRowKeys: {[s: string]: boolean}` and PrimeReact's `editingRows` (same shape when `dataKey` is set, array-of-row-objects otherwise) are the same identity-keyed-map idiom already proven convergent in the prior report. This is not new evidence requiring a new primitive — it is the _same_ primitive (`equals`/`dataKey` identity) applied to a different concern. No action needed.
 2. **Cell editing is architecturally distinct from row editing, and diverges structurally between Angular and React.** Angular's cell edit-mode is a single mutable `editingCell: Element` DOM reference with no separate dirty-value store — validity is checked by querying `.ng-invalid.ng-dirty` CSS classes on the live DOM (`table.ts:2512`), leveraging Angular's native reactive-forms integration. React maintains an explicit internal `editingMetaState` object (`{[key]: {data: {...rowData}, fields: []}}`, `DataTable.js:30`) that is **never exposed as a controlled prop** — it is always-internal state, unlike `editingRows` which is controllable. These are two genuinely different state-ownership models for the same feature, not a shared contract waiting to be extracted.
 3. **Row grouping is strongly convergent at the algorithm level, and it is not a new data primitive — it is the sort primitive, reused.** Both Angular and React inject `groupRowsBy` as a synthetic leading `SortMeta` entry into the real sort computation (`table.ts:3130` `getGroupRowsMeta()`; `DataTable.js:1072` `groupRowsSortMetaState`), then detect group boundaries at render time by comparing `resolveFieldData(row, groupRowsBy)` between adjacent rows in the already-sorted array (`table.ts:3444-3491`; `TableBody.js:218-246`, near-identical `deepEquals(current, prev/next)` logic). This confirms — again — that `SortMeta` (already in `uix-data`) is sufficient; grouping needs no new shared type, only a documented convention (group field becomes a synthetic sort key) that belongs in Table's own implementation, not in the shared package.
 4. **Drag/drop is genuinely three-way divergent, not two-way.** Angular's OrderList/PickList reorder via `@angular/cdk/drag-drop` (`CdkDragDrop`, `moveItemInArray`) — a real Angular CDK library dependency (`orderlist.ts:1`). React's `OrderListSubList.js` implements native HTML5 Drag and Drop (`draggable="true"`, `onDragStart`/`onDragOver`/`onDrop` DOM events, `ObjectUtils.reorderArray`, `OrderListSubList.js:40-78`). **PrimeVue's OrderList and PickList have no drag/drop implementation at all** — grep for `onDragStart`, `draggable`, `Sortable`, `VueDraggable` across `orderlist/` and `picklist/` returns zero matches. Vue ships button-only reordering (`moveUp`/`moveTop`/`moveDown`/`moveBottom`, `OrderList.vue:135-219`).
@@ -31,11 +31,11 @@ Real pinned source for Table editing, row grouping, and OrderList/PickList drag/
 
 Same three pinned revisions as the prior report, re-verified by directory name after fresh extraction from `.vendor-cache/*.tar.gz`:
 
-| Framework | Version | Identifier (git commit) |
-|---|---|---|
-| PrimeNG | 21.1.9 | `c493b1c6d9f7cdffbe1c4dc195493dd73d733593` |
-| PrimeReact | 10.9.9 | `d0f574e39122668292fc7a740f081bae1b93b1e9` |
-| PrimeVue | 4.5.5 | `66dde6788220fc9e6822342919d1ceb0e3460ece` |
+| Framework  | Version | Identifier (git commit)                    |
+| ---------- | ------- | ------------------------------------------ |
+| PrimeNG    | 21.1.9  | `c493b1c6d9f7cdffbe1c4dc195493dd73d733593` |
+| PrimeReact | 10.9.9  | `d0f574e39122668292fc7a740f081bae1b93b1e9` |
+| PrimeVue   | 4.5.5   | `66dde6788220fc9e6822342919d1ceb0e3460ece` |
 
 See the prior report's §2 for the full extraction-method rationale (`.vendor-extracted/` only contains already-migrated foundation-tier components; the ten Data-family components, including all of Table/OrderList/PickList, are only available in the cached tarballs, not in the repository's migrated source tree).
 
@@ -73,12 +73,12 @@ See the prior report's §2 for the full extraction-method rationale (`.vendor-ex
 
 ### 3.4 Cross-framework editing verdict
 
-| Concern | Angular | React | Vue | Convergence |
-|---|---|---|---|---|
-| Row edit-mode key-map (`editingRowKeys`/`editingRows`) | `dataKey`-keyed map | `dataKey`-keyed map (or array), controlled/uncontrolled | Not re-verified this pass | **Strongly shared semantics** — same identity primitive already in `uix-data`, no new type needed |
-| Cell edit dirty-value tracking | None (DOM `.ng-invalid.ng-dirty` query) | Always-internal `editingMetaState` object | Not investigated | **Framework-native, structurally divergent** — Angular leans on native forms integration, React on an internal snapshot object; not reconcilable into one shape |
-| Row/cell edit validity check | DOM class query (`isEditingCellValid`) | Per-column callback prop (`cellEditValidator`) | Not investigated | **Framework-native** |
-| `editMode: 'cell' \| 'row'` switch | ✅ | ✅ (prop) | Present (grep-confirmed prop name) | **Shared vocabulary, framework-native mechanism underneath** |
+| Concern                                                | Angular                                 | React                                                   | Vue                                | Convergence                                                                                                                                                     |
+| ------------------------------------------------------ | --------------------------------------- | ------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Row edit-mode key-map (`editingRowKeys`/`editingRows`) | `dataKey`-keyed map                     | `dataKey`-keyed map (or array), controlled/uncontrolled | Not re-verified this pass          | **Strongly shared semantics** — same identity primitive already in `uix-data`, no new type needed                                                               |
+| Cell edit dirty-value tracking                         | None (DOM `.ng-invalid.ng-dirty` query) | Always-internal `editingMetaState` object               | Not investigated                   | **Framework-native, structurally divergent** — Angular leans on native forms integration, React on an internal snapshot object; not reconcilable into one shape |
+| Row/cell edit validity check                           | DOM class query (`isEditingCellValid`)  | Per-column callback prop (`cellEditValidator`)          | Not investigated                   | **Framework-native**                                                                                                                                            |
+| `editMode: 'cell' \| 'row'` switch                     | ✅                                      | ✅ (prop)                                               | Present (grep-confirmed prop name) | **Shared vocabulary, framework-native mechanism underneath**                                                                                                    |
 
 ---
 
@@ -124,7 +124,7 @@ Method names are identical across all three frameworks — genuine convergence, 
 
 **Genuine three-way divergence, confirmed at the implementation-mechanism level, not just the API-surface level.** This is not "shared semantics, different implementation" (which would imply the same concept implemented three different but analogous ways) — it is "one framework has a feature the other two lack" (Vue), plus "the two frameworks that have it use unrelated mechanisms" (Angular CDK library vs. React native HTML5 DnD). There is no shared contract to extract: Angular's mechanism is externally dependency-bound, React's is DOM-event-bound, and Vue's is absent. Any Ultimate `uix-data` primitive here would either (a) have nothing to abstract over for Vue, or (b) have to abstract over a third-party library's event model, which is out of scope for a data-layer package by definition.
 
-The button-move baseline (§5.1) is genuinely shared but is simple enough (array splice/insert on integer index, ~15-30 lines per framework) that it does not meet the bar the prior report and ADR-043 both apply: shared primitives are added where they remove *load-bearing* duplication or protect a real invariant, not merely because the same method names appear three times.
+The button-move baseline (§5.1) is genuinely shared but is simple enough (array splice/insert on integer index, ~15-30 lines per framework) that it does not meet the bar the prior report and ADR-043 both apply: shared primitives are added where they remove _load-bearing_ duplication or protect a real invariant, not merely because the same method names appear three times.
 
 ---
 
@@ -132,11 +132,11 @@ The button-move baseline (§5.1) is genuinely shared but is simple enough (array
 
 **Resolved. Confirmed identical across all three frameworks.**
 
-| Framework | Import | Instantiation |
-|---|---|---|
-| Angular | `primeng/paginator` (`<p-paginator>` embedding, confirmed in prior report) | Template child component |
-| React | `DataTable.js:10`: `import { Paginator } from '../paginator/Paginator'` | `DataTable.js:1991`: `<Paginator ...>` |
-| Vue | `DataTable.vue:353`: `import Paginator from 'primevue/paginator'` | `DataTable.vue:2176`: `DTPaginator: Paginator` (component registration); used at lines 17 and 253 as `<DTPaginator>` |
+| Framework | Import                                                                     | Instantiation                                                                                                        |
+| --------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Angular   | `primeng/paginator` (`<p-paginator>` embedding, confirmed in prior report) | Template child component                                                                                             |
+| React     | `DataTable.js:10`: `import { Paginator } from '../paginator/Paginator'`    | `DataTable.js:1991`: `<Paginator ...>`                                                                               |
+| Vue       | `DataTable.vue:353`: `import Paginator from 'primevue/paginator'`          | `DataTable.vue:2176`: `DTPaginator: Paginator` (component registration); used at lines 17 and 253 as `<DTPaginator>` |
 
 This was inferred but not directly confirmed for React/Vue in the prior report (flagged `UNVERIFIED` there, §13 item 4 / this report's directive item 4). It is now directly confirmed: all three frameworks embed a real Paginator component instance, not a reimplementation of pagination UI. This strengthens the prior report's §6 conclusion that Table↔Paginator is real composition, not naming coincidence — it affects component sequencing (Paginator should exist as a working component before Table's pagination UI can be assembled, across all three frameworks equally) but has no bearing on the `uix-data` shared-contract question, since `PaginationState` is already the shared primitive and composition is a component-architecture concern, not a data-shape concern.
 
@@ -144,14 +144,14 @@ This was inferred but not directly confirmed for React/Vue in the prior report (
 
 ## 7. Cross-framework convergence/divergence matrix (this scope)
 
-| Candidate | Angular | React | Vue | Classification |
-|---|---|---|---|---|
-| Row edit-mode key-map (`dataKey`-scoped) | ✅ `editingRowKeys` | ✅ `editingRows` (controlled/uncontrolled) | Not re-verified this pass (prop present) | **Strongly shared semantics** — already served by `uix-data`'s identity/`equals` primitive, no new type |
-| Cell edit dirty-value tracking | None (DOM query) | Always-internal `editingMetaState` object | UNVERIFIED | **Framework-native, structurally divergent** |
-| Row grouping algorithm (sort-key injection + adjacent-row boundary detection) | ✅ | ✅ (independently confirmed, near-identical) | UNVERIFIED (reasonable extrapolation, not confirmed) | **Strongly shared semantics** — already served by `uix-data`'s `SortMeta`, no new type; belongs in Table's own implementation as a documented convention |
-| Button-based list reorder (`moveUp`/`moveTop`/`moveDown`/`moveBottom`) | ✅ | ✅ | ✅ | **Strongly shared method-name convention**, but too simple (array splice) to warrant a shared primitive |
-| Drag/drop mechanism (OrderList/PickList) | `@angular/cdk/drag-drop` (external library) | Native HTML5 DnD | **Absent entirely** | **Genuine three-way divergence** — no shared contract possible; Vue's absence alone rules out any abstraction |
-| Table↔Paginator composition | ✅ real child instance | ✅ real child instance (confirmed this pass) | ✅ real child instance (confirmed this pass) | **Strongly shared architecture pattern** — component-sequencing signal, not a data primitive |
+| Candidate                                                                     | Angular                                     | React                                        | Vue                                                  | Classification                                                                                                                                           |
+| ----------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Row edit-mode key-map (`dataKey`-scoped)                                      | ✅ `editingRowKeys`                         | ✅ `editingRows` (controlled/uncontrolled)   | Not re-verified this pass (prop present)             | **Strongly shared semantics** — already served by `uix-data`'s identity/`equals` primitive, no new type                                                  |
+| Cell edit dirty-value tracking                                                | None (DOM query)                            | Always-internal `editingMetaState` object    | UNVERIFIED                                           | **Framework-native, structurally divergent**                                                                                                             |
+| Row grouping algorithm (sort-key injection + adjacent-row boundary detection) | ✅                                          | ✅ (independently confirmed, near-identical) | UNVERIFIED (reasonable extrapolation, not confirmed) | **Strongly shared semantics** — already served by `uix-data`'s `SortMeta`, no new type; belongs in Table's own implementation as a documented convention |
+| Button-based list reorder (`moveUp`/`moveTop`/`moveDown`/`moveBottom`)        | ✅                                          | ✅                                           | ✅                                                   | **Strongly shared method-name convention**, but too simple (array splice) to warrant a shared primitive                                                  |
+| Drag/drop mechanism (OrderList/PickList)                                      | `@angular/cdk/drag-drop` (external library) | Native HTML5 DnD                             | **Absent entirely**                                  | **Genuine three-way divergence** — no shared contract possible; Vue's absence alone rules out any abstraction                                            |
+| Table↔Paginator composition                                                   | ✅ real child instance                      | ✅ real child instance (confirmed this pass) | ✅ real child instance (confirmed this pass)         | **Strongly shared architecture pattern** — component-sequencing signal, not a data primitive                                                             |
 
 ---
 
@@ -163,12 +163,12 @@ This was inferred but not directly confirmed for React/Vue in the prior report (
 
 ## 9. Candidates explicitly rejected for sharing
 
-| Candidate | Why rejected | Evidence |
-|---|---|---|
-| Cell-edit dirty-value tracking (`editingMeta`-style snapshot) | Structurally divergent ownership: Angular has none (delegates to native form-validity DOM state), React owns it as always-internal state never exposed as a controlled prop. Not a case of "same concept, different shape" — it's "concept exists in one framework's architecture and not meaningfully in the other's." | §3.1, §3.2 |
-| Drag/drop reorder mechanism | Three-way divergence including one framework's total absence of the feature; the two frameworks that have it depend on unrelated mechanisms (an external CDK library vs. native DOM events) | §5.2 |
-| Button-based move (`moveUp`/`moveTop`/`moveDown`/`moveBottom`) | Genuinely convergent but too simple (array splice/insert, ~15-30 lines) to justify a shared primitive — no load-bearing duplication removed, no invariant protected beyond what a correct array-splice already guarantees | §5.1, §5.3 |
-| Row grouping as an independent data primitive (as opposed to a `SortMeta` usage convention) | The algorithm doesn't need new shared *types* — it needs the existing `SortMeta` type, used according to a specific convention (group field as synthetic leading sort key). Codifying that convention belongs in Table's own implementation/spec, not in `uix-data` | §4.4 |
+| Candidate                                                                                   | Why rejected                                                                                                                                                                                                                                                                                                            | Evidence   |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Cell-edit dirty-value tracking (`editingMeta`-style snapshot)                               | Structurally divergent ownership: Angular has none (delegates to native form-validity DOM state), React owns it as always-internal state never exposed as a controlled prop. Not a case of "same concept, different shape" — it's "concept exists in one framework's architecture and not meaningfully in the other's." | §3.1, §3.2 |
+| Drag/drop reorder mechanism                                                                 | Three-way divergence including one framework's total absence of the feature; the two frameworks that have it depend on unrelated mechanisms (an external CDK library vs. native DOM events)                                                                                                                             | §5.2       |
+| Button-based move (`moveUp`/`moveTop`/`moveDown`/`moveBottom`)                              | Genuinely convergent but too simple (array splice/insert, ~15-30 lines) to justify a shared primitive — no load-bearing duplication removed, no invariant protected beyond what a correct array-splice already guarantees                                                                                               | §5.1, §5.3 |
+| Row grouping as an independent data primitive (as opposed to a `SortMeta` usage convention) | The algorithm doesn't need new shared _types_ — it needs the existing `SortMeta` type, used according to a specific convention (group field as synthetic leading sort key). Codifying that convention belongs in Table's own implementation/spec, not in `uix-data`                                                     | §4.4       |
 
 ---
 

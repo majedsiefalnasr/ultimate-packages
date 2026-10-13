@@ -1,11 +1,21 @@
 <template>
   <div :class="cx('root')">
     <div :class="cx('header')">
-      <button type="button" :class="cx('chooseButton', { disabled })" :disabled="disabled" @click="onChooseClick">
+      <button
+        type="button"
+        :class="cx('chooseButton', { disabled })"
+        :disabled="disabled"
+        @click="onChooseClick"
+      >
         {{ chooseLabel }}
       </button>
       <template v-if="!auto">
-        <button type="button" :class="cx('uploadButton')" :disabled="!hasFiles || uploading" @click="upload">
+        <button
+          type="button"
+          :class="cx('uploadButton')"
+          :disabled="!hasFiles || uploading"
+          @click="upload"
+        >
           {{ uploadLabel }}
         </button>
         <button type="button" :class="cx('cancelButton')" :disabled="!hasFiles" @click="clear">
@@ -33,12 +43,23 @@
       @drop="onDrop"
     >
       <div v-if="!hasFiles" :class="cx('empty')">{{ emptyMessage }}</div>
-      <div v-for="(file, index) in files" :key="`${file.name}-${file.size}-${index}`" :class="cx('file')">
+      <div
+        v-for="(file, index) in files"
+        :key="`${file.name}-${file.size}-${index}`"
+        :class="cx('file')"
+      >
         <div :class="cx('fileInfo')">
           <div :class="cx('fileName')">{{ file.name }}</div>
           <span :class="cx('fileSize')">{{ formatSize(file.size) }}</span>
         </div>
-        <button type="button" :class="cx('fileRemoveButton')" aria-label="Remove file" @click="remove($event, index)">&times;</button>
+        <button
+          type="button"
+          :class="cx('fileRemoveButton')"
+          aria-label="Remove file"
+          @click="remove($event, index)"
+        >
+          &times;
+        </button>
       </div>
     </div>
   </div>
@@ -148,22 +169,30 @@ export default {
       const validationMessages = [];
 
       for (const file of incoming) {
-        const alreadySelected = next.some((f) => f.name === file.name && f.type === file.type && f.size === file.size);
+        const alreadySelected = next.some(
+          (f) => f.name === file.name && f.type === file.type && f.size === file.size
+        );
         if (alreadySelected) continue;
 
         if (this.maxFileSize && file.size > this.maxFileSize) {
-          validationMessages.push(`${file.name}: invalid file size, maximum upload size is ${formatSize(this.maxFileSize)}.`);
+          validationMessages.push(
+            `${file.name}: invalid file size, maximum upload size is ${formatSize(this.maxFileSize)}.`
+          );
           continue;
         }
         if (this.accept && !isFileTypeValid(file, this.accept)) {
-          validationMessages.push(`${file.name}: invalid file type, allowed file types: ${this.accept}.`);
+          validationMessages.push(
+            `${file.name}: invalid file type, allowed file types: ${this.accept}.`
+          );
           continue;
         }
         next.push(file);
       }
 
       if (this.fileLimit && next.length > this.fileLimit) {
-        validationMessages.push(`Maximum number of files exceeded, limit is ${this.fileLimit} at most.`);
+        validationMessages.push(
+          `Maximum number of files exceeded, limit is ${this.fileLimit} at most.`
+        );
         next.length = this.fileLimit;
       }
 

@@ -23,7 +23,10 @@ const classes = {
   table: () => "u-table-table",
   thead: () => "u-table-thead",
   tbody: () => "u-table-tbody",
-  row: (params: Record<string, unknown> = {}) => ["u-table-row", { "u-table-row-selected": !!params.selected }],
+  row: (params: Record<string, unknown> = {}) => [
+    "u-table-row",
+    { "u-table-row-selected": !!params.selected },
+  ],
 };
 
 export const tableStyleModule: StyleModule = { css, classes };

@@ -32,20 +32,20 @@ The diagnostic driver/configuration were copied into the disposable container, n
 
 Evidence base: `.superpowers/sdd/2026-10-08-gap-064-g3e-media-data/`. Corrected attempt directory: `e1-v2-stage2-corrected/`; original attempt: `e1-v2-stage2/`.
 
-| Item | Corrected attempt |
-| --- | --- |
-| Branch / HEAD | `feature/gap-064-g3e-media-data` / `7c49568b50ed1017e17334152a48fb231e7ec307` |
-| Product input | Exact original Stage 2 `src.tar` reused, including prior approved dirty E-1 work; no refreshed or altered product inputs |
-| Input archive SHA-256 | `60bc65d477ffcae50c653c4d738e2f086a8fcb61e3351eab5811c600e2ec90a4` |
-| Original hook SHA-256 | `a12d2644d35d57436feb282378903ee5eb611b9b98b2fe3e72811ceb441058b7` |
-| Corrected hook SHA-256 | `91823fc355292ae29c6ae2d79db14177acfd5a13f603825c867bfc69bd13aaf1` |
-| Docker image | `mcr.microsoft.com/playwright:v1.63.0-jammy` |
-| Verified local image ID | `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847` |
-| Platform / Node | Linux arm64 (`aarch64`) / v24.20.0 |
-| Playwright / project | 1.63.0 / `prime-parity-chromium` |
-| Runtime Chromium | `153.0.8010.12` |
-| Viewport | 1280×720, device pixel ratio 1 |
-| Run | Start `2026-10-08T14:40:49.815Z`; runner duration 20.024 seconds; 1 passed, 0 unexpected, 0 skipped, 0 flaky, retries 0 |
+| Item                    | Corrected attempt                                                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Branch / HEAD           | `feature/gap-064-g3e-media-data` / `7c49568b50ed1017e17334152a48fb231e7ec307`                                            |
+| Product input           | Exact original Stage 2 `src.tar` reused, including prior approved dirty E-1 work; no refreshed or altered product inputs |
+| Input archive SHA-256   | `60bc65d477ffcae50c653c4d738e2f086a8fcb61e3351eab5811c600e2ec90a4`                                                       |
+| Original hook SHA-256   | `a12d2644d35d57436feb282378903ee5eb611b9b98b2fe3e72811ceb441058b7`                                                       |
+| Corrected hook SHA-256  | `91823fc355292ae29c6ae2d79db14177acfd5a13f603825c867bfc69bd13aaf1`                                                       |
+| Docker image            | `mcr.microsoft.com/playwright:v1.63.0-jammy`                                                                             |
+| Verified local image ID | `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847`                                                |
+| Platform / Node         | Linux arm64 (`aarch64`) / v24.20.0                                                                                       |
+| Playwright / project    | 1.63.0 / `prime-parity-chromium`                                                                                         |
+| Runtime Chromium        | `153.0.8010.12`                                                                                                          |
+| Viewport                | 1280×720, device pixel ratio 1                                                                                           |
+| Run                     | Start `2026-10-08T14:40:49.815Z`; runner duration 20.024 seconds; 1 passed, 0 unexpected, 0 skipped, 0 flaky, retries 0  |
 
 `commit.txt`, `git-status.txt` and `input-sha256.json` retain original archived-input provenance. `current-git-status.txt` and `pre-rerun-worktree-sha256.json` separately retain the current repository state before this rerun; they are not represented as contents of the reused archive. `hook-provenance.json` records both hook hashes and the archive hash. Runner and diagnostic configuration are byte-identical to the original attempt.
 
@@ -63,13 +63,13 @@ Source inspected to interpret the measurements: `tooling/prime-reference/cases-g
 
 ## 5. Elements and selectors measured
 
-| Element | PrimeNG | Ultimate |
-| --- | --- | --- |
-| Root | `.p-imagecompare` → `p-imagecompare.p-imagecompare` | `.u-image-compare` → `u-image-compare.u-component.u-image-compare` |
-| First image | `.p-imagecompare > img:first-of-type` → `img` | `.u-image-compare > img` → `img` |
-| Second/right blue image | `.p-imagecompare img + img` → `img` | `.u-image-compare > span > img` → `img` |
-| Right-image wrapper | None | `.u-image-compare > span` → `span` |
-| Slider | `.p-imagecompare-slider` → `input.p-imagecompare-slider` | `.u-image-compare-slider` → `input.u-image-compare-slider` |
+| Element                 | PrimeNG                                                  | Ultimate                                                           |
+| ----------------------- | -------------------------------------------------------- | ------------------------------------------------------------------ |
+| Root                    | `.p-imagecompare` → `p-imagecompare.p-imagecompare`      | `.u-image-compare` → `u-image-compare.u-component.u-image-compare` |
+| First image             | `.p-imagecompare > img:first-of-type` → `img`            | `.u-image-compare > img` → `img`                                   |
+| Second/right blue image | `.p-imagecompare img + img` → `img`                      | `.u-image-compare > span > img` → `img`                            |
+| Right-image wrapper     | None                                                     | `.u-image-compare > span` → `span`                                 |
+| Slider                  | `.p-imagecompare-slider` → `input.p-imagecompare-slider` | `.u-image-compare-slider` → `input.u-image-compare-slider`         |
 
 Raw records retain element identity, current image URL/natural dimensions, bounding and fragment rectangles, offsetParent/offsetTop, dimensions, computed styles, bounded ancestry, existing child-node ranges and detached-canvas font metrics. The canvas adds no DOM/style. The slider's native thumb has no DOM Element rectangle; its computed-style query is retained, with `thumbRect: null` and an explicit limitation. No synthetic thumb geometry is inferred.
 
@@ -77,12 +77,12 @@ Raw records retain element identity, current image URL/natural dimensions, bound
 
 All coordinates and sizes are CSS pixels. Here `y = top` for every element.
 
-| Element | x | y / top | bottom | width | height |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Root | 16 | 19 | 36 | 1257.5 | 17 |
-| First image | 16 | 16 | 33 | 1257.5 | 17 |
-| Second/right image | 16 | 16 | 33 | 1257.5 | 17 |
-| Slider | 8.5 | 18 | 33 | 1263 | 15 |
+| Element            |   x | y / top | bottom |  width | height |
+| ------------------ | --: | ------: | -----: | -----: | -----: |
+| Root               |  16 |      19 |     36 | 1257.5 |     17 |
+| First image        |  16 |      16 |     33 | 1257.5 |     17 |
+| Second/right image |  16 |      16 |     33 | 1257.5 |     17 |
+| Slider             | 8.5 |      18 |     33 |   1263 |     15 |
 
 Root: inline, relative, border-box; computed width 320px, height auto. Both images: block, absolute, border-box; used computed width/height 1257.5px/17px; computed top/bottom −3px/+3px, left/right 0px. Slider: inline-block, relative, border-box; 1263px/15px; computed insets 0px.
 
@@ -90,13 +90,13 @@ The image rules specify no top/bottom/left/right declarations; the recorded comp
 
 ## 7. Ultimate measurements
 
-| Element | x | y / top | bottom | width | height |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Root | 16 | 19 | 36 | 1257.5 | 17 |
-| First image | 16 | 16 | 33 | 1257.5 | 17 |
-| Second/right image | 16 | 19 | 36 | 1257.5 | 17 |
-| Right-image span | 16 | 19 | 36 | 1257.5 | 17 |
-| Slider | 8.5 | 18 | 33 | 1263 | 15 |
+| Element            |   x | y / top | bottom |  width | height |
+| ------------------ | --: | ------: | -----: | -----: | -----: |
+| Root               |  16 |      19 |     36 | 1257.5 |     17 |
+| First image        |  16 |      16 |     33 | 1257.5 |     17 |
+| Second/right image |  16 |      19 |     36 | 1257.5 |     17 |
+| Right-image span   |  16 |      19 |     36 | 1257.5 |     17 |
+| Slider             | 8.5 |      18 |     33 |   1263 |     15 |
 
 Root: inline, relative, content-box; computed width 320px, height auto. First image: block, absolute, content-box; 1257.5px/17px; computed top/bottom −3px/+3px. Second image: block, absolute, content-box; same dimensions; computed top/bottom 0px/0px. Both images have left/right 0px. Span: block, absolute, content-box, all insets 0px; 1257.5px/17px; overflow visible. Slider: inline-block, relative, content-box; same geometry and computed insets as Prime.
 
@@ -106,18 +106,18 @@ Both sides have normal line-height, baseline vertical-align and the same 16px Ti
 
 Delta means Ultimate minus Prime. Full rectangle deltas are in `deltas.json`.
 
-| Measurement | Prime | Ultimate | Delta |
-| --- | ---: | ---: | ---: |
-| Root y / top | 19 | 19 | 0 |
-| First image y / top | 16 | 16 | 0 |
-| Second/right blue image y / top | 16 | 19 | **+3** |
-| Wrapper y / top | Not present | 19 | Not applicable |
-| Slider y / top | 18 | 18 | 0 |
-| Root → first image | −3 | −3 | 0 |
-| Root → second image | −3 | 0 | **+3** |
-| Root → slider | −1 | −1 | 0 |
-| Root → wrapper | Not present | 0 | Not applicable |
-| Wrapper → second image | Not present | 0 | Not applicable |
+| Measurement                     |       Prime | Ultimate |          Delta |
+| ------------------------------- | ----------: | -------: | -------------: |
+| Root y / top                    |          19 |       19 |              0 |
+| First image y / top             |          16 |       16 |              0 |
+| Second/right blue image y / top |          16 |       19 |         **+3** |
+| Wrapper y / top                 | Not present |       19 | Not applicable |
+| Slider y / top                  |          18 |       18 |              0 |
+| Root → first image              |          −3 |       −3 |              0 |
+| Root → second image             |          −3 |        0 |         **+3** |
+| Root → slider                   |          −1 |       −1 |              0 |
+| Root → wrapper                  | Not present |        0 | Not applicable |
+| Wrapper → second image          | Not present |        0 | Not applicable |
 
 Root, first-image and slider rectangles are exactly equal across sides. The second image differs only in y/top/bottom, each +3; its width, height and horizontal position match. The saved corrected screenshots show the same downward displacement of the blue band.
 
@@ -131,12 +131,12 @@ The remaining recorded ancestors up to body are static and have no transform, fi
 
 ## 10. Hypothesis evaluation
 
-| Hypothesis | Result and limits |
-| --- | --- |
-| **H1 — inline/static-position behavior** | **Supported as part of the measured chain.** Direct absolute images with unspecified insets sit at root−3 on both sides; the nested image sits at wrapper+0. Source plus used insets/offsetParents establish different static-placement contexts. Exact line-box baseline construction is not directly measured; the descent3 coincidence alone is not used as causation. |
-| **H2 — containing-block/wrapper difference** | **Established for this displacement.** The blue image changes containing block from inline root to absolute span. The span starts at root+0, its image starts at span+0, while Prime's image starts at root−3. These measured relationships account for the full +3 px, with equal root/image sizes and unchanged direct first-image placement. |
-| **H3 — descendant formatting / box metrics** | **No independent cross-side font, image-size, vertical-align or spacing difference explains the shift.** Normal line-height, font metrics, image dimensions, object-fit/position, zero image spacing and slider metrics agree. The changed formatting context is the wrapper relationship in H1/H2, not an established separate font/style discrepancy. |
-| **H4 — root box-model difference** | **Does not explain the measured vertical displacement in this case.** Border-box versus content-box remains recorded, but both root rectangles and zero root padding/borders agree; image dimensions and direct-image positions also agree. There is no root box-edge/dimension delta contributing 3 px. This is case-specific, not a general box-model ruling. |
+| Hypothesis                                   | Result and limits                                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **H1 — inline/static-position behavior**     | **Supported as part of the measured chain.** Direct absolute images with unspecified insets sit at root−3 on both sides; the nested image sits at wrapper+0. Source plus used insets/offsetParents establish different static-placement contexts. Exact line-box baseline construction is not directly measured; the descent3 coincidence alone is not used as causation. |
+| **H2 — containing-block/wrapper difference** | **Established for this displacement.** The blue image changes containing block from inline root to absolute span. The span starts at root+0, its image starts at span+0, while Prime's image starts at root−3. These measured relationships account for the full +3 px, with equal root/image sizes and unchanged direct first-image placement.                           |
+| **H3 — descendant formatting / box metrics** | **No independent cross-side font, image-size, vertical-align or spacing difference explains the shift.** Normal line-height, font metrics, image dimensions, object-fit/position, zero image spacing and slider metrics agree. The changed formatting context is the wrapper relationship in H1/H2, not an established separate font/style discrepancy.                   |
+| **H4 — root box-model difference**           | **Does not explain the measured vertical displacement in this case.** Border-box versus content-box remains recorded, but both root rectangles and zero root padding/borders agree; image dimensions and direct-image positions also agree. There is no root box-edge/dimension delta contributing 3 px. This is case-specific, not a general box-model ruling.           |
 
 ## 11. Causal conclusion
 

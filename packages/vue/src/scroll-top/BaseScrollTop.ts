@@ -11,7 +11,10 @@ import { scrollTopStyleModule } from "./scroll-top-style";
 // as every sibling component.
 export function createBaseScrollTop() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "scroll-top", styleModule: scrollTopStyleModule }),
+    extends: createBaseComponent({
+      componentName: "scroll-top",
+      styleModule: scrollTopStyleModule,
+    }),
     props: {
       target: { type: String, default: "window" },
       threshold: { type: Number, default: 400 },

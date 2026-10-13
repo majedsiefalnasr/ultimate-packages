@@ -13,13 +13,13 @@ Below, **E** is `.superpowers/sdd/2026-10-08-gap-064-g3e-media-data/e1-v2-remedi
 
 The failed `E/production-input.tar` and `E/starting-worktree.tar` omit `tooling/prime-reference/ng/fixtures` entirely. The unchanged Angular asset configuration uses `{ "glob": "**/*", "input": "fixtures", "output": "/" }`. The repository provides that app-local input as a tracked directory symlink to the existing shared fixtures. The successful experiment archive `X/src.tar` contains this link and the same shared image bytes. D1 establishes the omission and source relationship; it does not establish an HTTP status, network failure or decoding failure.
 
-| Required identity | Exact value |
-| --- | --- |
-| Archive/repository path | `tooling/prime-reference/ng/fixtures` |
-| Literal relative link target | `../fixtures` |
-| Resolved archive-relative directory | `tooling/prime-reference/fixtures/` |
-| Git mode and recorded link blob | `120000`; `50c98ad3e0ddb0f0703050720db66f6ffa5b4243` |
-| Successful archive member | Tar symbolic-link type `2`, size `0`, linkname `../fixtures`, permission metadata `0755` |
+| Required identity                   | Exact value                                                                              |
+| ----------------------------------- | ---------------------------------------------------------------------------------------- |
+| Archive/repository path             | `tooling/prime-reference/ng/fixtures`                                                    |
+| Literal relative link target        | `../fixtures`                                                                            |
+| Resolved archive-relative directory | `tooling/prime-reference/fixtures/`                                                      |
+| Git mode and recorded link blob     | `120000`; `50c98ad3e0ddb0f0703050720db66f6ffa5b4243`                                     |
+| Successful archive member           | Tar symbolic-link type `2`, size `0`, linkname `../fixtures`, permission metadata `0755` |
 
 Git mode `120000` denotes the symlink type; tar permission metadata `0755` is not a substitute for that type. The Git blob records link text, not target-file bytes.
 
@@ -27,14 +27,14 @@ The failed archive already contains the target payload: `tooling/prime-reference
 
 ### Retained SHA-256 anchors
 
-| Input | SHA-256 |
-| --- | --- |
-| `E/production-input.tar` | `a7fea35cb18032bc71cbc039d221472e3d01f7a2ad687f3b6fd5f8b193695fe5` |
-| `E/starting-worktree.tar` | `0909b4ea2ecbb0b8c20074e4102b09c21c1c823788abc50a19f6438d71b465d2` |
-| `X/src.tar` | `60bc65d477ffcae50c653c4d738e2f086a8fcb61e3351eab5811c600e2ec90a4` |
+| Input                                     | SHA-256                                                            |
+| ----------------------------------------- | ------------------------------------------------------------------ |
+| `E/production-input.tar`                  | `a7fea35cb18032bc71cbc039d221472e3d01f7a2ad687f3b6fd5f8b193695fe5` |
+| `E/starting-worktree.tar`                 | `0909b4ea2ecbb0b8c20074e4102b09c21c1c823788abc50a19f6438d71b465d2` |
+| `X/src.tar`                               | `60bc65d477ffcae50c653c4d738e2f086a8fcb61e3351eab5811c600e2ec90a4` |
 | `tooling/prime-reference/ng/angular.json` | `8a8a2740539c734cc3e400092185a7d00f5fbb5302775de3b537e06c7e8f407f` |
-| Shared `media/landscape-1.png` | `fcb9f0eff74f7614d7e791c920253327872740df0ac0f8f053adca98cc39fc86` |
-| Shared `media/landscape-2.png` | `a2d5d4f160a5ece9b940c0c7ca1672f3de14f49fc8c43a4732a8e670ac920a2b` |
+| Shared `media/landscape-1.png`            | `fcb9f0eff74f7614d7e791c920253327872740df0ac0f8f053adca98cc39fc86` |
+| Shared `media/landscape-2.png`            | `a2d5d4f160a5ece9b940c0c7ca1672f3de14f49fc8c43a4732a8e670ac920a2b` |
 
 The first two PNGs are the failing reference case's inputs; retained header evidence records 800×600 and lengths 17876/17841 bytes. Their equal bytes do not prove browser serving or decoding. Hash all five existing target payload files during future preparation and compare with both retained archives and the applicable retained file manifest; do not invent missing expected hashes. Any disagreement or missing comparison anchor is STOP.
 
@@ -70,17 +70,17 @@ Only the following fresh directory and its listed contents may be created by a s
 
 `E/fixture-link-preparation/`
 
-| Disposable artifact | Purpose |
-| --- | --- |
-| `prepare-fixture-input.py` | Exact retained host-side implementation of §4; no repository tool installation or edits |
-| `invocation.txt`, `preparation.log` | Exact invocation and preparation-only output |
-| `starting-state.json` | Branch/commit, dirty-state inventory, starting protected-content hashes and input anchors |
-| `original-members.json`, `corrected-members.json`, `archive-delta.json` | Full member metadata/payload hashes and the single-entry delta |
-| `fixture-integrity.json`, `symlink-integrity.json` | Target bytes, topology, Git identity and extraction comparisons |
-| `artifact-hashes.json` | Exact script, archive and retained evidence hashes |
-| `production-input-with-ng-fixtures.tar` | Corrected derivative; never overwrite `E/production-input.tar` |
-| `extracted/` | One fresh staging extraction containing only the corrected archive's contents; removed after recording evidence |
-| `result.md`, `cleanup.json` | Preparation outcome, unresolved runtime question, unchanged-input checks and cleanup confirmation |
+| Disposable artifact                                                     | Purpose                                                                                                         |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `prepare-fixture-input.py`                                              | Exact retained host-side implementation of §4; no repository tool installation or edits                         |
+| `invocation.txt`, `preparation.log`                                     | Exact invocation and preparation-only output                                                                    |
+| `starting-state.json`                                                   | Branch/commit, dirty-state inventory, starting protected-content hashes and input anchors                       |
+| `original-members.json`, `corrected-members.json`, `archive-delta.json` | Full member metadata/payload hashes and the single-entry delta                                                  |
+| `fixture-integrity.json`, `symlink-integrity.json`                      | Target bytes, topology, Git identity and extraction comparisons                                                 |
+| `artifact-hashes.json`                                                  | Exact script, archive and retained evidence hashes                                                              |
+| `production-input-with-ng-fixtures.tar`                                 | Corrected derivative; never overwrite `E/production-input.tar`                                                  |
+| `extracted/`                                                            | One fresh staging extraction containing only the corrected archive's contents; removed after recording evidence |
+| `result.md`, `cleanup.json`                                             | Preparation outcome, unresolved runtime question, unchanged-input checks and cleanup confirmation               |
 
 If this destination already exists, STOP rather than overwrite it or choose another destination. No other file changes are allowed. The implementation of the retained script must not introduce choices beyond §4; any need to deviate requires a new ruling.
 

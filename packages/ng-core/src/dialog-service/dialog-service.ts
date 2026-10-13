@@ -3,7 +3,9 @@ import { Subject } from "rxjs";
 import { UDynamicDialogRef } from "./dynamic-dialog-ref";
 
 /** Options accepted by `UDialogService.open()`. Scoped subset of real PrimeNG's `DynamicDialogConfig` — header/data/inputValues only, matching `UDialog`'s already-established smaller surface (no draggable/resizable/breakpoints/maximizable). */
-export interface UDynamicDialogConfig<InputValuesType extends Record<string, unknown> = Record<string, unknown>> {
+export interface UDynamicDialogConfig<
+  InputValuesType extends Record<string, unknown> = Record<string, unknown>,
+> {
   /** Title text of the dialog. */
   header?: string;
   /** Arbitrary data made available to the loaded component via its own `data` input, if it declares one. */

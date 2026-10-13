@@ -68,7 +68,12 @@ import { panelStyleModule } from "./panel-style";
         </div>
       }
       @if (!toggleable() || !isCollapsed()) {
-        <div [class]="cx('contentContainer')" role="region" [attr.id]="id + '_content'" [attr.aria-labelledby]="id + '_header'">
+        <div
+          [class]="cx('contentContainer')"
+          role="region"
+          [attr.id]="id + '_content'"
+          [attr.aria-labelledby]="id + '_header'"
+        >
           <div [class]="cx('content')">
             <ng-content></ng-content>
           </div>

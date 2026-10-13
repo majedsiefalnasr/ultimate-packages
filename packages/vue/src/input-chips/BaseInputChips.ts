@@ -21,7 +21,10 @@ import { inputChipsStyleModule } from "./input-chips-style";
 // verified source, not a neutral choice.
 export function createBaseInputChips() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "inputchips", styleModule: inputChipsStyleModule }),
+    extends: createBaseComponent({
+      componentName: "inputchips",
+      styleModule: inputChipsStyleModule,
+    }),
     props: {
       modelValue: { type: Array as PropType<readonly unknown[]>, default: null },
       max: { type: Number, default: null },

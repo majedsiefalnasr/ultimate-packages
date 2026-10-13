@@ -52,9 +52,15 @@ describe("UPaginator", () => {
     const { container } = render(
       <UPaginator first={0} rows={10} totalRecords={95} onPageChange={vi.fn()} />
     );
-    expect((container.querySelector("[data-u-paginator-first]") as HTMLButtonElement).disabled).toBe(true);
-    expect((container.querySelector("[data-u-paginator-prev]") as HTMLButtonElement).disabled).toBe(true);
-    expect((container.querySelector("[data-u-paginator-next]") as HTMLButtonElement).disabled).toBe(false);
+    expect(
+      (container.querySelector("[data-u-paginator-first]") as HTMLButtonElement).disabled
+    ).toBe(true);
+    expect((container.querySelector("[data-u-paginator-prev]") as HTMLButtonElement).disabled).toBe(
+      true
+    );
+    expect((container.querySelector("[data-u-paginator-next]") as HTMLButtonElement).disabled).toBe(
+      false
+    );
   });
 });
 

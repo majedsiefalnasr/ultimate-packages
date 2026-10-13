@@ -30,8 +30,7 @@ describe("UInputOtp", () => {
   it("joins segment tokens into a single string modelValue as the user types", () => {
     const fixture = TestBed.createComponent(UInputOtp);
     fixture.detectChanges();
-    const inputs: NodeListOf<HTMLInputElement> =
-      fixture.nativeElement.querySelectorAll("input");
+    const inputs: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll("input");
 
     inputs[0].value = "1";
     inputs[0].dispatchEvent(inputEvent(inputs[0], "insertText"));
@@ -46,8 +45,7 @@ describe("UInputOtp", () => {
   it("moves focus to the next segment after a character is typed", () => {
     const fixture = TestBed.createComponent(UInputOtp);
     fixture.detectChanges();
-    const inputs: NodeListOf<HTMLInputElement> =
-      fixture.nativeElement.querySelectorAll("input");
+    const inputs: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll("input");
 
     inputs[0].value = "1";
     inputs[0].dispatchEvent(inputEvent(inputs[0], "insertText"));
@@ -59,11 +57,10 @@ describe("UInputOtp", () => {
   it("moves focus to the previous segment on ArrowLeft", () => {
     const fixture = TestBed.createComponent(UInputOtp);
     fixture.detectChanges();
-    const inputs: NodeListOf<HTMLInputElement> =
-      fixture.nativeElement.querySelectorAll("input");
+    const inputs: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll("input");
 
     inputs[1].dispatchEvent(
-      new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true, cancelable: true }),
+      new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true, cancelable: true })
     );
     fixture.detectChanges();
 
@@ -73,12 +70,11 @@ describe("UInputOtp", () => {
   it("moves focus to the previous segment on Backspace when the current segment is empty", () => {
     const fixture = TestBed.createComponent(UInputOtp);
     fixture.detectChanges();
-    const inputs: NodeListOf<HTMLInputElement> =
-      fixture.nativeElement.querySelectorAll("input");
+    const inputs: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll("input");
     inputs[1].focus();
 
     inputs[1].dispatchEvent(
-      new KeyboardEvent("keydown", { key: "Backspace", bubbles: true, cancelable: true }),
+      new KeyboardEvent("keydown", { key: "Backspace", bubbles: true, cancelable: true })
     );
     fixture.detectChanges();
 
@@ -88,8 +84,7 @@ describe("UInputOtp", () => {
   it("splits a pasted value across the segment inputs", () => {
     const fixture = TestBed.createComponent(UInputOtp);
     fixture.detectChanges();
-    const inputs: NodeListOf<HTMLInputElement> =
-      fixture.nativeElement.querySelectorAll("input");
+    const inputs: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll("input");
 
     const clipboardData = { getData: () => "1234" };
     const pasteEvent = Object.assign(new Event("paste", { bubbles: true, cancelable: true }), {
@@ -105,8 +100,7 @@ describe("UInputOtp", () => {
     const fixture = TestBed.createComponent(UInputOtp);
     fixture.componentRef.setInput("integerOnly", true);
     fixture.detectChanges();
-    const inputs: NodeListOf<HTMLInputElement> =
-      fixture.nativeElement.querySelectorAll("input");
+    const inputs: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll("input");
 
     const keydownEvent = new KeyboardEvent("keydown", {
       key: "a",
@@ -137,8 +131,7 @@ describe("UInputOtp", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const inputs: NodeListOf<HTMLInputElement> =
-      fixture.nativeElement.querySelectorAll("input");
+    const inputs: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll("input");
     expect(inputs[0].value).toBe("1");
     expect(inputs[3].value).toBe("4");
   });

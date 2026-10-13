@@ -14,7 +14,9 @@ export function useComponentStyle(componentName: string, styleModule: StyleModul
     registerThemeVariables(reactCoreStyleSheet, componentName);
 
     if (!reactCoreStyleSheet.has(componentName)) {
-      reactCoreStyleSheet.add(componentName, css`${styleModule.css}`);
+      // Keep the style module's CSS bytes intact; the registered value is used as-is.
+      const renderCss = css;
+      reactCoreStyleSheet.add(componentName, renderCss`${styleModule.css}`);
     }
   });
 }

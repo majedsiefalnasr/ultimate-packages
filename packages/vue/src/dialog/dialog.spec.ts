@@ -39,7 +39,10 @@ describe("UDialog — controlled contract (v-model:visible)", () => {
   });
 
   it("emits update:visible(false) when the close button is clicked", async () => {
-    const wrapper = mount(UDialog, { props: { visible: true, closable: true }, attachTo: document.body });
+    const wrapper = mount(UDialog, {
+      props: { visible: true, closable: true },
+      attachTo: document.body,
+    });
     await new Promise((r) => setTimeout(r, 0));
     const closeButton = document.querySelector('[role="dialog"] button');
     (closeButton as HTMLElement)?.click();
@@ -57,7 +60,10 @@ describe("UDialog — role override (Spec §5.2, GAP-049)", () => {
   });
 
   it("renders the supplied role override when set", async () => {
-    const wrapper = mount(UDialog, { props: { visible: true, role: "alertdialog" }, attachTo: document.body });
+    const wrapper = mount(UDialog, {
+      props: { visible: true, role: "alertdialog" },
+      attachTo: document.body,
+    });
     await new Promise((r) => setTimeout(r, 0));
     expect(document.querySelector('[role="alertdialog"]')).toBeTruthy();
     expect(document.querySelector('[role="dialog"]')).toBeNull();
@@ -113,7 +119,10 @@ describe("UDialog — Escape (via the shared uix-utils/escape adapter, spec §11
 
 describe("UDialog — scroll locking (spec §16)", () => {
   it("blocks body scroll when a modal dialog is visible", async () => {
-    const wrapper = mount(UDialog, { props: { visible: true, modal: true }, attachTo: document.body });
+    const wrapper = mount(UDialog, {
+      props: { visible: true, modal: true },
+      attachTo: document.body,
+    });
     await new Promise((r) => setTimeout(r, 0));
     expect(document.body.classList.contains("u-overflow-hidden")).toBe(true);
     wrapper.unmount();
@@ -267,12 +276,18 @@ describe("UDialog — dialogId generation (useId() migration regression tests)",
   // well-formed, non-empty dialogId/ariaLabelledById (not undefined, not
   // stale, not silently empty).
   it("independently derives a fresh, well-formed dialogId on every separate mount (jsdom retained-state check, not an SSR determinism proof)", async () => {
-    const wrapper1 = mount(UDialog, { props: { visible: true, header: "First" }, attachTo: document.body });
+    const wrapper1 = mount(UDialog, {
+      props: { visible: true, header: "First" },
+      attachTo: document.body,
+    });
     await new Promise((r) => setTimeout(r, 0));
     const id1 = document.querySelector('[role="dialog"]')?.getAttribute("aria-labelledby");
     wrapper1.unmount();
 
-    const wrapper2 = mount(UDialog, { props: { visible: true, header: "Second" }, attachTo: document.body });
+    const wrapper2 = mount(UDialog, {
+      props: { visible: true, header: "Second" },
+      attachTo: document.body,
+    });
     await new Promise((r) => setTimeout(r, 0));
     const id2 = document.querySelector('[role="dialog"]')?.getAttribute("aria-labelledby");
     wrapper2.unmount();

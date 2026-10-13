@@ -59,11 +59,11 @@ None of these decisions is reopened by this specification.
 
 ### 3.1 Evidence: current Ultimate Table filter architecture (all 3 frameworks, verified this conversation)
 
-| Framework | File | Mechanism | Currently dispatched |
-|---|---|---|---|
-| Angular | `packages/ng/src/table/table.ts:195-210` | Private class method `matchesFilter(row, field, filter)`, `switch (filter.matchMode)` | `contains`, `startsWith`, `equals` |
-| React | `packages/react/src/table/table.tsx:97-108` | Module-level function `matchesFilter<T>(row, field, filter)`, `switch (filter.matchMode)` | `contains` only |
-| Vue | `packages/vue/src/table/Table.vue:126-137` | Module-level function `matchesFilter(row, field, filter)`, `switch (filter.matchMode)` | `contains` only |
+| Framework | File                                        | Mechanism                                                                                 | Currently dispatched               |
+| --------- | ------------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------- |
+| Angular   | `packages/ng/src/table/table.ts:195-210`    | Private class method `matchesFilter(row, field, filter)`, `switch (filter.matchMode)`     | `contains`, `startsWith`, `equals` |
+| React     | `packages/react/src/table/table.tsx:97-108` | Module-level function `matchesFilter<T>(row, field, filter)`, `switch (filter.matchMode)` | `contains` only                    |
+| Vue       | `packages/vue/src/table/Table.vue:126-137`  | Module-level function `matchesFilter(row, field, filter)`, `switch (filter.matchMode)`    | `contains` only                    |
 
 Every unhandled mode in all 3 frameworks currently falls to a `default: return true` (pass-through, not silently wrong-filtering) — a `// NEEDS IMPLEMENTATION-TIME VERIFICATION: ...` comment lists exactly the modes this specification now resolves. All 3 already wire this function into the existing `{operator, constraints}` group-combination mechanism (React/Vue: object-with-constraints-array shape; Angular: array-of-alternatives shape) — that mechanism is unchanged by this specification.
 
@@ -75,11 +75,11 @@ Both React and Vue's `matchesFilter` are standalone module-level functions (not 
 
 Extracted directly from `.vendor-cache/` tarballs this conversation (not inferred from documentation, naming, or a prior pass's partial read):
 
-| Framework | Pinned source file | Commit |
-|---|---|---|
-| Angular | `packages/primeng/src/api/filterservice.ts` | `c493b1c6d9f7cdffbe1c4dc195493dd73d733593` (PrimeNG 21.1.9) |
-| React | `components/lib/api/FilterService.js` | `d0f574e39122668292fc7a740f081bae1b93b1e9` (PrimeReact 10.9.9) |
-| Vue | `packages/core/src/api/FilterService.js` | `66dde6788220fc9e6822342919d1ceb0e3460ece` (PrimeVue 4.5.5) |
+| Framework | Pinned source file                          | Commit                                                         |
+| --------- | ------------------------------------------- | -------------------------------------------------------------- |
+| Angular   | `packages/primeng/src/api/filterservice.ts` | `c493b1c6d9f7cdffbe1c4dc195493dd73d733593` (PrimeNG 21.1.9)    |
+| React     | `components/lib/api/FilterService.js`       | `d0f574e39122668292fc7a740f081bae1b93b1e9` (PrimeReact 10.9.9) |
+| Vue       | `packages/core/src/api/FilterService.js`    | `66dde6788220fc9e6822342919d1ceb0e3460ece` (PrimeVue 4.5.5)    |
 
 **Finding: all 3 frameworks' real `FilterService`-equivalent objects carry a near-identical `filters` map**, keyed by 16 shared non-`custom` mode names (`startsWith`, `contains`, `notContains`, `endsWith`, `equals`, `notEquals`, `in`, `between`, `lt`, `lte`, `gt`, `gte`, `dateIs`, `dateIsNot`, `dateBefore`, `dateAfter`; Angular additionally aliases `is`/`isNot`/`before`/`after` to `equals`/`notEquals`/`lt`/`gt`, not separate semantics). **Evidence correction (post-Implementation, source re-verified directly):** an earlier version of this finding claimed 17 shared names including `notIn` — that overstated the shared set. Direct re-extraction confirms `notIn` exists only in real PrimeReact source (`components/lib/api/FilterService.js`); it is genuinely absent from both PrimeNG's `filterservice.ts` and PrimeVue's `FilterService.js` (`grep -c "notIn"` returns 0 for both). This does not change any architectural conclusion — `notIn` remains correctly listed in `@ultimate/uix-data`'s `FilterMatchMode` type (§1) as the straightforward negation of `in`, and Angular's/Vue's real, shipped `notIn` implementations are ordinary, reasonable comparator logic, not a port of nonexistent upstream source; only this finding's own "17 shared names" citation was inaccurate. Comparator bodies are functionally identical across the 16 genuinely shared modes — numeric/date comparisons use `.getTime()` when both operands expose it, otherwise plain `<`/`<=`/`>`/`>=`/`===`; `between` checks an inclusive `[low, high]` two-element array; `in`/`notIn` iterate a filter array using the framework's own `equals` utility. Vue's date comparators additionally coerce string-typed operands via `new Date(...)` before comparing (React's and Angular's do not — see §3.3's edge-case note).
 
@@ -98,7 +98,7 @@ This confirms the comparator **semantics** (what "numeric between" or "date befo
 
 **Real Prime mechanism, verified identical in shape across all 3 frameworks:** each framework's real `FilterService`-equivalent exposes `register(rule: string, fn: Function): void`, which mutates the shared `filters` map so that a subsequently-used `matchMode` value (conventionally `'custom'`, but not restricted to that literal string) resolves to the newly-registered predicate. `FilterMatchMode.CUSTOM = 'custom'` (PrimeReact's `FilterMatchMode.js`) is a recognized name, not a dispatched case — `custom` is never itself present as a `case` inside any of the 3 frameworks' own `filters` maps; it only resolves once a consuming application has called `register('custom', someFn)`.
 
-**Finding: `register()` is not Angular-specific.** All 3 frameworks' real `FilterService`-equivalents expose the identical mechanism — a mutable `filters` dictionary plus a `register` setter — as plain object mutation. Angular wraps its instance in `@Injectable({ providedIn: 'root' })` for DI-container convenience; React's and Vue's are plain exported module objects (`FilterService.filters[rule] = fn`). The *mechanism* itself (mutate a dispatch table, then reference the new key by name) requires no framework-specific runtime feature in any of the 3 — it is exactly as buildable as a plain exported mutable object or a small registration function in React/Vue as it is as an Angular injectable.
+**Finding: `register()` is not Angular-specific.** All 3 frameworks' real `FilterService`-equivalents expose the identical mechanism — a mutable `filters` dictionary plus a `register` setter — as plain object mutation. Angular wraps its instance in `@Injectable({ providedIn: 'root' })` for DI-container convenience; React's and Vue's are plain exported module objects (`FilterService.filters[rule] = fn`). The _mechanism_ itself (mutate a dispatch table, then reference the new key by name) requires no framework-specific runtime feature in any of the 3 — it is exactly as buildable as a plain exported mutable object or a small registration function in React/Vue as it is as an Angular injectable.
 
 **Resolution, per framework, for this specification's scope: Angular supports `custom`; React and Vue do not.** For Angular, this is a public consumer-facing API decision, and per Spec Review, that contract is fixed here — not deferred to the Implementation Plan. The Plan chooses the internal implementation mechanism (a service, a registry object, an injection token, or another existing framework-native mechanism); it does not invent or alter any element of the contract below.
 
@@ -108,7 +108,7 @@ This confirms the comparator **semantics** (what "numeric between" or "date befo
 - **Registration scope: Table-scoped, not global/shared.** Each `UTable` instance resolves `custom` predicates only from registrations made against that same instance (directly, or via an Angular DI scope no wider than that Table's own injector hierarchy, at the Plan's choice). A predicate registered on one `UTable` instance must not be reachable from a different, unrelated `UTable` instance elsewhere in the same application. This is narrower than Prime's real root-singleton shape by design — a global mutable registry shared across unrelated Table instances is explicitly not required and not authorized as this contract's default.
 - **Registration key / rule-name contract:** a registration key is a non-empty `string`. The reserved name `'custom'` is the conventional key a `FilterMetadata.matchMode` value of `'custom'` resolves against by default, matching Prime's own convention (this section's own opening paragraph). The contract does not require support for arbitrary non-`'custom'` key names beyond this reserved one — that generalization (Prime's own `register(rule, fn)` accepting any `rule` string) is not part of this specification's bound scope; the Plan may implement the general form, but only supporting the reserved `'custom'` key satisfies this contract.
 - **Predicate callback contract — input:** `(value: unknown, filter: unknown, filterLocale?: string) => boolean`, matching the real Prime signature and the shape every other comparator in §3.2/§3.3 already follows (row's resolved field value, the `FilterMetadata.value`, and an optional locale string). **Output:** a `boolean` — `true` if the row value matches the filter, `false` otherwise. The predicate must be a pure function with respect to Table state: it receives only these two/three arguments and must not depend on hidden mutable Table internals to produce its result.
-- **Resolution — how a `filter.matchMode` value resolves to a registered predicate:** when `matchesFilter` dispatches a `FilterMetadata` whose `matchMode` is `'custom'`, the Table looks up a predicate previously registered under the key `'custom'` for that same Table instance (Table-scoped, per the registration-scope contract above) and invokes it with the row's resolved field value and the `FilterMetadata.value` (and `filterLocale` if the Table's own locale-aware comparators already carry one — matching the existing `contains`/`startsWith`/`equals` cases' own signature, §3.1). If no predicate is registered under `'custom'` for that instance at filter time, the row does not match (`false`) — an unregistered `custom` mode must not silently pass every row through (`default: return true` is the existing pass-through for genuinely *unhandled* mode names in §3.1; `custom` with no registration is a *handled* mode with a defined empty-registry outcome, and that outcome is "matches nothing," not "matches everything").
+- **Resolution — how a `filter.matchMode` value resolves to a registered predicate:** when `matchesFilter` dispatches a `FilterMetadata` whose `matchMode` is `'custom'`, the Table looks up a predicate previously registered under the key `'custom'` for that same Table instance (Table-scoped, per the registration-scope contract above) and invokes it with the row's resolved field value and the `FilterMetadata.value` (and `filterLocale` if the Table's own locale-aware comparators already carry one — matching the existing `contains`/`startsWith`/`equals` cases' own signature, §3.1). If no predicate is registered under `'custom'` for that instance at filter time, the row does not match (`false`) — an unregistered `custom` mode must not silently pass every row through (`default: return true` is the existing pass-through for genuinely _unhandled_ mode names in §3.1; `custom` with no registration is a _handled_ mode with a defined empty-registry outcome, and that outcome is "matches nothing," not "matches everything").
 - **Duplicate-registration behavior:** registering a second predicate under the same key (`'custom'`) for the same Table instance **replaces** the previously registered predicate — matching Prime's own real `register()` behavior (`this.filters[rule] = fn`, unconditional assignment, no duplicate-detection or rejection). Ultimate's Angular contract does not require throwing, warning, or otherwise rejecting a re-registration; the last registration for a given instance and key wins.
 - **Lifecycle / scope expectations relevant to consumers:** a registration is expected to remain valid for the lifetime of the `UTable` instance it was registered against (or the DI scope the Plan chooses, provided that scope does not outlive or leak across unrelated Table instances, per the Table-scoping requirement above). Registration timing relative to Table initialization, and whether re-registration triggers an immediate re-filter of already-rendered rows, are Plan/task-level detail (§12) — this contract does not require synchronous re-filtering on registration, only that the most recently registered predicate is used for any filter evaluation that occurs after registration completes.
 
@@ -118,7 +118,7 @@ This confirms the comparator **semantics** (what "numeric between" or "date befo
 - **No React or Vue registration API is introduced** — no new prop, no new exported function, no new module-level mutable object, and no other public surface that would let a consuming application register a `custom` predicate for either framework's Table.
 - **The exact internal handling of an unregistered `custom` `matchMode` value remains Plan-level implementation detail** (§12), **provided it cannot accidentally become working custom-predicate support** — i.e., whatever the Plan chooses (falling through to the existing `default: return true` pass-through, or an explicit `case 'custom': return false`, or another deterministic outcome) must not, now or by incidental future refactor, read from or invoke any application-supplied function. The binding requirement is the absence of an executable registration path, not which specific inert value `custom` resolves to.
 
-This asymmetry (Angular: supported per §3.4.1's binding contract; React/Vue: no executable path per §3.4.2) is **not** a claim that React/Vue cannot architecturally support `custom` — the real Prime mechanism proves they could. It is a scope decision: this specification closes DECISION-C's *named* remainder (the comparator vocabulary), and extending an executable `custom` mechanism to React/Vue is new API-surface design that was never itself the subject of DECISION-C's own text (`BLUEPRINT_GAPS.md`'s DECISION-C entry lists "the fuller filter-operator vocabulary beyond string match modes" — a registration mechanism is not a comparator). A future specification may extend `custom` to React/Vue if a concrete consumer need surfaces; this specification does not pre-authorize or preclude that.
+This asymmetry (Angular: supported per §3.4.1's binding contract; React/Vue: no executable path per §3.4.2) is **not** a claim that React/Vue cannot architecturally support `custom` — the real Prime mechanism proves they could. It is a scope decision: this specification closes DECISION-C's _named_ remainder (the comparator vocabulary), and extending an executable `custom` mechanism to React/Vue is new API-surface design that was never itself the subject of DECISION-C's own text (`BLUEPRINT_GAPS.md`'s DECISION-C entry lists "the fuller filter-operator vocabulary beyond string match modes" — a registration mechanism is not a comparator). A future specification may extend `custom` to React/Vue if a concrete consumer need surfaces; this specification does not pre-authorize or preclude that.
 
 ---
 
@@ -130,7 +130,7 @@ Basis:
 
 1. The shared vocabulary already exists correctly, as a type only (`packages/uix-data/src/filter/index.ts`) — nothing to add or change there.
 2. Each framework's filter dispatch is already framework-local by design, already in place, already tested for 3 modes — the remaining 14 comparator modes are the same shape of addition as the 3 already shipped, inside the same existing `switch` statements.
-3. Comparator bodies are trivial pure functions with no framework-specific API dependency — genuinely portable *as independently-written code*, not requiring a shared implementation to avoid duplication that would be architecturally meaningful.
+3. Comparator bodies are trivial pure functions with no framework-specific API dependency — genuinely portable _as independently-written code_, not requiring a shared implementation to avoid duplication that would be architecturally meaningful.
 4. `custom`'s real mechanism (§3.4) is confirmed framework-agnostic in principle. Angular's own contract is now fixed at Spec level (§3.4.1); extending an executable path to React/Vue is new API-surface design outside this specification's bounded scope, not a blocked architectural question — no protected decision gates it, no new foundation is required if a later specification takes it up.
 5. This directly matches the already-established Batch 3/DECISION-C precedent (`BLUEPRINT_GAPS.md` DECISION-C entry, OrderList/PickList/DataView resolution): "this asymmetry does not require a new shared foundation; where it exists, it already routes through the existing mechanism."
 
@@ -149,12 +149,12 @@ Basis:
 
 ## 6. Reuse of existing Ultimate foundations (binding — no new foundation work)
 
-| Framework | Foundation reused | Evidence |
-|---|---|---|
-| Angular, React, Vue | Existing `matchesFilter` dispatch function/method | §3.1 |
-| Angular, React, Vue | Existing `FilterMatchMode`/`FilterMetadata` types | `packages/uix-data/src/filter/index.ts` |
+| Framework           | Foundation reused                                                       | Evidence                                                                                   |
+| ------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Angular, React, Vue | Existing `matchesFilter` dispatch function/method                       | §3.1                                                                                       |
+| Angular, React, Vue | Existing `FilterMatchMode`/`FilterMetadata` types                       | `packages/uix-data/src/filter/index.ts`                                                    |
 | Angular, React, Vue | Existing `equals` utility (row/value identity, reused for `in`/`notIn`) | `packages/uix-data/src/identity/index.ts:1`, re-exported from `@ultimate/uix-utils/object` |
-| Angular, React, Vue | Existing `{operator, constraints}` group-combination mechanism | Already implemented and tested by the original Table work; unchanged by this specification |
+| Angular, React, Vue | Existing `{operator, constraints}` group-combination mechanism          | Already implemented and tested by the original Table work; unchanged by this specification |
 
 No new base-class tier, no new shared package export, and no new architectural pattern is authorized by this specification.
 
@@ -171,14 +171,14 @@ No new base-class tier, no new shared package export, and no new architectural p
 
 ## 8. Exclusions and deferred items — reasons restated for traceability
 
-| Item | Reason | Source |
-|---|---|---|
-| Tree, TreeTable, TreeSelect, Angular OrganizationChart | DECISION-D, protected, not reopened | `BLUEPRINT_GAPS.md` DECISION-D entry |
-| Chart, Editor | DECISION-B, not reopened | `BLUEPRINT_GAPS.md` DECISION-B entry |
-| Any new shared comparator service, registry, or `uix-data` runtime addition | Eligibility pass's own conclusion: not required | §4 |
-| `custom` for React and Vue | Explicit scope cut — new API-surface design outside this specification's bounded remainder | §3.4 |
-| `{operator, constraints}` group-combination mechanism itself | Already implemented and tested; unchanged by this specification | §1, §5 item 6 |
-| Any other Phase C capability or future batch | Not this specification's scope | §1 |
+| Item                                                                        | Reason                                                                                     | Source                               |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------ |
+| Tree, TreeTable, TreeSelect, Angular OrganizationChart                      | DECISION-D, protected, not reopened                                                        | `BLUEPRINT_GAPS.md` DECISION-D entry |
+| Chart, Editor                                                               | DECISION-B, not reopened                                                                   | `BLUEPRINT_GAPS.md` DECISION-B entry |
+| Any new shared comparator service, registry, or `uix-data` runtime addition | Eligibility pass's own conclusion: not required                                            | §4                                   |
+| `custom` for React and Vue                                                  | Explicit scope cut — new API-surface design outside this specification's bounded remainder | §3.4                                 |
+| `{operator, constraints}` group-combination mechanism itself                | Already implemented and tested; unchanged by this specification                            | §1, §5 item 6                        |
+| Any other Phase C capability or future batch                                | Not this specification's scope                                                             | §1                                   |
 
 ---
 

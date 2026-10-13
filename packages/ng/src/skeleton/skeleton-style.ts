@@ -17,11 +17,12 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params?: Record<string, unknown>) => [
-    "u-skeleton u-component",
-    params?.["shape"] === "circle" ? "u-skeleton-circle" : "",
-    params?.["animation"] === "wave" ? "u-skeleton-wave" : "",
-  ].filter(Boolean),
+  root: (params?: Record<string, unknown>) =>
+    [
+      "u-skeleton u-component",
+      params?.["shape"] === "circle" ? "u-skeleton-circle" : "",
+      params?.["animation"] === "wave" ? "u-skeleton-wave" : "",
+    ].filter(Boolean),
 };
 
 /** `UBaseComponent`-shaped style module for `USkeleton`. */

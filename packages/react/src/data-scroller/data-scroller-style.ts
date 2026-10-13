@@ -14,7 +14,9 @@ const css = /*css*/ `
 
 const classes = {
   root: (params?: Record<string, unknown>) =>
-    ["u-data-scroller u-component", params?.["inline"] ? "u-data-scroller-inline" : ""].filter(Boolean).join(" "),
+    ["u-data-scroller u-component", params?.["inline"] ? "u-data-scroller-inline" : ""]
+      .filter(Boolean)
+      .join(" "),
   content: "u-data-scroller-content",
   emptyMessage: "u-data-scroller-empty-message",
 };

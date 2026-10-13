@@ -6,7 +6,10 @@ import type { UMenuItem } from "../menu";
 
 describe("UPanelMenu", () => {
   const items: UMenuItem[] = [
-    { label: "Files", items: [{ label: "Documents", items: [{ label: "Work" }] }, { label: "Photos" }] },
+    {
+      label: "Files",
+      items: [{ label: "Documents", items: [{ label: "Work" }] }, { label: "Photos" }],
+    },
     { label: "Settings" },
   ];
 
@@ -87,20 +90,28 @@ describe("UPanelMenu", () => {
 
   it("does not expand or invoke command for a disabled group item", () => {
     const command = vi.fn();
-    const model: UMenuItem[] = [{ label: "Disabled", disabled: true, items: [{ label: "Hidden" }], command }];
+    const model: UMenuItem[] = [
+      { label: "Disabled", disabled: true, items: [{ label: "Hidden" }], command },
+    ];
     const { container } = render(<UPanelMenu model={model} />);
     const link = container.querySelector("a") as HTMLAnchorElement;
     expect(link.getAttribute("aria-disabled")).toBe("true");
     fireEvent.click(link);
     expect(command).not.toHaveBeenCalled();
-    expect(container.querySelector('[role="treeitem"]')?.getAttribute("data-u-expanded")).toBe("false");
+    expect(container.querySelector('[role="treeitem"]')?.getAttribute("data-u-expanded")).toBe(
+      "false"
+    );
   });
 
   describe("keyboard navigation (GAP-054)", () => {
     it("moves focus to the next root item on ArrowDown", () => {
       const model: UMenuItem[] = [{ label: "A" }, { label: "B" }, { label: "C" }];
       const { container } = render(<UPanelMenu model={model} />);
-      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      const links = Array.from(
+        container.querySelectorAll(
+          '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+        )
+      ) as HTMLAnchorElement[];
       links[0].focus();
       fireEvent.keyDown(links[0], { code: "ArrowDown" });
       expect(document.activeElement).toBe(links[1]);
@@ -109,7 +120,11 @@ describe("UPanelMenu", () => {
     it("moves focus to the previous root item on ArrowUp, wrapping at the start", () => {
       const model: UMenuItem[] = [{ label: "A" }, { label: "B" }, { label: "C" }];
       const { container } = render(<UPanelMenu model={model} />);
-      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      const links = Array.from(
+        container.querySelectorAll(
+          '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+        )
+      ) as HTMLAnchorElement[];
       links[0].focus();
       fireEvent.keyDown(links[0], { code: "ArrowUp" });
       expect(document.activeElement).toBe(links[2]);
@@ -118,7 +133,11 @@ describe("UPanelMenu", () => {
     it("wraps focus from the last root item to the first on ArrowDown", () => {
       const model: UMenuItem[] = [{ label: "A" }, { label: "B" }, { label: "C" }];
       const { container } = render(<UPanelMenu model={model} />);
-      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      const links = Array.from(
+        container.querySelectorAll(
+          '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+        )
+      ) as HTMLAnchorElement[];
       links[2].focus();
       fireEvent.keyDown(links[2], { code: "ArrowDown" });
       expect(document.activeElement).toBe(links[0]);
@@ -127,7 +146,11 @@ describe("UPanelMenu", () => {
     it("skips a disabled item when moving focus with ArrowDown", () => {
       const model: UMenuItem[] = [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }];
       const { container } = render(<UPanelMenu model={model} />);
-      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      const links = Array.from(
+        container.querySelectorAll(
+          '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+        )
+      ) as HTMLAnchorElement[];
       links[0].focus();
       fireEvent.keyDown(links[0], { code: "ArrowDown" });
       expect(document.activeElement).toBe(links[2]);
@@ -136,7 +159,11 @@ describe("UPanelMenu", () => {
     it("skips a disabled item when moving focus with ArrowUp", () => {
       const model: UMenuItem[] = [{ label: "A" }, { label: "B", disabled: true }, { label: "C" }];
       const { container } = render(<UPanelMenu model={model} />);
-      const links = Array.from(container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')) as HTMLAnchorElement[];
+      const links = Array.from(
+        container.querySelectorAll(
+          '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+        )
+      ) as HTMLAnchorElement[];
       links[2].focus();
       fireEvent.keyDown(links[2], { code: "ArrowUp" });
       expect(document.activeElement).toBe(links[0]);
@@ -170,11 +197,15 @@ describe("UPanelMenu", () => {
 
     it("does not toggle a disabled group item on Enter", () => {
       const command = vi.fn();
-      const model: UMenuItem[] = [{ label: "Disabled", disabled: true, items: [{ label: "Hidden" }], command }];
+      const model: UMenuItem[] = [
+        { label: "Disabled", disabled: true, items: [{ label: "Hidden" }], command },
+      ];
       const { container } = render(<UPanelMenu model={model} />);
       const header = container.querySelector('[role="treeitem"] a') as HTMLAnchorElement;
       fireEvent.keyDown(header, { code: "Enter" });
-      expect(container.querySelector('[role="treeitem"]')?.getAttribute("data-u-expanded")).toBe("false");
+      expect(container.querySelector('[role="treeitem"]')?.getAttribute("data-u-expanded")).toBe(
+        "false"
+      );
     });
 
     it("moves focus among a genuinely-expanded nested level's own items, independent of the root level", () => {
@@ -223,7 +254,9 @@ describe("UPanelMenu", () => {
         const { container } = render(<UPanelMenu model={model} />);
         // "Files" is rendered link index 1 (Hidden renders no <li>/<a>), but model index 2.
         const links = Array.from(
-          container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')
+          container.querySelectorAll(
+            '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+          )
         ) as HTMLAnchorElement[];
         const filesLink = links[1];
         filesLink.focus();
@@ -242,7 +275,9 @@ describe("UPanelMenu", () => {
         ];
         const { container } = render(<UPanelMenu model={model} />);
         const links = Array.from(
-          container.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a')
+          container.querySelectorAll(
+            '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+          )
         ) as HTMLAnchorElement[];
         // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
         const [a, b, c] = links;

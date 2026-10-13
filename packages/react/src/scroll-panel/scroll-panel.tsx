@@ -36,7 +36,10 @@ let uid = 0;
  */
 export const UScrollPanel = React.forwardRef<UScrollPanelHandle, UScrollPanelProps>(
   function UScrollPanel({ step = 5, className, children }, ref) {
-    const { cx } = useComponentBase({ componentName: "scroll-panel", styleModule: scrollPanelStyleModule });
+    const { cx } = useComponentBase({
+      componentName: "scroll-panel",
+      styleModule: scrollPanelStyleModule,
+    });
 
     const containerRef = React.useRef<HTMLDivElement>(null);
     const contentRef = React.useRef<HTMLDivElement>(null);
@@ -85,7 +88,9 @@ export const UScrollPanel = React.forwardRef<UScrollPanelHandle, UScrollPanelPro
         } else {
           xBar.classList.remove("u-scroll-panel-bar-hidden");
           const xBarWidth = Math.max(scrollXRatio.current * 100, 10);
-          const xBarLeft = Math.abs((content.scrollLeft * (100 - xBarWidth)) / (totalWidth - ownWidth || 1));
+          const xBarLeft = Math.abs(
+            (content.scrollLeft * (100 - xBarWidth)) / (totalWidth - ownWidth || 1)
+          );
           xBar.style.cssText = `width:${xBarWidth}%; inset-inline-start:${xBarLeft}%; bottom:${bottom}px;`;
         }
 
@@ -174,13 +179,15 @@ export const UScrollPanel = React.forwardRef<UScrollPanelHandle, UScrollPanelPro
         const deltaX = event.pageX - lastPageX.current;
         lastPageX.current = event.pageX;
         frame.current = window.requestAnimationFrame(() => {
-          if (contentRef.current) contentRef.current.scrollLeft += deltaX / (scrollXRatio.current || 1);
+          if (contentRef.current)
+            contentRef.current.scrollLeft += deltaX / (scrollXRatio.current || 1);
         });
       } else if (isYBarClicked.current) {
         const deltaY = event.pageY - lastPageY.current;
         lastPageY.current = event.pageY;
         frame.current = window.requestAnimationFrame(() => {
-          if (contentRef.current) contentRef.current.scrollTop += deltaY / (scrollYRatio.current || 1);
+          if (contentRef.current)
+            contentRef.current.scrollTop += deltaY / (scrollYRatio.current || 1);
         });
       }
     }, []);
@@ -193,7 +200,6 @@ export const UScrollPanel = React.forwardRef<UScrollPanelHandle, UScrollPanelPro
       document.removeEventListener("mouseup", onDocumentMouseUp);
       isXBarClicked.current = false;
       isYBarClicked.current = false;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const bindDocumentMouseListeners = () => {
@@ -232,7 +238,6 @@ export const UScrollPanel = React.forwardRef<UScrollPanelHandle, UScrollPanelPro
         if (frame.current) window.cancelAnimationFrame(frame.current);
         clearTimer();
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     React.useImperativeHandle(ref, () => ({
@@ -248,7 +253,12 @@ export const UScrollPanel = React.forwardRef<UScrollPanelHandle, UScrollPanelPro
     return (
       <div ref={containerRef} className={[cx("root"), className].filter(Boolean).join(" ")}>
         <div className={cx("contentContainer")}>
-          <div ref={contentRef} className={cx("content")} onScroll={onScroll} onMouseEnter={moveBar}>
+          <div
+            ref={contentRef}
+            className={cx("content")}
+            onScroll={onScroll}
+            onMouseEnter={moveBar}
+          >
             {children}
           </div>
         </div>

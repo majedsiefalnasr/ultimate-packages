@@ -9,6 +9,7 @@
 **Architecture:** Two from-scratch, framework-neutral, pure-types-and-data packages — no framework runtime dependency, matching `@ultimate/uix-data`'s own already-approved scaffold shape (`type: "module"`, `sideEffects: false`, `tsup` build, `vitest run --typecheck`, `tsc --noEmit`, per-concern `src/` subdirectories, `test/*.test.ts` + `test/*.test-d.ts` split). `@ultimate/component-metadata` depends on `@ultimate/component-schema` only; neither package is ever imported by `packages/{ng,react,vue}` at runtime (declarative/build-time artifact only, per spec §1/§8).
 
 **Ground truth:** Every metadata record and every validator test in this plan is checked against the real, closed proof set — Button, Checkbox, Dialog, Menu, Tooltip, Paginator, Scroller, Table — across Angular, React, Vue. Confirmed this planning pass by direct source read:
+
 - Button: no custom events in any framework (native click passthrough only) — the `events: []` empty-list case.
 - Checkbox: `binary` boolean input (Angular `input(false, {transform: booleanAttribute})`); doc comment at `packages/ng/src/checkbox/checkbox.ts:29` explicitly confirms no `onChange`/`onFocus`/`onBlur` outputs exist in this component's real shipped surface — a genuinely-empty-events case distinct from Button's (Button never had events; Checkbox's spec/doc comment records an explicit decision not to add them yet).
 - Dialog: real `onShow`/`onHide` Angular `output<void>()`s (`packages/ng/src/dialog/dialog.ts:180,182`) — a lifecycle-event case, structurally different from Table's state-change events (no payload, `void` type).
@@ -35,6 +36,7 @@
 ### Task 1: Scaffold `@ultimate/component-schema` package
 
 **Files:**
+
 - Create: `packages/component-schema/package.json`
 - Create: `packages/component-schema/tsconfig.json`
 - Create: `packages/component-schema/vitest.config.ts`
@@ -43,6 +45,7 @@
 - Test: `packages/component-schema/test/package-exports.test.ts`
 
 **Interfaces:**
+
 - Consumes: nothing (foundation package, matching `uix-data`'s own zero-dependency start)
 - Produces: an installable, buildable, testable empty package with a barrel `src/index.ts` — consumed by every later task in this group
 
@@ -125,6 +128,7 @@ git commit -m "feat(component-schema): scaffold package"
 ### Task 2: `schemaVersion` constant and top-level `ComponentMetadata` identity block type
 
 **Files:**
+
 - Create: `packages/component-schema/src/version.ts`
 - Create: `packages/component-schema/src/identity.ts`
 - Modify: `packages/component-schema/src/index.ts`
@@ -132,6 +136,7 @@ git commit -m "feat(component-schema): scaffold package"
 - Test: `packages/component-schema/test/identity.test-d.ts`
 
 **Interfaces:**
+
 - Consumes: nothing
 - Produces: `SCHEMA_VERSION: string` constant (spec §5); `ComponentIdentity` type covering `name`/`category`/`description`/`schemaVersion`/`metadataVersion`/`packages` (spec §6.1) — consumed by every later schema-block task and by Task 8 (validator)
 
@@ -214,12 +219,14 @@ git commit -m "feat(component-schema): add SCHEMA_VERSION and ComponentIdentity 
 ### Task 3: Per-framework API block types (`PropFact`, `EventFact`)
 
 **Files:**
+
 - Create: `packages/component-schema/src/api.ts`
 - Modify: `packages/component-schema/src/index.ts`
 - Test: `packages/component-schema/test/api.test-d.ts`
 - Test: `packages/component-schema/test/api.test.ts`
 
 **Interfaces:**
+
 - Consumes: nothing
 - Produces: `PropFact`, `EventFact`, `FrameworkApi` (`{props: PropFact[]; events: EventFact[]}`), `ComponentApi` (`{ng?, react?, vue?}: FrameworkApi`) types (spec §6.2) — consumed by Task 8 (validator) and Task 9-16 (metadata records)
 
@@ -246,12 +253,26 @@ import type { EventFact } from "../src/api";
 
 describe("EventFact — Table's sort-changed divergence (spec §12 worked example)", () => {
   it("represents the same semanticId with three different, non-unified frameworkName/mechanism pairs", () => {
-    const ngEvent: EventFact = { semanticId: "sort-changed", frameworkName: "sortFieldChange", mechanism: "output" };
-    const reactEvent: EventFact = { semanticId: "sort-changed", frameworkName: "onSort", mechanism: "callback-prop" };
-    const vueEvent: EventFact = { semanticId: "sort-changed", frameworkName: "sort", mechanism: "emit" };
+    const ngEvent: EventFact = {
+      semanticId: "sort-changed",
+      frameworkName: "sortFieldChange",
+      mechanism: "output",
+    };
+    const reactEvent: EventFact = {
+      semanticId: "sort-changed",
+      frameworkName: "onSort",
+      mechanism: "callback-prop",
+    };
+    const vueEvent: EventFact = {
+      semanticId: "sort-changed",
+      frameworkName: "sort",
+      mechanism: "emit",
+    };
     expect(ngEvent.semanticId).toBe(reactEvent.semanticId);
     expect(ngEvent.semanticId).toBe(vueEvent.semanticId);
-    expect(new Set([ngEvent.frameworkName, reactEvent.frameworkName, vueEvent.frameworkName]).size).toBe(3);
+    expect(
+      new Set([ngEvent.frameworkName, reactEvent.frameworkName, vueEvent.frameworkName]).size
+    ).toBe(3);
   });
 });
 
@@ -318,6 +339,7 @@ git commit -m "feat(component-schema): add PropFact/EventFact/ComponentApi types
 ### Task 4: Accessibility, style, relationships, provenance-reference block types
 
 **Files:**
+
 - Create: `packages/component-schema/src/accessibility.ts`
 - Create: `packages/component-schema/src/style.ts`
 - Create: `packages/component-schema/src/relationships.ts`
@@ -326,6 +348,7 @@ git commit -m "feat(component-schema): add PropFact/EventFact/ComponentApi types
 - Test: `packages/component-schema/test/blocks.test-d.ts`
 
 **Interfaces:**
+
 - Consumes: nothing
 - Produces: `AccessibilityFacts`, `StyleIdentity`, `Relationships`, `ProvenanceRef` types (spec §6.3-§6.6) — consumed by Task 8 (validator), Task 9-16 (metadata records)
 
@@ -404,11 +427,13 @@ git commit -m "feat(component-schema): add accessibility/style/relationships/pro
 ### Task 5: Human-authored guidance block type
 
 **Files:**
+
 - Create: `packages/component-schema/src/guidance.ts`
 - Modify: `packages/component-schema/src/index.ts`
 - Test: `packages/component-schema/test/guidance.test-d.ts`
 
 **Interfaces:**
+
 - Consumes: nothing
 - Produces: `Guidance` type (`usageNotes?`/`antiPatterns?`/`migrationNotes?`, all optional — spec §6.7) — consumed by Task 6 (top-level assembly), Task 8 (validator)
 
@@ -460,11 +485,13 @@ git commit -m "feat(component-schema): add Guidance type"
 ### Task 6: Assemble the top-level `ComponentMetadata` type
 
 **Files:**
+
 - Create: `packages/component-schema/src/component-metadata.ts`
 - Modify: `packages/component-schema/src/index.ts`
 - Test: `packages/component-schema/test/component-metadata.test-d.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentIdentity` (Task 2), `ComponentApi` (Task 3), `AccessibilityFacts`/`StyleIdentity`/`Relationships`/`ProvenanceRef` (Task 4), `Guidance` (Task 5)
 - Produces: `ComponentMetadata` — the single canonical shape (spec §6) — consumed by every metadata-record task (9-16) and the validator (Task 8)
 
@@ -479,8 +506,18 @@ import type { ComponentMetadata } from "../src/component-metadata";
 // else — a future unrecognized field is a deliberate schemaVersion-bump
 // event, not something that silently type-checks today.
 type ExpectedKeys =
-  | "name" | "category" | "description" | "schemaVersion" | "metadataVersion" | "packages"
-  | "api" | "accessibility" | "style" | "relationships" | "provenanceRef" | "guidance";
+  | "name"
+  | "category"
+  | "description"
+  | "schemaVersion"
+  | "metadataVersion"
+  | "packages"
+  | "api"
+  | "accessibility"
+  | "style"
+  | "relationships"
+  | "provenanceRef"
+  | "guidance";
 expectTypeOf<keyof ComponentMetadata>().toEqualTypeOf<ExpectedKeys>();
 ```
 
@@ -530,11 +567,13 @@ git commit -m "feat(component-schema): assemble canonical ComponentMetadata type
 ### Task 7: `metadataVersion` increment-semantics helper (testable behavior, not just a type)
 
 **Files:**
+
 - Create: `packages/component-schema/src/metadata-version.ts`
 - Modify: `packages/component-schema/src/index.ts`
 - Test: `packages/component-schema/test/metadata-version.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentMetadata` (Task 6) — this helper operates strictly on the already-defined v1 `ComponentMetadata` representation from Task 6; it introduces no separate canonical/normalized form of a record and no new versioning abstraction beyond the single integer already approved in spec §5.1.
 - Produces: `nextMetadataVersion(current: ComponentMetadata, next: Omit<ComponentMetadata, "metadataVersion">): number` — compares `next` against `current`'s content with `metadataVersion` itself excluded from the comparison, and returns either `current.metadataVersion + 1` (content differs) or `current.metadataVersion` unchanged (content identical) — the one piece of spec §5.1 behavior precise enough to be a runtime function, not merely a type. Used by a future authoring workflow, not by this plan's own record population — Task 10-15 author records starting at `metadataVersion: 1` directly, since they have no prior version to increment from.
 
@@ -558,8 +597,11 @@ import { nextMetadataVersion } from "../src/metadata-version";
 import type { ComponentMetadata } from "../src/component-metadata";
 
 const base: ComponentMetadata = {
-  name: "Button", category: "Primitive", description: "A button.",
-  schemaVersion: "1.0.0", metadataVersion: 1,
+  name: "Button",
+  category: "Primitive",
+  description: "A button.",
+  schemaVersion: "1.0.0",
+  metadataVersion: 1,
   packages: { ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/button/button.ts" } },
   api: { ng: { props: [{ name: "loading", type: "boolean", required: false }], events: [] } },
   guidance: { usageNotes: "Prefer text buttons for secondary actions." },
@@ -574,7 +616,9 @@ describe("nextMetadataVersion (spec §5.1 increment semantics — six required s
   it("2. increments by exactly 1 when nested content genuinely changes", () => {
     const changed = {
       ...base,
-      api: { ng: { props: [{ name: "loading", type: "'true' | 'false'", required: false }], events: [] } },
+      api: {
+        ng: { props: [{ name: "loading", type: "'true' | 'false'", required: false }], events: [] },
+      },
     };
     expect(nextMetadataVersion(base, changed)).toBe(2);
   });
@@ -592,13 +636,21 @@ describe("nextMetadataVersion (spec §5.1 increment semantics — six required s
   it("5. increments by exactly 1 when a generated-fact field (api.ng.events) changes", () => {
     const changed = {
       ...base,
-      api: { ng: { props: base.api!.ng!.props, events: [{ semanticId: "clicked", frameworkName: "click", mechanism: "output" as const }] } },
+      api: {
+        ng: {
+          props: base.api!.ng!.props,
+          events: [{ semanticId: "clicked", frameworkName: "click", mechanism: "output" as const }],
+        },
+      },
     };
     expect(nextMetadataVersion(base, changed)).toBe(2);
   });
 
   it("6. increments by exactly 1 when a human-authored guidance field changes — shares the same single version counter as generated facts, not a separate one", () => {
-    const changed = { ...base, guidance: { usageNotes: "Prefer outlined buttons for secondary actions." } };
+    const changed = {
+      ...base,
+      guidance: { usageNotes: "Prefer outlined buttons for secondary actions." },
+    };
     expect(nextMetadataVersion(base, changed)).toBe(2);
   });
 });
@@ -628,14 +680,22 @@ export function nextMetadataVersion(
   current: ComponentMetadata,
   next: Omit<ComponentMetadata, "metadataVersion">
 ): number {
-  const { metadataVersion: _currentVersion, schemaVersion: _currentSchema, ...currentContent } = current;
+  const {
+    metadataVersion: _currentVersion,
+    schemaVersion: _currentSchema,
+    ...currentContent
+  } = current;
   // `next`'s static type is Omit<ComponentMetadata, "metadataVersion">, but
   // callers commonly build it by spreading a full ComponentMetadata (e.g.
   // `{ ...base, description: "..." }`), which copies metadataVersion at
   // runtime despite the type. Strip it explicitly here too — omitting this
   // strip caused a real false-increment bug on the no-op-regeneration and
   // schemaVersion-only-change test scenarios during Task 7's implementation.
-  const { metadataVersion: _nextVersion, schemaVersion: _nextSchema, ...nextContent } = next as ComponentMetadata;
+  const {
+    metadataVersion: _nextVersion,
+    schemaVersion: _nextSchema,
+    ...nextContent
+  } = next as ComponentMetadata;
   const changed = JSON.stringify(currentContent) !== JSON.stringify(nextContent);
   return changed ? current.metadataVersion + 1 : current.metadataVersion;
 }
@@ -662,11 +722,13 @@ git commit -m "feat(component-schema): add nextMetadataVersion increment-semanti
 **Critical distinction this task exists to enforce (do not weaken it):** TypeScript types (Tasks 2-6) describe the contract to developers at compile time only — they provide zero runtime guarantee about a value coming from disk (a hand-authored `.ts` record file, a future JSON-authored record, or any other untrusted source). `validateComponentMetadata` is the only place in this package that actually **proves** an arbitrary runtime value conforms to the v1 `ComponentMetadata` shape. Its input parameter type must be `unknown`, never `ComponentMetadata` — accepting an already-typed parameter would let the validator silently rely on the caller's own (possibly wrong) type assertion instead of independently checking the data, defeating the entire purpose of a runtime validator. The validator performs structural narrowing (property-existence checks, `typeof` checks, `Array.isArray` checks, allowed-value-set checks) at every level of the object graph before ever treating a piece of data as trustworthy.
 
 **Files:**
+
 - Create: `packages/component-schema/src/validate.ts`
 - Modify: `packages/component-schema/src/index.ts`
 - Test: `packages/component-schema/test/validate.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentMetadata` type (Task 6, used only for the narrowed return type, never for trusting the input); `SCHEMA_VERSION` (Task 2)
 - Produces: `validateComponentMetadata(record: unknown, allRecords: unknown[]): ValidationResult` where `ValidationResult = {valid: true; record: ComponentMetadata} | {valid: false; errors: string[]}` (the `valid: true` branch carries the now-proven-narrowed `record` back to the caller, so a caller never needs a second, separate cast) — consumed by Task 16 (validate-all-records script)
 
@@ -702,9 +764,14 @@ import { validateComponentMetadata } from "../src/validate";
 
 function valid(): unknown {
   return {
-    name: "Button", category: "Primitive", description: "A button.",
-    schemaVersion: "1.0.0", metadataVersion: 1,
-    packages: { ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/button/button.ts" } },
+    name: "Button",
+    category: "Primitive",
+    description: "A button.",
+    schemaVersion: "1.0.0",
+    metadataVersion: 1,
+    packages: {
+      ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/button/button.ts" },
+    },
     api: { ng: { props: [], events: [] } },
     provenanceRef: { package: "ng", ultimateDestinations: ["packages/ng/src/button/button.ts"] },
   };
@@ -747,18 +814,27 @@ describe("validateComponentMetadata — accepts unknown, proves the shape at run
   it("rejects metadataVersion 0, a negative number, a non-integer, and a string", () => {
     for (const bad of [0, -1, 1.5, "1"]) {
       const record = { ...(valid() as Record<string, unknown>), metadataVersion: bad };
-      expect(validateComponentMetadata(record, [record]).valid, `metadataVersion=${JSON.stringify(bad)} should be rejected`).toBe(false);
+      expect(
+        validateComponentMetadata(record, [record]).valid,
+        `metadataVersion=${JSON.stringify(bad)} should be rejected`
+      ).toBe(false);
     }
   });
 
   it("rejects an api.<framework> entry with no matching packages.<framework> entry", () => {
-    const record = { ...(valid() as Record<string, unknown>), api: { react: { props: [], events: [] } } };
+    const record = {
+      ...(valid() as Record<string, unknown>),
+      api: { react: { props: [], events: [] } },
+    };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
   it("rejects a malformed PropFact (missing required 'required' boolean)", () => {
     const record = valid() as Record<string, unknown>;
-    (record.api as Record<string, unknown>).ng = { props: [{ name: "loading", type: "boolean" }], events: [] };
+    (record.api as Record<string, unknown>).ng = {
+      props: [{ name: "loading", type: "boolean" }],
+      events: [],
+    };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
@@ -766,38 +842,58 @@ describe("validateComponentMetadata — accepts unknown, proves the shape at run
     const record = valid() as Record<string, unknown>;
     (record.api as Record<string, unknown>).ng = {
       props: [],
-      events: [{ semanticId: "sort-changed", frameworkName: "sortFieldChange", mechanism: "signal" }],
+      events: [
+        { semanticId: "sort-changed", frameworkName: "sortFieldChange", mechanism: "signal" },
+      ],
     };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
   it("rejects a malformed accessibility block (verifiedRoles not an array of strings)", () => {
-    const record = { ...(valid() as Record<string, unknown>), accessibility: { verifiedRoles: "row" } };
+    const record = {
+      ...(valid() as Record<string, unknown>),
+      accessibility: { verifiedRoles: "row" },
+    };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
   it("rejects a malformed style block (missing required componentName)", () => {
-    const record = { ...(valid() as Record<string, unknown>), style: { styleModuleRef: "@ultimate/uix-styles/button" } };
+    const record = {
+      ...(valid() as Record<string, unknown>),
+      style: { styleModuleRef: "@ultimate/uix-styles/button" },
+    };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
   it("rejects a malformed relationships block (dependsOn not an array)", () => {
-    const record = { ...(valid() as Record<string, unknown>), relationships: { dependsOn: "Paginator" } };
+    const record = {
+      ...(valid() as Record<string, unknown>),
+      relationships: { dependsOn: "Paginator" },
+    };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
   it("rejects a malformed provenanceRef (package not one of the allowed literals)", () => {
-    const record = { ...(valid() as Record<string, unknown>), provenanceRef: { package: "primeng", ultimateDestinations: [] } };
+    const record = {
+      ...(valid() as Record<string, unknown>),
+      provenanceRef: { package: "primeng", ultimateDestinations: [] },
+    };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
   it("rejects a malformed guidance block (antiPatterns not an array of strings)", () => {
-    const record = { ...(valid() as Record<string, unknown>), guidance: { antiPatterns: "don't do this" } };
+    const record = {
+      ...(valid() as Record<string, unknown>),
+      guidance: { antiPatterns: "don't do this" },
+    };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
   it("rejects a provenanceRef pointing at a path not present in the real provenance JSON", () => {
-    const record = { ...(valid() as Record<string, unknown>), provenanceRef: { package: "ng", ultimateDestinations: ["packages/ng/src/nonexistent.ts"] } };
+    const record = {
+      ...(valid() as Record<string, unknown>),
+      provenanceRef: { package: "ng", ultimateDestinations: ["packages/ng/src/nonexistent.ts"] },
+    };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
@@ -808,14 +904,21 @@ describe("validateComponentMetadata — accepts unknown, proves the shape at run
   });
 
   it("rejects a relationships.dependsOn entry that doesn't match any real record name (dangling reference)", () => {
-    const record = { ...(valid() as Record<string, unknown>), relationships: { dependsOn: ["NonexistentComponent"] } };
+    const record = {
+      ...(valid() as Record<string, unknown>),
+      relationships: { dependsOn: ["NonexistentComponent"] },
+    };
     expect(validateComponentMetadata(record, [record]).valid).toBe(false);
   });
 
   it("accepts a valid relationships.dependsOn entry that matches a real sibling record (Table -> Paginator/Scroller case)", () => {
     const paginator = { ...(valid() as Record<string, unknown>), name: "Paginator" };
     const scroller = { ...(valid() as Record<string, unknown>), name: "Scroller" };
-    const table = { ...(valid() as Record<string, unknown>), name: "Table", relationships: { dependsOn: ["Paginator", "Scroller"] } };
+    const table = {
+      ...(valid() as Record<string, unknown>),
+      name: "Table",
+      relationships: { dependsOn: ["Paginator", "Scroller"] },
+    };
     expect(validateComponentMetadata(table, [paginator, scroller, table]).valid).toBe(true);
   });
 });
@@ -836,11 +939,22 @@ import { readFileSync } from "node:fs";
 import { SCHEMA_VERSION } from "./version";
 import type { ComponentMetadata } from "./component-metadata";
 
-export type ValidationResult = { valid: true; record: ComponentMetadata } | { valid: false; errors: string[] };
+export type ValidationResult =
+  { valid: true; record: ComponentMetadata } | { valid: false; errors: string[] };
 
 const KNOWN_TOP_LEVEL_KEYS = new Set([
-  "name", "category", "description", "schemaVersion", "metadataVersion", "packages",
-  "api", "accessibility", "style", "relationships", "provenanceRef", "guidance",
+  "name",
+  "category",
+  "description",
+  "schemaVersion",
+  "metadataVersion",
+  "packages",
+  "api",
+  "accessibility",
+  "style",
+  "relationships",
+  "provenanceRef",
+  "guidance",
 ]);
 const KNOWN_FRAMEWORKS = new Set(["ng", "react", "vue"]);
 const KNOWN_PROVENANCE_PACKAGES = new Set(["ng", "react", "vue", "uix-styles"]);
@@ -864,7 +978,10 @@ function readProvenanceDestinations(pkg: string): Set<string> {
  * shape — this is the ONLY place that establishes trust in metadata content;
  * TypeScript types alone give no runtime guarantee for data read from disk.
  */
-export function validateComponentMetadata(record: unknown, allRecords: unknown[]): ValidationResult {
+export function validateComponentMetadata(
+  record: unknown,
+  allRecords: unknown[]
+): ValidationResult {
   const errors: string[] = [];
 
   if (!isObject(record)) {
@@ -877,8 +994,14 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
   for (const required of ["name", "category", "description", "schemaVersion"] as const) {
     if (typeof record[required] !== "string") errors.push(`${required} must be a string`);
   }
-  if (typeof record.metadataVersion !== "number" || !Number.isInteger(record.metadataVersion) || record.metadataVersion < 1) {
-    errors.push(`metadataVersion must be a positive integer starting at 1, got: ${JSON.stringify(record.metadataVersion)}`);
+  if (
+    typeof record.metadataVersion !== "number" ||
+    !Number.isInteger(record.metadataVersion) ||
+    record.metadataVersion < 1
+  ) {
+    errors.push(
+      `metadataVersion must be a positive integer starting at 1, got: ${JSON.stringify(record.metadataVersion)}`
+    );
   }
   if (record.schemaVersion === SCHEMA_VERSION) {
     // compatible — no error
@@ -889,9 +1012,14 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
     errors.push("packages must be an object");
   } else {
     for (const key of Object.keys(record.packages)) {
-      if (!KNOWN_FRAMEWORKS.has(key)) errors.push(`packages has unrecognized framework key: ${key}`);
+      if (!KNOWN_FRAMEWORKS.has(key))
+        errors.push(`packages has unrecognized framework key: ${key}`);
       const entry = record.packages[key];
-      if (!isObject(entry) || typeof entry.packageName !== "string" || typeof entry.sourcePath !== "string") {
+      if (
+        !isObject(entry) ||
+        typeof entry.packageName !== "string" ||
+        typeof entry.sourcePath !== "string"
+      ) {
         errors.push(`packages.${key} must be {packageName: string, sourcePath: string}`);
       }
     }
@@ -903,15 +1031,26 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
       errors.push("api must be an object");
     } else {
       for (const framework of Object.keys(record.api)) {
-        if (!KNOWN_FRAMEWORKS.has(framework)) errors.push(`api has unrecognized framework key: ${framework}`);
-        if (!packagesObj[framework]) errors.push(`api.${framework} present but packages.${framework} is missing`);
+        if (!KNOWN_FRAMEWORKS.has(framework))
+          errors.push(`api has unrecognized framework key: ${framework}`);
+        if (!packagesObj[framework])
+          errors.push(`api.${framework} present but packages.${framework} is missing`);
         const frameworkApi = record.api[framework];
-        if (!isObject(frameworkApi) || !Array.isArray(frameworkApi.props) || !Array.isArray(frameworkApi.events)) {
+        if (
+          !isObject(frameworkApi) ||
+          !Array.isArray(frameworkApi.props) ||
+          !Array.isArray(frameworkApi.events)
+        ) {
           errors.push(`api.${framework} must be {props: PropFact[], events: EventFact[]}`);
           continue;
         }
         for (const [i, prop] of frameworkApi.props.entries()) {
-          if (!isObject(prop) || typeof prop.name !== "string" || typeof prop.type !== "string" || typeof prop.required !== "boolean") {
+          if (
+            !isObject(prop) ||
+            typeof prop.name !== "string" ||
+            typeof prop.type !== "string" ||
+            typeof prop.required !== "boolean"
+          ) {
             errors.push(`api.${framework}.props[${i}] is not a valid PropFact`);
           }
         }
@@ -922,7 +1061,9 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
             typeof event.frameworkName !== "string" ||
             !KNOWN_MECHANISMS.has(event.mechanism as string)
           ) {
-            errors.push(`api.${framework}.events[${i}] is not a valid EventFact (mechanism must be output/callback-prop/emit)`);
+            errors.push(
+              `api.${framework}.events[${i}] is not a valid EventFact (mechanism must be output/callback-prop/emit)`
+            );
           }
         }
       }
@@ -934,9 +1075,12 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
       errors.push("accessibility must be an object");
     } else {
       const { verifiedRoles, verifiedAriaAttributes, guidance } = record.accessibility;
-      if (verifiedRoles !== undefined && !isStringArray(verifiedRoles)) errors.push("accessibility.verifiedRoles must be string[]");
-      if (verifiedAriaAttributes !== undefined && !isStringArray(verifiedAriaAttributes)) errors.push("accessibility.verifiedAriaAttributes must be string[]");
-      if (guidance !== undefined && typeof guidance !== "string") errors.push("accessibility.guidance must be a string");
+      if (verifiedRoles !== undefined && !isStringArray(verifiedRoles))
+        errors.push("accessibility.verifiedRoles must be string[]");
+      if (verifiedAriaAttributes !== undefined && !isStringArray(verifiedAriaAttributes))
+        errors.push("accessibility.verifiedAriaAttributes must be string[]");
+      if (guidance !== undefined && typeof guidance !== "string")
+        errors.push("accessibility.guidance must be a string");
     }
   }
 
@@ -947,18 +1091,29 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
   }
 
   if (record.relationships !== undefined) {
-    if (!isObject(record.relationships) || (record.relationships.dependsOn !== undefined && !isStringArray(record.relationships.dependsOn))) {
+    if (
+      !isObject(record.relationships) ||
+      (record.relationships.dependsOn !== undefined &&
+        !isStringArray(record.relationships.dependsOn))
+    ) {
       errors.push("relationships.dependsOn must be string[]");
     }
   }
 
   if (record.provenanceRef !== undefined) {
-    if (!isObject(record.provenanceRef) || !KNOWN_PROVENANCE_PACKAGES.has(record.provenanceRef.package as string) || !isStringArray(record.provenanceRef.ultimateDestinations)) {
-      errors.push("provenanceRef must be {package: 'ng'|'react'|'vue'|'uix-styles', ultimateDestinations: string[]}");
+    if (
+      !isObject(record.provenanceRef) ||
+      !KNOWN_PROVENANCE_PACKAGES.has(record.provenanceRef.package as string) ||
+      !isStringArray(record.provenanceRef.ultimateDestinations)
+    ) {
+      errors.push(
+        "provenanceRef must be {package: 'ng'|'react'|'vue'|'uix-styles', ultimateDestinations: string[]}"
+      );
     } else {
       const destinations = readProvenanceDestinations(record.provenanceRef.package as string);
       for (const dest of record.provenanceRef.ultimateDestinations as string[]) {
-        if (!destinations.has(dest)) errors.push(`provenanceRef points at a nonexistent provenance entry: ${dest}`);
+        if (!destinations.has(dest))
+          errors.push(`provenanceRef points at a nonexistent provenance entry: ${dest}`);
       }
     }
   }
@@ -968,9 +1123,12 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
       errors.push("guidance must be an object");
     } else {
       const { usageNotes, antiPatterns, migrationNotes } = record.guidance;
-      if (usageNotes !== undefined && typeof usageNotes !== "string") errors.push("guidance.usageNotes must be a string");
-      if (antiPatterns !== undefined && !isStringArray(antiPatterns)) errors.push("guidance.antiPatterns must be string[]");
-      if (migrationNotes !== undefined && typeof migrationNotes !== "string") errors.push("guidance.migrationNotes must be a string");
+      if (usageNotes !== undefined && typeof usageNotes !== "string")
+        errors.push("guidance.usageNotes must be a string");
+      if (antiPatterns !== undefined && !isStringArray(antiPatterns))
+        errors.push("guidance.antiPatterns must be string[]");
+      if (migrationNotes !== undefined && typeof migrationNotes !== "string")
+        errors.push("guidance.migrationNotes must be a string");
     }
   }
 
@@ -980,7 +1138,8 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
   if (isObject(record.relationships) && isStringArray(record.relationships.dependsOn)) {
     const knownNames = new Set(validObjectRecords.map((r) => r.name));
     for (const dep of record.relationships.dependsOn) {
-      if (!knownNames.has(dep)) errors.push(`relationships.dependsOn references unknown component: ${dep}`);
+      if (!knownNames.has(dep))
+        errors.push(`relationships.dependsOn references unknown component: ${dep}`);
     }
   }
 
@@ -1011,6 +1170,7 @@ git commit -m "feat(component-schema): add validateComponentMetadata — runtime
 ### Task 9: Scaffold `@ultimate/component-metadata` package
 
 **Files:**
+
 - Create: `packages/component-metadata/package.json`
 - Create: `packages/component-metadata/tsconfig.json`
 - Create: `packages/component-metadata/vitest.config.ts`
@@ -1018,6 +1178,7 @@ git commit -m "feat(component-schema): add validateComponentMetadata — runtime
 - Test: `packages/component-metadata/test/package-exports.test.ts`
 
 **Interfaces:**
+
 - Consumes: `@ultimate/component-schema` (Task 1-8, as a `dependencies` entry — not `devDependencies`, since records are typed against it at runtime-adjacent build time)
 - Produces: an installable, buildable, testable empty package with a barrel `src/index.ts` exporting `ALL_COMPONENTS: ComponentMetadata[]` (initially empty) — consumed by Task 10 onward
 
@@ -1068,6 +1229,7 @@ git commit -m "feat(component-metadata): scaffold package"
 ### Task 10: Button and Checkbox records — the empty-events cases
 
 **Files:**
+
 - Create: `packages/component-metadata/src/records/button.ts`
 - Create: `packages/component-metadata/src/records/checkbox.ts`
 - Modify: `packages/component-metadata/src/index.ts`
@@ -1075,6 +1237,7 @@ git commit -m "feat(component-metadata): scaffold package"
 - Test: `packages/component-metadata/test/checkbox.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentMetadata`, `validateComponentMetadata` (`@ultimate/component-schema`)
 - Produces: `BUTTON_METADATA`, `CHECKBOX_METADATA` records, added to `ALL_COMPONENTS` — consumed by Task 16 (whole-set validation script + its own test)
 
@@ -1159,11 +1322,13 @@ git commit -m "feat(component-metadata): add Button and Checkbox records"
 ### Task 11: Dialog record — the lifecycle-event case (`onShow`/`onHide`)
 
 **Files:**
+
 - Create: `packages/component-metadata/src/records/dialog.ts`
 - Modify: `packages/component-metadata/src/index.ts`
 - Test: `packages/component-metadata/test/dialog.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentMetadata`, `validateComponentMetadata` (`@ultimate/component-schema`)
 - Produces: `DIALOG_METADATA` — consumed by Task 16 (whole-set validation script + its own test)
 
@@ -1218,6 +1383,7 @@ git commit -m "feat(component-metadata): add Dialog record"
 ### Task 12: Menu and Tooltip records
 
 **Files:**
+
 - Create: `packages/component-metadata/src/records/menu.ts`
 - Create: `packages/component-metadata/src/records/tooltip.ts`
 - Modify: `packages/component-metadata/src/index.ts`
@@ -1225,6 +1391,7 @@ git commit -m "feat(component-metadata): add Dialog record"
 - Test: `packages/component-metadata/test/tooltip.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentMetadata`, `validateComponentMetadata`
 - Produces: `MENU_METADATA`, `TOOLTIP_METADATA` — consumed by Task 16 (whole-set validation script + its own test)
 
@@ -1258,11 +1425,13 @@ git commit -m "feat(component-metadata): add Menu and Tooltip records"
 ### Task 13: Paginator record
 
 **Files:**
+
 - Create: `packages/component-metadata/src/records/paginator.ts`
 - Modify: `packages/component-metadata/src/index.ts`
 - Test: `packages/component-metadata/test/paginator.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentMetadata`, `validateComponentMetadata`
 - Produces: `PAGINATOR_METADATA` — consumed by Task 16 (Table's `relationships.dependsOn` needs this name to exist first, or Task 17's whole-set pass must run after both are added regardless of order) and Task 17
 
@@ -1296,11 +1465,13 @@ git commit -m "feat(component-metadata): add Paginator record"
 ### Task 14: Scroller record
 
 **Files:**
+
 - Create: `packages/component-metadata/src/records/scroller.ts`
 - Modify: `packages/component-metadata/src/index.ts`
 - Test: `packages/component-metadata/test/scroller.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentMetadata`, `validateComponentMetadata`
 - Produces: `SCROLLER_METADATA` — consumed by Task 16, Task 17
 
@@ -1334,11 +1505,13 @@ git commit -m "feat(component-metadata): add Scroller record"
 ### Task 15: Table record — the richest event-divergence case, `relationships.dependsOn`, and full description/guidance boundary worked example
 
 **Files:**
+
 - Create: `packages/component-metadata/src/records/table.ts`
 - Modify: `packages/component-metadata/src/index.ts`
 - Test: `packages/component-metadata/test/table.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentMetadata`, `validateComponentMetadata`; `PAGINATOR_METADATA`/`SCROLLER_METADATA` names (Task 13-14, for the dependency-reference validation to pass)
 - Produces: `TABLE_METADATA` — consumed by Task 16 (whole-set validation script + its own test)
 
@@ -1366,12 +1539,18 @@ describe("Table metadata record (spec §12's own worked example: sort-changed di
   });
 
   it("declares Paginator and Scroller as real, valid dependencies (spec §12, §6.5)", () => {
-    expect(TABLE_METADATA.relationships?.dependsOn).toEqual(expect.arrayContaining(["Paginator", "Scroller"]));
+    expect(TABLE_METADATA.relationships?.dependsOn).toEqual(
+      expect.arrayContaining(["Paginator", "Scroller"])
+    );
   });
 
   it("has verified accessibility facts (role, aria-sort, aria-selected) matching the just-closed milestone's real shipped markup", () => {
-    expect(TABLE_METADATA.accessibility?.verifiedRoles).toEqual(expect.arrayContaining(["row", "columnheader"]));
-    expect(TABLE_METADATA.accessibility?.verifiedAriaAttributes).toEqual(expect.arrayContaining(["aria-sort", "aria-selected"]));
+    expect(TABLE_METADATA.accessibility?.verifiedRoles).toEqual(
+      expect.arrayContaining(["row", "columnheader"])
+    );
+    expect(TABLE_METADATA.accessibility?.verifiedAriaAttributes).toEqual(
+      expect.arrayContaining(["aria-sort", "aria-selected"])
+    );
   });
 
   it("description and accessibility.guidance carry non-overlapping content (spec §6.1a boundary)", () => {
@@ -1392,6 +1571,7 @@ Expected: FAIL — module not found
 - [ ] **Step 3: Write minimal implementation**
 
 Read `packages/{ng,react,vue}/src/table/*` in full (the just-closed `UTable` implementation — real source, not the plan/spec prose). Populate `TABLE_METADATA`:
+
 - `description`: an evergreen identity statement (spec §6.1a's test: true regardless of specific usage) — e.g. "Table renders tabular data with sorting, filtering, selection, pagination, virtualization, and row/cell editing."
 - `accessibility.guidance`: the real, already-documented windowed-keyboard-navigation limitation from Table's own Scroller-composition tasks (Tasks 9/15b/21b of the Table plan) — e.g. "Keyboard navigation only operates within the currently-rendered virtualized window, not the full logical dataset."
 - `api.*.events`: at minimum the `sort-changed` triple above, plus `selection-changed`/`page-changed` following the same per-framework-real-name discipline (read `packages/{ng,react,vue}/src/table/table.{ts,tsx}` /`Table.vue` for the real `selectionChange`/`onSelectionChange`/`update:selection` and `firstChange`/`onPage`/`page` names).
@@ -1419,11 +1599,13 @@ git commit -m "feat(component-metadata): add Table record (sort-changed divergen
 **This task's one responsibility: create the durable, standalone `pnpm --filter @ultimate/component-metadata run validate` command.** This is new functionality (a script + a package.json entry point that did not exist before this task), not a re-run of anything — Task 17 (below) is the task that re-runs what this task creates, and the two must never be described as implementing the same thing twice.
 
 **Files:**
+
 - Create: `packages/component-metadata/scripts/validate-all.mjs`
 - Modify: `packages/component-metadata/package.json` (add `"validate": "node scripts/validate-all.mjs"` script)
 - Test: `packages/component-metadata/test/package-exports.test.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `validateComponentMetadata` (`@ultimate/component-schema`); `ALL_COMPONENTS` (Task 9-15)
 - Produces: a real, runnable `pnpm --filter @ultimate/component-metadata run validate` command that validates every record in `ALL_COMPONENTS` against every other record (cross-record checks — duplicate names, dangling relationship references — require the full set, not one record in isolation) — this exact command is what Task 17 re-runs as the dedicated Phase 6 whole-set verification gate
 
@@ -1435,13 +1617,25 @@ describe("whole-set validation (cross-record checks)", () => {
   it("every record in ALL_COMPONENTS is individually and cross-validated (no duplicate names, no dangling relationships)", () => {
     for (const record of ALL_COMPONENTS) {
       const result = validateComponentMetadata(record, ALL_COMPONENTS);
-      expect(result.valid, `record ${record.name} failed: ${!result.valid ? result.errors.join("; ") : ""}`).toBe(true);
+      expect(
+        result.valid,
+        `record ${record.name} failed: ${!result.valid ? result.errors.join("; ") : ""}`
+      ).toBe(true);
     }
   });
 
   it("contains exactly the 8 proof-set components, no more, no fewer (this plan's own scope boundary)", () => {
     const names = ALL_COMPONENTS.map((c) => c.name).sort();
-    expect(names).toEqual(["Button", "Checkbox", "Dialog", "Menu", "Paginator", "Scroller", "Table", "Tooltip"]);
+    expect(names).toEqual([
+      "Button",
+      "Checkbox",
+      "Dialog",
+      "Menu",
+      "Paginator",
+      "Scroller",
+      "Table",
+      "Tooltip",
+    ]);
   });
 });
 ```
@@ -1496,9 +1690,11 @@ git commit -m "feat(component-metadata): add whole-set validation script"
 **This task's one responsibility: re-run the durable command Task 16 created**, as this plan's dedicated Phase 6 whole-set verification checkpoint. Task 17 implements nothing new and must not be described as re-implementing Task 16's functionality — it is the governance/checkpoint act of invoking that already-real command and confirming it is still green, kept as a distinct, separately-tracked task so a future re-run of Phase 6's verification always has one unambiguous task to point at (matching the Table plan's own precedent of separating "a command exists" from "the command was checked at the closeout gate"). No code is expected to change in this task under normal circumstances.
 
 **Files:**
+
 - None expected (verification-only task)
 
 **Interfaces:**
+
 - Consumes: `pnpm --filter @ultimate/component-metadata run validate` (the exact command Task 16 created)
 
 - [ ] **Step 1: Write the failing test**
@@ -1528,9 +1724,11 @@ No commit if nothing changed (verification-only).
 ### Task 18: Package-boundary, dependency-ceiling, and repository-wide verification gate
 
 **Files:**
+
 - None expected (verification-only task; any fix belongs in whichever earlier task's file actually violates something)
 
 **Interfaces:**
+
 - Consumes: `scripts/provenance/validate-boundaries.mjs`, `scripts/provenance/validate-dependency-ceiling.mjs`, `scripts/provenance/validate-provenance.mjs`, the repo's root `build`/`test`/`typecheck` scripts
 
 **Verification checklist (matching this repo's established CI step order and the Table plan's own final-gate convention):**
@@ -1538,7 +1736,7 @@ No commit if nothing changed (verification-only).
 - [ ] `pnpm run build` — confirm `@ultimate/component-schema` and `@ultimate/component-metadata` both build clean alongside every existing package (zero regression to Phases 0-5/uix-data/Paginator/Scroller/Table).
 - [ ] `pnpm run test` — confirm the two new packages' test suites pass, and confirm zero regression to any existing package's suite (compare against the last known-good whole-workspace count from the Table milestone's own closeout, then add this plan's own new test count on top).
 - [ ] `pnpm run typecheck` — confirm zero errors across the whole workspace including the two new packages.
-- [ ] Content-only provenance validator invocation (no `--base-ref`, since this repo has no `origin` remote — established convention from the Table plan's Task 25/26/27) — confirm it does not regress (this plan adds no new *source-file* provenance entries of its own, since `component-schema`/`component-metadata` are Ultimate-original code with no upstream Prime equivalent — see Task 19 for the one required documentation note about this).
+- [ ] Content-only provenance validator invocation (no `--base-ref`, since this repo has no `origin` remote — established convention from the Table plan's Task 25/26/27) — confirm it does not regress (this plan adds no new _source-file_ provenance entries of its own, since `component-schema`/`component-metadata` are Ultimate-original code with no upstream Prime equivalent — see Task 19 for the one required documentation note about this).
 - [ ] `pnpm run boundary:validate` — confirm neither new package imports `@angular/*`/`react`/`react-dom`/`vue` (they are framework-neutral, per this plan's own Global Constraints) and confirm the validator's existing `uix*`-prefix package scan either already covers `component-schema`/`component-metadata` or is confirmed out-of-scope-by-design for non-`uix`-prefixed packages (read the real validator script to determine which, exactly as the Table plan's Task 26 did for its own boundary check — do not assume).
 - [ ] `pnpm run ceiling:validate` — confirm neither new package's `package.json` declares a forbidden Prime-branded runtime dependency (they should declare none at all beyond `@ultimate/component-schema` itself for `component-metadata`).
 - [ ] Grep both new packages' entire `src/`/`test/`/`scripts/` trees for any `primeng`/`primereact`/`primevue`/`@primeuix/*` import — confirm zero matches (this plan's own explicit "no forbidden runtime dependency" requirement, restated as a directly-checkable grep rather than trusted from the ceiling validator alone).
@@ -1554,10 +1752,12 @@ No commit if all green (verification-only). If a genuine violation surfaces, fix
 ### Task 19: GAP-027 documentation update (status only, not a rewrite)
 
 **Files:**
+
 - Modify: `docs/architecture/BLUEPRINT_GAPS.md` (GAP-027 status field only)
 - Modify: `docs/architecture/ROADMAP.md` (Phase 6 status row only)
 
 **Interfaces:**
+
 - Consumes: the fully green Task 18 verification gate
 
 Per this plan's own §11 constraint ("do not silently rewrite historical architecture documentation... identify the required closeout/documentation action, but keep the current run limited to plan authoring") — this task is the one place in this plan where that identified action is actually executed, once implementation is real and verified, exactly mirroring the Table plan's own Task 27 (`GAP-014` closure) precedent.

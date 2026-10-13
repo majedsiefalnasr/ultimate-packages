@@ -75,7 +75,10 @@ export const UInputMask = React.forwardRef<HTMLInputElement, UInputMaskProps>(fu
   },
   ref
 ) {
-  const { cx } = useComponentBase({ componentName: "input-mask", styleModule: inputMaskStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "input-mask",
+    styleModule: inputMaskStyleModule,
+  });
   const elementRef = React.useRef<HTMLInputElement | null>(null);
 
   const testsRef = React.useRef<Array<RegExp | null>>([]);
@@ -93,7 +96,8 @@ export const UInputMask = React.forwardRef<HTMLInputElement, UInputMaskProps>(fu
       if (typeof ref === "function") ref(node);
       else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
       if (typeof inputRef === "function") inputRef(node);
-      else if (inputRef) (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+      else if (inputRef)
+        (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
     },
     [ref, inputRef]
   );
@@ -130,11 +134,14 @@ export const UInputMask = React.forwardRef<HTMLInputElement, UInputMaskProps>(fu
     return { begin: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 };
   }, []);
 
-  const clearBuffer = React.useCallback((start: number, end: number) => {
-    for (let i = start; i < end && i < lenRef.current; i++) {
-      if (testsRef.current[i]) bufferRef.current[i] = getPlaceholder(i);
-    }
-  }, [getPlaceholder]);
+  const clearBuffer = React.useCallback(
+    (start: number, end: number) => {
+      for (let i = start; i < end && i < lenRef.current; i++) {
+        if (testsRef.current[i]) bufferRef.current[i] = getPlaceholder(i);
+      }
+    },
+    [getPlaceholder]
+  );
 
   const shiftL = React.useCallback(
     (begin: number, end: number) => {
@@ -247,8 +254,10 @@ export const UInputMask = React.forwardRef<HTMLInputElement, UInputMaskProps>(fu
         partialPositionRef.current = i;
       } else if (MASK_DEFS[c]) {
         testsRef.current.push(new RegExp(MASK_DEFS[c]));
-        if (firstNonMaskPosRef.current === null) firstNonMaskPosRef.current = testsRef.current.length - 1;
-        if (i < partialPositionRef.current) lastRequiredNonMaskPosRef.current = testsRef.current.length - 1;
+        if (firstNonMaskPosRef.current === null)
+          firstNonMaskPosRef.current = testsRef.current.length - 1;
+        if (i < partialPositionRef.current)
+          lastRequiredNonMaskPosRef.current = testsRef.current.length - 1;
       } else {
         testsRef.current.push(null);
       }
@@ -311,7 +320,7 @@ export const UInputMask = React.forwardRef<HTMLInputElement, UInputMaskProps>(fu
   React.useEffect(() => {
     initMask();
     updateValue();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- updateValue/initMask already depend on [mask, value] internally.
+    // updateValue/initMask already depend on [mask, value] internally.
   }, [mask, value]);
 
   const handleInputChange = React.useCallback(
@@ -322,13 +331,18 @@ export const UInputMask = React.forwardRef<HTMLInputElement, UInputMaskProps>(fu
         caret(pos);
       }
       updateModel(event);
-      if (onComplete && isCompleted()) onComplete({ originalEvent: event, value: unmask ? getUnmaskedValue() : elementRef.current?.value ?? "" });
+      if (onComplete && isCompleted())
+        onComplete({
+          originalEvent: event,
+          value: unmask ? getUnmaskedValue() : (elementRef.current?.value ?? ""),
+        });
     },
     [readOnly, checkVal, caret, updateModel, onComplete, isCompleted, unmask, getUnmaskedValue]
   );
 
   const onFocus = React.useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
+      void event;
       if (readOnly) return;
       focusTextRef.current = elementRef.current?.value ?? "";
       checkVal();
@@ -399,9 +413,26 @@ export const UInputMask = React.forwardRef<HTMLInputElement, UInputMaskProps>(fu
       }
       event.preventDefault();
       updateModel(event);
-      if (onComplete && completed) onComplete({ originalEvent: event, value: unmask ? getUnmaskedValue() : elementRef.current?.value ?? "" });
+      if (onComplete && completed)
+        onComplete({
+          originalEvent: event,
+          value: unmask ? getUnmaskedValue() : (elementRef.current?.value ?? ""),
+        });
     },
-    [readOnly, caret, seekNext, clearBuffer, shiftL, shiftR, writeBuffer, updateModel, onComplete, isCompleted, unmask, getUnmaskedValue]
+    [
+      readOnly,
+      caret,
+      seekNext,
+      clearBuffer,
+      shiftL,
+      shiftR,
+      writeBuffer,
+      updateModel,
+      onComplete,
+      isCompleted,
+      unmask,
+      getUnmaskedValue,
+    ]
   );
 
   return (
@@ -414,7 +445,10 @@ export const UInputMask = React.forwardRef<HTMLInputElement, UInputMaskProps>(fu
       disabled={disabled}
       readOnly={readOnly}
       aria-invalid={invalid || undefined}
-      className={[cx("root", { invalid, variantFilled: variant === "filled", fluid, disabled }), className]
+      className={[
+        cx("root", { invalid, variantFilled: variant === "filled", fluid, disabled }),
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
       onFocus={onFocus}

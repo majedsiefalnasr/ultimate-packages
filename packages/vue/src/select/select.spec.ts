@@ -76,7 +76,9 @@ describe("USelect", () => {
   });
 
   it("v-model — reflects the modelValue prop as the displayed label", async () => {
-    const wrapper = mount(USelect, { props: { modelValue: "Apple", options: ["Apple", "Banana"] } });
+    const wrapper = mount(USelect, {
+      props: { modelValue: "Apple", options: ["Apple", "Banana"] },
+    });
     expect(wrapper.find('[role="combobox"]').text()).toBe("Apple");
     await wrapper.setProps({ modelValue: "Banana" });
     expect(wrapper.find('[role="combobox"]').text()).toBe("Banana");

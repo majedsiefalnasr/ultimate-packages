@@ -24,38 +24,40 @@
 
 ## File Structure
 
-| File | Responsibility |
-|---|---|
-| `packages/ng-core/src/model-holder/model-holder.ts` | `UModelHolder` abstract directive: `modelValue`, `$filled`, `writeModelValue`. |
-| `packages/ng-core/src/model-holder/model-holder.spec.ts` | Tests for `UModelHolder` in isolation. |
-| `packages/ng-core/src/model-holder/index.ts` | Barrel re-export. |
-| `packages/ng-core/src/base-editable-holder/base-editable-holder.ts` | Modified: `UBaseEditableHolder extends UModelHolder` (was `extends UBaseComponent`). |
-| `packages/ng-core/src/index.ts` | Modified: add `export * from "./model-holder";`. |
-| `packages/uix-styles/src/inputtext/index.ts` | New: re-exports `style` from `@primeuix/styles/inputtext`, matching `checkbox/index.ts`'s pattern. |
-| `packages/uix-styles/package.json` | Modified: add `./inputtext` to `exports`. |
-| `packages/ng/src/input-text/input-text.ts` | `UInputText` attribute directive. |
-| `packages/ng/src/input-text/input-text-style.ts` | Style module (`css`, `classes`), matching `checkbox-style.ts`'s shape. |
-| `packages/ng/src/input-text/input-text.spec.ts` | Tests for `UInputText`. |
-| `packages/ng/src/input-text/index.ts` | Barrel re-export. |
-| `packages/ng/input-text/ng-package.json` | `ng-packagr` secondary entry point config, matching `packages/ng/checkbox/ng-package.json`. |
-| `packages/ng/package.json` | Modified: add `./input-text` to `exports`. |
-| `docs/architecture/provenance/ng-core.json` | New entries for `UModelHolder` + its spec/index files. |
-| `docs/architecture/provenance/ng.json` | New entries for `UInputText` + its style/spec/index files. |
-| `docs/architecture/COMPONENT_INVENTORY.md` | Split the `BaseModelHolder / BaseInput` row; move `InputText` row to built table. |
-| `docs/architecture/BLUEPRINT_GAPS.md` | Mark GAP-018 `RESOLVED` for the `BaseModelHolder` slice; add GAP-038 for the deferred `BaseInput` slice. |
-| `docs/architecture/DECISIONS.md` | New ADR-046 recording the two-tier finding, `UModelHolder` placement, and the Fluid-ancestor-detection first-implementation. |
+| File                                                                | Responsibility                                                                                                               |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `packages/ng-core/src/model-holder/model-holder.ts`                 | `UModelHolder` abstract directive: `modelValue`, `$filled`, `writeModelValue`.                                               |
+| `packages/ng-core/src/model-holder/model-holder.spec.ts`            | Tests for `UModelHolder` in isolation.                                                                                       |
+| `packages/ng-core/src/model-holder/index.ts`                        | Barrel re-export.                                                                                                            |
+| `packages/ng-core/src/base-editable-holder/base-editable-holder.ts` | Modified: `UBaseEditableHolder extends UModelHolder` (was `extends UBaseComponent`).                                         |
+| `packages/ng-core/src/index.ts`                                     | Modified: add `export * from "./model-holder";`.                                                                             |
+| `packages/uix-styles/src/inputtext/index.ts`                        | New: re-exports `style` from `@primeuix/styles/inputtext`, matching `checkbox/index.ts`'s pattern.                           |
+| `packages/uix-styles/package.json`                                  | Modified: add `./inputtext` to `exports`.                                                                                    |
+| `packages/ng/src/input-text/input-text.ts`                          | `UInputText` attribute directive.                                                                                            |
+| `packages/ng/src/input-text/input-text-style.ts`                    | Style module (`css`, `classes`), matching `checkbox-style.ts`'s shape.                                                       |
+| `packages/ng/src/input-text/input-text.spec.ts`                     | Tests for `UInputText`.                                                                                                      |
+| `packages/ng/src/input-text/index.ts`                               | Barrel re-export.                                                                                                            |
+| `packages/ng/input-text/ng-package.json`                            | `ng-packagr` secondary entry point config, matching `packages/ng/checkbox/ng-package.json`.                                  |
+| `packages/ng/package.json`                                          | Modified: add `./input-text` to `exports`.                                                                                   |
+| `docs/architecture/provenance/ng-core.json`                         | New entries for `UModelHolder` + its spec/index files.                                                                       |
+| `docs/architecture/provenance/ng.json`                              | New entries for `UInputText` + its style/spec/index files.                                                                   |
+| `docs/architecture/COMPONENT_INVENTORY.md`                          | Split the `BaseModelHolder / BaseInput` row; move `InputText` row to built table.                                            |
+| `docs/architecture/BLUEPRINT_GAPS.md`                               | Mark GAP-018 `RESOLVED` for the `BaseModelHolder` slice; add GAP-038 for the deferred `BaseInput` slice.                     |
+| `docs/architecture/DECISIONS.md`                                    | New ADR-046 recording the two-tier finding, `UModelHolder` placement, and the Fluid-ancestor-detection first-implementation. |
 
 ---
 
 ### Task 1: `UModelHolder` foundation directive
 
 **Files:**
+
 - Create: `packages/ng-core/src/model-holder/model-holder.ts`
 - Create: `packages/ng-core/src/model-holder/model-holder.spec.ts`
 - Create: `packages/ng-core/src/model-holder/index.ts`
 - Modify: `packages/ng-core/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseComponent` (`packages/ng-core/src/basecomponent/base-component.ts`) — extends it directly.
 - Produces: `export abstract class UModelHolder extends UBaseComponent { modelValue: WritableSignal<unknown>; readonly $filled: Signal<boolean>; writeModelValue(value: unknown): void }`. Task 2 (`UBaseEditableHolder`) and Task 4 (`UInputText`) both extend this.
 
@@ -141,23 +143,23 @@ Expected: PASS (1 test).
 Add to `packages/ng-core/src/model-holder/model-holder.spec.ts`, inside the existing `describe("UModelHolder", ...)` block:
 
 ```typescript
-  it("$filled is false when modelValue is undefined, empty string, or empty array; true otherwise", () => {
-    const fixture = TestBed.createComponent(TestModelHolderComponent);
-    const instance = fixture.componentInstance;
-    expect(instance.$filled()).toBe(false);
+it("$filled is false when modelValue is undefined, empty string, or empty array; true otherwise", () => {
+  const fixture = TestBed.createComponent(TestModelHolderComponent);
+  const instance = fixture.componentInstance;
+  expect(instance.$filled()).toBe(false);
 
-    instance.writeModelValue("");
-    expect(instance.$filled()).toBe(false);
+  instance.writeModelValue("");
+  expect(instance.$filled()).toBe(false);
 
-    instance.writeModelValue([]);
-    expect(instance.$filled()).toBe(false);
+  instance.writeModelValue([]);
+  expect(instance.$filled()).toBe(false);
 
-    instance.writeModelValue("hello");
-    expect(instance.$filled()).toBe(true);
+  instance.writeModelValue("hello");
+  expect(instance.$filled()).toBe(true);
 
-    instance.writeModelValue(0);
-    expect(instance.$filled()).toBe(true);
-  });
+  instance.writeModelValue(0);
+  expect(instance.$filled()).toBe(true);
+});
 ```
 
 - [ ] **Step 7: Run test to verify it fails or passes**
@@ -197,10 +199,12 @@ git commit -m "feat(ng-core): add UModelHolder foundation directive"
 ### Task 2: Insert `UModelHolder` into the `UBaseEditableHolder` chain
 
 **Files:**
+
 - Modify: `packages/ng-core/src/base-editable-holder/base-editable-holder.ts:1-29`
 - Modify: `packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts` (no test changes expected, run as regression check)
 
 **Interfaces:**
+
 - Consumes: `UModelHolder` (Task 1) — `UBaseEditableHolder` now extends it instead of `UBaseComponent` directly.
 - Produces: `UBaseEditableHolder` unchanged public surface (`disabled`, `$disabled`, CVA methods) plus newly-inherited `modelValue`/`$filled`/`writeModelValue` from `UModelHolder`. Existing consumers (`UCheckbox`) are unaffected — `UModelHolder`'s additions are purely additive.
 
@@ -209,14 +213,14 @@ git commit -m "feat(ng-core): add UModelHolder foundation directive"
 Add to `packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts`, inside the existing `describe("UBaseEditableHolder", ...)` block:
 
 ```typescript
-  it("inherits modelValue/$filled/writeModelValue from UModelHolder", () => {
-    const fixture = TestBed.createComponent(TestEditableComponent);
-    const instance = fixture.componentInstance;
-    expect(instance.$filled()).toBe(false);
-    instance.writeModelValue("x");
-    expect(instance.modelValue()).toBe("x");
-    expect(instance.$filled()).toBe(true);
-  });
+it("inherits modelValue/$filled/writeModelValue from UModelHolder", () => {
+  const fixture = TestBed.createComponent(TestEditableComponent);
+  const instance = fixture.componentInstance;
+  expect(instance.$filled()).toBe(false);
+  instance.writeModelValue("x");
+  expect(instance.modelValue()).toBe("x");
+  expect(instance.$filled()).toBe(true);
+});
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -310,10 +314,12 @@ git commit -m "feat(ng-core): UBaseEditableHolder extends UModelHolder"
 ### Task 3: `@ultimate/uix-styles/inputtext` subpath
 
 **Files:**
+
 - Create: `packages/uix-styles/src/inputtext/index.ts`
 - Modify: `packages/uix-styles/package.json:10-52` (add `./inputtext` to `exports`)
 
 **Interfaces:**
+
 - Consumes: `@primeuix/styles/inputtext` (existing pinned dependency, per `packages/uix-styles`'s existing pattern — no new dependency added).
 - Produces: `export { style } from "@ultimate/uix-styles/inputtext"` — a plain CSS string. Task 5 imports this.
 
@@ -384,6 +390,7 @@ git commit -m "feat(uix-styles): add inputtext subpath"
 ### Task 4: `UInputText` component
 
 **Files:**
+
 - Create: `packages/ng/src/input-text/input-text.ts`
 - Create: `packages/ng/src/input-text/input-text-style.ts`
 - Create: `packages/ng/src/input-text/index.ts`
@@ -391,6 +398,7 @@ git commit -m "feat(uix-styles): add inputtext subpath"
 - Modify: `packages/ng/package.json` (add `./input-text` to `exports`)
 
 **Interfaces:**
+
 - Consumes: `UModelHolder` (Task 1, `@ultimate/ng-core`), `UFluid` (`packages/ng/src/fluid/fluid.ts`, existing), `@ultimate/uix-styles/inputtext`'s `style` export (Task 3).
 - Produces: `export class UInputText extends UModelHolder { variant: InputSignal<'filled'|'outlined'|undefined>; fluid: InputSignal<boolean|undefined>; invalid: InputSignal<boolean|undefined>; readonly $variant: Signal<'filled'|'outlined'|undefined>; get hasFluid(): boolean }`, selector `[uInputText]`. Task 5 tests this directly; no later task consumes it.
 
@@ -496,14 +504,7 @@ Expected: FAIL — `Cannot find module './input-text'`.
 
 ```typescript
 // packages/ng/src/input-text/input-text.ts
-import {
-  Directive,
-  HostListener,
-  booleanAttribute,
-  computed,
-  inject,
-  input,
-} from "@angular/core";
+import { Directive, HostListener, booleanAttribute, computed, inject, input } from "@angular/core";
 import { NgControl } from "@angular/forms";
 import { UModelHolder } from "@ultimate/ng-core";
 import { UFluid } from "../fluid/fluid";
@@ -655,9 +656,11 @@ git commit -m "feat(ng): add UInputText component"
 ### Task 5: `UInputText` — Reactive Forms, template-driven forms, invalid/fluid/variant coverage
 
 **Files:**
+
 - Modify: `packages/ng/src/input-text/input-text.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `UInputText` (Task 4).
 - Produces: nothing new — this task only adds test coverage.
 
@@ -666,93 +669,95 @@ git commit -m "feat(ng): add UInputText component"
 Add to `packages/ng/src/input-text/input-text.spec.ts`, inside the existing `describe("UInputText", ...)` block:
 
 ```typescript
-  it("integrates with reactive forms — FormControl value flows in and out", async () => {
-    const { Component: Comp } = await import("@angular/core");
-    const { ReactiveFormsModule, FormControl } = await import("@angular/forms");
-    @Comp({
-      standalone: true,
-      imports: [UInputText, ReactiveFormsModule],
-      template: `<input uInputText [formControl]="control" />`,
-    })
-    class ReactiveHostComponent {
-      control = new FormControl("initial");
-    }
-    const fixture = TestBed.createComponent(ReactiveHostComponent);
-    fixture.detectChanges();
-    const input: HTMLInputElement = fixture.nativeElement.querySelector("input");
-    expect(input.value).toBe("initial");
+it("integrates with reactive forms — FormControl value flows in and out", async () => {
+  const { Component: Comp } = await import("@angular/core");
+  const { ReactiveFormsModule, FormControl } = await import("@angular/forms");
+  @Comp({
+    standalone: true,
+    imports: [UInputText, ReactiveFormsModule],
+    template: `<input uInputText [formControl]="control" />`,
+  })
+  class ReactiveHostComponent {
+    control = new FormControl("initial");
+  }
+  const fixture = TestBed.createComponent(ReactiveHostComponent);
+  fixture.detectChanges();
+  const input: HTMLInputElement = fixture.nativeElement.querySelector("input");
+  expect(input.value).toBe("initial");
 
-    input.value = "typed";
-    input.dispatchEvent(new Event("input"));
-    fixture.detectChanges();
-    expect(fixture.componentInstance.control.value).toBe("typed");
-  });
+  input.value = "typed";
+  input.dispatchEvent(new Event("input"));
+  fixture.detectChanges();
+  expect(fixture.componentInstance.control.value).toBe("typed");
+});
 
-  it("integrates with template-driven forms — ngModel value flows in and out", async () => {
-    const { Component: Comp } = await import("@angular/core");
-    const { FormsModule } = await import("@angular/forms");
-    @Comp({
-      standalone: true,
-      imports: [UInputText, FormsModule],
-      template: `<input uInputText [(ngModel)]="value" />`,
-    })
-    class TemplateHostComponent {
-      value = "initial";
-    }
-    const fixture = TestBed.createComponent(TemplateHostComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    const input: HTMLInputElement = fixture.nativeElement.querySelector("input");
-    expect(input.value).toBe("initial");
+it("integrates with template-driven forms — ngModel value flows in and out", async () => {
+  const { Component: Comp } = await import("@angular/core");
+  const { FormsModule } = await import("@angular/forms");
+  @Comp({
+    standalone: true,
+    imports: [UInputText, FormsModule],
+    template: `<input uInputText [(ngModel)]="value" />`,
+  })
+  class TemplateHostComponent {
+    value = "initial";
+  }
+  const fixture = TestBed.createComponent(TemplateHostComponent);
+  fixture.detectChanges();
+  await fixture.whenStable();
+  const input: HTMLInputElement = fixture.nativeElement.querySelector("input");
+  expect(input.value).toBe("initial");
 
-    input.value = "typed";
-    input.dispatchEvent(new Event("input"));
-    fixture.detectChanges();
-    await fixture.whenStable();
-    expect(fixture.componentInstance.value).toBe("typed");
-  });
+  input.value = "typed";
+  input.dispatchEvent(new Event("input"));
+  fixture.detectChanges();
+  await fixture.whenStable();
+  expect(fixture.componentInstance.value).toBe("typed");
+});
 
-  it("reflects the invalid input via the p-invalid class", () => {
-    @Component({
-      standalone: true,
-      imports: [UInputText],
-      template: `<input uInputText [invalid]="true" />`,
-    })
-    class HostComponent {}
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    const input = fixture.nativeElement.querySelector("input");
-    expect(input.classList.contains("p-invalid")).toBe(true);
-  });
+it("reflects the invalid input via the p-invalid class", () => {
+  @Component({
+    standalone: true,
+    imports: [UInputText],
+    template: `<input uInputText [invalid]="true" />`,
+  })
+  class HostComponent {}
+  const fixture = TestBed.createComponent(HostComponent);
+  fixture.detectChanges();
+  const input = fixture.nativeElement.querySelector("input");
+  expect(input.classList.contains("p-invalid")).toBe(true);
+});
 
-  it("hasFluid is true when an ancestor UFluid is present, even without the fluid input", () => {
-    @Component({
-      standalone: true,
-      imports: [UInputText, UFluid],
-      template: `<u-fluid><input uInputText #ref="uInputText" /></u-fluid>`,
-    })
-    class HostComponent {}
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    const directive = fixture.debugElement.query(
-      (de) => de.name === "input"
-    ).injector.get(UInputText);
-    expect(directive.hasFluid).toBe(true);
-  });
+it("hasFluid is true when an ancestor UFluid is present, even without the fluid input", () => {
+  @Component({
+    standalone: true,
+    imports: [UInputText, UFluid],
+    template: `<u-fluid><input uInputText #ref="uInputText" /></u-fluid>`,
+  })
+  class HostComponent {}
+  const fixture = TestBed.createComponent(HostComponent);
+  fixture.detectChanges();
+  const directive = fixture.debugElement
+    .query((de) => de.name === "input")
+    .injector.get(UInputText);
+  expect(directive.hasFluid).toBe(true);
+});
 
-  it("does not implement ControlValueAccessor", () => {
-    @Component({
-      standalone: true,
-      imports: [UInputText],
-      template: `<input uInputText />`,
-    })
-    class HostComponent {}
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    const directive = fixture.debugElement.query((de) => de.name === "input").injector.get(UInputText);
-    expect((directive as unknown as { writeValue?: unknown }).writeValue).toBeUndefined();
-    expect((directive as unknown as { registerOnChange?: unknown }).registerOnChange).toBeUndefined();
-  });
+it("does not implement ControlValueAccessor", () => {
+  @Component({
+    standalone: true,
+    imports: [UInputText],
+    template: `<input uInputText />`,
+  })
+  class HostComponent {}
+  const fixture = TestBed.createComponent(HostComponent);
+  fixture.detectChanges();
+  const directive = fixture.debugElement
+    .query((de) => de.name === "input")
+    .injector.get(UInputText);
+  expect((directive as unknown as { writeValue?: unknown }).writeValue).toBeUndefined();
+  expect((directive as unknown as { registerOnChange?: unknown }).registerOnChange).toBeUndefined();
+});
 ```
 
 Add the `UFluid` import at the top of the file:
@@ -787,10 +792,12 @@ git commit -m "test(ng): cover UInputText forms integration, invalid/fluid state
 ### Task 6: Provenance manifests
 
 **Files:**
+
 - Modify: `docs/architecture/provenance/ng-core.json`
 - Modify: `docs/architecture/provenance/ng.json`
 
 **Interfaces:**
+
 - Consumes: nothing — documentation-only task.
 - Produces: nothing consumed by later tasks — documentation-only task.
 
@@ -875,11 +882,13 @@ git commit -m "docs(provenance): record UModelHolder and UInputText"
 ### Task 7: `COMPONENT_INVENTORY.md`, `BLUEPRINT_GAPS.md`, and a new ADR
 
 **Files:**
+
 - Modify: `docs/architecture/COMPONENT_INVENTORY.md:46,61`
 - Modify: `docs/architecture/BLUEPRINT_GAPS.md` (GAP-018 entry, plus new GAP-038)
 - Modify: `docs/architecture/DECISIONS.md` (new ADR-046)
 
 **Interfaces:**
+
 - Consumes: nothing — documentation-only task.
 - Produces: nothing consumed by later tasks — documentation-only, final task in this plan.
 
@@ -906,6 +915,7 @@ Replace the GAP-018 entry's `**Status:**` line and add resolution evidence, foll
 
 ```markdown
 #### GAP-018 — `BaseModelHolder`/`BaseInput` foundation tier not yet built for Angular; blocks ~20 native-input form components
+
 - **Status:** RESOLVED (for the `BaseModelHolder`-equivalent slice specifically; see GAP-038 for the narrower, still-open `BaseInput`-equivalent remainder)
 - **Type:** Foundation, Component, Framework (Angular)
 - **Blocking level:** N/A (resolved for its most valuable slice)
@@ -927,6 +937,7 @@ Insert as a new entry after GAP-037 (the current last entry, per this workstream
 
 ```markdown
 #### GAP-038 (added during Angular Form Foundation workstream) — `BaseInput` foundation tier (richer `fluid`/`variant`/`size`/`pattern`/etc.) not yet built for Angular; blocks `InputMask`/`Password`/`AutoComplete`/`DatePicker`/`InputNumber`/`Select`
+
 - **Status:** DEFERRED (correctly, by design — no real consumer yet)
 - **Type:** Foundation, Component, Framework (Angular)
 - **Blocking level:** MEDIUM

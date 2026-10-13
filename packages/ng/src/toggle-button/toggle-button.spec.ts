@@ -25,7 +25,9 @@ describe("UToggleButton", () => {
   it("toggles on Enter keydown", () => {
     const fixture = TestBed.createComponent(UToggleButton);
     fixture.detectChanges();
-    fixture.nativeElement.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    fixture.nativeElement.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
+    );
     fixture.detectChanges();
     expect(fixture.componentInstance.checked()).toBe(true);
   });

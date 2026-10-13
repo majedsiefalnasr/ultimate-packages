@@ -57,7 +57,10 @@ export interface UInplaceContentContext {
     } @else {
       <div [class]="cx('content')">
         <ng-container
-          *ngTemplateOutlet="contentTemplate ?? null; context: { closeCallback: onDeactivateClick.bind(this) }"
+          *ngTemplateOutlet="
+            contentTemplate ?? null;
+            context: { closeCallback: onDeactivateClick.bind(this) }
+          "
         ></ng-container>
       </div>
     }

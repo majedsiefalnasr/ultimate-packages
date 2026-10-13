@@ -27,7 +27,10 @@ const css = /*css*/ `
 const classes = {
   root: (params: { disabled?: boolean; invalid?: boolean } = {}) => [
     "u-tri-state-checkbox u-component",
-    { "u-tri-state-checkbox-disabled": params.disabled, "u-tri-state-checkbox-invalid": params.invalid },
+    {
+      "u-tri-state-checkbox-disabled": params.disabled,
+      "u-tri-state-checkbox-invalid": params.invalid,
+    },
   ],
   box: "u-tri-state-checkbox-box",
   input: "u-tri-state-checkbox-input",

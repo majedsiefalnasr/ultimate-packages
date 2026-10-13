@@ -12,7 +12,9 @@
   >
     <slot :active="$pcAccordionPanel.active"></slot>
     <slot name="toggleicon" :active="$pcAccordionPanel.active">
-      <span :class="cx('toggleicon')" aria-hidden="true">{{ $pcAccordionPanel.active ? "▾" : "▸" }}</span>
+      <span :class="cx('toggleicon')" aria-hidden="true">{{
+        $pcAccordionPanel.active ? "▾" : "▸"
+      }}</span>
     </slot>
   </div>
 </template>

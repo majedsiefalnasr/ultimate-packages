@@ -18,8 +18,10 @@ import { inputTextStyleModule } from "./input-text-style";
  * `iconPosition` (IconField/InputIcon composition, out of this task's
  * scope).
  */
-export interface UInputTextProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "size"> {
+export interface UInputTextProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "value" | "onChange" | "size"
+> {
   value?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   invalid?: boolean;
@@ -32,14 +34,18 @@ export const UInputText = React.forwardRef<HTMLInputElement, UInputTextProps>(fu
   { className, invalid = false, variant, fluid = false, disabled, inputRef, ...rest },
   ref
 ) {
-  const { cx } = useComponentBase({ componentName: "input-text", styleModule: inputTextStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "input-text",
+    styleModule: inputTextStyleModule,
+  });
 
   const setRef = React.useCallback(
     (node: HTMLInputElement | null) => {
       if (typeof ref === "function") ref(node);
       else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
       if (typeof inputRef === "function") inputRef(node);
-      else if (inputRef) (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+      else if (inputRef)
+        (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
     },
     [ref, inputRef]
   );

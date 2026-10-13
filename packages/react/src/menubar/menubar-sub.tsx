@@ -85,7 +85,8 @@ export const UMenubarSub: React.FC<UMenubarSubProps> = ({ items, root, cx, onIte
    * bubbling toward the ancestor level that does.
    */
   /** Items that actually render their own direct-child `<a>` (excludes separators and hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
-  const renderedItems = () => items.filter((candidate) => !candidate.separator && candidate.visible !== false);
+  const renderedItems = () =>
+    items.filter((candidate) => !candidate.separator && candidate.visible !== false);
 
   const resolveOwnItem = (target: EventTarget | null): UMenuItem | null => {
     const links = getItemLinks();
@@ -93,7 +94,10 @@ export const UMenubarSub: React.FC<UMenubarSubProps> = ({ items, root, cx, onIte
     return index === -1 ? null : (renderedItems()[index] ?? null);
   };
 
-  const enabledItems = () => items.filter((candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled);
+  const enabledItems = () =>
+    items.filter(
+      (candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled
+    );
 
   const moveFocus = (current: UMenuItem, direction: 1 | -1) => {
     const enabled = enabledItems();
@@ -212,7 +216,12 @@ export const UMenubarSub: React.FC<UMenubarSubProps> = ({ items, root, cx, onIte
               </a>
             </div>
             {hasItems(item) && (
-              <UMenubarSub items={item.items ?? []} root={false} cx={cx} onItemSelect={onItemSelect} />
+              <UMenubarSub
+                items={item.items ?? []}
+                root={false}
+                cx={cx}
+                onItemSelect={onItemSelect}
+              />
             )}
           </li>
         );

@@ -114,7 +114,9 @@ export function UMultiStateCheckbox<T = unknown, V = T>({
       role="button"
       tabIndex={disabled ? -1 : tabIndex}
       onKeyDown={handleKeyDown}
-      aria-label={ariaLabel ?? (selectedOption ? getOptionLabel(selectedOption, optionLabel) : "none")}
+      aria-label={
+        ariaLabel ?? (selectedOption ? getOptionLabel(selectedOption, optionLabel) : "none")
+      }
     >
       <div className={cx("box")}>
         {selectedOption && optionIcon ? optionIcon(selectedOption) : null}

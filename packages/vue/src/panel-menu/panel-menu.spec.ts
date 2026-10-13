@@ -3,7 +3,10 @@ import { mount } from "@vue/test-utils";
 import { UPanelMenu } from "./index";
 
 const items = [
-  { label: "Files", items: [{ label: "Documents", items: [{ label: "Work" }] }, { label: "Photos" }] },
+  {
+    label: "Files",
+    items: [{ label: "Documents", items: [{ label: "Work" }] }, { label: "Photos" }],
+  },
   { label: "Settings" },
 ];
 
@@ -81,7 +84,14 @@ describe("UPanelMenu", () => {
 
   it("does not expand or invoke command for a disabled group item", async () => {
     let called = false;
-    const model = [{ label: "Disabled", disabled: true, items: [{ label: "Hidden" }], command: () => (called = true) }];
+    const model = [
+      {
+        label: "Disabled",
+        disabled: true,
+        items: [{ label: "Hidden" }],
+        command: () => (called = true),
+      },
+    ];
     const wrapper = mount(UPanelMenu, { props: { model } });
     const link = wrapper.find("a");
     expect(link.attributes("aria-disabled")).toBe("true");
@@ -91,14 +101,18 @@ describe("UPanelMenu", () => {
   });
 
   it("hides an item whose visible is false", () => {
-    const wrapper = mount(UPanelMenu, { props: { model: [...items, { label: "Hidden", visible: false }] } });
+    const wrapper = mount(UPanelMenu, {
+      props: { model: [...items, { label: "Hidden", visible: false }] },
+    });
     expect(wrapper.text()).not.toContain("Hidden");
   });
 
   describe("keyboard navigation (GAP-054)", () => {
     it("moves focus to the next root item on ArrowDown, wrapping at the end", async () => {
       const wrapper = mount(UPanelMenu, { props: { model: items }, attachTo: document.body });
-      const rootLinks = wrapper.findAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+      const rootLinks = wrapper.findAll(
+        '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+      );
       (rootLinks[0].element as HTMLElement).focus();
       await rootLinks[0].trigger("keydown", { code: "ArrowDown" });
       expect(document.activeElement).toBe(rootLinks[1].element);
@@ -110,7 +124,9 @@ describe("UPanelMenu", () => {
 
     it("moves focus to the previous root item on ArrowUp, wrapping at the start", async () => {
       const wrapper = mount(UPanelMenu, { props: { model: items }, attachTo: document.body });
-      const rootLinks = wrapper.findAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+      const rootLinks = wrapper.findAll(
+        '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+      );
       (rootLinks[0].element as HTMLElement).focus();
       await rootLinks[0].trigger("keydown", { code: "ArrowUp" });
       expect(document.activeElement).toBe(rootLinks[1].element);
@@ -124,7 +140,9 @@ describe("UPanelMenu", () => {
         { label: "C" },
       ];
       const wrapper = mount(UPanelMenu, { props: { model }, attachTo: document.body });
-      const rootLinks = wrapper.findAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+      const rootLinks = wrapper.findAll(
+        '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+      );
       (rootLinks[0].element as HTMLElement).focus();
       await rootLinks[0].trigger("keydown", { code: "ArrowDown" });
       expect(document.activeElement).toBe(rootLinks[2].element);
@@ -179,7 +197,7 @@ describe("UPanelMenu", () => {
       await rootHeader.trigger("keydown", { code: "Enter" });
 
       const nestedLinks = wrapper.findAll(
-        '[role="tree"] [role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a',
+        '[role="tree"] [role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
       );
       expect(nestedLinks.length).toBe(3);
 
@@ -195,10 +213,16 @@ describe("UPanelMenu", () => {
 
     describe("index mapping with a hidden item before the target (GAP-054 fix-loop)", () => {
       it("toggles expand/collapse on Enter for a group item positioned after a hidden item", async () => {
-        const model = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "Files", items: [{ label: "Doc" }] }];
+        const model = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "Files", items: [{ label: "Doc" }] },
+        ];
         const wrapper = mount(UPanelMenu, { props: { model }, attachTo: document.body });
         // "Files" is rendered link index 1 (Hidden renders no <li>/<a>), but model index 2.
-        const links = wrapper.findAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+        const links = wrapper.findAll(
+          '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+        );
         const filesLink = links[1];
         (filesLink.element as HTMLElement).focus();
         await filesLink.trigger("keydown", { code: "Enter" });
@@ -210,9 +234,16 @@ describe("UPanelMenu", () => {
       });
 
       it("ArrowDown from an item after a hidden item does not get stuck", async () => {
-        const model = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+        const model = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "B" },
+          { label: "C" },
+        ];
         const wrapper = mount(UPanelMenu, { props: { model }, attachTo: document.body });
-        const links = wrapper.findAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+        const links = wrapper.findAll(
+          '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+        );
         // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
         const [a, b, c] = links;
         (b.element as HTMLElement).focus();

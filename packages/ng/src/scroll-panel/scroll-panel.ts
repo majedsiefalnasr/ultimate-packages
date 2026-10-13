@@ -151,7 +151,10 @@ export class UScrollPanel extends UBaseComponent implements AfterViewInit, OnDes
     const pureContainerHeight = container.offsetHeight - parseInt(xBarStyles.height, 10);
 
     if (containerStyles.maxHeight !== "none" && pureContainerHeight === 0) {
-      if (content.offsetHeight + parseInt(xBarStyles.height, 10) > parseInt(containerStyles.maxHeight, 10)) {
+      if (
+        content.offsetHeight + parseInt(xBarStyles.height, 10) >
+        parseInt(containerStyles.maxHeight, 10)
+      ) {
         container.style.height = containerStyles.maxHeight;
       } else {
         container.style.height =
@@ -187,7 +190,9 @@ export class UScrollPanel extends UBaseComponent implements AfterViewInit, OnDes
       } else {
         xBar.classList.remove("u-scroll-panel-bar-hidden");
         const xBarWidth = Math.max(this.scrollXRatio * 100, 10);
-        const xBarLeft = Math.abs((content.scrollLeft * (100 - xBarWidth)) / (totalWidth - ownWidth || 1));
+        const xBarLeft = Math.abs(
+          (content.scrollLeft * (100 - xBarWidth)) / (totalWidth - ownWidth || 1)
+        );
         xBar.style.cssText = `width:${xBarWidth}%; inset-inline-start:${xBarLeft}%; bottom:${bottom}px;`;
       }
 
@@ -348,6 +353,7 @@ export class UScrollPanel extends UBaseComponent implements AfterViewInit, OnDes
   }
 
   private onDocumentMouseUp(_event: Event): void {
+    void _event;
     this.yBarRef.nativeElement.classList.remove("u-scroll-panel-bar-grabbed");
     this.xBarRef.nativeElement.classList.remove("u-scroll-panel-bar-grabbed");
     document.body.classList.remove("u-scroll-panel-bar-grabbed");

@@ -104,11 +104,21 @@ export function URating({
             onBlur={() => setFocusedIndex(-1)}
           >
             {active ? (
-              <svg className={cx("onIcon")} viewBox="0 0 16 16" aria-hidden="true" data-testid={`star-on-${starValue}`}>
+              <svg
+                className={cx("onIcon")}
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+                data-testid={`star-on-${starValue}`}
+              >
                 <path d="M8 1l2.163 4.279 4.837.626-3.5 3.279.882 4.816L8 11.7l-4.382 2.3.882-4.816-3.5-3.279 4.837-.626z" />
               </svg>
             ) : (
-              <svg className={cx("offIcon")} viewBox="0 0 16 16" aria-hidden="true" data-testid={`star-off-${starValue}`}>
+              <svg
+                className={cx("offIcon")}
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+                data-testid={`star-off-${starValue}`}
+              >
                 <path
                   d="M8 1l2.163 4.279 4.837.626-3.5 3.279.882 4.816L8 11.7l-4.382 2.3.882-4.816-3.5-3.279 4.837-.626z"
                   fill="none"

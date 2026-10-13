@@ -50,7 +50,10 @@ const classes = {
   rootList: "u-megamenu-root-list",
   item: (params: MegaMenuClassesParams = {}) => {
     const { disabled, open } = params;
-    return ["u-megamenu-item", { "u-megamenu-item-disabled": disabled, "u-megamenu-item-open": open }];
+    return [
+      "u-megamenu-item",
+      { "u-megamenu-item-disabled": disabled, "u-megamenu-item-open": open },
+    ];
   },
   itemContent: "u-megamenu-item-content",
   itemLink: "u-megamenu-item-link",

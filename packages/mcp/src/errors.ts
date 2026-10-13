@@ -6,7 +6,8 @@
 
 export interface McpToolError {
   // Load-bearing as the tool response discriminant (see toToolResponse) — must not be introduced onto any tool Result type.
-  readonly code: "invalid_input" | "not_found" | "manifest_unreadable" | "facet_not_recorded" | "internal_error";
+  readonly code:
+    "invalid_input" | "not_found" | "manifest_unreadable" | "facet_not_recorded" | "internal_error";
   readonly message: string;
 }
 
@@ -33,9 +34,11 @@ export function notFoundError(name: string, knownNames: readonly string[]): McpT
  * tool-error payload a calling host/agent sees.
  */
 export function manifestUnreadableError(_detail: string): McpToolError {
+  void _detail;
   return {
     code: "manifest_unreadable",
-    message: "The compatibility manifest could not be read or parsed. No compatibility result can be returned.",
+    message:
+      "The compatibility manifest could not be read or parsed. No compatibility result can be returned.",
   };
 }
 

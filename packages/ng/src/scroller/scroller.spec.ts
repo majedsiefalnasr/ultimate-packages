@@ -27,7 +27,10 @@ describe("UScroller", () => {
           // Synchronously invoke once, matching a real ResizeObserver's
           // initial-observation callback, so tests don't need to await a
           // real resize event loop.
-          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+          resizeObserverCallback?.(
+            [{ target } as ResizeObserverEntry],
+            this as unknown as ResizeObserver
+          );
         }
         disconnect() {}
       }
@@ -44,7 +47,10 @@ describe("UScroller", () => {
 
   it("computes numItemsInViewport via uix-data's calculateNumItemsInViewport, wired to the real shared function", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 100 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 100 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.detectChanges();
     // contentSize is a fixed 0 until Task 3's real DOM measurement lands, so
@@ -61,7 +67,10 @@ describe("UScroller", () => {
 
   it("clamps last (getLast) against the live items array length, per spec §9", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 5 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 5 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.componentRef.setInput("numToleratedItems", 50); // deliberately large tolerance
     fixture.detectChanges();
@@ -81,7 +90,10 @@ describe("UScroller", () => {
 
   it("measures the root viewport element's offsetHeight and computes numItemsInViewport from it, matching real PrimeNG's measured element/property", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 1000 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.detectChanges(); // triggers ngAfterViewInit, but offsetHeight is still 0 pre-mock
     const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
@@ -93,7 +105,10 @@ describe("UScroller", () => {
     // itself cause a re-check. Re-invoking the mocked ResizeObserver
     // callback simulates the real browser firing it on an actual resize,
     // which is what drives UScroller's internal _contentSize signal.
-    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: root } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     fixture.detectChanges();
     // 200 / 20 = 10 whole items fit exactly — asserting the real computed
     // number, not just that some non-zero value exists.
@@ -102,13 +117,19 @@ describe("UScroller", () => {
 
   it("renders only the windowed subset of items (first through last), not the full array, given a mocked 200px viewport", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 1000 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.detectChanges();
     const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
     mockViewportHeight(root, 200);
     // See the zoneless/signal note in the previous test.
-    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: root } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     fixture.detectChanges();
     const renderedItems = fixture.nativeElement.querySelectorAll("[data-u-scroller-item]");
     // numItemsInViewport=10, numToleratedItems defaults to ceil(10/2)=5,
@@ -120,13 +141,19 @@ describe("UScroller", () => {
 
   it("advances first/last on scroll, given a mocked 200px viewport", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 1000 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.detectChanges();
     const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
     mockViewportHeight(root, 200);
     // See the zoneless/signal note above.
-    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: root } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     fixture.detectChanges();
     const initialFirst = root.getAttribute("data-first");
     Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
@@ -152,10 +179,14 @@ describe("UScroller", () => {
 
   it("scrollTo calls the native Element.scrollTo with the given options", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 100 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 100 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.detectChanges();
-    const root = fixture.nativeElement.querySelector("[data-u-scroller-content]").parentElement as HTMLElement;
+    const root = fixture.nativeElement.querySelector("[data-u-scroller-content]")
+      .parentElement as HTMLElement;
     const scrollToSpy = vi.fn();
     root.scrollTo = scrollToSpy;
     fixture.componentInstance.scrollTo({ top: 100 });
@@ -164,10 +195,14 @@ describe("UScroller", () => {
 
   it("scrollToIndex computes the target position from index * itemSize", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 100 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 100 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.detectChanges();
-    const root = fixture.nativeElement.querySelector("[data-u-scroller-content]").parentElement as HTMLElement;
+    const root = fixture.nativeElement.querySelector("[data-u-scroller-content]")
+      .parentElement as HTMLElement;
     const scrollToSpy = vi.fn();
     root.scrollTo = scrollToSpy;
     fixture.componentInstance.scrollToIndex(10);
@@ -176,7 +211,10 @@ describe("UScroller", () => {
 
   it("disabled mode renders all items with zero virtualization", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 50 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 50 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.componentRef.setInput("disabled", true);
     fixture.detectChanges();
@@ -186,7 +224,10 @@ describe("UScroller", () => {
 
   it("fires onLazyLoad with {first, last} after a scroll-triggered window change, when lazy is true", async () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 1000 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.componentRef.setInput("lazy", true);
     fixture.detectChanges();
@@ -196,7 +237,10 @@ describe("UScroller", () => {
     // invisible to Angular's signal graph, so the mocked ResizeObserver
     // callback must be re-invoked to actually update _contentSize (and thus
     // numItemsInViewportComputed, which last/onLazyLoad's payload depends on).
-    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: root } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     fixture.detectChanges();
     let emitted: unknown;
     fixture.componentInstance.onLazyLoad.subscribe((e: unknown) => (emitted = e));
@@ -212,7 +256,10 @@ describe("UScroller", () => {
 
   it("does not fire onLazyLoad when lazy is false", async () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 1000 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.detectChanges();
     const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
@@ -231,13 +278,17 @@ describe("UScroller", () => {
     const fixture = TestBed.createComponent(UScroller);
     fixture.componentRef.setInput("loading", true);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector("[class*=u-scroller]").getAttribute("aria-busy")).toBe("true");
+    expect(
+      fixture.nativeElement.querySelector("[class*=u-scroller]").getAttribute("aria-busy")
+    ).toBe("true");
   });
 
   it("does not set aria-busy when loading is false or unset", () => {
     const fixture = TestBed.createComponent(UScroller);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector("[class*=u-scroller]").hasAttribute("aria-busy")).toBe(false);
+    expect(
+      fixture.nativeElement.querySelector("[class*=u-scroller]").hasAttribute("aria-busy")
+    ).toBe(false);
   });
 
   it("resolves the same virtualscroller.loader.mask.background token as the React/Vue cross-framework consistency test (packages/themes/test/cross-framework-consistency.test.ts)", () => {
@@ -270,7 +321,10 @@ describe("package exports", () => {
         <table data-test-content-template>
           <tbody>
             @for (item of visibleItems; track item.index) {
-              <tr [attr.data-index]="item.index" [attr.data-first]="options.getItemOptions(item.index).first">
+              <tr
+                [attr.data-index]="item.index"
+                [attr.data-first]="options.getItemOptions(item.index).first"
+              >
                 <td>{{ item.value }}</td>
               </tr>
             }
@@ -308,7 +362,10 @@ describe("UScroller content template (Task 1)", () => {
           resizeObserverCallback = cb;
         }
         observe(target: Element) {
-          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+          resizeObserverCallback?.(
+            [{ target } as ResizeObserverEntry],
+            this as unknown as ResizeObserver
+          );
         }
         disconnect() {}
       }
@@ -328,7 +385,10 @@ describe("UScroller content template (Task 1)", () => {
     fixture.detectChanges();
     const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
     mockViewportHeight(root, 200);
-    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: root } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector("[data-test-content-template]")).not.toBeNull();
     expect(fixture.nativeElement.querySelectorAll("[data-u-scroller-item]").length).toBe(0);
@@ -340,10 +400,15 @@ describe("UScroller content template (Task 1)", () => {
     fixture.detectChanges();
     const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
     mockViewportHeight(root, 200);
-    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: root } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     fixture.detectChanges();
 
-    const table = fixture.nativeElement.querySelector("table[data-test-content-template]") as HTMLTableElement;
+    const table = fixture.nativeElement.querySelector(
+      "table[data-test-content-template]"
+    ) as HTMLTableElement;
     expect(table).not.toBeNull();
     const tbody = table.querySelector("tbody");
     expect(tbody).not.toBeNull();
@@ -366,9 +431,14 @@ describe("UScroller content template (Task 1)", () => {
     fixture.detectChanges();
     const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
     mockViewportHeight(root, 200);
-    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: root } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll("[data-u-scroller-item]").length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.querySelectorAll("[data-u-scroller-item]").length).toBeGreaterThan(
+      0
+    );
   });
 
   it("exposes a real options.getItemOptions(index) returning {index, count, first, last, even, odd} — matching real PrimeNG's getOptions() shape", () => {
@@ -376,7 +446,10 @@ describe("UScroller content template (Task 1)", () => {
     fixture.detectChanges();
     const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
     mockViewportHeight(root, 200);
-    resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: root } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     fixture.detectChanges();
     const firstRow = fixture.nativeElement.querySelector("tr[data-index='0']");
     expect(firstRow.getAttribute("data-first")).toBe("true");

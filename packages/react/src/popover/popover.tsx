@@ -76,7 +76,8 @@ export const UPopover = React.forwardRef<UPopoverHandle, UPopoverProps>(function
   const show = React.useCallback(
     (event: React.SyntheticEvent, target?: HTMLElement) => {
       event.stopPropagation();
-      targetRef.current = target ?? (event.currentTarget as HTMLElement) ?? (event.target as HTMLElement);
+      targetRef.current =
+        target ?? (event.currentTarget as HTMLElement) ?? (event.target as HTMLElement);
       setVisible(true);
       onShow?.();
     },

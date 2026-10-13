@@ -11,7 +11,11 @@ export interface UStepsProps {
   /** Whether the items are clickable or not. */
   readonly?: boolean;
   /** Callback to invoke when the new step is selected. */
-  onSelect?: (event: { originalEvent: React.SyntheticEvent; item: UMenuItem; index: number }) => void;
+  onSelect?: (event: {
+    originalEvent: React.SyntheticEvent;
+    item: UMenuItem;
+    index: number;
+  }) => void;
   className?: string;
 }
 
@@ -32,7 +36,8 @@ export const USteps = React.forwardRef<HTMLElement, UStepsProps>(function USteps
   const { cx } = useComponentBase({ componentName: "steps", styleModule: stepsStyleModule });
   const listRef = React.useRef<HTMLOListElement>(null);
 
-  const isItemDisabled = (item: UMenuItem, index: number) => !!item.disabled || (readonly && index !== activeIndex);
+  const isItemDisabled = (item: UMenuItem, index: number) =>
+    !!item.disabled || (readonly && index !== activeIndex);
 
   const onKeyDown = (event: React.KeyboardEvent) => {
     const links = Array.from(listRef.current?.querySelectorAll("a") ?? []);
@@ -42,7 +47,8 @@ export const USteps = React.forwardRef<HTMLElement, UStepsProps>(function USteps
     const rendered = model
       .map((item, modelIndex) => ({ item, modelIndex }))
       .filter(({ item }) => item.visible !== false);
-    const isEnabled = (index: number) => !isItemDisabled(rendered[index].item, rendered[index].modelIndex);
+    const isEnabled = (index: number) =>
+      !isItemDisabled(rendered[index].item, rendered[index].modelIndex);
     const currentIndex = links.indexOf(document.activeElement as HTMLAnchorElement);
 
     let targetIndex: number | undefined;

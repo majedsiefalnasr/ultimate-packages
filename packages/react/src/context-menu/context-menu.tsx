@@ -77,19 +77,22 @@ export const UContextMenu = React.forwardRef<UContextMenuHandle, UContextMenuPro
       onHide?.();
     }, [onHide]);
 
-    const position = React.useCallback((pageX: number, pageY: number) => {
-      const container = containerRef.current;
-      if (!container) return;
-      let left = pageX + 1;
-      let top = pageY + 1;
-      const width = container.offsetWidth;
-      const height = container.offsetHeight;
-      if (left + width > window.innerWidth) left -= width;
-      if (top + height > window.innerHeight) top -= height;
-      container.style.left = `${Math.max(0, left)}px`;
-      container.style.top = `${Math.max(0, top)}px`;
-      setZIndex("menu", container, undefined);
-    }, [setZIndex]);
+    const position = React.useCallback(
+      (pageX: number, pageY: number) => {
+        const container = containerRef.current;
+        if (!container) return;
+        let left = pageX + 1;
+        let top = pageY + 1;
+        const width = container.offsetWidth;
+        const height = container.offsetHeight;
+        if (left + width > window.innerWidth) left -= width;
+        if (top + height > window.innerHeight) top -= height;
+        container.style.left = `${Math.max(0, left)}px`;
+        container.style.top = `${Math.max(0, top)}px`;
+        setZIndex("menu", container, undefined);
+      },
+      [setZIndex]
+    );
 
     const show = React.useCallback(
       (event: React.MouseEvent | MouseEvent) => {
@@ -138,7 +141,11 @@ export const UContextMenu = React.forwardRef<UContextMenuHandle, UContextMenuPro
       type: "click",
       listener: (event) => {
         const container = containerRef.current;
-        if (container && !container.contains(event.target as Node) && (event as MouseEvent).button !== 2) {
+        if (
+          container &&
+          !container.contains(event.target as Node) &&
+          (event as MouseEvent).button !== 2
+        ) {
           hide();
         }
       },

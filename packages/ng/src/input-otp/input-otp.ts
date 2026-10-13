@@ -177,6 +177,7 @@ export class UInputOtp extends UBaseEditableHolder {
   }
 
   protected onPaste(event: ClipboardEvent, index: number): void {
+    void index;
     if (this.$disabled() || this.readonly()) return;
     const pasted = event.clipboardData?.getData("text") ?? "";
     if (pasted.length) {

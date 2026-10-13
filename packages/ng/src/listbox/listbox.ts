@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, booleanAttribute, computed, input, output, signal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  computed,
+  input,
+  output,
+  signal,
+} from "@angular/core";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { UBaseEditableHolder } from "@ultimate/ng-core";
 import { listboxStyleModule } from "./listbox-style";
@@ -74,7 +83,12 @@ export interface UListboxChangeEvent {
             (mouseenter)="!isOptionDisabled(option) && focusedOptionIndex.set($index)"
           >
             @if (multiple()) {
-              <input type="checkbox" [checked]="isSelected(option)" [disabled]="isOptionDisabled(option)" tabindex="-1" />
+              <input
+                type="checkbox"
+                [checked]="isSelected(option)"
+                [disabled]="isOptionDisabled(option)"
+                tabindex="-1"
+              />
             }
             <span>{{ getOptionLabel(option) }}</span>
           </li>
@@ -131,7 +145,9 @@ export class UListbox extends UBaseEditableHolder {
     if (!query) {
       return this.options();
     }
-    return this.options().filter((option) => this.getOptionLabel(option).toLowerCase().includes(query));
+    return this.options().filter((option) =>
+      this.getOptionLabel(option).toLowerCase().includes(query)
+    );
   });
 
   protected classesParams() {

@@ -55,7 +55,9 @@ describe("UListbox", () => {
   });
 
   it("filters the option list via the filter input when filter is enabled", () => {
-    render(<UListbox value={null} onChange={() => {}} options={["Apple", "Banana", "Cherry"]} filter />);
+    render(
+      <UListbox value={null} onChange={() => {}} options={["Apple", "Banana", "Cherry"]} filter />
+    );
     fireEvent.change(screen.getByRole("searchbox"), { target: { value: "ban" } });
     expect(screen.getAllByRole("option").length).toBe(1);
   });
@@ -79,7 +81,9 @@ describe("UListbox", () => {
   });
 
   it("is fully controlled — reflects the value prop via aria-selected", () => {
-    const { rerender } = render(<UListbox value="Apple" onChange={() => {}} options={["Apple", "Banana"]} />);
+    const { rerender } = render(
+      <UListbox value="Apple" onChange={() => {}} options={["Apple", "Banana"]} />
+    );
     expect(screen.getByRole("option", { name: "Apple" })).toHaveAttribute("aria-selected", "true");
     rerender(<UListbox value="Banana" onChange={() => {}} options={["Apple", "Banana"]} />);
     expect(screen.getByRole("option", { name: "Banana" })).toHaveAttribute("aria-selected", "true");

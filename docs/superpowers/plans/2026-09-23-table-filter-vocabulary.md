@@ -59,10 +59,12 @@ Each task's deliverable is self-contained per framework: Task 1 (Angular compara
 ### Task 1: Angular — 14 comparator modes
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts:195-210` (the `matchesFilter` method)
 - Test: `packages/ng/src/table/table.spec.ts` (append to the existing `describe("filtering (Angular array-of-alternatives operator shape, spec §9 — string match modes only)", ...)` block, or add a new adjacent `describe` — either is acceptable, this task adds a new one for clarity)
 
 **Interfaces:**
+
 - Consumes: `equals` from `@ultimate/uix-data` (already imported at `table.ts:12`), `FilterMetadata` type (already imported at `table.ts:13`).
 - Produces: nothing consumed by a later task — Task 4 edits the same file's `matchesFilter` method afterward but does not call anything this task adds.
 
@@ -147,7 +149,9 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
     // Real PrimeNG filterservice.ts's own notEquals: filter === undefined ||
     // filter === null || (typeof filter === 'string' && filter.trim() === '')
     // => false (does not match). Both undefined and '' hit this branch.
-    fixture.componentRef.setInput("filters", { name: { value: undefined, matchMode: "notEquals" } });
+    fixture.componentRef.setInput("filters", {
+      name: { value: undefined, matchMode: "notEquals" },
+    });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
 
@@ -255,7 +259,9 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
       { id: 3, score: 30 },
     ]);
     fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
-    fixture.componentRef.setInput("filters", { score: { value: [null, null], matchMode: "between" } });
+    fixture.componentRef.setInput("filters", {
+      score: { value: [null, null], matchMode: "between" },
+    });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll("td").length).toBe(3);
   });
@@ -281,7 +287,9 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
       { id: 3, score: 30 },
     ]);
     fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
-    fixture.componentRef.setInput("filters", { score: { value: [10, 30, null], matchMode: "notIn" } });
+    fixture.componentRef.setInput("filters", {
+      score: { value: [10, 30, null], matchMode: "notIn" },
+    });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
   });
@@ -489,10 +497,12 @@ git commit -m "feat(ng): add remaining Table filter comparator modes"
 ### Task 2: React — 14 comparator modes
 
 **Files:**
+
 - Modify: `packages/react/src/table/table.tsx:97-108` (the `matchesFilter` function)
 - Test: `packages/react/src/table/table.spec.tsx` (add a new `describe` block)
 
 **Interfaces:**
+
 - Consumes: `equals` from `@ultimate/uix-data` (already imported at `table.tsx:3`), `FilterMetadata` type (already imported at `table.tsx:4`), `resolveCell` (module-level function already defined at `table.tsx:80-82`).
 - Produces: nothing consumed by a later task.
 
@@ -804,7 +814,8 @@ function matchesFilter<T>(row: T, field: string, filter: FilterMetadata): boolea
       // empty/whitespace-only string filter value => true (matches
       // everything) — the opposite outcome from Angular's/Vue's real source
       // for the identical condition.
-      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return true;
+      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "")
+        return true;
       return cellValue !== filterValue;
     case "lt":
       if (rawFilterValue === undefined || rawFilterValue === null) return true;
@@ -890,10 +901,12 @@ git commit -m "feat(react): add remaining Table filter comparator modes"
 ### Task 3: Vue — 14 comparator modes
 
 **Files:**
+
 - Modify: `packages/vue/src/table/Table.vue:126-137` (the `matchesFilter` function inside `<script>`)
 - Test: `packages/vue/src/table/table.spec.ts` (add a new `describe` block)
 
 **Interfaces:**
+
 - Consumes: `equals` from `@ultimate/uix-data` (already imported at `Table.vue:96`), `resolveCell` (module-level function already defined at `Table.vue:108-110`).
 - Produces: nothing consumed by a later task.
 
@@ -1071,7 +1084,9 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
     });
     expect(wrapper.findAll("td").length).toBe(2);
 
-    await wrapper.setProps({ filters: { when: { value: new Date(2026, 0, 1), matchMode: "dateIsNot" } } });
+    await wrapper.setProps({
+      filters: { when: { value: new Date(2026, 0, 1), matchMode: "dateIsNot" } },
+    });
     expect(wrapper.findAll("td").length).toBe(1);
 
     await wrapper.setProps({
@@ -1148,7 +1163,8 @@ function matchesFilter(row, field, filter) {
       // Real PrimeVue FilterService.js: absent (undefined/null) OR an empty
       // string filter value => false (does not match) — matching Angular's
       // real outcome, not React's.
-      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return false;
+      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "")
+        return false;
       return cellValue !== filterValue;
     case "lt":
       if (rawFilterValue === undefined || rawFilterValue === null) return true;
@@ -1244,10 +1260,12 @@ git commit -m "feat(vue): add remaining Table filter comparator modes"
 ### Task 4: Angular — `custom` registration surface (binding contract, Spec §3.4.1)
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts` (add the registration surface and wire `custom` dispatch into `matchesFilter`)
 - Test: `packages/ng/src/table/table.spec.ts` (add a new `describe` block)
 
 **Interfaces:**
+
 - Consumes: nothing from Task 1 beyond the shared `matchesFilter` method it edits again.
 - Produces: `UTable.registerCustomFilter(fn: (value: unknown, filter: unknown, filterLocale?: string) => boolean): void` — a public instance method, Table-scoped (per Spec §3.4.1's binding contract: ownership = the `UTable` instance; scope = that instance only; key = the reserved `'custom'` name, no arbitrary-key generalization; duplicate registration replaces). No later task in this plan consumes this method.
 
@@ -1415,10 +1433,12 @@ git commit -m "feat(ng): add Table-scoped custom filter registration for Angular
 ### Task 5: React — `custom` mode, no executable registration path (Spec §3.4.2)
 
 **Files:**
+
 - Modify: `packages/react/src/table/table.tsx:97-108` (the `matchesFilter` function — one explicit `case` added, no new prop, no new export)
 - Test: `packages/react/src/table/table.spec.tsx` (add a new `describe` block)
 
 **Interfaces:**
+
 - Consumes: nothing new.
 - Produces: nothing — this task's entire point is that nothing new is produced (Spec §3.4.2: no new prop, no new exported function, no new module-level mutable object).
 
@@ -1490,10 +1510,12 @@ git commit -m "feat(react): make Table custom filter mode a deterministic no-mat
 ### Task 6: Vue — `custom` mode, no executable registration path (Spec §3.4.2)
 
 **Files:**
+
 - Modify: `packages/vue/src/table/Table.vue:126-137` (the `matchesFilter` function — one explicit `case` added, no new prop, no new export)
 - Test: `packages/vue/src/table/table.spec.ts` (add a new `describe` block)
 
 **Interfaces:**
+
 - Consumes: nothing new.
 - Produces: nothing — same negative requirement as Task 5.
 
@@ -1565,10 +1587,12 @@ git commit -m "feat(vue): make Table custom filter mode a deterministic no-match
 ### Task 7: Documentation closeout (Spec §9 item 7, §11 item 7)
 
 **Files:**
+
 - Modify: `docs/architecture/COMPONENT_INVENTORY.md` (Table's row)
 - Modify: `docs/architecture/BLUEPRINT_GAPS.md` (DECISION-C entry)
 
 **Interfaces:**
+
 - Consumes: nothing — this task only updates prose describing work already committed in Tasks 1-6.
 - Produces: nothing consumed by another task.
 

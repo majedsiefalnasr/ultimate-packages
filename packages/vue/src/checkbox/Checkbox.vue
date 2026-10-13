@@ -90,7 +90,11 @@ export default {
 
       let newValue;
       if (this.binary) {
-        newValue = this.dIndeterminate ? this.trueValue : this.checked ? this.falseValue : this.trueValue;
+        newValue = this.dIndeterminate
+          ? this.trueValue
+          : this.checked
+            ? this.falseValue
+            : this.trueValue;
       } else {
         const current = Array.isArray(this.dValue) ? this.dValue : [];
         newValue =

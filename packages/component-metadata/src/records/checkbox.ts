@@ -45,7 +45,10 @@ export const CHECKBOX_METADATA: ComponentMetadata = {
   metadataVersion: 1,
   packages: {
     ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/checkbox/checkbox.ts" },
-    react: { packageName: "@ultimate/react", sourcePath: "packages/react/src/checkbox/checkbox.tsx" },
+    react: {
+      packageName: "@ultimate/react",
+      sourcePath: "packages/react/src/checkbox/checkbox.tsx",
+    },
     vue: { packageName: "@ultimate/vue", sourcePath: "packages/vue/src/checkbox/BaseCheckbox.ts" },
   },
   api: {
@@ -58,7 +61,12 @@ export const CHECKBOX_METADATA: ComponentMetadata = {
           required: false,
           description: "Allows to select a boolean value instead of multiple values.",
         },
-        { name: "label", type: "string | undefined", required: false, description: "Text label rendered next to the checkbox." },
+        {
+          name: "label",
+          type: "string | undefined",
+          required: false,
+          description: "Text label rendered next to the checkbox.",
+        },
       ],
       events: [],
     },
@@ -113,7 +121,8 @@ export const CHECKBOX_METADATA: ComponentMetadata = {
           semanticId: "change",
           frameworkName: "change",
           mechanism: "emit",
-          payloadDescription: "Raw native DOM change Event, emitted after this component's own binary/array-mode value resolution.",
+          payloadDescription:
+            "Raw native DOM change Event, emitted after this component's own binary/array-mode value resolution.",
         },
       ],
     },
@@ -123,6 +132,9 @@ export const CHECKBOX_METADATA: ComponentMetadata = {
   },
   provenanceRef: {
     package: "ng",
-    ultimateDestinations: ["packages/ng/src/checkbox/checkbox.ts", "packages/ng/src/checkbox/checkbox-style.ts"],
+    ultimateDestinations: [
+      "packages/ng/src/checkbox/checkbox.ts",
+      "packages/ng/src/checkbox/checkbox-style.ts",
+    ],
   },
 };

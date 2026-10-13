@@ -51,11 +51,12 @@ Real PrimeNG's chain is `BaseComponent → BaseModelHolder → BaseEditableHolde
 ### `UModelHolder` (new file, `packages/ng-core/src/model-holder/`)
 
 Mirrors real `BaseModelHolder` exactly (14 lines of real source, minimal surface):
+
 - `modelValue` — a signal, initial value `undefined`.
 - `$filled` — computed from an Ultimate `isNotEmpty`-equivalent check on `modelValue()`. `@ultimate/uix-utils` is checked first for an existing `isNotEmpty`/`isEmpty` helper before adding a new one (verify during implementation — `@primeuix/utils`' `isNotEmpty` is the real upstream source this maps to).
 - `writeModelValue(value)` — sets the signal.
 
-**Ownership boundary, stated explicitly:** `UModelHolder` owns model-value *state* only — `modelValue`, `$filled`, `writeModelValue`. It owns no `ControlValueAccessor` methods and no Angular Forms integration of any kind. Real `BaseModelHolder` doesn't implement `ControlValueAccessor` either (only `BaseEditableHolder`, one tier up, does) — this matches real PrimeNG's own separation exactly, not an Ultimate simplification.
+**Ownership boundary, stated explicitly:** `UModelHolder` owns model-value _state_ only — `modelValue`, `$filled`, `writeModelValue`. It owns no `ControlValueAccessor` methods and no Angular Forms integration of any kind. Real `BaseModelHolder` doesn't implement `ControlValueAccessor` either (only `BaseEditableHolder`, one tier up, does) — this matches real PrimeNG's own separation exactly, not an Ultimate simplification.
 
 No passthrough, no `PT` typing — matches GAP-021's three-times-convergent exclusion.
 
@@ -64,13 +65,15 @@ No passthrough, no `PT` typing — matches GAP-021's three-times-convergent excl
 A directive with selector `[uInputText]`, matching real PrimeNG's `[pInputText]` shape exactly (an attribute directive applied to a native `<input>`, not a wrapping component) — this is real PrimeNG's actual architecture, confirmed by direct source read, not a Ultimate design choice to diverge from.
 
 Real, in-scope surface (confirmed present on real `InputText`, independent of the `pt`/`PassThrough` system which is excluded):
+
 - `variant` (`'filled' | 'outlined' | undefined`), `fluid` (boolean), `invalid` (boolean) — declared locally, per the real source's own local-declaration pattern.
 - `$variant` computed from `variant()` falling back to config (Ultimate's `UltimateConfig` equivalent — confirmed existing pattern from `UBaseComponent`'s `config` injection, per ADR-018).
-- `hasFluid` getter — `fluid() ?? !!<ancestor UFluid instance>`, via `inject(UFluid, { optional: true, host: true, skipSelf: true })`. **Correction to an earlier draft of this spec, found during implementation-plan research by direct read of `packages/ng/src/button/button.ts`:** this ancestor-DI-lookup pattern is *not* already proven by `UButton` — `UButton`'s own doc comment explicitly documents the opposite, that it deliberately excludes this exact mechanism ("a host-DI-lookup mechanism `UBaseComponent`'s scoped-down Option B architecture has no equivalent for"). `UInputText` is the first Ultimate component to actually implement ancestor-`UFluid` DI detection, matching real PrimeNG's `InputText`'s own `pcFluid = inject(Fluid, { optional: true, host: true, skipSelf: true })` mechanism directly. This is new, first-of-its-kind infrastructure work within this task, not a repeat of an existing pattern.
+- `hasFluid` getter — `fluid() ?? !!<ancestor UFluid instance>`, via `inject(UFluid, { optional: true, host: true, skipSelf: true })`. **Correction to an earlier draft of this spec, found during implementation-plan research by direct read of `packages/ng/src/button/button.ts`:** this ancestor-DI-lookup pattern is _not_ already proven by `UButton` — `UButton`'s own doc comment explicitly documents the opposite, that it deliberately excludes this exact mechanism ("a host-DI-lookup mechanism `UBaseComponent`'s scoped-down Option B architecture has no equivalent for"). `UInputText` is the first Ultimate component to actually implement ancestor-`UFluid` DI detection, matching real PrimeNG's `InputText`'s own `pcFluid = inject(Fluid, { optional: true, host: true, skipSelf: true })` mechanism directly. This is new, first-of-its-kind infrastructure work within this task, not a repeat of an existing pattern.
 - `NgControl` injection (`optional: true, self: true`) used **read-only**, to synchronize `UModelHolder`'s `modelValue` state — `writeModelValue(ngControl?.value ?? <native input>.value)` on `AfterViewInit` and `DoCheck`, and on native `input` events (`@HostListener('input')`). `UInputText` does **not** implement `ControlValueAccessor`, does not provide `NG_VALUE_ACCESSOR`, and does not call `registerOnChange`/`registerOnTouched`/`writeValue`. Angular's own native `<input>` value accessor (`DefaultValueAccessor`, provided automatically by `@angular/forms` for any native `<input>` with `ngModel`/`formControl`/`formControlName`) remains the sole `ControlValueAccessor` for the element — this matches real `InputText` exactly: it reads `NgControl` purely to mirror the control's current value into `modelValue`/`$filled` for styling (`p-filled`), it never registers as the accessor itself.
 - `data-p` host attribute reflecting `invalid`/`fluid`/`filled` state, matching the real source's `dataP` getter and `inputtextstyle.ts`'s `p-filled`/`p-invalid`/`p-inputtext-fluid`/`p-variant-filled` class conditions.
 
 Explicitly excluded (per GAP-021, ADR-018's Option-B posture, no new fork needed — same exclusion already made three times):
+
 - `pt`/`ptInputText`/`pInputTextPT`/`pInputTextUnstyled` passthrough inputs and the `Bind` host-directive wiring that serves them.
 - `hostName`, `$pcInputText` sibling-instance lookup, `PARENT_INSTANCE` token — DI-token parent-instance lookup already excluded platform-wide per ADR-018.
 - `pSize`/`inputSize` and the `NgModule` re-export wrapper (`InputTextModule`) — Angular's platform-wide standalone-only decision, ADR-019, already forbids new `NgModule` authorship.
@@ -85,7 +88,7 @@ New `packages/ng/src/input-text/input-text-style.ts`, following the existing `ch
 
 `packages/ng/src/input-text/input-text.spec.ts`, using the Angular CLI Vitest builder + zoneless `TestBed` (ADR-022's established pattern, including its documented `markForCheck()`/`detectChanges(false)`/`whenStable()` fix for double-mutation `NG0100` errors where applicable). Coverage drawn from real `inputtext.spec.ts`'s non-PT-dependent blocks (confirmed present: Basic Functionality, Advanced Features — size/variant/fluid/invalid, Reactive Forms, Input Types, Edge Cases, Input Events) — the "PassThrough (PT) Tests" `describe` block (≈180 lines, the largest single block in the real spec file) is **not** ported, per the same PT-exclusion decision.
 
-Tests prove `UInputText` *integrates with* Angular Forms (reactive forms, template-driven `ngModel`, native `DefaultValueAccessor` behavior, disabled/invalid state reflection) — they do not test `UInputText` as a `ControlValueAccessor` implementation, because it isn't one. `UModelHolder`'s own `model-holder.spec.ts` tests `modelValue`/`$filled`/`writeModelValue` directly, matching `base-editable-holder.spec.ts`'s existing test-file-per-tier convention.
+Tests prove `UInputText` _integrates with_ Angular Forms (reactive forms, template-driven `ngModel`, native `DefaultValueAccessor` behavior, disabled/invalid state reflection) — they do not test `UInputText` as a `ControlValueAccessor` implementation, because it isn't one. `UModelHolder`'s own `model-holder.spec.ts` tests `modelValue`/`$filled`/`writeModelValue` directly, matching `base-editable-holder.spec.ts`'s existing test-file-per-tier convention.
 
 ---
 

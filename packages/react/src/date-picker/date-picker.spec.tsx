@@ -46,7 +46,9 @@ describe("UDatePicker", () => {
     render(<UDatePicker value={new Date(2026, 8, 15)} onChange={onChange} />);
     fireEvent.click(screen.getByRole("textbox"));
 
-    let focused = screen.getAllByRole("gridcell").find((el) => el.getAttribute("tabindex") === "0")!;
+    let focused = screen
+      .getAllByRole("gridcell")
+      .find((el) => el.getAttribute("tabindex") === "0")!;
     expect(focused.textContent).toBe("15");
 
     fireEvent.keyDown(focused, { code: "ArrowRight" });

@@ -14,7 +14,10 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: { popup?: boolean } = {}) => ["u-tieredmenu u-component", { "u-tieredmenu-overlay": params.popup }],
+  root: (params: { popup?: boolean } = {}) => [
+    "u-tieredmenu u-component",
+    { "u-tieredmenu-overlay": params.popup },
+  ],
   rootList: "u-tieredmenu-root-list",
   submenu: "u-tieredmenu-submenu",
   menuitem: (params: { disabled?: boolean; open?: boolean } = {}) => [

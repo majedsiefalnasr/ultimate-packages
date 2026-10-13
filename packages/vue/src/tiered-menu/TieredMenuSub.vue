@@ -164,7 +164,10 @@ export default {
     },
 
     enabledItems() {
-      return this.items.filter((candidate) => !candidate.separator && this.isVisible(candidate) && !this.isDisabled(candidate));
+      return this.items.filter(
+        (candidate) =>
+          !candidate.separator && this.isVisible(candidate) && !this.isDisabled(candidate)
+      );
     },
 
     moveFocus(current, direction) {
@@ -183,7 +186,9 @@ export default {
       this.$nextTick(() => {
         const ul = this.$refs.listEl;
         const openLi = ul?.querySelector(':scope > li[data-u-open="true"]');
-        const firstLink = openLi?.querySelector(".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a");
+        const firstLink = openLi?.querySelector(
+          ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+        );
         firstLink?.focus();
       });
     },

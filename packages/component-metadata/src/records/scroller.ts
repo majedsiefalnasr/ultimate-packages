@@ -107,18 +107,62 @@ export const SCROLLER_METADATA: ComponentMetadata = {
   metadataVersion: 1,
   packages: {
     ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/scroller/scroller.ts" },
-    react: { packageName: "@ultimate/react", sourcePath: "packages/react/src/scroller/scroller.tsx" },
+    react: {
+      packageName: "@ultimate/react",
+      sourcePath: "packages/react/src/scroller/scroller.tsx",
+    },
     vue: { packageName: "@ultimate/vue", sourcePath: "packages/vue/src/scroller/base-scroller.ts" },
   },
   api: {
     ng: {
       props: [
-        { name: "items", type: "unknown[]", default: "[]", required: false, description: "The full, un-windowed array of items to be virtually scrolled." },
-        { name: "itemSize", type: "number", default: "0", required: false, description: "Height in pixels of a single rendered item, used for windowing math and content-height calculation." },
-        { name: "numToleratedItems", type: "number | undefined", default: "undefined", required: false, description: "Number of extra items rendered as a buffer beyond the visible viewport on each side; when undefined, resolves to half the computed number of items in the viewport." },
-        { name: "loading", type: "boolean | undefined", default: "undefined", required: false, description: "When true, shows the built-in loader overlay and sets aria-busy on the root element." },
-        { name: "disabled", type: "boolean", default: "false", required: false, description: "When true, bypasses windowing entirely and renders every item in `items` (no virtualization)." },
-        { name: "lazy", type: "boolean", default: "false", required: false, description: "When true, enables lazy-load notification: onLazyLoad fires whenever the windowed first index changes on scroll." },
+        {
+          name: "items",
+          type: "unknown[]",
+          default: "[]",
+          required: false,
+          description: "The full, un-windowed array of items to be virtually scrolled.",
+        },
+        {
+          name: "itemSize",
+          type: "number",
+          default: "0",
+          required: false,
+          description:
+            "Height in pixels of a single rendered item, used for windowing math and content-height calculation.",
+        },
+        {
+          name: "numToleratedItems",
+          type: "number | undefined",
+          default: "undefined",
+          required: false,
+          description:
+            "Number of extra items rendered as a buffer beyond the visible viewport on each side; when undefined, resolves to half the computed number of items in the viewport.",
+        },
+        {
+          name: "loading",
+          type: "boolean | undefined",
+          default: "undefined",
+          required: false,
+          description:
+            "When true, shows the built-in loader overlay and sets aria-busy on the root element.",
+        },
+        {
+          name: "disabled",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, bypasses windowing entirely and renders every item in `items` (no virtualization).",
+        },
+        {
+          name: "lazy",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, enables lazy-load notification: onLazyLoad fires whenever the windowed first index changes on scroll.",
+        },
       ],
       events: [
         {
@@ -132,12 +176,49 @@ export const SCROLLER_METADATA: ComponentMetadata = {
     },
     react: {
       props: [
-        { name: "items", type: "unknown[]", required: true, description: "The full, un-windowed array of items to be virtually scrolled." },
-        { name: "itemSize", type: "number", required: true, description: "Height in pixels of a single rendered item, used for windowing math and content-height calculation." },
-        { name: "numToleratedItems", type: "number", required: false, description: "Number of extra items rendered as a buffer beyond the visible viewport on each side; when omitted, resolves to half the computed number of items in the viewport." },
-        { name: "disabled", type: "boolean", default: "false", required: false, description: "When true, bypasses windowing entirely and renders every item in `items` (no virtualization)." },
-        { name: "lazy", type: "boolean", default: "false", required: false, description: "When true, enables lazy-load notification: onLazyLoad fires whenever the windowed first index changes on scroll." },
-        { name: "loading", type: "boolean", required: false, description: "When true, shows the built-in loader overlay and sets aria-busy on the root element." },
+        {
+          name: "items",
+          type: "unknown[]",
+          required: true,
+          description: "The full, un-windowed array of items to be virtually scrolled.",
+        },
+        {
+          name: "itemSize",
+          type: "number",
+          required: true,
+          description:
+            "Height in pixels of a single rendered item, used for windowing math and content-height calculation.",
+        },
+        {
+          name: "numToleratedItems",
+          type: "number",
+          required: false,
+          description:
+            "Number of extra items rendered as a buffer beyond the visible viewport on each side; when omitted, resolves to half the computed number of items in the viewport.",
+        },
+        {
+          name: "disabled",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, bypasses windowing entirely and renders every item in `items` (no virtualization).",
+        },
+        {
+          name: "lazy",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, enables lazy-load notification: onLazyLoad fires whenever the windowed first index changes on scroll.",
+        },
+        {
+          name: "loading",
+          type: "boolean",
+          required: false,
+          description:
+            "When true, shows the built-in loader overlay and sets aria-busy on the root element.",
+        },
       ],
       events: [
         {
@@ -151,12 +232,53 @@ export const SCROLLER_METADATA: ComponentMetadata = {
     },
     vue: {
       props: [
-        { name: "items", type: "Array", default: "[]", required: false, description: "The full, un-windowed array of items to be virtually scrolled." },
-        { name: "itemSize", type: "Number", default: "0", required: false, description: "Height in pixels of a single rendered item, used for windowing math and content-height calculation." },
-        { name: "numToleratedItems", type: "Number", default: "null", required: false, description: "Number of extra items rendered as a buffer beyond the visible viewport on each side; when null, resolves to half the computed number of items in the viewport." },
-        { name: "disabled", type: "Boolean", default: "false", required: false, description: "When true, bypasses windowing entirely and renders every item in `items` (no virtualization). Declared directly on Scroller.vue, not in the shared base-scroller.ts triad." },
-        { name: "loading", type: "Boolean", default: "false", required: false, description: "When true, shows the built-in loader overlay and sets aria-busy on the root element. Declared directly on Scroller.vue, not in the shared base-scroller.ts triad." },
-        { name: "lazy", type: "Boolean", default: "false", required: false, description: "When true, enables lazy-load notification: 'lazy-load' emits whenever the windowed first index changes on scroll. Declared directly on Scroller.vue, not in the shared base-scroller.ts triad." },
+        {
+          name: "items",
+          type: "Array",
+          default: "[]",
+          required: false,
+          description: "The full, un-windowed array of items to be virtually scrolled.",
+        },
+        {
+          name: "itemSize",
+          type: "Number",
+          default: "0",
+          required: false,
+          description:
+            "Height in pixels of a single rendered item, used for windowing math and content-height calculation.",
+        },
+        {
+          name: "numToleratedItems",
+          type: "Number",
+          default: "null",
+          required: false,
+          description:
+            "Number of extra items rendered as a buffer beyond the visible viewport on each side; when null, resolves to half the computed number of items in the viewport.",
+        },
+        {
+          name: "disabled",
+          type: "Boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, bypasses windowing entirely and renders every item in `items` (no virtualization). Declared directly on Scroller.vue, not in the shared base-scroller.ts triad.",
+        },
+        {
+          name: "loading",
+          type: "Boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, shows the built-in loader overlay and sets aria-busy on the root element. Declared directly on Scroller.vue, not in the shared base-scroller.ts triad.",
+        },
+        {
+          name: "lazy",
+          type: "Boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, enables lazy-load notification: 'lazy-load' emits whenever the windowed first index changes on scroll. Declared directly on Scroller.vue, not in the shared base-scroller.ts triad.",
+        },
       ],
       events: [
         {
@@ -174,6 +296,9 @@ export const SCROLLER_METADATA: ComponentMetadata = {
   },
   provenanceRef: {
     package: "ng",
-    ultimateDestinations: ["packages/ng/src/scroller/scroller.ts", "packages/ng/src/scroller/scroller-style.ts"],
+    ultimateDestinations: [
+      "packages/ng/src/scroller/scroller.ts",
+      "packages/ng/src/scroller/scroller-style.ts",
+    ],
   },
 };

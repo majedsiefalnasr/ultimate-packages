@@ -67,7 +67,6 @@ class StyleSheet<E = HTMLStyleElement> {
    * @param {StyleMeta} meta
    * @returns {HTMLStyleElement | undefined}
    */
-  // eslint-disable-next-line
   createStyleElement(meta: StyleMeta = {}): E | undefined {
     return undefined;
   }

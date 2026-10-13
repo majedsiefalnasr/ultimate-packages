@@ -21,5 +21,10 @@ export const Default: Story = {
 };
 
 export const WithDisabledItem: Story = {
-  args: { model: [{ label: "File", items: [{ label: "New" }] }, { label: "Disabled", disabled: true }] },
+  args: {
+    model: [
+      { label: "File", items: [{ label: "New" }] },
+      { label: "Disabled", disabled: true },
+    ],
+  },
 };

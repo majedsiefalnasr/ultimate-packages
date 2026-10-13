@@ -105,18 +105,18 @@ The mapping was derived by comparing every upstream class (renamed `p-` → `u-`
 
 **Angular and Vue are identical for every shared key.** Unless listed below, an upstream class `p-X` maps to `u-X` by **identical name**.
 
-| Key             | Renamed (upstream → Ultimate)                                                                                                                                               | Not rendered by Ultimate                                                                                                      |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| avatar          | —                                                                                                                                                                           | `p-avatar-group` (AvatarGroup is a separate component, outside G3)                                                            |
-| skeleton        | —                                                                                                                                                                           | `p-skeleton-animation-none` (inverse modifier; see PX-A3)                                                                     |
-| progressbar     | `p-progressbar` → `u-progress-bar`; `-value` → `u-progress-bar-value`; `-label` → `u-progress-bar-label`; `-indeterminate` → `u-progress-bar-indeterminate`                 | `p-progressbar-determinate` (see PX-A1)                                                                                       |
-| progressspinner | `p-progressspinner` → `u-progress-spinner`; `-spin` → `u-progress-spinner-spin`; `-circle` → `u-progress-spinner-circle`                                                    | —                                                                                                                             |
-| metergroup      | `p-metergroup` → `u-meter-group` and every `p-metergroup-*` → `u-meter-group-*` (meters, meter, label-list, label, label-marker, label-icon, vertical, label-list-vertical) | `p-metergroup-horizontal`, `p-metergroup-label-list-horizontal` (see PX-A2)                                                   |
-| timeline        | —                                                                                                                                                                           | `p-timeline-left`, `-right`, `-alternate`, `-bottom` (see FX-A3)                                                              |
-| terminal        | —                                                                                                                                                                           | `p-terminal-input`                                                                                                            |
-| message         | —                                                                                                                                                                           | `p-message-content-wrapper`, `-close-icon`, `-outlined`, `-simple`, `-sm`, `-lg`, `-enter-active`, `-leave-active`            |
-| inlinemessage   | `p-inlinemessage` → `u-inline-message` and every `p-inlinemessage-*` → `u-inline-message-*` (text, icon, info, success, warn, error, secondary, contrast)                   | `p-inlinemessage-icon-only`                                                                                                   |
-| toast           | —                                                                                                                                                                           | `p-toast-message-icon`, `-close-icon`, `-message-enter-active`, `-message-leave-active`, `-message-leave-to` |
+| Key             | Renamed (upstream → Ultimate)                                                                                                                                               | Not rendered by Ultimate                                                                                           |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| avatar          | —                                                                                                                                                                           | `p-avatar-group` (AvatarGroup is a separate component, outside G3)                                                 |
+| skeleton        | —                                                                                                                                                                           | `p-skeleton-animation-none` (inverse modifier; see PX-A3)                                                          |
+| progressbar     | `p-progressbar` → `u-progress-bar`; `-value` → `u-progress-bar-value`; `-label` → `u-progress-bar-label`; `-indeterminate` → `u-progress-bar-indeterminate`                 | `p-progressbar-determinate` (see PX-A1)                                                                            |
+| progressspinner | `p-progressspinner` → `u-progress-spinner`; `-spin` → `u-progress-spinner-spin`; `-circle` → `u-progress-spinner-circle`                                                    | —                                                                                                                  |
+| metergroup      | `p-metergroup` → `u-meter-group` and every `p-metergroup-*` → `u-meter-group-*` (meters, meter, label-list, label, label-marker, label-icon, vertical, label-list-vertical) | `p-metergroup-horizontal`, `p-metergroup-label-list-horizontal` (see PX-A2)                                        |
+| timeline        | —                                                                                                                                                                           | `p-timeline-left`, `-right`, `-alternate`, `-bottom` (see FX-A3)                                                   |
+| terminal        | —                                                                                                                                                                           | `p-terminal-input`                                                                                                 |
+| message         | —                                                                                                                                                                           | `p-message-content-wrapper`, `-close-icon`, `-outlined`, `-simple`, `-sm`, `-lg`, `-enter-active`, `-leave-active` |
+| inlinemessage   | `p-inlinemessage` → `u-inline-message` and every `p-inlinemessage-*` → `u-inline-message-*` (text, icon, info, success, warn, error, secondary, contrast)                   | `p-inlinemessage-icon-only`                                                                                        |
+| toast           | —                                                                                                                                                                           | `p-toast-message-icon`, `-close-icon`, `-message-enter-active`, `-message-leave-active`, `-message-leave-to`       |
 
 Notes:
 
@@ -443,10 +443,10 @@ All are checked in both frameworks. Generated-style checks use the rendered `<st
 
 ### 14.3 Which specs each contract covers
 
-| Contract | Playwright selection | Specs covered |
-| -------- | -------------------- | ------------- |
-| Strict (existing step, input narrowed) | the existing project flags plus `--grep-invert "G3-A"` | **ng:** aura-token-wiring, auto-focus, badge, button, checkbox, dialog, fluid, menu, paginator, ripple, scroller, table, tooltip. **vue:** aura-token-wiring, button, checkbox, dialog, hidden-accessible, menu, paginator, ripple, scroller, stepper, table, tooltip. **react:** all specs, unaffected (no G3-A spec). |
-| G3-A differential (new steps, `ng` and `vue` only) | `packages/<fw>/e2e/g3a-aura-styles.spec.ts` on the same 3 projects | the 31 ng and 34 vue G3-A stories, visual and accessibility |
+| Contract                                           | Playwright selection                                               | Specs covered                                                                                                                                                                                                                                                                                                           |
+| -------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Strict (existing step, input narrowed)             | the existing project flags plus `--grep-invert "G3-A"`             | **ng:** aura-token-wiring, auto-focus, badge, button, checkbox, dialog, fluid, menu, paginator, ripple, scroller, table, tooltip. **vue:** aura-token-wiring, button, checkbox, dialog, hidden-accessible, menu, paginator, ripple, scroller, stepper, table, tooltip. **react:** all specs, unaffected (no G3-A spec). |
+| G3-A differential (new steps, `ng` and `vue` only) | `packages/<fw>/e2e/g3a-aura-styles.spec.ts` on the same 3 projects | the 31 ng and 34 vue G3-A stories, visual and accessibility                                                                                                                                                                                                                                                             |
 
 - Every G3-A test title contains "G3-A" (`<Fw>/<Name> G3-A visual|accessibility`), and no existing test title does.
 - This exact selection was exercised in Task 8. The Docker `regression` mode (`--grep-invert "G3-A"`, all 9 Storybook projects) gave strict `--check` OK for ng (261 nodes), vue (217) and react (197).
@@ -470,13 +470,13 @@ New steps after the existing strict check and the upload of its reports, guarded
 
 The script then performs these checks:
 
-| Check | Rule | Outcome on violation |
-| ----- | ---- | -------------------- |
-| Completeness | Every story ID in the pre-existing list has an envelope for each of chromium, firefox and webkit (93 ng / 102 vue files). Every G3-A story has at least the page-level rows, so the list names all 65 stories. | FAIL |
-| Introduced | `envelope fingerprints − ACCESSIBILITY_BASELINE.md − pre-existing list` must be empty. | FAIL, printing each rule, story and target |
-| Approved exceptions | The 9 G3-A rows are satisfied through `ACCESSIBILITY_BASELINE.md`, like every other baselined row. | none (accounted) |
-| Pre-existing still present | Count by rule. | informational |
-| Pre-existing no longer observed | List of rows (debt fixed). | informational; the list may be pruned by a reviewed human edit |
+| Check                           | Rule                                                                                                                                                                                                           | Outcome on violation                                           |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Completeness                    | Every story ID in the pre-existing list has an envelope for each of chromium, firefox and webkit (93 ng / 102 vue files). Every G3-A story has at least the page-level rows, so the list names all 65 stories. | FAIL                                                           |
+| Introduced                      | `envelope fingerprints − ACCESSIBILITY_BASELINE.md − pre-existing list` must be empty.                                                                                                                         | FAIL, printing each rule, story and target                     |
+| Approved exceptions             | The 9 G3-A rows are satisfied through `ACCESSIBILITY_BASELINE.md`, like every other baselined row.                                                                                                             | none (accounted)                                               |
+| Pre-existing still present      | Count by rule.                                                                                                                                                                                                 | informational                                                  |
+| Pre-existing no longer observed | List of rows (debt fixed).                                                                                                                                                                                     | informational; the list may be pruned by a reviewed human edit |
 
 ### 14.5 Why a genuinely new G3-A violation cannot be ignored
 
@@ -502,13 +502,13 @@ The script then performs these checks:
 
 ### 14.8 Files this amendment would touch, once approved through Plan Review
 
-| File | Change |
-| ---- | ------ |
-| `.github/workflows/ci.yml` | add `--grep-invert "G3-A"` to the existing run step; add 3 G3-A steps for ng and vue |
-| `scripts/provenance/validate-g3a-accessibility.mjs` | new, read-only |
-| `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` | new, 200 rows, evidence |
-| `scripts/provenance/validate-accessibility-baseline.mjs` | **unchanged** |
-| `ACCESSIBILITY_BASELINE.md` | **unchanged** beyond the 9 already-approved rows |
+| File                                                                             | Change                                                                               |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `.github/workflows/ci.yml`                                                       | add `--grep-invert "G3-A"` to the existing run step; add 3 G3-A steps for ng and vue |
+| `scripts/provenance/validate-g3a-accessibility.mjs`                              | new, read-only                                                                       |
+| `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` | new, 200 rows, evidence                                                              |
+| `scripts/provenance/validate-accessibility-baseline.mjs`                         | **unchanged**                                                                        |
+| `ACCESSIBILITY_BASELINE.md`                                                      | **unchanged** beyond the 9 already-approved rows                                     |
 
 ### 14.9 Questions for review
 
@@ -525,21 +525,21 @@ A1 is **approved**. The review questions in §14.9 are resolved as follows.
 3. **Strict contract:** `validate-accessibility-baseline.mjs --check` is unchanged. The existing strict scan uses exactly the proven selection `--grep-invert "G3-A"`.
 4. **Differential contract** (`validate-g3a-accessibility.mjs`, Angular and Vue, read-only). How each case is treated:
 
-   | Case | Result |
-   | ---- | ------ |
-   | missing report | **FAIL** |
-   | violation in neither `ACCESSIBILITY_BASELINE.md` nor the pre-existing list | **FAIL** |
-   | violation in `ACCESSIBILITY_BASELINE.md` | PASS |
-   | violation documented as pre-existing | PASS |
-   | pre-existing entry no longer observed | **STALE**, informational, never fails |
+   | Case                                                                       | Result                                |
+   | -------------------------------------------------------------------------- | ------------------------------------- |
+   | missing report                                                             | **FAIL**                              |
+   | violation in neither `ACCESSIBILITY_BASELINE.md` nor the pre-existing list | **FAIL**                              |
+   | violation in `ACCESSIBILITY_BASELINE.md`                                   | PASS                                  |
+   | violation documented as pre-existing                                       | PASS                                  |
+   | pre-existing entry no longer observed                                      | **STALE**, informational, never fails |
 
    The script never modifies either list.
+
 5. **Coverage invariant:** all 65 G3-A stories in all three browsers, so ng 31 × 3 = 93 reports, vue 34 × 3 = 102, 195 in total. A missing or skipped report can never produce a pass.
 6. **Approved exceptions:** the 9 G3-A Aura parity rows live only in `ACCESSIBILITY_BASELINE.md` and are not duplicated in the pre-existing file.
 7. **Known limitation kept:** the identity contract stays `rule + story + target`. Detecting contrast-ratio changes is out of scope.
 8. **CI artifacts:** the G3-A accessibility reports and the differential-validator output are uploaded.
 9. **Toast:** the 6 held Toast screenshots keep failing the G3-A visual gate until U2 is resolved. That failure is neither weakened nor bypassed.
-
 
 ### 14.11 A1 verification (2026-10-05)
 
@@ -548,16 +548,17 @@ A1 is **approved**. The review questions in §14.9 are resolved as follows.
   - Task 8 accepted state `f6b9627`: 384 passed and 6 failed (the held Toast tests), 200 rows.
 
   The regenerated set reproduces the Task 8 record exactly: 0 introduced, 28 removed, and the same counts per rule.
+
 - **Script tests:** `node --test scripts/provenance/validate-g3a-accessibility.test.mjs` passes 8/8 (missing report, introduced violation, stale, story-table size, story-id mismatch, framework guard, read-only). `pnpm run test:scripts` passes 126/126.
 - **Detection check:** run against the pre-port envelopes, the script FAILS on exactly the 28 rows in neither list (13 ng, 15 vue unique fingerprints). Run against the post-port envelopes, it passes: ng 93/93, vue 102/102, 0 introduced, 0 stale.
 - **Workflow lint:** `actionlint .github/workflows/ci.yml` is clean.
 - **End-to-end simulation** of the edited `track-a-browser-visual-a11y` steps, in Docker `mcr.microsoft.com/playwright:v1.63.0-jammy`, on the full working state (tree `cc9ce06`; `runner: .superpowers/sdd/…/docker/run.sh ci <fw>`):
 
-| Framework | Strict run (`--grep-invert "G3-A"`) | Strict `--check` | G3-A run | G3-A differential check |
-| --------- | ----------------------------------- | ---------------- | -------- | ----------------------- |
-| ng        | 309 passed                          | OK, 261 nodes    | 183 passed, **3 failed** (Toast AllSeverities × 3 browsers) | OK, 93/93 reports, 0 introduced, 0 stale |
+| Framework | Strict run (`--grep-invert "G3-A"`) | Strict `--check` | G3-A run                                                    | G3-A differential check                    |
+| --------- | ----------------------------------- | ---------------- | ----------------------------------------------------------- | ------------------------------------------ |
+| ng        | 309 passed                          | OK, 261 nodes    | 183 passed, **3 failed** (Toast AllSeverities × 3 browsers) | OK, 93/93 reports, 0 introduced, 0 stale   |
 | vue       | 282 passed                          | OK, 219 nodes    | 201 passed, **3 failed** (Toast AllSeverities × 3 browsers) | OK, 102/102 reports, 0 introduced, 0 stale |
-| react     | 216 passed                          | OK, 198 nodes    | step skipped (no G3-A spec) | step skipped |
+| react     | 216 passed                          | OK, 198 nodes    | step skipped (no G3-A spec)                                 | step skipped                               |
 
 - **Expected job state:** the ng and vue jobs stay red only on the 6 held Toast screenshots (decision 9). Everything else is green, including the strict contract. The validator output file `test-results/g3a-accessibility/<fw>-validation.txt` is produced, ready for the artifact upload.
 - **What this does not show:** an actual GitHub Actions run (`always()`/`!cancelled()` semantics, artifact upload) cannot be exercised locally. It is verified on the first CI run after push.
@@ -568,15 +569,15 @@ A1 is **approved**. The review questions in §14.9 are resolved as follows.
 
 ### 15.1 Evidence: the two DOM structures
 
-| Level | Upstream (PrimeVue 4.5.5 `ToastMessage.vue`; PrimeNG 21.1.9 `toast.ts`, same structure) | Ultimate (ng `toast.ts` template, vue `Toast.vue`; identical) |
-| ----- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| 1 | `.p-toast-message` (`display: grid; grid-template-rows: 1fr`) | `.u-toast-message` (same ported rule) |
-| 2 | `.p-toast-message-content` (`display: flex`, row) | `.u-toast-message-content` (same ported rule) |
-| 3 | `.p-toast-message-icon` (severity icon) | — not rendered (FX-A7) |
-| 3 | `.p-toast-message-text` (`flex: 1 1 auto; display: flex; flex-direction: column; gap: dt('toast.text.gap')`) | — **no wrapper**: summary and detail are direct children of content (FX-A7 omits the rule) |
-| 4 | `.p-toast-summary`, `.p-toast-detail` | `.u-toast-summary`, `.u-toast-detail` |
-| 3 | an unclassed `div` holding `.p-toast-close-button`, **inside** the content row | `.u-toast-close-button` is a **sibling** of the content element, directly inside the grid message |
-| 4 | `.p-toast-close-icon` (TimesIcon svg) | — the button's text is `&times;` (FX-A7) |
+| Level | Upstream (PrimeVue 4.5.5 `ToastMessage.vue`; PrimeNG 21.1.9 `toast.ts`, same structure)                      | Ultimate (ng `toast.ts` template, vue `Toast.vue`; identical)                                     |
+| ----- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| 1     | `.p-toast-message` (`display: grid; grid-template-rows: 1fr`)                                                | `.u-toast-message` (same ported rule)                                                             |
+| 2     | `.p-toast-message-content` (`display: flex`, row)                                                            | `.u-toast-message-content` (same ported rule)                                                     |
+| 3     | `.p-toast-message-icon` (severity icon)                                                                      | — not rendered (FX-A7)                                                                            |
+| 3     | `.p-toast-message-text` (`flex: 1 1 auto; display: flex; flex-direction: column; gap: dt('toast.text.gap')`) | — **no wrapper**: summary and detail are direct children of content (FX-A7 omits the rule)        |
+| 4     | `.p-toast-summary`, `.p-toast-detail`                                                                        | `.u-toast-summary`, `.u-toast-detail`                                                             |
+| 3     | an unclassed `div` holding `.p-toast-close-button`, **inside** the content row                               | `.u-toast-close-button` is a **sibling** of the content element, directly inside the grid message |
+| 4     | `.p-toast-close-icon` (TimesIcon svg)                                                                        | — the button's text is `&times;` (FX-A7)                                                          |
 
 ### 15.2 Why the ported CSS breaks (source-backed)
 
@@ -590,10 +591,12 @@ A1 is **approved**. The review questions in §14.9 are resolved as follows.
 
 **Option A — structural CSS adaptation, DOM unchanged (C4 holds).**
 Add Ultimate-specific adapted rules, recorded as a new parity exception PX-A7:
+
 - Text stacking: map the `.p-toast-message-text` declarations onto `.u-toast-message-content` (`flex-direction: column; gap: dt('toast.text.gap')`), because Ultimate's content element plays both roles when no icon renders. This part is a faithful re-mapping.
 - Close-button placement: there is no upstream rule that fits a sibling button inside a grid message. It needs **invented** values, for example `.u-toast-message { grid-template-columns: 1fr auto }` with a hand-chosen margin or offset for the button. That is a visual/design decision and not upstream-derived.
 
 Consequences:
+
 - `g3a-port.mjs` gains REWRITES and RETAINED entries, and the toast COUNTS, the fidelity data and the C3 exact-content expectations change.
 - The close button's position is an approximation of upstream, not parity.
 - The 6 accessibility fingerprints for Toast summary contrast keep their current targets, so the A1 evidence is unaffected.
@@ -602,6 +605,7 @@ Consequences:
 Change the ng and vue Toast templates to upstream's structure. Each message becomes `content > [ .u-toast-message-text > (summary, detail) ] + [ div > close button ]`, with a new `messageText: "u-toast-message-text"` class.
 
 Consequences:
+
 - The upstream `.p-toast-message-text` group becomes portable verbatim, so FX-A7 shrinks to message-icon, close-icon and the animations. The close-button rules then work as written upstream, with no invented values.
 - `g3a-port.mjs`: `p-toast-message-text` moves out of NOT_RENDERED; the toast COUNTS go from 36 to 37 ported; the fidelity data is regenerated from the unchanged fixture.
 - **C4 exception:** two templates gain one wrapper `div` and one container `div` per message. There is no role, ARIA, class-removal or behaviour change. The existing unit tests (`toast.spec.ts`, ng and vue) select by class only and need no change. The DOM-unchanged check (C4) needs an explicit allowance for exactly these elements.
@@ -613,6 +617,7 @@ Consequences:
 **Option C — take Toast out of G3-A.** Restore Toast's pre-port CSS (fa5c150) and the six Toast baselines, drop Toast from the G3-A counts, provenance and tests, and record it as a GAP-064 follow-up for a later tranche.
 
 Consequences:
+
 - G3-A closes without Toast parity.
 - The fa5c150 CSS contains legacy `--u-toast-*` variables, which interacts with the Task 10 legacy-variable removal statement.
 
@@ -634,13 +639,21 @@ It does reopen a Spec Review decision (§13.7, "no DOM/class restructuring"), an
 **D-A2-1: Markup.** This is the only permitted DOM change. Angular `toast.ts` and Vue `Toast.vue` render each message exactly as:
 
 ```html
-<div class="u-toast-message u-toast-message-{severity}" role="alert" aria-live="assertive" aria-atomic="true">
+<div
+  class="u-toast-message u-toast-message-{severity}"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true"
+>
   <div class="u-toast-message-content">
     <div class="u-toast-message-text">
-      <div class="u-toast-summary">…</div>  <!-- only if message.summary (unchanged condition) -->
-      <div class="u-toast-detail">…</div>   <!-- only if message.detail (unchanged condition) -->
+      <div class="u-toast-summary">…</div>
+      <!-- only if message.summary (unchanged condition) -->
+      <div class="u-toast-detail">…</div>
+      <!-- only if message.detail (unchanged condition) -->
     </div>
-    <div>                                    <!-- only if message.closable !== false; unclassed, as upstream -->
+    <div>
+      <!-- only if message.closable !== false; unclassed, as upstream -->
       <button type="button" class="u-toast-close-button" aria-label="Close">&times;</button>
     </div>
   </div>
@@ -660,6 +673,7 @@ It does reopen a Spec Review decision (§13.7, "no DOM/class restructuring"), an
 **D-A2-2: C4 exception (Toast only).** C4 is relaxed for the Toast implementation files only (`packages/ng/src/toast/toast.ts`, `packages/ng/src/toast/toast-style.ts`, `packages/vue/src/toast/Toast.vue`, `packages/vue/src/toast/toast-style.ts`), and only for the D-A2-1 template change and the one `classes` entry. C4 stays in force for every other G3-A component. The verification DOM-unchanged diff is extended with exactly these allowances; any other template or class-map change in the G3-A component files fails it.
 
 **D-A2-3: CSS.**
+
 - The upstream `.p-toast-message-text` group (`flex: 1 1 auto; display: flex; flex-direction: column; gap: dt('toast.text.gap')`) is ported **verbatim** as `.u-toast-message-text`, in upstream source order.
 - `g3a-port.mjs`:
   - `p-toast-message-text` leaves `NOT_RENDERED`;
@@ -670,6 +684,7 @@ It does reopen a Spec Review decision (§13.7, "no DOM/class restructuring"), an
 - The `toast.text.gap` token exists in the Aura preset (`packages/themes/src/presets/aura/toast.ts`), so C2 still holds.
 
 **D-A2-4: Accessibility identity mapping.** The 6 Toast summary contrast rows stay **pre-existing**. They are not Aura parity exceptions, and they are not added to `ACCESSIBILITY_BASELINE.md`.
+
 - In `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` the 6 old fingerprints are **replaced** by their post-markup fingerprints. A new section records an explicit old → new table, with the reason "Toast DOM alignment (Amendment A2); same rule, story, severity element and violation".
 - The new identities are taken from the **post-implementation axe run**, not predicted.
 - A mapping is valid only if all of these hold:
@@ -695,6 +710,7 @@ It does reopen a Spec Review decision (§13.7, "no DOM/class restructuring"), an
 7. The 6 held Toast screenshots are re-run in the baseline environment (Docker `mcr.microsoft.com/playwright:v1.63.0-jammy`, arm64) only after implementation, then go to a Task-8-style user review. No baseline is regenerated or approved automatically.
 
 **D-A2-6: Sequence after Spec approval:**
+
 1. Plan addendum, with its own review.
 2. Implementation (the TDD order puts the D-A2-5.1 structure tests first).
 3. Verification.

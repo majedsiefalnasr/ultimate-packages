@@ -44,7 +44,10 @@ const css = /*css*/ `
 const classes = {
   stepperRoot: "u-stepper u-component",
   stepListRoot: "u-step-list",
-  stepItemRoot: (params: { active?: boolean } = {}) => ["u-step-item", { "u-step-item-active": params.active }],
+  stepItemRoot: (params: { active?: boolean } = {}) => [
+    "u-step-item",
+    { "u-step-item-active": params.active },
+  ],
   stepRoot: (params: { active?: boolean; disabled?: boolean } = {}) => [
     "u-step",
     { "u-step-active": params.active, "u-step-disabled": params.disabled },

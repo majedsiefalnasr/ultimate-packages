@@ -30,6 +30,7 @@
 ### Task 1: Package scaffold — `package.json`, `tsconfig.json`, `tsup.config.ts`, `vitest.config.ts`
 
 **Files:**
+
 - Create: `packages/uix-data/package.json`
 - Create: `packages/uix-data/tsconfig.json`
 - Create: `packages/uix-data/tsup.config.ts`
@@ -38,6 +39,7 @@
 - Create: `packages/uix-data/.gitignore`
 
 **Interfaces:**
+
 - Consumes: `@ultimate/uix-utils` (workspace dependency declared here, consumed for real in Task 3).
 - Produces: a buildable, testable, empty package shell that later tasks add source to. No exports yet — `src/index.ts` does not exist until Task 8.
 
@@ -61,10 +63,7 @@
       "default": "./dist/index.mjs"
     }
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "scripts": {
     "build": "tsup && node scripts/rename-dts.mjs",
     "test": "vitest run",
@@ -181,10 +180,12 @@ git commit -m "chore(uix-data): scaffold package"
 ### Task 2: Identity module — re-export `equals`
 
 **Files:**
+
 - Create: `packages/uix-data/src/identity/index.ts`
 - Test: `packages/uix-data/test/identity.test.ts`
 
 **Interfaces:**
+
 - Consumes: `equals` from `@ultimate/uix-utils/object` (existing, real signature: `equals(obj1: any, obj2: any, field?: string): boolean`).
 - Produces: `equals` re-exported unchanged from `packages/uix-data/src/identity/index.ts`, consumed by Task 8's barrel.
 
@@ -244,10 +245,12 @@ git commit -m "feat(uix-data): re-export equals as identity primitive"
 ### Task 3: Selection module — `SelectionMode` type
 
 **Files:**
+
 - Create: `packages/uix-data/src/selection/index.ts`
 - Test: `packages/uix-data/test/selection.test-d.ts`
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces: `SelectionMode` type, consumed by Task 8's barrel.
 
@@ -327,10 +330,12 @@ git commit -m "feat(uix-data): add SelectionMode vocabulary type"
 ### Task 4: Sort module — `SortMeta`, `SortMode`
 
 **Files:**
+
 - Create: `packages/uix-data/src/sort/index.ts`
 - Test: `packages/uix-data/test/sort.test-d.ts`
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces: `SortMeta`, `SortMode`, consumed by Task 8's barrel.
 
@@ -412,10 +417,12 @@ git commit -m "feat(uix-data): add SortMeta and SortMode types"
 ### Task 5: Filter module — `FilterMatchMode`, `FilterMetadata`
 
 **Files:**
+
 - Create: `packages/uix-data/src/filter/index.ts`
 - Test: `packages/uix-data/test/filter.test-d.ts`
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces: `FilterMatchMode`, `FilterMetadata`, consumed by Task 8's barrel.
 
@@ -533,11 +540,13 @@ git commit -m "feat(uix-data): add FilterMatchMode and FilterMetadata types"
 ### Task 6: Pagination module — `PaginationState`, `getPageCount`
 
 **Files:**
+
 - Create: `packages/uix-data/src/pagination/index.ts`
 - Test: `packages/uix-data/test/pagination.test.ts`
 - Test: `packages/uix-data/test/pagination.test-d.ts`
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces: `PaginationState`, `getPageCount(totalRecords: number, rows: number): number`, consumed by Task 8's barrel.
 
@@ -641,10 +650,12 @@ git commit -m "feat(uix-data): add PaginationState type and getPageCount functio
 ### Task 7: Virtualization module — `calculateNumItemsInViewport`, `calculateLast`
 
 **Files:**
+
 - Create: `packages/uix-data/src/virtualization/index.ts`
 - Test: `packages/uix-data/test/virtualization.test.ts`
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces: `calculateNumItemsInViewport(contentSize: number, itemSize: number): number`, `calculateLast(first: number, numItemsInViewport: number, numToleratedItems: number, isColumns?: boolean): number`, consumed by Task 8's barrel.
 
@@ -750,10 +761,12 @@ git commit -m "feat(uix-data): add calculateNumItemsInViewport and calculateLast
 ### Task 8: Public barrel, package export test, and typecheck/build verification
 
 **Files:**
+
 - Create: `packages/uix-data/src/index.ts`
 - Test: `packages/uix-data/test/package-exports.test.ts`
 
 **Interfaces:**
+
 - Consumes: `equals` (Task 2), `SelectionMode` (Task 3), `SortMeta`/`SortMode` (Task 4), `FilterMatchMode`/`FilterMetadata` (Task 5), `PaginationState`/`getPageCount` (Task 6), `calculateNumItemsInViewport`/`calculateLast` (Task 7).
 - Produces: the complete public API of `@ultimate/uix-data`, re-exported from one flat barrel — this is what `ng-core`/`react-core`/`vue-core` will import from in future work (not part of this plan).
 
@@ -845,9 +858,11 @@ git commit -m "feat(uix-data): add public barrel exporting the approved six-conc
 ### Task 9: Repo-wide validator checks (boundary, ceiling, provenance gate)
 
 **Files:**
+
 - No new files — this task runs existing repo-wide validators against the new package and fixes anything they flag.
 
 **Interfaces:**
+
 - Consumes: the complete `packages/uix-data/src/` tree from Tasks 1–8.
 - Produces: confirmation that `packages/uix-data` passes every existing CI validator with zero script changes, as the spec claims.
 
@@ -873,10 +888,12 @@ Expected: FAIL — `packages/uix-data has source files but no manifest at docs/a
 ### Task 10: Provenance manifest and `PROVENANCE.md` entry
 
 **Files:**
+
 - Create: `docs/architecture/provenance/uix-data.json`
 - Modify: `docs/architecture/PROVENANCE.md`
 
 **Interfaces:**
+
 - Consumes: the file list from `packages/uix-data/src/` (7 files: `identity/index.ts`, `selection/index.ts`, `sort/index.ts`, `filter/index.ts`, `pagination/index.ts`, `virtualization/index.ts`, `index.ts`).
 - Produces: a manifest satisfying `validate-provenance.mjs`'s real requirement — every entry must have an `ultimateDestination` field whose value exactly matches a real `packages/uix-data/src/**/*.ts` file path (verified by reading the validator's source directly: `manifest.map((entry) => entry.ultimateDestination)` against `walkTsFiles(...)`'s output).
 
@@ -884,6 +901,7 @@ Expected: FAIL — `packages/uix-data has source files but no manifest at docs/a
 
 Run: `find packages/uix-data/src -name "*.ts"`
 Expected output (7 lines, exact paths will be used verbatim in Step 2):
+
 ```text
 packages/uix-data/src/identity/index.ts
 packages/uix-data/src/selection/index.ts
@@ -994,10 +1012,12 @@ git commit -m "docs(provenance): add uix-data manifest and PROVENANCE.md entry"
 ### Task 11: ADR-043 and README
 
 **Files:**
+
 - Modify: `docs/architecture/DECISIONS.md`
 - Create: `packages/uix-data/README.md`
 
 **Interfaces:**
+
 - Consumes: nothing new — this task documents Tasks 1–10's completed work.
 - Produces: a recorded architecture decision and a package README, both required by the spec's Acceptance Criteria.
 
@@ -1013,7 +1033,7 @@ Status: Accepted (uix-data spec, confirmed by implementation). Six sequential ar
 
 - [ ] **Step 2: Create `packages/uix-data/README.md`**
 
-```markdown
+````markdown
 # @ultimate/uix-data
 
 Framework-neutral pure types and pure functions for shared Data-component semantics, for the Ultimate Platform UI foundation.
@@ -1042,6 +1062,7 @@ import {
   calculateLast,
 } from "@ultimate/uix-data";
 ```
+````
 
 - **`equals(obj1: any, obj2: any, field?: string): boolean`** — deep-equality or field-path comparison. Re-exported unchanged from `@ultimate/uix-utils/object`.
 - **`SelectionMode = "single" | "multiple"`** — selection-cardinality vocabulary only. Carries no information about selection storage, mutation, or events.
@@ -1061,23 +1082,26 @@ import {
 ## Dependencies
 
 Depends on `@ultimate/uix-utils` (workspace), for `equals` only.
-```
+
+````
 
 - [ ] **Step 3: Commit**
 
 ```bash
 git add docs/architecture/DECISIONS.md packages/uix-data/README.md
 git commit -m "docs(uix-data): record ADR-043 and add package README"
-```
+````
 
 ---
 
 ### Task 12: Performance baseline
 
 **Files:**
+
 - Modify: `docs/architecture/PERFORMANCE.md`
 
 **Interfaces:**
+
 - Consumes: the built `packages/uix-data/dist/` output from Task 8.
 - Produces: recorded size numbers, satisfying the spec's Performance Requirements and Acceptance Criteria.
 
@@ -1104,9 +1128,11 @@ git commit -m "docs(uix-data): record performance baseline"
 ### Task 13: Full verification pass and manual boundary spot-check
 
 **Files:**
+
 - No new files — this is the plan's final verification gate.
 
 **Interfaces:**
+
 - Consumes: everything from Tasks 1–12.
 - Produces: confirmation that every Acceptance Criterion in the spec is met.
 

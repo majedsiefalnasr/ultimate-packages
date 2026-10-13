@@ -49,7 +49,9 @@ export default {
   },
   computed: {
     visible() {
-      return typeof this.item.visible === "function" ? this.item.visible() : this.item.visible !== false;
+      return typeof this.item.visible === "function"
+        ? this.item.visible()
+        : this.item.visible !== false;
     },
     disabled() {
       return typeof this.item.disabled === "function" ? this.item.disabled() : !!this.item.disabled;

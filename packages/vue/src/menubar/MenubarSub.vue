@@ -1,5 +1,10 @@
 <template>
-  <ul ref="listEl" :class="root ? cx('rootList') : cx('submenu')" :role="root ? 'menubar' : 'menu'" @keydown="onKeydown">
+  <ul
+    ref="listEl"
+    :class="root ? cx('rootList') : cx('submenu')"
+    :role="root ? 'menubar' : 'menu'"
+    @keydown="onKeydown"
+  >
     <template v-for="(item, i) in items" :key="(item.label || '') + i">
       <li v-if="item.separator" :class="cx('separator')" role="separator" />
       <li
@@ -23,10 +28,17 @@
           >
             <span v-if="item.icon" :class="[cx('itemIcon'), item.icon]" />
             <span v-if="item.label" :class="cx('itemLabel')">{{ item.label }}</span>
-            <span v-if="hasItems(item)" :class="cx('submenuIcon')" aria-hidden="true">{{ root ? "▾" : "▸" }}</span>
+            <span v-if="hasItems(item)" :class="cx('submenuIcon')" aria-hidden="true">{{
+              root ? "▾" : "▸"
+            }}</span>
           </a>
         </div>
-        <UMenubarSub v-if="hasItems(item)" :items="item.items" :root="false" @item-select="$emit('item-select', $event)" />
+        <UMenubarSub
+          v-if="hasItems(item)"
+          :items="item.items"
+          :root="false"
+          @item-select="$emit('item-select', $event)"
+        />
       </li>
     </template>
   </ul>
@@ -153,7 +165,10 @@ export default {
     },
 
     enabledItems() {
-      return this.items.filter((candidate) => !candidate.separator && this.isVisible(candidate) && !this.isDisabled(candidate));
+      return this.items.filter(
+        (candidate) =>
+          !candidate.separator && this.isVisible(candidate) && !this.isDisabled(candidate)
+      );
     },
 
     moveFocus(current, direction) {
@@ -172,7 +187,9 @@ export default {
       this.$nextTick(() => {
         const ul = this.$refs.listEl;
         const openLi = ul?.querySelector(':scope > li[data-u-open="true"]');
-        const firstLink = openLi?.querySelector(".u-menubar-submenu > li:first-child > .u-menubar-item-content > a");
+        const firstLink = openLi?.querySelector(
+          ".u-menubar-submenu > li:first-child > .u-menubar-item-content > a"
+        );
         firstLink?.focus();
       });
     },

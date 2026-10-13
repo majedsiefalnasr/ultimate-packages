@@ -45,7 +45,9 @@ describe("USelect", () => {
   });
 
   it("filters the option list via the filter input when filter is enabled", () => {
-    render(<USelect value={null} onChange={() => {}} options={["Apple", "Banana", "Cherry"]} filter />);
+    render(
+      <USelect value={null} onChange={() => {}} options={["Apple", "Banana", "Cherry"]} filter />
+    );
     fireEvent.click(screen.getByRole("combobox"));
     fireEvent.change(screen.getByRole("searchbox"), { target: { value: "ban" } });
     expect(screen.getAllByRole("option").length).toBe(1);
@@ -53,7 +55,9 @@ describe("USelect", () => {
   });
 
   it("is fully controlled — the value prop drives the displayed label", () => {
-    const { rerender } = render(<USelect value="Apple" onChange={() => {}} options={["Apple", "Banana"]} />);
+    const { rerender } = render(
+      <USelect value="Apple" onChange={() => {}} options={["Apple", "Banana"]} />
+    );
     expect(screen.getByRole("combobox")).toHaveTextContent("Apple");
     rerender(<USelect value="Banana" onChange={() => {}} options={["Apple", "Banana"]} />);
     expect(screen.getByRole("combobox")).toHaveTextContent("Banana");

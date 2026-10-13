@@ -1,11 +1,18 @@
 import * as React from "react";
-import { useComponentBase, useDisplayOrder, useGlobalEscapeKey, ESCAPE_PRIORITIES } from "@ultimate/react-core";
+import {
+  useComponentBase,
+  useDisplayOrder,
+  useGlobalEscapeKey,
+  ESCAPE_PRIORITIES,
+} from "@ultimate/react-core";
 import { passwordStyleModule } from "./password-style";
 
 type PasswordStrength = "weak" | "medium" | "strong" | null;
 
-export interface UPasswordProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "type" | "size"> {
+export interface UPasswordProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "value" | "onChange" | "type" | "size"
+> {
   value?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   feedback?: boolean;
@@ -100,7 +107,8 @@ export const UPassword = React.forwardRef<HTMLInputElement, UPasswordProps>(func
       if (typeof ref === "function") ref(node);
       else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
       if (typeof inputRef === "function") inputRef(node);
-      else if (inputRef) (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+      else if (inputRef)
+        (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
     },
     [ref, inputRef]
   );
@@ -171,7 +179,11 @@ export const UPassword = React.forwardRef<HTMLInputElement, UPasswordProps>(func
   };
 
   return (
-    <div className={[cx("root", { filled: value.length > 0, disabled, fluid }), className].filter(Boolean).join(" ")}>
+    <div
+      className={[cx("root", { filled: value.length > 0, disabled, fluid }), className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <input
         ref={setRef}
         type={unmasked ? "text" : "password"}
@@ -223,7 +235,10 @@ export const UPassword = React.forwardRef<HTMLInputElement, UPasswordProps>(func
       {feedback && overlayVisible && (
         <div className={cx("overlay")}>
           <div className={cx("meter")}>
-            <div className={cx("meterLabel", { strength: meter?.strength ?? null })} style={{ width: meter?.width ?? "" }} />
+            <div
+              className={cx("meterLabel", { strength: meter?.strength ?? null })}
+              style={{ width: meter?.width ?? "" }}
+            />
           </div>
           <div className={cx("meterText")}>{infoText}</div>
         </div>

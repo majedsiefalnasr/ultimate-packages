@@ -7,7 +7,10 @@ let uidCounter = 0;
 // displayOrderRegistry (NOT React's useState/return-value contract, spec §11 —
 // that stays in react-core, unchanged and un-extracted). Own implementation,
 // informed by but not copied from use-display-order.ts's React shape.
-export function useDisplayOrder(group: string, isVisible: Ref<boolean> | boolean): Ref<number | undefined> {
+export function useDisplayOrder(
+  group: string,
+  isVisible: Ref<boolean> | boolean
+): Ref<number | undefined> {
   const uid = ++uidCounter;
   const displayOrder = ref<number | undefined>(undefined);
 

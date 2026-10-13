@@ -16,6 +16,7 @@
 **Scope:** Table only. TreeTable, Tree, TreeSelect, OrganizationChart, DataView, OrderList, PickList, and Scroller/Paginator as standalone components are out of scope for this spec (each has its own future spec; this document treats Scroller and Paginator only as compositional dependencies of Table, per the two research reports' confirmed composition findings).
 
 **Out of scope for this spec (explicitly, per the source directive):**
+
 - Row/column reordering via drag-drop (confirmed OrderList/PickList territory, not Table's; Table has no drag-drop feature in any of the three real Prime implementations).
 - Any new `uix-data` primitive (none is justified — see §5).
 - TreeTable-as-grid (separate future spec; shares `SortMeta`/`FilterMetadata` types but diverges on value shape exactly as documented in the first research report §6).
@@ -101,7 +102,7 @@ Options-API-shaped props + `v-model` + emits, matching PrimeVue's real `DataTabl
 - `filters` (object form, same shape as React — §9), `@filter`
 - `paginator: boolean`, `first`/`rows`/`totalRecords`/`rowsPerPageOptions`, `@page`
 - `virtualScrollerOptions`, `lazy`, `@lazy-load`
-- `editMode: 'cell' | 'row'`, `v-model:editingRows` (Array, **not** a key-map — confirmed §11.3, a genuine shape difference from Angular/React's key-map at the *public prop* level even though Vue derives an internal key-map for lookup), `@cell-edit-init`/`@cell-edit-complete`/`@cell-edit-cancel`, `@row-edit-init`/`@row-edit-save`/`@row-edit-cancel`
+- `editMode: 'cell' | 'row'`, `v-model:editingRows` (Array, **not** a key-map — confirmed §11.3, a genuine shape difference from Angular/React's key-map at the _public prop_ level even though Vue derives an internal key-map for lookup), `@cell-edit-init`/`@cell-edit-complete`/`@cell-edit-cancel`, `@row-edit-init`/`@row-edit-save`/`@row-edit-cancel`
 - `rowGroupMode`, `groupRowsBy`, `expandableRowGroups`
 - Internal-only (`d_`-prefixed reactive data, not props): `d_editingRowKeys` (derived from `editingRows` + `dataKey`), `d_editingMeta` (§11.3).
 
@@ -111,19 +112,19 @@ Options-API-shaped props + `v-model` + emits, matching PrimeVue's real `DataTabl
 
 Directly inherited from both research reports and ADR-043 — restated here as the binding boundary for this spec, not re-derived:
 
-| Concept | Status | Source |
-|---|---|---|
-| `dataKey` + `equals`/`deepEquals` identity | **Shared** — `uix-data`'s `equals` | ADR-043; used for selection *and* row-editing key-maps (Angular/React) |
-| `SortMeta`/`SortMode` | **Shared** — `uix-data` | ADR-043; also the basis for row grouping (§13) |
-| Simple `FilterMetadata`/`FilterMatchMode` | **Shared** — `uix-data` | ADR-043 |
-| Filter operator/constraints wrapper | **Framework-native representation** (not shared) | §9 |
-| `PaginationState`/`getPageCount` | **Shared** — `uix-data` | ADR-043 |
-| Virtualization windowing (`calculateNumItemsInViewport`/`calculateLast`) | **Shared** — `uix-data` | ADR-043 |
-| Table state-ownership mechanism (two-way binding / controlled-uncontrolled / Options-API reactive) | **Framework-native** | First research report §3.4 |
-| Cell-edit dirty-value tracking | **Framework-native, structurally divergent per framework** | §11 |
-| Row grouping algorithm | **Shared semantics, zero new type** — reuses `SortMeta` as a documented Table-implementation convention | Second research report §4.4 |
-| Table↔Paginator / Table↔Scroller composition | **Shared architecture pattern**, not a data primitive | Both research reports; §14 |
-| Accessibility role/keyboard vocabulary | **Strongly convergent vocabulary, framework-native mechanism** | §15 |
+| Concept                                                                                            | Status                                                                                                  | Source                                                                 |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `dataKey` + `equals`/`deepEquals` identity                                                         | **Shared** — `uix-data`'s `equals`                                                                      | ADR-043; used for selection _and_ row-editing key-maps (Angular/React) |
+| `SortMeta`/`SortMode`                                                                              | **Shared** — `uix-data`                                                                                 | ADR-043; also the basis for row grouping (§13)                         |
+| Simple `FilterMetadata`/`FilterMatchMode`                                                          | **Shared** — `uix-data`                                                                                 | ADR-043                                                                |
+| Filter operator/constraints wrapper                                                                | **Framework-native representation** (not shared)                                                        | §9                                                                     |
+| `PaginationState`/`getPageCount`                                                                   | **Shared** — `uix-data`                                                                                 | ADR-043                                                                |
+| Virtualization windowing (`calculateNumItemsInViewport`/`calculateLast`)                           | **Shared** — `uix-data`                                                                                 | ADR-043                                                                |
+| Table state-ownership mechanism (two-way binding / controlled-uncontrolled / Options-API reactive) | **Framework-native**                                                                                    | First research report §3.4                                             |
+| Cell-edit dirty-value tracking                                                                     | **Framework-native, structurally divergent per framework**                                              | §11                                                                    |
+| Row grouping algorithm                                                                             | **Shared semantics, zero new type** — reuses `SortMeta` as a documented Table-implementation convention | Second research report §4.4                                            |
+| Table↔Paginator / Table↔Scroller composition                                                       | **Shared architecture pattern**, not a data primitive                                                   | Both research reports; §14                                             |
+| Accessibility role/keyboard vocabulary                                                             | **Strongly convergent vocabulary, framework-native mechanism**                                          | §15                                                                    |
 
 No item in this table changes `uix-data`'s six-primitive scope.
 
@@ -163,7 +164,7 @@ Directly reuses `uix-data`'s simple `FilterMetadata`/`FilterMatchMode`. The oper
 
 ## 9. Filter Operator/Constraints — Resolved as Framework-Native Representation (Not a Fork)
 
-**This is not a genuine architectural fork** under the fork-discipline rules given in the source directive: there are not "multiple materially different viable architectural choices" requiring a stop-and-decide, because the correct choice — do not centralize this in `uix-data`, represent it per framework — is already the direction ADR-043 itself points to, and this spec's job is to decide the *Table-implementation-level* representation, not to reopen whether it belongs in the shared package (it does not, confirmed by both research reports).
+**This is not a genuine architectural fork** under the fork-discipline rules given in the source directive: there are not "multiple materially different viable architectural choices" requiring a stop-and-decide, because the correct choice — do not centralize this in `uix-data`, represent it per framework — is already the direction ADR-043 itself points to, and this spec's job is to decide the _Table-implementation-level_ representation, not to reopen whether it belongs in the shared package (it does not, confirmed by both research reports).
 
 **Real evidence (re-confirmed by this spec's own targeted read, in addition to both research reports):**
 
@@ -178,7 +179,7 @@ Directly reuses `uix-data`'s simple `FilterMetadata`/`FilterMatchMode`. The oper
 - **No cross-framework public contract is introduced.** Each framework's Table exposes its own `filters` prop typed to its own shape, per §4. Nothing is added to `uix-data`.
 - This mirrors ADR-043's Table risk entry verbatim ("A future Table implementation discovers the deferred filter operator/constraints model is needed sooner than expected... Treat the filter-operator addition as its own small architectural fork when it arises, re-verifying real Table requirements against real Prime source at that time") — this spec is that re-verification, and its conclusion is that the correct fork resolution is "framework-native representation, no shared type," not "add to `uix-data`."
 
-**If a future implementation phase discovers a genuine cross-framework consumption need** (e.g., an Ultimate CLI or metadata layer needing to introspect filter state uniformly across frameworks) that this spec did not anticipate, *that* would be a new fork requiring its own decision — not resolved here, because no such requirement exists in the real Table source or the Blueprint today.
+**If a future implementation phase discovers a genuine cross-framework consumption need** (e.g., an Ultimate CLI or metadata layer needing to introspect filter state uniformly across frameworks) that this spec did not anticipate, _that_ would be a new fork requiring its own decision — not resolved here, because no such requirement exists in the real Table source or the Blueprint today.
 
 ---
 
@@ -215,17 +216,17 @@ Real source read directly (`packages/primevue/src/datatable/BaseDataTable.vue:20
 - **`editingRows` is a public `Array` prop** (`BaseDataTable.vue:209-212`), **not** a key-map at the public API level — this is a genuine shape difference from Angular's `editingRowKeys` (key-map) and closer to React's array fallback shape. It supports `v-model` via `update:editingRows` emit (`DataTable.vue:399`), giving Vue the same controlled/uncontrolled-shaped duality as React at the public-prop level, expressed through Vue's own `v-model` idiom rather than React's explicit callback-presence check.
 - **Internally, Vue derives a `dataKey`-scoped key-map anyway**: `d_editingRowKeys` (`DataTable.vue:422`), rebuilt by `updateEditingRowKeys()` (`DataTable.vue:1167-1175`) via `resolveFieldData(data, this.dataKey)` whenever `editMode === 'row' && dataKey` is set — the same `dataKey`+`equals`-family idiom as Angular/React, just derived internally from the public array rather than exposed as the public shape itself.
 - **Cell-edit dirty-value tracking**: `d_editingMeta` (`DataTable.vue:423`, internal reactive data, never a prop) — same `{[index]: {data: {...}, fields: []}}` shape as React's `editingMetaState` (`onEditingMetaChange`, `DataTable.vue:1949-1963`, structurally near-identical to React's `onEditingMetaChange` in `DataTable.js:509-523`). **Key derivation differs from React**, confirmed this spec: Vue's `index` is always `rowIndex` (`BodyCell.vue:244`: `index: this.rowIndex`, and consumed as `this.editingMeta[this.rowIndex]` at `BodyCell.vue:539`) — **never `dataKey`-resolved**, unlike React's `editingKey` which prefers `dataKey` when set. This is a genuine, real, framework-specific implementation divergence, not an oversight to reconcile.
-- **Row/cell edit lifecycle events**: `cell-edit-init`/`cell-edit-complete`/`cell-edit-cancel`, `row-edit-init`/`row-edit-save`/`row-edit-cancel` (`DataTable.vue:173-178,231-236,396-402`) — same vocabulary as Angular's `onEditInit`/`onEditComplete`/`onEditCancel` and React's `onRowEditInit`/`onRowEditSave`/`onRowEditCancel`, confirming shared *naming convention*, not shared *mechanism*.
+- **Row/cell edit lifecycle events**: `cell-edit-init`/`cell-edit-complete`/`cell-edit-cancel`, `row-edit-init`/`row-edit-save`/`row-edit-cancel` (`DataTable.vue:173-178,231-236,396-402`) — same vocabulary as Angular's `onEditInit`/`onEditComplete`/`onEditCancel` and React's `onRowEditInit`/`onRowEditSave`/`onRowEditCancel`, confirming shared _naming convention_, not shared _mechanism_.
 - **Ultimate implication**: Vue's Table exposes `editingRows` as an Array (matching upstream, and matching React's array-fallback shape rather than Angular's key-map shape at the public level), keeps `d_editingMeta` as component-internal state keyed by `rowIndex` (matching upstream exactly), and does not attempt to align its internal keying scheme with React's `dataKey`-preferring scheme — these are independent, framework-native implementation choices with no cross-framework contract implied.
 
 ### 11.4 Cross-framework editing verdict (spec-level)
 
-| Concern | Angular | React | Vue | Ultimate treatment |
-|---|---|---|---|---|
-| Row edit-mode public shape | `editingRowKeys` (key-map) | `editingRows` (array or key-map, controlled/uncontrolled) | `editingRows` (array, `v-model`) | Framework-native public shape, each matching its own real upstream |
-| Row edit-mode internal shape | N/A (public shape is already the key-map) | Same as public (may be key-map) | `d_editingRowKeys` (key-map, internally derived from the public array) | Framework-native |
-| Cell-edit dirty-value tracking | None (DOM `.ng-invalid.ng-dirty` query) | Always-internal `editingMetaState`, keyed by `dataKey`-or-`rowIndex` | Always-internal `d_editingMeta`, keyed by `rowIndex` only | Framework-native, structurally divergent — **not reconciled** |
-| Validity mechanism | Angular reactive-forms DOM classes | Per-column `cellEditValidator` callback | `NEEDS IMPLEMENTATION-TIME VERIFICATION` (not traced to a specific validator hook this pass; `cellEditValidator`-equivalent prop presence not confirmed) | Framework-native |
+| Concern                        | Angular                                   | React                                                                | Vue                                                                                                                                                      | Ultimate treatment                                                 |
+| ------------------------------ | ----------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Row edit-mode public shape     | `editingRowKeys` (key-map)                | `editingRows` (array or key-map, controlled/uncontrolled)            | `editingRows` (array, `v-model`)                                                                                                                         | Framework-native public shape, each matching its own real upstream |
+| Row edit-mode internal shape   | N/A (public shape is already the key-map) | Same as public (may be key-map)                                      | `d_editingRowKeys` (key-map, internally derived from the public array)                                                                                   | Framework-native                                                   |
+| Cell-edit dirty-value tracking | None (DOM `.ng-invalid.ng-dirty` query)   | Always-internal `editingMetaState`, keyed by `dataKey`-or-`rowIndex` | Always-internal `d_editingMeta`, keyed by `rowIndex` only                                                                                                | Framework-native, structurally divergent — **not reconciled**      |
+| Validity mechanism             | Angular reactive-forms DOM classes        | Per-column `cellEditValidator` callback                              | `NEEDS IMPLEMENTATION-TIME VERIFICATION` (not traced to a specific validator hook this pass; `cellEditValidator`-equivalent prop presence not confirmed) | Framework-native                                                   |
 
 No shared editing primitive is added to `uix-data`. This confirms, not contradicts, both research reports' conclusions.
 
@@ -255,11 +256,11 @@ Restated from the second research report §4.4, binding on this spec, not reopen
 
 Confirmed real component composition in all three frameworks, closing the open item from the first research report (§13 item 4) via both the second research report (§6) and this spec's own re-confirmation:
 
-| Framework | Paginator composition | Scroller composition |
-|---|---|---|
-| Angular | `<p-paginator>` template child (confirmed prior reports) | `<p-scroller>` child, `@ViewChild('scroller') scroller: Scroller` (`table.ts:58,992`) |
-| React | `import { Paginator } from '../paginator/Paginator'` + `<Paginator ...>` (`DataTable.js:10,1991`) | `import { VirtualScroller } from '../virtualscroller/VirtualScroller'` (`DataTable.js:12`) |
-| Vue | `import Paginator from 'primevue/paginator'` + `DTPaginator: Paginator` registration, used as `<DTPaginator>` (`DataTable.vue:353,2176`) | `<DTVirtualScroller>` embedded in template (`DataTable.vue:77`) |
+| Framework | Paginator composition                                                                                                                    | Scroller composition                                                                       |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Angular   | `<p-paginator>` template child (confirmed prior reports)                                                                                 | `<p-scroller>` child, `@ViewChild('scroller') scroller: Scroller` (`table.ts:58,992`)      |
+| React     | `import { Paginator } from '../paginator/Paginator'` + `<Paginator ...>` (`DataTable.js:10,1991`)                                        | `import { VirtualScroller } from '../virtualscroller/VirtualScroller'` (`DataTable.js:12`) |
+| Vue       | `import Paginator from 'primevue/paginator'` + `DTPaginator: Paginator` registration, used as `<DTPaginator>` (`DataTable.vue:353,2176`) | `<DTVirtualScroller>` embedded in template (`DataTable.vue:77`)                            |
 
 **Implication for Ultimate:** Table's implementation in every framework depends on its framework's own Paginator and Scroller components existing and being stable **before** Table's pagination/virtualization UI can be assembled. This is a component-sequencing dependency (§26), not a shared-contract question — `PaginationState` and the virtualization windowing functions are already the shared data contract; composition is a separate, per-framework component-architecture concern.
 
@@ -343,20 +344,20 @@ UltimateUIX (uix-data, uix-utils, uix-styled, uix-styles, uix-motion)
 
 Following the existing UIX/component testing conventions (Vitest for logic, framework-appropriate component-testing tools):
 
-| Area | Angular | React | Vue |
-|---|---|---|---|
-| Identity/selection | Unit: `equals`/`compareSelectionBy` branch coverage | Same | Same |
-| Sort (single/multi) | Unit + component | Unit + component | Unit + component |
-| Filter (simple + framework-native operator shape, §9) | Unit + component, array-of-alternatives shape | Unit + component, object+constraints shape | Unit + component, object+constraints shape |
-| Pagination | Component, composition with real Paginator instance | Same | Same |
-| Virtualization | Component, composition with real Scroller instance; zero-guard case (`uix-data`'s existing test already covers the pure function) | Same | Same |
-| Row/cell editing | Component: DOM-validity-class scenario | Component: controlled/uncontrolled `editingRows`, internal `editingMeta` snapshot correctness | Component: `v-model:editingRows` array shape, `d_editingRowKeys`/`d_editingMeta` internal derivation |
-| Row grouping | Component: `subheader`/`rowspan` boundary detection against a known sorted fixture | Same | Same (flagged for extra scrutiny — Vue's grouping call sites were not independently re-verified by either research report or this spec, §13) |
-| Table↔Paginator / Table↔Scroller composition | Component: real child instantiation, not a mock | Same | Same |
-| Accessibility | Automated ARIA-role/`aria-sort` assertion + keyboard-navigation interaction test | Same | Same |
-| Dependency Boundary | `boundary:validate` (existing, name-prefix match) | Same | Same |
-| Prime Dependency Boundary | `ceiling:validate` (existing) | Same | Same |
-| Provenance | `provenance:validate` (existing, extended per Table's manifest entries) | Same | Same |
+| Area                                                  | Angular                                                                                                                           | React                                                                                         | Vue                                                                                                                                          |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Identity/selection                                    | Unit: `equals`/`compareSelectionBy` branch coverage                                                                               | Same                                                                                          | Same                                                                                                                                         |
+| Sort (single/multi)                                   | Unit + component                                                                                                                  | Unit + component                                                                              | Unit + component                                                                                                                             |
+| Filter (simple + framework-native operator shape, §9) | Unit + component, array-of-alternatives shape                                                                                     | Unit + component, object+constraints shape                                                    | Unit + component, object+constraints shape                                                                                                   |
+| Pagination                                            | Component, composition with real Paginator instance                                                                               | Same                                                                                          | Same                                                                                                                                         |
+| Virtualization                                        | Component, composition with real Scroller instance; zero-guard case (`uix-data`'s existing test already covers the pure function) | Same                                                                                          | Same                                                                                                                                         |
+| Row/cell editing                                      | Component: DOM-validity-class scenario                                                                                            | Component: controlled/uncontrolled `editingRows`, internal `editingMeta` snapshot correctness | Component: `v-model:editingRows` array shape, `d_editingRowKeys`/`d_editingMeta` internal derivation                                         |
+| Row grouping                                          | Component: `subheader`/`rowspan` boundary detection against a known sorted fixture                                                | Same                                                                                          | Same (flagged for extra scrutiny — Vue's grouping call sites were not independently re-verified by either research report or this spec, §13) |
+| Table↔Paginator / Table↔Scroller composition          | Component: real child instantiation, not a mock                                                                                   | Same                                                                                          | Same                                                                                                                                         |
+| Accessibility                                         | Automated ARIA-role/`aria-sort` assertion + keyboard-navigation interaction test                                                  | Same                                                                                          | Same                                                                                                                                         |
+| Dependency Boundary                                   | `boundary:validate` (existing, name-prefix match)                                                                                 | Same                                                                                          | Same                                                                                                                                         |
+| Prime Dependency Boundary                             | `ceiling:validate` (existing)                                                                                                     | Same                                                                                          | Same                                                                                                                                         |
+| Provenance                                            | `provenance:validate` (existing, extended per Table's manifest entries)                                                           | Same                                                                                          | Same                                                                                                                                         |
 
 **`NEEDS IMPLEMENTATION-TIME VERIFICATION`**: visual regression and cross-browser test tooling for Table specifically — this is flagged as an open architectural decision in `docs/architecture/BLUEPRINT_GAPS.md` (visual/browser-test tooling choice, not resolved by this spec, not reopened here).
 
@@ -372,7 +373,7 @@ Consolidated from §4, §9, §11, §15 — restated here as the single reference
 4. **Cell-edit validity mechanism**: Angular reactive-forms DOM query vs. React per-column callback vs. Vue `NEEDS IMPLEMENTATION-TIME VERIFICATION` (§11.4).
 5. **State-ownership idiom**: Angular always-internal-plus-emit vs. React explicit controlled/uncontrolled vs. Vue Options-API-reactive-plus-`v-model` (§16, inherited from both research reports, reconfirmed for editing specifically by this spec).
 
-None of these divergences are treated as defects or reconciliation targets — each is the framework-appropriate implementation of a shared *concept*, matching the constraint to preserve meaningful per-framework API differences where upstream genuinely diverges.
+None of these divergences are treated as defects or reconciliation targets — each is the framework-appropriate implementation of a shared _concept_, matching the constraint to preserve meaningful per-framework API differences where upstream genuinely diverges.
 
 ---
 

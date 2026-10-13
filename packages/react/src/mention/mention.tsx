@@ -229,7 +229,11 @@ export function UMention<T = unknown>({
   };
 
   return (
-    <div className={[cx("root", { focused, filled: value.length > 0 }), className].filter(Boolean).join(" ")}>
+    <div
+      className={[cx("root", { focused, filled: value.length > 0 }), className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <textarea
         ref={textareaRef}
         id={inputId}

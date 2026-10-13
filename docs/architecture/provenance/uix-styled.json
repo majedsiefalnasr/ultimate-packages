@@ -110,8 +110,8 @@
   {
     "originalPath": "src/stylesheet/index.ts",
     "ultimateDestination": "packages/uix-styled/src/stylesheet/index.ts",
-    "modificationStatus": "import-path-adapted",
-    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+    "modificationStatus": "adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs; removed one obsolete, rule-free eslint-disable-next-line directive during GAP-092 lint repair (comment only, no runtime change)"
   },
   {
     "originalPath": "packages/core/src/basecomponent/BaseComponent.vue",

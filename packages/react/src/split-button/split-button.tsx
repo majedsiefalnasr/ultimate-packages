@@ -53,48 +53,67 @@ export interface USplitButtonProps {
  * additional wrapping is needed beyond wiring `UMenuHandle.toggle()`/
  * `hide()` to the dropdown/default buttons.
  */
-export const USplitButton = React.forwardRef<HTMLDivElement, USplitButtonProps>(function USplitButton(
-  { model = [], label, icon, iconPos, severity, text, outlined, size, disabled, onClick, onShow, onHide, className },
-  ref
-) {
-  const { cx } = useComponentBase({ componentName: "split-button", styleModule: splitButtonStyleModule });
-  const menuRef = React.useRef<UMenuHandle>(null);
+export const USplitButton = React.forwardRef<HTMLDivElement, USplitButtonProps>(
+  function USplitButton(
+    {
+      model = [],
+      label,
+      icon,
+      iconPos,
+      severity,
+      text,
+      outlined,
+      size,
+      disabled,
+      onClick,
+      onShow,
+      onHide,
+      className,
+    },
+    ref
+  ) {
+    const { cx } = useComponentBase({
+      componentName: "split-button",
+      styleModule: splitButtonStyleModule,
+    });
+    const menuRef = React.useRef<UMenuHandle>(null);
 
-  const handleDefaultClick = (event: React.SyntheticEvent) => {
-    menuRef.current?.hide();
-    onClick?.(event);
-  };
+    const handleDefaultClick = (event: React.SyntheticEvent) => {
+      menuRef.current?.hide();
+      onClick?.(event);
+    };
 
-  const handleDropdownClick = (event: React.SyntheticEvent) => {
-    menuRef.current?.toggle(event);
-  };
+    const handleDropdownClick = (event: React.SyntheticEvent) => {
+      menuRef.current?.toggle(event);
+    };
 
-  return (
-    <div ref={ref} className={[cx("root"), className].filter(Boolean).join(" ")}>
-      <UButton
-        className={cx("button")}
-        label={label}
-        icon={icon}
-        iconPos={iconPos}
-        severity={severity}
-        text={text}
-        outlined={outlined}
-        size={size}
-        disabled={disabled}
-        onClick={handleDefaultClick}
-      />
-      <UButton
-        className={cx("dropdown")}
-        icon="▾"
-        severity={severity}
-        text={text}
-        outlined={outlined}
-        size={size}
-        disabled={disabled}
-        aria-haspopup="menu"
-        onClick={handleDropdownClick}
-      />
-      <UMenu ref={menuRef} model={model} popup onShow={onShow} onHide={onHide} />
-    </div>
-  );
-});
+    return (
+      <div ref={ref} className={[cx("root"), className].filter(Boolean).join(" ")}>
+        <UButton
+          className={cx("button")}
+          label={label}
+          icon={icon}
+          iconPos={iconPos}
+          severity={severity}
+          text={text}
+          outlined={outlined}
+          size={size}
+          disabled={disabled}
+          onClick={handleDefaultClick}
+        />
+        <UButton
+          className={cx("dropdown")}
+          icon="▾"
+          severity={severity}
+          text={text}
+          outlined={outlined}
+          size={size}
+          disabled={disabled}
+          aria-haspopup="menu"
+          onClick={handleDropdownClick}
+        />
+        <UMenu ref={menuRef} model={model} popup onShow={onShow} onHide={onHide} />
+      </div>
+    );
+  }
+);

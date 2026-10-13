@@ -41,7 +41,11 @@ describe("UListbox", () => {
     @Component({
       standalone: true,
       imports: [UListbox, FormsModule],
-      template: `<u-listbox [options]="['Apple', 'Banana', 'Cherry']" [multiple]="true" [(ngModel)]="value" />`,
+      template: `<u-listbox
+        [options]="['Apple', 'Banana', 'Cherry']"
+        [multiple]="true"
+        [(ngModel)]="value"
+      />`,
     })
     class HostComponent {
       value: string[] = [];
@@ -70,7 +74,10 @@ describe("UListbox", () => {
     @Component({
       standalone: true,
       imports: [UListbox],
-      template: `<u-listbox [options]="['Apple', 'Banana', 'Cherry']" (onChange)="onChange($event)" />`,
+      template: `<u-listbox
+        [options]="['Apple', 'Banana', 'Cherry']"
+        (onChange)="onChange($event)"
+      />`,
     })
     class HostComponent {
       lastValue: unknown;
@@ -114,7 +121,12 @@ describe("UListbox", () => {
     @Component({
       standalone: true,
       imports: [UListbox, FormsModule],
-      template: `<u-listbox [options]="options" [optionLabel]="'label'" [optionDisabled]="'disabled'" [(ngModel)]="value" />`,
+      template: `<u-listbox
+        [options]="options"
+        [optionLabel]="'label'"
+        [optionDisabled]="'disabled'"
+        [(ngModel)]="value"
+      />`,
     })
     class HostComponent {
       options = [
@@ -156,7 +168,10 @@ describe("UListbox trackBy", () => {
       template: `<u-listbox [options]="options" [optionLabel]="'label'" />`,
     })
     class HostComponent {
-      options = [{ id: "a", label: "A" }, { id: "b", label: "B" }];
+      options = [
+        { id: "a", label: "A" },
+        { id: "b", label: "B" },
+      ];
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
@@ -168,7 +183,10 @@ describe("UListbox trackBy", () => {
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const after = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
-    expect(after.map((option) => option.textContent?.trim())).toEqual(["A refreshed", "B refreshed"]);
+    expect(after.map((option) => option.textContent?.trim())).toEqual([
+      "A refreshed",
+      "B refreshed",
+    ]);
     expect(after[0]).toBe(before[0]);
     expect(after[1]).toBe(before[1]);
   });
@@ -180,7 +198,10 @@ describe("UListbox trackBy", () => {
       template: `<u-listbox [options]="options" [optionLabel]="'label'" [trackBy]="trackBy" />`,
     })
     class HostComponent {
-      options = [{ id: "a", label: "A" }, { id: "b", label: "B" }];
+      options = [
+        { id: "a", label: "A" },
+        { id: "b", label: "B" },
+      ];
       trackBy(_index: number, option: unknown): unknown {
         return (option as { id: string }).id;
       }
@@ -195,7 +216,10 @@ describe("UListbox trackBy", () => {
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const after = [...fixture.nativeElement.querySelectorAll('[role="option"]')];
-    expect(after.map((option) => option.textContent?.trim())).toEqual(["B refreshed", "A refreshed"]);
+    expect(after.map((option) => option.textContent?.trim())).toEqual([
+      "B refreshed",
+      "A refreshed",
+    ]);
     expect(after[0]).toBe(before[1]);
     expect(after[1]).toBe(before[0]);
   });

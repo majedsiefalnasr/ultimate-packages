@@ -34,7 +34,12 @@ import { chipStyleModule } from "./chip-style";
     @if (visible()) {
       <ng-content></ng-content>
       @if (image()) {
-        <img [class]="cx('image')" [src]="image()" [alt]="alt()" (error)="handleImageError($event)" />
+        <img
+          [class]="cx('image')"
+          [src]="image()"
+          [alt]="alt()"
+          (error)="handleImageError($event)"
+        />
       } @else if (icon()) {
         <span [class]="cx('icon') + ' ' + icon()"></span>
       }

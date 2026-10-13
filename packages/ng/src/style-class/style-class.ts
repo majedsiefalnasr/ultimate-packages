@@ -104,9 +104,11 @@ export class UStyleClass implements OnDestroy {
     if (!target || !toggleClass) {
       return;
     }
-    target.classList.contains(toggleClass)
-      ? target.classList.remove(toggleClass)
-      : target.classList.add(toggleClass);
+    if (target.classList.contains(toggleClass)) {
+      target.classList.remove(toggleClass);
+    } else {
+      target.classList.add(toggleClass);
+    }
   }
 
   private enter(): void {

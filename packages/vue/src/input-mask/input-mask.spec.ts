@@ -59,7 +59,9 @@ describe("UInputMask — autoClear", () => {
   });
 
   it("keeps an incomplete value on blur when autoClear is false", async () => {
-    const wrapper = mount(UInputMask, { props: { modelValue: "", mask: "999-999", autoClear: false } });
+    const wrapper = mount(UInputMask, {
+      props: { modelValue: "", mask: "999-999", autoClear: false },
+    });
     const input = wrapper.find("input");
     await input.setValue("12");
     await input.trigger("blur");

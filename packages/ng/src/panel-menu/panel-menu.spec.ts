@@ -6,7 +6,10 @@ import type { UMenuItem } from "@ultimate/ng-core";
 
 describe("UPanelMenu", () => {
   const items: UMenuItem[] = [
-    { label: "Files", items: [{ label: "Documents", items: [{ label: "Work" }] }, { label: "Photos" }] },
+    {
+      label: "Files",
+      items: [{ label: "Documents", items: [{ label: "Work" }] }, { label: "Photos" }],
+    },
     { label: "Settings" },
   ];
 
@@ -86,11 +89,15 @@ describe("UPanelMenu", () => {
     const firstHeader = fixture.nativeElement.querySelector('[role="treeitem"] a');
     firstHeader.click();
     fixture.detectChanges();
-    const nestedHeader = fixture.nativeElement.querySelector('[role="tree"] [role="tree"] [role="treeitem"] a');
+    const nestedHeader = fixture.nativeElement.querySelector(
+      '[role="tree"] [role="tree"] [role="treeitem"] a'
+    );
     expect(nestedHeader).not.toBeNull();
     nestedHeader.click();
     fixture.detectChanges();
-    const deepList = fixture.nativeElement.querySelector('[role="tree"] [role="tree"] [role="tree"]');
+    const deepList = fixture.nativeElement.querySelector(
+      '[role="tree"] [role="tree"] [role="tree"]'
+    );
     expect(deepList).not.toBeNull();
   });
 
@@ -108,14 +115,21 @@ describe("UPanelMenu", () => {
   it("does not expand or invoke command for a disabled group item", () => {
     let called = false;
     const model: UMenuItem[] = [
-      { label: "Disabled", disabled: true, items: [{ label: "Hidden" }], command: () => (called = true) },
+      {
+        label: "Disabled",
+        disabled: true,
+        items: [{ label: "Hidden" }],
+        command: () => (called = true),
+      },
     ];
     const fixture = setup(model);
     const link = fixture.nativeElement.querySelector("a");
     expect(link.getAttribute("aria-disabled")).toBe("true");
     link.click();
     expect(called).toBe(false);
-    expect(fixture.nativeElement.querySelector('[role="treeitem"]').getAttribute("data-u-expanded")).toBe("false");
+    expect(
+      fixture.nativeElement.querySelector('[role="treeitem"]').getAttribute("data-u-expanded")
+    ).toBe("false");
   });
 
   describe("keyboard navigation (Spec §5.3, GAP-054)", () => {
@@ -136,7 +150,11 @@ describe("UPanelMenu", () => {
     });
 
     it("ArrowDown skips a disabled root item", () => {
-      const fixture = setup([{ label: "Files" }, { label: "Settings", disabled: true }, { label: "Help" }]);
+      const fixture = setup([
+        { label: "Files" },
+        { label: "Settings", disabled: true },
+        { label: "Help" },
+      ]);
       const links = fixture.nativeElement.querySelectorAll('[role="tree"] > [role="treeitem"] a');
       links[0].focus();
       keydown(links[0], "ArrowDown");
@@ -157,13 +175,17 @@ describe("UPanelMenu", () => {
     });
 
     it("does not toggle a disabled group item via Enter/Space", () => {
-      const model: UMenuItem[] = [{ label: "Disabled", disabled: true, items: [{ label: "Hidden" }] }];
+      const model: UMenuItem[] = [
+        { label: "Disabled", disabled: true, items: [{ label: "Hidden" }] },
+      ];
       const fixture = setup(model);
       const link = fixture.nativeElement.querySelector("a");
       link.focus();
       keydown(link, "Enter");
       fixture.detectChanges();
-      expect(fixture.nativeElement.querySelector('[role="treeitem"]').getAttribute("data-u-expanded")).toBe("false");
+      expect(
+        fixture.nativeElement.querySelector('[role="treeitem"]').getAttribute("data-u-expanded")
+      ).toBe("false");
     });
 
     it("ArrowDown/ArrowUp move focus among a nested (genuinely focused, non-root) level's own visible items, not bubbling into the root level's navigation", () => {
@@ -178,7 +200,7 @@ describe("UPanelMenu", () => {
       rootHeader.click();
       fixture.detectChanges();
       const nestedLinks = fixture.nativeElement.querySelectorAll(
-        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"] a',
+        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"] a'
       );
       expect(nestedLinks.length).toBe(3);
       nestedLinks[0].focus();
@@ -202,7 +224,7 @@ describe("UPanelMenu", () => {
       rootHeader.click();
       fixture.detectChanges();
       const nestedLinks = fixture.nativeElement.querySelectorAll(
-        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"] a',
+        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"] a'
       );
       nestedLinks[0].focus();
       keydown(nestedLinks[0], "ArrowDown");
@@ -215,13 +237,13 @@ describe("UPanelMenu", () => {
       rootHeader.click();
       fixture.detectChanges();
       const nestedHeader = fixture.nativeElement.querySelector(
-        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"] a',
+        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"] a'
       );
       nestedHeader.focus();
       keydown(nestedHeader, "Enter");
       fixture.detectChanges();
       const nestedItem = fixture.nativeElement.querySelector(
-        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"]',
+        '[role="tree"] > [role="treeitem"] [role="tree"] > [role="treeitem"]'
       );
       expect(nestedItem.getAttribute("data-u-expanded")).toBe("true");
       const rootItem = fixture.nativeElement.querySelector('[role="tree"] > [role="treeitem"]');
@@ -237,7 +259,9 @@ describe("UPanelMenu", () => {
         ];
         const fixture = setup(model);
         // "Files" is rendered link index 1 (Hidden renders no <li>/<a>), but model index 2.
-        const links = fixture.nativeElement.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+        const links = fixture.nativeElement.querySelectorAll(
+          '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+        );
         const filesLink = links[1];
         filesLink.focus();
         keydown(filesLink, "Enter");
@@ -255,7 +279,9 @@ describe("UPanelMenu", () => {
           { label: "C" },
         ];
         const fixture = setup(model);
-        const links = fixture.nativeElement.querySelectorAll('[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a');
+        const links = fixture.nativeElement.querySelectorAll(
+          '[role="tree"] > [role="treeitem"] > .u-panelmenu-header-content > a'
+        );
         // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
         const [a, b, c] = links;
         b.focus();

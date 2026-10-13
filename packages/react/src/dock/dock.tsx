@@ -55,7 +55,10 @@ export const UDock = React.forwardRef<HTMLDivElement, UDockProps>(function UDock
   }, []);
 
   /** Items that actually render their own `<a>` (excludes hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
-  const renderedItems = React.useCallback((): UMenuItem[] => model.filter((candidate) => candidate.visible !== false), [model]);
+  const renderedItems = React.useCallback(
+    (): UMenuItem[] => model.filter((candidate) => candidate.visible !== false),
+    [model]
+  );
 
   const resolveOwnItem = (target: EventTarget | null): UMenuItem | null => {
     const links = getItemLinks();
@@ -125,11 +128,24 @@ export const UDock = React.forwardRef<HTMLDivElement, UDockProps>(function UDock
   return (
     <div ref={ref} className={[cx("root", { position }), className].filter(Boolean).join(" ")}>
       <div className={cx("listContainer")}>
-        <ul ref={listRef} className={cx("list")} role="menu" aria-label={ariaLabel} onKeyDown={onKeyDown}>
+        <ul
+          ref={listRef}
+          className={cx("list")}
+          role="menu"
+          aria-label={ariaLabel}
+          onKeyDown={onKeyDown}
+        >
           {model.map((item, index) => {
             if (item.visible === false) return null;
             return (
-              <li key={item.label ?? index} className={cx("item", { active: hoveredIndex === index, disabled: !!item.disabled })} role="none">
+              <li
+                key={item.label ?? index}
+                className={cx("item", {
+                  active: hoveredIndex === index,
+                  disabled: !!item.disabled,
+                })}
+                role="none"
+              >
                 <a
                   href={item.url ?? "#"}
                   className={cx("itemLink")}
@@ -141,7 +157,9 @@ export const UDock = React.forwardRef<HTMLDivElement, UDockProps>(function UDock
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(-3)}
                 >
-                  {item.icon && <span className={[cx("itemIcon"), item.icon].filter(Boolean).join(" ")} />}
+                  {item.icon && (
+                    <span className={[cx("itemIcon"), item.icon].filter(Boolean).join(" ")} />
+                  )}
                 </a>
               </li>
             );

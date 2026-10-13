@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation, output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  ViewEncapsulation,
+  output,
+} from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { tieredMenuStyleModule } from "./tiered-menu-style";
@@ -228,7 +234,9 @@ export class UTieredMenuSub extends UBaseComponent {
   }
 
   private moveFocus(current: UMenuItem, direction: 1 | -1): void {
-    const enabled = this.items.filter((candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled);
+    const enabled = this.items.filter(
+      (candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled
+    );
     if (enabled.length === 0) return;
     const currentIndex = enabled.indexOf(current);
     const startIndex = currentIndex === -1 ? 0 : currentIndex;
@@ -248,7 +256,7 @@ export class UTieredMenuSub extends UBaseComponent {
       // recursive sub-component — not a plain nested <ul> — is what
       // actually renders the next level down.
       const firstLink = openLi?.querySelector<HTMLAnchorElement>(
-        ":scope > u-tiered-menu-sub > ul > li > .u-tieredmenu-item-content > a",
+        ":scope > u-tiered-menu-sub > ul > li > .u-tieredmenu-item-content > a"
       );
       firstLink?.focus();
     });

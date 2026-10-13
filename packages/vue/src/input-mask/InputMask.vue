@@ -54,7 +54,10 @@ export default {
   },
   computed: {
     displayValue() {
-      if (this.focused || (this.dValue !== undefined && this.dValue !== null && this.dValue !== "")) {
+      if (
+        this.focused ||
+        (this.dValue !== undefined && this.dValue !== null && this.dValue !== "")
+      ) {
         return this.bufferToString();
       }
       return "";

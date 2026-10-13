@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, booleanAttribute, computed, inject, input } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  computed,
+  inject,
+  input,
+} from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
 import { UStepper } from "./stepper";
 import { stepperStyleModule } from "./stepper-style";
@@ -47,7 +55,9 @@ export class UStep extends UBaseComponent {
   disabled = input(false, { transform: booleanAttribute });
 
   protected readonly active = computed(() => this.pcStepper.isStepActive(this.value()));
-  protected readonly isStepDisabled = computed(() => !this.active() && (this.pcStepper.linear() || this.disabled()));
+  protected readonly isStepDisabled = computed(
+    () => !this.active() && (this.pcStepper.linear() || this.disabled())
+  );
 
   protected onStepClick(): void {
     this.pcStepper.updateValue(this.value());

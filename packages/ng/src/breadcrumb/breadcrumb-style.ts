@@ -51,5 +51,7 @@ export const breadcrumbStyleModule = { css, classes };
 export function isCurrentBreadcrumbItem(item: Pick<UMenuItem, "routerLink">): boolean {
   if (!item.routerLink) return false;
   const path = Array.isArray(item.routerLink) ? item.routerLink.join("/") : item.routerLink;
-  return typeof window !== "undefined" && window.location.pathname === `/${path}`.replace(/\/+/g, "/");
+  return (
+    typeof window !== "undefined" && window.location.pathname === `/${path}`.replace(/\/+/g, "/")
+  );
 }

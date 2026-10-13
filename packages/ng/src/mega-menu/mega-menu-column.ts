@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation, output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  ViewEncapsulation,
+  output,
+} from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { megaMenuStyleModule } from "./mega-menu-style";
@@ -110,7 +116,11 @@ export class UMegaMenuColumnGroup extends UBaseComponent {
 
   private getItemLinks(): HTMLAnchorElement[] {
     const ul = (this.el.nativeElement as HTMLElement).querySelector("ul");
-    return ul ? Array.from(ul.querySelectorAll<HTMLAnchorElement>(":scope > li > .u-megamenu-item-content > a")) : [];
+    return ul
+      ? Array.from(
+          ul.querySelectorAll<HTMLAnchorElement>(":scope > li > .u-megamenu-item-content > a")
+        )
+      : [];
   }
 
   private moveFocus(current: UMenuItem, direction: 1 | -1): void {

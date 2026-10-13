@@ -38,11 +38,17 @@ describe("UConfirmPopup", () => {
     const popup = mount(UConfirmPopup, { attachTo: document.body });
     let accepted = false;
 
-    confirmationEventBus.emit("confirm", { message: "Delete?", target: button, accept: () => (accepted = true) });
+    confirmationEventBus.emit("confirm", {
+      message: "Delete?",
+      target: button,
+      accept: () => (accepted = true),
+    });
     await popup.vm.$nextTick();
 
     const buttons = document.querySelectorAll(".u-confirmpopup-footer button");
-    (buttons[buttons.length - 1] as HTMLButtonElement).dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    (buttons[buttons.length - 1] as HTMLButtonElement).dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
     await popup.vm.$nextTick();
 
     expect(accepted).toBe(true);
@@ -58,10 +64,16 @@ describe("UConfirmPopup", () => {
     const popup = mount(UConfirmPopup, { attachTo: document.body });
     let rejected = false;
 
-    confirmationEventBus.emit("confirm", { message: "Delete?", target: button, reject: () => (rejected = true) });
+    confirmationEventBus.emit("confirm", {
+      message: "Delete?",
+      target: button,
+      reject: () => (rejected = true),
+    });
     await popup.vm.$nextTick();
 
-    const rejectButton = document.querySelector(".u-confirmpopup-footer button") as HTMLButtonElement;
+    const rejectButton = document.querySelector(
+      ".u-confirmpopup-footer button"
+    ) as HTMLButtonElement;
     rejectButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     await popup.vm.$nextTick();
 
@@ -74,7 +86,9 @@ describe("UConfirmPopup", () => {
 
   it("hides when clicking outside the popup and target", async () => {
     const wrapper = mount(
-      { template: `<div><button class="trigger">Delete</button><div class="outside">Outside</div></div>` },
+      {
+        template: `<div><button class="trigger">Delete</button><div class="outside">Outside</div></div>`,
+      },
       { attachTo: document.body }
     );
     const button = wrapper.find(".trigger").element;
@@ -98,7 +112,11 @@ describe("UConfirmPopup", () => {
     const popup = mount(UConfirmPopup, { attachTo: document.body });
     let rejected = false;
 
-    confirmationEventBus.emit("confirm", { message: "Delete?", target: button, reject: () => (rejected = true) });
+    confirmationEventBus.emit("confirm", {
+      message: "Delete?",
+      target: button,
+      reject: () => (rejected = true),
+    });
     await popup.vm.$nextTick();
 
     document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));

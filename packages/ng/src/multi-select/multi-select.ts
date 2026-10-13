@@ -68,7 +68,12 @@ export interface UMultiSelectChangeEvent {
     @if (isVisibleClearIcon()) {
       <span [class]="cx('clearIcon')" aria-hidden="true" (click)="clear($event)">&times;</span>
     }
-    <div [class]="cx('dropdown')" role="button" aria-hidden="true" (click)="onContainerClick($event)">
+    <div
+      [class]="cx('dropdown')"
+      role="button"
+      aria-hidden="true"
+      (click)="onContainerClick($event)"
+    >
       <span aria-hidden="true">&#9662;</span>
     </div>
     @if (renderOverlay()) {
@@ -108,7 +113,12 @@ export interface UMultiSelectChangeEvent {
                 (click)="onOptionSelect($event, option)"
                 (mouseenter)="!isOptionDisabled(option) && focusedOptionIndex.set($index)"
               >
-                <input type="checkbox" [checked]="isSelected(option)" [disabled]="isOptionDisabled(option)" tabindex="-1" />
+                <input
+                  type="checkbox"
+                  [checked]="isSelected(option)"
+                  [disabled]="isOptionDisabled(option)"
+                  tabindex="-1"
+                />
                 <span>{{ getOptionLabel(option) }}</span>
               </li>
             } @empty {
@@ -183,7 +193,9 @@ export class UMultiSelect extends UBaseEditableHolder {
     if (!query) {
       return this.options();
     }
-    return this.options().filter((option) => this.getOptionLabel(option).toLowerCase().includes(query));
+    return this.options().filter((option) =>
+      this.getOptionLabel(option).toLowerCase().includes(query)
+    );
   });
 
   protected readonly allSelected = computed(() => {
@@ -399,7 +411,9 @@ export class UMultiSelect extends UBaseEditableHolder {
   protected toggleAll(): void {
     const selectable = this.visibleOptions().filter((option) => !this.isOptionDisabled(option));
     const newValue = this.allSelected()
-      ? this.selectedValues().filter((v) => !selectable.some((option) => this.getOptionValue(option) === v))
+      ? this.selectedValues().filter(
+          (v) => !selectable.some((option) => this.getOptionValue(option) === v)
+        )
       : [
           ...this.selectedValues(),
           ...selectable

@@ -53,7 +53,10 @@ test.describe("Vue/Tooltip", () => {
     const tooltip = page.locator('[role="tooltip"]');
     await expect(tooltip).toHaveCount(1);
     await expect(tooltip).toHaveText("Save changes");
-    await expect(button).toHaveAttribute("aria-describedby", await tooltip.getAttribute("id") ?? "");
+    await expect(button).toHaveAttribute(
+      "aria-describedby",
+      (await tooltip.getAttribute("id")) ?? ""
+    );
 
     // Real, verified finding: unlike React's Tooltip (a hardcoded
     // off-screen position), Vue's tooltip.ts genuinely computes a correct

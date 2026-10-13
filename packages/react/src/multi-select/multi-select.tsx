@@ -87,7 +87,10 @@ export function UMultiSelect<T = unknown>({
   onBlur,
   onClear,
 }: UMultiSelectProps<T>): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "multi-select", styleModule: multiSelectStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "multi-select",
+    styleModule: multiSelectStyleModule,
+  });
 
   const getOptionLabel = React.useCallback(
     (option: unknown): string => resolve(optionLabel, option, (o) => String(o)),
@@ -135,7 +138,15 @@ export function UMultiSelect<T = unknown>({
         return option !== undefined ? getOptionLabel(option) : String(v);
       })
       .join(", ");
-  }, [selectedValues, maxSelectedLabels, selectedItemsLabel, options, getOptionValue, getOptionLabel, placeholder]);
+  }, [
+    selectedValues,
+    maxSelectedLabels,
+    selectedItemsLabel,
+    options,
+    getOptionValue,
+    getOptionLabel,
+    placeholder,
+  ]);
 
   const hide = () => {
     setOverlayVisible(false);
@@ -164,7 +175,9 @@ export function UMultiSelect<T = unknown>({
       ? selectedValues.filter((v) => !selectable.some((option) => getOptionValue(option) === v))
       : [
           ...selectedValues,
-          ...selectable.map((option) => getOptionValue(option) as T).filter((v) => !selectedValues.includes(v)),
+          ...selectable
+            .map((option) => getOptionValue(option) as T)
+            .filter((v) => !selectedValues.includes(v)),
         ];
     onChange(newValue);
   };
@@ -190,17 +203,29 @@ export function UMultiSelect<T = unknown>({
     if (disabled) return;
     switch (event.code) {
       case "ArrowDown":
-        overlayVisible ? moveFocus(1) : show();
+        if (overlayVisible) {
+          moveFocus(1);
+        } else {
+          show();
+        }
         event.preventDefault();
         break;
       case "ArrowUp":
-        overlayVisible ? moveFocus(-1) : show();
+        if (overlayVisible) {
+          moveFocus(-1);
+        } else {
+          show();
+        }
         event.preventDefault();
         break;
       case "Enter":
       case "NumpadEnter":
       case "Space":
-        overlayVisible ? selectFocused(event) : show();
+        if (overlayVisible) {
+          selectFocused(event);
+        } else {
+          show();
+        }
         event.preventDefault();
         break;
       case "Escape":
@@ -220,7 +245,11 @@ export function UMultiSelect<T = unknown>({
   const isVisibleClearIcon = showClear && selectedValues.length > 0 && !disabled;
 
   return (
-    <div className={[cx("root", { disabled, overlayVisible, fluid }), className].filter(Boolean).join(" ")}>
+    <div
+      className={[cx("root", { disabled, overlayVisible, fluid }), className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <span
         role="combobox"
         aria-haspopup="listbox"
@@ -230,7 +259,11 @@ export function UMultiSelect<T = unknown>({
         className={cx("label", { placeholder: selectedValues.length === 0 })}
         onClick={(event) => {
           if (disabled) return;
-          overlayVisible ? hide() : show();
+          if (overlayVisible) {
+            hide();
+          } else {
+            show();
+          }
           event.stopPropagation();
         }}
         onKeyDown={handleKeyDown}
@@ -258,7 +291,11 @@ export function UMultiSelect<T = unknown>({
         aria-hidden="true"
         onClick={(event) => {
           if (disabled) return;
-          overlayVisible ? hide() : show();
+          if (overlayVisible) {
+            hide();
+          } else {
+            show();
+          }
           event.stopPropagation();
         }}
       >
@@ -268,7 +305,12 @@ export function UMultiSelect<T = unknown>({
         <div className={cx("overlay")}>
           <div className={cx("header")} onClick={(event) => event.stopPropagation()}>
             {showToggleAll && (
-              <input type="checkbox" aria-label="Select All" checked={allSelected} onChange={toggleAll} />
+              <input
+                type="checkbox"
+                aria-label="Select All"
+                checked={allSelected}
+                onChange={toggleAll}
+              />
             )}
             {filter && (
               <input

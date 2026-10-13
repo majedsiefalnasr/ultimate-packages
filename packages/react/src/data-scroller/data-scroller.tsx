@@ -50,89 +50,109 @@ export interface UDataScrollerProps<T = unknown> {
  * same "smaller surface than upstream" precedent as every sibling
  * component.
  */
-export const UDataScroller = React.forwardRef<UDataScrollerRef, UDataScrollerProps>(function UDataScroller(
-  { value, rows = 0, inline = false, lazy = false, loader = false, buffer = 0.9, scrollHeight, header, footer, itemTemplate, emptyMessage, onLazyLoad, className },
-  ref
-) {
-  const { cx } = useComponentBase({ componentName: "data-scroller", styleModule: dataScrollerStyleModule });
-  const [windowEnd, setWindowEnd] = React.useState(0);
-  const hasLoadedInitial = React.useRef(false);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+export const UDataScroller = React.forwardRef<UDataScrollerRef, UDataScrollerProps>(
+  function UDataScroller(
+    {
+      value,
+      rows = 0,
+      inline = false,
+      lazy = false,
+      loader = false,
+      buffer = 0.9,
+      scrollHeight,
+      header,
+      footer,
+      itemTemplate,
+      emptyMessage,
+      onLazyLoad,
+      className,
+    },
+    ref
+  ) {
+    const { cx } = useComponentBase({
+      componentName: "data-scroller",
+      styleModule: dataScrollerStyleModule,
+    });
+    const [windowEnd, setWindowEnd] = React.useState(0);
+    const hasLoadedInitial = React.useRef(false);
+    const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const isLazy = lazy;
-  const total = value?.length ?? 0;
-  const dataToRender = isLazy ? (value ?? []) : (value ?? []).slice(0, windowEnd);
+    const isLazy = lazy;
+    const total = value?.length ?? 0;
+    const dataToRender = isLazy ? (value ?? []) : (value ?? []).slice(0, windowEnd);
 
-  // `load()` advances the render window by `rows` each call. The first call
-  // (from the mount effect below, matching real source's own
-  // `useMountEffect(() => load())`) fills the initial window (0..rows)
-  // rather than skipping past it — subsequent calls (from scroll or the
-  // exposed imperative `load()`) advance further, matching real source's
-  // own single-`load()`-does-both-jobs shape.
-  const load = React.useCallback(() => {
-    const first = hasLoadedInitial.current ? windowEnd : 0;
-    const nextWindowEnd = first + rows;
-    hasLoadedInitial.current = true;
-    if (isLazy) {
-      onLazyLoad?.({ first, rows });
-      setWindowEnd(nextWindowEnd);
-    } else {
-      if (first < total) setWindowEnd(Math.min(nextWindowEnd, total));
-    }
-  }, [windowEnd, rows, isLazy, onLazyLoad, total]);
-
-  const reset = React.useCallback(() => {
-    setWindowEnd(0);
-    hasLoadedInitial.current = false;
-    load();
-  }, [load]);
-
-  React.useImperativeHandle(ref, () => ({ load, reset }), [load, reset]);
-
-  // Mount-time load, matching real source's own `useMountEffect(() => load())`
-  // — reuses the same `load()` used everywhere else, rather than duplicating
-  // the lazy-mode branch separately.
-  React.useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    if (loader) return;
-    const target: HTMLElement | Window = inline ? (containerRef.current ?? window) : window;
-    const handleScroll = () => {
-      // Matches real source's own threshold formula
-      // (`scrollTop >= scrollHeight * buffer - viewportHeight`), not a
-      // rescaled fraction-of-total formula — kept algebraically identical
-      // to real `DataScroller.js` so `buffer`'s meaning matches upstream
-      // exactly.
-      if (inline && containerRef.current) {
-        const el = containerRef.current;
-        if (el.scrollTop >= el.scrollHeight * buffer - el.clientHeight) load();
+    // `load()` advances the render window by `rows` each call. The first call
+    // (from the mount effect below, matching real source's own
+    // `useMountEffect(() => load())`) fills the initial window (0..rows)
+    // rather than skipping past it — subsequent calls (from scroll or the
+    // exposed imperative `load()`) advance further, matching real source's
+    // own single-`load()`-does-both-jobs shape.
+    const load = React.useCallback(() => {
+      const first = hasLoadedInitial.current ? windowEnd : 0;
+      const nextWindowEnd = first + rows;
+      hasLoadedInitial.current = true;
+      if (isLazy) {
+        onLazyLoad?.({ first, rows });
+        setWindowEnd(nextWindowEnd);
       } else {
-        const doc = document.documentElement;
-        if (window.scrollY >= doc.scrollHeight * buffer - window.innerHeight) load();
+        if (first < total) setWindowEnd(Math.min(nextWindowEnd, total));
       }
-    };
-    target.addEventListener("scroll", handleScroll);
-    return () => target.removeEventListener("scroll", handleScroll);
-  }, [loader, inline, buffer, load]);
+    }, [windowEnd, rows, isLazy, onLazyLoad, total]);
 
-  const isEmpty = total === 0;
+    const reset = React.useCallback(() => {
+      setWindowEnd(0);
+      hasLoadedInitial.current = false;
+      load();
+    }, [load]);
 
-  return (
-    <div
-      ref={containerRef}
-      className={[cx("root", { inline }), className].filter(Boolean).join(" ")}
-      style={inline && scrollHeight ? { maxHeight: scrollHeight, overflowY: "auto" } : undefined}
-    >
-      {header}
-      {isEmpty ? (
-        <div className={cx("emptyMessage")}>{emptyMessage ?? "No records found"}</div>
-      ) : (
-        <div className={cx("content")}>{dataToRender.map((item, index) => itemTemplate(item, index))}</div>
-      )}
-      {footer}
-    </div>
-  );
-});
+    React.useImperativeHandle(ref, () => ({ load, reset }), [load, reset]);
+
+    // Mount-time load, matching real source's own `useMountEffect(() => load())`
+    // — reuses the same `load()` used everywhere else, rather than duplicating
+    // the lazy-mode branch separately.
+    React.useEffect(() => {
+      load();
+    }, []);
+
+    React.useEffect(() => {
+      if (loader) return;
+      const target: HTMLElement | Window = inline ? (containerRef.current ?? window) : window;
+      const handleScroll = () => {
+        // Matches real source's own threshold formula
+        // (`scrollTop >= scrollHeight * buffer - viewportHeight`), not a
+        // rescaled fraction-of-total formula — kept algebraically identical
+        // to real `DataScroller.js` so `buffer`'s meaning matches upstream
+        // exactly.
+        if (inline && containerRef.current) {
+          const el = containerRef.current;
+          if (el.scrollTop >= el.scrollHeight * buffer - el.clientHeight) load();
+        } else {
+          const doc = document.documentElement;
+          if (window.scrollY >= doc.scrollHeight * buffer - window.innerHeight) load();
+        }
+      };
+      target.addEventListener("scroll", handleScroll);
+      return () => target.removeEventListener("scroll", handleScroll);
+    }, [loader, inline, buffer, load]);
+
+    const isEmpty = total === 0;
+
+    return (
+      <div
+        ref={containerRef}
+        className={[cx("root", { inline }), className].filter(Boolean).join(" ")}
+        style={inline && scrollHeight ? { maxHeight: scrollHeight, overflowY: "auto" } : undefined}
+      >
+        {header}
+        {isEmpty ? (
+          <div className={cx("emptyMessage")}>{emptyMessage ?? "No records found"}</div>
+        ) : (
+          <div className={cx("content")}>
+            {dataToRender.map((item, index) => itemTemplate(item, index))}
+          </div>
+        )}
+        {footer}
+      </div>
+    );
+  }
+);

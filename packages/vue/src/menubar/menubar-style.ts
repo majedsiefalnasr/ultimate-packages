@@ -51,7 +51,10 @@ const classes = {
   submenu: "u-menubar-submenu",
   item: (params: Record<string, unknown> = {}) => {
     const { disabled, open } = params as MenubarClassesParams;
-    return ["u-menubar-item", { "u-menubar-item-disabled": Boolean(disabled), "u-menubar-item-open": Boolean(open) }];
+    return [
+      "u-menubar-item",
+      { "u-menubar-item-disabled": Boolean(disabled), "u-menubar-item-open": Boolean(open) },
+    ];
   },
   itemContent: "u-menubar-item-content",
   itemLink: "u-menubar-item-link",

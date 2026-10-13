@@ -71,7 +71,10 @@ describe("USelect", () => {
     @Component({
       standalone: true,
       imports: [USelect],
-      template: `<u-select [options]="['Apple', 'Banana', 'Cherry']" (onChange)="onChange($event)" />`,
+      template: `<u-select
+        [options]="['Apple', 'Banana', 'Cherry']"
+        (onChange)="onChange($event)"
+      />`,
     })
     class HostComponent {
       lastValue: unknown;
@@ -156,7 +159,12 @@ describe("USelect", () => {
     @Component({
       standalone: true,
       imports: [USelect, FormsModule],
-      template: `<u-select [options]="options" [optionLabel]="'label'" [optionDisabled]="'disabled'" [(ngModel)]="value" />`,
+      template: `<u-select
+        [options]="options"
+        [optionLabel]="'label'"
+        [optionDisabled]="'disabled'"
+        [(ngModel)]="value"
+      />`,
     })
     class HostComponent {
       options = [

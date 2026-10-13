@@ -43,7 +43,8 @@ describe("getComponentApi", () => {
         {
           name: "SyntheticGapComponent",
           category: "Test",
-          description: "A synthetic record with no react api entry, used only to exercise the facet_not_recorded path.",
+          description:
+            "A synthetic record with no react api entry, used only to exercise the facet_not_recorded path.",
           schemaVersion: "1.0.0",
           metadataVersion: 1,
           packages: { ng: { packageName: "@ultimate/ng", sourcePath: "n/a" } },
@@ -54,7 +55,8 @@ describe("getComponentApi", () => {
       ],
     }));
 
-    const { getComponentApi: getComponentApiWithMock } = await import("../../src/tools/get-component-api");
+    const { getComponentApi: getComponentApiWithMock } =
+      await import("../../src/tools/get-component-api");
     const result = getComponentApiWithMock({ name: "SyntheticGapComponent", framework: "ng" });
 
     expect("code" in result).toBe(true);

@@ -102,7 +102,11 @@ test("fails when a packages/mcp-shaped fixture's package.json declares @ultimate
 
   const result = runScript(workDir);
 
-  assert.equal(result.status, 1, "expected fail on forward-direction dependencies violation (mcp -> cli)");
+  assert.equal(
+    result.status,
+    1,
+    "expected fail on forward-direction dependencies violation (mcp -> cli)"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /"dependencies"/);
   assert.match(result.stderr, /forward-direction/);
@@ -116,7 +120,10 @@ test("fails when a packages/mcp-shaped fixture's package.json declares @ultimate
   mkdirSync(pkgDir, { recursive: true });
   writeFileSync(
     join(pkgDir, "package.json"),
-    JSON.stringify({ name: "@ultimate/mcp", devDependencies: { "@ultimate/themes": "workspace:*" } })
+    JSON.stringify({
+      name: "@ultimate/mcp",
+      devDependencies: { "@ultimate/themes": "workspace:*" },
+    })
   );
 
   const result = runScript(workDir);
@@ -150,11 +157,18 @@ test("fails when a packages/mcp-shaped fixture's src imports @ultimate/cli (the 
   const workDir = makeWorkDir("mcp-boundary-check4-fail-cli-import-");
   const srcDir = join(workDir, "packages", "mcp", "src");
   mkdirSync(srcDir, { recursive: true });
-  writeFileSync(join(srcDir, "manifest.ts"), `import { matchCompatibility } from "@ultimate/cli";\n`);
+  writeFileSync(
+    join(srcDir, "manifest.ts"),
+    `import { matchCompatibility } from "@ultimate/cli";\n`
+  );
 
   const result = runScript(workDir);
 
-  assert.equal(result.status, 1, "expected fail on forward-direction source-import violation (mcp -> cli)");
+  assert.equal(
+    result.status,
+    1,
+    "expected fail on forward-direction source-import violation (mcp -> cli)"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /forward-direction/);
 

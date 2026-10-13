@@ -15,9 +15,28 @@
       @mousedown="onMouseDown"
       @keydown="onKeyDown"
     >
-      <path :d="rangePath" :stroke-width="strokeWidth" :stroke="rangeColor" :class="cx('range')"></path>
-      <path :d="valuePath" :stroke-width="strokeWidth" :stroke="valueColor" :class="cx('value')"></path>
-      <text v-if="showValue" :x="50" :y="57" text-anchor="middle" :fill="textColor" :class="cx('text')">{{ valueToDisplay }}</text>
+      <path
+        :d="rangePath"
+        :stroke-width="strokeWidth"
+        :stroke="rangeColor"
+        :class="cx('range')"
+      ></path>
+      <path
+        :d="valuePath"
+        :stroke-width="strokeWidth"
+        :stroke="valueColor"
+        :class="cx('value')"
+      ></path>
+      <text
+        v-if="showValue"
+        :x="50"
+        :y="57"
+        text-anchor="middle"
+        :fill="textColor"
+        :class="cx('text')"
+      >
+        {{ valueToDisplay }}
+      </text>
     </svg>
   </div>
 </template>
@@ -46,7 +65,13 @@ export default {
       return typeof this.dValue === "number" ? this.dValue : this.min;
     },
     zeroRadians() {
-      return this.mapRange(this.min > 0 && this.max > 0 ? this.min : 0, this.min, this.max, MIN_RADIANS, MAX_RADIANS);
+      return this.mapRange(
+        this.min > 0 && this.max > 0 ? this.min : 0,
+        this.min,
+        this.max,
+        MIN_RADIANS,
+        MAX_RADIANS
+      );
     },
     valueRadians() {
       return this.mapRange(this.currentValue, this.min, this.max, MIN_RADIANS, MAX_RADIANS);
@@ -85,7 +110,13 @@ export default {
       if (angle > MAX_RADIANS) {
         mappedValue = this.mapRange(angle, MIN_RADIANS, MAX_RADIANS, this.min, this.max);
       } else if (angle < start) {
-        mappedValue = this.mapRange(angle + 2 * Math.PI, MIN_RADIANS, MAX_RADIANS, this.min, this.max);
+        mappedValue = this.mapRange(
+          angle + 2 * Math.PI,
+          MIN_RADIANS,
+          MAX_RADIANS,
+          this.min,
+          this.max
+        );
       } else {
         return;
       }

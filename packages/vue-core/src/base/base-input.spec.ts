@@ -6,7 +6,11 @@ describe("createBaseInput", () => {
   it("resolvedFluid() reflects the fluid prop directly when set", () => {
     const Base = createBaseInput();
     const wrapper = mount(
-      { extends: Base, template: `<div>{{ resolvedFluid }}</div>`, props: { fluid: { type: Boolean, default: null } } },
+      {
+        extends: Base,
+        template: `<div>{{ resolvedFluid }}</div>`,
+        props: { fluid: { type: Boolean, default: null } },
+      },
       { props: { fluid: true } }
     );
     expect(wrapper.text()).toBe("true");
@@ -24,7 +28,11 @@ describe("createBaseInput", () => {
   it("resolvedVariant() reflects the variant prop when set", () => {
     const Base = createBaseInput();
     const wrapper = mount(
-      { extends: Base, template: `<div>{{ resolvedVariant }}</div>`, props: { variant: { type: String, default: null } } },
+      {
+        extends: Base,
+        template: `<div>{{ resolvedVariant }}</div>`,
+        props: { variant: { type: String, default: null } },
+      },
       { props: { variant: "filled" } }
     );
     expect(wrapper.text()).toBe("filled");

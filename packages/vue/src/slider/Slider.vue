@@ -128,7 +128,8 @@ export default {
     },
     applyStep(raw) {
       if (!this.step) return Math.floor(raw);
-      const decimalsCount = Math.floor(this.step) !== this.step ? (this.step.toString().split(".")[1]?.length ?? 0) : 0;
+      const decimalsCount =
+        Math.floor(this.step) !== this.step ? (this.step.toString().split(".")[1]?.length ?? 0) : 0;
       const stepped = Math.round(raw / this.step) * this.step;
       return decimalsCount > 0 ? +stepped.toFixed(decimalsCount) : stepped;
     },
@@ -156,7 +157,10 @@ export default {
       this.updateValue(this.applyStep(raw), event);
     },
     emitSlideEnd(event) {
-      this.$emit("slideend", { originalEvent: event, value: this.range ? this.rangeValue : this.singleValue });
+      this.$emit("slideend", {
+        originalEvent: event,
+        value: this.range ? this.rangeValue : this.singleValue,
+      });
     },
     updateBarRect() {
       const rect = this.$el.getBoundingClientRect();

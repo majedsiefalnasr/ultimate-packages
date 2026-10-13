@@ -36,13 +36,17 @@ describe("UCheckbox — uncontrolled (defaultValue)", () => {
 
 describe("UCheckbox — indeterminate (real, verified prop; opposite finding from React's Checkbox)", () => {
   it("renders MinusIcon and sets the native input's indeterminate DOM property when indeterminate", () => {
-    const wrapper = mount(UCheckbox, { props: { modelValue: false, binary: true, indeterminate: true } });
+    const wrapper = mount(UCheckbox, {
+      props: { modelValue: false, binary: true, indeterminate: true },
+    });
     expect((wrapper.find("input").element as HTMLInputElement).indeterminate).toBe(true);
     expect(wrapper.findComponent({ name: "UMinusIcon" }).exists()).toBe(true);
   });
 
   it("clears indeterminate and emits update:indeterminate on change", async () => {
-    const wrapper = mount(UCheckbox, { props: { modelValue: false, binary: true, indeterminate: true } });
+    const wrapper = mount(UCheckbox, {
+      props: { modelValue: false, binary: true, indeterminate: true },
+    });
     await wrapper.find("input").setValue(true);
     expect(wrapper.emitted("update:indeterminate")?.[0]).toEqual([false]);
   });
@@ -69,7 +73,15 @@ describe("UCheckbox — accessibility", () => {
 
   it("disabled/readonly/required/name/tabindex pass through to the native input", () => {
     const wrapper = mount(UCheckbox, {
-      props: { modelValue: false, binary: true, disabled: true, readonly: true, required: true, name: "agree", tabindex: 5 },
+      props: {
+        modelValue: false,
+        binary: true,
+        disabled: true,
+        readonly: true,
+        required: true,
+        name: "agree",
+        tabindex: 5,
+      },
     });
     const input = wrapper.find("input");
     expect(input.attributes("disabled")).toBeDefined();

@@ -44,9 +44,8 @@ describe("UAccordion", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const headers: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
-      '[role="button"]'
-    );
+    const headers: NodeListOf<HTMLElement> =
+      fixture.nativeElement.querySelectorAll('[role="button"]');
     headers[0].click();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('[role="region"]')?.textContent).toContain(
@@ -66,9 +65,8 @@ describe("UAccordion", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const headers: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
-      '[role="button"]'
-    );
+    const headers: NodeListOf<HTMLElement> =
+      fixture.nativeElement.querySelectorAll('[role="button"]');
     headers[0].click();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('[role="region"]')).not.toBeNull();
@@ -88,9 +86,8 @@ describe("UAccordion", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const headers: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
-      '[role="button"]'
-    );
+    const headers: NodeListOf<HTMLElement> =
+      fixture.nativeElement.querySelectorAll('[role="button"]');
     headers[0].click();
     fixture.detectChanges();
     headers[1].click();
@@ -110,9 +107,8 @@ describe("UAccordion", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const headers: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
-      '[role="button"]'
-    );
+    const headers: NodeListOf<HTMLElement> =
+      fixture.nativeElement.querySelectorAll('[role="button"]');
     headers[0].click();
     fixture.detectChanges();
     headers[1].click();
@@ -132,9 +128,8 @@ describe("UAccordion", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const headers: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
-      '[role="button"]'
-    );
+    const headers: NodeListOf<HTMLElement> =
+      fixture.nativeElement.querySelectorAll('[role="button"]');
     headers[2].click();
     fixture.detectChanges();
     expect(headers[2].getAttribute("aria-expanded")).toBe("false");
@@ -144,7 +139,11 @@ describe("UAccordion", () => {
     @Component({
       standalone: true,
       imports: [UAccordion],
-      template: `<u-accordion [panels]="panels" (onOpen)="onOpen($event)" (onClose)="onClose($event)"></u-accordion>`,
+      template: `<u-accordion
+        [panels]="panels"
+        (onOpen)="onOpen($event)"
+        (onClose)="onClose($event)"
+      ></u-accordion>`,
     })
     class HostComponent {
       panels = panels;
@@ -159,9 +158,8 @@ describe("UAccordion", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const headers: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
-      '[role="button"]'
-    );
+    const headers: NodeListOf<HTMLElement> =
+      fixture.nativeElement.querySelectorAll('[role="button"]');
     headers[0].click();
     fixture.detectChanges();
     expect((fixture.componentInstance.opened as { index: string }).index).toBe("a");
@@ -182,9 +180,8 @@ describe("UAccordion", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const headers: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
-      '[role="button"]'
-    );
+    const headers: NodeListOf<HTMLElement> =
+      fixture.nativeElement.querySelectorAll('[role="button"]');
     expect(headers[1].getAttribute("aria-expanded")).toBe("true");
   });
 });

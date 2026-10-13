@@ -155,7 +155,10 @@ export class UBreadcrumb extends UBaseComponent {
   protected isCurrent(item: UMenuItem): boolean {
     if (!item.routerLink) return false;
     const path = Array.isArray(item.routerLink) ? item.routerLink.join("/") : item.routerLink;
-    return typeof window !== "undefined" && window.location.pathname.replace(/^\//, "") === path.replace(/^\//, "");
+    return (
+      typeof window !== "undefined" &&
+      window.location.pathname.replace(/^\//, "") === path.replace(/^\//, "")
+    );
   }
 
   protected onClick(event: MouseEvent, item: UMenuItem): void {

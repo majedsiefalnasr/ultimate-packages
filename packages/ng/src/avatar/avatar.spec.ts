@@ -66,6 +66,7 @@ describe("UAvatar", () => {
     class HostComponent {
       called = false;
       onError(_event: Event) {
+        void _event;
         this.called = true;
       }
     }

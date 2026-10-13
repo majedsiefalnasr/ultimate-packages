@@ -1,6 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import { SpinnerIcon, TimesIcon, WindowMaximizeIcon, WindowMinimizeIcon, CheckIcon, MinusIcon } from "./index";
+import {
+  SpinnerIcon,
+  TimesIcon,
+  WindowMaximizeIcon,
+  WindowMinimizeIcon,
+  CheckIcon,
+  MinusIcon,
+} from "./index";
 
 describe.each([
   ["SpinnerIcon", SpinnerIcon],

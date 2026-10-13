@@ -75,7 +75,11 @@ describe("UTabView", () => {
 });
 
 describe("UTabMenu", () => {
-  const model: UMenuItem[] = [{ label: "One" }, { label: "Two" }, { label: "Three", disabled: true }];
+  const model: UMenuItem[] = [
+    { label: "One" },
+    { label: "Two" },
+    { label: "Three", disabled: true },
+  ];
 
   it("renders one tab item per model entry", () => {
     const { container } = render(<UTabMenu model={model} />);
@@ -100,7 +104,9 @@ describe("UTabMenu", () => {
     const command = vi.fn();
     const onTabChange = vi.fn();
     const items: UMenuItem[] = [{ label: "One", command }, { label: "Two" }];
-    const { container } = render(<UTabMenu model={items} activeIndex={0} onTabChange={onTabChange} />);
+    const { container } = render(
+      <UTabMenu model={items} activeIndex={0} onTabChange={onTabChange} />
+    );
     const links = container.querySelectorAll("a");
     fireEvent.click(links[0]);
     expect(command).toHaveBeenCalled();
@@ -228,7 +234,9 @@ describe("UTabView scrollable overflow (Spec §5.7, GAP-057)", () => {
       [prev(container) as Element, 30],
       [next(container) as Element, 30],
     ]);
-    const spy = vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockImplementation(function (this: HTMLElement) {
+    const spy = vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockImplementation(function (
+      this: HTMLElement
+    ) {
       return widths.get(this) ?? 0;
     });
     try {
@@ -242,7 +250,9 @@ describe("UTabView scrollable overflow (Spec §5.7, GAP-057)", () => {
 
 describe("closable tabs (Spec §5.8, GAP-058)", () => {
   const headers = (c: HTMLElement) =>
-    Array.from(c.querySelectorAll('[role="tab"]')).map((li) => li.querySelector("button")!.textContent);
+    Array.from(c.querySelectorAll('[role="tab"]')).map(
+      (li) => li.querySelector("button")!.textContent
+    );
   const selectedHeader = (c: HTMLElement) =>
     c.querySelector('[role="tab"][aria-selected="true"] button')?.textContent;
   const closeBtn = (c: HTMLElement, n: number) =>
@@ -275,7 +285,9 @@ describe("closable tabs (Spec §5.8, GAP-058)", () => {
         <UTabPanel header="A" closable closeIcon={<i data-testid="ico" />} />
       </UTabView>
     );
-    expect(screen.getByRole("button", { name: /close/i })).toContainElement(screen.getByTestId("ico"));
+    expect(screen.getByRole("button", { name: /close/i })).toContainElement(
+      screen.getByTestId("ico")
+    );
   });
 
   it("closing removes the tab and fires onTabClose with the index", () => {

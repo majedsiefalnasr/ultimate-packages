@@ -53,7 +53,10 @@ export const UPaginator: React.FC<UPaginatorProps> = ({
   pageLinkSize = 5,
   onPageChange,
 }) => {
-  const { cx } = useComponentBase({ componentName: "paginator", styleModule: paginatorStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "paginator",
+    styleModule: paginatorStyleModule,
+  });
 
   const pageCount = getPageCount(totalRecords, rows);
   const page = rows > 0 ? Math.floor(first / rows) : 0;

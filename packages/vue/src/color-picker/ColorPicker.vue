@@ -23,7 +23,10 @@
             @mousedown="onColorMouseDown"
           >
             <div :class="cx('colorBackground')">
-              <div :class="cx('colorHandle')" :style="{ left: colorHandleLeft + 'px', top: colorHandleTop + 'px' }"></div>
+              <div
+                :class="cx('colorHandle')"
+                :style="{ left: colorHandleLeft + 'px', top: colorHandleTop + 'px' }"
+              ></div>
             </div>
           </div>
           <div ref="hueRef" :class="cx('hue')" @mousedown="onHueMouseDown">
@@ -244,7 +247,9 @@ export default {
       const rect = this.$refs.colorSelectorRef?.getBoundingClientRect();
       if (!rect) return;
       const saturation = Math.floor((100 * Math.max(0, Math.min(150, clientX - rect.left))) / 150);
-      const brightness = Math.floor((100 * (150 - Math.max(0, Math.min(150, clientY - rect.top)))) / 150);
+      const brightness = Math.floor(
+        (100 * (150 - Math.max(0, Math.min(150, clientY - rect.top)))) / 150
+      );
       this.updateModel(validateHsb({ h: this.hsbValue.h, s: saturation, b: brightness }), event);
     },
     pickHue(clientY, event) {

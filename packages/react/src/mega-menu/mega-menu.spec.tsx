@@ -19,7 +19,9 @@ describe("UMegaMenu", () => {
   it("renders a menubar of root items", () => {
     const { container } = render(<UMegaMenu model={items} />);
     expect(container.querySelector('[role="menubar"]')).not.toBeNull();
-    const rootLinks = container.querySelectorAll(".u-megamenu-root-list > li > .u-megamenu-content > a");
+    const rootLinks = container.querySelectorAll(
+      ".u-megamenu-root-list > li > .u-megamenu-content > a"
+    );
     expect(rootLinks.length).toBe(2);
   });
 
@@ -31,7 +33,9 @@ describe("UMegaMenu", () => {
 
   it("opens the multi-column overlay on click", () => {
     const { container } = render(<UMegaMenu model={items} />);
-    const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+    const productsItem = container.querySelector(
+      ".u-megamenu-root-list > li:first-child"
+    ) as HTMLElement;
     fireEvent.click(productsItem.querySelector("a") as HTMLAnchorElement);
     expect(productsItem.getAttribute("data-u-open")).toBe("true");
     expect(productsItem.querySelectorAll(".u-megamenu-column").length).toBe(2);
@@ -39,15 +43,21 @@ describe("UMegaMenu", () => {
 
   it("renders each column's grouped items with a submenu label", () => {
     const { container } = render(<UMegaMenu model={items} />);
-    const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+    const productsItem = container.querySelector(
+      ".u-megamenu-root-list > li:first-child"
+    ) as HTMLElement;
     fireEvent.click(productsItem.querySelector("a") as HTMLAnchorElement);
-    const labels = Array.from(productsItem.querySelectorAll(".u-megamenu-submenu-label")).map((el) => el.textContent);
+    const labels = Array.from(productsItem.querySelectorAll(".u-megamenu-submenu-label")).map(
+      (el) => el.textContent
+    );
     expect(labels).toEqual(["Category A", "Category B"]);
   });
 
   it("closes the overlay on a second click", () => {
     const { container } = render(<UMegaMenu model={items} />);
-    const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+    const productsItem = container.querySelector(
+      ".u-megamenu-root-list > li:first-child"
+    ) as HTMLElement;
     const link = productsItem.querySelector("a") as HTMLAnchorElement;
     fireEvent.click(link);
     fireEvent.click(link);
@@ -57,7 +67,9 @@ describe("UMegaMenu", () => {
   it("invokes onItemSelect and closes the overlay when a leaf column item is clicked", () => {
     const onItemSelect = vi.fn();
     const { container } = render(<UMegaMenu model={items} onItemSelect={onItemSelect} />);
-    const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+    const productsItem = container.querySelector(
+      ".u-megamenu-root-list > li:first-child"
+    ) as HTMLElement;
     fireEvent.click(productsItem.querySelector("a") as HTMLAnchorElement);
     const leafLink = productsItem.querySelector(".u-megamenu-submenu a") as HTMLAnchorElement;
     fireEvent.click(leafLink);
@@ -82,7 +94,9 @@ describe("UMegaMenu", () => {
       const { container } = render(
         <UMegaMenu model={[{ label: "File" }, { label: "Edit" }, { label: "View" }]} />
       );
-      const links = container.querySelectorAll<HTMLAnchorElement>(".u-megamenu-root-list > li > .u-megamenu-content > a");
+      const links = container.querySelectorAll<HTMLAnchorElement>(
+        ".u-megamenu-root-list > li > .u-megamenu-content > a"
+      );
       links[0].focus();
       fireEvent.keyDown(links[0], { code: "ArrowRight" });
       expect(document.activeElement).toBe(links[1]);
@@ -100,9 +114,13 @@ describe("UMegaMenu", () => {
 
     it("ArrowRight skips a disabled root item", () => {
       const { container } = render(
-        <UMegaMenu model={[{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]} />
+        <UMegaMenu
+          model={[{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]}
+        />
       );
-      const links = container.querySelectorAll<HTMLAnchorElement>(".u-megamenu-root-list > li > .u-megamenu-content > a");
+      const links = container.querySelectorAll<HTMLAnchorElement>(
+        ".u-megamenu-root-list > li > .u-megamenu-content > a"
+      );
       links[0].focus();
       fireEvent.keyDown(links[0], { code: "ArrowRight" });
       expect(document.activeElement).toBe(links[2]);
@@ -110,7 +128,9 @@ describe("UMegaMenu", () => {
 
     it("Enter/Space on a column-having item opens the overlay and focuses its first leaf item", () => {
       const { container } = render(<UMegaMenu model={items} />);
-      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      const productsItem = container.querySelector(
+        ".u-megamenu-root-list > li:first-child"
+      ) as HTMLElement;
       const productsLink = productsItem.querySelector("a") as HTMLAnchorElement;
       productsLink.focus();
       fireEvent.keyDown(productsLink, { code: "Enter" });
@@ -123,12 +143,16 @@ describe("UMegaMenu", () => {
 
     it("Escape closes the open overlay from a focused leaf item and returns focus to its root trigger", () => {
       const { container } = render(<UMegaMenu model={items} />);
-      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      const productsItem = container.querySelector(
+        ".u-megamenu-root-list > li:first-child"
+      ) as HTMLElement;
       const productsLink = productsItem.querySelector("a") as HTMLAnchorElement;
       productsLink.focus();
       fireEvent.keyDown(productsLink, { code: "Enter" });
 
-      const firstLeafLink = productsItem.querySelector<HTMLAnchorElement>(".u-megamenu-submenu a") as HTMLAnchorElement;
+      const firstLeafLink = productsItem.querySelector<HTMLAnchorElement>(
+        ".u-megamenu-submenu a"
+      ) as HTMLAnchorElement;
       expect(document.activeElement).toBe(firstLeafLink);
 
       // Escape fired from focus genuinely inside the overlay on a leaf item,
@@ -141,10 +165,17 @@ describe("UMegaMenu", () => {
 
     it("ArrowDown/ArrowUp move focus among a column group's own leaf items, wrapping around", () => {
       const model: UMegaMenuItem[] = [
-        { label: "Products", items: [[{ label: "Category A", items: [{ label: "A1" }, { label: "A2" }, { label: "A3" }] }]] },
+        {
+          label: "Products",
+          items: [
+            [{ label: "Category A", items: [{ label: "A1" }, { label: "A2" }, { label: "A3" }] }],
+          ],
+        },
       ];
       const { container } = render(<UMegaMenu model={model} />);
-      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      const productsItem = container.querySelector(
+        ".u-megamenu-root-list > li:first-child"
+      ) as HTMLElement;
       fireEvent.click(productsItem.querySelector("a") as HTMLAnchorElement);
 
       const leafLinks = productsItem.querySelectorAll<HTMLAnchorElement>(".u-megamenu-submenu a");
@@ -169,11 +200,20 @@ describe("UMegaMenu", () => {
       const model: UMegaMenuItem[] = [
         {
           label: "Products",
-          items: [[{ label: "Category A", items: [{ label: "A1" }, { label: "A2", disabled: true }, { label: "A3" }] }]],
+          items: [
+            [
+              {
+                label: "Category A",
+                items: [{ label: "A1" }, { label: "A2", disabled: true }, { label: "A3" }],
+              },
+            ],
+          ],
         },
       ];
       const { container } = render(<UMegaMenu model={model} />);
-      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      const productsItem = container.querySelector(
+        ".u-megamenu-root-list > li:first-child"
+      ) as HTMLElement;
       fireEvent.click(productsItem.querySelector("a") as HTMLAnchorElement);
 
       const leafLinks = productsItem.querySelectorAll<HTMLAnchorElement>(".u-megamenu-submenu a");
@@ -190,12 +230,16 @@ describe("UMegaMenu", () => {
         { label: "About", url: "/about" },
       ];
       const { container } = render(<UMegaMenu model={model} />);
-      const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+      const productsItem = container.querySelector(
+        ".u-megamenu-root-list > li:first-child"
+      ) as HTMLElement;
       const productsLink = productsItem.querySelector("a") as HTMLAnchorElement;
       productsLink.focus();
       fireEvent.keyDown(productsLink, { code: "Enter" });
 
-      const firstLeafLink = productsItem.querySelector<HTMLAnchorElement>(".u-megamenu-submenu a") as HTMLAnchorElement;
+      const firstLeafLink = productsItem.querySelector<HTMLAnchorElement>(
+        ".u-megamenu-submenu a"
+      ) as HTMLAnchorElement;
       fireEvent.keyDown(firstLeafLink, { code: "Escape" });
 
       expect(productsItem.getAttribute("data-u-open")).toBe("false");
@@ -231,7 +275,9 @@ describe("UMegaMenu", () => {
         bLink.focus();
         fireEvent.keyDown(bLink, { code: "Enter" });
 
-        const leafLink = bLink.closest("li")?.querySelector<HTMLAnchorElement>(".u-megamenu-submenu a") as HTMLAnchorElement;
+        const leafLink = bLink
+          .closest("li")
+          ?.querySelector<HTMLAnchorElement>(".u-megamenu-submenu a") as HTMLAnchorElement;
         expect(document.activeElement).toBe(leafLink);
 
         fireEvent.keyDown(leafLink, { code: "Escape" });
@@ -267,7 +313,9 @@ describe("UMegaMenu", () => {
           },
         ];
         const { container } = render(<UMegaMenu model={model} />);
-        const productsItem = container.querySelector(".u-megamenu-root-list > li:first-child") as HTMLElement;
+        const productsItem = container.querySelector(
+          ".u-megamenu-root-list > li:first-child"
+        ) as HTMLElement;
         fireEvent.click(productsItem.querySelector("a") as HTMLAnchorElement);
 
         const leafLinks = productsItem.querySelectorAll<HTMLAnchorElement>(".u-megamenu-submenu a");

@@ -25,6 +25,7 @@ These facts were confirmed by direct inspection and materially shape the tasks b
 ## 1. Scope Restatement (from approved spec, unchanged)
 
 **In v1 (implemented by this plan):**
+
 - `ultimate init` — existing-project-only, never scaffolds new projects (spec §7.1).
 - `ultimate add <package>` — installs a specific `@ultimate/*` package via the target project's detected package manager, after a compatibility check (spec §7.1).
 - `ultimate theme <preset>` — configures an `@ultimate/themes` preset into the target project (spec §7.1).
@@ -34,6 +35,7 @@ These facts were confirmed by direct inspection and materially shape the tasks b
 - The compatibility manifest at `docs/architecture/compatibility-manifest.json`, its shape (spec §6.2/§6.3), and the deterministic multi-axis matching rule (spec §6.5).
 
 **Deferred, not implemented by this plan (unchanged from spec §9):**
+
 - `ultimate create`, `ultimate migrate`, `ultimate update` — absent from the v1 command surface entirely, not even stubbed.
 - Any Phase 8 (MCP) or Phase 9 (AI Skills, beyond the `ai` stub) contract or behavior.
 - `mcpVersionRange`/`aiSkillsVersionRange` manifest fields — present in the shape (reserved, optional), never populated or evaluated by any v1 logic.
@@ -53,6 +55,7 @@ These facts were confirmed by direct inspection and materially shape the tasks b
 **Files/packages affected:** `docs/architecture/compatibility-manifest.json` (new file).
 
 **Implementation scope:**
+
 - A JSON array of `CompatibilityEntry` objects, exactly matching the shape in spec §6.2:
   ```json
   [
@@ -75,10 +78,12 @@ These facts were confirmed by direct inspection and materially shape the tasks b
 - Every `versionRange` for axes without an established real Ultimate package version yet (`ultimateFrameworkPackage`, `uixVersionRange`, `themeVersionRange`, `cliVersionRange`) uses each package's actual current `package.json` `"version"` field as a `^`-prefixed range (read directly from `packages/ng/package.json`, `packages/uix-styles/package.json` or equivalent UIX-layer package, `packages/themes/package.json`, and the version this plan's Task 2 assigns `@ultimate/cli`) — never a fabricated version number.
 
 **Tests required:**
+
 - A new test file, `docs/architecture/compatibility-manifest.test.mjs` (Node's built-in test runner, matching `scripts/test:scripts`' existing pattern of `node --test scripts/provenance/*.test.mjs`), asserting: the file is valid JSON; every entry has exactly the keys defined in spec §6.2 plus optionally the two §6.3 reserved keys; `metadataSchemaVersion` in every entry exactly equals the real, currently-installed `@ultimate/component-schema`'s `SCHEMA_VERSION` (imported directly, not hardcoded twice); no entry contains `mcpVersionRange`/`aiSkillsVersionRange` populated with a non-empty value.
 - Add this test file's glob to `test:scripts` (root `package.json`) alongside the existing `scripts/provenance/*.test.mjs` pattern, or add a new root script `test:manifest` — whichever keeps the existing `test:scripts` script's own glob scope (`scripts/provenance/*.test.mjs`) unchanged; prefer a new root script `compatibility-manifest:validate` (mirroring the existing `provenance:validate`/`boundary:validate`/`ceiling:validate` naming convention) invoked as its own CI step, added in Task 11.
 
 **Acceptance criteria:**
+
 - `node docs/architecture/compatibility-manifest.test.mjs` (or wherever the test is placed to mirror `scripts/provenance/*.test.mjs`'s convention) passes.
 - File contains exactly 3 entries (angular, react, vue) — no more, no fewer, matching the three frameworks that exist today.
 - No `packages/cli` code exists yet at this point in the plan; this task produces pure data.
@@ -94,6 +99,7 @@ These facts were confirmed by direct inspection and materially shape the tasks b
 **Files/packages affected:** `packages/cli/package.json`, `packages/cli/tsconfig.json`, `packages/cli/tsup.config.ts`, `packages/cli/vitest.config.ts`, `packages/cli/scripts/rename-dts.mjs` (copied verbatim from `packages/component-schema/scripts/rename-dts.mjs` — identical problem, identical fix, no repo evidence for a different mechanism).
 
 **Implementation scope:**
+
 - `package.json`: `"name": "@ultimate/cli"`, `"type": "module"`, `"version": "0.1.0"` (starting version, matching every other Phase 6-era package's initial `0.1.0`), `main`/`module`/`types`/`exports` matching `component-metadata`'s exact pattern, **plus** a `"bin": { "ultimate": "./dist/bin.mjs" }` field — the one confirmed-necessary addition (spec §8) beyond the inherited convention, using Node.js's own standard `bin` mechanism, not a novel one.
 - `tsup.config.ts`: two entries — `index` (the library surface: exported functions for testing, e.g. `detectFramework`, `matchCompatibility`, `readAllComponents`) and `bin` (the actual CLI entry with a `#!/usr/bin/env node` shebang, `tsup`'s `banner` option, per its own documented mechanism for shebang injection — no custom scripting needed). `format: ["esm"]`, `outExtension` → `.mjs`, `dts: true` for `index` only (bin has no consumable types), `clean: true`, `splitting: false`.
 - `tsconfig.json`: `extends: "../../tsconfig.base.json"`, `outDir: "dist"`, `rootDir: "src"`, `include: ["src"]` — identical to `component-schema`'s.
@@ -105,6 +111,7 @@ These facts were confirmed by direct inspection and materially shape the tasks b
 **Tests required:** None yet (this task is pure scaffolding — no source exists to test). Task 2's own acceptance is structural.
 
 **Acceptance criteria:**
+
 - `pnpm install` resolves `packages/cli` as a workspace member with no errors.
 - `pnpm --filter @ultimate/cli run build` succeeds against a placeholder `src/index.ts` (`export {}`) and `src/bin.ts` (a no-op `console.log("@ultimate/cli placeholder")`) — proving the build pipeline itself works before any real command logic is written.
 - `pnpm --filter @ultimate/cli run typecheck` and `test` succeed (trivially, against placeholders).
@@ -120,18 +127,21 @@ These facts were confirmed by direct inspection and materially shape the tasks b
 **Files/packages affected:** `packages/cli/src/cli.ts` (dispatch logic), `packages/cli/src/bin.ts` (entry point, calls `cli.ts`), `packages/cli/test/cli.test.ts`.
 
 **Implementation scope:**
+
 - A single dispatch function, `runCli(argv: string[]): Promise<number>` (returns an exit code, never calls `process.exit` itself — keeps the function testable without a subprocess, following the same "keep logic testable, isolate I/O" shape implied by `component-metadata/scripts/validate-all.mjs`'s own separation of validation logic from its `process.exit` call site).
 - `argv[0]` is the command name (`init`/`add`/`theme`/`doctor`/`generate`/`ai`); everything after is passed through as raw string arguments to the specific command handler (Tasks 5-8) — no flag-parsing library needed because v1's entire command surface (per spec §7) uses only positional arguments (`add <package>`, `generate <component>`, `theme <preset>`) and zero-arg commands (`init`, `doctor`, `ai`). This is the exact "smallest behavior" the spec's own §7.2 principle establishes for `generate`, applied at the dispatch layer.
 - An unrecognized command name prints a clear error listing the five real v1 commands (plus `ai`, per spec §7.3) and returns a non-zero exit code — never silently no-ops.
 - `bin.ts` is a thin wrapper: `const code = await runCli(process.argv.slice(2)); process.exit(code);` — the only place `process.exit` is called in the entire package, isolating the untestable I/O boundary to one line.
 
 **Tests required (TDD — write first):**
+
 - `runCli(["doctor"])` dispatches to the doctor handler (stub it as a jest/vitest mock or a minimal real handler landing in Task 7, whichever lands first — see dependency note below).
 - `runCli(["nonsense"])` returns non-zero and the error message names all real v1 commands.
 - `runCli([])` (no command) returns non-zero with a usage message.
 - `runCli(["ai"])` dispatches to the stub handler (Task 8).
 
 **Acceptance criteria:**
+
 - All dispatch tests pass under `vitest run --typecheck`.
 - No dependency on any argument-parsing library appears in `package.json`.
 - `bin.ts` contains exactly one `process.exit` call site.
@@ -147,10 +157,12 @@ These facts were confirmed by direct inspection and materially shape the tasks b
 **Files/packages affected:** `packages/cli/src/detect-framework.ts`, `packages/cli/test/detect-framework.test.ts`, `packages/cli/test/fixtures/{angular,react,vue,unknown}-project/package.json` (minimal fixture files).
 
 **Implementation scope:**
+
 - `detectFramework(projectDir: string): "angular" | "react" | "vue" | null` — reads `<projectDir>/package.json`'s `dependencies`/`devDependencies`, checking for `@angular/core` (→ `"angular"`), `react` (→ `"react"`), or `vue` (→ `"vue"`). Returns `null` (not a throw) when none is found or the file doesn't exist — callers (Tasks 5-7) are responsible for turning `null` into the appropriate refusal message for their own command's context, keeping this function a pure, reusable detector rather than a command-specific one.
 - If more than one framework dependency is present (an unusual but possible fixture), the function returns the first match in a fixed, documented priority order (`angular` → `react` → `vue`) rather than throwing — a deterministic, simple rule; no interactive "ask the user" prompt is implemented in v1 (out of scope — the approved spec's command definitions do not call for interactive prompts, and introducing one would be new scope beyond what §7 defines).
 
 **Tests required (TDD — write first):**
+
 - Returns `"angular"` for a fixture with `@angular/core` in `dependencies`.
 - Returns `"react"` for a fixture with `react` in `dependencies`.
 - Returns `"vue"` for a fixture with `vue` in `dependencies`.
@@ -172,10 +184,12 @@ These facts were confirmed by direct inspection and materially shape the tasks b
 **Task 5 owns the shared package-manager/install infrastructure.** `init` is the first v1 command requiring package-manager detection and installation, so this task creates and tests `detectPackageManager` and `installPackage` as standalone, independently-testable modules — not as `init`-private logic. Task 7 (`add`, `theme`) consumes these two modules as an already-built, already-tested dependency; Task 7 does not implement, redefine, or modify them. This removes the prior draft's circular dependency (Task 5 needing Task 7's helper while Task 7 needed Task 5's `init` to land first) by giving the shared infrastructure a single, unambiguous owner sequenced before its first consumer.
 
 **Implementation scope — shared package-manager/install infrastructure (owned here, consumed by Task 7):**
-- `detectPackageManager(projectDir: string): "npm" | "yarn" | "pnpm"` — reads for the presence of `pnpm-lock.yaml` → `pnpm`, `yarn.lock` → `yarn`, `package-lock.json` → `npm`, defaulting to `npm` if none is found (npm is the only package manager guaranteed present in any Node.js environment, per npm's own bundling with Node — a defensible default, not an arbitrary one). This is the *consumer* project's package manager (spec §8.1's disambiguation) — wholly independent of this monorepo's own pnpm-only tooling.
+
+- `detectPackageManager(projectDir: string): "npm" | "yarn" | "pnpm"` — reads for the presence of `pnpm-lock.yaml` → `pnpm`, `yarn.lock` → `yarn`, `package-lock.json` → `npm`, defaulting to `npm` if none is found (npm is the only package manager guaranteed present in any Node.js environment, per npm's own bundling with Node — a defensible default, not an arbitrary one). This is the _consumer_ project's package manager (spec §8.1's disambiguation) — wholly independent of this monorepo's own pnpm-only tooling.
 - `installPackage(projectDir: string, packageName: string): Promise<{ exitCode: number }>` — resolves the package manager via `detectPackageManager`, then invokes it via `child_process.spawn` (array-form arguments, never `exec`/a shell string — avoids shell-injection risk from an unsanitized package-name argument) with the correct install subcommand per manager (`npm install <pkg>` / `yarn add <pkg>` / `pnpm add <pkg>`), and resolves with the subprocess's real exit code. This single function is the only place any command in `@ultimate/cli` shells out to a package manager.
 
 **Implementation scope — `init` itself (four required steps, each independently testable):**
+
 1. **Detect/validate framework** — call `detectFramework(projectDir)` (Task 4). If `null`, return a non-zero exit code with a message stating that `init` requires an existing, already-scaffolded Angular/React/Vue project (an `angular.json` or a recognizable framework dependency in `package.json`) and that creating a new project is not supported by `init` — pointing to `ultimate create` by name as the (currently deferred, not implemented) command for that need, per spec §7.1's exact boundary text.
 2. **Resolve the compatible Ultimate framework package** — call the compatibility resolver (Task 6) against the detected framework's version (read from the target's `package.json`) and the manifest (Task 1). If no entry matches on every populated axis, refuse with a diagnostic naming the failing axis (per spec §6.5) — never proceed to installation. On a match, the resolved `CompatibilityEntry.ultimateFrameworkPackage.name` (e.g. `"@ultimate/ng"`) is the package Step 3 installs — resolved from the manifest, never hardcoded per-framework in `init.ts` itself, so `init` and the manifest never drift independently.
 3. **Install the resolved package** — call `installPackage(projectDir, resolvedPackageName)` (the module this same task owns, above) to install the exact package name resolved in Step 2 into the target project. Passes through the subprocess's real exit code; a failed install is `init`'s own failure, not swallowed.
@@ -186,6 +200,7 @@ No additional configuration architecture is introduced beyond this one flat JSON
 `init` never runs `ng new`, `create-vite`, or any package-manager `create`/`init` scaffolding command on the target's behalf — confirmed absent from this implementation by construction (no such subprocess invocation exists anywhere in `init.ts`) and by test (below).
 
 **Tests required (TDD — write first):**
+
 - `detectPackageManager` (shared infrastructure, tested here since this task owns it): three lockfile-presence cases (`pnpm-lock.yaml`/`yarn.lock`/`package-lock.json`) + the no-lockfile-defaults-to-npm case.
 - `installPackage` (shared infrastructure, tested here since this task owns it): spies on `child_process.spawn` and asserts the correct binary/args for each of the three package managers; a subprocess-failure case (mock exit code 1) resolves with that same exit code; asserts `child_process.exec` is never called (array-form-only, no shell).
 - Fixture with no `package.json` (or an "empty" fixture dir) → non-zero exit, message names `init`'s existing-project requirement and points to `create`; no compatibility check or install attempted (spy asserts zero `matchCompatibility` and zero `spawn` calls).
@@ -196,6 +211,7 @@ No additional configuration architecture is introduced beyond this one flat JSON
 - Assert no subprocess/child_process call to `ng new`/`create-vite`/equivalent occurs across every case above (spy on `child_process` and assert zero calls to any `*new*`/`*create*`-named binary) — directly enforces the §4 boundary test's "never scaffolds a new project" rule as an executable assertion, not just a code-review expectation.
 
 **Acceptance criteria:**
+
 - All tests above pass.
 - `init` performs all four steps in order for a compatible fixture project: detect → resolve → install (real `spawn` call, asserted by test) → config write.
 - `init` never writes `ultimate.config.json` when installation fails or was never attempted.
@@ -212,6 +228,7 @@ No additional configuration architecture is introduced beyond this one flat JSON
 **Files/packages affected:** `packages/cli/src/compatibility.ts`, `packages/cli/test/compatibility.test.ts`.
 
 **Implementation scope:**
+
 - `matchCompatibility(input: { framework: "angular"|"react"|"vue"; frameworkVersion: string; ultimateFrameworkPackageVersion?: string; uixVersion?: string; themeVersion?: string; metadataSchemaVersion?: string; cliVersion: string }, manifest: CompatibilityEntry[]): { matched: true; entry: CompatibilityEntry } | { matched: false; reason: string }`.
 - Uses a semver-range-satisfaction check (Node's built-in `node:module`/no built-in semver exists — evaluate: does the repo already depend on `semver` anywhere transitively suitable for direct use, or is a minimal caret-range comparator sufficient for v1's exact needs (all ranges in Task 1's manifest are simple `^x.y.z` caret ranges)? **Decision, stated explicitly per this plan's own Pre-flight #2 precedent:** implement a minimal caret-range-only comparator (parse `^`/exact/`||`-of-exact forms actually present in `docs/architecture/COMPATIBILITY.md`'s existing three real ranges — `^21.0.7`, `^3.5.0`, `^17.0.0 || ^18.0.0 || ^19.0.0`) rather than adding the `semver` npm package as a new dependency, since v1's manifest (Task 1) contains only these already-known, simple range shapes and no repo package currently depends on `semver` directly. This mirrors Pre-flight #2's same reasoning (no new dependency without repo evidence it's needed) applied to a second candidate library.
 - For **every** axis present as a key in `input` (i.e., "populated ... applicable to the target project" per spec §6.5's exact wording): compare against the corresponding manifest entry field using range-satisfaction (all axes except one), or **exact string equality** for `metadataSchemaVersion` specifically (per spec §6.2/§6.4's distinguished contract — this is the one axis never range-compared).
@@ -219,6 +236,7 @@ No additional configuration architecture is introduced beyond this one flat JSON
 - On no entry satisfying all populated axes: return `{ matched: false, reason: "<names every axis that failed on the closest/first entry, or 'no entry for framework X' if none exists for the framework at all>" }`.
 
 **Tests required (TDD — write first):**
+
 - All-axes-match case → `matched: true`.
 - Framework-version-range mismatch only → `matched: false`, reason names `frameworkVersionRange`.
 - `metadataSchemaVersion` exact-mismatch (e.g., manifest has `"1.0.0"`, input has `"1.0.1"`) → `matched: false`, reason explicitly distinguishes this as an exact-match failure, not a range failure — a directly executable assertion of spec §6.2's distinguished contract.
@@ -239,6 +257,7 @@ No additional configuration architecture is introduced beyond this one flat JSON
 **Files/packages affected:** `packages/cli/src/commands/{add,theme,doctor}.ts`, `packages/cli/test/commands/{add,theme,doctor}.test.ts`. This task creates no new shared infrastructure module — `detectPackageManager`/`installPackage` are already implemented and tested by Task 5, which this task consumes as a plain import (`packages/cli/src/detect-package-manager.ts`, `packages/cli/src/install-package.ts`). This is a deliberate, one-directional consumption: Task 7 depends on Task 5's shared-infrastructure output; Task 5 has no dependency on Task 7 in return (see Task 5's own Dependencies line).
 
 **Implementation scope — `ultimate add <package>`:**
+
 - Runs `detectFramework` + `matchCompatibility` (Tasks 4/6) first, refusing exactly as `init` does (Task 5) on any mismatch.
 - On match: calls `installPackage` (imported from Task 5's module, not reimplemented) with the named `@ultimate/*` package.
 - Passes through `installPackage`'s exit code as `add`'s own exit code — never swallows a failed install as a false success.
@@ -257,12 +276,14 @@ Confirmed repository evidence (`packages/themes/README.md`, `packages/themes/pac
 **Testing (folded into the shared "Tests required" list below):** unknown-preset refusal (no file writes); known-preset success with `@ultimate/themes` already present (no install attempted, both files written/updated correctly); known-preset success with `@ultimate/themes` absent (install attempted via `installPackage`, then both files written); re-running `theme aura` a second time does not duplicate the `applyUltimateTheme()` call inside `ultimate-theme.ts` (idempotent write, checked by string-presence before insertion).
 
 **Implementation scope — `ultimate doctor`:**
+
 - Reads `ALL_COMPONENTS` from `@ultimate/component-metadata` directly (real import, no fabrication — spec §7.2, Task requirement #11).
 - Detects the target framework (Task 4).
 - For each of the exactly 8 records in `ALL_COMPONENTS`: checks whether the corresponding `packages.<framework>.packageName` appears in the target project's `package.json` dependencies (installed/missing), and runs `matchCompatibility` (Task 6) for a compatibility status line.
 - Output (stdout) is a per-component report table/list; explicitly prints a closing line stating the exact count "8 of 8 known components reported" (or similar), never implying broader coverage exists — a direct, testable assertion of spec §7.2's "report exactly what `ALL_COMPONENTS` contains, nothing implied beyond it."
 
 **Tests required (TDD — write first).** `detectPackageManager`/`installPackage` are not re-tested here — they are Task 5's own tested output, consumed by this task's tests via mocking/spying only, never re-implemented or re-verified:
+
 - `add`: compatibility-refusal case (spy confirms zero calls to `installPackage`/`spawn`); success case asserts `installPackage` was called with the named package; a failure case propagates `installPackage`'s non-zero exit code as `add`'s own.
 - `theme`: (a) unknown preset name (e.g. `"material"`) → non-zero exit, message names `"aura"` as the only valid preset, and asserts zero writes to both `ultimate.config.json` and `ultimate-theme.ts`; (b) known preset (`"aura"`) with `@ultimate/themes` already in the fixture's `package.json` → exit 0, `installPackage`/`spawn` never called, `ultimate.config.json` updated with `themePreset: "aura"`, and `ultimate-theme.ts` created containing the `applyUltimateTheme` import + call; (c) known preset with `@ultimate/themes` absent from the fixture → `installPackage` is called with `"@ultimate/themes"` before either file is written; (d) running `theme aura` twice against the same fixture leaves exactly one `applyUltimateTheme()` call in `ultimate-theme.ts` (idempotency, per Task 7's theme description above).
 - `doctor`: with a fixture project having 3 of the 8 components' packages "installed" (present in fixture `package.json`) and 5 missing, asserts the report correctly lists 3 installed / 5 missing, and the closing line reads exactly "8 of 8 known components reported" (or the plan's chosen exact phrasing) — never "8 of ~115" or any inventory-wide number.
@@ -280,6 +301,7 @@ Confirmed repository evidence (`packages/themes/README.md`, `packages/themes/pac
 **Files/packages affected:** `packages/cli/src/commands/{generate,ai}.ts`, `packages/cli/test/commands/{generate,ai}.test.ts`.
 
 **Implementation scope — `ultimate generate <component>`:**
+
 - Detects the target framework (Task 4) — refuses if undetectable (needed to know which framework's `api`/`packages` sub-record to print).
 - Looks up the named component in `ALL_COMPONENTS` (`@ultimate/component-metadata`) by exact, case-sensitive `name` match (matching the schema's own duplicate-identity rule, per Phase 6 spec §13).
 - If not found: prints an error to stderr naming the exact 8 real component names currently available (read from `ALL_COMPONENTS.map(c => c.name)`, never a hardcoded list that could drift) and returns non-zero — the message explicitly states the 8-component ceiling, e.g. "Component 'X' is not yet in the metadata proof set. Available: Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip."
@@ -287,9 +309,11 @@ Confirmed repository evidence (`packages/themes/README.md`, `packages/themes/pac
 - **No filesystem write of any kind occurs in this command's implementation** — enforced both by code review (no `fs.writeFile`/`fs.write*` import in `generate.ts` at all) and by an executable test (spy on every `fs` write function and assert zero calls across a successful `generate` run).
 
 **Implementation scope — `ultimate ai`:**
+
 - Unconditionally prints "not yet available — Phase 9 (AI Skills) is not started" (or the plan's exact chosen wording, matching spec §7.3's required phrasing) to stderr and returns a non-zero exit code — no argument parsing, no partial behavior, regardless of what follows `ai` on the command line.
 
 **Tests required (TDD — write first):**
+
 - `generate("Button")` for a react-detected fixture → stdout contains an import from the real `packages.react.packageName` value and a snippet referencing only `required: true` props from `api.react.props`; exit code 0.
 - `generate("NotAComponent")` → stderr names all 8 real component names (read from the real `ALL_COMPONENTS`, not a hardcoded test-side list, so the test breaks visibly if the proof set ever changes without this task's message being updated); exit code non-zero.
 - Filesystem-write spy test: zero write calls across both the success and failure paths.
@@ -306,11 +330,12 @@ Confirmed repository evidence (`packages/themes/README.md`, `packages/themes/pac
 **Objective:** Provide an explicit, executable test proving the spec's required dependency direction holds in **both** directions — since Pre-flight #3 confirmed the existing `boundary:validate`/`ceiling:validate` scripts do not inspect `packages/cli` at all and so cannot be relied on to catch a violation here:
 
 - **Reverse direction (unchanged from the prior draft):** `packages/{ng,react,vue}` must never import `@ultimate/cli`.
-- **Forward direction (strengthened per this correction):** `@ultimate/cli` must never depend on or import `@ultimate/ng`, `@ultimate/react`, `@ultimate/vue`, or `@ultimate/themes` — the full runtime-package set named by the approved spec (§5's "no other Ultimate runtime package as a *code* dependency", generalized here to explicitly include `themes`, which the prior draft's check did not name).
+- **Forward direction (strengthened per this correction):** `@ultimate/cli` must never depend on or import `@ultimate/ng`, `@ultimate/react`, `@ultimate/vue`, or `@ultimate/themes` — the full runtime-package set named by the approved spec (§5's "no other Ultimate runtime package as a _code_ dependency", generalized here to explicitly include `themes`, which the prior draft's check did not name).
 
 **Files/packages affected:** `scripts/provenance/validate-cli-boundary.mjs` (new script, modeled directly on the existing `validate-boundaries.mjs`'s own structure — same `fail`/`pass` helper pattern, same file-walk approach), a matching `.test.mjs` self-test (mirroring `test:scripts`' existing convention), root `package.json` (adds one new script entry).
 
 **Implementation scope — four checks, all in one script:**
+
 1. **Reverse-direction, source imports:** walks `packages/{ng,react,vue}*/src/**/*.{ts,tsx,js,jsx,mjs,cjs}` (excluding `dist`/`node_modules`, matching `validate-boundaries.mjs`'s own exclusion pattern) and fails if any file imports `@ultimate/cli` in any form (`from "@ultimate/cli"`, `require("@ultimate/cli")`, dynamic `import("@ultimate/cli")`).
 2. **Reverse-direction, package.json:** reads every `packages/{ng,react,vue}*/package.json`'s `dependencies` (not `devDependencies` — a dev-only reference, e.g. for cross-framework testing as `@ultimate/themes` itself already does with `@ultimate/react`/`@ultimate/vue`, is not a runtime dependency and is out of this check's scope) and fails if `@ultimate/cli` appears there.
 3. **Forward-direction, package.json:** reads `packages/cli/package.json`'s own `dependencies` **and** `devDependencies` and fails if either lists any of `@ultimate/ng`, `@ultimate/react`, `@ultimate/vue`, or `@ultimate/themes` — directly enforcing the corrected requirement that `@ultimate/cli` must not depend on the framework runtime packages or the themes runtime, in any dependency field.
@@ -335,10 +360,11 @@ Named `boundary:validate:cli` in root `package.json`, run as its own step (added
 **Files/packages affected:** `packages/cli/test/boundary.test.ts` (new test file, lives inside `packages/cli`'s own test suite rather than the root `scripts/` gates, since this check is specific to this one package's source, not a cross-package repository invariant like Task 9's).
 
 **Implementation scope:**
+
 - A single test that greps (via Node's `fs`, not a shell `grep` subprocess — keeps the test hermetic and cross-platform) every `.ts` file under `packages/cli/src/` for import statements matching any bundler/compiler-class package name that would indicate build-tool-replacement behavior: `@angular/compiler`, `@babel/core`, `vite`, `webpack`, `rollup`, `esbuild` (excluding `tsup`'s own devDependency-only usage in config files, which the test explicitly scopes out by only scanning `src/`, never `tsup.config.ts`) — asserting zero matches.
 - A second assertion: every command handler (Tasks 5-8) that invokes a subprocess (`add`'s package-manager install; nothing else in v1 shells out) uses `child_process.spawn`/`spawnSync` exclusively — greps for `child_process.exec(` (the shell-interpreting variant) across `src/` and asserts zero matches, directly enforcing the injection-safety rule stated in Task 7.
 
-**Tests required:** This task *is* the test — no further sub-tests needed beyond what's described above.
+**Tests required:** This task _is_ the test — no further sub-tests needed beyond what's described above.
 
 **Acceptance criteria:** The test passes against the real `packages/cli/src/` tree once Tasks 2-8 land.
 
@@ -348,11 +374,12 @@ Named `boundary:validate:cli` in root `package.json`, run as its own step (added
 
 ### Task 11 — CI wiring for new gates
 
-**Objective:** Add the two new root-level validation scripts (Task 1's manifest validator, Task 9's CLI-boundary validator) to CI, following the exact existing pattern (`provenance:validate`/`boundary:validate`/`ceiling:validate`) — no new CI *mechanism*, only new steps using the established one.
+**Objective:** Add the two new root-level validation scripts (Task 1's manifest validator, Task 9's CLI-boundary validator) to CI, following the exact existing pattern (`provenance:validate`/`boundary:validate`/`ceiling:validate`) — no new CI _mechanism_, only new steps using the established one.
 
 **Files/packages affected:** root `package.json` (two new script entries), `.github/workflows/ci.yml` (two new steps).
 
 **Implementation scope:**
+
 - root `package.json` scripts: `"compatibility-manifest:validate": "node docs/architecture/compatibility-manifest.test.mjs"` (or wherever Task 1 placed it) and `"boundary:validate:cli": "node scripts/provenance/validate-cli-boundary.mjs"`.
 - `.github/workflows/ci.yml`: two new steps added after the existing `Prime dependency-ceiling validation` step, named `Compatibility manifest validation` and `CLI package boundary validation`, each a one-line `run: pnpm run <script>` — matching the existing steps' exact style (Pre-flight #4).
 - No change to any existing step, script, or step ordering before these two new steps — purely additive.
@@ -372,6 +399,7 @@ Named `boundary:validate:cli` in root `package.json`, run as its own step (added
 **Files/packages affected:** `docs/architecture/ROADMAP.md`, `docs/architecture/BLUEPRINT_GAPS.md`. (No other file — this task is documentation-only.)
 
 **Implementation scope — verification (must all pass before any doc edit is made):**
+
 - `pnpm install`
 - `pnpm run lint`
 - `pnpm run format:check`
@@ -386,6 +414,7 @@ Named `boundary:validate:cli` in root `package.json`, run as its own step (added
 - `pnpm run boundary:validate:cli` (Task 11)
 
 **Implementation scope — documentation closeout (only after every command above exits 0):**
+
 - `docs/architecture/ROADMAP.md`: change Phase 7's row from `Not started` to `Complete`, with a footnote (matching the existing `[^1]`/`[^2]` convention already used for Phases 5/6) stating the exact v1 scope actually shipped — the five real commands plus the `ai` stub, and the manifest's real scope: **three frameworks / six evaluated axes** (framework version, Ultimate framework package version, UIX version, theme version, exact metadata schema version, CLI version) **+ two reserved, unpopulated axes** (MCP, AI/Skills — excluded from all v1 compatibility evaluation, per spec §6.3/§6.5) — and explicitly naming that `create`/`migrate`/`update` remain unimplemented and metadata coverage remains the same real 8-component proof set (not expanded by Phase 7).
 - `docs/architecture/BLUEPRINT_GAPS.md`: mark GAP-028 resolved, following GAP-027's own closure-entry format (a short "Resolved — see `docs/superpowers/plans/2026-09-07-phase-7-cli-implementation.md`" note, consistent with how the repository already records closure pointers rather than deleting the original gap analysis text).
 
@@ -399,20 +428,20 @@ Named `boundary:validate:cli` in root `package.json`, run as its own step (added
 
 ## 3. Task Summary Table
 
-| # | Task | Type | Depends on |
-|---|---|---|---|
-| 1 | Compatibility manifest data file | Implementation + tests | — |
-| 2 | `packages/cli` scaffolding | Implementation | — |
-| 3 | Argument parsing / dispatch | Implementation + TDD | 2 |
-| 4 | Framework detection | Implementation + TDD | 2 |
-| 5 | `ultimate init` (real package install; owns shared `detectPackageManager`/`installPackage`) | Implementation + TDD | 1, 2, 4, 6 |
-| 6 | Compatibility resolver (multi-axis rule) | Implementation + TDD | 1 |
-| 7 | `ultimate add` / `theme` / `doctor` (consumes Task 5's shared install helper) | Implementation + TDD | 1, 2, 4, 5, 6 |
-| 8 | `ultimate generate` / `ai` stub | Implementation + TDD | 2, 4 |
-| 9 | Dependency-direction boundary check (both directions) | Verification-only | 2 |
-| 10 | Orchestrator/build-tool boundary check | Verification-only | 2–8 |
-| 11 | CI wiring | Implementation (wiring) | 1, 9 |
-| 12 | Full verification + doc/GAP-028 closeout | Verification + final documentation | 1–11 |
+| #   | Task                                                                                        | Type                               | Depends on    |
+| --- | ------------------------------------------------------------------------------------------- | ---------------------------------- | ------------- |
+| 1   | Compatibility manifest data file                                                            | Implementation + tests             | —             |
+| 2   | `packages/cli` scaffolding                                                                  | Implementation                     | —             |
+| 3   | Argument parsing / dispatch                                                                 | Implementation + TDD               | 2             |
+| 4   | Framework detection                                                                         | Implementation + TDD               | 2             |
+| 5   | `ultimate init` (real package install; owns shared `detectPackageManager`/`installPackage`) | Implementation + TDD               | 1, 2, 4, 6    |
+| 6   | Compatibility resolver (multi-axis rule)                                                    | Implementation + TDD               | 1             |
+| 7   | `ultimate add` / `theme` / `doctor` (consumes Task 5's shared install helper)               | Implementation + TDD               | 1, 2, 4, 5, 6 |
+| 8   | `ultimate generate` / `ai` stub                                                             | Implementation + TDD               | 2, 4          |
+| 9   | Dependency-direction boundary check (both directions)                                       | Verification-only                  | 2             |
+| 10  | Orchestrator/build-tool boundary check                                                      | Verification-only                  | 2–8           |
+| 11  | CI wiring                                                                                   | Implementation (wiring)            | 1, 9          |
+| 12  | Full verification + doc/GAP-028 closeout                                                    | Verification + final documentation | 1–11          |
 
 ---
 
@@ -420,27 +449,27 @@ Named `boundary:validate:cli` in root `package.json`, run as its own step (added
 
 Every normative statement in the approved spec, mapped to the task(s) implementing/verifying it:
 
-| Spec section | Requirement | Task(s) |
-|---|---|---|
-| §3 | CLI responsibilities (detect framework, invoke tooling, install packages, resolve theme, diagnose, validate compatibility) | 4, 5, 6, 7 |
-| §4 | Orchestrator/build-tool boundary test | 5 (subprocess-absence-for-scaffolding test), 7 (`spawn`-only install), 10 |
-| §5 | `cli → component-metadata` dependency, no other runtime package (`ng`/`react`/`vue`/`themes`) as a code dependency | 2 (deps list), 9 (both directions, `dependencies` + `devDependencies` + source imports) |
-| §6.1 | Eight compatibility axes named | 1, 6 |
-| §6.2 | `CompatibilityEntry` shape, `metadataSchemaVersion` no-`Range`-suffix distinction | 1, 6 |
-| §6.3 | MCP/AI-Skills axes reserved, unpopulated, unevaluated | 1 (omitted from data), 6 (excluded from function signature) |
-| §6.4 | Manifest at `docs/architecture/compatibility-manifest.json`, JSON array, owned by CLI workstream, consumed by `@ultimate/cli` | 1 |
-| §6.5 | Deterministic multi-axis matching rule, exact-match for `metadataSchemaVersion`, refuse on any populated-axis mismatch | 6 |
-| §7.1 | `init` existing-project-only, never scaffolds, installs the compatible Ultimate framework package | 5 |
-| §7.1 | `add` — package manager invocation after compatibility check | 7 |
-| §7.1 | `theme` — real `@ultimate/themes` preset resolution/config/entry-file, install if absent, unknown-preset refusal, no CSS compilation | 7 |
-| §7.2 | `doctor` — exact 8-component ceiling, no overclaiming | 7 |
-| §7.2 | `generate` — stdout-only, real metadata, refuses unknown components | 8 |
-| §7.2 | `create` deferred | 5 (refusal message names it), not implemented (correctly absent) |
-| §7.3 | `ai` stub — clear message, non-zero exit | 8 |
-| §7.3 | `migrate`/`update` absent entirely | Not implemented (correctly absent from all tasks) |
-| §8 | Package conventions (ESM/tsup/vitest/`workspace:*`), `bin` field addition | 2 |
-| §8.1 | Package-manager detection is for consumer projects, distinct from monorepo's own pnpm | 7 |
-| §9 | All explicit deferrals preserved | Confirmed absent throughout — no task implements `create`/`migrate`/`update`/MCP/AI-Skills-beyond-stub/broader metadata |
+| Spec section | Requirement                                                                                                                          | Task(s)                                                                                                                 |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| §3           | CLI responsibilities (detect framework, invoke tooling, install packages, resolve theme, diagnose, validate compatibility)           | 4, 5, 6, 7                                                                                                              |
+| §4           | Orchestrator/build-tool boundary test                                                                                                | 5 (subprocess-absence-for-scaffolding test), 7 (`spawn`-only install), 10                                               |
+| §5           | `cli → component-metadata` dependency, no other runtime package (`ng`/`react`/`vue`/`themes`) as a code dependency                   | 2 (deps list), 9 (both directions, `dependencies` + `devDependencies` + source imports)                                 |
+| §6.1         | Eight compatibility axes named                                                                                                       | 1, 6                                                                                                                    |
+| §6.2         | `CompatibilityEntry` shape, `metadataSchemaVersion` no-`Range`-suffix distinction                                                    | 1, 6                                                                                                                    |
+| §6.3         | MCP/AI-Skills axes reserved, unpopulated, unevaluated                                                                                | 1 (omitted from data), 6 (excluded from function signature)                                                             |
+| §6.4         | Manifest at `docs/architecture/compatibility-manifest.json`, JSON array, owned by CLI workstream, consumed by `@ultimate/cli`        | 1                                                                                                                       |
+| §6.5         | Deterministic multi-axis matching rule, exact-match for `metadataSchemaVersion`, refuse on any populated-axis mismatch               | 6                                                                                                                       |
+| §7.1         | `init` existing-project-only, never scaffolds, installs the compatible Ultimate framework package                                    | 5                                                                                                                       |
+| §7.1         | `add` — package manager invocation after compatibility check                                                                         | 7                                                                                                                       |
+| §7.1         | `theme` — real `@ultimate/themes` preset resolution/config/entry-file, install if absent, unknown-preset refusal, no CSS compilation | 7                                                                                                                       |
+| §7.2         | `doctor` — exact 8-component ceiling, no overclaiming                                                                                | 7                                                                                                                       |
+| §7.2         | `generate` — stdout-only, real metadata, refuses unknown components                                                                  | 8                                                                                                                       |
+| §7.2         | `create` deferred                                                                                                                    | 5 (refusal message names it), not implemented (correctly absent)                                                        |
+| §7.3         | `ai` stub — clear message, non-zero exit                                                                                             | 8                                                                                                                       |
+| §7.3         | `migrate`/`update` absent entirely                                                                                                   | Not implemented (correctly absent from all tasks)                                                                       |
+| §8           | Package conventions (ESM/tsup/vitest/`workspace:*`), `bin` field addition                                                            | 2                                                                                                                       |
+| §8.1         | Package-manager detection is for consumer projects, distinct from monorepo's own pnpm                                                | 7                                                                                                                       |
+| §9           | All explicit deferrals preserved                                                                                                     | Confirmed absent throughout — no task implements `create`/`migrate`/`update`/MCP/AI-Skills-beyond-stub/broader metadata |
 
 ---
 
@@ -449,7 +478,7 @@ Every normative statement in the approved spec, mapped to the task(s) implementi
 The approved specification (`docs/superpowers/specs/2026-09-07-phase-7-cli-design.md`) was re-read in full before this re-review, with particular attention to §4 (boundary test), §5 (dependency direction), §6.1-§6.5 (manifest/axes/matching rule), and §7.1 (`init`/`add`/`theme` exact wording), since those are the sections the correction pass touched.
 
 1. **Does every spec normative requirement map to a task, including the corrected ones?** Yes — §4's traceability matrix (updated) covers §3 through §9 exhaustively; the §7.1 row now names `init`'s real package installation and `theme`'s real preset/config/entry-file behavior explicitly, matching the corrected Tasks 5/7.
-2. **Is v1 scope preserved exactly (no silent broadening)?** Yes — the correction pass added *depth* to `init`/`theme` (real installation, real preset config) and *breadth* to Task 9's boundary check (both directions), but added no new command, no new package, and no `create`/`migrate`/`update`/MCP/AI-Skills/LLM-contract behavior anywhere. `create` still appears only as a name in `init`'s refusal message and the ROADMAP footnote (Task 12), never as implemented behavior.
+2. **Is v1 scope preserved exactly (no silent broadening)?** Yes — the correction pass added _depth_ to `init`/`theme` (real installation, real preset config) and _breadth_ to Task 9's boundary check (both directions), but added no new command, no new package, and no `create`/`migrate`/`update`/MCP/AI-Skills/LLM-contract behavior anywhere. `create` still appears only as a name in `init`'s refusal message and the ROADMAP footnote (Task 12), never as implemented behavior.
 3. **Does `init` now genuinely implement "initializes ... Ultimate package installation," not just a config stub?** Yes — Task 5 is now a four-step sequence (detect → resolve → install via the shared `installPackage` helper → config write), with a dedicated test for each step including an install-failure case that proves the config file is never written on a failed install.
 4. **Does `theme` now genuinely configure the real `@ultimate/themes` preset, not just a metadata-only config value?** Yes — Task 7's `theme` section is grounded directly in the real, confirmed `@ultimate/themes` package shape (one preset, `auraPreset`; one entry point, `applyUltimateTheme()`) rather than an invented multi-preset system: it validates against the one real preset name, installs the package if absent (reusing Task 5's shared helper), writes a real, dedicated entry file that calls the real `applyUltimateTheme()` function, and updates `ultimate.config.json` — four concrete, testable behaviors, not an ambiguous "config write."
 5. **Was a new theme abstraction or runtime architecture avoided while still being concrete?** Yes — `theme`'s entry-file mechanism creates one new file at a fixed location using the package's own already-shipped, real API; it does not invent a preset registry, a plugin system, or any AST-based injection into the target's existing bootstrap file (explicitly ruled out as outside the orchestrator boundary, §4).
@@ -460,10 +489,10 @@ The approved specification (`docs/superpowers/specs/2026-09-07-phase-7-cli-desig
 10. **Is the orchestrator/build-tool boundary still preserved as a checkable constraint?** Yes — Task 10 is unchanged by this correction pass; `theme`'s new install-if-absent step still uses the same `installPackage` helper Task 10 already checks for `spawn`-only usage, so no new subprocess-invocation surface was introduced outside what Task 10 already covers.
 11. **Is `@ultimate/component-metadata` still used as the real source, with no fabricated coverage beyond 8 components?** Yes — unaffected by this correction pass; Tasks 5/7/8 are the only metadata-touching tasks and none of the corrections altered their metadata-reading logic.
 12. **Are repository conventions still followed, with no blind copying?** Yes — the `theme` correction specifically avoided blind invention by grounding every behavior in the real `packages/themes/README.md`/`package.json` content (one preset, one entry point) rather than assuming a generic multi-preset CLI pattern from outside this repository.
-13. **Is a second CLI package or new architectural layer still avoided?** Yes — the shared `installPackage`/`detectPackageManager` helpers, now owned by Task 5, live inside `packages/cli/src/` as plain modules, not a new package; `theme`'s new entry-file mechanism is a file this command writes into the *target* project, not a new file or package inside the Ultimate monorepo itself.
-14. **Is `COMPATIBILITY.md` still left unmodified, and is the compatibility manifest still not broadened beyond v1 scope?** Yes — no task touches `COMPATIBILITY.md`; Task 1's manifest shape is unchanged by this correction pass (only Task 12's *description* of that shape was corrected for terminology accuracy, per correction #4 — the manifest's actual axis set was already correct in Task 1/6, only the summary wording in Task 12 was imprecise).
+13. **Is a second CLI package or new architectural layer still avoided?** Yes — the shared `installPackage`/`detectPackageManager` helpers, now owned by Task 5, live inside `packages/cli/src/` as plain modules, not a new package; `theme`'s new entry-file mechanism is a file this command writes into the _target_ project, not a new file or package inside the Ultimate monorepo itself.
+14. **Is `COMPATIBILITY.md` still left unmodified, and is the compatibility manifest still not broadened beyond v1 scope?** Yes — no task touches `COMPATIBILITY.md`; Task 1's manifest shape is unchanged by this correction pass (only Task 12's _description_ of that shape was corrected for terminology accuracy, per correction #4 — the manifest's actual axis set was already correct in Task 1/6, only the summary wording in Task 12 was imprecise).
 15. **Is ROADMAP/BLUEPRINT_GAPS closure still correctly gated last?** Yes — Task 12 is otherwise unchanged; only its terminology (three frameworks / six evaluated axes + two reserved axes, replacing the prior "three-framework/six-axis" phrasing that omitted the reserved axes) was corrected.
-16. **Does executing this plan require the implementation team to make any new fundamental architectural decision?** No new architectural decision was introduced by this correction pass. The two implementation-level tooling choices already flagged in the prior review (no third-party argument-parsing library, Task 3; a minimal hand-rolled caret-range comparator instead of `semver`, Task 6) remain unchanged and are still the only such flagged choices. The shared `installPackage`/`detectPackageManager` module and the single fixed theme-entry-file location/name remain ordinary implementation-detail decisions inside the spec's own explicit text — reassigning their *ownership* from an ambiguous "either task" to Task 5 alone (this pass's correction) changes sequencing, not architecture.
+16. **Does executing this plan require the implementation team to make any new fundamental architectural decision?** No new architectural decision was introduced by this correction pass. The two implementation-level tooling choices already flagged in the prior review (no third-party argument-parsing library, Task 3; a minimal hand-rolled caret-range comparator instead of `semver`, Task 6) remain unchanged and are still the only such flagged choices. The shared `installPackage`/`detectPackageManager` module and the single fixed theme-entry-file location/name remain ordinary implementation-detail decisions inside the spec's own explicit text — reassigning their _ownership_ from an ambiguous "either task" to Task 5 alone (this pass's correction) changes sequencing, not architecture.
 17. **Is the full task dependency graph now acyclic?** Yes, verified by direct inspection of every task's "Dependencies" line after this pass's edits: Task 1 → none; Task 2 → none; Task 3 → 2; Task 4 → 2; Task 6 → 1; **Task 5 → 1, 2, 4, 6** (no longer references Task 7); **Task 7 → 1, 2, 4, 5, 6** (now explicitly depends on Task 5, one-directionally, for the shared helpers and `ultimate.config.json` shape it consumes); Task 8 → 2, 4; Task 9 → 2; Task 10 → 2–8; Task 11 → 1, 9; Task 12 → 1–11. This is a strict DAG — every edge points from a lower-numbered or equal-tier task to a task it genuinely consumes, and the prior draft's only cycle (Task 5 ↔ Task 7, both naming each other) is eliminated by giving `detectPackageManager`/`installPackage` a single owner (Task 5) sequenced before its sole consumer (Task 7).
 
 **No architectural fork was discovered during this correction pass or its re-review.** The dependency-cycle fix was a pure sequencing/ownership correction — resolvable directly from the reviewer's own preferred resolution (make Task 5 the owner, since `init` is the first command needing the shared infrastructure) — and required no change to the approved specification, the command surface, the compatibility model, or any file/package structure already established by the prior correction pass.

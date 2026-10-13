@@ -65,7 +65,9 @@ export abstract class UBaseComponent {
     registerIconSpin(sheet);
 
     if (!sheet.has(this.componentName)) {
-      sheet.add(this.componentName, css`${this.styleModule.css}`);
+      // Keep the style module's CSS bytes intact; the registered value is used as-is.
+      const renderCss = css;
+      sheet.add(this.componentName, renderCss`${this.styleModule.css}`);
     }
   }
 }

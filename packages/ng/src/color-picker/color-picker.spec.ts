@@ -66,7 +66,9 @@ describe("UColorPicker", () => {
     Object.defineProperty(selector, "getBoundingClientRect", {
       value: () => ({ left: 0, top: 0, width: 150, height: 150, right: 150, bottom: 150 }),
     });
-    selector.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, clientX: 75, clientY: 75 }));
+    selector.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true, clientX: 75, clientY: 75 })
+    );
     fixture.detectChanges();
 
     expect(fixture.componentInstance.value).toMatch(/^#[0-9a-f]{6}$/);
@@ -118,11 +120,17 @@ describe("UColorPicker", () => {
     Object.defineProperty(selector, "getBoundingClientRect", {
       value: () => ({ left: 0, top: 0, width: 150, height: 150, right: 150, bottom: 150 }),
     });
-    selector.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, clientX: 75, clientY: 75 }));
+    selector.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true, clientX: 75, clientY: 75 })
+    );
     fixture.detectChanges();
 
     expect(fixture.componentInstance.value).toEqual(
-      expect.objectContaining({ r: expect.any(Number), g: expect.any(Number), b: expect.any(Number) })
+      expect.objectContaining({
+        r: expect.any(Number),
+        g: expect.any(Number),
+        b: expect.any(Number),
+      })
     );
   });
 

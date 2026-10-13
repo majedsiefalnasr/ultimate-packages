@@ -155,7 +155,10 @@ export function UColorPicker({
   onShow,
   onHide,
 }: UColorPickerProps): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "color-picker", styleModule: colorPickerStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "color-picker",
+    styleModule: colorPickerStyleModule,
+  });
   const [overlayVisible, setOverlayVisible] = React.useState(false);
   const colorSelectorRef = React.useRef<HTMLDivElement>(null);
   const hueRef = React.useRef<HTMLDivElement>(null);
@@ -230,7 +233,9 @@ export function UColorPicker({
     const rect = colorSelectorRef.current?.getBoundingClientRect();
     if (!rect) return;
     const saturation = Math.floor((100 * Math.max(0, Math.min(150, clientX - rect.left))) / 150);
-    const brightness = Math.floor((100 * (150 - Math.max(0, Math.min(150, clientY - rect.top)))) / 150);
+    const brightness = Math.floor(
+      (100 * (150 - Math.max(0, Math.min(150, clientY - rect.top)))) / 150
+    );
     updateModel(validateHsb({ h: hsbValue.h, s: saturation, b: brightness }), event);
   };
 

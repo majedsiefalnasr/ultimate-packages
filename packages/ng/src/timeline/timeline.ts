@@ -32,11 +32,15 @@ import { timelineStyleModule } from "./timeline-style";
     @for (event of value(); track $index; let last = $last) {
       <div [class]="cx('event')">
         <div [class]="cx('eventOpposite')">
-          <ng-container *ngTemplateOutlet="oppositeTemplate ?? null; context: { $implicit: event }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="oppositeTemplate ?? null; context: { $implicit: event }"
+          ></ng-container>
         </div>
         <div [class]="cx('eventSeparator')">
           @if (markerTemplate) {
-            <ng-container *ngTemplateOutlet="markerTemplate; context: { $implicit: event }"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="markerTemplate; context: { $implicit: event }"
+            ></ng-container>
           } @else {
             <div [class]="cx('eventMarker')"></div>
           }
@@ -45,7 +49,9 @@ import { timelineStyleModule } from "./timeline-style";
           }
         </div>
         <div [class]="cx('eventContent')">
-          <ng-container *ngTemplateOutlet="contentTemplate ?? null; context: { $implicit: event }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="contentTemplate ?? null; context: { $implicit: event }"
+          ></ng-container>
         </div>
       </div>
     }

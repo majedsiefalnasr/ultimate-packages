@@ -31,8 +31,8 @@ describe("UProgressBar", () => {
 
   it("appends a custom unit to the value label", () => {
     render(<UProgressBar value={3} unit=" MB" />);
-    expect(screen.getByRole("progressbar").querySelector(".u-progress-bar-label")?.textContent).toBe(
-      "3 MB"
-    );
+    expect(
+      screen.getByRole("progressbar").querySelector(".u-progress-bar-label")?.textContent
+    ).toBe("3 MB");
   });
 });

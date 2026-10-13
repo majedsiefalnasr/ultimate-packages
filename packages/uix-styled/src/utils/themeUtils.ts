@@ -292,9 +292,7 @@ export default {
           const _css = minifyCSS((value as any).css);
           const id = `${key}-variables`;
 
-          acc.push(
-            `<style type="text/css" data-u-style-id="${id}" ${_props}>${_css}</style>`
-          ); // @todo data-primevue -> data-primeui check in primevue usestyle
+          acc.push(`<style type="text/css" data-u-style-id="${id}" ${_props}>${_css}</style>`); // @todo data-primevue -> data-primeui check in primevue usestyle
         }
 
         return acc;

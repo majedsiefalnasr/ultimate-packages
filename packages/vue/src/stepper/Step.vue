@@ -1,6 +1,20 @@
 <template>
-  <div :class="cx('stepRoot', { active, disabled: isStepDisabled })" role="presentation" data-u-step :aria-current="active ? 'step' : undefined" :data-u-active="active" :data-u-disabled="isStepDisabled">
-    <button type="button" :class="cx('stepHeader')" role="tab" :disabled="isStepDisabled" :tabindex="isStepDisabled ? -1 : undefined" @click="onStepClick">
+  <div
+    :class="cx('stepRoot', { active, disabled: isStepDisabled })"
+    role="presentation"
+    data-u-step
+    :aria-current="active ? 'step' : undefined"
+    :data-u-active="active"
+    :data-u-disabled="isStepDisabled"
+  >
+    <button
+      type="button"
+      :class="cx('stepHeader')"
+      role="tab"
+      :disabled="isStepDisabled"
+      :tabindex="isStepDisabled ? -1 : undefined"
+      @click="onStepClick"
+    >
       <span :class="cx('stepNumber')">{{ value }}</span>
       <span :class="cx('stepTitle')"><slot></slot></span>
     </button>

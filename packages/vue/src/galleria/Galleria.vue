@@ -15,13 +15,20 @@
       @escape="onContentEscape"
     >
       <template #item="slotProps"><slot name="item" v-bind="slotProps" /></template>
-      <template v-if="$slots.thumbnail" #thumbnail="slotProps"><slot name="thumbnail" v-bind="slotProps" /></template>
+      <template v-if="$slots.thumbnail" #thumbnail="slotProps"
+        ><slot name="thumbnail" v-bind="slotProps"
+      /></template>
     </UGalleriaContent>
   </div>
   <UPortal v-if="fullScreen">
     <div v-if="d_fullScreenActive" v-focustrap :class="cx('mask')" role="dialog">
-      <div style="width: 100%; height: 100%; display: flex; flex-direction: column;">
-        <button type="button" :class="cx('closeButton')" aria-label="Close" @click="closeFullScreen">
+      <div style="width: 100%; height: 100%; display: flex; flex-direction: column">
+        <button
+          type="button"
+          :class="cx('closeButton')"
+          aria-label="Close"
+          @click="closeFullScreen"
+        >
           <UTimesIcon />
         </button>
         <UGalleriaContent
@@ -39,7 +46,9 @@
           @escape="onContentEscape"
         >
           <template #item="slotProps"><slot name="item" v-bind="slotProps" /></template>
-          <template v-if="$slots.thumbnail" #thumbnail="slotProps"><slot name="thumbnail" v-bind="slotProps" /></template>
+          <template v-if="$slots.thumbnail" #thumbnail="slotProps"
+            ><slot name="thumbnail" v-bind="slotProps"
+          /></template>
         </UGalleriaContent>
       </div>
     </div>
@@ -113,7 +122,9 @@ export default {
       return this.value[this.d_activeIndex];
     },
     isForwardDisabled() {
-      return this.value.length === 0 || (this.d_activeIndex >= this.value.length - 1 && !this.circular);
+      return (
+        this.value.length === 0 || (this.d_activeIndex >= this.value.length - 1 && !this.circular)
+      );
     },
     isBackwardDisabled() {
       return this.value.length === 0 || (this.d_activeIndex <= 0 && !this.circular);

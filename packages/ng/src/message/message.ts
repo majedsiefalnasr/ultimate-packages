@@ -39,7 +39,12 @@ import { messageStyleModule } from "./message-style";
   selector: "u-message",
   template: `
     @if (visible()) {
-      <div [class]="cx('root', { severity: severity() })" role="alert" aria-live="polite" [attr.data-severity]="severity()">
+      <div
+        [class]="cx('root', { severity: severity() })"
+        role="alert"
+        aria-live="polite"
+        [attr.data-severity]="severity()"
+      >
         <div [class]="cx('content')">
           @if (icon()) {
             <i [class]="cx('icon') + ' ' + icon()" aria-hidden="true"></i>

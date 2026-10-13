@@ -7,7 +7,8 @@ describe("UInputGroup", () => {
     const wrapper = mount(UInputGroup, {
       global: { components: { UInputGroupAddon } },
       slots: {
-        default: '<UInputGroupAddon>$</UInputGroupAddon><input type="text" /><UInputGroupAddon>.00</UInputGroupAddon>',
+        default:
+          '<UInputGroupAddon>$</UInputGroupAddon><input type="text" /><UInputGroupAddon>.00</UInputGroupAddon>',
       },
     });
     expect(wrapper.findAllComponents(UInputGroupAddon)).toHaveLength(2);

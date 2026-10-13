@@ -33,7 +33,9 @@ function toToolResponse<T>(result: T | McpToolError) {
     const err = result as McpToolError;
     return {
       isError: true,
-      content: [{ type: "text" as const, text: JSON.stringify({ code: err.code, message: err.message }) }],
+      content: [
+        { type: "text" as const, text: JSON.stringify({ code: err.code, message: err.message }) },
+      ],
     };
   }
   return {
@@ -59,7 +61,8 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "search_components",
     {
-      description: "Case-insensitive substring search over Ultimate component name/category/description.",
+      description:
+        "Case-insensitive substring search over Ultimate component name/category/description.",
       inputSchema: {
         query: z.string(),
         framework: FRAMEWORK_ENUM_NG.optional(),
@@ -84,7 +87,8 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "get_component_api",
     {
-      description: "Returns a component's props/events for one specific framework, exactly as recorded.",
+      description:
+        "Returns a component's props/events for one specific framework, exactly as recorded.",
       inputSchema: {
         name: z.string(),
         framework: FRAMEWORK_ENUM_NG,
@@ -96,7 +100,8 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "get_component_accessibility",
     {
-      description: "Returns a component's recorded accessibility facts, or an honest not-recorded result.",
+      description:
+        "Returns a component's recorded accessibility facts, or an honest not-recorded result.",
       inputSchema: {
         name: z.string(),
       },

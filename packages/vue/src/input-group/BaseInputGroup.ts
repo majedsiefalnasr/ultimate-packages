@@ -7,6 +7,9 @@ import { inputGroupStyleModule } from "./input-group-style";
 // has no CVA/controlled-value concept, only slot projection.
 export function createBaseInputGroup() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "inputgroup", styleModule: inputGroupStyleModule }),
+    extends: createBaseComponent({
+      componentName: "inputgroup",
+      styleModule: inputGroupStyleModule,
+    }),
   });
 }

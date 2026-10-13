@@ -10,15 +10,15 @@ Primary evidence: [corrected Stage 2 investigation](../../architecture/research/
 
 Angular `imagecompare/root-style` has a visible +3 px displacement of the **second/right image, `landscape-2.png`, blue in the clipped left region**. It is not the original first/left image.
 
-| Element / relationship | PrimeNG | Ultimate |
-| --- | ---: | ---: |
-| Root y/top | 19 | 19 |
-| First image y/top | 16 | 16 |
-| Second/right image y/top | 16 | 19 |
-| Slider y/top | 18 | 18 |
-| Root → second image | −3 | 0 |
-| Root → right-image span | Not present | 0 |
-| Span → second image | Not present | 0 |
+| Element / relationship   |     PrimeNG | Ultimate |
+| ------------------------ | ----------: | -------: |
+| Root y/top               |          19 |       19 |
+| First image y/top        |          16 |       16 |
+| Second/right image y/top |          16 |       19 |
+| Slider y/top             |          18 |       18 |
+| Root → second image      |          −3 |        0 |
+| Root → right-image span  | Not present |        0 |
+| Span → second image      | Not present |        0 |
 
 All values are CSS pixels from the single successful corrected diagnostic. PrimeNG positions the second image directly against the positioned inline root. Ultimate positions it inside an absolutely positioned span. The used containing-block/static-position chain accounts for the full displacement: `(19 + 0) − (19 − 3) = 3`. Root, first-image and slider rectangles match; second-image dimensions/horizontal position match. H2 is established; H1 supports that relationship; H3/H4 do not independently explain the difference.
 
@@ -89,24 +89,24 @@ Before implementation, specification/plan review must select **one** candidate a
 
 [The current component](../../../packages/ng/src/image-compare/image-compare.ts) projects the right image into the span and updates that span's clip-path in `onSlide()`. Existing CSS gives the span absolute positioning and zero insets; images are absolute with percentage width/height. These relationships bind placement, sizing and clipping together.
 
-| Existing state | Preservation requirement / risk from span changes |
-| --- | --- |
+| Existing state             | Preservation requirement / risk from span changes                                                                                                         |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Default story / root-style | Remove the internal displacement while preserving the inline host, consumer style, first image and slider; do not repair the case by changing its wrapper |
-| Sized / initial 50% | Preserve the existing flex-sized 16:9 overlay and correct initial clip; do not carry an inline-only correction into this context without validation |
-| Slide / 25% | Preserve range interaction and span-owned clip update; no new event/state carrier or runtime calculation |
-| Focus | Preserve keyboard focus, focus-visible styling and handle visibility/position |
-| RTL | Preserve the existing RTL styling and recorded runtime behavior; do not introduce new direction detection or fix a separate RTL discrepancy |
+| Sized / initial 50%        | Preserve the existing flex-sized 16:9 overlay and correct initial clip; do not carry an inline-only correction into this context without validation       |
+| Slide / 25%                | Preserve range interaction and span-owned clip update; no new event/state carrier or runtime calculation                                                  |
+| Focus                      | Preserve keyboard focus, focus-visible styling and handle visibility/position                                                                             |
+| RTL                        | Preserve the existing RTL styling and recorded runtime behavior; do not introduce new direction detection or fix a separate RTL discrepancy               |
 
 These cover the existing Angular stories; no additional story, fixture, viewport or interaction variant is introduced by this specification.
 
 ## 6. DOM-preservation gate
 
-| Route | What falls within a possible later local-CSS authorization | What requires stopping and a new decision |
-| --- | --- | --- |
-| Existing elements | Only placement/formatting adaptations whose geometry, clipping and interaction satisfy this specification | Adding/removing/reordering the span, images or input; changing projection/template |
-| Runtime | Existing range handler and clipping state unchanged | Changing `onSlide()`, event handling, direction logic, state or clip-path mechanism |
-| API | Existing inputs/attributes and consumer usage unchanged | Adding/changing inputs, slots, required consumer configuration or public semantics |
-| Architecture | Existing component-local style adaptation category | New shared/global convention, generator policy, theme rule, token or another framework/component |
+| Route             | What falls within a possible later local-CSS authorization                                                | What requires stopping and a new decision                                                        |
+| ----------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Existing elements | Only placement/formatting adaptations whose geometry, clipping and interaction satisfy this specification | Adding/removing/reordering the span, images or input; changing projection/template               |
+| Runtime           | Existing range handler and clipping state unchanged                                                       | Changing `onSlide()`, event handling, direction logic, state or clip-path mechanism              |
+| API               | Existing inputs/attributes and consumer usage unchanged                                                   | Adding/changing inputs, slots, required consumer configuration or public semantics               |
+| Architecture      | Existing component-local style adaptation category                                                        | New shared/global convention, generator policy, theme rule, token or another framework/component |
 
 No route is currently proven to meet all requirements. If the selected route cannot satisfy them while retaining DOM/template/runtime/API, mark preservation infeasible **for that assessed route**, document the evidence and stop. A claim of overall infeasibility needs supporting evidence, not a failed single candidate. Any proposed relaxation belongs to a separate explicit scope decision; no prohibited change follows automatically.
 
@@ -122,13 +122,13 @@ Collect and retain both sides' root, first-image, second-image, retained span an
 
 ### Existing affected Angular coverage
 
-| Case | Existing Ultimate story | Evidence required |
-| --- | --- | --- |
-| `imagecompare/root-style` | `ng-imagecompare--default` | Primary internal geometry and image comparison |
-| `imagecompare/default` | `ng-imagecompare--sized` | Sized initial 50% overlay, both images and slider |
-| `imagecompare/slide` | `ng-imagecompare--sized` | Existing range-to-25% action and resulting clipping |
-| `imagecompare/focus` | `ng-imagecompare--sized` | Existing Tab state and focus-visible result |
-| `imagecompare/rtl` | `ng-imagecompare--rtl` | Existing RTL initial clip and geometry |
+| Case                      | Existing Ultimate story    | Evidence required                                   |
+| ------------------------- | -------------------------- | --------------------------------------------------- |
+| `imagecompare/root-style` | `ng-imagecompare--default` | Primary internal geometry and image comparison      |
+| `imagecompare/default`    | `ng-imagecompare--sized`   | Sized initial 50% overlay, both images and slider   |
+| `imagecompare/slide`      | `ng-imagecompare--sized`   | Existing range-to-25% action and resulting clipping |
+| `imagecompare/focus`      | `ng-imagecompare--sized`   | Existing Tab state and focus-visible result         |
+| `imagecompare/rtl`        | `ng-imagecompare--rtl`     | Existing RTL initial clip and geometry              |
 
 The case/story distinction matters: the Default story is the root-style case, while the default canonical comparison uses Sized. Sources: [case map](../../../tooling/prime-reference/cases-g3e.ts) and [stories](../../../packages/ng/src/image-compare/image-compare.stories.ts). Do not alter their geometry or actions to make a candidate pass.
 
@@ -140,17 +140,17 @@ Any requested additional coverage or inability to select these checks without br
 
 ## 8. Acceptance criteria
 
-| ID | Required outcome after a separately authorized implementation |
-| --- | --- |
-| AC1 | The canonical second/right image's +3 px discrepancy is removed: its root-relative placement agrees with Prime within the existing ±1 px geometry tolerance, and saved-image review shows no residual visible displacement |
-| AC2 | Root, first-image and slider geometry remain correct against Prime and do not acquire unintended movement/resizing relative to the retained evidence; nominal pinned y targets remain 19, 16 and 18 respectively |
+| ID  | Required outcome after a separately authorized implementation                                                                                                                                                                                                            |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AC1 | The canonical second/right image's +3 px discrepancy is removed: its root-relative placement agrees with Prime within the existing ±1 px geometry tolerance, and saved-image review shows no residual visible displacement                                               |
+| AC2 | Root, first-image and slider geometry remain correct against Prime and do not acquire unintended movement/resizing relative to the retained evidence; nominal pinned y targets remain 19, 16 and 18 respectively                                                         |
 | AC3 | Second-image dimensions/horizontal position and retained span placement/clipping are documented; the internal relationship explains the matching pixels. Wrapper coordinates need not equal their old values if the approved candidate intentionally adapts that wrapper |
-| AC4 | All existing affected cases in §7 retain valid geometry, initial clipping, slide behavior, focus and RTL results; no new material difference attributable to the remediation is silently accepted |
-| AC5 | Parity obeys Playbook §6.4: geometry within ±1 px, equal material probes and no visible difference on review. Pixel-diff ratio remains advisory; no new ratio gate is invented |
-| AC6 | Existing regression assertions retain their configured threshold (`threshold: 0.2` in the root Playwright configuration, no added ratio tolerance). Every changed screenshot is accounted for; an old-baseline mismatch is review evidence, not automatic acceptance |
-| AC7 | No new selector reach failure or introduced accessibility violation attributable to the remediation; existing gap classifications and validation strength remain unchanged |
-| AC8 | Approved DOM/template/runtime/API and all unaffected E-1 declarations are preserved; the exact authorized adaptation delta is auditable and fidelity/provenance checks remain meaningful |
-| AC9 | Applicable checks produce no new attributable failure. Both E1-B1 assertions and their blocker remain preserved, explicitly distinct from E1-V2 evidence; no overall-green or Task 6 completion claim follows |
+| AC4 | All existing affected cases in §7 retain valid geometry, initial clipping, slide behavior, focus and RTL results; no new material difference attributable to the remediation is silently accepted                                                                        |
+| AC5 | Parity obeys Playbook §6.4: geometry within ±1 px, equal material probes and no visible difference on review. Pixel-diff ratio remains advisory; no new ratio gate is invented                                                                                           |
+| AC6 | Existing regression assertions retain their configured threshold (`threshold: 0.2` in the root Playwright configuration, no added ratio tolerance). Every changed screenshot is accounted for; an old-baseline mismatch is review evidence, not automatic acceptance     |
+| AC7 | No new selector reach failure or introduced accessibility violation attributable to the remediation; existing gap classifications and validation strength remain unchanged                                                                                               |
+| AC8 | Approved DOM/template/runtime/API and all unaffected E-1 declarations are preserved; the exact authorized adaptation delta is auditable and fidelity/provenance checks remain meaningful                                                                                 |
+| AC9 | Applicable checks produce no new attributable failure. Both E1-B1 assertions and their blocker remain preserved, explicitly distinct from E1-V2 evidence; no overall-green or Task 6 completion claim follows                                                            |
 
 These are evidence criteria, not a baseline/status/classification authorization. Human final review remains required even if all E1-V2 criteria are met.
 

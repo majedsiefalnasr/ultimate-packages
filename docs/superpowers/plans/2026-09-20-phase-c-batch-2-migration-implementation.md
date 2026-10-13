@@ -24,6 +24,7 @@
 ## Task 1: React `UDataScroller`
 
 **Files:**
+
 - Create: `packages/react/src/data-scroller/data-scroller.tsx`
 - Create: `packages/react/src/data-scroller/data-scroller-style.ts`
 - Create: `packages/react/src/data-scroller/data-scroller.spec.tsx`
@@ -33,6 +34,7 @@
 - Modify: `packages/react/package.json` — add a `"./data-scroller"` subpath entry to `exports`, matching the `"./date-picker"`/`"./deferred-content"` entries' exact shape
 
 **Interfaces:**
+
 - Produces: `UDataScroller` (React function component, `React.forwardRef<HTMLDivElement, UDataScrollerProps<T>>`), `UDataScrollerProps<T>` (exported interface), an imperative handle exposing `load(): void` and `reset(): void` via `React.useImperativeHandle`.
 - Consumes: `useComponentBase` from `@ultimate/react-core` (already Built — no new interface).
 
@@ -63,7 +65,9 @@ const css = /*css*/ `
 
 const classes = {
   root: (params?: Record<string, unknown>) =>
-    ["u-data-scroller u-component", params?.["inline"] ? "u-data-scroller-inline" : ""].filter(Boolean).join(" "),
+    ["u-data-scroller u-component", params?.["inline"] ? "u-data-scroller-inline" : ""]
+      .filter(Boolean)
+      .join(" "),
   content: "u-data-scroller-content",
   emptyMessage: "u-data-scroller-empty-message",
 };
@@ -86,20 +90,39 @@ const items = Array.from({ length: 20 }, (_, i) => `Item ${i + 1}`);
 
 describe("UDataScroller", () => {
   it("renders only the first `rows` items initially", () => {
-    render(<UDataScroller value={items} rows={5} itemTemplate={(item) => <div key={item as string}>{item as string}</div>} />);
+    render(
+      <UDataScroller
+        value={items}
+        rows={5}
+        itemTemplate={(item) => <div key={item as string}>{item as string}</div>}
+      />
+    );
     expect(screen.getByText("Item 1")).toBeInTheDocument();
     expect(screen.getByText("Item 5")).toBeInTheDocument();
     expect(screen.queryByText("Item 6")).not.toBeInTheDocument();
   });
 
   it("renders the empty message when value is empty", () => {
-    render(<UDataScroller value={[]} rows={5} itemTemplate={(item) => <div key={item as string}>{item as string}</div>} emptyMessage="Nothing here" />);
+    render(
+      <UDataScroller
+        value={[]}
+        rows={5}
+        itemTemplate={(item) => <div key={item as string}>{item as string}</div>}
+        emptyMessage="Nothing here"
+      />
+    );
     expect(screen.getByText("Nothing here")).toBeInTheDocument();
   });
 
   it("loads the next window when the internal content container scrolls near the bottom (inline mode)", () => {
     const { container } = render(
-      <UDataScroller value={items} rows={5} inline scrollHeight="200px" itemTemplate={(item) => <div key={item as string}>{item as string}</div>} />
+      <UDataScroller
+        value={items}
+        rows={5}
+        inline
+        scrollHeight="200px"
+        itemTemplate={(item) => <div key={item as string}>{item as string}</div>}
+      />
     );
     const root = container.querySelector(".u-data-scroller") as HTMLElement;
     Object.defineProperty(root, "scrollHeight", { value: 1000, configurable: true });
@@ -227,92 +250,113 @@ export interface UDataScrollerProps<T = unknown> {
  * same "smaller surface than upstream" precedent as every sibling
  * component.
  */
-export const UDataScroller = React.forwardRef<UDataScrollerRef, UDataScrollerProps>(function UDataScroller(
-  { value, rows = 0, inline = false, lazy = false, loader = false, buffer = 0.9, scrollHeight, header, footer, itemTemplate, emptyMessage, onLazyLoad, className },
-  ref
-) {
-  const { cx } = useComponentBase({ componentName: "data-scroller", styleModule: dataScrollerStyleModule });
-  const [windowEnd, setWindowEnd] = React.useState(0);
-  const hasLoadedInitial = React.useRef(false);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+export const UDataScroller = React.forwardRef<UDataScrollerRef, UDataScrollerProps>(
+  function UDataScroller(
+    {
+      value,
+      rows = 0,
+      inline = false,
+      lazy = false,
+      loader = false,
+      buffer = 0.9,
+      scrollHeight,
+      header,
+      footer,
+      itemTemplate,
+      emptyMessage,
+      onLazyLoad,
+      className,
+    },
+    ref
+  ) {
+    const { cx } = useComponentBase({
+      componentName: "data-scroller",
+      styleModule: dataScrollerStyleModule,
+    });
+    const [windowEnd, setWindowEnd] = React.useState(0);
+    const hasLoadedInitial = React.useRef(false);
+    const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const isLazy = lazy;
-  const total = value?.length ?? 0;
-  const dataToRender = isLazy ? (value ?? []) : (value ?? []).slice(0, windowEnd);
+    const isLazy = lazy;
+    const total = value?.length ?? 0;
+    const dataToRender = isLazy ? (value ?? []) : (value ?? []).slice(0, windowEnd);
 
-  // `load()` advances the render window by `rows` each call. The first call
-  // (from the mount effect below, matching real source's own
-  // `useMountEffect(() => load())`) fills the initial window (0..rows)
-  // rather than skipping past it — subsequent calls (from scroll or the
-  // exposed imperative `load()`) advance further, matching real source's
-  // own single-`load()`-does-both-jobs shape.
-  const load = React.useCallback(() => {
-    const first = hasLoadedInitial.current ? windowEnd : 0;
-    const nextWindowEnd = first + rows;
-    hasLoadedInitial.current = true;
-    if (isLazy) {
-      onLazyLoad?.({ first, rows });
-      setWindowEnd(nextWindowEnd);
-    } else {
-      if (first < total) setWindowEnd(Math.min(nextWindowEnd, total));
-    }
-  }, [windowEnd, rows, isLazy, onLazyLoad, total]);
-
-  const reset = React.useCallback(() => {
-    setWindowEnd(0);
-    hasLoadedInitial.current = false;
-    load();
-  }, [load]);
-
-  React.useImperativeHandle(ref, () => ({ load, reset }), [load, reset]);
-
-  // Mount-time load, matching real source's own `useMountEffect(() => load())`
-  // — reuses the same `load()` used everywhere else, rather than duplicating
-  // the lazy-mode branch separately.
-  React.useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    if (loader) return;
-    const target: HTMLElement | Window = inline ? (containerRef.current ?? window) : window;
-    const handleScroll = () => {
-      // Matches real source's own threshold formula
-      // (`scrollTop >= scrollHeight * buffer - viewportHeight`), not a
-      // rescaled fraction-of-total formula — kept algebraically identical
-      // to real `DataScroller.js` so `buffer`'s meaning matches upstream
-      // exactly.
-      if (inline && containerRef.current) {
-        const el = containerRef.current;
-        if (el.scrollTop >= el.scrollHeight * buffer - el.clientHeight) load();
+    // `load()` advances the render window by `rows` each call. The first call
+    // (from the mount effect below, matching real source's own
+    // `useMountEffect(() => load())`) fills the initial window (0..rows)
+    // rather than skipping past it — subsequent calls (from scroll or the
+    // exposed imperative `load()`) advance further, matching real source's
+    // own single-`load()`-does-both-jobs shape.
+    const load = React.useCallback(() => {
+      const first = hasLoadedInitial.current ? windowEnd : 0;
+      const nextWindowEnd = first + rows;
+      hasLoadedInitial.current = true;
+      if (isLazy) {
+        onLazyLoad?.({ first, rows });
+        setWindowEnd(nextWindowEnd);
       } else {
-        const doc = document.documentElement;
-        if (window.scrollY >= doc.scrollHeight * buffer - window.innerHeight) load();
+        if (first < total) setWindowEnd(Math.min(nextWindowEnd, total));
       }
-    };
-    target.addEventListener("scroll", handleScroll);
-    return () => target.removeEventListener("scroll", handleScroll);
-  }, [loader, inline, buffer, load]);
+    }, [windowEnd, rows, isLazy, onLazyLoad, total]);
 
-  const isEmpty = total === 0;
+    const reset = React.useCallback(() => {
+      setWindowEnd(0);
+      hasLoadedInitial.current = false;
+      load();
+    }, [load]);
 
-  return (
-    <div
-      ref={containerRef}
-      className={[cx("root", { inline }), className].filter(Boolean).join(" ")}
-      style={inline && scrollHeight ? { maxHeight: scrollHeight, overflowY: "auto" } : undefined}
-    >
-      {header}
-      {isEmpty ? (
-        <div className={cx("emptyMessage")}>{emptyMessage ?? "No records found"}</div>
-      ) : (
-        <div className={cx("content")}>{dataToRender.map((item, index) => itemTemplate(item, index))}</div>
-      )}
-      {footer}
-    </div>
-  );
-});
+    React.useImperativeHandle(ref, () => ({ load, reset }), [load, reset]);
+
+    // Mount-time load, matching real source's own `useMountEffect(() => load())`
+    // — reuses the same `load()` used everywhere else, rather than duplicating
+    // the lazy-mode branch separately.
+    React.useEffect(() => {
+      load();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    React.useEffect(() => {
+      if (loader) return;
+      const target: HTMLElement | Window = inline ? (containerRef.current ?? window) : window;
+      const handleScroll = () => {
+        // Matches real source's own threshold formula
+        // (`scrollTop >= scrollHeight * buffer - viewportHeight`), not a
+        // rescaled fraction-of-total formula — kept algebraically identical
+        // to real `DataScroller.js` so `buffer`'s meaning matches upstream
+        // exactly.
+        if (inline && containerRef.current) {
+          const el = containerRef.current;
+          if (el.scrollTop >= el.scrollHeight * buffer - el.clientHeight) load();
+        } else {
+          const doc = document.documentElement;
+          if (window.scrollY >= doc.scrollHeight * buffer - window.innerHeight) load();
+        }
+      };
+      target.addEventListener("scroll", handleScroll);
+      return () => target.removeEventListener("scroll", handleScroll);
+    }, [loader, inline, buffer, load]);
+
+    const isEmpty = total === 0;
+
+    return (
+      <div
+        ref={containerRef}
+        className={[cx("root", { inline }), className].filter(Boolean).join(" ")}
+        style={inline && scrollHeight ? { maxHeight: scrollHeight, overflowY: "auto" } : undefined}
+      >
+        {header}
+        {isEmpty ? (
+          <div className={cx("emptyMessage")}>{emptyMessage ?? "No records found"}</div>
+        ) : (
+          <div className={cx("content")}>
+            {dataToRender.map((item, index) => itemTemplate(item, index))}
+          </div>
+        )}
+        {footer}
+      </div>
+    );
+  }
+);
 ```
 
 - [ ] **Step 6: Run the test to verify it passes**
@@ -326,7 +370,11 @@ Create `packages/react/src/data-scroller/index.ts`:
 
 ```typescript
 export { UDataScroller } from "./data-scroller";
-export type { UDataScrollerProps, UDataScrollerRef, UDataScrollerLazyLoadEvent } from "./data-scroller";
+export type {
+  UDataScrollerProps,
+  UDataScrollerRef,
+  UDataScrollerLazyLoadEvent,
+} from "./data-scroller";
 ```
 
 Create `packages/react/src/data-scroller/data-scroller.stories.tsx`:
@@ -349,7 +397,11 @@ export const Default: Story = {
   args: {
     value: items,
     rows: 5,
-    itemTemplate: (item) => <div key={item as string} style={{ padding: "0.5rem" }}>{item as string}</div>,
+    itemTemplate: (item) => (
+      <div key={item as string} style={{ padding: "0.5rem" }}>
+        {item as string}
+      </div>
+    ),
   },
 };
 
@@ -359,7 +411,11 @@ export const Inline: Story = {
     rows: 5,
     inline: true,
     scrollHeight: "250px",
-    itemTemplate: (item) => <div key={item as string} style={{ padding: "0.5rem" }}>{item as string}</div>,
+    itemTemplate: (item) => (
+      <div key={item as string} style={{ padding: "0.5rem" }}>
+        {item as string}
+      </div>
+    ),
   },
 };
 ```
@@ -407,6 +463,7 @@ git commit -m "feat(react): add DataScroller (Phase C Batch 2)"
 ## Task 2: Vue `UInlineMessage`
 
 **Files:**
+
 - Create: `packages/vue/src/inline-message/InlineMessage.vue`
 - Create: `packages/vue/src/inline-message/BaseInlineMessage.ts`
 - Create: `packages/vue/src/inline-message/inline-message-style.ts`
@@ -417,6 +474,7 @@ git commit -m "feat(react): add DataScroller (Phase C Batch 2)"
 - Modify: `packages/vue/package.json` — add a `"./inline-message"` subpath entry to `exports`, matching the `"./inplace"`/`"./input-chips"` entries' exact shape
 
 **Interfaces:**
+
 - Produces: `UInlineMessage` (Vue component, default export from `InlineMessage.vue`), `createBaseInlineMessage` (factory function, default export... actually named export, matching `createBaseMessage`'s own convention) from `BaseInlineMessage.ts`.
 - Consumes: `createBaseComponent` from `@ultimate/vue-core` (already Built — no new interface).
 
@@ -452,7 +510,10 @@ import type { ComponentOptions } from "vue";
 // not actually have.
 export function createBaseInlineMessage(): ComponentOptions {
   return {
-    extends: createBaseComponent({ componentName: "inline-message", styleModule: inlineMessageStyleModule }),
+    extends: createBaseComponent({
+      componentName: "inline-message",
+      styleModule: inlineMessageStyleModule,
+    }),
     props: {
       severity: { type: String, default: "error" },
       icon: { type: String, default: undefined },
@@ -514,17 +575,26 @@ describe("UInlineMessage", () => {
   });
 
   it("applies the severity class", () => {
-    const wrapper = mount(UInlineMessage, { props: { severity: "success" }, slots: { default: "Saved" } });
+    const wrapper = mount(UInlineMessage, {
+      props: { severity: "success" },
+      slots: { default: "Saved" },
+    });
     expect(wrapper.find(".u-inline-message").classes()).toContain("u-inline-message-success");
   });
 
   it("renders a default severity icon when no icon is provided", () => {
-    const wrapper = mount(UInlineMessage, { props: { severity: "warn" }, slots: { default: "Careful" } });
+    const wrapper = mount(UInlineMessage, {
+      props: { severity: "warn" },
+      slots: { default: "Careful" },
+    });
     expect(wrapper.find(".pi-exclamation-triangle").exists()).toBe(true);
   });
 
   it("renders a custom icon override when provided", () => {
-    const wrapper = mount(UInlineMessage, { props: { icon: "pi pi-star" }, slots: { default: "Custom" } });
+    const wrapper = mount(UInlineMessage, {
+      props: { icon: "pi pi-star" },
+      slots: { default: "Custom" },
+    });
     expect(wrapper.find(".pi-star").exists()).toBe(true);
   });
 
@@ -701,6 +771,7 @@ git commit -m "feat(vue): add InlineMessage (Phase C Batch 2)"
 ## Task 3: Batch 2 closeout — verification, documentation, and status update
 
 **Files:**
+
 - Modify: `docs/architecture/REACT_COMPONENT_STATUS.md` — move DataScroller's entry from "Eligible candidate"/"Batch 2 Specification created" to "Built"
 - Modify: `docs/architecture/VUE_COMPONENT_STATUS.md` — move InlineMessage's entry from "Eligible candidate"/"Batch 2 Specification created" to "Built"
 - Modify: `docs/architecture/research/2026-09-17-phase-c-cross-framework-functional-parity-matrix.md` — update both §4.1b rows from "Eligible — Batch 2 Specification created" to "Built"
@@ -715,10 +786,12 @@ Expected: `OK: scanned N package.json file(s), zero violations`.
 - [ ] **Step 2: Run the full React and Vue suites one more time together, from repo root context, to confirm the whole-branch state**
 
 Run:
+
 ```bash
 cd /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/packages/react && npx vitest run
 cd /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/packages/vue && npx vitest run
 ```
+
 Expected: both fully green, exact counts noted for the closeout report.
 
 - [ ] **Step 3: Read the exact current React DataScroller status-doc entry before editing**

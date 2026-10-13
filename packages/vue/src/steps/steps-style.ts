@@ -31,7 +31,10 @@ const classes = {
   list: "u-steps-list",
   item: (params: Record<string, unknown> = {}) => [
     "u-steps-item",
-    { "u-steps-item-active": Boolean(params.active), "u-steps-item-disabled": Boolean(params.disabled) },
+    {
+      "u-steps-item-active": Boolean(params.active),
+      "u-steps-item-disabled": Boolean(params.disabled),
+    },
   ],
   itemLink: "u-steps-item-link",
   itemNumber: "u-steps-item-number",

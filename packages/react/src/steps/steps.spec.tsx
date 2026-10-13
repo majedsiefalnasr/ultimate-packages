@@ -5,11 +5,17 @@ import { USteps } from "./steps";
 import type { UMenuItem } from "../menu";
 
 describe("USteps", () => {
-  const items: UMenuItem[] = [{ label: "Personal" }, { label: "Payment" }, { label: "Confirmation" }];
+  const items: UMenuItem[] = [
+    { label: "Personal" },
+    { label: "Payment" },
+    { label: "Confirmation" },
+  ];
 
   it("renders one list item per model entry, in order", () => {
     const { container } = render(<USteps model={items} />);
-    const labels = Array.from(container.querySelectorAll(".u-steps-item-label")).map((el) => el.textContent);
+    const labels = Array.from(container.querySelectorAll(".u-steps-item-label")).map(
+      (el) => el.textContent
+    );
     expect(labels).toEqual(["Personal", "Payment", "Confirmation"]);
   });
 
@@ -22,7 +28,9 @@ describe("USteps", () => {
 
   it("renders 1-based step numbers", () => {
     const { container } = render(<USteps model={items} />);
-    const numbers = Array.from(container.querySelectorAll(".u-steps-item-number")).map((el) => el.textContent);
+    const numbers = Array.from(container.querySelectorAll(".u-steps-item-number")).map(
+      (el) => el.textContent
+    );
     expect(numbers).toEqual(["1", "2", "3"]);
   });
 
@@ -53,9 +61,15 @@ describe("USteps", () => {
   });
 
   it("skips items with visible: false", () => {
-    const model: UMenuItem[] = [{ label: "One" }, { label: "Hidden", visible: false }, { label: "Three" }];
+    const model: UMenuItem[] = [
+      { label: "One" },
+      { label: "Hidden", visible: false },
+      { label: "Three" },
+    ];
     const { container } = render(<USteps model={model} />);
-    const labels = Array.from(container.querySelectorAll(".u-steps-item-label")).map((el) => el.textContent);
+    const labels = Array.from(container.querySelectorAll(".u-steps-item-label")).map(
+      (el) => el.textContent
+    );
     expect(labels).toEqual(["One", "Three"]);
   });
 });
@@ -115,7 +129,12 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
     });
 
     it("Home skips hidden/disabled items and reaches the first valid step", () => {
-      const model: UMenuItem[] = [{ label: "H", visible: false }, { label: "B", disabled: true }, { label: "C" }, { label: "D" }];
+      const model: UMenuItem[] = [
+        { label: "H", visible: false },
+        { label: "B", disabled: true },
+        { label: "C" },
+        { label: "D" },
+      ];
       const { container } = render(<USteps model={model} readonly={false} />);
       const links = container.querySelectorAll("a");
       (links[2] as HTMLElement).focus();
@@ -124,7 +143,12 @@ describe("keyboard navigation (Spec §5.1, GAP-052)", () => {
     });
 
     it("End skips hidden/disabled items and reaches the last valid step", () => {
-      const model: UMenuItem[] = [{ label: "A" }, { label: "B" }, { label: "H", visible: false }, { label: "D", disabled: true }];
+      const model: UMenuItem[] = [
+        { label: "A" },
+        { label: "B" },
+        { label: "H", visible: false },
+        { label: "D", disabled: true },
+      ];
       const { container } = render(<USteps model={model} readonly={false} />);
       const links = container.querySelectorAll("a");
       (links[0] as HTMLElement).focus();

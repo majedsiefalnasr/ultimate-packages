@@ -50,7 +50,20 @@ describe("component style modules — exactly 12 exist alongside base", () => {
       .map((e) => e.name)
       .sort();
     expect(actualModules).toEqual(
-      ["base", "badge", "button", "checkbox", "dialog", "inputnumber", "inputtext", "menu", "paginator", "table", "tooltip", "virtualscroller"].sort()
+      [
+        "base",
+        "badge",
+        "button",
+        "checkbox",
+        "dialog",
+        "inputnumber",
+        "inputtext",
+        "menu",
+        "paginator",
+        "table",
+        "tooltip",
+        "virtualscroller",
+      ].sort()
     );
   });
 

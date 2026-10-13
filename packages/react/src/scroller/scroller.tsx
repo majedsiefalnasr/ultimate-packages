@@ -43,114 +43,133 @@ function getLast(items: unknown[], last = 0, isCols = false): number {
   return Math.min(liveLength, last);
 }
 
-export const UScroller = React.forwardRef<UScrollerHandle, UScrollerProps>((props, forwardedRef) => {
-  const {
-    items,
-    itemSize,
-    numToleratedItems: numToleratedItemsProp,
-    disabled = false,
-    lazy = false,
-    loading,
-    onLazyLoad,
-    contentTemplate,
-  } = props;
-  const { cx } = useComponentBase({ componentName: "scroller", styleModule: scrollerStyleModule });
+export const UScroller = React.forwardRef<UScrollerHandle, UScrollerProps>(
+  (props, forwardedRef) => {
+    const {
+      items,
+      itemSize,
+      numToleratedItems: numToleratedItemsProp,
+      disabled = false,
+      lazy = false,
+      loading,
+      onLazyLoad,
+      contentTemplate,
+    } = props;
+    const { cx } = useComponentBase({
+      componentName: "scroller",
+      styleModule: scrollerStyleModule,
+    });
 
-  const elementRef = React.useRef<HTMLDivElement>(null);
+    const elementRef = React.useRef<HTMLDivElement>(null);
 
-  const [contentSizeState, setContentSizeState] = React.useState(0);
-  const [firstState, setFirstState] = React.useState(0);
+    const [contentSizeState, setContentSizeState] = React.useState(0);
+    const [firstState, setFirstState] = React.useState(0);
 
-  React.useImperativeHandle(forwardedRef, () => ({
-    scrollTo: (options: ScrollToOptions) => elementRef.current?.scrollTo(options),
-    scrollToIndex: (index: number, behavior: ScrollBehavior = "auto") =>
-      elementRef.current?.scrollTo({ top: index * itemSize, behavior }),
-  }));
+    React.useImperativeHandle(forwardedRef, () => ({
+      scrollTo: (options: ScrollToOptions) => elementRef.current?.scrollTo(options),
+      scrollToIndex: (index: number, behavior: ScrollBehavior = "auto") =>
+        elementRef.current?.scrollTo({ top: index * itemSize, behavior }),
+    }));
 
-  React.useEffect(() => {
-    const el = elementRef.current;
-    if (!el) return;
-    // Measures the root viewport element's offsetHeight — matching real
-    // PrimeReact's elementRef.current.offsetHeight measurement exactly
-    // (VirtualScroller.js:186, pinned commit d0f574e39122668292fc7a740f081bae1b93b1e9),
-    // not clientHeight.
-    setContentSizeState(el.offsetHeight);
-    const observer = new ResizeObserver(() => setContentSizeState(el.offsetHeight));
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    React.useEffect(() => {
+      const el = elementRef.current;
+      if (!el) return;
+      // Measures the root viewport element's offsetHeight — matching real
+      // PrimeReact's elementRef.current.offsetHeight measurement exactly
+      // (VirtualScroller.js:186, pinned commit d0f574e39122668292fc7a740f081bae1b93b1e9),
+      // not clientHeight.
+      setContentSizeState(el.offsetHeight);
+      const observer = new ResizeObserver(() => setContentSizeState(el.offsetHeight));
+      observer.observe(el);
+      return () => observer.disconnect();
+    }, []);
 
-  const numItemsInViewport = calculateNumItemsInViewport(contentSizeState, itemSize);
-  // numToleratedItems is honored from day one — an explicit override always
-  // takes effect, it is never silently hardcoded to a half-viewport default
-  // regardless of what the caller passed.
-  const numToleratedItems =
-    numToleratedItemsProp !== undefined ? numToleratedItemsProp : Math.ceil(numItemsInViewport / 2);
-  const rawLast = calculateLast(firstState, numItemsInViewport, numToleratedItems);
-  const last = getLast(items, rawLast);
+    const numItemsInViewport = calculateNumItemsInViewport(contentSizeState, itemSize);
+    // numToleratedItems is honored from day one — an explicit override always
+    // takes effect, it is never silently hardcoded to a half-viewport default
+    // regardless of what the caller passed.
+    const numToleratedItems =
+      numToleratedItemsProp !== undefined
+        ? numToleratedItemsProp
+        : Math.ceil(numItemsInViewport / 2);
+    const rawLast = calculateLast(firstState, numItemsInViewport, numToleratedItems);
+    const last = getLast(items, rawLast);
 
-  const visibleItems = disabled
-    ? items.map((value, index) => ({ index, value }))
-    : Array.from({ length: Math.max(0, last - firstState) }, (_, i) => ({
-        index: firstState + i,
-        value: items[firstState + i],
-      }));
+    const visibleItems = disabled
+      ? items.map((value, index) => ({ index, value }))
+      : Array.from({ length: Math.max(0, last - firstState) }, (_, i) => ({
+          index: firstState + i,
+          value: items[firstState + i],
+        }));
 
-  // Mirrors real PrimeReact's getOptions(index) shape, matching the same
-  // real per-item metadata fields confirmed for Angular's Task 1.
-  const getItemOptions = (index: number) => ({
-    index,
-    count: items.length,
-    first: index === 0,
-    last: index === items.length - 1,
-    even: index % 2 === 0,
-    odd: index % 2 !== 0,
-  });
+    // Mirrors real PrimeReact's getOptions(index) shape, matching the same
+    // real per-item metadata fields confirmed for Angular's Task 1.
+    const getItemOptions = (index: number) => ({
+      index,
+      count: items.length,
+      first: index === 0,
+      last: index === items.length - 1,
+      even: index % 2 === 0,
+      odd: index % 2 !== 0,
+    });
 
-  const handleScroll = () => {
-    const el = elementRef.current;
-    if (!el) return;
-    const newFirst = Math.floor(el.scrollTop / (itemSize || 1));
-    if (newFirst !== firstState) {
-      setFirstState(newFirst);
-      if (lazy && onLazyLoad) {
-        const first = newFirst;
-        const currentLast = getLast(items, calculateLast(first, numItemsInViewport, numToleratedItems));
-        Promise.resolve().then(() => onLazyLoad({ first, last: currentLast }));
+    const handleScroll = () => {
+      const el = elementRef.current;
+      if (!el) return;
+      const newFirst = Math.floor(el.scrollTop / (itemSize || 1));
+      if (newFirst !== firstState) {
+        setFirstState(newFirst);
+        if (lazy && onLazyLoad) {
+          const first = newFirst;
+          const currentLast = getLast(
+            items,
+            calculateLast(first, numItemsInViewport, numToleratedItems)
+          );
+          Promise.resolve().then(() => onLazyLoad({ first, last: currentLast }));
+        }
       }
-    }
-  };
+    };
 
-  return (
-    <div
-      ref={elementRef}
-      className={cx("root") as string}
-      data-num-items-in-viewport={numItemsInViewport}
-      data-last={last}
-      data-first={firstState}
-      aria-busy={loading ? "true" : undefined}
-      onScroll={handleScroll}
-    >
-      {loading ? (
-        <div className={cx("loader") as string}>
-          <span className="u-scroller-loading-icon" />
+    return (
+      <div
+        ref={elementRef}
+        className={cx("root") as string}
+        data-num-items-in-viewport={numItemsInViewport}
+        data-last={last}
+        data-first={firstState}
+        aria-busy={loading ? "true" : undefined}
+        onScroll={handleScroll}
+      >
+        {loading ? (
+          <div className={cx("loader") as string}>
+            <span className="u-scroller-loading-icon" />
+          </div>
+        ) : null}
+        <div
+          data-u-scroller-content
+          className={cx("content") as string}
+          style={{ height: items.length * itemSize }}
+        >
+          {contentTemplate
+            ? contentTemplate({
+                items: visibleItems,
+                getItemOptions,
+                itemSize,
+                loading: loading ?? false,
+              })
+            : visibleItems.map(({ index, value }) => (
+                <div
+                  key={index}
+                  data-u-scroller-item
+                  className={cx("item") as string}
+                  style={{ top: index * itemSize }}
+                >
+                  {String(value)}
+                </div>
+              ))}
         </div>
-      ) : null}
-      <div data-u-scroller-content className={cx("content") as string} style={{ height: items.length * itemSize }}>
-        {contentTemplate
-          ? contentTemplate({ items: visibleItems, getItemOptions, itemSize, loading: loading ?? false })
-          : visibleItems.map(({ index, value }) => (
-              <div
-                key={index}
-                data-u-scroller-item
-                className={cx("item") as string}
-                style={{ top: index * itemSize }}
-              >
-                {String(value)}
-              </div>
-            ))}
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 UScroller.displayName = "UScroller";

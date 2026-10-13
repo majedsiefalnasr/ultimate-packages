@@ -63,11 +63,12 @@ export async function runAccessibilityScan(
     let longest = 0;
     for (const el of document.querySelectorAll("*")) {
       const style = getComputedStyle(el);
-      for (const raw of [...style.transitionDuration.split(","), ...style.animationDuration.split(",")]) {
+      for (const raw of [
+        ...style.transitionDuration.split(","),
+        ...style.animationDuration.split(","),
+      ]) {
         const trimmed = raw.trim();
-        const seconds = trimmed.endsWith("ms")
-          ? parseFloat(trimmed) / 1000
-          : parseFloat(trimmed);
+        const seconds = trimmed.endsWith("ms") ? parseFloat(trimmed) / 1000 : parseFloat(trimmed);
         if (Number.isFinite(seconds)) longest = Math.max(longest, seconds);
       }
     }

@@ -13,7 +13,11 @@ const meta: Meta<USplitButton> = {
 export default meta;
 type Story = StoryObj<USplitButton>;
 
-const defaultItems: UMenuItem[] = [{ label: "Delete" }, { label: "Rename" }, { label: "Duplicate" }];
+const defaultItems: UMenuItem[] = [
+  { label: "Delete" },
+  { label: "Rename" },
+  { label: "Duplicate" },
+];
 
 export const Default: Story = {
   args: { label: "Save", model: defaultItems },

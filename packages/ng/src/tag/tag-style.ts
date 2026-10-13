@@ -19,11 +19,12 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params?: Record<string, unknown>) => [
-    "u-tag u-component",
-    params?.["rounded"] ? "u-tag-rounded" : "",
-    params?.["severity"] ? `u-tag-${params["severity"] as string}` : "",
-  ].filter(Boolean),
+  root: (params?: Record<string, unknown>) =>
+    [
+      "u-tag u-component",
+      params?.["rounded"] ? "u-tag-rounded" : "",
+      params?.["severity"] ? `u-tag-${params["severity"] as string}` : "",
+    ].filter(Boolean),
   icon: "u-tag-icon",
   label: "u-tag-label",
 };

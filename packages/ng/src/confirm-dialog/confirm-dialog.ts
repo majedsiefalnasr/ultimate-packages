@@ -66,7 +66,12 @@ import { confirmDialogStyleModule } from "./confirm-dialog-style";
       <span [class]="cx('message')">{{ confirmation()?.message }}</span>
       <div dialogFooter [class]="cx('footer')">
         @if (confirmation()?.rejectVisible !== false) {
-          <u-button [label]="rejectLabel()" severity="secondary" text (onClick)="onReject()"></u-button>
+          <u-button
+            [label]="rejectLabel()"
+            severity="secondary"
+            text
+            (onClick)="onReject()"
+          ></u-button>
         }
         @if (confirmation()?.acceptVisible !== false) {
           <u-button [label]="acceptLabel()" (onClick)="onAccept()"></u-button>

@@ -11,8 +11,18 @@
     <div v-if="loading" :class="cx('loader')">
       <span class="u-scroller-loading-icon"></span>
     </div>
-    <div :class="cx('content')" data-u-scroller-content :style="{ height: items.length * itemSize + 'px' }">
-      <slot name="content" :items="visibleItems" :get-item-options="getItemOptions" :item-size="itemSize" :loading="loading">
+    <div
+      :class="cx('content')"
+      data-u-scroller-content
+      :style="{ height: items.length * itemSize + 'px' }"
+    >
+      <slot
+        name="content"
+        :items="visibleItems"
+        :get-item-options="getItemOptions"
+        :item-size="itemSize"
+        :loading="loading"
+      >
         <div
           v-for="entry in visibleItems"
           :key="entry.index"
@@ -71,7 +81,9 @@ export default {
   },
   computed: {
     resolvedNumToleratedItems() {
-      return this.numToleratedItems !== null ? this.numToleratedItems : Math.ceil(this.numItemsInViewport / 2);
+      return this.numToleratedItems !== null
+        ? this.numToleratedItems
+        : Math.ceil(this.numItemsInViewport / 2);
     },
     visibleItems() {
       if (this.disabled) {
@@ -129,7 +141,11 @@ export default {
   methods: {
     recompute() {
       this.numItemsInViewport = calculateNumItemsInViewport(this.contentSize, this.itemSize);
-      const rawLast = calculateLast(this.first, this.numItemsInViewport, this.resolvedNumToleratedItems);
+      const rawLast = calculateLast(
+        this.first,
+        this.numItemsInViewport,
+        this.resolvedNumToleratedItems
+      );
       this.last = this.getLast(rawLast);
     },
     getLast(last = 0, isCols = false) {

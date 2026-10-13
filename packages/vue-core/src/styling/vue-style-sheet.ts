@@ -57,5 +57,7 @@ export function registerComponentStyle(
   }
 
   if (vueCoreStyleSheet.has(componentName)) return;
-  vueCoreStyleSheet.add(componentName, css`${styleModule.css}`);
+  // Keep the style module's CSS bytes intact; the registered value is used as-is.
+  const renderCss = css;
+  vueCoreStyleSheet.add(componentName, renderCss`${styleModule.css}`);
 }

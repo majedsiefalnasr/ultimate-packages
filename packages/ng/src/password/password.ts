@@ -121,12 +121,7 @@ type PasswordStrength = "weak" | "medium" | "strong" | null;
         <div [class]="cx('meterText')">{{ infoText() }}</div>
       </div>
     }
-    <svg
-      style="display:none"
-      width="0"
-      height="0"
-      aria-hidden="true"
-    >
+    <svg style="display:none" width="0" height="0" aria-hidden="true">
       <clipPath id="u-password-eyeslash-clip">
         <rect width="14" height="14" fill="white" />
       </clipPath>

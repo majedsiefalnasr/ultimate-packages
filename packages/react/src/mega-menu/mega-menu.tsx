@@ -99,7 +99,10 @@ export const UMegaMenu = React.forwardRef<HTMLElement, UMegaMenuProps>(function 
     }
   };
 
-  const handleColumnItemSelect = (event: { originalEvent: React.SyntheticEvent; item: UMenuItem }) => {
+  const handleColumnItemSelect = (event: {
+    originalEvent: React.SyntheticEvent;
+    item: UMenuItem;
+  }) => {
     setOpenItem(null);
     onItemSelect?.(event);
   };
@@ -114,7 +117,8 @@ export const UMegaMenu = React.forwardRef<HTMLElement, UMegaMenuProps>(function 
     return index === -1 ? null : (renderedRootItems()[index] ?? null);
   };
 
-  const enabledRootItems = () => model.filter((candidate) => candidate.visible !== false && !candidate.disabled);
+  const enabledRootItems = () =>
+    model.filter((candidate) => candidate.visible !== false && !candidate.disabled);
 
   const moveFocus = (current: UMegaMenuItem, direction: 1 | -1) => {
     const enabled = enabledRootItems();
@@ -197,7 +201,11 @@ export const UMegaMenu = React.forwardRef<HTMLElement, UMegaMenuProps>(function 
   }, [focusFirstOnOpen, openItem]);
 
   return (
-    <nav ref={ref} className={[cx("root"), className].filter(Boolean).join(" ")} aria-label={ariaLabel}>
+    <nav
+      ref={ref}
+      className={[cx("root"), className].filter(Boolean).join(" ")}
+      aria-label={ariaLabel}
+    >
       <ul ref={listRef} className={cx("rootList")} role="menubar" onKeyDown={onKeyDown}>
         {model.map((item, index) => {
           if (item.visible === false) return null;

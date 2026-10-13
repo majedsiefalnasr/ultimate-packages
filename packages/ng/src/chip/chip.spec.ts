@@ -59,7 +59,11 @@ describe("UChip", () => {
     @Component({
       standalone: true,
       imports: [UChip],
-      template: `<u-chip [label]="'Apple'" [removable]="true" (onRemove)="removed = true"></u-chip>`,
+      template: `<u-chip
+        [label]="'Apple'"
+        [removable]="true"
+        (onRemove)="removed = true"
+      ></u-chip>`,
     })
     class HostComponent {
       removed = false;
@@ -78,7 +82,11 @@ describe("UChip", () => {
     @Component({
       standalone: true,
       imports: [UChip],
-      template: `<u-chip [label]="'Apple'" [removable]="true" (onRemove)="removed = removed + 1"></u-chip>`,
+      template: `<u-chip
+        [label]="'Apple'"
+        [removable]="true"
+        (onRemove)="removed = removed + 1"
+      ></u-chip>`,
     })
     class HostComponent {
       removed = 0;
@@ -95,7 +103,12 @@ describe("UChip", () => {
     @Component({
       standalone: true,
       imports: [UChip],
-      template: `<u-chip [label]="'Apple'" [removable]="true" [disabled]="true" (onRemove)="removed = true"></u-chip>`,
+      template: `<u-chip
+        [label]="'Apple'"
+        [removable]="true"
+        [disabled]="true"
+        (onRemove)="removed = true"
+      ></u-chip>`,
     })
     class HostComponent {
       removed = false;

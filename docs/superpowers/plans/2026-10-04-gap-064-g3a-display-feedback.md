@@ -2103,6 +2103,7 @@ Spec §14 (Amendment A1) was added and approved during Task 8, after the Plan wa
   - `!cancelled()`/`always()` step behaviour.
 
   Any discrepancy found there is reported, never adapted ad hoc.
+
 - **Task 9 impact:** the G3-A part of the `track-a-browser-visual-a11y` job is expected to stay red on the 6 held Toast screenshots until U2 is resolved.
 
 ---
@@ -2147,12 +2148,14 @@ Spec §14 (Amendment A1) was added and approved during Task 8, after the Plan wa
 ### Task 11: Toast structure tests (RED) and the layout e2e test
 
 **Files:**
+
 - Modify (append tests only): `packages/ng/src/toast/toast.spec.ts`, `packages/vue/src/toast/toast.spec.ts`
 - Modify (append one test each): `packages/ng/e2e/g3a-aura-styles.spec.ts`, `packages/vue/e2e/g3a-aura-styles.spec.ts`
 - Modify (SDD workspace, not committed): `.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/run.sh`, adding a `layout` mode
 - Commit first, as its own docs commit: the approved Spec §15 (A2), this addendum, and the uncommitted CI-verification records (G3-A Spec §14 status, the Plan A1 record, `docs/superpowers/specs/2026-10-05-ci-visual-environment-design.md` §10).
 
 **Interfaces:**
+
 - Produces: the structure test names `"renders the upstream-aligned message structure (GAP-064 G3-A A2)"` and `"omits the close-button container for a non-closable message (GAP-064 G3-A A2)"` (ng and vue); the e2e test titles `Ng/Toast AllSeverities G3-A layout` and `Vue/Toast AllSeverities G3-A layout`.
 
 - [ ] **Step 0: Commit the approved documents**
@@ -2165,80 +2168,88 @@ git commit -m "docs(gap-064): approve Toast markup amendment A2 and record CI ve
 - [ ] **Step 1: Append the Angular structure tests** to `packages/ng/src/toast/toast.spec.ts`, inside the existing `describe("UToast", …)`:
 
 ```ts
-  it("renders the upstream-aligned message structure (GAP-064 G3-A A2)", () => {
-    @Component({ standalone: true, imports: [UToast], template: `<u-toast></u-toast>` })
-    class HostComponent {}
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    TestBed.inject(UToastService).add({ severity: "warn", summary: "S", detail: "D" });
-    fixture.detectChanges();
+it("renders the upstream-aligned message structure (GAP-064 G3-A A2)", () => {
+  @Component({ standalone: true, imports: [UToast], template: `<u-toast></u-toast>` })
+  class HostComponent {}
+  const fixture = TestBed.createComponent(HostComponent);
+  fixture.detectChanges();
+  TestBed.inject(UToastService).add({ severity: "warn", summary: "S", detail: "D" });
+  fixture.detectChanges();
 
-    const content = fixture.nativeElement.querySelector(
-      ".u-toast-message > .u-toast-message-content"
-    ) as HTMLElement;
-    const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
-    expect(rest).toHaveLength(0);
-    expect(text.className).toBe("u-toast-message-text");
-    expect(Array.from(text.children, (c) => c.className)).toEqual(["u-toast-summary", "u-toast-detail"]);
-    expect(container.tagName).toBe("DIV");
-    expect(container.classList).toHaveLength(0);
-    expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
-  });
+  const content = fixture.nativeElement.querySelector(
+    ".u-toast-message > .u-toast-message-content"
+  ) as HTMLElement;
+  const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
+  expect(rest).toHaveLength(0);
+  expect(text.className).toBe("u-toast-message-text");
+  expect(Array.from(text.children, (c) => c.className)).toEqual([
+    "u-toast-summary",
+    "u-toast-detail",
+  ]);
+  expect(container.tagName).toBe("DIV");
+  expect(container.classList).toHaveLength(0);
+  expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
+});
 
-  it("omits the close-button container for a non-closable message (GAP-064 G3-A A2)", () => {
-    @Component({ standalone: true, imports: [UToast], template: `<u-toast></u-toast>` })
-    class HostComponent {}
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    TestBed.inject(UToastService).add({ severity: "info", summary: "S", closable: false });
-    fixture.detectChanges();
+it("omits the close-button container for a non-closable message (GAP-064 G3-A A2)", () => {
+  @Component({ standalone: true, imports: [UToast], template: `<u-toast></u-toast>` })
+  class HostComponent {}
+  const fixture = TestBed.createComponent(HostComponent);
+  fixture.detectChanges();
+  TestBed.inject(UToastService).add({ severity: "info", summary: "S", closable: false });
+  fixture.detectChanges();
 
-    const content = fixture.nativeElement.querySelector(
-      ".u-toast-message > .u-toast-message-content"
-    ) as HTMLElement;
-    expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
-    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
-  });
+  const content = fixture.nativeElement.querySelector(
+    ".u-toast-message > .u-toast-message-content"
+  ) as HTMLElement;
+  expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
+  expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
+});
 ```
 
 - [ ] **Step 2: Append the Vue structure tests** to `packages/vue/src/toast/toast.spec.ts`, inside the existing `describe("UToast", …)`:
 
 ```ts
-  it("renders the upstream-aligned message structure (GAP-064 G3-A A2)", async () => {
-    const wrapper = mount(UToast);
-    toastEventBus.emit("add", { severity: "warn", summary: "S", detail: "D" });
-    await wrapper.vm.$nextTick();
+it("renders the upstream-aligned message structure (GAP-064 G3-A A2)", async () => {
+  const wrapper = mount(UToast);
+  toastEventBus.emit("add", { severity: "warn", summary: "S", detail: "D" });
+  await wrapper.vm.$nextTick();
 
-    const content = wrapper.find(".u-toast-message > .u-toast-message-content").element;
-    const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
-    expect(rest).toHaveLength(0);
-    expect(text.className).toBe("u-toast-message-text");
-    expect(Array.from(text.children, (c) => c.className)).toEqual(["u-toast-summary", "u-toast-detail"]);
-    expect(container.tagName).toBe("DIV");
-    expect(container.classList).toHaveLength(0);
-    expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
-    wrapper.unmount();
-  });
+  const content = wrapper.find(".u-toast-message > .u-toast-message-content").element;
+  const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
+  expect(rest).toHaveLength(0);
+  expect(text.className).toBe("u-toast-message-text");
+  expect(Array.from(text.children, (c) => c.className)).toEqual([
+    "u-toast-summary",
+    "u-toast-detail",
+  ]);
+  expect(container.tagName).toBe("DIV");
+  expect(container.classList).toHaveLength(0);
+  expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
+  wrapper.unmount();
+});
 
-  it("omits the close-button container for a non-closable message (GAP-064 G3-A A2)", async () => {
-    const wrapper = mount(UToast);
-    toastEventBus.emit("add", { severity: "info", summary: "S", closable: false });
-    await wrapper.vm.$nextTick();
+it("omits the close-button container for a non-closable message (GAP-064 G3-A A2)", async () => {
+  const wrapper = mount(UToast);
+  toastEventBus.emit("add", { severity: "info", summary: "S", closable: false });
+  await wrapper.vm.$nextTick();
 
-    const content = wrapper.find(".u-toast-message > .u-toast-message-content").element;
-    expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
-    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
-    wrapper.unmount();
-  });
+  const content = wrapper.find(".u-toast-message > .u-toast-message-content").element;
+  expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
+  expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
+  wrapper.unmount();
+});
 ```
 
 - [ ] **Step 3: Run both and confirm RED**
 
 Run, with `export PATH=$HOME/.nvm/versions/node/v24.15.0/bin:$PATH`:
+
 - `pnpm --filter @ultimate/ng exec ng test --project=ng --include=src/toast/toast.spec.ts --watch=false`
 - `pnpm --filter @ultimate/vue test -- toast.spec`
 
 Expected:
+
 - **only** the 4 new tests fail: the first content child is `u-toast-summary`, not `u-toast-message-text`;
 - every pre-existing Toast test passes.
 
@@ -2267,7 +2278,9 @@ test("Ng/Toast AllSeverities G3-A layout", async ({ page }) => {
     const outer = await box(":scope");
     expect(detail.y).toBeGreaterThanOrEqual(summary.y + summary.height - 0.5);
     expect(close.x).toBeGreaterThanOrEqual(text.x + text.width - 0.5);
-    expect(close.x).toBeGreaterThanOrEqual(Math.max(summary.x + summary.width, detail.x + detail.width) - 0.5);
+    expect(close.x).toBeGreaterThanOrEqual(
+      Math.max(summary.x + summary.width, detail.x + detail.width) - 0.5
+    );
     expect(close.x + close.width).toBeLessThanOrEqual(outer.x + outer.width + 0.5);
     expect(close.y).toBeGreaterThanOrEqual(outer.y - 0.5);
   }
@@ -2302,11 +2315,13 @@ git commit -m "test(gap-064): add Toast structure and measured-layout tests for 
 ### Task 12: Port the upstream text-column CSS (port data + both style modules)
 
 **Files:**
+
 - Modify: `packages/themes/test/utils/g3a-port.mjs`, around lines 80–87 (`NOT_RENDERED.toast`) and line 140 (`COUNTS.toast`)
 - Modify: the `css` template only in `packages/ng/src/toast/toast-style.ts` and `packages/vue/src/toast/toast-style.ts`
 - Modify (docs): Spec §4.3 toast row, §4.4 toast row (`36 / 42` → `37 / 42`; FX-A7 "5 groups …") and §5.4 FX-A7 ("message-icon, close-icon, and enter/leave/leave-to animations")
 
 **Interfaces:**
+
 - Consumes: the `g3a-port.mjs` CLI `node packages/themes/test/utils/g3a-port.mjs <ng|vue> toast`.
 - Produces: the `.u-toast-message-text{flex: 1 1 auto;display: flex;flex-direction: column;gap: dt('toast.text.gap');}` rule in both style modules.
 
@@ -2347,10 +2362,12 @@ git commit -m "feat(gap-064): port the upstream Toast text-column rule (amendmen
 ### Task 13: Align the Toast markup (GREEN) and prove the markup diff is bounded
 
 **Files:**
+
 - Modify: the `template` of `packages/ng/src/toast/toast.ts`; the `<template>` of `packages/vue/src/toast/Toast.vue`
 - Modify: the `classes` of `packages/ng/src/toast/toast-style.ts` and `packages/vue/src/toast/toast-style.ts` (one added entry each)
 
 **Interfaces:**
+
 - Consumes: the Task 11 structure tests; the Task 12 `.u-toast-message-text` rule.
 - Produces: the D-A2-1 DOM, plus `classes.messageText`.
 
@@ -2363,49 +2380,43 @@ git commit -m "feat(gap-064): port the upstream Toast text-column rule (amendmen
 - [ ] **Step 2: Angular template.** Replace the `messageContent` div and the `@if (message.closable !== false) { … }` block inside the message `div` of `packages/ng/src/toast/toast.ts` with:
 
 ```html
-        <div [class]="cx('messageContent')">
-          <div [class]="cx('messageText')">
-            @if (message.summary) {
-              <div [class]="cx('summary')">{{ message.summary }}</div>
-            }
-            @if (message.detail) {
-              <div [class]="cx('detail')">{{ message.detail }}</div>
-            }
-          </div>
-          @if (message.closable !== false) {
-            <div>
-              <button
-                type="button"
-                [class]="cx('closeButton')"
-                aria-label="Close"
-                (click)="remove(message.id)"
-              >
-                &times;
-              </button>
-            </div>
-          }
-        </div>
+<div [class]="cx('messageContent')">
+  <div [class]="cx('messageText')">
+    @if (message.summary) {
+    <div [class]="cx('summary')">{{ message.summary }}</div>
+    } @if (message.detail) {
+    <div [class]="cx('detail')">{{ message.detail }}</div>
+    }
+  </div>
+  @if (message.closable !== false) {
+  <div>
+    <button
+      type="button"
+      [class]="cx('closeButton')"
+      aria-label="Close"
+      (click)="remove(message.id)"
+    >
+      &times;
+    </button>
+  </div>
+  }
+</div>
 ```
 
 - [ ] **Step 3: Vue template.** Replace lines 11–23 of `packages/vue/src/toast/Toast.vue` (the `messageContent` div and the close `button`) with:
 
 ```html
-      <div :class="cx('messageContent')">
-        <div :class="cx('messageText')">
-          <div v-if="message.summary" :class="cx('summary')">{{ message.summary }}</div>
-          <div v-if="message.detail" :class="cx('detail')">{{ message.detail }}</div>
-        </div>
-        <div v-if="message.closable !== false">
-          <button
-            type="button"
-            :class="cx('closeButton')"
-            aria-label="Close"
-            @click="remove(message.id)"
-          >
-            &times;
-          </button>
-        </div>
-      </div>
+<div :class="cx('messageContent')">
+  <div :class="cx('messageText')">
+    <div v-if="message.summary" :class="cx('summary')">{{ message.summary }}</div>
+    <div v-if="message.detail" :class="cx('detail')">{{ message.detail }}</div>
+  </div>
+  <div v-if="message.closable !== false">
+    <button type="button" :class="cx('closeButton')" aria-label="Close" @click="remove(message.id)">
+      &times;
+    </button>
+  </div>
+</div>
 ```
 
 The button keeps its existing attribute lines, and only `v-if` moves from the button to the container.
@@ -2463,10 +2474,12 @@ git commit -m "feat(gap-064): align Toast markup with upstream (amendment A2)"
 ### Task 14: Post-implementation Docker run, layout proof, and the accessibility identity mapping
 
 **Files:**
+
 - Create (SDD workspace, not committed): `.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/docker/toast-identity-map.mjs`
 - Modify: `docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md` (written by the script)
 
 **Interfaces:**
+
 - Consumes: the Task 13 tree; `run.sh` modes `g3a`, `regression` and `layout`; the validator exports `BASELINE_PATH`, `loadBaseline`, `readEnvelopes`, `parseBaselineFingerprints`.
 - Produces: the updated evidence file with 200 rows and a bullet-list mapping section, and the Task 15 review inputs under `/tmp/g3a-docker/a2/`.
 
@@ -2481,6 +2494,7 @@ cp /tmp/g3a-docker/regression.log /tmp/g3a-docker/a2/regression.log
 ```
 
 Expected:
+
 - **g3a:** failures are exactly the 6 `Toast AllSeverities G3-A visual` screenshots, which are still held, and both `Toast AllSeverities G3-A layout` tests **pass** in all 3 browsers.
 - **regression:** 0 failed (record retry-passing flakes).
 - Anything else is UNEXPECTED: stop and report it.
@@ -2501,8 +2515,10 @@ import {
 } from "../../../../scripts/provenance/validate-accessibility-baseline.mjs";
 
 const EVIDENCE = "docs/architecture/research/2026-10-04-gap-064-g3a-accessibility-preexisting.md";
-const OLD = /^color-contrast:(ng|vue)-toast--all-severities:\.u-toast-message-(success|warn|error) > \.u-toast-message-content > \.u-toast-summary$/;
-const toNew = (old) => old.replace(/ > \.u-toast-summary$/, " > .u-toast-message-text > .u-toast-summary");
+const OLD =
+  /^color-contrast:(ng|vue)-toast--all-severities:\.u-toast-message-(success|warn|error) > \.u-toast-message-content > \.u-toast-summary$/;
+const toNew = (old) =>
+  old.replace(/ > \.u-toast-summary$/, " > .u-toast-message-text > .u-toast-summary");
 
 const root = process.argv[2];
 const baseline = loadBaseline(BASELINE_PATH);
@@ -2571,6 +2587,7 @@ cp -R /tmp/g3a-docker/a2/test-results $W/
 ```
 
 Expected:
+
 - `OK: ng 93/93 reports, 0 introduced violations, 0 stale pre-existing row(s)`;
 - `OK: vue 102/102 reports, 0 introduced violations, 0 stale pre-existing row(s)`.
 
@@ -2593,6 +2610,7 @@ git commit -m "docs(gap-064): re-identify the 6 pre-existing Toast contrast rows
 ### Task 15: Toast review gate (HARD USER STOP)
 
 **Files:**
+
 - Modify: `docs/superpowers/plans/2026-10-04-gap-064-g3a-visual-review.md` (append the section "Amendment A2: Toast review")
 
 - [ ] **Step 1: Copy the review artifacts** (the expected, actual and diff PNGs of the 6 Toast visual tests from `/tmp/g3a-docker/a2/test-results/`) to `.superpowers/sdd/2026-10-04-gap-064-g3a-display-feedback/a2-artifacts/`. Inspect each chromium "actual" image.
@@ -2612,6 +2630,7 @@ git commit -m "docs(gap-064): re-identify the 6 pre-existing Toast contrast rows
 ### Task 16: Accept the approved Toast baselines (only after the Task 15 approval)
 
 **Files:**
+
 - Modify: the 6 `Toast-AllSeverities-G3-A-visual-1-<ng|vue>-<browser>.png` files under `packages/{ng,vue}/e2e/g3a-aura-styles.spec.ts-snapshots/`; the review record.
 
 - [ ] **Step 1: Update only the approved PNGs in Docker**

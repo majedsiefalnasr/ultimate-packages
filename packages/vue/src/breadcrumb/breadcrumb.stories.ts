@@ -33,6 +33,9 @@ export const WithoutHome: Story = {
 export const WithDisabledItem: Story = {
   args: {
     home: { icon: "pi pi-home", url: "/" },
-    model: [{ label: "Category", url: "/category" }, { label: "Disabled", disabled: true }],
+    model: [
+      { label: "Category", url: "/category" },
+      { label: "Disabled", disabled: true },
+    ],
   },
 };

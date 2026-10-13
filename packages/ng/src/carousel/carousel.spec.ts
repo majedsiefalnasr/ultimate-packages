@@ -138,9 +138,9 @@ describe("UCarousel", () => {
       vi.advanceTimersByTime(1000);
       fixture.detectChanges();
       expect(
-        fixture.nativeElement.querySelectorAll('[data-p-active="true"]')[0].getAttribute(
-          "data-p-active"
-        )
+        fixture.nativeElement
+          .querySelectorAll('[data-p-active="true"]')[0]
+          .getAttribute("data-p-active")
       ).toBe("true");
       const indicators = fixture.nativeElement.querySelectorAll(".u-carousel-indicator");
       expect(indicators[1].getAttribute("data-p-active")).toBe("true");

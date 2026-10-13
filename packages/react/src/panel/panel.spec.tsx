@@ -45,9 +45,7 @@ describe("UPanel", () => {
     const onToggle = vi.fn();
     render(<UPanel header="Info" toggleable collapsed={false} onToggle={onToggle} />);
     fireEvent.click(screen.getByRole("button"));
-    expect(onToggle).toHaveBeenCalledWith(
-      expect.objectContaining({ value: true })
-    );
+    expect(onToggle).toHaveBeenCalledWith(expect.objectContaining({ value: true }));
   });
 
   it("hides the header entirely when showHeader is false", () => {

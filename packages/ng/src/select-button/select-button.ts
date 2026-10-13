@@ -138,7 +138,11 @@ export class USelectButton extends UBaseEditableHolder {
         }
         const disabled = this.$disabled() || this.isOptionDisabled(option);
         if (disabled !== control.disabled) {
-          disabled ? control.disable({ emitEvent: false }) : control.enable({ emitEvent: false });
+          if (disabled) {
+            control.disable({ emitEvent: false });
+          } else {
+            control.enable({ emitEvent: false });
+          }
         }
       });
     });

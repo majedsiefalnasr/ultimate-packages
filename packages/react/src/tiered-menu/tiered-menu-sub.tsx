@@ -56,7 +56,12 @@ const ITEM_LINK_SELECTOR = ":scope > li > .u-tieredmenu-content > a";
  * removed), matching the same reasoning already proven correct in
  * `UMenubarSub`.
  */
-export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({ items, root, cx, onItemSelect }) => {
+export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({
+  items,
+  root,
+  cx,
+  onItemSelect,
+}) => {
   const [openItem, setOpenItem] = React.useState<UMenuItem | null>(null);
   const [focusFirstOnOpen, setFocusFirstOnOpen] = React.useState(false);
   const listRef = React.useRef<HTMLUListElement>(null);
@@ -94,7 +99,8 @@ export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({ items, root, cx,
    * bubbling toward the ancestor level that does.
    */
   /** Items that actually render their own direct-child `<a>` (excludes separators and hidden items), in the same order `getItemLinks()` returns their DOM nodes. */
-  const renderedItems = () => items.filter((candidate) => !candidate.separator && candidate.visible !== false);
+  const renderedItems = () =>
+    items.filter((candidate) => !candidate.separator && candidate.visible !== false);
 
   const resolveOwnItem = (target: EventTarget | null): UMenuItem | null => {
     const links = getItemLinks();
@@ -102,7 +108,10 @@ export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({ items, root, cx,
     return index === -1 ? null : (renderedItems()[index] ?? null);
   };
 
-  const enabledItems = () => items.filter((candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled);
+  const enabledItems = () =>
+    items.filter(
+      (candidate) => !candidate.separator && candidate.visible !== false && !candidate.disabled
+    );
 
   const moveFocus = (current: UMenuItem, direction: 1 | -1) => {
     const enabled = enabledItems();
@@ -178,7 +187,12 @@ export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({ items, root, cx,
   }, [focusFirstOnOpen, openItem]);
 
   return (
-    <ul ref={listRef} className={root ? cx("rootList") : cx("submenu")} role="menu" onKeyDown={onKeyDown}>
+    <ul
+      ref={listRef}
+      className={root ? cx("rootList") : cx("submenu")}
+      role="menu"
+      onKeyDown={onKeyDown}
+    >
       {items.map((item, index) => {
         if (item.separator) {
           return <li key={`sep_${index}`} className={cx("separator")} role="separator" />;
@@ -214,7 +228,12 @@ export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({ items, root, cx,
               </a>
             </div>
             {hasItems(item) && (
-              <UTieredMenuSub items={item.items ?? []} root={false} cx={cx} onItemSelect={onItemSelect} />
+              <UTieredMenuSub
+                items={item.items ?? []}
+                root={false}
+                cx={cx}
+                onItemSelect={onItemSelect}
+              />
             )}
           </li>
         );

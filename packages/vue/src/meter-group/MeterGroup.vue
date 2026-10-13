@@ -8,16 +8,16 @@
   >
     <div :class="cx('meters')">
       <template v-for="(item, index) in value" :key="index">
-        <span
-          v-if="item.value > 0"
-          :class="cx('meter')"
-          :style="meterStyle(item)"
-        ></span>
+        <span v-if="item.value > 0" :class="cx('meter')" :style="meterStyle(item)"></span>
       </template>
     </div>
     <ol :class="cx('labelList', { orientation })">
       <li v-for="(item, index) in value" :key="index" :class="cx('label')">
-        <i v-if="item.icon" :class="[cx('labelIcon'), item.icon]" :style="{ color: item.color }"></i>
+        <i
+          v-if="item.icon"
+          :class="[cx('labelIcon'), item.icon]"
+          :style="{ color: item.color }"
+        ></i>
         <span v-else :class="cx('labelMarker')" :style="{ backgroundColor: item.color }"></span>
         <span :class="cx('labelText')">{{ item.label }} ({{ percentValue(item.value) }})</span>
       </li>

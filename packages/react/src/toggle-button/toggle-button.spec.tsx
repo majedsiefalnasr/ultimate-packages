@@ -22,7 +22,10 @@ describe("UToggleButton", () => {
     render(<UToggleButton checked={false} onChange={onChange} name="feature" />);
     fireEvent.click(screen.getByRole("checkbox", { hidden: true }));
     expect(onChange).toHaveBeenCalledWith(
-      expect.objectContaining({ value: true, target: expect.objectContaining({ name: "feature", value: true }) })
+      expect.objectContaining({
+        value: true,
+        target: expect.objectContaining({ name: "feature", value: true }),
+      })
     );
   });
 

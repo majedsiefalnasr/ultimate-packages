@@ -70,7 +70,9 @@ describe("UListbox", () => {
   });
 
   it("v-model — reflects the modelValue prop via aria-selected", async () => {
-    const wrapper = mount(UListbox, { props: { modelValue: "Apple", options: ["Apple", "Banana"] } });
+    const wrapper = mount(UListbox, {
+      props: { modelValue: "Apple", options: ["Apple", "Banana"] },
+    });
     const options = wrapper.findAll('[role="option"]');
     expect(options[0].attributes("aria-selected")).toBe("true");
     expect(options[1].attributes("aria-selected")).toBe("false");

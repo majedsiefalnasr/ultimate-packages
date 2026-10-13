@@ -1,6 +1,6 @@
 import * as React from "react";
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import { UColorPicker } from "./color-picker";
 
 describe("UColorPicker", () => {
@@ -48,7 +48,8 @@ describe("UColorPicker", () => {
     fireEvent.click(container.querySelector(".u-color-picker-preview") as HTMLElement);
 
     const hue = container.querySelector(".u-color-picker-hue") as HTMLElement;
-    hue.getBoundingClientRect = () => ({ left: 0, top: 0, width: 20, height: 150, right: 20, bottom: 150 }) as DOMRect;
+    hue.getBoundingClientRect = () =>
+      ({ left: 0, top: 0, width: 20, height: 150, right: 20, bottom: 150 }) as DOMRect;
     // clientY 75 (mid-strip) maps to hue 180 (cyan) — clearly distinct from
     // the starting red (#ff0000, hue 0/360).
     fireEvent.mouseDown(hue, { clientX: 10, clientY: 75 });
@@ -68,7 +69,11 @@ describe("UColorPicker", () => {
     fireEvent.mouseDown(selector, { clientX: 75, clientY: 75 });
 
     expect(onChange.mock.calls[0][0].value).toEqual(
-      expect.objectContaining({ r: expect.any(Number), g: expect.any(Number), b: expect.any(Number) })
+      expect.objectContaining({
+        r: expect.any(Number),
+        g: expect.any(Number),
+        b: expect.any(Number),
+      })
     );
   });
 

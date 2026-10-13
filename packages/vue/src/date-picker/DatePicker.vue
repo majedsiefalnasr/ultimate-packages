@@ -14,27 +14,60 @@
       @click="onInputClick"
       @keydown="onInputKeydown"
     />
-    <span v-if="showClear && filled && !disabled" :class="cx('clearIcon')" aria-hidden="true" @click="clear">&times;</span>
-    <span v-if="showIcon" :class="cx('trigger')" role="button" aria-hidden="true" @click="onInputClick">&#128197;</span>
+    <span
+      v-if="showClear && filled && !disabled"
+      :class="cx('clearIcon')"
+      aria-hidden="true"
+      @click="clear"
+      >&times;</span
+    >
+    <span
+      v-if="showIcon"
+      :class="cx('trigger')"
+      role="button"
+      aria-hidden="true"
+      @click="onInputClick"
+      >&#128197;</span
+    >
     <UPortal v-if="overlayVisible" :appendTo="appendTo">
       <div :class="cx('panel')" role="dialog">
         <div :class="cx('header')">
-          <button type="button" :class="cx('navButton')" aria-label="Previous month" @click="navBackward">&#8249;</button>
+          <button
+            type="button"
+            :class="cx('navButton')"
+            aria-label="Previous month"
+            @click="navBackward"
+          >
+            &#8249;
+          </button>
           <span :class="cx('title')">
             <span>{{ monthNames[viewMonth] }}</span>
             <span>{{ viewYear }}</span>
           </span>
-          <button type="button" :class="cx('navButton')" aria-label="Next month" @click="navForward">&#8250;</button>
+          <button
+            type="button"
+            :class="cx('navButton')"
+            aria-label="Next month"
+            @click="navForward"
+          >
+            &#8250;
+          </button>
         </div>
         <table :class="cx('dayView')" role="grid">
           <thead>
             <tr>
-              <th v-for="dayName in dayNames" :key="dayName" :class="cx('weekdayCell')" scope="col">{{ dayName }}</th>
+              <th v-for="dayName in dayNames" :key="dayName" :class="cx('weekdayCell')" scope="col">
+                {{ dayName }}
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(week, weekIndex) in weeks" :key="weekIndex">
-              <td v-for="cell in week" :key="`${cell.month}-${cell.day}-${cell.year}`" :class="cx('dayCell')">
+              <td
+                v-for="cell in week"
+                :key="`${cell.month}-${cell.day}-${cell.year}`"
+                :class="cx('dayCell')"
+              >
                 <span
                   role="gridcell"
                   :tabindex="isFocusedCell(cell) ? 0 : -1"
@@ -43,7 +76,8 @@
                   :class="cx('day', dayClassesParams(cell))"
                   @click="onDateSelect(cell)"
                   @keydown="onDateCellKeydown($event, cell)"
-                >{{ cell.day }}</span>
+                  >{{ cell.day }}</span
+                >
               </td>
             </tr>
           </tbody>
@@ -62,7 +96,11 @@ function stripTime(date) {
 }
 
 function isSameDay(a, b) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 function formatDate(date) {
@@ -144,14 +182,23 @@ export default {
         cells.push({ day, month: prevMonth, year: prevYear, otherMonth: true, today: false });
       }
       for (let day = 1; day <= daysInMonth; day++) {
-        const isToday = day === this.today.getDate() && month === this.today.getMonth() && year === this.today.getFullYear();
+        const isToday =
+          day === this.today.getDate() &&
+          month === this.today.getMonth() &&
+          year === this.today.getFullYear();
         cells.push({ day, month, year, otherMonth: false, today: isToday });
       }
       let nextDay = 1;
       const nextMonth = month === 11 ? 0 : month + 1;
       const nextYear = month === 11 ? year + 1 : year;
       while (cells.length % 7 !== 0) {
-        cells.push({ day: nextDay, month: nextMonth, year: nextYear, otherMonth: true, today: false });
+        cells.push({
+          day: nextDay,
+          month: nextMonth,
+          year: nextYear,
+          otherMonth: true,
+          today: false,
+        });
         nextDay++;
       }
 
@@ -175,11 +222,19 @@ export default {
     isSelected(cell) {
       const selected = this.selectedDate;
       if (!selected) return false;
-      return selected.getDate() === cell.day && selected.getMonth() === cell.month && selected.getFullYear() === cell.year;
+      return (
+        selected.getDate() === cell.day &&
+        selected.getMonth() === cell.month &&
+        selected.getFullYear() === cell.year
+      );
     },
     isFocusedCell(cell) {
       if (this.focusedCell) {
-        return this.focusedCell.day === cell.day && this.focusedCell.month === cell.month && this.focusedCell.year === cell.year;
+        return (
+          this.focusedCell.day === cell.day &&
+          this.focusedCell.month === cell.month &&
+          this.focusedCell.year === cell.year
+        );
       }
       return this.isSelected(cell);
     },
@@ -218,11 +273,19 @@ export default {
       if (selected) {
         this.viewMonth = selected.getMonth();
         this.viewYear = selected.getFullYear();
-        this.focusedCell = { day: selected.getDate(), month: selected.getMonth(), year: selected.getFullYear() };
+        this.focusedCell = {
+          day: selected.getDate(),
+          month: selected.getMonth(),
+          year: selected.getFullYear(),
+        };
       } else {
         this.viewMonth = this.today.getMonth();
         this.viewYear = this.today.getFullYear();
-        this.focusedCell = { day: this.today.getDate(), month: this.today.getMonth(), year: this.today.getFullYear() };
+        this.focusedCell = {
+          day: this.today.getDate(),
+          month: this.today.getMonth(),
+          year: this.today.getFullYear(),
+        };
       }
       this.overlayVisible = true;
       this.$emit("show");

@@ -16,7 +16,14 @@ describe("dark mode", () => {
 
   it("the assembled preset has distinct light and dark values for the same semantic token", () => {
     applyUltimateTheme();
-    const preset = Theme.getPreset() as any;
+    const preset = Theme.getPreset() as {
+      semantic?: {
+        colorScheme?: {
+          light?: { primary?: { color: string } };
+          dark?: { primary?: { color: string } };
+        };
+      };
+    };
     const lightPrimary = preset.semantic?.colorScheme?.light?.primary;
     const darkPrimary = preset.semantic?.colorScheme?.dark?.primary;
     expect(lightPrimary).toBeDefined();

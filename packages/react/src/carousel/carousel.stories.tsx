@@ -19,7 +19,14 @@ export const Default: Story = {
       numVisible={3}
       numScroll={1}
       itemTemplate={(item) => (
-        <div style={{ padding: "1rem", textAlign: "center", border: "1px solid #ddd", margin: "0 0.5rem" }}>
+        <div
+          style={{
+            padding: "1rem",
+            textAlign: "center",
+            border: "1px solid #ddd",
+            margin: "0 0.5rem",
+          }}
+        >
           {item}
         </div>
       )}

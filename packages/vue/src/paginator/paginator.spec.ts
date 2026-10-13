@@ -21,7 +21,9 @@ describe("UPaginator", () => {
   });
 
   it("renders one button per page-link, matching the shared display algorithm", () => {
-    const wrapper = mount(UPaginator, { props: { first: 0, rows: 10, totalRecords: 30, pageLinkSize: 5 } });
+    const wrapper = mount(UPaginator, {
+      props: { first: 0, rows: 10, totalRecords: 30, pageLinkSize: 5 },
+    });
     expect(wrapper.findAll("[data-u-paginator-page]").length).toBe(3);
   });
 

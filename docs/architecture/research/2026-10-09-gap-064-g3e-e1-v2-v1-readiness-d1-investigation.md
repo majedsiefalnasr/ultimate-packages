@@ -13,24 +13,24 @@ The review identifies an **established execution-input packaging discrepancy and
 
 For the inventory below, **E** denotes the existing ignored local evidence directory `.superpowers/sdd/2026-10-08-gap-064-g3e-media-data/e1-v2-remediation/`; **X** denotes `.superpowers/sdd/2026-10-08-gap-064-g3e-media-data/e1-v2-c1-experiment/`. These retained files are local evidence, not promised contents of a clean checkout.
 
-| Evidence | Inspection performed |
-| --- | --- |
-| `E/checks/v1.json` | Failed default-case identity, error/stack, 5035 ms recorded test duration, retry 0, 120000 ms test timeout, stats and attachment list |
-| `E/checks/v1.log` | Failure tail and relevant reference-server/media/error lines; existing readiness assertion timed out at 5000 ms |
-| `E/playwright/v1/g3e-imagecompare-default-ng-PrimeNG-21-1-9-vs-Ultimate-prime-parity-chromium/error-context.md` | Failure and embedded source excerpt; no request/response or per-image values provided |
-| `E/playwright/v1/` | Existing file inventory: `.last-run.json` and the error-context file; no retained trace/HAR |
-| `E/campaign-continuation/state.json`, `result.md`, `commands.log` | Existing state, execution order, invocation and stop/cleanup history |
-| `E/campaign-continuation/container-evidence.tar` | Member inventory and existing `test-results/prime-parity-g3e/E-1/report.json` (`rows: []`); no extraction to disk |
-| `E/production-input.tar`, `E/starting-worktree.tar` | Relevant member names/types, archived Angular configuration/source bytes and image bytes; archive SHA-256 |
-| `E/starting-manifest.json`, `post-implementation-manifest.json`, `implementation.json` | Presence/absence of relevant fixture entries, retained file hashes and recorded production archive identity |
-| `X/src.tar` | Only the directly relevant fixture-link, Angular source/configuration, case/loader/readiness and two image entries, for comparison with failed inputs; no experiment rerun |
-| `tooling/prime-reference/cases-g3e.ts` | ImageCompare part selectors and default-case mapping |
-| `tooling/prime-reference/ng/src/g3e.ts`, `src/main.ts` | Sized reference template, image URLs, route dispatch and existing Aura bootstrap |
-| `tooling/prime-reference/ng/angular.json` | Asset-serving input/output configuration |
-| `tooling/prime-reference/e2e/actions.ts`, `probe.ts`, `E/artifacts/g3e.spec.ts` | Readiness predicate, page URL/loading sequence and Prime-before-Ultimate execution order |
-| `tooling/prime-reference/ng/fixtures` | Existing filesystem symlink/target and its tracked Git mode; no modification |
-| `tooling/prime-reference/fixtures/media/landscape-1.png`, `landscape-2.png` | Local/archive byte hashes and PNG header dimensions; no decoder or rendering experiment |
-| Four approved C1 files | Current bytes compared with retained post-implementation hashes; all unchanged |
+| Evidence                                                                                                        | Inspection performed                                                                                                                                                       |
+| --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `E/checks/v1.json`                                                                                              | Failed default-case identity, error/stack, 5035 ms recorded test duration, retry 0, 120000 ms test timeout, stats and attachment list                                      |
+| `E/checks/v1.log`                                                                                               | Failure tail and relevant reference-server/media/error lines; existing readiness assertion timed out at 5000 ms                                                            |
+| `E/playwright/v1/g3e-imagecompare-default-ng-PrimeNG-21-1-9-vs-Ultimate-prime-parity-chromium/error-context.md` | Failure and embedded source excerpt; no request/response or per-image values provided                                                                                      |
+| `E/playwright/v1/`                                                                                              | Existing file inventory: `.last-run.json` and the error-context file; no retained trace/HAR                                                                                |
+| `E/campaign-continuation/state.json`, `result.md`, `commands.log`                                               | Existing state, execution order, invocation and stop/cleanup history                                                                                                       |
+| `E/campaign-continuation/container-evidence.tar`                                                                | Member inventory and existing `test-results/prime-parity-g3e/E-1/report.json` (`rows: []`); no extraction to disk                                                          |
+| `E/production-input.tar`, `E/starting-worktree.tar`                                                             | Relevant member names/types, archived Angular configuration/source bytes and image bytes; archive SHA-256                                                                  |
+| `E/starting-manifest.json`, `post-implementation-manifest.json`, `implementation.json`                          | Presence/absence of relevant fixture entries, retained file hashes and recorded production archive identity                                                                |
+| `X/src.tar`                                                                                                     | Only the directly relevant fixture-link, Angular source/configuration, case/loader/readiness and two image entries, for comparison with failed inputs; no experiment rerun |
+| `tooling/prime-reference/cases-g3e.ts`                                                                          | ImageCompare part selectors and default-case mapping                                                                                                                       |
+| `tooling/prime-reference/ng/src/g3e.ts`, `src/main.ts`                                                          | Sized reference template, image URLs, route dispatch and existing Aura bootstrap                                                                                           |
+| `tooling/prime-reference/ng/angular.json`                                                                       | Asset-serving input/output configuration                                                                                                                                   |
+| `tooling/prime-reference/e2e/actions.ts`, `probe.ts`, `E/artifacts/g3e.spec.ts`                                 | Readiness predicate, page URL/loading sequence and Prime-before-Ultimate execution order                                                                                   |
+| `tooling/prime-reference/ng/fixtures`                                                                           | Existing filesystem symlink/target and its tracked Git mode; no modification                                                                                               |
+| `tooling/prime-reference/fixtures/media/landscape-1.png`, `landscape-2.png`                                     | Local/archive byte hashes and PNG header dimensions; no decoder or rendering experiment                                                                                    |
+| Four approved C1 files                                                                                          | Current bytes compared with retained post-implementation hashes; all unchanged                                                                                             |
 
 The four files are `packages/themes/test/utils/g3e-port.mjs`, `packages/ng/src/image-compare/image-compare-style.ts`, `docs/architecture/provenance/ng.json` and `docs/architecture/PROVENANCE.md`. No unrelated component/framework source was investigated.
 
@@ -46,23 +46,23 @@ The four files are `packages/themes/test/utils/g3e-port.mjs`, `packages/ng/src/i
 
 ### Retained hash anchors
 
-| Input | SHA-256 |
-| --- | --- |
-| Failed `E/production-input.tar` | `a7fea35cb18032bc71cbc039d221472e3d01f7a2ad687f3b6fd5f8b193695fe5` |
-| `E/starting-worktree.tar` | `0909b4ea2ecbb0b8c20074e4102b09c21c1c823788abc50a19f6438d71b465d2` |
+| Input                             | SHA-256                                                            |
+| --------------------------------- | ------------------------------------------------------------------ |
+| Failed `E/production-input.tar`   | `a7fea35cb18032bc71cbc039d221472e3d01f7a2ad687f3b6fd5f8b193695fe5` |
+| `E/starting-worktree.tar`         | `0909b4ea2ecbb0b8c20074e4102b09c21c1c823788abc50a19f6438d71b465d2` |
 | Successful experiment `X/src.tar` | `60bc65d477ffcae50c653c4d738e2f086a8fcb61e3351eab5811c600e2ec90a4` |
-| Unchanged `ng/angular.json` | `8a8a2740539c734cc3e400092185a7d00f5fbb5302775de3b537e06c7e8f407f` |
-| Shared `landscape-1.png` | `fcb9f0eff74f7614d7e791c920253327872740df0ac0f8f053adca98cc39fc86` |
-| Shared `landscape-2.png` | `a2d5d4f160a5ece9b940c0c7ca1672f3de14f49fc8c43a4732a8e670ac920a2b` |
+| Unchanged `ng/angular.json`       | `8a8a2740539c734cc3e400092185a7d00f5fbb5302775de3b537e06c7e8f407f` |
+| Shared `landscape-1.png`          | `fcb9f0eff74f7614d7e791c920253327872740df0ac0f8f053adca98cc39fc86` |
+| Shared `landscape-2.png`          | `a2d5d4f160a5ece9b940c0c7ca1672f3de14f49fc8c43a4732a8e670ac920a2b` |
 
 ## 4. Explanation and hypotheses
 
-| Explanation | What existing evidence establishes | What remains unproven |
-| --- | --- | --- |
+| Explanation                                                        | What existing evidence establishes                                                                                                                                                                                                                           | What remains unproven                                                                                                                                                        |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Missing app-local fixture link prevents intended media serving** | The archive lacks the path required by the asset config; the known-good experiment archive contains it; shared media bytes/config/source match. This establishes an execution-input packaging discrepancy and a specific plausible loading-failure mechanism | No retained runtime filesystem listing after extraction/install, HTTP outcomes, response bytes/content types or image load/decode events prove the full browser causal chain |
-| **A transient loading/timing problem** | The predicate stayed false within the existing assertion window | No request timeline or separate `complete`/`naturalWidth` series establishes slow loading. A longer wait is not justified by the timeout alone |
-| **Resource/decoding failure independent of the omitted link** | Boolean failure is compatible with unsuccessful image loading; unchanged PNG bytes rule out a demonstrated between-archive image-byte substitution | The report does not identify the failed image's actual `currentSrc`, HTTP response or decoding error; header inspection does not establish browser decode success |
-| **C1 production CSS causes the failure** | No supporting causal evidence: the failure occurs on PrimeNG before Ultimate is observed; C1 is an Angular Ultimate retained-span rule | Ultimate parity is still unverified. This failure must not be used to accept or reject C1 |
+| **A transient loading/timing problem**                             | The predicate stayed false within the existing assertion window                                                                                                                                                                                              | No request timeline or separate `complete`/`naturalWidth` series establishes slow loading. A longer wait is not justified by the timeout alone                               |
+| **Resource/decoding failure independent of the omitted link**      | Boolean failure is compatible with unsuccessful image loading; unchanged PNG bytes rule out a demonstrated between-archive image-byte substitution                                                                                                           | The report does not identify the failed image's actual `currentSrc`, HTTP response or decoding error; header inspection does not establish browser decode success            |
+| **C1 production CSS causes the failure**                           | No supporting causal evidence: the failure occurs on PrimeNG before Ultimate is observed; C1 is an Angular Ultimate retained-span rule                                                                                                                       | Ultimate parity is still unverified. This failure must not be used to accept or reject C1                                                                                    |
 
 **Does the evidence explain the five-second timeout?** It supplies a concrete, source-backed **plausible explanation**: the configured fixture input was omitted from the disposable execution archive, so the expected media mapping was not preserved. The omission itself is established. The precise runtime image-loading failure is **not fully established**; specifically, no 404, request failure or decoding outcome can be claimed from these records. The timeout's duration does not establish that five seconds was insufficient.
 

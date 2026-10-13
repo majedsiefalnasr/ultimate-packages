@@ -1,8 +1,19 @@
-import { ChangeDetectionStrategy, Component, HostListener, ViewEncapsulation, booleanAttribute, input, numberAttribute, output, signal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  ViewEncapsulation,
+  booleanAttribute,
+  input,
+  numberAttribute,
+  output,
+  signal,
+} from "@angular/core";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { speedDialStyleModule } from "./speed-dial-style";
 
-type SpeedDialDirection = "up" | "down" | "left" | "right" | "up-left" | "up-right" | "down-left" | "down-right";
+type SpeedDialDirection =
+  "up" | "down" | "left" | "right" | "up-left" | "up-right" | "down-left" | "down-right";
 type SpeedDialType = "linear" | "circle" | "semi-circle" | "quarter-circle";
 
 /**
@@ -41,9 +52,18 @@ type SpeedDialType = "linear" | "circle" | "semi-circle" | "quarter-circle";
           <span [class]="icon()"></span>
         }
       </button>
-      <ul [class]="cx('list')" role="menu" [style]="listDirectionStyle()" (keydown)="onKeydown($event)">
+      <ul
+        [class]="cx('list')"
+        role="menu"
+        [style]="listDirectionStyle()"
+        (keydown)="onKeydown($event)"
+      >
         @for (item of model(); track item.label; let i = $index) {
-          <li [class]="cx('item', { hidden: item.visible === false })" role="none" [style]="getItemStyle(i)">
+          <li
+            [class]="cx('item', { hidden: item.visible === false })"
+            role="none"
+            [style]="getItemStyle(i)"
+          >
             <button
               type="button"
               [class]="cx('pcAction')"
@@ -107,7 +127,15 @@ export class USpeedDial extends UBaseComponent {
   protected listDirectionStyle() {
     const dir = this.direction();
     const flexDirection =
-      dir === "up" ? "column-reverse" : dir === "down" ? "column" : dir === "left" ? "row-reverse" : dir === "right" ? "row" : undefined;
+      dir === "up"
+        ? "column-reverse"
+        : dir === "down"
+          ? "column"
+          : dir === "left"
+            ? "row-reverse"
+            : dir === "right"
+              ? "row"
+              : undefined;
     return flexDirection ? { "flex-direction": flexDirection } : {};
   }
 
@@ -126,7 +154,10 @@ export class USpeedDial extends UBaseComponent {
 
     if (type === "circle") {
       const step = (2 * Math.PI) / length;
-      return { left: `${radius * Math.cos(step * index)}px`, top: `${radius * Math.sin(step * index)}px` };
+      return {
+        left: `${radius * Math.cos(step * index)}px`,
+        top: `${radius * Math.sin(step * index)}px`,
+      };
     }
 
     const direction = this.direction();
@@ -154,7 +185,11 @@ export class USpeedDial extends UBaseComponent {
   }
 
   protected onButtonClick(event: MouseEvent): void {
-    this.visible() ? this.hide() : this.show();
+    if (this.visible()) {
+      this.hide();
+    } else {
+      this.show();
+    }
     this.onClick.emit(event);
   }
 

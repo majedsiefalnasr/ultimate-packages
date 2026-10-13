@@ -11,6 +11,7 @@
 **Process note on this document's provenance:** this report was produced across two independent research passes (one covering `docs/architecture/research/` + `docs/superpowers/specs/`, one covering `docs/superpowers/plans/` + `skills/` + `packages/ai/context/` + all package/app READMEs), then independently reviewed, merged, corrected, and republished by the coordinating session before being treated as final. It represents the reviewed final report, not an earlier automatically-published draft.
 
 **Legend used throughout:**
+
 - `[AUTHORITATIVE]` — current architectural truth
 - `[HISTORICAL]` — real, dated, not current instruction
 - `[CONFLICT/STALE]` — contradicts current reality
@@ -42,31 +43,31 @@ None of these findings are architecturally significant — none reopens a protec
 
 ## 2. Current Knowledge/Documentation Surface
 
-| Layer | Count |
-|---|---|
-| `docs/architecture/*.md` | 14 |
-| `docs/architecture/research/` | 16 |
-| `docs/superpowers/specs/` | 25 |
-| `docs/superpowers/plans/` | 26 |
-| Package `README.md`s | 14 |
-| App `README.md`s | 3 |
-| `skills/*.md` | 10 |
-| Generated `llms*.txt` | 5 |
+| Layer                         | Count |
+| ----------------------------- | ----- |
+| `docs/architecture/*.md`      | 14    |
+| `docs/architecture/research/` | 16    |
+| `docs/superpowers/specs/`     | 25    |
+| `docs/superpowers/plans/`     | 26    |
+| Package `README.md`s          | 14    |
+| App `README.md`s              | 3     |
+| `skills/*.md`                 | 10    |
+| Generated `llms*.txt`         | 5     |
 
 Plus root-level `AGENTS.md`, `README.md`, `CHANGELOG.md`, `SECURITY.md`. Total surface: **~113 markdown/text documents** that could influence an AI agent's understanding of architecture, decisions, scope, or migration state.
 
 ### Structural map
 
-| Layer | Location | Role in the gated workflow (per `AGENTS.md` §3) |
-|---|---|---|
-| Governance baseline | `docs/architecture/BLUEPRINT.md` (1494 lines, 45 sections) | Architecture baseline — updated only for major decision/baseline/boundary/dependency/framework-strategy changes (§45, self-governing) |
-| Binding decisions | `docs/architecture/DECISIONS.md` (47 ADRs) | Approved architectural decisions within Blueprint's scope |
-| Approved scope | `docs/superpowers/specs/` (25), `docs/superpowers/plans/` (26) | Binding for their own scope once approved — output of Specification/Implementation-Plan gates |
-| Current-state tracking | `BLUEPRINT_GAPS.md`, `ROADMAP.md`, `COMPONENT_INVENTORY.md`, `PERFORMANCE.md`, `MIGRATION.md`, `COMPATIBILITY.md`, `PROVENANCE.md`, `DEPENDENCIES.md`, `PACKAGE_ARCHITECTURE.md`, `ACCESSIBILITY_BASELINE.md`, `SAST_BASELINE.md`, `AI_ARCHITECTURE.md` | Output of the Research/Architecture-Discussion/Decision gates — "the layer most likely to be stale relative to reality" per `AGENTS.md`'s own admission |
-| Dated evidence | `docs/architecture/research/*.md` (16) | Point-in-time research/audit snapshots feeding specs |
-| Descriptive | root `README.md`, package/app `README.md`s (17), `CHANGELOG.md` | Onboarding/descriptive — not authoritative for current state |
-| AI-facing generated/authored | `skills/*.md` (10), `packages/ai/context/*.txt` (5), `packages/ai/README.md` | One-directional consumers of everything above — mechanically generated from component metadata, or hand-authored prose validated against it |
-| Orientation | `AGENTS.md` (119 lines) | The hierarchy statement itself, plus operating rules — deliberately narrow, points elsewhere rather than restating |
+| Layer                        | Location                                                                                                                                                                                                                                                | Role in the gated workflow (per `AGENTS.md` §3)                                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Governance baseline          | `docs/architecture/BLUEPRINT.md` (1494 lines, 45 sections)                                                                                                                                                                                              | Architecture baseline — updated only for major decision/baseline/boundary/dependency/framework-strategy changes (§45, self-governing)                   |
+| Binding decisions            | `docs/architecture/DECISIONS.md` (47 ADRs)                                                                                                                                                                                                              | Approved architectural decisions within Blueprint's scope                                                                                               |
+| Approved scope               | `docs/superpowers/specs/` (25), `docs/superpowers/plans/` (26)                                                                                                                                                                                          | Binding for their own scope once approved — output of Specification/Implementation-Plan gates                                                           |
+| Current-state tracking       | `BLUEPRINT_GAPS.md`, `ROADMAP.md`, `COMPONENT_INVENTORY.md`, `PERFORMANCE.md`, `MIGRATION.md`, `COMPATIBILITY.md`, `PROVENANCE.md`, `DEPENDENCIES.md`, `PACKAGE_ARCHITECTURE.md`, `ACCESSIBILITY_BASELINE.md`, `SAST_BASELINE.md`, `AI_ARCHITECTURE.md` | Output of the Research/Architecture-Discussion/Decision gates — "the layer most likely to be stale relative to reality" per `AGENTS.md`'s own admission |
+| Dated evidence               | `docs/architecture/research/*.md` (16)                                                                                                                                                                                                                  | Point-in-time research/audit snapshots feeding specs                                                                                                    |
+| Descriptive                  | root `README.md`, package/app `README.md`s (17), `CHANGELOG.md`                                                                                                                                                                                         | Onboarding/descriptive — not authoritative for current state                                                                                            |
+| AI-facing generated/authored | `skills/*.md` (10), `packages/ai/context/*.txt` (5), `packages/ai/README.md`                                                                                                                                                                            | One-directional consumers of everything above — mechanically generated from component metadata, or hand-authored prose validated against it             |
+| Orientation                  | `AGENTS.md` (119 lines)                                                                                                                                                                                                                                 | The hierarchy statement itself, plus operating rules — deliberately narrow, points elsewhere rather than restating                                      |
 
 ---
 
@@ -74,19 +75,19 @@ Plus root-level `AGENTS.md`, `README.md`, `CHANGELOG.md`, `SECURITY.md`. Total s
 
 Applying the outer task's 10 questions to each layer. Full per-document classification for the research/ and specs/ corpus (41 files) is large; this section gives the layer-level pattern, §4/§9 give the specific documents that deviate from their layer's expected pattern.
 
-| Artifact | Purpose | Class | AI should read? | Actionable decisions? | Superseded material risk? | Duplicates elsewhere? |
-|---|---|---|---|---|---|---|
-| `BLUEPRINT.md` | Architecture baseline, governance | `[AUTHORITATIVE]` | Yes, always | Yes (§43 DECIDED list) | Low — self-governs, updated only 0 times since Phase 0 per its own §45 rule (confirmed: 2026-09-13 audit found zero changes since ADR-045) | No — sole source for architectural principles |
-| `DECISIONS.md` | 47 binding ADRs | `[AUTHORITATIVE]` | Yes, always | Yes, every entry | Low — each ADR cites specific file/line evidence per the 2026-09-13 audit's own spot-check | Partial overlap with `COMPONENT_INVENTORY.md`'s per-component narrowing notes (complementary, not contradictory) |
-| `BLUEPRINT_GAPS.md` | Open gap/decision registry | `[AUTHORITATIVE]` (current-state tier) | Yes, re-verify before consequential use | Yes — this is where "protected decisions" live (§5) | **Medium** — confirmed to contain a duplicated, contradictory DECISION-B/C pair (§4 below); does not yet track the two Vue bugs found in §1 | No |
-| `ROADMAP.md`, `COMPONENT_INVENTORY.md` | Phase status, per-component classification | `[AUTHORITATIVE]` (current-state tier) | Yes | Low — both mechanically re-verified as recently as this session's Phase A work | No | No |
-| Specs (25), approved subset | Binding scope for their own phase | `[AUTHORITATIVE]` for scope / `[HISTORICAL]` for status | Yes for scope decisions; ignore self-reported `Status:` field, check `ROADMAP.md` instead | Yes, within scope | **High** — 19/25 self-report "Draft for review" despite shipped implementation (§4) | Partial — narrows/restates Blueprint sections |
-| Plans (26) | Task-level execution record | `[HISTORICAL]` (execution record, not forward-looking instruction) | Conditionally — for understanding why code looks the way it does | No — describes what was done, not what should be done next | Low — plans are terminal artifacts by nature | No |
-| Research (16) | Dated point-in-time snapshots | `[HISTORICAL]` | Conditionally — as evidence trail, never as current fact without re-confirmation | No directly — decisions only become actionable once promoted to an ADR/gap entry | **High** — at least 1 confirmed live contradiction, 1 confirmed unpromoted bug finding (§4) | **High** — 5-document 2026-09-12/13 audit chain substantially re-covers the same ground each time (§4) |
-| Package/app READMEs (17) | Onboarding, package-level description | `[HISTORICAL]` (descriptive) | Optional | No | **Medium** — `packages/ng/README.md` confirmed stale (§4) | Yes — restates provenance/component counts already in `COMPONENT_INVENTORY.md`/`PROVENANCE.md` |
-| `AI_ARCHITECTURE.md` | AI/tooling constraints, "restated from Blueprint" | `[GENERATED]`/derivative | Low value — Blueprint §14/§2.6/§2.7/§6 already say the same thing | No new decisions | **Medium** — still framed as "Phase 0 preserves... no implementation," but `cli`/`mcp`/`ai` are now real, shipped packages (§4) | Yes, fully — every line traces to a cited Blueprint section |
-| Skills (`skills/*.md`) | AI operational guidance per component | `[GENERATED]` + hand-authored, mixed | Yes, by AI agents/tools consuming them — never upstream authority | No — consumes metadata, doesn't decide anything | Low — marker-delimited generated sections mechanically validated against metadata (`bin-validate.mjs`); hand-authored prose is the only unverified part, and is scoped narrow by design | By design — mirrors component-metadata |
-| `llms*.txt` | Generated LLM-context snapshot | `[GENERATED]` | Optional, external-consumer-facing | No | Low — one-time committed snapshot, not CI-regenerated, disclosed as such (GAP-036, ROADMAP footnote 5) — not misleading because its non-live nature is already documented | Yes, by design — derived from metadata |
+| Artifact                               | Purpose                                           | Class                                                              | AI should read?                                                                           | Actionable decisions?                                                            | Superseded material risk?                                                                                                                                                               | Duplicates elsewhere?                                                                                            |
+| -------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `BLUEPRINT.md`                         | Architecture baseline, governance                 | `[AUTHORITATIVE]`                                                  | Yes, always                                                                               | Yes (§43 DECIDED list)                                                           | Low — self-governs, updated only 0 times since Phase 0 per its own §45 rule (confirmed: 2026-09-13 audit found zero changes since ADR-045)                                              | No — sole source for architectural principles                                                                    |
+| `DECISIONS.md`                         | 47 binding ADRs                                   | `[AUTHORITATIVE]`                                                  | Yes, always                                                                               | Yes, every entry                                                                 | Low — each ADR cites specific file/line evidence per the 2026-09-13 audit's own spot-check                                                                                              | Partial overlap with `COMPONENT_INVENTORY.md`'s per-component narrowing notes (complementary, not contradictory) |
+| `BLUEPRINT_GAPS.md`                    | Open gap/decision registry                        | `[AUTHORITATIVE]` (current-state tier)                             | Yes, re-verify before consequential use                                                   | Yes — this is where "protected decisions" live (§5)                              | **Medium** — confirmed to contain a duplicated, contradictory DECISION-B/C pair (§4 below); does not yet track the two Vue bugs found in §1                                             | No                                                                                                               |
+| `ROADMAP.md`, `COMPONENT_INVENTORY.md` | Phase status, per-component classification        | `[AUTHORITATIVE]` (current-state tier)                             | Yes                                                                                       | Low — both mechanically re-verified as recently as this session's Phase A work   | No                                                                                                                                                                                      | No                                                                                                               |
+| Specs (25), approved subset            | Binding scope for their own phase                 | `[AUTHORITATIVE]` for scope / `[HISTORICAL]` for status            | Yes for scope decisions; ignore self-reported `Status:` field, check `ROADMAP.md` instead | Yes, within scope                                                                | **High** — 19/25 self-report "Draft for review" despite shipped implementation (§4)                                                                                                     | Partial — narrows/restates Blueprint sections                                                                    |
+| Plans (26)                             | Task-level execution record                       | `[HISTORICAL]` (execution record, not forward-looking instruction) | Conditionally — for understanding why code looks the way it does                          | No — describes what was done, not what should be done next                       | Low — plans are terminal artifacts by nature                                                                                                                                            | No                                                                                                               |
+| Research (16)                          | Dated point-in-time snapshots                     | `[HISTORICAL]`                                                     | Conditionally — as evidence trail, never as current fact without re-confirmation          | No directly — decisions only become actionable once promoted to an ADR/gap entry | **High** — at least 1 confirmed live contradiction, 1 confirmed unpromoted bug finding (§4)                                                                                             | **High** — 5-document 2026-09-12/13 audit chain substantially re-covers the same ground each time (§4)           |
+| Package/app READMEs (17)               | Onboarding, package-level description             | `[HISTORICAL]` (descriptive)                                       | Optional                                                                                  | No                                                                               | **Medium** — `packages/ng/README.md` confirmed stale (§4)                                                                                                                               | Yes — restates provenance/component counts already in `COMPONENT_INVENTORY.md`/`PROVENANCE.md`                   |
+| `AI_ARCHITECTURE.md`                   | AI/tooling constraints, "restated from Blueprint" | `[GENERATED]`/derivative                                           | Low value — Blueprint §14/§2.6/§2.7/§6 already say the same thing                         | No new decisions                                                                 | **Medium** — still framed as "Phase 0 preserves... no implementation," but `cli`/`mcp`/`ai` are now real, shipped packages (§4)                                                         | Yes, fully — every line traces to a cited Blueprint section                                                      |
+| Skills (`skills/*.md`)                 | AI operational guidance per component             | `[GENERATED]` + hand-authored, mixed                               | Yes, by AI agents/tools consuming them — never upstream authority                         | No — consumes metadata, doesn't decide anything                                  | Low — marker-delimited generated sections mechanically validated against metadata (`bin-validate.mjs`); hand-authored prose is the only unverified part, and is scoped narrow by design | By design — mirrors component-metadata                                                                           |
+| `llms*.txt`                            | Generated LLM-context snapshot                    | `[GENERATED]`                                                      | Optional, external-consumer-facing                                                        | No                                                                               | Low — one-time committed snapshot, not CI-regenerated, disclosed as such (GAP-036, ROADMAP footnote 5) — not misleading because its non-live nature is already documented               | Yes, by design — derived from metadata                                                                           |
 
 ---
 
@@ -94,7 +95,7 @@ Applying the outer task's 10 questions to each layer. Full per-document classifi
 
 ### 4.1 Confirmed live contradiction — sixth Dialog ID-counter instance
 
-> **Side A** — `docs/superpowers/specs/2026-09-12-ssr-safe-component-id-generation-design.md:25`: *"No sixth instance exists. Confirmed by a targeted grep... not re-run here since the origin document already establishes this as exhaustive."*
+> **Side A** — `docs/superpowers/specs/2026-09-12-ssr-safe-component-id-generation-design.md:25`: _"No sixth instance exists. Confirmed by a targeted grep... not re-run here since the origin document already establishes this as exhaustive."_
 >
 > **Side B** — `docs/architecture/research/2026-09-12-vue-dialog-id-counter-sixth-instance-finding.md` (same day, later): found and source-verified a sixth instance in `packages/vue/src/dialog/Dialog.vue:84,124`.
 >
@@ -104,7 +105,7 @@ Applying the outer task's 10 questions to each layer. Full per-document classifi
 
 ### 4.2 Confirmed unfixed, undocumented bug — Vue Tooltip never becomes visible
 
-> **Finding source**: buried inside `docs/architecture/research/2026-09-12-track-e-ssr-id-nondeterminism-finding.md` §(tooltip aside), explicitly flagged there as *"unrelated to SSR determinism or hydration"* — a side-finding inside an unrelated document.
+> **Finding source**: buried inside `docs/architecture/research/2026-09-12-track-e-ssr-id-nondeterminism-finding.md` §(tooltip aside), explicitly flagged there as _"unrelated to SSR determinism or hydration"_ — a side-finding inside an unrelated document.
 >
 > **Verified directly in current source**: `packages/vue/src/tooltip/tooltip.ts`'s `showTooltip()` builds the floating panel's class list as `["u-tooltip", binding.class]` — no `u-tooltip-{position}` modifier class is ever added (grepped directly, zero matches). `packages/uix-styles/src/tooltip/index.ts`'s base `.u-tooltip` rule sets `display: none`; nothing ever sets it visible.
 >
@@ -112,10 +113,10 @@ Applying the outer task's 10 questions to each layer. Full per-document classifi
 
 ### 4.3 Systemic — spec self-reported status vs. real implementation status
 
-| Spec's own `Status:` field | Count | Examples |
-|---|---|---|
+| Spec's own `Status:` field                              | Count        | Examples                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Still says "Draft for review" / "Draft for Spec Review" | **19 of 25** | Phase 0, Phase 1, uix-data foundation, Paginator, Scroller, Table, Phase 6 (metadata), Phase 7 (CLI), Phase 9 (AI/Skills), all 6 Phase 10 track specs, SSR-safe-ID-generation, vue-dialog-id-scope-amendment, blueprint-completion — **despite `ROADMAP.md` marking every one of these phases "Complete"** and real, tested, shipped code existing for all of them |
-| Updated to "Approved" or equivalent | 6 | Phase 2 (Angular), Phase 3 (React), Phase 4 (Vue), Phase 5 (Themes), Phase 8 (MCP), Angular base-input, Angular form-foundation |
+| Updated to "Approved" or equivalent                     | 6            | Phase 2 (Angular), Phase 3 (React), Phase 4 (Vue), Phase 5 (Themes), Phase 8 (MCP), Angular base-input, Angular form-foundation                                                                                                                                                                                                                                    |
 
 This is not a functional problem today — `AGENTS.md` §2 already tells an agent to trust `ROADMAP.md` over a spec's own status claim for "is this phase done" questions, and the gate gap is closed by the existence of a corresponding plan document. But it is a real, mechanical pattern (76% of specs) that a naive reading would misinterpret, and it is trivially, cheaply fixable.
 
@@ -125,15 +126,15 @@ Already found and disclosed by the most recent research pass (`2026-09-13-bluepr
 
 ### 4.5 Redundant research-document cluster (2026-09-12/13)
 
-Six documents dated 2026-09-12/13 substantially re-cover the same ground in sequence, each explicitly building on/re-verifying the last: `post-phase-10-blueprint-reconciliation-audit` → `ai-knowledge-architecture-assessment` → `project-reality-and-ai-operating-model-audit` → `ai-orientation-design` → `next-work-prioritization-audit` → `blueprint-closure-current-state-reconciliation`. This chain is not wasted work — each pass narrowed genuine uncertainty and the final one (`blueprint-closure...`) explicitly re-verifies rather than re-derives the earlier ones' findings. But a future agent grepping for "is X resolved" could land on any of the 6 and get a slightly different-vintage answer; only the *last* one in the chain (2026-09-13) is the current word, and nothing marks the other 5 as superseded-for-their-conclusions (they remain valid as evidence, but a reader needs to already know the chain order to know which is current). `next-work-prioritization-audit.md` is the weakest link — cited by only 1 other document (itself, transitively, via the AGENTS.md implementation plan's "did not touch" disclaimer) — effectively orphaned once its own recommendations were superseded by the next phase actually starting.
+Six documents dated 2026-09-12/13 substantially re-cover the same ground in sequence, each explicitly building on/re-verifying the last: `post-phase-10-blueprint-reconciliation-audit` → `ai-knowledge-architecture-assessment` → `project-reality-and-ai-operating-model-audit` → `ai-orientation-design` → `next-work-prioritization-audit` → `blueprint-closure-current-state-reconciliation`. This chain is not wasted work — each pass narrowed genuine uncertainty and the final one (`blueprint-closure...`) explicitly re-verifies rather than re-derives the earlier ones' findings. But a future agent grepping for "is X resolved" could land on any of the 6 and get a slightly different-vintage answer; only the _last_ one in the chain (2026-09-13) is the current word, and nothing marks the other 5 as superseded-for-their-conclusions (they remain valid as evidence, but a reader needs to already know the chain order to know which is current). `next-work-prioritization-audit.md` is the weakest link — cited by only 1 other document (itself, transitively, via the AGENTS.md implementation plan's "did not touch" disclaimer) — effectively orphaned once its own recommendations were superseded by the next phase actually starting.
 
 ### 4.6 Stale package READMEs — confirmed on all three framework packages, not just Angular
 
-`packages/ng/README.md:3` states *"Button, Checkbox, Dialog, Menu, Tooltip"* (5 components). Real current state: 14 real components in `packages/ng/src/` (Phase A's inventory: 18 counting foundation-tier pieces separately). **A second, independent pass over `docs/superpowers/plans/`, `skills/`, `packages/ai/context/`, and all 17 READMEs found the same drift is not Angular-specific**: `packages/react/README.md:3` also states 5 components against 8 real; `packages/vue/README.md:3` also states 5 against 9 real. All three framework-package READMEs — the first file anyone opens when starting work in a given package — currently understate real component count by roughly half to nearly 3×. Foundation-tier READMEs (`ng-core`/`react-core`/`vue-core`/`themes`/`uix-*`) make no component-count claims and were confirmed accurate; app playground READMEs are confirmed accurate and correctly self-aware ("not a playground, showcase, or demo application").
+`packages/ng/README.md:3` states _"Button, Checkbox, Dialog, Menu, Tooltip"_ (5 components). Real current state: 14 real components in `packages/ng/src/` (Phase A's inventory: 18 counting foundation-tier pieces separately). **A second, independent pass over `docs/superpowers/plans/`, `skills/`, `packages/ai/context/`, and all 17 READMEs found the same drift is not Angular-specific**: `packages/react/README.md:3` also states 5 components against 8 real; `packages/vue/README.md:3` also states 5 against 9 real. All three framework-package READMEs — the first file anyone opens when starting work in a given package — currently understate real component count by roughly half to nearly 3×. Foundation-tier READMEs (`ng-core`/`react-core`/`vue-core`/`themes`/`uix-*`) make no component-count claims and were confirmed accurate; app playground READMEs are confirmed accurate and correctly self-aware ("not a playground, showcase, or demo application").
 
 ### 4.7 AI_ARCHITECTURE.md's stale framing
 
-Still reads "Phase 0 preserves these constraints architecturally without implementing them" and "no implementation" for `cli`/`mcp`/`ai` — all three are now real, shipped packages (Phases 7/8/9, both Complete per `ROADMAP.md`). The underlying *constraints* it states (boundary rules, dependency direction) remain true and CI-enforced; only the "not yet implemented" framing is stale. Low risk (the constraint itself is still correct and independently stated in `BLUEPRINT.md` §2.6/§6), but a fresh reader skimming only this file would wrongly conclude these three packages don't exist yet. `packages/ai/README.md` and `packages/mcp/README.md` compound this: both still carry a bare "(Phase 8)"/"(Phase 9)" label and both have an empty "## Status" section with no content after the heading — a reader can't tell "is this shipped?" from the README alone, only by cross-referencing `ROADMAP.md`.
+Still reads "Phase 0 preserves these constraints architecturally without implementing them" and "no implementation" for `cli`/`mcp`/`ai` — all three are now real, shipped packages (Phases 7/8/9, both Complete per `ROADMAP.md`). The underlying _constraints_ it states (boundary rules, dependency direction) remain true and CI-enforced; only the "not yet implemented" framing is stale. Low risk (the constraint itself is still correct and independently stated in `BLUEPRINT.md` §2.6/§6), but a fresh reader skimming only this file would wrongly conclude these three packages don't exist yet. `packages/ai/README.md` and `packages/mcp/README.md` compound this: both still carry a bare "(Phase 8)"/"(Phase 9)" label and both have an empty "## Status" section with no content after the heading — a reader can't tell "is this shipped?" from the README alone, only by cross-referencing `ROADMAP.md`.
 
 ### 4.8 Plan documents never self-update after implementation ships
 
@@ -211,14 +212,14 @@ An agent tasked with "assess whether the AI knowledge architecture is sound" tod
 
 For Phase C (Actual Migration) to proceed safely, an agent must be able to trust, without re-verification, exactly these documents for exactly these questions:
 
-| Question Phase C will ask | Trust this document | Caveat |
-|---|---|---|
-| What architectural principles must every migrated component honor? | `BLUEPRINT.md` | None — stable, self-governing |
-| Why was a specific architectural choice made for an already-built component? | `DECISIONS.md` | None — evidence-cited |
-| What is a component's current build status (built/partial/not started)? | `docs/architecture/COMPONENT_INVENTORY.md` (Angular) + the Phase A report (React/Vue) | Phase A's React/Vue findings are not yet folded into a committed document — see §11 |
-| Is a given gap/decision still open, or resolved? | `BLUEPRINT_GAPS.md` | Missing the 2 Vue bugs found in §4.1/§4.2 — must be added before Phase C starts touching Vue Dialog/Tooltip-adjacent work |
-| What is currently protected from reopening? | `BLUEPRINT_GAPS.md` §5 | Contains one duplicate/stale entry (§4.4) — cosmetic but should be cleaned before relying on a first-read-only pass |
-| What exactly was scoped/excluded for an already-shipped phase? | That phase's own approved spec, read alongside its governing ADR | Ignore the spec's own `Status:` field; the ADR is the durable record of what was decided |
+| Question Phase C will ask                                                    | Trust this document                                                                   | Caveat                                                                                                                    |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| What architectural principles must every migrated component honor?           | `BLUEPRINT.md`                                                                        | None — stable, self-governing                                                                                             |
+| Why was a specific architectural choice made for an already-built component? | `DECISIONS.md`                                                                        | None — evidence-cited                                                                                                     |
+| What is a component's current build status (built/partial/not started)?      | `docs/architecture/COMPONENT_INVENTORY.md` (Angular) + the Phase A report (React/Vue) | Phase A's React/Vue findings are not yet folded into a committed document — see §11                                       |
+| Is a given gap/decision still open, or resolved?                             | `BLUEPRINT_GAPS.md`                                                                   | Missing the 2 Vue bugs found in §4.1/§4.2 — must be added before Phase C starts touching Vue Dialog/Tooltip-adjacent work |
+| What is currently protected from reopening?                                  | `BLUEPRINT_GAPS.md` §5                                                                | Contains one duplicate/stale entry (§4.4) — cosmetic but should be cleaned before relying on a first-read-only pass       |
+| What exactly was scoped/excluded for an already-shipped phase?               | That phase's own approved spec, read alongside its governing ADR                      | Ignore the spec's own `Status:` field; the ADR is the durable record of what was decided                                  |
 
 ---
 
@@ -247,19 +248,22 @@ Per the task's instruction, genuine choices are presented as alternatives, not d
 ### Genuine choices — present alternatives, do not decide here
 
 **Choice A — the 6-document 2026-09-12/13 reconciliation-audit cluster.**
-- *Option 1:* Leave all 6 as-is, add a short index note at the top of each pointing to the chain order and marking which is currently authoritative (2026-09-13's `blueprint-closure-current-state-reconciliation.md`). Lowest effort, preserves full evidence trail.
-- *Option 2:* Consolidate the chain's still-relevant conclusions into a single new "Knowledge State as of [date]" document, explicitly marking the 6 source documents as archived/superseded-for-conclusions (not deleted). Higher effort, but removes the "which of 6 do I trust" navigation problem entirely.
-- *Option 3:* Do nothing beyond what this Phase B report itself already provides — this report functionally is the consolidation, so a future agent finding it could treat it as sufficient without further doc changes.
+
+- _Option 1:_ Leave all 6 as-is, add a short index note at the top of each pointing to the chain order and marking which is currently authoritative (2026-09-13's `blueprint-closure-current-state-reconciliation.md`). Lowest effort, preserves full evidence trail.
+- _Option 2:_ Consolidate the chain's still-relevant conclusions into a single new "Knowledge State as of [date]" document, explicitly marking the 6 source documents as archived/superseded-for-conclusions (not deleted). Higher effort, but removes the "which of 6 do I trust" navigation problem entirely.
+- _Option 3:_ Do nothing beyond what this Phase B report itself already provides — this report functionally is the consolidation, so a future agent finding it could treat it as sufficient without further doc changes.
 
 **Choice B — `docs/architecture/research/2026-09-12-next-work-prioritization-audit.md` (the orphaned, 1-citation document).**
-- *Option 1:* Leave in place as ordinary historical research — it did real work at the time (informed the AGENTS.md orientation workstream's prioritization) even though its specific recommendations were since superseded by that workstream actually completing.
-- *Option 2:* Mark explicitly superseded in a one-line header note, since its core question ("what should we do next") has a different, later answer now (Phase A/B of this very migration effort).
+
+- _Option 1:_ Leave in place as ordinary historical research — it did real work at the time (informed the AGENTS.md orientation workstream's prioritization) even though its specific recommendations were since superseded by that workstream actually completing.
+- _Option 2:_ Mark explicitly superseded in a one-line header note, since its core question ("what should we do next") has a different, later answer now (Phase A/B of this very migration effort).
 
 **Choice C — whether "Update" tasks above (spec status fields, README counts, AI_ARCHITECTURE.md framing) get executed as small mechanical fixes now, or get folded into whatever Phase B Spec/Plan follows this report.**
-- *Option 1:* Execute now, as pure documentation-hygiene, no architecture judgment involved (matches how GAP-037/§5.9's cleanup was already deferred to "the next documentation-hygiene pass" by a prior audit — this could be that pass).
-- *Option 2:* Fold into the Phase B Spec/Plan explicitly, since the user's own instructions for this session forbid any repository file changes in this turn.
 
-Given this session's explicit "do not modify repository files" constraint, Option 2 is the only one available *this turn* regardless — flagged here as a choice for the Phase B Spec, not a live option right now.
+- _Option 1:_ Execute now, as pure documentation-hygiene, no architecture judgment involved (matches how GAP-037/§5.9's cleanup was already deferred to "the next documentation-hygiene pass" by a prior audit — this could be that pass).
+- _Option 2:_ Fold into the Phase B Spec/Plan explicitly, since the user's own instructions for this session forbid any repository file changes in this turn.
+
+Given this session's explicit "do not modify repository files" constraint, Option 2 is the only one available _this turn_ regardless — flagged here as a choice for the Phase B Spec, not a live option right now.
 
 ### Delete
 
@@ -315,4 +319,4 @@ Consolidated from §9, ordered by whether they require a decision (§12) or are 
 
 ---
 
-*Phase B — Knowledge Reconciliation. Research/audit only. No repository files modified during the audit itself, no protected decision reopened, no spec or plan authored. Findings sourced from direct repository inspection (file reads, grep, source verification) — every claim in §4 was independently confirmed against real current source, not merely cited from a prior document. Frozen for review before a Phase B Spec/Plan is authored.*
+_Phase B — Knowledge Reconciliation. Research/audit only. No repository files modified during the audit itself, no protected decision reopened, no spec or plan authored. Findings sourced from direct repository inspection (file reads, grep, source verification) — every claim in §4 was independently confirmed against real current source, not merely cited from a prior document. Frozen for review before a Phase B Spec/Plan is authored._

@@ -95,7 +95,10 @@ export function UCascadeSelect<T = unknown>({
   onFocus,
   onBlur,
 }: UCascadeSelectProps<T>): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "cascade-select", styleModule: cascadeSelectStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "cascade-select",
+    styleModule: cascadeSelectStyleModule,
+  });
 
   const [overlayVisible, setOverlayVisible] = React.useState(false);
   const [activeOptionPath, setActiveOptionPath] = React.useState<string[]>([]);
@@ -213,7 +216,10 @@ export function UCascadeSelect<T = unknown>({
             style={{ position: "relative" }}
           >
             <div
-              className={cx("optionContent", { selected: isSelected, disabled: isOptionDisabled(node.option) })}
+              className={cx("optionContent", {
+                selected: isSelected,
+                disabled: isOptionDisabled(node.option),
+              })}
               onClick={(event) => handleOptionClick(event, node)}
             >
               <span>{getOptionLabel(node.option)}</span>
@@ -231,7 +237,9 @@ export function UCascadeSelect<T = unknown>({
   );
 
   return (
-    <div className={[cx("root", { disabled, overlayVisible }), className].filter(Boolean).join(" ")}>
+    <div
+      className={[cx("root", { disabled, overlayVisible }), className].filter(Boolean).join(" ")}
+    >
       <span
         role="combobox"
         aria-haspopup="tree"
@@ -241,7 +249,11 @@ export function UCascadeSelect<T = unknown>({
         className={cx("label", { placeholder: value == null })}
         onClick={(event) => {
           if (disabled) return;
-          overlayVisible ? hide() : show();
+          if (overlayVisible) {
+            hide();
+          } else {
+            show();
+          }
           event.stopPropagation();
         }}
         onKeyDown={(event) => {
@@ -275,7 +287,11 @@ export function UCascadeSelect<T = unknown>({
         aria-hidden="true"
         onClick={(event) => {
           if (disabled) return;
-          overlayVisible ? hide() : show();
+          if (overlayVisible) {
+            hide();
+          } else {
+            show();
+          }
           event.stopPropagation();
         }}
       >

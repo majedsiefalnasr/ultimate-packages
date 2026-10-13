@@ -74,13 +74,17 @@ export interface UCarouselPageEvent {
           </button>
         }
         <div [class]="cx('viewport')">
-          <div
-            [class]="cx('itemList')"
-            [style.transform]="translateStyle()"
-          >
+          <div [class]="cx('itemList')" [style.transform]="translateStyle()">
             @for (item of value(); track $index) {
-              <div [class]="cx('item')" [style.flex]="itemFlexBasis()" role="group" [attr.aria-hidden]="!isItemVisible($index)">
-                <ng-container *ngTemplateOutlet="itemTemplate ?? null; context: { $implicit: item }"></ng-container>
+              <div
+                [class]="cx('item')"
+                [style.flex]="itemFlexBasis()"
+                role="group"
+                [attr.aria-hidden]="!isItemVisible($index)"
+              >
+                <ng-container
+                  *ngTemplateOutlet="itemTemplate ?? null; context: { $implicit: item }"
+                ></ng-container>
               </div>
             }
           </div>
@@ -100,7 +104,10 @@ export interface UCarouselPageEvent {
       @if (showIndicators()) {
         <ul [class]="cx('indicatorList')">
           @for (dot of totalDotsArray(); track $index) {
-            <li [class]="cx('indicator', { active: $index === page() })" [attr.data-p-active]="$index === page()">
+            <li
+              [class]="cx('indicator', { active: $index === page() })"
+              [attr.data-p-active]="$index === page()"
+            >
               <button
                 type="button"
                 [class]="cx('indicatorButton')"
@@ -168,9 +175,7 @@ export class UCarousel<T = unknown> extends UBaseComponent {
 
   protected readonly translateStyle = computed(() => {
     const shift = this.page() * this.numScroll() * (100 / this.numVisible());
-    return this.isVertical()
-      ? `translate3d(0, -${shift}%, 0)`
-      : `translate3d(-${shift}%, 0, 0)`;
+    return this.isVertical() ? `translate3d(0, -${shift}%, 0)` : `translate3d(-${shift}%, 0, 0)`;
   });
 
   protected isItemVisible(index: number): boolean {

@@ -65,7 +65,12 @@ export interface UGalleriaItemContext<T = unknown> {
     @if (fullScreen() && fullScreenActive()) {
       <div uOverlay [visible]="true" appendTo="body" [class]="cx('mask')" role="dialog">
         <div uFocusTrap style="width: 100%; height: 100%; display: flex; flex-direction: column;">
-          <button type="button" [class]="cx('closeButton')" (click)="closeFullScreen()" aria-label="Close">
+          <button
+            type="button"
+            [class]="cx('closeButton')"
+            (click)="closeFullScreen()"
+            aria-label="Close"
+          >
             <u-times-icon />
           </button>
           <ng-container *ngTemplateOutlet="content"></ng-container>
@@ -74,7 +79,12 @@ export interface UGalleriaItemContext<T = unknown> {
     }
 
     <ng-template #content>
-      <div [class]="cx('itemWrapper')" data-u-galleria-content tabindex="-1" (keydown)="onContentKeyDown($event)">
+      <div
+        [class]="cx('itemWrapper')"
+        data-u-galleria-content
+        tabindex="-1"
+        (keydown)="onContentKeyDown($event)"
+      >
         @if (showItemNavigators() && value().length > 1) {
           <button
             type="button"
@@ -88,7 +98,9 @@ export interface UGalleriaItemContext<T = unknown> {
         }
         <div [class]="cx('itemContainer')">
           @if (activeItem() !== undefined) {
-            <ng-container *ngTemplateOutlet="itemTemplate ?? null; context: { $implicit: activeItem() }"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="itemTemplate ?? null; context: { $implicit: activeItem() }"
+            ></ng-container>
           }
         </div>
         @if (showItemNavigators() && value().length > 1) {
@@ -114,7 +126,12 @@ export interface UGalleriaItemContext<T = unknown> {
               (click)="goTo($index)"
               (keydown)="onThumbnailKeyDown($event, $index)"
             >
-              <ng-container *ngTemplateOutlet="thumbnailTemplate ?? itemTemplate ?? null; context: { $implicit: item }"></ng-container>
+              <ng-container
+                *ngTemplateOutlet="
+                  thumbnailTemplate ?? itemTemplate ?? null;
+                  context: { $implicit: item }
+                "
+              ></ng-container>
             </li>
           }
         </ul>
@@ -163,7 +180,10 @@ export class UGalleria<T = unknown> extends UBaseComponent {
   protected readonly activeItem = computed<T | undefined>(() => this.value()[this.activeIndex()]);
 
   protected isForwardDisabled(): boolean {
-    return this.value().length === 0 || (this.activeIndex() >= this.value().length - 1 && !this.circular());
+    return (
+      this.value().length === 0 ||
+      (this.activeIndex() >= this.value().length - 1 && !this.circular())
+    );
   }
 
   protected isBackwardDisabled(): boolean {
@@ -275,7 +295,12 @@ export class UGalleria<T = unknown> extends UBaseComponent {
       return false;
     }
     const tagName = target.tagName;
-    return tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT" || target.isContentEditable;
+    return (
+      tagName === "INPUT" ||
+      tagName === "TEXTAREA" ||
+      tagName === "SELECT" ||
+      target.isContentEditable
+    );
   }
 
   /** Opens the fullscreen overlay (only meaningful when `fullScreen` is true). */

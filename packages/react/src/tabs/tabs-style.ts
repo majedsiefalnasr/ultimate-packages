@@ -45,7 +45,10 @@ const classes = {
   tabViewHeaderAction: "u-tabview-header-action",
   tabViewClose: "u-tabview-close",
   tabViewPanels: "u-tabview-panels",
-  tabViewPanel: (params: { selected?: boolean } = {}) => ["u-tabview-panel", { "u-tabview-panel-selected": params.selected }],
+  tabViewPanel: (params: { selected?: boolean } = {}) => [
+    "u-tabview-panel",
+    { "u-tabview-panel-selected": params.selected },
+  ],
 
   tabMenuRoot: "u-tabmenu u-component",
   tabMenuNav: "u-tabmenu-nav",

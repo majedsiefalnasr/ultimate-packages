@@ -31,7 +31,10 @@ export interface DrawerClassesParams {
 
 const classes = {
   mask: () => ["u-drawer-mask"],
-  root: (params: DrawerClassesParams = {}) => ["u-drawer u-component", `u-drawer-position-${params.position ?? "left"}`],
+  root: (params: DrawerClassesParams = {}) => [
+    "u-drawer u-component",
+    `u-drawer-position-${params.position ?? "left"}`,
+  ],
   header: "u-drawer-header",
   title: "u-drawer-title",
   closeButton: "u-drawer-close-button",

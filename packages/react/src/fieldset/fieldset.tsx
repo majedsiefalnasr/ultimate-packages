@@ -63,7 +63,10 @@ export const UFieldset = React.forwardRef<HTMLFieldSetElement, UFieldsetProps>(f
   };
 
   return (
-    <fieldset ref={ref} className={[cx("root", { toggleable }), className].filter(Boolean).join(" ")}>
+    <fieldset
+      ref={ref}
+      className={[cx("root", { toggleable }), className].filter(Boolean).join(" ")}
+    >
       <legend className={cx("legend")}>
         {toggleable ? (
           <button

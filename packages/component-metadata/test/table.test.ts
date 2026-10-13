@@ -18,12 +18,18 @@ describe("Table metadata record (spec §12's own worked example: sort-changed di
   });
 
   it("declares Paginator and Scroller as real, valid dependencies (spec §12, §6.5)", () => {
-    expect(TABLE_METADATA.relationships?.dependsOn).toEqual(expect.arrayContaining(["Paginator", "Scroller"]));
+    expect(TABLE_METADATA.relationships?.dependsOn).toEqual(
+      expect.arrayContaining(["Paginator", "Scroller"])
+    );
   });
 
   it("has verified accessibility facts (role, aria-sort, aria-selected) matching the just-closed milestone's real shipped markup", () => {
-    expect(TABLE_METADATA.accessibility?.verifiedRoles).toEqual(expect.arrayContaining(["row", "columnheader"]));
-    expect(TABLE_METADATA.accessibility?.verifiedAriaAttributes).toEqual(expect.arrayContaining(["aria-sort", "aria-selected"]));
+    expect(TABLE_METADATA.accessibility?.verifiedRoles).toEqual(
+      expect.arrayContaining(["row", "columnheader"])
+    );
+    expect(TABLE_METADATA.accessibility?.verifiedAriaAttributes).toEqual(
+      expect.arrayContaining(["aria-sort", "aria-selected"])
+    );
   });
 
   it("description and accessibility.guidance carry non-overlapping content (spec §6.1a boundary)", () => {

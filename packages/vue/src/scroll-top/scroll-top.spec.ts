@@ -67,7 +67,8 @@ describe("UScrollTop", () => {
     const wrapper = mount(
       {
         components: { UScrollTop },
-        template: '<div class="parent-scroller"><UScrollTop :target="\'parent\'" :threshold="50" /></div>',
+        template:
+          '<div class="parent-scroller"><UScrollTop :target="\'parent\'" :threshold="50" /></div>',
       },
       { attachTo: document.body }
     );

@@ -28,7 +28,10 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: { position?: string } = {}) => ["u-dock u-component", `u-dock-${params.position ?? "bottom"}`],
+  root: (params: { position?: string } = {}) => [
+    "u-dock u-component",
+    `u-dock-${params.position ?? "bottom"}`,
+  ],
   listContainer: "u-dock-list-container",
   list: "u-dock-list",
   item: (params: { active?: boolean; disabled?: boolean } = {}) => [

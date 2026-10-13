@@ -53,7 +53,9 @@ describe("UPassword", () => {
     const input: HTMLInputElement = fixture.nativeElement.querySelector("input");
     expect(input.type).toBe("password");
 
-    const toggle: SVGElement = fixture.nativeElement.querySelector('svg[aria-label="Show Password"]');
+    const toggle: SVGElement = fixture.nativeElement.querySelector(
+      'svg[aria-label="Show Password"]'
+    );
     toggle.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     fixture.detectChanges();
     expect(input.type).toBe("text");

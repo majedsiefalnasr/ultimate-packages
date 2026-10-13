@@ -52,7 +52,10 @@ const classes = {
   rootList: "u-megamenu-root-list",
   item: (params: Record<string, unknown> = {}) => {
     const { disabled, open } = params as MegaMenuClassesParams;
-    return ["u-megamenu-item", { "u-megamenu-item-disabled": Boolean(disabled), "u-megamenu-item-open": Boolean(open) }];
+    return [
+      "u-megamenu-item",
+      { "u-megamenu-item-disabled": Boolean(disabled), "u-megamenu-item-open": Boolean(open) },
+    ];
   },
   itemContent: "u-megamenu-item-content",
   itemLink: "u-megamenu-item-link",

@@ -33,7 +33,9 @@ export const Default: Story = {
       const modelValue = ref(args.modelValue);
       const suggestions = ref<string[]>([]);
       const onComplete = (event: { query: string }) => {
-        suggestions.value = FRUITS.filter((f) => f.toLowerCase().includes(event.query.toLowerCase()));
+        suggestions.value = FRUITS.filter((f) =>
+          f.toLowerCase().includes(event.query.toLowerCase())
+        );
       };
       return { args, modelValue, suggestions, onComplete };
     },

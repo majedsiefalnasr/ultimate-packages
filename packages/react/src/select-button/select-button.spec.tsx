@@ -81,7 +81,9 @@ describe("USelectButton", () => {
   });
 
   it("is fully controlled — reflects the value prop, no internal selection state", () => {
-    const { rerender } = render(<USelectButton value="A" onChange={() => {}} options={["A", "B"]} />);
+    const { rerender } = render(
+      <USelectButton value="A" onChange={() => {}} options={["A", "B"]} />
+    );
     const inputs = screen.getAllByRole("checkbox", { hidden: true });
     expect(inputs[0]).toBeChecked();
     expect(inputs[1]).not.toBeChecked();
@@ -217,7 +219,9 @@ describe("USelectButton", () => {
     });
 
     it("falls back to the first enabled option when the focused option is removed", () => {
-      const { rerender } = render(<USelectButton value={null} onChange={() => {}} options={["A", "B", "C"]} />);
+      const { rerender } = render(
+        <USelectButton value={null} onChange={() => {}} options={["A", "B", "C"]} />
+      );
       inputsOf()[2].focus();
       fireEvent.click(inputsOf()[2]);
       expect(tabIndexes()).toEqual(["-1", "-1", "0"]);

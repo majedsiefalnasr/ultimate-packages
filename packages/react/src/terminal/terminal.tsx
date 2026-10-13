@@ -26,7 +26,11 @@ export interface UTerminalProps {
  * Deliberately excludes real source's `pt`/passthrough system — same
  * "smaller surface than upstream" precedent as every sibling component.
  */
-export function UTerminal({ welcomeMessage, prompt = "$", className }: UTerminalProps): React.ReactNode {
+export function UTerminal({
+  welcomeMessage,
+  prompt = "$",
+  className,
+}: UTerminalProps): React.ReactNode {
   const { cx } = useComponentBase({ componentName: "terminal", styleModule: terminalStyleModule });
   const [commandText, setCommandText] = React.useState("");
   const [commands, setCommands] = React.useState<UTerminalCommand[]>([]);
@@ -88,7 +92,7 @@ export function UTerminal({ welcomeMessage, prompt = "$", className }: UTerminal
       {welcomeMessage && <div className={cx("welcomeMessage")}>{welcomeMessage}</div>}
       <div className={cx("content")}>
         {commands.map((command, index) => (
-          // eslint-disable-next-line react/no-array-index-key -- matches real source's own text+index key
+          // matches real source's own text+index key
           <div key={`${command.text}_${index}`} className={cx("command")}>
             <span className={cx("prompt")}>{prompt}&nbsp;</span>
             <span>{command.text}</span>

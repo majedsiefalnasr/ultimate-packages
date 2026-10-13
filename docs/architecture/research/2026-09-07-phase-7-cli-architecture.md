@@ -19,7 +19,7 @@ These are restated, not re-derived — Phase 7 does not get to relitigate them:
 - **Blueprint §6 (Dependency Direction):** the AI/tooling direction is `Component Source + Component Metadata + Documentation → CLI / MCP / AI / Skills / LLM outputs`. The prohibited direction is `Ultimate Components → CLI → MCP → AI`. CLI is strictly a **consumer** of platform knowledge; nothing in `packages/{ng,react,vue}` may depend on the CLI.
 - **Blueprint §34:** package name is `@ultimate/cli`, already reserved at `packages/cli`.
 - **Blueprint §40 (Definition of Done):** "CLI quality" is a named, non-optional axis of platform production-readiness.
-- **GAP-028's own dependency framing:** CLI's *core* orchestration (project init, package install, theme config) does not strictly require component metadata. Only its *diagnostic/AI-aware* features (`ultimate doctor`, `ultimate ai`) benefit from GAP-027, which is now closed. This means Phase 7 is not blocked on anything, but it does mean the spec must distinguish a metadata-independent core from a metadata-aware layer.
+- **GAP-028's own dependency framing:** CLI's _core_ orchestration (project init, package install, theme config) does not strictly require component metadata. Only its _diagnostic/AI-aware_ features (`ultimate doctor`, `ultimate ai`) benefit from GAP-027, which is now closed. This means Phase 7 is not blocked on anything, but it does mean the spec must distinguish a metadata-independent core from a metadata-aware layer.
 
 None of the above is an open architectural question. They are constraints this research works inside of.
 
@@ -31,7 +31,7 @@ GAP-028's text (`docs/architecture/BLUEPRINT_GAPS.md:483`) was written when meta
 - `@ultimate/component-metadata` — ships `ALL_COMPONENTS: ComponentMetadata[]`, a flat array of 8 populated records (Button, Checkbox, Dialog, Menu, Tooltip, Paginator, Scroller, Table), each with per-framework `packages`, per-framework `api.{ng,react,vue}.{props,events}`, `accessibility`, `style`, `relationships.dependsOn`, `provenanceRef`.
 - Both packages build to ESM (`dist/index.mjs` + `.d.mts`) via `tsup`, are `workspace:*` dependents of each other, and follow the repo's uniform package shape (`type: module`, `sideEffects: false`, `exports` map, `tsup`/`vitest`/`tsc --noEmit` scripts).
 
-This is a real, load-bearing fact for Phase 7 scope: a metadata-aware CLI feature (e.g., `ultimate doctor` reporting "8 of ~115 components have metadata coverage," or a generator that reads `ALL_COMPONENTS` to scaffold a component usage snippet) is no longer speculative — the data exists, in a real package, with a real flat-array shape, today. Phase 7 can *reference* this package as a concrete dependency rather than deferring metadata integration as unspecifiable.
+This is a real, load-bearing fact for Phase 7 scope: a metadata-aware CLI feature (e.g., `ultimate doctor` reporting "8 of ~115 components have metadata coverage," or a generator that reads `ALL_COMPONENTS` to scaffold a component usage snippet) is no longer speculative — the data exists, in a real package, with a real flat-array shape, today. Phase 7 can _reference_ this package as a concrete dependency rather than deferring metadata integration as unspecifiable.
 
 It remains true, however, that Phase 8 (MCP) and Phase 9 (AI Skills/LLM context) have no committed spec. Any CLI behavior that would require an MCP server or a Skills package to exist is still out of reach and stays deferred — GAP-027 closing does not close GAP-029/GAP-030.
 
@@ -51,7 +51,7 @@ Concretely, "orchestrate, don't replace" means the CLI's job is: **shell out to 
 
 `docs/architecture/COMPATIBILITY.md` exists today, but confirmed by direct reading: it is scoped entirely to **Prime baseline provenance** (PrimeNG/PrimeVue/PrimeReact pinned versions, peer ranges, rejected relicensed versions). It has zero entries for Ultimate's own package versions, CLI version, metadata schema version, MCP version, or AI/Skills version — the axis Blueprint §20 actually asks the compatibility manifest to cover.
 
-This is a real, evidence-confirmed gap (matching GAP-028's own note that COMPATIBILITY.md is only a "partial seed"). It is not an architectural fork — Blueprint §20 is directive about *what* the manifest must connect; it does not mandate a specific file format, storage location, or resolution algorithm. The specification (not this research) must decide the minimal concrete shape needed to satisfy §20 for what Phase 7 actually ships in v1, without designing a full multi-axis semver-range resolution engine speculatively ahead of MCP/AI/Skills existing.
+This is a real, evidence-confirmed gap (matching GAP-028's own note that COMPATIBILITY.md is only a "partial seed"). It is not an architectural fork — Blueprint §20 is directive about _what_ the manifest must connect; it does not mandate a specific file format, storage location, or resolution algorithm. The specification (not this research) must decide the minimal concrete shape needed to satisfy §20 for what Phase 7 actually ships in v1, without designing a full multi-axis semver-range resolution engine speculatively ahead of MCP/AI/Skills existing.
 
 ## 6. Package manager scope — no conflict, two different audiences
 

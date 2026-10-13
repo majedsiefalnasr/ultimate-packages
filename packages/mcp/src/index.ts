@@ -1,8 +1,20 @@
 // packages/mcp/src/index.ts
 export { createMcpServer } from "./server";
-export { searchComponents, type SearchComponentsInput, type SearchComponentsResult } from "./tools/search-components";
-export { getComponentApi, type GetComponentApiInput, type GetComponentApiResult } from "./tools/get-component-api";
-export { getComponent, type GetComponentInput, type GetComponentResult } from "./tools/get-component";
+export {
+  searchComponents,
+  type SearchComponentsInput,
+  type SearchComponentsResult,
+} from "./tools/search-components";
+export {
+  getComponentApi,
+  type GetComponentApiInput,
+  type GetComponentApiResult,
+} from "./tools/get-component-api";
+export {
+  getComponent,
+  type GetComponentInput,
+  type GetComponentResult,
+} from "./tools/get-component";
 export {
   getComponentAccessibility,
   type GetComponentAccessibilityInput,

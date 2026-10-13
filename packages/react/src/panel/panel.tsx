@@ -90,7 +90,12 @@ export const UPanel = React.forwardRef<HTMLDivElement, UPanelProps>(function UPa
         </div>
       )}
       {(!toggleable || !collapsed) && (
-        <div className={cx("contentContainer")} role="region" id={contentId} aria-labelledby={headerId}>
+        <div
+          className={cx("contentContainer")}
+          role="region"
+          id={contentId}
+          aria-labelledby={headerId}
+        >
           <div className={cx("content")}>{children}</div>
           {footer && <div className={cx("footer")}>{footer}</div>}
         </div>

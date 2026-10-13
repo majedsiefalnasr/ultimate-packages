@@ -32,16 +32,19 @@ This is decisive for one part of the fork: **Storybook is not one option among s
 ### Option analysis
 
 **(a) Storybook + screenshot/visual-diff addon**
+
 - Advantages: satisfies §27 (documentation surface) and §28 (visual regression) from one investment; natural per-framework story authoring matches the 3-framework package shape; lowest-friction fit for a component-library monorepo's existing workflow (author a story once per component, get docs + visual coverage together).
-- Disadvantages: does not provide real cross-browser *interaction* testing (keyboard nav, focus order, computed ARIA roles) — screenshot diffing catches pixel regressions, not behavioral ones; does not touch SSR/hydration at all (Storybook renders components in isolation, not through a real server-rendered page).
+- Disadvantages: does not provide real cross-browser _interaction_ testing (keyboard nav, focus order, computed ARIA roles) — screenshot diffing catches pixel regressions, not behavioral ones; does not touch SSR/hydration at all (Storybook renders components in isolation, not through a real server-rendered page).
 - Architectural consequence: adopting this alone leaves §28's "real-browser interaction testing" and §31's "SSR/hydration behavior" measurement requirement completely unaddressed — a second tool is still needed for those.
 
 **(b) Playwright alone**
+
 - Advantages: real browser engines (Chromium/Firefox/WebKit) — directly satisfies real-browser and cross-browser interaction testing; built-in `toHaveScreenshot()` can satisfy visual regression without a second tool; is the natural tool to drive a real served page for SSR/hydration verification once one exists (cluster E, §4 below).
 - Disadvantages: no component-documentation surface — does not satisfy §27 at all, which independently names Storybook.
 - Architectural consequence: choosing this alone means §27 remains unsatisfied and would need its own separate resolution later — not a clean single-tool answer given §27's explicit Storybook naming.
 
 **(c) Storybook + Playwright**
+
 - Advantages: covers every Phase-10-relevant testing requirement found in the Blueprint — §27 (documentation), §28 (visual regression, via Storybook or Playwright screenshots), §28/§31 (real-browser/cross-browser interaction, via Playwright), and gives Playwright a natural on-ramp to SSR/hydration testing (cluster E) once a real page exists to point it at.
 - Disadvantages: highest setup and ongoing maintenance cost of the three — two tools, two framework-adapter surfaces (Storybook has Angular/React/Vue builders to keep current; Playwright is framework-agnostic at the browser layer but still needs per-framework test harnesses), two CI integrations.
 - Architectural consequence: does not by itself resolve CI-cost/runtime concerns (§11 of the Research doc already flagged that a second, slower test tier likely needs its own CI job rather than folding into the existing 20-step linear job) — that is an implementation-plan-level concern, not resolved here, but the two-tool combination makes the eventual CI redesign larger than a single-tool choice would.
@@ -53,6 +56,7 @@ This is decisive for one part of the fork: **Storybook is not one option among s
 **Why:** §27 independently and directly names Storybook — this is not a preference, it is the Blueprint stating what the documentation/testing surface should be. Once Storybook is a given, the remaining question narrows to what covers real-browser interaction and SSR — and Playwright is the only one of the three options that can do either, since Storybook's isolated rendering never exercises a real served page. Rejecting (a) alone leaves §27 satisfied but real-browser/SSR testing unaddressed; rejecting (b) alone leaves §27 unsatisfied entirely, in direct tension with an explicit Blueprint statement. (c) is the only option that does not leave a named Blueprint requirement unmet.
 
 **Consequences:**
+
 - Two new tools enter the stack, each with its own CI integration, framework-adapter maintenance, and version-currency burden across three frameworks.
 - CI runtime and structure will need rework (separate job(s), likely conditional/scoped execution) — this is implementation-plan territory, flagged here as a known consequence, not solved.
 - Vitest's ownership of Unit/Component/Integration testing (§28) is unchanged — Storybook and Playwright are additive tiers, not a replacement.
@@ -60,10 +64,11 @@ This is decisive for one part of the fork: **Storybook is not one option among s
 **What it enables:** a credible, evidence-backed path to closing GAP-004 (visual regression), GAP-035 (real-browser/cross-browser testing), §27's documentation-surface requirement, and — once cluster E's harness exists — GAP-034 (SSR/hydration verification), all from one architectural decision.
 
 **What it intentionally does not solve:**
-- Does not decide *which* screenshot-diff mechanism Storybook uses (a commercial service like Chromatic vs. a self-hosted pixel-diff addon) — that is a Specification-level tooling choice, not an architectural fork; nothing in the Blueprint or this discussion favors one over the other.
+
+- Does not decide _which_ screenshot-diff mechanism Storybook uses (a commercial service like Chromatic vs. a self-hosted pixel-diff addon) — that is a Specification-level tooling choice, not an architectural fork; nothing in the Blueprint or this discussion favors one over the other.
 - Does not decide CI job structure/runtime budget — Specification/Implementation-Plan concern.
 - Does not decide whether Storybook instances are per-framework or a single multi-framework instance — Specification-level detail.
-- Does not by itself provide a real consumer app (GAP-008) — Playwright still needs *something* to point at for SSR verification; see §5 below for what that "something" is scoped to be.
+- Does not by itself provide a real consumer app (GAP-008) — Playwright still needs _something_ to point at for SSR verification; see §5 below for what that "something" is scoped to be.
 
 ### Proposed ADR wording (architectural level only)
 
@@ -85,7 +90,7 @@ The Research doc's cluster analysis holds up under this discussion's added evide
 - **Cluster A** (testing/browser/visual/accessibility) is now unblocked by the DECISION-A resolution above, but is still the largest and most implementation-heavy cluster — two new tools, CI restructuring, per-framework adapter work. It remains its own coherent unit.
 - **Cluster B** (CI security/quality gates — dependency/license/SAST scanning, bundle-size CI enforcement, coverage-threshold enforcement) has no architectural dependency on A, C, D, or E. The Research doc's finding stands: these are pure additive CI work, "Architectural decision required: No" on every one of the four items, independently confirmed again in this discussion (no new evidence contradicts it).
 - **Cluster C** (release engineering) depends on this discussion's migration-tooling-scope resolution (§4 below) before it can be scoped concretely, but does not depend on A, B, D, or E.
-- **Cluster D** (operational documentation) has no architectural dependency on any other cluster, though its CHANGELOG.md content depends on cluster C's release-engineering wiring being live — the *file's existence and template* can be drafted independently; its *content generation* cannot ship meaningfully until C lands.
+- **Cluster D** (operational documentation) has no architectural dependency on any other cluster, though its CHANGELOG.md content depends on cluster C's release-engineering wiring being live — the _file's existence and template_ can be drafted independently; its _content generation_ cannot ship meaningfully until C lands.
 - **Cluster E** (SSR/hydration) depends on this discussion's GAP-008 scope resolution (§5) and, once that harness exists, on Playwright being available per the DECISION-A resolution above — so E has a soft dependency on A (needs Playwright) and a hard dependency on the GAP-008 scoping decision.
 
 This produces a real, evidence-backed dependency graph, not an arbitrary split:
@@ -110,13 +115,14 @@ E (SSR/hydration)              ─── depends on §5's GAP-008 scope resoluti
 **Why:** Blueprint §36's mandated workflow (Phase → Spec → Review → Plan → Implementation → Verification → Exit Review) does not say a "Phase" must be a single spec/plan cycle — Phase 9 itself is precedent for scoping a Blueprint-named phase narrower than its full theoretical objective list (Phase 9's spec explicitly deferred documentation-ingestion rather than solving GAP-004 inline). Forcing eight broad, weakly-related objectives into one specification would either produce an unreviewable document or force premature decisions on genuinely separable questions (DECISION-A's resolution here does not, for example, need to be bundled with a coverage-threshold percentage).
 
 **Consequences:**
+
 - Five separate Specification documents will exist for Phase 10 instead of one, each independently reviewable and independently gated.
 - "Phase 10" as a ROADMAP.md row will not flip to "Complete" until all five sub-tracks close — this needs to be tracked (e.g., a Phase 10 tracking note in ROADMAP.md or a dedicated index), a documentation mechanic to work out at Specification time, not architecturally blocking.
 - Sub-tracks B and D can run concurrently with each other and, once DECISION-A is resolved (done, §2), concurrently with A as well — only C and E have real gating dependencies.
 
 **What it enables:** low-risk, immediately actionable work (B, D) does not wait on the higher-cost, higher-uncertainty work (A's two-tool CI integration, C's scope-dependent release engineering, E's SSR-harness scoping).
 
-**What it intentionally does not solve:** the exact Specification-level ordering *within* each sub-track, whether sub-tracks get formal "Phase 10a/10b/..." labels or stay flat under one Phase 10 umbrella with staged specs (naming convention deferred to whoever writes the first Specification — not an architectural question), and which sub-track's Specification is written first among the unblocked set (B, D, and now A) — that is a project-sequencing choice for the user, not resolved by this discussion.
+**What it intentionally does not solve:** the exact Specification-level ordering _within_ each sub-track, whether sub-tracks get formal "Phase 10a/10b/..." labels or stay flat under one Phase 10 umbrella with staged specs (naming convention deferred to whoever writes the first Specification — not an architectural question), and which sub-track's Specification is written first among the unblocked set (B, D, and now A) — that is a project-sequencing choice for the user, not resolved by this discussion.
 
 ---
 
@@ -132,7 +138,7 @@ Blueprint §19, read in full for this discussion:
 
 > `@ultimate/cli` is an orchestrator. Conceptual commands: `ultimate create`, `ultimate init`, `ultimate add`, `ultimate generate`, `ultimate theme`, `ultimate doctor`, `ultimate update`, `ultimate migrate`, `ultimate ai`. **Exact command names are not final.** The CLI must: detect/select framework, invoke official framework tooling, install compatible Ultimate packages, resolve theme, configure optional capabilities, validate compatibility, generate code/configuration, diagnose project state.
 
-Two things follow directly from this text. First, `create`, `migrate`, and `update` are listed only as "conceptual commands" among nine total — the Blueprint does not mandate all nine exist by any specific phase, and explicitly says exact names/set are not final. Second, the CLI's *mandatory* responsibilities (the "must" list) do not include a `migrate` or `update` capability by name — they describe framework detection, package install, theme resolution, compatibility validation, code generation, and diagnosis, all of which are already substantially covered by the five real commands Phase 7 shipped (`init`, `add`, `theme`, `doctor`, `generate`).
+Two things follow directly from this text. First, `create`, `migrate`, and `update` are listed only as "conceptual commands" among nine total — the Blueprint does not mandate all nine exist by any specific phase, and explicitly says exact names/set are not final. Second, the CLI's _mandatory_ responsibilities (the "must" list) do not include a `migrate` or `update` capability by name — they describe framework detection, package install, theme resolution, compatibility validation, code generation, and diagnosis, all of which are already substantially covered by the five real commands Phase 7 shipped (`init`, `add`, `theme`, `doctor`, `generate`).
 
 ### Decision
 
@@ -141,6 +147,7 @@ Two things follow directly from this text. First, `create`, `migrate`, and `upda
 **Why:** §40's exact phrase is "migration strategy" — a strategy is a documented approach, not necessarily shipped automation. §35's "migration tooling" is the only place suggesting built software, but §19's "conceptual... not final" framing means the Blueprint does not commit any specific phase to building `migrate`/`update` specifically. Building three nontrivial CLI commands (each requiring real per-framework upgrade-path logic) would substantially expand Phase 10's scope beyond what any Blueprint section concretely demands, in tension with this discussion's own instruction not to expand "package quality" (or by the same logic, any Phase 10 term) beyond what the Blueprint supports.
 
 **Consequences:**
+
 - Cluster C (release engineering) is scoped to: finishing changesets wiring, first real CHANGELOG.md generation, and a written migration-strategy document (e.g., how consumers should approach upgrading between Ultimate versions, framework-version compatibility notes referencing the existing compatibility-manifest/resolver from Phase 7). It is not scoped to include new CLI command implementation.
 - `@ultimate/cli`'s `create`/`migrate`/`update` remain explicitly unimplemented, tracked as CLI backlog independent of Phase 10, revisitable whenever real evidence (e.g., an actual consumer needing to migrate across a breaking Ultimate release) makes building them concretely justified.
 
@@ -158,21 +165,22 @@ Whether Phase 10 needs full Angular/React/Vue playground apps, one minimal SSR-c
 
 ### Discussion
 
-Blueprint §13/§14 (read in full for this discussion) both list SSR and hydration as compatibility responsibilities each framework package must "independently track" — alongside items like "TypeScript compatibility," "compiler behavior," "forms," "Angular CDK," "ecosystem compatibility." Neither section specifies *how* this tracking must be verified (no mention of a full consumer app, a playground, or any specific harness shape) — this is a genuine Blueprint silence, not an oversight to fill in with an assumption.
+Blueprint §13/§14 (read in full for this discussion) both list SSR and hydration as compatibility responsibilities each framework package must "independently track" — alongside items like "TypeScript compatibility," "compiler behavior," "forms," "Angular CDK," "ecosystem compatibility." Neither section specifies _how_ this tracking must be verified (no mention of a full consumer app, a playground, or any specific harness shape) — this is a genuine Blueprint silence, not an oversight to fill in with an assumption.
 
-What *is* concretely needed, independent of any Blueprint wording, is something Playwright (per §2's DECISION-A resolution) can actually drive: a real server-rendered, then client-hydrated page. That is the minimum technical requirement for "SSR/hydration behavior" (§31) to be measurable at all — jsdom/TestBed cannot produce this regardless of tooling choice, confirmed already in the Research doc.
+What _is_ concretely needed, independent of any Blueprint wording, is something Playwright (per §2's DECISION-A resolution) can actually drive: a real server-rendered, then client-hydrated page. That is the minimum technical requirement for "SSR/hydration behavior" (§31) to be measurable at all — jsdom/TestBed cannot produce this regardless of tooling choice, confirmed already in the Research doc.
 
-`apps/playground-angular`, `apps/playground-react`, `apps/playground-vue`, and `apps/showcase` were all scaffolded (directory + `.gitkeep`) at repository founding, presumably anticipating eventual full consumer/demo applications — but nothing in the Blueprint's Phase 10 text (§35) or Definition of Done (§40) requires a *full* playground/showcase experience. §40's relevant line is just "release automation," "migration strategy," "CLI quality" — no line item reads "consumer application" or "playground app." A full playground app is real, useful infrastructure (it would also help demo the CLI's `init`/`add`/`theme` commands, and would be a natural home for cluster A's Storybook/Playwright work) — but it is not a Phase 10 *requirement* by the Blueprint's own text.
+`apps/playground-angular`, `apps/playground-react`, `apps/playground-vue`, and `apps/showcase` were all scaffolded (directory + `.gitkeep`) at repository founding, presumably anticipating eventual full consumer/demo applications — but nothing in the Blueprint's Phase 10 text (§35) or Definition of Done (§40) requires a _full_ playground/showcase experience. §40's relevant line is just "release automation," "migration strategy," "CLI quality" — no line item reads "consumer application" or "playground app." A full playground app is real, useful infrastructure (it would also help demo the CLI's `init`/`add`/`theme` commands, and would be a natural home for cluster A's Storybook/Playwright work) — but it is not a Phase 10 _requirement_ by the Blueprint's own text.
 
 ### Decision
 
 **Phase 10's SSR/hydration verification requirement is satisfied by one minimal, framework-specific SSR-capable harness per framework (Angular Universal / Next.js / Nuxt, or the framework's standard minimal SSR starter) — not full playground/showcase applications. Building out `apps/playground-*`/`apps/showcase` into real, feature-complete consumer applications is explicitly out of scope for Phase 10.**
 
-**Why:** the Blueprint requires SSR/hydration to be *verified*, not a consumer-app experience to exist. A minimal harness — render one or two real Ultimate components through each framework's standard SSR pipeline and confirm hydration succeeds without console errors/mismatches — is the smallest artifact that makes §31's "SSR/hydration behavior" measurement possible and gives Playwright something real to drive. Anything beyond that (routing, multiple pages, a real design/demo experience) is GAP-008's *fuller* scope, useful but not required by any Phase 10 line item found in this discussion or the Research doc.
+**Why:** the Blueprint requires SSR/hydration to be _verified_, not a consumer-app experience to exist. A minimal harness — render one or two real Ultimate components through each framework's standard SSR pipeline and confirm hydration succeeds without console errors/mismatches — is the smallest artifact that makes §31's "SSR/hydration behavior" measurement possible and gives Playwright something real to drive. Anything beyond that (routing, multiple pages, a real design/demo experience) is GAP-008's _fuller_ scope, useful but not required by any Phase 10 line item found in this discussion or the Research doc.
 
 **Consequences:**
+
 - Cluster E's scope is: three minimal SSR harnesses (one per framework), each rendering a small number of already-shipped components (the existing 8-component proof set is a natural, ready target — no new component work needed), plus Playwright specs that assert successful hydration.
-- The existing `apps/playground-angular`/`apps/playground-react`/`apps/playground-vue` directories are reasonable homes for these harnesses, but their *scope* for Phase 10 purposes is the minimal SSR-verification harness, not a full playground. Whether that minimal harness later grows into the originally-scaffolded full playground is future work, not decided here.
+- The existing `apps/playground-angular`/`apps/playground-react`/`apps/playground-vue` directories are reasonable homes for these harnesses, but their _scope_ for Phase 10 purposes is the minimal SSR-verification harness, not a full playground. Whether that minimal harness later grows into the originally-scaffolded full playground is future work, not decided here.
 - `apps/showcase` and `apps/docs` remain out of Phase 10 scope entirely — `apps/docs` is more naturally cluster A's eventual Storybook home (a Specification-level detail, not decided here) and `apps/showcase` has no Phase-10 driver at all.
 
 **What it enables:** GAP-034 (SSR/hydration verification) becomes closeable within Phase 10 without Phase 10 quietly absorbing what would really be a full product-development phase.
@@ -199,15 +207,15 @@ No Blueprint section anywhere uses the literal phrase "package quality" outside 
 
 Cross-checked against current `main` (already established in the Research doc, re-confirmed here):
 
-| Sub-requirement (from §28/§31/§40) | Current state |
-|---|---|
-| Package exports / ESM | Satisfied — confirmed working per-package `exports` maps (React/Vue have per-component subpaths; Angular ships one barrel — a pre-existing, out-of-Phase-10-scope Angular gap, GAP-009/GAP-023, not reopened here) |
-| Tree-shaking | Proven for React/Vue; Angular's is flagged broken by a prior, unrelated gap (GAP-009) — not a Phase 10 finding, not reopened by this discussion |
-| Bundle boundaries / absence of unwanted AI-tooling runtime deps | Satisfied and CI-enforced — the `boundary:validate`/`boundary:validate:cli`/`boundary:validate:mcp`/`boundary:validate:ai` gates built across Phases 7–9 directly implement this line item already |
-| npm-pack/install integrity | **Partially satisfied** — Phase 9 built a real `pnpm pack`/`pnpm install` standalone-resolution test for `@ultimate/ai` only (Research doc §7). No equivalent exists for `ng`/`react`/`vue`/`themes`/`cli`/`mcp`/`component-schema`/`component-metadata`/`uix-*`. |
-| Bundle-size budget/monitoring | **Missing** — measurement script exists, not CI-enforced, coverage stops at Phase 2 packages (GAP-032, confirmed still open) |
-| SSR where supported | Covered by cluster E (§5 above), not duplicated here |
-| Supported framework compatibility | Already covered by the existing `compatibility-manifest.json`/compatibility-resolver work from Phase 7 — no new Phase 10 gap identified here |
+| Sub-requirement (from §28/§31/§40)                              | Current state                                                                                                                                                                                                                                                     |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Package exports / ESM                                           | Satisfied — confirmed working per-package `exports` maps (React/Vue have per-component subpaths; Angular ships one barrel — a pre-existing, out-of-Phase-10-scope Angular gap, GAP-009/GAP-023, not reopened here)                                                |
+| Tree-shaking                                                    | Proven for React/Vue; Angular's is flagged broken by a prior, unrelated gap (GAP-009) — not a Phase 10 finding, not reopened by this discussion                                                                                                                   |
+| Bundle boundaries / absence of unwanted AI-tooling runtime deps | Satisfied and CI-enforced — the `boundary:validate`/`boundary:validate:cli`/`boundary:validate:mcp`/`boundary:validate:ai` gates built across Phases 7–9 directly implement this line item already                                                                |
+| npm-pack/install integrity                                      | **Partially satisfied** — Phase 9 built a real `pnpm pack`/`pnpm install` standalone-resolution test for `@ultimate/ai` only (Research doc §7). No equivalent exists for `ng`/`react`/`vue`/`themes`/`cli`/`mcp`/`component-schema`/`component-metadata`/`uix-*`. |
+| Bundle-size budget/monitoring                                   | **Missing** — measurement script exists, not CI-enforced, coverage stops at Phase 2 packages (GAP-032, confirmed still open)                                                                                                                                      |
+| SSR where supported                                             | Covered by cluster E (§5 above), not duplicated here                                                                                                                                                                                                              |
+| Supported framework compatibility                               | Already covered by the existing `compatibility-manifest.json`/compatibility-resolver work from Phase 7 — no new Phase 10 gap identified here                                                                                                                      |
 
 ### Decision
 
@@ -231,9 +239,9 @@ Whether §29's "provenance tracking" means the existing Prime-source provenance 
 
 ### Discussion
 
-§29's exact context: "Security process must include: ... provenance tracking ..." — listed alongside dependency scanning, license scanning, SAST, vulnerability monitoring, security advisories, patch releases, malicious package/dependency review. Every other item in that list is about *ongoing risk in what Ultimate depends on or ships*, not about *where Ultimate's own incorporated source came from* (that second concern is §2.3's "MIT-only Provenance" and §8's "Provenance and Licensing" — separate, already-resolved sections covering Prime-source lineage specifically, confirmed extensively implemented via `docs/architecture/PROVENANCE.md`/`provenance/*.json`/`scripts/provenance/*`).
+§29's exact context: "Security process must include: ... provenance tracking ..." — listed alongside dependency scanning, license scanning, SAST, vulnerability monitoring, security advisories, patch releases, malicious package/dependency review. Every other item in that list is about _ongoing risk in what Ultimate depends on or ships_, not about _where Ultimate's own incorporated source came from_ (that second concern is §2.3's "MIT-only Provenance" and §8's "Provenance and Licensing" — separate, already-resolved sections covering Prime-source lineage specifically, confirmed extensively implemented via `docs/architecture/PROVENANCE.md`/`provenance/*.json`/`scripts/provenance/*`).
 
-Read in the context of its neighbors in §29's list, "provenance tracking" reads as belonging to the *security-process* concern (supply-chain integrity of what ships), not a restatement of the already-separately-covered Prime-lineage concern.
+Read in the context of its neighbors in §29's list, "provenance tracking" reads as belonging to the _security-process_ concern (supply-chain integrity of what ships), not a restatement of the already-separately-covered Prime-lineage concern.
 
 ### Decision
 
@@ -257,7 +265,7 @@ Whether the Blueprint literally requires SECURITY.md/CONTRIBUTING.md/CHANGELOG.m
 
 Confirmed again in this discussion: Blueprint §39's "Documentation Artifacts" list is `BLUEPRINT.md`, `DECISIONS.md`, `PROVENANCE.md`, `DEPENDENCIES.md`, `COMPATIBILITY.md`, plus (in the tree diagram) `PACKAGE_ARCHITECTURE.md` and `AI_ARCHITECTURE.md`. None of the three conventional filenames appear there. The only textual hooks are §35's unspecified "operational documentation" and §29's security-process list (which conventionally, but not explicitly, implies a published security-contact/disclosure document).
 
-This is a genuine Blueprint silence on exact filenames, not a contradiction — §39's list is scoped to *architecture* documentation specifically (its own heading), while §35's "operational documentation" is a different, broader category §39 does not enumerate.
+This is a genuine Blueprint silence on exact filenames, not a contradiction — §39's list is scoped to _architecture_ documentation specifically (its own heading), while §35's "operational documentation" is a different, broader category §39 does not enumerate.
 
 ### Decision
 
@@ -283,18 +291,18 @@ Recorded, not resolved by guessing: the Research doc found the old `BLUEPRINT_GA
 
 Re-classified using this discussion's decisions, not merely repeating the Research doc's findings:
 
-| GAP | Research doc status | This discussion's classification | Basis |
-|---|---|---|---|
-| GAP-004 (no visual regression/Storybook) | MISSING | **Remains open; now has an architectural resolution path** | §2 decision (Storybook adopted) gives this gap a clear closure route via cluster A |
-| GAP-005 (no automated a11y scanning) | MISSING | **Remains open, not directly resolved by any decision here** | No decision in this discussion specifically addressed axe-core-class tooling; belongs to cluster A's Specification, tooling-choice-only, no fork found |
-| GAP-008 (no real consumer app) | MISSING | **Partially resolved in scope** — Phase 10 requires only minimal SSR harnesses, not full playground apps | §5 decision |
-| GAP-011 (no SECURITY/CONTRIBUTING/CHANGELOG) | MISSING | **Remains open; scope narrowed** — SECURITY.md and CHANGELOG.md are Blueprint-driven (cluster D), CONTRIBUTING.md is optional/non-Blueprint | §8 decision |
-| GAP-030 (Phase 9 AI Skills/LLM Context) | Stale documentation only (Phase 9 is actually complete) | **Confirmed stale-documentation-only, unrelated to Phase 10 architecture** — re-flagged, not fixed (doc-edit scope) | Research doc §12, re-confirmed, no new evidence changes this |
-| GAP-031 (no dependency/license/SAST scanning) | MISSING | **Remains open, no architectural decision required** | Cluster B, tooling-choice-only per Research doc, not contested here |
-| GAP-032 (bundle-size not CI-enforced) | IMPLEMENTED-BUT-NOT-ENFORCED | **Remains open; now explicitly scoped under "package quality"** | §6 decision |
-| GAP-033 (coverage not CI-enforced) | IMPLEMENTED-BUT-NOT-ENFORCED | **Remains open, no architectural decision required** | Cluster B, tooling-choice-only |
-| GAP-034 (no SSR/hydration verification) | IMPLEMENTED-BUT-UNVERIFIED | **Remains open; now has a bounded, architecturally-scoped closure path** | §5 decision (minimal harnesses) + §2 decision (Playwright as the verification tool) |
-| GAP-035 (no browser-compat/real-browser testing) | MISSING | **Remains open; now has an architectural resolution path** | §2 decision (Playwright adopted) |
+| GAP                                              | Research doc status                                     | This discussion's classification                                                                                                            | Basis                                                                                                                                                  |
+| ------------------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| GAP-004 (no visual regression/Storybook)         | MISSING                                                 | **Remains open; now has an architectural resolution path**                                                                                  | §2 decision (Storybook adopted) gives this gap a clear closure route via cluster A                                                                     |
+| GAP-005 (no automated a11y scanning)             | MISSING                                                 | **Remains open, not directly resolved by any decision here**                                                                                | No decision in this discussion specifically addressed axe-core-class tooling; belongs to cluster A's Specification, tooling-choice-only, no fork found |
+| GAP-008 (no real consumer app)                   | MISSING                                                 | **Partially resolved in scope** — Phase 10 requires only minimal SSR harnesses, not full playground apps                                    | §5 decision                                                                                                                                            |
+| GAP-011 (no SECURITY/CONTRIBUTING/CHANGELOG)     | MISSING                                                 | **Remains open; scope narrowed** — SECURITY.md and CHANGELOG.md are Blueprint-driven (cluster D), CONTRIBUTING.md is optional/non-Blueprint | §8 decision                                                                                                                                            |
+| GAP-030 (Phase 9 AI Skills/LLM Context)          | Stale documentation only (Phase 9 is actually complete) | **Confirmed stale-documentation-only, unrelated to Phase 10 architecture** — re-flagged, not fixed (doc-edit scope)                         | Research doc §12, re-confirmed, no new evidence changes this                                                                                           |
+| GAP-031 (no dependency/license/SAST scanning)    | MISSING                                                 | **Remains open, no architectural decision required**                                                                                        | Cluster B, tooling-choice-only per Research doc, not contested here                                                                                    |
+| GAP-032 (bundle-size not CI-enforced)            | IMPLEMENTED-BUT-NOT-ENFORCED                            | **Remains open; now explicitly scoped under "package quality"**                                                                             | §6 decision                                                                                                                                            |
+| GAP-033 (coverage not CI-enforced)               | IMPLEMENTED-BUT-NOT-ENFORCED                            | **Remains open, no architectural decision required**                                                                                        | Cluster B, tooling-choice-only                                                                                                                         |
+| GAP-034 (no SSR/hydration verification)          | IMPLEMENTED-BUT-UNVERIFIED                              | **Remains open; now has a bounded, architecturally-scoped closure path**                                                                    | §5 decision (minimal harnesses) + §2 decision (Playwright as the verification tool)                                                                    |
+| GAP-035 (no browser-compat/real-browser testing) | MISSING                                                 | **Remains open; now has an architectural resolution path**                                                                                  | §2 decision (Playwright adopted)                                                                                                                       |
 
 No GAP in this list is fully "resolved" by this discussion — architecture-level decisions were made, but nothing has been implemented. "Blocked by another decision" does not apply to any remaining Phase 10 GAP after this discussion; every one now either has a clear path (via a decision above) or is confirmed pure tooling-choice/additive-work with no fork (cluster B items).
 

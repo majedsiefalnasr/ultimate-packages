@@ -35,7 +35,10 @@ const classes = {
   rootList: "u-contextmenu-root-list",
   item: (params: ContextMenuClassesParams = {}) => {
     const { disabled, focused } = params;
-    return ["u-contextmenu-item", { "u-contextmenu-item-disabled": disabled, "u-contextmenu-item-focused": focused }];
+    return [
+      "u-contextmenu-item",
+      { "u-contextmenu-item-disabled": disabled, "u-contextmenu-item-focused": focused },
+    ];
   },
   itemContent: "u-contextmenu-item-content",
   itemLink: "u-contextmenu-item-link",

@@ -66,7 +66,9 @@ describe("UConfirmPopup", () => {
     service.confirm({ message: "Delete?", target: button, reject: () => (rejected = true) });
     fixture.detectChanges();
 
-    const rejectButton = document.querySelector(".u-confirmpopup-footer button") as HTMLButtonElement;
+    const rejectButton = document.querySelector(
+      ".u-confirmpopup-footer button"
+    ) as HTMLButtonElement;
     rejectButton.click();
     fixture.detectChanges();
 

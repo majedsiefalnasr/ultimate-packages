@@ -6,12 +6,21 @@ import { SCHEMA_VERSION } from "./version";
 import type { ComponentMetadata } from "./component-metadata";
 
 export type ValidationResult =
-  | { valid: true; record: ComponentMetadata }
-  | { valid: false; errors: string[] };
+  { valid: true; record: ComponentMetadata } | { valid: false; errors: string[] };
 
 const KNOWN_TOP_LEVEL_KEYS = new Set([
-  "name", "category", "description", "schemaVersion", "metadataVersion", "packages",
-  "api", "accessibility", "style", "relationships", "provenanceRef", "guidance",
+  "name",
+  "category",
+  "description",
+  "schemaVersion",
+  "metadataVersion",
+  "packages",
+  "api",
+  "accessibility",
+  "style",
+  "relationships",
+  "provenanceRef",
+  "guidance",
 ]);
 const KNOWN_FRAMEWORKS = new Set(["ng", "react", "vue"]);
 const KNOWN_PROVENANCE_PACKAGES = new Set(["ng", "react", "vue", "uix-styles"]);
@@ -45,7 +54,10 @@ function readProvenanceDestinations(pkg: string): Set<string> {
  * shape — this is the ONLY place that establishes trust in metadata content;
  * TypeScript types alone give no runtime guarantee for data read from disk.
  */
-export function validateComponentMetadata(record: unknown, allRecords: unknown[]): ValidationResult {
+export function validateComponentMetadata(
+  record: unknown,
+  allRecords: unknown[]
+): ValidationResult {
   const errors: string[] = [];
 
   if (!isObject(record)) {
@@ -58,8 +70,14 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
   for (const required of ["name", "category", "description", "schemaVersion"] as const) {
     if (typeof record[required] !== "string") errors.push(`${required} must be a string`);
   }
-  if (typeof record.metadataVersion !== "number" || !Number.isInteger(record.metadataVersion) || record.metadataVersion < 1) {
-    errors.push(`metadataVersion must be a positive integer starting at 1, got: ${JSON.stringify(record.metadataVersion)}`);
+  if (
+    typeof record.metadataVersion !== "number" ||
+    !Number.isInteger(record.metadataVersion) ||
+    record.metadataVersion < 1
+  ) {
+    errors.push(
+      `metadataVersion must be a positive integer starting at 1, got: ${JSON.stringify(record.metadataVersion)}`
+    );
   }
   if (record.schemaVersion === SCHEMA_VERSION) {
     // compatible — no error
@@ -70,9 +88,14 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
     errors.push("packages must be an object");
   } else {
     for (const key of Object.keys(record.packages)) {
-      if (!KNOWN_FRAMEWORKS.has(key)) errors.push(`packages has unrecognized framework key: ${key}`);
+      if (!KNOWN_FRAMEWORKS.has(key))
+        errors.push(`packages has unrecognized framework key: ${key}`);
       const entry = record.packages[key];
-      if (!isObject(entry) || typeof entry.packageName !== "string" || typeof entry.sourcePath !== "string") {
+      if (
+        !isObject(entry) ||
+        typeof entry.packageName !== "string" ||
+        typeof entry.sourcePath !== "string"
+      ) {
         errors.push(`packages.${key} must be {packageName: string, sourcePath: string}`);
       }
     }
@@ -84,15 +107,26 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
       errors.push("api must be an object");
     } else {
       for (const framework of Object.keys(record.api)) {
-        if (!KNOWN_FRAMEWORKS.has(framework)) errors.push(`api has unrecognized framework key: ${framework}`);
-        if (!packagesObj[framework]) errors.push(`api.${framework} present but packages.${framework} is missing`);
+        if (!KNOWN_FRAMEWORKS.has(framework))
+          errors.push(`api has unrecognized framework key: ${framework}`);
+        if (!packagesObj[framework])
+          errors.push(`api.${framework} present but packages.${framework} is missing`);
         const frameworkApi = record.api[framework];
-        if (!isObject(frameworkApi) || !Array.isArray(frameworkApi.props) || !Array.isArray(frameworkApi.events)) {
+        if (
+          !isObject(frameworkApi) ||
+          !Array.isArray(frameworkApi.props) ||
+          !Array.isArray(frameworkApi.events)
+        ) {
           errors.push(`api.${framework} must be {props: PropFact[], events: EventFact[]}`);
           continue;
         }
         for (const [i, prop] of frameworkApi.props.entries()) {
-          if (!isObject(prop) || typeof prop.name !== "string" || typeof prop.type !== "string" || typeof prop.required !== "boolean") {
+          if (
+            !isObject(prop) ||
+            typeof prop.name !== "string" ||
+            typeof prop.type !== "string" ||
+            typeof prop.required !== "boolean"
+          ) {
             errors.push(`api.${framework}.props[${i}] is not a valid PropFact`);
           } else if (prop.default !== undefined && typeof prop.default !== "string") {
             errors.push(`api.${framework}.props[${i}].default must be a string`);
@@ -107,8 +141,13 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
             typeof event.frameworkName !== "string" ||
             !KNOWN_MECHANISMS.has(event.mechanism as string)
           ) {
-            errors.push(`api.${framework}.events[${i}] is not a valid EventFact (mechanism must be output/callback-prop/emit)`);
-          } else if (event.payloadDescription !== undefined && typeof event.payloadDescription !== "string") {
+            errors.push(
+              `api.${framework}.events[${i}] is not a valid EventFact (mechanism must be output/callback-prop/emit)`
+            );
+          } else if (
+            event.payloadDescription !== undefined &&
+            typeof event.payloadDescription !== "string"
+          ) {
             errors.push(`api.${framework}.events[${i}].payloadDescription must be a string`);
           }
         }
@@ -120,21 +159,32 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
     if (!isObject(record.accessibility)) {
       errors.push("accessibility must be an object");
     } else {
-      const KNOWN_ACCESSIBILITY_KEYS = new Set(["verifiedRoles", "verifiedAriaAttributes", "guidance"]);
+      const KNOWN_ACCESSIBILITY_KEYS = new Set([
+        "verifiedRoles",
+        "verifiedAriaAttributes",
+        "guidance",
+      ]);
       for (const key of Object.keys(record.accessibility)) {
-        if (!KNOWN_ACCESSIBILITY_KEYS.has(key)) errors.push(`accessibility has unrecognized field: ${key}`);
+        if (!KNOWN_ACCESSIBILITY_KEYS.has(key))
+          errors.push(`accessibility has unrecognized field: ${key}`);
       }
       const { verifiedRoles, verifiedAriaAttributes, guidance } = record.accessibility;
-      if (verifiedRoles !== undefined && !isStringArray(verifiedRoles)) errors.push("accessibility.verifiedRoles must be string[]");
-      if (verifiedAriaAttributes !== undefined && !isStringArray(verifiedAriaAttributes)) errors.push("accessibility.verifiedAriaAttributes must be string[]");
-      if (guidance !== undefined && typeof guidance !== "string") errors.push("accessibility.guidance must be a string");
+      if (verifiedRoles !== undefined && !isStringArray(verifiedRoles))
+        errors.push("accessibility.verifiedRoles must be string[]");
+      if (verifiedAriaAttributes !== undefined && !isStringArray(verifiedAriaAttributes))
+        errors.push("accessibility.verifiedAriaAttributes must be string[]");
+      if (guidance !== undefined && typeof guidance !== "string")
+        errors.push("accessibility.guidance must be a string");
     }
   }
 
   if (record.style !== undefined) {
     if (!isObject(record.style) || typeof record.style.componentName !== "string") {
       errors.push("style must be an object with a required string componentName");
-    } else if (record.style.styleModuleRef !== undefined && typeof record.style.styleModuleRef !== "string") {
+    } else if (
+      record.style.styleModuleRef !== undefined &&
+      typeof record.style.styleModuleRef !== "string"
+    ) {
       errors.push("style.styleModuleRef must be a string");
     }
   }
@@ -146,19 +196,29 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
       for (const key of Object.keys(record.relationships)) {
         if (key !== "dependsOn") errors.push(`relationships has unrecognized field: ${key}`);
       }
-      if (record.relationships.dependsOn !== undefined && !isStringArray(record.relationships.dependsOn)) {
+      if (
+        record.relationships.dependsOn !== undefined &&
+        !isStringArray(record.relationships.dependsOn)
+      ) {
         errors.push("relationships.dependsOn must be string[]");
       }
     }
   }
 
   if (record.provenanceRef !== undefined) {
-    if (!isObject(record.provenanceRef) || !KNOWN_PROVENANCE_PACKAGES.has(record.provenanceRef.package as string) || !isStringArray(record.provenanceRef.ultimateDestinations)) {
-      errors.push("provenanceRef must be {package: 'ng'|'react'|'vue'|'uix-styles', ultimateDestinations: string[]}");
+    if (
+      !isObject(record.provenanceRef) ||
+      !KNOWN_PROVENANCE_PACKAGES.has(record.provenanceRef.package as string) ||
+      !isStringArray(record.provenanceRef.ultimateDestinations)
+    ) {
+      errors.push(
+        "provenanceRef must be {package: 'ng'|'react'|'vue'|'uix-styles', ultimateDestinations: string[]}"
+      );
     } else {
       const destinations = readProvenanceDestinations(record.provenanceRef.package as string);
       for (const dest of record.provenanceRef.ultimateDestinations as string[]) {
-        if (!destinations.has(dest)) errors.push(`provenanceRef points at a nonexistent provenance entry: ${dest}`);
+        if (!destinations.has(dest))
+          errors.push(`provenanceRef points at a nonexistent provenance entry: ${dest}`);
       }
     }
   }
@@ -172,9 +232,12 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
         if (!KNOWN_GUIDANCE_KEYS.has(key)) errors.push(`guidance has unrecognized field: ${key}`);
       }
       const { usageNotes, antiPatterns, migrationNotes } = record.guidance;
-      if (usageNotes !== undefined && typeof usageNotes !== "string") errors.push("guidance.usageNotes must be a string");
-      if (antiPatterns !== undefined && !isStringArray(antiPatterns)) errors.push("guidance.antiPatterns must be string[]");
-      if (migrationNotes !== undefined && typeof migrationNotes !== "string") errors.push("guidance.migrationNotes must be a string");
+      if (usageNotes !== undefined && typeof usageNotes !== "string")
+        errors.push("guidance.usageNotes must be a string");
+      if (antiPatterns !== undefined && !isStringArray(antiPatterns))
+        errors.push("guidance.antiPatterns must be string[]");
+      if (migrationNotes !== undefined && typeof migrationNotes !== "string")
+        errors.push("guidance.migrationNotes must be a string");
     }
   }
 
@@ -184,7 +247,8 @@ export function validateComponentMetadata(record: unknown, allRecords: unknown[]
   if (isObject(record.relationships) && isStringArray(record.relationships.dependsOn)) {
     const knownNames = new Set(validObjectRecords.map((r) => r.name));
     for (const dep of record.relationships.dependsOn) {
-      if (!knownNames.has(dep)) errors.push(`relationships.dependsOn references unknown component: ${dep}`);
+      if (!knownNames.has(dep))
+        errors.push(`relationships.dependsOn references unknown component: ${dep}`);
     }
   }
 

@@ -88,11 +88,7 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
               @if (selectionColumn() && selectionMode()) {
                 <th>
                   @if (selectionMode() === "multiple") {
-                    <input
-                      type="checkbox"
-                      [checked]="allSelected"
-                      (click)="toggleAllSelection()"
-                    />
+                    <input type="checkbox" [checked]="allSelected" (click)="toggleAllSelection()" />
                   }
                 </th>
               }
@@ -109,7 +105,9 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                   role="columnheader"
                   [attr.aria-sort]="ariaSortFor(col.field)"
                   (click)="onSort(col.field)"
-                >{{ col.header }}</th>
+                >
+                  {{ col.header }}
+                </th>
               }
               @if (editMode() === "row") {
                 <th></th>
@@ -129,7 +127,9 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
               @for (entry of groupedRows; track $index; let rowIndex = $index) {
                 @if (entry.isGroupHeader && rowGroupMode() === "subheader") {
                   <tr data-u-table-group-header [class]="cx('rowGroupHeader')">
-                    <td [attr.colspan]="totalColumnCount">{{ resolveCell(entry.row, groupRowsBy() ?? "") }}</td>
+                    <td [attr.colspan]="totalColumnCount">
+                      {{ resolveCell(entry.row, groupRowsBy() ?? "") }}
+                    </td>
                   </tr>
                 }
                 <tr
@@ -163,13 +163,19 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                         type="button"
                         data-u-table-row-toggle
                         (click)="toggleRowExpansion($event, entry.row)"
-                      >{{ isRowExpanded(entry.row) ? "-" : "+" }}</button>
+                      >
+                        {{ isRowExpanded(entry.row) ? "-" : "+" }}
+                      </button>
                     </td>
                   }
                   @for (col of columns(); track col.field) {
-                    @if (rowGroupMode() === "rowspan" && groupRowsBy() && col.field === groupRowsBy()) {
+                    @if (
+                      rowGroupMode() === "rowspan" && groupRowsBy() && col.field === groupRowsBy()
+                    ) {
                       @if (entry.isGroupHeader) {
-                        <td data-u-table-group-cell [attr.rowspan]="entry.groupSize">{{ renderCell(entry.row, col, rowIndex) }}</td>
+                        <td data-u-table-group-cell [attr.rowspan]="entry.groupSize">
+                          {{ renderCell(entry.row, col, rowIndex) }}
+                        </td>
                       }
                     } @else if (isRowEditing(entry.row)) {
                       <td data-u-table-cell-editor>
@@ -185,12 +191,30 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                   }
                   @if (editMode() === "row" && isRowEditing(entry.row)) {
                     <td>
-                      <button type="button" data-u-table-row-edit-save (click)="saveRowEdit(entry.row, $event)">Save</button>
-                      <button type="button" data-u-table-row-edit-cancel (click)="cancelRowEdit(entry.row, $event)">Cancel</button>
+                      <button
+                        type="button"
+                        data-u-table-row-edit-save
+                        (click)="saveRowEdit(entry.row, $event)"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        data-u-table-row-edit-cancel
+                        (click)="cancelRowEdit(entry.row, $event)"
+                      >
+                        Cancel
+                      </button>
                     </td>
                   } @else if (editMode() === "row") {
                     <td>
-                      <button type="button" data-u-table-row-edit-init (click)="initRowEdit(entry.row, $event)">Edit</button>
+                      <button
+                        type="button"
+                        data-u-table-row-edit-init
+                        (click)="initRowEdit(entry.row, $event)"
+                      >
+                        Edit
+                      </button>
                     </td>
                   }
                 </tr>
@@ -319,7 +343,9 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * code should assume this registration is visible to any other UTable
    * instance.
    */
-  registerCustomFilter(fn: (value: unknown, filter: unknown, filterLocale?: string) => boolean): void {
+  registerCustomFilter(
+    fn: (value: unknown, filter: unknown, filterLocale?: string) => boolean
+  ): void {
     this.customFilterPredicate.set(fn);
   }
 
@@ -438,7 +464,8 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
         // everything). String.prototype.includes("") is always true, so
         // without this guard `!cellValue.includes("")` would be false for
         // every row, hiding all of them instead of showing all of them.
-        if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return true;
+        if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "")
+          return true;
         return !cellValue.includes(filterValue);
       case "endsWith":
         return cellValue.endsWith(filterValue);
@@ -547,7 +574,7 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
         return Array.isArray(filter)
           ? filter.some((f) => this.matchesFilter(row, field, f))
           : this.matchesFilter(row, field, filter);
-      }),
+      })
     );
     return this.applySort(filtered);
   }
@@ -829,7 +856,7 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
     const order = this.sortOrder();
     if (!field || order === 0) return rows;
     return rows.sort(
-      (a, b) => this.compareValues(this.resolveCell(a, field), this.resolveCell(b, field)) * order,
+      (a, b) => this.compareValues(this.resolveCell(a, field), this.resolveCell(b, field)) * order
     );
   }
 
@@ -893,7 +920,9 @@ export class UTable<T> extends UBaseComponent implements OnChanges {
    * already-shipped comparators (no inline reimplementation needed).
    */
   private isRowEqual(a: T, b: T): boolean {
-    return this.compareSelectionBy() === "deepEquals" ? deepEquals(a, b) : equals(a, b, this.dataKey());
+    return this.compareSelectionBy() === "deepEquals"
+      ? deepEquals(a, b)
+      : equals(a, b, this.dataKey());
   }
 
   protected isSelected(row: T): boolean {

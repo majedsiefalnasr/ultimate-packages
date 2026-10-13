@@ -5,9 +5,9 @@
 **Origin:** `docs/architecture/research/2026-09-12-ai-orientation-design.md` (the approved design this specification implements — every binding decision below traces to that document, referenced as `[Design §N]`). That design itself traces to `docs/architecture/research/2026-09-12-project-reality-and-ai-operating-model-audit.md` (referenced as `[Audit §N]`).
 **Baseline:** `main` at `d391acf`.
 
-**Amendment Note (this pass):** the human's own Spec Review feedback identified a missing dimension — the specification defined what a fresh agent must *know* about Ultimate but not how it is expected to *operate safely* inside the repository (git/branching, commit discipline, Superpowers usage, pre-work safety checks). This amendment adds §3.7 ("AI Operating Rules") to `AGENTS.md`'s required content and updates the section-count constraint from "exactly 6" to "exactly 7" accordingly (see §3's own updated framing and §11 for the full reasoning). No other section of this specification is altered by this amendment; §1-§10 (renumbered where a new subsection was inserted) retain their original substance.
+**Amendment Note (this pass):** the human's own Spec Review feedback identified a missing dimension — the specification defined what a fresh agent must _know_ about Ultimate but not how it is expected to _operate safely_ inside the repository (git/branching, commit discipline, Superpowers usage, pre-work safety checks). This amendment adds §3.7 ("AI Operating Rules") to `AGENTS.md`'s required content and updates the section-count constraint from "exactly 6" to "exactly 7" accordingly (see §3's own updated framing and §11 for the full reasoning). No other section of this specification is altered by this amendment; §1-§10 (renumbered where a new subsection was inserted) retain their original substance.
 
-**Amendment Note (post-implementation correction):** during Implementation (Task 1), the protected/do-not-reopen pointer originally specified below as foldable into §3.3 ("may be folded into §3.3's workflow section or kept separate — implementer's/Plan's choice") was instead separated into its own standalone section, since folding it collapsed the file's section *count* below the required 7 even though the *content* was present. This shifted every subsequent section's number by one in the final, merged `AGENTS.md`. This specification's own §3.5/§3.6 numbering below is corrected to match the as-built, as-merged file exactly: **Section 5 = Protected decisions, Section 6 = Where to find things, Section 7 = AI Operating Rules.** This is an implementation-time correction to this document's own internal section labels, not a change to any approved functional/content scope — every binding content requirement below is unchanged.
+**Amendment Note (post-implementation correction):** during Implementation (Task 1), the protected/do-not-reopen pointer originally specified below as foldable into §3.3 ("may be folded into §3.3's workflow section or kept separate — implementer's/Plan's choice") was instead separated into its own standalone section, since folding it collapsed the file's section _count_ below the required 7 even though the _content_ was present. This shifted every subsequent section's number by one in the final, merged `AGENTS.md`. This specification's own §3.5/§3.6 numbering below is corrected to match the as-built, as-merged file exactly: **Section 5 = Protected decisions, Section 6 = Where to find things, Section 7 = AI Operating Rules.** This is an implementation-time correction to this document's own internal section labels, not a change to any approved functional/content scope — every binding content requirement below is unchanged.
 **Required sequence (this document is the Specification step):** Research (audit) ✅ → Architecture Discussion (design) ✅ → Decision (human, confirmed this task) → **Specification (this document)** → Spec Review → Implementation Plan → Plan Review → Implementation → Verification → Final Review/Closeout.
 
 This specification does not implement anything. It does not create `AGENTS.md`, does not modify `README.md`, does not modify CI, and does not create an implementation plan. It defines the exact, bounded content and constraints that a future, separately-gated Implementation Plan must satisfy.
@@ -99,22 +99,22 @@ States, per `[Design §5]`:
 - The distinction between **implemented** (code exists, confirmed by reading the source directly), **verified** (a check was run once and passed at that moment), **CI-enforced** (a script in `.github/workflows/ci.yml` will fail the build if the condition regresses), and **externally unexercisable** (the claim cannot be proven locally because it requires a real external event — e.g., an actual npm publish, an actual GitHub branch-protection setting, an actual security advisory — and is honestly disclosed as such rather than either falsely claimed proven or endlessly chased in simulation).
 - That these four categories are not interchangeable, and a document's or agent's claim should name which one applies rather than using "done"/"working" ambiguously.
 - Where verification evidence of each kind is typically recorded: CI artifacts (ephemeral, e.g. `test-results/`), committed baseline documents (e.g. `docs/architecture/SAST_BASELINE.md`, `docs/architecture/ACCESSIBILITY_BASELINE.md`, `docs/architecture/PERFORMANCE.md`), and dated research artifacts (`docs/architecture/research/*.md`).
-- This section does not itself define a new verification *procedure* or tool — it names the existing conceptual categories and where their evidence already lives, consistent with `[Design §5]`'s own scope.
+- This section does not itself define a new verification _procedure_ or tool — it names the existing conceptual categories and where their evidence already lives, consistent with `[Design §5]`'s own scope.
 
 ### 3.6 Section: Pointer/index table (as merged; see amendment note above — originally numbered §3.5)
 
 A table (or equivalent list) containing **only file paths and a one-line description of each path's purpose** — no restated status content, no gap counts, no phase numbers, no decision outcomes. Minimum required entries, per `[Design §6]`:
 
-| For... | See |
-|---|---|
-| Current phase/track status | `docs/architecture/ROADMAP.md` |
-| Open gaps and architectural decisions | `docs/architecture/BLUEPRINT_GAPS.md` |
-| Why a past architectural choice was made | `docs/architecture/DECISIONS.md` |
-| Deep evidence for a specific past finding | `docs/architecture/research/` (dated files) |
+| For...                                              | See                                                                              |
+| --------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Current phase/track status                          | `docs/architecture/ROADMAP.md`                                                   |
+| Open gaps and architectural decisions               | `docs/architecture/BLUEPRINT_GAPS.md`                                            |
+| Why a past architectural choice was made            | `docs/architecture/DECISIONS.md`                                                 |
+| Deep evidence for a specific past finding           | `docs/architecture/research/` (dated files)                                      |
 | Component-level facts (props, accessibility, tests) | `@ultimate/component-metadata` records, or MCP tools, or direct component source |
-| Current component coverage | `docs/architecture/COMPONENT_INVENTORY.md` |
-| Performance/bundle-size baselines | `docs/architecture/PERFORMANCE.md` |
-| Release/migration process | `docs/architecture/MIGRATION.md` |
+| Current component coverage                          | `docs/architecture/COMPONENT_INVENTORY.md`                                       |
+| Performance/bundle-size baselines                   | `docs/architecture/PERFORMANCE.md`                                               |
+| Release/migration process                           | `docs/architecture/MIGRATION.md`                                                 |
 
 The Implementation Plan may add further rows of the same shape (path + one-line purpose) if a genuinely missing pointer is identified during implementation, but must not add rows containing restated status/content — any such addition is a spec deviation requiring escalation, not a routine implementation choice.
 
@@ -124,7 +124,7 @@ A short, standalone statement naming that architectural decisions can be explici
 
 ### 3.7 Section: AI Operating Rules (added by this amendment)
 
-A concise section stating **repository-level operating principles**, not procedures — the detailed how-to for each rule area remains owned by the sources named in each subsection below, per the human's own "keep `AGENTS.md` small" instruction. This section is the one place `AGENTS.md` tells an agent *how to behave safely*, distinct from §3.1-§3.6's *what-to-know* content (as merged: Sections 1-6).
+A concise section stating **repository-level operating principles**, not procedures — the detailed how-to for each rule area remains owned by the sources named in each subsection below, per the human's own "keep `AGENTS.md` small" instruction. This section is the one place `AGENTS.md` tells an agent _how to behave safely_, distinct from §3.1-§3.6's _what-to-know_ content (as merged: Sections 1-6).
 
 #### 3.7.1 Git / branching
 
@@ -162,6 +162,7 @@ Before modifying any repository file, establish: the current branch, the current
 #### 3.7.5 Preserving the human-controlled model (restated, not new)
 
 This subsection introduces no new principle — it restates, in the "how to operate" section specifically, constraints already established elsewhere in this specification (§3.3), because the human's own instruction asked for this restatement explicitly, and because operating rules are exactly the place an agent is most likely to look for this reminder in the moment it matters:
+
 - Discovering a problem does not authorize fixing it.
 - Finding a gap does not authorize implementing it.
 - An approved specification does not authorize implementation before an implementation plan exists and is itself reviewed/approved.
@@ -198,6 +199,7 @@ Any future edit to `AGENTS.md` motivated by "a phase completed" or "a gap closed
 ## 6. `README.md` correction — exact scope
 
 **Current stale content** (confirmed by direct read, `README.md` line 8):
+
 ```markdown
 ## Status
 
@@ -209,6 +211,7 @@ Any future edit to `AGENTS.md` motivated by "a phase completed" or "a gap closed
 **Binding constraint on the replacement text:** it must NOT state a specific phase number, a specific completion percentage, or any other status claim that could itself go stale again. It MUST retain the existing pointer to `docs/architecture/ROADMAP.md` (already correct) and MAY additionally point to the new `AGENTS.md` file, consistent with `AGENTS.md`'s own role as the map of where to find current state.
 
 **Illustrative shape (not binding exact wording — the Implementation Plan/implementer drafts the final text within this constraint):**
+
 ```markdown
 ## Status
 
@@ -226,9 +229,10 @@ Per `[Design §9]`'s own staleness-mitigation split (rarely-changing stable cont
 **What it checks:** that every file path referenced in `AGENTS.md`'s pointer/index table (§3.6 as merged, originally numbered §3.5) exists on disk at the commit being validated. Nothing else.
 
 **What it does NOT check (binding exclusions):**
+
 - Whether `AGENTS.md`'s prose (the "what is Ultimate," hierarchy, workflow, or verification-model sections) is conceptually accurate — this is explicitly out of scope, per the human's own instruction and `[Design §9]`'s own acknowledgment that conceptual freshness is not mechanically checkable.
 - Any link within any other document in the repository (this is not a general-purpose link checker, per the explicit exclusion list in §2.2).
-- Whether the pointer table itself is complete (i.e., it does not flag a *missing* pointer that should exist but doesn't) — it only flags pointers that exist but point at something that no longer does.
+- Whether the pointer table itself is complete (i.e., it does not flag a _missing_ pointer that should exist but doesn't) — it only flags pointers that exist but point at something that no longer does.
 - Markdown syntax/lint concerns beyond path extraction.
 
 **Mechanism (implementer's choice within this constraint, non-architectural):** either a small standalone script (matching this repository's existing `scripts/provenance/validate-*.mjs` convention) invoked as a new CI step, or an inline CI step using an existing, already-available tool (e.g., a markdown-link-checking utility scoped via CLI flags to exactly `AGENTS.md`) — the Implementation Plan decides which is simpler and more consistent with existing repository conventions, provided the resulting check satisfies exactly the scope stated above and no more.
@@ -275,8 +279,8 @@ None of the four items the approved design left open (`[Design §12]`) remain op
 
 The original specification constrained `AGENTS.md` to exactly 6 sections, matching `[Design §8]`'s own content list at the time the design was approved. The human's Spec Review feedback identified that "how to operate safely" (git/branching, commits, Superpowers usage, pre-work safety, restating the human-controlled model at the point of action) is a distinct concern from any of the original 6 sections' own subject matter:
 
-- §3.1 (what Ultimate is), §3.2 (source-of-truth hierarchy), §3.4 (verification model), §3.5 (pointer table), and §3.6 (protected-decision pointer) are each about a specific *kind of fact* an agent needs to know. Operating rules are not a fact-category — they are behavioral constraints, and forcing them into any one of these sections would either dilute that section's own clear, single subject (violating the same "narrow, single-purpose section" discipline the original 6 sections themselves follow) or require scattering operating-rule fragments across multiple sections, which would work against the "readable in a few minutes" goal by breaking up related material.
-- §3.3 (workflow and approval gates) is the closest existing fit by subject-matter adjacency (both concern process), and this amendment did consider folding the new content there. It was rejected because §3.3 is specifically about the *gate sequence and artifact types* — a structural, sequence-shaped statement — while the new content is a *behavioral checklist* (branching, commits, safety checks) that an agent consults at a different moment (continuously, while working) than §3.3 (at each gate transition). Merging them would make §3.3 do two distinct jobs and would obscure the "discovery ≠ authorization" rule (§3.3's own single clearest statement) inside a longer, mixed-purpose section.
+- §3.1 (what Ultimate is), §3.2 (source-of-truth hierarchy), §3.4 (verification model), §3.5 (pointer table), and §3.6 (protected-decision pointer) are each about a specific _kind of fact_ an agent needs to know. Operating rules are not a fact-category — they are behavioral constraints, and forcing them into any one of these sections would either dilute that section's own clear, single subject (violating the same "narrow, single-purpose section" discipline the original 6 sections themselves follow) or require scattering operating-rule fragments across multiple sections, which would work against the "readable in a few minutes" goal by breaking up related material.
+- §3.3 (workflow and approval gates) is the closest existing fit by subject-matter adjacency (both concern process), and this amendment did consider folding the new content there. It was rejected because §3.3 is specifically about the _gate sequence and artifact types_ — a structural, sequence-shaped statement — while the new content is a _behavioral checklist_ (branching, commits, safety checks) that an agent consults at a different moment (continuously, while working) than §3.3 (at each gate transition). Merging them would make §3.3 do two distinct jobs and would obscure the "discovery ≠ authorization" rule (§3.3's own single clearest statement) inside a longer, mixed-purpose section.
 
 A new, clearly-named 7th section (`AI Operating Rules`, §3.7) preserves each existing section's own narrow focus, keeps the new content discoverable under its own heading rather than buried inside an adjacent one, and matches the human's own suggested naming. The overall file remains compact: §3.7's own 5 subsections are each 3-6 short bullet points, consistent with the same terse, principle-not-procedure style already used throughout §3.1-§3.6 — this amendment's own estimate is that §3.7 adds proportionally to the file's length without changing the "readable in under a few minutes" target stated in §5, though the Implementation Plan/Spec Review should re-confirm this once a real draft exists, per §5's own "target, not hard limit" framing.
 

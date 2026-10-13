@@ -9,7 +9,10 @@ export interface UStepperProps {
   /** When enabled, prevents activating a step ahead of the active one. */
   linear?: boolean;
   /** Callback invoked when the active step changes. */
-  onChangeStep?: (event: { originalEvent: React.SyntheticEvent | undefined; index: number }) => void;
+  onChangeStep?: (event: {
+    originalEvent: React.SyntheticEvent | undefined;
+    index: number;
+  }) => void;
   children?: React.ReactNode;
   className?: string;
 }
@@ -41,7 +44,8 @@ export const UStepper = React.forwardRef<HTMLDivElement, UStepperProps>(function
   }, [activeStepProp]);
 
   const panels = React.Children.toArray(children).filter(
-    (child): child is React.ReactElement<UStepperPanelProps> => React.isValidElement(child) && child.type === UStepperPanel
+    (child): child is React.ReactElement<UStepperPanelProps> =>
+      React.isValidElement(child) && child.type === UStepperPanel
   );
 
   const isStepActive = (index: number) => activeStepState === index;
@@ -76,8 +80,19 @@ export const UStepper = React.forwardRef<HTMLDivElement, UStepperProps>(function
           const active = isStepActive(index);
           const disabled = isItemDisabled(index) || !!panel.props.disabled;
           return (
-            <li key={index} className={cx("header", { active, disabled })} data-u-active={active} data-u-disabled={disabled} aria-current={active ? "step" : undefined}>
-              <button type="button" className={cx("headerAction")} disabled={disabled} onClick={(event) => onHeaderClick(event, index)}>
+            <li
+              key={index}
+              className={cx("header", { active, disabled })}
+              data-u-active={active}
+              data-u-disabled={disabled}
+              aria-current={active ? "step" : undefined}
+            >
+              <button
+                type="button"
+                className={cx("headerAction")}
+                disabled={disabled}
+                onClick={(event) => onHeaderClick(event, index)}
+              >
                 <span className={cx("headerNumber")}>{index + 1}</span>
                 <span className={cx("headerTitle")}>{panel.props.header}</span>
               </button>
@@ -90,7 +105,14 @@ export const UStepper = React.forwardRef<HTMLDivElement, UStepperProps>(function
           const active = isStepActive(index);
           const content =
             typeof panel.props.children === "function"
-              ? (panel.props.children as (props: { index: number; active: boolean; prevCallback: (e: React.SyntheticEvent) => void; nextCallback: (e: React.SyntheticEvent) => void }) => React.ReactNode)({
+              ? (
+                  panel.props.children as (props: {
+                    index: number;
+                    active: boolean;
+                    prevCallback: (e: React.SyntheticEvent) => void;
+                    nextCallback: (e: React.SyntheticEvent) => void;
+                  }) => React.ReactNode
+                )({
                   index,
                   active,
                   prevCallback: (event) => prevCallback(event, index),
@@ -98,7 +120,13 @@ export const UStepper = React.forwardRef<HTMLDivElement, UStepperProps>(function
                 })
               : panel.props.children;
           return (
-            <div key={index} className={cx("panel")} role="tabpanel" data-u-hidden={!active} hidden={!active}>
+            <div
+              key={index}
+              className={cx("panel")}
+              role="tabpanel"
+              data-u-hidden={!active}
+              hidden={!active}
+            >
               {content}
             </div>
           );

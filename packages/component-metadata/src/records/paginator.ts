@@ -81,16 +81,46 @@ export const PAGINATOR_METADATA: ComponentMetadata = {
   metadataVersion: 1,
   packages: {
     ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/paginator/paginator.ts" },
-    react: { packageName: "@ultimate/react", sourcePath: "packages/react/src/paginator/paginator.tsx" },
-    vue: { packageName: "@ultimate/vue", sourcePath: "packages/vue/src/paginator/base-paginator.ts" },
+    react: {
+      packageName: "@ultimate/react",
+      sourcePath: "packages/react/src/paginator/paginator.tsx",
+    },
+    vue: {
+      packageName: "@ultimate/vue",
+      sourcePath: "packages/vue/src/paginator/base-paginator.ts",
+    },
   },
   api: {
     ng: {
       props: [
-        { name: "first", type: "number", default: "0", required: false, description: "Zero-relative index of the first record to be displayed." },
-        { name: "rows", type: "number", default: "0", required: false, description: "Number of rows to display per page." },
-        { name: "totalRecords", type: "number", default: "0", required: false, description: "Number of total records." },
-        { name: "pageLinkSize", type: "number", default: "5", required: false, description: "Number of page links to display." },
+        {
+          name: "first",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Zero-relative index of the first record to be displayed.",
+        },
+        {
+          name: "rows",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Number of rows to display per page.",
+        },
+        {
+          name: "totalRecords",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Number of total records.",
+        },
+        {
+          name: "pageLinkSize",
+          type: "number",
+          default: "5",
+          required: false,
+          description: "Number of page links to display.",
+        },
       ],
       events: [
         {
@@ -104,10 +134,31 @@ export const PAGINATOR_METADATA: ComponentMetadata = {
     },
     react: {
       props: [
-        { name: "first", type: "number", required: true, description: "Zero-relative index of the first record to be displayed." },
-        { name: "rows", type: "number", required: true, description: "Number of rows to display per page." },
-        { name: "totalRecords", type: "number", required: true, description: "Number of total records." },
-        { name: "pageLinkSize", type: "number", default: "5", required: false, description: "Number of page links to display." },
+        {
+          name: "first",
+          type: "number",
+          required: true,
+          description: "Zero-relative index of the first record to be displayed.",
+        },
+        {
+          name: "rows",
+          type: "number",
+          required: true,
+          description: "Number of rows to display per page.",
+        },
+        {
+          name: "totalRecords",
+          type: "number",
+          required: true,
+          description: "Number of total records.",
+        },
+        {
+          name: "pageLinkSize",
+          type: "number",
+          default: "5",
+          required: false,
+          description: "Number of page links to display.",
+        },
       ],
       events: [
         {
@@ -121,10 +172,34 @@ export const PAGINATOR_METADATA: ComponentMetadata = {
     },
     vue: {
       props: [
-        { name: "first", type: "Number", default: "0", required: false, description: "Zero-relative index of the first record to be displayed." },
-        { name: "rows", type: "Number", default: "0", required: false, description: "Number of rows to display per page." },
-        { name: "totalRecords", type: "Number", default: "0", required: false, description: "Number of total records." },
-        { name: "pageLinkSize", type: "Number", default: "5", required: false, description: "Number of page links to display." },
+        {
+          name: "first",
+          type: "Number",
+          default: "0",
+          required: false,
+          description: "Zero-relative index of the first record to be displayed.",
+        },
+        {
+          name: "rows",
+          type: "Number",
+          default: "0",
+          required: false,
+          description: "Number of rows to display per page.",
+        },
+        {
+          name: "totalRecords",
+          type: "Number",
+          default: "0",
+          required: false,
+          description: "Number of total records.",
+        },
+        {
+          name: "pageLinkSize",
+          type: "Number",
+          default: "5",
+          required: false,
+          description: "Number of page links to display.",
+        },
       ],
       events: [
         {
@@ -138,13 +213,15 @@ export const PAGINATOR_METADATA: ComponentMetadata = {
           semanticId: "firstChanged",
           frameworkName: "update:first",
           mechanism: "emit",
-          payloadDescription: "number — v-model companion emit for the `first` prop, enabling v-model:first two-way binding. Emitted alongside 'page' in the same changePage() call.",
+          payloadDescription:
+            "number — v-model companion emit for the `first` prop, enabling v-model:first two-way binding. Emitted alongside 'page' in the same changePage() call.",
         },
         {
           semanticId: "rowsChanged",
           frameworkName: "update:rows",
           mechanism: "emit",
-          payloadDescription: "number — v-model companion emit for the `rows` prop, enabling v-model:rows two-way binding. Emitted alongside 'page' in the same changePage() call.",
+          payloadDescription:
+            "number — v-model companion emit for the `rows` prop, enabling v-model:rows two-way binding. Emitted alongside 'page' in the same changePage() call.",
         },
       ],
     },
@@ -154,6 +231,9 @@ export const PAGINATOR_METADATA: ComponentMetadata = {
   },
   provenanceRef: {
     package: "ng",
-    ultimateDestinations: ["packages/ng/src/paginator/paginator.ts", "packages/ng/src/paginator/paginator-style.ts"],
+    ultimateDestinations: [
+      "packages/ng/src/paginator/paginator.ts",
+      "packages/ng/src/paginator/paginator-style.ts",
+    ],
   },
 };

@@ -52,22 +52,22 @@ describe("UInputText", () => {
     fixture.detectChanges();
     const directive = fixture.debugElement.children[0].injector.get(UInputText);
     expect((directive as unknown as Record<string, unknown>)["writeValue"]).toBeUndefined();
-    expect(
-      (directive as unknown as Record<string, unknown>)["registerOnChange"],
-    ).toBeUndefined();
-    expect(
-      (directive as unknown as Record<string, unknown>)["registerOnTouched"],
-    ).toBeUndefined();
-    expect(
-      (directive as unknown as Record<string, unknown>)["setDisabledState"],
-    ).toBeUndefined();
+    expect((directive as unknown as Record<string, unknown>)["registerOnChange"]).toBeUndefined();
+    expect((directive as unknown as Record<string, unknown>)["registerOnTouched"]).toBeUndefined();
+    expect((directive as unknown as Record<string, unknown>)["setDisabledState"]).toBeUndefined();
   });
 
   it("data-p is a distinct token string, not a duplicate of the class attribute", () => {
     @Component({
       standalone: true,
       imports: [UInputText],
-      template: `<input uInputText [invalid]="true" [fluid]="true" variant="filled" #ref="uInputText" />`,
+      template: `<input
+        uInputText
+        [invalid]="true"
+        [fluid]="true"
+        variant="filled"
+        #ref="uInputText"
+      />`,
     })
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
@@ -137,9 +137,9 @@ describe("UInputText", () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const input = fixture.nativeElement.querySelector("input");
-    const directive = fixture.debugElement.query((de) => de.name === "input").injector.get(
-      UInputText,
-    );
+    const directive = fixture.debugElement
+      .query((de) => de.name === "input")
+      .injector.get(UInputText);
     expect(directive.hasFluid).toBe(true);
     expect(input.classList.contains("u-inputtext-fluid")).toBe(true);
   });

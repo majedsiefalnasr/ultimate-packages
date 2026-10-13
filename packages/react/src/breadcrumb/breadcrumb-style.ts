@@ -20,7 +20,10 @@ const classes = {
   root: "u-breadcrumb u-component",
   menu: "u-breadcrumb-menu",
   home: "u-breadcrumb-home u-breadcrumb-menuitem",
-  menuitem: (params: { item?: boolean } = {}) => ["u-breadcrumb-menuitem", { "u-breadcrumb-item": !!params.item }],
+  menuitem: (params: { item?: boolean } = {}) => [
+    "u-breadcrumb-menuitem",
+    { "u-breadcrumb-item": !!params.item },
+  ],
   action: "u-breadcrumb-action",
   icon: "u-breadcrumb-icon",
   label: "u-breadcrumb-label",

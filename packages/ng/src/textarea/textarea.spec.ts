@@ -51,12 +51,8 @@ describe("UTextarea", () => {
     fixture.detectChanges();
     const directive = fixture.debugElement.children[0].injector.get(UTextarea);
     expect((directive as unknown as Record<string, unknown>)["writeValue"]).toBeUndefined();
-    expect(
-      (directive as unknown as Record<string, unknown>)["registerOnChange"],
-    ).toBeUndefined();
-    expect(
-      (directive as unknown as Record<string, unknown>)["setDisabledState"],
-    ).toBeUndefined();
+    expect((directive as unknown as Record<string, unknown>)["registerOnChange"]).toBeUndefined();
+    expect((directive as unknown as Record<string, unknown>)["setDisabledState"]).toBeUndefined();
   });
 
   it("reflects the invalid input as a p-invalid class", () => {
@@ -96,9 +92,9 @@ describe("UTextarea", () => {
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const directive = fixture.debugElement.query((de) => de.name === "textarea").injector.get(
-      UTextarea,
-    );
+    const directive = fixture.debugElement
+      .query((de) => de.name === "textarea")
+      .injector.get(UTextarea);
     expect(directive.hasFluid).toBe(true);
   });
 

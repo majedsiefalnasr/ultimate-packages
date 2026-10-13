@@ -29,38 +29,40 @@
 
 ## File Structure
 
-| File | Responsibility |
-|---|---|
-| `packages/ng-core/src/base-input/base-input.ts` | `UBaseInput`: `fluid`/`variant`/`size`/`inputSize`/`pattern`/`min`/`max`/`step`/`minlength`/`maxlength`, `$variant`, `hasFluid`. |
-| `packages/ng-core/src/base-input/base-input.spec.ts` | Tests for `UBaseInput` in isolation. |
-| `packages/ng-core/src/base-input/index.ts` | Barrel re-export. |
-| `packages/ng-core/src/base-editable-holder/base-editable-holder.ts` | Modified: add `writeControlValue` bridge, `writeValue` becomes fixed. |
-| `packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts` | New tests for the bridge itself. |
-| `packages/ng-core/src/index.ts` | Modified: add `export * from "./base-input";`. |
-| `packages/ng/src/checkbox/checkbox.ts` | Modified: remove `writeValue` override, add `writeControlValue`, wire `toggle()` to call `writeModelValue`. |
-| `packages/ng/src/checkbox/checkbox.spec.ts` | Modified: add the 5 regression-criteria tests. Existing tests untouched. |
-| `packages/uix-styles/src/inputnumber/index.ts` | New: re-exports/copy-renames real `@primeuix/styles` `inputnumber` CSS. |
-| `packages/uix-styles/package.json` | Modified: add `./inputnumber` to `exports`. |
-| `packages/ng/src/input-number/input-number.ts` | `UInputNumber` component. |
-| `packages/ng/src/input-number/input-number-style.ts` | Style module. |
-| `packages/ng/src/input-number/input-number.spec.ts` | Tests for `UInputNumber`. |
-| `packages/ng/src/input-number/index.ts` | Barrel re-export. |
-| `packages/ng/src/index.ts` | Modified: add `export * from "./input-number";` (main barrel — see Task 6's GAP-009 note). |
-| `docs/architecture/provenance/ng-core.json` | New entries for `UBaseInput` + bridge change. |
-| `docs/architecture/provenance/ng.json` | New entries for `UInputNumber`. |
-| `docs/architecture/COMPONENT_INVENTORY.md` | `BaseInput` row moves to built; `InputNumber` row moves to built. |
-| `docs/architecture/BLUEPRINT_GAPS.md` | GAP-038 marked `RESOLVED`. |
-| `docs/architecture/DECISIONS.md` | New ADR recording `UBaseInput`'s insertion, the bridge contract, `UCheckbox`'s fix. |
+| File                                                                     | Responsibility                                                                                                                   |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/ng-core/src/base-input/base-input.ts`                          | `UBaseInput`: `fluid`/`variant`/`size`/`inputSize`/`pattern`/`min`/`max`/`step`/`minlength`/`maxlength`, `$variant`, `hasFluid`. |
+| `packages/ng-core/src/base-input/base-input.spec.ts`                     | Tests for `UBaseInput` in isolation.                                                                                             |
+| `packages/ng-core/src/base-input/index.ts`                               | Barrel re-export.                                                                                                                |
+| `packages/ng-core/src/base-editable-holder/base-editable-holder.ts`      | Modified: add `writeControlValue` bridge, `writeValue` becomes fixed.                                                            |
+| `packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts` | New tests for the bridge itself.                                                                                                 |
+| `packages/ng-core/src/index.ts`                                          | Modified: add `export * from "./base-input";`.                                                                                   |
+| `packages/ng/src/checkbox/checkbox.ts`                                   | Modified: remove `writeValue` override, add `writeControlValue`, wire `toggle()` to call `writeModelValue`.                      |
+| `packages/ng/src/checkbox/checkbox.spec.ts`                              | Modified: add the 5 regression-criteria tests. Existing tests untouched.                                                         |
+| `packages/uix-styles/src/inputnumber/index.ts`                           | New: re-exports/copy-renames real `@primeuix/styles` `inputnumber` CSS.                                                          |
+| `packages/uix-styles/package.json`                                       | Modified: add `./inputnumber` to `exports`.                                                                                      |
+| `packages/ng/src/input-number/input-number.ts`                           | `UInputNumber` component.                                                                                                        |
+| `packages/ng/src/input-number/input-number-style.ts`                     | Style module.                                                                                                                    |
+| `packages/ng/src/input-number/input-number.spec.ts`                      | Tests for `UInputNumber`.                                                                                                        |
+| `packages/ng/src/input-number/index.ts`                                  | Barrel re-export.                                                                                                                |
+| `packages/ng/src/index.ts`                                               | Modified: add `export * from "./input-number";` (main barrel — see Task 6's GAP-009 note).                                       |
+| `docs/architecture/provenance/ng-core.json`                              | New entries for `UBaseInput` + bridge change.                                                                                    |
+| `docs/architecture/provenance/ng.json`                                   | New entries for `UInputNumber`.                                                                                                  |
+| `docs/architecture/COMPONENT_INVENTORY.md`                               | `BaseInput` row moves to built; `InputNumber` row moves to built.                                                                |
+| `docs/architecture/BLUEPRINT_GAPS.md`                                    | GAP-038 marked `RESOLVED`.                                                                                                       |
+| `docs/architecture/DECISIONS.md`                                         | New ADR recording `UBaseInput`'s insertion, the bridge contract, `UCheckbox`'s fix.                                              |
 
 ---
 
 ### Task 1: `writeControlValue` bridge on `UBaseEditableHolder`
 
 **Files:**
+
 - Modify: `packages/ng-core/src/base-editable-holder/base-editable-holder.ts:1-70`
 - Modify: `packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `UModelHolder`'s `writeModelValue(value: unknown): void` (existing, from GAP-018).
 - Produces: `UBaseEditableHolder.writeValue(value: unknown): void` (fixed, calls the bridge), `UBaseEditableHolder.writeControlValue(value: unknown, setModelValue: (value: unknown) => void): void` (NOOP default, overridable). Task 2 (`UCheckbox`) and Task 5 (`UInputNumber`) both override `writeControlValue`.
 
@@ -70,51 +72,51 @@
 // packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts
 // Add to the existing TestEditableComponent's describe block, after existing tests:
 
-  it("writeValue calls writeControlValue with the raw value and a bound setModelValue callback", () => {
-    const fixture = TestBed.createComponent(TestEditableComponent);
-    const instance = fixture.componentInstance;
-    let receivedValue: unknown;
-    let receivedSetter: ((value: unknown) => void) | undefined;
-    instance.writeControlValue = (value, setModelValue) => {
-      receivedValue = value;
-      receivedSetter = setModelValue;
-    };
-    instance.writeValue("test-value");
-    expect(receivedValue).toBe("test-value");
-    expect(typeof receivedSetter).toBe("function");
-    receivedSetter?.("via-setter");
-    expect(instance.modelValue()).toBe("via-setter");
-  });
+it("writeValue calls writeControlValue with the raw value and a bound setModelValue callback", () => {
+  const fixture = TestBed.createComponent(TestEditableComponent);
+  const instance = fixture.componentInstance;
+  let receivedValue: unknown;
+  let receivedSetter: ((value: unknown) => void) | undefined;
+  instance.writeControlValue = (value, setModelValue) => {
+    receivedValue = value;
+    receivedSetter = setModelValue;
+  };
+  instance.writeValue("test-value");
+  expect(receivedValue).toBe("test-value");
+  expect(typeof receivedSetter).toBe("function");
+  receivedSetter?.("via-setter");
+  expect(instance.modelValue()).toBe("via-setter");
+});
 
-  it("default writeControlValue is a NOOP — modelValue stays unpopulated unless a subclass opts in", () => {
-    const fixture = TestBed.createComponent(TestEditableComponent);
-    const instance = fixture.componentInstance;
-    expect(instance.modelValue()).toBeUndefined();
-    // TestEditableComponent overrides writeValue directly in the existing
-    // test harness — construct a second, bridge-only subclass to prove the
-    // *default* writeControlValue truly does nothing:
-  });
+it("default writeControlValue is a NOOP — modelValue stays unpopulated unless a subclass opts in", () => {
+  const fixture = TestBed.createComponent(TestEditableComponent);
+  const instance = fixture.componentInstance;
+  expect(instance.modelValue()).toBeUndefined();
+  // TestEditableComponent overrides writeValue directly in the existing
+  // test harness — construct a second, bridge-only subclass to prove the
+  // *default* writeControlValue truly does nothing:
+});
 ```
 
 The second test needs its own minimal subclass that does NOT override `writeControlValue` or `writeValue`, to prove the base's default is genuinely a NOOP. Replace the second test with:
 
 ```typescript
-  it("default writeControlValue is a NOOP — modelValue stays unpopulated unless a subclass opts in", () => {
-    @Component({
-      standalone: true,
-      selector: "u-test-bridge-noop",
-      template: "",
-      changeDetection: ChangeDetectionStrategy.OnPush,
-    })
-    class NoopBridgeComponent extends UBaseEditableHolder {
-      protected override readonly componentName = "test-bridge-noop";
-      protected override readonly styleModule = { css: "", classes: {} };
-    }
-    const fixture = TestBed.createComponent(NoopBridgeComponent);
-    const instance = fixture.componentInstance;
-    instance.writeValue("ignored");
-    expect(instance.modelValue()).toBeUndefined();
-  });
+it("default writeControlValue is a NOOP — modelValue stays unpopulated unless a subclass opts in", () => {
+  @Component({
+    standalone: true,
+    selector: "u-test-bridge-noop",
+    template: "",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+  })
+  class NoopBridgeComponent extends UBaseEditableHolder {
+    protected override readonly componentName = "test-bridge-noop";
+    protected override readonly styleModule = { css: "", classes: {} };
+  }
+  const fixture = TestBed.createComponent(NoopBridgeComponent);
+  const instance = fixture.componentInstance;
+  instance.writeValue("ignored");
+  expect(instance.modelValue()).toBeUndefined();
+});
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -232,10 +234,12 @@ git commit -m "feat(ng-core): add writeControlValue bridge to UBaseEditableHolde
 ### Task 2: Migrate `UCheckbox` to the bridge
 
 **Files:**
+
 - Modify: `packages/ng/src/checkbox/checkbox.ts:1-124`
 - Modify: `packages/ng/src/checkbox/checkbox.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseEditableHolder.writeControlValue(value, setModelValue)` (Task 1).
 - Produces: `UCheckbox` unchanged public surface (`binary`, `label`, `checked`) plus newly-working `modelValue()`/`$filled()` (inherited from `UModelHolder` via the chain, now actually populated). No later task consumes `UCheckbox` directly.
 
@@ -244,75 +248,78 @@ git commit -m "feat(ng-core): add writeControlValue bridge to UBaseEditableHolde
 Add to `packages/ng/src/checkbox/checkbox.spec.ts`, inside the existing `describe("UCheckbox", ...)` block, after the existing 6 tests (do not modify any existing test):
 
 ```typescript
-  it("modelValue synchronizes with values written through Angular Forms", () => {
-    @Component({
-      standalone: true,
-      imports: [UCheckbox, ReactiveFormsModule],
-      template: `<u-checkbox [formControl]="control" [binary]="true" />`,
-    })
-    class HostComponent {
-      control = new FormControl(false);
-    }
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox").componentInstance as UCheckbox;
+it("modelValue synchronizes with values written through Angular Forms", () => {
+  @Component({
+    standalone: true,
+    imports: [UCheckbox, ReactiveFormsModule],
+    template: `<u-checkbox [formControl]="control" [binary]="true" />`,
+  })
+  class HostComponent {
+    control = new FormControl(false);
+  }
+  const fixture = TestBed.createComponent(HostComponent);
+  fixture.detectChanges();
+  const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox")
+    .componentInstance as UCheckbox;
 
-    fixture.componentInstance.control.setValue(true);
-    fixture.detectChanges();
-    expect(checkbox.modelValue()).toBe(true);
-  });
+  fixture.componentInstance.control.setValue(true);
+  fixture.detectChanges();
+  expect(checkbox.modelValue()).toBe(true);
+});
 
-  it("$filled reflects the synchronized modelValue correctly", () => {
-    @Component({
-      standalone: true,
-      imports: [UCheckbox, ReactiveFormsModule],
-      template: `<u-checkbox [formControl]="control" [binary]="true" />`,
-    })
-    class HostComponent {
-      control = new FormControl(false);
-    }
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox").componentInstance as UCheckbox;
+it("$filled reflects the synchronized modelValue correctly", () => {
+  @Component({
+    standalone: true,
+    imports: [UCheckbox, ReactiveFormsModule],
+    template: `<u-checkbox [formControl]="control" [binary]="true" />`,
+  })
+  class HostComponent {
+    control = new FormControl(false);
+  }
+  const fixture = TestBed.createComponent(HostComponent);
+  fixture.detectChanges();
+  const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox")
+    .componentInstance as UCheckbox;
 
-    fixture.componentInstance.control.setValue(true);
-    fixture.detectChanges();
-    expect(checkbox.$filled()).toBe(true);
+  fixture.componentInstance.control.setValue(true);
+  fixture.detectChanges();
+  expect(checkbox.$filled()).toBe(true);
 
-    fixture.componentInstance.control.setValue(false);
-    fixture.detectChanges();
-    expect(checkbox.$filled()).toBe(false);
-  });
+  fixture.componentInstance.control.setValue(false);
+  fixture.detectChanges();
+  expect(checkbox.$filled()).toBe(false);
+});
 
-  it("user-driven writes (click) also populate modelValue, not just CVA-driven writes", () => {
-    const fixture = TestBed.createComponent(UCheckbox);
-    fixture.componentRef.setInput("binary", true);
-    fixture.detectChanges();
-    const input = fixture.nativeElement.querySelector('input[type="checkbox"]');
-    input.click();
-    fixture.detectChanges();
-    expect(fixture.componentInstance.modelValue()).toBe(true);
-  });
+it("user-driven writes (click) also populate modelValue, not just CVA-driven writes", () => {
+  const fixture = TestBed.createComponent(UCheckbox);
+  fixture.componentRef.setInput("binary", true);
+  fixture.detectChanges();
+  const input = fixture.nativeElement.querySelector('input[type="checkbox"]');
+  input.click();
+  fixture.detectChanges();
+  expect(fixture.componentInstance.modelValue()).toBe(true);
+});
 
-  it("writeControlValue is invoked exactly once per real CVA write — no double-write or feedback loop", () => {
-    @Component({
-      standalone: true,
-      imports: [UCheckbox, ReactiveFormsModule],
-      template: `<u-checkbox [formControl]="control" [binary]="true" />`,
-    })
-    class HostComponent {
-      control = new FormControl(false);
-    }
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox").componentInstance as UCheckbox;
-    const spy = vi.spyOn(checkbox, "writeControlValue");
+it("writeControlValue is invoked exactly once per real CVA write — no double-write or feedback loop", () => {
+  @Component({
+    standalone: true,
+    imports: [UCheckbox, ReactiveFormsModule],
+    template: `<u-checkbox [formControl]="control" [binary]="true" />`,
+  })
+  class HostComponent {
+    control = new FormControl(false);
+  }
+  const fixture = TestBed.createComponent(HostComponent);
+  fixture.detectChanges();
+  const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox")
+    .componentInstance as UCheckbox;
+  const spy = vi.spyOn(checkbox, "writeControlValue");
 
-    fixture.componentInstance.control.setValue(true);
-    fixture.detectChanges();
+  fixture.componentInstance.control.setValue(true);
+  fixture.detectChanges();
 
-    expect(spy).toHaveBeenCalledTimes(1);
-  });
+  expect(spy).toHaveBeenCalledTimes(1);
+});
 ```
 
 Add `vi` to the existing `import { describe, expect, it } from "vitest";` line, making it `import { describe, expect, it, vi } from "vitest";`.
@@ -478,12 +485,14 @@ git commit -m "fix(ng): migrate UCheckbox to writeControlValue bridge, populate 
 ### Task 3: `UBaseInput` foundation directive
 
 **Files:**
+
 - Create: `packages/ng-core/src/base-input/base-input.ts`
 - Create: `packages/ng-core/src/base-input/base-input.spec.ts`
 - Create: `packages/ng-core/src/base-input/index.ts`
 - Modify: `packages/ng-core/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseEditableHolder` (Task 1's file, unchanged surface plus the bridge) — extends it directly. `UFluid` (`packages/ng/src/fluid/fluid.ts`) — DI-injected for `hasFluid`, same pattern as `UInputText`.
 - Produces: `export abstract class UBaseInput extends UBaseEditableHolder { fluid: InputSignal<boolean|undefined>; variant: InputSignal<'filled'|'outlined'|undefined>; size: InputSignal<'large'|'small'|undefined>; inputSize: InputSignal<number|null|undefined>; pattern: InputSignal<string|null|undefined>; min: InputSignal<number|null|undefined>; max: InputSignal<number|null|undefined>; step: InputSignal<number|null|undefined>; minlength: InputSignal<number|null|undefined>; maxlength: InputSignal<number|null|undefined>; readonly $variant: Signal<'filled'|'outlined'|undefined>; get hasFluid(): boolean }`. Task 5 (`UInputNumber`) extends this.
 
@@ -498,6 +507,7 @@ Read the matched lines to understand whether `ng-core → ng` imports are alread
 - [ ] **Step 2: If `ng-core → ng` imports are prohibited, resolve via injection token (do this only if Step 1 confirms the prohibition)**
 
 If prohibited, `packages/ng-core/src/base-input/base-input.ts` cannot `import { UFluid } from "@ultimate/ng"`. Instead:
+
 1. Check whether `packages/ng/src/fluid/fluid.ts`'s `UFluid` component could itself provide a plain `InjectionToken<boolean>` (e.g. `FLUID_ANCESTOR`) that `UBaseInput` injects instead of the class token — this keeps `ng-core` dependency-free of `ng` while preserving the ancestor-detection mechanism. This is a real architectural decision, not pre-solved here — if Step 1 confirms the prohibition, STOP and escalate to the controller with the validator's exact output before choosing an approach; do not invent a workaround unilaterally.
 
 - [ ] **Step 3: (Assuming Step 1 confirms `ng-core → ng` imports ARE permitted, or Step 2's escalation resolved a path forward) Write the failing test for `UBaseInput`'s basic inputs**
@@ -617,25 +627,27 @@ Expected: PASS (2 tests).
 Only proceed with this step once Step 1/2's boundary-direction question is resolved. Assuming `ng-core → ng` imports are permitted (or Step 2's escalation resolved an injection-token path — adjust the test/import accordingly), add to `base-input.spec.ts`:
 
 ```typescript
-  it("hasFluid is true when an ancestor UFluid is present, even without the fluid input", () => {
-    // Import UFluid per whichever path Step 1/2 established.
-    @Component({
-      standalone: true,
-      imports: [TestBaseInputComponent, UFluid],
-      template: `<u-fluid><u-test-base-input /></u-fluid>`,
-    })
-    class HostComponent {}
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    const instance = fixture.debugElement.query((de) => de.name === "u-test-base-input").componentInstance;
-    expect(instance.hasFluid).toBe(true);
-  });
+it("hasFluid is true when an ancestor UFluid is present, even without the fluid input", () => {
+  // Import UFluid per whichever path Step 1/2 established.
+  @Component({
+    standalone: true,
+    imports: [TestBaseInputComponent, UFluid],
+    template: `<u-fluid><u-test-base-input /></u-fluid>`,
+  })
+  class HostComponent {}
+  const fixture = TestBed.createComponent(HostComponent);
+  fixture.detectChanges();
+  const instance = fixture.debugElement.query(
+    (de) => de.name === "u-test-base-input"
+  ).componentInstance;
+  expect(instance.hasFluid).toBe(true);
+});
 
-  it("hasFluid is false with no ancestor UFluid and no fluid input", () => {
-    const fixture = TestBed.createComponent(TestBaseInputComponent);
-    fixture.detectChanges();
-    expect(fixture.componentInstance.hasFluid).toBe(false);
-  });
+it("hasFluid is false with no ancestor UFluid and no fluid input", () => {
+  const fixture = TestBed.createComponent(TestBaseInputComponent);
+  fixture.detectChanges();
+  expect(fixture.componentInstance.hasFluid).toBe(false);
+});
 ```
 
 - [ ] **Step 8: Run tests to verify they fail**
@@ -697,18 +709,21 @@ git commit -m "feat(ng-core): add UBaseInput foundation directive"
 ### Task 4: `@ultimate/uix-styles/inputnumber` subpath
 
 **Files:**
+
 - Create: `packages/uix-styles/src/inputnumber/index.ts`
 - Create: `packages/uix-styles/test/inputnumber.test.ts`
 - Modify: `packages/uix-styles/package.json`
 - Modify: `packages/uix-styles/test/scope-guard.test.ts`
 
 **Interfaces:**
+
 - Consumes: real pinned PrimeUIX `inputnumber` CSS (extracted from `.vendor-cache/@primeuix__styles-2.0.3.tar.gz` via `scripts/provenance/extract-source.mjs`, matching the exact same process used for `inputtext` in the prior GAP-018 workstream — that workstream's Task 3 shipped a real CSS-fidelity bug initially, caught only by direct comparison against extracted real source; this task must extract and read the real source FIRST, not hand-author or paraphrase from memory).
 - Produces: `export const style: string` — a plain CSS string. Task 6 imports this.
 
 - [ ] **Step 1: Extract real pinned source before writing anything**
 
 Run:
+
 ```bash
 mkdir -p /tmp/task4-research
 node scripts/provenance/extract-source.mjs .vendor-cache/@primeuix__styles-2.0.3.tar.gz /tmp/task4-research/extracted
@@ -776,18 +791,21 @@ git commit -m "feat(uix-styles): add inputnumber subpath"
 ### Task 5: `UInputNumber` component
 
 **Files:**
+
 - Create: `packages/ng/src/input-number/input-number.ts`
 - Create: `packages/ng/src/input-number/input-number-style.ts`
 - Create: `packages/ng/src/input-number/index.ts`
 - Create: `packages/ng/src/input-number/input-number.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseInput` (Task 3, `@ultimate/ng-core`), `@ultimate/uix-styles/inputnumber`'s `style` export (Task 4).
 - Produces: `export class UInputNumber extends UBaseInput { value: number | null; writeControlValue(value: unknown, setModelValue: (value: unknown) => void): void }`, selector `u-input-number`. Real PrimeNG's `InputNumber` (confirmed by direct extraction this session: `packages/primeng/src/inputnumber/inputnumber.ts`) is a `@Component` with selector `p-inputNumber, p-inputnumber, p-input-number` — NOT an attribute directive like `UInputText`. `UInputNumber` follows the same `@Component` shape, selector `u-input-number`, matching `u-checkbox`'s existing single-selector convention (Ultimate components use one selector, not real PrimeNG's multi-alias `p-x, p-X, p-x-y` pattern — confirmed by `UCheckbox`'s own `selector: "u-checkbox"` versus real `Checkbox`'s `'p-checkbox, p-checkBox, p-check-box'`).
 
 - [ ] **Step 1: Extract and read real `InputNumber` source's core value-handling before writing anything**
 
 Run:
+
 ```bash
 mkdir -p /tmp/task5-research
 node scripts/provenance/extract-primeng-source.mjs .vendor-cache/primeng-21.1.9.tar.gz "inputnumber" /tmp/task5-research/inputnumber
@@ -903,6 +921,7 @@ Expected: FAIL — module doesn't exist.
 - [ ] **Step 5: Write `UInputNumber`**
 
 Base the shape on Step 1's real-source findings and `UBaseInput`'s inherited surface. Core requirements, regardless of exact template shape:
+
 - `extends UBaseInput`.
 - Own `value: number | null` field (or equivalent local numeric state) — the template-bound source of truth, matching real `InputNumber`'s own `this.value` field and `UCheckbox`'s established own-local-state-plus-bridge pattern (Task 2).
 - `providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UInputNumber, multi: true }]` — real `InputNumber` DOES implement its own CVA accessor (confirmed: `INPUTNUMBER_VALUE_ACCESSOR`), unlike `UInputText`. This is a genuine, confirmed real-source difference between the two components, not an inconsistency to resolve.
@@ -941,12 +960,14 @@ git commit -m "feat(ng): add UInputNumber component"
 ### Task 6: `UInputNumber` — template-driven forms, additional regression coverage, and packaging
 
 **Files:**
+
 - Modify: `packages/ng/src/input-number/input-number.spec.ts`
 - Modify: `packages/ng/src/index.ts`
 - Possibly create: `packages/ng/input-number/ng-package.json` (see GAP-009 note below — only if the boundary check passes)
 - Possibly modify: `packages/ng/package.json` (see GAP-009 note below — only if the boundary check passes)
 
 **Interfaces:**
+
 - Consumes: `UInputNumber` (Task 5).
 - Produces: nothing new — packaging and additional test coverage only.
 
@@ -957,25 +978,24 @@ git commit -m "feat(ng): add UInputNumber component"
 Add to `packages/ng/src/input-number/input-number.spec.ts`:
 
 ```typescript
-  it("integrates with template-driven forms — ngModel value flows in and populates modelValue", async () => {
-    const { FormsModule } = await import("@angular/forms");
-    @Component({
-      standalone: true,
-      imports: [UInputNumber, FormsModule],
-      template: `<u-input-number [(ngModel)]="value" />`,
-    })
-    class TemplateHostComponent {
-      value: number | null = 5;
-    }
-    const fixture = TestBed.createComponent(TemplateHostComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    const inputNumber = fixture.debugElement.query((de) => de.name === "u-input-number")
-      .componentInstance as UInputNumber;
-    expect(inputNumber.modelValue()).toBe(5);
-  });
+it("integrates with template-driven forms — ngModel value flows in and populates modelValue", async () => {
+  const { FormsModule } = await import("@angular/forms");
+  @Component({
+    standalone: true,
+    imports: [UInputNumber, FormsModule],
+    template: `<u-input-number [(ngModel)]="value" />`,
+  })
+  class TemplateHostComponent {
+    value: number | null = 5;
+  }
+  const fixture = TestBed.createComponent(TemplateHostComponent);
+  fixture.detectChanges();
+  await fixture.whenStable();
+  const inputNumber = fixture.debugElement.query((de) => de.name === "u-input-number")
+    .componentInstance as UInputNumber;
+  expect(inputNumber.modelValue()).toBe(5);
+});
 ```
-
 
 - [ ] **Step 2: Run test to verify it passes**
 
@@ -1025,10 +1045,12 @@ git commit -m "feat(ng): ship UInputNumber (main barrel or secondary entry point
 ### Task 7: Provenance manifests
 
 **Files:**
+
 - Modify: `docs/architecture/provenance/ng-core.json`
 - Modify: `docs/architecture/provenance/ng.json`
 
 **Interfaces:**
+
 - Consumes: nothing — documentation-only task.
 - Produces: nothing consumed by later tasks.
 
@@ -1085,11 +1107,13 @@ git commit -m "docs(provenance): record UBaseInput, writeControlValue bridge, an
 ### Task 8: `COMPONENT_INVENTORY.md`, `BLUEPRINT_GAPS.md`, and a new ADR
 
 **Files:**
+
 - Modify: `docs/architecture/COMPONENT_INVENTORY.md`
 - Modify: `docs/architecture/BLUEPRINT_GAPS.md`
 - Modify: `docs/architecture/DECISIONS.md`
 
 **Interfaces:**
+
 - Consumes: nothing — documentation-only, final task in this plan.
 - Produces: nothing consumed by later tasks.
 

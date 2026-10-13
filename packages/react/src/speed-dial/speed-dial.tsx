@@ -3,7 +3,8 @@ import { useComponentBase } from "@ultimate/react-core";
 import { speedDialStyleModule } from "./speed-dial-style";
 import type { UMenuItem } from "../menu";
 
-export type USpeedDialDirection = "up" | "down" | "left" | "right" | "up-left" | "up-right" | "down-left" | "down-right";
+export type USpeedDialDirection =
+  "up" | "down" | "left" | "right" | "up-left" | "up-right" | "down-left" | "down-right";
 export type USpeedDialType = "linear" | "circle" | "semi-circle" | "quarter-circle";
 
 export interface USpeedDialProps {
@@ -80,7 +81,10 @@ export const USpeedDial = React.forwardRef<USpeedDialHandle, USpeedDialProps>(fu
   },
   ref
 ) {
-  const { cx } = useComponentBase({ componentName: "speed-dial", styleModule: speedDialStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "speed-dial",
+    styleModule: speedDialStyleModule,
+  });
   const [visible, setVisible] = React.useState(false);
   const listRef = React.useRef<HTMLUListElement>(null);
 
@@ -211,10 +215,22 @@ export const USpeedDial = React.forwardRef<USpeedDialHandle, USpeedDialProps>(fu
   };
 
   const listFlexDirection =
-    direction === "up" ? "column-reverse" : direction === "down" ? "column" : direction === "left" ? "row-reverse" : direction === "right" ? "row" : undefined;
+    direction === "up"
+      ? "column-reverse"
+      : direction === "down"
+        ? "column"
+        : direction === "left"
+          ? "row-reverse"
+          : direction === "right"
+            ? "row"
+            : undefined;
 
   const onButtonClick = (event: React.MouseEvent) => {
-    visible ? hide() : show();
+    if (visible) {
+      hide();
+    } else {
+      show();
+    }
     onClick?.(event);
   };
 
@@ -245,7 +261,12 @@ export const USpeedDial = React.forwardRef<USpeedDialHandle, USpeedDialProps>(fu
           onKeyDown={onListKeyDown}
         >
           {model.map((item, index) => (
-            <li key={item.label ?? index} className={cx("item", { hidden: item.visible === false })} role="none" style={getItemStyle(index)}>
+            <li
+              key={item.label ?? index}
+              className={cx("item", { hidden: item.visible === false })}
+              role="none"
+              style={getItemStyle(index)}
+            >
               <button
                 type="button"
                 className={cx("pcAction")}
@@ -255,7 +276,9 @@ export const USpeedDial = React.forwardRef<USpeedDialHandle, USpeedDialProps>(fu
                 tabIndex={item.disabled || !visible ? -1 : 0}
                 onClick={(event) => onItemClick(event, item)}
               >
-                {item.icon && <span className={[cx("actionIcon"), item.icon].filter(Boolean).join(" ")} />}
+                {item.icon && (
+                  <span className={[cx("actionIcon"), item.icon].filter(Boolean).join(" ")} />
+                )}
               </button>
             </li>
           ))}

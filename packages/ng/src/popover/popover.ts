@@ -94,7 +94,11 @@ export class UPopover extends UBaseComponent {
 
   /** Toggles the overlay open/closed, positioning it against `target` (or the click event's own target). */
   toggle(event: Event, target?: HTMLElement): void {
-    this.visible() ? this.hide() : this.show(event, target);
+    if (this.visible()) {
+      this.hide();
+    } else {
+      this.show(event, target);
+    }
   }
 
   /** Shows the overlay, positioned against `target` (or the click event's own current/target element). */
@@ -131,6 +135,7 @@ export class UPopover extends UBaseComponent {
   }
 
   protected onContentClick(_event: MouseEvent): void {
+    void _event;
     this.selfClick = true;
   }
 

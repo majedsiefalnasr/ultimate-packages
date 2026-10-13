@@ -47,7 +47,10 @@ describe("UPopover", () => {
     fixture.componentInstance.op.onShow.subscribe(() => (shown = true));
     fixture.componentInstance.op.onHide.subscribe(() => (hidden = true));
 
-    fixture.componentInstance.op.show(new MouseEvent("click"), fixture.nativeElement.querySelector("button"));
+    fixture.componentInstance.op.show(
+      new MouseEvent("click"),
+      fixture.nativeElement.querySelector("button")
+    );
     fixture.detectChanges();
     expect(shown).toBe(true);
 

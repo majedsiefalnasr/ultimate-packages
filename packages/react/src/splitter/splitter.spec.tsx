@@ -29,18 +29,14 @@ describe("USplitter", () => {
   });
 
   it("distributes initial panel sizes evenly", () => {
-    const { container } = render(
-      <USplitter panels={[{ content: "A" }, { content: "B" }]} />
-    );
+    const { container } = render(<USplitter panels={[{ content: "A" }, { content: "B" }]} />);
     const panels = container.querySelectorAll<HTMLElement>(".u-splitter-panel");
     expect(panels[0].style.flexBasis).toContain("50%");
     expect(panels[1].style.flexBasis).toContain("50%");
   });
 
   it("resizes panels on a mousedown/mousemove/mouseup drag sequence", () => {
-    const { container } = render(
-      <USplitter panels={[{ content: "A" }, { content: "B" }]} />
-    );
+    const { container } = render(<USplitter panels={[{ content: "A" }, { content: "B" }]} />);
     const root = container.querySelector(".u-splitter") as HTMLElement;
     mockOffset(root, 400);
     const gutter = container.querySelector(".u-splitter-gutter") as HTMLElement;

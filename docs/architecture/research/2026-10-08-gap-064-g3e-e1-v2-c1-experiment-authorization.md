@@ -9,11 +9,11 @@
 Sources: [approved remediation Spec](../../superpowers/specs/2026-10-08-gap-064-g3e-e1-v2-remediation-design.md), [approved Plan](../../superpowers/plans/2026-10-08-gap-064-g3e-e1-v2-remediation.md), [corrected Stage 2 evidence](2026-10-08-gap-064-g3e-e1-v2-stage2-corrected-investigation.md), [typography/P1 ruling](2026-10-08-gap-064-g3e-e1-v2-typography-p1-ruling.md), and [blocked P2 assessment](2026-10-08-gap-064-g3e-e1-v2-p2-design.md). P1 selects C1 only. P2 remains blocked because an exact safe production delta is not established.
 
 | Existing canonical top/y (CSS px) | PrimeNG | Ultimate |
-| --- | ---: | ---: |
-| Root | 19 | 19 |
-| First image | 16 | 16 |
-| Second/right image | 16 | 19 |
-| Slider | 18 | 18 |
+| --------------------------------- | ------: | -------: |
+| Root                              |      19 |       19 |
+| First image                       |      16 |       16 |
+| Second/right image                |      16 |       19 |
+| Slider                            |      18 |       18 |
 
 Prime's second/right blue image is directly positioned at root−3. Ultimate's retained absolute span is at root+0 and its image at span+0. Hypothesis: allowing vertical static placement of that same absolute span, while explicitly retaining a containing-block-relative height, can align its image/clipping origin with Prime without disturbing the other geometry. The span remains the clip/sizing carrier and the image remains its child. This is not proof that the proposed declarations will produce that result.
 
@@ -37,13 +37,13 @@ This permits no repository edit, generator execution, production stylesheet repl
 
 ## 3. Exact case scope and proposed observation budget
 
-| Case | Existing Ultimate story | Existing state/action |
-| --- | --- | --- |
+| Case                      | Existing Ultimate story    | Existing state/action               |
+| ------------------------- | -------------------------- | ----------------------------------- |
 | `imagecompare/root-style` | `ng-imagecompare--default` | Primary inline-root case; no action |
-| `imagecompare/default` | `ng-imagecompare--sized` | Sized initial 50% |
-| `imagecompare/slide` | `ng-imagecompare--sized` | Existing slide-to-25% action |
-| `imagecompare/focus` | `ng-imagecompare--sized` | Existing focus action |
-| `imagecompare/rtl` | `ng-imagecompare--rtl` | Existing RTL case |
+| `imagecompare/default`    | `ng-imagecompare--sized`   | Sized initial 50%                   |
+| `imagecompare/slide`      | `ng-imagecompare--sized`   | Existing slide-to-25% action        |
+| `imagecompare/focus`      | `ng-imagecompare--sized`   | Existing focus action               |
+| `imagecompare/rtl`        | `ng-imagecompare--rtl`     | Existing RTL case                   |
 
 Recommend **one C1 mutation, one experimental run, zero retries**, one worker and no repeat. One invocation contains the five cases, each with one unchanged Prime observation and one Ultimate page observed before and after the same mutation. The before/after pair is explicitly part of this proposed budget, not a second attempt. No alternate mutation, value sweep, reload-to-confirm or second campaign is included. Stop at the first failure/ambiguity; mark later cases not observed.
 

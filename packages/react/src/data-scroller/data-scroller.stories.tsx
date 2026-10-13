@@ -15,7 +15,11 @@ export const Default: Story = {
   args: {
     value: items,
     rows: 5,
-    itemTemplate: (item) => <div key={item as string} style={{ padding: "0.5rem" }}>{item as string}</div>,
+    itemTemplate: (item) => (
+      <div key={item as string} style={{ padding: "0.5rem" }}>
+        {item as string}
+      </div>
+    ),
   },
 };
 
@@ -25,6 +29,10 @@ export const Inline: Story = {
     rows: 5,
     inline: true,
     scrollHeight: "250px",
-    itemTemplate: (item) => <div key={item as string} style={{ padding: "0.5rem" }}>{item as string}</div>,
+    itemTemplate: (item) => (
+      <div key={item as string} style={{ padding: "0.5rem" }}>
+        {item as string}
+      </div>
+    ),
   },
 };

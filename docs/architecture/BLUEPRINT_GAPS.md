@@ -22,19 +22,19 @@
 
 Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/plans/*` and actual package contents.
 
-| Phase | Name | Blueprint status | Repo-verified status |
-|---|---|---|---|
-| 0 | Baseline/Provenance/Repository | Complete | Confirmed — `docs/architecture/{PROVENANCE,DEPENDENCIES,COMPATIBILITY,checksums.json}` all populated with commit SHAs/tarball hashes for PrimeNG/PrimeVue/PrimeReact/4×`@primeuix/*`. |
-| 1 | UltimateUIX Foundation | Complete | Confirmed — `uix-utils`, `uix-styled`, `uix-styles` (base module only, ADR-017), `uix-motion` all have `package.json`, `src/`, tests, provenance JSON. |
-| 2 | UltimateNG | Complete | Confirmed — `ng-core` + `ng` build; proof set expanded from the original 5 components to 8 (Button/Checkbox/Dialog/Menu/Tooltip/Paginator/Scroller/Table). GAP-003 (style-injection no-op) resolved (commit `680876f`). GAP-006 (Tooltip `aria-describedby`, commit `7f814ae`), GAP-007 (Angular Escape-priority stacking, commit `cfdd4cb`), GAP-009/GAP-023 (per-component secondary entry points, commit `62575fb`), and GAP-010 (provenance spec reconciliation, commit `f6ee470`) are all now resolved by the Blueprint Completion workstream (2026-09-13) — see their own entries below. |
-| 3 | UltimateReact | Complete | Confirmed — `react-core` + `react`, full 8-component proof set, per-component subpath exports present (`ng` has 70 secondary entry points since GAP-070, 2026-10-01). |
-| 4 | UltimateVue | Complete | Confirmed — `vue-core` + `vue`, full 8-component proof set + `v-ripple`/`v-tooltip` directives, Options-API `extends` mixin architecture (ADR-032). |
-| 5 | Themes | Complete, with a footnoted exception | Confirmed — `packages/themes` (Aura preset, 8-component proof set). Footnote in `ROADMAP.md` itself: React components use hand-written static CSS, not `dt()` token calls — cross-framework theme consistency is proven at the `react-core` registration layer only, not through a real React component's CSS. GAP-003a (the contradiction this created against ADR-023) is now moot, since GAP-003 itself is resolved. |
-| 6 | Component Metadata | Complete | Confirmed — `@ultimate/component-schema` (versioned `ComponentMetadata` schema) and `@ultimate/component-metadata` (8 real, source-verified records) both have substantial real `src/`. GAP-027 (this document's own §4) already correctly marks this resolved; this row was simply never updated to match. |
-| 7 | CLI | Complete, with explicit follow-ups | Confirmed — `@ultimate/cli` ships 5 real commands (`init`/`add`/`theme`/`doctor`/`generate`) + an `ai` stub; `create`/`migrate`/`update` explicitly deferred per spec scope. See `ROADMAP.md` footnote 3 and GAP-028 below. |
-| 8 | MCP | Complete, with explicit follow-ups | Confirmed — `@ultimate/mcp` ships 5 real tools over stdio transport, boundary-enforced. HTTP transport/resources/prompts explicitly deferred. See `ROADMAP.md` footnote 4 and GAP-029 below. |
-| 9 | AI Skills / LLM Context | Complete | **Corrected — this table previously read "Not started," which was already stale by the time Phase 9 actually landed.** `packages/ai/src/` contains 7 real files exporting real generation/validation functions; `skills/` at repo root has real per-component Skill files for all 8 proof-set components plus `AGENT_CONVENTIONS.md`. `packages/ai/context/{llms,llms-full,llms-ng,llms-react,llms-vue}.txt` now exist as real, committed generated output (GAP-036, resolved by the Blueprint Completion workstream, 2026-09-13); `tooling/` remains empty (cosmetic). See GAP-030. |
-| 10 | Production Hardening | Complete, with explicit follow-ups | **Corrected — this table previously read "Not started."** All 5 Phase 10 tracks (A–E) are merged into `main`. `SECURITY.md`/`CHANGELOG.md` exist (Track D); visual-regression/a11y-scanning tooling is real and CI-enforced (Track A); dependency/license/SAST scanning and bundle-size/coverage regression gates are real and CI-enforced (Track B); a real release pipeline exists but has never executed a real release (Track C, disclosed); SSR/hydration verification is real (Track E, GAP-034). See `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §2 for the full per-track evidence. |
+| Phase | Name                           | Blueprint status                     | Repo-verified status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----- | ------------------------------ | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0     | Baseline/Provenance/Repository | Complete                             | Confirmed — `docs/architecture/{PROVENANCE,DEPENDENCIES,COMPATIBILITY,checksums.json}` all populated with commit SHAs/tarball hashes for PrimeNG/PrimeVue/PrimeReact/4×`@primeuix/*`.                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| 1     | UltimateUIX Foundation         | Complete                             | Confirmed — `uix-utils`, `uix-styled`, `uix-styles` (base module only, ADR-017), `uix-motion` all have `package.json`, `src/`, tests, provenance JSON.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| 2     | UltimateNG                     | Complete                             | Confirmed — `ng-core` + `ng` build; proof set expanded from the original 5 components to 8 (Button/Checkbox/Dialog/Menu/Tooltip/Paginator/Scroller/Table). GAP-003 (style-injection no-op) resolved (commit `680876f`). GAP-006 (Tooltip `aria-describedby`, commit `7f814ae`), GAP-007 (Angular Escape-priority stacking, commit `cfdd4cb`), GAP-009/GAP-023 (per-component secondary entry points, commit `62575fb`), and GAP-010 (provenance spec reconciliation, commit `f6ee470`) are all now resolved by the Blueprint Completion workstream (2026-09-13) — see their own entries below.                                          |
+| 3     | UltimateReact                  | Complete                             | Confirmed — `react-core` + `react`, full 8-component proof set, per-component subpath exports present (`ng` has 70 secondary entry points since GAP-070, 2026-10-01).                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| 4     | UltimateVue                    | Complete                             | Confirmed — `vue-core` + `vue`, full 8-component proof set + `v-ripple`/`v-tooltip` directives, Options-API `extends` mixin architecture (ADR-032).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 5     | Themes                         | Complete, with a footnoted exception | Confirmed — `packages/themes` (Aura preset, 8-component proof set). Footnote in `ROADMAP.md` itself: React components use hand-written static CSS, not `dt()` token calls — cross-framework theme consistency is proven at the `react-core` registration layer only, not through a real React component's CSS. GAP-003a (the contradiction this created against ADR-023) is now moot, since GAP-003 itself is resolved.                                                                                                                                                                                                                 |
+| 6     | Component Metadata             | Complete                             | Confirmed — `@ultimate/component-schema` (versioned `ComponentMetadata` schema) and `@ultimate/component-metadata` (8 real, source-verified records) both have substantial real `src/`. GAP-027 (this document's own §4) already correctly marks this resolved; this row was simply never updated to match.                                                                                                                                                                                                                                                                                                                             |
+| 7     | CLI                            | Complete, with explicit follow-ups   | Confirmed — `@ultimate/cli` ships 5 real commands (`init`/`add`/`theme`/`doctor`/`generate`) + an `ai` stub; `create`/`migrate`/`update` explicitly deferred per spec scope. See `ROADMAP.md` footnote 3 and GAP-028 below.                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 8     | MCP                            | Complete, with explicit follow-ups   | Confirmed — `@ultimate/mcp` ships 5 real tools over stdio transport, boundary-enforced. HTTP transport/resources/prompts explicitly deferred. See `ROADMAP.md` footnote 4 and GAP-029 below.                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| 9     | AI Skills / LLM Context        | Complete                             | **Corrected — this table previously read "Not started," which was already stale by the time Phase 9 actually landed.** `packages/ai/src/` contains 7 real files exporting real generation/validation functions; `skills/` at repo root has real per-component Skill files for all 8 proof-set components plus `AGENT_CONVENTIONS.md`. `packages/ai/context/{llms,llms-full,llms-ng,llms-react,llms-vue}.txt` now exist as real, committed generated output (GAP-036, resolved by the Blueprint Completion workstream, 2026-09-13); `tooling/` remains empty (cosmetic). See GAP-030.                                                    |
+| 10    | Production Hardening           | Complete, with explicit follow-ups   | **Corrected — this table previously read "Not started."** All 5 Phase 10 tracks (A–E) are merged into `main`. `SECURITY.md`/`CHANGELOG.md` exist (Track D); visual-regression/a11y-scanning tooling is real and CI-enforced (Track A); dependency/license/SAST scanning and bundle-size/coverage regression gates are real and CI-enforced (Track B); a real release pipeline exists but has never executed a real release (Track C, disclosed); SSR/hydration verification is real (Track E, GAP-034). See `docs/architecture/research/2026-09-12-post-phase-10-blueprint-reconciliation-audit.md` §2 for the full per-track evidence. |
 
 `packages/uix` (the umbrella package named in Blueprint §4's proposed repo shape) also contains only `.gitkeep` — it was never populated; its candidate responsibilities ended up distributed across `uix-utils`/`uix-styled`/`uix-styles`/`uix-motion`/`uix-data` instead. This is a repository-shape deviation from the Blueprint's literal proposed layout, not a missing capability (see GAP-001).
 
@@ -45,12 +45,13 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Foundation / architecture
 
 #### GAP-001 — `packages/uix` umbrella package was never populated; UIX responsibilities live in five sibling packages instead
+
 - **Status:** DOCUMENTATION-GAP
 - **Type:** Architecture, Packaging, Documentation
 - **Blocking level:** LOW
 - **Current evidence:** `packages/uix/` contains only `.DS_Store` and `.gitkeep`. Blueprint §4's proposed repo shape lists a single `uix/` package; the actual implementation split shared infrastructure into `uix-utils`, `uix-styled`, `uix-styles`, `uix-motion`, and (post-Phase-5) `uix-data` — five packages, no single `uix` package exists or is referenced as a dependency by anything.
 - **Expected state:** Either populate `packages/uix` with something (e.g. a re-export barrel), or formally record in `DECISIONS.md`/`PACKAGE_ARCHITECTURE.md` that the umbrella package is superseded by the `uix-*` family and remove/repurpose the empty directory.
-- **Why it matters:** Blueprint §4 explicitly says package names/shape are "provisional... until Phase 0 validates package boundaries" — Phase 0 did validate a different shape than the literal text describes, but no ADR records this specific deviation (ADR-016/017 cover *how* uix-styles/motion were vendored, not *why* there is no `uix` package).
+- **Why it matters:** Blueprint §4 explicitly says package names/shape are "provisional... until Phase 0 validates package boundaries" — Phase 0 did validate a different shape than the literal text describes, but no ADR records this specific deviation (ADR-016/017 cover _how_ uix-styles/motion were vendored, not _why_ there is no `uix` package).
 - **What it blocks:** Nothing functionally — cosmetic/documentation only.
 - **Dependencies:** None.
 - **Framework scope:** N/A (framework-neutral tooling concern).
@@ -60,10 +61,11 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — clerical.
 
 #### GAP-002 — `README.md` states "Phase 0" while five phases are complete
+
 - **Status:** DOCUMENTATION-GAP
 - **Type:** Documentation
 - **Blocking level:** LOW
-- **Current evidence:** Root `README.md` "Status" section reads: *"Phase 0 — Repository Foundation, Provenance & Baseline Verification. No component source has been migrated yet."* `docs/architecture/ROADMAP.md` shows Phases 0–5 complete, with 5 real components shipped in 3 frameworks plus a theme layer.
+- **Current evidence:** Root `README.md` "Status" section reads: _"Phase 0 — Repository Foundation, Provenance & Baseline Verification. No component source has been migrated yet."_ `docs/architecture/ROADMAP.md` shows Phases 0–5 complete, with 5 real components shipped in 3 frameworks plus a theme layer.
 - **Expected state:** README status section reflects current roadmap state (or simply points to `ROADMAP.md` as the single source of truth and drops the inline status entirely, to avoid drift again).
 - **Why it matters:** First-touch document for any new contributor/agent; actively misleading about platform maturity.
 - **What it blocks:** Nothing functionally; onboarding accuracy only.
@@ -75,6 +77,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-003 — `packages/uix-styled`'s `StyleSheet.createStyleElement` no-op means Angular never injects a real `<style>` element
+
 - **Status:** RESOLVED
 - **Type:** Foundation, Styling, Framework (Angular)
 - **Blocking level:** HIGH (at the time this was open)
@@ -90,6 +93,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-003a — Apparent contradiction: ADR-023/029 say Angular style injection is a no-op, but `ROADMAP.md` footnote says Angular's theme path is proven end-to-end
+
 - **Status:** RESOLVED (moot)
 - **Type:** Documentation, Architecture
 - **Blocking level:** N/A
@@ -105,6 +109,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-004 — No visual regression / Storybook / screenshot tooling anywhere in the repository
+
 - **Status:** RESOLVED
 - **Type:** Testing, CI, Production
 - **Blocking level:** HIGH (at the time this was open)
@@ -120,6 +125,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — DECISION-A (Open Architectural Decisions §5) is resolved by this implementation; see that entry.
 
 #### GAP-005 — No automated accessibility scanning (axe-core or equivalent) anywhere
+
 - **Status:** RESOLVED
 - **Type:** Accessibility, Testing, CI
 - **Blocking level:** HIGH (at the time this was open)
@@ -135,6 +141,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-006 — `UTooltip` (Angular) has `role="tooltip"` but no `aria-describedby` wiring
+
 - **Status:** RESOLVED
 - **Type:** Accessibility, Component, Framework (Angular)
 - **Blocking level:** LOW (at the time this was open)
@@ -150,6 +157,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-007 — Angular `UDialog` overlay has a single z-index bucket — no working multi-dialog stacking order
+
 - **Status:** RESOLVED
 - **Type:** Accessibility, Overlay/Interaction, Component, Framework (Angular)
 - **Blocking level:** MEDIUM (at the time this was open)
@@ -183,10 +191,11 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — this was a behavioral bug, not a fork.
 
 #### GAP-008 — No real consumer application anywhere in the monorepo (`apps/*` are all empty scaffolding)
+
 - **Status:** MISSING
 - **Type:** Testing, Packaging, Production
 - **Blocking level:** HIGH
-- **Current evidence:** `apps/docs`, `apps/playground-angular`, `apps/playground-react`, `apps/playground-vue`, `apps/showcase` each contain only `.gitkeep`. `PERFORMANCE.md` states directly: *"No app in this monorepo consumes `@ultimate/ng`/`@ultimate/ng-core` via normal node_modules resolution yet."* ADR-023 records the same for Angular specifically as an accepted, deferred Phase 2 exit-criteria gap.
+- **Current evidence:** `apps/docs`, `apps/playground-angular`, `apps/playground-react`, `apps/playground-vue`, `apps/showcase` each contain only `.gitkeep`. `PERFORMANCE.md` states directly: _"No app in this monorepo consumes `@ultimate/ng`/`@ultimate/ng-core` via normal node_modules resolution yet."_ ADR-023 records the same for Angular specifically as an accepted, deferred Phase 2 exit-criteria gap.
 - **Expected state:** Blueprint §35 Phase 2 exit criteria: "package consumers can use UltimateNG without installing PrimeNG" — necessary condition (no runtime PrimeNG dependency) is CI-enforced; sufficient condition (a real app actually consuming the package) is not met for any of the three frameworks.
 - **Why it matters:** This is the single biggest reason several other measurements in this document are asterisked. A real consumer app is the only way to get genuine tree-shaking numbers (Angular's `ng-packagr` partial-Ivy output has no `@__PURE__` annotations — only the Angular linker inside a real app build adds those; GAP-009), genuine bundle-size numbers, genuine SSR/hydration behavior, and genuine runtime style-injection verification (GAP-003/GAP-003a).
 - **What it blocks:** GAP-009 (tree-shaking measurement), real bundle-size/performance benchmarking (Blueprint §31), SSR/hydration verification (Blueprint §28's "Build/Package" testing tier), and any credible claim that "Phase 2/3/4 exit criteria" are fully met rather than partially deferred.
@@ -198,10 +207,11 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** Resolved for the SSR/hydration slice only — see ADR-045. GAP-008's fuller consumer-app scope (tree-shaking re-measurement, bundle-size benchmarking, a real demo experience) remains open backlog, not addressed by Phase 10 Track E.
 
 #### GAP-009 — Angular tree-shaking verified broken; `ng` ships a single barrel instead of the originally-planned 9 secondary entry points
+
 - **Status:** RESOLVED
 - **Type:** Packaging, Framework (Angular), Testing
 - **Blocking level:** MEDIUM (at the time this was open)
-- **Current evidence:** `packages/ng` now ships 8 real `ng-packagr` secondary entry points (`checkbox`, `paginator`, `scroller`, `tooltip`, `autofocus`, `badge`, `fluid`, `ripple` — every component directory confirmed to have zero cross-component source imports), each with its own `ng-package.json`/`lib.entryFile`, matching React's/Vue's per-component `exports` pattern. `button`, `dialog`, `menu`, and `table` are **not** split into secondary entry points: attempting all 12 surfaced a reproducible `ng-packagr@21.2.7`/`@angular/compiler-cli@21.2.22` crash (Angular's internal `ShimReferenceTagger` destructuring `undefined`) whenever one secondary entry point's source imports a file that is itself another secondary entry point's root, which is true for these 4 composites (`button`→`ripple`; `dialog`→`button`; `menu`→`ripple`,`tooltip`; `table`→`paginator`,`scroller`) — confirmed via isolated minimal repro, order-independent, not resolved by changing the import specifier, no newer 21.x patch available. `packages/ng/package.json` now declares a real `exports` map with a subpath per shipped component. `scripts/provenance/verify-tree-shaking.mjs`'s re-run result is documented in `docs/architecture/PERFORMANCE.md`'s tree-shaking section: still FAIL — but that script only ever exercises the *primary* `@ultimate/ng` barrel import (`UButton`), which is unaffected by this task since `button` is one of the 4 excluded composites; this gap is resolved for the 8 shipped components regardless, since the resolution criterion is the presence of real, working secondary entry points and a real `exports` map, not this specific script's unrelated `/* @__PURE__ */`-annotation limitation (Task 17's original finding, requires GAP-008's still-open real-consumer-app scope to fully resolve). **A 5th trigger pairing was confirmed during the Angular Form Foundation workstream:** `input-text`→`fluid` — `UInputText`'s mandated ancestor-`UFluid` DI-lookup (`inject(UFluid, { optional: true, host: true, skipSelf: true })`, matching real PrimeNG's own `Button`/`InputText` ancestor-`Fluid`-detection pattern) requires `packages/ng/src/input-text/input-text.ts` to import `UFluid` from `../fluid/fluid`, which is itself another secondary entry point's root — the same defect shape as the original 4 pairs, reproduced without any new investigation needed since the trigger condition was already fully characterized. `input-text` accordingly ships via the main `@ultimate/ng` barrel only (no `input-text` secondary entry point in `packages/ng/package.json`'s `exports` map), matching the resolution already applied to `button`/`dialog`/`menu`/`table`. **Refinement confirmed by a genuine counterexample (Angular Form Foundation workstream, GAP-038 closure):** `UInputNumber` also has ancestor-`UFluid` detection — inherited via `UBaseInput`'s `hasFluid` — yet `packages/ng/src/input-number/input-number.ts` itself never imports `UFluid`'s class at all, and `input-number` shipped as a real secondary entry point (`packages/ng/input-number/ng-package.json`, `./input-number` in `packages/ng/package.json`'s `exports` map) with zero `ShimReferenceTagger` crash. This is because `UBaseInput` (in `ng-core`) resolves the ancestor `<u-fluid>` wrapper via a marker `InjectionToken`, `U_FLUID_ANCESTOR` (`packages/ng-core/src/base-input/fluid-ancestor.token.ts`), which `UFluid` provides on itself — not via a direct DI-injection of `UFluid`'s class the way `UInputText` does. This refines the trigger condition first characterized by the original 4 pairs and the `input-text`→`fluid` 5th pair above: **the defect is triggered specifically by one secondary entry point's own compilation unit directly importing another secondary entry point's root class**, not by inherited ancestor-detection *behavior* in general. A component needing ancestor-`UFluid` detection can still ship as its own secondary entry point, provided the detection is routed through `UBaseInput`'s token-based indirection rather than a direct `UFluid` import — exactly the choice that let `input-number` succeed where `input-text` did not.
+- **Current evidence:** `packages/ng` now ships 8 real `ng-packagr` secondary entry points (`checkbox`, `paginator`, `scroller`, `tooltip`, `autofocus`, `badge`, `fluid`, `ripple` — every component directory confirmed to have zero cross-component source imports), each with its own `ng-package.json`/`lib.entryFile`, matching React's/Vue's per-component `exports` pattern. `button`, `dialog`, `menu`, and `table` are **not** split into secondary entry points: attempting all 12 surfaced a reproducible `ng-packagr@21.2.7`/`@angular/compiler-cli@21.2.22` crash (Angular's internal `ShimReferenceTagger` destructuring `undefined`) whenever one secondary entry point's source imports a file that is itself another secondary entry point's root, which is true for these 4 composites (`button`→`ripple`; `dialog`→`button`; `menu`→`ripple`,`tooltip`; `table`→`paginator`,`scroller`) — confirmed via isolated minimal repro, order-independent, not resolved by changing the import specifier, no newer 21.x patch available. `packages/ng/package.json` now declares a real `exports` map with a subpath per shipped component. `scripts/provenance/verify-tree-shaking.mjs`'s re-run result is documented in `docs/architecture/PERFORMANCE.md`'s tree-shaking section: still FAIL — but that script only ever exercises the _primary_ `@ultimate/ng` barrel import (`UButton`), which is unaffected by this task since `button` is one of the 4 excluded composites; this gap is resolved for the 8 shipped components regardless, since the resolution criterion is the presence of real, working secondary entry points and a real `exports` map, not this specific script's unrelated `/* @__PURE__ */`-annotation limitation (Task 17's original finding, requires GAP-008's still-open real-consumer-app scope to fully resolve). **A 5th trigger pairing was confirmed during the Angular Form Foundation workstream:** `input-text`→`fluid` — `UInputText`'s mandated ancestor-`UFluid` DI-lookup (`inject(UFluid, { optional: true, host: true, skipSelf: true })`, matching real PrimeNG's own `Button`/`InputText` ancestor-`Fluid`-detection pattern) requires `packages/ng/src/input-text/input-text.ts` to import `UFluid` from `../fluid/fluid`, which is itself another secondary entry point's root — the same defect shape as the original 4 pairs, reproduced without any new investigation needed since the trigger condition was already fully characterized. `input-text` accordingly ships via the main `@ultimate/ng` barrel only (no `input-text` secondary entry point in `packages/ng/package.json`'s `exports` map), matching the resolution already applied to `button`/`dialog`/`menu`/`table`. **Refinement confirmed by a genuine counterexample (Angular Form Foundation workstream, GAP-038 closure):** `UInputNumber` also has ancestor-`UFluid` detection — inherited via `UBaseInput`'s `hasFluid` — yet `packages/ng/src/input-number/input-number.ts` itself never imports `UFluid`'s class at all, and `input-number` shipped as a real secondary entry point (`packages/ng/input-number/ng-package.json`, `./input-number` in `packages/ng/package.json`'s `exports` map) with zero `ShimReferenceTagger` crash. This is because `UBaseInput` (in `ng-core`) resolves the ancestor `<u-fluid>` wrapper via a marker `InjectionToken`, `U_FLUID_ANCESTOR` (`packages/ng-core/src/base-input/fluid-ancestor.token.ts`), which `UFluid` provides on itself — not via a direct DI-injection of `UFluid`'s class the way `UInputText` does. This refines the trigger condition first characterized by the original 4 pairs and the `input-text`→`fluid` 5th pair above: **the defect is triggered specifically by one secondary entry point's own compilation unit directly importing another secondary entry point's root class**, not by inherited ancestor-detection _behavior_ in general. A component needing ancestor-`UFluid` detection can still ship as its own secondary entry point, provided the detection is routed through `UBaseInput`'s token-based indirection rather than a direct `UFluid` import — exactly the choice that let `input-number` succeed where `input-text` did not.
 - **Expected state:** Either Angular ships secondary entry points matching React/Vue's per-component export pattern, or the spec is formally amended. **Partially met** — 8 of the original 12 components ship secondary entry points; `button`/`dialog`/`menu`/`table` are permanently excluded due to an upstream `ng-packagr` defect with no available fix, and this exclusion is itself the closure (there is no further action pending — the spec was amended to match reality). `input-text` (added later, by the Angular Form Foundation workstream) hits the identical defect and is excluded on the same basis — see the 5th trigger pairing above. `input-number` (added by the same workstream's GAP-038 closure) does **not** hit the defect and ships as a genuine 9th secondary entry point — see the refinement note above.
 - **Why it matters:** Historical — Angular is no longer the outlier among the three frameworks on this specific packaging capability, for the components where the underlying tooling permits it.
 - **What it blocks:** Nothing — resolved (as amended).
@@ -213,6 +223,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-010 — Provenance manifest schema names `sha256OfOriginal` as required; neither `ng.json` nor `ng-core.json` has it
+
 - **Status:** RESOLVED
 - **Type:** Provenance, CI
 - **Blocking level:** LOW (at the time this was open)
@@ -228,6 +239,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-011 — No `SECURITY.md`, `CONTRIBUTING.md`, or `CHANGELOG.md` anywhere in the repository
+
 - **Status:** PARTIALLY RESOLVED
   - _Rationale:_ SECURITY.md and CHANGELOG.md now exist (Track D, R1/R2), resolving that portion of the gap. Blueprint §21's Changesets-driven release-automation expectation remains genuinely open — Track C's scope, not resolved by Track D. CONTRIBUTING.md is explicitly excluded per DECISION-D4 (not a Blueprint requirement); this is a settled, closed decision, not outstanding work.
 - **Type:** Documentation, Production
@@ -244,10 +256,11 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-012 — `CODEOWNERS` is a stub with zero actual ownership assignments
+
 - **Status:** DEFERRED (explicitly, by its own comment)
 - **Type:** Developer Experience, Production
 - **Blocking level:** LOW
-- **Current evidence:** File content is entirely commented-out example text: *"Phase 0: no packages or team ownership assignments exist yet. This stub is populated once package ownership is decided."*
+- **Current evidence:** File content is entirely commented-out example text: _"Phase 0: no packages or team ownership assignments exist yet. This stub is populated once package ownership is decided."_
 - **Expected state:** Real ownership entries once team structure is decided (explicitly out of this document's scope to decide).
 - **Why it matters:** Low urgency pre-team-formation; recorded for completeness per Production Hardening's operational-documentation requirement.
 - **What it blocks:** Nothing currently blocking; relevant once multiple maintainers exist.
@@ -261,11 +274,12 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Data foundation (post-`uix-data`)
 
 #### GAP-013 — Hierarchical (Tree-family) shared identity/selection/expansion contract does not exist and is evidence-blocked
+
 - **Status:** ARCHITECTURAL-GAP (deliberately unresolved, not overlooked)
 - **Type:** Data, Architecture, Component
 - **Blocking level:** HIGH
 - **Current evidence:** ADR-043, directly: hierarchical identity/selection/expansion "was verified structurally incompatible across frameworks — PrimeNG mutates `TreeNode` object references in place, while PrimeReact and PrimeVue both use external `{[key]: boolean}` key-maps — and is explicitly excluded from any shared contract, remaining framework-native unless future evidence establishes genuine shared semantics."
-- **Expected state:** No shared contract is expected until/unless real per-framework Tree implementation work surfaces new evidence. This is a *correctly deferred* gap, not a bug.
+- **Expected state:** No shared contract is expected until/unless real per-framework Tree implementation work surfaces new evidence. This is a _correctly deferred_ gap, not a bug.
 - **Why it matters:** Tree, TreeTable, TreeSelect, and OrganizationChart (4 components, COMPONENT_INVENTORY.md Data table) were recorded as depending on this decision. Since ADR-054 (2026-10-11) they are implementation-eligible as framework-native components without it.
 - **What it blocks:** Only a shared cross-framework hierarchical contract. Until 2026-10-11 this line read "Tree, TreeTable, TreeSelect, OrganizationChart implementation start"; ADR-054 records that framework-native implementation does not depend on this gap.
 - **Dependencies:** None upstream; no component implementation depends on it (ADR-054).
@@ -277,6 +291,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** Yes, but explicitly NOT NOW — tracked in Open Architectural Decisions §6 as a "do not open until X" entry.
 
 #### GAP-014 — Filter `operator`/`constraints`/multi-constraint model deferred, no `Table` implementation yet to justify it
+
 - **Status:** RESOLVED
 - **Type:** Data, Architecture
 - **Blocking level:** MEDIUM
@@ -292,6 +307,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — resolved by Table implementation plan Tasks 5/13/19; see Open Architectural Decisions §6.
 
 #### GAP-015 — Sort-toggle/removable-sort cycling not in shared `uix-data` (framework-divergent, confirmed)
+
 - **Status:** RESOLVED (as "intentionally excluded")
 - **Type:** Data
 - **Blocking level:** LOW
@@ -307,10 +323,11 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-016 — `uix-data` package name is explicitly provisional ("Package name is provisional")
+
 - **Status:** DOCUMENTATION-GAP
 - **Type:** Packaging, Documentation
 - **Blocking level:** LOW
-- **Current evidence:** `packages/uix-data/README.md`: *"Status: unstable (pre-1.0). No semver guarantee yet. Package name is provisional."* Same provisional-naming caveat Blueprint §34 applies to every package name.
+- **Current evidence:** `packages/uix-data/README.md`: _"Status: unstable (pre-1.0). No semver guarantee yet. Package name is provisional."_ Same provisional-naming caveat Blueprint §34 applies to every package name.
 - **Expected state:** Final name decided before first stable public release (Blueprint §34).
 - **Why it matters:** Low urgency now; becomes relevant once any framework component package starts depending on `uix-data` for a real Table/data component (would need a rename coordinated across all consumers).
 - **What it blocks:** Nothing yet — `uix-data` currently has zero consumers (verified: no `package.json` in `ng`/`react`/`vue`/`ng-core`/`react-core`/`vue-core` lists `@ultimate/uix-data` as a dependency).
@@ -324,6 +341,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Component coverage gaps
 
 #### GAP-017 — 101 of 117 PrimeNG source areas remain unincorporated (Angular); React/Vue inventories not independently produced
+
 - **Status:** MISSING (expected — explicitly scoped, not a defect)
 - **Type:** Component, Framework
 - **Blocking level:** HIGH (as a body of remaining work, not as a blocker of anything else)
@@ -339,6 +357,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No for most families; yes for Data components (GAP-013/GAP-014) and Chart/Visualization (GAP-019). **Update (2026-10-11):** both decisions now exist: ADR-054 (Tree family implementation-eligible as framework-native components) and ADR-055 (external runtime dependency policy, covering Chart and Editor).
 
 #### GAP-018 — `BaseModelHolder`/`BaseInput` foundation tier not yet built for Angular; blocks ~20 native-input form components
+
 - **Status:** RESOLVED (for the `BaseModelHolder`-equivalent slice specifically; the `BaseInput`-equivalent remainder tracked separately as GAP-038 is now also RESOLVED — see that entry)
 - **Type:** Foundation, Component, Framework (Angular)
 - **Blocking level:** N/A (resolved for its most valuable slice)
@@ -354,10 +373,11 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-019 — Chart/Visualization family requires an unresolved external-dependency decision (Chart.js)
+
 - **Status:** ARCHITECTURAL-GAP
 - **Type:** Component, Architecture, Licensing
 - **Blocking level:** MEDIUM
-- **Current evidence:** COMPONENT_INVENTORY.md: Chart is `NEEDS ARCHITECTURE DECISION`, Risk `High`, reason given directly: *"depends on approving an external charting dependency; blocked by ADR-004's no-required-runtime-dependency posture until Chart.js is evaluated as an explicit, approved peer dependency."*
+- **Current evidence:** COMPONENT_INVENTORY.md: Chart is `NEEDS ARCHITECTURE DECISION`, Risk `High`, reason given directly: _"depends on approving an external charting dependency; blocked by ADR-004's no-required-runtime-dependency posture until Chart.js is evaluated as an explicit, approved peer dependency."_
 - **Expected state:** A decision on whether Chart.js (or an alternative) becomes an approved peer dependency, following the same evaluation rigor Phase 0 applied to Prime baselines.
 - **Why it matters:** ADR-004 (no Prime runtime dependency) is about Prime specifically, not all external dependencies — but no equivalent "external dependency approval" process is documented for non-Prime libraries like Chart.js.
 - **What it blocks:** Chart component family only (1 component in the inventory, but likely represents a broader unaddressed question: what is Ultimate's general policy for approving non-Prime runtime dependencies?).
@@ -370,6 +390,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Decision (user, 2026-10-11, ADR-055):** DECISION-B is decided as policy (a) with integration model I-1: `chart.js` `^4.5` is approved as an optional peer dependency, loaded lazily by Chart, subject to the policy checks (production audit, install-script review, recorded bundle cost) being recorded and enforced; until then no package may declare it (`DEPENDENCIES.md`, "Approved optional runtime dependencies"). Chart still needs its own Spec and Plan. The framework-scope question above is answered by the pinned sources: PrimeReact 10.9.9 and PrimeVue 4.5.5 both ship a Chart that loads Chart.js lazily ([K-8 research](research/2026-10-11-k8-decision-b-external-dependency-policy-research.md) F-1). The Status line is unchanged by this note.
 
 #### GAP-020 — `Editor` component wraps Quill (external dependency), same unresolved-approval pattern as Chart
+
 - **Status:** ARCHITECTURAL-GAP
 - **Type:** Component, Architecture, Licensing
 - **Blocking level:** LOW
@@ -386,6 +407,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Decision (user, 2026-10-11, ADR-055):** resolved together with GAP-019 as recommended: `quill` `^2.0.3` is approved as an optional peer dependency, loaded lazily by Editor, subject to the same recorded and enforced policy checks; until then no package may declare it. Editor still needs its own Spec and Plan. The pinned sources confirm PrimeReact 10.9.9 and PrimeVue 4.5.5 both ship an Editor that loads Quill lazily ([K-8 research](research/2026-10-11-k8-decision-b-external-dependency-policy-research.md) F-1). The Status line is unchanged by this note.
 
 #### GAP-021 — `config` full surface (global `PrimeNGConfig`-equivalent) and `passthrough` (`pt`/`ptm`/`ptmo` system) both explicitly deferred, cross-framework
+
 - **Status:** DEFERRED (deliberately, per YAGNI)
 - **Type:** Architecture, Foundation
 - **Blocking level:** MEDIUM
@@ -404,6 +426,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Cross-cutting: Overlay/Interaction
 
 #### GAP-022 — No shared overlay-orchestration abstraction; each framework wires Overlay+FocusTrap+Motion directly per-component
+
 - **Status:** RESOLVED (as "intentionally not built," per YAGNI)
 - **Type:** Architecture, Overlay/Interaction
 - **Blocking level:** LOW
@@ -421,6 +444,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Framework parity
 
 #### GAP-023 — Angular has no per-component subpath exports (React and Vue do)
+
 - **Status:** RESOLVED
 - **Type:** Packaging, Framework
 - **Blocking level:** MEDIUM (at the time this was open)
@@ -436,12 +460,13 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-024 — Framework-native divergences are real and intentional, not gaps — recorded so they are not "fixed" for false parity
+
 - **Status:** RESOLVED (documented as intentional divergence)
 - **Type:** Framework
 - **Blocking level:** LOW
 - **Current evidence:** Multiple ADRs record deliberate, evidence-based framework divergence: ADR-025 (React FocusTrap uses sentinel-span, not Angular's keydown interception), ADR-027 (React Menu uses `aria-activedescendant` virtual focus; Angular's `UMenu` uses literal DOM focus movement — both verified as matching their own framework's real Prime reference), ADR-030 vs. ADR-040 (React's `UDialog` excludes draggable/resizable/maximizable entirely per spec; Vue's real PrimeVue reference has draggable+maximizable but never had resizable at all — Vue's `UDialog` excludes draggable/maximizable "to keep scope identical across all three frameworks," a scope decision, not a source-fidelity gap), ADR-034 (Vue's FocusTrap/Tooltip/Ripple are native Vue directives, matching PrimeVue's own directive-shaped source — not components, unlike React's component-shaped equivalents).
 - **Expected state:** No forced parity. This is the correct application of Blueprint §9's "Do not force identical APIs where framework conventions make that harmful."
-- **Why it matters:** Recorded explicitly so a future "framework parity audit" does not treat these as bugs to fix — each is independently verified against real per-framework Prime source and is the *correct* framework-native behavior.
+- **Why it matters:** Recorded explicitly so a future "framework parity audit" does not treat these as bugs to fix — each is independently verified against real per-framework Prime source and is the _correct_ framework-native behavior.
 - **What it blocks:** Nothing — recorded for future-agent context only.
 - **Dependencies:** None.
 - **Framework scope:** All three, by design divergent from each other in specific, evidenced ways.
@@ -451,6 +476,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — already resolved, multiple times, with evidence.
 
 #### GAP-025 — `UCheckbox` capability genuinely differs across frameworks (Vue richest, React narrowest) — not an inconsistency to fix
+
 - **Status:** RESOLVED (documented as intentional, evidence-based divergence)
 - **Type:** Framework, Component
 - **Blocking level:** LOW
@@ -466,6 +492,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-026 — `@primevue/forms` is a real, verified, working upstream feature with zero Ultimate provenance record — deliberately unevaluated
+
 - **Status:** DEFERRED
 - **Type:** Architecture, Provenance, Framework (Vue)
 - **Blocking level:** LOW
@@ -483,6 +510,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Metadata / CLI / MCP / AI (Phases 6-9)
 
 #### GAP-027 — Component metadata schema and metadata do not exist (Phase 6)
+
 - **Status:** RESOLVED
 - **Type:** Documentation, Component, AI
 - **Blocking level:** BLOCKER
@@ -498,13 +526,14 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** Not primarily — Blueprint §17/§18 already specify the intent fairly concretely; the remaining decisions are schema-detail-level, not fork-level, and thus out of scope for this document's Open Architectural Decisions section.
 
 #### GAP-028 — CLI does not exist (Phase 7)
+
 - **Status:** RESOLVED
 - **Type:** CLI, Developer Experience
 - **Blocking level:** HIGH
 - **Current evidence:** `packages/cli` contains only `.gitkeep`. `ROADMAP.md`: "Not started."
 - **Expected state:** Blueprint §19/§20/ADR-008 — orchestrator only, never replaces Angular CLI/Vite; needs a compatibility resolver (§20) reading a machine-readable compatibility manifest.
 - **Why it matters:** Directly named in Blueprint §40's Definition of Done ("CLI quality").
-- **What it blocks:** Nothing else is blocked *by* the CLI's absence per the dependency-direction diagram (§6) — CLI is a consumer of platform knowledge, not a producer other packages depend on. Its absence blocks only the CLI's own deliverable and any Skills/AI setup flows that assume `ultimate ai` exists (§19).
+- **What it blocks:** Nothing else is blocked _by_ the CLI's absence per the dependency-direction diagram (§6) — CLI is a consumer of platform knowledge, not a producer other packages depend on. Its absence blocks only the CLI's own deliverable and any Skills/AI setup flows that assume `ultimate ai` exists (§19).
 - **Dependencies:** Benefits from, but does not strictly require, GAP-027 (metadata) — could start with a minimal orchestration/scaffolding surface (framework detection, package install, theme config) before metadata exists, then add metadata-aware features (`ultimate doctor`/`ultimate ai`) once GAP-027 resolves.
 - **Framework scope:** Cross-framework by design (adapters per framework, §19).
 - **Existing reusable infrastructure:** `docs/architecture/COMPATIBILITY.md`'s existing baseline/peer-range table is a partial seed for the compatibility manifest §20 calls for, though it currently covers Prime baselines, not Ultimate's own package/framework/theme/metadata/CLI/MCP/AI version matrix (§20's actual scope).
@@ -513,6 +542,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — Blueprint is fairly directive here (§19's non-goals are explicit: never replace framework build tools).
 
 #### GAP-029 — MCP server does not exist (Phase 8)
+
 - **Status:** RESOLVED
 - **Type:** MCP, AI
 - **Blocking level:** HIGH
@@ -528,6 +558,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — Blueprint §23 is directive; the real prerequisite is GAP-027, not a fork.
 
 #### GAP-030 — AI Skills package, LLM context generation, and agent-instruction conventions do not exist (Phase 9)
+
 - **Status:** RESOLVED
 - **Type:** AI, Documentation
 - **Blocking level:** MEDIUM (at the time this was open)
@@ -545,6 +576,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 ### Production readiness (Phase 10)
 
 #### GAP-031 — No dependency/license/SAST scanning wired into CI
+
 - **Status:** RESOLVED as wiring. The scans are wired, and the license scan passes. From the first remote CI run (2026-10-04) until GAP-095's remediation, the dependency scan failed on real advisories; it passes from `bde9bbb` (CI run 37607802835, GAP-095 RESOLVED 2026-10-07). The SAST handoff now passes against real CodeQL output on GAP-090's PR run 38300808881; the overall CI run still failed on other required checks, with no exception granted. "CI-enforced" means the step remains a failing gate if its condition regresses, not that all CI is green.
 - **Type:** CI, Production, Licensing
 - **Blocking level:** HIGH (at the time this was open)
@@ -560,6 +592,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-032 — No bundle-size monitoring / size-limit tooling in CI (distinct from the one-time `PERFORMANCE.md` snapshot)
+
 - **Status:** RESOLVED
 - **Type:** CI, Production, Packaging
 - **Blocking level:** MEDIUM (at the time this was open)
@@ -575,6 +608,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-033 — Test suites run, but no coverage threshold is enforced anywhere in CI
+
 - **Status:** RESOLVED as wiring; **not green in CI** (corrected 2026-10-07, CI-health registration). The gate runs and exits 1 on every `main` push since the first remote CI run (2026-10-04). React and Vue fail because the coverage scope counts Storybook stories while the baselines predate them (GAP-091).
 - **Type:** CI, Testing
 - **Blocking level:** MEDIUM (at the time this was open)
@@ -590,6 +624,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No.
 
 #### GAP-034 — No SSR/hydration verification anywhere (Angular has an `isPlatformBrowser()` guard; no test proves SSR actually works end-to-end)
+
 - **Status:** RESOLVED (SSR/hydration verification specifically; does not close GAP-008's fuller scope)
 - **Type:** Testing, Framework, Production
 - **Blocking level:** MEDIUM
@@ -605,6 +640,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — already resolved, per ADR-045.
 
 #### GAP-035 — No browser-compatibility testing (real-browser or cross-browser) — all tests run under jsdom/Vitest/TestBed
+
 - **Status:** RESOLVED
 - **Type:** Testing, Production
 - **Blocking level:** LOW (at the time this was open)
@@ -620,6 +656,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — resolved alongside GAP-004/DECISION-A.
 
 #### GAP-036 (added during Documentation Reconciliation, resolved during Blueprint Completion) — `llms.txt`/`llms-full.txt` generation tooling exists and is tested, but no generated output artifact has ever been produced or committed
+
 - **Status:** RESOLVED
 - **Type:** AI, Documentation
 - **Blocking level:** LOW
@@ -631,6 +668,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Source/evidence:** `packages/ai/context/*.txt`; `packages/ai/package.json`; `packages/ai/test/packaging.test.ts`; commit `10435ca`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 5.
 
 #### GAP-037 (new, added during Documentation Reconciliation) — `PERFORMANCE.md` has no dedicated narrative section for Phase 3 (React), Phase 4 (Vue), or Phase 5 (Themes)
+
 - **Status:** DOCUMENTATION-GAP
 - **Type:** Documentation, Performance
 - **Blocking level:** LOW
@@ -646,6 +684,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Architectural decision required:** No — ordinary documentation backfill.
 
 #### GAP-038 (added during Angular Form Foundation workstream) — `BaseInput` foundation tier (richer `fluid`/`variant`/`size`/`pattern`/etc.) not yet built for Angular; blocks `InputMask`/`Password`/`AutoComplete`/`DatePicker`/`InputNumber`/`Select`
+
 - **Status:** RESOLVED (for the `UBaseInput` tier itself and its first real consumer, `UInputNumber`; `Password`/`InputMask`/`AutoComplete`/`DatePicker`/`Select` remain unmigrated and are not part of this resolution)
 - **Type:** Foundation, Component, Framework (Angular)
 - **Blocking level:** N/A (resolved)
@@ -665,7 +704,7 @@ Source: `docs/architecture/ROADMAP.md`, cross-checked against `docs/superpowers/
 - **Status:** DEFERRED
 - **Type:** Component, Framework, Architecture
 - **Blocking level:** MEDIUM
-- **Current evidence:** `docs/superpowers/plans/2026-09-02-paginator-component-implementation.md` Task 15 (line 1577 onward) reads: *"Status: BLOCKED pending an Ultimate Select-equivalent component."* Its Step 0 gate instructs re-running `find packages/ng/src packages/react/src packages/vue/src -maxdepth 1 -type d` before ever starting the task. Re-running that exact command confirms no `select`/`dropdown`-named (or otherwise equivalent) component directory exists at one directory depth under any of the three frameworks' `src/` trees — the only top-level component directories present are `tooltip`, `checkbox`, `ripple`, `dialog`, `button`, `table`, `menu`, `scroller`, `paginator` (Vue/React), plus `input-text`, `autofocus`, `input-number`, `fluid`, `badge` (Angular). This is independently consistent with `docs/architecture/research/2026-09-16-phase-a-prime-migration-inventory.md` §3/§4's confirmation that no Select component exists in any of the three frameworks.
+- **Current evidence:** `docs/superpowers/plans/2026-09-02-paginator-component-implementation.md` Task 15 (line 1577 onward) reads: _"Status: BLOCKED pending an Ultimate Select-equivalent component."_ Its Step 0 gate instructs re-running `find packages/ng/src packages/react/src packages/vue/src -maxdepth 1 -type d` before ever starting the task. Re-running that exact command confirms no `select`/`dropdown`-named (or otherwise equivalent) component directory exists at one directory depth under any of the three frameworks' `src/` trees — the only top-level component directories present are `tooltip`, `checkbox`, `ripple`, `dialog`, `button`, `table`, `menu`, `scroller`, `paginator` (Vue/React), plus `input-text`, `autofocus`, `input-number`, `fluid`, `badge` (Angular). This is independently consistent with `docs/architecture/research/2026-09-16-phase-a-prime-migration-inventory.md` §3/§4's confirmation that no Select component exists in any of the three frameworks.
 - **Expected state:** Once a real Ultimate Select/Dropdown-equivalent component ships in all three frameworks, Task 15 can be planned concretely (a follow-up plan section wiring the rows-per-page dropdown to `rowsPerPageOptions` per spec §10) and implemented. Until then, no action is expected — this is a deliberately gated, not invented, deferral.
 - **Why it matters:** Paginator's rows-per-page and jump-to-page controls are the one piece of the component's public API surface (spec §10/§21 criterion 6) that cannot be built without a dependency that doesn't exist yet; recording it here prevents a future agent from treating the gap as an oversight rather than an explicit, evidence-based gate.
 - **What it blocks:** Paginator's rows-per-page/jump-to-page dropdown UI specifically — **not** Paginator's already-shipped core functionality. First/prev/next/last navigation, page-links, and the current-page report (Tasks 1-14 of the same plan) are already complete, tested, and usable as a full paging control without rows-per-page/jump-to-page; this gate does not block shipping the rest of Paginator or starting other components' own plans.
@@ -849,7 +888,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Expected state:** One conditional ARIA attribute (`aria-live`) on the autoplay content wrapper, matching real Prime.
 - **Why it matters:** Autoplay content changes are otherwise not announced to assistive technology.
 - **What it blocks:** Nothing further downstream.
-- **Dependencies:** **Independent from GAP-050** — same omission *pattern*, no shared mechanism, per the Batch 5 triage's explicit non-merge decision.
+- **Dependencies:** **Independent from GAP-050** — same omission _pattern_, no shared mechanism, per the Batch 5 triage's explicit non-merge decision.
 - **Framework scope:** Angular, React, Vue.
 - **Existing reusable infrastructure:** None needed — a single conditional attribute addition.
 - **Recommended resolution direction:** Directional only — add the conditional `aria-live` attribute; no Spec needed.
@@ -897,7 +936,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Expected state:** Roving-focus keyboard navigation for all four components, in all three frameworks.
 - **Why it matters:** This is the largest single Navigation-family gap in the audit by component count; comments claiming this "matches `UMenu`'s own reduction pattern" understate the gap — `UMenu` itself retains basic Arrow navigation, while these four retain none.
 - **What it blocks:** Nothing further downstream.
-- **Dependencies:** None. **Independent from GAP-055** (Dock keyboard navigation) — same omission *pattern* only, different component, no shared mechanism.
+- **Dependencies:** None. **Independent from GAP-055** (Dock keyboard navigation) — same omission _pattern_ only, different component, no shared mechanism.
 - **Framework scope:** Angular, React, Vue.
 - **Existing reusable infrastructure:** None directly reusable — this requires new keyboard-handling logic for each of the four components, though the four may share one implementation approach given the systemic nature of the finding.
 - **Recommended resolution direction:** Directional only — one plan covering all four components' keyboard-navigation addition, given the shared root pattern; may still require framework-specific task breakdown within that one plan.
@@ -913,7 +952,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Expected state:** Roving-focus keyboard navigation between Dock action items, matching real Prime.
 - **Why it matters:** Dock is otherwise entirely mouse-dependent, a real accessibility gap.
 - **What it blocks:** Nothing further downstream.
-- **Dependencies:** **Independent from GAP-054** — different component, same omission *pattern* only.
+- **Dependencies:** **Independent from GAP-054** — different component, same omission _pattern_ only.
 - **Framework scope:** Angular, React, Vue.
 - **Existing reusable infrastructure:** The same roving-focus keyboard-handler shape used elsewhere in this registry's Navigation-family gaps.
 - **Recommended resolution direction:** Directional only — add keyboard navigation, following the same roving-focus shape as GAP-052/GAP-056.
@@ -1005,7 +1044,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Status:** RESOLVED (2026-10-01, Form/Accessibility Plan — `36eab26`; related follow-ups GAP-074, GAP-076)
 - **Type:** Component, Accessibility, Framework (Vue)
 - **Blocking level:** LOW
-- **Current evidence:** Genuinely PrimeVue-specific richness (`aria-haspopup`, `aria-expanded`, `aria-controls`, two `aria-live` regions) — independently confirmed absent from PrimeNG/PrimeReact too, confirmed during Batch 6 triage, so Angular/React correctly match their own baselines by *not* having it.
+- **Current evidence:** Genuinely PrimeVue-specific richness (`aria-haspopup`, `aria-expanded`, `aria-controls`, two `aria-live` regions) — independently confirmed absent from PrimeNG/PrimeReact too, confirmed during Batch 6 triage, so Angular/React correctly match their own baselines by _not_ having it.
 - **Expected state:** Vue's Password gains the disclosure-pattern ARIA real PrimeVue 4.5.5 uses (`Password.vue:13-15,44-45,57-58`): on the **input**, `aria-haspopup` (= `feedback`), `aria-expanded` (= strength overlay open) and `aria-controls` (= the overlay's id, only while open); the strength overlay gets an id plus `role="dialog"` and `aria-live="polite"`; a visually hidden `aria-live="polite"` span shows the current strength text (`infoText`), always rendered. The mask/unmask toggle icons are unchanged. **(Corrected 2026-09-30, Implementation-stage source check:** this entry originally placed the ARIA on the "overlay-toggle", which the Plan read as the mask toggle; real PrimeVue puts it on the input and ties it to the strength-meter overlay. User decision: follow real PrimeVue.)
 - **Why it matters:** This is genuinely Vue-specific richness real PrimeVue provides that Ultimate's Vue port currently lacks; Angular/React are correctly unaffected since their own real upstream never had this either.
 - **What it blocks:** Nothing further downstream.
@@ -1113,6 +1152,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
      - Open.
 
   Separate and pre-existing, not a G3-B follow-up: `provenance:validate` fails on the missing `ng.json` entry for `packages/ng/src/accordion/accordion.spec.ts`.
+
 - **Progress (2026-10-06, G3-C1 — complete; record `docs/architecture/research/2026-10-06-gap-064-g3c1-closeout.md`):**
   - **Scope.** F2 Navigation sub-tranche: breadcrumb, dock, steps, stepper, tabs. That is 5 Angular and 5 Vue style modules; no key rename.
   - **Port.** Each module's `css` is now the applicable `@primeuix/styles` 2.0.3 structural CSS mapped to the existing DOM: Angular 79 of 90 upstream groups shipped: 74 as previously classified, plus the five Stepper separator groups, which Angular's own components never render. Groups 15, 25, 26 and 27 are conditional (ADR-052 X-1 class K: reached only by a consumer-placed `UStepperSeparator`), and group 14 is unreachable under supported composition (G3-C1 Spec §18 Errata E3, reconciled in E3a). Vue: 81 of 90, all effective. It adds the disabled base role (not for Steps, PX-C1), three retained Ultimate-only rules, and the PX-C2 Steps focus-ring adaptation.
@@ -1173,7 +1213,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Status:** RESOLVED (2026-10-01, Existing Commitments Plan — `1f1e505`; Tooltip/Dialog screenshot baselines still to be regenerated in the Linux container before merge, see the branch closeout record)
 - **Type:** Component, Framework (Angular), Accessibility
 - **Blocking level:** MEDIUM
-- **Current evidence:** GAP-039's own resolved entry (§3, Cross-cutting: Overlay/Interaction) explicitly discloses this: *"Angular's `UTooltip` has the same effective visibility defect, confirmed by its own existing e2e test... This was not fixed as part of GAP-039's resolution — GAP-039 was scoped to Vue only... Angular's gap remains a separately disclosed, not-yet-registered fact; it is not tracked by this entry."* Angular's own existing Playwright assertion (`packages/ng/e2e/tooltip.spec.ts`, `expect(computedDisplay).toBe("none")`) already proves the defect in a real browser. The confirmed, already-proven fix mechanism (adding the companion inline `display` style GAP-039 added to Vue's `showTooltip()`) is directly applicable, since Angular imports the identical shared `uix-styles/tooltip` base CSS.
+- **Current evidence:** GAP-039's own resolved entry (§3, Cross-cutting: Overlay/Interaction) explicitly discloses this: _"Angular's `UTooltip` has the same effective visibility defect, confirmed by its own existing e2e test... This was not fixed as part of GAP-039's resolution — GAP-039 was scoped to Vue only... Angular's gap remains a separately disclosed, not-yet-registered fact; it is not tracked by this entry."_ Angular's own existing Playwright assertion (`packages/ng/e2e/tooltip.spec.ts`, `expect(computedDisplay).toBe("none")`) already proves the defect in a real browser. The confirmed, already-proven fix mechanism (adding the companion inline `display` style GAP-039 added to Vue's `showTooltip()`) is directly applicable, since Angular imports the identical shared `uix-styles/tooltip` base CSS.
 - **Expected state:** Angular's `UTooltip` gains the same one-line inline-`display`-style fix GAP-039 already applied to Vue, and its existing e2e assertion is converted from asserting the known failure to asserting correct visibility, mirroring GAP-039's own Vue fix exactly.
 - **Why it matters:** This is a real, already-proven-in-browser defect with an already-proven fix mechanism sitting one component away — the lowest-risk item in this entire GAP set, but genuinely unregistered until now, per GAP-039's own explicit disclosure.
 - **What it blocks:** Nothing further downstream.
@@ -1189,7 +1229,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Status:** RESOLVED (2026-10-01, Existing Commitments Plan — `a314711`, `9ee1f91`, `1814c34`; consumer-facing changes in MIGRATION.md §8; Menu screenshot baselines still to be regenerated)
 - **Type:** Component, Framework (Angular), Architecture
 - **Blocking level:** MEDIUM
-- **Current evidence:** `UMenu`'s own doc comment (`packages/ng/src/menu/menu.ts:38-44`) explicitly discloses: *"`popup` is accepted as an input per the Interfaces section, but this task's file list has no popup-overlay component to render into, so it is currently inert beyond flagging the `u-menu-overlay` style-class variant... A future task can extend this component's input/output surface for the popup overlay, submenu nesting, and the additional key handlers."* This was named as expected future work at the time `UMenu` shipped, not discovered fresh by the Prime-vs-Ultimate parity audit. `USplitButton` currently implements its own hand-rolled overlay state as a workaround rather than delegating to `UMenu`'s popup mode, confirmed during the Findings Decision/Scope Triage. React's and Vue's own `UMenu`/`USplitButton` equivalents already have working popup mechanisms (Portal+escape-registry+z-index), confirmed as the direct cross-framework template.
+- **Current evidence:** `UMenu`'s own doc comment (`packages/ng/src/menu/menu.ts:38-44`) explicitly discloses: _"`popup` is accepted as an input per the Interfaces section, but this task's file list has no popup-overlay component to render into, so it is currently inert beyond flagging the `u-menu-overlay` style-class variant... A future task can extend this component's input/output surface for the popup overlay, submenu nesting, and the additional key handlers."_ This was named as expected future work at the time `UMenu` shipped, not discovered fresh by the Prime-vs-Ultimate parity audit. `USplitButton` currently implements its own hand-rolled overlay state as a workaround rather than delegating to `UMenu`'s popup mode, confirmed during the Findings Decision/Scope Triage. React's and Vue's own `UMenu`/`USplitButton` equivalents already have working popup mechanisms (Portal+escape-registry+z-index), confirmed as the direct cross-framework template.
 - **Expected state:** `UMenu`'s popup-overlay mechanism built out (input/output surface extended per its own doc comment's named scope), after which `USplitButton` can be simplified to delegate to it, matching React/Vue's own already-working shape.
 - **Why it matters:** This is a real, previously-named (not undisclosed) piece of unfinished work — `UMenu`'s own doc comment named the deferral at the time it shipped — that `USplitButton` currently works around with duplicated, hand-rolled overlay logic instead of a shared mechanism.
 - **What it blocks:** Nothing further downstream; `USplitButton`'s current workaround is functional, just duplicated.
@@ -2118,14 +2158,14 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Blocking level:** LOW
 - **Framework scope:** Angular and Vue.
 - **Current evidence:**
-  - *Registration:* `dataview/loading` (Angular; Docker `docker-e4-r3`): PrimeNG renders a masked overlay with a spinner icon over the content. Ultimate rendered `span[role="status"]` with the text "Loading" (`data-view.ts:87`, `DataView.vue:134`). Vue has no Prime reference for loading (G3E-7), but the template is the same. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-5.
-  - *Remediation (E4-V1):* both templates now render the shared spinner icon (`aria-hidden`) and visually hidden "Loading" text inside the same `role="status"` live region. Confirmation (Docker `docker-e4-v1`): `dataview/loading` (ng) has 0 probe differences and noise 0; the G3-E accessibility validator has 0 introduced violations (the E4-V1 `color-contrast` rows are gone); Chromium's accessibility tree exposes `status` (polite, atomic) with the text "Loading" and no image node.
-  - *Residuals at registration (2026-10-10; remediated 2026-10-11, see below):* (1) the icon does not spin. No `u-icon-spin` animation is defined anywhere (the same for `UButton`'s loading icon), while Prime's spinner rotates; adding one is a base-level rule (GAP-098 boundary). (2) The icon is drawn in `mask.color` on the mask, a non-text contrast of 2.31:1, below WCAG 1.4.11's 3:1 if the icon is considered required. Prime uses the identical colours, and the project's automated gate (axe) has no non-text contrast rule.
-  - *Remediation (GAP-124, merged `e32c224`):*
+  - _Registration:_ `dataview/loading` (Angular; Docker `docker-e4-r3`): PrimeNG renders a masked overlay with a spinner icon over the content. Ultimate rendered `span[role="status"]` with the text "Loading" (`data-view.ts:87`, `DataView.vue:134`). Vue has no Prime reference for loading (G3E-7), but the template is the same. [E-4 record](research/2026-10-08-gap-064-g3e-e4-record.md) E4-5.
+  - _Remediation (E4-V1):_ both templates now render the shared spinner icon (`aria-hidden`) and visually hidden "Loading" text inside the same `role="status"` live region. Confirmation (Docker `docker-e4-v1`): `dataview/loading` (ng) has 0 probe differences and noise 0; the G3-E accessibility validator has 0 introduced violations (the E4-V1 `color-contrast` rows are gone); Chromium's accessibility tree exposes `status` (polite, atomic) with the text "Loading" and no image node.
+  - _Residuals at registration (2026-10-10; remediated 2026-10-11, see below):_ (1) the icon does not spin. No `u-icon-spin` animation is defined anywhere (the same for `UButton`'s loading icon), while Prime's spinner rotates; adding one is a base-level rule (GAP-098 boundary). (2) The icon is drawn in `mask.color` on the mask, a non-text contrast of 2.31:1, below WCAG 1.4.11's 3:1 if the icon is considered required. Prime uses the identical colours, and the project's automated gate (axe) has no non-text contrast rule.
+  - _Remediation (GAP-124, merged `e32c224`):_
     - **Item A (motion).** A shared, class-scoped `.u-icon-spin` rule (Prime's `BaseIconStyle` spin, 2 s linear) is registered from the Angular and Vue cores (`registerIconSpin`). Under `prefers-reduced-motion: reduce` the icon stays visible and stops rotating (an Ultimate difference from Prime). This applies to the Button and DataView loading icons, in Angular and Vue. User ruling D-124-1: the opt-in spin is outside the GAP-098 global-reset boundary; the GAP-098 ruling is unchanged. React-only documents are unchanged; three React checks prove it.
     - **Item B (contrast).** The DataView loading icon uses `text.hover.color` (light `surface.800`, dark white), scoped to DataView. Measured in a browser on 10 declared surfaces, its non-text contrast is ≥ 3:1: minimum 3.67 (light `surface.300`); 5.13 on white; at least 19.62 on the default dark surface. Contrast is the minimum over every fully covered icon pixel against every adjacent mask pixel, with per-condition rounding ranges (Amendment A2). This differs visually from Prime by design.
     - **Evidence.** Local runs and a Docker (Linux) CI simulation: GAP-124 suite 81/81 at `de7e66c`; contrast spec 162/162 (3 repeats × 6 projects); the three Angular DataView-loading baselines were reviewed and approved by the user. Actual post-merge GitHub Actions CI on `e32c224` (run 38137093707): the strict Playwright jobs that run the GAP-124 specs passed (Angular 369, Vue 321, React 219). The run concluded `failure` only on steps that failed identically on the previous `main` run 38118745630 (inherited); see the verification record §11.
-  - *Known limitations (why GAP-124 stays PARTIAL):*
+  - _Known limitations (why GAP-124 stays PARTIAL):_
     - **KL-1:** a standalone spinning icon rotates only if an Angular or Vue Ultimate component has registered the rule in that document.
     - **KL-2:** in a document that also renders an Angular or Vue Ultimate component, a React spinner rotates too (document-level class selector).
     - **KL-3:** over darker or saturated light-scheme content under the mask (`surface.400`, `surface.500`, `primary.500`), the icon is below 3:1.
@@ -2230,7 +2270,7 @@ Listed here only where the repository shows genuine, unresolved forks requiring 
 
 ### DECISION-B — External runtime dependency approval process (Chart.js, Quill, and future cases)
 
-- **Question:** ADR-004 defines a rigorous approval process for Prime-derived source specifically (license verification, commit pinning, provenance recording). No equivalent documented process exists for approving a *non-Prime* external runtime dependency like Chart.js (GAP-019) or Quill (GAP-020).
+- **Question:** ADR-004 defines a rigorous approval process for Prime-derived source specifically (license verification, commit pinning, provenance recording). No equivalent documented process exists for approving a _non-Prime_ external runtime dependency like Chart.js (GAP-019) or Quill (GAP-020).
 - **Current evidence:** Two components (Chart, Editor) are already blocked on this exact unresolved question, independently, in COMPONENT_INVENTORY.md. **Confirmed still genuinely open during Documentation Reconciliation** — no Chart or Editor implementation work has occurred in any track through Phase 10.
 - **Options:** (a) Extend the existing Phase-0-style provenance/license process to cover any external runtime dependency, not just Prime-derived source; (b) treat each external dependency as a one-off case-by-case ADR with no generic process; (c) avoid external chart/rich-text dependencies entirely and scope Chart/Editor out of the initial platform (Blueprint §41's non-goals don't explicitly forbid this, but don't explicitly require Chart/Editor either).
 - **Affected areas:** Chart (Visualization family), Editor (Panel/Layout/Display family), and any future component with a genuine external dependency need.
@@ -2253,11 +2293,11 @@ Listed here only where the repository shows genuine, unresolved forks requiring 
 ### DECISION-D — Hierarchical (Tree-family) shared contract (do-not-open marker)
 
 - **Question:** Restated from GAP-013 for visibility in this section: should Tree/TreeTable/TreeSelect/OrganizationChart ever get a shared cross-framework contract?
-- **Current evidence:** This decision's own six-pass research effort already answered this for the *current* evidence: no, structurally incompatible (PrimeNG mutates `TreeNode` object references in place; PrimeReact and PrimeVue both use external `{[key]: boolean}` key-maps).
+- **Current evidence:** This decision's own six-pass research effort already answered this for the _current_ evidence: no, structurally incompatible (PrimeNG mutates `TreeNode` object references in place; PrimeReact and PrimeVue both use external `{[key]: boolean}` key-maps).
 - **Options:** N/A — not re-litigated here.
 - **Affected areas:** Tree-family components only.
 - **Recommendation:** **Do not open this decision without new repository evidence** (per this task's Critical Operating Rule 5, extended by analogy — this Tree-family finding deserves the same protection as `uix-data`'s own scope, since it was produced by the same six-pass research effort). Revisit only when a real Tree implementation surfaces genuine new evidence.
-- **Reference-integrity note (Parity Reconciliation pass, 2026-09-20):** this entry's "current evidence" line previously attributed the structural-incompatibility finding above to "ADR-043." `DECISIONS.md`'s actual ADR-043 is titled "`@ultimate/uix-data` introduced as a narrow, evidence-verified shared Data foundation" — a real, correctly-cited decision (see DECISION-C's own "Current evidence" line above, which correctly references it for the *shared-Data-primitives* question) but unrelated to Tree. Searched all of `DECISIONS.md` for this Tree structural-incompatibility content under any ADR number — it does not exist there under any number; it has only ever lived in this entry's own prose. The citation has been corrected here to attribute the finding to this DECISION-D entry directly, not to a numbered ADR. Every downstream document that cited "ADR-043's structural-incompatibility finding" for Tree (the Phase C Migration Roadmap, Dependency Map, Batch Selection Analysis, and prior audit documents) was correctly propagating this entry's own prior text, so the error originated here, not in each downstream copy. This correction is a citation fix only — DECISION-D's substance, protection, and "do-not-reopen" status are unchanged and not reopened by this note.
+- **Reference-integrity note (Parity Reconciliation pass, 2026-09-20):** this entry's "current evidence" line previously attributed the structural-incompatibility finding above to "ADR-043." `DECISIONS.md`'s actual ADR-043 is titled "`@ultimate/uix-data` introduced as a narrow, evidence-verified shared Data foundation" — a real, correctly-cited decision (see DECISION-C's own "Current evidence" line above, which correctly references it for the _shared-Data-primitives_ question) but unrelated to Tree. Searched all of `DECISIONS.md` for this Tree structural-incompatibility content under any ADR number — it does not exist there under any number; it has only ever lived in this entry's own prose. The citation has been corrected here to attribute the finding to this DECISION-D entry directly, not to a numbered ADR. Every downstream document that cited "ADR-043's structural-incompatibility finding" for Tree (the Phase C Migration Roadmap, Dependency Map, Batch Selection Analysis, and prior audit documents) was correctly propagating this entry's own prior text, so the error originated here, not in each downstream copy. This correction is a citation fix only — DECISION-D's substance, protection, and "do-not-reopen" status are unchanged and not reopened by this note.
 - **OrganizationChart scope clarification (human-approved architectural decision, 2026-09-21) — mechanism-based interpretation adopted, protection substance unchanged:** a source-reconstruction pass traced this entry's original inclusion of OrganizationChart back to its first appearance (uix-data design spec, 2026-09-01, consolidated into this entry 2026-09-02) and found the inclusion was stated as a mechanism-dependency claim ("also depending... through Tree") but was never independently source-verified for OrganizationChart at the time — only Tree itself carried a citation. `COMPONENT_INVENTORY.md`'s own OrganizationChart row (plain `ADAPT`, no Tree dependency, written 2026-08-29, four days before this decision existed and never revised since) reflects that lack of verification, not an error. Direct real-source verification (2026-09-20/21) has since established the claim is framework-asymmetric, not uniform: **Angular's real PrimeNG `OrganizationChart` genuinely imports `TreeNode` and mutates `node.expanded` in place** — the same contested mechanism this decision protects — so **Angular OrganizationChart remains excluded, unchanged**. **React's real PrimeReact `OrganizationChart` and Vue's real PrimeVue `OrganizationChart` are both structurally independent** — neither imports Tree's module or `TreeNode` type, neither shares Tree's own expansion-state mechanism (real source: `OrganizationChartNode.js`'s local `useState` for React; `OrganizationChart.vue`'s own `collapsedKeys` prop for Vue, distinct from Tree's `expandedKeys`) — so **this decision's protection does not, on the evidence, extend to React or Vue OrganizationChart**. This is a **scope clarification** (this decision protects the verified Tree mechanism, applied per framework where evidence differs — the same capability-scoped model already used throughout Phase C for every other mixed-eligibility capability), **not a reversal or reopening of Tree's own protected status**, which remains fully intact for Tree/TreeTable/TreeSelect and for Angular's OrganizationChart specifically. React and Vue OrganizationChart are **not thereby declared migration-eligible** — they still require normal Phase C eligibility verification (beyond the Tree-dependency question resolved here) before any future batch could include them. No Angular redesign is authorized or implied — Angular's real Tree-dependent implementation is not to be reworked to avoid this classification.
 - **Implementation-eligibility clarification (user decision, 2026-10-11, ADR-054) — protected question unchanged:** the "excluded" status above concerned implementation eligibility, not the protected shared-contract question. ADR-054 records: "Tree, TreeTable, TreeSelect and Angular OrganizationChart are implementation-eligible as framework-native components, each following its framework's upstream state model with framework-local types. ADR-043's exclusion of a shared hierarchical contract and DECISION-D's protection of that question remain unchanged." Angular OrganizationChart is therefore implementation-eligible using Angular's own `TreeNode` model, which is consistent with "No Angular redesign is authorized or implied". This decision is **not opened**: no shared contract or shared type is introduced, and new evidence of shared semantics found during implementation is recorded here, not acted on. React and Vue OrganizationChart have shipped since G3-E (`dd4c963`). Evidence: `docs/architecture/research/2026-10-11-k7-tree-family-architecture-research.md`.
 
@@ -2341,35 +2381,42 @@ scanning) + GAP-032 (bundle-size not CI-enforced) + GAP-033 (coverage not CI-enf
 ## 7. Recommended future sequencing — dependency-aware grouping, not phase numbers
 
 ### Group: Foundation blockers
+
 Gaps that unlock the most other work and should be resolved before the workstreams below them start in earnest.
+
 - ~~**GAP-003 / GAP-003a** (Angular style injection)~~ — **RESOLVED** (commit `680876f`); no longer a blocker.
 - ~~**GAP-018** (Angular `BaseModelHolder`/`BaseInput`)~~ — **RESOLVED** (`BaseModelHolder` slice via `UModelHolder`/`UInputText`; `BaseInput` slice via GAP-038, see below) — the foundation tier for the ~20-component native-input Form family is now fully built and proven by two real consumers (`UInputText`, `UInputNumber`).
 - ~~**GAP-038** (Angular `BaseInput` tier + `UInputNumber`)~~ — **RESOLVED** (this workstream, ADR-047) — unblocks `Password`/`InputMask`/`AutoComplete`/`DatePicker`/`Select` migration whenever each is individually scheduled.
 - ~~**GAP-009 / GAP-023** (Angular secondary entry points)~~ — **RESOLVED** (commit `62575fb`, Blueprint Completion, 2026-09-13) for 8 of 12 components; `button`/`dialog`/`menu`/`table` permanently excluded by an upstream `ng-packagr` defect (see GAP-009's entry). Extended to 70 subpaths by GAP-070 (2026-10-01).
-Why here: each is small, evidence-backed, has a proven pattern to copy from a sibling framework, and unblocks a materially larger downstream body of work.
+  Why here: each is small, evidence-backed, has a proven pattern to copy from a sibling framework, and unblocks a materially larger downstream body of work.
 
 ### Group: Component-enabling foundations
+
 - **GAP-008** (real consumer app, at least one per framework) — this is likely the single highest-leverage item in the entire registry: it unblocks genuine tree-shaking numbers, genuine SSR/hydration verification, genuine bundle-size/runtime benchmarking, and genuine end-to-end visual proof of GAP-003's fix.
 - **GAP-022's successor state** — once a second real overlay component is planned, extract the shared orchestration pattern ADR-020 deferred (not urgent now, but sequenced here because it's a "when a second consumer exists" trigger, and GAP-008's playground app is a plausible source of that second consumer).
 
 ### Group: Component family expansion
+
 - Form family (after GAP-018), Overlay family (after the second-consumer trigger above), Navigation family, Panel/Layout/Display family — all `ADAPT`-classified, low architectural risk, proven pattern from the now-8-component proof set across 3 frameworks (GAP-017).
 - Data family — **Table, Scroller, Paginator have shipped** (3 of 8 rows) with real, tested, framework-native composition (see DECISION-C's updated entry in §5). **OrderList, PickList, DataView's architectural relationship to Table/DECISION-C is now resolved (2026-09-21)** — no new shared foundation required, ordinary framework-native implementation work only; not yet built or scheduled for any batch. TreeTable (1 row) remains blocked, but on Tree/DECISION-D specifically, not DECISION-C. Tree itself (1 row) remains correctly deferred per GAP-013/DECISION-D.
 - Visualization/Editor — blocked on DECISION-B (external dependency policy), still genuinely open. **Update (2026-10-11):** DECISION-B is decided (ADR-055); Chart and Editor are unblocked architecturally, subject to the recorded policy checks, and need their own Specs.
 
 ### Group: Framework parity
+
 - No forced-parity work is recommended — GAP-024/GAP-025 document that current divergence is evidence-based and correct. The only real parity item, GAP-009/GAP-023 (Angular exports), is now resolved (8 of 12 components, extended to 70 subpaths by GAP-070 on 2026-10-01; see Foundation blockers above).
 
 ### Group: Platform tooling (Phases 6-9) — **all four now RESOLVED (see §2's corrected phase table)**
+
 - ~~**GAP-027** (component metadata)~~ — RESOLVED. ~~**GAP-028** (CLI)~~ — RESOLVED, with disclosed follow-ups. ~~**GAP-029** (MCP)~~ — RESOLVED, with disclosed follow-ups. ~~**GAP-030** (AI Skills/LLM context)~~ — RESOLVED (its one disclosed follow-up, GAP-036, is itself now resolved too). This entire group, sequenced here as future work when this document was first written, has since landed in full.
 
 ### Group: Production hardening — **all CI-enforcement items now RESOLVED**
+
 - ~~**GAP-004/GAP-035**~~ (visual regression + real-browser testing) — RESOLVED by Phase 10 Track A.
 - ~~**GAP-005**~~ (accessibility scanning) — RESOLVED by Phase 10 Track A.
 - ~~**GAP-031/GAP-032/GAP-033**~~ (dependency/license/SAST scanning, bundle-size CI gate, coverage CI gate) — RESOLVED by Phase 10 Track B, all now genuinely CI-enforced. **Correction (2026-10-13):** all three are wired, and the bundle-size gate passes. The SAST handoff failed on `main` through `6d2836d` but passed against real CodeQL output in GAP-090's PR run 38300808881; its repair merged at `6d777328`. The coverage gate remains tracked as GAP-091. The dependency scan failed until GAP-095's remediation and passes from `bde9bbb` (CI run 37607802835; GAP-095 RESOLVED 2026-10-07). Other required CI failures remain unexcepted.
 - **GAP-011** (SECURITY/CONTRIBUTING/CHANGELOG) — already accurately marked PARTIALLY RESOLVED (Track D); unchanged by this reconciliation.
 - ~~**GAP-036**~~ (generate/commit `llms.txt`) — RESOLVED (commit `10435ca`, Blueprint Completion, 2026-09-13). **GAP-037** (PERFORMANCE.md Phase 3/4/5 sections) — LOW blocking level, mechanical, remains open.
-This entire group, sequenced here as future work when this document was first written, has since landed in full except for GAP-037.
+  This entire group, sequenced here as future work when this document was first written, has since landed in full except for GAP-037.
 
 ---
 
@@ -2388,6 +2435,7 @@ The single largest body of remaining work is the ~90-plus-directory remaining Pr
 ### True Architectural Blockers
 
 Four gaps/decisions are true architectural blockers in the sense of preventing multiple future workstreams, as opposed to being ordinary backlog:
+
 - **GAP-018** (Angular's missing `BaseModelHolder`/`BaseInput` tier) blocks an entire component family (~20 components) until built — but the pattern is already proven and low-risk, so this is a blocker in scope, not in difficulty.
 - **DECISION-B** (external dependency approval policy) blocks Chart and Editor independently, and blocks any future non-Prime dependency need generically until a policy exists. **Update (2026-10-11):** decided by ADR-055; no longer a blocker.
 - **DECISION-C** (Table/Data architecture, now narrower — see §5): OrderList/PickList/DataView's architectural relationship to Table is resolved (2026-09-21, no new foundation required); TreeTable remains blocked, but on Tree/DECISION-D, not DECISION-C.
@@ -2408,6 +2456,7 @@ Five were open (§5) at the 2026-10-01 closeout; DECISION-F was decided on 2026-
 ### Recommended Next Research
 
 Two candidates, in order of cost-to-value ratio:
+
 1. **DECISION-C's narrowed remainder** — the verification step this item originally recommended (confirming whether Table's proven composition pattern generalizes to TreeTable/OrderList/PickList/DataView, or whether each needs its own pass) has been completed for OrderList/PickList/DataView (2026-09-21, resolved: no new foundation required). Table's own fuller filter-operator vocabulary is also resolved (2026-09-23, see DECISION-C's own resolution paragraph). TreeTable remains excluded from both resolutions — its own blocker is Tree/DECISION-D, a separate, protected decision, not this item.
 2. ~~**DECISION-B** (external dependency approval process) — still the one open fork with no prior research investment at all; unlike DECISION-C, it requires an actual first architecture pass (Ultimate already has a working, generalizable process from Phase 0 to build on, per this entry's own recommendation in §5).~~ — **DONE 2026-10-11:** researched (`research/2026-10-11-k8-decision-b-external-dependency-policy-research.md`) and decided (ADR-055).
 
@@ -2426,7 +2475,7 @@ For traceability, every claim flagged `UNVERIFIED` in the gap registry above is 
 7. Whether React/Vue built an equivalent to Angular's missing `BaseModelHolder`/`BaseInput` tier (GAP-018) — React/Vue never had a full component inventory produced at all (per PROVENANCE.md's own admission), so this is genuinely unknown, not just unchecked.
 8. ~~Whether PrimeReact/PrimeVue have a Chart-equivalent component surfacing the same external-dependency question as Angular's Chart (GAP-019).~~ — **RESOLVED 2026-10-11**: yes; PrimeReact 10.9.9 and PrimeVue 4.5.5 both ship Chart, loading Chart.js lazily (K-8 research F-1).
 9. ~~Whether React/Vue have an Editor/Quill-equivalent component (GAP-020).~~ — **RESOLVED 2026-10-11**: yes; PrimeReact 10.9.9 and PrimeVue 4.5.5 both ship Editor, loading Quill lazily (K-8 research F-1).
-10. ~~Whether `scripts/provenance/measure-package-size.mjs` was ever extended to cover `react*`/`vue*`/`themes` packages~~ — **RESOLVED during Documentation Reconciliation**: yes, by Phase 10 Track B, whose "Phase 10 — CI/Security/Quality Gates" `PERFORMANCE.md` section extends the script's scope to all 17 publishable packages, including `packages/react`/`packages/vue`/`packages/themes`. No dedicated Phase 3/4/5 *narrative* section exists, however (that remains a real, separate documentation gap — see GAP-037).
+10. ~~Whether `scripts/provenance/measure-package-size.mjs` was ever extended to cover `react*`/`vue*`/`themes` packages~~ — **RESOLVED during Documentation Reconciliation**: yes, by Phase 10 Track B, whose "Phase 10 — CI/Security/Quality Gates" `PERFORMANCE.md` section extends the script's scope to all 17 publishable packages, including `packages/react`/`packages/vue`/`packages/themes`. No dedicated Phase 3/4/5 _narrative_ section exists, however (that remains a real, separate documentation gap — see GAP-037).
 11. Whether any spec file anywhere in the repository exercises SSR/hydration behavior without an SSR-indicating filename (GAP-034) — only a filename-pattern scan was performed, not a content grep of every spec file.
 12. Whether `vitest.config.ts` files anywhere in the repo declare a `coverage.thresholds` block despite no CI step consuming it (GAP-033) — individual config files were not opened in this pass.
 

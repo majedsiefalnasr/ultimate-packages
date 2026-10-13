@@ -15,7 +15,11 @@ describe("UToast", () => {
 
   it("shows a message queued via toastEventBus.emit('add', ...)", async () => {
     const wrapper = mount(UToast);
-    toastEventBus.emit("add", { severity: "info", summary: "Saved", detail: "Your changes were saved." });
+    toastEventBus.emit("add", {
+      severity: "info",
+      summary: "Saved",
+      detail: "Your changes were saved.",
+    });
     await wrapper.vm.$nextTick();
 
     expect(wrapper.find(".u-toast-summary").text()).toBe("Saved");
@@ -132,7 +136,10 @@ describe("UToast", () => {
     const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
     expect(rest).toHaveLength(0);
     expect(text.className).toBe("u-toast-message-text");
-    expect(Array.from(text.children, (c) => c.className)).toEqual(["u-toast-summary", "u-toast-detail"]);
+    expect(Array.from(text.children, (c) => c.className)).toEqual([
+      "u-toast-summary",
+      "u-toast-detail",
+    ]);
     expect(container.tagName).toBe("DIV");
     expect(container.classList).toHaveLength(0);
     expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
@@ -146,7 +153,9 @@ describe("UToast", () => {
 
     const content = wrapper.find(".u-toast-message > .u-toast-message-content").element;
     expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
-    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
+    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual([
+      "u-toast-summary",
+    ]);
     wrapper.unmount();
   });
 });

@@ -43,9 +43,9 @@ describe("UTag", () => {
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    expect(
-      fixture.nativeElement.querySelector(".u-tag")?.classList.contains("u-tag-rounded")
-    ).toBe(true);
+    expect(fixture.nativeElement.querySelector(".u-tag")?.classList.contains("u-tag-rounded")).toBe(
+      true
+    );
   });
 
   it("renders an icon when provided", () => {

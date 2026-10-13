@@ -48,7 +48,11 @@ describe("USelectButton", () => {
     @Component({
       standalone: true,
       imports: [USelectButton, FormsModule],
-      template: `<u-select-button [options]="['A', 'B']" [allowEmpty]="false" [(ngModel)]="value" />`,
+      template: `<u-select-button
+        [options]="['A', 'B']"
+        [allowEmpty]="false"
+        [(ngModel)]="value"
+      />`,
     })
     class HostComponent {
       value: string | null = "A";
@@ -65,7 +69,11 @@ describe("USelectButton", () => {
     @Component({
       standalone: true,
       imports: [USelectButton, FormsModule],
-      template: `<u-select-button [options]="['A', 'B', 'C']" [multiple]="true" [(ngModel)]="value" />`,
+      template: `<u-select-button
+        [options]="['A', 'B', 'C']"
+        [multiple]="true"
+        [(ngModel)]="value"
+      />`,
     })
     class HostComponent {
       value: string[] = [];
@@ -88,7 +96,11 @@ describe("USelectButton", () => {
     @Component({
       standalone: true,
       imports: [USelectButton, FormsModule],
-      template: `<u-select-button [options]="options" [optionDisabled]="'disabled'" [(ngModel)]="value" />`,
+      template: `<u-select-button
+        [options]="options"
+        [optionDisabled]="'disabled'"
+        [(ngModel)]="value"
+      />`,
     })
     class HostComponent {
       options = [

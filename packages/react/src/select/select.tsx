@@ -169,11 +169,19 @@ export function USelect<T = unknown>({
     if (disabled) return;
     switch (event.code) {
       case "ArrowDown":
-        overlayVisible ? moveFocus(1) : show();
+        if (overlayVisible) {
+          moveFocus(1);
+        } else {
+          show();
+        }
         event.preventDefault();
         break;
       case "ArrowUp":
-        overlayVisible ? moveFocus(-1) : show();
+        if (overlayVisible) {
+          moveFocus(-1);
+        } else {
+          show();
+        }
         event.preventDefault();
         break;
       case "Home":
@@ -191,7 +199,11 @@ export function USelect<T = unknown>({
       case "Enter":
       case "NumpadEnter":
       case "Space":
-        overlayVisible ? selectFocused(event) : show();
+        if (overlayVisible) {
+          selectFocused(event);
+        } else {
+          show();
+        }
         event.preventDefault();
         break;
       case "Escape":
@@ -212,7 +224,11 @@ export function USelect<T = unknown>({
   const isVisibleClearIcon = showClear && value != null && !disabled;
 
   return (
-    <div className={[cx("root", { disabled, overlayVisible, fluid }), className].filter(Boolean).join(" ")}>
+    <div
+      className={[cx("root", { disabled, overlayVisible, fluid }), className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <span
         role="combobox"
         id={inputId}
@@ -225,7 +241,11 @@ export function USelect<T = unknown>({
         className={cx("label", { placeholder: selectedOption === undefined })}
         onClick={(event) => {
           if (disabled) return;
-          overlayVisible ? hide() : show();
+          if (overlayVisible) {
+            hide();
+          } else {
+            show();
+          }
           event.stopPropagation();
         }}
         onKeyDown={handleKeyDown}
@@ -253,7 +273,11 @@ export function USelect<T = unknown>({
         aria-hidden="true"
         onClick={(event) => {
           if (disabled) return;
-          overlayVisible ? hide() : show();
+          if (overlayVisible) {
+            hide();
+          } else {
+            show();
+          }
           event.stopPropagation();
         }}
       >

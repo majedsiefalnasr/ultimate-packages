@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, input } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  computed,
+  input,
+} from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
 import { meterGroupStyleModule } from "./meter-group-style";
 
@@ -31,11 +37,22 @@ export interface UMeterItem {
   standalone: true,
   selector: "u-meter-group",
   template: `
-    <div [class]="cx('root', { orientation: orientation() })" role="meter" [attr.aria-valuemin]="min()" [attr.aria-valuemax]="max()" [attr.aria-valuenow]="totalPercent()">
+    <div
+      [class]="cx('root', { orientation: orientation() })"
+      role="meter"
+      [attr.aria-valuemin]="min()"
+      [attr.aria-valuemax]="max()"
+      [attr.aria-valuenow]="totalPercent()"
+    >
       <div [class]="cx('meters')">
         @for (item of value(); track $index) {
           @if (item.value > 0) {
-            <span [class]="cx('meter')" [style.width]="orientation() === 'horizontal' ? percentValue(item.value) : null" [style.height]="orientation() === 'vertical' ? percentValue(item.value) : null" [style.background]="item.color"></span>
+            <span
+              [class]="cx('meter')"
+              [style.width]="orientation() === 'horizontal' ? percentValue(item.value) : null"
+              [style.height]="orientation() === 'vertical' ? percentValue(item.value) : null"
+              [style.background]="item.color"
+            ></span>
           }
         }
       </div>

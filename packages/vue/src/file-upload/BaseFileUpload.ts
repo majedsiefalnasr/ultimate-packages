@@ -15,7 +15,10 @@ import type { ClassValue } from "@ultimate/vue-core";
 // differs from Rating/Knob's (editable value, but simpler base needed).
 export function createBaseFileUpload() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "fileupload", styleModule: fileUploadStyleModule }),
+    extends: createBaseComponent({
+      componentName: "fileupload",
+      styleModule: fileUploadStyleModule,
+    }),
     props: {
       name: { type: String, default: "files" },
       url: { type: String, default: null },

@@ -46,7 +46,10 @@ describe("UButton", () => {
   });
 
   it("renders a tooltip on hover when the tooltip prop is set (sugar over v-tooltip)", async () => {
-    const wrapper = mount(UButton, { props: { label: "Save", tooltip: "Save changes" }, attachTo: document.body });
+    const wrapper = mount(UButton, {
+      props: { label: "Save", tooltip: "Save changes" },
+      attachTo: document.body,
+    });
     await wrapper.find("button").trigger("mouseenter");
     await new Promise((r) => setTimeout(r, 0));
     const panel = document.querySelector('[role="tooltip"]');

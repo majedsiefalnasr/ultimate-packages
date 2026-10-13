@@ -55,7 +55,9 @@ describe("UFileUpload", () => {
   it("dropping files onto the content zone adds them (drag-drop)", async () => {
     const wrapper = mount(UFileUpload, { props: { url: "/upload", multiple: true } });
     const content = wrapper.find(".u-file-upload-content");
-    await content.trigger("drop", { dataTransfer: { files: makeFileList([makeFile("dropped.png", 2048, "image/png")]) } });
+    await content.trigger("drop", {
+      dataTransfer: { files: makeFileList([makeFile("dropped.png", 2048, "image/png")]) },
+    });
 
     const fileRows = wrapper.findAll(".u-file-upload-file");
     expect(fileRows.length).toBe(1);
@@ -135,7 +137,9 @@ describe("UFileUpload", () => {
   });
 
   it("customUpload defers to upload-handler instead of XHR", async () => {
-    const wrapper = mount(UFileUpload, { props: { url: "/upload", customUpload: true, auto: true } });
+    const wrapper = mount(UFileUpload, {
+      props: { url: "/upload", customUpload: true, auto: true },
+    });
     const input = wrapper.find('input[type="file"]').element as HTMLInputElement;
     setInputFiles(input, [makeFile("a.txt", 100)]);
     await wrapper.find('input[type="file"]').trigger("change");

@@ -23,6 +23,7 @@
 ## Task 1: WP2 — Reconcile the provenance-manifest spec text with the real validator
 
 **Files:**
+
 - Modify: `docs/superpowers/specs/2026-08-29-phase-2-ultimateng-foundation-design.md:388`
 - Modify: `docs/superpowers/specs/2026-08-28-phase-1-uix-foundation-design.md:310`
 
@@ -63,10 +64,12 @@ git commit -m "docs(provenance): reconcile Phase 1/2 spec text with the real val
 ## Task 2: WP4 — Wire `aria-describedby` on Angular's `UTooltip`
 
 **Files:**
+
 - Modify: `packages/ng/src/tooltip/tooltip.ts`
 - Modify: `packages/ng/src/tooltip/tooltip.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `ComponentIdGenerator` from `@ultimate/ng-core` (existing class, `next(prefix: string): string`, already used by `packages/ng/src/dialog/dialog.ts`).
 - Produces: no new public API. `UTooltip`'s existing public inputs (`uTooltip`, `uTooltipPosition`, `uTooltipDisabled`) are unchanged. The host element gains a new `aria-describedby` attribute lifecycle (set on show, cleared on hide) — an implementation detail, not a new input/output.
 
@@ -473,11 +476,13 @@ git commit -m "fix(ng): wire aria-describedby from UTooltip's trigger to its flo
 ## Task 3: WP5 — Angular `UOverlay`/`UDialog` adopt the shared Escape-priority registry
 
 **Files:**
+
 - Modify: `packages/ng-core/src/overlay/overlay.spec.ts`
 - Modify: `packages/ng/src/dialog/dialog.ts`
 - Modify: `packages/ng/src/dialog/dialog.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `escapeRegistry` (`{ register(primary: number, secondary: number, callback: (e: KeyboardEvent) => void): void; unregister(primary: number, secondary: number): void }`) and `ESCAPE_PRIORITIES` (`{ DIALOG: 300; MENU: 500; TOOLTIP: 1200 }`) from `@ultimate/uix-utils/escape`. `displayOrderRegistry` (`{ register(group: string, id: number): number; unregister(group: string, id: number): void }`) from the same module. All three already exist and are already consumed by `packages/react-core/src/escape/`.
 - Produces: no new public API on `UOverlay` or `UDialog`. `UDialog`'s existing `closeOnEscape` input and its observable behavior (Escape closes the dialog when `visible` and `closeOnEscape`) are preserved exactly — the only behavioral change is that with two dialogs open simultaneously, Escape now closes only the topmost (most-recently-displayed) one, instead of closing both.
 
@@ -497,128 +502,128 @@ Open `packages/ng/src/dialog/dialog.spec.ts`. Make these four changes:
 4. Add three new tests after the existing `"gives two dialogs sharing one TestBed-provided ComponentIdGenerator..."` test (same `describe("UDialog", ...)` block):
 
 ```typescript
-  it("closes only the topmost of two simultaneously open dialogs on Escape", async () => {
-    @Component({
-      standalone: true,
-      imports: [UDialog],
-      template: `
-        <u-dialog [(visible)]="visibleA" header="Dialog A">A body</u-dialog>
-        <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
-      `,
-    })
-    class TwoDialogHostComponent {
-      visibleA = true;
-      visibleB = true;
-    }
+it("closes only the topmost of two simultaneously open dialogs on Escape", async () => {
+  @Component({
+    standalone: true,
+    imports: [UDialog],
+    template: `
+      <u-dialog [(visible)]="visibleA" header="Dialog A">A body</u-dialog>
+      <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
+    `,
+  })
+  class TwoDialogHostComponent {
+    visibleA = true;
+    visibleB = true;
+  }
 
-    const fixture = TestBed.createComponent(TwoDialogHostComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
+  const fixture = TestBed.createComponent(TwoDialogHostComponent);
+  fixture.detectChanges();
+  await fixture.whenStable();
 
-    expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(2);
+  expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(2);
 
-    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
-    fixture.detectChanges();
-    await fixture.whenStable();
+  document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+  fixture.detectChanges();
+  await fixture.whenStable();
 
-    // Dialog B was displayed second (registered later, higher display
-    // order), so it is topmost and must be the one Escape closes — Dialog
-    // A must remain open. Asserted via the host's own bound signals rather
-    // than DOM count alone, so a failure clearly names which dialog closed.
-    expect(fixture.componentInstance.visibleA).toBe(true);
-    expect(fixture.componentInstance.visibleB).toBe(false);
-  });
+  // Dialog B was displayed second (registered later, higher display
+  // order), so it is topmost and must be the one Escape closes — Dialog
+  // A must remain open. Asserted via the host's own bound signals rather
+  // than DOM count alone, so a failure clearly names which dialog closed.
+  expect(fixture.componentInstance.visibleA).toBe(true);
+  expect(fixture.componentInstance.visibleB).toBe(false);
+});
 
-  it("closes the remaining dialog on a second Escape after the topmost one closes", async () => {
-    @Component({
-      standalone: true,
-      imports: [UDialog],
-      template: `
-        <u-dialog [(visible)]="visibleA" header="Dialog A">A body</u-dialog>
-        <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
-      `,
-    })
-    class TwoDialogHostComponent {
-      visibleA = true;
-      visibleB = true;
-    }
+it("closes the remaining dialog on a second Escape after the topmost one closes", async () => {
+  @Component({
+    standalone: true,
+    imports: [UDialog],
+    template: `
+      <u-dialog [(visible)]="visibleA" header="Dialog A">A body</u-dialog>
+      <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
+    `,
+  })
+  class TwoDialogHostComponent {
+    visibleA = true;
+    visibleB = true;
+  }
 
-    const fixture = TestBed.createComponent(TwoDialogHostComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
+  const fixture = TestBed.createComponent(TwoDialogHostComponent);
+  fixture.detectChanges();
+  await fixture.whenStable();
 
-    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
-    fixture.detectChanges();
-    await fixture.whenStable();
-    expect(fixture.componentInstance.visibleB).toBe(false);
+  document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+  fixture.detectChanges();
+  await fixture.whenStable();
+  expect(fixture.componentInstance.visibleB).toBe(false);
 
-    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
-    fixture.detectChanges();
-    await fixture.whenStable();
-    expect(fixture.componentInstance.visibleA).toBe(false);
-  });
+  document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+  fixture.detectChanges();
+  await fixture.whenStable();
+  expect(fixture.componentInstance.visibleA).toBe(false);
+});
 
-  it("does not react to Escape after a still-open dialog is destroyed (registry entries cleared on destroy)", async () => {
-    @Component({
-      standalone: true,
-      imports: [UDialog],
-      template: `@if (showB()) {
-        <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
-      }`,
-    })
-    class DestroyableDialogHostComponent {
-      visibleB = true;
-      showB = signal(true);
-    }
+it("does not react to Escape after a still-open dialog is destroyed (registry entries cleared on destroy)", async () => {
+  @Component({
+    standalone: true,
+    imports: [UDialog],
+    template: `@if (showB()) {
+      <u-dialog [(visible)]="visibleB" header="Dialog B">B body</u-dialog>
+    }`,
+  })
+  class DestroyableDialogHostComponent {
+    visibleB = true;
+    showB = signal(true);
+  }
 
-    const fixture = TestBed.createComponent(DestroyableDialogHostComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(1);
+  const fixture = TestBed.createComponent(DestroyableDialogHostComponent);
+  fixture.detectChanges();
+  await fixture.whenStable();
+  expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(1);
 
-    // Destroy Dialog B while it is still visible=true and still registered
-    // (never toggled to visible=false first) — a real scenario, e.g. an
-    // *ngIf/@if-gated dialog whose host is torn down directly, or a router
-    // navigation that destroys the component tree mid-dialog. Without an
-    // explicit ngOnDestroy unregistering both registries, this dialog's
-    // now-stale escapeRegistry/displayOrderRegistry entries would remain
-    // registered forever, permanently occupying the topmost display-order
-    // slot and silently swallowing every future Escape keypress meant for
-    // any dialog opened afterward.
-    fixture.componentInstance.showB.set(false);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(0);
+  // Destroy Dialog B while it is still visible=true and still registered
+  // (never toggled to visible=false first) — a real scenario, e.g. an
+  // *ngIf/@if-gated dialog whose host is torn down directly, or a router
+  // navigation that destroys the component tree mid-dialog. Without an
+  // explicit ngOnDestroy unregistering both registries, this dialog's
+  // now-stale escapeRegistry/displayOrderRegistry entries would remain
+  // registered forever, permanently occupying the topmost display-order
+  // slot and silently swallowing every future Escape keypress meant for
+  // any dialog opened afterward.
+  fixture.componentInstance.showB.set(false);
+  fixture.detectChanges();
+  await fixture.whenStable();
+  expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(0);
 
-    @Component({
-      standalone: true,
-      imports: [UDialog],
-      template: `<u-dialog [(visible)]="visibleC" header="Dialog C">C body</u-dialog>`,
-    })
-    class SingleDialogHostComponent {
-      visibleC = true;
-    }
-    const fixtureC = TestBed.createComponent(SingleDialogHostComponent);
-    fixtureC.detectChanges();
-    await fixtureC.whenStable();
+  @Component({
+    standalone: true,
+    imports: [UDialog],
+    template: `<u-dialog [(visible)]="visibleC" header="Dialog C">C body</u-dialog>`,
+  })
+  class SingleDialogHostComponent {
+    visibleC = true;
+  }
+  const fixtureC = TestBed.createComponent(SingleDialogHostComponent);
+  fixtureC.detectChanges();
+  await fixtureC.whenStable();
 
-    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
-    fixtureC.detectChanges();
-    await fixtureC.whenStable();
+  document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+  fixtureC.detectChanges();
+  await fixtureC.whenStable();
 
-    // If Dialog B's registry entries leaked past its destruction, Dialog C
-    // (registered later, genuinely topmost) would not receive this Escape —
-    // the stale, higher-priority-looking B entry would still win the
-    // registry's "highest pair" comparison. Asserting C actually closes
-    // proves the leak did not happen.
-    expect(fixtureC.componentInstance.visibleC).toBe(false);
-  });
+  // If Dialog B's registry entries leaked past its destruction, Dialog C
+  // (registered later, genuinely topmost) would not receive this Escape —
+  // the stale, higher-priority-looking B entry would still win the
+  // registry's "highest pair" comparison. Asserting C actually closes
+  // proves the leak did not happen.
+  expect(fixtureC.componentInstance.visibleC).toBe(false);
+});
 ```
 
 - [ ] **Step 2: Run the tests to verify the new ones fail and confirm the dispatch-fix rationale**
 
 Run: `pnpm --filter @ultimate/ng test -- --project=ng -t "UDialog"`
-Expected: the three new tests FAIL — the two multi-instance stacking tests fail because both dialogs currently close on one Escape (no stacking check yet); the destroy-cleanup test fails because `UDialog` has no `ngOnDestroy` yet, so Dialog B's registry entries leak past its destruction and Dialog C's later Escape either does nothing or throws, depending on registry state (a real reflection of the current, unfixed leak — not a test-authoring mistake). All pre-existing tests still PASS (the `key`→`code` dispatch change is a no-op against the *current* `(document:keydown.escape)` Angular host-listener syntax, which Angular translates from the DOM `key` property — Angular's own `keydown.escape` host-listener parsing reads `event.key`, so this change alone does not break anything yet; it only becomes load-bearing once Step 3 replaces that host listener).
+Expected: the three new tests FAIL — the two multi-instance stacking tests fail because both dialogs currently close on one Escape (no stacking check yet); the destroy-cleanup test fails because `UDialog` has no `ngOnDestroy` yet, so Dialog B's registry entries leak past its destruction and Dialog C's later Escape either does nothing or throws, depending on registry state (a real reflection of the current, unfixed leak — not a test-authoring mistake). All pre-existing tests still PASS (the `key`→`code` dispatch change is a no-op against the _current_ `(document:keydown.escape)` Angular host-listener syntax, which Angular translates from the DOM `key` property — Angular's own `keydown.escape` host-listener parsing reads `event.key`, so this change alone does not break anything yet; it only becomes load-bearing once Step 3 replaces that host listener).
 
 - [ ] **Step 3: Implement the shared registry in `UDialog`**
 
@@ -648,7 +653,11 @@ import {
   UTimesIcon,
 } from "@ultimate/ng-core";
 import { createMotion, type MotionInstance } from "@ultimate/uix-motion";
-import { ESCAPE_PRIORITIES, displayOrderRegistry, escapeRegistry } from "@ultimate/uix-utils/escape";
+import {
+  ESCAPE_PRIORITIES,
+  displayOrderRegistry,
+  escapeRegistry,
+} from "@ultimate/uix-utils/escape";
 ```
 
 Next, add a module-scoped display-order uid counter directly above the `@Component` decorator (find the `/**\n * Ultimate-owned adaptation of PrimeNG's \`Dialog\` component...` doc comment and insert immediately before it):
@@ -854,32 +863,32 @@ Expected: all tests PASS, including all three new tests (the two multi-instance 
 Open `packages/ng-core/src/overlay/overlay.spec.ts`. This step confirms `UOverlay`'s own z-index assignment (unchanged by this task) still increments correctly across multiple simultaneous instances, closing the loop on this plan's own research finding that the z-index half of GAP-007 was never actually broken. Add this test to the existing `describe` block, after the existing `"assigns a z-index when appended"` test:
 
 ```typescript
-  it("assigns a strictly higher z-index to a second overlay instance appended while the first is still visible", async () => {
-    @Component({
-      standalone: true,
-      imports: [UOverlay],
-      template: `<div uOverlay [visible]="visible"></div>`,
-    })
-    class HostComponent {
-      visible = false;
-    }
+it("assigns a strictly higher z-index to a second overlay instance appended while the first is still visible", async () => {
+  @Component({
+    standalone: true,
+    imports: [UOverlay],
+    template: `<div uOverlay [visible]="visible"></div>`,
+  })
+  class HostComponent {
+    visible = false;
+  }
 
-    const fixtureA = TestBed.createComponent(HostComponent);
-    fixtureA.componentInstance.visible = true;
-    fixtureA.detectChanges();
-    await fixtureA.whenStable();
-    const elA = fixtureA.nativeElement.querySelector("div");
-    const zA = Number(elA.style.zIndex);
+  const fixtureA = TestBed.createComponent(HostComponent);
+  fixtureA.componentInstance.visible = true;
+  fixtureA.detectChanges();
+  await fixtureA.whenStable();
+  const elA = fixtureA.nativeElement.querySelector("div");
+  const zA = Number(elA.style.zIndex);
 
-    const fixtureB = TestBed.createComponent(HostComponent);
-    fixtureB.componentInstance.visible = true;
-    fixtureB.detectChanges();
-    await fixtureB.whenStable();
-    const elB = fixtureB.nativeElement.querySelector("div");
-    const zB = Number(elB.style.zIndex);
+  const fixtureB = TestBed.createComponent(HostComponent);
+  fixtureB.componentInstance.visible = true;
+  fixtureB.detectChanges();
+  await fixtureB.whenStable();
+  const elB = fixtureB.nativeElement.querySelector("div");
+  const zB = Number(elB.style.zIndex);
 
-    expect(zB).toBeGreaterThan(zA);
-  });
+  expect(zB).toBeGreaterThan(zA);
+});
 ```
 
 Check the top of `overlay.spec.ts` for its existing imports (`Component`, `TestBed`, test runner functions) — if `Component` is not already imported from `@angular/core`, add it to the existing import line rather than creating a duplicate import statement.
@@ -908,6 +917,7 @@ git commit -m "fix(ng): adopt shared escape/display-order registry for multi-dia
 **AMENDMENT (implementation, 2026-09-13):** the original file list below included `button`, `dialog`, `menu`, and `table`. Attempting all 12 surfaced a reproducible `ng-packagr@21.2.7`/`@angular/compiler-cli@21.2.22` crash (`Cannot destructure property 'pos' of 'file.referencedFiles[index]' as it is undefined`, in Angular's internal `ShimReferenceTagger`) whenever one secondary entry point's source imports a file that is itself another secondary entry point's root — confirmed via isolated repro, order-independent, not fixed by changing the import specifier, and with no newer 21.x patch available. `button` imports `../ripple`; `dialog` imports `../button/button`; `menu` imports `../ripple` and `../tooltip`; `table` imports `../paginator/paginator` and `../scroller/scroller`. Per the approved design-spec amendment to WP1 (see `docs/superpowers/specs/2026-09-13-blueprint-completion-design.md`), this task's scope is narrowed to the 8 confirmed-leaf components with zero cross-component source imports. `button`, `dialog`, `menu`, `table` remain reachable only via the primary `@ultimate/ng` entry point — a real, permanent limitation of this dependency version for this repository's composite components, not a placeholder. The steps below are updated to match this narrowed scope.
 
 **Files:**
+
 - Create: `packages/ng/checkbox/ng-package.json`
 - Create: `packages/ng/paginator/ng-package.json`
 - Create: `packages/ng/scroller/ng-package.json`
@@ -927,6 +937,7 @@ git commit -m "fix(ng): adopt shared escape/display-order registry for multi-dia
 Each file's content is identical in shape — only the `entryFile` path differs. Create each of the following 8 files with this exact content pattern (the entry file path is relative to the secondary `ng-package.json`'s own directory, i.e. `packages/ng/<component>/`, pointing back into `packages/ng/src/<component>/index.ts`). Skip `button`, `dialog`, `menu`, `table` per the amendment above.
 
 `packages/ng/checkbox/ng-package.json`:
+
 ```json
 {
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
@@ -937,6 +948,7 @@ Each file's content is identical in shape — only the `entryFile` path differs.
 ```
 
 `packages/ng/paginator/ng-package.json`:
+
 ```json
 {
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
@@ -947,6 +959,7 @@ Each file's content is identical in shape — only the `entryFile` path differs.
 ```
 
 `packages/ng/scroller/ng-package.json`:
+
 ```json
 {
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
@@ -957,6 +970,7 @@ Each file's content is identical in shape — only the `entryFile` path differs.
 ```
 
 `packages/ng/tooltip/ng-package.json`:
+
 ```json
 {
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
@@ -967,6 +981,7 @@ Each file's content is identical in shape — only the `entryFile` path differs.
 ```
 
 `packages/ng/autofocus/ng-package.json`:
+
 ```json
 {
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
@@ -977,6 +992,7 @@ Each file's content is identical in shape — only the `entryFile` path differs.
 ```
 
 `packages/ng/badge/ng-package.json`:
+
 ```json
 {
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
@@ -987,6 +1003,7 @@ Each file's content is identical in shape — only the `entryFile` path differs.
 ```
 
 `packages/ng/fluid/ng-package.json`:
+
 ```json
 {
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
@@ -997,6 +1014,7 @@ Each file's content is identical in shape — only the `entryFile` path differs.
 ```
 
 `packages/ng/ripple/ng-package.json`:
+
 ```json
 {
   "$schema": "../node_modules/ng-packagr/ng-entrypoint.schema.json",
@@ -1018,7 +1036,7 @@ find packages/ng/dist -maxdepth 2 -type f \( -name "*.mjs" -o -name "*.d.ts" \) 
 
 Expected: this lists, among the pre-existing primary-entry-point files, one compiled module file and one `.d.ts` file per secondary entry point created in Step 1 (`checkbox`, `paginator`, `scroller`, `tooltip`, `autofocus`, `badge`, `fluid`, `ripple`) — 16 new files total, 2 per component. (`button`, `dialog`, `menu`, `table` are not built as secondary entry points — see this task's amendment note.)
 
-**This `find` output is the authoritative source for every path written into Step 3's `exports` map below — not the JSON shown in Step 3.** Step 3's JSON block is this plan's best-evidenced *prediction* of `ng-packagr`'s real Angular Package Format naming convention (flat-module naming: `<primary-package-name>-<secondary-path>.mjs` alongside the primary's own `fesm2022/ultimate-ng.mjs`), made without an actual build having been run during this planning pass. It is not confirmed. Before writing anything into `packages/ng/package.json`, compare Step 3's predicted paths against this step's real `find` output one subpath at a time; for every path that differs (a different directory, a different filename pattern, a different extension), use the real path from `find`, not the predicted one. Do not write a path into `package.json` that this `find` command did not actually show you.
+**This `find` output is the authoritative source for every path written into Step 3's `exports` map below — not the JSON shown in Step 3.** Step 3's JSON block is this plan's best-evidenced _prediction_ of `ng-packagr`'s real Angular Package Format naming convention (flat-module naming: `<primary-package-name>-<secondary-path>.mjs` alongside the primary's own `fesm2022/ultimate-ng.mjs`), made without an actual build having been run during this planning pass. It is not confirmed. Before writing anything into `packages/ng/package.json`, compare Step 3's predicted paths against this step's real `find` output one subpath at a time; for every path that differs (a different directory, a different filename pattern, a different extension), use the real path from `find`, not the predicted one. Do not write a path into `package.json` that this `find` command did not actually show you.
 
 - [x] **Step 3: Add the `exports` map to `packages/ng/package.json`, using Step 2's real file listing**
 
@@ -1147,6 +1165,7 @@ git commit -m "feat(ng): add per-component ng-packagr secondary entry points and
 **AMENDMENT (implementation, 2026-09-13):** the original steps below (Steps 1-6) moved generated output out of `dist/` without updating `packages/ai/package.json`'s `"files"` array, which controls what a real `npm`/`pnpm install @ultimate/ai` actually ships. This would have silently broken an existing, pre-Blueprint-Completion test — `packages/ai/test/packaging.test.ts` ("npm packaging contract, spec §7.1a") — which asserts these 5 files are present in a real packed tarball and resolvable after a real install, previously at `dist/context/*.txt`. Per the approved design-spec amendment to WP3, the npm packaging guarantee is kept: `"files"` gains `"context"`, and the packaging test's expected paths move from `dist/context/*.txt` to `context/*.txt`. New Steps 5a and 5b below (after the original Step 5, before the original Step 6/commit) implement this.
 
 **Files:**
+
 - Modify: `packages/ai/package.json`
 - Modify: `packages/ai/test/packaging.test.ts`
 - Create: `packages/ai/context/llms.txt`
@@ -1156,6 +1175,7 @@ git commit -m "feat(ng): add per-component ng-packagr secondary entry points and
 - Create: `packages/ai/context/llms-vue.txt`
 
 **Interfaces:**
+
 - Consumes: `packages/ai/src/bin-generate.ts`'s existing `main()` (reads `process.argv[2]` for the skills directory, `process.argv[3]` for the context output directory — both already fully parameterizable, no source change needed) and `packages/ai/src/bin-validate.ts`'s existing `main()` (same argument shape).
 - Produces: five new committed text files under `packages/ai/context/`. No new exported function or type.
 
@@ -1257,18 +1277,18 @@ Replace with:
       ]) {
 ```
 
-Also update this test's own name from `"a real \`npm pack\` tarball includes all 5 dist/context/*.txt files"` to `"a real \`npm pack\` tarball includes all 5 context/*.txt files"`.
+Also update this test's own name from `"a real \`npm pack\` tarball includes all 5 dist/context/_.txt files"`to`"a real \`npm pack\` tarball includes all 5 context/_.txt files"`.
 
 Find the second test's `contextDir` line:
 
 ```typescript
-      const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "dist", "context");
+const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "dist", "context");
 ```
 
 Replace with:
 
 ```typescript
-      const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "context");
+const contextDir = join(consumerDir, "node_modules", "@ultimate", "ai", "context");
 ```
 
 Also update this test's own name from `"installing the packed tarball into a scratch consumer resolves all 5 files at node_modules/@ultimate/ai/dist/context/"` to `"installing the packed tarball into a scratch consumer resolves all 5 files at node_modules/@ultimate/ai/context/"`.
@@ -1294,6 +1314,7 @@ git commit -m "feat(ai): generate and commit llms.txt/llms-full.txt context outp
 ## Task 6: WP6 — Update `BLUEPRINT_GAPS.md` and `ROADMAP.md` to reflect all six resolved gaps
 
 **Files:**
+
 - Modify: `docs/architecture/BLUEPRINT_GAPS.md`
 - Modify: `docs/architecture/ROADMAP.md`
 
@@ -1321,6 +1342,7 @@ Find the `#### GAP-006` heading (search for `UTooltip.*aria-describedby.*wiring`
 
 ```markdown
 #### GAP-006 — `UTooltip` (Angular) has `role="tooltip"` but no `aria-describedby` wiring
+
 - **Status:** RESOLVED
 - **Type:** Accessibility, Component, Framework (Angular)
 - **Blocking level:** LOW (at the time this was open)
@@ -1334,7 +1356,6 @@ Find the `#### GAP-006` heading (search for `UTooltip.*aria-describedby.*wiring`
 - **Recommended resolution direction:** N/A — resolved.
 - **Source/evidence:** `packages/ng/src/tooltip/tooltip.ts`; `packages/ng/src/tooltip/tooltip.spec.ts`; commit `<Task-2-commit-sha>`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 2.
 - **Architectural decision required:** No.
-
 ```
 
 - [x] **Step 3: Update GAP-007's entry**
@@ -1343,6 +1364,7 @@ Find the `#### GAP-007` heading. Replace the entire entry block (up to, but not 
 
 ```markdown
 #### GAP-007 — Angular `UDialog` overlay has a single z-index bucket — no working multi-dialog stacking order
+
 - **Status:** RESOLVED
 - **Type:** Accessibility, Overlay/Interaction, Component, Framework (Angular)
 - **Blocking level:** MEDIUM (at the time this was open)
@@ -1356,7 +1378,6 @@ Find the `#### GAP-007` heading. Replace the entire entry block (up to, but not 
 - **Recommended resolution direction:** N/A — resolved.
 - **Source/evidence:** `packages/ng/src/dialog/dialog.ts`; `packages/ng/src/dialog/dialog.spec.ts`; `packages/ng-core/src/overlay/overlay.spec.ts`; commit `<Task-3-commit-sha>`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 3.
 - **Architectural decision required:** No.
-
 ```
 
 - [x] **Step 4: Update GAP-009's entry**
@@ -1365,6 +1386,7 @@ Find the `#### GAP-009` heading. Replace the entire entry block (up to, but not 
 
 ```markdown
 #### GAP-009 — Angular tree-shaking verified broken; `ng` ships a single barrel instead of the originally-planned 9 secondary entry points
+
 - **Status:** RESOLVED
 - **Type:** Packaging, Framework (Angular), Testing
 - **Blocking level:** MEDIUM (at the time this was open)
@@ -1378,7 +1400,6 @@ Find the `#### GAP-009` heading. Replace the entire entry block (up to, but not 
 - **Recommended resolution direction:** N/A — resolved. A future `ng-packagr`/`@angular/compiler-cli` upgrade past this defect could revisit `button`/`dialog`/`menu`/`table`, but no such fix exists as of this resolution.
 - **Source/evidence:** `packages/ng/{checkbox,paginator,scroller,tooltip,autofocus,badge,fluid,ripple}/ng-package.json`; `packages/ng/package.json`; `docs/architecture/PERFORMANCE.md`; `docs/superpowers/specs/2026-09-13-blueprint-completion-design.md` WP1 amendment; commit `<Task-4-commit-sha>`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 4.
 - **Architectural decision required:** No.
-
 ```
 
 - [x] **Step 5: Update GAP-010's entry**
@@ -1387,6 +1408,7 @@ Find the `#### GAP-010` heading. Replace the entire entry block (up to, but not 
 
 ```markdown
 #### GAP-010 — Provenance manifest schema names `sha256OfOriginal` as required; neither `ng.json` nor `ng-core.json` has it
+
 - **Status:** RESOLVED
 - **Type:** Provenance, CI
 - **Blocking level:** LOW (at the time this was open)
@@ -1400,7 +1422,6 @@ Find the `#### GAP-010` heading. Replace the entire entry block (up to, but not 
 - **Recommended resolution direction:** N/A — resolved.
 - **Source/evidence:** `docs/superpowers/specs/2026-08-28-phase-1-uix-foundation-design.md:310`; `docs/superpowers/specs/2026-08-29-phase-2-ultimateng-foundation-design.md:388`; commit `<Task-1-commit-sha>`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 1.
 - **Architectural decision required:** No.
-
 ```
 
 - [x] **Step 6: Update GAP-023's entry**
@@ -1409,6 +1430,7 @@ Find the `#### GAP-023` heading. Replace the entire entry block (up to, but not 
 
 ```markdown
 #### GAP-023 — Angular has no per-component subpath exports (React and Vue do)
+
 - **Status:** RESOLVED
 - **Type:** Packaging, Framework
 - **Blocking level:** MEDIUM (at the time this was open)
@@ -1422,7 +1444,6 @@ Find the `#### GAP-023` heading. Replace the entire entry block (up to, but not 
 - **Recommended resolution direction:** N/A — resolved.
 - **Source/evidence:** `packages/{ng,react,vue}/package.json` `exports` fields; commit `<Task-4-commit-sha>`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 4.
 - **Architectural decision required:** No.
-
 ```
 
 - [x] **Step 7: Update GAP-036's entry**
@@ -1431,6 +1452,7 @@ Find the `#### GAP-036` heading. Replace the entire entry block (up to, but not 
 
 ```markdown
 #### GAP-036 (added during Documentation Reconciliation, resolved during Blueprint Completion) — `llms.txt`/`llms-full.txt` generation tooling exists and is tested, but no generated output artifact has ever been produced or committed
+
 - **Status:** RESOLVED
 - **Type:** AI, Documentation
 - **Blocking level:** LOW
@@ -1440,7 +1462,6 @@ Find the `#### GAP-036` heading. Replace the entire entry block (up to, but not 
 - **Dependencies:** None.
 - **Type of work:** Completed — ordinary implementation/operational task (ran the existing generator, committed its output).
 - **Source/evidence:** `packages/ai/context/*.txt`; `packages/ai/package.json`; commit `<Task-5-commit-sha>`; `docs/superpowers/plans/2026-09-13-blueprint-completion.md` Task 5.
-
 ```
 
 - [x] **Step 8: Update `ROADMAP.md`'s footnote 5**
@@ -1462,8 +1483,7 @@ With:
 Run: `grep -n "GAP-006\|GAP-007\|GAP-009\|GAP-010\|GAP-023\|GAP-036" docs/architecture/BLUEPRINT_GAPS.md`
 Expected: every occurrence of these six IDs across the whole document (the §2 phase table, each gap's own entry, and any cross-reference from another gap's entry, e.g. GAP-017's dependency note) is consistent with `RESOLVED` — no remaining sentence anywhere in the file still describes any of these six as open, missing, or partial. Read each matched line to confirm.
 
-Run: `grep -n "GAP-036\|no \`llms.txt\`" docs/architecture/ROADMAP.md`
-Expected: no remaining sentence claims `llms.txt` doesn't exist.
+Run: `grep -n "GAP-036\|no \`llms.txt\`" docs/architecture/ROADMAP.md`Expected: no remaining sentence claims`llms.txt` doesn't exist.
 
 - [x] **Step 10: Commit**
 

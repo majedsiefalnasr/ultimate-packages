@@ -16,7 +16,13 @@ import { useKeyFilter, type UKeyFilterPattern } from "./key-filter";
  * `packages/react/src/key-filter/key-filter.spec.tsx` (named presets,
  * custom RegExp, paste blocking, `validateOnly`).
  */
-function KeyFilterDemo({ pattern, placeholder }: { pattern: RegExp | UKeyFilterPattern; placeholder: string }) {
+function KeyFilterDemo({
+  pattern,
+  placeholder,
+}: {
+  pattern: RegExp | UKeyFilterPattern;
+  placeholder: string;
+}) {
   const ref = React.useRef<HTMLInputElement>(null);
   useKeyFilter(ref, { pattern });
   return <input ref={ref} placeholder={placeholder} />;

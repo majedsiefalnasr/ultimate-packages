@@ -108,7 +108,9 @@ const classes = {
   overlay: "u-password-overlay",
   meter: "u-password-meter",
   meterLabel: (params: PasswordClassesParams = {}) =>
-    params.strength ? `u-password-meter-label u-password-meter-label-${params.strength}` : "u-password-meter-label",
+    params.strength
+      ? `u-password-meter-label u-password-meter-label-${params.strength}`
+      : "u-password-meter-label",
   meterText: "u-password-meter-text",
 };
 

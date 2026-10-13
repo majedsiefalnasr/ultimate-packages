@@ -29,7 +29,7 @@
 - No new `@ultimate/uix-data` primitive, no ADR-043 change, no Blueprint change, no `BLUEPRINT_GAPS.md` change — these are out of scope for this plan.
 - **Confirmed real-source verification, this planning pass**: `packages/{ng,react,vue}/src/*` contains no Select/InputNumber-equivalent component (only `autofocus`, `badge`, `button`, `checkbox`, `dialog`, `fluid`, `menu`, `ripple`, `tooltip` exist). Per the spec's own §22 framing ("if they don't exist yet, that becomes an ordinary prerequisite task ... not a blocked spec"), this plan proceeds with all controls that do **not** require a dropdown/select (first/prev/next/last buttons, page-links, current-page report) as fully concrete tasks now. Rows-per-page and jump-to-page **dropdown** controls are deferred to **Task Group D** (one task per framework), explicitly gated: each such task's first step is verifying whether an Ultimate Select-equivalent component has landed in `packages/{framework}/src/` by the time that task is picked up — if not, that task is not executable yet and must be raised back to the user rather than implemented with a placeholder or a raw unstyled native `<select>` masquerading as the real component API.
 - Match every existing shipped-component convention exactly (verified this planning pass by reading `packages/{ng,react,vue}/src/button/*` in full): Angular components extend `UBaseComponent` (`@ultimate/ng-core`) with a `componentName`/`styleModule` pair and Angular signal `input()`/`output()`; React components use `useComponentBase({ componentName, styleModule })` from `@ultimate/react-core`; Vue components use `createBaseComponent({ componentName, styleModule })` from `@ultimate/vue-core` via `extends:`. Every style module is `{ css, classes }`, with `css` sourced from `@ultimate/uix-styles/<component>` and `classes` a local class-name-slot resolver object (`.p-*` renamed to `.u-*`).
-- Provenance style tokens for Paginator already exist, vendored, at `.vendor-extracted/uix-styles-components/src/paginator/index.ts` (102 lines, real `dt('paginator.*')` token references) — this plan ports that file into `packages/uix-styles/src/paginator/index.ts` (Task 1), matching the exact pattern of the existing `packages/uix-styles/src/button/index.ts`. No component *logic* source is vendored yet (`.vendor-extracted/{ng,react,vue}` has no `paginator` directory) — real PrimeNG/PrimeReact/PrimeVue Paginator logic is read from the pinned cached tarballs (`.vendor-cache/{primeng,primereact,primevue}-<version>.tar.gz`, sha256-verified against `docs/architecture/checksums.json`) as each task requires it, per the spec's own citations.
+- Provenance style tokens for Paginator already exist, vendored, at `.vendor-extracted/uix-styles-components/src/paginator/index.ts` (102 lines, real `dt('paginator.*')` token references) — this plan ports that file into `packages/uix-styles/src/paginator/index.ts` (Task 1), matching the exact pattern of the existing `packages/uix-styles/src/button/index.ts`. No component _logic_ source is vendored yet (`.vendor-extracted/{ng,react,vue}` has no `paginator` directory) — real PrimeNG/PrimeReact/PrimeVue Paginator logic is read from the pinned cached tarballs (`.vendor-cache/{primeng,primereact,primevue}-<version>.tar.gz`, sha256-verified against `docs/architecture/checksums.json`) as each task requires it, per the spec's own citations.
 
 ---
 
@@ -38,11 +38,13 @@
 ### Task 1: Port Paginator style tokens into `@ultimate/uix-styles`
 
 **Files:**
+
 - Create: `packages/uix-styles/src/paginator/index.ts`
 - Modify: none (new subpath, no existing barrel to update — confirmed `packages/uix-styles/src/button/index.ts` has no parent barrel importing it; each component subpath is imported directly, e.g. `@ultimate/uix-styles/button`)
 - Test: `packages/uix-styles/test/paginator.test.ts`
 
 **Interfaces:**
+
 - Consumes: nothing new (plain string export, matching `packages/uix-styles/src/button/index.ts`'s `export const style = ...` shape)
 - Produces: `export const style: string` — importable as `@ultimate/uix-styles/paginator`, consumed by Task 3/9/15's `paginator-style.ts` files
 
@@ -94,12 +96,14 @@ git commit -m "feat(uix-styles): add paginator style tokens"
 ### Task 2: Scaffold `UPaginator` — state, `PaginationState` consumption, `getPageCount`
 
 **Files:**
+
 - Create: `packages/ng/src/paginator/paginator.ts`
 - Test: `packages/ng/src/paginator/paginator.spec.ts`
 
 (`packages/ng/src/paginator/index.ts` does not exist yet — it is created in Task 5, once `UPaginator` has its full public surface worth exporting. This task's test imports `UPaginator` directly from `./paginator`, matching Task 5/6's own later distinction between the direct-module test target and the package barrel.)
 
 **Interfaces:**
+
 - Consumes: `PaginationState`, `getPageCount` from `@ultimate/uix-data`; `UBaseComponent` from `@ultimate/ng-core`
 - Produces: `UPaginator` class with signal inputs `first = input(0)`, `rows = input(0)`, `totalRecords = input(0)`, `pageLinkSize = input(5)`; output `onPageChange = output<{ page: number; first: number; rows: number; pageCount: number }>()`; protected getter `pageCount(): number` (calls `getPageCount`); protected getter `page(): number` (`Math.floor(this._first / this.rows())`) — consumed internally by the template (bound via `data-page-count`) and by Task 3/4's rendering; kept `protected` (template-bindable, not part of the public class API) per this component's real access-control intent — tests assert against rendered DOM output, never `fixture.componentInstance.<protected member>`, matching Angular's own access rules (a `protected` class member is not readable from an external `.spec.ts` file, which is a different module than the component class)
 
@@ -216,11 +220,13 @@ git commit -m "feat(ng): scaffold UPaginator with uix-data state consumption"
 ### Task 3: Angular — style module, first/prev/next/last controls, `changePage`
 
 **Files:**
+
 - Modify: `packages/ng/src/paginator/paginator.ts`
 - Create: `packages/ng/src/paginator/paginator-style.ts`
 - Test: `packages/ng/src/paginator/paginator.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `style` from `@ultimate/uix-styles/paginator` (Task 1)
 - Produces: `changePage(first: number): void` (public, called by template click handlers and by Task 4's tests); `isFirstPage(): boolean`, `isLastPage(): boolean`, `empty(): boolean` getters — consumed by Task 5's disabled-state wiring
 
@@ -365,10 +371,30 @@ Update `@Component({ template: ... })` to a first/prev/next/last button row (bou
 ```html
 <nav [class]="cx('root')" [attr.data-page-count]="pageCount" [attr.data-page]="page">
   <div [class]="cx('content')">
-    <button type="button" [class]="cx('first', {disabled: isFirstPage})" [disabled]="isFirstPage" (click)="goFirst()"></button>
-    <button type="button" [class]="cx('prev', {disabled: isFirstPage})" [disabled]="isFirstPage" (click)="goPrev()"></button>
-    <button type="button" [class]="cx('next', {disabled: isLastPage})" [disabled]="isLastPage" (click)="goNext()"></button>
-    <button type="button" [class]="cx('last', {disabled: isLastPage})" [disabled]="isLastPage" (click)="goLast()"></button>
+    <button
+      type="button"
+      [class]="cx('first', {disabled: isFirstPage})"
+      [disabled]="isFirstPage"
+      (click)="goFirst()"
+    ></button>
+    <button
+      type="button"
+      [class]="cx('prev', {disabled: isFirstPage})"
+      [disabled]="isFirstPage"
+      (click)="goPrev()"
+    ></button>
+    <button
+      type="button"
+      [class]="cx('next', {disabled: isLastPage})"
+      [disabled]="isLastPage"
+      (click)="goNext()"
+    ></button>
+    <button
+      type="button"
+      [class]="cx('last', {disabled: isLastPage})"
+      [disabled]="isLastPage"
+      (click)="goLast()"
+    ></button>
   </div>
 </nav>
 ```
@@ -390,10 +416,12 @@ git commit -m "feat(ng): add UPaginator first/prev/next/last controls and change
 ### Task 4: Angular — page-link display algorithm
 
 **Files:**
+
 - Modify: `packages/ng/src/paginator/paginator.ts`
 - Test: `packages/ng/src/paginator/paginator.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `pageCount` (Task 2), `page` (Task 2), `pageLinkSize` input (Task 2)
 - Produces: `pageLinks(): number[]` getter (1-indexed page numbers to render) — consumed by Task 5's template
 
@@ -479,11 +507,13 @@ git commit -m "feat(ng): add UPaginator page-link display algorithm"
 ### Task 5: Angular — page-link buttons, accessibility (`aria-label`, `aria-current`, `<nav>` root), `index.ts` export
 
 **Files:**
+
 - Modify: `packages/ng/src/paginator/paginator.ts`
 - Create: `packages/ng/src/paginator/index.ts`
 - Test: `packages/ng/src/paginator/paginator.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `pageLinks` (Task 4), `changePage` (Task 3)
 - Produces: `UPaginator` fully exported from `packages/ng/src/paginator/index.ts` — consumed by `packages/ng/src/index.ts` (Task 6)
 
@@ -525,10 +555,18 @@ it("first/prev/next/last controls have aria-label attributes", () => {
   fixture.componentRef.setInput("totalRecords", 95);
   fixture.componentRef.setInput("rows", 10);
   fixture.detectChanges();
-  expect(fixture.nativeElement.querySelector("[data-u-paginator-first]").hasAttribute("aria-label")).toBe(true);
-  expect(fixture.nativeElement.querySelector("[data-u-paginator-prev]").hasAttribute("aria-label")).toBe(true);
-  expect(fixture.nativeElement.querySelector("[data-u-paginator-next]").hasAttribute("aria-label")).toBe(true);
-  expect(fixture.nativeElement.querySelector("[data-u-paginator-last]").hasAttribute("aria-label")).toBe(true);
+  expect(
+    fixture.nativeElement.querySelector("[data-u-paginator-first]").hasAttribute("aria-label")
+  ).toBe(true);
+  expect(
+    fixture.nativeElement.querySelector("[data-u-paginator-prev]").hasAttribute("aria-label")
+  ).toBe(true);
+  expect(
+    fixture.nativeElement.querySelector("[data-u-paginator-next]").hasAttribute("aria-label")
+  ).toBe(true);
+  expect(
+    fixture.nativeElement.querySelector("[data-u-paginator-last]").hasAttribute("aria-label")
+  ).toBe(true);
 });
 ```
 
@@ -539,25 +577,55 @@ Expected: FAIL — page-link buttons not found (template not yet rendering them)
 
 - [ ] **Step 3: Write minimal implementation**
 
-Extend the `@Component({ template: ... })` in `paginator.ts` to add page-link buttons and `aria-label`s (labels are static English strings in this task — locale/translation lookup is `NEEDS IMPLEMENTATION-TIME VERIFICATION` per spec §20/§12, out of scope here; this task only guarantees every control has *an* `aria-label`, matching the spec's confirmed-vocabulary acceptance criterion):
+Extend the `@Component({ template: ... })` in `paginator.ts` to add page-link buttons and `aria-label`s (labels are static English strings in this task — locale/translation lookup is `NEEDS IMPLEMENTATION-TIME VERIFICATION` per spec §20/§12, out of scope here; this task only guarantees every control has _an_ `aria-label`, matching the spec's confirmed-vocabulary acceptance criterion):
 
 ```html
 <nav [class]="cx('root')" [attr.data-page-count]="pageCount" [attr.data-page]="page">
   <div [class]="cx('content')">
-    <button type="button" data-u-paginator-first [class]="cx('first', {disabled: isFirstPage})" [disabled]="isFirstPage" aria-label="First Page" (click)="goFirst()"></button>
-    <button type="button" data-u-paginator-prev [class]="cx('prev', {disabled: isFirstPage})" [disabled]="isFirstPage" aria-label="Previous Page" (click)="goPrev()"></button>
+    <button
+      type="button"
+      data-u-paginator-first
+      [class]="cx('first', {disabled: isFirstPage})"
+      [disabled]="isFirstPage"
+      aria-label="First Page"
+      (click)="goFirst()"
+    ></button>
+    <button
+      type="button"
+      data-u-paginator-prev
+      [class]="cx('prev', {disabled: isFirstPage})"
+      [disabled]="isFirstPage"
+      aria-label="Previous Page"
+      (click)="goPrev()"
+    ></button>
     @for (link of pageLinks; track link) {
-      <button
-        type="button"
-        data-u-paginator-page
-        [class]="cx('page', {selected: link - 1 === page})"
-        [attr.aria-current]="link - 1 === page ? 'page' : null"
-        [attr.aria-label]="'Page ' + link"
-        (click)="changePage((link - 1) * rows())"
-      >{{ link }}</button>
+    <button
+      type="button"
+      data-u-paginator-page
+      [class]="cx('page', {selected: link - 1 === page})"
+      [attr.aria-current]="link - 1 === page ? 'page' : null"
+      [attr.aria-label]="'Page ' + link"
+      (click)="changePage((link - 1) * rows())"
+    >
+      {{ link }}
+    </button>
     }
-    <button type="button" data-u-paginator-next [class]="cx('next', {disabled: isLastPage})" [disabled]="isLastPage" aria-label="Next Page" (click)="goNext()"></button>
-    <button type="button" data-u-paginator-last [class]="cx('last', {disabled: isLastPage})" [disabled]="isLastPage" aria-label="Last Page" (click)="goLast()"></button>
+    <button
+      type="button"
+      data-u-paginator-next
+      [class]="cx('next', {disabled: isLastPage})"
+      [disabled]="isLastPage"
+      aria-label="Next Page"
+      (click)="goNext()"
+    ></button>
+    <button
+      type="button"
+      data-u-paginator-last
+      [class]="cx('last', {disabled: isLastPage})"
+      [disabled]="isLastPage"
+      aria-label="Last Page"
+      (click)="goLast()"
+    ></button>
   </div>
 </nav>
 ```
@@ -585,11 +653,13 @@ git commit -m "feat(ng): add UPaginator page-link buttons and accessibility labe
 ### Task 6: Angular — wire into package barrel and secondary entry point
 
 **Files:**
+
 - Modify: `packages/ng/src/index.ts`
 - Modify: `packages/ng/package.json` (`description` field — add "Paginator" to the component list, matching the existing pattern: `"Ultimate Platform Angular components: Button, Checkbox, Dialog, Menu, Tooltip."`)
 - Test: `packages/ng/src/paginator/paginator.spec.ts` (extend — package/export smoke test)
 
 **Interfaces:**
+
 - Consumes: `UPaginator` from `./paginator` (Task 5)
 - Produces: `UPaginator` importable from `@ultimate/ng`'s root entry
 
@@ -639,11 +709,13 @@ git commit -m "feat(ng): export UPaginator from package root"
 ### Task 7: Scaffold `UPaginator` — controlled props, `PaginationState`/`getPageCount` consumption
 
 **Files:**
+
 - Create: `packages/react/src/paginator/paginator.tsx`
 - Create: `packages/react/src/paginator/index.ts`
 - Test: `packages/react/src/paginator/paginator.spec.tsx`
 
 **Interfaces:**
+
 - Consumes: `getPageCount` from `@ultimate/uix-data`; `useComponentBase` from `@ultimate/react-core`
 - Produces: `UPaginatorProps { first: number; rows: number; totalRecords: number; pageLinkSize?: number; onPageChange: (event: PaginatorPageChangeEvent) => void }`; `UPaginator: React.FC<UPaginatorProps>` — root `<nav>` carries a `data-page-count` attribute reflecting the computed `pageCount` (the same cross-framework convention Task 2/Task 10 use for Angular/Vue, so all three frameworks expose the identical DOM-observable proxy for this internal value) — consumed by Task 8
 
@@ -712,7 +784,10 @@ export const UPaginator: React.FC<UPaginatorProps> = ({
   pageLinkSize = 5,
   onPageChange,
 }) => {
-  const { cx } = useComponentBase({ componentName: "paginator", styleModule: paginatorStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "paginator",
+    styleModule: paginatorStyleModule,
+  });
 
   const pageCount = getPageCount(totalRecords, rows);
   const page = rows > 0 ? Math.floor(first / rows) : 0;
@@ -738,11 +813,13 @@ git commit -m "feat(react): scaffold UPaginator with uix-data state consumption"
 ### Task 8: React — style module, first/prev/next/last controls, page-links, `changePage`
 
 **Files:**
+
 - Modify: `packages/react/src/paginator/paginator.tsx`
 - Create: `packages/react/src/paginator/paginator-style.ts`
 - Test: `packages/react/src/paginator/paginator.spec.tsx` (extend)
 
 **Interfaces:**
+
 - Consumes: `style` from `@ultimate/uix-styles/paginator` (Task 1)
 - Produces: fully rendered controls; `changePage(newFirst: number): void` internal helper that always calls `props.onPageChange` (no internal state, per spec §8/§13's React model) — consumed by Task 9's tests
 
@@ -782,9 +859,15 @@ it("disables first/prev on the first page and next/last on the last page", () =>
   const { container } = render(
     <UPaginator first={0} rows={10} totalRecords={95} onPageChange={vi.fn()} />
   );
-  expect((container.querySelector("[data-u-paginator-first]") as HTMLButtonElement).disabled).toBe(true);
-  expect((container.querySelector("[data-u-paginator-prev]") as HTMLButtonElement).disabled).toBe(true);
-  expect((container.querySelector("[data-u-paginator-next]") as HTMLButtonElement).disabled).toBe(false);
+  expect((container.querySelector("[data-u-paginator-first]") as HTMLButtonElement).disabled).toBe(
+    true
+  );
+  expect((container.querySelector("[data-u-paginator-prev]") as HTMLButtonElement).disabled).toBe(
+    true
+  );
+  expect((container.querySelector("[data-u-paginator-next]") as HTMLButtonElement).disabled).toBe(
+    false
+  );
 });
 ```
 
@@ -842,7 +925,10 @@ export const UPaginator: React.FC<UPaginatorProps> = ({
   pageLinkSize = 5,
   onPageChange,
 }) => {
-  const { cx } = useComponentBase({ componentName: "paginator", styleModule: paginatorStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "paginator",
+    styleModule: paginatorStyleModule,
+  });
 
   const pageCount = getPageCount(totalRecords, rows);
   const page = rows > 0 ? Math.floor(first / rows) : 0;
@@ -935,6 +1021,7 @@ git commit -m "feat(react): add UPaginator controls, page-links, and controlled 
 ### Task 9: React — package export, `index.ts`, root barrel, `tsup` entry
 
 **Files:**
+
 - Create: `packages/react/src/paginator/index.ts`
 - Modify: `packages/react/src/index.ts`
 - Modify: `packages/react/tsup.config.ts`
@@ -942,6 +1029,7 @@ git commit -m "feat(react): add UPaginator controls, page-links, and controlled 
 - Test: `packages/react/src/paginator/paginator.spec.tsx` (extend — package/export smoke test)
 
 **Interfaces:**
+
 - Consumes: `UPaginator` from `./paginator` (Task 8)
 - Produces: `UPaginator` importable from both `@ultimate/react` and `@ultimate/react/paginator`
 
@@ -999,6 +1087,7 @@ git commit -m "feat(react): export UPaginator from package root and dedicated su
 ### Task 10: Scaffold `UPaginator` — `createBaseComponent`, internal `d_first`/`d_rows`, `PaginationState`/`getPageCount` consumption
 
 **Files:**
+
 - Create: `packages/vue/src/paginator/base-paginator.ts`
 - Create: `packages/vue/src/paginator/Paginator.vue`
 - Create: `packages/vue/src/paginator/paginator-style.ts`
@@ -1007,6 +1096,7 @@ git commit -m "feat(react): export UPaginator from package root and dedicated su
 (`packages/vue/src/paginator/index.ts` does not exist yet — package/subpath export wiring is Task 12's concern, matching Angular's Task 2/5 and React's Task 7/9 split. This task tests `Paginator.vue` directly, the same way Task 2 (Angular) and Task 7 (React) test their own component module directly before any barrel/index exists.)
 
 **Interfaces:**
+
 - Consumes: `getPageCount` from `@ultimate/uix-data`; `createBaseComponent` from `@ultimate/vue-core`; `style` from `@ultimate/uix-styles/paginator` (Task 1 — the real port, not a placeholder; this task only needs the `root`/`content` class slots, extended with the remaining first/prev/next/last/page slots in Task 11)
 - Produces: `UPaginator` SFC with props `first: Number`, `rows: Number`, `totalRecords: Number`, `pageLinkSize: { default: 5 }`; emits `page`, `update:first`, `update:rows`; data `d_first`, `d_rows` — consumed by Task 11
 
@@ -1141,11 +1231,13 @@ git commit -m "feat(vue): scaffold UPaginator with internal d_first/d_rows state
 ### Task 11: Vue — style module, first/prev/next/last controls, page-links, `changePage`, `v-model`/`page` emit
 
 **Files:**
+
 - Modify: `packages/vue/src/paginator/Paginator.vue`
 - Modify: `packages/vue/src/paginator/paginator-style.ts`
 - Test: `packages/vue/src/paginator/paginator.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `style` from `@ultimate/uix-styles/paginator` (Task 1)
 - Produces: fully rendered controls; `changePage(newFirst)` method that mutates `d_first`/`d_rows`-derived state and emits `page` + `update:first` + `update:rows` — consumed by Task 12's tests
 
@@ -1154,7 +1246,9 @@ git commit -m "feat(vue): scaffold UPaginator with internal d_first/d_rows state
 ```typescript
 // append to packages/vue/src/paginator/paginator.spec.ts
 it("renders one button per page-link, matching the shared display algorithm", () => {
-  const wrapper = mount(UPaginator, { props: { first: 0, rows: 10, totalRecords: 30, pageLinkSize: 5 } });
+  const wrapper = mount(UPaginator, {
+    props: { first: 0, rows: 10, totalRecords: 30, pageLinkSize: 5 },
+  });
   expect(wrapper.findAll("[data-u-paginator-page]").length).toBe(3);
 });
 
@@ -1240,7 +1334,9 @@ export const paginatorStyleModule = { css, classes };
         :aria-current="link - 1 === page ? 'page' : null"
         :aria-label="'Page ' + link"
         @click="changePage((link - 1) * d_rows)"
-      >{{ link }}</button>
+      >
+        {{ link }}
+      </button>
       <button
         type="button"
         data-u-paginator-next
@@ -1328,6 +1424,7 @@ git commit -m "feat(vue): add UPaginator controls, page-links, and v-model suppo
 ### Task 12: Vue — package export, root barrel, `tsup` entry, `aria-live` current-page report
 
 **Files:**
+
 - Modify: `packages/vue/src/paginator/Paginator.vue`
 - Create: `packages/vue/src/paginator/index.ts`
 - Modify: `packages/vue/src/index.ts`
@@ -1336,6 +1433,7 @@ git commit -m "feat(vue): add UPaginator controls, page-links, and v-model suppo
 - Test: `packages/vue/src/paginator/paginator.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `UPaginator` from `./Paginator.vue` (Task 11)
 - Produces: `UPaginator` importable from both `@ultimate/vue` and `@ultimate/vue/paginator`; current-page report element with `aria-live="polite"` (spec §12's confirmed Vue-specific finding)
 
@@ -1367,7 +1465,9 @@ Expected: FAIL — no `[data-u-paginator-current-report]` element rendered
 Add a current-page report element to `Paginator.vue`'s template, inside `.u-paginator-content`, after the last-page button:
 
 ```html
-<span data-u-paginator-current-report :class="cx('currentPageReport')" aria-live="polite">{{ page + 1 }} of {{ pageCount }}</span>
+<span data-u-paginator-current-report :class="cx('currentPageReport')" aria-live="polite"
+  >{{ page + 1 }} of {{ pageCount }}</span
+>
 ```
 
 Add a `currentPageReport` class-name slot to `paginator-style.ts`'s `classes` object: `currentPageReport: () => "u-paginator-current-report"`.
@@ -1409,11 +1509,13 @@ git commit -m "feat(vue): export UPaginator and add current-page-report aria-liv
 ### Task 13: Cross-framework theme-consistency test (matching `UButton`'s established pattern)
 
 **Files:**
+
 - Modify: `packages/themes/test/cross-framework-consistency.test.ts`
 - Modify: `packages/ng/src/paginator/paginator.spec.ts` (Angular's half — this convention proves the guarantee in two files, not one, per `UButton`'s own precedent below)
 - Test: (this task's changes ARE the tests — no separate test file)
 
 **Interfaces:**
+
 - Consumes: `UPaginator` from `@ultimate/react/paginator` and `@ultimate/vue/paginator` (built `dist/` output — see the build-freshness note below); `dt` from `@ultimate/uix-styled`; `applyUltimateTheme` from `@ultimate/themes` (already imported at the top of `cross-framework-consistency.test.ts`); `TestBed` and `UPaginator` from `./paginator` for the Angular half
 
 **What this test actually verifies** (confirmed by reading the real, already-existing `packages/themes/test/cross-framework-consistency.test.ts` in full, and its Angular counterpart in `packages/ng/src/button/button.spec.ts`, before writing this task): style/design-**token resolution** consistency — that the same `dt('paginator.background')` token call resolves to the identical `var(--u-paginator-background, ...)` CSS text regardless of which framework's `*-core` `StyleSheet` registered it. It is **not** a component-runtime-registration test (it does not assert that a component "renders" or "mounts correctly" in the abstract) — mounting a real `UPaginator` per framework is only the mechanism used to read each framework's own registered `<style>` element's text back out of the DOM; the assertion itself is always a `dt(...)`-resolved-token-text comparison. Do not restructure this into a broader smoke test.
@@ -1537,10 +1639,12 @@ git commit -m "test(themes): verify UPaginator cross-framework token consistency
 ### Task 14: Provenance manifest entries
 
 **Files:**
+
 - Create/Modify: `docs/architecture/provenance/paginator.json` (new file, following the existing `originalPath`/`ultimateDestination` schema used by Phase 1/2 components — read an existing component's provenance JSON, e.g. for `button`, before writing this one, to match the exact schema shape)
 - Modify: `docs/architecture/PROVENANCE.md` (new package-level entry for Paginator, following the existing template)
 
 **Interfaces:**
+
 - Consumes: none (documentation only)
 - Produces: provenance coverage satisfying `provenance:validate` for every new `.ts`/`.tsx`/`.vue` file created in Tasks 1-12
 
@@ -1554,6 +1658,7 @@ Expected: FAIL — reports missing manifest entries for `packages/{ng,react,vue}
 - [ ] **Step 3: Write the provenance entries**
 
 Read an existing provenance file (e.g. whatever file covers `packages/ng/src/button/`) to copy its exact JSON schema, then write `docs/architecture/provenance/paginator.json` with one entry per file created in Tasks 1-12, citing:
+
 - `originalPath`: the real pinned-source file each Ultimate file adapts (`paginator.ts` for Angular, `Paginator.js` for React, `Paginator.vue` for Vue, `.vendor-extracted/uix-styles-components/src/paginator/index.ts` for the style tokens)
 - `ultimateDestination`: the Ultimate file path
 - Pinned revision identifiers, matching `docs/architecture/checksums.json`'s existing values (already cited throughout the Paginator spec's own §17)
@@ -1595,6 +1700,7 @@ If no such component exists yet: **do not implement this task**. Report back to 
 ## Self-Review
 
 **Spec coverage** (`docs/superpowers/specs/2026-09-02-paginator-component-design.md`):
+
 - §4 Public API by Framework → Tasks 2, 7, 10 (props/inputs), Task 3/8/11 (events/methods).
 - §5 Shared vs Framework-Native → Global Constraints section; Tasks 2/7/10 consume `getPageCount` per §5's row 2 (closing the "re-inlined formula" finding).
 - §8 State Ownership → Task 3 (Angular `ngOnChanges` reconciliation, tested explicitly), Task 8 (React no-fallback, tested explicitly), Task 11 (Vue watcher-sync + `v-model`, tested explicitly).

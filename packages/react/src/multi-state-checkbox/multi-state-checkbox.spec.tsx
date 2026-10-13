@@ -27,9 +27,7 @@ describe("UMultiStateCheckbox", () => {
 
   it("wraps to the first option after the last when empty=false", () => {
     const onChange = vi.fn();
-    render(
-      <UMultiStateCheckbox value="done" options={STATES} onChange={onChange} empty={false} />
-    );
+    render(<UMultiStateCheckbox value="done" options={STATES} onChange={onChange} empty={false} />);
     fireEvent.click(screen.getByRole("button"));
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ value: "todo" }));
   });
@@ -43,9 +41,7 @@ describe("UMultiStateCheckbox", () => {
 
   it("does not cycle when disabled", () => {
     const onChange = vi.fn();
-    render(
-      <UMultiStateCheckbox value="todo" options={STATES} onChange={onChange} disabled />
-    );
+    render(<UMultiStateCheckbox value="todo" options={STATES} onChange={onChange} disabled />);
     fireEvent.click(screen.getByRole("button"));
     expect(onChange).not.toHaveBeenCalled();
   });

@@ -44,12 +44,18 @@ export interface TieredMenuClassesParams {
 }
 
 const classes = {
-  root: (params: { popup?: boolean } = {}) => ["u-tieredmenu u-component", { "u-tieredmenu-overlay": params.popup }],
+  root: (params: { popup?: boolean } = {}) => [
+    "u-tieredmenu u-component",
+    { "u-tieredmenu-overlay": params.popup },
+  ],
   rootList: "u-tieredmenu-root-list",
   submenu: "u-tieredmenu-submenu",
   item: (params: TieredMenuClassesParams = {}) => {
     const { disabled, open } = params;
-    return ["u-tieredmenu-item", { "u-tieredmenu-item-disabled": disabled, "u-tieredmenu-item-open": open }];
+    return [
+      "u-tieredmenu-item",
+      { "u-tieredmenu-item-disabled": disabled, "u-tieredmenu-item-open": open },
+    ];
   },
   itemContent: "u-tieredmenu-item-content",
   itemLink: "u-tieredmenu-item-link",

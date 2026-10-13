@@ -48,7 +48,7 @@ export function UDeferredContent({
     observer.observe(el);
 
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- onLoad intentionally not tracked; mirrors real source's mount-once binding
+    // onLoad intentionally not tracked; mirrors real source's mount-once binding
   }, [loaded]);
 
   return (

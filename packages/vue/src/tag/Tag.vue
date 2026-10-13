@@ -3,7 +3,9 @@
     <span v-if="icon" :class="cx('icon')">
       <i :class="icon" aria-hidden="true"></i>
     </span>
-    <span :class="cx('label')"><slot>{{ value }}</slot></span>
+    <span :class="cx('label')"
+      ><slot>{{ value }}</slot></span
+    >
   </span>
 </template>
 

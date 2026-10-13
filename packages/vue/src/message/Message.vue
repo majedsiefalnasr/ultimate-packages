@@ -1,5 +1,11 @@
 <template>
-  <div v-if="visible" :class="cx('root', { severity })" role="alert" aria-live="polite" :data-severity="severity">
+  <div
+    v-if="visible"
+    :class="cx('root', { severity })"
+    role="alert"
+    aria-live="polite"
+    :data-severity="severity"
+  >
     <div :class="cx('content')">
       <span v-if="resolvedIcon" :class="cx('icon')">
         <i :class="resolvedIcon" aria-hidden="true"></i>

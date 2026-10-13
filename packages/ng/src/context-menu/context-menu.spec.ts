@@ -8,7 +8,12 @@ import { UContextMenu } from "./context-menu";
 import type { UMenuItem } from "@ultimate/ng-core";
 
 describe("UContextMenu", () => {
-  const items: UMenuItem[] = [{ label: "Copy" }, { label: "Paste" }, { separator: true }, { label: "Delete", disabled: true }];
+  const items: UMenuItem[] = [
+    { label: "Copy" },
+    { label: "Paste" },
+    { separator: true },
+    { label: "Delete", disabled: true },
+  ];
 
   it("renders nothing until right-clicked", () => {
     @Component({
@@ -35,9 +40,15 @@ describe("UContextMenu", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const host: HTMLElement = fixture.nativeElement.querySelector("u-context-menu") ?? fixture.nativeElement;
+    const host: HTMLElement =
+      fixture.nativeElement.querySelector("u-context-menu") ?? fixture.nativeElement;
 
-    const event = new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: 50, clientY: 60 });
+    const event = new MouseEvent("contextmenu", {
+      bubbles: true,
+      cancelable: true,
+      clientX: 50,
+      clientY: 60,
+    });
     const preventDefaultSpy = vi.spyOn(event, "preventDefault");
     host.dispatchEvent(event);
     fixture.detectChanges();
@@ -53,7 +64,10 @@ describe("UContextMenu", () => {
     @Component({
       standalone: true,
       imports: [UContextMenu],
-      template: `<u-context-menu [model]="items" (onItemSelect)="onSelect($event)"></u-context-menu>`,
+      template: `<u-context-menu
+        [model]="items"
+        (onItemSelect)="onSelect($event)"
+      ></u-context-menu>`,
     })
     class HostComponent {
       items = items;
@@ -82,7 +96,10 @@ describe("UContextMenu", () => {
     @Component({
       standalone: true,
       imports: [UContextMenu],
-      template: `<u-context-menu [model]="items" (onItemSelect)="onSelect($event)"></u-context-menu>`,
+      template: `<u-context-menu
+        [model]="items"
+        (onItemSelect)="onSelect($event)"
+      ></u-context-menu>`,
     })
     class HostComponent {
       items = items;
@@ -110,7 +127,10 @@ describe("UContextMenu", () => {
     @Component({
       standalone: true,
       imports: [UContextMenu],
-      template: `<div><u-context-menu [model]="items"></u-context-menu><div id="outside">Outside</div></div>`,
+      template: `<div>
+        <u-context-menu [model]="items"></u-context-menu>
+        <div id="outside">Outside</div>
+      </div>`,
     })
     class HostComponent {
       items = items;
@@ -226,7 +246,8 @@ describe("UContextMenu", () => {
 
     const openContextMenu = (cm: ComponentFixture<UContextMenu>) =>
       cm.componentInstance.show(new MouseEvent("contextmenu", { clientX: 10, clientY: 10 }));
-    const openMenu = (menu: ComponentFixture<UMenu>) => menu.componentInstance.show(new MouseEvent("click"));
+    const openMenu = (menu: ComponentFixture<UMenu>) =>
+      menu.componentInstance.show(new MouseEvent("click"));
     // Both components portal their panel to document.body via UOverlay, so
     // each is located through its own logical view tree (debugElement).
     const isOpen = (fixture: ComponentFixture<unknown>, selector: string) => {

@@ -490,7 +490,10 @@ export interface TooltipBindingValue {
   hideDelay?: number;
   autoHide?: boolean;
 }
-export const tooltipDirective: import("vue").ObjectDirective<HTMLElement, string | TooltipBindingValue>;
+export const tooltipDirective: import("vue").ObjectDirective<
+  HTMLElement,
+  string | TooltipBindingValue
+>;
 ```
 
 ---
@@ -522,7 +525,7 @@ export const tooltipDirective: import("vue").ObjectDirective<HTMLElement, string
 
 - [ ] **Step 1: Write the failing test for `uix-utils/escape`**
 
-Create `packages/uix-utils/test/escape.test.ts` (ported test *design* from `react-core/src/escape/escape.spec.ts`, rewritten against the new framework-neutral API):
+Create `packages/uix-utils/test/escape.test.ts` (ported test _design_ from `react-core/src/escape/escape.spec.ts`, rewritten against the new framework-neutral API):
 
 ```typescript
 import { describe, it, expect, beforeEach } from "vitest";
@@ -838,7 +841,17 @@ export * from "./zindex";
 Extend the hardcoded `submodules` array (this package's `tsup.config.ts` auto-discovers new `src/` directories with no config change needed — only this test's array needs editing):
 
 ```typescript
-const submodules = ["classnames", "dom", "escape", "eventbus", "mergeprops", "object", "scroll-lock", "uuid", "zindex"];
+const submodules = [
+  "classnames",
+  "dom",
+  "escape",
+  "eventbus",
+  "mergeprops",
+  "object",
+  "scroll-lock",
+  "uuid",
+  "zindex",
+];
 ```
 
 - [ ] **Step 15: Build `uix-utils` and run its full test suite**
@@ -1048,7 +1061,11 @@ test("extracts a real packages/core/src/<name> directory (foundation root)", () 
     ]);
     assert.ok(existsSync(join(outDir, "BaseComponent.vue")), "BaseComponent.vue should be copied");
     const content = readFileSync(join(outDir, "BaseComponent.vue"), "utf8");
-    assert.match(content, /name: 'BaseComponent'/, "copied file should be real BaseComponent.vue source");
+    assert.match(
+      content,
+      /name: 'BaseComponent'/,
+      "copied file should be real BaseComponent.vue source"
+    );
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }
@@ -1345,12 +1362,8 @@ export default defineConfig({
           const fs = await import("node:fs/promises");
           const source = await fs.readFile(args.path, "utf8");
           if (!filter(args.path)) return undefined;
-          const result = await vue.transform.call(
-            { addWatchFile() {} },
-            source,
-            args.path
-          );
-          const code = typeof result === "string" ? result : result?.code ?? source;
+          const result = await vue.transform.call({ addWatchFile() {} }, source, args.path);
+          const code = typeof result === "string" ? result : (result?.code ?? source);
           return { contents: code, loader: "ts" };
         });
       },
@@ -1625,11 +1638,14 @@ import { createBaseEditableHolder } from "./base-editable-holder";
 describe("createBaseEditableHolder", () => {
   it("controlled mode: reflects the modelValue prop, does not manage its own state", async () => {
     const Base = createBaseEditableHolder();
-    const wrapper = mount({
-      extends: Base,
-      template: `<div>{{ dValue }}</div>`,
-      props: { modelValue: { default: undefined } },
-    }, { props: { modelValue: "a" } });
+    const wrapper = mount(
+      {
+        extends: Base,
+        template: `<div>{{ dValue }}</div>`,
+        props: { modelValue: { default: undefined } },
+      },
+      { props: { modelValue: "a" } }
+    );
     expect(wrapper.text()).toBe("a");
     expect(wrapper.vm.controlled).toBe(true);
     await wrapper.setProps({ modelValue: "b" });
@@ -1638,22 +1654,28 @@ describe("createBaseEditableHolder", () => {
 
   it("uncontrolled mode: initializes from defaultValue when modelValue is absent", () => {
     const Base = createBaseEditableHolder();
-    const wrapper = mount({
-      extends: Base,
-      template: `<div>{{ dValue }}</div>`,
-      props: { defaultValue: { default: undefined } },
-    }, { props: { defaultValue: "initial" } });
+    const wrapper = mount(
+      {
+        extends: Base,
+        template: `<div>{{ dValue }}</div>`,
+        props: { defaultValue: { default: undefined } },
+      },
+      { props: { defaultValue: "initial" } }
+    );
     expect(wrapper.text()).toBe("initial");
     expect(wrapper.vm.controlled).toBe(false);
   });
 
   it("writeValue emits update:modelValue and value-change when controlled", () => {
     const Base = createBaseEditableHolder();
-    const wrapper = mount({
-      extends: Base,
-      template: `<div />`,
-      props: { modelValue: { default: undefined } },
-    }, { props: { modelValue: "a" } });
+    const wrapper = mount(
+      {
+        extends: Base,
+        template: `<div />`,
+        props: { modelValue: { default: undefined } },
+      },
+      { props: { modelValue: "a" } }
+    );
     (wrapper.vm as unknown as { writeValue: (v: unknown) => void }).writeValue("b");
     expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["b"]);
     expect(wrapper.emitted("value-change")?.[0]).toEqual(["b"]);
@@ -1661,11 +1683,14 @@ describe("createBaseEditableHolder", () => {
 
   it("writeValue emits only value-change (not update:modelValue) when uncontrolled", () => {
     const Base = createBaseEditableHolder();
-    const wrapper = mount({
-      extends: Base,
-      template: `<div />`,
-      props: { defaultValue: { default: undefined } },
-    }, { props: { defaultValue: "a" } });
+    const wrapper = mount(
+      {
+        extends: Base,
+        template: `<div />`,
+        props: { defaultValue: { default: undefined } },
+      },
+      { props: { defaultValue: "a" } }
+    );
     (wrapper.vm as unknown as { writeValue: (v: unknown) => void }).writeValue("b");
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
     expect(wrapper.emitted("value-change")?.[0]).toEqual(["b"]);
@@ -1820,7 +1845,11 @@ describe("createBaseInput", () => {
   it("resolvedFluid() reflects the fluid prop directly when set", () => {
     const Base = createBaseInput();
     const wrapper = mount(
-      { extends: Base, template: `<div>{{ resolvedFluid }}</div>`, props: { fluid: { default: null } } },
+      {
+        extends: Base,
+        template: `<div>{{ resolvedFluid }}</div>`,
+        props: { fluid: { default: null } },
+      },
       { props: { fluid: true } }
     );
     expect(wrapper.text()).toBe("true");
@@ -1838,7 +1867,11 @@ describe("createBaseInput", () => {
   it("resolvedVariant() reflects the variant prop when set", () => {
     const Base = createBaseInput();
     const wrapper = mount(
-      { extends: Base, template: `<div>{{ resolvedVariant }}</div>`, props: { variant: { default: null } } },
+      {
+        extends: Base,
+        template: `<div>{{ resolvedVariant }}</div>`,
+        props: { variant: { default: null } },
+      },
       { props: { variant: "filled" } }
     );
     expect(wrapper.text()).toBe("filled");
@@ -2143,10 +2176,13 @@ describe("Portal", () => {
   });
 
   it("teleports its slot content to document.body by default", async () => {
-    mount({
-      components: { Portal },
-      template: `<Portal><div id="portal-content">hi</div></Portal>`,
-    }, { attachTo: document.body });
+    mount(
+      {
+        components: { Portal },
+        template: `<Portal><div id="portal-content">hi</div></Portal>`,
+      },
+      { attachTo: document.body }
+    );
     await new Promise((r) => setTimeout(r, 0));
     expect(document.body.querySelector("#portal-content")).not.toBeNull();
   });
@@ -2285,7 +2321,7 @@ git commit -m "feat(vue-core): add Portal wrapping native Teleport"
 
 - [ ] **Step 1: Write the failing tests**
 
-Create `packages/vue-core/src/escape/escape.spec.ts` (test *design* ported from `react-core/src/escape/escape.spec.ts`, rewritten for Vue's mixin/`ref()` shape):
+Create `packages/vue-core/src/escape/escape.spec.ts` (test _design_ ported from `react-core/src/escape/escape.spec.ts`, rewritten for Vue's mixin/`ref()` shape):
 
 ```typescript
 import { describe, it, expect, vi } from "vitest";
@@ -2437,7 +2473,10 @@ let uidCounter = 0;
 // displayOrderRegistry (NOT React's useState/return-value contract, spec §11 —
 // that stays in react-core, unchanged and un-extracted). Own implementation,
 // informed by but not copied from use-display-order.ts's React shape.
-export function useDisplayOrder(group: string, isVisible: Ref<boolean> | boolean): Ref<number | undefined> {
+export function useDisplayOrder(
+  group: string,
+  isVisible: Ref<boolean> | boolean
+): Ref<number | undefined> {
   const uid = ++uidCounter;
   const displayOrder = ref<number | undefined>(undefined);
 
@@ -2846,7 +2885,10 @@ function unbind(el: HTMLElement): void {
 }
 
 function autoElementFocus(el: HTMLElement, binding: FocusTrapBindingValue): void {
-  let target = getFirstFocusableElement(el, `[autofocus]${getComputedSelector(binding.autoFocusSelector)}`);
+  let target = getFirstFocusableElement(
+    el,
+    `[autofocus]${getComputedSelector(binding.autoFocusSelector)}`
+  );
   if (binding.autoFocus && !target) {
     target = getFirstFocusableElement(el, getComputedSelector(binding.firstFocusableSelector));
   }
@@ -3378,7 +3420,9 @@ it("mounting a component registers its style module, injecting a real <style> el
     styleModule: { css: ".u-regression-test { color: blue; }", classes: {} },
   });
   mount({ extends: Base, template: `<div />` });
-  const styleEl = document.head.querySelector('style[data-u-style="base-component-style-regression"]');
+  const styleEl = document.head.querySelector(
+    'style[data-u-style="base-component-style-regression"]'
+  );
   expect(styleEl).not.toBeNull();
   expect(styleEl?.textContent).toContain(".u-regression-test");
 });
@@ -3546,8 +3590,19 @@ export const TimesIcon = defineComponent({
     return () =>
       h(
         "svg",
-        { role: "img", "aria-label": props.label, class: props.class, width: "14", height: "14", viewBox: "0 0 14 14" },
-        [h("path", { d: "M8.014 7 13.4 1.61a.702.702 0 0 0-.994-.993L7.014 6L1.61.615a.703.703 0 0 0-.994.993L6.014 7 .626 12.385a.703.703 0 0 0 .994.993L7.014 8l5.394 5.385a.703.703 0 0 0 .994-.993Z" })]
+        {
+          role: "img",
+          "aria-label": props.label,
+          class: props.class,
+          width: "14",
+          height: "14",
+          viewBox: "0 0 14 14",
+        },
+        [
+          h("path", {
+            d: "M8.014 7 13.4 1.61a.702.702 0 0 0-.994-.993L7.014 6L1.61.615a.703.703 0 0 0-.994.993L6.014 7 .626 12.385a.703.703 0 0 0 .994.993L7.014 8l5.394 5.385a.703.703 0 0 0 .994-.993Z",
+          }),
+        ]
       );
   },
 });
@@ -3772,7 +3827,7 @@ export default defineConfig({
           const source = await fs.readFile(args.path, "utf8");
           if (!filter(args.path)) return undefined;
           const result = await vue.transform.call({ addWatchFile() {} }, source, args.path);
-          const code = typeof result === "string" ? result : result?.code ?? source;
+          const code = typeof result === "string" ? result : (result?.code ?? source);
           return { contents: code, loader: "ts" };
         });
       },
@@ -3910,7 +3965,11 @@ const inkByElement = new WeakMap<HTMLElement, HTMLElement>();
 const listenerByElement = new WeakMap<HTMLElement, (event: MouseEvent) => void>();
 
 function createInk(): HTMLElement {
-  return createElement("span", { class: "u-ink", role: "presentation", "aria-hidden": true }) as HTMLElement;
+  return createElement("span", {
+    class: "u-ink",
+    role: "presentation",
+    "aria-hidden": true,
+  }) as HTMLElement;
 }
 
 function activate(el: HTMLElement, ink: HTMLElement, event: MouseEvent): void {
@@ -4359,7 +4418,9 @@ describe("v-tooltip", () => {
 
   it("removes only the owned aria-describedby id on hide, preserving pre-existing values", async () => {
     const wrapper = mount(
-      { template: `<button aria-describedby="other-id" v-tooltip="'Save changes'">Target</button>` },
+      {
+        template: `<button aria-describedby="other-id" v-tooltip="'Save changes'">Target</button>`,
+      },
       { global: { directives: { tooltip: tooltipDirective } }, attachTo: document.body }
     );
     await wrapper.find("button").trigger("mouseenter");
@@ -4414,8 +4475,16 @@ const stateByElement = new WeakMap<HTMLElement, TooltipState>();
 const { set: setZIndex, clear: clearZIndex } = useZIndex();
 
 function normalizeBinding(value: string | TooltipBindingValue | undefined): TooltipBindingValue {
-  if (typeof value === "string") return { value, escape: true, showDelay: 0, hideDelay: 0, autoHide: true };
-  return { escape: true, showDelay: 0, hideDelay: 0, autoHide: true, ...value, value: value?.value ?? "" };
+  if (typeof value === "string")
+    return { value, escape: true, showDelay: 0, hideDelay: 0, autoHide: true };
+  return {
+    escape: true,
+    showDelay: 0,
+    hideDelay: 0,
+    autoHide: true,
+    ...value,
+    value: value?.value ?? "",
+  };
 }
 
 function addOwnedDescribedBy(el: HTMLElement, id: string): void {
@@ -4440,7 +4509,10 @@ function showTooltip(el: HTMLElement, state: TooltipState, binding: TooltipBindi
     id: state.panelId,
     role: "tooltip",
     class: binding.class,
-    style: { position: "absolute", width: binding.fitContent === false ? undefined : "fit-content" },
+    style: {
+      position: "absolute",
+      width: binding.fitContent === false ? undefined : "fit-content",
+    },
   }) as HTMLElement;
 
   // Two-mode content contract, matching verified Tooltip.js exactly (spec §25):
@@ -4608,7 +4680,14 @@ Modify `Button.vue`'s `<template>`, adding `v-tooltip="tooltipBinding"` alongsid
 
 ```vue
 <template>
-  <component :is="tag" v-if="!asChild" v-ripple v-tooltip="tooltipBinding" :class="cx('root')" v-bind="rootAttrs">
+  <component
+    :is="tag"
+    v-if="!asChild"
+    v-ripple
+    v-tooltip="tooltipBinding"
+    :class="cx('root')"
+    v-bind="rootAttrs"
+  >
     <!-- ... rest unchanged ... -->
   </component>
   <slot v-else :class="cx('root')" />
@@ -4621,7 +4700,10 @@ Append to `packages/vue/src/button/button.spec.ts`:
 
 ```typescript
 it("renders a tooltip on hover when the tooltip prop is set (sugar over v-tooltip)", async () => {
-  const wrapper = mount(UButton, { props: { label: "Save", tooltip: "Save changes" }, attachTo: document.body });
+  const wrapper = mount(UButton, {
+    props: { label: "Save", tooltip: "Save changes" },
+    attachTo: document.body,
+  });
   await wrapper.find("button").trigger("mouseenter");
   await new Promise((r) => setTimeout(r, 0));
   const panel = document.querySelector('[role="tooltip"]');
@@ -4765,13 +4847,17 @@ describe("UCheckbox — uncontrolled (defaultValue)", () => {
 
 describe("UCheckbox — indeterminate (real, verified prop; opposite finding from React's Checkbox)", () => {
   it("renders MinusIcon and sets the native input's indeterminate DOM property when indeterminate", () => {
-    const wrapper = mount(UCheckbox, { props: { modelValue: false, binary: true, indeterminate: true } });
+    const wrapper = mount(UCheckbox, {
+      props: { modelValue: false, binary: true, indeterminate: true },
+    });
     expect((wrapper.find("input").element as HTMLInputElement).indeterminate).toBe(true);
     expect(wrapper.findComponent({ name: "UMinusIcon" }).exists()).toBe(true);
   });
 
   it("clears indeterminate and emits update:indeterminate on change", async () => {
-    const wrapper = mount(UCheckbox, { props: { modelValue: false, binary: true, indeterminate: true } });
+    const wrapper = mount(UCheckbox, {
+      props: { modelValue: false, binary: true, indeterminate: true },
+    });
     await wrapper.find("input").setValue(true);
     expect(wrapper.emitted("update:indeterminate")?.[0]).toEqual([false]);
   });
@@ -4798,7 +4884,15 @@ describe("UCheckbox — accessibility", () => {
 
   it("disabled/readonly/required/name/tabindex pass through to the native input", () => {
     const wrapper = mount(UCheckbox, {
-      props: { modelValue: false, binary: true, disabled: true, readonly: true, required: true, name: "agree", tabindex: 5 },
+      props: {
+        modelValue: false,
+        binary: true,
+        disabled: true,
+        readonly: true,
+        required: true,
+        name: "agree",
+        tabindex: 5,
+      },
     });
     const input = wrapper.find("input");
     expect(input.attributes("disabled")).toBeDefined();
@@ -4934,10 +5028,16 @@ export default {
 
       let newValue;
       if (this.binary) {
-        newValue = this.dIndeterminate ? this.trueValue : this.checked ? this.falseValue : this.trueValue;
+        newValue = this.dIndeterminate
+          ? this.trueValue
+          : this.checked
+            ? this.falseValue
+            : this.trueValue;
       } else {
         const current = Array.isArray(this.dValue) ? this.dValue : [];
-        newValue = this.checked ? current.filter((v) => v !== this.value) : [...current, this.value];
+        newValue = this.checked
+          ? current.filter((v) => v !== this.value)
+          : [...current, this.value];
       }
 
       if (this.dIndeterminate) {
@@ -5046,6 +5146,7 @@ git commit -m "feat(vue): add UCheckbox with full controlled/uncontrolled/indete
 Run: `node scripts/provenance/extract-primevue-source.mjs .vendor-cache/primevue-4.5.5.tar.gz primevue dialog .vendor-extracted/vue/dialog`
 
 Read `.vendor-extracted/vue/dialog/Dialog.vue` and `.vendor-extracted/vue/dialog/BaseDialog.vue` in full (already read multiple times during the Real-Source Verification Gates — spec §15, §16, §17). Re-confirm the exact composition this task must reproduce:
+
 - `Portal` wraps `<transition>` wraps the mask/root markup.
 - `v-focustrap="{ disabled: !modal }"` on the root content element.
 - `onEnter`: emits `show`, captures `document.activeElement` into `this.target`, calls `enableDocumentSettings()` (scroll lock), `bindGlobalListeners()` (Escape), sets z-index (`'modal'` key).
@@ -5096,7 +5197,10 @@ describe("UDialog — controlled contract (v-model:visible)", () => {
   });
 
   it("emits update:visible(false) when the close button is clicked", async () => {
-    const wrapper = mount(UDialog, { props: { visible: true, closable: true }, attachTo: document.body });
+    const wrapper = mount(UDialog, {
+      props: { visible: true, closable: true },
+      attachTo: document.body,
+    });
     await new Promise((r) => setTimeout(r, 0));
     const closeButton = document.querySelector('[role="dialog"] button');
     (closeButton as HTMLElement)?.click();
@@ -5131,7 +5235,7 @@ describe("UDialog — Escape (via the shared uix-utils/escape adapter, spec §11
   });
 
   it("the topmost of two simultaneously-open dialogs closes first on Escape (priority stacking)", async () => {
-    const first = mount(UDialog, { props: { visible: true } }, );
+    const first = mount(UDialog, { props: { visible: true } });
     const second = mount(UDialog, { props: { visible: true } });
     await new Promise((r) => setTimeout(r, 0));
     document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
@@ -5144,7 +5248,10 @@ describe("UDialog — Escape (via the shared uix-utils/escape adapter, spec §11
 
 describe("UDialog — scroll locking (spec §16)", () => {
   it("blocks body scroll when a modal dialog is visible", async () => {
-    const wrapper = mount(UDialog, { props: { visible: true, modal: true }, attachTo: document.body });
+    const wrapper = mount(UDialog, {
+      props: { visible: true, modal: true },
+      attachTo: document.body,
+    });
     await new Promise((r) => setTimeout(r, 0));
     expect(document.body.classList.contains("u-overflow-hidden")).toBe(true);
     wrapper.unmount();
@@ -5181,7 +5288,10 @@ describe("UDialog — focus", () => {
 
 describe("UDialog — mask click", () => {
   it("dismisses on a mask click when dismissableMask and modal are both true", async () => {
-    const wrapper = mount(UDialog, { props: { visible: true, modal: true, dismissableMask: true }, attachTo: document.body });
+    const wrapper = mount(UDialog, {
+      props: { visible: true, modal: true, dismissableMask: true },
+      attachTo: document.body,
+    });
     await new Promise((r) => setTimeout(r, 0));
     const mask = document.querySelector(".u-dialog-mask");
     mask?.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
@@ -5238,7 +5348,13 @@ Create `packages/vue/src/dialog/Dialog.vue`:
 ```vue
 <template>
   <UPortal :appendTo="appendTo">
-    <div v-if="containerVisible" ref="mask" :class="cx('mask')" @mousedown="onMaskMouseDown" @mouseup="onMaskMouseUp">
+    <div
+      v-if="containerVisible"
+      ref="mask"
+      :class="cx('mask')"
+      @mousedown="onMaskMouseDown"
+      @mouseup="onMaskMouseUp"
+    >
       <transition
         name="u-dialog"
         appear
@@ -5259,7 +5375,14 @@ Create `packages/vue/src/dialog/Dialog.vue`:
         >
           <div v-if="header" ref="headerContainer" :class="cx('header')">
             <span :id="ariaLabelledById" :class="cx('title')">{{ header }}</span>
-            <button v-if="closable" v-ripple type="button" :class="cx('closeButton')" :aria-label="ariaCloseLabel" @click="close">
+            <button
+              v-if="closable"
+              v-ripple
+              type="button"
+              :class="cx('closeButton')"
+              :aria-label="ariaCloseLabel"
+              @click="close"
+            >
               <UTimesIcon />
             </button>
           </div>
@@ -5276,7 +5399,16 @@ Create `packages/vue/src/dialog/Dialog.vue`:
 </template>
 
 <script>
-import { Portal as UPortal, TimesIcon as UTimesIcon, focusTrapDirective, useZIndex, Z_INDEX_KEYS, useScrollLock, createGlobalEscapeKeyMixin, createMotionTransitionHooks } from "@ultimate/vue-core";
+import {
+  Portal as UPortal,
+  TimesIcon as UTimesIcon,
+  focusTrapDirective,
+  useZIndex,
+  Z_INDEX_KEYS,
+  useScrollLock,
+  createGlobalEscapeKeyMixin,
+  createMotionTransitionHooks,
+} from "@ultimate/vue-core";
 import { ESCAPE_PRIORITIES } from "@ultimate/uix-utils/escape";
 import { focus } from "@ultimate/uix-utils/dom";
 import { rippleDirective } from "../ripple";
@@ -5365,7 +5497,12 @@ export default {
       this.maskMouseDownTarget = event.target;
     },
     onMaskMouseUp(event) {
-      if (this.dismissableMask && this.modal && this.$refs.mask === this.maskMouseDownTarget && this.$refs.mask === event.target) {
+      if (
+        this.dismissableMask &&
+        this.modal &&
+        this.$refs.mask === this.maskMouseDownTarget &&
+        this.$refs.mask === event.target
+      ) {
         this.close();
       }
     },
@@ -5494,6 +5631,7 @@ git commit -m "feat(vue): add UDialog composing Portal/FocusTrap/Escape/ZIndex/s
 Run: `node scripts/provenance/extract-primevue-source.mjs .vendor-cache/primevue-4.5.5.tar.gz primevue menu .vendor-extracted/vue/menu`
 
 Read `.vendor-extracted/vue/menu/Menu.vue` and `.vendor-extracted/vue/menu/Menuitem.vue` in full (already read multiple times during the Real-Source Verification Gates — spec §10). Re-confirm the complete verified behavior surface this task must reproduce:
+
 - Dual-mode: `popup: false` renders an always-visible inline `<ul role="menu">`; `popup: true` toggles a `Portal`-rendered overlay via `show(event, target)`/`hide()`/`toggle()`.
 - `aria-activedescendant` virtual focus — `focusedOptionIndex` tracks the active item by its rendered `id`, no `.focus()` ever called on an individual `<li>`.
 - Keyboard: `ArrowDown`/`ArrowUp` (`Alt+ArrowUp` in popup mode returns focus to target and closes), `Home`/`End`, `Enter`/`NumpadEnter`/`Space` (both call `onEnterKey`), `Escape` (local handler, calls `focus(this.target)` then `hide()` if popup — **verified fall-through into the `Tab` case, no `break`**, a real quirk to preserve, not silently fix), `Tab` (closes a visible popup, does not trap).
@@ -5583,7 +5721,14 @@ describe("UMenu — keyboard navigation (verified full key set, spec §10)", () 
 
   it("Space triggers the same activation as Enter (calls onEnterKey)", async () => {
     const commandSpy = { called: false };
-    const spyModel = [{ label: "Action", command: () => { commandSpy.called = true; } }];
+    const spyModel = [
+      {
+        label: "Action",
+        command: () => {
+          commandSpy.called = true;
+        },
+      },
+    ];
     const wrapper = mount(UMenu, { props: { model: spyModel }, attachTo: document.body });
     const list = wrapper.find('ul[role="menu"]');
     await list.trigger("focus");
@@ -5710,7 +5855,10 @@ import { createBaseComponent } from "@ultimate/vue-core";
 
 export default {
   name: "UMenuitem",
-  extends: createBaseComponent({ componentName: "menuitem", styleModule: { css: "", classes: {} } }),
+  extends: createBaseComponent({
+    componentName: "menuitem",
+    styleModule: { css: "", classes: {} },
+  }),
   directives: { ripple: rippleDirective },
   emits: ["item-click", "item-mousemove"],
   props: {
@@ -5720,7 +5868,9 @@ export default {
   },
   computed: {
     visible() {
-      return typeof this.item.visible === "function" ? this.item.visible() : this.item.visible !== false;
+      return typeof this.item.visible === "function"
+        ? this.item.visible()
+        : this.item.visible !== false;
     },
     disabled() {
       return typeof this.item.disabled === "function" ? this.item.disabled() : !!this.item.disabled;
@@ -5750,7 +5900,12 @@ Create `packages/vue/src/menu/Menu.vue`:
 <template>
   <UPortal :appendTo="appendTo" :disabled="!popup">
     <transition name="u-menu" @enter="onEnter" @leave="onLeave" @after-leave="onAfterLeave">
-      <div v-if="popup ? overlayVisible : true" ref="container" :class="cx('root')" @click="onOverlayClick">
+      <div
+        v-if="popup ? overlayVisible : true"
+        ref="container"
+        :class="cx('root')"
+        @click="onOverlayClick"
+      >
         <ul
           ref="list"
           role="menu"
@@ -5764,7 +5919,12 @@ Create `packages/vue/src/menu/Menu.vue`:
           @keydown="onListKeyDown"
         >
           <template v-for="(item, i) in model" :key="item.label + i">
-            <li v-if="!item.items && item.separator" :key="'sep' + i" role="separator" :class="cx('separator')" />
+            <li
+              v-if="!item.items && item.separator"
+              :key="'sep' + i"
+              role="separator"
+              :class="cx('separator')"
+            />
             <UMenuitem
               v-else-if="!item.items"
               :id="`${_uid}_${i}`"
@@ -5965,8 +6125,12 @@ export default {
     bindOutsideClickListener() {
       if (this.outsideClickListener) return;
       this.outsideClickListener = (event) => {
-        const isOutsideContainer = this.$refs.container && !this.$refs.container.contains(event.target);
-        const isOutsideTarget = !(this.target && (this.target === event.target || this.target.contains?.(event.target)));
+        const isOutsideContainer =
+          this.$refs.container && !this.$refs.container.contains(event.target);
+        const isOutsideTarget = !(
+          this.target &&
+          (this.target === event.target || this.target.contains?.(event.target))
+        );
         if (this.overlayVisible && isOutsideContainer && isOutsideTarget) this.hide();
         else if (!this.popup && isOutsideContainer && isOutsideTarget) this.focusedOptionIndex = -1;
       };
@@ -6149,13 +6313,17 @@ for (const check of checks) {
   const code = await bundleEntry(check.source, check.label);
   for (const term of check.mustContain) {
     if (!code.includes(term)) {
-      console.error(`FAIL: ${check.label} — expected bundle to contain "${term}" but it was eliminated`);
+      console.error(
+        `FAIL: ${check.label} — expected bundle to contain "${term}" but it was eliminated`
+      );
       failed = true;
     }
   }
   for (const term of check.mustNotContain) {
     if (code.includes(term)) {
-      console.error(`FAIL: ${check.label} — expected bundle to NOT contain "${term}" (tree-shaking failure)`);
+      console.error(
+        `FAIL: ${check.label} — expected bundle to NOT contain "${term}" (tree-shaking failure)`
+      );
       failed = true;
     }
   }
@@ -6169,7 +6337,9 @@ if (failed) {
   process.exit(1);
 }
 
-console.log("[verify-tree-shaking-vue] all checks passed — sideEffects: false confirmed under real esbuild bundling.");
+console.log(
+  "[verify-tree-shaking-vue] all checks passed — sideEffects: false confirmed under real esbuild bundling."
+);
 ```
 
 - [ ] **Step 2: Build both packages in production mode**
@@ -6181,12 +6351,13 @@ Expected: PASS — both `dist/` directories populated (not dev/watch mode).
 
 Run: `node scripts/provenance/verify-tree-shaking-vue.mjs`
 Expected: PASS. If it FAILs, this is a real, required decision point — not a step to skip or silently retry:
+
 - If style registration is eliminated: correct `sideEffects` to `true` in the failing package's `package.json` (matching Angular's ADR-021 precedent), or mark the specific style-registration module `sideEffects: true` via the array-of-paths form if only that module needs it.
 - Do not proceed to Step 4 until this genuinely passes — do not comment out the check or narrow its assertions to make it pass artificially.
 
 - [ ] **Step 4: Write a throwaway consumer-mounting confirmation test, run it, then delete it**
 
-Create a temporary `packages/vue/src/__tree-shaking-consumer.spec.ts` (deleted at the end of this step — its only purpose is confirming real component *mounting* from the built `dist/` output, not just import, survives whatever `sideEffects` value Step 3 settled on):
+Create a temporary `packages/vue/src/__tree-shaking-consumer.spec.ts` (deleted at the end of this step — its only purpose is confirming real component _mounting_ from the built `dist/` output, not just import, survives whatever `sideEffects` value Step 3 settled on):
 
 ```typescript
 import { describe, it, expect } from "vitest";
@@ -6303,7 +6474,7 @@ Status: Accepted (Phase 4 spec, confirmed by implementation). `vue-core`'s `crea
 
 ## ADR-034 — FocusTrap, Tooltip, and Ripple are Vue custom directives, not components
 
-Status: Accepted (Phase 4 spec, confirmed by implementation). Verified PrimeVue's real `FocusTrap.js`, `Tooltip.js`, and `Ripple.js` are all Vue custom directives (`v-focustrap`, `v-tooltip`, `v-ripple`), not `.vue` SFC components — a materially different artifact shape from both Angular's `[uFocusTrap]` directive-with-component-render and React's ref-based sentinel *component* (FocusTrap) or ref-target *component* (Tooltip). `vue-core`'s `v-focustrap` and `vue`'s `v-tooltip`/`v-ripple` preserve this verified directive-native mechanism rather than converting any of the three into components to superficially match Angular's or React's API shape — per §2.4/ADR-006's framework-native-implementation principle.
+Status: Accepted (Phase 4 spec, confirmed by implementation). Verified PrimeVue's real `FocusTrap.js`, `Tooltip.js`, and `Ripple.js` are all Vue custom directives (`v-focustrap`, `v-tooltip`, `v-ripple`), not `.vue` SFC components — a materially different artifact shape from both Angular's `[uFocusTrap]` directive-with-component-render and React's ref-based sentinel _component_ (FocusTrap) or ref-target _component_ (Tooltip). `vue-core`'s `v-focustrap` and `vue`'s `v-tooltip`/`v-ripple` preserve this verified directive-native mechanism rather than converting any of the three into components to superficially match Angular's or React's API shape — per §2.4/ADR-006's framework-native-implementation principle.
 
 ## ADR-035 — FocusTrap's `MutationObserver` dynamic-content redirection carried forward
 
@@ -6345,7 +6516,7 @@ Run: `grep -n "^| 4" docs/architecture/ROADMAP.md` to confirm the current row te
 Change the Phase 4 row's status from `Not started` to `Complete`:
 
 ```markdown
-| 4     | UltimateVue                                               | Complete                |
+| 4 | UltimateVue | Complete |
 ```
 
 **Note**: Phases 0/1/2's rows show stale statuses in this file despite being complete (pre-existing drift, not introduced by this plan) — out of this task's scope to fix unless explicitly asked; only Phase 4's own row is this task's responsibility.
@@ -6372,7 +6543,7 @@ git commit -m "docs(architecture): record Phase 4 provenance, package-architectu
 
 Following the exact structural depth of `packages/react-core/README.md` (Status/Architecture/Modules/Usage/Intentional-deviations/Dependencies sections):
 
-```markdown
+````markdown
 # @ultimate/vue-core
 
 Vue-specific foundation for the Ultimate Platform: Options-API base component architecture, directive infrastructure, overlay/focus-trap/escape/scroll/motion infrastructure, and icons.
@@ -6414,6 +6585,7 @@ export default {
   template: `<div :class="cx('root')" />`,
 };
 ```
+````
 
 ## Intentional deviations (spec §32)
 
@@ -6428,7 +6600,8 @@ export default {
 ## Dependencies
 
 Depends on `@ultimate/uix-utils`, `@ultimate/uix-styled`, and `@ultimate/uix-motion` (workspace). Peers on `vue` (`^3.5.0`).
-```
+
+````
 
 - [ ] **Step 2: Write `packages/vue/README.md`**
 
@@ -6470,7 +6643,7 @@ export default {
   methods: { onSave() {} },
 };
 </script>
-```
+````
 
 ## Intentional deviations (spec §32)
 
@@ -6484,7 +6657,8 @@ See `packages/vue-core/README.md`'s deviation list for foundation-tier deviation
 ## Dependencies
 
 Depends on `@ultimate/vue-core`, `@ultimate/uix-utils`, `@ultimate/uix-styled`, and `@ultimate/uix-motion` (workspace). Peers on `vue` (`^3.5.0`).
-```
+
+````
 
 - [ ] **Step 3: Full clean-checkout install/build/test/typecheck sequence, both packages**
 
@@ -6501,17 +6675,20 @@ pnpm --filter @ultimate/vue-core typecheck
 pnpm --filter @ultimate/vue build
 pnpm --filter @ultimate/vue test
 pnpm --filter @ultimate/vue typecheck
-```
+````
+
 Expected: PASS at every step — including `react-core`'s tests, confirming Task 1's refactor introduced no regression this far downstream in the plan either.
 
 - [ ] **Step 4: Run all three provenance/boundary validators**
 
 Run:
+
 ```bash
 node scripts/provenance/validate-provenance.mjs
 node scripts/provenance/validate-boundaries.mjs
 node scripts/provenance/validate-dependency-ceiling.mjs
 ```
+
 Expected: PASS on all three — `validate-provenance.mjs` confirms every `.ts`/`.tsx`/`.vue` file under `packages/{uix,ng,react,vue}*/src/` has a provenance manifest entry (Task 2's extension); `validate-boundaries.mjs` confirms no `vue-core → vue` reverse dependency and no `vue-core → react-core`/`vue → react`/etc. cross-framework dependency (spec §28); `validate-dependency-ceiling.mjs` confirms zero `primevue`/`@primevue/*`/`@primeuix/*` runtime dependency anywhere in `packages/vue*`.
 
 - [ ] **Step 5: Manual dependency-direction grep check**
@@ -6539,4 +6716,3 @@ Do not auto-mark this step done — walk through spec §33's exit-criteria check
 **Placeholder scan**: no "TBD"/"implement later"/"add appropriate error handling" patterns found on review. Two places deliberately flag a genuine open implementation-time decision rather than papering over it with a placeholder — Task 3's tsup/`.vue` esbuild-plugin shim (untested pattern, explicit fallback guidance given) and Task 20's `useDisplayOrder` Options-API/Composition-API mismatch (two concrete resolution paths given, one marked preferred) — both are real engineering unknowns this plan could not responsibly resolve on paper without running the actual code, not omissions.
 
 **Type consistency check**: cross-referenced `Z_INDEX_KEYS`/`useZIndex`'s signature (Task 9) against every consumer (Tasks 18, 20, 21) — consistent. Cross-referenced `createGlobalEscapeKeyMixin`'s `priority: [primary, () => secondary]` shape (Task 8) against its only consumer (Task 20) — consistent, `getSecondary` accessor pattern used correctly to defer reading `this._displayOrderRef` until registration time. Cross-referenced `StyleModule`'s `{ css, classes }` shape (Task 3) against every `*-style.ts` file (Tasks 17-21) — consistent, though each one carries its own "verify the real `uix-styles` export shape matches" caveat rather than asserting unverified certainty. Found and fixed one real inconsistency during drafting: Task 19's `Checkbox.vue` initially referenced a bare `UMinusIcon` import with no corresponding `vue-core` icon — flagged explicitly in Task 19 Step 6 as a genuine icon-set gap requiring resolution before that task is complete, rather than silently wiring a wrong-looking substitute icon.
-

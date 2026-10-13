@@ -93,7 +93,9 @@ test.describe("Ng/Tooltip", () => {
     await expect(tooltip).toHaveClass(/u-tooltip-right/);
 
     const buttonBox = await button.boundingBox();
-    const styleLeft = await tooltip.evaluate((el) => Number.parseFloat((el as HTMLElement).style.left));
+    const styleLeft = await tooltip.evaluate((el) =>
+      Number.parseFloat((el as HTMLElement).style.left)
+    );
     expect(buttonBox).not.toBeNull();
     if (buttonBox) {
       // Real computed left offset must sit at or past the button's real

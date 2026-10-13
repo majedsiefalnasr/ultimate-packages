@@ -39,8 +39,19 @@ export interface ButtonClassesParams {
 
 const classes = {
   root: (params: ButtonClassesParams = {}) => {
-    const { hasIcon, label, loading, severity, raised, rounded, text, outlined, link, size, fluid } =
-      params;
+    const {
+      hasIcon,
+      label,
+      loading,
+      severity,
+      raised,
+      rounded,
+      text,
+      outlined,
+      link,
+      size,
+      fluid,
+    } = params;
 
     return [
       "u-button",

@@ -56,7 +56,10 @@ const classes = {
   headerLabel: "u-panelmenu-header-label",
   item: (params: PanelMenuClassesParams = {}) => {
     const { disabled, expanded } = params;
-    return ["u-panelmenu-item", { "u-panelmenu-item-disabled": disabled, "u-panelmenu-item-expanded": expanded }];
+    return [
+      "u-panelmenu-item",
+      { "u-panelmenu-item-disabled": disabled, "u-panelmenu-item-expanded": expanded },
+    ];
   },
   submenu: "u-panelmenu-submenu",
   submenuIcon: "u-panelmenu-submenu-icon",

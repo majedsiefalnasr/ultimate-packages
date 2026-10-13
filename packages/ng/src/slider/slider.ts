@@ -44,7 +44,11 @@ export interface USliderChangeEvent {
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: USlider, multi: true }],
   template: `
     @if (!range()) {
-      <span [class]="cx('range')" [style.width.%]="orientation() === 'horizontal' ? handleValue() : null" [style.height.%]="orientation() === 'vertical' ? handleValue() : null"></span>
+      <span
+        [class]="cx('range')"
+        [style.width.%]="orientation() === 'horizontal' ? handleValue() : null"
+        [style.height.%]="orientation() === 'vertical' ? handleValue() : null"
+      ></span>
       <span
         #handle
         [class]="cx('handle')"
@@ -141,7 +145,9 @@ export class USlider extends UBaseEditableHolder {
   });
 
   protected readonly rangeStart = computed(() => Math.min(...this.handleValues()));
-  protected readonly rangeWidth = computed(() => Math.abs(this.handleValues()[1] - this.handleValues()[0]));
+  protected readonly rangeWidth = computed(() =>
+    Math.abs(this.handleValues()[1] - this.handleValues()[0])
+  );
 
   private readonly singleValue = computed(() => {
     const value = this.modelValue();

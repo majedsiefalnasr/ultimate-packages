@@ -147,7 +147,7 @@ Expected: MIT license text, copyright PrimeTek. Confirm this matches the other t
 
 - [ ] **Step 5: Add the `docs/architecture/PROVENANCE.md` entry**
 
-Remove `@primeuix/themes` from the "Excluded from Phase 0 core" list (currently line ~132: `**Excluded from Phase 0 core (not runtime dependencies of any confirmed baseline):** \`@primeuix/forms\`, \`@primeuix/themes\`, \`@primeuix/mcp\`.` — remove just `\`@primeuix/themes\`,` from that sentence, keep `@primeuix/forms`/`@primeuix/mcp`).
+Remove `@primeuix/themes` from the "Excluded from Phase 0 core" list (currently line ~132: `**Excluded from Phase 0 core (not runtime dependencies of any confirmed baseline):** \`@primeuix/forms\`, \`@primeuix/themes\`, \`@primeuix/mcp\`.`— remove just`\`@primeuix/themes\`,`from that sentence, keep`@primeuix/forms`/`@primeuix/mcp`).
 
 Add a new `## @primeuix/themes` section, positioned after the existing `## @primeuix/motion` section, matching the exact field structure of the three existing `@primeuix/*` entries:
 
@@ -504,7 +504,10 @@ it("resolves dt() calls in registered CSS into var(--u-*, ...) references", () =
   };
   // ... mount/init the harness component with this styleModule, matching
   // the file's existing setup pattern
-  const styleEl = document.querySelector('style[data-u-style-id]') /* or ng-core's real registered-style lookup, matching whatever assertion pattern the file's other style-registration tests already use */;
+  const styleEl =
+    document.querySelector(
+      "style[data-u-style-id]"
+    ); /* or ng-core's real registered-style lookup, matching whatever assertion pattern the file's other style-registration tests already use */
   expect(styleEl?.textContent).toContain("var(--u-test-token-value");
   expect(styleEl?.textContent).not.toContain("dt(");
 });
@@ -541,7 +544,7 @@ Expected: PASS.
 - [ ] **Step 5: Run the full `ng-core` and `ng` test suites for regressions**
 
 Run: `pnpm --filter @ultimate/ng-core --filter @ultimate/ng test`
-Expected: PASS — this changes what every registered component's CSS actually contains (unresolved `dt(...)` calls now resolve to `var(...)` references with no fallback value yet, since no theme/preset has been applied — `dt()`'s fallback argument is unset in these call sites, matching real PrimeVue's own `Css\`${style}\`` call shape, which also passes no fallback). No existing test should have asserted literal `dt(...)` text remaining in registered CSS; if one does, it was asserting an already-known-broken state and should be updated.
+Expected: PASS — this changes what every registered component's CSS actually contains (unresolved `dt(...)` calls now resolve to `var(...)` references with no fallback value yet, since no theme/preset has been applied — `dt()`'s fallback argument is unset in these call sites, matching real PrimeVue's own `Css\`${style}\``call shape, which also passes no fallback). No existing test should have asserted literal`dt(...)` text remaining in registered CSS; if one does, it was asserting an already-known-broken state and should be updated.
 
 - [ ] **Step 6: Commit**
 
@@ -576,7 +579,10 @@ it("resolves dt() calls in registered CSS into var(--u-*, ...) references", () =
   };
   // Mount a minimal component using useComponentStyle("dt-test-component", styleModule),
   // matching this file's existing render/mount pattern for its other tests.
-  const styleEl = document.querySelector("style[data-u-style]") /* match the file's existing DOM-assertion pattern for registered styles */;
+  const styleEl =
+    document.querySelector(
+      "style[data-u-style]"
+    ); /* match the file's existing DOM-assertion pattern for registered styles */
   expect(styleEl?.textContent).toContain("var(--u-test-token-value");
   expect(styleEl?.textContent).not.toContain("dt(");
 });
@@ -598,7 +604,12 @@ import type { StyleModule } from "../base/component-base";
 export function useComponentStyle(componentName: string, styleModule: StyleModule): void {
   useMountEffect(() => {
     if (!reactCoreStyleSheet.has(componentName)) {
-      reactCoreStyleSheet.add(componentName, css`${styleModule.css}`);
+      reactCoreStyleSheet.add(
+        componentName,
+        css`
+          ${styleModule.css}
+        `
+      );
     }
   });
 }
@@ -677,7 +688,12 @@ export const vueCoreStyleSheet = new VueStyleSheet();
 
 export function registerComponentStyle(componentName: string, styleModule: StyleModule): void {
   if (vueCoreStyleSheet.has(componentName)) return;
-  vueCoreStyleSheet.add(componentName, css`${styleModule.css}`);
+  vueCoreStyleSheet.add(
+    componentName,
+    css`
+      ${styleModule.css}
+    `
+  );
 }
 ```
 
@@ -1304,15 +1320,36 @@ describe("cross-framework theme consistency", () => {
 
   it("the same preset produces the same resolved CSS variable name whether registered via ng-core's, react-core's, or vue-core's StyleSheet.add()", async () => {
     const { css } = await import("@ultimate/uix-styled");
-    const { ngCoreStyleSheet } = await import("@ultimate/ng-core/dist/basecomponent/style-sheet.mjs" /* adjust to the package's real subpath export if one exists, else import the package root and access the relevant export */);
-    const { reactCoreStyleSheet } = await import("@ultimate/react-core/dist/styling/react-style-sheet.mjs" /* same note */);
-    const { vueCoreStyleSheet } = await import("@ultimate/vue-core/dist/styling/vue-style-sheet.mjs" /* same note */);
+    const { ngCoreStyleSheet } = await import(
+      "@ultimate/ng-core/dist/basecomponent/style-sheet.mjs" /* adjust to the package's real subpath export if one exists, else import the package root and access the relevant export */
+    );
+    const { reactCoreStyleSheet } = await import(
+      "@ultimate/react-core/dist/styling/react-style-sheet.mjs" /* same note */
+    );
+    const { vueCoreStyleSheet } = await import(
+      "@ultimate/vue-core/dist/styling/vue-style-sheet.mjs" /* same note */
+    );
 
     const testCss = ".u-consistency-test { color: dt('button.primary.background'); }";
 
-    ngCoreStyleSheet.add("consistency-test-ng", css`${testCss}`);
-    reactCoreStyleSheet.add("consistency-test-react", css`${testCss}`);
-    vueCoreStyleSheet.add("consistency-test-vue", css`${testCss}`);
+    ngCoreStyleSheet.add(
+      "consistency-test-ng",
+      css`
+        ${testCss}
+      `
+    );
+    reactCoreStyleSheet.add(
+      "consistency-test-react",
+      css`
+        ${testCss}
+      `
+    );
+    vueCoreStyleSheet.add(
+      "consistency-test-vue",
+      css`
+        ${testCss}
+      `
+    );
 
     const ngResult = ngCoreStyleSheet.get("consistency-test-ng")?.css;
     const reactResult = reactCoreStyleSheet.get("consistency-test-react")?.css;
@@ -1544,6 +1581,7 @@ git commit -m "docs(themes): add README, close out Phase 5 provenance and roadma
 §1.3 (pin) → Task 1; §2 (package scaffold) → Task 8; §3 (rebrand) → Tasks 3-4; §4 (contract) → Task 8; §5+§5.1 (application timing + dt() wiring) → Tasks 5-7, 11; §6 (integration boundary) → Task 12; §10 exit criteria → Tasks 1-15 collectively, cross-checked below.
 
 **Exit-criteria cross-check** (spec §10, in order):
+
 1. `@primeuix/themes` pinned → Task 1. 2. `dt()` wiring at 3 call sites → Tasks 5-7. 3. `@ultimate/themes` package exists/builds → Task 8. 4. CSS var prefix `u` → Task 3. 5. `uix-styled` barrel rebrand recorded → Tasks 3-4. 6. Real token values for 5 components → Task 10. 7. Light/dark functional → Task 13. 8. RTL/LTR regression → Task 13. 9. Cross-framework consistency → Task 12. 10. Dependency-ceiling extended → Task 2. 11. Provenance validator extended → Task 2. 12. `themes.json` manifest → Task 10. 13. README → Task 15. 14. ROADMAP → Task 15.
 
 No gaps found. Every exit criterion has an owning task.

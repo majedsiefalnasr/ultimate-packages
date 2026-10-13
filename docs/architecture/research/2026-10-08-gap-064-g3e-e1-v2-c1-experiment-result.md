@@ -40,13 +40,13 @@ Original archive provenance and current worktree provenance are retained separat
 
 All positions below are CSS pixels. Prime values were observed again in this campaign, not inferred from the historical record.
 
-| Element | Prime top/y | Ultimate before | Ultimate after | After−before |
-| --- | ---: | ---: | ---: | ---: |
-| Root | 19 | 19 | 19 | 0 |
-| First image | 16 | 16 | 16 | 0 |
-| Second/right blue image | 16 | 19 | 16 | −3 |
-| Retained span | Absent | 19 | 16 | −3 |
-| Slider | 18 | 18 | 18 | 0 |
+| Element                 | Prime top/y | Ultimate before | Ultimate after | After−before |
+| ----------------------- | ----------: | --------------: | -------------: | -----------: |
+| Root                    |          19 |              19 |             19 |            0 |
+| First image             |          16 |              16 |             16 |            0 |
+| Second/right blue image |          16 |              19 |             16 |           −3 |
+| Retained span           |      Absent |              19 |             16 |           −3 |
+| Slider                  |          18 |              18 |             18 |            0 |
 
 The span remains absolute, with width 1257.5 and height 17 before and after. Second-image dimensions and horizontal placement remain unchanged. Ultimate root→span changes from 0 to −3; span→image remains 0. The clip-bearing span and image therefore move together to Prime's direct-image origin, rather than compensating the image independently. Root/first-image/slider full rectangles remain unchanged.
 
@@ -54,12 +54,12 @@ The mutated clip polygon occupies x16..644.75, y16..33, matching Prime's second-
 
 ## 4. Regression observations and saved images
 
-| Case | Prime / Ultimate after: root, first, second, slider y | Span width×height before/after | Observed mutation effect |
-| --- | --- | --- | --- |
-| `imagecompare/default` (Sized) | 16, 16, 16, 18 | 320×180 / 320×180 | No geometry or screenshot change |
-| `imagecompare/slide` | 16, 16, 16, 18 | 320×180 / 320×180 | Existing 25% clip and slider value retained |
-| `imagecompare/focus` | 16, 14, 14, 16 | 320×180 / 320×180 | Existing focus identity/state and screenshot retained |
-| `imagecompare/rtl` | 16, 16, 16, 18 | 320×180 / 320×180 | Existing right-half clip and direction retained |
+| Case                           | Prime / Ultimate after: root, first, second, slider y | Span width×height before/after | Observed mutation effect                              |
+| ------------------------------ | ----------------------------------------------------- | ------------------------------ | ----------------------------------------------------- |
+| `imagecompare/default` (Sized) | 16, 16, 16, 18                                        | 320×180 / 320×180              | No geometry or screenshot change                      |
+| `imagecompare/slide`           | 16, 16, 16, 18                                        | 320×180 / 320×180              | Existing 25% clip and slider value retained           |
+| `imagecompare/focus`           | 16, 14, 14, 16                                        | 320×180 / 320×180              | Existing focus identity/state and screenshot retained |
+| `imagecompare/rtl`             | 16, 16, 16, 18                                        | 320×180 / 320×180              | Existing right-half clip and direction retained       |
 
 All four cases have zero before/after rectangle deltas for root, images, span and slider. Recorded clip polygon coordinates match Prime; initial 50%, slide 25% and RTL clipping remain correct in these observations. The focus row reports its actual captured state, not the canonical root-style coordinates.
 

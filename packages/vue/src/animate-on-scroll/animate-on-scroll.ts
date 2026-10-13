@@ -60,7 +60,11 @@ export const animateOnScrollDirective = createDirective<AnimateOnScrollValue>({
 });
 
 function observerOptions(value: AnimateOnScrollValue): IntersectionObserverInit {
-  return { root: value.root ?? null, rootMargin: value.rootMargin, threshold: value.threshold || 0.5 };
+  return {
+    root: value.root ?? null,
+    rootMargin: value.rootMargin,
+    threshold: value.threshold || 0.5,
+  };
 }
 
 function bindIntersectionObserver(
@@ -73,7 +77,11 @@ function bindIntersectionObserver(
   state.observer = new IntersectionObserver(([entry]) => {
     if (state.isObserverActive) {
       if (entry.boundingClientRect.top > 0) {
-        entry.isIntersecting ? enter(el, value, state) : leave(el, value, state);
+        if (entry.isIntersecting) {
+          enter(el, value, state);
+        } else {
+          leave(el, value, state);
+        }
       }
     } else if (entry.isIntersecting) {
       enter(el, value, state);

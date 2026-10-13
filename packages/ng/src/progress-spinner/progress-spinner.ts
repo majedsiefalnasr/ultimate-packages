@@ -15,8 +15,20 @@ import { progressSpinnerStyleModule } from "./progress-spinner-style";
   standalone: true,
   selector: "u-progress-spinner",
   template: `
-    <svg [class]="cx('spin')" viewBox="25 25 50 50" [style.animation-duration]="animationDuration()">
-      <circle [class]="cx('circle')" cx="50" cy="50" r="20" [attr.fill]="fill()" [attr.stroke-width]="strokeWidth()" stroke-miterlimit="10" />
+    <svg
+      [class]="cx('spin')"
+      viewBox="25 25 50 50"
+      [style.animation-duration]="animationDuration()"
+    >
+      <circle
+        [class]="cx('circle')"
+        cx="50"
+        cy="50"
+        r="20"
+        [attr.fill]="fill()"
+        [attr.stroke-width]="strokeWidth()"
+        stroke-miterlimit="10"
+      />
     </svg>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

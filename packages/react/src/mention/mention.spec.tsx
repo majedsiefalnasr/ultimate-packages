@@ -26,7 +26,9 @@ describe("UMention", () => {
     render(<UMention value="" onChange={() => {}} onSearch={onSearch} delay={0} />);
     const textarea = screen.getByRole("combobox") as HTMLTextAreaElement;
     fireEvent.change(textarea, { target: { value: "@jo", selectionStart: 3 } });
-    act(() => { vi.runAllTimers(); });
+    act(() => {
+      vi.runAllTimers();
+    });
     expect(onSearch).toHaveBeenCalledWith(expect.objectContaining({ trigger: "@", query: "jo" }));
   });
 
@@ -35,7 +37,9 @@ describe("UMention", () => {
     render(<UMention value="" onChange={() => {}} onSearch={onSearch} />);
     const textarea = screen.getByRole("combobox");
     fireEvent.change(textarea, { target: { value: "hello", selectionStart: 5 } });
-    act(() => { vi.runAllTimers(); });
+    act(() => {
+      vi.runAllTimers();
+    });
     expect(onSearch).not.toHaveBeenCalled();
   });
 
@@ -45,7 +49,9 @@ describe("UMention", () => {
     );
     const textarea = screen.getByRole("combobox") as HTMLTextAreaElement;
     fireEvent.change(textarea, { target: { value: "@jo", selectionStart: 3 } });
-    act(() => { vi.runAllTimers(); });
+    act(() => {
+      vi.runAllTimers();
+    });
 
     rerender(
       <UMention
@@ -69,10 +75,18 @@ describe("UMention", () => {
     );
     const textarea = screen.getByRole("combobox") as HTMLTextAreaElement;
     fireEvent.change(textarea, { target: { value: "@jo", selectionStart: 3 } });
-    act(() => { vi.runAllTimers(); });
+    act(() => {
+      vi.runAllTimers();
+    });
 
     rerender(
-      <UMention value="@jo" onChange={onChange} suggestions={["john"]} onSelect={onSelect} delay={0} />
+      <UMention
+        value="@jo"
+        onChange={onChange}
+        suggestions={["john"]}
+        onSelect={onSelect}
+        delay={0}
+      />
     );
 
     fireEvent.click(screen.getByRole("option", { name: "john" }));
@@ -86,7 +100,9 @@ describe("UMention", () => {
     );
     const textarea = screen.getByRole("combobox") as HTMLTextAreaElement;
     fireEvent.change(textarea, { target: { value: "@jo", selectionStart: 3 } });
-    act(() => { vi.runAllTimers(); });
+    act(() => {
+      vi.runAllTimers();
+    });
     rerender(<UMention value="@jo" onChange={() => {}} suggestions={["john"]} delay={0} />);
     expect(screen.getByRole("listbox")).toBeInTheDocument();
 
@@ -101,8 +117,12 @@ describe("UMention", () => {
     );
     const textarea = screen.getByRole("combobox") as HTMLTextAreaElement;
     fireEvent.change(textarea, { target: { value: "@jo", selectionStart: 3 } });
-    act(() => { vi.runAllTimers(); });
-    rerender(<UMention value="@jo" onChange={onChange} suggestions={["john", "joanna"]} delay={0} />);
+    act(() => {
+      vi.runAllTimers();
+    });
+    rerender(
+      <UMention value="@jo" onChange={onChange} suggestions={["john", "joanna"]} delay={0} />
+    );
 
     fireEvent.keyDown(textarea, { key: "ArrowDown" });
     fireEvent.keyDown(textarea, { key: "Enter" });

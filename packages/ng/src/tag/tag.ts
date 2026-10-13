@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, booleanAttribute, input } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  input,
+} from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
 import { tagStyleModule } from "./tag-style";
 
@@ -24,7 +30,9 @@ import { tagStyleModule } from "./tag-style";
     @if (icon()) {
       <span [class]="cx('icon') + ' ' + icon()"></span>
     }
-    <span [class]="cx('label')"><ng-content>{{ value() }}</ng-content></span>
+    <span [class]="cx('label')"
+      ><ng-content>{{ value() }}</ng-content></span
+    >
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

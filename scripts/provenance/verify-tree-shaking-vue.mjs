@@ -88,7 +88,14 @@ const checks = [
     // must not pull in UDialog/UMenu any more than the subpath import does.
     // Leaving this empty makes the barrel check unable to ever fail on the
     // one thing it exists to catch.
-    mustNotContain: ["UDialog", "u-dialog", "createBaseDialog", "UMenu", "u-menu", "createBaseMenu"],
+    mustNotContain: [
+      "UDialog",
+      "u-dialog",
+      "createBaseDialog",
+      "UMenu",
+      "u-menu",
+      "createBaseMenu",
+    ],
   },
   {
     // vue-core has no subpath exports (single flat dist/index.mjs, splitting:
@@ -135,13 +142,17 @@ try {
     const code = await bundleEntry(check.source, check.label, workDir);
     for (const term of check.mustContain) {
       if (!code.includes(term)) {
-        console.error(`FAIL: ${check.label} — expected bundle to contain "${term}" but it was eliminated`);
+        console.error(
+          `FAIL: ${check.label} — expected bundle to contain "${term}" but it was eliminated`
+        );
         failed = true;
       }
     }
     for (const term of check.mustNotContain) {
       if (code.includes(term)) {
-        console.error(`FAIL: ${check.label} — expected bundle to NOT contain "${term}" (tree-shaking failure)`);
+        console.error(
+          `FAIL: ${check.label} — expected bundle to NOT contain "${term}" (tree-shaking failure)`
+        );
         failed = true;
       }
     }

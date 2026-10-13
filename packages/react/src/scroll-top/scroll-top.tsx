@@ -42,7 +42,10 @@ export const UScrollTop = React.forwardRef<HTMLButtonElement, UScrollTopProps>(f
   },
   ref
 ) {
-  const { cx } = useComponentBase({ componentName: "scroll-top", styleModule: scrollTopStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "scroll-top",
+    styleModule: scrollTopStyleModule,
+  });
   const { set: setZIndex, clear: clearZIndex } = useZIndex();
   const [visible, setVisible] = React.useState(false);
   const helperRef = React.useRef<HTMLSpanElement>(null);
@@ -85,7 +88,6 @@ export const UScrollTop = React.forwardRef<HTMLButtonElement, UScrollTopProps>(f
       if (buttonElRef.current) clearZIndex(buttonElRef.current);
       onHide?.();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   const onClick = () => {

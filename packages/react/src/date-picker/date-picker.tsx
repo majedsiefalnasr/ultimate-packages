@@ -52,7 +52,11 @@ function stripTime(date: Date): Date {
 }
 
 function isSameDay(a: Date, b: Date): boolean {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 function formatDate(date: Date): string {
@@ -118,15 +122,20 @@ export function UDatePicker({
   onShow,
   onHide,
 }: UDatePickerProps): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "date-picker", styleModule: datePickerStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "date-picker",
+    styleModule: datePickerStyleModule,
+  });
 
   const today = React.useMemo(() => new Date(), []);
   const [overlayVisible, setOverlayVisible] = React.useState(false);
   const [viewMonth, setViewMonth] = React.useState(value ? value.getMonth() : today.getMonth());
   const [viewYear, setViewYear] = React.useState(value ? value.getFullYear() : today.getFullYear());
-  const [focusedCell, setFocusedCell] = React.useState<{ day: number; month: number; year: number } | null>(
-    null
-  );
+  const [focusedCell, setFocusedCell] = React.useState<{
+    day: number;
+    month: number;
+    year: number;
+  } | null>(null);
 
   const isCellDisabled = React.useCallback(
     (cell: DayCell): boolean => {
@@ -161,14 +170,23 @@ export function UDatePicker({
       cells.push({ day, month: prevMonth, year: prevYear, otherMonth: true, today: false });
     }
     for (let day = 1; day <= daysInMonth; day++) {
-      const isToday = day === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+      const isToday =
+        day === today.getDate() &&
+        viewMonth === today.getMonth() &&
+        viewYear === today.getFullYear();
       cells.push({ day, month: viewMonth, year: viewYear, otherMonth: false, today: isToday });
     }
     let nextDay = 1;
     const nextMonth = viewMonth === 11 ? 0 : viewMonth + 1;
     const nextYear = viewMonth === 11 ? viewYear + 1 : viewYear;
     while (cells.length % 7 !== 0) {
-      cells.push({ day: nextDay, month: nextMonth, year: nextYear, otherMonth: true, today: false });
+      cells.push({
+        day: nextDay,
+        month: nextMonth,
+        year: nextYear,
+        otherMonth: true,
+        today: false,
+      });
       nextDay++;
     }
 
@@ -281,7 +299,11 @@ export function UDatePicker({
       case "NumpadEnter":
       case "Space":
         event.preventDefault();
-        overlayVisible ? hide() : show();
+        if (overlayVisible) {
+          hide();
+        } else {
+          show();
+        }
         break;
       case "Escape":
         if (overlayVisible) {
@@ -296,7 +318,11 @@ export function UDatePicker({
 
   const isFocusedCell = (cell: DayCell): boolean => {
     if (focusedCell) {
-      return focusedCell.day === cell.day && focusedCell.month === cell.month && focusedCell.year === cell.year;
+      return (
+        focusedCell.day === cell.day &&
+        focusedCell.month === cell.month &&
+        focusedCell.year === cell.year
+      );
     }
     return isSelected(cell);
   };
@@ -343,14 +369,24 @@ export function UDatePicker({
       {overlayVisible && (
         <div className={cx("panel")} role="dialog">
           <div className={cx("header")}>
-            <button type="button" className={cx("navButton")} aria-label="Previous month" onClick={navBackward}>
+            <button
+              type="button"
+              className={cx("navButton")}
+              aria-label="Previous month"
+              onClick={navBackward}
+            >
               &#8249;
             </button>
             <span className={cx("title")}>
               <span>{monthNames[viewMonth]}</span>
               <span>{viewYear}</span>
             </span>
-            <button type="button" className={cx("navButton")} aria-label="Next month" onClick={navForward}>
+            <button
+              type="button"
+              className={cx("navButton")}
+              aria-label="Next month"
+              onClick={navForward}
+            >
               &#8250;
             </button>
           </div>

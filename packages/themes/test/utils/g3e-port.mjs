@@ -402,7 +402,9 @@ const ORGANIZATIONCHART_RETAINED = [
 export const RETAINED = {
   ng: {
     image: [],
-    imagecompare: [".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }"],
+    imagecompare: [
+      ".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }",
+    ],
     carousel: CAROUSEL_RETAINED,
     galleria: [],
     // E3-V1 review fix: reset for the Angular drag-mode `ul` list (exact previous declaration).
@@ -418,7 +420,11 @@ export const RETAINED = {
       ".u-pick-list > .u-pick-list-controls { order: 1; }",
       ".u-pick-list > .u-pick-list-target { order: 2; }",
     ],
-    dataview: [".u-data-view-list { margin: 0; padding: 0; list-style: none; }", DATAVIEW_GRID, DATAVIEW_LOADING_ICON],
+    dataview: [
+      ".u-data-view-list { margin: 0; padding: 0; list-style: none; }",
+      DATAVIEW_GRID,
+      DATAVIEW_LOADING_ICON,
+    ],
   },
   vue: {
     image: [],

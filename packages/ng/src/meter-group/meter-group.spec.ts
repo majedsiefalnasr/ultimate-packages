@@ -75,10 +75,7 @@ describe("UMeterGroup", () => {
       template: `<u-meter-group [value]="value"></u-meter-group>`,
     })
     class HostComponent {
-      value: UMeterItem[] = [
-        { value: 20 },
-        { value: 30 },
-      ];
+      value: UMeterItem[] = [{ value: 20 }, { value: 30 }];
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();

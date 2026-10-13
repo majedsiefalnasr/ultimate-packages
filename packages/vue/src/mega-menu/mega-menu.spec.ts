@@ -69,7 +69,9 @@ describe("UMegaMenu", () => {
   });
 
   it("does not open or navigate for a disabled root item", async () => {
-    const disabledModel = [{ label: "Disabled", disabled: true, items: [[{ label: "X", items: [{ label: "Y" }] }]] }];
+    const disabledModel = [
+      { label: "Disabled", disabled: true, items: [[{ label: "X", items: [{ label: "Y" }] }]] },
+    ];
     const wrapper = mount(UMegaMenu, { props: { model: disabledModel } });
     const item = wrapper.findAll('[role="menubar"] > li')[0];
     const link = item.find("a");
@@ -79,7 +81,9 @@ describe("UMegaMenu", () => {
   });
 
   it("hides an item whose visible is false", () => {
-    const wrapper = mount(UMegaMenu, { props: { model: [...model, { label: "Hidden", visible: false, url: "/h" }] } });
+    const wrapper = mount(UMegaMenu, {
+      props: { model: [...model, { label: "Hidden", visible: false, url: "/h" }] },
+    });
     expect(wrapper.text()).not.toContain("Hidden");
   });
 
@@ -133,10 +137,20 @@ describe("UMegaMenu", () => {
       const withDisabledLeaf = [
         {
           label: "Products",
-          items: [[{ label: "Category A", items: [{ label: "A1" }, { label: "A2", disabled: true }, { label: "A3" }] }]],
+          items: [
+            [
+              {
+                label: "Category A",
+                items: [{ label: "A1" }, { label: "A2", disabled: true }, { label: "A3" }],
+              },
+            ],
+          ],
         },
       ];
-      const wrapper = mount(UMegaMenu, { props: { model: withDisabledLeaf }, attachTo: document.body });
+      const wrapper = mount(UMegaMenu, {
+        props: { model: withDisabledLeaf },
+        attachTo: document.body,
+      });
       const productsItem = wrapper.findAll('[role="menubar"] > li')[0];
       await productsItem.find("a").trigger("click");
       const leafLinks = productsItem.findAll(".u-megamenu-submenu a");
@@ -179,7 +193,10 @@ describe("UMegaMenu", () => {
       ];
 
       it("opens the overlay on Enter for a root item positioned after a hidden item", async () => {
-        const wrapper = mount(UMegaMenu, { props: { model: modelWithHidden }, attachTo: document.body });
+        const wrapper = mount(UMegaMenu, {
+          props: { model: modelWithHidden },
+          attachTo: document.body,
+        });
         // "B" is rendered link index 1 (Hidden renders no <li>/<a>), but model index 2.
         const bLink = wrapper.findAll('[role="menubar"] > li > .u-megamenu-item-content > a')[1];
         (bLink.element as HTMLElement).focus();
@@ -192,12 +209,17 @@ describe("UMegaMenu", () => {
       });
 
       it("Escape from a leaf item refocuses the correct owning root trigger, not a sibling shifted by a hidden item", async () => {
-        const wrapper = mount(UMegaMenu, { props: { model: modelWithHidden }, attachTo: document.body });
+        const wrapper = mount(UMegaMenu, {
+          props: { model: modelWithHidden },
+          attachTo: document.body,
+        });
         const bLink = wrapper.findAll('[role="menubar"] > li > .u-megamenu-item-content > a')[1];
         (bLink.element as HTMLElement).focus();
         await bLink.trigger("keydown", { code: "Enter" });
 
-        const bLi = wrapper.findAll('[role="menubar"] > li').find((li) => li.element === bLink.element.closest("li"))!;
+        const bLi = wrapper
+          .findAll('[role="menubar"] > li')
+          .find((li) => li.element === bLink.element.closest("li"))!;
         const leafLink = bLi.find(".u-megamenu-submenu a");
         expect(document.activeElement).toBe(leafLink.element);
 
@@ -209,7 +231,10 @@ describe("UMegaMenu", () => {
       });
 
       it("ArrowLeft from a root item after a hidden item does not get stuck", async () => {
-        const wrapper = mount(UMegaMenu, { props: { model: modelWithHidden }, attachTo: document.body });
+        const wrapper = mount(UMegaMenu, {
+          props: { model: modelWithHidden },
+          attachTo: document.body,
+        });
         const links = wrapper.findAll('[role="menubar"] > li > .u-megamenu-item-content > a');
         const [a, b] = links;
         (b.element as HTMLElement).focus();
@@ -225,10 +250,20 @@ describe("UMegaMenu", () => {
         const withHiddenLeaf = [
           {
             label: "Products",
-            items: [[{ label: "Category A", items: [{ label: "A1" }, { label: "Hidden", visible: false }, { label: "A2" }] }]],
+            items: [
+              [
+                {
+                  label: "Category A",
+                  items: [{ label: "A1" }, { label: "Hidden", visible: false }, { label: "A2" }],
+                },
+              ],
+            ],
           },
         ];
-        const wrapper = mount(UMegaMenu, { props: { model: withHiddenLeaf }, attachTo: document.body });
+        const wrapper = mount(UMegaMenu, {
+          props: { model: withHiddenLeaf },
+          attachTo: document.body,
+        });
         const productsItem = wrapper.findAll('[role="menubar"] > li')[0];
         await productsItem.find("a").trigger("click");
 

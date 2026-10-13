@@ -123,7 +123,9 @@ export function UListbox<T = unknown>({
     let newValue: T | T[];
     if (multiple) {
       const current = Array.isArray(value) ? value : [];
-      newValue = current.includes(optionVal) ? current.filter((v) => v !== optionVal) : [...current, optionVal];
+      newValue = current.includes(optionVal)
+        ? current.filter((v) => v !== optionVal)
+        : [...current, optionVal];
     } else {
       newValue = optionVal;
     }

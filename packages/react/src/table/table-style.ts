@@ -22,7 +22,10 @@ const classes = {
   table: () => "u-table-table",
   thead: () => "u-table-thead",
   tbody: () => "u-table-tbody",
-  row: (params: { selected?: boolean } = {}) => ["u-table-row", { "u-table-row-selected": params.selected }],
+  row: (params: { selected?: boolean } = {}) => [
+    "u-table-row",
+    { "u-table-row-selected": params.selected },
+  ],
 };
 
 /** `UBaseComponent`-shaped style module for `UTable`. */

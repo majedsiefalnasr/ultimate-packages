@@ -29,7 +29,9 @@ const css = /*css*/ `
 
 const classes = {
   root: (params?: Record<string, unknown>) =>
-    ["u-timeline u-component", `u-timeline-${(params?.["layout"] as string) ?? "vertical"}`].join(" "),
+    ["u-timeline u-component", `u-timeline-${(params?.["layout"] as string) ?? "vertical"}`].join(
+      " "
+    ),
   event: "u-timeline-event",
   eventOpposite: "u-timeline-event-opposite",
   eventSeparator: "u-timeline-event-separator",

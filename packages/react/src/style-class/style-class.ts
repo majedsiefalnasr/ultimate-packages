@@ -212,9 +212,11 @@ export function useStyleClass(
       if (!target) return;
 
       if (toggleClass) {
-        target.classList.contains(toggleClass)
-          ? target.classList.remove(toggleClass)
-          : target.classList.add(toggleClass);
+        if (target.classList.contains(toggleClass)) {
+          target.classList.remove(toggleClass);
+        } else {
+          target.classList.add(toggleClass);
+        }
       } else if (target.offsetParent === null) {
         enter();
       } else {

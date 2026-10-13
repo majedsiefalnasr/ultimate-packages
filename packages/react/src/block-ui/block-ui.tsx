@@ -73,7 +73,6 @@ export const UBlockUI = React.forwardRef<HTMLDivElement, UBlockUIProps>(function
       clearZIndex(maskRef.current);
       onUnblocked?.();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blocked]);
 
   React.useEffect(() => {
@@ -83,7 +82,6 @@ export const UBlockUI = React.forwardRef<HTMLDivElement, UBlockUIProps>(function
         unregister(lockId);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

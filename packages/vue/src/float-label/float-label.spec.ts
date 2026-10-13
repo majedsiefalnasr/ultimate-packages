@@ -5,7 +5,9 @@ import { UFloatLabel } from "./index";
 describe("UFloatLabel", () => {
   it("projects its default slot content (input + label)", () => {
     const wrapper = mount(UFloatLabel, {
-      slots: { default: '<input id="username" type="text" /><label for="username">Username</label>' },
+      slots: {
+        default: '<input id="username" type="text" /><label for="username">Username</label>',
+      },
     });
     expect(wrapper.find("input").exists()).toBe(true);
     expect(wrapper.find("label").exists()).toBe(true);
@@ -28,7 +30,9 @@ describe("UFloatLabel", () => {
 
   it("label-float trigger is pure CSS (:has()) — root class list is stable regardless of child filled state", () => {
     const unfilled = mount(UFloatLabel, { slots: { default: '<input type="text" />' } });
-    const filled = mount(UFloatLabel, { slots: { default: '<input type="text" class="u-filled" />' } });
+    const filled = mount(UFloatLabel, {
+      slots: { default: '<input type="text" class="u-filled" />' },
+    });
     expect(filled.classes().sort()).toEqual(unfilled.classes().sort());
     expect(filled.find("input.u-filled").exists()).toBe(true);
   });

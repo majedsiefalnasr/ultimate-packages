@@ -12,18 +12,10 @@
     <span :class="cx('message')">{{ confirmation?.message }}</span>
     <template #footer>
       <div :class="cx('footer')">
-        <button
-          v-if="confirmation?.rejectVisible !== false"
-          type="button"
-          @click="onReject"
-        >
+        <button v-if="confirmation?.rejectVisible !== false" type="button" @click="onReject">
           {{ confirmation?.rejectLabel ?? "No" }}
         </button>
-        <button
-          v-if="confirmation?.acceptVisible !== false"
-          type="button"
-          @click="onAccept"
-        >
+        <button v-if="confirmation?.acceptVisible !== false" type="button" @click="onAccept">
           {{ confirmation?.acceptLabel ?? "Yes" }}
         </button>
       </div>

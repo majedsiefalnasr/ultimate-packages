@@ -5,7 +5,9 @@ import { UMultiSelect } from "./multi-select";
 
 describe("UMultiSelect", () => {
   it("renders a combobox trigger showing the placeholder when nothing is selected", () => {
-    render(<UMultiSelect value={[]} onChange={() => {}} options={["A", "B"]} placeholder="Choose" />);
+    render(
+      <UMultiSelect value={[]} onChange={() => {}} options={["A", "B"]} placeholder="Choose" />
+    );
     expect(screen.getByRole("combobox")).toHaveTextContent("Choose");
   });
 
@@ -54,7 +56,9 @@ describe("UMultiSelect", () => {
   });
 
   it("filters the option list via the filter input when filter is enabled", () => {
-    render(<UMultiSelect value={[]} onChange={() => {}} options={["Apple", "Banana", "Cherry"]} filter />);
+    render(
+      <UMultiSelect value={[]} onChange={() => {}} options={["Apple", "Banana", "Cherry"]} filter />
+    );
     fireEvent.click(screen.getByRole("combobox"));
     fireEvent.change(screen.getByRole("searchbox"), { target: { value: "ban" } });
     expect(screen.getAllByRole("option").length).toBe(1);
@@ -74,7 +78,9 @@ describe("UMultiSelect", () => {
       <UMultiSelect value={["Apple"]} onChange={() => {}} options={["Apple", "Banana"]} />
     );
     expect(screen.getByRole("combobox")).toHaveTextContent("Apple");
-    rerender(<UMultiSelect value={["Apple", "Banana"]} onChange={() => {}} options={["Apple", "Banana"]} />);
+    rerender(
+      <UMultiSelect value={["Apple", "Banana"]} onChange={() => {}} options={["Apple", "Banana"]} />
+    );
     expect(screen.getByRole("combobox")).toHaveTextContent("Apple, Banana");
   });
 
@@ -92,7 +98,9 @@ describe("UMultiSelect", () => {
 
   it("clears the value via the clear icon when showClear is set", () => {
     const onChange = vi.fn();
-    render(<UMultiSelect value={["Apple"]} onChange={onChange} options={["Apple", "Banana"]} showClear />);
+    render(
+      <UMultiSelect value={["Apple"]} onChange={onChange} options={["Apple", "Banana"]} showClear />
+    );
     fireEvent.click(screen.getByText("×"));
     expect(onChange).toHaveBeenCalledWith([]);
   });

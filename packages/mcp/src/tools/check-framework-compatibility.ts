@@ -83,7 +83,10 @@ export function checkFrameworkCompatibility(
 
   const entry = manifestResult.find((e) => e.framework === input.framework);
   if (entry === undefined) {
-    return { compatible: false, reason: `no compatibility-manifest entry for framework "${input.framework}"` };
+    return {
+      compatible: false,
+      reason: `no compatibility-manifest entry for framework "${input.framework}"`,
+    };
   }
 
   const matched = satisfiesRange(input.frameworkVersion, entry.frameworkVersionRange);

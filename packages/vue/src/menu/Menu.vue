@@ -1,7 +1,18 @@
 <template>
   <UPortal :appendTo="appendTo" :disabled="!popup">
-    <transition :css="false" name="u-menu" @enter="onEnter" @leave="onLeave" @after-leave="onAfterLeave">
-      <div v-if="popup ? overlayVisible : true" ref="container" :class="cx('root')" @click="onOverlayClick">
+    <transition
+      :css="false"
+      name="u-menu"
+      @enter="onEnter"
+      @leave="onLeave"
+      @after-leave="onAfterLeave"
+    >
+      <div
+        v-if="popup ? overlayVisible : true"
+        ref="container"
+        :class="cx('root')"
+        @click="onOverlayClick"
+      >
         <ul
           ref="list"
           role="menu"
@@ -15,7 +26,12 @@
           @keydown="onListKeyDown"
         >
           <template v-for="(item, i) in model" :key="(item.label || '') + i">
-            <li v-if="!item.items && item.separator" :key="'sep' + i" role="separator" :class="cx('separator')" />
+            <li
+              v-if="!item.items && item.separator"
+              :key="'sep' + i"
+              role="separator"
+              :class="cx('separator')"
+            />
             <UMenuitem
               v-else-if="!item.items"
               :id="itemId(i)"
@@ -297,7 +313,8 @@ export default {
     bindOutsideClickListener() {
       if (this.outsideClickListener) return;
       this.outsideClickListener = (event) => {
-        const isOutsideContainer = this.$refs.container && !this.$refs.container.contains(event.target);
+        const isOutsideContainer =
+          this.$refs.container && !this.$refs.container.contains(event.target);
         const isOutsideTarget = !(
           this.target &&
           (this.target === event.target || this.target.contains?.(event.target))

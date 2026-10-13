@@ -67,15 +67,15 @@ Prepare dependency build artifacts once, in this explicit order: `@ultimate/uix-
 
 Temporary files are allowed only inside the disposable `/work` and `/io`, never as permanent repository changes:
 
-| Artifact | Exact content/derivation contract |
-| --- | --- |
-| `/work/tooling/prime-reference/playwright.e1v2.config.ts` | V1 derived configuration in §4, colocated with its base so relative paths remain correct |
-| `/work/playwright.e1v2.config.ts` | V2–V4 derived configuration in §4, colocated with root base |
-| `/work/tooling/prime-reference/e2e/e1v2-measure.ts` | Exact extracted read-only `measure` function described in §5 |
-| Disposable copy of `tooling/prime-reference/e2e/g3e.spec.ts` | Only §5 integration edits; save exact diff before use |
-| `/work/e1v2-scoped-a11y.mjs` | Exact scoped copy transformation in §7; imports remain existing validator functions |
-| `/work/e1v2-fidelity.mjs` | Exact read-only content in §7 |
-| `/io/selections/`, `/io/checks/`, `/io/internal/` | Fresh selection manifests, command outputs and measurements; no historic-envelope import |
+| Artifact                                                     | Exact content/derivation contract                                                        |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| `/work/tooling/prime-reference/playwright.e1v2.config.ts`    | V1 derived configuration in §4, colocated with its base so relative paths remain correct |
+| `/work/playwright.e1v2.config.ts`                            | V2–V4 derived configuration in §4, colocated with root base                              |
+| `/work/tooling/prime-reference/e2e/e1v2-measure.ts`          | Exact extracted read-only `measure` function described in §5                             |
+| Disposable copy of `tooling/prime-reference/e2e/g3e.spec.ts` | Only §5 integration edits; save exact diff before use                                    |
+| `/work/e1v2-scoped-a11y.mjs`                                 | Exact scoped copy transformation in §7; imports remain existing validator functions      |
+| `/work/e1v2-fidelity.mjs`                                    | Exact read-only content in §7                                                            |
+| `/io/selections/`, `/io/checks/`, `/io/internal/`            | Fresh selection manifests, command outputs and measurements; no historic-envelope import |
 
 Before execution, retain the materialized temporary artifact text, source hashes, exact diffs, command log and environment manifest. These recipes do not permit modifying a permanent validator or altering policy. A recipe that cannot be materialized exactly stops for review; no browser may be used to troubleshoot it.
 
@@ -94,7 +94,7 @@ export default defineConfig({
   updateSnapshots: "none",
   outputDir: "/io/playwright/v1",
   webServer: (base.webServer as Array<{ name?: string }>).filter(
-    s => s.name === "prime-reference-ng" || s.name === "ng-storybook"
+    (s) => s.name === "prime-reference-ng" || s.name === "ng-storybook"
   ),
 });
 ```
@@ -111,12 +111,10 @@ export default defineConfig({
   maxFailures: 1,
   updateSnapshots: "none",
   outputDir: "/io/playwright/ng",
-  projects: base.projects!.filter(
-    p => ["ng-chromium", "ng-firefox", "ng-webkit"].includes(p.name!)
+  projects: base.projects!.filter((p) =>
+    ["ng-chromium", "ng-firefox", "ng-webkit"].includes(p.name!)
   ),
-  webServer: (base.webServer as Array<{ name?: string }>).filter(
-    s => s.name === "ng-storybook"
-  ),
+  webServer: (base.webServer as Array<{ name?: string }>).filter((s) => s.name === "ng-storybook"),
 });
 ```
 
@@ -154,7 +152,9 @@ writeFileSync(`/io/captures/${captureStem}.ultimate.png`, ult.png);
 ```ts
 expect(all, "material probe/fact mismatch — STOP").toEqual([]);
 expect(noise, "unstable existing observations — STOP").toEqual({
-  probe: 0, primePixels: 0, ultimatePixels: 0,
+  probe: 0,
+  primePixels: 0,
+  ultimatePixels: 0,
 });
 if (review.differing > 0) {
   throw new Error("Saved-image difference remains pending human review — STOP campaign");
@@ -169,12 +169,12 @@ Keep the original parity observations and prescribed noise observations unchange
 
 Use repository-root working directory `/work`. `G3E_BATCH=E-1` is required for V1. Patterns are full-title suffix matches, not leaf-start anchors:
 
-| Run | File | Project(s) | Literal grep | Expected selection |
-| --- | --- | --- | --- | --- |
-| V1 | `tooling/prime-reference/e2e/g3e.spec.ts` | `prime-parity-chromium` | `\bimagecompare/(root-style\|default\|slide\|focus\|rtl) \[ng\] PrimeNG 21\.1\.9 vs Ultimate$` | Five distinct named cases |
-| V2 | `packages/ng/e2e/g3e-aura-styles.spec.ts` | Each of `ng-chromium`, `ng-firefox`, `ng-webkit` | `\bNg/ImageCompare (Sized\|Rtl) rest G3-E E-1 visual$` | Two per engine |
-| V3 | Same Angular file | Each of those three projects | `\bNg/ImageCompare (Sized\|Rtl) G3-E E-1 accessibility$` | Two per engine, six total |
-| V4 | Same Angular file | `ng-chromium` | `\bNg/imagecompare selector reach G3-E reach$` | One test, existing two-story body |
+| Run | File                                      | Project(s)                                       | Literal grep                                                                                   | Expected selection                |
+| --- | ----------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- | --------------------------------- |
+| V1  | `tooling/prime-reference/e2e/g3e.spec.ts` | `prime-parity-chromium`                          | `\bimagecompare/(root-style\|default\|slide\|focus\|rtl) \[ng\] PrimeNG 21\.1\.9 vs Ultimate$` | Five distinct named cases         |
+| V2  | `packages/ng/e2e/g3e-aura-styles.spec.ts` | Each of `ng-chromium`, `ng-firefox`, `ng-webkit` | `\bNg/ImageCompare (Sized\|Rtl) rest G3-E E-1 visual$`                                         | Two per engine                    |
+| V3  | Same Angular file                         | Each of those three projects                     | `\bNg/ImageCompare (Sized\|Rtl) G3-E E-1 accessibility$`                                       | Two per engine, six total         |
+| V4  | Same Angular file                         | `ng-chromium`                                    | `\bNg/imagecompare selector reach G3-E reach$`                                                 | One test, existing two-story body |
 
 The table escapes `|` for Markdown only. Exact representative commands (repeat V2/V3 once for each named engine, without changing the regex):
 
@@ -217,9 +217,10 @@ Inside the container, copy `scripts/provenance/validate-g3e-accessibility.mjs` t
 3. Immediately before `if (ids.length !== EXPECTED_STORY_COUNT[fw])`, insert:
 
 ```js
-  const permitted = new Set(["ng-imagecompare--sized", "ng-imagecompare--rtl"]);
-  for (let i = ids.length - 1; i >= 0; i--) if (!permitted.has(ids[i])) ids.splice(i, 1);
-  if (ids.length !== 2 || [...permitted].some(id => !ids.includes(id))) fail("ImageCompare story identity mismatch");
+const permitted = new Set(["ng-imagecompare--sized", "ng-imagecompare--rtl"]);
+for (let i = ids.length - 1; i >= 0; i--) if (!permitted.has(ids[i])) ids.splice(i, 1);
+if (ids.length !== 2 || [...permitted].some((id) => !ids.includes(id)))
+  fail("ImageCompare story identity mismatch");
 ```
 
 No other logic changes. Retain both original baseline/preexisting fingerprint sets, missing-report failure, component-story identity checks and `computeFingerprint`/`parseBaselineFingerprints`. Fresh input must contain no imported historical a11y results. Require each new envelope's `framework`/`browser` to match its file path and scan time to fall in this campaign; malformed or stale reports stop. Require all six before invoking once:
@@ -237,8 +238,14 @@ Exact disposable file `/work/e1v2-fidelity.mjs`:
 ```js
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { actualCssText, expectedCss, parseGroups, norm, COUNTS } from "./packages/themes/test/utils/g3e-port.mjs";
-const groups = text => parseGroups(text).map(g => norm(`${g.head}{${g.body}}`));
+import {
+  actualCssText,
+  expectedCss,
+  parseGroups,
+  norm,
+  COUNTS,
+} from "./packages/themes/test/utils/g3e-port.mjs";
+const groups = (text) => parseGroups(text).map((g) => norm(`${g.head}{${g.body}}`));
 const before = readFileSync("/io/start-imagecompare-css.txt", "utf8");
 const actual = groups(actualCssText("ng", "imagecompare"));
 const initial = groups(before);
@@ -247,8 +254,17 @@ assert.equal(initial.length, 13);
 assert.equal(actual.length, 13);
 assert.deepEqual(actual, expectedCss("ng", "imagecompare"));
 assert.deepEqual(actual.slice(0, 12), initial.slice(0, 12));
-assert.equal(actual[12], norm(".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }"));
-assert.ok(actual.some(r => r.includes("::-moz-range-thumb{") && r.includes("dt('imagecompare.handle.border.style')")));
+assert.equal(
+  actual[12],
+  norm(
+    ".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }"
+  )
+);
+assert.ok(
+  actual.some(
+    (r) => r.includes("::-moz-range-thumb{") && r.includes("dt('imagecompare.handle.border.style')")
+  )
+);
 console.log("Angular ImageCompare generated/shipped fidelity and protected D1 groups preserved");
 ```
 
@@ -262,17 +278,17 @@ Perform one read-only final comparison with the starting file manifest and copie
 
 The Spec's AC1–AC9 remain unchanged; no new ratio/tolerance gate:
 
-| AC | Required evidence |
-| --- | --- |
-| AC1 | V1 actual stylesheet: second/right image agrees with Prime within ±1 px, no visible displacement |
-| AC2 | V1 root/first/slider preserved, nominal canonical y19/y16/y18 |
-| AC3 | V1 internal image/span dimensions, relative placement, clipping and pixels |
-| AC4 | V1 five-case actions and V2 existing regression cases preserve sizing/slide/focus/RTL |
-| AC5 | Existing Playbook geometry/probes and saved-image review; pixel ratio advisory |
-| AC6 | Unchanged V2 screenshot assertions; every mismatch accounted for and stops; no baseline accepted |
+| AC  | Required evidence                                                                                    |
+| --- | ---------------------------------------------------------------------------------------------------- |
+| AC1 | V1 actual stylesheet: second/right image agrees with Prime within ±1 px, no visible displacement     |
+| AC2 | V1 root/first/slider preserved, nominal canonical y19/y16/y18                                        |
+| AC3 | V1 internal image/span dimensions, relative placement, clipping and pixels                           |
+| AC4 | V1 five-case actions and V2 existing regression cases preserve sizing/slide/focus/RTL                |
+| AC5 | Existing Playbook geometry/probes and saved-image review; pixel ratio advisory                       |
+| AC6 | Unchanged V2 screenshot assertions; every mismatch accounted for and stops; no baseline accepted     |
 | AC7 | V3 six fresh envelopes, unchanged differential identity/strength; V4 existing reach collector passes |
-| AC8 | V6 generated equality plus V8 exact four-file/provenance/DOM/runtime/API integrity |
-| AC9 | V5/V7 applicable checks, preserved E1-B1 failures separately reported; no overall-green claim |
+| AC8 | V6 generated equality plus V8 exact four-file/provenance/DOM/runtime/API integrity                   |
+| AC9 | V5/V7 applicable checks, preserved E1-B1 failures separately reported; no overall-green claim        |
 
 Retain human approvals, source/archive/environment hashes, dirty-state originals, exact implementation diff/generated stdout, temporary artifact contents/diffs/hashes, selection manifests, every invocation/status, raw internal JSON, parity reports/captures/noise, regression expected/actual/diffs, six a11y envelopes, reach output, unit/fidelity/build/type/provenance outputs, failures/unrun members and cleanup results. Never overwrite prior evidence or describe an unrun broad suite as passing.
 

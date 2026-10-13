@@ -5,7 +5,11 @@ import { USpeedDial, type USpeedDialHandle } from "./speed-dial";
 import type { UMenuItem } from "../menu";
 
 describe("USpeedDial", () => {
-  const items: UMenuItem[] = [{ label: "Add", icon: "pi pi-plus" }, { label: "Edit", icon: "pi pi-pencil" }, { label: "Delete", icon: "pi pi-trash" }];
+  const items: UMenuItem[] = [
+    { label: "Add", icon: "pi pi-plus" },
+    { label: "Edit", icon: "pi pi-pencil" },
+    { label: "Delete", icon: "pi pi-trash" },
+  ];
 
   it("renders collapsed by default (aria-expanded false)", () => {
     const { container } = render(<USpeedDial model={items} />);
@@ -35,7 +39,9 @@ describe("USpeedDial", () => {
     const onShow = vi.fn();
     const onHide = vi.fn();
     const ref = React.createRef<USpeedDialHandle>();
-    const { container } = render(<USpeedDial ref={ref} model={items} onShow={onShow} onHide={onHide} />);
+    const { container } = render(
+      <USpeedDial ref={ref} model={items} onShow={onShow} onHide={onHide} />
+    );
     act(() => ref.current?.show());
     expect(onShow).toHaveBeenCalled();
     expect(container.querySelector("button")?.getAttribute("aria-expanded")).toBe("true");

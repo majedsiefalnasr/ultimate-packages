@@ -19,7 +19,10 @@ import { tieredMenuStyleModule } from "./tiered-menu-style";
 // not reproduced here.
 export function createBaseTieredMenu() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "tieredmenu", styleModule: tieredMenuStyleModule }),
+    extends: createBaseComponent({
+      componentName: "tieredmenu",
+      styleModule: tieredMenuStyleModule,
+    }),
     props: {
       model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       popup: { type: Boolean, default: false },

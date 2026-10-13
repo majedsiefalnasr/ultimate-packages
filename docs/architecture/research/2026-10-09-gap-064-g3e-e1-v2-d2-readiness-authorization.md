@@ -39,16 +39,16 @@ Question: **Does this corrected input serve the intended images, and what actual
 
 ## 3. Frozen environment and input gates
 
-| Dimension | Required value |
-| --- | --- |
-| Docker | `mcr.microsoft.com/playwright:v1.63.0-jammy` |
-| Image ID | `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847` |
-| OS/platform | Linux arm64 |
-| Node / pnpm | v24.20.0 / 9.6.0 |
-| Playwright / Chromium | 1.63.0 / 153.0.8010.12 |
-| Reference dependencies | PrimeNG 21.1.9; Aura/PrimeUIX 2.0.3; existing frozen lockfile |
-| Viewport / DPR | 1280×720 / 1 |
-| Typography | Accepted fixture-scoped default typography; no Inter/font integration or new resources |
+| Dimension              | Required value                                                                         |
+| ---------------------- | -------------------------------------------------------------------------------------- |
+| Docker                 | `mcr.microsoft.com/playwright:v1.63.0-jammy`                                           |
+| Image ID               | `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847`              |
+| OS/platform            | Linux arm64                                                                            |
+| Node / pnpm            | v24.20.0 / 9.6.0                                                                       |
+| Playwright / Chromium  | 1.63.0 / 153.0.8010.12                                                                 |
+| Reference dependencies | PrimeNG 21.1.9; Aura/PrimeUIX 2.0.3; existing frozen lockfile                          |
+| Viewport / DPR         | 1280×720 / 1                                                                           |
+| Typography             | Accepted fixture-scoped default typography; no Inter/font integration or new resources |
 
 Before any page creation, require matching image/package/runtime identities, using Playwright's actual `chromium.executablePath()` for the executable version; no browser identity-observation page. Check the archive SHA, all original member/payload hashes, preparation topology records, lockfile and four-file/protected-content hashes against retained evidence. Extract the corrected archive once into fresh `/work`, preserving its symlink. Verify `ng/fixtures -> ../fixtures` and all five fixture hashes through both paths. A discrepancy is STOP; no repackage/repair/re-extraction.
 
@@ -73,7 +73,7 @@ export default defineConfig({
   outputDir: "/io/playwright",
   projects: base.projects,
   webServer: (base.webServer as Array<{ name?: string }>).filter(
-    s => s.name === "prime-reference-ng"
+    (s) => s.name === "prime-reference-ng"
   ),
 });
 ```
@@ -152,16 +152,16 @@ This title/file cannot select V1 or another suite. No command adds an assertion 
 
 Only after separate approval may these fresh host files/directories under `E/d2-readiness/` be created:
 
-| Artifact | Required content |
-| --- | --- |
-| `artifacts/playwright.d2.config.ts`, `artifacts/d2-readiness.spec.ts` | Exact future disposable source texts; retained before execution |
-| `artifacts/driver.diff`, `artifacts/hashes.json` | Additions only; original harness/config hashes and artifact hashes |
-| `starting-state.json`, `input-integrity.json`, `environment.json` | Branch/dirty-state and input/protected hashes; corrected archive/topology/fixture checks; exact runtime identities/settings |
-| `commands.log`, `preparation.log`, `server.log`, `diagnostic.log` | Exact preparation, launch/discovery/diagnostic commands and outputs, with no secrets or unrelated network-body logging |
-| `selection.json`, `selection-validation.json` | Exact discovery and guard results |
-| `diagnostic-runner.json`, `playwright/` | Runner report and any automatic failure/error-context attachments; no snapshot updates |
+| Artifact                                                                      | Required content                                                                                                                                  |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `artifacts/playwright.d2.config.ts`, `artifacts/d2-readiness.spec.ts`         | Exact future disposable source texts; retained before execution                                                                                   |
+| `artifacts/driver.diff`, `artifacts/hashes.json`                              | Additions only; original harness/config hashes and artifact hashes                                                                                |
+| `starting-state.json`, `input-integrity.json`, `environment.json`             | Branch/dirty-state and input/protected hashes; corrected archive/topology/fixture checks; exact runtime identities/settings                       |
+| `commands.log`, `preparation.log`, `server.log`, `diagnostic.log`             | Exact preparation, launch/discovery/diagnostic commands and outputs, with no secrets or unrelated network-body logging                            |
+| `selection.json`, `selection-validation.json`                                 | Exact discovery and guard results                                                                                                                 |
+| `diagnostic-runner.json`, `playwright/`                                       | Runner report and any automatic failure/error-context attachments; no snapshot updates                                                            |
 | `images.json`, `network.json`, `events.json`, `readiness.json`, `errors.json` | Per-image identities/state/decode outcomes; correlated request outcomes; native events; timestamps/assertion result; relevant page/console errors |
-| `final-integrity.json`, `cleanup.json`, `artifact-hashes.json`, `result.md` | Before/after protected/input/repository comparison; resource disposal; complete evidence hashes; facts/hypotheses and next gate |
+| `final-integrity.json`, `cleanup.json`, `artifact-hashes.json`, `result.md`   | Before/after protected/input/repository comparison; resource disposal; complete evidence hashes; facts/hypotheses and next gate                   |
 
 Inside the one disposable container, writes are limited to extracted `/work`, dependency-install/server transient artifacts needed by the unchanged reference app, the two specified diagnostic files, and `/io` evidence. Do not overwrite `g3e.spec.ts`, approved temporary configs or any original source/test/fixture. No permanent or historical evidence changes; no additional archive creation required. Refuse a preexisting host destination or occupied container name rather than selecting a replacement.
 

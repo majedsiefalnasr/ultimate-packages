@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject, input } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  computed,
+  inject,
+  input,
+} from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
 import { UTabs } from "./tabs";
 import { tabsStyleModule } from "./tabs-style";

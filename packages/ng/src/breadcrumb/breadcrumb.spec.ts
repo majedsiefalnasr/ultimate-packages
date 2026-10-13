@@ -51,7 +51,10 @@ describe("UBreadcrumb", () => {
   });
 
   it('sets aria-current="page" on the last item when its routerLink matches the current location', () => {
-    const fixture = setup([{ label: "Category", routerLink: "/category" }, { label: "Details", routerLink: "/" }]);
+    const fixture = setup([
+      { label: "Category", routerLink: "/category" },
+      { label: "Details", routerLink: "/" },
+    ]);
     const links = fixture.nativeElement.querySelectorAll("a");
     const last = links[links.length - 1];
     expect(last.getAttribute("aria-current")).toBe("page");
@@ -82,7 +85,9 @@ describe("UBreadcrumb", () => {
 
   it("prevents navigation and skips command for a disabled item", () => {
     let commandCalled = false;
-    const model: UMenuItem[] = [{ label: "Disabled", disabled: true, command: () => (commandCalled = true) }];
+    const model: UMenuItem[] = [
+      { label: "Disabled", disabled: true, command: () => (commandCalled = true) },
+    ];
     const fixture = setup(model, {});
     const link: HTMLAnchorElement = fixture.nativeElement.querySelector("a");
     expect(link.getAttribute("aria-disabled")).toBe("true");
