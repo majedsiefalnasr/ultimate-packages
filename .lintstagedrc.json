@@ -1,4 +1,5 @@
 {
   "*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}": "eslint --max-warnings=0 --no-warn-ignored",
-  "*": "prettier --check --ignore-unknown"
+  "*": "prettier --check --ignore-unknown",
+  "*.{ts,vue}": "node scripts/check-svg-text-whitespace.mjs"
 }

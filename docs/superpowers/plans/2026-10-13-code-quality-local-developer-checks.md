@@ -231,6 +231,160 @@ See `docs/superpowers/specs/2026-09-06-phase-6-component-metadata-design.md` for
 - **Order:** A2-1, then A2-2, then A2-3, each verified as above. Then one commit on `fix/gap-092-code-quality-local-checks`, `fix(quality): preserve template whitespace and correct exposed baselines (GAP-092)`, with the pre-commit equivalence check from P1-3. Then a single push to draft PR #9 and P1-6 CI evidence again. The PR stays draft and unmerged.
 - **Stop and return to Plan Review if:** the branch probe shows any render difference beyond the three listed equivalent forms; strict formatting changes any file outside the 12; any other package fails the size integrity check; or CI shows any other failure caused by this PR.
 
+## Amendment A3 — remaining pack/install defect and SVG text guard (proposed for Plan Review)
+
+**Trigger:** [CI run 38388858946](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38388858946) on `5cd0e42` (draft PR #9). A2-1, A2-2, and A2-3 pass in CI. Pack/install integrity now fails on the next package in the loop, `@ultimate/component-schema`. Separately, A2-1 showed that `htmlWhitespaceSensitivity: "strict"` does not protect SVG `<text>`, and the single `knob.ts` ignore does not protect future templates. A3 adds exactly the two changes below. Everything in this plan, A1, and A2 is otherwise unchanged, including the Spec, `.github/workflows/ci.yml`, the Prettier policy, and existing gates.
+
+### A3-1 Missing `component-schema` README (older defect, newly exposed)
+
+**Finding.** `packages/component-schema/package.json` lists `README.md` in `files`, but no such file exists at `3f86cbc` or `5cd0e42`. The CI loop stops at the first failing package, so this was hidden behind `component-metadata` until A2-3 fixed it. A local run of `integrity:pack-install` for the 13 affected packages CI never reached (`mcp ng ng-core react react-core themes uix-data uix-motion uix-styled uix-styles uix-utils vue vue-core`) passed for every one. A scan of every `packages/*/package.json` finds `component-schema` is the only remaining package that declares a README it lacks.
+
+**Correction (proposed).** Create `packages/component-schema/README.md` with exactly this content. It follows the A2-3 `component-metadata` README; the description comes from the package's own `package.json`, and the import names are real exports of `src/index.ts`. No `package.json` or other configuration change.
+
+````markdown
+# @ultimate/component-schema
+
+Versioned schema/contract and validator for Ultimate Platform component metadata (Phase 6).
+
+## Status
+
+Unstable (pre-1.0). No semver guarantee yet.
+
+## Usage
+
+```ts
+import { SCHEMA_VERSION, validateComponentMetadata } from "@ultimate/component-schema";
+import type { ComponentMetadata } from "@ultimate/component-schema";
+```
+
+## Scope
+
+See `docs/superpowers/specs/2026-09-06-phase-6-component-metadata-design.md` for the contract.
+````
+
+**Verification:** `pnpm --filter @ultimate/component-schema run build`, then `pnpm run integrity:pack-install -- @ultimate/component-schema` exits 0. Rerun `integrity:pack-install` for every affected package in CI order and require all to pass, and require `pnpm run format:check` to pass.
+
+### A3-2 SVG text whitespace guard
+
+**Finding: formatter behavior.** Fixtures were formatted with the repository's Prettier 3.9.6 and the A2 config (`htmlWhitespaceSensitivity: "strict"`). Strict mode does not apply to SVG text-content elements. When a line exceeds `printWidth`, Prettier moves the content of `<text>`, `<title>`, and `<desc>` onto its own line, both in Angular inline templates (inside or outside `@if`) and in Vue SFCs. An HTML `<span>` with identical attributes stays inline. Short lines are not reflowed.
+
+**Finding: compiled output.** Fixture originals and their Prettier output were compiled with `@angular/compiler` 21.2.25 (`preserveWhitespaces: false`) and Vue 3.5.42 `compileTemplate`:
+
+| Element content                              | Angular                              | Vue                                               | React (JSX, esbuild)                   |
+| -------------------------------------------- | ------------------------------------ | ------------------------------------------------- | -------------------------------------- |
+| `<text>{{ value }}</text>` reflowed          | renders `" value "` (changed)        | unchanged (whitespace-only newline nodes dropped) | unchanged (`children: valueToDisplay`) |
+| `<text>Static label</text>` reflowed         | renders `" Static label "` (changed) | renders `" Static label text "` (changed)         | unchanged (`children: "Static label"`) |
+| `<title>` / `<desc>` with `{{ … }}` reflowed | changed                              | unchanged                                         | n/a                                    |
+| `<text><tspan>{{ … }}</tspan></text>`        | unchanged                            | unchanged                                         | n/a                                    |
+
+**Finding: rendered output.** Chromium measured `<text x="50" text-anchor="middle">` with `"50%"` vs `" 50% "`. The geometry is identical (bbox x 39.000, width 22.000, computed length 22.000, 3 rendered characters), and the accessible name from `<title>` is identical (`img "50%"`). The DOM `textContent` differs (`"50%"` vs `" 50% "`), and so does the SSR markup. The change is therefore invisible on screen but observable to SSR output, `textContent` consumers, and tests. No knob unit test asserts the text, so the existing suites would not catch it.
+
+**Current inventory.** SVG text-content elements in templates: `packages/ng/src/knob/knob.ts` (protected by the A2-1 `prettier-ignore`), `packages/vue/src/knob/Knob.vue` (interpolation-only, so unaffected), and `packages/react/src/knob/knob.tsx` (JSX, unaffected). No other template in `packages/` or `apps/` contains `text`, `tspan`, `textPath`, `title`, or `desc` inside SVG.
+
+**Why not alternatives.** A per-file `prettier-ignore` protects only the files already found. Rewriting templates to `[textContent]`/`v-text` changes Prime-derived source and still does not stop new interpolations. Prettier has no per-element option, and `embeddedLanguageFormatting: "off"` would stop formatting every template. A compiled-output check is the smallest durable protection: it tests the actual failure (rendered leading or trailing whitespace) and leaves formatting checks unchanged.
+
+**Correction (proposed).**
+
+1. Create `scripts/check-svg-text-whitespace.mjs`, exact content in [Appendix C](#appendix-c--a3-2-guard-script-exact-content) (revision 3, after the second A3-2 Request Changes review). It checks tracked `*.ts` and `*.vue` files, or the paths passed as arguments, and adds no dependency. It loads only `typescript` (root) and `vue/compiler-sfc` (from `packages/vue`). It does **not** load `@angular/compiler`, whose `engines.node` is `^20.19.0 || ^22.12.0 || >=24.0.0`.
+   - **Angular scope:** only the `template` property of a `@Component({...})` decorator, the only templates Prettier embed-formats. Vue runtime `template:` strings in `.ts` stories and specs are out of scope; Prettier does not reformat them.
+   - **Static resolution (`${...}`):** unchanged from revision 2. The template is resolved the way Angular AOT resolves it — string and template literals, `${...}` substitutions, parentheses, and identifiers bound to a same-file `const`, recursively — and the resolved text is checked. Reported lines are exact without substitutions; otherwise `file:line (resolved template line N)`.
+   - **Angular semantics without the Angular compiler:** a structural scanner reproduces the parts of Angular's lexer and parser that decide rendered SVG text whitespace:
+     - Tag-start rule: `<` followed by a letter, `/`, or `!` ends a text run, even inside an unterminated `{{`.
+     - Comments, start tags with quoted and unquoted attributes, self-closing tags, and HTML void elements.
+     - Escapable raw-text elements (`title`, `textarea`, `script`, `style`), also inside `<svg>`.
+     - SVG namespace propagation, reset under `foreignObject`.
+     - Closing tags under Angular's `closedByParent` rule.
+     - Brace depth of control-flow blocks and ICU expressions per element.
+     - The whitespace rule of `preserveWhitespaces: false`: comments and whitespace-only text nodes are dropped, and other text nodes keep their leading and trailing whitespace, including the text around interpolations. Edge whitespace written as an entity (`&nbsp;`, `&ngsp;`, numeric space or newline) counts as whitespace, as Angular decodes it.
+   - **Fail closed** (exit 1, `not verified`):
+     - A template that cannot be resolved statically.
+     - A template the scanner cannot scan: unterminated comment, start tag, attribute value, or raw-text element; unexpected closing tag; unclosed block or ICU; stray `}`.
+     - SVG text content it does not model: a control-flow block, ICU, or `@` inside the SVG text element itself, or `ng-container`/`ng-template`/`ng-content` as its child.
+     - A Vue SFC that fails to parse or compile.
+
+     Nothing is skipped silently.
+
+   - **Defined boundary:** Angular _expression_ syntax inside `{{ … }}` (for example `{{ value( }}`) is not validated. Expression content cannot change rendered leading or trailing whitespace, and Angular rejects such templates in the existing Build step. Revision 2 failed closed on this case; revision 3 passes it.
+   - **Rule:** exit 1, listing locations, when an SVG `text`, `tspan`, `textPath`, `title`, or `desc` renders leading or trailing whitespace.
+   - **Exit:** sets `process.exitCode = 1` instead of calling `process.exit(1)`. The earlier immediate exit truncated stderr written to a pipe (761 of 882 lines), the way lint-staged and CI read it.
+   - **Node:** uses `dirname(fileURLToPath(import.meta.url))` and only built-ins available in Node 20.0.0. No Node-floor change is proposed.
+
+2. In root `package.json`, extend `lint` from `eslint . --max-warnings=0` to `eslint . --max-warnings=0 && node scripts/check-svg-text-whitespace.mjs`. CI's existing Lint step runs `pnpm run lint`, so this is enforced in CI without editing `ci.yml`. ESLint's zero-warning behavior is unchanged.
+3. In `.lintstagedrc.json`, add `"*.{ts,vue}": "node scripts/check-svg-text-whitespace.mjs"`, so `pre-commit` checks staged templates; lint-staged passes the staged paths as arguments. The existing ESLint and Prettier entries are unchanged, and the hook stays read-only.
+
+The existing `knob.ts` `prettier-ignore` stays, and the guard now enforces it.
+
+**Node support of the guard's runtime closure** (`engines.node` read from every installed package in the closure):
+
+- `typescript@5.9.3`: `>=14.17`.
+- `vue@3.5.42` and its 23-package closure: every declared range includes 20.0.0 (strictest: `postcss` `^10 || ^12 || >=14`, `nanoid` `^10 || ^12 || ^13.7 || ^14 || >=15.0.1`).
+- Unchanged invocation tooling: Prettier 3.9.6 `>=14`, lint-staged 15.5.2 `>=18.12.0` (closure ≤ `>=18`), and Husky 9.1.7 `>=18` all include 20.0.0.
+
+**Pre-existing constraint outside A3 (decision requested, not changed here):** ESLint 9.39.5 and its `@eslint/*` packages declare `^18.18.0 || ^20.9.0 || >=21.1.0`. ESLint is already the first command of `pnpm run lint` and a `pre-commit` task under the approved plan, so the full `lint` and `pre-commit` commands were already outside declared support on Node 20.0–20.8 before A3. A3 adds no constraint beyond it. The smallest decision: record this as a separate gap for its own gate, or accept it as known, without raising `engines.node` here.
+
+**Revision 3 evidence.**
+
+_Differential check against the Angular compiler._ The Angular compiler was used only as a test oracle on Node 24, outside the guard. A generated corpus covered 5 SVG text elements × 11 content forms × 6 whitespace layouts × 5 placements, 1,650 `@Component` templates in total:
+
+- Content forms: interpolation, static text, mixed text, child `<tspan>`, sibling `<tspan>`s, comment, `&nbsp;`, `&#32;`, `{{ a < b }}`, and `{{a<b}}`.
+- Whitespace layouts: inline, leading newline, trailing newline, both, spaces, and whitespace around a child element.
+- Placements: directly in `<svg>`, inside `@if`, inside `<g>`, inside `@for`, and in HTML outside `<svg>`.
+
+The oracle found 770 clean templates, 760 violations, and 120 parse errors. The guard CLI agreed on all 1,530 non-error templates, line for line. It failed closed on exactly the 120 the oracle rejects. There were 0 disagreements and 0 fail-closed verdicts on a template Angular accepts. All 495 tracked `@Component` templates are clean under both. The two defects this exposed (raw-text `title`, and `closedByParent`) are fixed in Appendix C.
+
+_Fixture comparison per component, guard vs oracle:_ every F6 and F10 component matches the oracle: unterminated `{{ value() ` renders whitespace; unclosed block, stray `}`, and a block crossing an element fail closed; valid `@if`/`@else` and ICU outside SVG text pass. The intentional differences are F6b (expression error: guard passes, see the defined boundary above) and F9 (`@if`, ICU, or `ng-container` inside `<text>`: Angular accepts, guard fails closed).
+
+_Real repository commands_ (disposable clone of `5cd0e42`, frozen install, active Husky hook, A3-2 applied and committed through the real `pre-commit`, Node 24.15.0). Each fixture was placed under `packages/{ng,vue}/src/__probe__/`, Prettier-formatted where possible, staged, then run through `pnpm run lint` and `git commit`:
+
+| Fixture                                                   | Expected            | `pnpm run lint`                                                   | `git commit`             | Index / HEAD / stash |
+| --------------------------------------------------------- | ------------------- | ----------------------------------------------------------------- | ------------------------ | -------------------- |
+| Clean clone (1,939 files)                                 | pass                | exit 0                                                            | n/a                      | n/a                  |
+| F2: `${LABEL}` + reflowed `<text>`                        | fail                | exit 1: `:4 (resolved template line 3)`, `:15`                    | exit 1 (guard FAILED)    | unchanged            |
+| F3: whitespace only after resolution                      | fail                | exit 1: both components                                           | exit 1                   | unchanged            |
+| F4: substitutions resolving to clean text and `<tspan>`   | pass                | exit 0                                                            | exit 0 (guard COMPLETED) | commit created       |
+| F5: imported binding and function-call substitution       | fail closed         | exit 1: `cannot be resolved statically; not verified` ×2          | exit 1                   | unchanged            |
+| F6: unclosed `@if` in `<svg>`                             | fail closed         | exit 1: `cannot be scanned (unclosed block or ICU before </svg>)` | exit 1                   | unchanged            |
+| F6b: expression error `{{ value( }}`                      | pass (boundary)     | exit 0                                                            | exit 0                   | commit created       |
+| F7: Vue SFC with unterminated interpolation               | fail closed         | exit 1: `SFC does not parse (…); not verified`                    | exit 1                   | unchanged            |
+| F8: Vue `defineComponent({ template })` string in `.ts`   | pass (out of scope) | exit 0                                                            | exit 0                   | commit created       |
+| F9: `@if`, ICU, `ng-container` inside `<text>`            | fail closed         | exit 1: ×3 `not verified`                                         | exit 1                   | unchanged            |
+| F10: malformed blocks (with valid blocks and ICU passing) | fail closed ×3      | exit 1: unclosed block ×2, stray `}`                              | exit 1                   | unchanged            |
+| (a) `knob.ts` from `ecdbf79`                              | fail                | exit 1: `knob.ts:72: <text>`                                      | exit 1                   | unchanged            |
+| (b) Vue static `<text>` reflowed                          | fail                | exit 1: `Knob.vue:40: <text>`                                     | exit 1                   | unchanged            |
+| (c) Vue interpolation-only `<text>` reflowed              | pass                | exit 0                                                            | exit 0                   | commit created       |
+
+_Node 20.0.0_ (official darwin-arm64 binary, SHA-256 verified, run from `/tmp`, not installed):
+
+- The guard's output is byte-identical to Node 24.15.0 for the whole repository (exit 0) and for all 14 fixture files (22 identical problem lines, exit 1).
+- With Node 20.0.0 first on `PATH`, real `pnpm run lint` exits 0, including the guard over 1,939 files.
+- A real `git commit` of the reflowed `ecdbf79` knob exits 1, with the guard task `[FAILED]` naming `knob.ts:72`. Index and worktree are restored clean.
+- ESLint ran in both cases although its declared range excludes 20.0.0; see the pre-existing constraint above.
+
+The Appendix C script is Prettier-clean under the A2 config and passes `eslint --max-warnings=0`. Known lint-staged behavior: when one task fails, its concurrent ESLint task is killed (`[KILLED]`). The commit is still blocked, and `pnpm run lint` reports both.
+
+**A3-2 verification (on the branch, before commit):**
+
+- [ ] `pnpm run lint` exits 0, including the guard over all tracked templates.
+- [ ] Negative probes in a disposable copy: (a) replace `knob.ts` with its `ecdbf79` version; `pnpm run lint` and staged `pre-commit` both fail, naming `knob.ts`. (b) Add a static-text `<text>` reflowed onto its own line to a Vue template; both fail. (c) Add an interpolation-only reflowed `<text>` to a Vue template; both pass. Restore, then rerun `pnpm run lint` clean.
+- [ ] Fixture probes F2–F10 through both commands give the results in the table above. Index, HEAD, and stash are unchanged after every failing commit.
+- [ ] Rerun the 1,650-case differential check against the Angular compiler oracle (Node 24) and require 0 disagreements.
+- [ ] With the Node 20.0.0 binary: guard output identical to Node 24.15.0 on the repository and fixtures, and real `pnpm run lint` and `git commit` of the reflowed knob behave as above.
+- [ ] `pnpm run format:check` passes. The P1-3 `pre-commit` equivalence check passes with an unchanged index. The A2-1 render probe still reports 91 identical of 94.
+- [ ] Repeat the A2 verification set: `@ultimate/ng` and `@ultimate/vue` unit suites, typecheck, build, Angular and Vue SSR projects, and `size:validate` after commit.
+
+### A3 file boundary, sequencing, and stop conditions
+
+- **Added to the Phase 1 boundary:**
+  - `packages/component-schema/README.md` (new)
+  - `scripts/check-svg-text-whitespace.mjs` (new)
+  - `package.json` (`lint` script value only)
+  - `.lintstagedrc.json` (one added entry)
+  - this plan (A3 text and Appendix C)
+- **Unchanged:** the Spec, `.github/workflows/ci.yml`, `.prettierrc.json`, `.prettierignore`, `eslint.config.mjs`, tests, other validators, and tracking documents. `.husky/pre-push` stays absent and the PR stays draft.
+- **Order:** A3-1, then A3-2, each verified. Then one commit, `fix(quality): guard SVG text whitespace and add component-schema README (GAP-092)`, through the P1-3 pre-commit check. Then a single push to draft PR #9 and fresh CI evidence (P1-6).
+- **Expected CI after A3:** every `ci` step that is red on `main` stays red for the same named gap. Pack/install integrity and Lint pass. The Angular and Vue unit suites still do not run in CI while GAP-089 stops the root Test step at React; they are reported from local runs only.
+- **Stop and return to Plan Review if:** the guard flags any file at the branch that this analysis did not predict; any affected package fails pack/install; the guard's lint-staged entry alters the index or worktree; or CI shows any other failure caused by this PR.
+
 ## Plan Review decisions and stop conditions
 
 Plan Review should confirm the pinned version choice, the staging glob/ignore semantics, the strict no-change preservation contract, the exact-file baseline appendices, and the GAP-089 sequencing. A real compatibility or preservation failure is a blocker requiring a corrected Plan Review; it is not delegated to implementation improvisation. This plan intentionally keeps `.github/workflows/ci.yml` unchanged and permits only mechanical formatter changes in Appendix B tracking documents; status reconciliation waits for closeout.
@@ -801,4 +955,330 @@ scripts/provenance/extract-primevue-source.test.mjs
 scripts/provenance/validate-g3a-accessibility.test.mjs
 scripts/provenance/validate-mcp-boundary.test.mjs
 scripts/provenance/verify-tree-shaking-vue.mjs
+```
+
+## Appendix C — A3-2 guard script exact content
+
+Proposed `scripts/check-svg-text-whitespace.mjs`, revision 3. It does not load `@angular/compiler`; it loads `typescript` and `vue/compiler-sfc` only. It is `@Component`-scoped, resolves `${...}` statically, scans Angular templates structurally, fails closed, and uses only APIs available in Node 20.0.0. Already Prettier-formatted with the A2 config; passes `eslint --max-warnings=0`:
+
+```js
+#!/usr/bin/env node
+// Fails when an SVG text-content element (text, tspan, textPath, title, desc) in an
+// Angular @Component template or a Vue SFC template renders leading or trailing whitespace.
+//
+// Prettier's htmlWhitespaceSensitivity "strict" does not cover SVG elements, so it can
+// move their content onto its own line. Angular (preserveWhitespaces: false) drops
+// whitespace-only text nodes but keeps leading/trailing whitespace of any other text node
+// (interpolations included), so it renders " value "; Vue does the same for static text.
+//
+// Angular templates are checked with a small structural scanner instead of
+// @angular/compiler, whose engines range is narrower than this repository's Node floor.
+// Vue templates are checked with vue/compiler-sfc. Fails closed: a template it cannot
+// resolve statically or cannot scan, or SVG text content it does not model, is reported
+// as a violation because it cannot be verified.
+//
+// Usage: node scripts/check-svg-text-whitespace.mjs [files...]   (default: all tracked templates)
+import { createRequire } from "node:module";
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const ts = createRequire(resolve(root, "package.json"))("typescript");
+const sfc = createRequire(resolve(root, "packages/vue/package.json"))("vue/compiler-sfc");
+
+const SVG_TEXT = ["text", "tspan", "textPath", "title", "desc"];
+const HTML_VOID = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta"];
+HTML_VOID.push("source", "track", "wbr");
+const NG_STRUCTURAL = ["ng-container", "ng-template", "ng-content"];
+// Angular parses these elements' content as (escapable) raw text, also inside <svg>.
+const RAW_TEXT = ["title", "textarea", "script", "style"];
+// Elements Angular lets a closing ancestor tag close implicitly (HtmlTagDefinition.closedByParent).
+const CLOSED_BY_PARENT = ["li", "dt", "dd", "rb", "rt", "rtc", "rp", "optgroup", "option", "p"];
+CLOSED_BY_PARENT.push("thead", "tbody", "tfoot", "tr", "td", "th");
+// Raw whitespace, or an entity Angular decodes to whitespace, at the start/end of a text node.
+const WS_ENTITY = "&(?:nbsp|ngsp|#0*(?:9|10|13|32|160)|#x0*(?:9|a|d|20|a0));";
+const WS_START = new RegExp(`^(?:\\s|${WS_ENTITY})`, "i");
+const WS_END = new RegExp(`(?:\\s|${WS_ENTITY})$`, "i");
+const MESSAGE = "renders leading/trailing whitespace";
+
+// Static string value of an expression, as Angular's AOT compiler resolves it for the
+// cases used here: string and template literals, `${...}` substitutions, parentheses, and
+// identifiers bound to a same-file `const`. Returns null when it cannot be resolved.
+function staticString(expr, sf, seen = new Set()) {
+  if (ts.isStringLiteral(expr) || ts.isNoSubstitutionTemplateLiteral(expr)) return expr.text;
+  if (ts.isParenthesizedExpression(expr)) return staticString(expr.expression, sf, seen);
+  if (ts.isTemplateExpression(expr)) {
+    let out = expr.head.text;
+    for (const span of expr.templateSpans) {
+      const value = staticString(span.expression, sf, seen);
+      if (value === null) return null;
+      out += value + span.literal.text;
+    }
+    return out;
+  }
+  if (ts.isIdentifier(expr) && !seen.has(expr.text)) {
+    seen.add(expr.text);
+    for (const stmt of sf.statements) {
+      if (!ts.isVariableStatement(stmt) || !(stmt.declarationList.flags & ts.NodeFlags.Const))
+        continue;
+      for (const decl of stmt.declarationList.declarations)
+        if (ts.isIdentifier(decl.name) && decl.name.text === expr.text && decl.initializer)
+          return staticString(decl.initializer, sf, seen);
+    }
+  }
+  return null;
+}
+
+function isComponentTemplate(prop) {
+  const call = prop.parent?.parent;
+  return (
+    ts.isPropertyAssignment(prop) &&
+    prop.name.getText() === "template" &&
+    ts.isObjectLiteralExpression(prop.parent) &&
+    call !== undefined &&
+    ts.isCallExpression(call) &&
+    ts.isDecorator(call.parent) &&
+    call.expression.getText() === "Component"
+  );
+}
+
+// Text outside interpolations. An unterminated `{{` runs to the end of the text run, as in
+// Angular's lexer, so it is dropped as well.
+const outsideInterpolation = (value) =>
+  value.replace(/\{\{[\s\S]*?\}\}/g, "").replace(/\{\{[\s\S]*$/, "");
+
+// Structural scan of an Angular template: elements, text, comments, and the braces of
+// control-flow blocks and ICU expressions, with the same tag-start rule as Angular's lexer
+// (`<` followed by a letter, `/` or `!` ends a text run, even inside an unterminated `{{`).
+// Returns { tree } or { error, pos }.
+function scanAngular(text) {
+  const rootNode = { name: "#root", svg: false, children: [], closed: true, depth: 0 };
+  const stack = [rootNode];
+  let i = 0;
+  const fail = (error, pos) => ({ error, pos });
+  while (i < text.length) {
+    const parent = stack.at(-1);
+    if (text.startsWith("<!--", i)) {
+      const end = text.indexOf("-->", i + 4);
+      if (end < 0) return fail("unterminated comment", i);
+      parent.children.push({ type: "comment" });
+      i = end + 3;
+    } else if (text.startsWith("</", i) && /[a-zA-Z]/.test(text[i + 2] ?? "")) {
+      const end = text.indexOf(">", i);
+      if (end < 0) return fail("unterminated closing tag", i);
+      const name = text.slice(i + 2, end).trim();
+      let at = stack.length - 1;
+      while (at > 0 && stack[at].name !== name && CLOSED_BY_PARENT.includes(stack[at].name)) at--;
+      if (at < 1 || stack[at].name !== name) return fail(`unexpected closing tag </${name}>`, i);
+      if (stack.slice(at).some((el) => el.depth !== 0))
+        return fail(`unclosed block or ICU before </${name}>`, i);
+      stack[at].closed = true;
+      stack.length = at;
+      i = end + 1;
+    } else if (text[i] === "<" && /[a-zA-Z]/.test(text[i + 1] ?? "")) {
+      const name = /^[^\s/>]+/.exec(text.slice(i + 1))[0];
+      let j = i + 1 + name.length;
+      let selfClosing = false;
+      for (;;) {
+        while (/\s/.test(text[j] ?? "")) j++;
+        if (j >= text.length) return fail(`unterminated start tag <${name}>`, i);
+        if (text[j] === ">") {
+          j++;
+          break;
+        }
+        if (text.startsWith("/>", j)) {
+          j += 2;
+          selfClosing = true;
+          break;
+        }
+        const attr = /^[^\s=/>]+/.exec(text.slice(j));
+        j += attr ? attr[0].length : 1;
+        while (/\s/.test(text[j] ?? "")) j++;
+        if (text[j] !== "=") continue;
+        j++;
+        while (/\s/.test(text[j] ?? "")) j++;
+        const quote = text[j];
+        if (quote === '"' || quote === "'") {
+          const close = text.indexOf(quote, j + 1);
+          if (close < 0) return fail(`unterminated attribute value in <${name}>`, i);
+          j = close + 1;
+        } else {
+          j += /^[^\s>]*/.exec(text.slice(j))[0].length;
+        }
+      }
+      const svg = name === "svg" || (parent.svg && parent.name !== "foreignObject");
+      const el = {
+        type: "element",
+        name,
+        svg,
+        pos: i,
+        children: [],
+        closed: selfClosing,
+        depth: 0,
+      };
+      parent.children.push(el);
+      if (!selfClosing && RAW_TEXT.includes(name.toLowerCase())) {
+        const close = new RegExp(`</${name}\\s*>`, "i").exec(text.slice(j));
+        if (!close) return fail(`unclosed <${name}>`, i);
+        el.children.push({ type: "text", value: text.slice(j, j + close.index) });
+        el.closed = true;
+        j += close.index + close[0].length;
+      } else if (!selfClosing && (svg || !HTML_VOID.includes(name.toLowerCase()))) stack.push(el);
+      else el.closed = true;
+      i = j;
+    } else {
+      let j = i + 1;
+      while (j < text.length && !(text[j] === "<" && /[a-zA-Z/!]/.test(text[j + 1] ?? ""))) j++;
+      const value = text.slice(i, j);
+      for (const ch of outsideInterpolation(value)) {
+        if (ch === "{") parent.depth++;
+        else if (ch === "}" && parent.depth-- === 0) return fail("unexpected '}'", i);
+      }
+      parent.children.push({ type: "text", value });
+      i = j;
+    }
+  }
+  if (stack.some((el) => el.depth !== 0)) return fail("unclosed block or ICU", text.length);
+  return { tree: rootNode };
+}
+
+// Problems for one resolved Angular template: [{ pos, message }].
+function angularProblems(text) {
+  const scan = scanAngular(text);
+  if (scan.error)
+    return [{ pos: scan.pos, message: `template cannot be scanned (${scan.error}); not verified` }];
+  const problems = [];
+  const walk = (el) => {
+    for (const child of el.children) {
+      if (child.type !== "element") continue;
+      if (child.svg && SVG_TEXT.includes(child.name)) {
+        const unverified = (why) =>
+          problems.push({ pos: child.pos, message: `<${child.name}> ${why}; not verified` });
+        // Angular drops comments and whitespace-only text nodes; the rest render as written.
+        const rendered = child.children.filter(
+          (c) => c.type === "element" || (c.type === "text" && !/^\s*$/.test(c.value))
+        );
+        if (!child.closed) unverified("is not closed");
+        else if (
+          rendered.some((c) => c.type === "text" && /[{}@]/.test(outsideInterpolation(c.value)))
+        )
+          unverified("contains control flow, ICU or '@' syntax");
+        else if (rendered.some((c) => c.type === "element" && NG_STRUCTURAL.includes(c.name)))
+          unverified("contains ng-container, ng-template or ng-content");
+        else {
+          const first = rendered[0];
+          const last = rendered.at(-1);
+          if (
+            (first?.type === "text" && WS_START.test(first.value)) ||
+            (last?.type === "text" && WS_END.test(last.value))
+          )
+            problems.push({ pos: child.pos, message: `<${child.name}> ${MESSAGE}` });
+        }
+      }
+      walk(child);
+    }
+  };
+  walk(scan.tree);
+  return problems;
+}
+
+function checkAngular(file, src) {
+  const sf = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+  const problems = [];
+  const visit = (node) => {
+    if (isComponentTemplate(node)) {
+      const init = node.initializer;
+      const line = sf.getLineAndCharacterOfPosition(init.getStart(sf)).line;
+      const exact = ts.isNoSubstitutionTemplateLiteral(init) || ts.isStringLiteral(init);
+      const text = staticString(init, sf);
+      if (text === null) {
+        problems.push(`${file}:${line + 1}: template cannot be resolved statically; not verified`);
+      } else {
+        for (const { pos, message } of angularProblems(text)) {
+          const spanLine = text.slice(0, pos).split("\n").length - 1;
+          const where = exact
+            ? `${file}:${line + spanLine + 1}`
+            : `${file}:${line + 1} (resolved template line ${spanLine + 1})`;
+          problems.push(`${where}: ${message}`);
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sf);
+  return problems;
+}
+
+function vueEdge(child, edge) {
+  if (!child) return "";
+  if (child.type === 2) return child.content; // TEXT
+  if (child.type === 8) {
+    // COMPOUND_EXPRESSION: text + interpolation parts
+    const parts = child.children.filter((p) => typeof p === "object");
+    const p = edge === "start" ? parts[0] : parts.at(-1);
+    return p?.type === 2 ? p.content : "";
+  }
+  return "";
+}
+
+function checkVue(file, src) {
+  const { descriptor, errors: parseErrors } = sfc.parse(src, { filename: file });
+  if (parseErrors.length)
+    return [`${file}: SFC does not parse (${parseErrors[0].message}); not verified`];
+  if (!descriptor.template) return [];
+  const { ast, errors } = sfc.compileTemplate({
+    source: descriptor.template.content,
+    filename: file,
+    id: "check",
+  });
+  if (errors.length || !ast) {
+    const first = errors[0];
+    return [`${file}: template does not compile (${first?.message ?? first}); not verified`];
+  }
+  const offset = descriptor.template.loc.start.line - 1;
+  const problems = [];
+  const walk = (list) => {
+    for (const n of list ?? []) {
+      if (n.type === 1 && SVG_TEXT.includes(n.tag) && n.children.length) {
+        if (
+          /^\s/.test(vueEdge(n.children[0], "start")) ||
+          /\s$/.test(vueEdge(n.children.at(-1), "end"))
+        )
+          problems.push(`${file}:${offset + n.loc.start.line}: <${n.tag}> ${MESSAGE}`);
+      }
+      walk(n.children);
+      n.branches?.forEach((b) => walk(b.children));
+    }
+  };
+  walk(ast.children);
+  return problems;
+}
+
+const args = process.argv.slice(2);
+const files = (
+  args.length
+    ? args
+    : execFileSync("git", ["ls-files", "*.ts", "*.vue"], { cwd: root, encoding: "utf8" }).split(
+        "\n"
+      )
+).filter((f) => f.endsWith(".vue") || (f.endsWith(".ts") && !f.endsWith(".d.ts")));
+const problems = [];
+for (const file of files) {
+  const src = readFileSync(resolve(root, file), "utf8");
+  if (file.endsWith(".vue")) problems.push(...checkVue(file, src));
+  else if (src.includes("@Component")) problems.push(...checkAngular(file, src));
+}
+if (problems.length) {
+  console.error(problems.join("\n"));
+  console.error(
+    `\n${problems.length} problem(s). An SVG text element must not render leading/trailing whitespace: keep its content on the tag's line (add <!-- prettier-ignore --> before the element if Prettier reflows it). Templates that cannot be resolved or scanned cannot be verified.`
+  );
+  process.exitCode = 1; // not process.exit(): that can truncate stderr when it is a pipe
+} else {
+  console.log(
+    `check-svg-text-whitespace: ${files.length} file(s) checked, no SVG text whitespace.`
+  );
+}
 ```
