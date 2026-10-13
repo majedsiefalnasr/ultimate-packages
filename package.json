@@ -9,7 +9,7 @@
   "scripts": {
     "audit:validate": "pnpm audit --audit-level high --prod",
     "build": "pnpm -r --if-present run build",
-    "test": "pnpm -r --if-present run test",
+    "test": "pnpm --filter @ultimate/themes run test && pnpm -r --filter '!@ultimate/themes' --if-present run test",
     "prepare": "husky",
     "validate": "pnpm -r --if-present run validate",
     "test:scripts": "node --test scripts/provenance/*.test.mjs",

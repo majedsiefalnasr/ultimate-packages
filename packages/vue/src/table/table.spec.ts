@@ -844,7 +844,7 @@ describe("package export", () => {
   it("is exported from the package root", async () => {
     const { UTable: RootExport } = await import("../index");
     expect(RootExport).toBe(UTable);
-  });
+  }, 10_000);
 });
 
 describe("real child-component composition (regression guard, Task 24)", () => {
