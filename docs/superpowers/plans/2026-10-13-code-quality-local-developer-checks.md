@@ -137,6 +137,100 @@ Phase 1 steps, executed only after A1 is approved:
 - **Branch drift while blocked.** Phase 1 reformats 509 files, so other work landing on `main` will conflict. Resolve by merging `main` into the branch at P2-0 and re-running `pnpm run lint` and `pnpm run format:check`; new formatter or lint findings on files outside Appendix A/B return to Plan Review rather than being silently absorbed.
 - **CI cost.** Each push to the draft PR triggers the full workflow; push only at P1-5 and P2-2 unless a fix is required.
 
+## Amendment A2 — Phase 1 CI findings (proposed for Plan Review)
+
+**Trigger:** Phase 1 stopped at P1-6. [CI run 38381740920](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38381740920) on `ecdbf79` (draft PR #9) passed Lint and Format check but exposed one regression this PR caused and two older defects, newly exposed. A P1-3 Spec edit also needs retroactive review. A2 adds four bounded corrections to the Phase 1 boundary. Everything else in this plan and A1 is unchanged. No A2 change is applied until A2 passes Plan Review.
+
+### A2-0 Spec normalization (retroactive review; no further Spec edits)
+
+At P1-3 the staged whitespace check (`git diff --cached --check`) rejected the approved Spec. Its three header lines ended in two-space Markdown hard breaks. Without separate authorization, those breaks were replaced by CommonMark backslash hard breaks before commit `7728281`. The complete diff between the approved Spec and the PR #9 version (`$` marks end of line):
+
+```diff
+-**Date:** 2026-10-13  $
+-**Status:** PROPOSED — awaiting Spec Review. No implementation, Plan, commit, or tracking change is authorized.  $
+-**Baseline:** fetched `origin/main` at `3f86cbce30fcde4fd0ff88756e2713b8daf0a6ae` (GAP-088 PR #8 merge).  $
++**Date:** 2026-10-13\$
++**Status:** PROPOSED — awaiting Spec Review. No implementation, Plan, commit, or tracking change is authorized.\$
++**Baseline:** fetched `origin/main` at `3f86cbce30fcde4fd0ff88756e2713b8daf0a6ae` (GAP-088 PR #8 merge).\$
+```
+
+No other byte differs. The text, requirements, and rendered output (three lines with hard breaks) are unchanged. Prettier 3.9.6 accepts both forms; only the whitespace check rejects the original. **Decision requested:** accept this normalization as recorded, or restore the original bytes and decide how the Spec passes the whitespace check. No further Spec edit is proposed.
+
+### A2-1 Template whitespace regression (caused by this PR)
+
+**Finding.** Under the default `htmlWhitespaceSensitivity: "css"`, Prettier 3.9.6 reflowed embedded Angular templates and Vue SFC templates. Elements it treats as whitespace-insensitive (for example `th`, `td`, `button`, `span`, `a`) had text moved onto its own lines. Angular (`preserveWhitespaces: false`) and Vue (`condense`) then render one space on each side of the text. Example, `packages/ng/src/table/table.ts`:
+
+```text
+base   : >{{ col.header }}</th>                → renders "Name"
+PR head: >\n  {{ col.header }}\n</th>          → renders " Name "  (Angular SSR spec expects ">Name<"; fails 3/3)
+strict : >{{ col.header }}</th\n>              → renders "Name"
+```
+
+**Method.** Probe script outside the repo, `/tmp/gap092-probe-scripts/probe.mjs`. For every changed file that carries a template, it compiles three versions with the repository's own compilers: `@angular/compiler` 21.2.25 `parseTemplate(..., { preserveWhitespaces: false })`, serializing text nodes, interpolation text parts, elements, attributes, bindings, and control-flow blocks; and Vue 3.5.42 `compileTemplate`, with whitespace normalized only outside string literals. The versions are base (`3f86cbc`), PR head (`ecdbf79`), and the candidate. Population: 94 files (Angular inline templates in `packages/ng{,-core}/src` plus every `.vue` file in the diff).
+
+| Comparison                    | Identical | Differ | Differences                                                          |
+| ----------------------------- | --------- | ------ | -------------------------------------------------------------------- |
+| base vs PR head               | 79        | 15     | 12 render text changes (below), plus 3 equivalent JS forms           |
+| base vs strict-formatted base | 90        | 4      | `knob.ts` (SVG `<text>`, below), plus the same 3 equivalent JS forms |
+| base vs **candidate**         | **91**    | **3**  | only the 3 equivalent JS forms                                       |
+
+The 12 text changes are in `packages/ng/src/{date-picker/date-picker,file-upload/file-upload,image/image,knob/knob,paginator/paginator,table/table,tabs/tab-list}.ts` and `packages/vue/src/{breadcrumb/Breadcrumb,date-picker/DatePicker,file-upload/FileUpload,image/Image,table/Table}.vue`. Examples: `‹` → `‹`, `↻` → `↻`, `×` → `×`, `Save` → `Save`, `{{ link }}`/`{{ chooseLabel() }}`/`{{ valueToDisplay() }}` gaining surrounding spaces. The three equivalent JS forms are `Listbox.vue` and `MultiSelect.vue` (a trailing comma added in an object literal) and `Select.vue` (`' '` → `" "`). They are already in PR head and are semantically identical.
+
+**Limit of `strict`.** Setting `strict` alone repairs nothing already committed: `prettier --list-different --html-whitespace-sensitivity strict .` at PR head reports 0 files, because strict preserves the whitespace the earlier formatting inserted. Strict also does not protect SVG `<text>`. Minimal fixtures show `<text …>{{ x }}</text>` split in strict mode both inside and outside `@if`, while the equivalent HTML `<span>` is preserved. A single `<!-- prettier-ignore -->` before that element preserves it. Angular does not render template comments.
+
+**Correction (proposed).**
+
+1. `.prettierrc.json`: add `"htmlWhitespaceSensitivity": "strict"`. At PR head this changes no other file (0 files in the list above), so `format:check` scope and the rest of the reformatted tree are unaffected. This is a formatter-policy change made to preserve rendered output. It does not weaken any check.
+2. For each of the 12 files: take the base (`3f86cbc`) content, reapply only that file's approved lint fix, and format with the repository Prettier under the new setting. Only `date-picker.ts` is in Appendix A; its lint fix is the two `no-unused-expressions` ternary-to-`if`/`else` rewrites. The other 11 files are format-only.
+3. `packages/ng/src/knob/knob.ts`: add exactly one `<!-- prettier-ignore -->` line immediately before the SVG `<text x="50" …>` element. No other `prettier-ignore` is added anywhere. This file has no per-file provenance record (GAP-094 scope), so no provenance edit is required. If Plan Review prefers it recorded, add it to the existing PrimeNG package entry.
+
+Candidate size against PR head: 3–33 changed lines per file, 147 lines across the 12 files. The candidate passes `prettier --check` under the new config.
+
+**A2-1 verification (on the branch, before commit):** rerun the probe base-vs-branch and require 91 identical with only the 3 listed equivalent forms differing. Then require these to exit 0: `pnpm run format:check` and `pnpm run lint`, the `@ultimate/ng` and `@ultimate/vue` unit suites, `pnpm run typecheck`, `pnpm run build`, and the Angular SSR Playwright project (`ssr-hydration.spec.ts`, including "serves SSR content and hydrates column sorting"). Then probe that a new whitespace-only template edit still fails `format:check`.
+
+### A2-2 Stale themes size entry (older defect, newly exposed)
+
+**Finding.** `docs/architecture/PERFORMANCE.md` records `packages/themes` gzip as `13.14 KB`. A fresh build measures 13,873 bytes, i.e. `13.55 KB`, identical at base `3f86cbc` and PR head `ecdbf79`. Measured locally with Node 24.15.0 via `measurePackage("packages/themes")`; CI reported the same `13.55 KB`. Themes source and manifest are unchanged in this PR. This PR reformats `PERFORMANCE.md`, so `validate-bundle-size.mjs` classifies themes as a baseline-only diff and runs its integrity check, which fails.
+
+**Correction (proposed).** Change only the `index.mjs gzip size` cell of the `packages/themes` row in the "Phase 10 — CI/Security/Quality Gates" Package size table from `13.14 KB` to `13.55 KB`. Nothing else changes: the dist size and file-count cells (not gated), every other row, the 15% threshold, all validator code, and the historical Phase 5 narrative (line 79). This changes a recorded measurement, not any gap, decision, or completion status.
+
+**Verification:** `pnpm run build` then `pnpm run size:validate` (base ref `origin/main`) reports themes `OK (baseline-only, integrity check: 13.55 KB matches fresh measurement)`, with no new FAIL for any package.
+
+### A2-3 Missing `component-metadata` README (older defect, newly exposed)
+
+**Finding.** `packages/component-metadata/package.json` lists `README.md` in `files`, but no such file exists at base or head. Pack/install integrity checks only affected packages, and this PR edits `component-metadata` sources, so the check fails with "missing 1 path(s) … README.md". GAP-131 resolved the same defect for `@ultimate/cli` by adding the README.
+
+**Correction (proposed).** Create `packages/component-metadata/README.md` with this exact content, following the existing package README pattern. No `package.json` change.
+
+````markdown
+# @ultimate/component-metadata
+
+Populated component metadata records for the Ultimate Platform (Phase 6), validated against `@ultimate/component-schema`.
+
+## Status
+
+Unstable (pre-1.0). No semver guarantee yet.
+
+## Usage
+
+```ts
+import { ALL_COMPONENTS } from "@ultimate/component-metadata";
+```
+
+## Scope
+
+See `docs/superpowers/specs/2026-09-06-phase-6-component-metadata-design.md` for the contract.
+````
+
+**Verification:** `pnpm --filter @ultimate/component-metadata run build`, then `pnpm run integrity:pack-install -- @ultimate/component-metadata` exits 0, and `pnpm run format:check` passes.
+
+### A2 file boundary, sequencing, and stop conditions
+
+- **Added to the Phase 1 boundary:** `.prettierrc.json` (one key), `docs/architecture/PERFORMANCE.md` (one cell), and `packages/component-metadata/README.md` (new). The 12 A2-1 files are already in Appendix B.
+- **Unchanged:** the CI workflow, the Spec, `.prettierignore`, `eslint.config.mjs`, tests, validators, and tracking status. `.husky/pre-push` stays absent.
+- **Order:** A2-1, then A2-2, then A2-3, each verified as above. Then one commit on `fix/gap-092-code-quality-local-checks`, `fix(quality): preserve template whitespace and correct exposed baselines (GAP-092)`, with the pre-commit equivalence check from P1-3. Then a single push to draft PR #9 and P1-6 CI evidence again. The PR stays draft and unmerged.
+- **Stop and return to Plan Review if:** the branch probe shows any render difference beyond the three listed equivalent forms; strict formatting changes any file outside the 12; any other package fails the size integrity check; or CI shows any other failure caused by this PR.
+
 ## Plan Review decisions and stop conditions
 
 Plan Review should confirm the pinned version choice, the staging glob/ignore semantics, the strict no-change preservation contract, the exact-file baseline appendices, and the GAP-089 sequencing. A real compatibility or preservation failure is a blocker requiring a corrected Plan Review; it is not delegated to implementation improvisation. This plan intentionally keeps `.github/workflows/ci.yml` unchanged and permits only mechanical formatter changes in Appendix B tracking documents; status reconciliation waits for closeout.

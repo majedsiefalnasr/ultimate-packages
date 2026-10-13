@@ -105,9 +105,8 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                   role="columnheader"
                   [attr.aria-sort]="ariaSortFor(col.field)"
                   (click)="onSort(col.field)"
+                  >{{ col.header }}</th
                 >
-                  {{ col.header }}
-                </th>
               }
               @if (editMode() === "row") {
                 <th></th>
@@ -127,9 +126,9 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
               @for (entry of groupedRows; track $index; let rowIndex = $index) {
                 @if (entry.isGroupHeader && rowGroupMode() === "subheader") {
                   <tr data-u-table-group-header [class]="cx('rowGroupHeader')">
-                    <td [attr.colspan]="totalColumnCount">
-                      {{ resolveCell(entry.row, groupRowsBy() ?? "") }}
-                    </td>
+                    <td [attr.colspan]="totalColumnCount">{{
+                      resolveCell(entry.row, groupRowsBy() ?? "")
+                    }}</td>
                   </tr>
                 }
                 <tr
@@ -163,9 +162,8 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                         type="button"
                         data-u-table-row-toggle
                         (click)="toggleRowExpansion($event, entry.row)"
+                        >{{ isRowExpanded(entry.row) ? "-" : "+" }}</button
                       >
-                        {{ isRowExpanded(entry.row) ? "-" : "+" }}
-                      </button>
                     </td>
                   }
                   @for (col of columns(); track col.field) {
@@ -173,9 +171,9 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                       rowGroupMode() === "rowspan" && groupRowsBy() && col.field === groupRowsBy()
                     ) {
                       @if (entry.isGroupHeader) {
-                        <td data-u-table-group-cell [attr.rowspan]="entry.groupSize">
-                          {{ renderCell(entry.row, col, rowIndex) }}
-                        </td>
+                        <td data-u-table-group-cell [attr.rowspan]="entry.groupSize">{{
+                          renderCell(entry.row, col, rowIndex)
+                        }}</td>
                       }
                     } @else if (isRowEditing(entry.row)) {
                       <td data-u-table-cell-editor>
@@ -195,16 +193,14 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                         type="button"
                         data-u-table-row-edit-save
                         (click)="saveRowEdit(entry.row, $event)"
+                        >Save</button
                       >
-                        Save
-                      </button>
                       <button
                         type="button"
                         data-u-table-row-edit-cancel
                         (click)="cancelRowEdit(entry.row, $event)"
+                        >Cancel</button
                       >
-                        Cancel
-                      </button>
                     </td>
                   } @else if (editMode() === "row") {
                     <td>
@@ -212,9 +208,8 @@ const DEFAULT_EMPTY_MESSAGE = "No results found";
                         type="button"
                         data-u-table-row-edit-init
                         (click)="initRowEdit(entry.row, $event)"
+                        >Edit</button
                       >
-                        Edit
-                      </button>
                     </td>
                   }
                 </tr>

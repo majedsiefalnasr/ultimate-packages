@@ -31,35 +31,31 @@
             :class="cx('rotateRightButton')"
             aria-label="Rotate right"
             @click="rotateRight"
+            >&#8635;</button
           >
-            &#8635;
-          </button>
           <button
             type="button"
             :class="cx('rotateLeftButton')"
             aria-label="Rotate left"
             @click="rotateLeft"
+            >&#8634;</button
           >
-            &#8634;
-          </button>
           <button
             type="button"
             :class="cx('zoomOutButton')"
             aria-label="Zoom out"
             :disabled="isZoomOutDisabled"
             @click="zoomOut"
+            >&minus;</button
           >
-            &minus;
-          </button>
           <button
             type="button"
             :class="cx('zoomInButton')"
             aria-label="Zoom in"
             :disabled="isZoomInDisabled"
             @click="zoomIn"
+            >+</button
           >
-            +
-          </button>
           <button
             ref="closeButton"
             type="button"

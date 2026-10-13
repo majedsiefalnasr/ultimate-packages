@@ -96,35 +96,31 @@ let imageDisplayOrderUid = 0;
               [class]="cx('rotateRightButton')"
               (click)="rotateRight()"
               aria-label="Rotate right"
+              >&#8635;</button
             >
-              &#8635;
-            </button>
             <button
               type="button"
               [class]="cx('rotateLeftButton')"
               (click)="rotateLeft()"
               aria-label="Rotate left"
+              >&#8634;</button
             >
-              &#8634;
-            </button>
             <button
               type="button"
               [class]="cx('zoomOutButton')"
               (click)="zoomOut()"
               [disabled]="isZoomOutDisabled()"
               aria-label="Zoom out"
+              >&minus;</button
             >
-              &minus;
-            </button>
             <button
               type="button"
               [class]="cx('zoomInButton')"
               (click)="zoomIn()"
               [disabled]="isZoomInDisabled()"
               aria-label="Zoom in"
+              >+</button
             >
-              +
-            </button>
             <button
               type="button"
               [class]="cx('closeButton')"

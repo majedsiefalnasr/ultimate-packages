@@ -99,7 +99,7 @@ Re-baselined rows (`ng-core`, `ng`, `react-core`, `react`, `themes`, `uix-utils`
 | packages/ng                 | 5281.3 KB  | 286              | 202.86 KB           |
 | packages/react-core         | 73.8 KB    | 3                | 6.76 KB             |
 | packages/react              | 3390.8 KB  | 439              | 87.16 KB            |
-| packages/themes             | 482.9 KB   | 3                | 13.14 KB            |
+| packages/themes             | 482.9 KB   | 3                | 13.55 KB            |
 | packages/uix-data           | 7.0 KB     | 3                | 0.34 KB             |
 | packages/uix-motion         | 32.8 KB    | 3                | 2.06 KB             |
 | packages/uix-styled         | 117.2 KB   | 3                | 8.45 KB             |

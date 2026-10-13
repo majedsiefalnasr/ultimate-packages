@@ -33,9 +33,8 @@ import { tabsStyleModule } from "./tabs-style";
         [class]="cx('tabListPrevButton')"
         (click)="onPrevButtonClick()"
         aria-label="Previous"
+        >‹</button
       >
-        ‹
-      </button>
     }
     <div #content [class]="cx('tabListContent')" (scroll)="onScroll()">
       <div #tabListEl [class]="cx('tabListTabList')" role="tablist">
@@ -49,9 +48,8 @@ import { tabsStyleModule } from "./tabs-style";
         [class]="cx('tabListNextButton')"
         (click)="onNextButtonClick()"
         aria-label="Next"
+        >›</button
       >
-        ›
-      </button>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

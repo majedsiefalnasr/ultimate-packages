@@ -24,9 +24,8 @@
             role="columnheader"
             :aria-sort="ariaSortFor(col.field)"
             @click="sortColumn(col.field)"
+            >{{ col.header }}</th
           >
-            {{ col.header }}
-          </th>
           <th v-if="editMode === 'row'"></th>
         </tr>
       </thead>
@@ -73,9 +72,8 @@
                 type="button"
                 data-u-table-row-toggle
                 @click.stop="toggleRowExpansion($event, entry.row)"
+                >{{ isRowExpanded(entry.row) ? "-" : "+" }}</button
               >
-                {{ isRowExpanded(entry.row) ? "-" : "+" }}
-              </button>
             </td>
             <template v-for="col in columns" :key="col.field">
               <td
@@ -87,9 +85,8 @@
                 "
                 data-u-table-group-cell
                 :rowspan="entry.groupSize"
+                >{{ renderCell(entry.row, col, index) }}</td
               >
-                {{ renderCell(entry.row, col, index) }}
-              </td>
               <td
                 v-else-if="
                   isRowEditing(entry.row) &&
@@ -107,26 +104,24 @@
                 v-else-if="
                   !(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)
                 "
+                >{{ renderCell(entry.row, col, index) }}</td
               >
-                {{ renderCell(entry.row, col, index) }}
-              </td>
             </template>
             <td v-if="editMode === 'row' && isRowEditing(entry.row)">
-              <button type="button" data-u-table-row-edit-save @click.stop="saveRowEdit(entry.row)">
-                Save
-              </button>
+              <button type="button" data-u-table-row-edit-save @click.stop="saveRowEdit(entry.row)"
+                >Save</button
+              >
               <button
                 type="button"
                 data-u-table-row-edit-cancel
                 @click.stop="cancelRowEdit(entry.row)"
+                >Cancel</button
               >
-                Cancel
-              </button>
             </td>
             <td v-else-if="editMode === 'row'">
-              <button type="button" data-u-table-row-edit-init @click.stop="initRowEdit(entry.row)">
-                Edit
-              </button>
+              <button type="button" data-u-table-row-edit-init @click.stop="initRowEdit(entry.row)"
+                >Edit</button
+              >
             </td>
           </tr>
           <tr v-if="dataKey && isRowExpanded(entry.row)" data-u-table-row-expansion>
@@ -170,9 +165,9 @@
                 This is intentional (a row outside the window isn't in the
                 DOM to focus), not a bug.
               -->
-              <td v-for="col in columns" :key="col.field">
-                {{ renderCell(entry.value, col, entry.index) }}
-              </td>
+              <td v-for="col in columns" :key="col.field">{{
+                renderCell(entry.value, col, entry.index)
+              }}</td>
             </tr>
           </tbody>
         </table>

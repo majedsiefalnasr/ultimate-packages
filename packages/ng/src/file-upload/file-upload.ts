@@ -92,26 +92,23 @@ export interface UFileUploadHandlerEvent {
         [class]="cx('chooseButton', headerClassesParams())"
         [attr.disabled]="disabled() ? '' : undefined"
         (click)="onChooseClick()"
+        >{{ chooseLabel() }}</button
       >
-        {{ chooseLabel() }}
-      </button>
       @if (!auto()) {
         <button
           type="button"
           [class]="cx('uploadButton')"
           [disabled]="!hasFiles() || uploading()"
           (click)="upload()"
+          >{{ uploadLabel() }}</button
         >
-          {{ uploadLabel() }}
-        </button>
         <button
           type="button"
           [class]="cx('cancelButton')"
           [disabled]="!hasFiles()"
           (click)="clear()"
+          >{{ cancelLabel() }}</button
         >
-          {{ cancelLabel() }}
-        </button>
       }
       <input
         #fileInput
@@ -151,9 +148,8 @@ export interface UFileUploadHandlerEvent {
             [class]="cx('fileRemoveButton')"
             aria-label="Remove file"
             (click)="remove($event, index)"
+            >&times;</button
           >
-            &times;
-          </button>
         </div>
       }
     </div>

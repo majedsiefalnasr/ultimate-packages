@@ -69,9 +69,8 @@ const MAX_RADIANS = -Math.PI / 3;
         [class]="cx('value')"
       ></path>
       @if (showValue()) {
-        <text x="50" y="57" text-anchor="middle" [attr.fill]="textColor()" [class]="cx('text')">
-          {{ valueToDisplay() }}
-        </text>
+        <!-- prettier-ignore -->
+        <text x="50" y="57" text-anchor="middle" [attr.fill]="textColor()" [class]="cx('text')">{{ valueToDisplay() }}</text>
       }
     </svg>
   `,

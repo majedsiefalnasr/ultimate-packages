@@ -57,9 +57,8 @@
           :class="cx('fileRemoveButton')"
           aria-label="Remove file"
           @click="remove($event, index)"
+          >&times;</button
         >
-          &times;
-        </button>
       </div>
     </div>
   </div>

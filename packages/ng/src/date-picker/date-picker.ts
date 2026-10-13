@@ -116,9 +116,8 @@ const DEFAULT_MONTH_NAMES = [
             [class]="cx('navButton')"
             aria-label="Previous month"
             (click)="navBackward()"
+            >&#8249;</button
           >
-            &#8249;
-          </button>
           <span [class]="cx('title')">
             <span [class]="cx('titleButton')">{{ monthNames()[viewMonth()] }}</span>
             <span [class]="cx('titleButton')">{{ viewYear() }}</span>
@@ -128,9 +127,8 @@ const DEFAULT_MONTH_NAMES = [
             [class]="cx('navButton')"
             aria-label="Next month"
             (click)="navForward()"
+            >&#8250;</button
           >
-            &#8250;
-          </button>
         </div>
         <table [class]="cx('dayView')" role="grid">
           <thead>

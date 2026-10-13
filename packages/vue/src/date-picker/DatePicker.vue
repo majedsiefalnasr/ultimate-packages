@@ -37,28 +37,26 @@
             :class="cx('navButton')"
             aria-label="Previous month"
             @click="navBackward"
+            >&#8249;</button
           >
-            &#8249;
-          </button>
           <span :class="cx('title')">
             <span>{{ monthNames[viewMonth] }}</span>
             <span>{{ viewYear }}</span>
           </span>
-          <button
-            type="button"
-            :class="cx('navButton')"
-            aria-label="Next month"
-            @click="navForward"
+          <button type="button" :class="cx('navButton')" aria-label="Next month" @click="navForward"
+            >&#8250;</button
           >
-            &#8250;
-          </button>
         </div>
         <table :class="cx('dayView')" role="grid">
           <thead>
             <tr>
-              <th v-for="dayName in dayNames" :key="dayName" :class="cx('weekdayCell')" scope="col">
-                {{ dayName }}
-              </th>
+              <th
+                v-for="dayName in dayNames"
+                :key="dayName"
+                :class="cx('weekdayCell')"
+                scope="col"
+                >{{ dayName }}</th
+              >
             </tr>
           </thead>
           <tbody>
