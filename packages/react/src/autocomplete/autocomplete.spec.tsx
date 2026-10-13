@@ -11,12 +11,17 @@ describe("UAutoComplete", () => {
 
   it("calls completeMethod after the debounce delay once minLength is met", async () => {
     const completeMethod = vi.fn();
-    render(<UAutoComplete value={null} onChange={() => {}} delay={10} completeMethod={completeMethod} />);
+    render(
+      <UAutoComplete value={null} onChange={() => {}} delay={10} completeMethod={completeMethod} />
+    );
     const input = screen.getByRole("combobox");
     fireEvent.change(input, { target: { value: "ab" } });
-    await waitFor(() => expect(completeMethod).toHaveBeenCalledWith(expect.objectContaining({ query: "ab" })), {
-      timeout: 500,
-    });
+    await waitFor(
+      () => expect(completeMethod).toHaveBeenCalledWith(expect.objectContaining({ query: "ab" })),
+      {
+        timeout: 500,
+      }
+    );
   });
 
   it("opens the suggestion overlay and lists provided suggestions", async () => {
@@ -65,7 +70,13 @@ describe("UAutoComplete", () => {
 
   it("closes the overlay on Escape", async () => {
     render(
-      <UAutoComplete value={null} onChange={() => {}} delay={1} suggestions={["Apple"]} completeMethod={() => {}} />
+      <UAutoComplete
+        value={null}
+        onChange={() => {}}
+        delay={1}
+        suggestions={["Apple"]}
+        completeMethod={() => {}}
+      />
     );
     const input = screen.getByRole("combobox");
     fireEvent.change(input, { target: { value: "a" } });

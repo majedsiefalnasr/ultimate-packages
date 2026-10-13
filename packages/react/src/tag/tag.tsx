@@ -28,7 +28,10 @@ export const UTag = React.forwardRef<HTMLSpanElement, UTagProps>(function UTag(
   const { cx } = useComponentBase({ componentName: "tag", styleModule: tagStyleModule });
 
   return (
-    <span ref={ref} className={[cx("root", { severity, rounded }), className].filter(Boolean).join(" ")}>
+    <span
+      ref={ref}
+      className={[cx("root", { severity, rounded }), className].filter(Boolean).join(" ")}
+    >
       {icon && <span className={cx("icon")}>{icon}</span>}
       <span className={cx("label")}>{children ?? value}</span>
     </span>

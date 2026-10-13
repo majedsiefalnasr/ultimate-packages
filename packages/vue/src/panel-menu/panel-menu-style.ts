@@ -58,7 +58,13 @@ const classes = {
   headerLabel: "u-panelmenu-header-label",
   item: (params: Record<string, unknown> = {}) => {
     const { disabled, expanded } = params as PanelMenuClassesParams;
-    return ["u-panelmenu-item", { "u-panelmenu-item-disabled": Boolean(disabled), "u-panelmenu-item-expanded": Boolean(expanded) }];
+    return [
+      "u-panelmenu-item",
+      {
+        "u-panelmenu-item-disabled": Boolean(disabled),
+        "u-panelmenu-item-expanded": Boolean(expanded),
+      },
+    ];
   },
   submenu: "u-panelmenu-submenu",
   submenuIcon: "u-panelmenu-submenu-icon",

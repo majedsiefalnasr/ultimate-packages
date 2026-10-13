@@ -2,15 +2,7 @@ import { createDirective } from "@ultimate/vue-core";
 import type { ObjectDirective } from "vue";
 
 export type UKeyFilterPattern =
-  | "pint"
-  | "int"
-  | "pnum"
-  | "money"
-  | "num"
-  | "hex"
-  | "email"
-  | "alpha"
-  | "alphanum";
+  "pint" | "int" | "pnum" | "money" | "num" | "hex" | "email" | "alpha" | "alphanum";
 
 export interface UKeyFilterOptions {
   pattern?: RegExp | UKeyFilterPattern;
@@ -37,7 +29,10 @@ function resolveRegex(value: RegExp | UKeyFilterPattern | UKeyFilterOptions | un
     const options = value;
     return { regex: resolvePattern(options.pattern), validateOnly: Boolean(options.validateOnly) };
   }
-  return { regex: resolvePattern(value as RegExp | UKeyFilterPattern | undefined), validateOnly: false };
+  return {
+    regex: resolvePattern(value as RegExp | UKeyFilterPattern | undefined),
+    validateOnly: false,
+  };
 }
 
 function resolvePattern(pattern: RegExp | UKeyFilterPattern | undefined): RegExp {
@@ -49,7 +44,10 @@ function resolvePattern(pattern: RegExp | UKeyFilterPattern | undefined): RegExp
 type Handlers = { keypress: (event: Event) => void; paste: (event: Event) => void };
 const boundHandlers = new WeakMap<HTMLElement, Handlers>();
 
-function bind(el: HTMLElement, value: RegExp | UKeyFilterPattern | UKeyFilterOptions | undefined): void {
+function bind(
+  el: HTMLElement,
+  value: RegExp | UKeyFilterPattern | UKeyFilterOptions | undefined
+): void {
   const { regex, validateOnly } = resolveRegex(value);
   const target = el instanceof HTMLInputElement ? el : el.querySelector("input");
   if (!target) return;
@@ -125,19 +123,21 @@ function unbind(el: HTMLElement): void {
  * rule matching this task's minimal scope) — matching every sibling
  * directive/hook's established "smaller surface than upstream" precedent.
  */
-export const UKeyFilter: ObjectDirective<HTMLElement, RegExp | UKeyFilterPattern | UKeyFilterOptions | undefined> =
-  createDirective({
-    name: "key-filter",
-    hooks: {
-      mounted(el, binding) {
-        bind(el, binding.value);
-      },
-      updated(el, binding) {
-        unbind(el);
-        bind(el, binding.value);
-      },
-      unmounted(el) {
-        unbind(el);
-      },
+export const UKeyFilter: ObjectDirective<
+  HTMLElement,
+  RegExp | UKeyFilterPattern | UKeyFilterOptions | undefined
+> = createDirective({
+  name: "key-filter",
+  hooks: {
+    mounted(el, binding) {
+      bind(el, binding.value);
     },
-  });
+    updated(el, binding) {
+      unbind(el);
+      bind(el, binding.value);
+    },
+    unmounted(el) {
+      unbind(el);
+    },
+  },
+});

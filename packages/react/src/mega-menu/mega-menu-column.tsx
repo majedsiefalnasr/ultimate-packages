@@ -27,7 +27,11 @@ const ITEM_LINK_SELECTOR = ":scope > li > .u-megamenu-content > a";
  * overlay to `UMegaMenu`'s own root `<ul>`, which owns the single `openItem`
  * this hard-2-level structure ever needs to close.
  */
-export const UMegaMenuColumnGroup: React.FC<UMegaMenuColumnGroupProps> = ({ group, cx, onItemSelect }) => {
+export const UMegaMenuColumnGroup: React.FC<UMegaMenuColumnGroupProps> = ({
+  group,
+  cx,
+  onItemSelect,
+}) => {
   const listRef = React.useRef<HTMLUListElement>(null);
   const items = group.items ?? [];
 

@@ -14,14 +14,14 @@ Binding sources are the [remediation Spec](../../superpowers/specs/2026-10-08-ga
 
 ## 2. Evidence basis and limits
 
-| Evidence | Supported use for this proposal | Limit |
-| --- | --- | --- |
-| [V1 readiness decision packet](2026-10-09-gap-064-g3e-e1-v2-v1-readiness-decision-packet.md), options D2/D3 | D3 means an expressly authorized repeated five-case V1; passing V6/V7/V5 and original failure are preserved | Original campaign repetition is not available |
-| [Fixture preparation packet](2026-10-09-gap-064-g3e-e1-v2-fixture-preparation-correction-packet.md) and accepted preparation result summarized in D2 | Corrected derivative retains original inputs and adds the tracked Angular fixture link | Preparation topology is not proof of historical browser failure cause |
-| [D2 authorization](2026-10-09-gap-064-g3e-e1-v2-d2-readiness-authorization.md), [D2 decision packet](2026-10-09-gap-064-g3e-e1-v2-d2-decision-packet.md), retained D2 result | Corrected-input reference assets were observed served and decoded; qualified evidence supports considering a future parity run | PrimeNG default only; Ultimate and root-style not observed; served response bodies not hash-compared |
-| Retained D2 final-integrity record | Distinguishes pre-diagnostic container comparison and final host comparison from missing final container audit | Final D2 container-byte audit **UNAVAILABLE**; no reconstruction can establish disposed historical bytes |
-| P3 §§3–6 | Frozen environment, Angular/Prime configuration, corrected measurement hook, exact V1 selection/invocation and fail-first behavior | Container/artifact preparation for a new attempt needs fresh exact approval |
-| Spec §8 and Plan §7 | G3-E E1-V2 AC1–AC9 remain the unchanged acceptance baseline | A repeated V1 alone cannot satisfy all criteria |
+| Evidence                                                                                                                                                                     | Supported use for this proposal                                                                                                    | Limit                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [V1 readiness decision packet](2026-10-09-gap-064-g3e-e1-v2-v1-readiness-decision-packet.md), options D2/D3                                                                  | D3 means an expressly authorized repeated five-case V1; passing V6/V7/V5 and original failure are preserved                        | Original campaign repetition is not available                                                            |
+| [Fixture preparation packet](2026-10-09-gap-064-g3e-e1-v2-fixture-preparation-correction-packet.md) and accepted preparation result summarized in D2                         | Corrected derivative retains original inputs and adds the tracked Angular fixture link                                             | Preparation topology is not proof of historical browser failure cause                                    |
+| [D2 authorization](2026-10-09-gap-064-g3e-e1-v2-d2-readiness-authorization.md), [D2 decision packet](2026-10-09-gap-064-g3e-e1-v2-d2-decision-packet.md), retained D2 result | Corrected-input reference assets were observed served and decoded; qualified evidence supports considering a future parity run     | PrimeNG default only; Ultimate and root-style not observed; served response bodies not hash-compared     |
+| Retained D2 final-integrity record                                                                                                                                           | Distinguishes pre-diagnostic container comparison and final host comparison from missing final container audit                     | Final D2 container-byte audit **UNAVAILABLE**; no reconstruction can establish disposed historical bytes |
+| P3 §§3–6                                                                                                                                                                     | Frozen environment, Angular/Prime configuration, corrected measurement hook, exact V1 selection/invocation and fail-first behavior | Container/artifact preparation for a new attempt needs fresh exact approval                              |
+| Spec §8 and Plan §7                                                                                                                                                          | G3-E E1-V2 AC1–AC9 remain the unchanged acceptance baseline                                                                        | A repeated V1 alone cannot satisfy all criteria                                                          |
 
 Directly read retained records during preparation: `.superpowers/sdd/2026-10-08-gap-064-g3e-media-data/e1-v2-remediation/d2-readiness/result.md` and `final-integrity.json`. Their statements are historical evidence, not newly executed audits. The D2 decision packet also records `msgpackr-extract` lifecycle errors despite completed installation; their relevance to future execution is **UNKNOWN**, and no repair is proposed or authorized.
 
@@ -52,30 +52,30 @@ Proposed discovery is the same invocation with `--list --reporter=json` replacin
 
 ## 4. Frozen inputs and disposable artifact contract
 
-| Input | Existing identity / required preservation |
-| --- | --- |
-| Corrected archive | `.superpowers/sdd/2026-10-08-gap-064-g3e-media-data/e1-v2-remediation/fixture-link-preparation/production-input-with-ng-fixtures.tar`; retained SHA-256 `b61a8ef908dd41eb9b00ab10b9efb8c90507ebb40a29d4d9292b60036f9c750a`. Future verification required; no archive created or changed here |
-| Fixture topology | `tooling/prime-reference/ng/fixtures -> ../fixtures`, tracked Git mode `120000`; all five existing target payloads need approved retained anchors, unchanged through both paths |
-| Environment | Playwright Docker `mcr.microsoft.com/playwright:v1.63.0-jammy`, image ID `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847`; Linux arm64; Node v24.20.0; pnpm 9.6.0; Playwright 1.63.0; Chromium 153.0.8010.12; PrimeNG 21.1.9; PrimeUIX/Aura 2.0.3; unchanged frozen lockfile |
-| Rendering | V1 viewport 1280×720, DPR1; accepted fixture-scoped default typography, recorded 16px Times New Roman. No Inter integration, new assets/theme/font/viewport or readiness/timeout change |
-| Production | Retained four-file C1 delta stays unchanged; generator total remains one. No production inline overrides or hand-created generated CSS |
-| V1 configuration | P3 §4 literal V1 configuration; only `prime-reference-ng` and `ng-storybook`; preserve inherited project settings. No React/Vue/SSR server or D2-only config substitution |
-| Measurement | P3 §5 extraction/integration contract; measurement source SHA-256 `fc6a909fd1f01bd8b75ea5f097d174c730c9453e498eeacd5db62834a3d2c420`; corrected non-Element guard retained. First root-style observation per side only |
+| Input             | Existing identity / required preservation                                                                                                                                                                                                                                                             |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Corrected archive | `.superpowers/sdd/2026-10-08-gap-064-g3e-media-data/e1-v2-remediation/fixture-link-preparation/production-input-with-ng-fixtures.tar`; retained SHA-256 `b61a8ef908dd41eb9b00ab10b9efb8c90507ebb40a29d4d9292b60036f9c750a`. Future verification required; no archive created or changed here          |
+| Fixture topology  | `tooling/prime-reference/ng/fixtures -> ../fixtures`, tracked Git mode `120000`; all five existing target payloads need approved retained anchors, unchanged through both paths                                                                                                                       |
+| Environment       | Playwright Docker `mcr.microsoft.com/playwright:v1.63.0-jammy`, image ID `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847`; Linux arm64; Node v24.20.0; pnpm 9.6.0; Playwright 1.63.0; Chromium 153.0.8010.12; PrimeNG 21.1.9; PrimeUIX/Aura 2.0.3; unchanged frozen lockfile |
+| Rendering         | V1 viewport 1280×720, DPR1; accepted fixture-scoped default typography, recorded 16px Times New Roman. No Inter integration, new assets/theme/font/viewport or readiness/timeout change                                                                                                               |
+| Production        | Retained four-file C1 delta stays unchanged; generator total remains one. No production inline overrides or hand-created generated CSS                                                                                                                                                                |
+| V1 configuration  | P3 §4 literal V1 configuration; only `prime-reference-ng` and `ng-storybook`; preserve inherited project settings. No React/Vue/SSR server or D2-only config substitution                                                                                                                             |
+| Measurement       | P3 §5 extraction/integration contract; measurement source SHA-256 `fc6a909fd1f01bd8b75ea5f097d174c730c9453e498eeacd5db62834a3d2c420`; corrected non-Element guard retained. First root-style observation per side only                                                                                |
 
 Proposed future disposable V1 files are P3's `/work/tooling/prime-reference/playwright.e1v2.config.ts`, `/work/tooling/prime-reference/e2e/e1v2-measure.ts` and narrowly instrumented disposable `g3e.spec.ts`, with retained exact texts/diffs/hashes. No V2–V4 configuration, fidelity script or scoped accessibility validator is needed for this D3-only proposal. New audit/orchestration artifacts, container name, evidence directory and exact preparation command set must receive explicit approval before any materialization. No path in this document is current write permission.
 
 ## 5. Proposed budget versus current authority
 
-| Operation | Existing restriction / proposed future limit | Authorization state |
-| --- | --- | --- |
-| Document preparation | This one new document; preserve every existing file | Authorized now |
-| D3 repeated V1 | One invocation over the five existing Angular cases; one worker, retries 0, maxFailures 1; no snapshot update | Proposal supported by readiness decision D3; **new human budget not granted** |
-| Selection discovery | One V1-only list/identity validation proposed; no V2–V4 discovery | Needs explicit new preparation budget |
-| Environment/extraction/dependency preparation | Frozen environment; no replacement attempt or repair | Exact operations/counts/build reuse **UNRESOLVED** |
-| Final integrity, evidence retention and owned cleanup | Required for this future attempt, before disposal | Exact invocations, paths and bounds **UNRESOLVED** |
-| Repairs, retries, timeout increases, extra diagnosis or observations | Zero under unchanged fail-first/no-rerun restrictions | Not authorized |
-| Generator/implementation/V5/V6/V7/D2 replay | No additional invocation | Excluded |
-| V2/V3/V4/V8 | Still NOT RUN | Excluded; separate later ruling required |
+| Operation                                                            | Existing restriction / proposed future limit                                                                  | Authorization state                                                           |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Document preparation                                                 | This one new document; preserve every existing file                                                           | Authorized now                                                                |
+| D3 repeated V1                                                       | One invocation over the five existing Angular cases; one worker, retries 0, maxFailures 1; no snapshot update | Proposal supported by readiness decision D3; **new human budget not granted** |
+| Selection discovery                                                  | One V1-only list/identity validation proposed; no V2–V4 discovery                                             | Needs explicit new preparation budget                                         |
+| Environment/extraction/dependency preparation                        | Frozen environment; no replacement attempt or repair                                                          | Exact operations/counts/build reuse **UNRESOLVED**                            |
+| Final integrity, evidence retention and owned cleanup                | Required for this future attempt, before disposal                                                             | Exact invocations, paths and bounds **UNRESOLVED**                            |
+| Repairs, retries, timeout increases, extra diagnosis or observations | Zero under unchanged fail-first/no-rerun restrictions                                                         | Not authorized                                                                |
+| Generator/implementation/V5/V6/V7/D2 replay                          | No additional invocation                                                                                      | Excluded                                                                      |
+| V2/V3/V4/V8                                                          | Still NOT RUN                                                                                                 | Excluded; separate later ruling required                                      |
 
 No total-time/resource defaults are invented. Existing operation/readiness timeouts stay unchanged. A proposed one-invocation limit does not authorize preparation, builds, audit operations or hidden script repetitions. Failed, partial or UNKNOWN execution is retained and never repeated automatically. Historical consumption is not reset. New environment preparation, if needed, must be specifically approved rather than treated as unused original-campaign allowance.
 
@@ -83,14 +83,14 @@ No total-time/resource defaults are invented. Existing operation/readiness timeo
 
 All criteria below belong to **G3-E E1-V2**, not BAE. No criterion is closed by packet preparation or qualified D2 acceptance.
 
-| Criteria | Proposed D3 contribution | Still required / limit |
-| --- | --- | --- |
-| AC1–AC3 | Production right-image placement, root/first/slider geometry, image/span dimensions/relative positions and clipping evidence | Existing ±1 px tolerance and visible parity; nominal root/first/slider y19/y16/y18. Missing data STOP; image y16 alone insufficient |
-| AC4–AC5 | Five-case sizing/Slide/Focus/RTL observations, probes/noise and saved-image evidence | No new tolerance/ratio gate; V2 and final human review remain outstanding |
-| AC6 | None: V2 screenshots are excluded from D3 | Unchanged configured regression thresholds and accounting remain required under a later grant |
-| AC7 | None: V3/V4 are excluded | Accessibility/reach and E1-B1 protection remain outstanding |
-| AC8 | Future attempt input/final integrity may support preservation; original V6 PASS retained | Not a V8 rerun or substitute; full provenance/check accounting still pending |
-| AC9 | Original V5/V7 PASS retained without replay | No overall-green claim; known E1-B1 assertions/blocker stay preserved and distinct |
+| Criteria | Proposed D3 contribution                                                                                                     | Still required / limit                                                                                                              |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| AC1–AC3  | Production right-image placement, root/first/slider geometry, image/span dimensions/relative positions and clipping evidence | Existing ±1 px tolerance and visible parity; nominal root/first/slider y19/y16/y18. Missing data STOP; image y16 alone insufficient |
+| AC4–AC5  | Five-case sizing/Slide/Focus/RTL observations, probes/noise and saved-image evidence                                         | No new tolerance/ratio gate; V2 and final human review remain outstanding                                                           |
+| AC6      | None: V2 screenshots are excluded from D3                                                                                    | Unchanged configured regression thresholds and accounting remain required under a later grant                                       |
+| AC7      | None: V3/V4 are excluded                                                                                                     | Accessibility/reach and E1-B1 protection remain outstanding                                                                         |
+| AC8      | Future attempt input/final integrity may support preservation; original V6 PASS retained                                     | Not a V8 rerun or substitute; full provenance/check accounting still pending                                                        |
+| AC9      | Original V5/V7 PASS retained without replay                                                                                  | No overall-green claim; known E1-B1 assertions/blocker stay preserved and distinct                                                  |
 
 P3 §5's material-probe/noise guards and STOP for `review.differing > 0` remain intact. That stop means saved-image difference pending human review, not an invented acceptance threshold or product-failure classification. No baseline/status acceptance follows even from successful V1 evidence.
 

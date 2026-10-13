@@ -15,7 +15,10 @@ beforeEach(() => {
         resizeObserverCallback = cb;
       }
       observe(target: Element) {
-        resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        resizeObserverCallback?.(
+          [{ target } as ResizeObserverEntry],
+          this as unknown as ResizeObserver
+        );
       }
       disconnect() {}
     }
@@ -34,7 +37,10 @@ describe("UTable", () => {
   it("renders one row per value entry with role=row and a columnheader per column", () => {
     const wrapper = mount(UTable, {
       props: {
-        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
         columns: [{ field: "name", header: "Name" }],
       },
     });
@@ -55,7 +61,12 @@ describe("sorting", () => {
       { id: 1, name: "Alice" },
     ];
     const wrapper = mount(UTable, {
-      props: { value: original, columns: [{ field: "name", header: "Name" }], sortField: "name", sortOrder: 1 },
+      props: {
+        value: original,
+        columns: [{ field: "name", header: "Name" }],
+        sortField: "name",
+        sortOrder: 1,
+      },
     });
     const cells = wrapper.findAll("td");
     expect(cells[0].text()).toBe("Alice");
@@ -64,7 +75,12 @@ describe("sorting", () => {
 
   it("sets aria-sort on the active sortField's columnheader and emits sort on click", async () => {
     const wrapper = mount(UTable, {
-      props: { value: [{ id: 1, name: "Alice" }], columns: [{ field: "name", header: "Name" }], sortField: "name", sortOrder: -1 },
+      props: {
+        value: [{ id: 1, name: "Alice" }],
+        columns: [{ field: "name", header: "Name" }],
+        sortField: "name",
+        sortOrder: -1,
+      },
     });
     const header = wrapper.find('[role="columnheader"]');
     expect(header.attributes("aria-sort")).toBe("descending");
@@ -77,7 +93,10 @@ describe("filtering (Vue object+constraints operator shape, spec §9)", () => {
   it("applies a simple FilterMetadata filter", () => {
     const wrapper = mount(UTable, {
       props: {
-        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
         columns: [{ field: "name", header: "Name" }],
         filters: { name: { value: "ali", matchMode: "contains" } },
       },
@@ -303,7 +322,9 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
     });
     expect(wrapper.findAll("td").length).toBe(2);
 
-    await wrapper.setProps({ filters: { when: { value: new Date(2026, 0, 1), matchMode: "dateIsNot" } } });
+    await wrapper.setProps({
+      filters: { when: { value: new Date(2026, 0, 1), matchMode: "dateIsNot" } },
+    });
     expect(wrapper.findAll("td").length).toBe(1);
 
     await wrapper.setProps({
@@ -365,7 +386,10 @@ describe("selection-column UI (Spec §5.2, GAP-042)", () => {
   it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
     const wrapper = mount(UTable, {
       props: {
-        value: [{ id: 1, name: "A" }, { id: 2, name: "B" }],
+        value: [
+          { id: 1, name: "A" },
+          { id: 2, name: "B" },
+        ],
         columns: [{ field: "name", header: "Name" }],
         selectionMode: "multiple",
         selectionColumn: true,
@@ -431,7 +455,10 @@ describe("selection-column UI (Spec §5.2, GAP-042)", () => {
   });
 
   it("clicking the header checkbox selects all rows; clicking again deselects all", async () => {
-    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const rows = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
     const wrapper = mount(UTable, {
       props: {
         value: rows,
@@ -452,7 +479,10 @@ describe("keyboard navigation", () => {
     const wrapper = mount(UTable, {
       attachTo: document.body,
       props: {
-        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
         columns: [{ field: "name", header: "Name" }],
       },
     });
@@ -491,7 +521,10 @@ describe("keyboard selection (Spec §5.7, GAP-047)", () => {
   });
 
   it("Ctrl+A selects all rows when selectionMode is multiple", async () => {
-    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const rows = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
     const wrapper = mount(UTable, {
       props: {
         value: rows,
@@ -518,7 +551,10 @@ describe("keyboard selection (Spec §5.7, GAP-047)", () => {
     const wrapper = mount(UTable, {
       attachTo: document.body,
       props: {
-        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
         columns: [{ field: "name", header: "Name" }],
       },
     });
@@ -567,7 +603,10 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     // matching the established convention from scroller.spec.ts.
     const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
     mockViewportHeight(scrollerRoot, 200);
-    resizeObserverCallback?.([{ target: scrollerRoot } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     await wrapper.vm.$nextTick();
 
     const table = wrapper.find("table[data-u-table-virtual-body]");
@@ -592,7 +631,10 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     });
     const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
     mockViewportHeight(scrollerRoot, 300);
-    resizeObserverCallback?.([{ target: scrollerRoot } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     await wrapper.vm.$nextTick();
 
     const rows = wrapper.findAll("table[data-u-table-virtual-body] tbody tr");
@@ -616,7 +658,10 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     });
     const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
     mockViewportHeight(scrollerRoot, 200);
-    resizeObserverCallback?.([{ target: scrollerRoot } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     await wrapper.vm.$nextTick();
 
     const firstRow = wrapper.find('table[data-u-table-virtual-body] tbody [role="row"]');
@@ -636,7 +681,10 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     });
     const scrollerRoot = wrapper.find("[class*=u-scroller]").element as HTMLElement;
     mockViewportHeight(scrollerRoot, 200);
-    resizeObserverCallback?.([{ target: scrollerRoot } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+    resizeObserverCallback?.(
+      [{ target: scrollerRoot } as unknown as ResizeObserverEntry],
+      {} as unknown as ResizeObserver
+    );
     await wrapper.vm.$nextTick();
 
     const rows = wrapper.findAll('table[data-u-table-virtual-body] tbody [role="row"]');
@@ -677,7 +725,9 @@ describe("row/cell editing lifecycle (Spec §5.3, GAP-043)", () => {
       },
     });
     await wrapper.find("[data-u-table-row-edit-init]").trigger("click");
-    await wrapper.setProps({ editingRows: wrapper.emitted("update:editingRows")?.[0]?.[0] as unknown[] });
+    await wrapper.setProps({
+      editingRows: wrapper.emitted("update:editingRows")?.[0]?.[0] as unknown[],
+    });
     expect(wrapper.find("[data-u-table-cell-editor] input").exists()).toBe(true);
   });
 
@@ -869,7 +919,12 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
   });
 
   it("falls back to the raw field value when no body function is supplied", () => {
-    const wrapper = mount(UTable, { props: { value: [{ id: 1, name: "Widget", price: 9.5 }], columns: [{ field: "price", header: "Price" }] } });
+    const wrapper = mount(UTable, {
+      props: {
+        value: [{ id: 1, name: "Widget", price: 9.5 }],
+        columns: [{ field: "price", header: "Price" }],
+      },
+    });
     expect(wrapper.find("td").text()).toBe("9.5");
   });
 });
@@ -976,7 +1031,10 @@ describe("row expansion (Spec §5.4, GAP-044)", () => {
     expect(() =>
       mount(UTable, {
         props: {
-          value: [{ id: 1, name: "A" }, { id: 1, name: "B" }] as Row[],
+          value: [
+            { id: 1, name: "A" },
+            { id: 1, name: "B" },
+          ] as Row[],
           columns: [{ field: "name", header: "Name" }],
           dataKey: "id",
         },
@@ -1010,7 +1068,10 @@ describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
   it("Ctrl+A while focused inside the cell editor input does not trigger select-all-rows (Important finding 2)", async () => {
     const wrapper = mount(UTable, {
       props: {
-        value: [{ id: 1, name: "A" }, { id: 2, name: "B" }],
+        value: [
+          { id: 1, name: "A" },
+          { id: 2, name: "B" },
+        ],
         columns: [{ field: "name", header: "Name" }],
         dataKey: "id",
         editMode: "row",

@@ -44,7 +44,10 @@ export interface UTableProps<T> {
   sortOrder?: 1 | 0 | -1;
   multiSortMeta?: SortMeta[];
   onSort?: (event: UTableSortEvent) => void;
-  filters?: Record<string, FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }>;
+  filters?: Record<
+    string,
+    FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }
+  >;
   /**
    * Accepted for interface-contract completeness (spec §4.2 lists `onFilter`
    * as part of PrimeReact's real DataTable surface) but not yet invoked.
@@ -59,7 +62,12 @@ export interface UTableProps<T> {
    * trigger/payload once a concrete consumer (e.g. a filter-editing UI
    * task) requires it.
    */
-  onFilter?: (filters: Record<string, FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }>) => void;
+  onFilter?: (
+    filters: Record<
+      string,
+      FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }
+    >
+  ) => void;
   selectionMode?: SelectionMode;
   selection?: T | T[];
   onSelectionChange?: (selection: T | T[]) => void;
@@ -140,7 +148,8 @@ function matchesFilter<T>(row: T, field: string, filter: FilterMetadata): boolea
       // everything). String.prototype.includes("") is always true, so
       // without this guard `!cellValue.includes("")` would be false for
       // every row, hiding all of them instead of showing all of them.
-      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return true;
+      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "")
+        return true;
       return !cellValue.includes(filterValue);
     case "endsWith":
       return cellValue.endsWith(filterValue);
@@ -151,7 +160,12 @@ function matchesFilter<T>(row: T, field: string, filter: FilterMetadata): boolea
       // empty/whitespace-only string filter value => true (matches
       // everything) — the opposite outcome from Angular's/Vue's real source
       // for the identical condition.
-      if (rawFilterValue === undefined || rawFilterValue === null || (typeof rawFilterValue === "string" && rawFilterValue.trim() === "")) return true;
+      if (
+        rawFilterValue === undefined ||
+        rawFilterValue === null ||
+        (typeof rawFilterValue === "string" && rawFilterValue.trim() === "")
+      )
+        return true;
       return cellValue !== filterValue;
     case "lt":
       if (rawFilterValue === undefined || rawFilterValue === null) return true;
@@ -374,7 +388,7 @@ export function UTable<T>({
   const [internalEditingRows, setInternalEditingRows] = React.useState<Record<string, boolean>>(
     editingRows ?? {}
   );
-  const resolvedEditingRows = onRowEditChange ? editingRows ?? {} : internalEditingRows;
+  const resolvedEditingRows = onRowEditChange ? (editingRows ?? {}) : internalEditingRows;
 
   /**
    * Row-expansion key-map state (GAP-044, Spec §5.4), matching the
@@ -384,10 +398,12 @@ export function UTable<T>({
    * internal `useState` fallback takes over so the toggle still works
    * standalone.
    */
-  const [internalExpandedRowKeys, setInternalExpandedRowKeys] = React.useState<Record<string, boolean>>({});
+  const [internalExpandedRowKeys, setInternalExpandedRowKeys] = React.useState<
+    Record<string, boolean>
+  >({});
   const resolvedExpandedRowKeys = onExpandedRowKeysChange
-    ? expandedRowKeys ?? {}
-    : expandedRowKeys ?? internalExpandedRowKeys;
+    ? (expandedRowKeys ?? {})
+    : (expandedRowKeys ?? internalExpandedRowKeys);
 
   /**
    * Always-internal cell-edit dirty-value tracking (spec §11.2), keyed by
@@ -459,7 +475,9 @@ export function UTable<T>({
     if (fields.length === 0) return sortedValue;
 
     return applySort(
-      effectiveValue.filter((row) => fields.every((field) => matchesFilterEntry(row, field, filters[field])))
+      effectiveValue.filter((row) =>
+        fields.every((field) => matchesFilterEntry(row, field, filters[field]))
+      )
     );
   }, [effectiveValue, filters, applySort, sortedValue]);
 
@@ -538,7 +556,10 @@ export function UTable<T>({
    * used the bare `columns.length`, ignoring the extra columns entirely.
    */
   const totalColumnCount =
-    columns.length + (selectionColumn && selectionMode ? 1 : 0) + (dataKey ? 1 : 0) + (editMode === "row" ? 1 : 0);
+    columns.length +
+    (selectionColumn && selectionMode ? 1 : 0) +
+    (dataKey ? 1 : 0) +
+    (editMode === "row" ? 1 : 0);
 
   const ariaSortFor = (field: string): "ascending" | "descending" | undefined => {
     if (sortMode === "multiple") {
@@ -884,7 +905,9 @@ export function UTable<T>({
               <React.Fragment key={index}>
                 {rowGroupMode === "subheader" && isGroupHeader && (
                   <tr data-u-table-group-header className={cx("rowGroupHeader") as string}>
-                    <td colSpan={totalColumnCount}>{String(resolveCell(row, groupRowsBy ?? ""))}</td>
+                    <td colSpan={totalColumnCount}>
+                      {String(resolveCell(row, groupRowsBy ?? ""))}
+                    </td>
                   </tr>
                 )}
                 <tr
@@ -934,7 +957,9 @@ export function UTable<T>({
                         <td key={col.field} data-u-table-cell-editor>
                           <input
                             value={draftValue(row, col.field) as string}
-                            onChange={(event) => handleDraftChange(row, col.field, event.target.value)}
+                            onChange={(event) =>
+                              handleDraftChange(row, col.field, event.target.value)
+                            }
                             onClick={(event) => event.stopPropagation()}
                           />
                         </td>
@@ -1015,7 +1040,11 @@ export function UTable<T>({
                     // not the edges of the full `value` dataset. This is intentional
                     // (a row outside the window isn't in the DOM to focus), not a bug.
                     onKeyDown={(event) => handleRowKeyDown(event, value as T)}
-                    style={{ position: "absolute", top: getItemOptions(index).index * itemSize, width: "100%" }}
+                    style={{
+                      position: "absolute",
+                      top: getItemOptions(index).index * itemSize,
+                      width: "100%",
+                    }}
                   >
                     {columns.map((col) => (
                       <td key={col.field}>{renderCell(value as T, col, index)}</td>

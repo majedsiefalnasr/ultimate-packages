@@ -13,9 +13,10 @@
 
 **Purpose:** Define the implementation-ready v1 schema and package responsibilities for Ultimate's component metadata system — the first-class, versioned platform artifact Blueprint §18 places upstream of Docs, Storybook, MCP, and AI Skills/LLM context.
 
-**Scope:** The metadata *schema* and its *conceptual population* against the real, already-built proof set (Button, Checkbox, Dialog, Menu, Tooltip, Paginator, Scroller, Table — all three frameworks). This spec defines the contract; it does not author complete metadata for all ~115 inventoried components, generate any tooling, or build `packages/component-schema`/`packages/component-metadata`.
+**Scope:** The metadata _schema_ and its _conceptual population_ against the real, already-built proof set (Button, Checkbox, Dialog, Menu, Tooltip, Paginator, Scroller, Table — all three frameworks). This spec defines the contract; it does not author complete metadata for all ~115 inventoried components, generate any tooling, or build `packages/component-schema`/`packages/component-metadata`.
 
 **Out of scope for this spec (explicitly, per the source directive):**
+
 - Any Phase 7 (CLI), Phase 8 (MCP), or Phase 9 (AI Skills/LLM context) contract detail — those phases have no committed spec, and designing against their needs now would be speculative coupling.
 - A runtime component wrapper, runtime registry, or universal cross-framework component API. This system is declarative and build-time only.
 - Reopening or duplicating the existing provenance schema (`docs/architecture/provenance/*.json`) — component metadata references it, never replaces it.
@@ -30,7 +31,7 @@ This spec inherits, without modification:
 
 - **Phases 0–5**, `@ultimate/uix-data`, `UPaginator`, `UScroller`, the Scroller content-template extension, and `UTable` — all closed (`UTable` closed at `ede4174`). Not reopened by this spec.
 - **Blueprint §17's candidate field list** — treated as a superset to select from, not a v1 mandate. GAP-027 itself frames the remaining decisions as "schema-detail-level, not fork-level."
-- **The existing provenance convention** (`originalPath`/`ultimateDestination`/`modificationStatus`/`modificationDescription`, per-framework flat JSON arrays) — unchanged, unduplicated. Component metadata carries a *reference* into this system (§10), never a copy of its fields.
+- **The existing provenance convention** (`originalPath`/`ultimateDestination`/`modificationStatus`/`modificationDescription`, per-framework flat JSON arrays) — unchanged, unduplicated. Component metadata carries a _reference_ into this system (§10), never a copy of its fields.
 - **`COMPONENT_INVENTORY.md`'s 11-column table** — the existing, real, human-authored prior art GAP-027 names as a "strong head start." This spec's schema is designed to be capable of representing the same facts that table already captures, in machine-readable, versioned form — not to replace or redesign that table's own content.
 
 This spec resolves, from the preceding research/reconciliation pass's direct source verification (not a new broad research pass):
@@ -45,7 +46,7 @@ This spec resolves, from the preceding research/reconciliation pass's direct sou
 Per Blueprint §259 (Metadata Packages responsibilities) and §17/§18, confirmed against real repository evidence:
 
 - Describe a component's **identity** (name, category, framework availability, package ownership) as a single, versioned, machine-readable record per component.
-- Describe each framework implementation's **public API** (props/inputs, events/outputs) as *authoritative facts extracted from real source*, never invented or normalized away from the real per-framework mechanism.
+- Describe each framework implementation's **public API** (props/inputs, events/outputs) as _authoritative facts extracted from real source_, never invented or normalized away from the real per-framework mechanism.
 - Describe **accessibility facts actually present in source** (role, aria-* attributes genuinely implemented) — not a target/aspirational taxonomy.
 - Describe **style/theme identity** at the one point of genuine cross-framework convergence already proven (`componentName`).
 - Describe coarse **relationships/dependencies** between components (e.g., Table depends on Paginator and Scroller), reusing `COMPONENT_INVENTORY.md`'s existing judgment rather than re-deriving it.
@@ -82,8 +83,8 @@ Blueprint §17 explicitly requires: "Metadata must be versioned. The schema itse
 
 **Two distinct version numbers, kept separate:**
 
-1. **`schemaVersion`** (on the schema itself, exported as `SCHEMA_VERSION` from `@ultimate/component-schema`) — a single semver-shaped string describing the *shape* of `ComponentMetadata`. Bumped only when the schema's structure changes.
-2. **`metadataVersion`** (a field *inside* each `ComponentMetadata` record) — see below for its precise, implementation-ready semantics.
+1. **`schemaVersion`** (on the schema itself, exported as `SCHEMA_VERSION` from `@ultimate/component-schema`) — a single semver-shaped string describing the _shape_ of `ComponentMetadata`. Bumped only when the schema's structure changes.
+2. **`metadataVersion`** (a field _inside_ each `ComponentMetadata` record) — see below for its precise, implementation-ready semantics.
 
 ### 5.1 `metadataVersion` — precise semantics
 
@@ -136,11 +137,11 @@ packages: {
 
 Four human-authored prose fields exist across the schema (`description`, `accessibility.guidance`, `guidance.usageNotes`, `guidance.antiPatterns`/`guidance.migrationNotes`). Each has one, non-overlapping responsibility. An implementer populating a record must be able to answer "which field does this sentence belong in" without ambiguity — the test in each entry below is the practical disambiguator.
 
-- **`description`** (identity block, §6.1) — **what the component is.** A short, single-paragraph, definitional statement of the component's identity and purpose — the kind of sentence that would appear as the opening line of the component's own documentation page or a catalog listing. It answers "what is this" once, at the record's top level, and nothing else reads it as authoritative for behavior. *Test: if the sentence would still be true even if the component's props/behavior changed significantly (e.g. "Table renders tabular data with sorting, filtering, and selection"), it belongs here. If the sentence depends on a specific prop, event, or usage pattern, it does not belong here.*
-- **`accessibility.guidance`** (§6.3) — **accessibility-specific caveats not expressible as a verified fact.** Scoped narrowly to accessibility behavior that `verifiedRoles`/`verifiedAriaAttributes` can't capture as a flat list — e.g., a limitation like "keyboard navigation only operates within the currently-rendered virtualized window, not the full logical dataset" (a real, already-documented Table limitation from the just-closed milestone). *Test: if the sentence is about accessibility/keyboard/screen-reader behavior specifically, and isn't a bare role/attribute name, it belongs here — nowhere else.*
-- **`guidance.usageNotes`** (§6.7) — **how/when to use the component correctly**, general-purpose (not accessibility-specific). E.g., "prefer `virtualScrollerOptions` over `paginator` for datasets over ~500 rows." *Test: general usage advice, not an identity statement and not accessibility-specific.*
-- **`guidance.antiPatterns`** (§6.7) — **known misuse to avoid**, stated as a discrete list of specific don'ts, not prose. E.g., "do not mutate `selection` directly in Vue; always emit through `update:selection`." *Test: a specific, nameable mistake — if it can't be phrased as "don't do X," it belongs in `usageNotes` instead.*
-- **`guidance.migrationNotes`** (§6.7) — **upgrade/compatibility guidance tied to a version change** (either `metadataVersion` or the component's own real package version, distinctly — see §5.1's "relationship to package version"), e.g., "as of package v2.0, `editingRowKeys` replaced the deprecated `editingKeys` prop name." *Test: the sentence only makes sense in the context of "this changed between versions" — if it's evergreen advice with no version dimension, it belongs in `usageNotes` instead.*
+- **`description`** (identity block, §6.1) — **what the component is.** A short, single-paragraph, definitional statement of the component's identity and purpose — the kind of sentence that would appear as the opening line of the component's own documentation page or a catalog listing. It answers "what is this" once, at the record's top level, and nothing else reads it as authoritative for behavior. _Test: if the sentence would still be true even if the component's props/behavior changed significantly (e.g. "Table renders tabular data with sorting, filtering, and selection"), it belongs here. If the sentence depends on a specific prop, event, or usage pattern, it does not belong here._
+- **`accessibility.guidance`** (§6.3) — **accessibility-specific caveats not expressible as a verified fact.** Scoped narrowly to accessibility behavior that `verifiedRoles`/`verifiedAriaAttributes` can't capture as a flat list — e.g., a limitation like "keyboard navigation only operates within the currently-rendered virtualized window, not the full logical dataset" (a real, already-documented Table limitation from the just-closed milestone). _Test: if the sentence is about accessibility/keyboard/screen-reader behavior specifically, and isn't a bare role/attribute name, it belongs here — nowhere else._
+- **`guidance.usageNotes`** (§6.7) — **how/when to use the component correctly**, general-purpose (not accessibility-specific). E.g., "prefer `virtualScrollerOptions` over `paginator` for datasets over ~500 rows." _Test: general usage advice, not an identity statement and not accessibility-specific._
+- **`guidance.antiPatterns`** (§6.7) — **known misuse to avoid**, stated as a discrete list of specific don'ts, not prose. E.g., "do not mutate `selection` directly in Vue; always emit through `update:selection`." _Test: a specific, nameable mistake — if it can't be phrased as "don't do X," it belongs in `usageNotes` instead._
+- **`guidance.migrationNotes`** (§6.7) — **upgrade/compatibility guidance tied to a version change** (either `metadataVersion` or the component's own real package version, distinctly — see §5.1's "relationship to package version"), e.g., "as of package v2.0, `editingRowKeys` replaced the deprecated `editingKeys` prop name." _Test: the sentence only makes sense in the context of "this changed between versions" — if it's evergreen advice with no version dimension, it belongs in `usageNotes` instead._
 
 **Why `description` sits at the identity-block level while the rest sit under `guidance`/`accessibility`:** `description` is not optional and not "guidance" in Blueprint §18's sense — it is a required, load-bearing identity fact every record must have (the same way `name`/`category` are required), read first by any consumer (a catalog listing, a search index) before anything else in the record is even inspected. The `guidance.*` fields, by contrast, are all optional in v1 (§6.7) precisely because they represent deeper, situational advice that not every component has authored yet — they supplement the identity established by `description`, never restate it. An implementer must never copy the same sentence into both `description` and `guidance.usageNotes`: if a sentence is true regardless of how the component is used, it belongs only in `description`; if it depends on a usage decision, prop combination, or version boundary, it belongs only in the relevant `guidance.*`/`accessibility.guidance` field, never duplicated back into `description`.
 
@@ -242,28 +243,28 @@ Slots/templates, variants, states, examples, and any CLI/MCP/AI-specific sub-sha
 
 Per-category classification, restated precisely (required in v1 / optional in v1 / framework-specific extension / deferred / out of scope):
 
-| Category | Classification |
-|---|---|
-| Component identity (name, category, description) | **Required in v1** |
-| Package/framework ownership, framework availability | **Required in v1** |
-| Schema version, metadata version | **Required in v1** |
-| Props/inputs (per-framework facts: name, type, default, required, description) | **Required in v1** — framework-native representation (§6.2), not a unified prop model |
-| Events/outputs (semantic id + per-framework name + mechanism + payload) | **Required in v1** — framework-native representation (§6.2), semantic id is the only shared field |
-| Accessibility (verified roles/aria-attributes + optional guidance) | **Required in v1, minimal** — no taxonomy |
-| Style/theme identity (`componentName` + style module pointer) | **Required in v1, minimal** |
-| Relationships/dependencies (coarse, component-name list) | **Required in v1, coarse only** |
-| Provenance reference (pointer into existing provenance JSON) | **Required in v1** |
-| Human-authored guidance (usage notes, anti-patterns, migration notes) | **Optional in v1** — shape exists, content not required |
-| Slots/templates | **Deferred** — insufficient cross-framework data points (only Table has real composition evidence) |
-| Variants/states formal taxonomy | **Deferred** — no formal taxonomy exists anywhere in the repo yet beyond ad hoc prop values |
-| Documentation content / examples / Storybook stories | **Deferred** — Phase 8/9-downstream, no committed spec to design against |
-| CLI generation/query shape | **Deferred** — Phase 7 has no committed spec |
-| MCP exposure shape | **Deferred** — Phase 8 has no committed spec |
-| AI/LLM context shape | **Deferred** — Phase 9 has no committed spec |
-| Full migration-system metadata | **Deferred** — `migrationNotes` exists as a free-text optional field only; no structured migration-classification schema (`COMPONENT_INVENTORY.md`'s own "Migration classification"/"Migration phase" columns are NOT re-modeled here — out of scope, that table remains the source of truth for planning-level migration tracking) |
-| Runtime component wrapper/registry | **Out of scope** — this system is declarative/build-time only, never a runtime dependency of `packages/{ng,react,vue}` |
-| Universal cross-framework event name | **Out of scope** — `frameworkName`/`mechanism` in §6.2 are recorded per-framework precisely because no universal name exists in real source |
-| Universal framework API abstraction | **Out of scope** — explicitly excluded per this run's own constraints and unsupported by convergence evidence |
+| Category                                                                       | Classification                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Component identity (name, category, description)                               | **Required in v1**                                                                                                                                                                                                                                                                                                                  |
+| Package/framework ownership, framework availability                            | **Required in v1**                                                                                                                                                                                                                                                                                                                  |
+| Schema version, metadata version                                               | **Required in v1**                                                                                                                                                                                                                                                                                                                  |
+| Props/inputs (per-framework facts: name, type, default, required, description) | **Required in v1** — framework-native representation (§6.2), not a unified prop model                                                                                                                                                                                                                                               |
+| Events/outputs (semantic id + per-framework name + mechanism + payload)        | **Required in v1** — framework-native representation (§6.2), semantic id is the only shared field                                                                                                                                                                                                                                   |
+| Accessibility (verified roles/aria-attributes + optional guidance)             | **Required in v1, minimal** — no taxonomy                                                                                                                                                                                                                                                                                           |
+| Style/theme identity (`componentName` + style module pointer)                  | **Required in v1, minimal**                                                                                                                                                                                                                                                                                                         |
+| Relationships/dependencies (coarse, component-name list)                       | **Required in v1, coarse only**                                                                                                                                                                                                                                                                                                     |
+| Provenance reference (pointer into existing provenance JSON)                   | **Required in v1**                                                                                                                                                                                                                                                                                                                  |
+| Human-authored guidance (usage notes, anti-patterns, migration notes)          | **Optional in v1** — shape exists, content not required                                                                                                                                                                                                                                                                             |
+| Slots/templates                                                                | **Deferred** — insufficient cross-framework data points (only Table has real composition evidence)                                                                                                                                                                                                                                  |
+| Variants/states formal taxonomy                                                | **Deferred** — no formal taxonomy exists anywhere in the repo yet beyond ad hoc prop values                                                                                                                                                                                                                                         |
+| Documentation content / examples / Storybook stories                           | **Deferred** — Phase 8/9-downstream, no committed spec to design against                                                                                                                                                                                                                                                            |
+| CLI generation/query shape                                                     | **Deferred** — Phase 7 has no committed spec                                                                                                                                                                                                                                                                                        |
+| MCP exposure shape                                                             | **Deferred** — Phase 8 has no committed spec                                                                                                                                                                                                                                                                                        |
+| AI/LLM context shape                                                           | **Deferred** — Phase 9 has no committed spec                                                                                                                                                                                                                                                                                        |
+| Full migration-system metadata                                                 | **Deferred** — `migrationNotes` exists as a free-text optional field only; no structured migration-classification schema (`COMPONENT_INVENTORY.md`'s own "Migration classification"/"Migration phase" columns are NOT re-modeled here — out of scope, that table remains the source of truth for planning-level migration tracking) |
+| Runtime component wrapper/registry                                             | **Out of scope** — this system is declarative/build-time only, never a runtime dependency of `packages/{ng,react,vue}`                                                                                                                                                                                                              |
+| Universal cross-framework event name                                           | **Out of scope** — `frameworkName`/`mechanism` in §6.2 are recorded per-framework precisely because no universal name exists in real source                                                                                                                                                                                         |
+| Universal framework API abstraction                                            | **Out of scope** — explicitly excluded per this run's own constraints and unsupported by convergence evidence                                                                                                                                                                                                                       |
 
 ---
 
@@ -271,10 +272,10 @@ Per-category classification, restated precisely (required in v1 / optional in v1
 
 This spec makes no change to, and imposes no new constraint on, any framework's actual component implementation:
 
-- Angular's `input()`/`output()` signal factories remain exactly as implemented; `PropFact`/`EventFact` records *describe* them, they do not wrap, re-export, or replace them.
+- Angular's `input()`/`output()` signal factories remain exactly as implemented; `PropFact`/`EventFact` records _describe_ them, they do not wrap, re-export, or replace them.
 - React's TS interface props and `onX` callback props remain exactly as implemented.
 - Vue's `props: {type, default}` objects and `emits: [...]` arrays remain exactly as implemented.
-- No metadata-consuming tool introduced by this spec (there are none — Phase 7/8/9 are out of scope) reads metadata *instead of* the real component at runtime; metadata is authored/generated from real source as a separate, parallel artifact.
+- No metadata-consuming tool introduced by this spec (there are none — Phase 7/8/9 are out of scope) reads metadata _instead of_ the real component at runtime; metadata is authored/generated from real source as a separate, parallel artifact.
 
 ---
 
@@ -300,7 +301,7 @@ Explicit, restated: `docs/architecture/provenance/{ng,react,vue,uix-styles}.json
 
 Blueprint §18 places Docs, Storybook, MCP, and Skills/LLM-context downstream of metadata. This spec:
 
-- Confirms the `ComponentMetadata` shape (§6) is *structurally* sufficient to be a useful, authoritative source for those future consumers (identity, per-framework API, accessibility, style, relationships, provenance reference — everything a docs generator or an MCP query layer would need to start from).
+- Confirms the `ComponentMetadata` shape (§6) is _structurally_ sufficient to be a useful, authoritative source for those future consumers (identity, per-framework API, accessibility, style, relationships, provenance reference — everything a docs generator or an MCP query layer would need to start from).
 - Does **not** define any Phase 7 (CLI generation), Phase 8 (MCP query/exposure), or Phase 9 (AI Skills/LLM context) consumer-specific contract, format, or query shape — none of those phases has a committed spec yet, and designing against unwritten requirements would be speculative coupling this spec explicitly avoids.
 
 ---

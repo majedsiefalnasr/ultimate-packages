@@ -24,7 +24,8 @@
             role="columnheader"
             :aria-sort="ariaSortFor(col.field)"
             @click="sortColumn(col.field)"
-          >{{ col.header }}</th>
+            >{{ col.header }}</th
+          >
           <th v-if="editMode === 'row'"></th>
         </tr>
       </thead>
@@ -33,7 +34,11 @@
           <td data-u-table-loading :colspan="totalColumnCount"></td>
         </tr>
       </tbody>
-      <tbody v-else-if="!virtualScrollerOptions && value.length === 0" :class="cx('tbody')" role="rowgroup">
+      <tbody
+        v-else-if="!virtualScrollerOptions && value.length === 0"
+        :class="cx('tbody')"
+        role="rowgroup"
+      >
         <tr>
           <td :colspan="totalColumnCount">{{ emptyMessage }}</td>
         </tr>
@@ -67,33 +72,56 @@
                 type="button"
                 data-u-table-row-toggle
                 @click.stop="toggleRowExpansion($event, entry.row)"
-              >{{ isRowExpanded(entry.row) ? "-" : "+" }}</button>
+                >{{ isRowExpanded(entry.row) ? "-" : "+" }}</button
+              >
             </td>
             <template v-for="col in columns" :key="col.field">
               <td
-                v-if="rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy && entry.isGroupHeader"
+                v-if="
+                  rowGroupMode === 'rowspan' &&
+                  groupRowsBy &&
+                  col.field === groupRowsBy &&
+                  entry.isGroupHeader
+                "
                 data-u-table-group-cell
                 :rowspan="entry.groupSize"
-              >{{ renderCell(entry.row, col, index) }}</td>
-              <td v-else-if="isRowEditing(entry.row) && !(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)" data-u-table-cell-editor>
+                >{{ renderCell(entry.row, col, index) }}</td
+              >
+              <td
+                v-else-if="
+                  isRowEditing(entry.row) &&
+                  !(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)
+                "
+                data-u-table-cell-editor
+              >
                 <input
                   :value="draftValue(entry.row, col.field)"
                   @input="onDraftInput(entry.row, col.field, $event)"
                   @click.stop
                 />
               </td>
-              <td v-else-if="!(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)">{{ renderCell(entry.row, col, index) }}</td>
+              <td
+                v-else-if="
+                  !(rowGroupMode === 'rowspan' && groupRowsBy && col.field === groupRowsBy)
+                "
+                >{{ renderCell(entry.row, col, index) }}</td
+              >
             </template>
             <td v-if="editMode === 'row' && isRowEditing(entry.row)">
-              <button type="button" data-u-table-row-edit-save @click.stop="saveRowEdit(entry.row)">Save</button>
-              <button type="button" data-u-table-row-edit-cancel @click.stop="cancelRowEdit(entry.row)">Cancel</button>
-            </td>
-            <td v-else-if="editMode === 'row'">
+              <button type="button" data-u-table-row-edit-save @click.stop="saveRowEdit(entry.row)"
+                >Save</button
+              >
               <button
                 type="button"
-                data-u-table-row-edit-init
-                @click.stop="initRowEdit(entry.row)"
-              >Edit</button>
+                data-u-table-row-edit-cancel
+                @click.stop="cancelRowEdit(entry.row)"
+                >Cancel</button
+              >
+            </td>
+            <td v-else-if="editMode === 'row'">
+              <button type="button" data-u-table-row-edit-init @click.stop="initRowEdit(entry.row)"
+                >Edit</button
+              >
             </td>
           </tr>
           <tr v-if="dataKey && isRowExpanded(entry.row)" data-u-table-row-expansion>
@@ -137,7 +165,9 @@
                 This is intentional (a row outside the window isn't in the
                 DOM to focus), not a bug.
               -->
-              <td v-for="col in columns" :key="col.field">{{ renderCell(entry.value, col, entry.index) }}</td>
+              <td v-for="col in columns" :key="col.field">{{
+                renderCell(entry.value, col, entry.index)
+              }}</td>
             </tr>
           </tbody>
         </table>
@@ -234,7 +264,8 @@ function matchesFilter(row, field, filter) {
       // everything). String.prototype.includes("") is always true, so
       // without this guard `!cellValue.includes("")` would be false for
       // every row, hiding all of them instead of showing all of them.
-      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return true;
+      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "")
+        return true;
       return !cellValue.includes(filterValue);
     case "endsWith":
       return cellValue.endsWith(filterValue);
@@ -244,7 +275,8 @@ function matchesFilter(row, field, filter) {
       // Real PrimeVue FilterService.js: absent (undefined/null) OR an empty
       // string filter value => false (does not match) — matching Angular's
       // real outcome, not React's.
-      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "") return false;
+      if (rawFilterValue === undefined || rawFilterValue === null || filterValue === "")
+        return false;
       return cellValue !== filterValue;
     case "lt":
       if (rawFilterValue === undefined || rawFilterValue === null) return true;
@@ -568,7 +600,9 @@ export default {
 
       if (!this.sortField || this.sortOrder === 0) return rows;
       return rows.sort(
-        (a, b) => compareValues(resolveCell(a, this.sortField), resolveCell(b, this.sortField)) * this.sortOrder
+        (a, b) =>
+          compareValues(resolveCell(a, this.sortField), resolveCell(b, this.sortField)) *
+          this.sortOrder
       );
     },
     ariaSortFor(field) {
@@ -612,7 +646,9 @@ export default {
      * structural `deepEquals`, matching React's `isRowEqual`.
      */
     isRowEqual(a, b) {
-      return this.compareSelectionBy === "deepEquals" ? deepEquals(a, b) : equals(a, b, this.dataKey);
+      return this.compareSelectionBy === "deepEquals"
+        ? deepEquals(a, b)
+        : equals(a, b, this.dataKey);
     },
     isSelected(row) {
       if (this.selection == null) return false;

@@ -50,7 +50,9 @@ describe("UTimeline", () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     expect(
-      fixture.nativeElement.querySelector(".u-timeline")?.classList.contains("u-timeline-horizontal")
+      fixture.nativeElement
+        .querySelector(".u-timeline")
+        ?.classList.contains("u-timeline-horizontal")
     ).toBe(true);
   });
 
@@ -73,7 +75,9 @@ describe("UTimeline", () => {
       standalone: true,
       imports: [UTimeline],
       template: `<u-timeline [value]="events">
-        <ng-template #marker let-event><span class="custom-marker">{{ event }}</span></ng-template>
+        <ng-template #marker let-event
+          ><span class="custom-marker">{{ event }}</span></ng-template
+        >
       </u-timeline>`,
     })
     class HostComponent {

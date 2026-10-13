@@ -89,7 +89,7 @@ Modification status      Modification description  Date incorporated
 - **Copyright holder:** PrimeTek, 2025
 - **Third-party notices:** none found upstream
 - **Ultimate destination:** `packages/uix-styled` (Phase 1)
-- **Modification status:** incorporated (Phase 1) — cross-package `@primeuix/*` import specifiers adapted to `@ultimate/uix-*` via `scripts/provenance/adapt-imports.mjs`; all other source retained verbatim. File-level detail: `docs/architecture/provenance/uix-styled.json`.
+- **Modification status:** incorporated (Phase 1) — cross-package `@primeuix/*` import specifiers adapted to `@ultimate/uix-*` via `scripts/provenance/adapt-imports.mjs`; `src/stylesheet/index.ts` later had one obsolete ESLint directive removed during GAP-092 lint repair. Other source changes remain described in the file-level manifest at `docs/architecture/provenance/uix-styled.json`.
 - **Modification description:** see file-level manifest at `docs/architecture/provenance/uix-styled.json` for per-file status.
 - **Date incorporated:** 2026-08-29
 

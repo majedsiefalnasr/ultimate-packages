@@ -148,7 +148,7 @@ Status: Accepted (Phase 4 spec, confirmed by implementation). `vue-core`'s `crea
 
 ## ADR-034 — FocusTrap, Tooltip, and Ripple are Vue custom directives, not components
 
-Status: Accepted (Phase 4 spec, confirmed by implementation). Verified PrimeVue's real `FocusTrap.js`, `Tooltip.js`, and `Ripple.js` are all Vue custom directives (`v-focustrap`, `v-tooltip`, `v-ripple`), not `.vue` SFC components — a materially different artifact shape from both Angular's `[uFocusTrap]` directive-with-component-render and React's ref-based sentinel *component* (FocusTrap) or ref-target *component* (Tooltip). `vue-core`'s `v-focustrap` and `vue`'s `v-tooltip`/`v-ripple` preserve this verified directive-native mechanism rather than converting any of the three into components to superficially match Angular's or React's API shape — per §2.4/ADR-006's framework-native-implementation principle.
+Status: Accepted (Phase 4 spec, confirmed by implementation). Verified PrimeVue's real `FocusTrap.js`, `Tooltip.js`, and `Ripple.js` are all Vue custom directives (`v-focustrap`, `v-tooltip`, `v-ripple`), not `.vue` SFC components — a materially different artifact shape from both Angular's `[uFocusTrap]` directive-with-component-render and React's ref-based sentinel _component_ (FocusTrap) or ref-target _component_ (Tooltip). `vue-core`'s `v-focustrap` and `vue`'s `v-tooltip`/`v-ripple` preserve this verified directive-native mechanism rather than converting any of the three into components to superficially match Angular's or React's API shape — per §2.4/ADR-006's framework-native-implementation principle.
 
 ## ADR-035 — FocusTrap's `MutationObserver` dynamic-content redirection carried forward
 

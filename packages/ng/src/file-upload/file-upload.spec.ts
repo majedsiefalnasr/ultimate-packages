@@ -121,7 +121,9 @@ describe("UFileUpload", () => {
     input.dispatchEvent(new Event("change"));
     fixture.detectChanges();
 
-    const removeButton: HTMLElement = fixture.nativeElement.querySelector(".u-file-upload-file-remove-button");
+    const removeButton: HTMLElement = fixture.nativeElement.querySelector(
+      ".u-file-upload-file-remove-button"
+    );
     removeButton.click();
     fixture.detectChanges();
 
@@ -149,7 +151,9 @@ describe("UFileUpload", () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll(".u-file-upload-file").length).toBe(2);
 
-    const cancelButton: HTMLElement = fixture.nativeElement.querySelector(".u-file-upload-cancel-button");
+    const cancelButton: HTMLElement = fixture.nativeElement.querySelector(
+      ".u-file-upload-cancel-button"
+    );
     cancelButton.click();
     fixture.detectChanges();
 
@@ -188,16 +192,20 @@ describe("UFileUpload", () => {
     fixture.detectChanges();
     const fileInput: HTMLInputElement = fixture.nativeElement.querySelector('input[type="file"]');
     expect(fileInput.disabled).toBe(true);
-    const chooseButton: HTMLButtonElement = fixture.nativeElement.querySelector(".u-file-upload-choose-button");
+    const chooseButton: HTMLButtonElement = fixture.nativeElement.querySelector(
+      ".u-file-upload-choose-button"
+    );
     expect(chooseButton.disabled).toBe(true);
   });
 
   it("uploads selected files via XHR and reports progress, then emits onUpload on success", () => {
     class FakeXhr {
       static instances: FakeXhr[] = [];
-      upload = { addEventListener: vi.fn((_type: string, handler: (event: ProgressEvent) => void) => {
-        this.progressHandler = handler;
-      }) };
+      upload = {
+        addEventListener: vi.fn((_type: string, handler: (event: ProgressEvent) => void) => {
+          this.progressHandler = handler;
+        }),
+      };
       progressHandler: ((event: ProgressEvent) => void) | null = null;
       onreadystatechange: (() => void) | null = null;
       readyState = 0;
@@ -218,7 +226,12 @@ describe("UFileUpload", () => {
     @Component({
       standalone: true,
       imports: [UFileUpload],
-      template: `<u-file-upload url="/upload" [auto]="true" (onUpload)="onUpload($event)" (onProgress)="onProgress($event)" />`,
+      template: `<u-file-upload
+        url="/upload"
+        [auto]="true"
+        (onUpload)="onUpload($event)"
+        (onProgress)="onProgress($event)"
+      />`,
     })
     class HostComponent {
       uploaded: unknown;
@@ -245,7 +258,12 @@ describe("UFileUpload", () => {
     @Component({
       standalone: true,
       imports: [UFileUpload],
-      template: `<u-file-upload url="/upload" [customUpload]="true" [auto]="true" (uploadHandler)="onHandler($event)" />`,
+      template: `<u-file-upload
+        url="/upload"
+        [customUpload]="true"
+        [auto]="true"
+        (uploadHandler)="onHandler($event)"
+      />`,
     })
     class HostComponent {
       handled: unknown;

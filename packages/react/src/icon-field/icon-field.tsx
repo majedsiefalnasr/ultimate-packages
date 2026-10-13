@@ -73,7 +73,11 @@ export const UInputIcon = React.forwardRef<HTMLSpanElement, UInputIconProps>(fun
   });
 
   return (
-    <span ref={ref} className={[cx("root"), className].filter(Boolean).join(" ")} aria-hidden="true">
+    <span
+      ref={ref}
+      className={[cx("root"), className].filter(Boolean).join(" ")}
+      aria-hidden="true"
+    >
       {children}
     </span>
   );

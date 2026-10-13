@@ -41,7 +41,8 @@ export interface ConfirmationServiceApi {
   close(): void;
 }
 
-export const UConfirmationServiceKey: InjectionKey<ConfirmationServiceApi> = Symbol("UConfirmationService");
+export const UConfirmationServiceKey: InjectionKey<ConfirmationServiceApi> =
+  Symbol("UConfirmationService");
 
 function createConfirmationServiceApi(): ConfirmationServiceApi {
   return {

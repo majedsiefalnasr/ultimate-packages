@@ -32,7 +32,11 @@ export const UMenubar = React.forwardRef<HTMLElement, UMenubarProps>(function UM
   const { cx } = useComponentBase({ componentName: "menubar", styleModule: menubarStyleModule });
 
   return (
-    <nav ref={ref} className={[cx("root"), className].filter(Boolean).join(" ")} aria-label={ariaLabel}>
+    <nav
+      ref={ref}
+      className={[cx("root"), className].filter(Boolean).join(" ")}
+      aria-label={ariaLabel}
+    >
       <UMenubarSub items={model} root cx={cx} onItemSelect={(event) => onItemSelect?.(event)} />
     </nav>
   );

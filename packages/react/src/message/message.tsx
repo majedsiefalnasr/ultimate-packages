@@ -63,7 +63,11 @@ export const UMessage = React.forwardRef<HTMLDivElement, UMessageProps>(function
     warn: "pi pi-exclamation-triangle",
     error: "pi pi-times-circle",
   };
-  const resolvedIcon = icon ?? (defaultIconClass[severity] ? <i className={defaultIconClass[severity]} aria-hidden="true" /> : null);
+  const resolvedIcon =
+    icon ??
+    (defaultIconClass[severity] ? (
+      <i className={defaultIconClass[severity]} aria-hidden="true" />
+    ) : null);
 
   if (!visible) return null;
 

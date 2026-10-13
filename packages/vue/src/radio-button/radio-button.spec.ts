@@ -67,7 +67,9 @@ describe("URadioButton — accessibility and pass-through", () => {
   });
 
   it("disabled prevents onChange from emitting", async () => {
-    const wrapper = mount(URadioButton, { props: { modelValue: null, value: "a", disabled: true } });
+    const wrapper = mount(URadioButton, {
+      props: { modelValue: null, value: "a", disabled: true },
+    });
     await wrapper.find("input").trigger("change");
     expect(wrapper.emitted("update:modelValue")).toBeFalsy();
   });

@@ -18,7 +18,9 @@ describe("UBreadcrumb", () => {
   });
 
   it("renders a home item before the model trail, separated by a separator", () => {
-    const wrapper = mount(UBreadcrumb, { props: { model, home: { icon: "pi pi-home", url: "/" } } });
+    const wrapper = mount(UBreadcrumb, {
+      props: { model, home: { icon: "pi pi-home", url: "/" } },
+    });
     const links = wrapper.findAll("a");
     expect(links.length).toBe(3);
     expect(wrapper.findAll('[role="separator"]').length).toBe(2);
@@ -74,7 +76,9 @@ describe("UBreadcrumb", () => {
   });
 
   it("renders an item's icon when provided", () => {
-    const wrapper = mount(UBreadcrumb, { props: { model: [{ label: "Icon Item", icon: "pi pi-star", url: "/x" }] } });
+    const wrapper = mount(UBreadcrumb, {
+      props: { model: [{ label: "Icon Item", icon: "pi pi-star", url: "/x" }] },
+    });
     expect(wrapper.find(".pi-star").exists()).toBe(true);
   });
 });

@@ -21,8 +21,10 @@ import { inputTextareaStyleModule } from "./input-textarea-style";
  * Deliberately excludes real source's `keyfilter`/`tooltip`/passthrough
  * surface, same cuts as `input-text.tsx`.
  */
-export interface UInputTextareaProps
-  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "value" | "onChange"> {
+export interface UInputTextareaProps extends Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  "value" | "onChange"
+> {
   value?: string;
   onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
   invalid?: boolean;
@@ -34,7 +36,17 @@ export interface UInputTextareaProps
 
 export const UInputTextarea = React.forwardRef<HTMLTextAreaElement, UInputTextareaProps>(
   function UInputTextarea(
-    { className, invalid = false, variant, fluid = false, autoResize = false, disabled, inputRef, onInput, ...rest },
+    {
+      className,
+      invalid = false,
+      variant,
+      fluid = false,
+      autoResize = false,
+      disabled,
+      inputRef,
+      onInput,
+      ...rest
+    },
     ref
   ) {
     const { cx } = useComponentBase({
@@ -50,7 +62,8 @@ export const UInputTextarea = React.forwardRef<HTMLTextAreaElement, UInputTextar
         if (typeof ref === "function") ref(node);
         else if (ref) (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
         if (typeof inputRef === "function") inputRef(node);
-        else if (inputRef) (inputRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
+        else if (inputRef)
+          (inputRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
       },
       [ref, inputRef]
     );

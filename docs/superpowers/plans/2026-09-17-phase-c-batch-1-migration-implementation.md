@@ -28,7 +28,7 @@ This plan does not implement anything. It does not modify any Ultimate package, 
 - **Capability-scoped, per-framework-independent realization** (spec §4 items 1–2) — a mixed-eligibility capability's eligible-framework tasks proceed independently of its deferred-framework task; no task blocks on a sibling framework's task for the same capability unless spec §5 states an explicit ordering.
 - **No Unverified capability promoted** (spec §4 item 3) — no task may implement a capability/framework pair the spec marks Unverified-and-excluded.
 - **Dependency correctness governs sequencing** (spec §5) — restated as this plan's own Task Group ordering (§2 below). No task starts before its stated prerequisite task completes.
-- **Functional Family organizes task *presentation* only** (spec §4 item 6) — this remains **one Implementation Plan**; Task Groups below are internal organization, not separate plans, and share one Verification (§9) and one Final Review/Closeout (§10).
+- **Functional Family organizes task _presentation_ only** (spec §4 item 6) — this remains **one Implementation Plan**; Task Groups below are internal organization, not separate plans, and share one Verification (§9) and one Final Review/Closeout (§10).
 - **Proof-by-exception** (spec §4 item 7) — no task performs a feasibility study. Where a capability's real Prime source reveals a genuinely new architectural pattern, unresolved dependency, or exception not already known, the implementer stops that specific task and escalates (Task Group templates state this explicitly, §3).
 - **Framework-native implementation, no forced shared shape, no Prime runtime dependency** (spec §4 items 8–9) — every task's public API is derived from that framework's own real pinned Prime source, never copied cross-framework.
 - **No new foundation-tier work beyond the two named Vue infrastructure items** (spec §6) — every task reuses the foundation tiers named in the Pre-planning inspection above; no task creates a new base-class tier or shared package export.
@@ -52,6 +52,7 @@ Per the task's own instruction, these are resolved concretely here, at the Plan 
 Real PrimeVue's `ConfirmationService`, `DialogService`, and `ToastService` are Vue `provide`/`inject`-based services, each installed via a Vue plugin (`app.use(ConfirmationService)` etc.) that provides a small API object into the injection tree, consumed by a companion always-mounted UI component (`ConfirmDialog`/`DynamicDialog`/`Toast`) that listens for service calls via Vue's `emitter`/event-bus pattern (PrimeVue's own internal `EventBus`, already superseded in Ultimate by `@ultimate/uix-utils`'s own `eventbus` module, per Dependency Map §5/Parity Matrix — **reuse, not a new pattern**).
 
 **Concrete decision, binding on Task Group A (§3):**
+
 - **Ultimate names:** `UConfirmationService`, `UDialogService`, `UToastService` (matches Ultimate's existing `U`-prefix convention for every other Angular/Vue-shared-naming artifact, e.g. `UBadge`/`UDialog`).
 - **Installation mechanism:** each is a Vue plugin object (`{ install(app) { app.provide(SYMBOL, api) } }`) — matching Vue's own idiomatic pattern, not PrimeVue's exact internal shape (Option B: reference, not verbatim).
 - **API surface, minimum required by spec §3.0's behavioral responsibility:**
@@ -69,22 +70,23 @@ Real PrimeVue's `ConfirmationService`, `DialogService`, and `ToastService` are V
 
 ## 2. Task Group structure and dependency/order model
 
-| Task Group | Contents | Depends on | Rationale |
-|---|---|---|---|
-| **Group 0** | Pre-implementation branch/working-tree check | — | Standard first task, matches prior plans' own Task 0 pattern |
-| **Group A** | Vue infrastructure prefix — `UConfirmationService`, `UDialogService`, `UToastService`, Vue Badge | Group 0 | Spec §3.0/§5 item 1 — must complete before any Vue task in Groups D/E that depends on it |
-| **Group B** | Form family — 30 capabilities | Group 0 (independent of Group A — no Form capability depends on the Vue infrastructure prefix) | Spec §3.1 |
-| **Group C** | Navigation family — 11 capabilities | Group 0 (independent of Group A) | Spec §3.3 |
-| **Group D** | Overlay family — 8 capabilities | Group 0 for Angular/React tasks; **Group A** for the 4 Vue tasks gated on the infrastructure prefix (ConfirmDialog, ConfirmPopup, DynamicDialog, OverlayBadge) | Spec §3.2, §5 item 1 |
-| **Group E** | Panel/Layout/Display/Feedback family — 30 capabilities | Group 0 for all Angular/React/most-Vue tasks; **Group A** for Vue's Toast task only, and **Group B** for Angular's AvatarGroup task (after Avatar) | Spec §3.4, §5 items 1–2 |
-| **Group Z** | Cross-cutting: current-state tracking file creation/updates, `COMPONENT_INVENTORY.md` updates | All of Groups A–E complete for the capabilities each entry covers | Spec §11 item 5, §9 item 5 |
-| **Verification** | Whole-branch regression + acceptance-criteria check | All of Groups 0–Z | Spec §9, §11 |
-| **Final Review/Closeout** | Per the repository's standard gated workflow | Verification | Spec §1, Roadmap §9 |
+| Task Group                | Contents                                                                                         | Depends on                                                                                                                                                     | Rationale                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Group 0**               | Pre-implementation branch/working-tree check                                                     | —                                                                                                                                                              | Standard first task, matches prior plans' own Task 0 pattern                             |
+| **Group A**               | Vue infrastructure prefix — `UConfirmationService`, `UDialogService`, `UToastService`, Vue Badge | Group 0                                                                                                                                                        | Spec §3.0/§5 item 1 — must complete before any Vue task in Groups D/E that depends on it |
+| **Group B**               | Form family — 30 capabilities                                                                    | Group 0 (independent of Group A — no Form capability depends on the Vue infrastructure prefix)                                                                 | Spec §3.1                                                                                |
+| **Group C**               | Navigation family — 11 capabilities                                                              | Group 0 (independent of Group A)                                                                                                                               | Spec §3.3                                                                                |
+| **Group D**               | Overlay family — 8 capabilities                                                                  | Group 0 for Angular/React tasks; **Group A** for the 4 Vue tasks gated on the infrastructure prefix (ConfirmDialog, ConfirmPopup, DynamicDialog, OverlayBadge) | Spec §3.2, §5 item 1                                                                     |
+| **Group E**               | Panel/Layout/Display/Feedback family — 30 capabilities                                           | Group 0 for all Angular/React/most-Vue tasks; **Group A** for Vue's Toast task only, and **Group B** for Angular's AvatarGroup task (after Avatar)             | Spec §3.4, §5 items 1–2                                                                  |
+| **Group Z**               | Cross-cutting: current-state tracking file creation/updates, `COMPONENT_INVENTORY.md` updates    | All of Groups A–E complete for the capabilities each entry covers                                                                                              | Spec §11 item 5, §9 item 5                                                               |
+| **Verification**          | Whole-branch regression + acceptance-criteria check                                              | All of Groups 0–Z                                                                                                                                              | Spec §9, §11                                                                             |
+| **Final Review/Closeout** | Per the repository's standard gated workflow                                                     | Verification                                                                                                                                                   | Spec §1, Roadmap §9                                                                      |
 
 **No Task Group is itself a separate Plan.** All are sections of this one document, sharing one Verification and one Final Review/Closeout, per the task's own explicit instruction.
 
 **Intra-group ordering** (restated exactly from spec §5, not re-derived):
-1. Group A's four items (3 services + Badge) have no ordering constraint *among themselves* — they may proceed in any order or in parallel.
+
+1. Group A's four items (3 services + Badge) have no ordering constraint _among themselves_ — they may proceed in any order or in parallel.
 2. Within Group E: **Angular's AvatarGroup task depends on Angular's Avatar task** (same group, explicit soft ordering, spec §5 item 2). React/Vue's AvatarGroup tasks carry no such ordering.
 3. Within Group C (Navigation) and Group E (Panel/Layout/Display/Feedback), for Vue's decomposed families (Tabs, Stepper, Accordion, Splitter — spec §5 item 3) and React's Stepper/StepperPanel (spec §5 item 4): container-first sub-component ordering is internal to that single capability's own task, stated in each such task's own step list (§3), not a Group-level dependency.
 4. No other ordering exists among any of the 79 capabilities' tasks, per spec §5's own exhaustiveness statement (cross-capability scope) — confirmed by this plan's own re-check against Dependency Map §C.
@@ -101,6 +103,7 @@ Every capability task, regardless of Group, follows this exact template. The per
 **Pinned Prime source evidence to consult:** the table row's cited Prime source path, extracted via `scripts/provenance/extract-prime{ng|react|vue}-source.mjs` against the pinned tarball named in the Pre-planning inspection — never from memory or training data (spec §11 item 1, restated).
 
 **Concrete implementation steps:**
+
 1. Extract and read the real pinned Prime source for this capability (table row's cited path). Confirm the table row's framework-native naming note (if any, e.g. React's `Dropdown` for canonical `Select`) still matches current source.
 2. Determine the public API surface (props/inputs/outputs/events/emits) directly from that source, following the same per-framework idiom already established by every prior Built component in this same package (fully-controlled for React, `ControlValueAccessor`/directive form for Angular per the existing 4-tier chain, `v-model`/`writeValue()` for Vue) — this resolves spec §12 item 3 for this specific capability, at this specific task.
 3. Implement the component file(s), extending/composing the foundation tier named above. **If the real Prime source reveals a pattern not already covered by an existing Ultimate foundation tier or an already-Built sibling component's precedent — stop this task and escalate as a finding; do not invent a new architectural pattern** (spec §4 item 7, Global Constraints).
@@ -123,38 +126,38 @@ Every capability task, regardless of Group, follows this exact template. The per
 
 Realized per the per-capability, per-framework eligibility already fixed by spec §3.1 (restated in the table's Framework column — "All 3" or the named subset). Prime source paths below are the top-level PrimeNG/PrimeReact/PrimeVue directory names already confirmed by Phase A/the Dependency Map; each must be freshly extracted and read at implementation time per §3 step 1, not assumed unchanged.
 
-| Capability | Framework(s) | Prime source path(s) (PrimeNG / PrimeReact / PrimeVue) | Notes |
-|---|---|---|---|
-| RadioButton | All 3 | `radiobutton/` / `radiobutton/` / `radiobutton/` | — |
-| ToggleSwitch | All 3 | `toggleswitch/` / `inputswitch/` (React names it InputSwitch) / `toggleswitch/` | Framework-native name per capability, not unified — spec §4 item 10 |
-| ToggleButton | All 3 | `togglebutton/` / `togglebutton/` / `togglebutton/` | — |
-| InputText | React, Vue only (Angular Built) | — / `inputtext/` / `inputtext/` | Angular's `UInputText` already exists; do not modify it |
-| Textarea | All 3 | `textarea/` / `inputtextarea/` (React names it InputTextarea) / `textarea/` | — |
-| InputNumber | React, Vue only (Angular Built) | — / `inputnumber/` / `inputnumber/` | Angular's `UInputNumber` already exists; do not modify it. Vue/React tasks reuse the `U_FLUID_ANCESTOR`-equivalent pattern only if their own framework's foundation tier requires ancestor-Fluid detection (verify per §3 step 3) |
-| InputMask | All 3 | `inputmask/` / `inputmask/` / `inputmask/` | — |
-| InputOTP | All 3 | `inputotp/` / `inputotp/` / `inputotp/` | — |
-| Password | All 3 | `password/` / `password/` / `password/` | — |
-| AutoComplete | All 3 | `autocomplete/` / `autocomplete/` / `autocomplete/` | — |
-| Select | All 3 | `select/` / `dropdown/` (React names it Dropdown) / `select/` | Framework-native name, spec §4 item 10 |
-| MultiSelect | All 3 | `multiselect/` / `multiselect/` / `multiselect/` | — |
-| CascadeSelect | All 3 | `cascadeselect/` / `cascadeselect/` / `cascadeselect/` | — |
-| Listbox | All 3 | `listbox/` / `listbox/` / `listbox/` | — |
-| SelectButton | All 3 | `selectbutton/` / `selectbutton/` / `selectbutton/` | — |
-| Rating | All 3 | `rating/` / `rating/` / `rating/` | — |
-| Slider | All 3 | `slider/` / `slider/` / `slider/` | — |
-| Knob | All 3 | `knob/` / `knob/` / `knob/` | — |
-| ColorPicker | All 3 | `colorpicker/` / `colorpicker/` / `colorpicker/` | — |
-| DatePicker | All 3 | `datepicker/` / `calendar/` (React names it Calendar) / `datepicker/` | Framework-native name, spec §4 item 10 |
-| FileUpload | All 3 | `fileupload/` / `fileupload/` / `fileupload/` | — |
-| KeyFilter | All 3 | `keyfilter/` / `keyfilter/` / `keyfilter/` | — |
-| FloatLabel | All 3 | `floatlabel/` / `floatlabel/` / `floatlabel/` | — |
-| IconField / InputIcon | All 3 | `iconfield/`, `inputicon/` / `iconfield/`, `inputicon/` / `iconfield/`, `inputicon/` | One canonical capability, two Prime directories each framework — bundle as one task per framework, two small files |
-| InputChips | React, Vue only (Angular Unverified — excluded) | — / `chips/` / `inputchips/` | Do not attempt an Angular realization — Unverified, not confirmed absent (spec §3.1) |
-| InputGroup / InputGroupAddon | Angular, Vue only (React Unverified — excluded) | `inputgroup/`, `inputgroupaddon/` / — / `inputgroup/`, `inputgroupaddon/` | One canonical capability, two Prime directories each framework |
-| IftaLabel | Angular, Vue only (React Unverified — excluded) | `iftalabel/` / — / `iftalabel/` | — |
-| Mention | React only (Angular, Vue Unverified — excluded) | — / `mention/` / — | — |
-| MultiStateCheckbox | React only (Angular, Vue Unverified — excluded) | — / `multistatecheckbox/` / — | — |
-| TriStateCheckbox | React only (Angular, Vue Unverified — excluded) | — / `tristatecheckbox/` / — | — |
+| Capability                   | Framework(s)                                    | Prime source path(s) (PrimeNG / PrimeReact / PrimeVue)                               | Notes                                                                                                                                                                                                                             |
+| ---------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RadioButton                  | All 3                                           | `radiobutton/` / `radiobutton/` / `radiobutton/`                                     | —                                                                                                                                                                                                                                 |
+| ToggleSwitch                 | All 3                                           | `toggleswitch/` / `inputswitch/` (React names it InputSwitch) / `toggleswitch/`      | Framework-native name per capability, not unified — spec §4 item 10                                                                                                                                                               |
+| ToggleButton                 | All 3                                           | `togglebutton/` / `togglebutton/` / `togglebutton/`                                  | —                                                                                                                                                                                                                                 |
+| InputText                    | React, Vue only (Angular Built)                 | — / `inputtext/` / `inputtext/`                                                      | Angular's `UInputText` already exists; do not modify it                                                                                                                                                                           |
+| Textarea                     | All 3                                           | `textarea/` / `inputtextarea/` (React names it InputTextarea) / `textarea/`          | —                                                                                                                                                                                                                                 |
+| InputNumber                  | React, Vue only (Angular Built)                 | — / `inputnumber/` / `inputnumber/`                                                  | Angular's `UInputNumber` already exists; do not modify it. Vue/React tasks reuse the `U_FLUID_ANCESTOR`-equivalent pattern only if their own framework's foundation tier requires ancestor-Fluid detection (verify per §3 step 3) |
+| InputMask                    | All 3                                           | `inputmask/` / `inputmask/` / `inputmask/`                                           | —                                                                                                                                                                                                                                 |
+| InputOTP                     | All 3                                           | `inputotp/` / `inputotp/` / `inputotp/`                                              | —                                                                                                                                                                                                                                 |
+| Password                     | All 3                                           | `password/` / `password/` / `password/`                                              | —                                                                                                                                                                                                                                 |
+| AutoComplete                 | All 3                                           | `autocomplete/` / `autocomplete/` / `autocomplete/`                                  | —                                                                                                                                                                                                                                 |
+| Select                       | All 3                                           | `select/` / `dropdown/` (React names it Dropdown) / `select/`                        | Framework-native name, spec §4 item 10                                                                                                                                                                                            |
+| MultiSelect                  | All 3                                           | `multiselect/` / `multiselect/` / `multiselect/`                                     | —                                                                                                                                                                                                                                 |
+| CascadeSelect                | All 3                                           | `cascadeselect/` / `cascadeselect/` / `cascadeselect/`                               | —                                                                                                                                                                                                                                 |
+| Listbox                      | All 3                                           | `listbox/` / `listbox/` / `listbox/`                                                 | —                                                                                                                                                                                                                                 |
+| SelectButton                 | All 3                                           | `selectbutton/` / `selectbutton/` / `selectbutton/`                                  | —                                                                                                                                                                                                                                 |
+| Rating                       | All 3                                           | `rating/` / `rating/` / `rating/`                                                    | —                                                                                                                                                                                                                                 |
+| Slider                       | All 3                                           | `slider/` / `slider/` / `slider/`                                                    | —                                                                                                                                                                                                                                 |
+| Knob                         | All 3                                           | `knob/` / `knob/` / `knob/`                                                          | —                                                                                                                                                                                                                                 |
+| ColorPicker                  | All 3                                           | `colorpicker/` / `colorpicker/` / `colorpicker/`                                     | —                                                                                                                                                                                                                                 |
+| DatePicker                   | All 3                                           | `datepicker/` / `calendar/` (React names it Calendar) / `datepicker/`                | Framework-native name, spec §4 item 10                                                                                                                                                                                            |
+| FileUpload                   | All 3                                           | `fileupload/` / `fileupload/` / `fileupload/`                                        | —                                                                                                                                                                                                                                 |
+| KeyFilter                    | All 3                                           | `keyfilter/` / `keyfilter/` / `keyfilter/`                                           | —                                                                                                                                                                                                                                 |
+| FloatLabel                   | All 3                                           | `floatlabel/` / `floatlabel/` / `floatlabel/`                                        | —                                                                                                                                                                                                                                 |
+| IconField / InputIcon        | All 3                                           | `iconfield/`, `inputicon/` / `iconfield/`, `inputicon/` / `iconfield/`, `inputicon/` | One canonical capability, two Prime directories each framework — bundle as one task per framework, two small files                                                                                                                |
+| InputChips                   | React, Vue only (Angular Unverified — excluded) | — / `chips/` / `inputchips/`                                                         | Do not attempt an Angular realization — Unverified, not confirmed absent (spec §3.1)                                                                                                                                              |
+| InputGroup / InputGroupAddon | Angular, Vue only (React Unverified — excluded) | `inputgroup/`, `inputgroupaddon/` / — / `inputgroup/`, `inputgroupaddon/`            | One canonical capability, two Prime directories each framework                                                                                                                                                                    |
+| IftaLabel                    | Angular, Vue only (React Unverified — excluded) | `iftalabel/` / — / `iftalabel/`                                                      | —                                                                                                                                                                                                                                 |
+| Mention                      | React only (Angular, Vue Unverified — excluded) | — / `mention/` / —                                                                   | —                                                                                                                                                                                                                                 |
+| MultiStateCheckbox           | React only (Angular, Vue Unverified — excluded) | — / `multistatecheckbox/` / —                                                        | —                                                                                                                                                                                                                                 |
+| TriStateCheckbox             | React only (Angular, Vue Unverified — excluded) | — / `tristatecheckbox/` / —                                                          | —                                                                                                                                                                                                                                 |
 
 **Excluded (restated, not a task):** TreeSelect — depends on Tree, an architectural exception. No task in this Group covers it.
 
@@ -164,19 +167,19 @@ Realized per the per-capability, per-framework eligibility already fixed by spec
 
 All 3 frameworks, no qualification, unless noted:
 
-| Capability | Prime source path(s) | Notes |
-|---|---|---|
-| Breadcrumb | `breadcrumb/` (all 3) | — |
-| MegaMenu | `megamenu/` (all 3) | Composes the already-Built Menu foundation per each framework |
-| Menubar | `menubar/` (all 3) | Composes Menu |
-| PanelMenu | `panelmenu/` (all 3) | Composes Menu |
-| TieredMenu | `tieredmenu/` (all 3) | Composes Menu |
-| Tabs | `tabs/` / `tabview/`, `tabmenu/` / `tabs/`, `tablist/`, `tab/`, `tabpanel/`, `tabpanels/` | Angular: single task. React: two sub-components (TabView, TabMenu) within one capability task. Vue: 5-directory family, container-first order (tabs → tablist → tab → tabpanel → tabpanels) within one capability task, per §3's internal-ordering step |
-| Stepper | `stepper/` / `stepper/`, `stepperpanel/` / `stepper/`, `step/`, `stepitem/`, `steplist/`, `steppanel/`, `steppanels/` | Angular: single task. React: Stepper before StepperPanel, same task, internal order. Vue: 6-directory family, container-first order, same task |
-| Steps | `steps/` (all 3) | — |
-| Dock | `dock/` (all 3) | — |
-| SpeedDial | `speeddial/` (all 3) | — |
-| SplitButton | `splitbutton/` (all 3) | Composes already-Built Button + Menu — no dependency wait needed, both already exist |
+| Capability  | Prime source path(s)                                                                                                  | Notes                                                                                                                                                                                                                                                   |
+| ----------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Breadcrumb  | `breadcrumb/` (all 3)                                                                                                 | —                                                                                                                                                                                                                                                       |
+| MegaMenu    | `megamenu/` (all 3)                                                                                                   | Composes the already-Built Menu foundation per each framework                                                                                                                                                                                           |
+| Menubar     | `menubar/` (all 3)                                                                                                    | Composes Menu                                                                                                                                                                                                                                           |
+| PanelMenu   | `panelmenu/` (all 3)                                                                                                  | Composes Menu                                                                                                                                                                                                                                           |
+| TieredMenu  | `tieredmenu/` (all 3)                                                                                                 | Composes Menu                                                                                                                                                                                                                                           |
+| Tabs        | `tabs/` / `tabview/`, `tabmenu/` / `tabs/`, `tablist/`, `tab/`, `tabpanel/`, `tabpanels/`                             | Angular: single task. React: two sub-components (TabView, TabMenu) within one capability task. Vue: 5-directory family, container-first order (tabs → tablist → tab → tabpanel → tabpanels) within one capability task, per §3's internal-ordering step |
+| Stepper     | `stepper/` / `stepper/`, `stepperpanel/` / `stepper/`, `step/`, `stepitem/`, `steplist/`, `steppanel/`, `steppanels/` | Angular: single task. React: Stepper before StepperPanel, same task, internal order. Vue: 6-directory family, container-first order, same task                                                                                                          |
+| Steps       | `steps/` (all 3)                                                                                                      | —                                                                                                                                                                                                                                                       |
+| Dock        | `dock/` (all 3)                                                                                                       | —                                                                                                                                                                                                                                                       |
+| SpeedDial   | `speeddial/` (all 3)                                                                                                  | —                                                                                                                                                                                                                                                       |
+| SplitButton | `splitbutton/` (all 3)                                                                                                | Composes already-Built Button + Menu — no dependency wait needed, both already exist                                                                                                                                                                    |
 
 **Excluded (restated, not a task):** Menu — already Built.
 
@@ -184,16 +187,16 @@ All 3 frameworks, no qualification, unless noted:
 
 ## 6. Task Group D — Overlay (8 capabilities)
 
-| Capability | Framework(s) | Prime source path(s) | Notes |
-|---|---|---|---|
-| Popover | All 3 | `popover/` / `overlaypanel/` (React names it OverlayPanel) / `popover/` | Framework-native name |
-| Drawer | All 3 | `drawer/` / `sidebar/` (React names it Sidebar) / `drawer/` | Framework-native name |
-| ContextMenu | All 3 | `contextmenu/` (all 3) | — |
-| StyleClass | All 3 | `styleclass/` (all 3) | — |
-| ConfirmDialog | Angular, React now; **Vue depends on Group A** | `confirmdialog/` (all 3) | Vue task starts only after Group A's `UConfirmationService` lands |
-| ConfirmPopup | Angular, React now; **Vue depends on Group A** | `confirmpopup/` (all 3) | Same |
-| DynamicDialog | Angular only (React Unverified — excluded); **Vue depends on Group A** | `dynamicdialog/` (Angular, Vue) | Vue task uses `UDialogService` from Group A |
-| OverlayBadge | Angular only (React Unverified — excluded); **Vue depends on Group A** | `overlaybadge/` (Angular, Vue) | Vue task uses Group A's Vue Badge |
+| Capability    | Framework(s)                                                           | Prime source path(s)                                                    | Notes                                                             |
+| ------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Popover       | All 3                                                                  | `popover/` / `overlaypanel/` (React names it OverlayPanel) / `popover/` | Framework-native name                                             |
+| Drawer        | All 3                                                                  | `drawer/` / `sidebar/` (React names it Sidebar) / `drawer/`             | Framework-native name                                             |
+| ContextMenu   | All 3                                                                  | `contextmenu/` (all 3)                                                  | —                                                                 |
+| StyleClass    | All 3                                                                  | `styleclass/` (all 3)                                                   | —                                                                 |
+| ConfirmDialog | Angular, React now; **Vue depends on Group A**                         | `confirmdialog/` (all 3)                                                | Vue task starts only after Group A's `UConfirmationService` lands |
+| ConfirmPopup  | Angular, React now; **Vue depends on Group A**                         | `confirmpopup/` (all 3)                                                 | Same                                                              |
+| DynamicDialog | Angular only (React Unverified — excluded); **Vue depends on Group A** | `dynamicdialog/` (Angular, Vue)                                         | Vue task uses `UDialogService` from Group A                       |
+| OverlayBadge  | Angular only (React Unverified — excluded); **Vue depends on Group A** | `overlaybadge/` (Angular, Vue)                                          | Vue task uses Group A's Vue Badge                                 |
 
 **Excluded (restated, not a task):** Dialog, Tooltip — already Built.
 
@@ -201,38 +204,38 @@ All 3 frameworks, no qualification, unless noted:
 
 ## 7. Task Group E — Panel/Layout/Display/Feedback (30 capabilities)
 
-| Capability | Framework(s) | Prime source path(s) | Notes |
-|---|---|---|---|
-| Accordion | All 3 | `accordion/` / `accordion/` / `accordion/`, `accordionpanel/`, `accordionheader/`, `accordioncontent/` | Vue: 4-directory family, container-first order within one task |
-| Avatar | All 3 | `avatar/` (all 3) | **Angular task must complete before Angular's AvatarGroup task below** |
-| AvatarGroup | All 3 | `avatargroup/` (all 3) | Angular: depends on Angular's Avatar task (same Group, explicit soft ordering). React/Vue: no such dependency |
-| BlockUI | All 3 | `blockui/` (all 3) | — |
-| ButtonGroup | All 3 | `buttongroup/` (all 3) | Composes already-Built Button |
-| Card | All 3 | `card/` (all 3) | — |
-| Carousel | All 3 | `carousel/` (all 3) | — |
-| Chip | All 3 | `chip/` (all 3) | — |
-| Divider | All 3 | `divider/` (all 3) | — |
-| Fieldset | All 3 | `fieldset/` (all 3) | — |
-| Galleria | All 3 | `galleria/` (all 3) | — |
-| Image | All 3 | `image/` (all 3) | — |
-| Inplace | All 3 | `inplace/` (all 3) | — |
-| Message | All 3 | `message/` (all 3) | — |
-| MeterGroup | All 3 | `metergroup/` (all 3) | — |
-| Panel | All 3 | `panel/` (all 3) | — |
-| ProgressBar | All 3 | `progressbar/` (all 3) | — |
-| ProgressSpinner | All 3 | `progressspinner/` (all 3) | — |
-| ScrollPanel | All 3 | `scrollpanel/` (all 3) | — |
-| ScrollTop | All 3 | `scrolltop/` (all 3) | — |
-| Skeleton | All 3 | `skeleton/` (all 3) | — |
-| Splitter | All 3 | `splitter/` / `splitter/` / `splitter/`, `splitterpanel/` | Vue: 2-directory family, container-first order within one task |
-| Tag | All 3 | `tag/` (all 3) | — |
-| Terminal | All 3 | `terminal/` (all 3) | React/Vue additionally name a companion `TerminalService` — bundle into the same task, not a separate capability (spec §3.1 note) |
-| Timeline | All 3 | `timeline/` (all 3) | — |
-| Toolbar | All 3 | `toolbar/` (all 3) | — |
-| ImageCompare | Angular, Vue only (React Unverified — excluded) | `imagecompare/` (Angular, Vue) | — |
-| AnimateOnScroll | Angular, Vue only (React Unverified — excluded) | `animateonscroll/` (Angular, Vue) | — |
-| DeferredContent | React, Vue only (Angular Unverified — excluded) | `deferredcontent/` (React, Vue) | — |
-| Toast | Angular, React now; **Vue depends on Group A** | `toast/` (all 3) | Vue task uses Group A's `UToastService` |
+| Capability      | Framework(s)                                    | Prime source path(s)                                                                                   | Notes                                                                                                                             |
+| --------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Accordion       | All 3                                           | `accordion/` / `accordion/` / `accordion/`, `accordionpanel/`, `accordionheader/`, `accordioncontent/` | Vue: 4-directory family, container-first order within one task                                                                    |
+| Avatar          | All 3                                           | `avatar/` (all 3)                                                                                      | **Angular task must complete before Angular's AvatarGroup task below**                                                            |
+| AvatarGroup     | All 3                                           | `avatargroup/` (all 3)                                                                                 | Angular: depends on Angular's Avatar task (same Group, explicit soft ordering). React/Vue: no such dependency                     |
+| BlockUI         | All 3                                           | `blockui/` (all 3)                                                                                     | —                                                                                                                                 |
+| ButtonGroup     | All 3                                           | `buttongroup/` (all 3)                                                                                 | Composes already-Built Button                                                                                                     |
+| Card            | All 3                                           | `card/` (all 3)                                                                                        | —                                                                                                                                 |
+| Carousel        | All 3                                           | `carousel/` (all 3)                                                                                    | —                                                                                                                                 |
+| Chip            | All 3                                           | `chip/` (all 3)                                                                                        | —                                                                                                                                 |
+| Divider         | All 3                                           | `divider/` (all 3)                                                                                     | —                                                                                                                                 |
+| Fieldset        | All 3                                           | `fieldset/` (all 3)                                                                                    | —                                                                                                                                 |
+| Galleria        | All 3                                           | `galleria/` (all 3)                                                                                    | —                                                                                                                                 |
+| Image           | All 3                                           | `image/` (all 3)                                                                                       | —                                                                                                                                 |
+| Inplace         | All 3                                           | `inplace/` (all 3)                                                                                     | —                                                                                                                                 |
+| Message         | All 3                                           | `message/` (all 3)                                                                                     | —                                                                                                                                 |
+| MeterGroup      | All 3                                           | `metergroup/` (all 3)                                                                                  | —                                                                                                                                 |
+| Panel           | All 3                                           | `panel/` (all 3)                                                                                       | —                                                                                                                                 |
+| ProgressBar     | All 3                                           | `progressbar/` (all 3)                                                                                 | —                                                                                                                                 |
+| ProgressSpinner | All 3                                           | `progressspinner/` (all 3)                                                                             | —                                                                                                                                 |
+| ScrollPanel     | All 3                                           | `scrollpanel/` (all 3)                                                                                 | —                                                                                                                                 |
+| ScrollTop       | All 3                                           | `scrolltop/` (all 3)                                                                                   | —                                                                                                                                 |
+| Skeleton        | All 3                                           | `skeleton/` (all 3)                                                                                    | —                                                                                                                                 |
+| Splitter        | All 3                                           | `splitter/` / `splitter/` / `splitter/`, `splitterpanel/`                                              | Vue: 2-directory family, container-first order within one task                                                                    |
+| Tag             | All 3                                           | `tag/` (all 3)                                                                                         | —                                                                                                                                 |
+| Terminal        | All 3                                           | `terminal/` (all 3)                                                                                    | React/Vue additionally name a companion `TerminalService` — bundle into the same task, not a separate capability (spec §3.1 note) |
+| Timeline        | All 3                                           | `timeline/` (all 3)                                                                                    | —                                                                                                                                 |
+| Toolbar         | All 3                                           | `toolbar/` (all 3)                                                                                     | —                                                                                                                                 |
+| ImageCompare    | Angular, Vue only (React Unverified — excluded) | `imagecompare/` (Angular, Vue)                                                                         | —                                                                                                                                 |
+| AnimateOnScroll | Angular, Vue only (React Unverified — excluded) | `animateonscroll/` (Angular, Vue)                                                                      | —                                                                                                                                 |
+| DeferredContent | React, Vue only (Angular Unverified — excluded) | `deferredcontent/` (React, Vue)                                                                        | —                                                                                                                                 |
+| Toast           | Angular, React now; **Vue depends on Group A**  | `toast/` (all 3)                                                                                       | Vue task uses Group A's `UToastService`                                                                                           |
 
 **Excluded (restated, not a task):** OrganizationChart, Messages, InlineMessage (deferred).
 
@@ -243,6 +246,7 @@ All 3 frameworks, no qualification, unless noted:
 **Depends on:** all of Groups A–E complete.
 
 **What to do:**
+
 1. **Create** `docs/architecture/REACT_COMPONENT_STATUS.md` and `docs/architecture/VUE_COMPONENT_STATUS.md`, per §1.1's resolution — schema matches `COMPONENT_INVENTORY.md`'s own columns (minus Angular-specific ones), seeded with every already-Built React/Vue component plus every React/Vue capability this batch closes.
 2. **Update `COMPONENT_INVENTORY.md`** — for every Angular capability this batch closes, move its row from "Remaining" to "Built," following the exact same reconciliation pattern already used for `UInputText`/`UInputNumber`'s own prior additions (Angular Form Foundation workstream) — additive, corrected arithmetic, no wholesale rewrite.
 3. **Do not modify** `BLUEPRINT.md`, `DECISIONS.md`, `BLUEPRINT_GAPS.md`, or any Phase C research artifact — none of Batch 1's work touches any open architectural decision or exception.

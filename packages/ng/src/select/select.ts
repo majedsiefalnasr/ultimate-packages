@@ -70,7 +70,12 @@ export interface USelectChangeEvent {
     @if (isVisibleClearIcon()) {
       <span [class]="cx('clearIcon')" aria-hidden="true" (click)="clear($event)">&times;</span>
     }
-    <div [class]="cx('dropdown')" role="button" aria-hidden="true" (click)="onContainerClick($event)">
+    <div
+      [class]="cx('dropdown')"
+      role="button"
+      aria-hidden="true"
+      (click)="onContainerClick($event)"
+    >
       <span aria-hidden="true">&#9662;</span>
     </div>
     @if (renderOverlay()) {
@@ -185,7 +190,9 @@ export class USelect extends UBaseInput {
     if (!query) {
       return this.options();
     }
-    return this.options().filter((option) => this.getOptionLabel(option).toLowerCase().includes(query));
+    return this.options().filter((option) =>
+      this.getOptionLabel(option).toLowerCase().includes(query)
+    );
   });
 
   protected readonly isVisibleClearIcon = computed(

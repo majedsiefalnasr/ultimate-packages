@@ -40,7 +40,7 @@ export function UTimeline<T = unknown>({
   return (
     <div className={[cx("root", { layout, align }), className].filter(Boolean).join(" ")}>
       {value.map((event, index) => (
-        // eslint-disable-next-line react/no-array-index-key -- events have no stable identity in real source either
+        // events have no stable identity in real source either
         <div key={index} className={cx("event")}>
           <div className={cx("eventOpposite")}>{opposite?.(event)}</div>
           <div className={cx("eventSeparator")}>

@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, input, output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  input,
+  output,
+} from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { UMegaMenuColumnGroup } from "./mega-menu-column";
@@ -93,7 +99,10 @@ import type { UMegaMenuItem } from "./mega-menu-item";
                     @for (column of item.items; track $index) {
                       <div [class]="cx('column')">
                         @for (group of column; track $index) {
-                          <u-mega-menu-column-group [group]="group" (itemSelect)="handleItemSelect($event)" />
+                          <u-mega-menu-column-group
+                            [group]="group"
+                            (itemSelect)="handleItemSelect($event)"
+                          />
                         }
                       </div>
                     }
@@ -221,7 +230,9 @@ export class UMegaMenu extends UBaseComponent {
   private getRootLinks(): HTMLAnchorElement[] {
     const rootList = (this.el.nativeElement as HTMLElement).querySelector('ul[role="menubar"]');
     return rootList
-      ? Array.from(rootList.querySelectorAll<HTMLAnchorElement>(":scope > li > .u-megamenu-item-content > a"))
+      ? Array.from(
+          rootList.querySelectorAll<HTMLAnchorElement>(":scope > li > .u-megamenu-item-content > a")
+        )
       : [];
   }
 
@@ -231,7 +242,9 @@ export class UMegaMenu extends UBaseComponent {
   }
 
   private moveFocus(current: UMegaMenuItem, direction: 1 | -1): void {
-    const enabled = this.model().filter((candidate) => candidate.visible !== false && !candidate.disabled);
+    const enabled = this.model().filter(
+      (candidate) => candidate.visible !== false && !candidate.disabled
+    );
     if (enabled.length === 0) return;
     const currentIndex = enabled.indexOf(current);
     const startIndex = currentIndex === -1 ? 0 : currentIndex;

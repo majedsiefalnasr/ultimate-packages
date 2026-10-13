@@ -78,12 +78,8 @@ export default defineConfig({
           const fs = await import("node:fs/promises");
           const source = await fs.readFile(args.path, "utf8");
           if (!filter(args.path)) return undefined;
-          const result = await vue.transform.call(
-            { addWatchFile() {} },
-            source,
-            args.path
-          );
-          const code = typeof result === "string" ? result : result?.code ?? source;
+          const result = await vue.transform.call({ addWatchFile() {} }, source, args.path);
+          const code = typeof result === "string" ? result : (result?.code ?? source);
           return { contents: code, loader: "ts" };
         });
       },

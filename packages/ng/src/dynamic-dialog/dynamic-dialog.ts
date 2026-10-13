@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject, signal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  inject,
+  signal,
+} from "@angular/core";
 import { NgComponentOutlet } from "@angular/common";
 import { UBaseComponent, UDialogService, type UDynamicDialogOpenRequest } from "@ultimate/ng-core";
 import { UDialog } from "../dialog/dialog";

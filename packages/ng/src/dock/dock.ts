@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, input, output, signal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  input,
+  output,
+  signal,
+} from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
@@ -26,7 +33,12 @@ import { dockStyleModule } from "./dock-style";
   template: `
     <div [class]="cx('root', { position: position() })">
       <div [class]="cx('listContainer')">
-        <ul [class]="cx('list')" role="menu" [attr.aria-label]="ariaLabel()" (keydown)="onKeydown($event)">
+        <ul
+          [class]="cx('list')"
+          role="menu"
+          [attr.aria-label]="ariaLabel()"
+          (keydown)="onKeydown($event)"
+        >
           @for (item of model(); track item.label; let i = $index) {
             @if (item.visible !== false) {
               <li [class]="cx('item', itemParams(item, i))" role="none">
@@ -43,7 +55,10 @@ import { dockStyleModule } from "./dock-style";
                     (mouseenter)="onItemMouseEnter(i)"
                     (mouseleave)="onListMouseLeave()"
                   >
-                    <ng-container [ngTemplateOutlet]="itemContent" [ngTemplateOutletContext]="{ $implicit: item }" />
+                    <ng-container
+                      [ngTemplateOutlet]="itemContent"
+                      [ngTemplateOutletContext]="{ $implicit: item }"
+                    />
                   </a>
                 } @else {
                   <a
@@ -58,7 +73,10 @@ import { dockStyleModule } from "./dock-style";
                     (mouseenter)="onItemMouseEnter(i)"
                     (mouseleave)="onListMouseLeave()"
                   >
-                    <ng-container [ngTemplateOutlet]="itemContent" [ngTemplateOutletContext]="{ $implicit: item }" />
+                    <ng-container
+                      [ngTemplateOutlet]="itemContent"
+                      [ngTemplateOutletContext]="{ $implicit: item }"
+                    />
                   </a>
                 }
               </li>

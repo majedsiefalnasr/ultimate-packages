@@ -28,7 +28,11 @@ describe("UKnob", () => {
   });
 
   it("clicking the SVG at a given offset updates the value via ngModel", async () => {
-    @Component({ standalone: true, imports: [UKnob, FormsModule], template: `<u-knob [(ngModel)]="value" />` })
+    @Component({
+      standalone: true,
+      imports: [UKnob, FormsModule],
+      template: `<u-knob [(ngModel)]="value" />`,
+    })
     class HostComponent {
       value = 0;
     }
@@ -145,7 +149,11 @@ describe("UKnob", () => {
   });
 
   describe("SSR safety (GAP-065)", () => {
-    @Component({ standalone: true, imports: [UKnob, FormsModule], template: `<u-knob [(ngModel)]="value" />` })
+    @Component({
+      standalone: true,
+      imports: [UKnob, FormsModule],
+      template: `<u-knob [(ngModel)]="value" />`,
+    })
     class SsrHostComponent {
       value = 30;
     }

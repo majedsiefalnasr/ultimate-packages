@@ -15,9 +15,11 @@
       @focus="$emit('focus', $event)"
       @blur="onBlur"
     >
-      {{ label === undefined ? ' ' : label }}
+      {{ label === undefined ? " " : label }}
     </span>
-    <span v-if="isVisibleClearIcon" :class="cx('clearIcon')" aria-hidden="true" @click="clear">&times;</span>
+    <span v-if="isVisibleClearIcon" :class="cx('clearIcon')" aria-hidden="true" @click="clear"
+      >&times;</span
+    >
     <div :class="cx('dropdown')" role="button" aria-hidden="true" @click="onContainerClick">
       <span aria-hidden="true">&#9662;</span>
     </div>
@@ -47,7 +49,13 @@
               role="option"
               :aria-selected="isSelected(option)"
               :aria-disabled="isOptionDisabled(option)"
-              :class="cx('option', { focused: focusedIndex === index, selected: isSelected(option), disabled: isOptionDisabled(option) })"
+              :class="
+                cx('option', {
+                  focused: focusedIndex === index,
+                  selected: isSelected(option),
+                  disabled: isOptionDisabled(option),
+                })
+              "
               @click="onOptionSelect($event, option)"
               @mouseenter="!isOptionDisabled(option) && (focusedIndex = index)"
             >
@@ -120,7 +128,9 @@ export default {
     visibleOptions() {
       const query = this.filterValue.trim().toLowerCase();
       if (!query) return this.options;
-      return this.options.filter((option) => this.getOptionLabel(option).toLowerCase().includes(query));
+      return this.options.filter((option) =>
+        this.getOptionLabel(option).toLowerCase().includes(query)
+      );
     },
     isVisibleClearIcon() {
       return this.showClear && this.filled && !this.disabled;
@@ -143,7 +153,11 @@ export default {
     },
     isOptionDisabled(option) {
       if (typeof this.optionDisabled === "function") return this.optionDisabled(option);
-      if (typeof this.optionDisabled === "string" && typeof option === "object" && option !== null) {
+      if (
+        typeof this.optionDisabled === "string" &&
+        typeof option === "object" &&
+        option !== null
+      ) {
         return !!option[this.optionDisabled];
       }
       return false;

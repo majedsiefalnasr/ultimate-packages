@@ -16,16 +16,16 @@ Applicable requirements remain the [remediation Spec](../../superpowers/specs/20
 
 For concise references, **E** means `.superpowers/sdd/2026-10-08-gap-064-g3e-media-data/e1-v2-remediation/`. The following are existing retained records inspected for this preparation, not freshly executed checks:
 
-| Reference | Existing record | What it establishes |
-| --- | --- | --- |
-| R1 | `E/campaign-continuation/commands.log` and `result.md` | Historical build/verification commands, V6/V7/V5 PASS, first-case PrimeNG readiness failure, and stopped campaign |
-| R2 | `E/campaign-continuation/materialized-artifact-hashes.txt` | Recorded hashes of materialized temporary configurations, measurement helper and instrumented test |
-| R3 | `E/fixture-link-preparation/archive-delta.json` and `result.md` | Corrected archive adds exactly the fixture symlink; original member metadata and payloads were preserved in that preparation |
-| R4 | `E/d2-readiness/input-integrity.json` | Recorded extracted-input manifest, five fixture hashes and 100 protected-content anchors |
-| R5 | `E/d2-readiness/environment.json` | Recorded D2 environment identity |
-| R6 | `E/d2-readiness/preparation.log` and `commands.log` | Installation completion with lifecycle errors; historical orchestration and failed quoted audit hook |
-| R7 | `E/d2-readiness/result.md`, `final-integrity.json` and `cleanup.json` | Qualified readiness observations, missing final container audit, final host preservation and disposal |
-| R8 | [D2 authorization](2026-10-09-gap-064-g3e-e1-v2-d2-readiness-authorization.md) and [D2 decision packet](2026-10-09-gap-064-g3e-e1-v2-d2-decision-packet.md) | D2-only scope, audit limitation and documentary decision options |
+| Reference | Existing record                                                                                                                                             | What it establishes                                                                                                          |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| R1        | `E/campaign-continuation/commands.log` and `result.md`                                                                                                      | Historical build/verification commands, V6/V7/V5 PASS, first-case PrimeNG readiness failure, and stopped campaign            |
+| R2        | `E/campaign-continuation/materialized-artifact-hashes.txt`                                                                                                  | Recorded hashes of materialized temporary configurations, measurement helper and instrumented test                           |
+| R3        | `E/fixture-link-preparation/archive-delta.json` and `result.md`                                                                                             | Corrected archive adds exactly the fixture symlink; original member metadata and payloads were preserved in that preparation |
+| R4        | `E/d2-readiness/input-integrity.json`                                                                                                                       | Recorded extracted-input manifest, five fixture hashes and 100 protected-content anchors                                     |
+| R5        | `E/d2-readiness/environment.json`                                                                                                                           | Recorded D2 environment identity                                                                                             |
+| R6        | `E/d2-readiness/preparation.log` and `commands.log`                                                                                                         | Installation completion with lifecycle errors; historical orchestration and failed quoted audit hook                         |
+| R7        | `E/d2-readiness/result.md`, `final-integrity.json` and `cleanup.json`                                                                                       | Qualified readiness observations, missing final container audit, final host preservation and disposal                        |
+| R8        | [D2 authorization](2026-10-09-gap-064-g3e-e1-v2-d2-readiness-authorization.md) and [D2 decision packet](2026-10-09-gap-064-g3e-e1-v2-d2-decision-packet.md) | D2-only scope, audit limitation and documentary decision options                                                             |
 
 Reading a retained hash does not establish current archive, runtime or artifact byte equality. Future comparisons require their own authorization. This preparation's starting worktree identity was branch `feature/gap-064-g3e-media-data`, HEAD `7c49568b50ed1017e17334152a48fb231e7ec307`; its intentional dirty state is the preservation base, not HEAD alone.
 
@@ -39,9 +39,9 @@ R3 records 3,792 original members and 3,793 corrected members. The added member 
 
 R4's fixture anchors, relative to `tooling/prime-reference/fixtures/`:
 
-| File | Recorded SHA-256 |
-| --- | --- |
-| `generate.mjs` | `576f0ceedd95dc7f0ef20c952e6ac97bc8faeb2ccf6c05643b3179fd6fea2054` |
+| File                    | Recorded SHA-256                                                   |
+| ----------------------- | ------------------------------------------------------------------ |
+| `generate.mjs`          | `576f0ceedd95dc7f0ef20c952e6ac97bc8faeb2ccf6c05643b3179fd6fea2054` |
 | `media/landscape-1.png` | `fcb9f0eff74f7614d7e791c920253327872740df0ac0f8f053adca98cc39fc86` |
 | `media/landscape-2.png` | `a2d5d4f160a5ece9b940c0c7ca1672f3de14f49fc8c43a4732a8e670ac920a2b` |
 | `media/landscape-3.png` | `b5c9f26549a9bc57d49fdbb57e75a3ff7e2651805fe74e1cd98e7f16c333ca3a` |
@@ -49,12 +49,12 @@ R4's fixture anchors, relative to `tooling/prime-reference/fixtures/`:
 
 R4 records these four production anchors:
 
-| Protected file | Recorded SHA-256 |
-| --- | --- |
-| `packages/themes/test/utils/g3e-port.mjs` | `0968fa2720f60ce9958110db84933b6d3a066d7b0eb35527b3ed7773e7189db5` |
+| Protected file                                         | Recorded SHA-256                                                   |
+| ------------------------------------------------------ | ------------------------------------------------------------------ |
+| `packages/themes/test/utils/g3e-port.mjs`              | `0968fa2720f60ce9958110db84933b6d3a066d7b0eb35527b3ed7773e7189db5` |
 | `packages/ng/src/image-compare/image-compare-style.ts` | `91deac25ff3ecb54f4f14f74c29e1780c7016365c6a4f179233b646dee01278a` |
-| `docs/architecture/provenance/ng.json` | `cd445440982571b0ea3a4b24aedf4ce299b5e8a91df8af298395083c6e528efe` |
-| `docs/architecture/PROVENANCE.md` | `015f9a06ecd51a935bf8f5fd3e2bffc77b47f2ba67b46e5e544778fa2beaa8db` |
+| `docs/architecture/provenance/ng.json`                 | `cd445440982571b0ea3a4b24aedf4ce299b5e8a91df8af298395083c6e528efe` |
+| `docs/architecture/PROVENANCE.md`                      | `015f9a06ecd51a935bf8f5fd3e2bffc77b47f2ba67b46e5e544778fa2beaa8db` |
 
 Use the complete retained protected-content manifest, including E1-B1, rather than only these four examples. Missing comparison anchors or unequal values are STOP conditions. Historical coverage is not a newly passed integrity audit.
 
@@ -91,13 +91,13 @@ The current V1 base configuration starts `prime-reference-ng` and `ng-storybook`
 
 Propose a fresh disposable environment using only the corrected derivative, extracted under `/work`, with the source archive mounted read-only as in the retained orchestration. It must not bind the live checkout as a writable source. `/io` is the historical evidence mount convention; its new host destination, mount permissions and narrowly scoped output allowlist require approval. A fresh container name/ID, exact launch command, runner contents/hash, logging wrapper and extraction/selection validator contents/hash remain **UNRESOLVED**. Do not reuse the disposed D2 container name as an approved D3 identity.
 
-| Disposable artifact | Historical identity / future requirement |
-| --- | --- |
-| `/work/tooling/prime-reference/playwright.e1v2.config.ts` | R2 SHA `0c56c18bb9cf029830f4788dc78620adec65107f169a32e5e091100146b49d3d`; use P3 §4 content, inherited settings, Angular/Prime servers only |
-| `/work/tooling/prime-reference/e2e/e1v2-measure.ts` | R2 SHA `9872d51b54fcb25ae0760998a7203471e5068d97cf21b874d226399b29607b8d`; corrected read-only helper, P3 §5 derivation |
-| Disposable `/work/tooling/prime-reference/e2e/g3e.spec.ts` | R2 SHA `d0093d527435a1e8d6ba14497d19ff832afdde7a9c76f74854955e550445a9d8`; only P3's approved hook; no test/readiness change |
-| Measurement derivation source | P3 §5 records SHA `fc6a909fd1f01bd8b75ea5f097d174c730c9453e498eeacd5db62834a3d2c420`; preserve extraction boundaries and non-Element guard |
-| Selection validator / audit runner | Exact future text, derivation, hashes and locations **UNRESOLVED**; retain previously authorized null handling without broadening rules |
+| Disposable artifact                                        | Historical identity / future requirement                                                                                                     |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/work/tooling/prime-reference/playwright.e1v2.config.ts`  | R2 SHA `0c56c18bb9cf029830f4788dc78620adec65107f169a32e5e091100146b49d3d`; use P3 §4 content, inherited settings, Angular/Prime servers only |
+| `/work/tooling/prime-reference/e2e/e1v2-measure.ts`        | R2 SHA `9872d51b54fcb25ae0760998a7203471e5068d97cf21b874d226399b29607b8d`; corrected read-only helper, P3 §5 derivation                      |
+| Disposable `/work/tooling/prime-reference/e2e/g3e.spec.ts` | R2 SHA `d0093d527435a1e8d6ba14497d19ff832afdde7a9c76f74854955e550445a9d8`; only P3's approved hook; no test/readiness change                 |
+| Measurement derivation source                              | P3 §5 records SHA `fc6a909fd1f01bd8b75ea5f097d174c730c9453e498eeacd5db62834a3d2c420`; preserve extraction boundaries and non-Element guard   |
+| Selection validator / audit runner                         | Exact future text, derivation, hashes and locations **UNRESOLVED**; retain previously authorized null handling without broadening rules      |
 
 Recorded hashes are comparison candidates, not claims of newly materialized equality. Retain literal future artifact text/diffs/hashes before discovery. Unexpected differences STOP. No V2–V4 config, fidelity script or accessibility validator is part of D3.
 
@@ -153,14 +153,14 @@ Smallest additional analysis proposal: read only the frozen lockfile entries and
 
 ## 7. Section 7 gap-to-decision mapping and budgets
 
-| Existing D3 §7 gap | Evidence and proposed resolution | Remaining uncertainty / human decision / STOP |
-| --- | --- | --- |
-| 1. New budget and grant | D3 §§3/5 and R1 establish exhausted historical campaign authority. Propose one repeated five-case V1, one worker, retries 0, max-failures 1, plus one separately budgeted discovery | **UNRESOLVED:** approve exact preparation, installation/build, identity, discovery, V1, audit, capture and cleanup invocation budgets. No historical counter reset or implicit grant |
-| 2. Orchestration and identities | R1/R2/P3 provide command and artifact comparison identities; §4 specifies dependency order | **UNRESOLVED:** fresh host evidence path/allowlist, container identity, exact driver/logging/extraction/selection/audit texts and hashes. Missing or differing identity STOP |
-| 3. Build preparation | R1 historical successes; R4 lacks demonstrated reusable output inventory. §3 proposes the existing seven prerequisites | **UNKNOWN:** adequate reusable outputs and additional Angular build requirement. Human must approve an exact route/budget or defer; no V7 replay by implication |
-| 4. Final audit / cleanup | R7 records unavailable historical audit. §5 defines coverage and explicit pre-disposal phase | **UNRESOLVED:** exact representation, invocation bounds, output locations and cleanup ownership. No runtime launch before reviewed approval; no historical recovery claim |
-| 5. Integrity anchors | R3/R4/R5 and §2 identify retained archive/environment/fixture/protected manifests | Historical coverage is **PARTIAL** for future execution: fresh equality remains unverified. Approve complete comparison inputs and temporary-delta/output coverage; missing anchors/mismatch STOP |
-| 6. Preparation qualification | R6/R7 establish lifecycle errors, installation completion and limited readiness | Relevance **UNKNOWN**. Authorize the narrow read-only qualification or explicitly disposition known limits; no compiler/dependency fix or assumption of harmlessness |
+| Existing D3 §7 gap              | Evidence and proposed resolution                                                                                                                                                    | Remaining uncertainty / human decision / STOP                                                                                                                                                     |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. New budget and grant         | D3 §§3/5 and R1 establish exhausted historical campaign authority. Propose one repeated five-case V1, one worker, retries 0, max-failures 1, plus one separately budgeted discovery | **UNRESOLVED:** approve exact preparation, installation/build, identity, discovery, V1, audit, capture and cleanup invocation budgets. No historical counter reset or implicit grant              |
+| 2. Orchestration and identities | R1/R2/P3 provide command and artifact comparison identities; §4 specifies dependency order                                                                                          | **UNRESOLVED:** fresh host evidence path/allowlist, container identity, exact driver/logging/extraction/selection/audit texts and hashes. Missing or differing identity STOP                      |
+| 3. Build preparation            | R1 historical successes; R4 lacks demonstrated reusable output inventory. §3 proposes the existing seven prerequisites                                                              | **UNKNOWN:** adequate reusable outputs and additional Angular build requirement. Human must approve an exact route/budget or defer; no V7 replay by implication                                   |
+| 4. Final audit / cleanup        | R7 records unavailable historical audit. §5 defines coverage and explicit pre-disposal phase                                                                                        | **UNRESOLVED:** exact representation, invocation bounds, output locations and cleanup ownership. No runtime launch before reviewed approval; no historical recovery claim                         |
+| 5. Integrity anchors            | R3/R4/R5 and §2 identify retained archive/environment/fixture/protected manifests                                                                                                   | Historical coverage is **PARTIAL** for future execution: fresh equality remains unverified. Approve complete comparison inputs and temporary-delta/output coverage; missing anchors/mismatch STOP |
+| 6. Preparation qualification    | R6/R7 establish lifecycle errors, installation completion and limited readiness                                                                                                     | Relevance **UNKNOWN**. Authorize the narrow read-only qualification or explicitly disposition known limits; no compiler/dependency fix or assumption of harmlessness                              |
 
 The one-V1/one-discovery limits above are proposals, not approved new budgets. Preparation/extraction, installation, seven builds, final audit/evidence/cleanup counts remain unresolved. Repairs, retries, generators, extra browser observations, timeout increases and other campaign members remain excluded. Existing readiness and operation timeouts are unchanged; no new total-duration/resource defaults are invented. Failed, partial or UNKNOWN operations must be retained, not automatically repeated.
 

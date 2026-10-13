@@ -104,7 +104,12 @@ export function UDrawer({
   };
 
   const rootElement = (
-    <div ref={maskRef} className={cx("mask")} onMouseDown={onMaskMouseDown} onMouseUp={onMaskMouseUp}>
+    <div
+      ref={maskRef}
+      className={cx("mask")}
+      onMouseDown={onMaskMouseDown}
+      onMouseUp={onMaskMouseUp}
+    >
       <FocusTrap>
         <div role="complementary" className={cx("root", { position })}>
           <div className={cx("header")}>

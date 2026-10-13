@@ -130,7 +130,10 @@ export function UFileUpload({
   onRemove,
   onUploadHandler,
 }: UFileUploadProps): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "file-upload", styleModule: fileUploadStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "file-upload",
+    styleModule: fileUploadStyleModule,
+  });
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const [files, setFiles] = React.useState<File[]>([]);
@@ -187,7 +190,18 @@ export function UFileUpload({
       xhr.withCredentials = withCredentials;
       xhr.send(formData);
     },
-    [customUpload, onUploadHandler, url, name, onProgress, onUpload, onClear, onError, method, withCredentials]
+    [
+      customUpload,
+      onUploadHandler,
+      url,
+      name,
+      onProgress,
+      onUpload,
+      onClear,
+      onError,
+      method,
+      withCredentials,
+    ]
   );
 
   const handleSelectedFiles = (fileList: FileList | null, event: React.SyntheticEvent) => {
@@ -203,7 +217,9 @@ export function UFileUpload({
       if (alreadySelected) continue;
 
       if (maxFileSize !== undefined && file.size > maxFileSize) {
-        validationMessages.push(`${file.name}: invalid file size, maximum upload size is ${formatSize(maxFileSize)}.`);
+        validationMessages.push(
+          `${file.name}: invalid file size, maximum upload size is ${formatSize(maxFileSize)}.`
+        );
         continue;
       }
       if (accept && !isFileTypeValid(file, accept)) {
@@ -291,7 +307,12 @@ export function UFileUpload({
   return (
     <div className={[cx("root"), className].filter(Boolean).join(" ")}>
       <div className={cx("header")}>
-        <button type="button" className={cx("chooseButton")} disabled={disabled} onClick={onChooseClick}>
+        <button
+          type="button"
+          className={cx("chooseButton")}
+          disabled={disabled}
+          onClick={onChooseClick}
+        >
           {chooseLabel}
         </button>
         {!auto && (
@@ -304,7 +325,12 @@ export function UFileUpload({
             >
               {uploadLabel}
             </button>
-            <button type="button" className={cx("cancelButton")} disabled={!hasFiles} onClick={clear}>
+            <button
+              type="button"
+              className={cx("cancelButton")}
+              disabled={!hasFiles}
+              onClick={clear}
+            >
               {cancelLabel}
             </button>
           </>

@@ -36,9 +36,7 @@ describe("UBlockUI", () => {
 
   it("sets aria-busy reflecting blocked", () => {
     render(<UBlockUI blocked />);
-    expect(document.querySelector(".u-blockui-container")?.getAttribute("aria-busy")).toBe(
-      "true"
-    );
+    expect(document.querySelector(".u-blockui-container")?.getAttribute("aria-busy")).toBe("true");
   });
 
   it("applies the fullScreen document mask class", () => {

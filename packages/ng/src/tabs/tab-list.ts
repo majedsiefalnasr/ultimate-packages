@@ -28,7 +28,13 @@ import { tabsStyleModule } from "./tabs-style";
   selector: "u-tab-list",
   template: `
     @if (showNavigators() && isPrevButtonEnabled()) {
-      <button type="button" [class]="cx('tabListPrevButton')" (click)="onPrevButtonClick()" aria-label="Previous">‹</button>
+      <button
+        type="button"
+        [class]="cx('tabListPrevButton')"
+        (click)="onPrevButtonClick()"
+        aria-label="Previous"
+        >‹</button
+      >
     }
     <div #content [class]="cx('tabListContent')" (scroll)="onScroll()">
       <div #tabListEl [class]="cx('tabListTabList')" role="tablist">
@@ -37,7 +43,13 @@ import { tabsStyleModule } from "./tabs-style";
       </div>
     </div>
     @if (showNavigators() && isNextButtonEnabled()) {
-      <button type="button" [class]="cx('tabListNextButton')" (click)="onNextButtonClick()" aria-label="Next">›</button>
+      <button
+        type="button"
+        [class]="cx('tabListNextButton')"
+        (click)="onNextButtonClick()"
+        aria-label="Next"
+        >›</button
+      >
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

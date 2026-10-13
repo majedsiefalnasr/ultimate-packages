@@ -9,7 +9,11 @@ export interface UTabMenuProps {
   /** Index of the active item. */
   activeIndex?: number;
   /** Callback invoked when the active tab changes (controlled mode). */
-  onTabChange?: (event: { originalEvent: React.SyntheticEvent; value: UMenuItem; index: number }) => void;
+  onTabChange?: (event: {
+    originalEvent: React.SyntheticEvent;
+    value: UMenuItem;
+    index: number;
+  }) => void;
   className?: string;
 }
 
@@ -50,14 +54,22 @@ export const UTabMenu = React.forwardRef<HTMLDivElement, UTabMenuProps>(function
         {model.map((item, index) => {
           const active = index === activeIndex;
           return (
-            <li key={item.label ?? index} className={cx("tabMenuItem", { active, disabled: !!item.disabled })} role="tab" aria-selected={active} data-u-disabled={!!item.disabled}>
+            <li
+              key={item.label ?? index}
+              className={cx("tabMenuItem", { active, disabled: !!item.disabled })}
+              role="tab"
+              aria-selected={active}
+              data-u-disabled={!!item.disabled}
+            >
               <a
                 href={item.url ?? "#"}
                 className={cx("tabMenuAction")}
                 tabIndex={item.disabled ? -1 : 0}
                 onClick={(event) => itemClick(event, item, index)}
               >
-                {item.icon && <span className={[cx("tabMenuIcon"), item.icon].filter(Boolean).join(" ")} />}
+                {item.icon && (
+                  <span className={[cx("tabMenuIcon"), item.icon].filter(Boolean).join(" ")} />
+                )}
                 {item.label && <span className={cx("tabMenuLabel")}>{item.label}</span>}
               </a>
             </li>

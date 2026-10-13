@@ -22,7 +22,10 @@ describe("UInputSwitch", () => {
     render(<UInputSwitch checked={false} onChange={onChange} name="agree" />);
     fireEvent.click(screen.getByRole("switch"));
     expect(onChange).toHaveBeenCalledWith(
-      expect.objectContaining({ value: true, target: expect.objectContaining({ name: "agree", value: true }) })
+      expect.objectContaining({
+        value: true,
+        target: expect.objectContaining({ name: "agree", value: true }),
+      })
     );
   });
 

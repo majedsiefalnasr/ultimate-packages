@@ -5,6 +5,16 @@ import type { ComponentMetadata } from "../src/component-metadata";
 // else — a future unrecognized field is a deliberate schemaVersion-bump
 // event, not something that silently type-checks today.
 type ExpectedKeys =
-  | "name" | "category" | "description" | "schemaVersion" | "metadataVersion" | "packages"
-  | "api" | "accessibility" | "style" | "relationships" | "provenanceRef" | "guidance";
+  | "name"
+  | "category"
+  | "description"
+  | "schemaVersion"
+  | "metadataVersion"
+  | "packages"
+  | "api"
+  | "accessibility"
+  | "style"
+  | "relationships"
+  | "provenanceRef"
+  | "guidance";
 expectTypeOf<keyof ComponentMetadata>().toEqualTypeOf<ExpectedKeys>();

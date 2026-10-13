@@ -98,22 +98,26 @@ const DEFAULT_MONTH_NAMES = [
       <span [class]="cx('clearIcon')" aria-hidden="true" (click)="clear($event)">&times;</span>
     }
     @if (showIcon()) {
-      <span
-        [class]="cx('trigger')"
-        role="button"
-        aria-hidden="true"
-        (click)="onInputClick()"
-      >&#128197;</span>
+      <span [class]="cx('trigger')" role="button" aria-hidden="true" (click)="onInputClick()"
+        >&#128197;</span
+      >
     }
     @if (renderOverlay()) {
-      <div uOverlay [visible]="overlayVisible()" appendTo="body" [class]="cx('panel')" role="dialog">
+      <div
+        uOverlay
+        [visible]="overlayVisible()"
+        appendTo="body"
+        [class]="cx('panel')"
+        role="dialog"
+      >
         <div [class]="cx('header')">
           <button
             type="button"
             [class]="cx('navButton')"
             aria-label="Previous month"
             (click)="navBackward()"
-          >&#8249;</button>
+            >&#8249;</button
+          >
           <span [class]="cx('title')">
             <span [class]="cx('titleButton')">{{ monthNames()[viewMonth()] }}</span>
             <span [class]="cx('titleButton')">{{ viewYear() }}</span>
@@ -123,7 +127,8 @@ const DEFAULT_MONTH_NAMES = [
             [class]="cx('navButton')"
             aria-label="Next month"
             (click)="navForward()"
-          >&#8250;</button>
+            >&#8250;</button
+          >
         </div>
         <table [class]="cx('dayView')" role="grid">
           <thead>
@@ -138,7 +143,7 @@ const DEFAULT_MONTH_NAMES = [
           <tbody>
             @for (week of weeks(); track $index) {
               <tr>
-                @for (cell of week; track cell.month + '-' + cell.day + '-' + cell.year) {
+                @for (cell of week; track cell.month + "-" + cell.day + "-" + cell.year) {
                   <td [class]="cx('dayCell')">
                     <span
                       [class]="cx('day', dayClassesParams(cell))"
@@ -148,7 +153,8 @@ const DEFAULT_MONTH_NAMES = [
                       [attr.aria-disabled]="isCellDisabled(cell)"
                       (click)="onDateSelect($event, cell)"
                       (keydown)="onDateCellKeydown($event, cell)"
-                    >{{ cell.day }}</span>
+                      >{{ cell.day }}</span
+                    >
                   </td>
                 }
               </tr>
@@ -204,7 +210,9 @@ export class UDatePicker extends UBaseInput {
   private readonly today = new Date();
   protected readonly viewMonth = signal(this.today.getMonth());
   protected readonly viewYear = signal(this.today.getFullYear());
-  protected readonly focusedCell = signal<{ day: number; month: number; year: number } | null>(null);
+  protected readonly focusedCell = signal<{ day: number; month: number; year: number } | null>(
+    null
+  );
 
   protected readonly selectedDate = computed(() => {
     const value = this.modelValue();
@@ -252,7 +260,13 @@ export class UDatePicker extends UBaseInput {
     const nextMonth = month === 11 ? 0 : month + 1;
     const nextYear = month === 11 ? year + 1 : year;
     while (cells.length % 7 !== 0) {
-      cells.push({ day: nextDay, month: nextMonth, year: nextYear, otherMonth: true, today: false });
+      cells.push({
+        day: nextDay,
+        month: nextMonth,
+        year: nextYear,
+        otherMonth: true,
+        today: false,
+      });
       nextDay++;
     }
 
@@ -265,7 +279,9 @@ export class UDatePicker extends UBaseInput {
 
   private isToday(day: number, month: number, year: number): boolean {
     return (
-      day === this.today.getDate() && month === this.today.getMonth() && year === this.today.getFullYear()
+      day === this.today.getDate() &&
+      month === this.today.getMonth() &&
+      year === this.today.getFullYear()
     );
   }
 
@@ -301,7 +317,11 @@ export class UDatePicker extends UBaseInput {
   }
 
   private isSameDay(a: Date, b: Date): boolean {
-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    return (
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate()
+    );
   }
 
   private formatDate(date: Date): string {
@@ -313,7 +333,11 @@ export class UDatePicker extends UBaseInput {
 
   protected onInputClick(): void {
     if (this.$disabled()) return;
-    this.overlayVisible() ? this.hide() : this.show();
+    if (this.overlayVisible()) {
+      this.hide();
+    } else {
+      this.show();
+    }
   }
 
   protected onInputKeydown(event: KeyboardEvent): void {
@@ -323,7 +347,11 @@ export class UDatePicker extends UBaseInput {
       case "NumpadEnter":
       case "Space":
         event.preventDefault();
-        this.overlayVisible() ? this.hide() : this.show();
+        if (this.overlayVisible()) {
+          this.hide();
+        } else {
+          this.show();
+        }
         break;
       case "Escape":
         if (this.overlayVisible()) {
@@ -342,11 +370,19 @@ export class UDatePicker extends UBaseInput {
     if (selected) {
       this.viewMonth.set(selected.getMonth());
       this.viewYear.set(selected.getFullYear());
-      this.focusedCell.set({ day: selected.getDate(), month: selected.getMonth(), year: selected.getFullYear() });
+      this.focusedCell.set({
+        day: selected.getDate(),
+        month: selected.getMonth(),
+        year: selected.getFullYear(),
+      });
     } else {
       this.viewMonth.set(this.today.getMonth());
       this.viewYear.set(this.today.getFullYear());
-      this.focusedCell.set({ day: this.today.getDate(), month: this.today.getMonth(), year: this.today.getFullYear() });
+      this.focusedCell.set({
+        day: this.today.getDate(),
+        month: this.today.getMonth(),
+        year: this.today.getFullYear(),
+      });
     }
     this.overlayVisible.set(true);
     this.onShow.emit();

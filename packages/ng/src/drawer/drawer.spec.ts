@@ -59,7 +59,9 @@ describe("UDrawer", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const closeButton: HTMLButtonElement = document.querySelector(".u-drawer-close-button button") ?? (document.querySelector(".u-drawer-close-button") as HTMLButtonElement);
+    const closeButton: HTMLButtonElement =
+      document.querySelector(".u-drawer-close-button button") ??
+      (document.querySelector(".u-drawer-close-button") as HTMLButtonElement);
     closeButton.click();
     fixture.detectChanges();
     expect(fixture.componentInstance.changed).toBe(false);

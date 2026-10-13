@@ -5,14 +5,20 @@ import { checkFrameworkCompatibility } from "../../src/tools/check-framework-com
 describe("checkFrameworkCompatibility", () => {
   it("returns compatible: true for a version satisfying the real manifest's angular frameworkVersionRange", () => {
     // Real manifest entry: angular frameworkVersionRange "^21.0.7" (Pre-flight #6).
-    const result = checkFrameworkCompatibility({ framework: "angular", frameworkVersion: "21.0.7" });
+    const result = checkFrameworkCompatibility({
+      framework: "angular",
+      frameworkVersion: "21.0.7",
+    });
     expect("code" in result).toBe(false);
     if ("code" in result) return;
     expect(result.compatible).toBe(true);
   });
 
   it("returns compatible: false with a reason for a version below the real manifest's range floor", () => {
-    const result = checkFrameworkCompatibility({ framework: "angular", frameworkVersion: "20.0.0" });
+    const result = checkFrameworkCompatibility({
+      framework: "angular",
+      frameworkVersion: "20.0.0",
+    });
     expect("code" in result).toBe(false);
     if ("code" in result) return;
     expect(result.compatible).toBe(false);

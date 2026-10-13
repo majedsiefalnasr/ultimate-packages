@@ -55,9 +55,18 @@
       </svg>
     </template>
     <UPortal v-if="feedback" :appendTo="appendTo">
-      <div v-if="overlayVisible" :id="overlayId" :class="cx('overlay')" role="dialog" aria-live="polite">
+      <div
+        v-if="overlayVisible"
+        :id="overlayId"
+        :class="cx('overlay')"
+        role="dialog"
+        aria-live="polite"
+      >
         <div :class="cx('meter')">
-          <div :class="cx('meterLabel', { strength: meter ? meter.strength : null })" :style="{ width: meter ? meter.width : '' }" />
+          <div
+            :class="cx('meterLabel', { strength: meter ? meter.strength : null })"
+            :style="{ width: meter ? meter.width : '' }"
+          />
         </div>
         <div :class="cx('meterText')">{{ infoText }}</div>
       </div>

@@ -138,7 +138,11 @@ describe("USplitter", () => {
     @Component({
       standalone: true,
       imports: [USplitter, USplitterPanel],
-      template: `<u-splitter style="width: 400px; display: flex;" (onResizeStart)="started = true" (onResizeEnd)="ended = true">
+      template: `<u-splitter
+        style="width: 400px; display: flex;"
+        (onResizeStart)="started = true"
+        (onResizeEnd)="ended = true"
+      >
         <ng-template uSplitterPanel>A</ng-template>
         <ng-template uSplitterPanel>B</ng-template>
       </u-splitter>`,

@@ -174,10 +174,18 @@ describe("UPaginator", () => {
     fixture.componentRef.setInput("totalRecords", 95);
     fixture.componentRef.setInput("rows", 10);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector("[data-u-paginator-first]").hasAttribute("aria-label")).toBe(true);
-    expect(fixture.nativeElement.querySelector("[data-u-paginator-prev]").hasAttribute("aria-label")).toBe(true);
-    expect(fixture.nativeElement.querySelector("[data-u-paginator-next]").hasAttribute("aria-label")).toBe(true);
-    expect(fixture.nativeElement.querySelector("[data-u-paginator-last]").hasAttribute("aria-label")).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector("[data-u-paginator-first]").hasAttribute("aria-label")
+    ).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector("[data-u-paginator-prev]").hasAttribute("aria-label")
+    ).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector("[data-u-paginator-next]").hasAttribute("aria-label")
+    ).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector("[data-u-paginator-last]").hasAttribute("aria-label")
+    ).toBe(true);
   });
 
   it("is exported from the package root barrel", () => {

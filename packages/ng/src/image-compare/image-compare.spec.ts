@@ -33,9 +33,7 @@ describe("UImageCompare", () => {
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const slider = fixture.nativeElement.querySelector(
-      "input[type='range']"
-    ) as HTMLInputElement;
+    const slider = fixture.nativeElement.querySelector("input[type='range']") as HTMLInputElement;
     expect(slider).toBeTruthy();
     expect(slider.value).toBe("50");
   });
@@ -54,9 +52,7 @@ describe("UImageCompare", () => {
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const slider = fixture.nativeElement.querySelector(
-      "input[type='range']"
-    ) as HTMLInputElement;
+    const slider = fixture.nativeElement.querySelector("input[type='range']") as HTMLInputElement;
     slider.value = "30";
     slider.dispatchEvent(new Event("input"));
     fixture.detectChanges();

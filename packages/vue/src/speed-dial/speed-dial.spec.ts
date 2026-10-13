@@ -2,7 +2,11 @@ import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 import { USpeedDial } from "./index";
 
-const items = [{ label: "Add", icon: "pi pi-plus" }, { label: "Edit", icon: "pi pi-pencil" }, { label: "Delete", icon: "pi pi-trash" }];
+const items = [
+  { label: "Add", icon: "pi pi-plus" },
+  { label: "Edit", icon: "pi pi-pencil" },
+  { label: "Delete", icon: "pi pi-trash" },
+];
 
 describe("USpeedDial", () => {
   it("renders collapsed by default (aria-expanded false)", () => {
@@ -86,7 +90,10 @@ describe("USpeedDial", () => {
     });
 
     it("uses ArrowRight/ArrowLeft instead of ArrowDown/ArrowUp when direction is 'right'", async () => {
-      const wrapper = mount(USpeedDial, { props: { model: items, direction: "right" }, attachTo: document.body });
+      const wrapper = mount(USpeedDial, {
+        props: { model: items, direction: "right" },
+        attachTo: document.body,
+      });
       await wrapper.find("button").trigger("click");
       const menuitems = wrapper.findAll('[role="menuitem"]');
       (menuitems[0]!.element as HTMLButtonElement).focus();

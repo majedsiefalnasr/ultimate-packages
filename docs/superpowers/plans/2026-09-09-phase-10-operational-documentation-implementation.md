@@ -11,14 +11,14 @@
 
 ## 1. Task List Overview
 
-| Task | Deliverable | Spec requirement | Depends on |
-|---|---|---|---|
-| Task 1 | `/SECURITY.md` | R1 | None |
-| Task 2 | `/CHANGELOG.md` | R2 | None |
-| Task 3 | `docs/architecture/DECISIONS.md` (ADR-044 append) | R4 | None |
-| Task 4 | `docs/architecture/BLUEPRINT_GAPS.md` (GAP-011 status field only) | §9 bookkeeping row 2 | Soft: informed by Tasks 1-2 landing (see Task 4 note) |
-| Task 5 | `README.md` (≤2 pointer lines) | §9 bookkeeping row 5 | Hard: Tasks 1 and 2 (files must exist before pointing to them) |
-| Task 6 | Whole-track verification | AC6.1, AC6.2, all ACs | All of Tasks 1-5 |
+| Task   | Deliverable                                                       | Spec requirement      | Depends on                                                     |
+| ------ | ----------------------------------------------------------------- | --------------------- | -------------------------------------------------------------- |
+| Task 1 | `/SECURITY.md`                                                    | R1                    | None                                                           |
+| Task 2 | `/CHANGELOG.md`                                                   | R2                    | None                                                           |
+| Task 3 | `docs/architecture/DECISIONS.md` (ADR-044 append)                 | R4                    | None                                                           |
+| Task 4 | `docs/architecture/BLUEPRINT_GAPS.md` (GAP-011 status field only) | §9 bookkeeping row 2  | Soft: informed by Tasks 1-2 landing (see Task 4 note)          |
+| Task 5 | `README.md` (≤2 pointer lines)                                    | §9 bookkeeping row 5  | Hard: Tasks 1 and 2 (files must exist before pointing to them) |
+| Task 6 | Whole-track verification                                          | AC6.1, AC6.2, all ACs | All of Tasks 1-5                                               |
 
 Tasks 1, 2, and 3 have no ordering dependency on each other and may be implemented independently or in parallel (spec §8: "R1, R2, R4 have no ordering dependency on each other"). Task 4 is sequenced after Tasks 1-2 only so its status text can truthfully say the files exist — it does not modify or depend on their content. Task 5 hard-depends on Tasks 1-2 (it links to files that must exist first). Task 6 is strictly last.
 
@@ -35,6 +35,7 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 **Prerequisite:** None.
 
 **Implementation steps:**
+
 1. Re-verify immediately before writing (repository state may have shifted since spec approval — spec §3 facts must be re-confirmed, not assumed):
    - `package.json` (root) still has no `repository`, `bugs`, or `author` field (confirms D1's placeholder-URL basis still holds).
    - The four Track B script names are still exactly: `audit:validate`, `license:validate`, `sast:validate`, `install-script-policy:validate` (grep `package.json`'s `scripts` block).
@@ -52,6 +53,7 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 3. Apply R1's non-requirement constraint throughout drafting: no response-time/SLA language, no named person/team/email, no claimed automation that does not exist (e.g., do not claim advisories auto-publish).
 
 **Verification:**
+
 - `test -f SECURITY.md` (exists at root, not under `.github/` or `docs/`).
 - `grep -c "^## " SECURITY.md` shows at least 9 top-level subsections matching the 9 items above.
 - `grep -n "audit:validate\|license:validate\|sast:validate\|install-script-policy:validate" SECURITY.md` — all four appear, and each string is separately grep-verified to exist verbatim in `package.json`'s `scripts` block (`grep -n '"audit:validate"\|"license:validate"\|"sast:validate"\|"install-script-policy:validate"' package.json`) — confirms AC1.3's "grep-verifiable against `package.json`'s real script definitions."
@@ -73,6 +75,7 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 **Prerequisite:** None.
 
 **Implementation steps:**
+
 1. Re-verify immediately before writing: `.changeset/config.json` still configures `"changelog": "@changesets/cli/changelog"`, and the installed package is still `@changesets/changelog-git` (re-check `pnpm-lock.yaml` for `@changesets/changelog-git@` — a version bump wouldn't change the flat-bullet-output finding, but confirm the package itself hasn't been swapped since spec approval).
 2. Write `/CHANGELOG.md` with exactly the 4 elements R2 enumerates (spec §5, R2 items 1-4, as amended):
    1. Header explaining the file's purpose and its Changesets-driven update mechanism (once Track C implements it), citing `.changeset/config.json`'s existing configuration.
@@ -82,6 +85,7 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 3. Do not implement, configure, or invoke any Changesets release command as part of this task — this task only authors the static Markdown file.
 
 **Verification:**
+
 - `test -f CHANGELOG.md` (exists at root).
 - `grep -c "^## \[Unreleased\]$" CHANGELOG.md` equals exactly 1.
 - `grep -cE "^## \[[0-9]" CHANGELOG.md` equals 0 (no dated version sections).
@@ -102,6 +106,7 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 **Prerequisite:** None (independent of Tasks 1-2).
 
 **Implementation steps:**
+
 1. **Re-verify the highest existing ADR number immediately before writing** (spec R4's explicit instruction, since intervening work could theoretically add one after spec approval): `grep -n "^## ADR-" docs/architecture/DECISIONS.md | tail -1`. At time of spec authorship this was `ADR-043`; confirm it is still the highest before assigning `ADR-044`. If a higher ADR now exists, use the next sequential number after whatever is actually highest and note the renumbering in the task's own completion notes — do not silently assume `044`.
 2. Read the architecture discussion's exact pre-drafted wording: `docs/architecture/research/2026-09-08-phase-10-architecture-discussion.md`, "Proposed ADR wording (architectural level only)" subsection (spec §5 R4 cites this as the sole content source):
    > **ADR-XXX — Phase 10 testing/documentation tooling: Storybook + Playwright, distinct responsibilities**
@@ -110,6 +115,7 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 4. Append after the current final entry. Do not edit any existing `## ADR-` entry.
 
 **Verification:**
+
 - `grep -n "^## ADR-" docs/architecture/DECISIONS.md` — exactly one new heading beyond the pre-task list, sequentially numbered.
 - `git diff docs/architecture/DECISIONS.md` — confirms the diff is purely additive (no existing lines removed or altered), matching AC4.3's "confirmed by diff — exactly one new `## ADR-` heading."
 - Manual side-by-side read against the architecture discussion's "Proposed ADR wording" block — confirms substance is transcribed, not re-derived (AC4.2).
@@ -127,6 +133,7 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 **Prerequisite:** Soft — sequenced after Tasks 1-2 so the status text can accurately state SECURITY.md/CHANGELOG.md now exist. Does not read or depend on their content, only their existence.
 
 **Implementation steps:**
+
 1. Re-read the exact current GAP-011 block (`docs/architecture/BLUEPRINT_GAPS.md:210-223`) immediately before editing, to confirm line numbers/content have not shifted since spec approval.
 2. Change only the `- **Status:** MISSING` line to `- **Status:** PARTIALLY RESOLVED`.
 3. Immediately below the `Status:` line (or as a clearly delimited addition within that same bullet, not replacing "Current evidence"/"Expected state"/"Recommended resolution direction"), add one short rationale note stating:
@@ -137,6 +144,7 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 5. Do NOT touch any other `#### GAP-` entry in the file (GAP-012 and all others remain byte-identical).
 
 **Verification:**
+
 - `git diff docs/architecture/BLUEPRINT_GAPS.md` — confirms changes are confined to GAP-011's status line plus the one rationale addition; no other GAP block appears in the diff.
 - `grep -n "^#### GAP-" docs/architecture/BLUEPRINT_GAPS.md | wc -l` before and after — identical count (no GAP added/removed).
 - `grep -A1 "GAP-011" docs/architecture/BLUEPRINT_GAPS.md | grep "Status:"` shows `PARTIALLY RESOLVED`.
@@ -156,12 +164,14 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 **Prerequisite:** Hard — Tasks 1 and 2 must be complete first (this task links to files that must actually exist).
 
 **Implementation steps:**
+
 1. Re-confirm `SECURITY.md` and `CHANGELOG.md` both exist at repo root (Tasks 1-2 complete).
 2. Add exactly one line pointing to `SECURITY.md` and exactly one line pointing to `CHANGELOG.md` — placed near the existing `## Provenance`/`## License` sections (README.md:34-39) as the most natural existing home for root-document pointers, e.g. as two added lines (not a new `##` section header, to keep the change minimal — a single added line under each existing heading, or two lines grouped together immediately before `## Provenance`, whichever reads more naturally against the file's existing prose style once read in context).
 3. Do not modify README.md's `## Status` section (lines 7-9, "Phase 0 — Repository Foundation...") — leave byte-identical.
 4. Do not modify `## Repository structure` or `## Development` sections.
 
 **Verification:**
+
 - `git diff README.md` — confirms exactly ≤2 added lines, zero removed lines, zero lines changed elsewhere in the file.
 - `grep -c "SECURITY.md\|CHANGELOG.md" README.md` — at least 2 (one mention each, minimum).
 - `sed -n '7,9p' README.md` before and after — byte-identical (confirms the Status section is untouched).
@@ -181,10 +191,12 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
 **Implementation steps / checks:**
 
 1. **Exact changed-file allowlist check (AC6.2):**
+
    ```bash
    git status --porcelain
    git diff --stat
    ```
+
    Confirm the complete set of touched files is exactly:
    - `SECURITY.md` (new)
    - `CHANGELOG.md` (new)
@@ -196,9 +208,11 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
    Any file outside this list appearing in the diff is a hard failure — stop and investigate before proceeding.
 
 2. **Confirmation no excluded file was modified (spec §11):**
+
    ```bash
    git diff --stat | grep -E "ROADMAP\.md|CONTRIBUTING\.md|\.github/workflows/|scripts/provenance/|package\.json|pnpm-lock\.yaml|\.changeset/"
    ```
+
    Must return no matches. Also explicitly confirm:
    - No `CONTRIBUTING.md` file exists (`test ! -f CONTRIBUTING.md`) — AC3.1.
    - `docs/architecture/ROADMAP.md` untouched (`git diff docs/architecture/ROADMAP.md` empty) — AC5.4.
@@ -206,16 +220,20 @@ No task in this plan creates a CONTRIBUTING.md, touches any Track A/B/C/E scope,
    - No spec/research/plan document's `Status:` header line changed anywhere in the repo (`git diff -- '**/specs/*.md' '**/research/*.md' '**/plans/*.md' | grep "^-.*Status:"` — must return no matches, or only additions, never a removed `Status:` line) — AC5.5.
 
 3. **Confirmation no new dependency/script/CI change introduced:**
+
    ```bash
    git diff package.json pnpm-lock.yaml .github/workflows/ci.yml .github/codeql/codeql-config.yml
    ```
+
    All four must show zero diff (empty output) — Track D touches none of them.
 
 4. **Full repository validation still green (AC6.1):**
+
    ```bash
    source ~/.nvm/nvm.sh && nvm use v22.22.2
    pnpm run test
    ```
+
    Exit code 0, all package suites report passed — confirms Track D's purely-additive-documentation changes did not regress anything (expected trivially, since no source file changed, but must be confirmed empirically per this repository's established trust-but-verify discipline, not assumed).
 
 5. **Documentation consistency checks:**

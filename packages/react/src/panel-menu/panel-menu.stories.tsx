@@ -11,7 +11,10 @@ export default meta;
 type Story = StoryObj<typeof UPanelMenu>;
 
 const defaultItems: UMenuItem[] = [
-  { label: "Files", items: [{ label: "Documents", items: [{ label: "Work" }] }, { label: "Photos" }] },
+  {
+    label: "Files",
+    items: [{ label: "Documents", items: [{ label: "Work" }] }, { label: "Photos" }],
+  },
   { label: "Settings" },
 ];
 

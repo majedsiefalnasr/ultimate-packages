@@ -55,7 +55,11 @@ describe("UTable", () => {
 });
 
 describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §5.1)", () => {
-  interface Row { id: number; name: string; price: number }
+  interface Row {
+    id: number;
+    name: string;
+    price: number;
+  }
 
   it("renders a column's body function output instead of the raw field value", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -78,7 +82,14 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
       { id: 2, name: "B", price: 2 },
     ]);
     fixture.componentRef.setInput("columns", [
-      { field: "name", header: "Name", body: (row: Row, options: { field: string; rowIndex: number }) => { seen.push(options); return row.name; } },
+      {
+        field: "name",
+        header: "Name",
+        body: (row: Row, options: { field: string; rowIndex: number }) => {
+          seen.push(options);
+          return row.name;
+        },
+      },
     ]);
     fixture.detectChanges();
     expect(seen).toEqual([
@@ -97,7 +108,10 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
   });
 
   it("calls the body function with undefined row[field] for a sparse row without throwing", () => {
-    interface SparseRow { id: number; name?: string }
+    interface SparseRow {
+      id: number;
+      name?: string;
+    }
     const fixture = TestBed.createComponent(UTable<SparseRow>);
     fixture.componentRef.setInput("value", [{ id: 1 }]);
     fixture.componentRef.setInput("columns", [
@@ -171,11 +185,11 @@ describe("sorting", () => {
     ]);
     fixture.detectChanges();
     const cells = fixture.nativeElement.querySelectorAll("td");
-    expect([cells[0].textContent?.trim(), cells[1].textContent?.trim(), cells[2].textContent?.trim()]).toEqual([
-      "x",
-      "y",
-      "z",
-    ]);
+    expect([
+      cells[0].textContent?.trim(),
+      cells[1].textContent?.trim(),
+      cells[2].textContent?.trim(),
+    ]).toEqual(["x", "y", "z"]);
   });
 });
 
@@ -283,7 +297,9 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
       { id: 2, name: "Bob" },
     ]);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
-    fixture.componentRef.setInput("filters", { name: { value: undefined, matchMode: "notContains" } });
+    fixture.componentRef.setInput("filters", {
+      name: { value: undefined, matchMode: "notContains" },
+    });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll("td").length).toBe(2);
 
@@ -331,7 +347,9 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
     // Real PrimeNG filterservice.ts's own notEquals: filter === undefined ||
     // filter === null || (typeof filter === 'string' && filter.trim() === '')
     // => false (does not match). Both undefined and '' hit this branch.
-    fixture.componentRef.setInput("filters", { name: { value: undefined, matchMode: "notEquals" } });
+    fixture.componentRef.setInput("filters", {
+      name: { value: undefined, matchMode: "notEquals" },
+    });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll("td").length).toBe(0);
 
@@ -451,7 +469,9 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
       { id: 3, score: 30 },
     ]);
     fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
-    fixture.componentRef.setInput("filters", { score: { value: [null, null], matchMode: "between" } });
+    fixture.componentRef.setInput("filters", {
+      score: { value: [null, null], matchMode: "between" },
+    });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll("td").length).toBe(3);
   });
@@ -477,7 +497,9 @@ describe("filtering — remaining comparator modes (Spec: 2026-09-23-table-filte
       { id: 3, score: 30 },
     ]);
     fixture.componentRef.setInput("columns", [{ field: "score", header: "Score" }]);
-    fixture.componentRef.setInput("filters", { score: { value: [10, 30, null], matchMode: "notIn" } });
+    fixture.componentRef.setInput("filters", {
+      score: { value: [10, 30, null], matchMode: "notIn" },
+    });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll("td").length).toBe(1);
   });
@@ -588,16 +610,24 @@ describe("selection", () => {
     fixture.componentRef.setInput("selectionMode", "single");
     fixture.componentRef.setInput("selection", { id: 1, name: "Alice" });
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('tbody [role="row"]').getAttribute("aria-selected")).toBe("true");
+    expect(
+      fixture.nativeElement.querySelector('tbody [role="row"]').getAttribute("aria-selected")
+    ).toBe("true");
   });
 });
 
 describe("selection-column UI (Spec §5.2, GAP-042)", () => {
-  interface Row { id: number; name: string }
+  interface Row {
+    id: number;
+    name: string;
+  }
 
   it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 2, name: "B" }]);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ]);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("selectionMode", "multiple");
     fixture.componentRef.setInput("selectionColumn", true);
@@ -656,7 +686,10 @@ describe("selection-column UI (Spec §5.2, GAP-042)", () => {
 
   it("clicking the header checkbox selects all rows; clicking again deselects all", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const rows = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
     fixture.componentRef.setInput("value", rows);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("selectionMode", "multiple");
@@ -721,7 +754,10 @@ describe("keyboard selection (Spec §5.7, GAP-047)", () => {
 
   it("Ctrl+A selects all rows when selectionMode is multiple", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const rows = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
     fixture.componentRef.setInput("value", rows);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("selectionMode", "multiple");
@@ -813,7 +849,10 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
           resizeObserverCallback = cb;
         }
         observe(target: Element) {
-          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+          resizeObserverCallback?.(
+            [{ target } as ResizeObserverEntry],
+            this as unknown as ResizeObserver
+          );
         }
         disconnect() {}
       }
@@ -861,7 +900,10 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
 
   it("does not render the built-in u-scroller-item divs when virtualScroll=true (content template fully replaces them)", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    fixture.componentRef.setInput("value", Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` })));
+    fixture.componentRef.setInput(
+      "value",
+      Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` }))
+    );
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("virtualScroll", true);
     fixture.componentRef.setInput("virtualScrollItemSize", 30);
@@ -889,7 +931,9 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
 
     let emitted: unknown;
     fixture.componentInstance.selectionChange.subscribe((e: unknown) => (emitted = e));
-    const firstRow = fixture.nativeElement.querySelector('table[data-u-table-virtual-body] tbody [role="row"]');
+    const firstRow = fixture.nativeElement.querySelector(
+      'table[data-u-table-virtual-body] tbody [role="row"]'
+    );
     firstRow.click();
     expect(emitted).toEqual(rows[0]);
   });
@@ -910,10 +954,14 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     );
     fixture.detectChanges();
 
-    const renderedRows = fixture.nativeElement.querySelectorAll('table[data-u-table-virtual-body] tbody [role="row"]');
+    const renderedRows = fixture.nativeElement.querySelectorAll(
+      'table[data-u-table-virtual-body] tbody [role="row"]'
+    );
     expect(renderedRows.length).toBeGreaterThan(1);
     renderedRows[0].focus();
-    renderedRows[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    renderedRows[0].dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })
+    );
     fixture.detectChanges();
     expect(fixture.nativeElement.ownerDocument.activeElement).toBe(renderedRows[1]);
   });
@@ -927,7 +975,9 @@ describe("row editing (key-map, spec §11.1)", () => {
     fixture.componentRef.setInput("editMode", "row");
     fixture.detectChanges();
     let emitted: Record<string, boolean> | undefined;
-    fixture.componentInstance.editingRowKeysChange.subscribe((e: Record<string, boolean>) => (emitted = e));
+    fixture.componentInstance.editingRowKeysChange.subscribe(
+      (e: Record<string, boolean>) => (emitted = e)
+    );
     fixture.componentInstance.initRowEdit({ id: 1, name: "Alice" });
     expect(emitted).toEqual({ "1": true });
   });
@@ -1029,7 +1079,11 @@ describe("row grouping (SortMeta-reuse convention, spec §13)", () => {
 });
 
 describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
-  interface Row2 { id: number; category: string; name: string }
+  interface Row2 {
+    id: number;
+    category: string;
+    name: string;
+  }
 
   it("spans consecutive rows sharing the same groupRowsBy value under one cell", () => {
     const fixture = TestBed.createComponent(UTable<Row2>);
@@ -1038,7 +1092,10 @@ describe("rowGroupMode rowspan (Spec §5.5, GAP-045)", () => {
       { id: 2, category: "Fruit", name: "Banana" },
       { id: 3, category: "Veg", name: "Carrot" },
     ]);
-    fixture.componentRef.setInput("columns", [{ field: "category", header: "Category" }, { field: "name", header: "Name" }]);
+    fixture.componentRef.setInput("columns", [
+      { field: "category", header: "Category" },
+      { field: "name", header: "Name" },
+    ]);
     fixture.componentRef.setInput("rowGroupMode", "rowspan");
     fixture.componentRef.setInput("groupRowsBy", "category");
     fixture.detectChanges();
@@ -1111,7 +1168,9 @@ describe("real child-component composition (regression guard, Task 24)", () => {
     fixture.componentRef.setInput("rows", 10);
     fixture.componentRef.setInput("totalRecords", 1);
     fixture.detectChanges();
-    const paginatorDebugEl = fixture.debugElement.query((de) => de.componentInstance instanceof UPaginator);
+    const paginatorDebugEl = fixture.debugElement.query(
+      (de) => de.componentInstance instanceof UPaginator
+    );
     expect(paginatorDebugEl).not.toBeNull();
   });
 
@@ -1129,12 +1188,17 @@ describe("real child-component composition (regression guard, Task 24)", () => {
     );
     try {
       const fixture = TestBed.createComponent(UTable<Row>);
-      fixture.componentRef.setInput("value", Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` })));
+      fixture.componentRef.setInput(
+        "value",
+        Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` }))
+      );
       fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
       fixture.componentRef.setInput("virtualScroll", true);
       fixture.componentRef.setInput("virtualScrollItemSize", 30);
       fixture.detectChanges();
-      const scrollerDebugEl = fixture.debugElement.query((de) => de.componentInstance instanceof UScroller);
+      const scrollerDebugEl = fixture.debugElement.query(
+        (de) => de.componentInstance instanceof UScroller
+      );
       expect(scrollerDebugEl).not.toBeNull();
     } finally {
       vi.unstubAllGlobals();
@@ -1249,7 +1313,7 @@ describe("filtering — custom mode, Angular registration contract (Spec §3.4.1
     // case, since a component reference is only obtainable via
     // viewChild/@ViewChild, which resolves after first render.
     fixture.componentInstance.registerCustomFilter(
-      (value) => typeof value === "string" && value.length > 3,
+      (value) => typeof value === "string" && value.length > 3
     );
     fixture.detectChanges();
 
@@ -1308,7 +1372,10 @@ describe("loading/empty states (Spec §5.6, GAP-046)", () => {
 });
 
 describe("row expansion (Spec §5.4, GAP-044)", () => {
-  interface Row { id: number; name: string }
+  interface Row {
+    id: number;
+    name: string;
+  }
 
   it("toggles a row's expanded state and renders expanded content via the expandedRowTemplate", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -1335,7 +1402,10 @@ describe("row expansion (Spec §5.4, GAP-044)", () => {
 
   it("does not throw when dataKey maps to a duplicate value across two rows", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 1, name: "B" }]);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "A" },
+      { id: 1, name: "B" },
+    ]);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("dataKey", "id");
     expect(() => fixture.detectChanges()).not.toThrow();
@@ -1343,7 +1413,10 @@ describe("row expansion (Spec §5.4, GAP-044)", () => {
 });
 
 describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
-  interface Row { id: number; name: string }
+  interface Row {
+    id: number;
+    name: string;
+  }
 
   it("clicking the expand-toggle button does not also toggle row selection (Important finding 1)", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
@@ -1406,7 +1479,10 @@ describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
 
   it("Ctrl+A while focused inside the cell editor input does not trigger select-all-rows (Important finding 2)", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    fixture.componentRef.setInput("value", [{ id: 1, name: "A" }, { id: 2, name: "B" }]);
+    fixture.componentRef.setInput("value", [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ]);
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("dataKey", "id");
     fixture.componentRef.setInput("editMode", "row");
@@ -1419,7 +1495,9 @@ describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
 
     const input = fixture.nativeElement.querySelector("[data-u-table-cell-editor] input");
     input.focus();
-    input.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true, bubbles: true }));
+    input.dispatchEvent(
+      new KeyboardEvent("keydown", { code: "KeyA", ctrlKey: true, bubbles: true })
+    );
 
     expect(emitted).toEqual([]);
   });
@@ -1507,7 +1585,10 @@ describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
           resizeObserverCallback = cb;
         }
         observe(target: Element) {
-          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+          resizeObserverCallback?.(
+            [{ target } as ResizeObserverEntry],
+            this as unknown as ResizeObserver
+          );
         }
         disconnect() {}
       }
@@ -1543,7 +1624,11 @@ describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
     // window-relative $index (which would reset to 0 here) from the item's
     // real absolute dataset index (React/Vue's own semantics).
     seenRowIndexes.length = 0;
-    Object.defineProperty(scrollerRoot, "scrollTop", { value: 3000, writable: true, configurable: true });
+    Object.defineProperty(scrollerRoot, "scrollTop", {
+      value: 3000,
+      writable: true,
+      configurable: true,
+    });
     scrollerRoot.dispatchEvent(new Event("scroll"));
     fixture.detectChanges();
 

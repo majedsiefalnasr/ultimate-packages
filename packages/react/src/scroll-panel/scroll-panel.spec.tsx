@@ -1,5 +1,5 @@
 import * as React from "react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import { UScrollPanel, type UScrollPanelHandle } from "./scroll-panel";
 
@@ -40,7 +40,11 @@ describe("UScrollPanel", () => {
       </UScrollPanel>
     );
     const yBar = screen.getAllByRole("scrollbar")[1];
-    const keydownEvent = new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true, cancelable: true });
+    const keydownEvent = new KeyboardEvent("keydown", {
+      code: "ArrowDown",
+      bubbles: true,
+      cancelable: true,
+    });
     yBar.dispatchEvent(keydownEvent);
     expect(keydownEvent.defaultPrevented).toBe(true);
   });

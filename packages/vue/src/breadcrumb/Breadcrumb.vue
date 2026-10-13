@@ -33,7 +33,9 @@
             <span v-if="item.label" :class="cx('itemLabel')">{{ item.label }}</span>
           </a>
         </li>
-        <li v-if="isVisible(item) && i !== lastIndex" :class="cx('separator')" role="separator">›</li>
+        <li v-if="isVisible(item) && i !== lastIndex" :class="cx('separator')" role="separator"
+          >›</li
+        >
       </template>
     </ol>
   </nav>

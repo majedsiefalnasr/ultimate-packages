@@ -13,13 +13,24 @@ export function nextMetadataVersion(
   current: ComponentMetadata,
   next: Omit<ComponentMetadata, "metadataVersion">
 ): number {
-  const { metadataVersion: _currentVersion, schemaVersion: _currentSchema, ...currentContent } = current;
+  const {
+    metadataVersion: _currentVersion,
+    schemaVersion: _currentSchema,
+    ...currentContent
+  } = current;
+  void _currentVersion;
+  void _currentSchema;
   // `next`'s static type omits metadataVersion, but callers may still pass an
   // object that carries it at runtime (e.g. via object spread from a
   // ComponentMetadata) — strip it defensively so the comparison never keys
   // off a field this function has no business considering.
-  const { metadataVersion: _nextVersion, schemaVersion: _nextSchema, ...nextContent } =
-    next as ComponentMetadata;
+  const {
+    metadataVersion: _nextVersion,
+    schemaVersion: _nextSchema,
+    ...nextContent
+  } = next as ComponentMetadata;
+  void _nextVersion;
+  void _nextSchema;
   const changed = JSON.stringify(currentContent) !== JSON.stringify(nextContent);
   return changed ? current.metadataVersion + 1 : current.metadataVersion;
 }

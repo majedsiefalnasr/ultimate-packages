@@ -106,7 +106,9 @@ describe("UDynamicDialog", () => {
     let closed = false;
     ref.onClose.subscribe(() => (closed = true));
 
-    const closeButton = document.querySelector(".u-dialog-close-button button") as HTMLButtonElement;
+    const closeButton = document.querySelector(
+      ".u-dialog-close-button button"
+    ) as HTMLButtonElement;
     closeButton.click();
     fixture.detectChanges();
     // UDialog keeps its DOM present through an async leave-motion promise —

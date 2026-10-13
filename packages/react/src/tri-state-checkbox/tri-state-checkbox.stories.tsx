@@ -28,9 +28,7 @@ type Story = StoryObj<typeof UTriStateCheckbox>;
 
 function TriStateCheckboxHarness(props: React.ComponentProps<typeof UTriStateCheckbox>) {
   const [value, setValue] = React.useState(props.value);
-  return (
-    <UTriStateCheckbox {...props} value={value} onChange={(event) => setValue(event.value)} />
-  );
+  return <UTriStateCheckbox {...props} value={value} onChange={(event) => setValue(event.value)} />;
 }
 
 /** Default — click to cycle null -> true -> false -> null. */

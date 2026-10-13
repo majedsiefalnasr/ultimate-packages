@@ -36,7 +36,11 @@ test("extracts a real packages/core/src/<name> directory (foundation root)", () 
     ]);
     assert.ok(existsSync(join(outDir, "BaseComponent.vue")), "BaseComponent.vue should be copied");
     const content = readFileSync(join(outDir, "BaseComponent.vue"), "utf8");
-    assert.match(content, /name: 'BaseComponent'/, "copied file should be real BaseComponent.vue source");
+    assert.match(
+      content,
+      /name: 'BaseComponent'/,
+      "copied file should be real BaseComponent.vue source"
+    );
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }

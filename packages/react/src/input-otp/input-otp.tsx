@@ -47,17 +47,31 @@ export interface UInputOtpProps {
 function findNextInput(element: HTMLElement): HTMLInputElement | undefined {
   const next = element.nextElementSibling;
   if (!next) return undefined;
-  return next.nodeName === "INPUT" ? (next as HTMLInputElement) : findNextInput(next as HTMLElement);
+  return next.nodeName === "INPUT"
+    ? (next as HTMLInputElement)
+    : findNextInput(next as HTMLElement);
 }
 
 function findPrevInput(element: HTMLElement): HTMLInputElement | undefined {
   const prev = element.previousElementSibling;
   if (!prev) return undefined;
-  return prev.nodeName === "INPUT" ? (prev as HTMLInputElement) : findPrevInput(prev as HTMLElement);
+  return prev.nodeName === "INPUT"
+    ? (prev as HTMLInputElement)
+    : findPrevInput(prev as HTMLElement);
 }
 
 export const UInputOtp = React.forwardRef<HTMLDivElement, UInputOtpProps>(function UInputOtp(
-  { value = "", length = 4, mask = false, integerOnly = false, disabled = false, readOnly = false, invalid = false, onChange, className },
+  {
+    value = "",
+    length = 4,
+    mask = false,
+    integerOnly = false,
+    disabled = false,
+    readOnly = false,
+    invalid = false,
+    onChange,
+    className,
+  },
   ref
 ) {
   const { cx } = useComponentBase({ componentName: "input-otp", styleModule: inputOtpStyleModule });
@@ -177,7 +191,7 @@ export const UInputOtp = React.forwardRef<HTMLDivElement, UInputOtpProps>(functi
   return (
     <div ref={ref} className={[cx("root"), className].filter(Boolean).join(" ")}>
       {tokens.map((token, index) => (
-        // eslint-disable-next-line react/no-array-index-key -- positional segment, stable per-render.
+        // positional segment, stable per-render.
         <input
           key={index}
           type={mask ? "password" : "text"}

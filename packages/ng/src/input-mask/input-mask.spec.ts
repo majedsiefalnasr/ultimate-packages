@@ -8,7 +8,9 @@ function type(input: HTMLInputElement, chars: string): void {
   input.focus();
   input.setSelectionRange(0, 0);
   for (const ch of chars) {
-    input.dispatchEvent(new KeyboardEvent("keypress", { key: ch, bubbles: true, cancelable: true }));
+    input.dispatchEvent(
+      new KeyboardEvent("keypress", { key: ch, bubbles: true, cancelable: true })
+    );
   }
 }
 
@@ -57,7 +59,7 @@ describe("UInputMask", () => {
 
     input.setSelectionRange(4, 4);
     input.dispatchEvent(
-      new KeyboardEvent("keydown", { key: "Backspace", bubbles: true, cancelable: true }),
+      new KeyboardEvent("keydown", { key: "Backspace", bubbles: true, cancelable: true })
     );
     fixture.detectChanges();
 

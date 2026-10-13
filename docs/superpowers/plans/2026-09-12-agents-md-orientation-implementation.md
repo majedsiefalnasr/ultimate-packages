@@ -8,7 +8,7 @@
 
 **Amendment Note (this pass):** the human's own Plan Review feedback explicitly authorized the `package.json` change this plan's Task 3 already required as mechanical wiring, closing the one open question flagged in the prior draft. This amendment makes the resulting **5-file implementation scope** — `AGENTS.md`, `README.md`, `scripts/provenance/validate-agents-md-pointers.mjs`, `package.json`, `.github/workflows/ci.yml` — explicit and consistent everywhere this plan states a file count or list, replacing every prior "4 files" reference. The authorization is scoped narrowly and exactly as granted: `package.json` may gain exactly one new entry in its `scripts` block (`"agents-md-pointers:validate": "node scripts/provenance/validate-agents-md-pointers.mjs"`) — no dependency, version, build-configuration, or other script change of any kind. No other section's substance is altered by this amendment.
 
-**Amendment Note (post-implementation correction):** during Implementation (Task 1), the protected/do-not-reopen pointer this plan's own Task 1 labeled "Section 6" was instead built as its own standalone section, since folding it into another section would have collapsed the file's section *count* below the required 7. This shifted every subsequent section's number by one in the final, merged `AGENTS.md`. Task 1's own numbering below is corrected to match the as-built file exactly: **Section 5 = Protected decisions, Section 6 = Where to find things, Section 7 = AI Operating Rules.** This is an implementation-time correction to this document's own internal section labels, not a change to any approved functional scope — every binding content requirement Task 1 specifies is unchanged.
+**Amendment Note (post-implementation correction):** during Implementation (Task 1), the protected/do-not-reopen pointer this plan's own Task 1 labeled "Section 6" was instead built as its own standalone section, since folding it into another section would have collapsed the file's section _count_ below the required 7. This shifted every subsequent section's number by one in the final, merged `AGENTS.md`. Task 1's own numbering below is corrected to match the as-built file exactly: **Section 5 = Protected decisions, Section 6 = Where to find things, Section 7 = AI Operating Rules.** This is an implementation-time correction to this document's own internal section labels, not a change to any approved functional scope — every binding content requirement Task 1 specifies is unchanged.
 
 This plan does not implement anything. It does not create `AGENTS.md`, does not modify `README.md`, does not modify `package.json`, does not modify CI, and does not create the validation script. It defines the exact tasks a future, separately-authorized Implementation step must execute.
 
@@ -47,6 +47,7 @@ This plan does not implement anything. It does not create `AGENTS.md`, does not 
 **This is not optional preamble — it is the first task, per `AGENTS.md`'s own §3.7.1/§3.7.4 rules this very work item is building, applied to itself.**
 
 **What to do:**
+
 1. Run `git status --short` and `git branch --show-current` and confirm: current branch, exact working-tree state, and that the only pending changes are the pre-existing uncommitted research/spec/plan artifacts already known to exist (3 research artifacts, the approved spec, and this plan's own file) — no other unexpected change.
 2. Confirm HEAD matches `d391acf` (the baseline this plan and its approved specification were written against) — if HEAD has moved, stop and re-verify the specification's baseline assumptions still hold before proceeding.
 3. **Ask the human** whether to implement this work item on the current branch (`main`) or on a new task branch — per the approved specification's own §3.7.1 rule (direct work on `main` requires explicit authorization; branch naming has no established repository convention, so if a new branch is chosen, propose a name and let the human confirm or adjust it rather than asserting one as fixed).
@@ -66,11 +67,13 @@ This plan does not implement anything. It does not create `AGENTS.md`, does not 
 **Intended change:** create the file with exactly 7 top-level sections, in this order, each satisfying the exact binding content specified in the approved specification's §3 (cited per-subsection below). Exact prose wording is the implementer's choice; the substance below is binding.
 
 ### Section 1 — What Ultimate is (spec §3.1)
+
 - 2-3 sentences, closely paraphrasing `docs/architecture/BLUEPRINT.md` §1's own stated goal: a company-owned, multi-framework UI platform (Angular/React/Vue, extensible), derived from MIT-licensed Prime ecosystem baselines, no required runtime dependency on Prime packages.
 - **Pattern to follow:** `README.md`'s own opening paragraph (line 3) already states this correctly and concisely — the implementer should read it directly and may closely mirror its wording, since both documents are describing the same permanent fact from the same authoritative source (`BLUEPRINT.md` §1).
 - **Must not contain:** any phase number, completion status, or current-state claim (that belongs in Section 6's pointer table, not here).
 
 ### Section 2 — Source-of-truth hierarchy (spec §3.2)
+
 - The exact 8-tier list, in the exact order, from spec §3.2:
   1. Real repository evidence (source, tests, CI output, git history) — wins every disagreement, always.
   2. `docs/architecture/BLUEPRINT.md`.
@@ -84,27 +87,33 @@ This plan does not implement anything. It does not create `AGENTS.md`, does not 
 - **No deviation from this ordering or substance is permitted** — this is the specification's single most load-bearing content item; an implementer finding a reason to reorder or omit a tier must stop and escalate to Plan Review, not silently adjust.
 
 ### Section 3 — Workflow and approval gates (spec §3.3)
+
 - The gate sequence stated plainly: Research → Verification → Architecture Discussion → Decision → Specification → Spec Review → Implementation Plan → Plan Review → Implementation → Verification → Final Review/Closeout.
 - The artifact-per-gate mapping: research → `docs/architecture/research/*.md`; architecture decision → an ADR in `DECISIONS.md`; specification → `docs/superpowers/specs/*.md`; plan → `docs/superpowers/plans/*.md`.
 - The explicit, standalone rule: **discovering a task/gap/defect does not itself authorize implementation** — each gate boundary needs its own, separately granted authorization; a prior "yes" does not carry forward.
 - A pointer to the protected/do-not-reopen category, naming that such markers exist and currently live in `docs/architecture/BLUEPRINT_GAPS.md` §5, without naming specific current instances.
 
 ### Section 4 — Verification model (spec §3.4)
+
 - Define, distinctly: **implemented** (code exists, confirmed by reading source), **verified** (a check ran once and passed at that moment), **CI-enforced** (a `.github/workflows/ci.yml` script will fail the build on regression), **externally unexercisable** (requires a real external event — e.g. an actual npm publish, an actual branch-protection setting, an actual security advisory — honestly disclosed as unproven rather than falsely claimed or endlessly simulated).
 - State these four are not interchangeable.
 - Name where evidence of each kind typically lives: CI artifacts (ephemeral, e.g. `test-results/`), committed baseline docs (e.g. `docs/architecture/SAST_BASELINE.md`, `ACCESSIBILITY_BASELINE.md`, `PERFORMANCE.md`), dated research artifacts (`docs/architecture/research/*.md`).
 
 ### Section 6 — Pointer/index table (spec §3.6 as merged, originally numbered §3.5 — see Amendment Note above)
+
 - A table with **only** file paths and one-line purposes, at minimum the 8 rows specified in spec §3.5 (phase/track status → `ROADMAP.md`; open gaps/decisions → `BLUEPRINT_GAPS.md`; architectural reasoning → `DECISIONS.md`; deep evidence → `docs/architecture/research/`; component facts → metadata/MCP/source; component coverage → `COMPONENT_INVENTORY.md`; performance baselines → `PERFORMANCE.md`; release/migration → `MIGRATION.md`).
 - **No additional rows containing restated status/content** — any implementer-added row must be path+one-line-purpose only, matching the existing 8 exactly in shape.
 
 ### Section 5 — Protected/do-not-reopen category pointer (spec §3.5 as merged, originally numbered §3.6 — see Amendment Note above)
+
 - A short statement (may be folded into Section 3 or kept standalone — non-architectural implementer choice) naming that architectural decisions can be explicitly protected against reopening without new evidence, pointing to `docs/architecture/BLUEPRINT_GAPS.md` §5 — without naming which decisions are currently so marked.
 
 ### Section 7 — AI Operating Rules (spec §3.7, added by the Spec Review amendment)
+
 Five subsections, each concise (3-6 bullet points, matching the terse style of Sections 1-6):
 
 **7.1 Git / branching** (spec §3.7.1):
+
 - Inspect current branch and working-tree state before starting work; do not assume the current branch is correct.
 - Unless task context already establishes the branch, ask the human: continue on current branch, or create/use a new one.
 - Direct work on `main` requires explicit human authorization.
@@ -114,6 +123,7 @@ Five subsections, each concise (3-6 bullet points, matching the terse style of S
 - **State honestly:** no single branch-naming convention exists in this repository's history — naming is an implementation-level choice, not a fixed pattern to invent or assume.
 
 **7.2 Superpowers usage** (spec §3.7.2):
+
 - The gated workflow (Section 3 above) is intended to be executed using the appropriate Superpowers skill for each stage, when available — a working expectation, not optional reading.
 - Point to (do not restate) the relevant skill category per stage — the implementer should name real, currently-available skill categories by their actual purpose (e.g., problem exploration/brainstorming, specification and plan authorship, subagent-driven execution, pre-completion verification, closeout) rather than inventing hypothetical category names; use whatever skills are actually present in the environment as the concrete reference, without hardcoding specific plugin-internal file paths that could move.
 - Use the skill appropriate to the current stage; never invoke an unrelated one merely to satisfy a checklist.
@@ -121,6 +131,7 @@ Five subsections, each concise (3-6 bullet points, matching the terse style of S
 - **State explicitly:** if Superpowers is unavailable in the current environment, the workflow and its gates still apply — absence of the tool does not remove the gates.
 
 **7.3 Git commits** (spec §3.7.3):
+
 - **State the confirmed, real convention:** this repository's commits follow Conventional Commits shape, `type(scope): short description` (point to `git log` as the live example — do not restate a Conventional Commits tutorial or invent a different format).
 - Do not commit merely because files changed — a commit corresponds to authorized work at an appropriate gate.
 - Review `git status`/`git diff` before staging; never stage blindly.
@@ -130,9 +141,11 @@ Five subsections, each concise (3-6 bullet points, matching the terse style of S
 - Never push without explicit authorization from the task's own context.
 
 **7.4 Pre-work repository safety** (spec §3.7.4):
+
 - Before modifying any file, establish: current branch, current working-tree status, existing relevant uncommitted changes, and the applicable task/spec/plan's current approval state — to avoid mistaking an existing dirty tree for one's own work or implementing against the wrong branch/state.
 
 **7.5 Preserving the human-controlled model** (spec §3.7.5, restated for immediacy):
+
 - Discovering a problem does not authorize fixing it.
 - Finding a gap does not authorize implementing it.
 - An approved specification does not authorize implementation before an approved, reviewed implementation plan exists.
@@ -142,6 +155,7 @@ Five subsections, each concise (3-6 bullet points, matching the terse style of S
 **Relevant existing pattern to follow for overall file tone/format:** this repository's own `docs/architecture/research/*.md` artifacts' "Status:"/"Purpose:" front-matter convention (a short, labeled preamble before the first numbered section) is a reasonable, already-established stylistic precedent for `AGENTS.md`'s own opening, though `AGENTS.md` itself is not a research artifact and should not adopt that convention's "Discovery snapshot" framing — it is a stable, durable file, and its own front matter (if any) should say so.
 
 **Verification method:**
+
 1. Read the finished file in full; confirm exactly 7 top-level sections exist, each matching its spec-cited content above, no additional sections.
 2. Check against spec §4's negative-scope list — no phase status, no gap IDs, no ADR content, no component counts, no research-artifact content beyond a directory pointer, no enumeration of currently-protected decisions, no detailed git manual, no copied Superpowers skill content, no restated Conventional Commits tutorial.
 3. Check total length against spec §5's ~200-400 line target — flag (do not silently accept) a substantial overage at Plan Review's own eventual verification pass, or in this task's own self-review if executed via subagent-driven-development.
@@ -157,12 +171,15 @@ Five subsections, each concise (3-6 bullet points, matching the terse style of S
 **Exact file:** `README.md` — exactly the "## Status" section (lines 7-9 as currently written), nothing else in the file.
 
 **Intended change:** replace the current text —
+
 ```markdown
 ## Status
 
 **Phase 0 — Repository Foundation, Provenance & Baseline Verification.** No component source has been migrated yet. See `docs/architecture/ROADMAP.md` for the full phase plan.
 ```
+
 — with a pointer-only statement per spec §6's binding constraint: no specific phase number, no completion percentage, no other status claim that could itself go stale. Must retain the existing `ROADMAP.md` pointer and may additionally point to `AGENTS.md`. Spec §6's own illustrative (non-binding) shape:
+
 ```markdown
 ## Status
 
@@ -174,6 +191,7 @@ For current phase and track status, see `docs/architecture/ROADMAP.md`. For how 
 **Scope boundary:** do not touch any other section of `README.md` (the opening description, "Repository structure," "Development," "Provenance," "License" — all unchanged).
 
 **Verification method:**
+
 1. `git diff README.md` shows changes confined to exactly the "## Status" section's own lines — nothing else in the file differs.
 2. Confirm the replacement text contains no digit-based phase number and no completion-percentage claim (a simple visual/grep check: no standalone "Phase N" pattern, no "%" character in the new text).
 3. Confirm the `ROADMAP.md` pointer is retained.
@@ -194,13 +212,14 @@ For current phase and track status, see `docs/architecture/ROADMAP.md`. For how 
 - Logic: read `AGENTS.md`, extract the Section 6 pointer table's referenced paths (parse the Markdown table rows, extracting the path from each row's "See" column — a small, targeted parse, not a general Markdown parser), and for each extracted path, confirm it exists on disk (`existsSync`) — a directory reference (e.g. `docs/architecture/research/`) is checked for directory existence, a file reference for file existence.
 - On any missing path: `fail()` with a message naming the specific missing path (e.g., `AGENTS.md pointer table references "docs/architecture/FOO.md", which does not exist`), matching the existing family's convention of specific, actionable failure messages (`validate-provenance.mjs:35`, `:43`, `:69` are the direct examples to match in tone/specificity).
 - On success: `pass()` naming how many paths were checked, then `process.exit(0)`.
-- **Explicitly out of scope for this script** (per spec §7's own binding exclusions): no check of `AGENTS.md`'s prose accuracy, no check of any link outside `AGENTS.md`'s own Section 6 table, no check of pointer-table *completeness* (a missing row that should exist is not flagged, only an existing row's broken target), no Markdown lint beyond the table-parsing this script needs to do its own job.
+- **Explicitly out of scope for this script** (per spec §7's own binding exclusions): no check of `AGENTS.md`'s prose accuracy, no check of any link outside `AGENTS.md`'s own Section 6 table, no check of pointer-table _completeness_ (a missing row that should exist is not flagged, only an existing row's broken target), no Markdown lint beyond the table-parsing this script needs to do its own job.
 
 **Relevant existing pattern to follow:** `validate-install-script-policy.mjs`'s own `readFileIfExists` helper (lines 40-43) and its overall single-file, no-external-dependency shape — this new script should be similarly self-contained (Node's built-in `node:fs` only, no new npm dependency), matching every existing script in this family.
 
 **Root `package.json` addition (explicitly authorized by the human at Plan Review, scoped exactly as follows):** one new script entry, `"agents-md-pointers:validate": "node scripts/provenance/validate-agents-md-pointers.mjs"`, added to the same `scripts` block section (alongside the other `*:validate` entries, e.g. near `install-script-policy:validate`/`ceiling:validate`), matching the exact naming pattern (`<check-name>:validate`) every existing entry follows. This is the **only** change this task (or any task in this plan) makes to `package.json` — no dependency, devDependency, version, or other script is added, removed, or modified.
 
 **Verification method (must be performed, not merely asserted, per the specification's own AC7):**
+
 1. Run `node scripts/provenance/validate-agents-md-pointers.mjs` against the real, just-created `AGENTS.md` — confirm it passes (all real paths exist).
 2. **Deliberately break it:** temporarily edit one row of `AGENTS.md`'s pointer table to reference a nonexistent path (e.g., `docs/architecture/DOES-NOT-EXIST.md`), re-run the script, confirm it fails with a message specifically naming that exact path — not a generic failure.
 3. Revert the deliberate break, confirm `AGENTS.md` is back to its correct, real state (`git diff AGENTS.md` shows no residual change from this verification step), re-run the script, confirm it passes again.
@@ -218,20 +237,23 @@ For current phase and track status, see `docs/architecture/ROADMAP.md`. For how 
 **Intended change:** append one new step to the main `ci` job's existing step sequence, immediately after the last existing validation-script step (`AI package boundary validation`, currently the job's final step per this plan's own pre-planning inspection above) — placing the new step in the same cluster as the 8 existing small validation-script steps it structurally matches, rather than earlier in the job (before Build/Test) or in either of the two separate Track A/E jobs (which solve unrelated concerns).
 
 ```yaml
-      - name: AGENTS.md pointer validation
-        run: pnpm run agents-md-pointers:validate
+- name: AGENTS.md pointer validation
+  run: pnpm run agents-md-pointers:validate
 ```
 
 **Relevant existing pattern to follow:** the immediately preceding step's own exact shape —
+
 ```yaml
-      - name: AI package boundary validation
-        run: pnpm run boundary:validate:ai
+- name: AI package boundary validation
+  run: pnpm run boundary:validate:ai
 ```
+
 — a two-line `name:`/`run:` pair with no additional `env:`/`with:`/conditional logic, matching every other step in this job's own validation cluster (none of the 8 existing sibling steps use `--base-ref` or any other flag except `provenance:validate`, `size:validate`, and `coverage:validate`, which need git-diff context this new check does not — the new step should be the simplest possible shape, matching `boundary:validate`'s own zero-flag invocation, not the 3 checks that happen to need one).
 
 **Scope boundary:** do not modify any existing step in `ci.yml`, do not create a new job, do not touch `track-a-browser-visual-a11y` or `track-e-ssr-hydration`'s job definitions.
 
 **Verification method:**
+
 1. `git diff .github/workflows/ci.yml` shows exactly one new step appended, no existing line altered or removed.
 2. Confirm the new step's `run:` command exactly matches the `package.json` script name added in Task 3.
 3. A full local dry-run of the command itself (`pnpm run agents-md-pointers:validate`) was already proven to pass/fail correctly in Task 3's own verification — this task does not need to re-run the break/revert sequence, only confirm the CI step invokes the same, already-verified command correctly.
@@ -245,6 +267,7 @@ For current phase and track status, see `docs/architecture/ROADMAP.md`. For how 
 **Depends on:** Tasks 1-4 all complete.
 
 **What to verify, in order:**
+
 1. `git status --short` — confirm exactly 5 changed/new files, no more, no fewer: `AGENTS.md` (new), `README.md` (modified), `scripts/provenance/validate-agents-md-pointers.mjs` (new), `package.json` (modified — exactly the one new `scripts` entry authorized at Plan Review), `.github/workflows/ci.yml` (modified — exactly one new step).
 2. `git diff --stat` — confirm no file outside this 5-file set appears.
 3. `git diff package.json` specifically — confirm the only change is the single new `scripts` entry (`"agents-md-pointers:validate": ...`); confirm no `dependencies`/`devDependencies`/version/other-script line differs from the baseline. This is a distinct, explicit check because `package.json`'s authorization is narrower than the other 4 files' — the other 4 are authorized for their whole intended change, `package.json` is authorized for exactly one line.
@@ -255,6 +278,7 @@ For current phase and track status, see `docs/architecture/ROADMAP.md`. For how 
 8. Confirm the working tree still contains its own pre-existing, unrelated uncommitted files (the 3 research artifacts, the spec, this plan) exactly as they were before this Implementation step began — per `AGENTS.md`'s own §3.7.1/§3.7.4 rules (which this very file now states), this Implementation step must not disturb them.
 
 **What NOT to do:**
+
 - Do not commit at the end of this task. Per the approved specification's own AI Operating Rules content (which this plan's Task 1 creates) and this session's own established practice throughout every prior task in this work item's history, committing is its own separately authorized action, requested explicitly after the human reviews the finished, verified diff — never bundled automatically into "implementation complete."
 
 **Acceptance criteria covered:** AC8, AC9, AC10 (final, whole-diff confirmation of all three).

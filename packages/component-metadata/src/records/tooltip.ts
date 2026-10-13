@@ -65,7 +65,12 @@ export const TOOLTIP_METADATA: ComponentMetadata = {
   api: {
     ng: {
       props: [
-        { name: "uTooltip", type: "string | undefined", required: false, description: "Content of the tooltip." },
+        {
+          name: "uTooltip",
+          type: "string | undefined",
+          required: false,
+          description: "Content of the tooltip.",
+        },
         {
           name: "uTooltipPosition",
           type: '"top" | "bottom" | "left" | "right"',
@@ -91,7 +96,12 @@ export const TOOLTIP_METADATA: ComponentMetadata = {
           required: true,
         },
         { name: "content", type: "React.ReactNode | undefined", required: false },
-        { name: "position", type: '"right" | "left" | "top" | "bottom"', default: '"right"', required: false },
+        {
+          name: "position",
+          type: '"right" | "left" | "top" | "bottom"',
+          default: '"right"',
+          required: false,
+        },
         {
           name: "event",
           type: '"hover" | "focus" | "both"',
@@ -137,6 +147,9 @@ export const TOOLTIP_METADATA: ComponentMetadata = {
   },
   provenanceRef: {
     package: "ng",
-    ultimateDestinations: ["packages/ng/src/tooltip/tooltip.ts", "packages/ng/src/tooltip/tooltip-style.ts"],
+    ultimateDestinations: [
+      "packages/ng/src/tooltip/tooltip.ts",
+      "packages/ng/src/tooltip/tooltip-style.ts",
+    ],
   },
 };

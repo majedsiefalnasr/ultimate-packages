@@ -80,7 +80,10 @@ describe("UPopover", () => {
   });
 
   it("does not hide on outside click when dismissable is false", async () => {
-    const wrapper = mount(HostComponent, { props: { dismissable: false }, attachTo: document.body });
+    const wrapper = mount(HostComponent, {
+      props: { dismissable: false },
+      attachTo: document.body,
+    });
     const button = wrapper.find("button");
     await button.trigger("click");
     expect(document.querySelector(".u-popover")).not.toBeNull();

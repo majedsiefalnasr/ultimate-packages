@@ -1,5 +1,10 @@
 <template>
-  <div :class="cx('root')" :tabindex="tabindex" :aria-labelledby="ariaLabelledby" :aria-label="ariaLabel">
+  <div
+    :class="cx('root')"
+    :tabindex="tabindex"
+    :aria-labelledby="ariaLabelledby"
+    :aria-label="ariaLabel"
+  >
     <slot name="left"></slot>
     <span ref="right"><slot name="right"></slot></span>
     <input type="range" min="0" max="100" value="50" :class="cx('slider')" @input="onSlide" />

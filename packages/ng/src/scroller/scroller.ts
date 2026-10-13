@@ -116,7 +116,8 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
    * its own projected content — silently capturing the wrong template. When
    * absent, the built-in `@for` rendering runs unchanged.
    */
-  @ContentChild("content", { descendants: false }) protected contentTemplate?: TemplateRef<UScrollerContentContext>;
+  @ContentChild("content", { descendants: false })
+  protected contentTemplate?: TemplateRef<UScrollerContentContext>;
 
   // Plain internal state per Global Constraints (no getter/setter, no
   // Change output). `_contentSize` is a signal rather than a bare field
@@ -192,7 +193,11 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
   }
 
   protected get last(): number {
-    const rawLast = calculateLast(this._first, this.numItemsInViewportComputed, this.resolvedNumToleratedItems);
+    const rawLast = calculateLast(
+      this._first,
+      this.numItemsInViewportComputed,
+      this.resolvedNumToleratedItems
+    );
     return this.getLast(rawLast);
   }
 

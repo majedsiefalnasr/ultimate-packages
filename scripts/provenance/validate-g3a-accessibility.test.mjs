@@ -119,7 +119,10 @@ test("fails on an envelope whose story id does not match its file name", () => {
   );
   const result = runScript(dir);
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /componentStoryId "ng-other--default", expected "ng-story4--default"/);
+  assert.match(
+    result.stderr,
+    /componentStoryId "ng-other--default", expected "ng-story4--default"/
+  );
   rmSync(dir, { recursive: true, force: true });
 });
 

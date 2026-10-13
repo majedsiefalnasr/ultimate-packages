@@ -37,9 +37,7 @@ describe("UInplace", () => {
   it("invokes closeCallback from children to deactivate", () => {
     render(
       <UInplace active display={<span>Click to edit</span>}>
-        {(closeCallback) => (
-          <button onClick={(e) => closeCallback(e)}>Close</button>
-        )}
+        {(closeCallback) => <button onClick={(e) => closeCallback(e)}>Close</button>}
       </UInplace>
     );
     fireEvent.click(screen.getByText("Close"));

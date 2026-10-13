@@ -11,7 +11,9 @@ const meta: Meta<typeof UColorPicker> = {
 export default meta;
 type Story = StoryObj<typeof UColorPicker>;
 
-function ColorPickerHarness(props: Omit<React.ComponentProps<typeof UColorPicker>, "value" | "onChange">) {
+function ColorPickerHarness(
+  props: Omit<React.ComponentProps<typeof UColorPicker>, "value" | "onChange">
+) {
   const [value, setValue] = React.useState<UColorPickerValue | null>(null);
   return <UColorPicker {...props} value={value} onChange={(event) => setValue(event.value)} />;
 }

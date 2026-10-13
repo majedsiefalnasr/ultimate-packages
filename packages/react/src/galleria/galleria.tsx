@@ -69,11 +69,14 @@ export function UGalleria<T>({
 }: UGalleriaProps<T>): React.ReactElement {
   const { cx } = useComponentBase({ componentName: "galleria", styleModule: galleriaStyleModule });
   const [internalActiveIndex, setInternalActiveIndex] = React.useState(activeIndexProp);
-  const isActiveIndexControlled = onActiveIndexChange !== undefined && activeIndexProp !== undefined;
+  const isActiveIndexControlled =
+    onActiveIndexChange !== undefined && activeIndexProp !== undefined;
   const activeIndex = isActiveIndexControlled ? activeIndexProp : internalActiveIndex;
   const [internalFullScreenActive, setInternalFullScreenActive] = React.useState(false);
   const isFullScreenControlled = controlledFullScreenActive !== undefined;
-  const fullScreenActive = isFullScreenControlled ? controlledFullScreenActive : internalFullScreenActive;
+  const fullScreenActive = isFullScreenControlled
+    ? controlledFullScreenActive
+    : internalFullScreenActive;
   const intervalRef = React.useRef<ReturnType<typeof setInterval>>();
 
   const stopAutoplay = React.useCallback(() => {
@@ -102,7 +105,6 @@ export function UGalleria<T>({
       goTo(next);
     }, autoplayInterval);
     return stopAutoplay;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoplayInterval, activeIndex, value.length]);
 
   const setFullScreenActive = (next: boolean) => {
@@ -144,7 +146,12 @@ export function UGalleria<T>({
   const isEditableTarget = (target: EventTarget | null): boolean => {
     if (!(target instanceof HTMLElement)) return false;
     const tagName = target.tagName;
-    return tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT" || target.isContentEditable;
+    return (
+      tagName === "INPUT" ||
+      tagName === "TEXTAREA" ||
+      tagName === "SELECT" ||
+      target.isContentEditable
+    );
   };
 
   /**
@@ -186,7 +193,12 @@ export function UGalleria<T>({
 
   const content = (
     <>
-      <div className={cx("itemWrapper")} data-u-galleria-content tabIndex={-1} onKeyDown={onContentKeyDown}>
+      <div
+        className={cx("itemWrapper")}
+        data-u-galleria-content
+        tabIndex={-1}
+        onKeyDown={onContentKeyDown}
+      >
         {showItemNavigators && value.length > 1 && (
           <button
             type="button"
@@ -198,7 +210,9 @@ export function UGalleria<T>({
             &lsaquo;
           </button>
         )}
-        <div className={cx("itemContainer")}>{activeItem !== undefined && itemTemplate(activeItem)}</div>
+        <div className={cx("itemContainer")}>
+          {activeItem !== undefined && itemTemplate(activeItem)}
+        </div>
         {showItemNavigators && value.length > 1 && (
           <button
             type="button"
@@ -244,7 +258,14 @@ export function UGalleria<T>({
           element={
             <div className={cx("mask")} role="dialog">
               <FocusTrap autoFocus>
-                <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
                   <button
                     type="button"
                     className={cx("closeButton")}

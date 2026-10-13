@@ -45,7 +45,9 @@ export default {
   },
   methods: {
     isItemActive(value) {
-      return this.multiple ? Array.isArray(this.d_value) && this.d_value.includes(value) : this.d_value === value;
+      return this.multiple
+        ? Array.isArray(this.d_value) && this.d_value.includes(value)
+        : this.d_value === value;
     },
     updateValue(newValue) {
       const active = this.isItemActive(newValue);

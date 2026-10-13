@@ -10,17 +10,26 @@ describe("UInlineMessage", () => {
   });
 
   it("applies the severity class", () => {
-    const wrapper = mount(UInlineMessage, { props: { severity: "success" }, slots: { default: "Saved" } });
+    const wrapper = mount(UInlineMessage, {
+      props: { severity: "success" },
+      slots: { default: "Saved" },
+    });
     expect(wrapper.find(".u-inline-message").classes()).toContain("u-inline-message-success");
   });
 
   it("renders a default severity icon when no icon is provided", () => {
-    const wrapper = mount(UInlineMessage, { props: { severity: "warn" }, slots: { default: "Careful" } });
+    const wrapper = mount(UInlineMessage, {
+      props: { severity: "warn" },
+      slots: { default: "Careful" },
+    });
     expect(wrapper.find(".pi-exclamation-triangle").exists()).toBe(true);
   });
 
   it("renders a custom icon override when provided", () => {
-    const wrapper = mount(UInlineMessage, { props: { icon: "pi pi-star" }, slots: { default: "Custom" } });
+    const wrapper = mount(UInlineMessage, {
+      props: { icon: "pi pi-star" },
+      slots: { default: "Custom" },
+    });
     expect(wrapper.find(".pi-star").exists()).toBe(true);
   });
 

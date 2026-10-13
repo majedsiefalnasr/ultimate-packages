@@ -7,7 +7,10 @@ import { scrollPanelStyleModule } from "./scroll-panel-style";
 // PrimeVue's own BaseScrollPanel.vue's `extends: BaseComponent`.
 export function createBaseScrollPanel() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "scrollpanel", styleModule: scrollPanelStyleModule }),
+    extends: createBaseComponent({
+      componentName: "scrollpanel",
+      styleModule: scrollPanelStyleModule,
+    }),
     props: {
       step: { type: Number, default: 5 },
     },

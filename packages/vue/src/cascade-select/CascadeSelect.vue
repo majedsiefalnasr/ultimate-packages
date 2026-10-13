@@ -139,7 +139,11 @@ export default {
     },
     isOptionDisabled(option) {
       if (typeof this.optionDisabled === "function") return this.optionDisabled(option);
-      if (typeof this.optionDisabled === "string" && typeof option === "object" && option !== null) {
+      if (
+        typeof this.optionDisabled === "string" &&
+        typeof option === "object" &&
+        option !== null
+      ) {
         return !!option[this.optionDisabled];
       }
       return false;
@@ -165,7 +169,9 @@ export default {
       if (this.isOptionDisabled(node.option)) return;
       if (node.children.length > 0) {
         this.activeOptionPath = this.activeOptionPath.includes(node.key)
-          ? this.activeOptionPath.filter((key) => key !== node.key && !key.startsWith(`${node.key}_`))
+          ? this.activeOptionPath.filter(
+              (key) => key !== node.key && !key.startsWith(`${node.key}_`)
+            )
           : [...this.activeOptionPath.filter((key) => key !== node.parentKey), node.key];
         return;
       }

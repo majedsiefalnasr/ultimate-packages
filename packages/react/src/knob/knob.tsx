@@ -68,8 +68,13 @@ export function UKnob({
 
   const enabled = !disabled && !readOnly;
 
-  const mapRange = (x: number, inMin: number, inMax: number, outMin: number, outMax: number): number =>
-    ((x - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+  const mapRange = (
+    x: number,
+    inMin: number,
+    inMax: number,
+    outMin: number,
+    outMax: number
+  ): number => ((x - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 
   const zeroRadians = mapRange(min > 0 && max > 0 ? min : 0, min, max, MIN_RADIANS, MAX_RADIANS);
   const valueRadians = mapRange(value, min, max, MIN_RADIANS, MAX_RADIANS);

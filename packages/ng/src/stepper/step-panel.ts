@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject, input } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  computed,
+  inject,
+  input,
+} from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
 import { UStepper } from "./stepper";
 import { stepperStyleModule } from "./stepper-style";

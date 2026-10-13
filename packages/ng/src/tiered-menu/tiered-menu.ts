@@ -32,7 +32,11 @@ import { tieredMenuStyleModule } from "./tiered-menu-style";
   template: `
     @if (popup() ? visible() : true) {
       <div [class]="cx('root', classesParams())">
-        <u-tiered-menu-sub [items]="model()" [root]="true" (itemSelect)="handleItemSelect($event)"></u-tiered-menu-sub>
+        <u-tiered-menu-sub
+          [items]="model()"
+          [root]="true"
+          (itemSelect)="handleItemSelect($event)"
+        ></u-tiered-menu-sub>
       </div>
     }
   `,
@@ -70,7 +74,11 @@ export class UTieredMenu extends UBaseComponent {
 
   /** Toggles the popup menu open/closed. */
   toggle(): void {
-    this.visible() ? this.hide() : this.show();
+    if (this.visible()) {
+      this.hide();
+    } else {
+      this.show();
+    }
   }
 
   /** Shows the popup menu. */

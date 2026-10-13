@@ -37,11 +37,7 @@ export const UProgressSpinner = React.forwardRef<HTMLDivElement, UProgressSpinne
         aria-busy="true"
         aria-label={ariaLabel}
       >
-        <svg
-          className={cx("spin")}
-          viewBox="25 25 50 50"
-          style={{ animationDuration }}
-        >
+        <svg className={cx("spin")} viewBox="25 25 50 50" style={{ animationDuration }}>
           <circle
             className={cx("circle")}
             cx="50"

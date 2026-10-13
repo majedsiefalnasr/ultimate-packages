@@ -23,9 +23,15 @@ const classes = {
     "u-speeddial u-component",
     `u-speeddial-direction-${params.direction ?? "up"}`,
   ],
-  pcButton: (params: { open?: boolean } = {}) => ["u-speeddial-button", { "u-speeddial-open": params.open }],
+  pcButton: (params: { open?: boolean } = {}) => [
+    "u-speeddial-button",
+    { "u-speeddial-open": params.open },
+  ],
   list: "u-speeddial-list",
-  item: (params: { hidden?: boolean } = {}) => ["u-speeddial-item", { "u-speeddial-item-hidden": params.hidden }],
+  item: (params: { hidden?: boolean } = {}) => [
+    "u-speeddial-item",
+    { "u-speeddial-item-hidden": params.hidden },
+  ],
   pcAction: "u-speeddial-action",
   actionIcon: "u-speeddial-action-icon",
   mask: "u-speeddial-mask",

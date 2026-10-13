@@ -8,14 +8,14 @@
 
 ## 1. Observed mismatch (evidence)
 
-| Fact | Evidence |
-| ---- | -------- |
-| The repository's screenshot baselines are rendered in `mcr.microsoft.com/playwright:v1.63.0-jammy` on **native arm64** Docker. | `fb74a8b` ("Regenerated all 240 baselines under real Linux (Docker, native arm64, mcr.microsoft.com/playwright:v1.63.0-jammy matching the pinned @playwright/test version)"); later baseline work used the same image and architecture (GAP-064 Tranche 1 `8f402ef`, G3-A `9b92407` and `d5a9513`). |
-| CI's `track-a-browser-visual-a11y` renders on the GitHub-hosted runner `ubuntu-24.04` (image 20260927.320.1, **x86_64**). The browsers come from `npx playwright install --with-deps`, so the OS libraries and fonts are the runner's own. | `.github/workflows/ci.yml` (`runs-on: ubuntu-latest`); runner header of run `37286219584`. |
-| Screenshot failures predate any GAP-064 work. | `main` at `f05bd9b`, run `37191180514`: track-a ng 73, vue 56 and react 48 failures, all `toHaveScreenshot`, no other error type. The first CI run `37188652979` on 2026-10-04 showed the same pattern. |
-| React fails although it has no G3-A change. | Draft PR #1 run `37286219584`: react 47 failed, all screenshots. |
-| The same specs pass in the baseline environment. | Local Docker regression runs (arm64, the pinned image): 834–835 passed across the 9 Storybook and 3 SSR projects (G3-A Task 8 review record). |
-| Consequence: the strict accessibility step never runs in CI. It is gated on the Playwright step, which always fails for the reason above. | `Accessibility baseline validation` was **skipped** in run `37286219584` and on `main`. |
+| Fact                                                                                                                                                                                                                                       | Evidence                                                                                                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The repository's screenshot baselines are rendered in `mcr.microsoft.com/playwright:v1.63.0-jammy` on **native arm64** Docker.                                                                                                             | `fb74a8b` ("Regenerated all 240 baselines under real Linux (Docker, native arm64, mcr.microsoft.com/playwright:v1.63.0-jammy matching the pinned @playwright/test version)"); later baseline work used the same image and architecture (GAP-064 Tranche 1 `8f402ef`, G3-A `9b92407` and `d5a9513`). |
+| CI's `track-a-browser-visual-a11y` renders on the GitHub-hosted runner `ubuntu-24.04` (image 20260927.320.1, **x86_64**). The browsers come from `npx playwright install --with-deps`, so the OS libraries and fonts are the runner's own. | `.github/workflows/ci.yml` (`runs-on: ubuntu-latest`); runner header of run `37286219584`.                                                                                                                                                                                                          |
+| Screenshot failures predate any GAP-064 work.                                                                                                                                                                                              | `main` at `f05bd9b`, run `37191180514`: track-a ng 73, vue 56 and react 48 failures, all `toHaveScreenshot`, no other error type. The first CI run `37188652979` on 2026-10-04 showed the same pattern.                                                                                             |
+| React fails although it has no G3-A change.                                                                                                                                                                                                | Draft PR #1 run `37286219584`: react 47 failed, all screenshots.                                                                                                                                                                                                                                    |
+| The same specs pass in the baseline environment.                                                                                                                                                                                           | Local Docker regression runs (arm64, the pinned image): 834–835 passed across the 9 Storybook and 3 SSR projects (G3-A Task 8 review record).                                                                                                                                                       |
+| Consequence: the strict accessibility step never runs in CI. It is gated on the Playwright step, which always fails for the reason above.                                                                                                  | `Accessibility baseline validation` was **skipped** in run `37286219584` and on `main`.                                                                                                                                                                                                             |
 
 **Root cause (established):** baselines and CI render in different environments. The environments differ in **at least** the OS image (jammy image vs `ubuntu-24.04` with the runner's own deps) and the **CPU architecture** (arm64 vs x86_64). Which of the two accounts for each pixel difference has not been isolated; see §5.
 
@@ -34,14 +34,14 @@ The architecture is part of the invariant because the established baselines are 
 Only the `track-a-browser-visual-a11y` job changes:
 
 ```yaml
-  track-a-browser-visual-a11y:
-    runs-on: ubuntu-24.04-arm        # GitHub-hosted arm64 runner (available for public repos)
-    container:
-      image: mcr.microsoft.com/playwright:v1.63.0-jammy
-      options: --user 1001           # Playwright's documented container setup (Firefox HOME)
-    # strategy/matrix and every existing step unchanged, except:
-    #   - remove "Install Playwright browsers": the image already ships the
-    #     browsers of exactly Playwright 1.63.0
+track-a-browser-visual-a11y:
+  runs-on: ubuntu-24.04-arm # GitHub-hosted arm64 runner (available for public repos)
+  container:
+    image: mcr.microsoft.com/playwright:v1.63.0-jammy
+    options: --user 1001 # Playwright's documented container setup (Firefox HOME)
+  # strategy/matrix and every existing step unchanged, except:
+  #   - remove "Install Playwright browsers": the image already ships the
+  #     browsers of exactly Playwright 1.63.0
 ```
 
 - The checkout, pnpm/Node setup, install, build, the strict run (with `--grep-invert "G3-A"`), strict `--check`, the G3-A steps and the uploads stay exactly as they are.
@@ -59,6 +59,7 @@ It is unproven whether the jammy image renders identically on amd64 and arm64. T
 **In scope:** only the execution environment of `track-a-browser-visual-a11y` (runner label, `container:`, and dropping the browser-install step that becomes redundant).
 
 **Out of scope:**
+
 - baseline regeneration on any environment;
 - screenshot threshold changes;
 - CI-specific visual exceptions or masks;
@@ -94,17 +95,16 @@ A1 stays **not fully CI-verified** until §7 criteria 3–5 are observed in a re
 
 Real CI run `37289718639` on commit `ae71bc5` (draft PR #1). All §7 criteria are met:
 
-| § 7 criterion | Result |
-| ------------- | ------ |
-| 1. Existing visual suite passes | Strict Playwright run (`--grep-invert "G3-A"`): Angular 309, Vue 282, React 216 passed; 0 failed, 0 flaky. |
+| § 7 criterion                                   | Result                                                                                                                                                                                                                                |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Existing visual suite passes                 | Strict Playwright run (`--grep-invert "G3-A"`): Angular 309, Vue 282, React 216 passed; 0 failed, 0 flaky.                                                                                                                            |
 | 2. Same image and architecture as the baselines | All three jobs ran on `ubuntu-24.04-arm` (runner image `ubuntu24-arm64/20260927.135`), inside `mcr.microsoft.com/playwright:v1.63.0-jammy` (pulled digest `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847`). |
-| 3. Strict accessibility check runs and passes | **Ran**: Angular OK (261 nodes), Vue OK (219), React OK (198), 0 new violations. |
-| 4. G3-A differential check | Angular 93/93, Vue 102/102 reports, 0 introduced, 0 stale. React correctly skips the G3-A steps. |
-| 5. G3-A visual failures | Exactly the 6 held `Toast AllSeverities` screenshots (Angular and Vue × chromium, firefox, webkit). Angular 183 passed, Vue 201 passed. |
-| 6. Artifacts | `accessibility-reports-*` (Angular 93, Vue 75, React 72 files), `playwright-report-*` (all three) and `g3a-accessibility-reports-*` (Angular 94, Vue 103, including the validation output) all uploaded. |
+| 3. Strict accessibility check runs and passes   | **Ran**: Angular OK (261 nodes), Vue OK (219), React OK (198), 0 new violations.                                                                                                                                                      |
+| 4. G3-A differential check                      | Angular 93/93, Vue 102/102 reports, 0 introduced, 0 stale. React correctly skips the G3-A steps.                                                                                                                                      |
+| 5. G3-A visual failures                         | Exactly the 6 held `Toast AllSeverities` screenshots (Angular and Vue × chromium, firefox, webkit). Angular 183 passed, Vue 201 passed.                                                                                               |
+| 6. Artifacts                                    | `accessibility-reports-*` (Angular 93, Vue 75, React 72 files), `playwright-report-*` (all three) and `g3a-accessibility-reports-*` (Angular 94, Vue 103, including the validation output) all uploaded.                              |
 
 - No baseline, threshold, validator, G3-A source or story, or Toast workaround was introduced. Commit `ae71bc5` changes only the job's runner, its container and the removed browser-install step, plus this spec.
 - **Outside this change's scope:**
   - The `ci` job and the React/Vue `track-e-ssr-hydration` jobs still fail. These are the known, separately tracked issues from run `37188652979`.
   - The `pnpm install` step prints a non-blocking optional native-build warning (`msgpackr-extract`), which does not affect this outcome.
-

@@ -67,8 +67,19 @@ export const DIALOG_METADATA: ComponentMetadata = {
   api: {
     ng: {
       props: [
-        { name: "visible", type: "boolean", default: "false", required: false, description: "Specifies the visibility of the dialog." },
-        { name: "header", type: "string | undefined", required: false, description: "Title text of the dialog." },
+        {
+          name: "visible",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description: "Specifies the visibility of the dialog.",
+        },
+        {
+          name: "header",
+          type: "string | undefined",
+          required: false,
+          description: "Title text of the dialog.",
+        },
         {
           name: "closable",
           type: "boolean",
@@ -96,19 +107,22 @@ export const DIALOG_METADATA: ComponentMetadata = {
           semanticId: "visibleChange",
           frameworkName: "visibleChange",
           mechanism: "output",
-          payloadDescription: "boolean — notifies changes in the visibility state of the component (the controlled-visibility companion to the `visible` input, emitted on close).",
+          payloadDescription:
+            "boolean — notifies changes in the visibility state of the component (the controlled-visibility companion to the `visible` input, emitted on close).",
         },
         {
           semanticId: "shown",
           frameworkName: "onShow",
           mechanism: "output",
-          payloadDescription: "void — emitted once the enter motion's promise resolves after `visible` transitions to true.",
+          payloadDescription:
+            "void — emitted once the enter motion's promise resolves after `visible` transitions to true.",
         },
         {
           semanticId: "hidden",
           frameworkName: "onHide",
           mechanism: "output",
-          payloadDescription: "void — emitted synchronously when `visible` transitions to false, before the leave motion completes.",
+          payloadDescription:
+            "void — emitted synchronously when `visible` transitions to false, before the leave motion completes.",
         },
       ],
     },
@@ -125,7 +139,11 @@ export const DIALOG_METADATA: ComponentMetadata = {
         { name: "dismissableMask", type: "boolean", default: "false", required: false },
         { name: "blockScroll", type: "boolean", default: "false", required: false },
         { name: "baseZIndex", type: "number | undefined", required: false },
-        { name: "appendTo", type: "HTMLElement | (() => HTMLElement) | undefined", required: false },
+        {
+          name: "appendTo",
+          type: "HTMLElement | (() => HTMLElement) | undefined",
+          required: false,
+        },
         { name: "className", type: "string | undefined", required: false },
         { name: "style", type: "React.CSSProperties | undefined", required: false },
         { name: "id", type: "string | undefined", required: false },
@@ -136,7 +154,8 @@ export const DIALOG_METADATA: ComponentMetadata = {
           semanticId: "hidden",
           frameworkName: "onHide",
           mechanism: "callback-prop",
-          payloadDescription: "(event?: React.SyntheticEvent) => void — the single controlled-visibility/close callback, called both on user-driven close (Escape, close button, dismissable-mask click) and, distinctly, once the leave motion's onAfterLeave completes. There is no React onShow counterpart — no such prop exists on UDialogProps.",
+          payloadDescription:
+            "(event?: React.SyntheticEvent) => void — the single controlled-visibility/close callback, called both on user-driven close (Escape, close button, dismissable-mask click) and, distinctly, once the leave motion's onAfterLeave completes. There is no React onShow counterpart — no such prop exists on UDialogProps.",
         },
       ],
     },
@@ -161,7 +180,8 @@ export const DIALOG_METADATA: ComponentMetadata = {
           semanticId: "visibleChange",
           frameworkName: "update:visible",
           mechanism: "emit",
-          payloadDescription: "boolean — Vue's v-model convention companion to the `visible` prop, emitted false on close.",
+          payloadDescription:
+            "boolean — Vue's v-model convention companion to the `visible` prop, emitted false on close.",
         },
         {
           semanticId: "shown",
@@ -183,6 +203,9 @@ export const DIALOG_METADATA: ComponentMetadata = {
   },
   provenanceRef: {
     package: "ng",
-    ultimateDestinations: ["packages/ng/src/dialog/dialog.ts", "packages/ng/src/dialog/dialog-style.ts"],
+    ultimateDestinations: [
+      "packages/ng/src/dialog/dialog.ts",
+      "packages/ng/src/dialog/dialog-style.ts",
+    ],
   },
 };

@@ -19,7 +19,10 @@ import { inlineMessageStyleModule } from "./inline-message-style";
 // not actually have.
 export function createBaseInlineMessage() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "inlinemessage", styleModule: inlineMessageStyleModule }),
+    extends: createBaseComponent({
+      componentName: "inlinemessage",
+      styleModule: inlineMessageStyleModule,
+    }),
     props: {
       severity: { type: String, default: "error" },
       icon: { type: String, default: undefined },

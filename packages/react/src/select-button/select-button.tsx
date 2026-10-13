@@ -78,7 +78,10 @@ export function USelectButton<T = unknown>({
   className,
   "aria-labelledby": ariaLabelledBy,
 }: USelectButtonProps<T>): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "select-button", styleModule: selectButtonStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "select-button",
+    styleModule: selectButtonStyleModule,
+  });
 
   const groupRef = React.useRef<HTMLDivElement>(null);
   const [focusedIndex, setFocusedIndex] = React.useState(0);

@@ -12,7 +12,10 @@ import { floatLabelStyleModule } from "./float-label-style";
 // editable state" reason.
 export function createBaseFloatLabel() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "floatlabel", styleModule: floatLabelStyleModule }),
+    extends: createBaseComponent({
+      componentName: "floatlabel",
+      styleModule: floatLabelStyleModule,
+    }),
     props: {
       variant: { type: String, default: "over" },
     },

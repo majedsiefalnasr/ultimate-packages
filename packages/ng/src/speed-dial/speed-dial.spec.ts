@@ -4,7 +4,11 @@ import { USpeedDial } from "./speed-dial";
 import type { UMenuItem } from "@ultimate/ng-core";
 
 describe("USpeedDial", () => {
-  const items: UMenuItem[] = [{ label: "Add", icon: "pi pi-plus" }, { label: "Edit", icon: "pi pi-pencil" }, { label: "Delete", icon: "pi pi-trash" }];
+  const items: UMenuItem[] = [
+    { label: "Add", icon: "pi pi-plus" },
+    { label: "Edit", icon: "pi pi-pencil" },
+    { label: "Delete", icon: "pi pi-trash" },
+  ];
 
   function setup(model: UMenuItem[] = items) {
     const fixture = TestBed.createComponent(USpeedDial);
@@ -15,7 +19,9 @@ describe("USpeedDial", () => {
 
   it("renders collapsed by default (aria-expanded false)", () => {
     const fixture = setup();
-    expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe("false");
+    expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe(
+      "false"
+    );
   });
 
   it("renders one menuitem action button per model entry", () => {
@@ -27,7 +33,9 @@ describe("USpeedDial", () => {
     const fixture = setup();
     fixture.nativeElement.querySelector("button").click();
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe("true");
+    expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe(
+      "true"
+    );
   });
 
   it("collapses on a second toggle-button click", () => {
@@ -63,7 +71,9 @@ describe("USpeedDial", () => {
     fixture.nativeElement.querySelector('[role="menuitem"]').click();
     fixture.detectChanges();
     expect(called).toBe(true);
-    expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe("false");
+    expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe(
+      "false"
+    );
   });
 
   it("hides on Escape when closeOnEscape (default) and visible", () => {
@@ -72,7 +82,9 @@ describe("USpeedDial", () => {
     fixture.detectChanges();
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe("false");
+    expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe(
+      "false"
+    );
   });
 
   it("disabled action items are not clickable (button disabled attribute set)", () => {
@@ -147,7 +159,12 @@ describe("USpeedDial", () => {
       // omitting the element) — unlike UDock, which never renders an `<a>`
       // for a hidden item. So the DOM-links array here is NOT already a
       // "rendered subset"; navigation must skip hidden items explicitly.
-      const model: UMenuItem[] = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+      const model: UMenuItem[] = [
+        { label: "A" },
+        { label: "Hidden", visible: false },
+        { label: "B" },
+        { label: "C" },
+      ];
       const fixture = setup(model);
       fixture.componentInstance.show();
       fixture.detectChanges();
@@ -168,10 +185,14 @@ describe("USpeedDial", () => {
       fixture.detectChanges();
       fixture.componentInstance.show();
       fixture.detectChanges();
-      expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe("true");
+      expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe(
+        "true"
+      );
       document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
       fixture.detectChanges();
-      expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe("false");
+      expect(fixture.nativeElement.querySelector("button").getAttribute("aria-expanded")).toBe(
+        "false"
+      );
     });
   });
 });

@@ -82,7 +82,12 @@ export const MENU_METADATA: ComponentMetadata = {
     },
     react: {
       props: [
-        { name: "model", type: "UMenuItem[]", required: true, description: "An array of menuitems." },
+        {
+          name: "model",
+          type: "UMenuItem[]",
+          required: true,
+          description: "An array of menuitems.",
+        },
         { name: "popup", type: "boolean", default: "false", required: false },
         {
           name: "popupAlignment",
@@ -97,7 +102,11 @@ export const MENU_METADATA: ComponentMetadata = {
         { name: "className", type: "string | undefined", required: false },
         { name: "style", type: "React.CSSProperties | undefined", required: false },
         { name: "baseZIndex", type: "number | undefined", required: false },
-        { name: "appendTo", type: "HTMLElement | (() => HTMLElement) | undefined", required: false },
+        {
+          name: "appendTo",
+          type: "HTMLElement | (() => HTMLElement) | undefined",
+          required: false,
+        },
         { name: "closeOnEscape", type: "boolean", default: "true", required: false },
       ],
       events: [
@@ -105,7 +114,8 @@ export const MENU_METADATA: ComponentMetadata = {
           semanticId: "shown",
           frameworkName: "onShow",
           mechanism: "callback-prop",
-          payloadDescription: "() => void — called synchronously inside show(), right after visible is set to true.",
+          payloadDescription:
+            "() => void — called synchronously inside show(), right after visible is set to true.",
         },
         {
           semanticId: "hidden",
@@ -118,7 +128,13 @@ export const MENU_METADATA: ComponentMetadata = {
     },
     vue: {
       props: [
-        { name: "model", type: "Array", default: "[]", required: false, description: "An array of menuitems." },
+        {
+          name: "model",
+          type: "Array",
+          default: "[]",
+          required: false,
+          description: "An array of menuitems.",
+        },
         { name: "popup", type: "Boolean", default: "false", required: false },
         { name: "appendTo", type: "[String, Object]", default: "body", required: false },
         { name: "autoZIndex", type: "Boolean", default: "true", required: false },

@@ -12,11 +12,15 @@
       :class="cx('option')"
     >
       <div
-        :class="cx('optionContent', { selected: isSelected(node), disabled: isDisabled(node.option) })"
+        :class="
+          cx('optionContent', { selected: isSelected(node), disabled: isDisabled(node.option) })
+        "
         @click="$emit('option-click', node)"
       >
         <span>{{ getLabel(node.option) }}</span>
-        <span v-if="node.children.length > 0" :class="cx('groupIcon')" aria-hidden="true">&#9656;</span>
+        <span v-if="node.children.length > 0" :class="cx('groupIcon')" aria-hidden="true"
+          >&#9656;</span
+        >
       </div>
       <CascadeSelectSublist
         v-if="node.children.length > 0 && activePath.includes(node.key)"

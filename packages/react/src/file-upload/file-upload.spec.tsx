@@ -65,7 +65,9 @@ describe("UFileUpload", () => {
     const onClear = vi.fn();
     const { container } = render(<UFileUpload url="/upload" multiple onClear={onClear} />);
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
-    fireEvent.change(input, { target: { files: [makeFile("a.txt", 100), makeFile("b.txt", 200)] } });
+    fireEvent.change(input, {
+      target: { files: [makeFile("a.txt", 100), makeFile("b.txt", 200)] },
+    });
     expect(screen.getByText("a.txt")).toBeInTheDocument();
     expect(screen.getByText("b.txt")).toBeInTheDocument();
 

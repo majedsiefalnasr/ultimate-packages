@@ -26,7 +26,9 @@
         :aria-current="link - 1 === page ? 'page' : null"
         :aria-label="'Page ' + link"
         @click="changePage((link - 1) * d_rows)"
-      >{{ link }}</button>
+      >
+        {{ link }}
+      </button>
       <button
         type="button"
         data-u-paginator-next
@@ -43,7 +45,9 @@
         aria-label="Last Page"
         @click="changePage((pageCount - 1) * d_rows)"
       />
-      <span data-u-paginator-current-report :class="cx('currentPageReport')" aria-live="polite">{{ page + 1 }} of {{ pageCount }}</span>
+      <span data-u-paginator-current-report :class="cx('currentPageReport')" aria-live="polite"
+        >{{ page + 1 }} of {{ pageCount }}</span
+      >
     </div>
   </nav>
 </template>

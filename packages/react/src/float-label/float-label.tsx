@@ -28,17 +28,18 @@ export interface UFloatLabelProps {
  * input — see `float-label-style.ts`), matching real source exactly: no
  * JS-side focus/content tracking exists in real `FloatLabel` at all.
  */
-export const UFloatLabel = React.forwardRef<HTMLSpanElement, UFloatLabelProps>(
-  function UFloatLabel({ variant = "over", className, children }, ref) {
-    const { cx } = useComponentBase({
-      componentName: "float-label",
-      styleModule: floatLabelStyleModule,
-    });
+export const UFloatLabel = React.forwardRef<HTMLSpanElement, UFloatLabelProps>(function UFloatLabel(
+  { variant = "over", className, children },
+  ref
+) {
+  const { cx } = useComponentBase({
+    componentName: "float-label",
+    styleModule: floatLabelStyleModule,
+  });
 
-    return (
-      <span ref={ref} className={[cx("root", { variant }), className].filter(Boolean).join(" ")}>
-        {children}
-      </span>
-    );
-  }
-);
+  return (
+    <span ref={ref} className={[cx("root", { variant }), className].filter(Boolean).join(" ")}>
+      {children}
+    </span>
+  );
+});

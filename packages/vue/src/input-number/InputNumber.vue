@@ -82,7 +82,8 @@ export default {
         useGrouping: this.useGrouping,
         minimumFractionDigits: this.minFractionDigits,
         maximumFractionDigits: this.maxFractionDigits,
-        style: this.mode === "currency" ? "currency" : this.mode === "percent" ? "percent" : "decimal",
+        style:
+          this.mode === "currency" ? "currency" : this.mode === "percent" ? "percent" : "decimal",
       };
       if (this.mode === "currency") {
         options.currency = this.currency ?? "USD";
@@ -108,8 +109,10 @@ export default {
     /** Strips prefix/suffix/grouping separators, normalizes the locale decimal separator to '.'. */
     parseValue(text) {
       let stripped = text;
-      if (this.prefix && stripped.startsWith(this.prefix)) stripped = stripped.slice(this.prefix.length);
-      if (this.suffix && stripped.endsWith(this.suffix)) stripped = stripped.slice(0, -this.suffix.length);
+      if (this.prefix && stripped.startsWith(this.prefix))
+        stripped = stripped.slice(this.prefix.length);
+      if (this.suffix && stripped.endsWith(this.suffix))
+        stripped = stripped.slice(0, -this.suffix.length);
 
       const parts = this.formatter.formatToParts(1234.5);
       const group = parts.find((p) => p.type === "group")?.value ?? ",";
@@ -148,7 +151,9 @@ export default {
     onFocus(event) {
       this.focused = true;
       this.rawText =
-        this.numericValue === null || Number.isNaN(this.numericValue) ? "" : String(this.numericValue);
+        this.numericValue === null || Number.isNaN(this.numericValue)
+          ? ""
+          : String(this.numericValue);
       this.$emit("focus", event);
     },
     onBlur(event) {

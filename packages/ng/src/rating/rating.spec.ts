@@ -85,7 +85,8 @@ describe("URating", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const inputs: HTMLInputElement[] = fixture.nativeElement.querySelectorAll('input[type="radio"]');
+    const inputs: HTMLInputElement[] =
+      fixture.nativeElement.querySelectorAll('input[type="radio"]');
     inputs[2].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
     fixture.detectChanges();
     expect(fixture.componentInstance.value).toBe(1);
@@ -104,7 +105,8 @@ describe("URating", () => {
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
-    const inputs: HTMLInputElement[] = fixture.nativeElement.querySelectorAll('input[type="radio"]');
+    const inputs: HTMLInputElement[] =
+      fixture.nativeElement.querySelectorAll('input[type="radio"]');
     inputs[2].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
     fixture.detectChanges();
     expect(fixture.componentInstance.value).toBe(2);
@@ -138,7 +140,8 @@ describe("URating", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const inputs: HTMLInputElement[] = fixture.nativeElement.querySelectorAll('input[type="radio"]');
+    const inputs: HTMLInputElement[] =
+      fixture.nativeElement.querySelectorAll('input[type="radio"]');
     inputs.forEach((input) => expect(input.disabled).toBe(true));
   });
 

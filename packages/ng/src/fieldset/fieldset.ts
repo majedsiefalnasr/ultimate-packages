@@ -44,7 +44,9 @@ import { fieldsetStyleModule } from "./fieldset-style";
             (click)="toggle($event)"
             (keydown)="onKeyDown($event)"
           >
-            <span [class]="cx('toggleIcon')" aria-hidden="true">{{ isCollapsed() ? "+" : "−" }}</span>
+            <span [class]="cx('toggleIcon')" aria-hidden="true">{{
+              isCollapsed() ? "+" : "−"
+            }}</span>
             <span [class]="cx('legendLabel')">{{ legend() }}</span>
           </button>
         } @else {
@@ -52,7 +54,12 @@ import { fieldsetStyleModule } from "./fieldset-style";
         }
       </legend>
       @if (!toggleable() || !isCollapsed()) {
-        <div [class]="cx('contentContainer')" role="region" [attr.id]="id + '_content'" [attr.aria-labelledby]="id + '_header'">
+        <div
+          [class]="cx('contentContainer')"
+          role="region"
+          [attr.id]="id + '_content'"
+          [attr.aria-labelledby]="id + '_header'"
+        >
           <div [class]="cx('content')">
             <ng-content></ng-content>
           </div>

@@ -92,20 +92,23 @@ export interface UFileUploadHandlerEvent {
         [class]="cx('chooseButton', headerClassesParams())"
         [attr.disabled]="disabled() ? '' : undefined"
         (click)="onChooseClick()"
-      >{{ chooseLabel() }}</button>
+        >{{ chooseLabel() }}</button
+      >
       @if (!auto()) {
         <button
           type="button"
           [class]="cx('uploadButton')"
           [disabled]="!hasFiles() || uploading()"
           (click)="upload()"
-        >{{ uploadLabel() }}</button>
+          >{{ uploadLabel() }}</button
+        >
         <button
           type="button"
           [class]="cx('cancelButton')"
           [disabled]="!hasFiles()"
           (click)="clear()"
-        >{{ cancelLabel() }}</button>
+          >{{ cancelLabel() }}</button
+        >
       }
       <input
         #fileInput
@@ -134,7 +137,7 @@ export interface UFileUploadHandlerEvent {
       @if (!hasFiles()) {
         <div [class]="cx('empty')">{{ emptyMessage() }}</div>
       }
-      @for (file of files(); track file.name + '-' + file.size + '-' + $index; let index = $index) {
+      @for (file of files(); track file.name + "-" + file.size + "-" + $index; let index = $index) {
         <div [class]="cx('file')">
           <div [class]="cx('fileInfo')">
             <div [class]="cx('fileName')">{{ file.name }}</div>
@@ -145,7 +148,8 @@ export interface UFileUploadHandlerEvent {
             [class]="cx('fileRemoveButton')"
             aria-label="Remove file"
             (click)="remove($event, index)"
-          >&times;</button>
+            >&times;</button
+          >
         </div>
       }
     </div>
@@ -290,7 +294,9 @@ export class UFileUpload extends UBaseComponent {
 
       const maxFileSize = this.maxFileSize();
       if (maxFileSize !== undefined && file.size > maxFileSize) {
-        validationMessages.push(`${file.name}: invalid file size, maximum upload size is ${this.formatSize(maxFileSize)}.`);
+        validationMessages.push(
+          `${file.name}: invalid file size, maximum upload size is ${this.formatSize(maxFileSize)}.`
+        );
         continue;
       }
       const accept = this.accept();

@@ -27,7 +27,10 @@ describe("USplitButton", () => {
   });
 
   it("opens the popup menu on dropdown button click", async () => {
-    const wrapper = mount(USplitButton, { props: { label: "Save", model: items }, attachTo: document.body });
+    const wrapper = mount(USplitButton, {
+      props: { label: "Save", model: items },
+      attachTo: document.body,
+    });
     await wrapper.vm.$nextTick();
     const buttons = wrapper.findAll("button");
     await buttons[1].trigger("click");
@@ -38,7 +41,10 @@ describe("USplitButton", () => {
   });
 
   it("closes the popup menu on a second dropdown button click", async () => {
-    const wrapper = mount(USplitButton, { props: { label: "Save", model: items }, attachTo: document.body });
+    const wrapper = mount(USplitButton, {
+      props: { label: "Save", model: items },
+      attachTo: document.body,
+    });
     await wrapper.vm.$nextTick();
     const dropdown = wrapper.findAll("button")[1];
     await dropdown.trigger("click");
@@ -51,7 +57,10 @@ describe("USplitButton", () => {
   });
 
   it("emits click and closes the menu when the default button is clicked", async () => {
-    const wrapper = mount(USplitButton, { props: { label: "Save", model: items }, attachTo: document.body });
+    const wrapper = mount(USplitButton, {
+      props: { label: "Save", model: items },
+      attachTo: document.body,
+    });
     await wrapper.vm.$nextTick();
     const buttons = wrapper.findAll("button");
     await buttons[1].trigger("click");
@@ -67,7 +76,10 @@ describe("USplitButton", () => {
   it("invokes the item's command when a menu item is selected and closes the popup", async () => {
     let called = false;
     const model = [{ label: "Delete", command: () => (called = true) }];
-    const wrapper = mount(USplitButton, { props: { label: "Save", model }, attachTo: document.body });
+    const wrapper = mount(USplitButton, {
+      props: { label: "Save", model },
+      attachTo: document.body,
+    });
     await wrapper.vm.$nextTick();
     const dropdown = wrapper.findAll("button")[1];
     await dropdown.trigger("click");

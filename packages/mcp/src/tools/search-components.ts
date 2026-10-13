@@ -27,7 +27,9 @@ const KNOWN_FRAMEWORKS = new Set(["ng", "react", "vue"]);
  * array order — unranked. Fuzzy matching/relevance ranking is explicitly
  * deferred (spec §10), not implemented here.
  */
-export function searchComponents(input: SearchComponentsInput): SearchComponentsResult | McpToolError {
+export function searchComponents(
+  input: SearchComponentsInput
+): SearchComponentsResult | McpToolError {
   if (typeof input.query !== "string") {
     return invalidInputError("query", "must be a string");
   }

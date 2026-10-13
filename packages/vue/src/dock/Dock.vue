@@ -3,7 +3,11 @@
     <div :class="cx('listContainer')">
       <ul ref="listEl" :class="cx('list')" role="menu" :aria-label="ariaLabel" @keydown="onKeydown">
         <template v-for="(item, index) in model" :key="(item.label || '') + index">
-          <li v-if="item.visible !== false" :class="cx('item', { active: hoveredIndex === index, disabled: !!item.disabled })" role="none">
+          <li
+            v-if="item.visible !== false"
+            :class="cx('item', { active: hoveredIndex === index, disabled: !!item.disabled })"
+            role="none"
+          >
             <a
               :href="item.url || '#'"
               :class="cx('itemLink')"

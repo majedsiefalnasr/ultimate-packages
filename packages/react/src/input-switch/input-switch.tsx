@@ -63,7 +63,10 @@ export function UInputSwitch({
   autoFocus = false,
   className,
 }: UInputSwitchProps): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "input-switch", styleModule: inputSwitchStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "input-switch",
+    styleModule: inputSwitchStyleModule,
+  });
   const internalInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const setInputRef = React.useCallback(
@@ -89,7 +92,9 @@ export function UInputSwitch({
   return (
     <div
       id={id}
-      className={[cx("root", { checked: isChecked, disabled }), className].filter(Boolean).join(" ")}
+      className={[cx("root", { checked: isChecked, disabled }), className]
+        .filter(Boolean)
+        .join(" ")}
       data-p-highlight={isChecked}
       data-p-disabled={disabled}
     >

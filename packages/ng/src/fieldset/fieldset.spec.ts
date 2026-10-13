@@ -81,7 +81,11 @@ describe("UFieldset", () => {
     @Component({
       standalone: true,
       imports: [UFieldset],
-      template: `<u-fieldset [legend]="'Info'" [toggleable]="true" (collapsedChange)="last = $event"></u-fieldset>`,
+      template: `<u-fieldset
+        [legend]="'Info'"
+        [toggleable]="true"
+        (collapsedChange)="last = $event"
+      ></u-fieldset>`,
     })
     class HostComponent {
       last: boolean | undefined;

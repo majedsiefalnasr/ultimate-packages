@@ -15,7 +15,7 @@ describe("UKnob", () => {
     await svg.trigger("click", { offsetX: 50, offsetY: 5 });
     const emitted = wrapper.emitted("update:modelValue");
     expect(emitted).toBeTruthy();
-    expect((emitted?.[0][0] as number)).toBeGreaterThan(0);
+    expect(emitted?.[0][0] as number).toBeGreaterThan(0);
   });
 
   it("ArrowUp increments the value by step", async () => {

@@ -7,6 +7,9 @@ import { inputIconStyleModule } from "./icon-field-style";
 // has no CVA/controlled-value concept, only slot projection.
 export function createBaseInputIcon() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "input-icon", styleModule: inputIconStyleModule }),
+    extends: createBaseComponent({
+      componentName: "input-icon",
+      styleModule: inputIconStyleModule,
+    }),
   });
 }

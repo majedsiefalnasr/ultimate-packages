@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 import { UScrollPanel } from "./index";
 
@@ -33,7 +33,11 @@ describe("UScrollPanel", () => {
       attachTo: document.body,
     });
     const yBar = wrapper.find(".u-scroll-panel-bar-y").element as HTMLElement;
-    const event = new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true, cancelable: true });
+    const event = new KeyboardEvent("keydown", {
+      code: "ArrowDown",
+      bubbles: true,
+      cancelable: true,
+    });
     yBar.dispatchEvent(event);
     await wrapper.vm.$nextTick();
     expect(event.defaultPrevented).toBe(true);

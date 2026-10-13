@@ -49,7 +49,9 @@ describe("v-tooltip", () => {
 
   it("removes only the owned aria-describedby id on hide, preserving pre-existing values", async () => {
     const wrapper = mount(
-      { template: `<button aria-describedby="other-id" v-tooltip="'Save changes'">Target</button>` },
+      {
+        template: `<button aria-describedby="other-id" v-tooltip="'Save changes'">Target</button>`,
+      },
       { global: { directives: { tooltip: tooltipDirective } }, attachTo: document.body }
     );
     await wrapper.find("button").trigger("mouseenter");

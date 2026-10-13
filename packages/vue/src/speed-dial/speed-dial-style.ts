@@ -33,9 +33,15 @@ const classes = {
     "u-speeddial u-component",
     `u-speeddial-direction-${params.direction ?? "up"}`,
   ],
-  pcButton: (params: Record<string, unknown> = {}) => ["u-speeddial-button", { "u-speeddial-open": Boolean(params.open) }],
+  pcButton: (params: Record<string, unknown> = {}) => [
+    "u-speeddial-button",
+    { "u-speeddial-open": Boolean(params.open) },
+  ],
   list: "u-speeddial-list",
-  item: (params: Record<string, unknown> = {}) => ["u-speeddial-item", { "u-speeddial-item-hidden": Boolean(params.hidden) }],
+  item: (params: Record<string, unknown> = {}) => [
+    "u-speeddial-item",
+    { "u-speeddial-item-hidden": Boolean(params.hidden) },
+  ],
   pcAction: "u-speeddial-action",
   actionIcon: "u-speeddial-action-icon",
   mask: "u-speeddial-mask",

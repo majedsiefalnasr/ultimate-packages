@@ -1,7 +1,13 @@
 <template>
   <span :class="cx('root')">
     <img :src="src" :alt="alt" :width="width" :height="height" @error="onImageError" />
-    <button v-if="preview" type="button" :class="cx('previewMask')" aria-label="Zoom image" @click="open">
+    <button
+      v-if="preview"
+      type="button"
+      :class="cx('previewMask')"
+      aria-label="Zoom image"
+      @click="open"
+    >
       <svg viewBox="0 0 24 24" :class="cx('previewIcon')" fill="currentColor" aria-hidden="true">
         <path
           d="M12 5c-7.633 0-11.65 6.61-11.816 6.89a1 1 0 0 0 0 1.02C.35 13.19 4.367 19.8 12 19.8s11.65-6.61 11.816-6.89a1 1 0 0 0 0-1.02C23.65 11.61 19.633 5 12 5zm0 12.8a4.9 4.9 0 1 1 0-9.8 4.9 4.9 0 0 1 0 9.8zm0-7.8a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8z"
@@ -20,11 +26,43 @@
         @keydown="onMaskKeydown"
       >
         <div :class="cx('toolbar')" @click.stop>
-          <button type="button" :class="cx('rotateRightButton')" aria-label="Rotate right" @click="rotateRight">&#8635;</button>
-          <button type="button" :class="cx('rotateLeftButton')" aria-label="Rotate left" @click="rotateLeft">&#8634;</button>
-          <button type="button" :class="cx('zoomOutButton')" aria-label="Zoom out" :disabled="isZoomOutDisabled" @click="zoomOut">&minus;</button>
-          <button type="button" :class="cx('zoomInButton')" aria-label="Zoom in" :disabled="isZoomInDisabled" @click="zoomIn">+</button>
-          <button ref="closeButton" type="button" :class="cx('closeButton')" aria-label="Close" @click="close">
+          <button
+            type="button"
+            :class="cx('rotateRightButton')"
+            aria-label="Rotate right"
+            @click="rotateRight"
+            >&#8635;</button
+          >
+          <button
+            type="button"
+            :class="cx('rotateLeftButton')"
+            aria-label="Rotate left"
+            @click="rotateLeft"
+            >&#8634;</button
+          >
+          <button
+            type="button"
+            :class="cx('zoomOutButton')"
+            aria-label="Zoom out"
+            :disabled="isZoomOutDisabled"
+            @click="zoomOut"
+            >&minus;</button
+          >
+          <button
+            type="button"
+            :class="cx('zoomInButton')"
+            aria-label="Zoom in"
+            :disabled="isZoomInDisabled"
+            @click="zoomIn"
+            >+</button
+          >
+          <button
+            ref="closeButton"
+            type="button"
+            :class="cx('closeButton')"
+            aria-label="Close"
+            @click="close"
+          >
             <UTimesIcon />
           </button>
         </div>

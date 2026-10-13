@@ -22,7 +22,9 @@ describe("UMenubar", () => {
   it("renders a nav with the top-level items", () => {
     const fixture = setup();
     expect(fixture.nativeElement.querySelector("nav")).not.toBeNull();
-    const rootLinks = fixture.nativeElement.querySelectorAll(".u-menubar-root-list > li > .u-menubar-item-content > a");
+    const rootLinks = fixture.nativeElement.querySelectorAll(
+      ".u-menubar-root-list > li > .u-menubar-item-content > a"
+    );
     expect(rootLinks.length).toBe(3);
   });
 
@@ -76,7 +78,9 @@ describe("UMenubar", () => {
 
   it("does not open or invoke command for a disabled item", () => {
     let called = false;
-    const model: UMenuItem[] = [{ label: "Disabled", disabled: true, command: () => (called = true) }];
+    const model: UMenuItem[] = [
+      { label: "Disabled", disabled: true, command: () => (called = true) },
+    ];
     const fixture = setup(model);
     const link = fixture.nativeElement.querySelector("a");
     expect(link.getAttribute("aria-disabled")).toBe("true");
@@ -104,7 +108,10 @@ describe("UMenubar", () => {
       item.focus();
       item.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
       fixture.detectChanges();
-      expect(fixture.nativeElement.querySelector("[role=menuitem][aria-label=New]") || fixture.nativeElement.textContent).toContain("New");
+      expect(
+        fixture.nativeElement.querySelector("[role=menuitem][aria-label=New]") ||
+          fixture.nativeElement.textContent
+      ).toContain("New");
     });
 
     it("Escape closes the innermost open submenu, keeping focus on its own trigger", () => {
@@ -119,7 +126,11 @@ describe("UMenubar", () => {
     });
 
     it("ArrowRight skips a disabled top-level item", () => {
-      const fixture = setup([{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]);
+      const fixture = setup([
+        { label: "File" },
+        { label: "Edit", disabled: true },
+        { label: "View" },
+      ]);
       const items = fixture.nativeElement.querySelectorAll("[role=menuitem]");
       items[0].focus();
       items[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight", bubbles: true }));
@@ -190,7 +201,7 @@ describe("UMenubar", () => {
         expect(document.activeElement).toBe(openLink);
 
         (document.activeElement as HTMLElement).dispatchEvent(
-          new KeyboardEvent("keydown", { code: "Escape", bubbles: true }),
+          new KeyboardEvent("keydown", { code: "Escape", bubbles: true })
         );
         fixture.detectChanges();
         await flushFocus();
@@ -214,13 +225,19 @@ describe("UMenubar", () => {
 
       it("opens the submenu on Enter for a group item positioned after a separator", async () => {
         const fixture = setup([{ label: "File", items: modelWithSeparator }]);
-        const fileLink = fixture.nativeElement.querySelector(".u-menubar-root-list > li > .u-menubar-item-content > a");
+        const fileLink = fixture.nativeElement.querySelector(
+          ".u-menubar-root-list > li > .u-menubar-item-content > a"
+        );
         fileLink.click();
         fixture.detectChanges();
 
-        const fileItem = fixture.nativeElement.querySelector(".u-menubar-root-list > li:first-child");
+        const fileItem = fixture.nativeElement.querySelector(
+          ".u-menubar-root-list > li:first-child"
+        );
         // "Open" is rendered link index 1 (separator has no <a>), but model index 2.
-        const openLink = fileItem.querySelectorAll(".u-menubar-submenu > li > .u-menubar-item-content > a")[1];
+        const openLink = fileItem.querySelectorAll(
+          ".u-menubar-submenu > li > .u-menubar-item-content > a"
+        )[1];
         openLink.focus();
         openLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
         fixture.detectChanges();
@@ -232,12 +249,18 @@ describe("UMenubar", () => {
 
       it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", async () => {
         const fixture = setup([{ label: "File", items: modelWithSeparator }]);
-        const fileLink = fixture.nativeElement.querySelector(".u-menubar-root-list > li > .u-menubar-item-content > a");
+        const fileLink = fixture.nativeElement.querySelector(
+          ".u-menubar-root-list > li > .u-menubar-item-content > a"
+        );
         fileLink.click();
         fixture.detectChanges();
 
-        const fileItem = fixture.nativeElement.querySelector(".u-menubar-root-list > li:first-child");
-        const openLink = fileItem.querySelectorAll(".u-menubar-submenu > li > .u-menubar-item-content > a")[1];
+        const fileItem = fixture.nativeElement.querySelector(
+          ".u-menubar-root-list > li:first-child"
+        );
+        const openLink = fileItem.querySelectorAll(
+          ".u-menubar-submenu > li > .u-menubar-item-content > a"
+        )[1];
         openLink.focus();
         openLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
         fixture.detectChanges();
@@ -264,7 +287,9 @@ describe("UMenubar", () => {
           { label: "C" },
         ];
         const fixture = setup(model);
-        const links = fixture.nativeElement.querySelectorAll(".u-menubar-root-list > li > .u-menubar-item-content > a");
+        const links = fixture.nativeElement.querySelectorAll(
+          ".u-menubar-root-list > li > .u-menubar-item-content > a"
+        );
         // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).
         const [a, b, c] = links;
         b.focus();

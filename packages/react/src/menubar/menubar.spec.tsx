@@ -14,7 +14,9 @@ describe("UMenubar", () => {
   it("renders a nav with top-level items", () => {
     const { container } = render(<UMenubar model={items} />);
     expect(container.querySelector("nav")).not.toBeNull();
-    const rootLinks = container.querySelectorAll(".u-menubar-root-list > li > .u-menubar-content > a");
+    const rootLinks = container.querySelectorAll(
+      ".u-menubar-root-list > li > .u-menubar-content > a"
+    );
     expect(rootLinks.length).toBe(3);
   });
 
@@ -26,14 +28,18 @@ describe("UMenubar", () => {
 
   it("opens a submenu on click of an item with children", () => {
     const { container } = render(<UMenubar model={items} />);
-    const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+    const fileItem = container.querySelector(
+      ".u-menubar-root-list > li:first-child"
+    ) as HTMLElement;
     fireEvent.click(fileItem.querySelector("a") as HTMLAnchorElement);
     expect(fileItem.getAttribute("data-u-open")).toBe("true");
   });
 
   it("closes an open submenu when clicked again", () => {
     const { container } = render(<UMenubar model={items} />);
-    const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+    const fileItem = container.querySelector(
+      ".u-menubar-root-list > li:first-child"
+    ) as HTMLElement;
     const link = fileItem.querySelector("a") as HTMLAnchorElement;
     fireEvent.click(link);
     fireEvent.click(link);
@@ -42,7 +48,9 @@ describe("UMenubar", () => {
 
   it("renders nested (drill-down) submenus", () => {
     const { container } = render(<UMenubar model={items} />);
-    const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+    const fileItem = container.querySelector(
+      ".u-menubar-root-list > li:first-child"
+    ) as HTMLElement;
     fireEvent.click(fileItem.querySelector("a") as HTMLAnchorElement);
     const nested = fileItem.querySelector(".u-menubar-submenu .u-menubar-submenu");
     expect(nested).not.toBeNull();
@@ -69,20 +77,24 @@ describe("UMenubar", () => {
   });
 
   it("renders a separator item", () => {
-    const { container } = render(<UMenubar model={[{ label: "A" }, { separator: true }, { label: "B" }]} />);
+    const { container } = render(
+      <UMenubar model={[{ label: "A" }, { separator: true }, { label: "B" }]} />
+    );
     expect(container.querySelector('[role="separator"]')).not.toBeNull();
   });
 
   describe("keyboard navigation (GAP-054)", () => {
     const rootLink = (container: HTMLElement, index: number) =>
-      container.querySelectorAll<HTMLAnchorElement>(".u-menubar-root-list > li > .u-menubar-content > a")[
-        index
-      ];
+      container.querySelectorAll<HTMLAnchorElement>(
+        ".u-menubar-root-list > li > .u-menubar-content > a"
+      )[index];
 
     it("carries ARIA roles for menubar/menu/menuitem", () => {
       const { container } = render(<UMenubar model={items} />);
       expect(container.querySelector(".u-menubar-root-list")?.getAttribute("role")).toBe("menubar");
-      const rootLinks = container.querySelectorAll(".u-menubar-root-list > li > .u-menubar-content > a");
+      const rootLinks = container.querySelectorAll(
+        ".u-menubar-root-list > li > .u-menubar-content > a"
+      );
       rootLinks.forEach((link) => expect(link.getAttribute("role")).toBe("menuitem"));
     });
 
@@ -128,7 +140,9 @@ describe("UMenubar", () => {
       file.focus();
       fireEvent.keyDown(file, { code: "Enter" });
 
-      const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+      const fileItem = container.querySelector(
+        ".u-menubar-root-list > li:first-child"
+      ) as HTMLElement;
       expect(fileItem.getAttribute("data-u-open")).toBe("true");
 
       const firstSubItemLink = fileItem.querySelector<HTMLAnchorElement>(
@@ -143,7 +157,9 @@ describe("UMenubar", () => {
       file.focus();
       fireEvent.keyDown(file, { code: "Enter" });
 
-      const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+      const fileItem = container.querySelector(
+        ".u-menubar-root-list > li:first-child"
+      ) as HTMLElement;
       const firstSubItemLink = fileItem.querySelector<HTMLAnchorElement>(
         ".u-menubar-submenu > li:first-child > .u-menubar-content > a"
       ) as HTMLAnchorElement;
@@ -162,7 +178,9 @@ describe("UMenubar", () => {
       file.focus();
       fireEvent.keyDown(file, { code: "Enter" });
 
-      const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+      const fileItem = container.querySelector(
+        ".u-menubar-root-list > li:first-child"
+      ) as HTMLElement;
       const newLink = fileItem.querySelector<HTMLAnchorElement>(
         ".u-menubar-submenu > li:nth-child(1) > .u-menubar-content > a"
       ) as HTMLAnchorElement;
@@ -205,14 +223,18 @@ describe("UMenubar", () => {
       ];
 
       it("opens the submenu on Enter for a group item positioned after a separator", () => {
-        const { container } = render(<UMenubar model={[{ label: "File", items: modelWithSeparator }]} />);
+        const { container } = render(
+          <UMenubar model={[{ label: "File", items: modelWithSeparator }]} />
+        );
         const file = container.querySelector<HTMLAnchorElement>(
           ".u-menubar-root-list > li > .u-menubar-content > a"
         ) as HTMLAnchorElement;
         file.focus();
         fireEvent.keyDown(file, { code: "Enter" });
 
-        const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+        const fileItem = container.querySelector(
+          ".u-menubar-root-list > li:first-child"
+        ) as HTMLElement;
         // "Open" is rendered link index 1 (separator has no <a>), but model
         // index 2 — the old bug indexed the DOM links with the model index.
         const openLink = fileItem.querySelectorAll<HTMLAnchorElement>(
@@ -226,14 +248,18 @@ describe("UMenubar", () => {
       });
 
       it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", () => {
-        const { container } = render(<UMenubar model={[{ label: "File", items: modelWithSeparator }]} />);
+        const { container } = render(
+          <UMenubar model={[{ label: "File", items: modelWithSeparator }]} />
+        );
         const file = container.querySelector<HTMLAnchorElement>(
           ".u-menubar-root-list > li > .u-menubar-content > a"
         ) as HTMLAnchorElement;
         file.focus();
         fireEvent.keyDown(file, { code: "Enter" });
 
-        const fileItem = container.querySelector(".u-menubar-root-list > li:first-child") as HTMLElement;
+        const fileItem = container.querySelector(
+          ".u-menubar-root-list > li:first-child"
+        ) as HTMLElement;
         const openLink = fileItem.querySelectorAll<HTMLAnchorElement>(
           ".u-menubar-submenu > li > .u-menubar-content > a"
         )[1];

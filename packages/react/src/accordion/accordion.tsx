@@ -52,10 +52,22 @@ export interface UAccordionProps {
  * `activeIndex`/`onTabChange` controlled-vs-internal-state duality.
  */
 export const UAccordion = React.forwardRef<HTMLDivElement, UAccordionProps>(function UAccordion(
-  { panels, multiple = false, value, defaultValue, onValueChange, onTabOpen, onTabClose, className },
+  {
+    panels,
+    multiple = false,
+    value,
+    defaultValue,
+    onValueChange,
+    onTabOpen,
+    onTabClose,
+    className,
+  },
   ref
 ) {
-  const { cx } = useComponentBase({ componentName: "accordion", styleModule: accordionStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "accordion",
+    styleModule: accordionStyleModule,
+  });
   const [internalValue, setInternalValue] = React.useState<
     string | number | (string | number)[] | undefined
   >(defaultValue);

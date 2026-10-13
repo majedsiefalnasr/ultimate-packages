@@ -8,7 +8,9 @@ describe("UOverlayBadge", () => {
     @Component({
       standalone: true,
       imports: [UOverlayBadge],
-      template: `<u-overlay-badge value="2" severity="danger"><i class="pi pi-bell"></i></u-overlay-badge>`,
+      template: `<u-overlay-badge value="2" severity="danger"
+        ><i class="pi pi-bell"></i
+      ></u-overlay-badge>`,
     })
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
@@ -24,7 +26,9 @@ describe("UOverlayBadge", () => {
     @Component({
       standalone: true,
       imports: [UOverlayBadge],
-      template: `<u-overlay-badge value="9" badgeSize="large" [badgeDisabled]="true"><span>Icon</span></u-overlay-badge>`,
+      template: `<u-overlay-badge value="9" badgeSize="large" [badgeDisabled]="true"
+        ><span>Icon</span></u-overlay-badge
+      >`,
     })
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);

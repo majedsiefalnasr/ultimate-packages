@@ -25,13 +25,7 @@ type Story = StoryObj<typeof UCheckbox>;
 
 function CheckboxHarness(props: React.ComponentProps<typeof UCheckbox>) {
   const [checked, setChecked] = React.useState(props.checked);
-  return (
-    <UCheckbox
-      {...props}
-      checked={checked}
-      onChange={(event) => setChecked(event.checked)}
-    />
-  );
+  return <UCheckbox {...props} checked={checked} onChange={(event) => setChecked(event.checked)} />;
 }
 
 /** Default state — unchecked, per checkbox.spec.tsx's base fixture. */

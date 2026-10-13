@@ -16,18 +16,18 @@ The diagnostic selected one test, one worker and retries 0. Its intended sequenc
 
 ## 3. Environment/provenance
 
-| Item | Retained provenance |
-| --- | --- |
-| Branch / HEAD | `feature/gap-064-g3e-media-data` / `7c49568b50ed1017e17334152a48fb231e7ec307` |
-| Working input | Current worktree, including earlier approved E-1 edits; exact starting status in `git-status.txt` and file hashes in `input-sha256.json` |
-| Input archive SHA-256 | `60bc65d477ffcae50c653c4d738e2f086a8fcb61e3351eab5811c600e2ec90a4` |
-| Docker image | `mcr.microsoft.com/playwright:v1.63.0-jammy` |
-| Image ID/digest | `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847` |
-| Platform / Node | Linux arm64 (`aarch64`) / Node v24.20.0 |
-| Playwright / browser | Playwright 1.63.0; bundled Chromium via existing `prime-parity-chromium` project |
+| Item                       | Retained provenance                                                                                                                                                                                                             |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Branch / HEAD              | `feature/gap-064-g3e-media-data` / `7c49568b50ed1017e17334152a48fb231e7ec307`                                                                                                                                                   |
+| Working input              | Current worktree, including earlier approved E-1 edits; exact starting status in `git-status.txt` and file hashes in `input-sha256.json`                                                                                        |
+| Input archive SHA-256      | `60bc65d477ffcae50c653c4d738e2f086a8fcb61e3351eab5811c600e2ec90a4`                                                                                                                                                              |
+| Docker image               | `mcr.microsoft.com/playwright:v1.63.0-jammy`                                                                                                                                                                                    |
+| Image ID/digest            | `sha256:167d0506cfbe3c294fb214b2d11737326eeee028aa611fa1ba538e5057675847`                                                                                                                                                       |
+| Platform / Node            | Linux arm64 (`aarch64`) / Node v24.20.0                                                                                                                                                                                         |
+| Playwright / browser       | Playwright 1.63.0; bundled Chromium via existing `prime-parity-chromium` project                                                                                                                                                |
 | Browser version limitation | `browser.version()` was read into memory but the hook failed before the output bundle was written. The exact runtime Chromium version string is **not retained**; no version is inferred or additional browser launch performed |
-| Viewport / readiness | Existing `load()` uses 1280×720; existing font readiness, settling, pointer parking, empty case actions and image-loaded helper retained |
-| Run result | 1 failed diagnostic, 0 skipped, 0 flaky, retries 0; start `2026-10-08T14:29:22.478Z`, total runner duration approximately 18.77 seconds |
+| Viewport / readiness       | Existing `load()` uses 1280×720; existing font readiness, settling, pointer parking, empty case actions and image-loaded helper retained                                                                                        |
+| Run result                 | 1 failed diagnostic, 0 skipped, 0 flaky, retries 0; start `2026-10-08T14:29:22.478Z`, total runner duration approximately 18.77 seconds                                                                                         |
 
 Evidence directory: `.superpowers/sdd/2026-10-08-gap-064-g3e-media-data/e1-v2-stage2/`.
 
@@ -45,13 +45,13 @@ Install/build completed as existing Docker preparation, not as a new unit or vis
 
 ## 5. Elements/selectors and measurement hook
 
-| Element | PrimeNG selector | Intended Ultimate selector |
-| --- | --- | --- |
-| Root | `.p-imagecompare` | `.u-image-compare` |
-| First image, original part-map `left` | `.p-imagecompare > img:first-of-type` | `.u-image-compare > img` |
-| Second image, original part-map `right` | `.p-imagecompare img + img` | `.u-image-compare > span > img` |
-| Right-image wrapper | None | `.u-image-compare > span` |
-| Slider | `.p-imagecompare-slider` | `.u-image-compare-slider` |
+| Element                                 | PrimeNG selector                      | Intended Ultimate selector      |
+| --------------------------------------- | ------------------------------------- | ------------------------------- |
+| Root                                    | `.p-imagecompare`                     | `.u-image-compare`              |
+| First image, original part-map `left`   | `.p-imagecompare > img:first-of-type` | `.u-image-compare > img`        |
+| Second image, original part-map `right` | `.p-imagecompare img + img`           | `.u-image-compare > span > img` |
+| Right-image wrapper                     | None                                  | `.u-image-compare > span`       |
+| Slider                                  | `.p-imagecompare-slider`              | `.u-image-compare-slider`       |
 
 **Identity clarification:** The blue image visible in the left portion of the initial comparison is the **second/right image** (`landscape-2.png`), clipped into that region; the first/left image is `landscape-1.png`. “Left/blue” in the earlier raster descriptions denotes the visible region, not the original part-map `left` element. The Stage 1 statement contrasting a left/blue displacement with the right wrapper must therefore not be treated as evidence excluding a direct wrapper relationship. This clarifies source identity only; it does not establish a layout cause or rewrite Stage 1 history.
 
@@ -81,17 +81,17 @@ The existing cross-side environment equality guard was placed after both observa
 
 ## 8. Delta table
 
-| Required comparison | PrimeNG | Ultimate | New delta |
-| --- | --- | --- | --- |
-| Root y/top | Not persisted | Not observed | Unavailable |
-| First/left image y/top | Not persisted | Not observed | Unavailable |
-| Second/right blue image y/top | Not persisted | Not observed | Unavailable |
-| Wrapper y/top | Not applicable to Prime | Not observed | Unavailable |
-| Slider y/top | Not persisted | Not observed | Unavailable |
-| Root → first image | Not persisted | Not observed | Unavailable |
-| Root → second image | Not persisted | Not observed | Unavailable |
-| Wrapper → second image | Not applicable to Prime | Not observed | Unavailable |
-| Internal computed formatting values | Not persisted | Not observed | Unavailable |
+| Required comparison                 | PrimeNG                 | Ultimate     | New delta   |
+| ----------------------------------- | ----------------------- | ------------ | ----------- |
+| Root y/top                          | Not persisted           | Not observed | Unavailable |
+| First/left image y/top              | Not persisted           | Not observed | Unavailable |
+| Second/right blue image y/top       | Not persisted           | Not observed | Unavailable |
+| Wrapper y/top                       | Not applicable to Prime | Not observed | Unavailable |
+| Slider y/top                        | Not persisted           | Not observed | Unavailable |
+| Root → first image                  | Not persisted           | Not observed | Unavailable |
+| Root → second image                 | Not persisted           | Not observed | Unavailable |
+| Wrapper → second image              | Not applicable to Prime | Not observed | Unavailable |
+| Internal computed formatting values | Not persisted           | Not observed | Unavailable |
 
 The approximately 3 px saved-raster offset remains **prior evidence**, not a delta newly established by this pass. `prime.json`, `ultimate.json`, `measurements.json`, `prime.png` and `ultimate.png` were not produced. Missing measurements are not interpreted as zero or equality.
 
@@ -101,12 +101,12 @@ No new browser-used containing-block, baseline, line-box or ancestry values surv
 
 ## 10. Hypothesis evaluation
 
-| Hypothesis | Result after this pass |
-| --- | --- |
-| **H1 — inline/static-position behavior** | Unresolved. No retained used positions, text-range/line-box metrics or relative offsets establish its contribution |
+| Hypothesis                                   | Result after this pass                                                                                                             |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **H1 — inline/static-position behavior**     | Unresolved. No retained used positions, text-range/line-box metrics or relative offsets establish its contribution                 |
 | **H2 — containing-block/wrapper difference** | Unresolved. The span exists in source and contains the blue image, but no retained browser geometry proves a resulting 3 px offset |
-| **H3 — descendant formatting/box metrics** | Unresolved. Requested computed values and image dimensions were not persisted; no quantitative contribution established |
-| **H4 — root box-model difference** | Unresolved. The prior explanatory box-sizing difference remains evidence, but this pass supplies no quantitative causal link |
+| **H3 — descendant formatting/box metrics**   | Unresolved. Requested computed values and image dimensions were not persisted; no quantitative contribution established            |
+| **H4 — root box-model difference**           | Unresolved. The prior explanatory box-sizing difference remains evidence, but this pass supplies no quantitative causal link       |
 
 None is selected, eliminated by the failed measurement, or promoted to causation.
 

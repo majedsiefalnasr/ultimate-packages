@@ -53,7 +53,11 @@ describe("UGalleria", () => {
   it("calls onActiveIndexChange when navigating (uncontrolled)", () => {
     const onActiveIndexChange = vi.fn();
     render(
-      <UGalleria value={items} itemTemplate={itemTemplate} onActiveIndexChange={onActiveIndexChange} />
+      <UGalleria
+        value={items}
+        itemTemplate={itemTemplate}
+        onActiveIndexChange={onActiveIndexChange}
+      />
     );
     fireEvent.click(screen.getByLabelText("Next"));
     expect(onActiveIndexChange).toHaveBeenCalledWith(1);
@@ -189,9 +193,15 @@ describe("keyboard navigation, Escape, role=region (Spec §5.1, GAP-050)", () =>
 
   it("does not navigate when ArrowLeft/ArrowRight are pressed while a focused input inside a custom item template has focus", () => {
     const onActiveIndexChange = vi.fn();
-    const inputItemTemplate = (item: string) => <input className="item-input" defaultValue={item} />;
+    const inputItemTemplate = (item: string) => (
+      <input className="item-input" defaultValue={item} />
+    );
     const { container } = render(
-      <UGalleria value={items} itemTemplate={inputItemTemplate} onActiveIndexChange={onActiveIndexChange} />
+      <UGalleria
+        value={items}
+        itemTemplate={inputItemTemplate}
+        onActiveIndexChange={onActiveIndexChange}
+      />
     );
     const input = container.querySelector(".item-input") as HTMLInputElement;
     input.focus();

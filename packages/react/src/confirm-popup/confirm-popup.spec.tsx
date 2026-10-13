@@ -34,7 +34,9 @@ describe("UConfirmPopup", () => {
     render(<Harness />);
     const button = screen.getByTestId("trigger");
     let accepted = false;
-    act(() => confirmPopup({ message: "Delete?", target: button, accept: () => (accepted = true) }));
+    act(() =>
+      confirmPopup({ message: "Delete?", target: button, accept: () => (accepted = true) })
+    );
     await screen.findByText("Delete?");
 
     const buttons = document.querySelectorAll(".u-confirmpopup-footer button");
@@ -48,10 +50,14 @@ describe("UConfirmPopup", () => {
     render(<Harness />);
     const button = screen.getByTestId("trigger");
     let rejected = false;
-    act(() => confirmPopup({ message: "Delete?", target: button, reject: () => (rejected = true) }));
+    act(() =>
+      confirmPopup({ message: "Delete?", target: button, reject: () => (rejected = true) })
+    );
     await screen.findByText("Delete?");
 
-    const rejectButton = document.querySelector(".u-confirmpopup-footer button") as HTMLButtonElement;
+    const rejectButton = document.querySelector(
+      ".u-confirmpopup-footer button"
+    ) as HTMLButtonElement;
     fireEvent.click(rejectButton);
 
     expect(rejected).toBe(true);
@@ -77,7 +83,9 @@ describe("UConfirmPopup", () => {
     render(<Harness />);
     const button = screen.getByTestId("trigger");
     let rejected = false;
-    act(() => confirmPopup({ message: "Delete?", target: button, reject: () => (rejected = true) }));
+    act(() =>
+      confirmPopup({ message: "Delete?", target: button, reject: () => (rejected = true) })
+    );
     await screen.findByText("Delete?");
 
     fireEvent.keyDown(document, { code: "Escape" });

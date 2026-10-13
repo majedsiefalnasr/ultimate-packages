@@ -20,7 +20,10 @@ describe("UImage", () => {
   });
 
   it("opens the fullscreen preview mask when the preview button is clicked", async () => {
-    const wrapper = mount(UImage, { props: { src: "a.png", preview: true }, attachTo: document.body });
+    const wrapper = mount(UImage, {
+      props: { src: "a.png", preview: true },
+      attachTo: document.body,
+    });
     await wrapper.find(".u-image-preview-mask").trigger("click");
     await flushMacrotask();
     expect(document.querySelector(".u-image-mask")).toBeTruthy();
@@ -28,7 +31,10 @@ describe("UImage", () => {
   });
 
   it("closes the preview when the close button is clicked", async () => {
-    const wrapper = mount(UImage, { props: { src: "a.png", preview: true }, attachTo: document.body });
+    const wrapper = mount(UImage, {
+      props: { src: "a.png", preview: true },
+      attachTo: document.body,
+    });
     await wrapper.find(".u-image-preview-mask").trigger("click");
     await flushMacrotask();
     const closeBtn = document.querySelector(".u-image-close-button") as HTMLElement;
@@ -41,7 +47,10 @@ describe("UImage", () => {
   });
 
   it("closes the preview on Escape keydown", async () => {
-    const wrapper = mount(UImage, { props: { src: "a.png", preview: true }, attachTo: document.body });
+    const wrapper = mount(UImage, {
+      props: { src: "a.png", preview: true },
+      attachTo: document.body,
+    });
     await wrapper.find(".u-image-preview-mask").trigger("click");
     await flushMacrotask();
     document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
@@ -52,7 +61,10 @@ describe("UImage", () => {
   });
 
   it("toggles zoom in within the max bound", async () => {
-    const wrapper = mount(UImage, { props: { src: "a.png", preview: true }, attachTo: document.body });
+    const wrapper = mount(UImage, {
+      props: { src: "a.png", preview: true },
+      attachTo: document.body,
+    });
     await wrapper.find(".u-image-preview-mask").trigger("click");
     await flushMacrotask();
     (document.querySelector(".u-image-zoom-in-button") as HTMLElement).click();
@@ -69,7 +81,10 @@ describe("UImage", () => {
   });
 
   it("emits show and hide", async () => {
-    const wrapper = mount(UImage, { props: { src: "a.png", preview: true }, attachTo: document.body });
+    const wrapper = mount(UImage, {
+      props: { src: "a.png", preview: true },
+      attachTo: document.body,
+    });
     await wrapper.find(".u-image-preview-mask").trigger("click");
     await flushMacrotask();
     expect(wrapper.emitted("show")).toHaveLength(1);

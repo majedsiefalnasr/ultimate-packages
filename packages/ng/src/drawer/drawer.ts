@@ -40,7 +40,14 @@ import { drawerStyleModule } from "./drawer-style";
   imports: [UOverlay, UFocusTrap, UButton, UTimesIcon],
   template: `
     @if (renderMask()) {
-      <div uOverlay [visible]="visible()" appendTo="body" [class]="cx('mask')" (mousedown)="onMaskMouseDown($event)" (mouseup)="onMaskMouseUp($event)">
+      <div
+        uOverlay
+        [visible]="visible()"
+        appendTo="body"
+        [class]="cx('mask')"
+        (mousedown)="onMaskMouseDown($event)"
+        (mouseup)="onMaskMouseUp($event)"
+      >
         <div
           [class]="cx('root', classesParams())"
           role="complementary"

@@ -22,7 +22,9 @@ describe("UTieredMenu", () => {
   it('renders role="menu" and root-level items when inline (popup: false)', () => {
     const fixture = setup();
     expect(fixture.nativeElement.querySelector('[role="menu"]')).not.toBeNull();
-    expect(fixture.nativeElement.querySelectorAll('[role="menuitem"]').length).toBeGreaterThanOrEqual(2);
+    expect(
+      fixture.nativeElement.querySelectorAll('[role="menuitem"]').length
+    ).toBeGreaterThanOrEqual(2);
   });
 
   it("does not render its content when popup: true and not yet shown", () => {
@@ -78,7 +80,9 @@ describe("UTieredMenu", () => {
     const fileItem = fixture.nativeElement.querySelector('[role="menuitem"]');
     fileItem.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
     fixture.detectChanges();
-    const nestedSubmenu = fixture.nativeElement.querySelector(".u-tieredmenu-submenu .u-tieredmenu-submenu");
+    const nestedSubmenu = fixture.nativeElement.querySelector(
+      ".u-tieredmenu-submenu .u-tieredmenu-submenu"
+    );
     expect(nestedSubmenu).not.toBeNull();
   });
 
@@ -102,7 +106,9 @@ describe("UTieredMenu", () => {
     // is a horizontal menubar (ArrowRight/ArrowLeft) with vertical submenus.
     it("ArrowDown/ArrowUp move focus among top-level items", () => {
       const fixture = setup([{ label: "File" }, { label: "Edit" }, { label: "View" }]);
-      const links = fixture.nativeElement.querySelectorAll('[role="menuitem"] > .u-tieredmenu-item-content > a');
+      const links = fixture.nativeElement.querySelectorAll(
+        '[role="menuitem"] > .u-tieredmenu-item-content > a'
+      );
       links[0].focus();
       links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true }));
       expect(document.activeElement).toBe(links[1]);
@@ -111,7 +117,7 @@ describe("UTieredMenu", () => {
     it("Enter/Space on a top-level item with children opens its submenu", () => {
       const fixture = setup([{ label: "File", items: [{ label: "New" }] }]);
       const item = fixture.nativeElement.querySelector('[role="menuitem"]');
-      const link = item.querySelector('.u-tieredmenu-item-content > a');
+      const link = item.querySelector(".u-tieredmenu-item-content > a");
       link.focus();
       link.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
       fixture.detectChanges();
@@ -122,7 +128,7 @@ describe("UTieredMenu", () => {
     it("Escape closes the innermost open submenu, keeping focus on its own trigger", () => {
       const fixture = setup([{ label: "File", items: [{ label: "New" }] }]);
       const item = fixture.nativeElement.querySelector('[role="menuitem"]');
-      const link = item.querySelector('.u-tieredmenu-item-content > a');
+      const link = item.querySelector(".u-tieredmenu-item-content > a");
       link.focus();
       link.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
       fixture.detectChanges();
@@ -133,8 +139,14 @@ describe("UTieredMenu", () => {
     });
 
     it("ArrowDown skips a disabled top-level item", () => {
-      const fixture = setup([{ label: "File" }, { label: "Edit", disabled: true }, { label: "View" }]);
-      const links = fixture.nativeElement.querySelectorAll('[role="menuitem"] > .u-tieredmenu-item-content > a');
+      const fixture = setup([
+        { label: "File" },
+        { label: "Edit", disabled: true },
+        { label: "View" },
+      ]);
+      const links = fixture.nativeElement.querySelectorAll(
+        '[role="menuitem"] > .u-tieredmenu-item-content > a'
+      );
       links[0].focus();
       links[0].dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowDown", bubbles: true }));
       expect(document.activeElement).toBe(links[2]);
@@ -205,7 +217,7 @@ describe("UTieredMenu", () => {
         expect(document.activeElement).toBe(openLink);
 
         (document.activeElement as HTMLElement).dispatchEvent(
-          new KeyboardEvent("keydown", { code: "Escape", bubbles: true }),
+          new KeyboardEvent("keydown", { code: "Escape", bubbles: true })
         );
         fixture.detectChanges();
         await flushFocus();
@@ -230,7 +242,9 @@ describe("UTieredMenu", () => {
       it("opens the submenu on Enter for a group item positioned after a separator", async () => {
         const fixture = setup(modelWithSeparator);
         // "Open" is rendered link index 1 (separator has no <a>), but model index 2.
-        const openLink = fixture.nativeElement.querySelectorAll('[role="menuitem"] > .u-tieredmenu-item-content > a')[1];
+        const openLink = fixture.nativeElement.querySelectorAll(
+          '[role="menuitem"] > .u-tieredmenu-item-content > a'
+        )[1];
         openLink.focus();
         openLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
         fixture.detectChanges();
@@ -242,7 +256,9 @@ describe("UTieredMenu", () => {
 
       it("Escape from a nested item refocuses the correct owning trigger, not a sibling shifted by a separator", async () => {
         const fixture = setup(modelWithSeparator);
-        const openLink = fixture.nativeElement.querySelectorAll('[role="menuitem"] > .u-tieredmenu-item-content > a')[1];
+        const openLink = fixture.nativeElement.querySelectorAll(
+          '[role="menuitem"] > .u-tieredmenu-item-content > a'
+        )[1];
         openLink.focus();
         openLink.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", bubbles: true }));
         fixture.detectChanges();
@@ -268,7 +284,9 @@ describe("UTieredMenu", () => {
           { label: "C" },
         ];
         const fixture = setup(model);
-        const links = fixture.nativeElement.querySelectorAll('[role="menuitem"] > .u-tieredmenu-item-content > a');
+        const links = fixture.nativeElement.querySelectorAll(
+          '[role="menuitem"] > .u-tieredmenu-item-content > a'
+        );
         const [a, b] = links;
         b.focus();
         b.dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowUp", bubbles: true }));

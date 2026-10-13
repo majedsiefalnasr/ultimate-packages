@@ -64,12 +64,16 @@ describe("UMenubar", () => {
   });
 
   it("renders a separator item", () => {
-    const wrapper = mount(UMenubar, { props: { model: [{ label: "A" }, { separator: true }, { label: "B" }] } });
+    const wrapper = mount(UMenubar, {
+      props: { model: [{ label: "A" }, { separator: true }, { label: "B" }] },
+    });
     expect(wrapper.find('[role="separator"]').exists()).toBe(true);
   });
 
   it("hides an item whose visible is false", () => {
-    const wrapper = mount(UMenubar, { props: { model: [...items, { label: "Hidden", visible: false }] } });
+    const wrapper = mount(UMenubar, {
+      props: { model: [...items, { label: "Hidden", visible: false }] },
+    });
     expect(wrapper.text()).not.toContain("Hidden");
   });
 
@@ -129,7 +133,9 @@ describe("UMenubar", () => {
       const fileItem = wrapper.findAll(".u-menubar-root-list > li")[0];
       expect(fileItem.attributes("data-u-open")).toBe("true");
 
-      const firstSubItemLink = fileItem.find(".u-menubar-submenu > li:first-child > .u-menubar-item-content > a");
+      const firstSubItemLink = fileItem.find(
+        ".u-menubar-submenu > li:first-child > .u-menubar-item-content > a"
+      );
       expect(document.activeElement).toBe(firstSubItemLink.element);
 
       wrapper.unmount();
@@ -142,7 +148,9 @@ describe("UMenubar", () => {
       await file.trigger("keydown", { code: "Enter" });
 
       const fileItem = wrapper.findAll(".u-menubar-root-list > li")[0];
-      const firstSubItemLink = fileItem.find(".u-menubar-submenu > li:first-child > .u-menubar-item-content > a");
+      const firstSubItemLink = fileItem.find(
+        ".u-menubar-submenu > li:first-child > .u-menubar-item-content > a"
+      );
       expect(document.activeElement).toBe(firstSubItemLink.element);
 
       await firstSubItemLink.trigger("keydown", { code: "Escape" });
@@ -161,7 +169,9 @@ describe("UMenubar", () => {
       await file.trigger("keydown", { code: "Enter" });
 
       const fileItem = wrapper.findAll(".u-menubar-root-list > li")[0];
-      const newLink = fileItem.find(".u-menubar-submenu > li:nth-child(1) > .u-menubar-item-content > a");
+      const newLink = fileItem.find(
+        ".u-menubar-submenu > li:nth-child(1) > .u-menubar-item-content > a"
+      );
       expect(document.activeElement).toBe(newLink.element);
 
       // Move down within the open submenu to "Open" (has its own nested submenu).
@@ -173,7 +183,9 @@ describe("UMenubar", () => {
       // Open the nested submenu via Enter, landing focus on "Recent".
       await openLink.trigger("keydown", { code: "Enter" });
       expect(openItemLi.attributes("data-u-open")).toBe("true");
-      const recentLink = openItemLi.find(".u-menubar-submenu > li:first-child > .u-menubar-item-content > a");
+      const recentLink = openItemLi.find(
+        ".u-menubar-submenu > li:first-child > .u-menubar-item-content > a"
+      );
       expect(document.activeElement).toBe(recentLink.element);
 
       // Escape from the deepest level closes only that level, not the parent "File" menu.
@@ -204,7 +216,9 @@ describe("UMenubar", () => {
 
         const fileItem = wrapper.findAll(".u-menubar-root-list > li")[0];
         // "Open" is rendered link index 1 (separator has no <a>), but model index 2.
-        const openLink = fileItem.findAll(".u-menubar-submenu > li > .u-menubar-item-content > a")[1];
+        const openLink = fileItem.findAll(
+          ".u-menubar-submenu > li > .u-menubar-item-content > a"
+        )[1];
         (openLink.element as HTMLElement).focus();
         await openLink.trigger("keydown", { code: "Enter" });
 
@@ -224,12 +238,18 @@ describe("UMenubar", () => {
         await file.trigger("keydown", { code: "Enter" });
 
         const fileItem = wrapper.findAll(".u-menubar-root-list > li")[0];
-        const openLink = fileItem.findAll(".u-menubar-submenu > li > .u-menubar-item-content > a")[1];
+        const openLink = fileItem.findAll(
+          ".u-menubar-submenu > li > .u-menubar-item-content > a"
+        )[1];
         (openLink.element as HTMLElement).focus();
         await openLink.trigger("keydown", { code: "Enter" });
 
-        const openLi = wrapper.findAll(".u-menubar-submenu > li").find((li) => li.element === openLink.element.closest("li"))!;
-        const recentLink = openLi.find(".u-menubar-submenu > li:first-child > .u-menubar-item-content > a");
+        const openLi = wrapper
+          .findAll(".u-menubar-submenu > li")
+          .find((li) => li.element === openLink.element.closest("li"))!;
+        const recentLink = openLi.find(
+          ".u-menubar-submenu > li:first-child > .u-menubar-item-content > a"
+        );
         expect(document.activeElement).toBe(recentLink.element);
 
         await recentLink.trigger("keydown", { code: "Escape" });
@@ -241,7 +261,12 @@ describe("UMenubar", () => {
       });
 
       it("ArrowLeft from a root item after a hidden item does not get stuck", async () => {
-        const model = [{ label: "A" }, { label: "Hidden", visible: false }, { label: "B" }, { label: "C" }];
+        const model = [
+          { label: "A" },
+          { label: "Hidden", visible: false },
+          { label: "B" },
+          { label: "C" },
+        ];
         const wrapper = mount(UMenubar, { props: { model }, attachTo: document.body });
         const links = wrapper.findAll(".u-menubar-root-list > li > .u-menubar-item-content > a");
         // Rendered links are [A, B, C] (Hidden renders no <li>/<a>).

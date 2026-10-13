@@ -184,7 +184,11 @@ export function UAutoComplete<T = unknown>({
   };
 
   return (
-    <div className={[cx("root", { filled: inputValue.length > 0, disabled, fluid }), className].filter(Boolean).join(" ")}>
+    <div
+      className={[cx("root", { filled: inputValue.length > 0, disabled, fluid }), className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <input
         type="text"
         role="combobox"
@@ -224,7 +228,10 @@ export function UAutoComplete<T = unknown>({
                 id={`${idRef}_option_${index}`}
                 role="option"
                 aria-selected={option === value}
-                className={cx("option", { focused: focusedIndex === index, selected: option === value })}
+                className={cx("option", {
+                  focused: focusedIndex === index,
+                  selected: option === value,
+                })}
                 onClick={(event) => selectOption(event, option)}
                 onMouseEnter={() => setFocusedIndex(index)}
               >

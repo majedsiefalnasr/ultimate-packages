@@ -81,7 +81,9 @@ export default {
       return this.layout === "horizontal";
     },
     gutterStyle() {
-      return this.horizontal ? { width: `${this.gutterSize}px` } : { height: `${this.gutterSize}px` };
+      return this.horizontal
+        ? { width: `${this.gutterSize}px` }
+        : { height: `${this.gutterSize}px` };
     },
   },
   methods: {

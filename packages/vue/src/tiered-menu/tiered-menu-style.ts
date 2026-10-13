@@ -46,12 +46,18 @@ export interface TieredMenuClassesParams {
 }
 
 const classes = {
-  root: (params: Record<string, unknown> = {}) => ["u-tieredmenu u-component", { "u-tieredmenu-overlay": Boolean(params.popup) }],
+  root: (params: Record<string, unknown> = {}) => [
+    "u-tieredmenu u-component",
+    { "u-tieredmenu-overlay": Boolean(params.popup) },
+  ],
   rootList: "u-tieredmenu-root-list",
   submenu: "u-tieredmenu-submenu",
   item: (params: Record<string, unknown> = {}) => {
     const { disabled, open } = params as TieredMenuClassesParams;
-    return ["u-tieredmenu-item", { "u-tieredmenu-item-disabled": Boolean(disabled), "u-tieredmenu-item-open": Boolean(open) }];
+    return [
+      "u-tieredmenu-item",
+      { "u-tieredmenu-item-disabled": Boolean(disabled), "u-tieredmenu-item-open": Boolean(open) },
+    ];
   },
   itemContent: "u-tieredmenu-item-content",
   itemLink: "u-tieredmenu-item-link",

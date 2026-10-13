@@ -124,7 +124,13 @@ export const UToast = React.forwardRef<UToastHandle, UToastProps>(function UToas
   return (
     <div className={[cx("root", { position }), className].filter(Boolean).join(" ")}>
       {messages.map((message) => (
-        <div key={message.id} className={cx("message", { severity: message.severity })} role="alert" aria-live="assertive" aria-atomic="true">
+        <div
+          key={message.id}
+          className={cx("message", { severity: message.severity })}
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
           <div className={cx("messageContent")}>
             {message.summary && <div className={cx("summary")}>{message.summary}</div>}
             {message.detail && <div className={cx("detail")}>{message.detail}</div>}

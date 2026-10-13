@@ -12,9 +12,19 @@
       >
         <span v-if="icon" :class="icon"></span>
       </button>
-      <ul ref="listEl" :class="cx('list')" role="menu" :style="listDirectionStyle" @keydown="onKeydown">
+      <ul
+        ref="listEl"
+        :class="cx('list')"
+        role="menu"
+        :style="listDirectionStyle"
+        @keydown="onKeydown"
+      >
         <template v-for="(item, index) in model" :key="(item.label || '') + index">
-          <li :class="cx('item', { hidden: item.visible === false })" role="none" :style="getItemStyle(index)">
+          <li
+            :class="cx('item', { hidden: item.visible === false })"
+            role="none"
+            :style="getItemStyle(index)"
+          >
             <button
               type="button"
               :class="cx('pcAction')"
@@ -69,7 +79,15 @@ export default {
     listDirectionStyle() {
       const dir = this.direction;
       const flexDirection =
-        dir === "up" ? "column-reverse" : dir === "down" ? "column" : dir === "left" ? "row-reverse" : dir === "right" ? "row" : undefined;
+        dir === "up"
+          ? "column-reverse"
+          : dir === "down"
+            ? "column"
+            : dir === "left"
+              ? "row-reverse"
+              : dir === "right"
+                ? "row"
+                : undefined;
       return flexDirection ? { flexDirection } : {};
     },
   },
@@ -96,7 +114,10 @@ export default {
 
       if (type === "circle") {
         const step = (2 * Math.PI) / length;
-        return { left: `${radius * Math.cos(step * index)}px`, top: `${radius * Math.sin(step * index)}px` };
+        return {
+          left: `${radius * Math.cos(step * index)}px`,
+          top: `${radius * Math.sin(step * index)}px`,
+        };
       }
 
       const direction = this.direction;

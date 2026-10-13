@@ -16,6 +16,7 @@
 **Scope:** The CLI's v1 command surface, its relationship to official framework tooling, its use of `@ultimate/component-metadata` now that GAP-027 is closed, and the minimal compatibility-manifest shape needed to satisfy Blueprint §20 for axes that exist today. This spec defines the contract and boundary; it does not implement `packages/cli`, does not write the compatibility manifest's actual data file, and does not author the CLI's internal argument-parsing or subprocess-invocation code.
 
 **Out of scope for this spec (explicitly, per the source directive):**
+
 - Any Phase 8 (MCP) or Phase 9 (AI Skills/LLM context) contract detail. `ultimate ai` and any Skills-dependent behavior are stubbed/deferred only (§7.3), never designed.
 - Resolving MCP-version or AI/Skills-version axes of the compatibility manifest — reserved as unpopulated fields only (§6.3).
 - A runtime dependency from `packages/{ng,react,vue}` on the CLI, in either direction — prohibited by Blueprint §6 and not reconsidered here.
@@ -63,11 +64,13 @@ Explicitly **not** v1 CLI responsibilities: compiling or bundling application co
 Per ADR-008 and Blueprint §19's closing sentence ("must not become a replacement for official framework build systems"), restated as a concrete, checkable rule every command definition in §7 must pass:
 
 **A CLI feature is in-bounds (orchestration) if it only needs to:**
+
 1. Read or write configuration/dependency files the target ecosystem already understands (`package.json`, `angular.json`, theme config, import statements), or
 2. Invoke an already-installed external tool as a subprocess (`ng generate ...`, the project's package manager, the project's existing build/dev command), or
 3. Read `@ultimate/component-metadata` or `docs/architecture/COMPATIBILITY.md`-shaped data to make a decision or produce a report.
 
 **A CLI feature is out-of-bounds (build-tool replacement) if it would require the CLI itself to:**
+
 1. Parse, transform, or compile a framework's component syntax (Angular templates, JSX, Vue SFCs), or
 2. Bundle, tree-shake, or otherwise perform what `ng build`/Vite/an equivalent already does, or
 3. Run or manage a project's dev server / hot-reload loop itself.
@@ -88,7 +91,7 @@ Responsibility: the orchestrator binary and its command implementations. Ships:
 - A metadata-lite diagnostics module consuming `@ultimate/component-metadata`'s `ALL_COMPONENTS` export.
 - Subprocess-invocation wrappers around the target project's package manager and framework CLI — never a reimplementation of what those tools do.
 
-Depends on `@ultimate/component-metadata` (workspace dependency, mirroring how `@ultimate/component-metadata` itself depends on `@ultimate/component-schema`). Depends on no other Ultimate runtime package (`ng`/`react`/`vue`/`themes`) as a *code* dependency — it orchestrates their installation into a *target* project as an external effect, it does not import their runtime code into its own bundle. This preserves §6's prohibited-direction rule by construction: the dependency arrow is `cli → component-metadata`, never `ng/react/vue → cli`, and `cli` itself never imports `packages/{ng,react,vue}` source.
+Depends on `@ultimate/component-metadata` (workspace dependency, mirroring how `@ultimate/component-metadata` itself depends on `@ultimate/component-schema`). Depends on no other Ultimate runtime package (`ng`/`react`/`vue`/`themes`) as a _code_ dependency — it orchestrates their installation into a _target_ project as an external effect, it does not import their runtime code into its own bundle. This preserves §6's prohibited-direction rule by construction: the dependency arrow is `cli → component-metadata`, never `ng/react/vue → cli`, and `cli` itself never imports `packages/{ng,react,vue}` source.
 
 No second package is introduced. Blueprint §34 names exactly one CLI package; nothing in this spec's research found evidence justifying a split (e.g., a separate `create-ultimate` scaffolding package) beyond what `@ultimate/cli` alone can hold at v1 scope.
 
@@ -165,30 +168,30 @@ Blueprint §19's own text states its nine-command list is conceptual and "not fi
 
 ### 7.1 Core orchestration (metadata-independent) — **In v1**
 
-| Command | Responsibility | Boundary-test pass (§4) |
-|---|---|---|
-| `ultimate init` | Operates on an **existing, already-scaffolded** Angular/React/Vue project — never creates a new framework project. Detects/selects the framework; validates compatibility (§6.5); initializes/configures Ultimate package installation and theme integration into that existing project. | Reads/writes config only — passes. |
-| `ultimate add <package>` | Install a specific `@ultimate/*` package via the target project's package manager, after a compatibility check. | Subprocess invocation of the project's package manager — passes. |
-| `ultimate theme <preset>` | Configure an `@ultimate/themes` preset into the target project (write config/imports); does not compile CSS itself (`@ultimate/themes` already owns that, Phase 5). | Config write only — passes. |
+| Command                   | Responsibility                                                                                                                                                                                                                                                                           | Boundary-test pass (§4)                                          |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `ultimate init`           | Operates on an **existing, already-scaffolded** Angular/React/Vue project — never creates a new framework project. Detects/selects the framework; validates compatibility (§6.5); initializes/configures Ultimate package installation and theme integration into that existing project. | Reads/writes config only — passes.                               |
+| `ultimate add <package>`  | Install a specific `@ultimate/*` package via the target project's package manager, after a compatibility check.                                                                                                                                                                          | Subprocess invocation of the project's package manager — passes. |
+| `ultimate theme <preset>` | Configure an `@ultimate/themes` preset into the target project (write config/imports); does not compile CSS itself (`@ultimate/themes` already owns that, Phase 5).                                                                                                                      | Config write only — passes.                                      |
 
 `ultimate init`'s scope boundary is exact and non-overlapping with `create` (§7.2's deferral below): `init` requires a pre-existing, already-scaffolded Angular/React/Vue project to operate on (an `angular.json`, a `package.json` with a recognizable framework dependency, or equivalent already present) and fails with a clear diagnostic if none is found — it never runs `ng new`, `create-vite`, or any equivalent new-project scaffolding on the target's behalf. Creating a brand-new framework project from nothing remains entirely deferred to `ultimate create` (§7.2), which is not expanded into a v1 implementation by this correction.
 
 ### 7.2 Metadata-aware (now unblocked by GAP-027 closing) — **In v1, scoped to real proof-set coverage**
 
-| Command | Responsibility | Boundary-test pass (§4) |
-|---|---|---|
-| `ultimate doctor` | Report, for each of `@ultimate/component-metadata`'s currently-populated 8 components: installed/missing, and (per §6.5) framework-compatibility status. Must not claim coverage or status for any of the ~107 not-yet-metadata-backed components in `COMPONENT_INVENTORY.md` — report exactly what `ALL_COMPONENTS` contains, nothing implied beyond it. | Reads metadata + config only — passes. |
+| Command                         | Responsibility                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Boundary-test pass (§4)                                                                                                            |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `ultimate doctor`               | Report, for each of `@ultimate/component-metadata`'s currently-populated 8 components: installed/missing, and (per §6.5) framework-compatibility status. Must not claim coverage or status for any of the ~107 not-yet-metadata-backed components in `COMPONENT_INVENTORY.md` — report exactly what `ALL_COMPONENTS` contains, nothing implied beyond it.                                                                                                                                                                          | Reads metadata + config only — passes.                                                                                             |
 | `ultimate generate <component>` | For a component present in `ALL_COMPONENTS`, **print to stdout** a minimal, copy-pasteable import statement and usage snippet for the target project's detected framework, built directly from that record's `packages.{framework}.packageName` (import source) and `api.{framework}.props` (a minimal required-props usage example). Refuses with a clear error (non-zero exit) for any component not yet in `ALL_COMPONENTS`, naming the 8-component ceiling. Never writes, creates, or modifies any file in the target project. | Reads metadata only, writes nothing — passes trivially; no source-editing/insertion-point logic exists to design or later replace. |
 
 `ultimate create` (Blueprint's own conceptual "scaffold a brand-new project" command) is **deferred**, not because it depends on unstarted phases, but because it is a strict superset of `init` requiring project-template authoring decisions (which starter templates, for which frameworks) that have no repository precedent or Blueprint-mandated shape yet — an implementation-time content question, not an architectural one, and out of scope for a specification whose job is the CLI's structural contract.
 
 ### 7.3 Skills/AI-dependent — **Stubbed only, not designed**
 
-| Command | v1 treatment |
-|---|---|
-| `ultimate ai` | Not implemented in v1. If invoked, must print a clear "not yet available — Phase 9 (AI Skills) is not started" message and exit non-zero. No Skills-package contract, no AI-context shape, is designed by this spec. |
+| Command            | v1 treatment                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ultimate ai`      | Not implemented in v1. If invoked, must print a clear "not yet available — Phase 9 (AI Skills) is not started" message and exit non-zero. No Skills-package contract, no AI-context shape, is designed by this spec.                                                                                                                                                                                               |
 | `ultimate migrate` | Deferred entirely in v1 — Blueprint's conceptual description does not specify enough for this spec to scope safely without inventing migration-tooling architecture (a real gap, not resolvable from existing evidence per the research pass). Not stubbed as a command at all in v1; left absent rather than a misleading stub, since "migrate" implies existing functionality that stub-text would misrepresent. |
-| `ultimate update` | Deferred entirely in v1, same reasoning as `migrate` — updating installed Ultimate packages safely is coupled to the same not-yet-designed migration/compatibility-transition logic. |
+| `ultimate update`  | Deferred entirely in v1, same reasoning as `migrate` — updating installed Ultimate packages safely is coupled to the same not-yet-designed migration/compatibility-transition logic.                                                                                                                                                                                                                               |
 
 ---
 
@@ -203,7 +206,7 @@ Blueprint §19's own text states its nine-command list is conceptual and "not fi
 
 ### 8.1 Package-manager scope — two distinct audiences, not a conflict
 
-The monorepo's own dev tooling is pnpm-only (`packageManager: "pnpm@9.6.0"`, root `package.json`) — this governs how `@ultimate/cli` itself is built and tested inside this repository and is unchanged by this spec. Separately, Blueprint §19 requires the *shipped CLI binary* to "support common package managers where practical" when acting on a **consumer's** project (npm, yarn, or pnpm, detected from the consumer project's lockfile). These are different audiences and do not conflict; the specification states this explicitly so it is not later mistaken for an unresolved question.
+The monorepo's own dev tooling is pnpm-only (`packageManager: "pnpm@9.6.0"`, root `package.json`) — this governs how `@ultimate/cli` itself is built and tested inside this repository and is unchanged by this spec. Separately, Blueprint §19 requires the _shipped CLI binary_ to "support common package managers where practical" when acting on a **consumer's** project (npm, yarn, or pnpm, detected from the consumer project's lockfile). These are different audiences and do not conflict; the specification states this explicitly so it is not later mistaken for an unresolved question.
 
 ---
 

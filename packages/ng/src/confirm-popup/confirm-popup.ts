@@ -12,7 +12,12 @@ import {
   input,
   signal,
 } from "@angular/core";
-import { UBaseComponent, UConfirmationService, UOverlay, type UConfirmation } from "@ultimate/ng-core";
+import {
+  UBaseComponent,
+  UConfirmationService,
+  UOverlay,
+  type UConfirmation,
+} from "@ultimate/ng-core";
 import { ESCAPE_PRIORITIES, escapeRegistry } from "@ultimate/uix-utils/escape";
 import { ZIndex } from "@ultimate/uix-utils/zindex";
 import { UButton } from "../button/button";
@@ -56,7 +61,12 @@ import { confirmPopupStyleModule } from "./confirm-popup-style";
         </div>
         <div [class]="cx('footer')">
           @if (confirmation()?.rejectVisible !== false) {
-            <u-button [label]="rejectLabel()" severity="secondary" text (onClick)="onReject()"></u-button>
+            <u-button
+              [label]="rejectLabel()"
+              severity="secondary"
+              text
+              (onClick)="onReject()"
+            ></u-button>
           }
           @if (confirmation()?.acceptVisible !== false) {
             <u-button [label]="acceptLabel()" (onClick)="onAccept()"></u-button>
@@ -193,7 +203,9 @@ export class UConfirmPopup extends UBaseComponent {
       return;
     }
     this.registeredEscape = true;
-    escapeRegistry.register(ESCAPE_PRIORITIES.OVERLAY_PANEL, this.instanceUid, () => this.onReject());
+    escapeRegistry.register(ESCAPE_PRIORITIES.OVERLAY_PANEL, this.instanceUid, () =>
+      this.onReject()
+    );
   }
 
   private unregisterEscape(): void {

@@ -70,6 +70,13 @@ pnpm run lint
 pnpm run format:check
 ```
 
+`pnpm install --frozen-lockfile` activates the Git hooks. Before a commit,
+`pre-commit` checks staged whitespace, lint, and formatting. Before a push,
+`pre-push` runs the full build, typecheck, and test commands in that order.
+Run `pnpm run lint`, `pnpm run format:check`, `pnpm run build`,
+`pnpm run typecheck`, and `pnpm run test` manually when needed. Git hooks can
+be bypassed; CI runs its own checks and remains authoritative.
+
 Browser, visual, and accessibility tests use Storybook and Playwright:
 
 ```bash

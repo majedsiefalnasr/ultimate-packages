@@ -1,15 +1,7 @@
 import * as React from "react";
 
 export type UKeyFilterPattern =
-  | "pint"
-  | "int"
-  | "pnum"
-  | "money"
-  | "num"
-  | "hex"
-  | "email"
-  | "alpha"
-  | "alphanum";
+  "pint" | "int" | "pnum" | "money" | "num" | "hex" | "email" | "alpha" | "alphanum";
 
 const DEFAULT_MASKS: Record<UKeyFilterPattern, RegExp> = {
   pint: /^[\d]*$/,

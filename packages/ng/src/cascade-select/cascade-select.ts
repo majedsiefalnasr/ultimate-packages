@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, input, output, signal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  computed,
+  input,
+  output,
+  signal,
+} from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { UBaseEditableHolder, UOverlay } from "@ultimate/ng-core";
@@ -81,7 +89,12 @@ interface ProcessedOption {
     >
       {{ label() }}
     </span>
-    <div [class]="cx('dropdown')" role="button" aria-hidden="true" (click)="onContainerClick($event)">
+    <div
+      [class]="cx('dropdown')"
+      role="button"
+      aria-hidden="true"
+      (click)="onContainerClick($event)"
+    >
       <span aria-hidden="true">&#9662;</span>
     </div>
     @if (renderOverlay()) {
@@ -101,7 +114,11 @@ interface ProcessedOption {
             [attr.aria-selected]="isSelectedNode(node)"
             [attr.aria-expanded]="node.children.length > 0 ? isActiveNode(node) : null"
           >
-            <div [class]="cx('optionContent')" (click)="onOptionClick($event, node)" (mouseenter)="onOptionMouseEnter(node)">
+            <div
+              [class]="cx('optionContent')"
+              (click)="onOptionClick($event, node)"
+              (mouseenter)="onOptionMouseEnter(node)"
+            >
               <span>{{ getOptionLabel(node.option) }}</span>
               @if (node.children.length > 0) {
                 <span [class]="cx('groupIcon')" aria-hidden="true">&#9656;</span>
@@ -109,7 +126,10 @@ interface ProcessedOption {
             </div>
             @if (node.children.length > 0 && isActiveNode(node)) {
               <ng-container
-                *ngTemplateOutlet="sublist; context: { options: node.children, parentKey: node.key }"
+                *ngTemplateOutlet="
+                  sublist;
+                  context: { options: node.children, parentKey: node.key }
+                "
               ></ng-container>
             }
           </li>
@@ -183,7 +203,10 @@ export class UCascadeSelect extends UBaseEditableHolder {
     return [];
   }
 
-  private findPathToValue(value: unknown, nodes: ProcessedOption[] = this.processedOptions()): ProcessedOption[] | null {
+  private findPathToValue(
+    value: unknown,
+    nodes: ProcessedOption[] = this.processedOptions()
+  ): ProcessedOption[] | null {
     for (const node of nodes) {
       if (node.children.length === 0) {
         if (this.getOptionValue(node.option) === value) {
@@ -310,6 +333,7 @@ export class UCascadeSelect extends UBaseEditableHolder {
   }
 
   protected onOptionMouseEnter(_node: ProcessedOption): void {
+    void _node;
     // Hover-to-preview is intentionally not ported — click-to-drill is the
     // retained minimal interaction, per this component's own doc comment.
   }

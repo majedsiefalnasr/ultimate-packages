@@ -19,7 +19,10 @@ export interface UTabViewProps {
    * Called before a closable tab is closed; returning `false` cancels the
    * close. `index` is the tab's index among the panels.
    */
-  onBeforeTabClose?: (event: { originalEvent: React.SyntheticEvent; index: number }) => boolean | void;
+  onBeforeTabClose?: (event: {
+    originalEvent: React.SyntheticEvent;
+    index: number;
+  }) => boolean | void;
   /** Called after a closable tab has been closed. */
   onTabClose?: (event: { originalEvent: React.SyntheticEvent; index: number }) => void;
   children?: React.ReactNode;

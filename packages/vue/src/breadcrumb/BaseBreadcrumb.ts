@@ -17,7 +17,10 @@ import { breadcrumbStyleModule } from "./breadcrumb-style";
 // posture excludes entirely (spec §7); not reproduced here.
 export function createBaseBreadcrumb() {
   return defineComponent({
-    extends: createBaseComponent({ componentName: "breadcrumb", styleModule: breadcrumbStyleModule }),
+    extends: createBaseComponent({
+      componentName: "breadcrumb",
+      styleModule: breadcrumbStyleModule,
+    }),
     props: {
       model: { type: Array as PropType<readonly unknown[]>, default: () => [] },
       home: { type: Object, default: null },

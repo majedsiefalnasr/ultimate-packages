@@ -6,11 +6,11 @@
 
 **Why this exists / evidence basis:** A dedicated architecture research pass (real pinned upstream source: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5) found that real Table never uses Scroller's per-item template — it uses a coarser **content-level** composition point instead, which is a real, generic, already-public part of upstream Scroller/VirtualScroller's own API, not Table-specific glue:
 
-| Framework | Real upstream mechanism | Citation |
-|---|---|---|
-| Angular | `@ContentChild('content') contentTemplate: TemplateRef<{$implicit: unknown[]; options: ScrollerContentOptions}>`, rendered via `*ngTemplateOutlet`, falling back to the built-in per-item rendering when absent; per-item metadata via `getOptions(index) → {index, count, first, last, even, odd}` | PrimeNG `scroller.ts:450` (ContentChild), `scroller.ts:54-56` (ngTemplateOutlet dispatch), `scroller.ts:1191-1210` (`getContentOptions()`), `scroller.ts:1213-1224` (`getOptions()`); Table supplies it at `table.ts:207-217`; disabled-mode separate dispatch at `scroller.ts:89-94` |
-| React | `contentTemplate?: (options) => ReactNode` prop, called instead of the default per-item rendering when supplied; per-item metadata via `getOptions(index)`, same shape | PrimeReact `VirtualScroller.js:716-753` (`createContent`/`defaultOptions`); Table supplies it at `DataTable.js:1942-1967` |
-| Vue | `content` scoped slot, wrapping the default per-item `item`-slot rendering as fallback; per-item metadata via `getOptions(index)`, same shape | PrimeVue `VirtualScroller.vue:4-20`; Table supplies it at `DataTable.vue:91-92,127,184-186` |
+| Framework | Real upstream mechanism                                                                                                                                                                                                                                                                             | Citation                                                                                                                                                                                                                                                                              |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Angular   | `@ContentChild('content') contentTemplate: TemplateRef<{$implicit: unknown[]; options: ScrollerContentOptions}>`, rendered via `*ngTemplateOutlet`, falling back to the built-in per-item rendering when absent; per-item metadata via `getOptions(index) → {index, count, first, last, even, odd}` | PrimeNG `scroller.ts:450` (ContentChild), `scroller.ts:54-56` (ngTemplateOutlet dispatch), `scroller.ts:1191-1210` (`getContentOptions()`), `scroller.ts:1213-1224` (`getOptions()`); Table supplies it at `table.ts:207-217`; disabled-mode separate dispatch at `scroller.ts:89-94` |
+| React     | `contentTemplate?: (options) => ReactNode` prop, called instead of the default per-item rendering when supplied; per-item metadata via `getOptions(index)`, same shape                                                                                                                              | PrimeReact `VirtualScroller.js:716-753` (`createContent`/`defaultOptions`); Table supplies it at `DataTable.js:1942-1967`                                                                                                                                                             |
+| Vue       | `content` scoped slot, wrapping the default per-item `item`-slot rendering as fallback; per-item metadata via `getOptions(index)`, same shape                                                                                                                                                       | PrimeVue `VirtualScroller.vue:4-20`; Table supplies it at `DataTable.vue:91-92,127,184-186`                                                                                                                                                                                           |
 
 This plan mirrors that exact mechanism, per framework, as an **additive-only** extension: `UScroller`'s current built-in item rendering (`<div>{{value}}</div>`/`<div>{String(value)}</div>`) stays as the default/fallback path, used by any consumer (including all of `UScroller`'s current tests) that does not supply a content template. No existing `UScroller` public API (`items`/`itemSize`/`numToleratedItems`/`loading`/`disabled`/`lazy`/`onLazyLoad`/`scrollTo`/`scrollToIndex`) changes shape or behavior.
 
@@ -22,10 +22,10 @@ This plan mirrors that exact mechanism, per framework, as an **additive-only** e
 
 ## Global Constraints
 
-- **Additive-only.** No existing `UScroller` input/output/prop/emit is renamed, removed, or has its default behavior changed. Every existing test in `packages/{ng,react,vue}/src/scroller/scroller.spec.{ts,tsx}` must continue to pass unmodified after this plan — this plan only *adds* tests for the new content-template path, never edits an existing assertion. If any existing test needs to change, that is a signal this plan has drifted from "additive-only" and must stop and report, not silently adjust the existing test.
+- **Additive-only.** No existing `UScroller` input/output/prop/emit is renamed, removed, or has its default behavior changed. Every existing test in `packages/{ng,react,vue}/src/scroller/scroller.spec.{ts,tsx}` must continue to pass unmodified after this plan — this plan only _adds_ tests for the new content-template path, never edits an existing assertion. If any existing test needs to change, that is a signal this plan has drifted from "additive-only" and must stop and report, not silently adjust the existing test.
 - **Mirror the cited real upstream mechanism exactly, per framework — do not invent a shape.** Angular: `@ContentChild('content')` + `TemplateRef`, dispatched via `*ngTemplateOutlet`, matching `scroller.ts:450,54-56`. React: an optional `contentTemplate?: (options: ScrollerContentOptions) => React.ReactNode` prop, matching `VirtualScroller.js:729,753`. Vue: a `content` scoped slot, matching `VirtualScroller.vue:4-20`. Do not add an `item`-level template/slot/render-prop in this plan — real Table never uses that finer-grained mechanism (confirmed, both Table research passes), and adding it now would be speculative scope beyond what any known consumer needs.
 - **The content-template context/options object shape, re-verified against real source this review pass (the original planning pass under-specified this — corrected here):** real upstream's own `getContentOptions()`/`defaultOptions`/content-slot-props are richer than a bare `{itemSize}`. Confirmed real fields, all three frameworks (PrimeNG `scroller.ts:1191-1210` `getContentOptions()`; PrimeReact `VirtualScroller.js:729-748` `defaultOptions`; PrimeVue `VirtualScroller.vue:5-17` content slot props): `items` (the windowed slice — Angular's `loadedItems`/React's `loadedItems()`/Vue's `loadedItems`), `getItemOptions(index)`/`getOptions(index)` (a **per-item metadata function**, not a static style object — real shape confirmed at PrimeNG `scroller.ts:1213-1224`: `{index, count, first, last, even, odd}`, positional/boundary metadata only, no `top`/style offset field — positioning itself is computed by the consumer's own absolutely-positioned rendering, not handed down pre-computed), `itemSize`, `rows`/`columns` (pass-through of Scroller's own `rows`/`columns` inputs, relevant to Table's multi-column case), `loading`/`d_loading` (current loading-state flag — see the loading-path note below). Angular/React additionally expose `spacerStyle`/`contentStyle` and `contentRef`/`spacerRef` measurement-plumbing callbacks (PrimeNG's own template composes these structurally rather than exposing refs through the options object the same way; PrimeReact `VirtualScroller.js:730-747` exposes `spacerRef`/`contentRef`/`stickyRef` explicitly, and real `DataTable.js:1942-1950` wires `options.spacerRef` through to keep scroll-height spacer sizing correct when a `contentTemplate` is supplied). **This plan's content-template options object must include, at minimum: `items`, `getItemOptions(index)` returning `{index, count, first, last, even, odd}`, `itemSize`, `loading`.** `rows`/`columns` are out of scope for this plan (Ultimate's `UScroller` has no `columns` input — single-array `items` only, per its already-shipped API) and are correctly omitted, not deferred-and-forgotten. `spacerRef`/`contentRef`-equivalent plumbing is deferred as a `NEEDS IMPLEMENTATION-TIME VERIFICATION` item (see Task 1/3/5's own notes) since Ultimate's `UScroller` currently sizes its content wrapper via a plain `height` style on the `data-u-scroller-content` div (not a separate spacer element), so the real upstream's spacer-ref plumbing may not have a direct Ultimate equivalent to wire — do not invent one without re-verifying `UScroller`'s own real sizing mechanism first.
-- **`disabled`/`loading` interaction with the content template, verified against real source this review pass:** real PrimeNG has a *separate* template branch (`#disabledContainer`, `scroller.ts:89-94`) that also dispatches `contentTemplate` when `disabled` is true, but with a different, narrower context (`{$implicit: items, options: {rows: _items, columns: loadedColumns}}` — no `getItemOptions`, since disabled mode renders the full unwindowed list, not a virtualized window). Ultimate's `UScroller` already has its own `disabled` input (shipped, unchanged by this plan) whose existing behavior is "render every item, not just the windowed slice" (`visibleItems()`'s existing `if (this.disabled())` branch, `scroller.ts:142-144` — already shipped code, not part of this plan). **This plan's content-template dispatch must still fire when `disabled()` is true**, with `items` reflecting the full list (matching `UScroller`'s already-shipped disabled behavior) rather than the windowed slice — Tasks 1/3/5 must each include an explicit test for `disabled=true` + content-template-supplied, confirming the consumer's template receives the full item list, not an empty/incorrectly-windowed one. Real PrimeReact's `VirtualScroller.js:759`-region special-cases `props.disabled` similarly (calls `contentTemplate` with `{items: props.items, rows: props.items, columns: props.columns}` — the raw, unwindowed props, not the computed windowed state) — confirming this is a genuine cross-framework pattern, not an Angular-only quirk, and must be tested in all three frameworks, not just Angular.
+- **`disabled`/`loading` interaction with the content template, verified against real source this review pass:** real PrimeNG has a _separate_ template branch (`#disabledContainer`, `scroller.ts:89-94`) that also dispatches `contentTemplate` when `disabled` is true, but with a different, narrower context (`{$implicit: items, options: {rows: _items, columns: loadedColumns}}` — no `getItemOptions`, since disabled mode renders the full unwindowed list, not a virtualized window). Ultimate's `UScroller` already has its own `disabled` input (shipped, unchanged by this plan) whose existing behavior is "render every item, not just the windowed slice" (`visibleItems()`'s existing `if (this.disabled())` branch, `scroller.ts:142-144` — already shipped code, not part of this plan). **This plan's content-template dispatch must still fire when `disabled()` is true**, with `items` reflecting the full list (matching `UScroller`'s already-shipped disabled behavior) rather than the windowed slice — Tasks 1/3/5 must each include an explicit test for `disabled=true` + content-template-supplied, confirming the consumer's template receives the full item list, not an empty/incorrectly-windowed one. Real PrimeReact's `VirtualScroller.js:759`-region special-cases `props.disabled` similarly (calls `contentTemplate` with `{items: props.items, rows: props.items, columns: props.columns}` — the raw, unwindowed props, not the computed windowed state) — confirming this is a genuine cross-framework pattern, not an Angular-only quirk, and must be tested in all three frameworks, not just Angular.
 - **Loading state**: `loading()` is an existing shipped `UScroller` input (unchanged). Real `getContentOptions()`/`defaultOptions` expose the current loading flag to the content template (`loading`, per the field list above) so a consumer can render its own loading UI inside its own markup if it chooses — this plan exposes that flag but does not require Tasks 1/3/5 to build any Table-side loading UI (out of scope, Table's own concern later). Verify in Tasks 1/3/5 that supplying a content template does not suppress `UScroller`'s own existing built-in loader (`cx('loader')`/`u-scroller-loading-icon`, already shipped) incorrectly — real upstream's own loader rendering is a structurally separate concern from the content-template dispatch (confirmed: PrimeNG's loader markup sits in the same template region but outside the `contentTemplate`/`buildInContent` conditional, `scroller.ts` template lines ~40-53 precede the content dispatch at line 54), so Ultimate's existing loader block should likewise remain visually independent of which content path renders — each of Tasks 1/3/5 must add one test confirming the existing loader still renders correctly (or correctly does not render, per `loading()`'s existing semantics) when a content template is also supplied, not just when it is absent.
 - **`ResizeObserver` test-mock convention, carried forward from the original Scroller plan**: constructing `new ResizeObserver(() => {})` inside a test silently overwrites the shared mock's captured `resizeObserverCallback`, discarding the component's real captured callback. Always re-invoke the already-captured `resizeObserverCallback` (see `packages/ng/src/scroller/scroller.spec.ts:15-38`'s existing mock setup) rather than constructing a second observer inside a test.
 - **Angular OnPush/signal convention, carried forward**: any new internal state that can be mutated by a code path outside a template event (e.g., a getter recomputing content-template context on each render is fine since it's read during change detection; but if this plan introduces any new field mutated imperatively, it must be a `signal()`, not a plain field, per the same root cause documented in the original Scroller plan's `_contentSize` and the Paginator plan's `_first`).
@@ -41,10 +41,12 @@ This plan mirrors that exact mechanism, per framework, as an **additive-only** e
 ### Task 1: Angular — `@ContentChild('content')` + `ngTemplateOutlet` dispatch
 
 **Files:**
+
 - Modify: `packages/ng/src/scroller/scroller.ts`
 - Test: `packages/ng/src/scroller/scroller.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: existing `visibleItems()`/windowing state (already shipped)
 - Produces: `@ContentChild('content') contentTemplate?: TemplateRef<UScrollerContentContext>` where `UScrollerContentContext = { $implicit: {index: number; value: unknown}[]; options: { getItemOptions: (index: number) => {index: number; count: number; first: boolean; last: boolean; even: boolean; odd: boolean}; itemSize: number; loading: boolean } }` — corrected shape per the Global Constraints re-verification (real `getContentOptions()`, `scroller.ts:1191-1210`/`1213-1224`), not the originally-drafted `{itemSize}`-only shape — when present, dispatched via `*ngTemplateOutlet` instead of the built-in per-item `@for` block; when absent, today's built-in rendering runs unchanged — consumed by Table's (currently blocked) Task 9 once this plan merges
 
@@ -63,7 +65,10 @@ import { Component, ViewChild } from "@angular/core";
         <table data-test-content-template>
           <tbody>
             @for (item of visibleItems; track item.index) {
-              <tr [attr.data-index]="item.index" [attr.data-first]="options.getItemOptions(item.index).first">
+              <tr
+                [attr.data-index]="item.index"
+                [attr.data-first]="options.getItemOptions(item.index).first"
+              >
                 <td>{{ item.value }}</td>
               </tr>
             }
@@ -94,7 +99,9 @@ describe("UScroller content template (Task 1)", () => {
     fixture.componentRef.setInput("items", ["a", "b", "c"]);
     fixture.componentRef.setInput("itemSize", 30);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll("[data-u-scroller-item]").length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.querySelectorAll("[data-u-scroller-item]").length).toBeGreaterThan(
+      0
+    );
   });
 
   it("exposes a real options.getItemOptions(index) returning {index, count, first, last, even, odd} — matching real PrimeNG's getOptions() shape", () => {
@@ -131,7 +138,7 @@ Expected: FAIL — `[data-test-content-template]` not found (no `@ContentChild('
 
 - [ ] **Step 3: Write minimal implementation**
 
-Add `@ContentChild('content') protected contentTemplate?: TemplateRef<UScrollerContentContext>;` to `UScroller` (with the corrected `UScrollerContentContext` type from this task's Interfaces above, exported alongside `UScroller` for consumers). Add a `protected getItemOptions(index: number)` method returning `{index, count: this.items().length, first: index === 0, last: index === this.items().length - 1, even: index % 2 === 0, odd: index % 2 !== 0}`, mirroring real PrimeNG's `getOptions(renderedIndex)` (`scroller.ts:1213-1224`) exactly — note real PrimeNG's `index` accounts for the windowed offset (`this.first + renderedIndex`); Ultimate's `visibleItems()` already returns absolute (not renderedIndex-relative) indices per its existing shipped implementation, so `getItemOptions` takes the already-absolute index directly, no offset arithmetic needed here (verify this against `visibleItems()`'s actual shipped return shape before implementing — it already returns `{index, value}` pairs with `index` as the absolute array index, confirmed by reading `scroller.ts`'s existing `visibleItems()` method this planning pass). In the template, wrap the existing `data-u-scroller-content` `<div>` block: when `contentTemplate` is present, render `<ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: visibleItems(), options: { getItemOptions: getItemOptions.bind(this), itemSize: itemSize(), loading: loading() ?? false } }"></ng-container>` in place of the built-in `@for (item of visibleItems(); ...)` block; when absent, keep today's built-in rendering exactly as-is (no behavior change to the existing path). The outer `data-u-scroller-content` positioning `<div>` (height/absolute-positioning wrapper) stays either way — only the *inner* per-item rendering is replaced by the outlet, matching real PrimeNG's own structure where the content template replaces the inner rendering, not Scroller's outer scroll-viewport shell. **`disabled` interaction**: `visibleItems()` already branches on `disabled()` in its existing shipped implementation (returns the full `liveItems` list, not the windowed slice, when `disabled()` is true — confirmed, `scroller.ts`'s existing `visibleItems()` method) — since this task's content-template dispatch reuses `visibleItems()` as-is, the disabled-mode full-list behavior is inherited automatically, requiring no separate disabled-specific branch in the content-template dispatch itself (unlike real PrimeNG's separate `#disabledContainer` template region, which exists because PrimeNG's own `disabled` handling is structured differently — Ultimate's simpler single-`visibleItems()`-source-of-truth design already covers both cases through one dispatch path). The loader block (`cx('loader')`, already shipped, unchanged) remains outside/sibling to this conditional, exactly as it is today — no restructuring needed, since it already sits outside the content-rendering `<div>` in the current shipped template.
+Add `@ContentChild('content') protected contentTemplate?: TemplateRef<UScrollerContentContext>;` to `UScroller` (with the corrected `UScrollerContentContext` type from this task's Interfaces above, exported alongside `UScroller` for consumers). Add a `protected getItemOptions(index: number)` method returning `{index, count: this.items().length, first: index === 0, last: index === this.items().length - 1, even: index % 2 === 0, odd: index % 2 !== 0}`, mirroring real PrimeNG's `getOptions(renderedIndex)` (`scroller.ts:1213-1224`) exactly — note real PrimeNG's `index` accounts for the windowed offset (`this.first + renderedIndex`); Ultimate's `visibleItems()` already returns absolute (not renderedIndex-relative) indices per its existing shipped implementation, so `getItemOptions` takes the already-absolute index directly, no offset arithmetic needed here (verify this against `visibleItems()`'s actual shipped return shape before implementing — it already returns `{index, value}` pairs with `index` as the absolute array index, confirmed by reading `scroller.ts`'s existing `visibleItems()` method this planning pass). In the template, wrap the existing `data-u-scroller-content` `<div>` block: when `contentTemplate` is present, render `<ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: visibleItems(), options: { getItemOptions: getItemOptions.bind(this), itemSize: itemSize(), loading: loading() ?? false } }"></ng-container>` in place of the built-in `@for (item of visibleItems(); ...)` block; when absent, keep today's built-in rendering exactly as-is (no behavior change to the existing path). The outer `data-u-scroller-content` positioning `<div>` (height/absolute-positioning wrapper) stays either way — only the _inner_ per-item rendering is replaced by the outlet, matching real PrimeNG's own structure where the content template replaces the inner rendering, not Scroller's outer scroll-viewport shell. **`disabled` interaction**: `visibleItems()` already branches on `disabled()` in its existing shipped implementation (returns the full `liveItems` list, not the windowed slice, when `disabled()` is true — confirmed, `scroller.ts`'s existing `visibleItems()` method) — since this task's content-template dispatch reuses `visibleItems()` as-is, the disabled-mode full-list behavior is inherited automatically, requiring no separate disabled-specific branch in the content-template dispatch itself (unlike real PrimeNG's separate `#disabledContainer` template region, which exists because PrimeNG's own `disabled` handling is structured differently — Ultimate's simpler single-`visibleItems()`-source-of-truth design already covers both cases through one dispatch path). The loader block (`cx('loader')`, already shipped, unchanged) remains outside/sibling to this conditional, exactly as it is today — no restructuring needed, since it already sits outside the content-rendering `<div>` in the current shipped template.
 
 - [ ] **Step 4: Run test to verify it passes**
 
@@ -150,9 +157,11 @@ git commit -m "feat(ng): add UScroller content-template composition point (Conte
 ### Task 2: Angular — verify existing tests unaffected, verify options context shape against real usage
 
 **Files:**
+
 - Test: `packages/ng/src/scroller/scroller.spec.ts` (no new assertions expected — verification task)
 
 **Interfaces:**
+
 - Consumes: Task 1's `contentTemplate`
 - Produces: nothing new — confirms the additive-only constraint held
 
@@ -185,10 +194,12 @@ No commit if nothing changed. If a Task-1 regression was fixed, commit that fix 
 ### Task 3: React — `contentTemplate` render-prop
 
 **Files:**
+
 - Modify: `packages/react/src/scroller/scroller.tsx`
 - Test: `packages/react/src/scroller/scroller.spec.tsx` (extend)
 
 **Interfaces:**
+
 - Consumes: existing `visibleItems`/windowing state (already shipped)
 - Produces: `contentTemplate?: (options: UScrollerContentOptions) => React.ReactNode` prop on `UScrollerProps` where `UScrollerContentOptions = { items: {index: number; value: unknown}[]; getItemOptions: (index: number) => {index: number; count: number; first: boolean; last: boolean; even: boolean; odd: boolean}; itemSize: number; loading: boolean }` — corrected shape per the Global Constraints re-verification (real `defaultOptions`, `VirtualScroller.js:729-748`), not the originally-drafted `{items, itemSize}`-only shape — when present, called instead of the built-in per-item `.map()` rendering; when absent, today's built-in rendering runs unchanged — consumed by Table's (currently blocked) Task 15b once this plan merges
 
@@ -236,7 +247,11 @@ describe("UScroller content template (Task 3)", () => {
           <table data-test-content-template>
             <tbody>
               {visible.map((entry) => (
-                <tr key={entry.index} data-index={entry.index} data-first={String(getItemOptions(entry.index).first)}>
+                <tr
+                  key={entry.index}
+                  data-index={entry.index}
+                  data-first={String(getItemOptions(entry.index).first)}
+                >
                   <td>{String(entry.value)}</td>
                 </tr>
               ))}
@@ -312,9 +327,11 @@ git commit -m "feat(react): add UScroller contentTemplate render-prop compositio
 ### Task 4: React — verify existing tests unaffected
 
 **Files:**
+
 - Test: `packages/react/src/scroller/scroller.spec.tsx` (no new assertions expected — verification task)
 
 **Interfaces:**
+
 - Consumes: Task 3's `contentTemplate`
 - Produces: nothing new — confirms the additive-only constraint held
 
@@ -347,10 +364,12 @@ No commit if nothing changed; otherwise commit the specific regression fix.
 ### Task 5: Vue — `content` scoped slot
 
 **Files:**
+
 - Modify: `packages/vue/src/scroller/Scroller.vue`
 - Test: `packages/vue/src/scroller/scroller.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: existing `visibleItems`/windowing state (already shipped)
 - Produces: a `content` scoped slot exposing `{ items: {index, value}[], getItemOptions: (index: number) => {index, count, first, last, even, odd}, itemSize, loading }` — corrected shape per the Global Constraints re-verification (real content-slot props, `VirtualScroller.vue:5-17`), not the originally-drafted `{items, itemSize}`-only shape — when a consumer supplies `#content`, it replaces the built-in per-item `v-for` rendering; when absent, today's built-in rendering runs unchanged — consumed by Table's (currently blocked) Task 21b once this plan merges
 
@@ -366,19 +385,17 @@ describe("UScroller content template (Task 5)", () => {
       props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30 },
       slots: {
         content: (slotProps: { items: { index: number; value: unknown }[] }) =>
-          h(
-            "table",
-            { "data-test-content-template": true },
-            [
-              h(
-                "tbody",
-                {},
-                slotProps.items.map((entry) =>
-                  h("tr", { key: entry.index, "data-index": entry.index }, [h("td", {}, String(entry.value))])
-                )
-              ),
-            ]
-          ),
+          h("table", { "data-test-content-template": true }, [
+            h(
+              "tbody",
+              {},
+              slotProps.items.map((entry) =>
+                h("tr", { key: entry.index, "data-index": entry.index }, [
+                  h("td", {}, String(entry.value)),
+                ])
+              )
+            ),
+          ]),
       },
     });
     expect(wrapper.find("[data-test-content-template]").exists()).toBe(true);
@@ -399,23 +416,23 @@ describe("UScroller content template (Task 5)", () => {
           items: { index: number; value: unknown }[];
           getItemOptions: (index: number) => { first: boolean };
         }) =>
-          h(
-            "table",
-            { "data-test-content-template": true },
-            [
-              h(
-                "tbody",
-                {},
-                slotProps.items.map((entry) =>
-                  h(
-                    "tr",
-                    { key: entry.index, "data-index": entry.index, "data-first": String(slotProps.getItemOptions(entry.index).first) },
-                    [h("td", {}, String(entry.value))]
-                  )
+          h("table", { "data-test-content-template": true }, [
+            h(
+              "tbody",
+              {},
+              slotProps.items.map((entry) =>
+                h(
+                  "tr",
+                  {
+                    key: entry.index,
+                    "data-index": entry.index,
+                    "data-first": String(slotProps.getItemOptions(entry.index).first),
+                  },
+                  [h("td", {}, String(entry.value))]
                 )
-              ),
-            ]
-          ),
+              )
+            ),
+          ]),
       },
     });
     expect(wrapper.find("tr[data-index='0']").attributes("data-first")).toBe("true");
@@ -423,20 +440,24 @@ describe("UScroller content template (Task 5)", () => {
 
   it("passes the full unwindowed item list when disabled=true, matching UScroller's existing shipped disabled behavior", () => {
     const wrapper = mount(UScroller, {
-      props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30, disabled: true },
+      props: {
+        items: Array.from({ length: 50 }, (_, i) => `Row ${i}`),
+        itemSize: 30,
+        disabled: true,
+      },
       slots: {
         content: (slotProps: { items: { index: number; value: unknown }[] }) =>
-          h(
-            "table",
-            { "data-test-content-template": true },
-            [
-              h(
-                "tbody",
-                {},
-                slotProps.items.map((entry) => h("tr", { key: entry.index, "data-index": entry.index }, [h("td", {}, String(entry.value))]))
-              ),
-            ]
-          ),
+          h("table", { "data-test-content-template": true }, [
+            h(
+              "tbody",
+              {},
+              slotProps.items.map((entry) =>
+                h("tr", { key: entry.index, "data-index": entry.index }, [
+                  h("td", {}, String(entry.value)),
+                ])
+              )
+            ),
+          ]),
       },
     });
     expect(wrapper.findAll("tr[data-index]").length).toBe(50);
@@ -479,9 +500,11 @@ git commit -m "feat(vue): add UScroller content scoped-slot composition point"
 ### Task 6: Vue — verify existing tests unaffected
 
 **Files:**
+
 - Test: `packages/vue/src/scroller/scroller.spec.ts` (no new assertions expected — verification task)
 
 **Interfaces:**
+
 - Consumes: Task 5's `content` slot
 - Produces: nothing new — confirms the additive-only constraint held
 
@@ -514,23 +537,25 @@ No commit if nothing changed; otherwise commit the specific regression fix.
 ### Task 7: Cross-framework content-template parity test
 
 **Files:**
+
 - Create: a small parity test per framework, or extend each `scroller.spec.{ts,tsx}` with one final labeled block confirming the three mechanisms produce equivalent capability (not identical DOM — the point is capability parity, not shared markup)
 
 **Interfaces:**
+
 - Consumes: Tasks 1/3/5's real implementations
 - Produces: one test per framework proving the **exact nested structure** `table → tbody → tr → td` (element parentage, not just presence) renders through the content mechanism with correct row/cell counts, plus confirmation the built-in fallback still works when no content template/prop/slot is supplied — this is the concrete proof the mechanism is generic enough for a future `UTable` to use, not merely passing a synthetic test fixture
 
 - [ ] **Step 1: Write the failing test**
 
-Extend each framework's Task 1/3/5 test block with an assertion per framework that checks the **actual DOM nesting**, not just element presence — Tasks 1/3/5's existing tests query `tr[data-index]`/`td` at the container level, which does not by itself prove `td` is a *child* of `tr`, which is a child of `tbody`, which is a child of `table` (a malformed/flattened DOM could still satisfy "these three selectors all return non-zero results" without proving correct nesting). Add, per framework: `const table = container.querySelector("table[data-test-content-template]"); const tbody = table.querySelector("tbody"); expect(tbody?.parentElement).toBe(table); const rows = tbody.querySelectorAll(":scope > tr"); expect(rows.length).toBe(<expected windowed count>); rows.forEach(row => expect(row.querySelector(":scope > td")).not.toBeNull());` (Angular: `fixture.nativeElement`-rooted equivalent; Vue: `wrapper.element`-rooted equivalent) — this is a genuinely new assertion (direct-child scoping via `:scope >`), not a restatement of Tasks 1/3/5's existing presence checks, and is the actual close of "verify Task 7 proves actual semantic table markup: `table → tbody → tr → td`" from the review criteria.
+Extend each framework's Task 1/3/5 test block with an assertion per framework that checks the **actual DOM nesting**, not just element presence — Tasks 1/3/5's existing tests query `tr[data-index]`/`td` at the container level, which does not by itself prove `td` is a _child_ of `tr`, which is a child of `tbody`, which is a child of `table` (a malformed/flattened DOM could still satisfy "these three selectors all return non-zero results" without proving correct nesting). Add, per framework: `const table = container.querySelector("table[data-test-content-template]"); const tbody = table.querySelector("tbody"); expect(tbody?.parentElement).toBe(table); const rows = tbody.querySelectorAll(":scope > tr"); expect(rows.length).toBe(<expected windowed count>); rows.forEach(row => expect(row.querySelector(":scope > td")).not.toBeNull());` (Angular: `fixture.nativeElement`-rooted equivalent; Vue: `wrapper.element`-rooted equivalent) — this is a genuinely new assertion (direct-child scoping via `:scope >`), not a restatement of Tasks 1/3/5's existing presence checks, and is the actual close of "verify Task 7 proves actual semantic table markup: `table → tbody → tr → td`" from the review criteria.
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run each framework's scroller test filter. This is a genuine new assertion (direct-child `:scope >` nesting proof), not a restatement of an existing passing test — it may legitimately fail if Tasks 1/3/5's dispatch wraps the consumer's template in an unexpected extra element (e.g., the outer `data-u-scroller-content` positioning `<div>` landing *between* `tbody` and `table` instead of around the whole `<table>`), which would be a genuine composition defect to fix at its source (Task 1/3/5's own file), not a reason to weaken this test.
+Run each framework's scroller test filter. This is a genuine new assertion (direct-child `:scope >` nesting proof), not a restatement of an existing passing test — it may legitimately fail if Tasks 1/3/5's dispatch wraps the consumer's template in an unexpected extra element (e.g., the outer `data-u-scroller-content` positioning `<div>` landing _between_ `tbody` and `table` instead of around the whole `<table>`), which would be a genuine composition defect to fix at its source (Task 1/3/5's own file), not a reason to weaken this test.
 
 - [ ] **Step 3: Write minimal implementation**
 
-None expected if Tasks 1/3/5 wrap the outlet/render-prop/slot correctly (dispatch replaces only the *inner* item-rendering, leaving the consumer's own `<table>` root un-wrapped by any Scroller-owned element, per each task's own Step 3 text). If Step 2 fails, the fix belongs in the offending framework's Task 1/3/5 file, not here.
+None expected if Tasks 1/3/5 wrap the outlet/render-prop/slot correctly (dispatch replaces only the _inner_ item-rendering, leaving the consumer's own `<table>` root un-wrapped by any Scroller-owned element, per each task's own Step 3 text). If Step 2 fails, the fix belongs in the offending framework's Task 1/3/5 file, not here.
 
 - [ ] **Step 4: Run test to verify it passes**
 
@@ -549,11 +574,13 @@ git commit -m "test: verify UScroller content-template mechanism achieves table-
 ### Task 8: Provenance manifest entries
 
 **Files:**
+
 - Modify: `docs/architecture/provenance/ng.json`
 - Modify: `docs/architecture/provenance/react.json`
 - Modify: `docs/architecture/provenance/vue.json`
 
 **Interfaces:**
+
 - Consumes: none
 - Produces: one entry per modified file (Tasks 1/3/5's `scroller.ts`/`scroller.tsx`/`Scroller.vue` — modification, not new file), using the existing `originalPath`/`ultimateDestination`/`modificationStatus`/`modificationDescription` schema, citing the real upstream `contentTemplate`/`ContentChild`/scoped-slot mechanism this plan mirrors **with the exact pinned commit SHA per framework**, matching every other provenance entry in this repo's convention (verified this review pass — existing Paginator/Scroller entries always pair a file:line citation with the pinned upstream commit hash, never a line citation alone)
 
@@ -568,7 +595,8 @@ Expected: FAIL — modified `scroller.ts`/`scroller.tsx`/`Scroller.vue` have no 
 
 - [ ] **Step 3: Write minimal implementation**
 
-Update or append entries for `packages/ng/src/scroller/scroller.ts`, `packages/react/src/scroller/scroller.tsx`, `packages/vue/src/scroller/Scroller.vue`, each following the existing schema exactly: `originalPath` pointing at the real upstream file, `ultimateDestination` at the Ultimate file, `modificationStatus: "adapted"` (this is a structural adaptation of a real upstream mechanism into `UBaseComponent`'s own contract, not a verbatim copy — matching the same `modificationStatus` value already used by every other Scroller/Paginator entry in these manifests), and a `modificationDescription` that (a) names the exact real upstream mechanism mirrored, (b) cites the exact pinned commit SHA, not just a version number, and (c) states plainly that Ultimate's implementation is *informed by* the cited upstream mechanism, not copied verbatim — the type shapes, dispatch structure, and existing `UBaseComponent`/`useComponentBase`/`createBaseComponent` conventions are Ultimate's own, only the architectural mechanism (content-level composition point, generic per-item metadata via `getItemOptions`) is mirrored. Exact citations to use:
+Update or append entries for `packages/ng/src/scroller/scroller.ts`, `packages/react/src/scroller/scroller.tsx`, `packages/vue/src/scroller/Scroller.vue`, each following the existing schema exactly: `originalPath` pointing at the real upstream file, `ultimateDestination` at the Ultimate file, `modificationStatus: "adapted"` (this is a structural adaptation of a real upstream mechanism into `UBaseComponent`'s own contract, not a verbatim copy — matching the same `modificationStatus` value already used by every other Scroller/Paginator entry in these manifests), and a `modificationDescription` that (a) names the exact real upstream mechanism mirrored, (b) cites the exact pinned commit SHA, not just a version number, and (c) states plainly that Ultimate's implementation is _informed by_ the cited upstream mechanism, not copied verbatim — the type shapes, dispatch structure, and existing `UBaseComponent`/`useComponentBase`/`createBaseComponent` conventions are Ultimate's own, only the architectural mechanism (content-level composition point, generic per-item metadata via `getItemOptions`) is mirrored. Exact citations to use:
+
 - Angular: `originalPath: "packages/primeng/src/scroller/scroller.ts"` (pinned commit `c493b1c6d9f7cdffbe1c4dc195493dd73d733593`, PrimeNG 21.1.9), `modificationDescription` citing `@ContentChild('content', {descendants: false})` (`scroller.ts:450`), the `ngTemplateOutlet` dispatch (`scroller.ts:54-56`), and `getOptions(renderedIndex)`'s real per-item metadata shape (`scroller.ts:1213-1224`) as the mechanisms this task's `contentTemplate`/`getItemOptions` are informed by.
 - React: `originalPath: "packages/primereact/components/lib/virtualscroller/VirtualScroller.js"` (pinned commit `d0f574e39122668292fc7a740f081bae1b93b1e9`, PrimeReact 10.9.9), citing the `contentTemplate` prop and `defaultOptions` object (`VirtualScroller.js:716-753`) and `getOptions`'s real per-item metadata shape as the informing mechanism.
 - Vue: `originalPath: "packages/primevue/src/virtualscroller/VirtualScroller.vue"` (pinned commit `66dde6788220fc9e6822342919d1ceb0e3460ece`, PrimeVue 4.5.5), citing the `content` scoped slot and its props (`VirtualScroller.vue:4-20`) and `getOptions`'s real per-item metadata shape as the informing mechanism.

@@ -32,13 +32,13 @@ Only this plan is created now. All checkboxes below describe future work, not ac
 
 ## 2. Preconditions and human gates
 
-| Gate | Required explicit human approval | Current state |
-| --- | --- | --- |
-| **P1 — candidate selection** | Select exactly one C1, C2 or C3; record evidence-based justification and preservation argument | **NOT GRANTED** |
-| **P2 — exact delta** | Approve exact selector, CSS properties/declarations, before/after text, style/data location, generated/provenance representation and complete file allowlist | **NOT GRANTED** |
-| **P3 — execution budget** | Approve one selected candidate, one implementation, one verification campaign, retries 0, exact scoped checks and evidence destinations | **NOT GRANTED** |
-| **P4 — escalation contract** | Acknowledge the stop matrix in §9; no execution may cross those boundaries without another ruling | Binding boundary; no exception authorized |
-| **Implementation authorization** | After Plan Review and P1–P3, explicitly authorize execution of the reviewed exact delta and campaign | **NOT GRANTED** |
+| Gate                             | Required explicit human approval                                                                                                                             | Current state                             |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
+| **P1 — candidate selection**     | Select exactly one C1, C2 or C3; record evidence-based justification and preservation argument                                                               | **NOT GRANTED**                           |
+| **P2 — exact delta**             | Approve exact selector, CSS properties/declarations, before/after text, style/data location, generated/provenance representation and complete file allowlist | **NOT GRANTED**                           |
+| **P3 — execution budget**        | Approve one selected candidate, one implementation, one verification campaign, retries 0, exact scoped checks and evidence destinations                      | **NOT GRANTED**                           |
+| **P4 — escalation contract**     | Acknowledge the stop matrix in §9; no execution may cross those boundaries without another ruling                                                            | Binding boundary; no exception authorized |
+| **Implementation authorization** | After Plan Review and P1–P3, explicitly authorize execution of the reviewed exact delta and campaign                                                         | **NOT GRANTED**                           |
 
 P2 approval must contain a concrete delta record with: selected candidate; exact destination selector; precise property/value additions/removals/replacements; original declaration text; source rule and affected upstream group or retained-local-rule identity; generator data path/field; style destination; provenance entry; rationale; diagnostic citation; affected files; preservation argument; and exact campaign/measurement integration described in §6. A local retained rule must be identified as local, not falsely attributed to an upstream group. No unapproved compensation value follows from the observed 3 px.
 
@@ -48,11 +48,11 @@ This intentionally blocked candidate-specific section is not a placeholder for a
 
 ## 3. Candidate handling — none selected
 
-| Candidate | Intended mechanism / potential surface | Risks and required evidence | Stop conditions |
-| --- | --- | --- | --- |
-| **C1 — retained-span placement adaptation** | Existing span's placement relative to inline root; Angular style module and only its approved Angular generator-data representation | Clip box, sizing and overlay bounds may move; prove primary image/wrapper geometry and all existing affected states | Needs a forbidden change, unsupported fixed compensation, new evidence, or fails preservation/parity |
-| **C2 — different span positioning context** | Existing span's formatting/positioning role and second image's containing block, within the same local style/data surfaces | Clip reference box, percentage dimensions, flow and slider placement may change; prove containing block, clip and slide behavior, all five canonical cases | Requires replacing/removing span, runtime adjustment, new convention, or fails preservation/parity |
-| **C3 — right-image-only alignment** | Existing second image within the unchanged positioned span, through approved component-local style/data representation | Matching image top can still crop pixels or leave clip-origin mismatch; prove image plus clip-box geometry and visual/interaction results | Needs changing clipping mechanism, forbidden scope, unapproved diagnostics, or fails preservation/parity |
+| Candidate                                   | Intended mechanism / potential surface                                                                                              | Risks and required evidence                                                                                                                                | Stop conditions                                                                                          |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **C1 — retained-span placement adaptation** | Existing span's placement relative to inline root; Angular style module and only its approved Angular generator-data representation | Clip box, sizing and overlay bounds may move; prove primary image/wrapper geometry and all existing affected states                                        | Needs a forbidden change, unsupported fixed compensation, new evidence, or fails preservation/parity     |
+| **C2 — different span positioning context** | Existing span's formatting/positioning role and second image's containing block, within the same local style/data surfaces          | Clip reference box, percentage dimensions, flow and slider placement may change; prove containing block, clip and slide behavior, all five canonical cases | Requires replacing/removing span, runtime adjustment, new convention, or fails preservation/parity       |
+| **C3 — right-image-only alignment**         | Existing second image within the unchanged positioned span, through approved component-local style/data representation              | Matching image top can still crop pixels or leave clip-origin mismatch; prove image plus clip-box geometry and visual/interaction results                  | Needs changing clipping mechanism, forbidden scope, unapproved diagnostics, or fails preservation/parity |
 
 The complete §6 campaign applies to whichever candidate is selected. These descriptions are not executable CSS instructions. No exact property/value or mapping entry is invented. Exactly one isolated Task 1 below may be instantiated by the P1/P2 packet; no alternative branch executes after failure.
 
@@ -60,13 +60,13 @@ The complete §6 campaign applies to whichever candidate is selected. These desc
 
 Likely surfaces, **not a current modification allowlist**:
 
-| Surface | Existing role / future restriction |
-| --- | --- |
-| `packages/ng/src/image-compare/image-compare-style.ts` | Generated CSS destination; change only the approved local delta, retain unrelated groups byte-for-byte where generation permits |
-| `packages/themes/test/utils/g3e-port.mjs` | Existing `MAPPING`, `LOCAL_RULES`, `RETAINED`, `expectedCss()` and generator data; P2 must name the precise Angular-only data field, not invent a new policy |
-| `docs/architecture/provenance/ng.json` | Existing Angular manifest; P2 must approve the exact changed-style entry/content, including any necessary new entry |
-| `docs/architecture/PROVENANCE.md` | Existing aggregate provenance document; modify only if specifically required and approved in P2, never as a general refresh |
-| `packages/themes/test/g3e-upstream-fidelity.test.ts` | Existing fidelity assertions, read-only; no weakening, exemption, fixture/count change or new expected declaration merely to pass |
+| Surface                                                | Existing role / future restriction                                                                                                                           |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `packages/ng/src/image-compare/image-compare-style.ts` | Generated CSS destination; change only the approved local delta, retain unrelated groups byte-for-byte where generation permits                              |
+| `packages/themes/test/utils/g3e-port.mjs`              | Existing `MAPPING`, `LOCAL_RULES`, `RETAINED`, `expectedCss()` and generator data; P2 must name the precise Angular-only data field, not invent a new policy |
+| `docs/architecture/provenance/ng.json`                 | Existing Angular manifest; P2 must approve the exact changed-style entry/content, including any necessary new entry                                          |
+| `docs/architecture/PROVENANCE.md`                      | Existing aggregate provenance document; modify only if specifically required and approved in P2, never as a general refresh                                  |
+| `packages/themes/test/g3e-upstream-fidelity.test.ts`   | Existing fidelity assertions, read-only; no weakening, exemption, fixture/count change or new expected declaration merely to pass                            |
 
 The current mapping includes shared array references between Angular/Vue. Do not mutate an aliased array in a way that changes Vue output. An Angular-only representation must use the existing architecture without changing its generation policy; if that cannot be achieved, stop. Both approved output and approved provenance must identify the selected adaptation honestly.
 
@@ -106,16 +106,16 @@ Existing before evidence is the corrected Stage 2 case, not a new browser captur
 
 Each row below is part of the single campaign. Commands are future selections for P2/P3 review, not commands executed in plan creation. Container-only config/instrumentation must be approved concretely before use.
 
-| Run | Selection / invocation contract | Evidence / required outcome |
-| --- | --- | --- |
-| **V1 — parity + internal geometry** | One `prime-parity-chromium` run of `tooling/prime-reference/e2e/g3e.spec.ts`, batch E-1, grep `\bimagecompare/(root-style\|default\|slide\|focus\|rtl) \[ng\] PrimeNG 21\.1\.9 vs Ultimate$` interpreted as the alternation regex shown below; one worker, retries 0; approved Angular-only derived config | Exactly five Angular cases; root-style measurements from that observation; existing environment and zero-noise checks; saved comparison images/reports |
-| **V2 — visual regression** | One invocation each for `ng-chromium`, `ng-firefox`, `ng-webkit` of `packages/ng/e2e/g3e-aura-styles.spec.ts`, grep `\bNg/ImageCompare (Sized\|Rtl) rest G3-E E-1 visual$` interpreted as alternation | Two existing ImageCompare screenshot tests per engine, unchanged thresholds/snapshots, raw expected/actual/diff outputs retained |
-| **V3 — accessibility** | One targeted set: existing Sized/Rtl accessibility tests in each of those three engines, exact regex below; one scoped read-only differential validation invocation approved at P2 | Six new envelopes, all required reports present, no introduced violation under existing baseline/pre-existing fingerprint accounting |
-| **V4 — selector reach** | One invocation of `packages/ng/e2e/g3e-aura-styles.spec.ts`, `ng-chromium`, exact grep `\bNg/imagecompare selector reach G3-E reach$`, retries 0 | Existing Sized/Rtl reach runs, unchanged collector/validator and no new failure; do not run or edit Image's closed E1-B2 interaction |
-| **V5 — component unit** | Once: `pnpm --filter @ultimate/ng exec ng test --project=ng --include=src/image-compare/image-compare.spec.ts --watch=false` | Existing projection, range and clip-path behavior assertions preserved and passing |
-| **V6 — generated-style fidelity** | One approved scoped read-only comparison of Angular `imagecompare` using the existing `actualCssText`, `parseGroups`, `norm`, `expectedCss` logic and existing count literals | Generated and shipped groups equal, approved mapping delta only, exact protected Firefox declaration and counts preserved |
-| **V7 — build/type** | Once each: `pnpm --filter @ultimate/ng run build` and `pnpm --filter @ultimate/ng run typecheck`, with required dependency artifacts prepared once per approved list | No new attributable compile/type failure; no repair of unrelated debt |
-| **V8 — changed-file provenance/integrity** | One scoped read-only check against the starting worktree manifest and P2 allowlist; inspect the exact changed-style provenance entry, generated/shipped equality and protected hashes | Every changed source file accounted for; no unrelated mapping/Vue/product/test/baseline/history change; E1-B1 preserved |
+| Run                                        | Selection / invocation contract                                                                                                                                                                                                                                                                            | Evidence / required outcome                                                                                                                            |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **V1 — parity + internal geometry**        | One `prime-parity-chromium` run of `tooling/prime-reference/e2e/g3e.spec.ts`, batch E-1, grep `\bimagecompare/(root-style\|default\|slide\|focus\|rtl) \[ng\] PrimeNG 21\.1\.9 vs Ultimate$` interpreted as the alternation regex shown below; one worker, retries 0; approved Angular-only derived config | Exactly five Angular cases; root-style measurements from that observation; existing environment and zero-noise checks; saved comparison images/reports |
+| **V2 — visual regression**                 | One invocation each for `ng-chromium`, `ng-firefox`, `ng-webkit` of `packages/ng/e2e/g3e-aura-styles.spec.ts`, grep `\bNg/ImageCompare (Sized\|Rtl) rest G3-E E-1 visual$` interpreted as alternation                                                                                                      | Two existing ImageCompare screenshot tests per engine, unchanged thresholds/snapshots, raw expected/actual/diff outputs retained                       |
+| **V3 — accessibility**                     | One targeted set: existing Sized/Rtl accessibility tests in each of those three engines, exact regex below; one scoped read-only differential validation invocation approved at P2                                                                                                                         | Six new envelopes, all required reports present, no introduced violation under existing baseline/pre-existing fingerprint accounting                   |
+| **V4 — selector reach**                    | One invocation of `packages/ng/e2e/g3e-aura-styles.spec.ts`, `ng-chromium`, exact grep `\bNg/imagecompare selector reach G3-E reach$`, retries 0                                                                                                                                                           | Existing Sized/Rtl reach runs, unchanged collector/validator and no new failure; do not run or edit Image's closed E1-B2 interaction                   |
+| **V5 — component unit**                    | Once: `pnpm --filter @ultimate/ng exec ng test --project=ng --include=src/image-compare/image-compare.spec.ts --watch=false`                                                                                                                                                                               | Existing projection, range and clip-path behavior assertions preserved and passing                                                                     |
+| **V6 — generated-style fidelity**          | One approved scoped read-only comparison of Angular `imagecompare` using the existing `actualCssText`, `parseGroups`, `norm`, `expectedCss` logic and existing count literals                                                                                                                              | Generated and shipped groups equal, approved mapping delta only, exact protected Firefox declaration and counts preserved                              |
+| **V7 — build/type**                        | Once each: `pnpm --filter @ultimate/ng run build` and `pnpm --filter @ultimate/ng run typecheck`, with required dependency artifacts prepared once per approved list                                                                                                                                       | No new attributable compile/type failure; no repair of unrelated debt                                                                                  |
+| **V8 — changed-file provenance/integrity** | One scoped read-only check against the starting worktree manifest and P2 allowlist; inspect the exact changed-style provenance entry, generated/shipped equality and protected hashes                                                                                                                      | Every changed source file accounted for; no unrelated mapping/Vue/product/test/baseline/history change; E1-B1 preserved                                |
 
 Playwright matches grep against the full test title, including project/file/ancestor context. These patterns match the exact leaf-title suffix at a word boundary rather than assuming the leaf starts the full title. Apply them only with the explicit file and Angular project selections in V1–V4; V3 uses the same file/project restrictions as V2. For clarity, the table escapes `|` only for Markdown rendering. The literal CLI grep strings are:
 
@@ -146,17 +146,17 @@ No such artifact is created now. Its exact approved contents are required before
 
 The following are the approved specification's criteria, without weakening:
 
-| ID | Required outcome after the separately authorized implementation |
-| --- | --- |
-| AC1 | The canonical second/right image's +3 px discrepancy is removed: its root-relative placement agrees with Prime within the existing ±1 px geometry tolerance, and saved-image review shows no residual visible displacement |
-| AC2 | Root, first-image and slider geometry remain correct against Prime and do not acquire unintended movement/resizing relative to the retained evidence; nominal pinned y targets remain 19, 16 and 18 respectively |
+| ID  | Required outcome after the separately authorized implementation                                                                                                                                                                                                          |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AC1 | The canonical second/right image's +3 px discrepancy is removed: its root-relative placement agrees with Prime within the existing ±1 px geometry tolerance, and saved-image review shows no residual visible displacement                                               |
+| AC2 | Root, first-image and slider geometry remain correct against Prime and do not acquire unintended movement/resizing relative to the retained evidence; nominal pinned y targets remain 19, 16 and 18 respectively                                                         |
 | AC3 | Second-image dimensions/horizontal position and retained span placement/clipping are documented; the internal relationship explains the matching pixels. Wrapper coordinates need not equal their old values if the approved candidate intentionally adapts that wrapper |
-| AC4 | All existing affected cases in Spec §7 retain valid geometry, initial clipping, slide behavior, focus and RTL results; no new material difference attributable to the remediation is silently accepted |
-| AC5 | Parity obeys Playbook §6.4: geometry within ±1 px, equal material probes and no visible difference on review. Pixel-diff ratio remains advisory; no new ratio gate is invented |
-| AC6 | Existing regression assertions retain their configured threshold (`threshold: 0.2` in the root Playwright configuration, no added ratio tolerance). Every changed screenshot is accounted for; an old-baseline mismatch is review evidence, not automatic acceptance |
-| AC7 | No new selector reach failure or introduced accessibility violation attributable to the remediation; existing gap classifications and validation strength remain unchanged |
-| AC8 | Approved DOM/template/runtime/API and all unaffected E-1 declarations are preserved; the exact authorized adaptation delta is auditable and fidelity/provenance checks remain meaningful |
-| AC9 | Applicable checks produce no new attributable failure. Both E1-B1 assertions and their blocker remain preserved, explicitly distinct from E1-V2 evidence; no overall-green or Task 6 completion claim follows |
+| AC4 | All existing affected cases in Spec §7 retain valid geometry, initial clipping, slide behavior, focus and RTL results; no new material difference attributable to the remediation is silently accepted                                                                   |
+| AC5 | Parity obeys Playbook §6.4: geometry within ±1 px, equal material probes and no visible difference on review. Pixel-diff ratio remains advisory; no new ratio gate is invented                                                                                           |
+| AC6 | Existing regression assertions retain their configured threshold (`threshold: 0.2` in the root Playwright configuration, no added ratio tolerance). Every changed screenshot is accounted for; an old-baseline mismatch is review evidence, not automatic acceptance     |
+| AC7 | No new selector reach failure or introduced accessibility violation attributable to the remediation; existing gap classifications and validation strength remain unchanged                                                                                               |
+| AC8 | Approved DOM/template/runtime/API and all unaffected E-1 declarations are preserved; the exact authorized adaptation delta is auditable and fidelity/provenance checks remain meaningful                                                                                 |
+| AC9 | Applicable checks produce no new attributable failure. Both E1-B1 assertions and their blocker remain preserved, explicitly distinct from E1-V2 evidence; no overall-green or Task 6 completion claim follows                                                            |
 
 Nominal pinned second-image y is 16, not a hardcoded CSS instruction. Wrapper position may change only as explicitly approved; preservation of rendered clipping still applies. Historical regression-baseline differences remain review evidence: unchanged prior mismatches are not newly passing tests. A failing invoked screenshot assertion stops the campaign even if its difference was previously reviewed; no baseline is accepted to make a run pass. Existing unaccepted ImageCompare baselines may therefore prevent completion of all campaign members. P3 must acknowledge that limitation; accounting for a prior difference does not grant permission to continue past a failing check.
 
@@ -170,21 +170,21 @@ Stop on **any invoked verification check returning a failing status**, residual 
 
 ## 9. Escalation matrix
 
-| Condition | Action |
-| --- | --- |
-| Approved local CSS-only delta remains within constraints and checks succeed | Continue only the remaining enumerated campaign members, then human review |
-| DOM/template required | STOP / human scope ruling |
-| Runtime required | STOP / human scope ruling |
-| Public API required | STOP / human scope ruling |
-| Shared/global rule needed | STOP / human ruling |
-| New token/theme/preset needed | STOP / human ruling |
-| Generator-policy change needed | STOP / human ruling |
-| Another framework/component affected | STOP / human ruling; do not investigate it |
-| New architectural rule/convention | STOP / human ruling; no ADR automatically |
-| New diagnostic evidence outside the approved campaign needed | STOP / separate diagnostic authorization |
-| Verification mismatch or any invoked check fails, including an old-baseline assertion | STOP / new ruling; no fix, waiver, continuation or rerun |
-| E1-B1 declaration/token/assertion behavior changes | STOP; preserve blocker; no remedial B1 edits |
-| Gates incomplete or exact delta/instrumentation unavailable | Remain blocked before editing/running |
+| Condition                                                                             | Action                                                                     |
+| ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Approved local CSS-only delta remains within constraints and checks succeed           | Continue only the remaining enumerated campaign members, then human review |
+| DOM/template required                                                                 | STOP / human scope ruling                                                  |
+| Runtime required                                                                      | STOP / human scope ruling                                                  |
+| Public API required                                                                   | STOP / human scope ruling                                                  |
+| Shared/global rule needed                                                             | STOP / human ruling                                                        |
+| New token/theme/preset needed                                                         | STOP / human ruling                                                        |
+| Generator-policy change needed                                                        | STOP / human ruling                                                        |
+| Another framework/component affected                                                  | STOP / human ruling; do not investigate it                                 |
+| New architectural rule/convention                                                     | STOP / human ruling; no ADR automatically                                  |
+| New diagnostic evidence outside the approved campaign needed                          | STOP / separate diagnostic authorization                                   |
+| Verification mismatch or any invoked check fails, including an old-baseline assertion | STOP / new ruling; no fix, waiver, continuation or rerun                   |
+| E1-B1 declaration/token/assertion behavior changes                                    | STOP; preserve blocker; no remedial B1 edits                               |
+| Gates incomplete or exact delta/instrumentation unavailable                           | Remain blocked before editing/running                                      |
 
 ## 10. Rollback and safety
 

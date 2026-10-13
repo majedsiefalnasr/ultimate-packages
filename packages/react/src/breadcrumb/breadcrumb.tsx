@@ -36,7 +36,10 @@ export const UBreadcrumb = React.forwardRef<HTMLElement, UBreadcrumbProps>(funct
   { model = [], home, homeAriaLabel, onItemClick, className },
   ref
 ) {
-  const { cx } = useComponentBase({ componentName: "breadcrumb", styleModule: breadcrumbStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "breadcrumb",
+    styleModule: breadcrumbStyleModule,
+  });
 
   const isCurrent = (url?: string): "page" | undefined => {
     if (!url) return undefined;
@@ -58,7 +61,11 @@ export const UBreadcrumb = React.forwardRef<HTMLElement, UBreadcrumbProps>(funct
   };
 
   const renderLink = (item: UMenuItem, key: string) => (
-    <li className={cx("menuitem", { item: true })} key={key} data-u-disabled={String(!!item.disabled)}>
+    <li
+      className={cx("menuitem", { item: true })}
+      key={key}
+      data-u-disabled={String(!!item.disabled)}
+    >
       <a
         href={item.url ?? "#"}
         className={cx("action")}

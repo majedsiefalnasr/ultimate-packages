@@ -40,7 +40,9 @@ describe("UColorPicker", () => {
     const selector = document.querySelector(".u-color-picker-color-selector") as HTMLElement;
     selector.getBoundingClientRect = () =>
       ({ left: 0, top: 0, width: 150, height: 150, right: 150, bottom: 150 }) as DOMRect;
-    selector.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, clientX: 75, clientY: 75 }));
+    selector.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true, clientX: 75, clientY: 75 })
+    );
     await wrapper.vm.$nextTick();
 
     const emitted = wrapper.emitted("update:modelValue");
@@ -53,7 +55,8 @@ describe("UColorPicker", () => {
     await wrapper.find(".u-color-picker-preview").trigger("click");
 
     const hue = document.querySelector(".u-color-picker-hue") as HTMLElement;
-    hue.getBoundingClientRect = () => ({ left: 0, top: 0, width: 20, height: 150, right: 20, bottom: 150 }) as DOMRect;
+    hue.getBoundingClientRect = () =>
+      ({ left: 0, top: 0, width: 20, height: 150, right: 20, bottom: 150 }) as DOMRect;
     // clientY 75 (mid-strip) maps to hue 180 (cyan) — clearly distinct from
     // the starting red (#ff0000, hue 0/360).
     hue.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, clientX: 10, clientY: 75 }));
@@ -71,12 +74,18 @@ describe("UColorPicker", () => {
     const selector = document.querySelector(".u-color-picker-color-selector") as HTMLElement;
     selector.getBoundingClientRect = () =>
       ({ left: 0, top: 0, width: 150, height: 150, right: 150, bottom: 150 }) as DOMRect;
-    selector.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, clientX: 75, clientY: 75 }));
+    selector.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true, clientX: 75, clientY: 75 })
+    );
     await wrapper.vm.$nextTick();
 
     const emitted = wrapper.emitted("update:modelValue");
     expect(emitted?.[0][0]).toEqual(
-      expect.objectContaining({ r: expect.any(Number), g: expect.any(Number), b: expect.any(Number) })
+      expect.objectContaining({
+        r: expect.any(Number),
+        g: expect.any(Number),
+        b: expect.any(Number),
+      })
     );
   });
 

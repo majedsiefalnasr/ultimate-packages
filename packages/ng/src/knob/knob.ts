@@ -56,9 +56,20 @@ const MAX_RADIANS = -Math.PI / 3;
       (keydown)="onKeyDown($event)"
       (mousedown)="onMouseDown($event)"
     >
-      <path [attr.d]="rangePath()" [attr.stroke-width]="strokeWidth()" [attr.stroke]="rangeColor()" [class]="cx('range')"></path>
-      <path [attr.d]="valuePath()" [attr.stroke-width]="strokeWidth()" [attr.stroke]="valueColor()" [class]="cx('value')"></path>
+      <path
+        [attr.d]="rangePath()"
+        [attr.stroke-width]="strokeWidth()"
+        [attr.stroke]="rangeColor()"
+        [class]="cx('range')"
+      ></path>
+      <path
+        [attr.d]="valuePath()"
+        [attr.stroke-width]="strokeWidth()"
+        [attr.stroke]="valueColor()"
+        [class]="cx('value')"
+      ></path>
       @if (showValue()) {
+        <!-- prettier-ignore -->
         <text x="50" y="57" text-anchor="middle" [attr.fill]="textColor()" [class]="cx('text')">{{ valueToDisplay() }}</text>
       }
     </svg>
@@ -104,7 +115,13 @@ export class UKnob extends UBaseEditableHolder {
     return typeof value === "number" ? value : this.min();
   });
 
-  private mapRange(x: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
+  private mapRange(
+    x: number,
+    inMin: number,
+    inMax: number,
+    outMin: number,
+    outMax: number
+  ): number {
     return ((x - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
   }
 
@@ -155,7 +172,13 @@ export class UKnob extends UBaseEditableHolder {
     if (angle > MAX_RADIANS) {
       mappedValue = this.mapRange(angle, MIN_RADIANS, MAX_RADIANS, this.min(), this.max());
     } else if (angle < start) {
-      mappedValue = this.mapRange(angle + 2 * Math.PI, MIN_RADIANS, MAX_RADIANS, this.min(), this.max());
+      mappedValue = this.mapRange(
+        angle + 2 * Math.PI,
+        MIN_RADIANS,
+        MAX_RADIANS,
+        this.min(),
+        this.max()
+      );
     } else {
       return;
     }

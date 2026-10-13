@@ -18,7 +18,10 @@ describe("UScroller", () => {
           resizeObserverCallback = cb;
         }
         observe(target: Element) {
-          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+          resizeObserverCallback?.(
+            [{ target } as ResizeObserverEntry],
+            this as unknown as ResizeObserver
+          );
         }
         disconnect() {}
       }
@@ -36,7 +39,11 @@ describe("UScroller", () => {
 
   it("clamps last (getLast) against the live items array length, per spec §9", () => {
     const { container } = render(
-      <UScroller items={Array.from({ length: 5 }, (_, i) => i)} itemSize={20} numToleratedItems={50} />
+      <UScroller
+        items={Array.from({ length: 5 }, (_, i) => i)}
+        itemSize={20}
+        numToleratedItems={50}
+      />
     );
     expect(container.querySelector("[data-last]")?.getAttribute("data-last")).toBe("5");
   });
@@ -74,20 +81,28 @@ describe("UScroller", () => {
     // is wrapped in act() because it synchronously triggers a React state
     // update (setContentSizeState) outside of React's own event handling.
     act(() => {
-      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+      resizeObserverCallback?.(
+        [{ target: root } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
     });
     expect(root.getAttribute("data-num-items-in-viewport")).toBe("10");
   });
 
   it("renders only the windowed subset of items, not the full array, given a mocked 200px viewport", () => {
-    const { container } = render(<UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} />);
+    const { container } = render(
+      <UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} />
+    );
     const root = container.firstChild as HTMLElement;
     mockViewportHeight(root, 200);
     // See the deviation note on the preceding test: re-invoke the
     // component's captured resizeObserverCallback directly rather than
     // constructing a new ResizeObserver, which would clobber it.
     act(() => {
-      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+      resizeObserverCallback?.(
+        [{ target: root } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
     });
     const renderedItems = container.querySelectorAll("[data-u-scroller-item]");
     // numItemsInViewport=10, numToleratedItems defaults to ceil(10/2)=5,
@@ -137,7 +152,12 @@ describe("UScroller", () => {
   it("fires onLazyLoad with {first, last} after a scroll-triggered window change, when lazy is true, given a mocked 200px viewport", async () => {
     const onLazyLoad = vi.fn();
     const { container } = render(
-      <UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} lazy onLazyLoad={onLazyLoad} />
+      <UScroller
+        items={Array.from({ length: 1000 }, (_, i) => i)}
+        itemSize={20}
+        lazy
+        onLazyLoad={onLazyLoad}
+      />
     );
     const root = container.firstChild as HTMLElement;
     mockViewportHeight(root, 200);
@@ -149,7 +169,10 @@ describe("UScroller", () => {
     // act() because it synchronously triggers a React state update
     // (setContentSizeState) outside of React's own event handling.
     act(() => {
-      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+      resizeObserverCallback?.(
+        [{ target: root } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
     });
     Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
     act(() => {
@@ -165,7 +188,11 @@ describe("UScroller", () => {
   it("does not fire onLazyLoad when lazy is false", async () => {
     const onLazyLoad = vi.fn();
     const { container } = render(
-      <UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} onLazyLoad={onLazyLoad} />
+      <UScroller
+        items={Array.from({ length: 1000 }, (_, i) => i)}
+        itemSize={20}
+        onLazyLoad={onLazyLoad}
+      />
     );
     const root = container.firstChild as HTMLElement;
     Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
@@ -183,7 +210,10 @@ describe("UScroller", () => {
     const root = container.firstChild as HTMLElement;
     mockViewportHeight(root, 200);
     act(() => {
-      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+      resizeObserverCallback?.(
+        [{ target: root } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
     });
     const initialFirst = root.getAttribute("data-first");
     Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
@@ -225,7 +255,10 @@ describe("UScroller content template (Task 3)", () => {
           resizeObserverCallback = cb;
         }
         observe(target: Element) {
-          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+          resizeObserverCallback?.(
+            [{ target } as ResizeObserverEntry],
+            this as unknown as ResizeObserver
+          );
         }
         disconnect() {}
       }
@@ -263,7 +296,10 @@ describe("UScroller content template (Task 3)", () => {
     const root = container.firstChild as HTMLElement;
     mockViewportHeight(root, 200);
     act(() => {
-      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+      resizeObserverCallback?.(
+        [{ target: root } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
     });
     expect(container.querySelector("[data-test-content-template]")).not.toBeNull();
     expect(container.querySelectorAll("[data-u-scroller-item]").length).toBe(0);
@@ -292,7 +328,10 @@ describe("UScroller content template (Task 3)", () => {
     const root = container.firstChild as HTMLElement;
     mockViewportHeight(root, 200);
     act(() => {
-      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+      resizeObserverCallback?.(
+        [{ target: root } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
     });
 
     const table = container.querySelector("table[data-test-content-template]") as HTMLTableElement;
@@ -316,7 +355,10 @@ describe("UScroller content template (Task 3)", () => {
     const root = container.firstChild as HTMLElement;
     mockViewportHeight(root, 200);
     act(() => {
-      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+      resizeObserverCallback?.(
+        [{ target: root } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
     });
     expect(container.querySelectorAll("[data-u-scroller-item]").length).toBeGreaterThan(0);
   });
@@ -331,7 +373,11 @@ describe("UScroller content template (Task 3)", () => {
           <table data-test-content-template>
             <tbody>
               {visible.map((entry) => (
-                <tr key={entry.index} data-index={entry.index} data-first={String(getItemOptions(entry.index).first)}>
+                <tr
+                  key={entry.index}
+                  data-index={entry.index}
+                  data-first={String(getItemOptions(entry.index).first)}
+                >
                   <td>{String(entry.value)}</td>
                 </tr>
               ))}
@@ -343,7 +389,10 @@ describe("UScroller content template (Task 3)", () => {
     const root = container.firstChild as HTMLElement;
     mockViewportHeight(root, 200);
     act(() => {
-      resizeObserverCallback?.([{ target: root } as unknown as ResizeObserverEntry], {} as unknown as ResizeObserver);
+      resizeObserverCallback?.(
+        [{ target: root } as unknown as ResizeObserverEntry],
+        {} as unknown as ResizeObserver
+      );
     });
     expect(container.querySelector("tr[data-index='0']")?.getAttribute("data-first")).toBe("true");
   });

@@ -41,7 +41,9 @@ describe("UProgressBar", () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector(".u-progress-bar-label")).toBeFalsy();
     expect(
-      fixture.nativeElement.querySelector(".u-progress-bar")?.classList.contains("u-progress-bar-indeterminate")
+      fixture.nativeElement
+        .querySelector(".u-progress-bar")
+        ?.classList.contains("u-progress-bar-indeterminate")
     ).toBe(true);
   });
 

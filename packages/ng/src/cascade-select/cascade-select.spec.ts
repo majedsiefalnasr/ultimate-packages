@@ -27,7 +27,11 @@ describe("UCascadeSelect", () => {
     @Component({
       standalone: true,
       imports: [UCascadeSelect],
-      template: `<u-cascade-select [options]="options" [optionLabel]="'name'" [placeholder]="'Select a city'" />`,
+      template: `<u-cascade-select
+        [options]="options"
+        [optionLabel]="'name'"
+        [placeholder]="'Select a city'"
+      />`,
     })
     class HostComponent {
       options = COUNTRIES;
@@ -75,7 +79,9 @@ describe("UCascadeSelect", () => {
     fixture.detectChanges();
 
     // Click "Germany" (a group) — drills in, revealing Berlin/Hamburg as a nested sublist.
-    const germanyContent = document.querySelectorAll(".u-cascade-select-option-content")[0] as HTMLElement;
+    const germanyContent = document.querySelectorAll(
+      ".u-cascade-select-option-content"
+    )[0] as HTMLElement;
     germanyContent.click();
     fixture.detectChanges();
 
@@ -95,7 +101,12 @@ describe("UCascadeSelect", () => {
     @Component({
       standalone: true,
       imports: [UCascadeSelect, FormsModule],
-      template: `<u-cascade-select [options]="options" [optionLabel]="'name'" [optionValue]="'name'" [(ngModel)]="value" />`,
+      template: `<u-cascade-select
+        [options]="options"
+        [optionLabel]="'name'"
+        [optionValue]="'name'"
+        [(ngModel)]="value"
+      />`,
     })
     class HostComponent {
       options = flatCountries;
@@ -114,7 +125,9 @@ describe("UCascadeSelect", () => {
 
     // Select the "Berlin" leaf (no items — a plain leaf, selecting it closes the overlay).
     contents = document.querySelectorAll(".u-cascade-select-option-content");
-    const berlin = Array.from(contents).find((el) => el.textContent?.trim() === "Berlin") as HTMLElement;
+    const berlin = Array.from(contents).find(
+      (el) => el.textContent?.trim() === "Berlin"
+    ) as HTMLElement;
     expect(berlin).toBeDefined();
     berlin.click();
     fixture.detectChanges();
@@ -149,10 +162,18 @@ describe("UCascadeSelect", () => {
     @Component({
       standalone: true,
       imports: [UCascadeSelect, ReactiveFormsModule],
-      template: `<u-cascade-select [options]="options" [optionLabel]="'cname'" [optionValue]="'code'" [formControl]="control" />`,
+      template: `<u-cascade-select
+        [options]="options"
+        [optionLabel]="'cname'"
+        [optionValue]="'code'"
+        [formControl]="control"
+      />`,
     })
     class HostComponent {
-      options = [{ cname: "Mitte", code: "MT" }, { cname: "Altstadt", code: "AS" }];
+      options = [
+        { cname: "Mitte", code: "MT" },
+        { cname: "Altstadt", code: "AS" },
+      ];
       control = new FormControl<string | null>("AS");
     }
     const fixture = TestBed.createComponent(HostComponent);

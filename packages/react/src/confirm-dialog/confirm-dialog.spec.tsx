@@ -36,7 +36,9 @@ describe("UConfirmDialog", () => {
     act(() => confirmDialog({ message: "Proceed?", reject: () => (rejected = true) }));
     await screen.findByText("Proceed?");
 
-    const rejectButton = document.querySelector(".u-confirmdialog-footer button") as HTMLButtonElement;
+    const rejectButton = document.querySelector(
+      ".u-confirmdialog-footer button"
+    ) as HTMLButtonElement;
     fireEvent.click(rejectButton);
 
     expect(rejected).toBe(true);

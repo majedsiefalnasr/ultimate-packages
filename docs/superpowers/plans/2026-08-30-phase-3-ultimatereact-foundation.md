@@ -224,7 +224,10 @@ export function Portal(props: PortalProps): React.ReactPortal | React.ReactNode 
 export function useOverlayListener(options: {
   target: React.RefObject<HTMLElement>;
   overlay: React.RefObject<HTMLElement>;
-  listener: (event: Event, meta: { type: "outside" | "resize" | "orientationchange" | "scroll"; valid: boolean }) => void;
+  listener: (
+    event: Event,
+    meta: { type: "outside" | "resize" | "orientationchange" | "scroll"; valid: boolean }
+  ) => void;
   when?: boolean;
 }): [bind: () => void, unbind: () => void];
 ```
@@ -260,7 +263,11 @@ export const Z_INDEX_BUCKETS = {
 // Verified default values from PrimeReact.js — adopted as Ultimate's own starting values.
 
 export function useZIndex(): {
-  set: (key: keyof typeof Z_INDEX_BUCKETS, element: HTMLElement | null, baseZIndex?: number) => void;
+  set: (
+    key: keyof typeof Z_INDEX_BUCKETS,
+    element: HTMLElement | null,
+    baseZIndex?: number
+  ) => void;
   clear: (element: HTMLElement | null) => void;
 };
 // Thin wrapper around @ultimate/uix-utils/zindex's ZIndex — does not modify that module.
@@ -471,7 +478,9 @@ try {
   }
 
   copyRecursive(sourceDir, outputDir);
-  console.log(`[extract-primereact-source] copied components/lib/${libRelativePath} to ${outputDir}`);
+  console.log(
+    `[extract-primereact-source] copied components/lib/${libRelativePath} to ${outputDir}`
+  );
 } finally {
   rmSync(extractDir, { recursive: true, force: true });
 }
@@ -743,7 +752,7 @@ export function useComponentBase({ componentName, styleModule }: ComponentBaseOp
 }
 ```
 
-**Deliberately not included** (per Global Constraints and spec §7): no `pt`/`ptm`/`ptmo` parameters anywhere in this signature. Style *registration* (as opposed to class-name resolution) is Task 11's `useComponentStyle` — this task's `useComponentBase` does not itself call it yet; component tasks (13-17) call both hooks together.
+**Deliberately not included** (per Global Constraints and spec §7): no `pt`/`ptm`/`ptmo` parameters anywhere in this signature. Style _registration_ (as opposed to class-name resolution) is Task 11's `useComponentStyle` — this task's `useComponentBase` does not itself call it yet; component tasks (13-17) call both hooks together.
 
 - [ ] **Step 7: Run the test, verify it passes**
 
@@ -1050,9 +1059,7 @@ export interface UseEventListenerOptions {
   when?: boolean;
 }
 
-function resolveTarget(
-  target: UseEventListenerOptions["target"]
-): EventTarget | null {
+function resolveTarget(target: UseEventListenerOptions["target"]): EventTarget | null {
   if (target === "window") return typeof window !== "undefined" ? window : null;
   if (target === "document") return typeof document !== "undefined" ? document : null;
   if (typeof target === "function") return target();
@@ -1526,14 +1533,18 @@ describe("useGlobalEscapeKey", () => {
 
   it("calls the callback on Escape when when is true", () => {
     const callback = vi.fn();
-    renderHook(() => useGlobalEscapeKey({ callback, when: true, priority: [ESCAPE_PRIORITIES.DIALOG, 1] }));
+    renderHook(() =>
+      useGlobalEscapeKey({ callback, when: true, priority: [ESCAPE_PRIORITIES.DIALOG, 1] })
+    );
     fireEscape();
     expect(callback).toHaveBeenCalledOnce();
   });
 
   it("does not call the callback when when is false", () => {
     const callback = vi.fn();
-    renderHook(() => useGlobalEscapeKey({ callback, when: false, priority: [ESCAPE_PRIORITIES.DIALOG, 1] }));
+    renderHook(() =>
+      useGlobalEscapeKey({ callback, when: false, priority: [ESCAPE_PRIORITIES.DIALOG, 1] })
+    );
     fireEscape();
     expect(callback).not.toHaveBeenCalled();
   });
@@ -1542,10 +1553,18 @@ describe("useGlobalEscapeKey", () => {
     const dialogCallback = vi.fn();
     const menuCallback = vi.fn();
     renderHook(() =>
-      useGlobalEscapeKey({ callback: dialogCallback, when: true, priority: [ESCAPE_PRIORITIES.DIALOG, 1] })
+      useGlobalEscapeKey({
+        callback: dialogCallback,
+        when: true,
+        priority: [ESCAPE_PRIORITIES.DIALOG, 1],
+      })
     );
     renderHook(() =>
-      useGlobalEscapeKey({ callback: menuCallback, when: true, priority: [ESCAPE_PRIORITIES.MENU, 1] })
+      useGlobalEscapeKey({
+        callback: menuCallback,
+        when: true,
+        priority: [ESCAPE_PRIORITIES.MENU, 1],
+      })
     );
     fireEscape();
     // MENU (500) > DIALOG (300) — MENU's tuple wins.
@@ -1826,7 +1845,11 @@ export const Z_INDEX_BUCKETS = {
 } as const;
 
 export function useZIndex(): {
-  set: (key: keyof typeof Z_INDEX_BUCKETS, element: HTMLElement | null, baseZIndex?: number) => void;
+  set: (
+    key: keyof typeof Z_INDEX_BUCKETS,
+    element: HTMLElement | null,
+    baseZIndex?: number
+  ) => void;
   clear: (element: HTMLElement | null) => void;
 } {
   const set = useCallback(
@@ -2059,7 +2082,7 @@ export function FocusTrap({
 }
 ```
 
-**Scope note**: verified `FocusTrap.js`'s real redirect logic additionally distinguishes "focus arrived here via Tab-forward from inside" vs "via Shift+Tab from outside" using a `relatedTarget` comparison against the *other* sentinel — this simplified version always redirects to the nearest end of the trap on either sentinel's focus, which is the correct behavior for the Phase 3 proof set's single-level, non-nested trap usage (`UDialog` only). If a future need demonstrates the `relatedTarget` distinction matters (e.g. distinguishing which direction focus is cycling), extend this then per the same verified-behavior-first process — do not add it speculatively now.
+**Scope note**: verified `FocusTrap.js`'s real redirect logic additionally distinguishes "focus arrived here via Tab-forward from inside" vs "via Shift+Tab from outside" using a `relatedTarget` comparison against the _other_ sentinel — this simplified version always redirects to the nearest end of the trap on either sentinel's focus, which is the correct behavior for the Phase 3 proof set's single-level, non-nested trap usage (`UDialog` only). If a future need demonstrates the `relatedTarget` distinction matters (e.g. distinguishing which direction focus is cycling), extend this then per the same verified-behavior-first process — do not add it speculatively now.
 
 - [ ] **Step 5: Run the tests, verify they pass**
 
@@ -2318,7 +2341,9 @@ describe("useMotion", () => {
     const el = document.createElement("div");
     document.body.appendChild(el);
     const ref = { current: el };
-    expect(() => renderHook(() => useMotion(ref, true, { name: "u-test", safe: false }))).not.toThrow();
+    expect(() =>
+      renderHook(() => useMotion(ref, true, { name: "u-test", safe: false }))
+    ).not.toThrow();
     document.body.removeChild(el);
   });
 
@@ -2489,7 +2514,9 @@ describe("useComponentStyle", () => {
   it("registers the style module once per component name on mount", () => {
     renderHook(() => useComponentStyle("test-button", { css: ".u-button {}", classes: {} }));
     expect(reactCoreStyleSheet.has("test-button")).toBe(true);
-    const styleEl = document.head.querySelector('style[data-ultimate-style-id="test-button"], style');
+    const styleEl = document.head.querySelector(
+      'style[data-ultimate-style-id="test-button"], style'
+    );
     expect(document.head.querySelector("style")?.textContent).toContain(".u-button");
   });
 
@@ -2687,6 +2714,7 @@ subclass from day one; the Angular-side gap is tracked separately."
 - [ ] **Step 1: Extract `icons` source for reference**
 
 Run:
+
 ```bash
 node scripts/provenance/extract-primereact-source.mjs .vendor-cache/primereact-10.9.9.tar.gz icons/spinner .vendor-extracted/react/icons-spinner
 node scripts/provenance/extract-primereact-source.mjs .vendor-cache/primereact-10.9.9.tar.gz icons/times .vendor-extracted/react/icons-times
@@ -3164,7 +3192,19 @@ export interface ButtonClassesParams {
 
 const classes = {
   root: (params: ButtonClassesParams = {}) => {
-    const { hasIcon, label, loading, severity, raised, rounded, text, outlined, link, plain, size } = params;
+    const {
+      hasIcon,
+      label,
+      loading,
+      severity,
+      raised,
+      rounded,
+      text,
+      outlined,
+      link,
+      plain,
+      size,
+    } = params;
     return [
       "u-button u-component",
       {
@@ -3491,7 +3531,10 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: { position?: string } = {}) => ["u-tooltip u-component", `u-tooltip-${params.position ?? "right"}`],
+  root: (params: { position?: string } = {}) => [
+    "u-tooltip u-component",
+    `u-tooltip-${params.position ?? "right"}`,
+  ],
   text: "u-tooltip-text",
 };
 
@@ -3848,8 +3891,14 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: { checked?: boolean } = {}) => ["u-checkbox u-component", { "u-checkbox-checked": params.checked }],
-  box: (params: { checked?: boolean } = {}) => ["u-checkbox-box", { "u-checkbox-box-checked": params.checked }],
+  root: (params: { checked?: boolean } = {}) => [
+    "u-checkbox u-component",
+    { "u-checkbox-checked": params.checked },
+  ],
+  box: (params: { checked?: boolean } = {}) => [
+    "u-checkbox-box",
+    { "u-checkbox-box-checked": params.checked },
+  ],
   input: "u-checkbox-input",
   icon: "u-checkbox-icon",
 };
@@ -4505,7 +4554,10 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: { popup?: boolean } = {}) => ["u-menu u-component", { "u-menu-overlay": params.popup }],
+  root: (params: { popup?: boolean } = {}) => [
+    "u-menu u-component",
+    { "u-menu-overlay": params.popup },
+  ],
   menu: "u-menu-list",
   menuitem: (params: { focused?: boolean } = {}) => ["u-menuitem", { "u-focus": params.focused }],
   content: "u-menuitem-content",
@@ -4948,10 +5000,7 @@ try {
     "subpath-import",
     `import { UButton } from "@ultimate/react/button";`
   );
-  const barrelOk = await checkImport(
-    "barrel-import",
-    `import { UButton } from "@ultimate/react";`
-  );
+  const barrelOk = await checkImport("barrel-import", `import { UButton } from "@ultimate/react";`);
 
   console.log(
     "[verify-tree-shaking-react] MANUAL/AUTOMATED CHECK REQUIRED (see plan Task 19 Step 4): " +

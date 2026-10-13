@@ -64,8 +64,14 @@ function isOutsideClick(event: Event, el: HTMLElement, target: HTMLElement | nul
 function enter(el: HTMLElement, state: BoundState, options: UStyleClassOptions): void {
   const target = state.target;
   if (!target) return;
-  const { enterActiveClass, enterFromClass, enterToClass, hideOnOutsideClick, hideOnEscape, hideOnResize } =
-    options;
+  const {
+    enterActiveClass,
+    enterFromClass,
+    enterToClass,
+    hideOnOutsideClick,
+    hideOnEscape,
+    hideOnResize,
+  } = options;
 
   if (enterActiveClass) {
     if (!state.animating) {
@@ -93,8 +99,14 @@ function enter(el: HTMLElement, state: BoundState, options: UStyleClassOptions):
 function leave(el: HTMLElement, state: BoundState, options: UStyleClassOptions): void {
   const target = state.target;
   if (!target) return;
-  const { leaveActiveClass, leaveFromClass, leaveToClass, hideOnOutsideClick, hideOnEscape, hideOnResize } =
-    options;
+  const {
+    leaveActiveClass,
+    leaveFromClass,
+    leaveToClass,
+    hideOnOutsideClick,
+    hideOnEscape,
+    hideOnResize,
+  } = options;
 
   if (leaveActiveClass) {
     if (!state.animating) {
@@ -119,7 +131,11 @@ function leave(el: HTMLElement, state: BoundState, options: UStyleClassOptions):
   if (hideOnResize) unbindWindowResizeListener(state);
 }
 
-function bindDocumentClickListener(el: HTMLElement, state: BoundState, options: UStyleClassOptions): void {
+function bindDocumentClickListener(
+  el: HTMLElement,
+  state: BoundState,
+  options: UStyleClassOptions
+): void {
   if (state.documentClickListener) return;
   state.documentClickListener = (event: MouseEvent) => {
     if (!isVisible(state.target)) unbindDocumentClickListener(state);
@@ -183,9 +199,11 @@ function bind(el: HTMLElement, options: UStyleClassOptions): void {
     if (!target) return;
 
     if (options.toggleClass) {
-      target.classList.contains(options.toggleClass)
-        ? target.classList.remove(options.toggleClass)
-        : target.classList.add(options.toggleClass);
+      if (target.classList.contains(options.toggleClass)) {
+        target.classList.remove(options.toggleClass);
+      } else {
+        target.classList.add(options.toggleClass);
+      }
     } else if (target.offsetParent === null) {
       enter(el, state, options);
     } else {
@@ -228,18 +246,19 @@ function unbind(el: HTMLElement): void {
  * hook — one shared, source-verified behavior, three framework-native
  * attachment mechanisms.
  */
-export const UStyleClass: ObjectDirective<HTMLElement, UStyleClassOptions | undefined> = createDirective({
-  name: "style-class",
-  hooks: {
-    mounted(el, binding) {
-      bind(el, binding.value ?? {});
+export const UStyleClass: ObjectDirective<HTMLElement, UStyleClassOptions | undefined> =
+  createDirective({
+    name: "style-class",
+    hooks: {
+      mounted(el, binding) {
+        bind(el, binding.value ?? {});
+      },
+      updated(el, binding) {
+        unbind(el);
+        bind(el, binding.value ?? {});
+      },
+      unmounted(el) {
+        unbind(el);
+      },
     },
-    updated(el, binding) {
-      unbind(el);
-      bind(el, binding.value ?? {});
-    },
-    unmounted(el) {
-      unbind(el);
-    },
-  },
-});
+  });

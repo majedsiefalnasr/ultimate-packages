@@ -51,7 +51,10 @@ test.describe("React/Tooltip", () => {
     const tooltip = page.locator('[role="tooltip"]');
     await expect(tooltip).toHaveCount(1);
     await expect(tooltip).toHaveText("Save changes");
-    await expect(button).toHaveAttribute("aria-describedby", await tooltip.getAttribute("id") ?? "");
+    await expect(button).toHaveAttribute(
+      "aria-describedby",
+      (await tooltip.getAttribute("id")) ?? ""
+    );
 
     // Real, verified gap: no positioning logic anywhere in tooltip.tsx
     // ever overrides the hardcoded `top: -9999px; left: -9999px` CSS rule

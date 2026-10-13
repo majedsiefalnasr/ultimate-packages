@@ -17,9 +17,12 @@ function mountWithService() {
   app.use(UDialogService);
   const el = document.createElement("div");
   app.mount(el);
-  return { app, get api() {
-    return api!;
-  } };
+  return {
+    app,
+    get api() {
+      return api!;
+    },
+  };
 }
 
 describe("UDialogService", () => {

@@ -11,13 +11,13 @@ Framework-neutral theme contract and baseline preset for the Ultimate Platform: 
 - **The theme contract** — TypeScript types describing the shape of a theme preset (`PrimitiveTokens`, `SemanticTokens`, `ComponentTokens`, `ColorScale`) and the supported mode/direction values (`UltimateThemeMode`, `UltimateThemeDirection`). These types describe data shapes only; they carry no runtime behavior of their own.
 - **The Aura preset** — `auraPreset`, Ultimate's Option B port (reference, not verbatim copy) of `@primeuix/themes@2.0.3`'s Aura preset, covering the shared primitive/semantic base tier plus real per-component design tokens for 79 components: the original five-component proof set (Button, Checkbox, Dialog, Menu, Tooltip), 71 modules ported in GAP-064's Batches 1-3 tranche (2026-10-01) and Badge, InputGroup and Paginator (GAP-064 Tranche 1). Many component style files do not consume their modules yet; see GAP-064 in `docs/architecture/BLUEPRINT_GAPS.md`. See `docs/architecture/provenance/themes.json` for the per-file provenance record and `THIRD-PARTY-NOTICES.md` for the upstream MIT license text.
 
-Theme *application* — writing CSS custom properties onto the document and reacting to dark-mode/RTL — is not implemented here. That mechanism already exists in `@ultimate/uix-styled` (the `Theme`/`StyleSheet` runtime, rebranded in Phase 5 from PrimeUIX's `p`-prefixed CSS variables to Ultimate's own `u` prefix). `@ultimate/themes` supplies the *data* (`auraPreset`) and a thin, framework-agnostic *entry point* (`applyUltimateTheme`) that wires that data into `uix-styled`'s existing `Theme.setTheme()` call — it does not reimplement token resolution, dark-mode selectors, or CSS-layer handling.
+Theme _application_ — writing CSS custom properties onto the document and reacting to dark-mode/RTL — is not implemented here. That mechanism already exists in `@ultimate/uix-styled` (the `Theme`/`StyleSheet` runtime, rebranded in Phase 5 from PrimeUIX's `p`-prefixed CSS variables to Ultimate's own `u` prefix). `@ultimate/themes` supplies the _data_ (`auraPreset`) and a thin, framework-agnostic _entry point_ (`applyUltimateTheme`) that wires that data into `uix-styled`'s existing `Theme.setTheme()` call — it does not reimplement token resolution, dark-mode selectors, or CSS-layer handling.
 
 ## Public API
 
 ```typescript
 export * from "./contract"; // PrimitiveTokens, SemanticTokens, ComponentTokens, ColorScale,
-                              // UltimateThemeMode, UltimateThemeDirection
+// UltimateThemeMode, UltimateThemeDirection
 export { auraPreset } from "./presets/aura";
 export { applyUltimateTheme, type ApplyUltimateThemeOptions } from "./apply-theme";
 ```

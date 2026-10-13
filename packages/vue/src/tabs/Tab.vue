@@ -105,7 +105,12 @@ export default {
       this.$pcTabs.updateValue(this.value);
     },
     isEligible(el) {
-      return !!el && el.getAttribute && el.getAttribute("data-u-disabled") !== "true" && el.getAttribute("role") === "tab";
+      return (
+        !!el &&
+        el.getAttribute &&
+        el.getAttribute("data-u-disabled") !== "true" &&
+        el.getAttribute("role") === "tab"
+      );
     },
     findNext(el, selfCheck = false) {
       const candidate = selfCheck ? el : el.nextElementSibling;

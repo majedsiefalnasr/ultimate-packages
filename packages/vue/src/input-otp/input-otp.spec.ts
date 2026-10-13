@@ -32,7 +32,10 @@ describe("UInputOtp — controlled (v-model)", () => {
 
 describe("UInputOtp — segment navigation", () => {
   it("ArrowRight moves focus to the next segment", async () => {
-    const wrapper = mount(UInputOtp, { props: { modelValue: "", length: 3 }, attachTo: document.body });
+    const wrapper = mount(UInputOtp, {
+      props: { modelValue: "", length: 3 },
+      attachTo: document.body,
+    });
     const inputs = wrapper.findAll("input");
     inputs[0].element.focus();
     await inputs[0].trigger("keydown", { key: "ArrowRight" });
@@ -41,7 +44,10 @@ describe("UInputOtp — segment navigation", () => {
   });
 
   it("ArrowLeft moves focus to the previous segment", async () => {
-    const wrapper = mount(UInputOtp, { props: { modelValue: "", length: 3 }, attachTo: document.body });
+    const wrapper = mount(UInputOtp, {
+      props: { modelValue: "", length: 3 },
+      attachTo: document.body,
+    });
     const inputs = wrapper.findAll("input");
     inputs[1].element.focus();
     await inputs[1].trigger("keydown", { key: "ArrowLeft" });
@@ -50,7 +56,10 @@ describe("UInputOtp — segment navigation", () => {
   });
 
   it("Backspace on an empty segment moves focus to the previous segment", async () => {
-    const wrapper = mount(UInputOtp, { props: { modelValue: "", length: 3 }, attachTo: document.body });
+    const wrapper = mount(UInputOtp, {
+      props: { modelValue: "", length: 3 },
+      attachTo: document.body,
+    });
     const inputs = wrapper.findAll("input");
     inputs[1].element.focus();
     await inputs[1].trigger("keydown", { key: "Backspace" });
@@ -108,7 +117,9 @@ describe("UInputOtp — masking and accessibility", () => {
   });
 
   it("disabled/readonly pass through to every segment", () => {
-    const wrapper = mount(UInputOtp, { props: { modelValue: "", length: 2, disabled: true, readonly: true } });
+    const wrapper = mount(UInputOtp, {
+      props: { modelValue: "", length: 2, disabled: true, readonly: true },
+    });
     for (const input of wrapper.findAll("input")) {
       expect(input.attributes("disabled")).toBeDefined();
       expect(input.attributes("readonly")).toBeDefined();

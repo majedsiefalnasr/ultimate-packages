@@ -28,7 +28,7 @@ The initial design presented the bridge only at the level of "add the mechanism 
 writeControlValue(value: unknown, setModelValue: (value: unknown) => void): void
 ```
 
-**Default behavior in `UBaseEditableHolder`:** a NOOP. Real PrimeNG's own comment states this exactly: *"NOOP - this method should be overridden in the derived classes."* `UBaseEditableHolder`'s default implementation does nothing — it exists so `writeValue` always has something to call, not so it has meaningful default behavior.
+**Default behavior in `UBaseEditableHolder`:** a NOOP. Real PrimeNG's own comment states this exactly: _"NOOP - this method should be overridden in the derived classes."_ `UBaseEditableHolder`'s default implementation does nothing — it exists so `writeValue` always has something to call, not so it has meaningful default behavior.
 
 **The bridge's exact wiring, verified against real source:**
 
@@ -83,6 +83,7 @@ Close GAP-038's `UBaseInput` tier and the `writeControlValue` bridge gap ADR-046
 Extends `UBaseEditableHolder` directly (chain becomes `UBaseComponent → UModelHolder → UBaseEditableHolder → UBaseInput`, matching real PrimeNG's `BaseComponent → BaseModelHolder → BaseEditableHolder → BaseInput` ordering exactly — the same real-source-verified insertion-point discipline GAP-018 applied to `UModelHolder`).
 
 Real, in-scope surface (verified against real `baseinput.ts`, 75 lines):
+
 - `fluid` (boolean), `variant` (`'filled' | 'outlined' | undefined'`), `size` (`'large' | 'small' | undefined`), `inputSize` (`number | null | undefined`), `pattern`, `min`, `max`, `step`, `minlength`, `maxlength` (all numeric/string, matching real source's exact types).
 - `$variant` computed from `variant()` falling back to config — same documented, deliberate omission `UInputText` already established (`UltimateConfig`'s Option-B surface has neither `inputStyle`/`inputVariant`; expanding it is gated on config's own still-open architecture decision). Do not re-litigate this — repeat the same documented omission, do not attempt to add config fields in this workstream.
 - `hasFluid` — ancestor-`UFluid` DI-detection via `inject(UFluid, { optional: true, host: true, skipSelf: true })`, the same mechanism `UInputText` already implements. `UBaseInput` is the second Ultimate class (after `UInputText`) to use this pattern — no new architectural fork, direct reuse of GAP-018's precedent.
@@ -98,12 +99,14 @@ Per the "Exact signature" / "Ownership contract" sections above. `UBaseEditableH
 `UInputNumber` extends `UBaseInput` directly (matching real `InputNumber extends BaseInput<InputNumberPassThrough>` exactly). Real PrimeNG's `InputNumber` (1493 lines) is materially larger than any component migrated so far — the largest single feature surface in the platform's proof set to date. This spec deliberately scopes a real, working, CVA-correct numeric input, not a full port.
 
 **In scope, real functional surface:**
+
 - Native `<input>`-wrapping directive/component rendering a real numeric-capable input, CVA-correct via `UBaseInput`'s inherited (and now-fixed) bridge — `writeControlValue` populates `modelValue`/`$filled` and the component's own local numeric-value state, mirroring the `UCheckbox` pattern established above (own local value state remains the template-bound source of truth; `modelValue` stays populated in parallel via the bridge).
 - `min`/`max`/`step` — inherited from `UBaseInput`, real clamping behavior on value changes (real source's `validateValue` does real min/max clamping; port this specific, bounded piece of logic, verified against real source before writing).
 - Basic decimal parsing/formatting for a plain numeric value (no currency, no percent, no grouping/locale-aware formatting) — real source's `formatValue`/`parseValue` are `Intl.NumberFormat`-backed and locale-aware; this spec scopes to a plain `Number()`-based parse/format pair as the minimal real numeric contract, not upstream's full locale machinery.
 - Increment/decrement via native `<input type="number">` spinner semantics or a minimal up/down control — the exact mechanism (native `type="number"` vs. custom spinner buttons) is an implementation-plan decision informed by real source's `showButtons`/`spin()`/`repeat()` methods, not pre-decided here. If custom spinner buttons are built, they must be real, working, keyboard-accessible controls — not a stub.
 
 **Explicitly out of scope (real, verified features in real `InputNumber` that this spec does not port):**
+
 - Locale-aware `Intl.NumberFormat` parsing/formatting (`getDecimalExpression`/`getGroupingExpression`/`getCurrencyExpression`/`getPrefixExpression`/`getSuffixExpression` and their consumers) — real source's formatting is one of the largest single pieces of its 1493 lines; porting it is a future workstream's job if a real consumer needs currency/percent/locale formatting.
 - Clipboard paste handling (`onPaste`), cursor/caret-position insertion logic (`insert`/`insertText`/`deleteRange`/`initCursor`/`getCharIndexes`), and the full keyboard-event interception in `onInputKeyDown`/`onInputKeyPress` (real source: ~250 lines of caret-aware digit/sign/decimal-point insertion handling) — this spec's minimal numeric input relies on the native `<input>` element's own typing/editing behavior, not a custom input-masking engine.
 - `showButtons`/`buttonLayout` (`"stacked"`/`"horizontal"`/`"vertical"`) as a full configurable spinner layout system — if increment/decrement controls are built at all (see above), they are a single fixed layout, not a configurable one.

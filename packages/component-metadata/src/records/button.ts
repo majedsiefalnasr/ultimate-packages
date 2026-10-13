@@ -37,8 +37,18 @@ export const BUTTON_METADATA: ComponentMetadata = {
   api: {
     ng: {
       props: [
-        { name: "label", type: "string | undefined", required: false, description: "Text of the button." },
-        { name: "icon", type: "string | undefined", required: false, description: "Name of the icon." },
+        {
+          name: "label",
+          type: "string | undefined",
+          required: false,
+          description: "Text of the button.",
+        },
+        {
+          name: "icon",
+          type: "string | undefined",
+          required: false,
+          description: "Name of the icon.",
+        },
         {
           name: "iconPos",
           type: '"left" | "right" | "top" | "bottom"',
@@ -60,7 +70,12 @@ export const BUTTON_METADATA: ComponentMetadata = {
           required: false,
           description: "When present, it specifies that the component should be disabled.",
         },
-        { name: "severity", type: "string | undefined", required: false, description: "Defines the style of the button." },
+        {
+          name: "severity",
+          type: "string | undefined",
+          required: false,
+          description: "Defines the style of the button.",
+        },
         {
           name: "raised",
           type: "boolean",
@@ -89,7 +104,12 @@ export const BUTTON_METADATA: ComponentMetadata = {
           required: false,
           description: "Add a border class without a background initially.",
         },
-        { name: "size", type: '"small" | "large" | undefined', required: false, description: "Defines the size of the button." },
+        {
+          name: "size",
+          type: '"small" | "large" | undefined',
+          required: false,
+          description: "Defines the size of the button.",
+        },
         {
           name: "fluid",
           type: "boolean",
@@ -104,7 +124,12 @@ export const BUTTON_METADATA: ComponentMetadata = {
       props: [
         { name: "label", type: "string | undefined", required: false },
         { name: "icon", type: "React.ReactNode", required: false },
-        { name: "iconPos", type: '"left" | "right" | "top" | "bottom"', default: "left", required: false },
+        {
+          name: "iconPos",
+          type: '"left" | "right" | "top" | "bottom"',
+          default: "left",
+          required: false,
+        },
         { name: "loading", type: "boolean", default: "false", required: false },
         { name: "loadingIcon", type: "React.ReactNode", required: false },
         { name: "disabled", type: "boolean", default: "false", required: false },
@@ -163,6 +188,9 @@ export const BUTTON_METADATA: ComponentMetadata = {
   },
   provenanceRef: {
     package: "ng",
-    ultimateDestinations: ["packages/ng/src/button/button.ts", "packages/ng/src/button/button-style.ts"],
+    ultimateDestinations: [
+      "packages/ng/src/button/button.ts",
+      "packages/ng/src/button/button-style.ts",
+    ],
   },
 };

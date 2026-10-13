@@ -11,7 +11,9 @@ describe("UDatePicker", () => {
   });
 
   it("renders a readonly text input showing empty value when nothing is selected", () => {
-    const wrapper = mount(UDatePicker, { props: { modelValue: null, placeholder: "Select a date" } });
+    const wrapper = mount(UDatePicker, {
+      props: { modelValue: null, placeholder: "Select a date" },
+    });
     const input = wrapper.find("input");
     expect(input.exists()).toBe(true);
     expect(input.attributes("readonly")).toBeDefined();
@@ -108,7 +110,9 @@ describe("UDatePicker", () => {
   });
 
   it("clears the value via the clear icon when showClear is set", async () => {
-    const wrapper = mount(UDatePicker, { props: { modelValue: new Date(2026, 8, 18), showClear: true } });
+    const wrapper = mount(UDatePicker, {
+      props: { modelValue: new Date(2026, 8, 18), showClear: true },
+    });
     const clearIcon = wrapper.find(".u-date-picker-clear-icon");
     await clearIcon.trigger("click");
     expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([null]);

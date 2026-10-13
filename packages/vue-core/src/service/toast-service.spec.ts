@@ -15,9 +15,12 @@ function mountWithService() {
   app.use(UToastService);
   const el = document.createElement("div");
   app.mount(el);
-  return { app, get api() {
-    return api!;
-  } };
+  return {
+    app,
+    get api() {
+      return api!;
+    },
+  };
 }
 
 describe("UToastService", () => {

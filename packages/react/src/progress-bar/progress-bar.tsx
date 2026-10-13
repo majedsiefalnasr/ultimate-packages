@@ -21,33 +21,38 @@ export interface UProgressBarProps {
  * hatches beyond the top-level `className` — same "smaller surface than
  * upstream" precedent as every sibling component.
  */
-export const UProgressBar = React.forwardRef<HTMLDivElement, UProgressBarProps>(function UProgressBar(
-  { value = 0, showValue = true, unit = "%", mode = "determinate", className },
-  ref
-) {
-  const { cx } = useComponentBase({ componentName: "progress-bar", styleModule: progressBarStyleModule });
+export const UProgressBar = React.forwardRef<HTMLDivElement, UProgressBarProps>(
+  function UProgressBar(
+    { value = 0, showValue = true, unit = "%", mode = "determinate", className },
+    ref
+  ) {
+    const { cx } = useComponentBase({
+      componentName: "progress-bar",
+      styleModule: progressBarStyleModule,
+    });
 
-  return (
-    <div
-      ref={ref}
-      className={[cx("root", { mode }), className].filter(Boolean).join(" ")}
-      role="progressbar"
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={mode === "determinate" ? value : undefined}
-    >
-      {mode === "determinate" ? (
-        <div className={cx("value")} style={{ width: `${value}%` }}>
-          {showValue && (
-            <div className={cx("label")}>
-              {value}
-              {unit}
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className={cx("value")} />
-      )}
-    </div>
-  );
-});
+    return (
+      <div
+        ref={ref}
+        className={[cx("root", { mode }), className].filter(Boolean).join(" ")}
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={mode === "determinate" ? value : undefined}
+      >
+        {mode === "determinate" ? (
+          <div className={cx("value")} style={{ width: `${value}%` }}>
+            {showValue && (
+              <div className={cx("label")}>
+                {value}
+                {unit}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className={cx("value")} />
+        )}
+      </div>
+    );
+  }
+);

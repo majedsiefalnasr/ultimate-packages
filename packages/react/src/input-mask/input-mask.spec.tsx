@@ -28,9 +28,7 @@ describe("UInputMask", () => {
     render(<UInputMask value="" mask="999-999" onChange={onChange} />);
     const input = screen.getByRole("textbox");
     fireEvent.input(input, { target: { value: "123456" } });
-    expect(onChange).toHaveBeenCalledWith(
-      expect.objectContaining({ value: "123-456" })
-    );
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ value: "123-456" }));
   });
 
   it("emits onChange with the raw unmasked value when unmask is true", () => {
@@ -38,9 +36,7 @@ describe("UInputMask", () => {
     render(<UInputMask value="" mask="999-999" unmask onChange={onChange} />);
     const input = screen.getByRole("textbox");
     fireEvent.input(input, { target: { value: "123456" } });
-    expect(onChange).toHaveBeenCalledWith(
-      expect.objectContaining({ value: "123456" })
-    );
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ value: "123456" }));
   });
 
   it("applies disabled and readOnly to the native input", () => {

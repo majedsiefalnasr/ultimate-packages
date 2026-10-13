@@ -89,7 +89,12 @@ export default {
       return (this.modelValue && this.modelValue.length > 0) || this.inputValue.length > 0;
     },
     styleParams() {
-      return { disabled: this.disabled, invalid: this.invalid, focused: this.focused, filled: this.isFilled };
+      return {
+        disabled: this.disabled,
+        invalid: this.invalid,
+        focused: this.focused,
+        filled: this.isFilled,
+      };
     },
   },
   methods: {
@@ -159,7 +164,10 @@ export default {
     onPaste(event) {
       if (!this.separator) return;
 
-      const separator = this.separator.replace("\\n", "\n").replace("\\r", "\r").replace("\\t", "\t");
+      const separator = this.separator
+        .replace("\\n", "\n")
+        .replace("\\r", "\r")
+        .replace("\\t", "\t");
       const pastedData = (event.clipboardData || window.clipboardData).getData("Text");
 
       if (pastedData) {
@@ -196,7 +204,8 @@ export default {
     },
     onArrowLeftKeyOn() {
       if (this.inputValue.length === 0 && this.modelValue && this.modelValue.length > 0) {
-        this.focusedIndex = this.focusedIndex === null ? this.modelValue.length - 1 : this.focusedIndex - 1;
+        this.focusedIndex =
+          this.focusedIndex === null ? this.modelValue.length - 1 : this.focusedIndex - 1;
         if (this.focusedIndex < 0) this.focusedIndex = 0;
       }
     },

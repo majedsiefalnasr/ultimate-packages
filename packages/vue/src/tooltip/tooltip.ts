@@ -1,6 +1,11 @@
 import { createElement } from "@ultimate/uix-utils/dom";
 import { uuid } from "@ultimate/uix-utils/uuid";
-import { createDirective, registerComponentStyle, useZIndex, Z_INDEX_KEYS } from "@ultimate/vue-core";
+import {
+  createDirective,
+  registerComponentStyle,
+  useZIndex,
+  Z_INDEX_KEYS,
+} from "@ultimate/vue-core";
 import { tooltipStyleModule } from "./tooltip-style";
 
 export interface TooltipBindingValue {
@@ -30,8 +35,16 @@ const stateByElement = new WeakMap<HTMLElement, TooltipState>();
 const { set: setZIndex, clear: clearZIndex } = useZIndex();
 
 function normalizeBinding(value: string | TooltipBindingValue | undefined): TooltipBindingValue {
-  if (typeof value === "string") return { value, escape: true, showDelay: 0, hideDelay: 0, autoHide: true };
-  return { escape: true, showDelay: 0, hideDelay: 0, autoHide: true, ...value, value: value?.value ?? "" };
+  if (typeof value === "string")
+    return { value, escape: true, showDelay: 0, hideDelay: 0, autoHide: true };
+  return {
+    escape: true,
+    showDelay: 0,
+    hideDelay: 0,
+    autoHide: true,
+    ...value,
+    value: value?.value ?? "",
+  };
 }
 
 function addOwnedDescribedBy(el: HTMLElement, id: string): void {

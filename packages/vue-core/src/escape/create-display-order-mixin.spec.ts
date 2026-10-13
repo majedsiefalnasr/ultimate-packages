@@ -28,7 +28,9 @@ describe("createDisplayOrderMixin", () => {
 
   it("does not register an order for an instance that is not visible on mount", () => {
     const wrapper = mount({
-      mixins: [createDisplayOrderMixin({ group: "test-group-vue-mixin-b", isVisible: () => false })],
+      mixins: [
+        createDisplayOrderMixin({ group: "test-group-vue-mixin-b", isVisible: () => false }),
+      ],
       template: `<div />`,
     });
 
@@ -107,7 +109,9 @@ describe("createDisplayOrderMixin", () => {
   it("registers on updated() when mounted invisible, then becomes visible later (v-model:visible pattern)", async () => {
     let visible = false;
     const wrapper = mount({
-      mixins: [createDisplayOrderMixin({ group: "test-group-vue-mixin-e", isVisible: () => visible })],
+      mixins: [
+        createDisplayOrderMixin({ group: "test-group-vue-mixin-e", isVisible: () => visible }),
+      ],
       data() {
         return { tick: 0 };
       },

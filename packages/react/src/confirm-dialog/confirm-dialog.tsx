@@ -1,5 +1,9 @@
 import * as React from "react";
-import { useComponentBase, confirmationEventBus, type UConfirmationOptions } from "@ultimate/react-core";
+import {
+  useComponentBase,
+  confirmationEventBus,
+  type UConfirmationOptions,
+} from "@ultimate/react-core";
 import { UButton } from "../button/button";
 import { UDialog } from "../dialog/dialog";
 import { confirmDialogStyleModule } from "./confirm-dialog-style";
@@ -77,7 +81,12 @@ export function UConfirmDialog({ group }: UConfirmDialogProps): React.ReactNode 
       footer={
         <div className={cx("footer")}>
           {confirmation?.rejectVisible !== false && (
-            <UButton label={confirmation?.rejectLabel ?? "No"} severity="secondary" text onClick={onReject} />
+            <UButton
+              label={confirmation?.rejectLabel ?? "No"}
+              severity="secondary"
+              text
+              onClick={onReject}
+            />
           )}
           {confirmation?.acceptVisible !== false && (
             <UButton label={confirmation?.acceptLabel ?? "Yes"} onClick={onAccept} />

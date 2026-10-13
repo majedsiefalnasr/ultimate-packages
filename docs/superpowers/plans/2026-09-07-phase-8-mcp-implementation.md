@@ -47,7 +47,7 @@ These facts were confirmed by direct inspection immediately before writing this 
 6. **The real `docs/architecture/compatibility-manifest.json`** is a 3-entry JSON array (angular/react/vue), each with exactly the 6 required `CompatibilityEntry` keys and no `mcpVersionRange`/`aiSkillsVersionRange` populated on any entry — confirmed by direct read. `check_framework_compatibility` (Task 7) reads `frameworkVersionRange` from this file only, per spec §7.4's single-axis scope.
 7. **The real `validate-cli-boundary.mjs`** (`scripts/provenance/validate-cli-boundary.mjs`) does 4 checks: (1) reverse-direction source-import scan of `packages/{ng,react,vue}*/src/**/*` for `@ultimate/cli` imports (via `require`/`import`/dynamic-`import`/`from`-clause regexes, with a line-start anchor on the `import`/`from` forms specifically to avoid a real false positive found during Phase 7 review — an in-string literal in `theme.ts`); (2) reverse-direction `package.json` `dependencies` scan of the same directories; (3) forward-direction `package.json` `dependencies`+`devDependencies` scan of `packages/cli/package.json` for `@ultimate/{ng,react,vue,themes}`; (4) forward-direction source-import scan of `packages/cli/src/**/*` for the same 4 packages. It has a sibling `node:test`-based test file (`validate-cli-boundary.test.mjs`) using `mkdtempSync`-based fixture directories and `spawnSync` to invoke the real script against synthetic fixtures. Task 10 creates a direct structural sibling (`validate-mcp-boundary.mjs` + `.test.mjs`), extended per the approved spec (§8.1) to also forbid the `@ultimate/mcp → @ultimate/cli` edge specifically (the original script has no notion of MCP at all).
 8. **Real package shape convention** (`packages/component-metadata`, `packages/cli`): `type: "module"`, `sideEffects: false`, `main`/`module`/`types` pointing at `./dist/index.mjs`/`./dist/index.d.mts`, `exports` map with `types`/`import`/`default`, `files: ["dist", "README.md"]`, `scripts.build = "tsup && node scripts/rename-dts.mjs"`, `scripts.test = "vitest run --typecheck"`, `scripts.typecheck = "tsc --noEmit"`. `packages/cli` additionally has `bin: { ultimate: "./dist/bin.mjs" }` and a two-entry `tsup.config.ts` (`index` with `dts: true`, `bin` with `dts: false` and a `banner: { js: "#!/usr/bin/env node" }`). `packages/cli/scripts/rename-dts.mjs` is copied verbatim from `component-schema`'s (identical `tsup`-`dts`-under-`type:module` workaround). `tsconfig.json` extends `../../tsconfig.base.json` with `outDir: "dist"`/`rootDir: "src"`/`include: ["src"]`. `vitest.config.ts` sets `test.environment: "node"`, `test.include: ["test/**/*.test.ts"]`, `test.typecheck.include: ["test/**/*.test-d.ts"]`. Root `pnpm-workspace.yaml` covers `packages/*` — no separate registration needed.
-9. **Root CI (`.github/workflows/ci.yml`)** runs, in order: checkout → fetch base ref → pnpm setup → node setup → install → lint → format:check → typecheck → build → test → test:scripts → provenance:validate → boundary:validate → ceiling:validate → compatibility-manifest:validate → **boundary:validate:cli**. All but the last 6 are root `pnpm run <script>` aggregations (`pnpm -r --if-present run <script>` under the hood for typecheck/build/test); the last 6 are direct `node scripts/...`/`node docs/...` invocations wired as individual root `package.json` scripts. `@ultimate/mcp` needs no new top-level CI *step* beyond one new line (`boundary:validate:mcp`, Task 11) — the existing `typecheck`/`build`/`test` steps already cover any new workspace package automatically via `-r --if-present`.
+9. **Root CI (`.github/workflows/ci.yml`)** runs, in order: checkout → fetch base ref → pnpm setup → node setup → install → lint → format:check → typecheck → build → test → test:scripts → provenance:validate → boundary:validate → ceiling:validate → compatibility-manifest:validate → **boundary:validate:cli**. All but the last 6 are root `pnpm run <script>` aggregations (`pnpm -r --if-present run <script>` under the hood for typecheck/build/test); the last 6 are direct `node scripts/...`/`node docs/...` invocations wired as individual root `package.json` scripts. `@ultimate/mcp` needs no new top-level CI _step_ beyond one new line (`boundary:validate:mcp`, Task 11) — the existing `typecheck`/`build`/`test` steps already cover any new workspace package automatically via `-r --if-present`.
 10. **`scripts/provenance/validate-boundaries.mjs`** (the original, `uix*`-scoped boundary script) and **`scripts/provenance/validate-dependency-ceiling.mjs`** (scoped to `packages/{uix,ng,react,vue,themes}*`) both confirmed, by reading their own scope constants, to **not** inspect `packages/cli` or `packages/mcp` at all — `packages/mcp` automatically passes both existing gates with zero change to either script, exactly as was true for `packages/cli` in Phase 7. The dependency-direction guarantee for MCP specifically is enforced only by the new Task 10 gate, not by these two pre-existing ones.
 11. **No `docs/architecture/compatibility-manifest.json` reader anywhere in the repo throws on a missing/malformed file today** — `doctor.ts`'s `readManifest()` does a bare `readFileSync`/`JSON.parse` with no try/catch, meaning a malformed manifest would currently crash the CLI's `doctor` command with an unstructured Node exception. This is a real, pre-existing gap in `@ultimate/cli`'s own code (not something this plan touches or fixes — out of scope, `packages/cli` source is not modified by this plan) but is directly relevant evidence for Task 4/7: `@ultimate/mcp`'s own manifest reader must **not** copy this behavior — the approved spec's error taxonomy (§4.1 case 3) explicitly requires a structured error, never an unstructured crash, so Task 4 wraps its read in an explicit try/catch from the start.
 
@@ -56,6 +56,7 @@ These facts were confirmed by direct inspection immediately before writing this 
 ## 1. Scope Restatement (from approved spec, unchanged)
 
 **In v1 (implemented by this plan):**
+
 - `@ultimate/mcp` package, stdio-transport MCP server, `bin`-invoked.
 - Five tools: `search_components`, `get_component`, `get_component_api`, `get_component_accessibility`, `check_framework_compatibility` (spec §7).
 - Shared five-case error taxonomy (spec §4.1) applied uniformly.
@@ -64,6 +65,7 @@ These facts were confirmed by direct inspection immediately before writing this 
 - New `boundary:validate:mcp` CI gate (spec §8.1).
 
 **Deferred, not implemented by this plan (unchanged from spec §10):**
+
 - HTTP transport, MCP resources, MCP prompts.
 - Usage-examples lookup, theme/token lookup, CLI/tooling-discovery tools, a dedicated migration-assistance tool.
 - Populating `mcpVersionRange`/`aiSkillsVersionRange` on the compatibility manifest, or extending `@ultimate/cli`'s `matchCompatibility()`.
@@ -129,6 +131,7 @@ docs/architecture/BLUEPRINT_GAPS.md  # Task 12
 **Objective:** Create `packages/mcp`'s `package.json`, `tsconfig.json`, `tsup.config.ts`, `vitest.config.ts`, and a placeholder `src/index.ts`, following the confirmed repository convention (Pre-flight #8) with the two confirmed-necessary additions (`bin` field, `@modelcontextprotocol/sdk` dependency).
 
 **Files:**
+
 - Create: `packages/mcp/package.json`
 - Create: `packages/mcp/tsconfig.json`
 - Create: `packages/mcp/tsup.config.ts`
@@ -138,6 +141,7 @@ docs/architecture/BLUEPRINT_GAPS.md  # Task 12
 - Create: `packages/mcp/src/bin.ts` (placeholder: `console.error("@ultimate/mcp placeholder");`)
 
 **Interfaces:**
+
 - Consumes: nothing (first task, no prior task dependency).
 - Produces: the package's own build/test/typecheck scripts (`pnpm --filter @ultimate/mcp run {build,test,typecheck}`), consumed by every later task's own test-run step and by Task 11's CI wiring.
 
@@ -164,10 +168,7 @@ docs/architecture/BLUEPRINT_GAPS.md  # Task 12
       "default": "./dist/index.mjs"
     }
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "dependencies": {
     "@ultimate/component-metadata": "workspace:*",
     "@ultimate/component-schema": "workspace:*",
@@ -287,11 +288,13 @@ renameDtsToMts("dist");
 - [ ] **Step 6: Write placeholder `src/index.ts` and `src/bin.ts`**
 
 `src/index.ts`:
+
 ```typescript
 export {};
 ```
 
 `src/bin.ts`:
+
 ```typescript
 console.error("@ultimate/mcp placeholder");
 ```
@@ -328,10 +331,12 @@ git commit -m "feat(mcp): scaffold @ultimate/mcp package shape"
 **Objective:** Implement the one shared error-shaping module every tool handler uses, per spec §4.1's five cases, so no tool invents its own ad hoc error shape.
 
 **Files:**
+
 - Create: `packages/mcp/src/errors.ts`
 - Test: `packages/mcp/test/errors.test.ts`
 
 **Interfaces:**
+
 - Consumes: nothing (pure, standalone module).
 - Produces: `McpToolError` (a discriminated type), and five constructor functions — `invalidInputError(field, reason)`, `notFoundError(name, knownNames)`, `manifestUnreadableError(detail)`, `absentFacetError(facetName)`, `internalError()` — consumed by every tool in Tasks 5, 6, 7, and by `server.ts` in Task 8 for its own top-level catch-all.
 
@@ -376,7 +381,9 @@ describe("manifestUnreadableError", () => {
   });
 
   it("does not leak the raw underlying error detail into the message (that goes to stderr, not the tool-error payload — case 5's no-leak rule applies to case 3's detail too)", () => {
-    const err = manifestUnreadableError("ENOENT: /Users/someone/secret-path/compatibility-manifest.json");
+    const err = manifestUnreadableError(
+      "ENOENT: /Users/someone/secret-path/compatibility-manifest.json"
+    );
     expect(err.message).not.toContain("/Users/someone/secret-path");
   });
 });
@@ -427,7 +434,8 @@ Expected: FAIL — `src/errors.ts` does not exist yet (`Cannot find module '../s
 // McpToolError values constructed only by the five functions below.
 
 export interface McpToolError {
-  readonly code: "invalid_input" | "not_found" | "manifest_unreadable" | "facet_not_recorded" | "internal_error";
+  readonly code:
+    "invalid_input" | "not_found" | "manifest_unreadable" | "facet_not_recorded" | "internal_error";
   readonly message: string;
 }
 
@@ -456,7 +464,8 @@ export function notFoundError(name: string, knownNames: readonly string[]): McpT
 export function manifestUnreadableError(_detail: string): McpToolError {
   return {
     code: "manifest_unreadable",
-    message: "The compatibility manifest could not be read or parsed. No compatibility result can be returned.",
+    message:
+      "The compatibility manifest could not be read or parsed. No compatibility result can be returned.",
   };
 }
 
@@ -506,12 +515,14 @@ git commit -m "feat(mcp): shared five-case tool error taxonomy (spec §4.1)"
 **Objective:** Implement the two tools that operate on a single component-name (or query) lookup with per-framework API detail, per spec §7.1's `search_components` row and §7.2's `get_component_api` row.
 
 **Files:**
+
 - Create: `packages/mcp/src/tools/search-components.ts`
 - Create: `packages/mcp/src/tools/get-component-api.ts`
 - Test: `packages/mcp/test/tools/search-components.test.ts`
 - Test: `packages/mcp/test/tools/get-component-api.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ALL_COMPONENTS` from `@ultimate/component-metadata` (real import); `McpToolError`/`notFoundError`/`invalidInputError` from `../errors` (Task 2).
 - Produces: `searchComponents(input: SearchComponentsInput): SearchComponentsResult | McpToolError` and `getComponentApi(input: GetComponentApiInput): GetComponentApiResult | McpToolError`, consumed by `server.ts` (Task 8) for tool registration and by Task 9's server-level tests.
 
@@ -625,7 +636,9 @@ const KNOWN_FRAMEWORKS = new Set(["ng", "react", "vue"]);
  * array order — unranked. Fuzzy matching/relevance ranking is explicitly
  * deferred (spec §10), not implemented here.
  */
-export function searchComponents(input: SearchComponentsInput): SearchComponentsResult | McpToolError {
+export function searchComponents(
+  input: SearchComponentsInput
+): SearchComponentsResult | McpToolError {
   if (typeof input.query !== "string") {
     return invalidInputError("query", "must be a string");
   }
@@ -707,7 +720,8 @@ describe("getComponentApi", () => {
         {
           name: "SyntheticGapComponent",
           category: "Test",
-          description: "A synthetic record with no react api entry, used only to exercise the facet_not_recorded path.",
+          description:
+            "A synthetic record with no react api entry, used only to exercise the facet_not_recorded path.",
           schemaVersion: "1.0.0",
           metadataVersion: 1,
           packages: { ng: { packageName: "@ultimate/ng", sourcePath: "n/a" } },
@@ -718,7 +732,8 @@ describe("getComponentApi", () => {
       ],
     }));
 
-    const { getComponentApi: getComponentApiWithMock } = await import("../../src/tools/get-component-api");
+    const { getComponentApi: getComponentApiWithMock } =
+      await import("../../src/tools/get-component-api");
     const result = getComponentApiWithMock({ name: "SyntheticGapComponent", framework: "ng" });
 
     expect("code" in result).toBe(true);
@@ -822,10 +837,12 @@ git commit -m "feat(mcp): search_components and get_component_api tool logic"
 **Objective:** Implement a `@ultimate/mcp`-owned, independent read of `docs/architecture/compatibility-manifest.json` — never importing `@ultimate/cli`'s `matchCompatibility()`/`detectFramework()`, per spec §5.2. Fails closed (structured error) on any read/parse failure, never crashing unstructured or fabricating a result — correcting the exact gap Pre-flight #11 found in `@ultimate/cli`'s own `doctor.ts`.
 
 **Files:**
+
 - Create: `packages/mcp/src/manifest.ts`
 - Test: `packages/mcp/test/manifest.test.ts`
 
 **Interfaces:**
+
 - Consumes: `manifestUnreadableError` from `../errors` (Task 2).
 - Produces: `readCompatibilityManifest(): CompatibilityManifestEntry[] | McpToolError` and `CompatibilityManifestEntry` (the minimal shape this package needs — `framework`, `frameworkVersionRange` only, per spec §7.4's single-axis scope; **not** a full port of CLI's 6-field `CompatibilityEntry`), consumed by `check-framework-compatibility.ts` (Task 7).
 
@@ -1033,12 +1050,14 @@ git commit -m "feat(mcp): independent compatibility-manifest reader, no @ultimat
 **Objective:** Implement `get_component`'s exact framework-narrowing rule (spec §7.1) and `get_component_accessibility`'s honest-degradation contract (spec §7.2), grounded against the real per-record facet population confirmed in Pre-flight #4.
 
 **Files:**
+
 - Create: `packages/mcp/src/tools/get-component.ts`
 - Create: `packages/mcp/src/tools/get-component-accessibility.ts`
 - Test: `packages/mcp/test/tools/get-component.test.ts`
 - Test: `packages/mcp/test/tools/get-component-accessibility.test.ts`
 
 **Interfaces:**
+
 - Consumes: `ALL_COMPONENTS` from `@ultimate/component-metadata`; `notFoundError`/`invalidInputError`/`absentFacetError` from `../errors` (Task 2).
 - Produces: `getComponent(input: GetComponentInput): GetComponentResult | McpToolError` and `getComponentAccessibility(input: GetComponentAccessibilityInput): GetComponentAccessibilityResult | McpToolError`, consumed by `server.ts` (Task 8).
 
@@ -1306,10 +1325,12 @@ git commit -m "feat(mcp): get_component and get_component_accessibility tool log
 **Objective:** Implement the narrowly-scoped, single-axis compatibility tool per spec §7.4, consuming Task 4's independent manifest reader — never `@ultimate/cli`'s `matchCompatibility()`.
 
 **Files:**
+
 - Create: `packages/mcp/src/tools/check-framework-compatibility.ts`
 - Test: `packages/mcp/test/tools/check-framework-compatibility.test.ts`
 
 **Interfaces:**
+
 - Consumes: `readCompatibilityManifest` from `../manifest` (Task 4); `invalidInputError` from `../errors` (Task 2). Uses hand-rolled caret-range satisfaction (mirroring, not importing, `@ultimate/cli`'s own `satisfiesRange` logic in `compatibility.ts` — spec §5.2 forbids the import, but the algorithm itself is public, well-understood caret-range semantics, not CLI-proprietary logic).
 - Produces: `checkFrameworkCompatibility(input: CheckFrameworkCompatibilityInput): CheckFrameworkCompatibilityResult | McpToolError`, consumed by `server.ts` (Task 8).
 
@@ -1323,14 +1344,20 @@ import { checkFrameworkCompatibility } from "../../src/tools/check-framework-com
 describe("checkFrameworkCompatibility", () => {
   it("returns compatible: true for a version satisfying the real manifest's angular frameworkVersionRange", () => {
     // Real manifest entry: angular frameworkVersionRange "^21.0.7" (Pre-flight #6).
-    const result = checkFrameworkCompatibility({ framework: "angular", frameworkVersion: "21.0.7" });
+    const result = checkFrameworkCompatibility({
+      framework: "angular",
+      frameworkVersion: "21.0.7",
+    });
     expect("code" in result).toBe(false);
     if ("code" in result) return;
     expect(result.compatible).toBe(true);
   });
 
   it("returns compatible: false with a reason for a version below the real manifest's range floor", () => {
-    const result = checkFrameworkCompatibility({ framework: "angular", frameworkVersion: "20.0.0" });
+    const result = checkFrameworkCompatibility({
+      framework: "angular",
+      frameworkVersion: "20.0.0",
+    });
     expect("code" in result).toBe(false);
     if ("code" in result) return;
     expect(result.compatible).toBe(false);
@@ -1467,7 +1494,10 @@ export function checkFrameworkCompatibility(
 
   const entry = manifestResult.find((e) => e.framework === input.framework);
   if (entry === undefined) {
-    return { compatible: false, reason: `no compatibility-manifest entry for framework "${input.framework}"` };
+    return {
+      compatible: false,
+      reason: `no compatibility-manifest entry for framework "${input.framework}"`,
+    };
   }
 
   const matched = satisfiesRange(input.frameworkVersion, entry.frameworkVersionRange);
@@ -1504,11 +1534,13 @@ git commit -m "feat(mcp): check_framework_compatibility tool, single-axis only, 
 **Objective:** Wire all 5 tool functions (Tasks 3, 5, 6) into a real `@modelcontextprotocol/sdk` `McpServer`, register the stdio transport, and make `bin.ts` the sole file that starts it — satisfying the stdout/stderr discipline (spec §5.1.1) end-to-end.
 
 **Files:**
+
 - Create: `packages/mcp/src/server.ts`
 - Modify: `packages/mcp/src/bin.ts` (replace placeholder)
 - Modify: `packages/mcp/src/index.ts` (replace placeholder — export the tool functions/types for library-surface consumption by tests and any future consumer)
 
 **Interfaces:**
+
 - Consumes: `searchComponents`/`SearchComponentsInput` (Task 3), `getComponentApi`/`GetComponentApiInput` (Task 3), `getComponent`/`GetComponentInput` (Task 5), `getComponentAccessibility`/`GetComponentAccessibilityInput` (Task 5), `checkFrameworkCompatibility`/`CheckFrameworkCompatibilityInput` (Task 6), `McpToolError` (Task 2).
 - Produces: `createMcpServer(): McpServer` (a constructed-but-not-yet-connected server instance, for testability without a real stdio connection), consumed by `bin.ts` (this task) and by Task 9's server-registration tests.
 
@@ -1550,7 +1582,9 @@ function toToolResponse<T>(result: T | McpToolError) {
     const err = result as McpToolError;
     return {
       isError: true,
-      content: [{ type: "text" as const, text: JSON.stringify({ code: err.code, message: err.message }) }],
+      content: [
+        { type: "text" as const, text: JSON.stringify({ code: err.code, message: err.message }) },
+      ],
     };
   }
   return {
@@ -1576,7 +1610,8 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "search_components",
     {
-      description: "Case-insensitive substring search over Ultimate component name/category/description.",
+      description:
+        "Case-insensitive substring search over Ultimate component name/category/description.",
       inputSchema: {
         query: z.string(),
         framework: FRAMEWORK_ENUM_NG.optional(),
@@ -1601,7 +1636,8 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "get_component_api",
     {
-      description: "Returns a component's props/events for one specific framework, exactly as recorded.",
+      description:
+        "Returns a component's props/events for one specific framework, exactly as recorded.",
       inputSchema: {
         name: z.string(),
         framework: FRAMEWORK_ENUM_NG,
@@ -1613,7 +1649,8 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "get_component_accessibility",
     {
-      description: "Returns a component's recorded accessibility facts, or an honest not-recorded result.",
+      description:
+        "Returns a component's recorded accessibility facts, or an honest not-recorded result.",
       inputSchema: {
         name: z.string(),
       },
@@ -1668,9 +1705,21 @@ main().catch((error) => {
 ```typescript
 // packages/mcp/src/index.ts
 export { createMcpServer } from "./server";
-export { searchComponents, type SearchComponentsInput, type SearchComponentsResult } from "./tools/search-components";
-export { getComponentApi, type GetComponentApiInput, type GetComponentApiResult } from "./tools/get-component-api";
-export { getComponent, type GetComponentInput, type GetComponentResult } from "./tools/get-component";
+export {
+  searchComponents,
+  type SearchComponentsInput,
+  type SearchComponentsResult,
+} from "./tools/search-components";
+export {
+  getComponentApi,
+  type GetComponentApiInput,
+  type GetComponentApiResult,
+} from "./tools/get-component-api";
+export {
+  getComponent,
+  type GetComponentInput,
+  type GetComponentResult,
+} from "./tools/get-component";
 export {
   getComponentAccessibility,
   type GetComponentAccessibilityInput,
@@ -1697,6 +1746,7 @@ export {
 `@modelcontextprotocol/sdk`'s `registerTool` input-schema shape (as used above) expects raw Zod schemas per field — `zod` must be declared as an explicit direct dependency (not merely a transitive one pulled in by the SDK), since `server.ts` imports it directly.
 
 Modify `packages/mcp/package.json`'s `dependencies` (adds `zod` to the set Task 1 already declared):
+
 ```json
 "dependencies": {
   "@ultimate/component-metadata": "workspace:*",
@@ -1739,9 +1789,11 @@ git commit -m "feat(mcp): wire all 5 tools into McpServer, stdio bootstrap in bi
 **Objective:** Automate what Task 7 Step 6 verified manually — confirm all 5 tools are registered, the shared error taxonomy round-trips correctly through the SDK's response shape, and no code path writes to stdout.
 
 **Files:**
+
 - Create: `packages/mcp/test/server.test.ts`
 
 **Interfaces:**
+
 - Consumes: `createMcpServer` from `../src/server` (Task 7).
 - Produces: nothing consumed by later tasks — this is a terminal test task for the package's own internal correctness.
 
@@ -1763,7 +1815,13 @@ describe("createMcpServer", () => {
     // implementation detail to confirm against the real package, not
     // guessed here — this step's assertion list is the contract, its
     // exact mechanism is an implementation-time lookup).
-    const registeredNames = ["search_components", "get_component", "get_component_api", "get_component_accessibility", "check_framework_compatibility"];
+    const registeredNames = [
+      "search_components",
+      "get_component",
+      "get_component_api",
+      "get_component_accessibility",
+      "check_framework_compatibility",
+    ];
     // Placeholder assertion shape — implementer confirms the real
     // introspection call against @modelcontextprotocol/sdk's actual API
     // and replaces this comment with the concrete check; the required
@@ -1841,10 +1899,12 @@ git commit -m "test(mcp): server-level tool registration and stdout/stderr disci
 **Objective:** Create a direct structural sibling of `scripts/provenance/validate-cli-boundary.mjs` (Pre-flight #7), extended to prove: (a) `packages/{ng,react,vue}*` never depend on `@ultimate/mcp`; (b) `@ultimate/mcp` never depends on `@ultimate/cli` or `@ultimate/{ng,react,vue,themes}` — per approved spec §8.1.
 
 **Files:**
+
 - Create: `scripts/provenance/validate-mcp-boundary.mjs`
 - Create: `scripts/provenance/validate-mcp-boundary.test.mjs`
 
 **Interfaces:**
+
 - Consumes: nothing from earlier tasks (standalone script, mirrors `validate-cli-boundary.mjs`'s own standalone shape).
 - Produces: a `node scripts/provenance/validate-mcp-boundary.mjs` CLI invocation with exit code 0 (pass) / 1 (fail), consumed by Task 11's CI wiring and root `package.json` script.
 
@@ -1955,7 +2015,11 @@ test("fails when a packages/mcp-shaped fixture's package.json declares @ultimate
 
   const result = runScript(workDir);
 
-  assert.equal(result.status, 1, "expected fail on forward-direction dependencies violation (mcp -> cli)");
+  assert.equal(
+    result.status,
+    1,
+    "expected fail on forward-direction dependencies violation (mcp -> cli)"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /"dependencies"/);
   assert.match(result.stderr, /forward-direction/);
@@ -1969,7 +2033,10 @@ test("fails when a packages/mcp-shaped fixture's package.json declares @ultimate
   mkdirSync(pkgDir, { recursive: true });
   writeFileSync(
     join(pkgDir, "package.json"),
-    JSON.stringify({ name: "@ultimate/mcp", devDependencies: { "@ultimate/themes": "workspace:*" } })
+    JSON.stringify({
+      name: "@ultimate/mcp",
+      devDependencies: { "@ultimate/themes": "workspace:*" },
+    })
   );
 
   const result = runScript(workDir);
@@ -2003,11 +2070,18 @@ test("fails when a packages/mcp-shaped fixture's src imports @ultimate/cli (the 
   const workDir = makeWorkDir("mcp-boundary-check4-fail-cli-import-");
   const srcDir = join(workDir, "packages", "mcp", "src");
   mkdirSync(srcDir, { recursive: true });
-  writeFileSync(join(srcDir, "manifest.ts"), `import { matchCompatibility } from "@ultimate/cli";\n`);
+  writeFileSync(
+    join(srcDir, "manifest.ts"),
+    `import { matchCompatibility } from "@ultimate/cli";\n`
+  );
 
   const result = runScript(workDir);
 
-  assert.equal(result.status, 1, "expected fail on forward-direction source-import violation (mcp -> cli)");
+  assert.equal(
+    result.status,
+    1,
+    "expected fail on forward-direction source-import violation (mcp -> cli)"
+  );
   assert.match(result.stderr, /VIOLATION/);
   assert.match(result.stderr, /forward-direction/);
 
@@ -2226,10 +2300,12 @@ git commit -m "feat(provenance): add MCP dependency-direction boundary validator
 **Objective:** Add the new `boundary:validate:mcp` root script and CI step, per spec §8.1 and Pre-flight #9's confirmed CI structure.
 
 **Files:**
+
 - Modify: `package.json` (root) — add one script.
 - Modify: `.github/workflows/ci.yml` — add one step.
 
 **Interfaces:**
+
 - Consumes: `scripts/provenance/validate-mcp-boundary.mjs` (Task 9).
 - Produces: nothing consumed by later tasks — terminal CI-wiring task.
 
@@ -2247,11 +2323,11 @@ Modify `package.json`'s `"scripts"` block, adding one line after the existing `"
 Modify `.github/workflows/ci.yml`, adding one step after the existing `"CLI package boundary validation"` step:
 
 ```yaml
-      - name: CLI package boundary validation
-        run: pnpm run boundary:validate:cli
+- name: CLI package boundary validation
+  run: pnpm run boundary:validate:cli
 
-      - name: MCP package boundary validation
-        run: pnpm run boundary:validate:mcp
+- name: MCP package boundary validation
+  run: pnpm run boundary:validate:mcp
 ```
 
 - [ ] **Step 3: Verify locally**
@@ -2277,17 +2353,19 @@ git commit -m "ci(gates): wire boundary:validate:mcp into CI"
 **Objective:** Add `packages/mcp/README.md` (matching every sibling package's convention of shipping one) and update `ROADMAP.md`/`BLUEPRINT_GAPS.md` to reflect Phase 8's closure — the only documentation changes explicitly justified by the approved spec (its own §12 anticipates this exact update, mirroring the convention used at GAP-027/GAP-028's closure).
 
 **Files:**
+
 - Create: `packages/mcp/README.md`
 - Modify: `docs/architecture/ROADMAP.md`
 - Modify: `docs/architecture/BLUEPRINT_GAPS.md`
 
 **Interfaces:**
+
 - Consumes: nothing (documentation-only task, final in the plan).
 - Produces: nothing (terminal task).
 
 - [ ] **Step 1: Write `packages/mcp/README.md`**
 
-```markdown
+````markdown
 # @ultimate/mcp
 
 MCP server exposing Ultimate component metadata and compatibility queries (Phase 8).
@@ -2301,13 +2379,15 @@ v1 — stdio-transport MCP server, 5 tools: `search_components`, `get_component`
 ```bash
 npx @ultimate/mcp
 ```
+````
 
 Runs the server over stdio — intended to be spawned by an MCP-aware AI coding tool, not invoked interactively.
 
 ## Scope
 
 See `docs/superpowers/specs/2026-09-07-phase-8-mcp-design.md` for the full v1 contract, including explicit non-goals (HTTP transport, MCP resources/prompts, usage-examples/theme-token/CLI-discovery tools, and any Phase 9 Skills/LLM-context functionality — none of which this package implements).
-```
+
+````
 
 - [ ] **Step 2: Update `docs/architecture/ROADMAP.md`**
 
@@ -2315,7 +2395,7 @@ Change the Phase 8 row from `Not started` to `Complete`, and add a footnote matc
 
 ```markdown
 | 8     | MCP                                                        | Complete [^4] |
-```
+````
 
 ```markdown
 [^4]: `@ultimate/mcp` (`packages/mcp`) ships a stdio-transport MCP server exposing 5 real tools — `search_components`, `get_component`, `get_component_api`, `get_component_accessibility`, `check_framework_compatibility` — reading `@ultimate/component-metadata`'s real 8-component `ALL_COMPONENTS` set and `docs/architecture/compatibility-manifest.json` directly, with no dependency on `@ultimate/cli` or any framework package in either direction (enforced by a new `boundary:validate:mcp` CI gate, modeled on Phase 7's `boundary:validate:cli`). Explicitly deferred: HTTP transport, MCP resources/prompts, usage-examples/theme-token/CLI-tooling-discovery tools (no backing schema data exists for any), and populating the reserved `mcpVersionRange` compatibility-manifest axis (remains `@ultimate/cli`'s own future work). See `docs/superpowers/specs/2026-09-07-phase-8-mcp-design.md` for the full contract.
@@ -2395,6 +2475,7 @@ Task 8 + Task 10 ──> Task 11 (README + ROADMAP/GAPS closeout, full-repo veri
 **Acyclic confirmation:** no task's dependency list names a task that appears later in its own dependency chain — Task 1 → {2} → {3,4,5} → {6,7} → {8} and Task 9 → {10} → {11} are two independent chains that only merge at the final Task 11, which depends on both chains' terminal tasks (8 and 10) but neither chain depends on the other's internals.
 
 **Shared-helper single ownership:**
+
 - `errors.ts` (the five-case taxonomy) — owned exclusively by Task 2. Tasks 3, 5, 6, 7 consume it via import; none redefines or duplicates it.
 - `manifest.ts`/`manifest-path.ts` (the independent compatibility-manifest reader) — owned exclusively by Task 4. Only Task 6 consumes it; no other task reads the manifest file directly or duplicates this logic.
 - `ALL_COMPONENTS` lookup-by-name pattern (`ALL_COMPONENTS.find((c) => c.name === input.name)`) appears in Tasks 3 (get-component-api), 5 (get-component, get-component-accessibility) — this is a 2-line inline expression, not extracted into a shared helper, since extracting a 1-line `Array.prototype.find` call would be premature abstraction (YAGNI) for a pattern this small; each tool file owns its own copy, consistent with `@ultimate/cli`'s own `doctor.ts`/`generate.ts` precedent (Pre-flight research confirms both independently call `ALL_COMPONENTS.find(...)` rather than sharing a helper).
@@ -2404,6 +2485,7 @@ Task 8 + Task 10 ──> Task 11 (README + ROADMAP/GAPS closeout, full-repo veri
 ## 5. Self-Review
 
 **1. Spec coverage** — every approved-spec requirement maps to a concrete task:
+
 - §5.1 (stdio transport, `bin` entry, tools-only primitive) → Task 1 (package.json `bin`), Task 7 (`StdioServerTransport`), Task 7 (only 5 tools registered, no resources/prompts anywhere in `server.ts`).
 - §5.1.1 (stdout/stderr discipline) → Task 7 (`bin.ts`'s only output is `console.error`), Task 8 (automated stdout-discipline tests).
 - §5.2 (no CLI dependency, independent manifest read) → Task 4 (`manifest.ts`, no `@ultimate/cli` import), Task 9 (boundary gate specifically checking for the `@ultimate/mcp → @ultimate/cli` edge).
@@ -2424,6 +2506,7 @@ No gap found.
 **2. Placeholder scan** — searched every task for "TBD"/"TODO"/"implement later"/"add appropriate error handling"/"similar to Task N without code". One legitimate exception flagged explicitly rather than hidden: Task 8 Step 1's tool-registration test contains an explicit, labeled placeholder for the SDK's exact introspection API call, because the precise method name on `McpServer` for listing registered tools is a real implementation-time lookup against whatever `@modelcontextprotocol/sdk` version Task 1 pins — inventing a specific method name now would risk stating a false API contract as fact (the same discipline the formal spec review demanded of the Phase 8 spec itself). This is flagged, not silently left vague, and Task 8's own completion criteria explicitly forbid marking the task done with the placeholder still in place. No other placeholder-shaped language found.
 
 **3. Type consistency** — cross-checked function names/signatures used across tasks:
+
 - `searchComponents(input: SearchComponentsInput): SearchComponentsResult | McpToolError` — defined Task 3, consumed identically in Task 7's `safeHandler(searchComponents)` and Task 8's stdout-discipline test. Consistent.
 - `getComponentApi(input: GetComponentApiInput): GetComponentApiResult | McpToolError` — defined Task 3, consumed identically in Task 7. Consistent.
 - `getComponent(input: GetComponentInput): GetComponentResult | McpToolError` — defined Task 5, consumed identically in Task 7 and Task 8. Consistent.
@@ -2449,11 +2532,11 @@ No mismatch found.
 
 **9. Is the MCP↔CLI dependency prohibition enforced in both directions?** Yes — Task 9's script checks both directions explicitly (Check 1/2 reverse: framework packages never depend on MCP; Check 3/4 forward: MCP never depends on CLI or any framework/themes package), with dedicated tests for the specific `@ultimate/mcp → @ultimate/cli` edge (the one edge the original `validate-cli-boundary.mjs` had no notion of, since MCP didn't exist in Phase 7). Task 4's `manifest.ts` independently avoids the edge at the source level (no `@ultimate/cli` import anywhere), which Task 9's gate then mechanically verifies.
 
-**10. Is runtime source parsing impossible by design and covered by the boundary gate?** Design: every tool (Tasks 3, 5, 6) reads only `ALL_COMPONENTS` (a typed, in-memory import from `@ultimate/component-metadata`) or `readCompatibilityManifest()` (Task 4, a plain JSON file read) — no task anywhere calls `readFileSync`/`readdirSync`/any filesystem or AST-parsing API against `packages/{ng,react,vue}/src/**`, confirmed by reviewing every task's Files/Implementation sections. This is a design property (no task introduces such a call), not itself something Task 9's boundary gate directly checks (that gate checks *dependency declarations and imports*, not *runtime filesystem access patterns* — a deliberate, correctly-scoped distinction: the boundary gate proves the dependency graph is clean, which is what makes runtime source parsing structurally unreachable without also violating that graph, since reading `packages/ng/src/*.ts` at runtime would require either a filesystem path constant unrelated to any import — which no task introduces — or importing framework package internals directly, which Task 9 already forbids).
+**10. Is runtime source parsing impossible by design and covered by the boundary gate?** Design: every tool (Tasks 3, 5, 6) reads only `ALL_COMPONENTS` (a typed, in-memory import from `@ultimate/component-metadata`) or `readCompatibilityManifest()` (Task 4, a plain JSON file read) — no task anywhere calls `readFileSync`/`readdirSync`/any filesystem or AST-parsing API against `packages/{ng,react,vue}/src/**`, confirmed by reviewing every task's Files/Implementation sections. This is a design property (no task introduces such a call), not itself something Task 9's boundary gate directly checks (that gate checks _dependency declarations and imports_, not _runtime filesystem access patterns_ — a deliberate, correctly-scoped distinction: the boundary gate proves the dependency graph is clean, which is what makes runtime source parsing structurally unreachable without also violating that graph, since reading `packages/ng/src/*.ts` at runtime would require either a filesystem path constant unrelated to any import — which no task introduces — or importing framework package internals directly, which Task 9 already forbids).
 
 **11. Is Phase 9 completely excluded?** Yes — no task's Files list touches `packages/ai/` or `skills/`; no task imports, generates, or references any Skills/LLM-context artifact; Global Constraints states this explicitly and Task 11's closeout documentation explicitly restates the deferred-scope list rather than silently expanding it.
 
-**12. Is there any accidental scope expansion?** Checked against the task brief's explicit "Do NOT" list: no code was implemented by *this planning pass* (the plan describes what an implementer does; this document itself created no source file); no production source, `package.json`, tests, or CI config were modified by *writing this plan* (Task 1–11's own file changes are prescribed for the implementation phase, not executed here); no architectural decision was reopened (every task cites the specific approved-spec section it implements, never re-deriving a decision); HTTP transport/MCP resources/MCP prompts/filesystem auto-detection are nowhere in any task; `@ultimate/cli`/`ng`/`react`/`vue`/`themes` dependencies are nowhere in any task's `package.json` content; `@ultimate/component-metadata`/`component-schema` are read-only consumed, never modified by any task; no Phase 9 functionality appears anywhere. No expansion found.
+**12. Is there any accidental scope expansion?** Checked against the task brief's explicit "Do NOT" list: no code was implemented by _this planning pass_ (the plan describes what an implementer does; this document itself created no source file); no production source, `package.json`, tests, or CI config were modified by _writing this plan_ (Task 1–11's own file changes are prescribed for the implementation phase, not executed here); no architectural decision was reopened (every task cites the specific approved-spec section it implements, never re-deriving a decision); HTTP transport/MCP resources/MCP prompts/filesystem auto-detection are nowhere in any task; `@ultimate/cli`/`ng`/`react`/`vue`/`themes` dependencies are nowhere in any task's `package.json` content; `@ultimate/component-metadata`/`component-schema` are read-only consumed, never modified by any task; no Phase 9 functionality appears anywhere. No expansion found.
 
 The one flagged item at original write-time (Task 8's SDK-introspection placeholder) is a deliberate, explicitly-labeled implementation-time lookup, not a planning gap, and does not affect any other task's contract. **This self-review section (§5, items 1–12 above) predates the formal Plan Review recorded in §6 below — items 1 ("No gap found") and 3 ("No mismatch found") did not catch Findings 1/2 in §6, since both require cross-referencing real source this self-review pass did not re-verify. §6 documents what an independent review caught and how this plan was corrected in response.**
 

@@ -11,13 +11,14 @@
 **Spec:** `docs/superpowers/specs/2026-09-02-table-component-design.md` (commit `6bf81c6`)
 
 **Dependencies verified real and shipped (this planning pass, read directly from source, not assumed from the spec):**
+
 - `packages/ng/src/paginator/paginator.ts` (`UPaginator`, signal inputs `first`/`rows`/`totalRecords`/`pageLinkSize`, output `onPageChange: PaginatorPageChangeEvent`, public `changePage(first: number): void`) — merged `870883e`.
 - `packages/react/src/paginator/paginator.tsx` (`UPaginatorProps { first, rows, totalRecords, pageLinkSize?, onPageChange }`, zero internal state) — merged `870883e`.
 - `packages/vue/src/paginator/Paginator.vue` + `base-paginator.ts` (props `first`/`rows`/`totalRecords`/`pageLinkSize`, emits `page`/`update:first`/`update:rows`, internal `d_first`/`d_rows`) — merged `870883e`.
 - `packages/ng/src/scroller/scroller.ts` (`UScroller`, inputs `items`/`itemSize`/`numToleratedItems`/`loading`/`disabled`/`lazy`, output `onLazyLoad: {first, last}`, public `scrollTo(options)`/`scrollToIndex(index, behavior?)`) — merged `8f8f97b`. **Content-template composition point** (merged `3204f38`, `descendants: false` fix `c2be17b`): `@ContentChild("content", { descendants: false }) protected contentTemplate?: TemplateRef<UScrollerContentContext>`, where `UScrollerContentContext = { $implicit: {index: number; value: unknown}[]; options: { getItemOptions: (index: number) => {index, count, first, last, even, odd}; itemSize: number; loading: boolean } }`. Dispatched via `*ngTemplateOutlet` in place of the built-in per-item `<div>` rendering when a `#content` template is projected; built-in rendering is the fallback when absent. `visibleItems()` (already-shipped windowing) is passed as `$implicit` — real absolute array indices, not window-relative.
 - `packages/react/src/scroller/scroller.tsx` (`UScrollerProps`, `React.forwardRef<UScrollerHandle, UScrollerProps>`, `UScrollerHandle { scrollTo, scrollToIndex }`) — merged `8f8f97b`. **Content-template composition point** (merged `f022ccd`): `contentTemplate?: (options: UScrollerContentOptions) => React.ReactNode` prop, where `UScrollerContentOptions = { items: {index, value}[]; getItemOptions: (index: number) => {index, count, first, last, even, odd}; itemSize: number; loading: boolean }`. Called in place of the built-in per-item `.map()` when supplied.
 - `packages/vue/src/scroller/Scroller.vue` + `base-scroller.ts` (props `items`/`itemSize`/`numToleratedItems` in base, `disabled`/`loading`/`lazy` in component; methods `scrollTo`/`scrollToIndex`; emit `lazy-load`) — merged `8f8f97b`. **Content-template composition point** (merged `1ae29ec`, windowed-path test fix `343816a`): `content` scoped slot exposing `:items`, `:get-item-options` (→ `getItemOptions` when destructured — Vue camelCases kebab-case slot-prop bindings, confirmed against the compiled template output), `:item-size` (→ `itemSize`), `:loading`. Built-in `v-for` rendering is the slot's fallback content, rendered automatically when `#content` isn't supplied.
-- **All three frameworks' `getItemOptions(index)` are field-for-field identical**: `{index, count, first: index === 0, last: index === count - 1, even: index % 2 === 0, odd: index % 2 !== 0}`, where `count` is always the *full* (unwindowed) `items.length`, mirroring real PrimeNG/PrimeReact/PrimeVue's `getOptions(index)` — confirmed by the Scroller extension plan's final whole-branch review. This is positional/boundary metadata only, not a pre-computed style/position offset.
+- **All three frameworks' `getItemOptions(index)` are field-for-field identical**: `{index, count, first: index === 0, last: index === count - 1, even: index % 2 === 0, odd: index % 2 !== 0}`, where `count` is always the _full_ (unwindowed) `items.length`, mirroring real PrimeNG/PrimeReact/PrimeVue's `getOptions(index)` — confirmed by the Scroller extension plan's final whole-branch review. This is positional/boundary metadata only, not a pre-computed style/position offset.
 - **`disabled=true` interaction**: all three frameworks' content-template dispatch reuses the same `visibleItems`/`visibleItems()` value the built-in path already uses — when `disabled()`/`disabled` is `true`, that value is already the full unwindowed item list (pre-existing, shipped behavior, unrelated to this extension), so the content template receives the full list automatically with no separate disabled-specific branch needed.
 - **Positioning is NOT handed down by `UScroller`.** `.u-scroller-content` (`packages/{ng,react,vue}/src/scroller/scroller-style.ts`) is `position: absolute; width: 100%` with a computed `height` but no `top` — the built-in per-item rendering compensates via `top: index * itemSize` per `.u-scroller-item`. A consumer's own content-template markup (e.g. Table's `<table>`) is a normal-flow child of that wrapper and does **not** automatically receive per-row positioning — real PrimeNG/PrimeReact/PrimeVue's own Table applies its own `translateY`/`top` offset to its rendered `<table>` (or per-row) using the real array index, and Table's own implementation here must do the same, deriving the offset from `getItemOptions(item.index).index * itemSize` (the absolute index is already available; no new field is needed from `UScroller`). This is a real, load-bearing implementation detail, not an oversight — flagged explicitly in Task 9/15b/21b below.
 
@@ -44,7 +45,7 @@
 - Match every existing shipped-component convention exactly (verified this planning pass by reading `packages/{ng,react,vue}/src/paginator/*` and `packages/{ng,react,vue}/src/scroller/*` in full): Angular components extend `UBaseComponent` (`@ultimate/ng-core`) with a `componentName`/`styleModule` pair, signal `input()`/`output()`, `ChangeDetectionStrategy.OnPush`, and internal state that must be mutated from outside a template event (e.g. imperative methods called by tests or parent code) implemented as `signal()` rather than a plain field — confirmed root cause pattern from both Scroller's `_contentSize` and Paginator's `_first`. React components use `useComponentBase({ componentName, styleModule })` from `@ultimate/react-core`. Vue components use `createBaseComponent({ componentName, styleModule })` from `@ultimate/vue-core` via `extends:`, with `d_`-prefixed internal reactive data mirrored from props via `watch`. Every style module is `{ css, classes }`, with `css` sourced from `@ultimate/uix-styles/<component>` and `classes` a local class-name-slot resolver object (`.p-*` renamed to `.u-*` — verified this pass: `packages/uix-styles/src/paginator/index.ts` and the vendored `.vendor-extracted/uix-styles-components/src/datatable/index.ts` both follow this convention; the latter is 608 lines, the largest style-token source of the three components planned so far, confirmed this pass).
 - **`fixture.nativeElement` in Angular tests is the component's own host element** (`<u-table>`), not a child inside its template — DOM-observable state needing `getAttribute()`-style assertion must be bound via `@Component({ host: {...} })`; `querySelector`/`querySelectorAll` (subtree search) is the correct mechanism for template-descendant elements (page-link buttons, cell/row elements, etc.) — confirmed convention from both prior plans' fix rounds, carried forward without rediscovery.
 - **Provenance manifest entries go into the existing per-package files** (`docs/architecture/provenance/{ng,react,vue,uix-styles}.json`), using the direct-adaptation schema (`originalPath`/`ultimateDestination`/`modificationStatus`/`modificationDescription`) already used by every Paginator/Scroller entry — confirmed this pass by reading the real tail entries of `docs/architecture/provenance/ng.json`. There is no per-component provenance file convention in this repo; none is created by this plan.
-- Provenance style tokens for Table's data-table CSS already exist, vendored, at `.vendor-extracted/uix-styles-components/src/datatable/index.ts` (608 lines, real `dt('datatable.*')` token references, confirmed this pass) — this plan ports that file into `packages/uix-styles/src/table/index.ts` (Task 1), matching the exact pattern `packages/uix-styles/src/paginator/index.ts` already established. No component *logic* source is vendored yet (`.vendor-extracted/{ng,react,vue}` has no `table`/`datatable` directory) — real PrimeNG/PrimeReact/PrimeVue Table logic is read from the pinned cached tarballs as each task requires it, per the spec's own citations (`table.ts` commit `c493b1c6d9f7cdffbe1c4dc195493dd73d733593`, `DataTable.js` commit `d0f574e39122668292fc7a740f081bae1b93b1e9`, `DataTable.vue` commit `66dde6788220fc9e6822342919d1ceb0e3460ece` — per spec §21).
+- Provenance style tokens for Table's data-table CSS already exist, vendored, at `.vendor-extracted/uix-styles-components/src/datatable/index.ts` (608 lines, real `dt('datatable.*')` token references, confirmed this pass) — this plan ports that file into `packages/uix-styles/src/table/index.ts` (Task 1), matching the exact pattern `packages/uix-styles/src/paginator/index.ts` already established. No component _logic_ source is vendored yet (`.vendor-extracted/{ng,react,vue}` has no `table`/`datatable` directory) — real PrimeNG/PrimeReact/PrimeVue Table logic is read from the pinned cached tarballs as each task requires it, per the spec's own citations (`table.ts` commit `c493b1c6d9f7cdffbe1c4dc195493dd73d733593`, `DataTable.js` commit `d0f574e39122668292fc7a740f081bae1b93b1e9`, `DataTable.vue` commit `66dde6788220fc9e6822342919d1ceb0e3460ece` — per spec §21).
 - No new `@ultimate/uix-data` primitive, no ADR-043 change, no Blueprint change. `docs/architecture/BLUEPRINT_GAPS.md`'s GAP-014 (filter operator/constraints) is addressed by this plan's Task 5/12/19 (per-framework filter implementation matching spec §9's resolution) — updating GAP-014's status to `RESOLVED` is a documentation task at the end of this plan (Task 27), not a precondition for starting.
 - **Scope boundary, restated from spec §1**: no drag-drop, no `uix-data` primitive addition, no TreeTable-as-grid, no column virtualization beyond what `calculateNumItemsInViewport`/`calculateLast` already cover. Frozen columns and column resize/reorder are explicitly out of scope (spec §1, §22 `NEEDS IMPLEMENTATION-TIME VERIFICATION` items not pursued here beyond what's needed for the acceptance criteria).
 
@@ -55,10 +56,12 @@
 ### Task 1: Port Table style tokens into `@ultimate/uix-styles`
 
 **Files:**
+
 - Create: `packages/uix-styles/src/table/index.ts`
 - Test: `packages/uix-styles/test/table.test.ts`
 
 **Interfaces:**
+
 - Consumes: nothing new (plain string export, matching `packages/uix-styles/src/paginator/index.ts`'s `export const style = ...` shape)
 - Produces: `export const style: string` — importable as `@ultimate/uix-styles/table`, consumed by Task 2/9/16's `table-style.ts` files
 
@@ -110,11 +113,13 @@ git commit -m "feat(uix-styles): add table style tokens"
 ### Task 2: Scaffold `UTable` — render rows/columns from `value`, style module
 
 **Files:**
+
 - Create: `packages/ng/src/table/table.ts`
 - Create: `packages/ng/src/table/table-style.ts`
 - Test: `packages/ng/src/table/table.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `UBaseComponent` from `@ultimate/ng-core`; `style` from `@ultimate/uix-styles/table` (Task 1)
 - Produces: `UTable<T>` class with signal input `value = input<T[]>([])`, `dataKey = input<string>('')`; renders `role="table"` root, `role="rowgroup"` on `tbody`, `role="row"` per data row — consumed by Task 3 (columns), Task 4 (selection)
 
@@ -238,10 +243,12 @@ git commit -m "feat(ng): scaffold UTable with row rendering"
 ### Task 3: Angular — column definitions, per-column cell templating
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Test: `packages/ng/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `value` (Task 2)
 - Produces: `columns = input<{ field: string; header: string }[]>([])` input; renders `role="columnheader"` header cells and per-column data cells resolving `row[field]` — consumed by Task 4 (sort), Task 7 (accessibility)
 
@@ -281,17 +288,17 @@ Extend `table.ts`'s template with a `thead`/`columns`-driven header row and per-
     <thead [class]="cx('thead')" role="rowgroup">
       <tr role="row">
         @for (col of columns(); track col.field) {
-          <th role="columnheader">{{ col.header }}</th>
+        <th role="columnheader">{{ col.header }}</th>
         }
       </tr>
     </thead>
     <tbody [class]="cx('tbody')" role="rowgroup">
       @for (row of value(); track $index) {
-        <tr [class]="cx('row')" role="row">
-          @for (col of columns(); track col.field) {
-            <td>{{ row[col.field] }}</td>
-          }
-        </tr>
+      <tr [class]="cx('row')" role="row">
+        @for (col of columns(); track col.field) {
+        <td>{{ row[col.field] }}</td>
+        }
+      </tr>
       }
     </tbody>
   </table>
@@ -317,10 +324,12 @@ git commit -m "feat(ng): add UTable column definitions and cell rendering"
 ### Task 4: Angular — sorting (`sortField`/`sortOrder`, `multiSortMeta`, `aria-sort`)
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Test: `packages/ng/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `SortMeta`/`SortMode` from `@ultimate/uix-data`; `columns` (Task 3)
 - Produces: `sortMode = input<SortMode>('single')`, `sortField = input<string>()`, `sortOrder = input<1|0|-1>(0)`, `multiSortMeta = input<SortMeta[]>([])`, outputs `sortFieldChange`/`sortOrderChange`/`multiSortMetaChange`; `sortedValue` getter (single- and multi-sort execution, Table's own logic per spec §7); `onSort(field)` click handler on header cells — consumed by Task 8 (real Paginator composition operates on `sortedValue`, not raw `value`)
 
@@ -371,11 +380,11 @@ describe("sorting", () => {
     ]);
     fixture.detectChanges();
     const cells = fixture.nativeElement.querySelectorAll("td");
-    expect([cells[0].textContent?.trim(), cells[1].textContent?.trim(), cells[2].textContent?.trim()]).toEqual([
-      "x",
-      "y",
-      "z",
-    ]);
+    expect([
+      cells[0].textContent?.trim(),
+      cells[1].textContent?.trim(),
+      cells[2].textContent?.trim(),
+    ]).toEqual(["x", "y", "z"]);
   });
 });
 ```
@@ -408,10 +417,12 @@ git commit -m "feat(ng): add UTable single/multi sort and aria-sort"
 > **Scope correction from an earlier pass:** the original version of this task named the full `FilterMatchMode` vocabulary (including `lt`/`lte`/`gt`/`gte`/`between`/`dateIs`/`dateIsNot`/`dateBefore`/`dateAfter`/`in`/`notIn`/`custom`) as "in scope," with only `contains` actually tested — an unverified, speculative mini filter engine. Corrected per review: this task now implements and tests only the **string match-mode subset actually exercised below** (`contains`, `startsWith`, `equals`). `custom` in particular is not implemented here — its real upstream contract (PrimeNG's `filters` config allows a per-column custom predicate function, per `table.ts`'s own `filterService`-style dispatch, not independently re-verified this pass) is unconfirmed and out of scope. Numeric (`lt`/`lte`/`gt`/`gte`/`between`), set (`in`/`notIn`), date (`dateIs`/`dateIsNot`/`dateBefore`/`dateAfter`), and `notContains`/`endsWith`/`notEquals`/`custom` are **explicitly deferred** — not implemented, not stubbed, not silently no-op'd; `filteredValue`'s match-mode dispatch throws or passes the row through unfiltered only for modes it implements, and any `matchMode` outside this task's `{contains, startsWith, equals}` set is a `NEEDS IMPLEMENTATION-TIME VERIFICATION` follow-up task, not silently invented here.
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Test: `packages/ng/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `FilterMatchMode`/`FilterMetadata` from `@ultimate/uix-data`; `sortedValue` (Task 4)
 - Produces: `filters = input<Record<string, FilterMetadata | FilterMetadata[]>>({})` (spec §9's Angular-specific array-of-alternatives shape); `filteredValue` getter implementing only `contains`/`startsWith`/`equals` (applies filters before sort, matching real PrimeNG's filter-then-sort pipeline order) — consumed by Task 8 (Paginator operates on the fully filtered+sorted result)
 
@@ -506,10 +517,12 @@ git commit -m "feat(ng): add UTable filtering (contains/startsWith/equals) with 
 ### Task 6: Angular — selection (`single`/`multiple`, `compareSelectionBy`, `aria-selected`)
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Test: `packages/ng/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `equals` from `@ultimate/uix-data`; `dataKey` (Task 2)
 - Produces: `selectionMode = input<SelectionMode>()`, `selection = input<T | T[]>()`, output `selectionChange`, `compareSelectionBy = input<'equals'|'deepEquals'>('equals')`; row `(click)` selection toggling with `aria-selected` — consumed by Task 7 (accessibility verification)
 
@@ -540,7 +553,9 @@ describe("selection", () => {
     fixture.componentRef.setInput("selectionMode", "single");
     fixture.componentRef.setInput("selection", { id: 1, name: "Alice" });
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('tbody [role="row"]').getAttribute("aria-selected")).toBe("true");
+    expect(
+      fixture.nativeElement.querySelector('tbody [role="row"]').getAttribute("aria-selected")
+    ).toBe("true");
   });
 });
 ```
@@ -571,10 +586,12 @@ git commit -m "feat(ng): add UTable single/multiple selection with dataKey ident
 ### Task 7: Angular — keyboard navigation, remaining accessibility vocabulary
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Test: `packages/ng/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: existing row/column/sort/selection state (Tasks 2-6)
 - Produces: `@HostListener('keydown')`-driven arrow-key/enter/home/end navigation across `role="row"`/`role="columnheader"` elements, per spec §15 — consumed by Task 27's cross-framework accessibility verification
 
@@ -628,10 +645,12 @@ git commit -m "feat(ng): add UTable keyboard row navigation"
 ### Task 8: Angular — real `UPaginator` composition
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Test: `packages/ng/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `UPaginator` from `../paginator/paginator` (real shipped component, `870883e`); `filteredValue`/`sortedValue` (Tasks 4-5)
 - Produces: `paginator = input(false)`, `first = input(0)` + output `firstChange`, `rows = input(0)` + output `rowsChange`, `totalRecords = input(0)`, `rowsPerPageOptions = input<number[]>()`; renders a real `<u-paginator>` child when `paginator()` is true, wired to slice the already-filtered/sorted rows — consumed by Task 27 (cross-framework composition verification)
 
@@ -692,12 +711,12 @@ Extend the template with:
 
 ```html
 @if (paginator()) {
-  <u-paginator
-    [first]="first()"
-    [rows]="rows()"
-    [totalRecords]="totalRecords()"
-    (onPageChange)="onPaginatorPageChange($event)"
-  ></u-paginator>
+<u-paginator
+  [first]="first()"
+  [rows]="rows()"
+  [totalRecords]="totalRecords()"
+  (onPageChange)="onPaginatorPageChange($event)"
+></u-paginator>
 }
 ```
 
@@ -722,10 +741,12 @@ git commit -m "feat(ng): compose real UPaginator into UTable"
 > **Unblocked.** The earlier blocker (`UScroller` had no content-projection mechanism) is resolved: `docs/superpowers/plans/2026-09-02-scroller-content-template-extension.md` shipped `@ContentChild('content', {descendants: false})` + `ngTemplateOutlet` on the real, merged `UScroller` (`3204f38`, `descendants: false` fix `c2be17b`). This task composes that real mechanism — Option 1 from the prior review, the option that preserves `table → tbody → tr → td` semantics through composition.
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Test: `packages/ng/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `UScroller`, `UScrollerContentContext` from `../scroller/scroller` (real shipped, `8f8f97b`, content-template extension `3204f38`/`c2be17b`); `filteredValue`/`sortedValue` (Tasks 4-5)
 - Produces: `virtualScroll = input(false)`, `virtualScrollItemSize = input(0)`, `lazy = input(false)`, `lazyLoadOnInit = input(false)`, output `onLazyLoad`; renders a real `<u-scroller>` child with a `#content` template supplying Table's own `<table><tbody><tr><td>` markup when `virtualScroll()` is true — consumed by Task 27
 
@@ -760,7 +781,10 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
 
   it("does not render the built-in u-scroller-item divs when virtualScroll=true (content template fully replaces them)", () => {
     const fixture = TestBed.createComponent(UTable<Row>);
-    fixture.componentRef.setInput("value", Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` })));
+    fixture.componentRef.setInput(
+      "value",
+      Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` }))
+    );
     fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
     fixture.componentRef.setInput("virtualScroll", true);
     fixture.componentRef.setInput("virtualScrollItemSize", 30);
@@ -781,36 +805,36 @@ Add `UScroller` to `imports`, add `virtualScroll`/`virtualScrollItemSize`/`lazy`
 
 ```html
 @if (virtualScroll()) {
-  <u-scroller
-    [items]="filteredValue"
-    [itemSize]="virtualScrollItemSize()"
-    [lazy]="lazy()"
-    (onLazyLoad)="onScrollerLazyLoad($event)"
-  >
-    <ng-template #content let-visibleItems let-options="options">
-      <table data-u-table-virtual-body [class]="cx('table')">
-        <tbody [class]="cx('tbody')" role="rowgroup">
-          @for (item of visibleItems; track item.index) {
-            <tr
-              [class]="cx('row')"
-              role="row"
-              [style.position]="'absolute'"
-              [style.top.px]="options.getItemOptions(item.index).index * options.itemSize"
-              [style.width]="'100%'"
-            >
-              @for (col of columns(); track col.field) {
-                <td>{{ item.value[col.field] }}</td>
-              }
-            </tr>
+<u-scroller
+  [items]="filteredValue"
+  [itemSize]="virtualScrollItemSize()"
+  [lazy]="lazy()"
+  (onLazyLoad)="onScrollerLazyLoad($event)"
+>
+  <ng-template #content let-visibleItems let-options="options">
+    <table data-u-table-virtual-body [class]="cx('table')">
+      <tbody [class]="cx('tbody')" role="rowgroup">
+        @for (item of visibleItems; track item.index) {
+        <tr
+          [class]="cx('row')"
+          role="row"
+          [style.position]="'absolute'"
+          [style.top.px]="options.getItemOptions(item.index).index * options.itemSize"
+          [style.width]="'100%'"
+        >
+          @for (col of columns(); track col.field) {
+          <td>{{ item.value[col.field] }}</td>
           }
-        </tbody>
-      </table>
-    </ng-template>
-  </u-scroller>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </ng-template>
+</u-scroller>
 }
 ```
 
-**Positioning, load-bearing detail (see Global Constraints/Dependencies note above):** `UScroller`'s `.u-scroller-content` wrapper is `position: absolute; height: <total>` with no per-row `top` of its own — the built-in fallback compensates via `top: index * itemSize` on each rendered item, and a consumer's own content-template markup gets no positioning for free. This task's template therefore applies `top: options.getItemOptions(item.index).index * options.itemSize` directly on each `<tr>` (via inline style, `position: absolute` — matching the same technique `UScroller`'s own built-in `.u-scroller-item` uses), using the *absolute* array index `getItemOptions` returns (confirmed real, shared, identical across all three frameworks) rather than the item's position within the windowed slice. Do not omit this — without it, virtualized rows render stacked at the top of the scroll container regardless of actual scroll position, a real, user-visible defect, not a cosmetic one.
+**Positioning, load-bearing detail (see Global Constraints/Dependencies note above):** `UScroller`'s `.u-scroller-content` wrapper is `position: absolute; height: <total>` with no per-row `top` of its own — the built-in fallback compensates via `top: index * itemSize` on each rendered item, and a consumer's own content-template markup gets no positioning for free. This task's template therefore applies `top: options.getItemOptions(item.index).index * options.itemSize` directly on each `<tr>` (via inline style, `position: absolute` — matching the same technique `UScroller`'s own built-in `.u-scroller-item` uses), using the _absolute_ array index `getItemOptions` returns (confirmed real, shared, identical across all three frameworks) rather than the item's position within the windowed slice. Do not omit this — without it, virtualized rows render stacked at the top of the scroll container regardless of actual scroll position, a real, user-visible defect, not a cosmetic one.
 
 Add `onScrollerLazyLoad(event: {first: number; last: number})` that re-emits Table's own `onLazyLoad` output, matching `UScroller`'s real `onLazyLoad` payload shape.
 
@@ -833,6 +857,7 @@ git commit -m "feat(ng): compose real UScroller content-template mechanism into 
 ### Task 10: Angular — row editing (DOM-validity cell editing, key-map row editing), row grouping, package wiring
 
 **Files:**
+
 - Modify: `packages/ng/src/table/table.ts`
 - Create: `packages/ng/src/table/index.ts`
 - Modify: `packages/ng/src/index.ts`
@@ -840,6 +865,7 @@ git commit -m "feat(ng): compose real UScroller content-template mechanism into 
 - Test: `packages/ng/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: existing Table state (Tasks 2-9)
 - Produces: `editMode = input<'cell'|'row'>()`, `editingRowKeys = input<Record<string, boolean>>({})` + output `editingRowKeysChange`, `rowGroupMode = input<'subheader'|'rowspan'>()`, `groupRowsBy = input<string>()`; `UTable` exported from `packages/ng/src/table/index.ts` and re-exported from `packages/ng/src/index.ts`
 
@@ -855,7 +881,9 @@ describe("row editing (key-map, spec §11.1)", () => {
     fixture.componentRef.setInput("editMode", "row");
     fixture.detectChanges();
     let emitted: Record<string, boolean> | undefined;
-    fixture.componentInstance.editingRowKeysChange.subscribe((e: Record<string, boolean>) => (emitted = e));
+    fixture.componentInstance.editingRowKeysChange.subscribe(
+      (e: Record<string, boolean>) => (emitted = e)
+    );
     fixture.componentInstance.initRowEdit({ id: 1, name: "Alice" });
     expect(emitted).toEqual({ "1": true });
   });
@@ -924,11 +952,13 @@ git commit -m "feat(ng): add UTable row editing key-map, row grouping, package e
 ### Task 11: Scaffold `UTable` — controlled `value`/columns render
 
 **Files:**
+
 - Create: `packages/react/src/table/table.tsx`
 - Create: `packages/react/src/table/table-style.ts`
 - Test: `packages/react/src/table/table.spec.tsx`
 
 **Interfaces:**
+
 - Consumes: `useComponentBase` from `@ultimate/react-core`; `style` from `@ultimate/uix-styles/table`
 - Produces: `UTableProps<T> { value: T[]; dataKey?: string; columns: { field: string; header: string }[] }`; `UTable: React.FC<UTableProps<T>>` renders `role="table"`/`role="row"`/`role="columnheader"` — consumed by Task 12
 
@@ -951,7 +981,10 @@ describe("UTable", () => {
   it("renders one row per value entry with role=row and a columnheader per column", () => {
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
       />
     );
@@ -986,7 +1019,10 @@ const classes = {
   table: () => "u-table-table",
   thead: () => "u-table-thead",
   tbody: () => "u-table-tbody",
-  row: (params: { selected?: boolean } = {}) => ["u-table-row", { "u-table-row-selected": params.selected }],
+  row: (params: { selected?: boolean } = {}) => [
+    "u-table-row",
+    { "u-table-row-selected": params.selected },
+  ],
 };
 
 export const tableStyleModule = { css, classes };
@@ -1056,10 +1092,12 @@ git commit -m "feat(react): scaffold UTable with row/column rendering"
 ### Task 12: React — sorting (controlled `sortField`/`sortOrder`/`multiSortMeta`, `onSort`)
 
 **Files:**
+
 - Modify: `packages/react/src/table/table.tsx`
 - Test: `packages/react/src/table/table.spec.tsx` (extend)
 
 **Interfaces:**
+
 - Consumes: `SortMeta`/`SortMode` from `@ultimate/uix-data`
 - Produces: `sortMode?: SortMode`, `sortField?: string`, `sortOrder?: 1|0|-1`, `multiSortMeta?: SortMeta[]`, `onSort?: (event: { sortField?: string; sortOrder?: 1|0|-1; multiSortMeta?: SortMeta[] }) => void` props — consumed by Task 15 (Paginator composition operates on sorted rows)
 
@@ -1076,7 +1114,13 @@ describe("sorting", () => {
       { id: 1, name: "Alice" },
     ];
     const { container } = render(
-      <UTable<Row> value={original} columns={[{ field: "name", header: "Name" }]} sortField="name" sortOrder={1} onSort={vi.fn()} />
+      <UTable<Row>
+        value={original}
+        columns={[{ field: "name", header: "Name" }]}
+        sortField="name"
+        sortOrder={1}
+        onSort={vi.fn()}
+      />
     );
     const cells = container.querySelectorAll("td");
     expect(cells[0].textContent).toBe("Alice");
@@ -1086,7 +1130,13 @@ describe("sorting", () => {
   it("sets aria-sort on the active sortField's columnheader and calls onSort when clicked", () => {
     const onSort = vi.fn();
     const { container } = render(
-      <UTable<Row> value={[{ id: 1, name: "Alice" }]} columns={[{ field: "name", header: "Name" }]} sortField="name" sortOrder={-1} onSort={onSort} />
+      <UTable<Row>
+        value={[{ id: 1, name: "Alice" }]}
+        columns={[{ field: "name", header: "Name" }]}
+        sortField="name"
+        sortOrder={-1}
+        onSort={onSort}
+      />
     );
     const header = container.querySelector('[role="columnheader"]') as HTMLElement;
     expect(header.getAttribute("aria-sort")).toBe("descending");
@@ -1122,10 +1172,12 @@ git commit -m "feat(react): add UTable controlled sort with aria-sort"
 ### Task 13: React — filtering (object+constraints operator shape) and selection
 
 **Files:**
+
 - Modify: `packages/react/src/table/table.tsx`
 - Test: `packages/react/src/table/table.spec.tsx` (extend)
 
 **Interfaces:**
+
 - Consumes: `FilterMatchMode`/`FilterMetadata` from `@ultimate/uix-data`; `equals` from `@ultimate/uix-data`
 - Produces: `filters?: Record<string, FilterMetadata | { operator: 'and'|'or'; constraints: FilterMetadata[] }>` (spec §9's React object-with-constraints-array shape), `onFilter?`; `selectionMode?`, `selection?`, `onSelectionChange?`, `compareSelectionBy?` — consumed by Task 15
 
@@ -1137,7 +1189,10 @@ describe("filtering (React object+constraints operator shape, spec §9)", () => 
   it("applies a simple FilterMetadata filter", () => {
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
         filters={{ name: { value: "ali", matchMode: "contains" } }}
       />
@@ -1148,7 +1203,10 @@ describe("filtering (React object+constraints operator shape, spec §9)", () => 
   it("applies an operator+constraints filter with 'and' semantics", () => {
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Alison" }]}
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Alison" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
         filters={{
           name: {
@@ -1211,10 +1269,12 @@ git commit -m "feat(react): add UTable filtering (operator+constraints) and cont
 ### Task 14: React — keyboard navigation and accessibility vocabulary
 
 **Files:**
+
 - Modify: `packages/react/src/table/table.tsx`
 - Test: `packages/react/src/table/table.spec.tsx` (extend)
 
 **Interfaces:**
+
 - Consumes: existing row/header rendering (Tasks 11-13)
 - Produces: `onKeyDown` handlers on row and header-cell elements implementing arrow/home/end navigation, matching spec §15's confirmed React baseline (`BodyRow.js:163`, `HeaderCell.js:210`)
 
@@ -1226,7 +1286,10 @@ describe("keyboard navigation", () => {
   it("ArrowDown on a row moves focus to the next row", () => {
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
       />
     );
@@ -1266,10 +1329,12 @@ git commit -m "feat(react): add UTable keyboard row navigation"
 ### Task 15: React — real `UPaginator` composition (Paginator only — Scroller composition split out, see below)
 
 **Files:**
+
 - Modify: `packages/react/src/table/table.tsx`
 - Test: `packages/react/src/table/table.spec.tsx` (extend)
 
 **Interfaces:**
+
 - Consumes: `UPaginator` from `../paginator/paginator` (real shipped, `870883e`)
 - Produces: `paginator?: boolean`, `first?: number`, `rows?: number`, `totalRecords?: number`, `onPage?` — consumed by Task 27
 
@@ -1325,10 +1390,12 @@ git commit -m "feat(react): compose real UPaginator into UTable"
 > **Unblocked.** `packages/react/src/scroller/scroller.tsx` now ships `contentTemplate?: (options: UScrollerContentOptions) => React.ReactNode` (merged `f022ccd`), mirroring real PrimeReact's own `contentTemplate` prop mechanism. This task composes that real render-prop.
 
 **Files:**
+
 - Modify: `packages/react/src/table/table.tsx`
 - Test: `packages/react/src/table/table.spec.tsx` (extend)
 
 **Interfaces:**
+
 - Consumes: `UScroller`, `UScrollerContentOptions` from `../scroller/scroller` (real shipped, `8f8f97b`, content-template extension `f022ccd`)
 - Produces: `virtualScrollerOptions?: { itemSize: number }`, `lazy?`, `onLazyLoad?` props; renders a real `<UScroller>` with a `contentTemplate` render-prop supplying Table's own `<table><tbody><tr><td>` markup when `virtualScrollerOptions` is set — consumed by Task 27
 
@@ -1382,7 +1449,11 @@ Import `UScroller`; add `virtualScrollerOptions`/`lazy`/`onLazyLoad` props. When
             key={index}
             className={cx("row") as string}
             role="row"
-            style={{ position: "absolute", top: getItemOptions(index).index * itemSize, width: "100%" }}
+            style={{
+              position: "absolute",
+              top: getItemOptions(index).index * itemSize,
+              width: "100%",
+            }}
           >
             {columns.map((col) => (
               <td key={col.field}>{String((value as Record<string, unknown>)[col.field])}</td>
@@ -1414,6 +1485,7 @@ git commit -m "feat(react): compose real UScroller contentTemplate render-prop i
 ### Task 16: React — row/cell editing, row grouping, package export
 
 **Files:**
+
 - Modify: `packages/react/src/table/table.tsx`
 - Create: `packages/react/src/table/index.ts`
 - Modify: `packages/react/src/index.ts`
@@ -1422,6 +1494,7 @@ git commit -m "feat(react): compose real UScroller contentTemplate render-prop i
 - Test: `packages/react/src/table/table.spec.tsx` (extend)
 
 **Interfaces:**
+
 - Consumes: existing Table state (Tasks 11-15)
 - Produces: `editMode?`, `editingRows?` (controlled/uncontrolled via `onRowEditChange` presence, per spec §11.2), always-internal `editingMeta` state; `rowGroupMode?`, `groupRowsBy?`; `UTable` exported from `packages/react/src/table/index.ts`, `@ultimate/react` root, and `@ultimate/react/table`
 
@@ -1512,12 +1585,14 @@ git commit -m "feat(react): add UTable row editing, row grouping, and package ex
 ### Task 17: Scaffold `UTable` — `createBaseComponent`, `value`/columns render
 
 **Files:**
+
 - Create: `packages/vue/src/table/base-table.ts`
 - Create: `packages/vue/src/table/Table.vue`
 - Create: `packages/vue/src/table/table-style.ts`
 - Test: `packages/vue/src/table/table.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `createBaseComponent` from `@ultimate/vue-core`; `style` from `@ultimate/uix-styles/table`
 - Produces: `UTable` SFC with props `value: { type: Array, default: () => [] }`, `dataKey: String`, `columns: { type: Array, default: () => [] }` — consumed by Task 18
 
@@ -1533,7 +1608,10 @@ describe("UTable", () => {
   it("renders one row per value entry with role=row and a columnheader per column", () => {
     const wrapper = mount(UTable, {
       props: {
-        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
         columns: [{ field: "name", header: "Name" }],
       },
     });
@@ -1568,7 +1646,10 @@ const classes = {
   table: () => "u-table-table",
   thead: () => "u-table-thead",
   tbody: () => "u-table-tbody",
-  row: (params: { selected?: boolean } = {}) => ["u-table-row", { "u-table-row-selected": params.selected }],
+  row: (params: { selected?: boolean } = {}) => [
+    "u-table-row",
+    { "u-table-row-selected": params.selected },
+  ],
 };
 
 export const tableStyleModule = { css, classes };
@@ -1638,11 +1719,13 @@ git commit -m "feat(vue): scaffold UTable with row/column rendering"
 ### Task 18: Vue — sorting (props + `@sort` emit)
 
 **Files:**
+
 - Modify: `packages/vue/src/table/base-table.ts`
 - Modify: `packages/vue/src/table/Table.vue`
 - Test: `packages/vue/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `SortMeta`/`SortMode` from `@ultimate/uix-data`
 - Produces: props `sortMode`, `sortField`, `sortOrder`, `multiSortMeta`; emit `sort`; computed `sortedValue` — consumed by Task 21 (Paginator composition)
 
@@ -1657,7 +1740,12 @@ describe("sorting", () => {
       { id: 1, name: "Alice" },
     ];
     const wrapper = mount(UTable, {
-      props: { value: original, columns: [{ field: "name", header: "Name" }], sortField: "name", sortOrder: 1 },
+      props: {
+        value: original,
+        columns: [{ field: "name", header: "Name" }],
+        sortField: "name",
+        sortOrder: 1,
+      },
     });
     const cells = wrapper.findAll("td");
     expect(cells[0].text()).toBe("Alice");
@@ -1666,7 +1754,12 @@ describe("sorting", () => {
 
   it("sets aria-sort on the active sortField's columnheader and emits sort on click", async () => {
     const wrapper = mount(UTable, {
-      props: { value: [{ id: 1, name: "Alice" }], columns: [{ field: "name", header: "Name" }], sortField: "name", sortOrder: -1 },
+      props: {
+        value: [{ id: 1, name: "Alice" }],
+        columns: [{ field: "name", header: "Name" }],
+        sortField: "name",
+        sortOrder: -1,
+      },
     });
     const header = wrapper.find('[role="columnheader"]');
     expect(header.attributes("aria-sort")).toBe("descending");
@@ -1702,11 +1795,13 @@ git commit -m "feat(vue): add UTable sort with aria-sort and sort emit"
 ### Task 19: Vue — filtering (object+constraints operator shape) and selection
 
 **Files:**
+
 - Modify: `packages/vue/src/table/base-table.ts`
 - Modify: `packages/vue/src/table/Table.vue`
 - Test: `packages/vue/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `FilterMatchMode`/`FilterMetadata`, `equals` from `@ultimate/uix-data`
 - Produces: prop `filters` (object+constraints shape, same as React per spec §9), emit `filter`; prop `selectionMode`, `v-model:selection`, `compareSelectionBy` — consumed by Task 21
 
@@ -1718,7 +1813,10 @@ describe("filtering (Vue object+constraints operator shape, spec §9)", () => {
   it("applies a simple FilterMetadata filter", () => {
     const wrapper = mount(UTable, {
       props: {
-        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
         columns: [{ field: "name", header: "Name" }],
         filters: { name: { value: "ali", matchMode: "contains" } },
       },
@@ -1769,10 +1867,12 @@ git commit -m "feat(vue): add UTable filtering (operator+constraints) and v-mode
 ### Task 20: Vue — keyboard navigation and accessibility vocabulary
 
 **Files:**
+
 - Modify: `packages/vue/src/table/Table.vue`
 - Test: `packages/vue/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: existing row/header rendering (Tasks 17-19)
 - Produces: `@keydown` handlers on row/header elements implementing arrow/home/end navigation, matching spec §15's confirmed Vue baseline (`HeaderCell.vue:11,239`)
 
@@ -1785,7 +1885,10 @@ describe("keyboard navigation", () => {
     const wrapper = mount(UTable, {
       attachTo: document.body,
       props: {
-        value: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }],
+        value: [
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ],
         columns: [{ field: "name", header: "Name" }],
       },
     });
@@ -1824,11 +1927,13 @@ git commit -m "feat(vue): add UTable keyboard row navigation"
 ### Task 21: Vue — real `UPaginator` composition (Paginator only — Scroller composition split out, see below)
 
 **Files:**
+
 - Modify: `packages/vue/src/table/base-table.ts`
 - Modify: `packages/vue/src/table/Table.vue`
 - Test: `packages/vue/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `UPaginator` from `../paginator/Paginator.vue` (real shipped, `870883e`)
 - Produces: props `paginator`, `first`, `rows`, `totalRecords`, `rowsPerPageOptions`; emit `page` — consumed by Task 27
 
@@ -1883,11 +1988,13 @@ git commit -m "feat(vue): compose real UPaginator into UTable"
 > **Unblocked.** `packages/vue/src/scroller/Scroller.vue` now ships a `content` scoped slot (merged `1ae29ec`, windowed-path test fix `343816a`), mirroring real PrimeVue's own `content` scoped-slot mechanism. This task composes that real slot.
 
 **Files:**
+
 - Modify: `packages/vue/src/table/base-table.ts`
 - Modify: `packages/vue/src/table/Table.vue`
 - Test: `packages/vue/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `UScroller` from `../scroller/Scroller.vue` (real shipped, `8f8f97b`, content-template extension `1ae29ec`)
 - Produces: `virtualScrollerOptions`, `lazy` props; emit `lazy-load`; renders a real `<UScroller>` with a `#content` scoped-slot template supplying Table's own `<table><tbody><tr><td>` markup when `virtualScrollerOptions` is set — consumed by Task 27
 
@@ -1972,6 +2079,7 @@ git commit -m "feat(vue): compose real UScroller content scoped-slot into UTable
 ### Task 22: Vue — row/cell editing (`v-model:editingRows` array), row grouping, package export
 
 **Files:**
+
 - Modify: `packages/vue/src/table/base-table.ts`
 - Modify: `packages/vue/src/table/Table.vue`
 - Create: `packages/vue/src/table/index.ts`
@@ -1980,6 +2088,7 @@ git commit -m "feat(vue): compose real UScroller content scoped-slot into UTable
 - Test: `packages/vue/src/table/table.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: existing Table state (Tasks 17-21)
 - Produces: prop `editingRows` (`Array`, per spec §11.3), emit `update:editingRows`; internal `d_editingRowKeys`/`d_editingMeta`; props `rowGroupMode`/`groupRowsBy`; `UTable` exported from `packages/vue/src/table/index.ts` and package root
 
@@ -2067,9 +2176,11 @@ git commit -m "feat(vue): add UTable row editing, row grouping, and package expo
 ### Task 23: Cross-framework theme-token consistency test for Table
 
 **Files:**
+
 - Modify: `packages/themes/test/cross-framework-consistency.test.ts`
 
 **Interfaces:**
+
 - Consumes: real `UTable` from all three frameworks; `dt('table.*')`/`dt('datatable.*')` token resolution
 - Produces: a new describe block proving `dt('<token>')` resolves to an identical `var(--u-table-<token>, ...)` (or whatever the real token naming convention turns out to be once Task 1's ported file is read in full — verify the exact dotted-path-to-CSS-var derivation against the same mechanism already proven for Paginator/Scroller in this same test file, do not assume the prefix without checking) regardless of which framework's Table registered it, mounted via real components (not mocks) — matching the file's own existing Paginator/Scroller blocks exactly in structure
 
@@ -2103,9 +2214,11 @@ git commit -m "test(themes): verify UTable cross-framework token consistency"
 ### Task 24: Cross-framework real-child-composition verification test
 
 **Files:**
+
 - Create (per framework, alongside existing spec files) or extend: `packages/ng/src/table/table.spec.ts`, `packages/react/src/table/table.spec.tsx`, `packages/vue/src/table/table.spec.ts` — a final, explicitly-labeled block in each confirming the mounted Paginator instance is the real class/component, not a test double
 
 **Interfaces:**
+
 - Consumes: `UPaginator`, `UScroller` (real, all three frameworks — `UScroller` composition now unblocked via Tasks 9/15b/21b)
 - Produces: a genuine runtime-composition assertion for Angular and Vue (both frameworks' test utilities expose a real handle to the mounted child instance/component); for React, a `vi.spyOn`-based call-site verification that actually proves runtime usage (not just import presence), since React Testing Library's `render()` does not expose fiber-level component-instance identity the way `TestBed.debugElement`/`@vue/test-utils`'s `findComponent` do — this correction replaces the plan's earlier weaker `typeof UPaginator === "function"` assertion, which proved only that the import resolved, not that `UTable` actually renders it. Both `UPaginator` and `UScroller` get this treatment per framework — the plan's original single-component version predates `UScroller`'s unblocking and is extended here, not left as a Paginator-only check.
 
@@ -2126,7 +2239,9 @@ it("composes the real UPaginator class (debugElement query, not a DOM-only check
   // constructed — componentInstance here is the actual instantiated
   // UPaginator class, not a DOM lookalike, so `instanceof` is a genuine
   // runtime-composition proof (stronger than the earlier module-import check).
-  const paginatorDebugEl = fixture.debugElement.query((de) => de.componentInstance instanceof UPaginator);
+  const paginatorDebugEl = fixture.debugElement.query(
+    (de) => de.componentInstance instanceof UPaginator
+  );
   expect(paginatorDebugEl).not.toBeNull();
 });
 ```
@@ -2137,12 +2252,17 @@ import { UScroller } from "../scroller/scroller";
 
 it("composes the real UScroller class (debugElement query, not a DOM-only check)", () => {
   const fixture = TestBed.createComponent(UTable<Row>);
-  fixture.componentRef.setInput("value", Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` })));
+  fixture.componentRef.setInput(
+    "value",
+    Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Row ${i}` }))
+  );
   fixture.componentRef.setInput("columns", [{ field: "name", header: "Name" }]);
   fixture.componentRef.setInput("virtualScroll", true);
   fixture.componentRef.setInput("virtualScrollItemSize", 30);
   fixture.detectChanges();
-  const scrollerDebugEl = fixture.debugElement.query((de) => de.componentInstance instanceof UScroller);
+  const scrollerDebugEl = fixture.debugElement.query(
+    (de) => de.componentInstance instanceof UScroller
+  );
   expect(scrollerDebugEl).not.toBeNull();
 });
 ```
@@ -2248,12 +2368,14 @@ git commit -m "test: verify UTable composes the real UPaginator/UScroller instan
 ### Task 25: Provenance manifest entries
 
 **Files:**
+
 - Modify: `docs/architecture/provenance/uix-styles.json`
 - Modify: `docs/architecture/provenance/ng.json`
 - Modify: `docs/architecture/provenance/react.json`
 - Modify: `docs/architecture/provenance/vue.json`
 
 **Interfaces:**
+
 - Consumes: none
 - Produces: one entry per new/modified source file created by Tasks 1-22, using the existing `originalPath`/`ultimateDestination`/`modificationStatus`/`modificationDescription` schema — verified this planning pass to be the only real convention (no per-component provenance file exists in this repo)
 
@@ -2287,9 +2409,11 @@ git commit -m "docs(provenance): add table component manifest entries"
 ### Task 26: Package-boundary and dependency-ceiling validation
 
 **Files:**
+
 - None expected (verification-only task; any fix belongs in whichever earlier task's file actually violates a boundary)
 
 **Interfaces:**
+
 - Consumes: `scripts/provenance/validate-boundaries.mjs`, `scripts/provenance/validate-dependency-ceiling.mjs`
 - Produces: a clean run confirming Table's new imports (`@ultimate/uix-data`, intra-package `../paginator/*`, `../scroller/*`) do not violate the approved dependency direction (Framework Components → Framework Core → UltimateUIX, spec §20) or the Prime-package ceiling — both the Paginator and Scroller intra-package imports are same-package (Table lives alongside both in each framework's own `packages/{ng,react,vue}` package), not a boundary crossing.
 
@@ -2320,9 +2444,11 @@ No commit if no files changed (verification-only). If a fix was required, commit
 ### Task 27: Full test suite, typecheck, build, GAP-014 documentation update
 
 **Files:**
+
 - Modify: `docs/architecture/BLUEPRINT_GAPS.md` (GAP-014 status only)
 
 **Interfaces:**
+
 - Consumes: entire merged Table implementation (Tasks 1-26)
 - Produces: a fully green `pnpm run build && pnpm run test && pnpm run typecheck` across the whole workspace; GAP-014 marked `RESOLVED` with a one-line pointer to this plan's §9-implementing tasks (5, 13, 19) as the concrete resolution evidence, per spec §25's acceptance criterion ("GAP-014 ... updated to reflect this spec's resolution at implementation-plan time")
 

@@ -15,12 +15,12 @@ Historical documents remain unchanged. The E-1 record's earlier “cause undeter
 
 The saved corrected diagnostic used one pass, zero retries, both sides, Playwright 1.63.0 Jammy / Chromium 153.0.8010.12, and 1280×720. No browser or verification run is performed for this proposal.
 
-| Measured y/top, CSS px | PrimeNG | Ultimate | Ultimate − Prime |
-| --- | ---: | ---: | ---: |
-| Root | 19 | 19 | 0 |
-| First/original left image | 16 | 16 | 0 |
-| Second/right image | 16 | 19 | **+3** |
-| Slider | 18 | 18 | 0 |
+| Measured y/top, CSS px    | PrimeNG | Ultimate | Ultimate − Prime |
+| ------------------------- | ------: | -------: | ---------------: |
+| Root                      |      19 |       19 |                0 |
+| First/original left image |      16 |       16 |                0 |
+| Second/right image        |      16 |       19 |           **+3** |
+| Slider                    |      18 |       18 |                0 |
 
 The **second/right image is `landscape-2.png`, the blue image visible in the clipped left region**. PrimeNG places it directly against the inline root at root−3. Ultimate places it inside an absolute span: root→span = 0 and span→image = 0. The difference is therefore `(19 + 0) − (19 − 3) = 3 px`.
 
@@ -50,13 +50,13 @@ Task 6 cannot close under the current stop ruling. E1-V2 needs a separately appr
 
 ### Established versus unknown
 
-| Established | Not established |
-| --- | --- |
-| Full +3 px mechanism and exact direct-root versus nested-span relationship | Safest specific code change |
-| Positioning/formatting is involved | Whether CSS-only is sufficient |
-| The span contains/clips the right image | Whether changing its positioning preserves all ImageCompare states |
-| DOM/template changes are prohibited by current E-1 scope | Whether a different DOM could be justified under a separately approved scope |
-| The unchanged case's geometry is measured | Whether another parity case would regress after a change |
+| Established                                                                | Not established                                                              |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Full +3 px mechanism and exact direct-root versus nested-span relationship | Safest specific code change                                                  |
+| Positioning/formatting is involved                                         | Whether CSS-only is sufficient                                               |
+| The span contains/clips the right image                                    | Whether changing its positioning preserves all ImageCompare states           |
+| DOM/template changes are prohibited by current E-1 scope                   | Whether a different DOM could be justified under a separately approved scope |
+| The unchanged case's geometry is measured                                  | Whether another parity case would regress after a change                     |
 
 **Potential layer and risk:** component-local CSS is a plausible layer to examine because used positioning explains the difference. This is a feasibility direction, not a correction design or evidence of sufficiency. The existing Angular template projects the right image into the span; `onSlide()` updates that span's clip-path. Changing its positioning relationship could alter overlay alignment, clipping or sizing during interaction, even without editing runtime code. Effects on sized, sliding, focus and RTL cases remain untested.
 

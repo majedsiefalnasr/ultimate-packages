@@ -35,7 +35,9 @@ describe("UScrollPanel", () => {
     @Component({
       standalone: true,
       imports: [UScrollPanel],
-      template: `<u-scroll-panel #panel style="height: 50px;"><div style="height: 500px;">tall</div></u-scroll-panel>`,
+      template: `<u-scroll-panel #panel style="height: 50px;"
+        ><div style="height: 500px;">tall</div></u-scroll-panel
+      >`,
     })
     class HostComponent {
       @ViewChild("panel") panel!: UScrollPanel;
@@ -56,7 +58,9 @@ describe("UScrollPanel", () => {
     @Component({
       standalone: true,
       imports: [UScrollPanel],
-      template: `<u-scroll-panel style="height: 50px;"><div style="height: 500px;">tall</div></u-scroll-panel>`,
+      template: `<u-scroll-panel style="height: 50px;"
+        ><div style="height: 500px;">tall</div></u-scroll-panel
+      >`,
     })
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
@@ -74,7 +78,9 @@ describe("UScrollPanel", () => {
     @Component({
       standalone: true,
       imports: [UScrollPanel],
-      template: `<u-scroll-panel #panel style="height: 50px;"><div style="height: 500px;">tall</div></u-scroll-panel>`,
+      template: `<u-scroll-panel #panel style="height: 50px;"
+        ><div style="height: 500px;">tall</div></u-scroll-panel
+      >`,
     })
     class HostComponent {
       @ViewChild("panel") panel!: UScrollPanel;
@@ -90,7 +96,9 @@ describe("UScrollPanel", () => {
     @Component({
       standalone: true,
       imports: [UScrollPanel],
-      template: `<u-scroll-panel style="height: 50px;"><div style="height: 500px;">tall</div></u-scroll-panel>`,
+      template: `<u-scroll-panel style="height: 50px;"
+        ><div style="height: 500px;">tall</div></u-scroll-panel
+      >`,
     })
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
@@ -113,7 +121,9 @@ describe("UScrollPanel", () => {
     @Component({
       standalone: true,
       imports: [UScrollPanel],
-      template: `<u-scroll-panel style="height: 50px; width: 50px;"><div style="height: 500px; width: 500px;">tall</div></u-scroll-panel>`,
+      template: `<u-scroll-panel style="height: 50px; width: 50px;"
+        ><div style="height: 500px; width: 500px;">tall</div></u-scroll-panel
+      >`,
     })
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
@@ -135,7 +145,9 @@ describe("UScrollPanel", () => {
     @Component({
       standalone: true,
       imports: [UScrollPanel],
-      template: `<u-scroll-panel style="height: 50px;"><div style="height: 500px;">tall</div></u-scroll-panel>`,
+      template: `<u-scroll-panel style="height: 50px;"
+        ><div style="height: 500px;">tall</div></u-scroll-panel
+      >`,
     })
     class SsrHostComponent {}
 

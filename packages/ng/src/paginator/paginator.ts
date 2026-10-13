@@ -136,7 +136,8 @@ export interface PaginatorPageChangeEvent {
             [attr.aria-current]="link - 1 === page ? 'page' : null"
             [attr.aria-label]="'Page ' + link"
             (click)="changePage((link - 1) * rows())"
-          >{{ link }}</button>
+            >{{ link }}</button
+          >
         }
         <button
           type="button"

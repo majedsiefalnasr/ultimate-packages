@@ -79,208 +79,216 @@ function clamp(value: number, min?: number, max?: number): number {
   return result;
 }
 
-export const UInputNumber = React.forwardRef<HTMLInputElement, UInputNumberProps>(function UInputNumber(
-  {
-    value = null,
-    onValueChange,
-    min,
-    max,
-    step = 1,
-    mode = "decimal",
-    currency,
-    locale,
-    useGrouping = true,
-    minFractionDigits,
-    maxFractionDigits,
-    prefix = "",
-    suffix = "",
-    format = true,
-    allowEmpty = true,
-    showButtons = false,
-    disabled = false,
-    readOnly = false,
-    invalid = false,
-    fluid = false,
-    name,
-    id,
-    placeholder,
-    className,
-    inputRef,
-  },
-  ref
-) {
-  const { cx } = useComponentBase({ componentName: "input-number", styleModule: inputNumberStyleModule });
-  const elementRef = React.useRef<HTMLInputElement | null>(null);
-  const [focused, setFocused] = React.useState(false);
-  const [rawText, setRawText] = React.useState<string | null>(null);
-
-  const setRef = React.useCallback(
-    (node: HTMLInputElement | null) => {
-      elementRef.current = node;
-      if (typeof ref === "function") ref(node);
-      else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
-      if (typeof inputRef === "function") inputRef(node);
-      else if (inputRef) (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+export const UInputNumber = React.forwardRef<HTMLInputElement, UInputNumberProps>(
+  function UInputNumber(
+    {
+      value = null,
+      onValueChange,
+      min,
+      max,
+      step = 1,
+      mode = "decimal",
+      currency,
+      locale,
+      useGrouping = true,
+      minFractionDigits,
+      maxFractionDigits,
+      prefix = "",
+      suffix = "",
+      format = true,
+      allowEmpty = true,
+      showButtons = false,
+      disabled = false,
+      readOnly = false,
+      invalid = false,
+      fluid = false,
+      name,
+      id,
+      placeholder,
+      className,
+      inputRef,
     },
-    [ref, inputRef]
-  );
+    ref
+  ) {
+    const { cx } = useComponentBase({
+      componentName: "input-number",
+      styleModule: inputNumberStyleModule,
+    });
+    const elementRef = React.useRef<HTMLInputElement | null>(null);
+    const [focused, setFocused] = React.useState(false);
+    const [rawText, setRawText] = React.useState<string | null>(null);
 
-  const numberFormat = React.useMemo(
-    () =>
-      new Intl.NumberFormat(locale, {
-        style: mode,
-        currency: mode === "currency" ? currency : undefined,
-        useGrouping,
-        minimumFractionDigits: minFractionDigits,
-        maximumFractionDigits: maxFractionDigits,
-      }),
-    [locale, mode, currency, useGrouping, minFractionDigits, maxFractionDigits]
-  );
+    const setRef = React.useCallback(
+      (node: HTMLInputElement | null) => {
+        elementRef.current = node;
+        if (typeof ref === "function") ref(node);
+        else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
+        if (typeof inputRef === "function") inputRef(node);
+        else if (inputRef)
+          (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+      },
+      [ref, inputRef]
+    );
 
-  const formatValue = React.useCallback(
-    (val: number | null): string => {
-      if (val == null) return "";
-      const formatted = format ? numberFormat.format(val) : String(val);
-      return `${prefix}${formatted}${suffix}`;
-    },
-    [format, numberFormat, prefix, suffix]
-  );
+    const numberFormat = React.useMemo(
+      () =>
+        new Intl.NumberFormat(locale, {
+          style: mode,
+          currency: mode === "currency" ? currency : undefined,
+          useGrouping,
+          minimumFractionDigits: minFractionDigits,
+          maximumFractionDigits: maxFractionDigits,
+        }),
+      [locale, mode, currency, useGrouping, minFractionDigits, maxFractionDigits]
+    );
 
-  const parseValue = React.useCallback(
-    (text: string): number | null => {
-      let stripped = text;
-      if (prefix && stripped.startsWith(prefix)) stripped = stripped.slice(prefix.length);
-      if (suffix && stripped.endsWith(suffix)) stripped = stripped.slice(0, stripped.length - suffix.length);
-      stripped = stripped.trim();
-      if (stripped === "") return null;
-      // Strip locale grouping separators and normalize decimal separator to '.'.
-      const parts = numberFormat.formatToParts(1234.5);
-      const group = parts.find((p) => p.type === "group")?.value ?? ",";
-      const decimal = parts.find((p) => p.type === "decimal")?.value ?? ".";
-      const normalized = stripped
-        .split(group)
-        .join("")
-        .replace(decimal, ".")
-        .replace(/[^\d.-]/g, "");
-      const parsed = Number(normalized);
-      return Number.isNaN(parsed) ? null : parsed;
-    },
-    [numberFormat, prefix, suffix]
-  );
+    const formatValue = React.useCallback(
+      (val: number | null): string => {
+        if (val == null) return "";
+        const formatted = format ? numberFormat.format(val) : String(val);
+        return `${prefix}${formatted}${suffix}`;
+      },
+      [format, numberFormat, prefix, suffix]
+    );
 
-  const emit = React.useCallback(
-    (event: React.SyntheticEvent, next: number | null) => {
-      onValueChange?.({ originalEvent: event, value: next });
-    },
-    [onValueChange]
-  );
+    const parseValue = React.useCallback(
+      (text: string): number | null => {
+        let stripped = text;
+        if (prefix && stripped.startsWith(prefix)) stripped = stripped.slice(prefix.length);
+        if (suffix && stripped.endsWith(suffix))
+          stripped = stripped.slice(0, stripped.length - suffix.length);
+        stripped = stripped.trim();
+        if (stripped === "") return null;
+        // Strip locale grouping separators and normalize decimal separator to '.'.
+        const parts = numberFormat.formatToParts(1234.5);
+        const group = parts.find((p) => p.type === "group")?.value ?? ",";
+        const decimal = parts.find((p) => p.type === "decimal")?.value ?? ".";
+        const normalized = stripped
+          .split(group)
+          .join("")
+          .replace(decimal, ".")
+          .replace(/[^\d.-]/g, "");
+        const parsed = Number(normalized);
+        return Number.isNaN(parsed) ? null : parsed;
+      },
+      [numberFormat, prefix, suffix]
+    );
 
-  const displayValue = focused ? (rawText ?? (value == null ? "" : String(value))) : formatValue(value);
+    const emit = React.useCallback(
+      (event: React.SyntheticEvent, next: number | null) => {
+        onValueChange?.({ originalEvent: event, value: next });
+      },
+      [onValueChange]
+    );
 
-  const onFocus = React.useCallback(() => {
-    setFocused(true);
-    setRawText(value == null ? "" : String(value));
-  }, [value]);
+    const displayValue = focused
+      ? (rawText ?? (value == null ? "" : String(value)))
+      : formatValue(value);
 
-  const onChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onFocus = React.useCallback(() => {
+      setFocused(true);
+      setRawText(value == null ? "" : String(value));
+    }, [value]);
+
+    const onChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
       setRawText(event.target.value);
-    },
-    []
-  );
+    }, []);
 
-  const commit = React.useCallback(
-    (event: React.SyntheticEvent, text: string) => {
-      const parsed = parseValue(text);
-      if (parsed == null) {
-        if (allowEmpty) emit(event, null);
-        else emit(event, clamp(0, min, max));
-        return;
-      }
-      emit(event, clamp(parsed, min, max));
-    },
-    [parseValue, allowEmpty, emit, min, max]
-  );
+    const commit = React.useCallback(
+      (event: React.SyntheticEvent, text: string) => {
+        const parsed = parseValue(text);
+        if (parsed == null) {
+          if (allowEmpty) emit(event, null);
+          else emit(event, clamp(0, min, max));
+          return;
+        }
+        emit(event, clamp(parsed, min, max));
+      },
+      [parseValue, allowEmpty, emit, min, max]
+    );
 
-  const onBlur = React.useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) => {
-      commit(event, rawText ?? "");
-      setFocused(false);
-      setRawText(null);
-    },
-    [commit, rawText]
-  );
+    const onBlur = React.useCallback(
+      (event: React.FocusEvent<HTMLInputElement>) => {
+        commit(event, rawText ?? "");
+        setFocused(false);
+        setRawText(null);
+      },
+      [commit, rawText]
+    );
 
-  const applyStep = React.useCallback(
-    (event: React.SyntheticEvent, direction: 1 | -1) => {
-      if (disabled || readOnly) return;
-      const base = value ?? 0;
-      const next = clamp(base + direction * step, min, max);
-      emit(event, next);
-    },
-    [disabled, readOnly, value, step, min, max, emit]
-  );
+    const applyStep = React.useCallback(
+      (event: React.SyntheticEvent, direction: 1 | -1) => {
+        if (disabled || readOnly) return;
+        const base = value ?? 0;
+        const next = clamp(base + direction * step, min, max);
+        emit(event, next);
+      },
+      [disabled, readOnly, value, step, min, max, emit]
+    );
 
-  const onKeyDown = React.useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === "ArrowUp") {
-        applyStep(event, 1);
-        event.preventDefault();
-      } else if (event.key === "ArrowDown") {
-        applyStep(event, -1);
-        event.preventDefault();
-      }
-    },
-    [applyStep]
-  );
+    const onKeyDown = React.useCallback(
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "ArrowUp") {
+          applyStep(event, 1);
+          event.preventDefault();
+        } else if (event.key === "ArrowDown") {
+          applyStep(event, -1);
+          event.preventDefault();
+        }
+      },
+      [applyStep]
+    );
 
-  return (
-    <span className={[cx("root", { invalid, fluid, focused }), className].filter(Boolean).join(" ")}>
-      <input
-        ref={setRef}
-        type="text"
-        inputMode="decimal"
-        role="spinbutton"
-        id={id}
-        name={name}
-        placeholder={placeholder}
-        disabled={disabled}
-        readOnly={readOnly}
-        aria-invalid={invalid || undefined}
-        aria-valuemin={min}
-        aria-valuemax={max}
-        aria-valuenow={value ?? undefined}
-        className={cx("input")}
-        value={displayValue}
-        onFocus={onFocus}
-        onChange={onChange}
-        onBlur={onBlur}
-        onKeyDown={onKeyDown}
-      />
-      {showButtons && (
-        <span className={cx("buttonGroup")}>
-          <button
-            type="button"
-            tabIndex={-1}
-            disabled={disabled || readOnly}
-            className={cx("incrementButton")}
-            aria-label="Increment"
-            onClick={(event) => applyStep(event, 1)}
-          >
-            +
-          </button>
-          <button
-            type="button"
-            tabIndex={-1}
-            disabled={disabled || readOnly}
-            className={cx("decrementButton")}
-            aria-label="Decrement"
-            onClick={(event) => applyStep(event, -1)}
-          >
-            -
-          </button>
-        </span>
-      )}
-    </span>
-  );
-});
+    return (
+      <span
+        className={[cx("root", { invalid, fluid, focused }), className].filter(Boolean).join(" ")}
+      >
+        <input
+          ref={setRef}
+          type="text"
+          inputMode="decimal"
+          role="spinbutton"
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          disabled={disabled}
+          readOnly={readOnly}
+          aria-invalid={invalid || undefined}
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-valuenow={value ?? undefined}
+          className={cx("input")}
+          value={displayValue}
+          onFocus={onFocus}
+          onChange={onChange}
+          onBlur={onBlur}
+          onKeyDown={onKeyDown}
+        />
+        {showButtons && (
+          <span className={cx("buttonGroup")}>
+            <button
+              type="button"
+              tabIndex={-1}
+              disabled={disabled || readOnly}
+              className={cx("incrementButton")}
+              aria-label="Increment"
+              onClick={(event) => applyStep(event, 1)}
+            >
+              +
+            </button>
+            <button
+              type="button"
+              tabIndex={-1}
+              disabled={disabled || readOnly}
+              className={cx("decrementButton")}
+              aria-label="Decrement"
+              onClick={(event) => applyStep(event, -1)}
+            >
+              -
+            </button>
+          </span>
+        )}
+      </span>
+    );
+  }
+);

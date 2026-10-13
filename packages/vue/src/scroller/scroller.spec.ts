@@ -14,7 +14,10 @@ beforeEach(() => {
         resizeObserverCallback = cb;
       }
       observe(target: Element) {
-        resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        resizeObserverCallback?.(
+          [{ target } as ResizeObserverEntry],
+          this as unknown as ResizeObserver
+        );
       }
       disconnect() {}
     }
@@ -49,7 +52,9 @@ describe("UScroller", () => {
     expect(typeof (wrapper.vm as unknown as { first: number }).first).toBe("number");
     // Confirms these are NOT props: the component definition below has no
     // `first`/`last`/`numItemsInViewport` entries in its `props` object.
-    expect((wrapper.vm.$options as { props?: Record<string, unknown> }).props?.first).toBeUndefined();
+    expect(
+      (wrapper.vm.$options as { props?: Record<string, unknown> }).props?.first
+    ).toBeUndefined();
   });
 
   it("measures the root viewport element's offsetHeight and computes numItemsInViewport from it, matching real PrimeVue's measured element/property", async () => {
@@ -139,7 +144,11 @@ describe("UScroller", () => {
       {} as unknown as ResizeObserver
     );
     await wrapper.vm.$nextTick();
-    Object.defineProperty(wrapper.element, "scrollTop", { value: 2000, writable: true, configurable: true });
+    Object.defineProperty(wrapper.element, "scrollTop", {
+      value: 2000,
+      writable: true,
+      configurable: true,
+    });
     await wrapper.trigger("scroll");
     await Promise.resolve(); // matches the real Promise.resolve().then() deferral, spec §10
     // first = floor(2000/20) = 100; numItemsInViewport=10, numToleratedItems=5,
@@ -153,7 +162,11 @@ describe("UScroller", () => {
     const wrapper = mount(UScroller, {
       props: { items: Array.from({ length: 1000 }, (_, i) => i), itemSize: 20 },
     });
-    Object.defineProperty(wrapper.element, "scrollTop", { value: 2000, writable: true, configurable: true });
+    Object.defineProperty(wrapper.element, "scrollTop", {
+      value: 2000,
+      writable: true,
+      configurable: true,
+    });
     await wrapper.trigger("scroll");
     await Promise.resolve();
     expect(wrapper.emitted("lazy-load")).toBeFalsy();
@@ -196,19 +209,17 @@ describe("UScroller content template (Task 5)", () => {
       props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30 },
       slots: {
         content: (slotProps: { items: { index: number; value: unknown }[] }) =>
-          h(
-            "table",
-            { "data-test-content-template": true },
-            [
-              h(
-                "tbody",
-                {},
-                slotProps.items.map((entry) =>
-                  h("tr", { key: entry.index, "data-index": entry.index }, [h("td", {}, String(entry.value))])
-                )
-              ),
-            ]
-          ),
+          h("table", { "data-test-content-template": true }, [
+            h(
+              "tbody",
+              {},
+              slotProps.items.map((entry) =>
+                h("tr", { key: entry.index, "data-index": entry.index }, [
+                  h("td", {}, String(entry.value)),
+                ])
+              )
+            ),
+          ]),
       },
     });
     mockViewportHeight(wrapper.element as HTMLElement, 300);
@@ -234,19 +245,17 @@ describe("UScroller content template (Task 5)", () => {
       props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30 },
       slots: {
         content: (slotProps: { items: { index: number; value: unknown }[] }) =>
-          h(
-            "table",
-            { "data-test-content-template": true },
-            [
-              h(
-                "tbody",
-                {},
-                slotProps.items.map((entry) =>
-                  h("tr", { key: entry.index, "data-index": entry.index }, [h("td", {}, String(entry.value))])
-                )
-              ),
-            ]
-          ),
+          h("table", { "data-test-content-template": true }, [
+            h(
+              "tbody",
+              {},
+              slotProps.items.map((entry) =>
+                h("tr", { key: entry.index, "data-index": entry.index }, [
+                  h("td", {}, String(entry.value)),
+                ])
+              )
+            ),
+          ]),
       },
     });
     mockViewportHeight(wrapper.element as HTMLElement, 300);
@@ -256,7 +265,9 @@ describe("UScroller content template (Task 5)", () => {
     );
     await wrapper.vm.$nextTick();
 
-    const table = wrapper.element.querySelector("table[data-test-content-template]") as HTMLTableElement;
+    const table = wrapper.element.querySelector(
+      "table[data-test-content-template]"
+    ) as HTMLTableElement;
     expect(table).not.toBeNull();
     const tbody = table.querySelector("tbody");
     expect(tbody).not.toBeNull();
@@ -294,23 +305,23 @@ describe("UScroller content template (Task 5)", () => {
           items: { index: number; value: unknown }[];
           getItemOptions: (index: number) => { first: boolean };
         }) =>
-          h(
-            "table",
-            { "data-test-content-template": true },
-            [
-              h(
-                "tbody",
-                {},
-                slotProps.items.map((entry) =>
-                  h(
-                    "tr",
-                    { key: entry.index, "data-index": entry.index, "data-first": String(slotProps.getItemOptions(entry.index).first) },
-                    [h("td", {}, String(entry.value))]
-                  )
+          h("table", { "data-test-content-template": true }, [
+            h(
+              "tbody",
+              {},
+              slotProps.items.map((entry) =>
+                h(
+                  "tr",
+                  {
+                    key: entry.index,
+                    "data-index": entry.index,
+                    "data-first": String(slotProps.getItemOptions(entry.index).first),
+                  },
+                  [h("td", {}, String(entry.value))]
                 )
-              ),
-            ]
-          ),
+              )
+            ),
+          ]),
       },
     });
     mockViewportHeight(wrapper.element as HTMLElement, 90);
@@ -324,20 +335,24 @@ describe("UScroller content template (Task 5)", () => {
 
   it("passes the full unwindowed item list when disabled=true, matching UScroller's existing shipped disabled behavior", () => {
     const wrapper = mount(UScroller, {
-      props: { items: Array.from({ length: 50 }, (_, i) => `Row ${i}`), itemSize: 30, disabled: true },
+      props: {
+        items: Array.from({ length: 50 }, (_, i) => `Row ${i}`),
+        itemSize: 30,
+        disabled: true,
+      },
       slots: {
         content: (slotProps: { items: { index: number; value: unknown }[] }) =>
-          h(
-            "table",
-            { "data-test-content-template": true },
-            [
-              h(
-                "tbody",
-                {},
-                slotProps.items.map((entry) => h("tr", { key: entry.index, "data-index": entry.index }, [h("td", {}, String(entry.value))]))
-              ),
-            ]
-          ),
+          h("table", { "data-test-content-template": true }, [
+            h(
+              "tbody",
+              {},
+              slotProps.items.map((entry) =>
+                h("tr", { key: entry.index, "data-index": entry.index }, [
+                  h("td", {}, String(entry.value)),
+                ])
+              )
+            ),
+          ]),
       },
     });
     expect(wrapper.findAll("tr[data-index]").length).toBe(50);

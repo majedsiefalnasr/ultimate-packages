@@ -40,7 +40,9 @@ describe("UToast", () => {
     fixture.detectChanges();
 
     expect(
-      fixture.nativeElement.querySelector(".u-toast-message")?.classList.contains("u-toast-message-error")
+      fixture.nativeElement
+        .querySelector(".u-toast-message")
+        ?.classList.contains("u-toast-message-error")
     ).toBe(true);
   });
 
@@ -86,9 +88,8 @@ describe("UToast", () => {
     service.add({ summary: "Second", sticky: true });
     fixture.detectChanges();
 
-    const buttons: HTMLButtonElement[] = fixture.nativeElement.querySelectorAll(
-      ".u-toast-close-button"
-    );
+    const buttons: HTMLButtonElement[] =
+      fixture.nativeElement.querySelectorAll(".u-toast-close-button");
     expect(buttons.length).toBe(2);
     buttons[0].click();
     fixture.detectChanges();
@@ -115,7 +116,11 @@ describe("UToast", () => {
   });
 
   it("only accepts messages matching its own key", () => {
-    @Component({ standalone: true, imports: [UToast], template: `<u-toast key="secondary"></u-toast>` })
+    @Component({
+      standalone: true,
+      imports: [UToast],
+      template: `<u-toast key="secondary"></u-toast>`,
+    })
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
@@ -188,7 +193,10 @@ describe("UToast", () => {
     const [text, container, ...rest] = Array.from(content.children) as HTMLElement[];
     expect(rest).toHaveLength(0);
     expect(text.className).toBe("u-toast-message-text");
-    expect(Array.from(text.children, (c) => c.className)).toEqual(["u-toast-summary", "u-toast-detail"]);
+    expect(Array.from(text.children, (c) => c.className)).toEqual([
+      "u-toast-summary",
+      "u-toast-detail",
+    ]);
     expect(container.tagName).toBe("DIV");
     expect(container.classList).toHaveLength(0);
     expect(Array.from(container.children, (c) => c.className)).toEqual(["u-toast-close-button"]);
@@ -206,6 +214,8 @@ describe("UToast", () => {
       ".u-toast-message > .u-toast-message-content"
     ) as HTMLElement;
     expect(Array.from(content.children, (c) => c.className)).toEqual(["u-toast-message-text"]);
-    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual(["u-toast-summary"]);
+    expect(Array.from(content.children[0].children, (c) => c.className)).toEqual([
+      "u-toast-summary",
+    ]);
   });
 });

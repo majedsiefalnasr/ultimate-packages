@@ -52,7 +52,9 @@ describe("UConfirmDialog", () => {
     fixture.detectChanges();
 
     expect(document.querySelector(".u-dialog")).not.toBeNull();
-    expect(document.querySelector(".u-confirmdialog-message")?.textContent).toBe("Delete this item?");
+    expect(document.querySelector(".u-confirmdialog-message")?.textContent).toBe(
+      "Delete this item?"
+    );
     expect(document.querySelector(".u-dialog-title")?.textContent).toBe("Confirm");
 
     fixture.destroy();
@@ -88,7 +90,9 @@ describe("UConfirmDialog", () => {
     service.confirm({ message: "Proceed?", reject: () => (rejected = true) });
     fixture.detectChanges();
 
-    const rejectButton = document.querySelector(".u-confirmdialog-footer button") as HTMLButtonElement;
+    const rejectButton = document.querySelector(
+      ".u-confirmdialog-footer button"
+    ) as HTMLButtonElement;
     rejectButton.click();
     fixture.detectChanges();
     await flushDialogLeaveMotion(fixture);

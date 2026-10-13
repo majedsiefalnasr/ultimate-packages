@@ -34,7 +34,10 @@ import { stepsStyleModule } from "./steps-style";
       <ol [class]="cx('list')" (keydown)="onKeydown($event)">
         @for (item of model(); track item.label; let i = $index) {
           @if (item.visible !== false) {
-            <li [class]="cx('item', itemParams(item, i))" [attr.aria-current]="i === activeIndex() ? 'step' : null">
+            <li
+              [class]="cx('item', itemParams(item, i))"
+              [attr.aria-current]="i === activeIndex() ? 'step' : null"
+            >
               @if (item.routerLink && !readonly() && !item.disabled) {
                 <a
                   [routerLink]="item.routerLink"
@@ -44,7 +47,10 @@ import { stepsStyleModule } from "./steps-style";
                   [attr.aria-disabled]="isItemDisabled(item, i)"
                   (click)="onItemClick($event, item, i)"
                 >
-                  <ng-container [ngTemplateOutlet]="linkContent" [ngTemplateOutletContext]="{ $implicit: item, i }" />
+                  <ng-container
+                    [ngTemplateOutlet]="linkContent"
+                    [ngTemplateOutletContext]="{ $implicit: item, i }"
+                  />
                 </a>
               } @else {
                 <a
@@ -55,7 +61,10 @@ import { stepsStyleModule } from "./steps-style";
                   [attr.aria-disabled]="isItemDisabled(item, i)"
                   (click)="onItemClick($event, item, i)"
                 >
-                  <ng-container [ngTemplateOutlet]="linkContent" [ngTemplateOutletContext]="{ $implicit: item, i }" />
+                  <ng-container
+                    [ngTemplateOutlet]="linkContent"
+                    [ngTemplateOutletContext]="{ $implicit: item, i }"
+                  />
                 </a>
               }
             </li>
@@ -107,7 +116,8 @@ export class USteps extends UBaseComponent {
     const rendered = this.model()
       .map((item, modelIndex) => ({ item, modelIndex }))
       .filter(({ item }) => item.visible !== false);
-    const isEnabled = (index: number) => !this.isItemDisabled(rendered[index].item, rendered[index].modelIndex);
+    const isEnabled = (index: number) =>
+      !this.isItemDisabled(rendered[index].item, rendered[index].modelIndex);
     const currentIndex = links.indexOf(document.activeElement as HTMLElement);
 
     let targetIndex: number | undefined;

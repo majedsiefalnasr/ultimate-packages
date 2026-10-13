@@ -12,7 +12,9 @@ describe("confirmationEventBus / confirmDialog / confirmPopup", () => {
 
     confirmDialog({ message: "Are you sure?" });
 
-    expect(handler).toHaveBeenCalledWith(expect.objectContaining({ message: "Are you sure?", visible: true }));
+    expect(handler).toHaveBeenCalledWith(
+      expect.objectContaining({ message: "Are you sure?", visible: true })
+    );
   });
 
   it("confirmPopup() emits 'confirm-popup' with visible defaulted to true", () => {
@@ -21,7 +23,9 @@ describe("confirmationEventBus / confirmDialog / confirmPopup", () => {
 
     confirmPopup({ message: "Delete?" });
 
-    expect(handler).toHaveBeenCalledWith(expect.objectContaining({ message: "Delete?", visible: true }));
+    expect(handler).toHaveBeenCalledWith(
+      expect.objectContaining({ message: "Delete?", visible: true })
+    );
   });
 
   it("confirmDialog() respects an explicit visible: false", () => {

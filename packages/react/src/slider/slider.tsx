@@ -80,7 +80,8 @@ export function USlider({
       if (!step) {
         return Math.floor(raw);
       }
-      const decimals = step && Math.floor(step) !== step ? (step.toString().split(".")[1]?.length ?? 0) : 0;
+      const decimals =
+        step && Math.floor(step) !== step ? (step.toString().split(".")[1]?.length ?? 0) : 0;
       const stepped = Math.round(raw / step) * step;
       return decimals > 0 ? +stepped.toFixed(decimals) : stepped;
     },
@@ -134,7 +135,12 @@ export function USlider({
     draggingRef.current = true;
     const rect = rootRef.current?.getBoundingClientRect();
     if (rect) {
-      barRectRef.current = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+      barRectRef.current = {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+      };
     }
     (event.target as HTMLElement).focus();
     event.preventDefault();
@@ -165,7 +171,12 @@ export function USlider({
     if (target.getAttribute("role") === "slider") return;
     const rect = rootRef.current?.getBoundingClientRect();
     if (rect) {
-      barRectRef.current = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+      barRectRef.current = {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+      };
     }
     handleIndexRef.current = range ? nearestHandleIndex(event.clientX, event.clientY) : 0;
     setValueFromPointer(event.clientX, event.clientY, event);
@@ -221,13 +232,17 @@ export function USlider({
           <span
             className={cx("range")}
             style={
-              orientation === "horizontal" ? { width: `${handlePercent}%` } : { height: `${handlePercent}%` }
+              orientation === "horizontal"
+                ? { width: `${handlePercent}%` }
+                : { height: `${handlePercent}%` }
             }
           />
           <span
             className={cx("handle")}
             style={
-              orientation === "horizontal" ? { left: `${handlePercent}%` } : { bottom: `${handlePercent}%` }
+              orientation === "horizontal"
+                ? { left: `${handlePercent}%` }
+                : { bottom: `${handlePercent}%` }
             }
             role="slider"
             tabIndex={0}
@@ -252,7 +267,9 @@ export function USlider({
           <span
             className={cx("handle")}
             style={
-              orientation === "horizontal" ? { left: `${startPercent}%` } : { bottom: `${startPercent}%` }
+              orientation === "horizontal"
+                ? { left: `${startPercent}%` }
+                : { bottom: `${startPercent}%` }
             }
             role="slider"
             tabIndex={0}
@@ -265,7 +282,11 @@ export function USlider({
           />
           <span
             className={cx("handle")}
-            style={orientation === "horizontal" ? { left: `${endPercent}%` } : { bottom: `${endPercent}%` }}
+            style={
+              orientation === "horizontal"
+                ? { left: `${endPercent}%` }
+                : { bottom: `${endPercent}%` }
+            }
             role="slider"
             tabIndex={0}
             aria-valuemin={min}

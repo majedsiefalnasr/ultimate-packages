@@ -4,7 +4,9 @@ import { UMultiSelect } from "./index";
 
 describe("UMultiSelect", () => {
   afterEach(() => {
-    document.querySelectorAll('.u-multi-select-overlay, [role="listbox"]').forEach((el) => el.remove());
+    document
+      .querySelectorAll('.u-multi-select-overlay, [role="listbox"]')
+      .forEach((el) => el.remove());
   });
 
   it("renders a combobox trigger showing the placeholder when nothing is selected", () => {
@@ -15,7 +17,9 @@ describe("UMultiSelect", () => {
   });
 
   it("opens the overlay on click and lists options with checkboxes", async () => {
-    const wrapper = mount(UMultiSelect, { props: { modelValue: [], options: ["Apple", "Banana"] } });
+    const wrapper = mount(UMultiSelect, {
+      props: { modelValue: [], options: ["Apple", "Banana"] },
+    });
     await wrapper.find('[role="combobox"]').trigger("click");
     const options = document.querySelectorAll('[role="option"]');
     expect(options.length).toBe(2);
@@ -42,7 +46,9 @@ describe("UMultiSelect", () => {
   });
 
   it("select-all header checkbox selects/deselects every visible option", async () => {
-    const wrapper = mount(UMultiSelect, { props: { modelValue: [], options: ["Apple", "Banana"] } });
+    const wrapper = mount(UMultiSelect, {
+      props: { modelValue: [], options: ["Apple", "Banana"] },
+    });
     await wrapper.find('[role="combobox"]').trigger("click");
     const selectAll = document.querySelector('[aria-label="Select All"]') as HTMLInputElement;
     selectAll.checked = true;

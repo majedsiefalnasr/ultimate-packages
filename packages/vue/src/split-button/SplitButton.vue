@@ -24,7 +24,13 @@
       aria-haspopup="menu"
       @click="onDropdownButtonClick"
     />
-    <UMenu ref="menu" :model="menuModel" :popup="true" @show="$emit('show')" @hide="$emit('hide')" />
+    <UMenu
+      ref="menu"
+      :model="menuModel"
+      :popup="true"
+      @show="$emit('show')"
+      @hide="$emit('hide')"
+    />
   </div>
 </template>
 

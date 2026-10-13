@@ -39,7 +39,10 @@ export const UMeterGroup = React.forwardRef<HTMLDivElement, UMeterGroupProps>(fu
   { value = [], min = 0, max = 100, orientation = "horizontal", className },
   ref
 ) {
-  const { cx } = useComponentBase({ componentName: "meter-group", styleModule: meterGroupStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "meter-group",
+    styleModule: meterGroupStyleModule,
+  });
 
   const percent = (meter = 0): number => {
     if (max === min) return 100;

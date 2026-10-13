@@ -234,8 +234,8 @@ describe("cross-framework theme consistency", () => {
       // the content match alone is only a sanity check that the found element
       // is really scroller CSS.
       const vueStyleEl = document.head.querySelector('style[data-u-style="scroller"]');
-      const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find((el) =>
-        (el.textContent ?? "").includes(".u-scroller-loader {")
+      const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find(
+        (el) => (el.textContent ?? "").includes(".u-scroller-loader {")
       );
       expect(styleEl).not.toBeUndefined();
       expect(styleEl).not.toBe(vueStyleEl);
@@ -355,7 +355,11 @@ describe("cross-framework theme consistency", () => {
 
       expect(vueCss).not.toContain("dt("); // no unresolved dt() calls leaked through
 
-      for (const token of ["datatable.header.background", "datatable.header.border.color", "datatable.row.selected.background"]) {
+      for (const token of [
+        "datatable.header.background",
+        "datatable.header.border.color",
+        "datatable.row.selected.background",
+      ]) {
         const resolvedToken = dt(token);
         expect(vueCss).toContain(resolvedToken);
       }
@@ -376,8 +380,8 @@ describe("cross-framework theme consistency", () => {
       // alone would also match Vue's root div class list on some other
       // component, so the more specific nested selector is used).
       const vueStyleEl = document.head.querySelector('style[data-u-style="table"]');
-      const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find((el) =>
-        (el.textContent ?? "").includes(".u-table-table {")
+      const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find(
+        (el) => (el.textContent ?? "").includes(".u-table-table {")
       );
       expect(styleEl).not.toBeUndefined();
       expect(styleEl).not.toBe(vueStyleEl);
@@ -385,7 +389,11 @@ describe("cross-framework theme consistency", () => {
 
       expect(reactCss).not.toContain("dt(");
 
-      for (const token of ["datatable.header.background", "datatable.header.border.color", "datatable.row.selected.background"]) {
+      for (const token of [
+        "datatable.header.background",
+        "datatable.header.border.color",
+        "datatable.row.selected.background",
+      ]) {
         const resolvedToken = dt(token);
         expect(reactCss).toContain(resolvedToken);
       }

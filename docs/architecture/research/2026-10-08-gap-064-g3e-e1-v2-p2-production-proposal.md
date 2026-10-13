@@ -17,13 +17,22 @@ Destination selector: `.u-image-compare > span`.
 Before:
 
 ```css
-.u-image-compare > span { position: absolute; inset: 0; }
+.u-image-compare > span {
+  position: absolute;
+  inset: 0;
+}
 ```
 
 After:
 
 ```css
-.u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }
+.u-image-compare > span {
+  position: absolute;
+  inset: 0;
+  top: auto;
+  bottom: auto;
+  height: 100%;
+}
 ```
 
 Retain the existing shorthand and append the three longhand declarations in this order. They override the shorthand's vertical edges while preserving horizontal zero insets and the absolute positioning role. No measured pixel compensation is encoded.
@@ -31,19 +40,25 @@ Retain the existing shorthand and append the three longhand declarations in this
 In `packages/themes/test/utils/g3e-port.mjs`, change **only** the string at `RETAINED.ng.imagecompare[0]` from:
 
 ```js
-".u-image-compare > span { position: absolute; inset: 0; }"
+".u-image-compare > span { position: absolute; inset: 0; }";
 ```
 
 to:
 
 ```js
-".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }"
+".u-image-compare > span { position: absolute; inset: 0; top: auto; bottom: auto; height: 100%; }";
 ```
 
 `expectedCss()` already appends `RETAINED[fw][key]` last and normalizes each rule. A later authorized implementation must obtain the CSS body from the existing `g3e-port.mjs ng imagecompare` generator entry point and place that output in the module's existing `/*css*/` block. The sole changed normalized rule will be:
 
 ```css
-.u-image-compare > span{position: absolute;inset: 0;top: auto;bottom: auto;height: 100%;}
+.u-image-compare > span {
+  position: absolute;
+  inset: 0;
+  top: auto;
+  bottom: auto;
+  height: 100%;
+}
 ```
 
 The generator prints CSS; it does not itself rewrite the destination module. Transfer only the generated CSS body, preserving the module's other content. No independent CSS hand edit, extra override group, selector rewrite or fidelity-expectation change is permitted. All 12 D1 groups, upstream/count literals and E1-B1 remain unchanged. D5 remains one existing rule with an amended declaration list.
@@ -54,12 +69,12 @@ The generator prints CSS; it does not itself rewrite the destination module. Tra
 
 The proposed future change set is limited to these four files; none is changed by preparing this proposal:
 
-| File | Exact permitted delta |
-| --- | --- |
-| `packages/themes/test/utils/g3e-port.mjs` | The single Angular retained-rule string above |
-| `packages/ng/src/image-compare/image-compare-style.ts` | Generated CSS body reflecting that single rule delta; no classes/module/template change |
-| `docs/architecture/provenance/ng.json` | Append the single style-file entry specified below; preserve all existing entries |
-| `docs/architecture/PROVENANCE.md` | Append the single sentence specified below to the existing `@primeuix/styles` modification-status paragraph |
+| File                                                   | Exact permitted delta                                                                                       |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `packages/themes/test/utils/g3e-port.mjs`              | The single Angular retained-rule string above                                                               |
+| `packages/ng/src/image-compare/image-compare-style.ts` | Generated CSS body reflecting that single rule delta; no classes/module/template change                     |
+| `docs/architecture/provenance/ng.json`                 | Append the single style-file entry specified below; preserve all existing entries                           |
+| `docs/architecture/PROVENANCE.md`                      | Append the single sentence specified below to the existing `@primeuix/styles` modification-status paragraph |
 
 The current Angular manifest has no entry for this style destination. Use its existing reference-derived style-entry convention, with this exact proposed object:
 
@@ -100,17 +115,17 @@ The target remains Angular `imagecompare/root-style`; the component-local rule a
 
 No check is run by this design gate. After separate P2/P3 and implementation authorization, the Plan's single bounded V1–V8 campaign must validate the actual generated stylesheet: pinned Chromium parity/internal geometry across the five cases, existing Angular Sized/Rtl regression screenshots across Chromium/Firefox/WebKit, scoped accessibility and selector reach, component unit, generated/shipped fidelity, build/type and provenance/integrity checks. Keep the Plan's exact selection validation, Angular-only server isolation, retries 0, unchanged thresholds/baselines and stop-on-failure rules.
 
-| Criterion | Experiment contribution / outstanding production requirement |
-| --- | --- |
-| AC1 | Experiment removes +3 px and matches saved pixels; reproduce with generated stylesheet |
-| AC2 | Root/first/slider unchanged experimentally; confirm actual production geometry |
-| AC3 | Span/image sizing, offsets and clipping recorded; repeat against actual stylesheet |
-| AC4 | Four existing sampled states preserved; run existing approved production actions/coverage |
-| AC5 | Byte-identical experiment images exceed the existing ±1 px/no-visible-difference criterion; retain that criterion unchanged |
-| AC6 | No baseline accepted; actual unchanged screenshot assertions still apply and any failure stops |
-| AC7 | Reach/accessibility not established by experiment; execute the scoped approved checks |
-| AC8 | Four-file source/provenance delta defined; verify generated equality, unchanged protected surfaces and auditable provenance |
-| AC9 | Applicable production checks remain outstanding; preserve both E1-B1 assertion failures separately without waiver or overall-green claim |
+| Criterion | Experiment contribution / outstanding production requirement                                                                             |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| AC1       | Experiment removes +3 px and matches saved pixels; reproduce with generated stylesheet                                                   |
+| AC2       | Root/first/slider unchanged experimentally; confirm actual production geometry                                                           |
+| AC3       | Span/image sizing, offsets and clipping recorded; repeat against actual stylesheet                                                       |
+| AC4       | Four existing sampled states preserved; run existing approved production actions/coverage                                                |
+| AC5       | Byte-identical experiment images exceed the existing ±1 px/no-visible-difference criterion; retain that criterion unchanged              |
+| AC6       | No baseline accepted; actual unchanged screenshot assertions still apply and any failure stops                                           |
+| AC7       | Reach/accessibility not established by experiment; execute the scoped approved checks                                                    |
+| AC8       | Four-file source/provenance delta defined; verify generated equality, unchanged protected surfaces and auditable provenance              |
+| AC9       | Applicable production checks remain outstanding; preserve both E1-B1 assertion failures separately without waiver or overall-green claim |
 
 Exact temporary validation/configuration/measurement artifacts required by Plan §2/§6 have not been created by this production-delta proposal. They still require concrete preparation, review and explicit approval before execution; experiment artifacts are not automatically approved for the implementation campaign. This proposal does not silently relax that prerequisite or authorize artifact preparation now.
 

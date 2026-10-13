@@ -75,7 +75,10 @@ describe("filtering (React object+constraints operator shape, spec §9)", () => 
   it("applies a simple FilterMetadata filter", () => {
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
         filters={{ name: { value: "ali", matchMode: "contains" } }}
       />
@@ -86,7 +89,10 @@ describe("filtering (React object+constraints operator shape, spec §9)", () => 
   it("applies an operator+constraints filter with 'and' semantics", () => {
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Alison" }]}
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Alison" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
         filters={{
           name: {
@@ -108,7 +114,10 @@ describe("filtering (React object+constraints operator shape, spec §9)", () => 
     const onFilter = vi.fn();
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
         filters={{ name: { value: "ali", matchMode: "contains" } }}
         onFilter={onFilter}
@@ -140,7 +149,10 @@ describe("selection-column UI (Spec §5.2, GAP-042)", () => {
   it("renders a checkbox per row and a header select-all checkbox when selectionMode is multiple and selectionColumn is true", () => {
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "A" }, { id: 2, name: "B" }]}
+        value={[
+          { id: 1, name: "A" },
+          { id: 2, name: "B" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
         selectionMode="multiple"
         selectionColumn
@@ -189,7 +201,9 @@ describe("selection-column UI (Spec §5.2, GAP-042)", () => {
         onSelectionChange={vi.fn()}
       />
     );
-    const headerCheckbox = container.querySelector("thead input[type=checkbox]") as HTMLInputElement;
+    const headerCheckbox = container.querySelector(
+      "thead input[type=checkbox]"
+    ) as HTMLInputElement;
     expect(headerCheckbox.checked).toBe(false);
     expect(headerCheckbox.disabled).toBe(false);
   });
@@ -211,7 +225,10 @@ describe("selection-column UI (Spec §5.2, GAP-042)", () => {
   });
 
   it("clicking the header checkbox selects all rows; clicking again deselects all", () => {
-    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const rows = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
     const onSelectionChange = vi.fn();
     const { container } = render(
       <UTable<Row>
@@ -223,7 +240,9 @@ describe("selection-column UI (Spec §5.2, GAP-042)", () => {
         onSelectionChange={onSelectionChange}
       />
     );
-    const headerCheckbox = container.querySelector("thead input[type=checkbox]") as HTMLInputElement;
+    const headerCheckbox = container.querySelector(
+      "thead input[type=checkbox]"
+    ) as HTMLInputElement;
     fireEvent.click(headerCheckbox);
     expect(onSelectionChange).toHaveBeenCalledWith(rows);
   });
@@ -233,7 +252,10 @@ describe("keyboard navigation", () => {
   it("ArrowDown on a row moves focus to the next row", () => {
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
       />
     );
@@ -279,7 +301,10 @@ describe("keyboard selection (Spec §5.7, GAP-047)", () => {
   });
 
   it("Ctrl+A selects all rows when selectionMode is multiple", () => {
-    const rows = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const rows = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
     const onSelectionChange = vi.fn();
     const { container } = render(
       <UTable<Row>
@@ -311,7 +336,10 @@ describe("keyboard selection (Spec §5.7, GAP-047)", () => {
   it("existing Arrow/Home/End keyboard navigation is unaffected by the new Space/Enter/Ctrl+A handling", () => {
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]}
+        value={[
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
       />
     );
@@ -363,7 +391,10 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
           resizeObserverCallback = cb;
         }
         observe(target: Element) {
-          resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+          resizeObserverCallback?.(
+            [{ target } as ResizeObserverEntry],
+            this as unknown as ResizeObserver
+          );
         }
         disconnect() {}
       }
@@ -430,7 +461,11 @@ describe("Scroller composition (real UScroller content-template mechanism, not a
     // Scroll so the window starts partway through the list, then confirm
     // rendered rows are positioned at their real absolute index * itemSize,
     // not stacked at 0 regardless of scroll offset.
-    Object.defineProperty(scrollerRoot, "scrollTop", { value: 3000, writable: true, configurable: true });
+    Object.defineProperty(scrollerRoot, "scrollTop", {
+      value: 3000,
+      writable: true,
+      configurable: true,
+    });
     act(() => {
       scrollerRoot.dispatchEvent(new Event("scroll"));
     });
@@ -1094,7 +1129,12 @@ describe("column body renderer (Spec: 2026-09-26-prime-parity-table-design.md §
   });
 
   it("falls back to the raw field value when no body function is supplied", () => {
-    render(<UTable<Row> value={[{ id: 1, name: "Widget", price: 9.5 }]} columns={[{ field: "price", header: "Price" }]} />);
+    render(
+      <UTable<Row>
+        value={[{ id: 1, name: "Widget", price: 9.5 }]}
+        columns={[{ field: "price", header: "Price" }]}
+      />
+    );
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("9.5");
   });
 
@@ -1130,9 +1170,7 @@ describe("loading/empty states (Spec §5.6, GAP-046)", () => {
   });
 
   it("does not show the empty-state message while loading is true, even with an empty value", () => {
-    render(
-      <UTable<Row> value={[]} columns={[{ field: "name", header: "Name" }]} loading />
-    );
+    render(<UTable<Row> value={[]} columns={[{ field: "name", header: "Name" }]} loading />);
     expect(screen.queryByText("No results found")).toBeNull();
   });
 
@@ -1173,7 +1211,10 @@ describe("loading/empty states (Spec §5.6, GAP-046)", () => {
 });
 
 describe("row expansion (Spec §5.4, GAP-044)", () => {
-  interface Row { id: number; name: string }
+  interface Row {
+    id: number;
+    name: string;
+  }
 
   it("toggles a row's expanded state via expandedRowKeys/onExpandedRowKeysChange", () => {
     const onExpandedRowKeysChange = vi.fn();
@@ -1224,7 +1265,10 @@ describe("row expansion (Spec §5.4, GAP-044)", () => {
     expect(() =>
       render(
         <UTable<Row>
-          value={[{ id: 1, name: "A" }, { id: 1, name: "B" }]}
+          value={[
+            { id: 1, name: "A" },
+            { id: 1, name: "B" },
+          ]}
           columns={[{ field: "name", header: "Name" }]}
           dataKey="id"
         />
@@ -1260,7 +1304,10 @@ describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
     const onSelectionChange = vi.fn();
     const { container } = render(
       <UTable<Row>
-        value={[{ id: 1, name: "A" }, { id: 2, name: "B" }]}
+        value={[
+          { id: 1, name: "A" },
+          { id: 2, name: "B" },
+        ]}
         columns={[{ field: "name", header: "Name" }]}
         dataKey="id"
         editMode="row"
@@ -1380,7 +1427,9 @@ describe("whole-plan integration fix round 1 (cross-GAP defects)", () => {
     fireEvent.change(input, { target: { value: "Changed" } });
     fireEvent.click(container.querySelector("[data-u-table-row-edit-save]") as HTMLElement);
 
-    const headerCheckbox = container.querySelector("thead input[type=checkbox]") as HTMLInputElement;
+    const headerCheckbox = container.querySelector(
+      "thead input[type=checkbox]"
+    ) as HTMLInputElement;
     fireEvent.click(headerCheckbox);
 
     expect(onSelectionChange).toHaveBeenCalledWith([{ id: 1, name: "Changed" }]);

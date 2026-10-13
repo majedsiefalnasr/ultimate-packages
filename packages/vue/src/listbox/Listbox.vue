@@ -28,11 +28,24 @@
           role="option"
           :aria-selected="isSelected(option)"
           :aria-disabled="isOptionDisabled(option)"
-          :class="cx('option', { focused: focusedIndex === index, selected: isSelected(option), disabled: isOptionDisabled(option) })"
+          :class="
+            cx('option', {
+              focused: focusedIndex === index,
+              selected: isSelected(option),
+              disabled: isOptionDisabled(option),
+            })
+          "
           @click="onOptionSelect($event, option)"
           @mouseenter="!isOptionDisabled(option) && (focusedIndex = index)"
         >
-          <input v-if="multiple" type="checkbox" :checked="isSelected(option)" :disabled="isOptionDisabled(option)" tabindex="-1" readonly />
+          <input
+            v-if="multiple"
+            type="checkbox"
+            :checked="isSelected(option)"
+            :disabled="isOptionDisabled(option)"
+            tabindex="-1"
+            readonly
+          />
           <span>{{ getOptionLabel(option) }}</span>
         </li>
         <li v-if="visibleOptions.length === 0" :class="cx('emptyMessage')" role="option">
@@ -76,7 +89,9 @@ export default {
     visibleOptions() {
       const query = this.filterValue.trim().toLowerCase();
       if (!query) return this.options;
-      return this.options.filter((option) => this.getOptionLabel(option).toLowerCase().includes(query));
+      return this.options.filter((option) =>
+        this.getOptionLabel(option).toLowerCase().includes(query)
+      );
     },
   },
   methods: {
@@ -96,7 +111,11 @@ export default {
     },
     isOptionDisabled(option) {
       if (typeof this.optionDisabled === "function") return this.optionDisabled(option);
-      if (typeof this.optionDisabled === "string" && typeof option === "object" && option !== null) {
+      if (
+        typeof this.optionDisabled === "string" &&
+        typeof option === "object" &&
+        option !== null
+      ) {
         return !!option[this.optionDisabled];
       }
       return false;
@@ -158,7 +177,9 @@ export default {
       let newValue;
       if (this.multiple) {
         const current = Array.isArray(this.dValue) ? this.dValue : [];
-        newValue = current.includes(optionValue) ? current.filter((v) => v !== optionValue) : [...current, optionValue];
+        newValue = current.includes(optionValue)
+          ? current.filter((v) => v !== optionValue)
+          : [...current, optionValue];
       } else {
         newValue = optionValue;
       }

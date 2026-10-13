@@ -52,7 +52,9 @@ export class UTab extends UBaseComponent {
   disabled = input(false, { transform: booleanAttribute });
 
   protected readonly active = computed(() => this.pcTabs.value() === this.value());
-  protected readonly tabindexAttr = computed(() => (this.disabled() ? -1 : this.active() ? this.pcTabs.tabindex() : -1));
+  protected readonly tabindexAttr = computed(() =>
+    this.disabled() ? -1 : this.active() ? this.pcTabs.tabindex() : -1
+  );
 
   @HostListener("focus")
   protected onFocus(): void {
@@ -105,7 +107,9 @@ export class UTab extends UBaseComponent {
   }
 
   private isEligible(el: Element | null): el is HTMLElement {
-    return !!el && el.getAttribute("data-u-disabled") !== "true" && el.tagName.toLowerCase() === "u-tab";
+    return (
+      !!el && el.getAttribute("data-u-disabled") !== "true" && el.tagName.toLowerCase() === "u-tab"
+    );
   }
 
   private findNext(el: Element, selfCheck = false): HTMLElement | null {

@@ -57,7 +57,10 @@ export function UToggleButton({
   tabIndex,
   className,
 }: UToggleButtonProps): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "toggle-button", styleModule: toggleButtonStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "toggle-button",
+    styleModule: toggleButtonStyleModule,
+  });
 
   const hasLabel = onLabel.length > 0 && offLabel.length > 0;
   const label = hasLabel ? (checked ? onLabel : offLabel) : " ";

@@ -225,11 +225,13 @@ export function USplitter({
   return (
     <div ref={rootRef} className={[cx("root", { layout }), className].filter(Boolean).join(" ")}>
       {panels.map((panel, index) => (
-        // eslint-disable-next-line react/no-array-index-key -- panels have no stable identity in this config-driven shape
+        // panels have no stable identity in this config-driven shape
         <React.Fragment key={index}>
           <div
             className={cx("panel")}
-            style={{ flexBasis: `calc(${panelSizes[index] ?? 0}% - ${gutterCount * gutterSize}px)` }}
+            style={{
+              flexBasis: `calc(${panelSizes[index] ?? 0}% - ${gutterCount * gutterSize}px)`,
+            }}
             tabIndex={-1}
           >
             {panel.content}

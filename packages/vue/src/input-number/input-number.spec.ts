@@ -77,13 +77,17 @@ describe("UInputNumber — keyboard increment", () => {
   });
 
   it("ArrowUp clamps at max", async () => {
-    const wrapper = mount(UInputNumber, { props: { modelValue: 10, max: 10, step: 1, locale: "en-US" } });
+    const wrapper = mount(UInputNumber, {
+      props: { modelValue: 10, max: 10, step: 1, locale: "en-US" },
+    });
     await wrapper.find("input").trigger("keydown", { key: "ArrowUp" });
     expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([10]);
   });
 
   it("does not increment when disabled", async () => {
-    const wrapper = mount(UInputNumber, { props: { modelValue: 5, disabled: true, locale: "en-US" } });
+    const wrapper = mount(UInputNumber, {
+      props: { modelValue: 5, disabled: true, locale: "en-US" },
+    });
     await wrapper.find("input").trigger("keydown", { key: "ArrowUp" });
     expect(wrapper.emitted("update:modelValue")).toBeFalsy();
   });

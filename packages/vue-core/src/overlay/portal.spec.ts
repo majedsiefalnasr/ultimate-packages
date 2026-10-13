@@ -8,10 +8,13 @@ describe("Portal", () => {
   });
 
   it("teleports its slot content to document.body by default", async () => {
-    mount({
-      components: { Portal },
-      template: `<Portal><div id="portal-content">hi</div></Portal>`,
-    }, { attachTo: document.body });
+    mount(
+      {
+        components: { Portal },
+        template: `<Portal><div id="portal-content">hi</div></Portal>`,
+      },
+      { attachTo: document.body }
+    );
     await new Promise((r) => setTimeout(r, 0));
     expect(document.body.querySelector("#portal-content")).not.toBeNull();
   });

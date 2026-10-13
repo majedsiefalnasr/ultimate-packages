@@ -63,7 +63,9 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: { filled?: boolean; focused?: boolean; disabled?: boolean; invalid?: boolean } = {}) => [
+  root: (
+    params: { filled?: boolean; focused?: boolean; disabled?: boolean; invalid?: boolean } = {}
+  ) => [
     "u-input-chips",
     {
       "u-input-chips-filled": params.filled,

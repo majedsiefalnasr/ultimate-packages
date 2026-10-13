@@ -20,7 +20,9 @@ describe("UConfirmDialog", () => {
     await wrapper.vm.$nextTick();
 
     expect(document.querySelector(".u-dialog")).not.toBeNull();
-    expect(document.querySelector(".u-confirmdialog-message")?.textContent).toBe("Delete this item?");
+    expect(document.querySelector(".u-confirmdialog-message")?.textContent).toBe(
+      "Delete this item?"
+    );
     expect(document.querySelector(".u-dialog-title")?.textContent).toBe("Confirm");
 
     wrapper.unmount();
@@ -33,7 +35,9 @@ describe("UConfirmDialog", () => {
     await wrapper.vm.$nextTick();
 
     const buttons = document.querySelectorAll(".u-confirmdialog-footer button");
-    (buttons[buttons.length - 1] as HTMLButtonElement).dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    (buttons[buttons.length - 1] as HTMLButtonElement).dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
     await wrapper.vm.$nextTick();
 
     expect(accepted).toBe(true);
@@ -48,7 +52,9 @@ describe("UConfirmDialog", () => {
     confirmationEventBus.emit("confirm", { message: "Proceed?", reject: () => (rejected = true) });
     await wrapper.vm.$nextTick();
 
-    const rejectButton = document.querySelector(".u-confirmdialog-footer button") as HTMLButtonElement;
+    const rejectButton = document.querySelector(
+      ".u-confirmdialog-footer button"
+    ) as HTMLButtonElement;
     rejectButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     await wrapper.vm.$nextTick();
 
@@ -70,7 +76,10 @@ describe("UConfirmDialog", () => {
   });
 
   it("only responds to confirmations matching its own group key", async () => {
-    const wrapper = mount(UConfirmDialog, { props: { group: "secondary" }, attachTo: document.body });
+    const wrapper = mount(UConfirmDialog, {
+      props: { group: "secondary" },
+      attachTo: document.body,
+    });
 
     confirmationEventBus.emit("confirm", { message: "For a different dialog", key: "other" });
     await wrapper.vm.$nextTick();

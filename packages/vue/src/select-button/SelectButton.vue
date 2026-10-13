@@ -52,7 +52,11 @@ export default {
     },
     isOptionDisabled(option) {
       if (typeof this.optionDisabled === "function") return this.optionDisabled(option);
-      if (typeof this.optionDisabled === "string" && typeof option === "object" && option !== null) {
+      if (
+        typeof this.optionDisabled === "string" &&
+        typeof option === "object" &&
+        option !== null
+      ) {
         return !!option[this.optionDisabled];
       }
       return false;

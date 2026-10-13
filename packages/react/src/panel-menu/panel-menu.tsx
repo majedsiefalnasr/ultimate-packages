@@ -29,7 +29,10 @@ export const UPanelMenu = React.forwardRef<HTMLDivElement, UPanelMenuProps>(func
   { model = [], multiple = false, onItemSelect, className },
   ref
 ) {
-  const { cx } = useComponentBase({ componentName: "panel-menu", styleModule: panelMenuStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "panel-menu",
+    styleModule: panelMenuStyleModule,
+  });
   const [expandedItems, setExpandedItems] = React.useState<Set<UMenuItem>>(new Set());
 
   const onToggle = React.useCallback(

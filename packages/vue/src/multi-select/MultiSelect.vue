@@ -14,7 +14,9 @@
     >
       {{ label }}
     </span>
-    <span v-if="isVisibleClearIcon" :class="cx('clearIcon')" aria-hidden="true" @click="clear">&times;</span>
+    <span v-if="isVisibleClearIcon" :class="cx('clearIcon')" aria-hidden="true" @click="clear"
+      >&times;</span
+    >
     <div :class="cx('dropdown')" role="button" aria-hidden="true" @click="onContainerClick">
       <span aria-hidden="true">&#9662;</span>
     </div>
@@ -49,11 +51,23 @@
               role="option"
               :aria-selected="isSelected(option)"
               :aria-disabled="isOptionDisabled(option)"
-              :class="cx('option', { focused: focusedIndex === index, selected: isSelected(option), disabled: isOptionDisabled(option) })"
+              :class="
+                cx('option', {
+                  focused: focusedIndex === index,
+                  selected: isSelected(option),
+                  disabled: isOptionDisabled(option),
+                })
+              "
               @click="onOptionSelect($event, option)"
               @mouseenter="!isOptionDisabled(option) && (focusedIndex = index)"
             >
-              <input type="checkbox" :checked="isSelected(option)" :disabled="isOptionDisabled(option)" tabindex="-1" readonly />
+              <input
+                type="checkbox"
+                :checked="isSelected(option)"
+                :disabled="isOptionDisabled(option)"
+                tabindex="-1"
+                readonly
+              />
               <span>{{ getOptionLabel(option) }}</span>
             </li>
             <li v-if="visibleOptions.length === 0" :class="cx('emptyMessage')" role="option">
@@ -110,7 +124,9 @@ export default {
     visibleOptions() {
       const query = this.filterValue.trim().toLowerCase();
       if (!query) return this.options;
-      return this.options.filter((option) => this.getOptionLabel(option).toLowerCase().includes(query));
+      return this.options.filter((option) =>
+        this.getOptionLabel(option).toLowerCase().includes(query)
+      );
     },
     allSelected() {
       const selectable = this.visibleOptions.filter((option) => !this.isOptionDisabled(option));
@@ -150,7 +166,11 @@ export default {
     },
     isOptionDisabled(option) {
       if (typeof this.optionDisabled === "function") return this.optionDisabled(option);
-      if (typeof this.optionDisabled === "string" && typeof option === "object" && option !== null) {
+      if (
+        typeof this.optionDisabled === "string" &&
+        typeof option === "object" &&
+        option !== null
+      ) {
         return !!option[this.optionDisabled];
       }
       return false;
@@ -233,10 +253,14 @@ export default {
     toggleAll() {
       const selectable = this.visibleOptions.filter((option) => !this.isOptionDisabled(option));
       const newValue = this.allSelected
-        ? this.selectedValues.filter((v) => !selectable.some((option) => this.getOptionValue(option) === v))
+        ? this.selectedValues.filter(
+            (v) => !selectable.some((option) => this.getOptionValue(option) === v)
+          )
         : [
             ...this.selectedValues,
-            ...selectable.map((option) => this.getOptionValue(option)).filter((v) => !this.selectedValues.includes(v)),
+            ...selectable
+              .map((option) => this.getOptionValue(option))
+              .filter((v) => !this.selectedValues.includes(v)),
           ];
       this.writeValue(newValue);
       this.$emit("select-all-change", { value: newValue });

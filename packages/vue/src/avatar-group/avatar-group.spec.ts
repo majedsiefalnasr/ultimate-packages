@@ -5,18 +5,16 @@ import { UAvatarGroup } from "./index";
 
 describe("UAvatarGroup", () => {
   it("renders projected UAvatar children", () => {
-    const wrapper = mount(
-      {
-        components: { UAvatarGroup, UAvatar },
-        template: `
+    const wrapper = mount({
+      components: { UAvatarGroup, UAvatar },
+      template: `
           <UAvatarGroup>
             <UAvatar label="A" />
             <UAvatar label="B" />
             <UAvatar label="C" />
           </UAvatarGroup>
         `,
-      }
-    );
+    });
     expect(wrapper.findAll(".u-avatar")).toHaveLength(3);
   });
 

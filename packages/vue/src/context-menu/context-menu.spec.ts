@@ -29,7 +29,12 @@ describe("UContextMenu", () => {
       attachTo: document.body,
     });
     const target = wrapper.find(".target").element;
-    const event = new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: 10, clientY: 10 });
+    const event = new MouseEvent("contextmenu", {
+      bubbles: true,
+      cancelable: true,
+      clientX: 10,
+      clientY: 10,
+    });
     const preventDefaultSpy = vi.spyOn(event, "preventDefault");
     target.dispatchEvent(event);
     await wrapper.vm.$nextTick();
@@ -73,7 +78,9 @@ describe("UContextMenu", () => {
     await wrapper.vm.$nextTick();
 
     const links = document.querySelectorAll(".u-contextmenu-item-link");
-    (links[links.length - 1] as HTMLAnchorElement).dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    (links[links.length - 1] as HTMLAnchorElement).dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
     await wrapper.vm.$nextTick();
 
     expect(wrapper.emitted("item-select")).toBeFalsy();

@@ -54,7 +54,10 @@ export function URadioButton({
   autoFocus = false,
   className,
 }: URadioButtonProps): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "radio-button", styleModule: radioButtonStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "radio-button",
+    styleModule: radioButtonStyleModule,
+  });
   const internalInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const setInputRef = React.useCallback(

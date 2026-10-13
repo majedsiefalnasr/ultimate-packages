@@ -17,12 +17,14 @@
 **Purpose:** Define the implementation-ready scope for Phase C Batch 2 — the exactly two canonical capability/framework realizations that became eligible for ordinary migration following Batch 1's closeout and the Parity Reconciliation pass, per the approved Phase C Migration Roadmap's capability-scoped model `[Roadmap §5, §9]`.
 
 **In scope:**
+
 1. **React DataScroller** (§3.1).
 2. **Vue InlineMessage** (§3.2).
 
 Each is a single-framework realization of its own canonical capability. Per the Roadmap's capability-scoped model, a capability entering scope for one framework does not require or imply any other framework's realization — for DataScroller, its Angular and Vue realizations are simply **not in scope for this batch**; for InlineMessage, its Angular and React realizations are simply **not in scope for this batch**. In every case, the framework(s) not in scope remain genuinely `Unverified / mapping unresolved` (§1) — this specification does not assert or imply they are confirmed absent `[Roadmap §5.1]`.
 
 **Out of scope, entirely, for this specification and its eventual Implementation Plan:**
+
 - Any capability not named in §3.
 - Any of the 11 capability/framework pairs the Parity Reconciliation pass confirmed genuinely absent (`Not applicable`) — React: DynamicDialog, OverlayBadge, IftaLabel, ImageCompare, AnimateOnScroll, InputGroup/InputGroupAddon (6); Angular: MultiStateCheckbox, TriStateCheckbox, Mention, InputChips, DeferredContent (5) `[Parity Matrix §4.1]`.
 - The 7 capability/framework pairs still genuinely `Unverified / mapping unresolved` after the reconciliation pass (Vue MultiStateCheckbox/TriStateCheckbox/Mention/DataScroller; React InlineMessage; Angular DataScroller/InlineMessage) — none promoted without further evidence `[Parity Matrix §4.1b, Roadmap §6]`.
@@ -60,19 +62,19 @@ None of these decisions is reopened by this specification.
 
 **Required behavioral responsibility**, derived directly from real source:
 
-| Prop (real PrimeReact name/default) | Required behavior |
-|---|---|
-| `value` (`any[]`, default `null`) | Source data array. |
-| `rows` (`number`, default `0`) | Number of items appended per load cycle. |
-| `inline` (`boolean`, default `false`) | `true`: the component's own content container is the scroll target. `false`: the window is the scroll target. |
-| `lazy` (`boolean`, default `false`) | `true`: defers loading to `onLazyLoad`, consumer supplies newly-appended data via `value`. `false`: component performs its own synchronous array-slicing from the full `value` array. |
-| `loader` (`boolean`, default `false`) | `true`: disables the internal scroll listener; the host application drives loading itself via an exposed imperative `load()` method (real source has no built-in "Load More" button UI for this mode — the hook only). |
-| `buffer` (`number`, default `0.9`) | Scroll-position fraction (of scrollable distance) that triggers the next load. |
-| `scrollHeight` (`string`) | Max-height for `inline` mode's content area. |
-| `header`, `footer` (static content) | Static header/footer content, not template/render-prop slots. |
-| `itemTemplate` (render function) | Per-item render function — required, since DataScroller has no fixed row shape. |
-| `emptyMessage` (content or render function, default a "no records" message) | Rendered when the resolved data set is empty. |
-| `onLazyLoad` (callback: `{first, rows}`) | Fired in lazy mode instead of internal slicing. |
+| Prop (real PrimeReact name/default)                                         | Required behavior                                                                                                                                                                                                      |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value` (`any[]`, default `null`)                                           | Source data array.                                                                                                                                                                                                     |
+| `rows` (`number`, default `0`)                                              | Number of items appended per load cycle.                                                                                                                                                                               |
+| `inline` (`boolean`, default `false`)                                       | `true`: the component's own content container is the scroll target. `false`: the window is the scroll target.                                                                                                          |
+| `lazy` (`boolean`, default `false`)                                         | `true`: defers loading to `onLazyLoad`, consumer supplies newly-appended data via `value`. `false`: component performs its own synchronous array-slicing from the full `value` array.                                  |
+| `loader` (`boolean`, default `false`)                                       | `true`: disables the internal scroll listener; the host application drives loading itself via an exposed imperative `load()` method (real source has no built-in "Load More" button UI for this mode — the hook only). |
+| `buffer` (`number`, default `0.9`)                                          | Scroll-position fraction (of scrollable distance) that triggers the next load.                                                                                                                                         |
+| `scrollHeight` (`string`)                                                   | Max-height for `inline` mode's content area.                                                                                                                                                                           |
+| `header`, `footer` (static content)                                         | Static header/footer content, not template/render-prop slots.                                                                                                                                                          |
+| `itemTemplate` (render function)                                            | Per-item render function — required, since DataScroller has no fixed row shape.                                                                                                                                        |
+| `emptyMessage` (content or render function, default a "no records" message) | Rendered when the resolved data set is empty.                                                                                                                                                                          |
+| `onLazyLoad` (callback: `{first, rows}`)                                    | Fired in lazy mode instead of internal slicing.                                                                                                                                                                        |
 
 **Internal behavior, required:** on mount, load the initial window (`load()` once); bind a scroll listener (window or the inline content container, per `inline`) unless `loader` is `true`; each triggered load appends the next `rows`-sized window from `value` (non-lazy) or invokes `onLazyLoad` (lazy) — loaded items accumulate and remain rendered (no virtualization, no recycling — this is real upstream DataScroller's actual behavior, faithfully portable as-is, not a scope cut). Expose an imperative `reset()` (clears accumulated state, reloads from the start) and `load()` (for `loader: true` host-driven mode).
 
@@ -90,14 +92,14 @@ None of these decisions is reopened by this specification.
 
 **Required behavioral responsibility**, derived directly from real source:
 
-| Prop (real PrimeVue name/default) | Required behavior |
-|---|---|
+| Prop (real PrimeVue name/default)      | Required behavior                                                          |
+| -------------------------------------- | -------------------------------------------------------------------------- |
 | `severity` (string, default `'error'`) | One of `info`/`success`/`warn`/`error`; drives the default icon selection. |
-| `icon` (string, default `undefined`) | Override the icon class; when unset, an icon is resolved from `severity`. |
-| Default slot | Message text/content. |
-| `icon` named slot | Override the entire icon element. |
+| `icon` (string, default `undefined`)   | Override the icon class; when unset, an icon is resolved from `severity`.  |
+| Default slot                           | Message text/content.                                                      |
+| `icon` named slot                      | Override the entire icon element.                                          |
 
-**Genuine correction to the prior Parity Reconciliation pass's evidence, binding on this specification:** the reconciliation pass's earlier finding described InlineMessage as auto-dismissing via a `life` timeout "unless `sticky`." Direct read of real `BaseInlineMessage.vue`'s actual declared props during this Specification's own evidence-gathering found **no `sticky` or `life` prop declared anywhere** — `InlineMessage.vue`'s `mounted()` hook references `this.sticky`/`this.life`, but both are always `undefined` at runtime (never assigned by any prop/data field), and the component's own `<template>` never gates on `visible` at all (unlike `Message.vue`, which has a real `v-if="visible"`). Real PrimeVue's own `InlineMessage.spec.js` never exercises this path either. **This is real upstream dead code with no observable effect, not a working feature.** This specification requires a faithful port of real InlineMessage's *actual* behavior: **a permanently-visible, non-dismissible inline alert with no timer, no close mechanism of any kind** — not the auto-dismiss/sticky behavior the earlier reconciliation evidence incorrectly attributed to it. The Implementation Plan must not port the dead sticky/life mechanism as if it were functional.
+**Genuine correction to the prior Parity Reconciliation pass's evidence, binding on this specification:** the reconciliation pass's earlier finding described InlineMessage as auto-dismissing via a `life` timeout "unless `sticky`." Direct read of real `BaseInlineMessage.vue`'s actual declared props during this Specification's own evidence-gathering found **no `sticky` or `life` prop declared anywhere** — `InlineMessage.vue`'s `mounted()` hook references `this.sticky`/`this.life`, but both are always `undefined` at runtime (never assigned by any prop/data field), and the component's own `<template>` never gates on `visible` at all (unlike `Message.vue`, which has a real `v-if="visible"`). Real PrimeVue's own `InlineMessage.spec.js` never exercises this path either. **This is real upstream dead code with no observable effect, not a working feature.** This specification requires a faithful port of real InlineMessage's _actual_ behavior: **a permanently-visible, non-dismissible inline alert with no timer, no close mechanism of any kind** — not the auto-dismiss/sticky behavior the earlier reconciliation evidence incorrectly attributed to it. The Implementation Plan must not port the dead sticky/life mechanism as if it were functional.
 
 **Confirmed delta vs. already-Built `Message`** (direct comparison, both real sources read): `Message` has real `closable`/`life`/`icon`/`closeIcon`/`closeButtonProps`/`size`/`variant` props, a working `v-if="visible"` gate, a real close button, `close()`/`life-end` emitted events, and a `<transition>` wrapper. `InlineMessage` has none of this — just `severity`+`icon`, always-visible, no dismiss mechanism of any kind (real or intended). This is a materially smaller, genuinely distinct capability, not a redundant duplicate of Message — confirms the Parity Reconciliation pass's core eligibility finding even though its behavioral-detail claim about `sticky`/`life` is corrected above.
 
@@ -133,10 +135,10 @@ Restated from the Roadmap and Batch 2 Brainstorming/Decision stage, as binding c
 
 ## 6. Reuse of existing Ultimate foundations (binding — no new foundation work authorized)
 
-| Framework | Capability | Foundation reused | Evidence |
-|---|---|---|---|
-| React | DataScroller | `react-core`'s `useComponentBase` (bare display/data tier, no CVA) | `react-core/src/`; matches real `DataScrollerBase extends ComponentBase` |
-| Vue | InlineMessage | `vue-core`'s `createBaseComponent` (bare tier, no CVA) | `vue-core/src/`; matches real `BaseInlineMessage extends BaseComponent`; proven sibling precedent: Ultimate's own already-Built `Message.vue` via `createBaseMessage`, same bare tier |
+| Framework | Capability    | Foundation reused                                                  | Evidence                                                                                                                                                                              |
+| --------- | ------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React     | DataScroller  | `react-core`'s `useComponentBase` (bare display/data tier, no CVA) | `react-core/src/`; matches real `DataScrollerBase extends ComponentBase`                                                                                                              |
+| Vue       | InlineMessage | `vue-core`'s `createBaseComponent` (bare tier, no CVA)             | `vue-core/src/`; matches real `BaseInlineMessage extends BaseComponent`; proven sibling precedent: Ultimate's own already-Built `Message.vue` via `createBaseMessage`, same bare tier |
 
 Neither capability requires `uix-data` (Data-family shared primitives are irrelevant to DataScroller's actual mechanism, per §3.1's explicit no-composition finding), a model-holder/input tier, or any new shared package export. This specification authorizes **no new base-class tier and no new architectural pattern.**
 
@@ -153,15 +155,15 @@ Neither capability requires `uix-data` (Data-family shared primitives are irrele
 
 ## 8. Exclusions and deferred items — reasons restated for traceability
 
-| Item | Reason | Source |
-|---|---|---|
-| Chart, Editor, Tree, TreeTable, TreeSelect, OrderList, PickList, DataView, Angular `config` (full surface) | Architectural exceptions — DECISION-B/C/D, not reopened | Roadmap §7 |
-| OrganizationChart | Unresolved DECISION-D/`COMPONENT_INVENTORY.md` discrepancy, not adjudicated | Roadmap §7, Dependency Map §D |
-| Messages | Relationship to Message unresolved | Parity Matrix §3.6 |
-| React Ripple, Vue Fluid, Angular `config` full surface | Existing standing deferrals; not bundled into this batch merely because it is small | Roadmap §7, this Brainstorming/Decision §7 item 4 |
-| Vue RadioButtonGroup, Vue CheckboxGroup | Confirmed Vue-specific supporting implementations of already-Built RadioButton/Checkbox, not separate canonical capabilities | This Batch 2 Brainstorming/Decision's own focused verification |
-| Angular DataScroller, Vue DataScroller, Angular InlineMessage, React InlineMessage, Vue MultiStateCheckbox, Vue TriStateCheckbox, Vue Mention | Still genuinely `Unverified / mapping unresolved`; not checked by the Parity Reconciliation pass; not promoted without further evidence | Parity Matrix §4.1b, Roadmap §6 |
-| The 11 confirmed-absent pairs (React DynamicDialog/OverlayBadge/IftaLabel/ImageCompare/AnimateOnScroll/InputGroup-InputGroupAddon — 6; Angular MultiStateCheckbox/TriStateCheckbox/Mention/InputChips/DeferredContent — 5) | Confirmed genuine functional absence by the Parity Reconciliation pass — `Not applicable`, not eligible for migration | Parity Matrix §4.1 |
+| Item                                                                                                                                                                                                                       | Reason                                                                                                                                  | Source                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Chart, Editor, Tree, TreeTable, TreeSelect, OrderList, PickList, DataView, Angular `config` (full surface)                                                                                                                 | Architectural exceptions — DECISION-B/C/D, not reopened                                                                                 | Roadmap §7                                                     |
+| OrganizationChart                                                                                                                                                                                                          | Unresolved DECISION-D/`COMPONENT_INVENTORY.md` discrepancy, not adjudicated                                                             | Roadmap §7, Dependency Map §D                                  |
+| Messages                                                                                                                                                                                                                   | Relationship to Message unresolved                                                                                                      | Parity Matrix §3.6                                             |
+| React Ripple, Vue Fluid, Angular `config` full surface                                                                                                                                                                     | Existing standing deferrals; not bundled into this batch merely because it is small                                                     | Roadmap §7, this Brainstorming/Decision §7 item 4              |
+| Vue RadioButtonGroup, Vue CheckboxGroup                                                                                                                                                                                    | Confirmed Vue-specific supporting implementations of already-Built RadioButton/Checkbox, not separate canonical capabilities            | This Batch 2 Brainstorming/Decision's own focused verification |
+| Angular DataScroller, Vue DataScroller, Angular InlineMessage, React InlineMessage, Vue MultiStateCheckbox, Vue TriStateCheckbox, Vue Mention                                                                              | Still genuinely `Unverified / mapping unresolved`; not checked by the Parity Reconciliation pass; not promoted without further evidence | Parity Matrix §4.1b, Roadmap §6                                |
+| The 11 confirmed-absent pairs (React DynamicDialog/OverlayBadge/IftaLabel/ImageCompare/AnimateOnScroll/InputGroup-InputGroupAddon — 6; Angular MultiStateCheckbox/TriStateCheckbox/Mention/InputChips/DeferredContent — 5) | Confirmed genuine functional absence by the Parity Reconciliation pass — `Not applicable`, not eligible for migration                   | Parity Matrix §4.1                                             |
 
 ---
 

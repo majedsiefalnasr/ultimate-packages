@@ -72,7 +72,9 @@ describe("Tabs family (UTabs/UTabList/UTab/UTabPanels/UTabPanel)", () => {
   it("renders all tabs and panels, only the active panel visible", () => {
     const fixture = setup();
     expect(fixture.nativeElement.querySelectorAll('[role="tab"]').length).toBe(3);
-    const panels: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[role="tabpanel"]'));
+    const panels: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('[role="tabpanel"]')
+    );
     expect(panels[0].hidden).toBe(false);
     expect(panels[1].hidden).toBe(true);
     expect(panels[2].hidden).toBe(true);
@@ -91,7 +93,9 @@ describe("Tabs family (UTabs/UTabList/UTab/UTabPanels/UTabPanel)", () => {
     const tabs: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[role="tab"]'));
     tabs[1].click();
     fixture.detectChanges();
-    const panels: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[role="tabpanel"]'));
+    const panels: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('[role="tabpanel"]')
+    );
     expect(tabs[1].getAttribute("aria-selected")).toBe("true");
     expect(panels[1].hidden).toBe(false);
     expect(panels[0].hidden).toBe(true);

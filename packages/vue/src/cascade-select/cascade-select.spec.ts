@@ -20,7 +20,12 @@ describe("UCascadeSelect", () => {
 
   it("renders a combobox trigger showing the placeholder when nothing is selected", () => {
     const wrapper = mount(UCascadeSelect, {
-      props: { modelValue: null, options: COUNTRIES, optionLabel: "name", placeholder: "Select a city" },
+      props: {
+        modelValue: null,
+        options: COUNTRIES,
+        optionLabel: "name",
+        placeholder: "Select a city",
+      },
     });
     expect(wrapper.find('[role="combobox"]').text()).toBe("Select a city");
   });
@@ -42,7 +47,9 @@ describe("UCascadeSelect", () => {
     });
     await wrapper.find('[role="combobox"]').trigger("click");
 
-    const germanyContent = document.querySelectorAll(".u-cascade-select-option-content")[0] as HTMLElement;
+    const germanyContent = document.querySelectorAll(
+      ".u-cascade-select-option-content"
+    )[0] as HTMLElement;
     germanyContent.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     await wrapper.vm.$nextTick();
 
@@ -64,7 +71,9 @@ describe("UCascadeSelect", () => {
     await wrapper.vm.$nextTick();
 
     contents = document.querySelectorAll(".u-cascade-select-option-content");
-    const berlin = Array.from(contents).find((el) => el.textContent?.trim() === "Berlin") as HTMLElement;
+    const berlin = Array.from(contents).find(
+      (el) => el.textContent?.trim() === "Berlin"
+    ) as HTMLElement;
     expect(berlin).toBeDefined();
     berlin.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     await wrapper.vm.$nextTick();

@@ -53,35 +53,38 @@ Expected: all existing tests PASS (this suite runs under jsdom and does not asse
 In `packages/vue/src/tooltip/tooltip.ts`, inside `showTooltip()`, change:
 
 ```typescript
-  const panel = createElement(
-    "div",
-    {
-      id: state.panelId,
-      role: "tooltip",
-      class: ["u-tooltip", binding.class],
-      style: { position: "absolute", width: binding.fitContent === false ? undefined : "fit-content" },
+const panel = createElement(
+  "div",
+  {
+    id: state.panelId,
+    role: "tooltip",
+    class: ["u-tooltip", binding.class],
+    style: {
+      position: "absolute",
+      width: binding.fitContent === false ? undefined : "fit-content",
     },
-    text
-  );
+  },
+  text
+);
 ```
 
 to:
 
 ```typescript
-  const panel = createElement(
-    "div",
-    {
-      id: state.panelId,
-      role: "tooltip",
-      class: ["u-tooltip", binding.class],
-      style: {
-        position: "absolute",
-        display: "inline-block",
-        width: binding.fitContent === false ? undefined : "fit-content",
-      },
+const panel = createElement(
+  "div",
+  {
+    id: state.panelId,
+    role: "tooltip",
+    class: ["u-tooltip", binding.class],
+    style: {
+      position: "absolute",
+      display: "inline-block",
+      width: binding.fitContent === false ? undefined : "fit-content",
     },
-    text
-  );
+  },
+  text
+);
 ```
 
 No other line in the file changes.
@@ -89,7 +92,7 @@ No other line in the file changes.
 - [ ] **Step 3: Re-run the existing unit suite to confirm no regression**
 
 Run: `cd packages/vue && npx vitest run src/tooltip/tooltip.spec.ts`
-Expected: identical PASS result to Step 1 — same test count, same outcomes. jsdom does not assert `display`, so this run proves the change didn't break anything jsdom *can* see (role, text/escape semantics, `aria-describedby`, disabled short-circuit), not that visibility itself is fixed (that's Task 2's job, in a real browser).
+Expected: identical PASS result to Step 1 — same test count, same outcomes. jsdom does not assert `display`, so this run proves the change didn't break anything jsdom _can_ see (role, text/escape semantics, `aria-describedby`, disabled short-circuit), not that visibility itself is fixed (that's Task 2's job, in a real browser).
 
 - [ ] **Step 4: Vue package typecheck**
 
@@ -122,29 +125,29 @@ git commit -m "fix(vue): add missing inline display style to make v-tooltip pane
 In `packages/vue/e2e/tooltip.spec.ts`, inside the `"Default story: real hover creates the tooltip node..."` test, change:
 
 ```typescript
-    // Real, verified gap: despite the correct position, the base
-    // `.u-tooltip { display: none }` rule is never overridden anywhere in
-    // this codebase, so the panel stays genuinely invisible in a real
-    // browser.
-    await expect(tooltip).toBeHidden();
-    const display = await tooltip.evaluate((el) => getComputedStyle(el).display);
-    expect(display).toBe("none");
+// Real, verified gap: despite the correct position, the base
+// `.u-tooltip { display: none }` rule is never overridden anywhere in
+// this codebase, so the panel stays genuinely invisible in a real
+// browser.
+await expect(tooltip).toBeHidden();
+const display = await tooltip.evaluate((el) => getComputedStyle(el).display);
+expect(display).toBe("none");
 ```
 
 to:
 
 ```typescript
-    // Verified fix (GAP-039): showTooltip() now sets an inline
-    // `display: inline-block` style on the panel, mirroring real
-    // PrimeVue's own create() mechanism, so the panel is genuinely
-    // visible in a real browser despite the base `.u-tooltip { display:
-    // none }` CSS rule (an inline style outranks a class-based rule by
-    // specificity). Asserting `not.toBe("none")` rather than an exact
-    // value keeps this robust across Chromium/Firefox/WebKit computed-
-    // style reporting differences.
-    await expect(tooltip).toBeVisible();
-    const display = await tooltip.evaluate((el) => getComputedStyle(el).display);
-    expect(display).not.toBe("none");
+// Verified fix (GAP-039): showTooltip() now sets an inline
+// `display: inline-block` style on the panel, mirroring real
+// PrimeVue's own create() mechanism, so the panel is genuinely
+// visible in a real browser despite the base `.u-tooltip { display:
+// none }` CSS rule (an inline style outranks a class-based rule by
+// specificity). Asserting `not.toBe("none")` rather than an exact
+// value keeps this robust across Chromium/Firefox/WebKit computed-
+// style reporting differences.
+await expect(tooltip).toBeVisible();
+const display = await tooltip.evaluate((el) => getComputedStyle(el).display);
+expect(display).not.toBe("none");
 ```
 
 Also rename the test's own title, since it no longer documents an unfixed gap. Change:
@@ -209,7 +212,7 @@ Replace the entire comment block at lines 4-47 (from `/**` through the closing `
 Run (from repository root): `npx playwright test --project=vue-chromium --project=vue-firefox --project=vue-webkit -g "Vue/Tooltip"`
 Expected: the "Default story: real hover creates a visible tooltip node..." test PASSES on all three engines (visibility assertions now correct). The two "visual regression" tests (Default and Disabled story) are expected to FAIL at this point for the Default-story one only, with a screenshot-mismatch error — this is the anticipated, correct result of the fix itself (the tooltip is now visibly rendered in the screenshot, where the committed baseline shows it absent), not a bug. The Disabled-story visual-regression test must still PASS (that story's screenshot is unaffected by this fix, since disabled hover never creates a panel at all). All other tests (accessibility scans, Disabled-story node-count test) must PASS unchanged.
 
-If the Default-story visual-regression test does *not* fail here, stop and investigate before Step 4 — it would mean the fix did not actually change what's rendered, contradicting Task 1's intent.
+If the Default-story visual-regression test does _not_ fail here, stop and investigate before Step 4 — it would mean the fix did not actually change what's rendered, contradicting Task 1's intent.
 
 - [ ] **Step 4: Regenerate only the Default-story visual-regression baseline for all three engines**
 

@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, booleanAttribute, input, model } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  input,
+  model,
+} from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
 import { stepperStyleModule } from "./stepper-style";
 

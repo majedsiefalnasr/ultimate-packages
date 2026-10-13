@@ -44,7 +44,9 @@ describe("Stepper family (UStepper/UStepList/UStep/UStepPanels/UStepPanel)", () 
   it("renders all steps and panels, only the active panel visible", () => {
     const fixture = setup();
     expect(fixture.nativeElement.querySelectorAll("u-step").length).toBe(3);
-    const panels: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[role="tabpanel"]'));
+    const panels: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('[role="tabpanel"]')
+    );
     expect(panels[0].hidden).toBe(false);
     expect(panels[1].hidden).toBe(true);
     expect(panels[2].hidden).toBe(true);
@@ -60,40 +62,56 @@ describe("Stepper family (UStepper/UStepList/UStep/UStepPanels/UStepPanel)", () 
 
   it("clicking a step header activates it and its matching panel (non-linear)", () => {
     const fixture = setup(false);
-    const headers: HTMLButtonElement[] = Array.from(fixture.nativeElement.querySelectorAll(".u-step-header"));
+    const headers: HTMLButtonElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll(".u-step-header")
+    );
     headers[2].click();
     fixture.detectChanges();
-    const panels: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[role="tabpanel"]'));
+    const panels: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('[role="tabpanel"]')
+    );
     expect(panels[2].hidden).toBe(false);
   });
 
   it("in linear mode, non-active step headers are disabled — clicking ahead does not activate", () => {
     const fixture = setup(true);
-    const headers: HTMLButtonElement[] = Array.from(fixture.nativeElement.querySelectorAll(".u-step-header"));
+    const headers: HTMLButtonElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll(".u-step-header")
+    );
     expect(headers[2].disabled).toBe(true);
     headers[2].click();
     fixture.detectChanges();
-    const panels: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[role="tabpanel"]'));
+    const panels: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('[role="tabpanel"]')
+    );
     expect(panels[0].hidden).toBe(false);
     expect(panels[2].hidden).toBe(true);
   });
 
   it("a panel's own Next button (activate()) progresses the active step — validation-gating via the host template", () => {
     const fixture = setup(true);
-    const nextButton: HTMLButtonElement = fixture.nativeElement.querySelector("button:not(.u-step-header)");
+    const nextButton: HTMLButtonElement = fixture.nativeElement.querySelector(
+      "button:not(.u-step-header)"
+    );
     nextButton.click();
     fixture.detectChanges();
-    const panels: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[role="tabpanel"]'));
+    const panels: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('[role="tabpanel"]')
+    );
     expect(panels[0].hidden).toBe(true);
     expect(panels[1].hidden).toBe(false);
   });
 
   it("in linear mode, once advanced, the previously-active step becomes clickable again by being the active one", () => {
     const fixture = setup(true);
-    const nextButton: HTMLButtonElement = fixture.nativeElement.querySelector("button:not(.u-step-header)");
+    const nextButton: HTMLButtonElement = fixture.nativeElement.querySelector(
+      "button:not(.u-step-header)"
+    );
     nextButton.click();
     fixture.detectChanges();
-    const headers: HTMLButtonElement[] = Array.from(fixture.nativeElement.querySelectorAll(".u-step-header"));
+    const headers: HTMLButtonElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll(".u-step-header")
+    );
     expect(headers[1].disabled).toBe(false);
     expect(headers[0].disabled).toBe(true);
   });

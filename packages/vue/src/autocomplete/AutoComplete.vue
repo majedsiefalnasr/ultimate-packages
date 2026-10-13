@@ -33,7 +33,11 @@
         >
           {{ getOptionLabel(option) }}
         </li>
-        <li v-if="suggestions.length === 0 && showEmptyMessage" :class="cx('emptyMessage')" role="option">
+        <li
+          v-if="suggestions.length === 0 && showEmptyMessage"
+          :class="cx('emptyMessage')"
+          role="option"
+        >
           {{ emptyMessage }}
         </li>
       </ul>
@@ -75,7 +79,9 @@ export default {
       // `undefined` here even when `modelValue` was passed). Deriving from
       // `this.modelValue`/`this.defaultValue` directly (the same inputs
       // `dValue` itself is seeded from) avoids depending on merge order.
-      inputValue: this.getOptionLabel(this.defaultValue !== undefined ? this.defaultValue : this.modelValue),
+      inputValue: this.getOptionLabel(
+        this.defaultValue !== undefined ? this.defaultValue : this.modelValue
+      ),
       overlayVisible: false,
       focusedIndex: -1,
       searchTimeout: null,
@@ -150,12 +156,14 @@ export default {
       switch (event.code) {
         case "ArrowDown":
           if (!this.overlayVisible) return;
-          this.focusedIndex = this.focusedIndex + 1 >= this.suggestions.length ? 0 : this.focusedIndex + 1;
+          this.focusedIndex =
+            this.focusedIndex + 1 >= this.suggestions.length ? 0 : this.focusedIndex + 1;
           event.preventDefault();
           break;
         case "ArrowUp":
           if (!this.overlayVisible) return;
-          this.focusedIndex = this.focusedIndex <= 0 ? this.suggestions.length - 1 : this.focusedIndex - 1;
+          this.focusedIndex =
+            this.focusedIndex <= 0 ? this.suggestions.length - 1 : this.focusedIndex - 1;
           event.preventDefault();
           break;
         case "Enter":

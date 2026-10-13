@@ -128,30 +128,178 @@ export const TABLE_METADATA: ComponentMetadata = {
   api: {
     ng: {
       props: [
-        { name: "value", type: "T[]", default: "[]", required: false, description: "The full, unpaginated array of records to render." },
-        { name: "dataKey", type: "string", default: "\"\"", required: false, description: "Field name used to resolve a row's identity for selection equality and row editing." },
-        { name: "columns", type: "{ field: string; header: string }[]", default: "[]", required: false, description: "Column definitions: field to resolve per row, and header text to render." },
-        { name: "sortMode", type: "SortMode", default: "\"single\"", required: false, description: "Whether a single field or multiple fields (via multiSortMeta) drive sorting." },
-        { name: "sortField", type: "string | undefined", required: false, description: "Field currently sorted on, in single-sort mode." },
-        { name: "sortOrder", type: "1 | 0 | -1", default: "0", required: false, description: "Sort direction for sortField, in single-sort mode." },
-        { name: "multiSortMeta", type: "SortMeta[]", default: "[]", required: false, description: "Priority-ordered field/order pairs driving sorting, in multi-sort mode." },
-        { name: "filters", type: "Record<string, FilterMetadata | FilterMetadata[]>", default: "{}", required: false, description: "Per-field filter criteria; an array value is OR'd alternatives (Angular's array-of-alternatives shape)." },
-        { name: "selectionMode", type: "SelectionMode | undefined", required: false, description: "When set, enables row-click selection (single replaces selection, multiple toggles rows in/out of it)." },
-        { name: "selection", type: "T | T[] | undefined", required: false, description: "Currently selected row (single mode) or rows (multiple mode)." },
-        { name: "compareSelectionBy", type: "\"equals\" | \"deepEquals\"", default: "\"equals\"", required: false, description: "Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals." },
-        { name: "paginator", type: "boolean", default: "false", required: false, description: "When true, renders a composed UPaginator beneath the table and slices the filtered/sorted rows to the current page." },
-        { name: "first", type: "number", default: "0", required: false, description: "Zero-relative index of the first record on the current page." },
-        { name: "rows", type: "number", default: "0", required: false, description: "Number of rows to display per page." },
-        { name: "totalRecords", type: "number", default: "0", required: false, description: "Total record count, forwarded to the composed UPaginator." },
-        { name: "rowsPerPageOptions", type: "number[] | undefined", required: false, description: "Row-count choices offered by the composed UPaginator." },
-        { name: "virtualScroll", type: "boolean", default: "false", required: false, description: "When true, renders rows through a composed UScroller instead of a plain tbody map." },
-        { name: "virtualScrollItemSize", type: "number", default: "0", required: false, description: "Row height in pixels, forwarded to the composed UScroller for windowing math." },
-        { name: "lazy", type: "boolean", default: "false", required: false, description: "When true, enables the composed UScroller's lazy-load notification, forwarded as onLazyLoad." },
-        { name: "lazyLoadOnInit", type: "boolean", default: "false", required: false, description: "When true, triggers an initial lazy-load notification on first render." },
-        { name: "editMode", type: "\"cell\" | \"row\" | undefined", required: false, description: "Enables the row-edit-init affordance ('row') or cell-level editing ('cell')." },
-        { name: "editingRowKeys", type: "Record<string, boolean>", default: "{}", required: false, description: "Key-map (keyed by dataKey-resolved row identity) of rows currently in edit mode." },
-        { name: "rowGroupMode", type: "\"subheader\" | \"rowspan\" | undefined", required: false, description: "Row-grouping display strategy when groupRowsBy is set." },
-        { name: "groupRowsBy", type: "string | undefined", required: false, description: "Field used to group adjacent rows sharing the same value." },
+        {
+          name: "value",
+          type: "T[]",
+          default: "[]",
+          required: false,
+          description: "The full, unpaginated array of records to render.",
+        },
+        {
+          name: "dataKey",
+          type: "string",
+          default: '""',
+          required: false,
+          description:
+            "Field name used to resolve a row's identity for selection equality and row editing.",
+        },
+        {
+          name: "columns",
+          type: "{ field: string; header: string }[]",
+          default: "[]",
+          required: false,
+          description: "Column definitions: field to resolve per row, and header text to render.",
+        },
+        {
+          name: "sortMode",
+          type: "SortMode",
+          default: '"single"',
+          required: false,
+          description:
+            "Whether a single field or multiple fields (via multiSortMeta) drive sorting.",
+        },
+        {
+          name: "sortField",
+          type: "string | undefined",
+          required: false,
+          description: "Field currently sorted on, in single-sort mode.",
+        },
+        {
+          name: "sortOrder",
+          type: "1 | 0 | -1",
+          default: "0",
+          required: false,
+          description: "Sort direction for sortField, in single-sort mode.",
+        },
+        {
+          name: "multiSortMeta",
+          type: "SortMeta[]",
+          default: "[]",
+          required: false,
+          description: "Priority-ordered field/order pairs driving sorting, in multi-sort mode.",
+        },
+        {
+          name: "filters",
+          type: "Record<string, FilterMetadata | FilterMetadata[]>",
+          default: "{}",
+          required: false,
+          description:
+            "Per-field filter criteria; an array value is OR'd alternatives (Angular's array-of-alternatives shape).",
+        },
+        {
+          name: "selectionMode",
+          type: "SelectionMode | undefined",
+          required: false,
+          description:
+            "When set, enables row-click selection (single replaces selection, multiple toggles rows in/out of it).",
+        },
+        {
+          name: "selection",
+          type: "T | T[] | undefined",
+          required: false,
+          description: "Currently selected row (single mode) or rows (multiple mode).",
+        },
+        {
+          name: "compareSelectionBy",
+          type: '"equals" | "deepEquals"',
+          default: '"equals"',
+          required: false,
+          description:
+            "Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals.",
+        },
+        {
+          name: "paginator",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, renders a composed UPaginator beneath the table and slices the filtered/sorted rows to the current page.",
+        },
+        {
+          name: "first",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Zero-relative index of the first record on the current page.",
+        },
+        {
+          name: "rows",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Number of rows to display per page.",
+        },
+        {
+          name: "totalRecords",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Total record count, forwarded to the composed UPaginator.",
+        },
+        {
+          name: "rowsPerPageOptions",
+          type: "number[] | undefined",
+          required: false,
+          description: "Row-count choices offered by the composed UPaginator.",
+        },
+        {
+          name: "virtualScroll",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, renders rows through a composed UScroller instead of a plain tbody map.",
+        },
+        {
+          name: "virtualScrollItemSize",
+          type: "number",
+          default: "0",
+          required: false,
+          description:
+            "Row height in pixels, forwarded to the composed UScroller for windowing math.",
+        },
+        {
+          name: "lazy",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, enables the composed UScroller's lazy-load notification, forwarded as onLazyLoad.",
+        },
+        {
+          name: "lazyLoadOnInit",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description: "When true, triggers an initial lazy-load notification on first render.",
+        },
+        {
+          name: "editMode",
+          type: '"cell" | "row" | undefined',
+          required: false,
+          description:
+            "Enables the row-edit-init affordance ('row') or cell-level editing ('cell').",
+        },
+        {
+          name: "editingRowKeys",
+          type: "Record<string, boolean>",
+          default: "{}",
+          required: false,
+          description:
+            "Key-map (keyed by dataKey-resolved row identity) of rows currently in edit mode.",
+        },
+        {
+          name: "rowGroupMode",
+          type: '"subheader" | "rowspan" | undefined',
+          required: false,
+          description: "Row-grouping display strategy when groupRowsBy is set.",
+        },
+        {
+          name: "groupRowsBy",
+          type: "string | undefined",
+          required: false,
+          description: "Field used to group adjacent rows sharing the same value.",
+        },
       ],
       events: [
         {
@@ -179,27 +327,150 @@ export const TABLE_METADATA: ComponentMetadata = {
     },
     react: {
       props: [
-        { name: "value", type: "T[]", required: true, description: "The full, unpaginated array of records to render." },
-        { name: "dataKey", type: "string", required: false, description: "Field name used to resolve a row's identity for selection equality and row editing." },
-        { name: "columns", type: "UTableColumn[]", required: true, description: "Column definitions: field to resolve per row, and header text to render." },
-        { name: "sortMode", type: "SortMode", default: "\"single\"", required: false, description: "Whether a single field or multiple fields (via multiSortMeta) drive sorting." },
-        { name: "sortField", type: "string", required: false, description: "Field currently sorted on, in single-sort mode." },
-        { name: "sortOrder", type: "1 | 0 | -1", default: "0", required: false, description: "Sort direction for sortField, in single-sort mode." },
-        { name: "multiSortMeta", type: "SortMeta[]", default: "[]", required: false, description: "Priority-ordered field/order pairs driving sorting, in multi-sort mode." },
-        { name: "filters", type: "Record<string, FilterMetadata | { operator: \"and\" | \"or\"; constraints: FilterMetadata[] }>", default: "{}", required: false, description: "Per-field filter criteria; a {operator, constraints} group AND/ORs its constraints (React's object-with-constraints-array shape, distinct from Angular's array-of-alternatives shape)." },
-        { name: "selectionMode", type: "SelectionMode | undefined", required: false, description: "When set, enables row-click selection (single replaces selection, multiple toggles rows in/out of it)." },
-        { name: "selection", type: "T | T[] | undefined", required: false, description: "Currently selected row (single mode) or rows (multiple mode)." },
-        { name: "compareSelectionBy", type: "\"equals\" | \"deepEquals\"", default: "\"equals\"", required: false, description: "Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals." },
-        { name: "paginator", type: "boolean", default: "false", required: false, description: "When true, renders a composed UPaginator beneath the table and slices the filtered/sorted rows to the current page." },
-        { name: "first", type: "number", default: "0", required: false, description: "Zero-relative index of the first record on the current page." },
-        { name: "rows", type: "number", default: "0", required: false, description: "Number of rows to display per page." },
-        { name: "totalRecords", type: "number", default: "0", required: false, description: "Total record count, forwarded to the composed UPaginator." },
-        { name: "virtualScrollerOptions", type: "{ itemSize: number } | undefined", required: false, description: "When set, renders rows through a composed UScroller (via its contentTemplate render-prop) instead of a plain tbody map." },
-        { name: "lazy", type: "boolean | undefined", required: false, description: "When true, enables the composed UScroller's lazy-load notification." },
-        { name: "editMode", type: "\"cell\" | \"row\" | undefined", required: false, description: "Enables the row-edit-init affordance ('row') or cell-level editing ('cell')." },
-        { name: "editingRows", type: "Record<string, boolean> | undefined", required: false, description: "Controlled key-map of rows currently in edit mode; falls back to internal state when onRowEditChange is omitted." },
-        { name: "rowGroupMode", type: "\"subheader\" | \"rowspan\" | undefined", required: false, description: "Row-grouping display strategy when groupRowsBy is set." },
-        { name: "groupRowsBy", type: "string | undefined", required: false, description: "Field used to group adjacent rows sharing the same value." },
+        {
+          name: "value",
+          type: "T[]",
+          required: true,
+          description: "The full, unpaginated array of records to render.",
+        },
+        {
+          name: "dataKey",
+          type: "string",
+          required: false,
+          description:
+            "Field name used to resolve a row's identity for selection equality and row editing.",
+        },
+        {
+          name: "columns",
+          type: "UTableColumn[]",
+          required: true,
+          description: "Column definitions: field to resolve per row, and header text to render.",
+        },
+        {
+          name: "sortMode",
+          type: "SortMode",
+          default: '"single"',
+          required: false,
+          description:
+            "Whether a single field or multiple fields (via multiSortMeta) drive sorting.",
+        },
+        {
+          name: "sortField",
+          type: "string",
+          required: false,
+          description: "Field currently sorted on, in single-sort mode.",
+        },
+        {
+          name: "sortOrder",
+          type: "1 | 0 | -1",
+          default: "0",
+          required: false,
+          description: "Sort direction for sortField, in single-sort mode.",
+        },
+        {
+          name: "multiSortMeta",
+          type: "SortMeta[]",
+          default: "[]",
+          required: false,
+          description: "Priority-ordered field/order pairs driving sorting, in multi-sort mode.",
+        },
+        {
+          name: "filters",
+          type: 'Record<string, FilterMetadata | { operator: "and" | "or"; constraints: FilterMetadata[] }>',
+          default: "{}",
+          required: false,
+          description:
+            "Per-field filter criteria; a {operator, constraints} group AND/ORs its constraints (React's object-with-constraints-array shape, distinct from Angular's array-of-alternatives shape).",
+        },
+        {
+          name: "selectionMode",
+          type: "SelectionMode | undefined",
+          required: false,
+          description:
+            "When set, enables row-click selection (single replaces selection, multiple toggles rows in/out of it).",
+        },
+        {
+          name: "selection",
+          type: "T | T[] | undefined",
+          required: false,
+          description: "Currently selected row (single mode) or rows (multiple mode).",
+        },
+        {
+          name: "compareSelectionBy",
+          type: '"equals" | "deepEquals"',
+          default: '"equals"',
+          required: false,
+          description:
+            "Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals.",
+        },
+        {
+          name: "paginator",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, renders a composed UPaginator beneath the table and slices the filtered/sorted rows to the current page.",
+        },
+        {
+          name: "first",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Zero-relative index of the first record on the current page.",
+        },
+        {
+          name: "rows",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Number of rows to display per page.",
+        },
+        {
+          name: "totalRecords",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Total record count, forwarded to the composed UPaginator.",
+        },
+        {
+          name: "virtualScrollerOptions",
+          type: "{ itemSize: number } | undefined",
+          required: false,
+          description:
+            "When set, renders rows through a composed UScroller (via its contentTemplate render-prop) instead of a plain tbody map.",
+        },
+        {
+          name: "lazy",
+          type: "boolean | undefined",
+          required: false,
+          description: "When true, enables the composed UScroller's lazy-load notification.",
+        },
+        {
+          name: "editMode",
+          type: '"cell" | "row" | undefined',
+          required: false,
+          description:
+            "Enables the row-edit-init affordance ('row') or cell-level editing ('cell').",
+        },
+        {
+          name: "editingRows",
+          type: "Record<string, boolean> | undefined",
+          required: false,
+          description:
+            "Controlled key-map of rows currently in edit mode; falls back to internal state when onRowEditChange is omitted.",
+        },
+        {
+          name: "rowGroupMode",
+          type: '"subheader" | "rowspan" | undefined',
+          required: false,
+          description: "Row-grouping display strategy when groupRowsBy is set.",
+        },
+        {
+          name: "groupRowsBy",
+          type: "string | undefined",
+          required: false,
+          description: "Field used to group adjacent rows sharing the same value.",
+        },
       ],
       events: [
         {
@@ -227,28 +498,170 @@ export const TABLE_METADATA: ComponentMetadata = {
     },
     vue: {
       props: [
-        { name: "value", type: "Array", default: "[]", required: false, description: "The full, unpaginated array of records to render." },
-        { name: "dataKey", type: "String", default: "\"\"", required: false, description: "Field name used to resolve a row's identity for selection equality and row editing." },
-        { name: "columns", type: "Array", default: "[]", required: false, description: "Column definitions: field to resolve per row, and header text to render." },
-        { name: "sortMode", type: "String", default: "\"single\"", required: false, description: "Whether a single field or multiple fields (via multiSortMeta) drive sorting." },
-        { name: "sortField", type: "String", default: "undefined", required: false, description: "Field currently sorted on, in single-sort mode." },
-        { name: "sortOrder", type: "Number", default: "0", required: false, description: "Sort direction for sortField, in single-sort mode." },
-        { name: "multiSortMeta", type: "Array", default: "[]", required: false, description: "Priority-ordered field/order pairs driving sorting, in multi-sort mode." },
-        { name: "filters", type: "Object", default: "{}", required: false, description: "Per-field filter criteria; a {operator, constraints} group AND/ORs its constraints, matching React's shape." },
-        { name: "selectionMode", type: "String", default: "undefined", required: false, description: "When set, enables row-click selection (single replaces selection, multiple toggles rows in/out of it)." },
-        { name: "selection", type: "[Object, Array]", default: "undefined", required: false, description: "Currently selected row (single mode) or rows (multiple mode)." },
-        { name: "compareSelectionBy", type: "String", default: "\"equals\"", required: false, description: "Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals." },
-        { name: "paginator", type: "Boolean", default: "false", required: false, description: "When true, renders a composed UPaginator beneath the table and slices the filtered/sorted rows to the current page." },
-        { name: "first", type: "Number", default: "0", required: false, description: "Zero-relative index of the first record on the current page." },
-        { name: "rows", type: "Number", default: "0", required: false, description: "Number of rows to display per page." },
-        { name: "totalRecords", type: "Number", default: "0", required: false, description: "Total record count, forwarded to the composed UPaginator." },
-        { name: "rowsPerPageOptions", type: "Array", default: "[]", required: false, description: "Row-count choices offered by the composed UPaginator." },
-        { name: "virtualScrollerOptions", type: "Object", default: "undefined", required: false, description: "When set, renders rows through a composed UScroller (via its named 'content' scoped slot) instead of a plain tbody map." },
-        { name: "lazy", type: "Boolean", default: "false", required: false, description: "When true, enables the composed UScroller's lazy-load notification, forwarded via lazy-load." },
-        { name: "editMode", type: "String", default: "undefined", required: false, description: "Enables the row-edit-init affordance ('row') or cell-level editing ('cell')." },
-        { name: "editingRows", type: "Array", default: "[]", required: false, description: "Array of rows currently in edit mode (Vue's array-append idiom, distinct from ng's/react's dataKey-based key-map shape)." },
-        { name: "rowGroupMode", type: "String", default: "undefined", required: false, description: "Row-grouping display strategy when groupRowsBy is set." },
-        { name: "groupRowsBy", type: "String", default: "undefined", required: false, description: "Field used to group adjacent rows sharing the same value." },
+        {
+          name: "value",
+          type: "Array",
+          default: "[]",
+          required: false,
+          description: "The full, unpaginated array of records to render.",
+        },
+        {
+          name: "dataKey",
+          type: "String",
+          default: '""',
+          required: false,
+          description:
+            "Field name used to resolve a row's identity for selection equality and row editing.",
+        },
+        {
+          name: "columns",
+          type: "Array",
+          default: "[]",
+          required: false,
+          description: "Column definitions: field to resolve per row, and header text to render.",
+        },
+        {
+          name: "sortMode",
+          type: "String",
+          default: '"single"',
+          required: false,
+          description:
+            "Whether a single field or multiple fields (via multiSortMeta) drive sorting.",
+        },
+        {
+          name: "sortField",
+          type: "String",
+          default: "undefined",
+          required: false,
+          description: "Field currently sorted on, in single-sort mode.",
+        },
+        {
+          name: "sortOrder",
+          type: "Number",
+          default: "0",
+          required: false,
+          description: "Sort direction for sortField, in single-sort mode.",
+        },
+        {
+          name: "multiSortMeta",
+          type: "Array",
+          default: "[]",
+          required: false,
+          description: "Priority-ordered field/order pairs driving sorting, in multi-sort mode.",
+        },
+        {
+          name: "filters",
+          type: "Object",
+          default: "{}",
+          required: false,
+          description:
+            "Per-field filter criteria; a {operator, constraints} group AND/ORs its constraints, matching React's shape.",
+        },
+        {
+          name: "selectionMode",
+          type: "String",
+          default: "undefined",
+          required: false,
+          description:
+            "When set, enables row-click selection (single replaces selection, multiple toggles rows in/out of it).",
+        },
+        {
+          name: "selection",
+          type: "[Object, Array]",
+          default: "undefined",
+          required: false,
+          description: "Currently selected row (single mode) or rows (multiple mode).",
+        },
+        {
+          name: "compareSelectionBy",
+          type: "String",
+          default: '"equals"',
+          required: false,
+          description:
+            "Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals.",
+        },
+        {
+          name: "paginator",
+          type: "Boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, renders a composed UPaginator beneath the table and slices the filtered/sorted rows to the current page.",
+        },
+        {
+          name: "first",
+          type: "Number",
+          default: "0",
+          required: false,
+          description: "Zero-relative index of the first record on the current page.",
+        },
+        {
+          name: "rows",
+          type: "Number",
+          default: "0",
+          required: false,
+          description: "Number of rows to display per page.",
+        },
+        {
+          name: "totalRecords",
+          type: "Number",
+          default: "0",
+          required: false,
+          description: "Total record count, forwarded to the composed UPaginator.",
+        },
+        {
+          name: "rowsPerPageOptions",
+          type: "Array",
+          default: "[]",
+          required: false,
+          description: "Row-count choices offered by the composed UPaginator.",
+        },
+        {
+          name: "virtualScrollerOptions",
+          type: "Object",
+          default: "undefined",
+          required: false,
+          description:
+            "When set, renders rows through a composed UScroller (via its named 'content' scoped slot) instead of a plain tbody map.",
+        },
+        {
+          name: "lazy",
+          type: "Boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, enables the composed UScroller's lazy-load notification, forwarded via lazy-load.",
+        },
+        {
+          name: "editMode",
+          type: "String",
+          default: "undefined",
+          required: false,
+          description:
+            "Enables the row-edit-init affordance ('row') or cell-level editing ('cell').",
+        },
+        {
+          name: "editingRows",
+          type: "Array",
+          default: "[]",
+          required: false,
+          description:
+            "Array of rows currently in edit mode (Vue's array-append idiom, distinct from ng's/react's dataKey-based key-map shape).",
+        },
+        {
+          name: "rowGroupMode",
+          type: "String",
+          default: "undefined",
+          required: false,
+          description: "Row-grouping display strategy when groupRowsBy is set.",
+        },
+        {
+          name: "groupRowsBy",
+          type: "String",
+          default: "undefined",
+          required: false,
+          description: "Field used to group adjacent rows sharing the same value.",
+        },
       ],
       events: [
         {
@@ -289,6 +702,9 @@ export const TABLE_METADATA: ComponentMetadata = {
   },
   provenanceRef: {
     package: "ng",
-    ultimateDestinations: ["packages/ng/src/table/table.ts", "packages/ng/src/table/table-style.ts"],
+    ultimateDestinations: [
+      "packages/ng/src/table/table.ts",
+      "packages/ng/src/table/table-style.ts",
+    ],
   },
 };

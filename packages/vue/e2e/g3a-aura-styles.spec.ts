@@ -119,7 +119,9 @@ test("Vue/Toast AllSeverities G3-A layout", async ({ page }) => {
     const outer = await box(":scope");
     expect(detail.y).toBeGreaterThanOrEqual(summary.y + summary.height - 0.5);
     expect(close.x).toBeGreaterThanOrEqual(text.x + text.width - 0.5);
-    expect(close.x).toBeGreaterThanOrEqual(Math.max(summary.x + summary.width, detail.x + detail.width) - 0.5);
+    expect(close.x).toBeGreaterThanOrEqual(
+      Math.max(summary.x + summary.width, detail.x + detail.width) - 0.5
+    );
     expect(close.x + close.width).toBeLessThanOrEqual(outer.x + outer.width + 0.5);
     expect(close.y).toBeGreaterThanOrEqual(outer.y - 0.5);
   }

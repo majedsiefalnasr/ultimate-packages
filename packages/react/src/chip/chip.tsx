@@ -30,7 +30,18 @@ export interface UChipProps {
  * source's own uncontrolled `visibleState`.
  */
 export const UChip = React.forwardRef<HTMLDivElement, UChipProps>(function UChip(
-  { label, icon, image, alt, disabled, removable, removeAriaLabel, onRemove, onImageError, className },
+  {
+    label,
+    icon,
+    image,
+    alt,
+    disabled,
+    removable,
+    removeAriaLabel,
+    onRemove,
+    onImageError,
+    className,
+  },
   ref
 ) {
   const { cx } = useComponentBase({ componentName: "chip", styleModule: chipStyleModule });
@@ -51,11 +62,7 @@ export const UChip = React.forwardRef<HTMLDivElement, UChipProps>(function UChip
   };
 
   return (
-    <div
-      ref={ref}
-      className={[cx("root"), className].filter(Boolean).join(" ")}
-      aria-label={label}
-    >
+    <div ref={ref} className={[cx("root"), className].filter(Boolean).join(" ")} aria-label={label}>
       {image ? (
         <img className={cx("image")} src={image} alt={alt} onError={onImageError} />
       ) : icon ? (

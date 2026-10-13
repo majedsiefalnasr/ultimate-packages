@@ -35,7 +35,9 @@ describe("manifestUnreadableError", () => {
   });
 
   it("does not leak the raw underlying error detail into the message (that goes to stderr, not the tool-error payload — case 5's no-leak rule applies to case 3's detail too)", () => {
-    const err = manifestUnreadableError("ENOENT: /Users/someone/secret-path/compatibility-manifest.json");
+    const err = manifestUnreadableError(
+      "ENOENT: /Users/someone/secret-path/compatibility-manifest.json"
+    );
     expect(err.message).not.toContain("/Users/someone/secret-path");
   });
 });

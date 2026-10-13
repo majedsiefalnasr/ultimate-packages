@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, input, output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  input,
+  output,
+} from "@angular/core";
 import { UBaseComponent, type UMenuItem } from "@ultimate/ng-core";
 import { UMenubarSub } from "./menubar-sub";
 import { menubarStyleModule } from "./menubar-style";
@@ -29,7 +35,11 @@ import { menubarStyleModule } from "./menubar-style";
   imports: [UMenubarSub],
   template: `
     <nav [class]="cx('root')" [attr.aria-label]="ariaLabel()">
-      <u-menubar-sub [items]="model()" [root]="true" (itemSelect)="onItemSelect.emit($event)"></u-menubar-sub>
+      <u-menubar-sub
+        [items]="model()"
+        [root]="true"
+        (itemSelect)="onItemSelect.emit($event)"
+      ></u-menubar-sub>
     </nav>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -23,14 +23,14 @@
   This is never imported from `uix-data` — it requires live component state (`items`/`props.items`/`this.items`), which `uix-data`'s `calculateLast` explicitly excludes (spec §2, §9). Every task below that defines `getLast` (Tasks 2, 7, 11) must declare it with this exact `(last = 0, isCols = false)` signature, even though the `isCols` branch is unreachable in this plan's vertical-only scope — this is Global Constraints binding on those tasks, not optional.
 - State ownership must match each framework's real divergent model exactly (spec §14) — do not normalize:
   - **Angular**: plain internal fields (`_first`, `_last`, `_page`, `_numItemsInViewport`) updated directly by scroll/resize handlers; **no getter/setter, no `Change` output** for any of them (unlike Paginator's `_first`, which is getter/setter-backed and one-way-input-driven).
-  - **React**: `items`/`itemSize`/every other prop read directly from `props` every render (no internal duplication of inputs); but the *derived* scroll window (`first`/`last`/`numItemsInViewport`) is **internal `useState`**, with **no callback-based override path** — "controlled input, uncontrolled derived output."
+  - **React**: `items`/`itemSize`/every other prop read directly from `props` every render (no internal duplication of inputs); but the _derived_ scroll window (`first`/`last`/`numItemsInViewport`) is **internal `useState`**, with **no callback-based override path** — "controlled input, uncontrolled derived output."
   - **Vue**: internal `data()` reactive fields for `first`/`last`/`page`/`numItemsInViewport`, **no props of the same name exist to sync from** (they are purely derived/internal, not prop-initialized the way Paginator's `d_first` is) — **no `v-model:first`**, only `update:numToleratedItems` is a `v-model`-compatible emit.
 - **Scope for this plan: `vertical` orientation only.** The spec confirms `horizontal`/`both` (2D grid, `{rows, cols}`-shaped state) as real upstream features (spec §4, §8), but including all three orientations in this plan's first pass would roughly double every rendering/clamping/lazy-load task's scope. This plan builds a complete, real, `vertical`-only `UScroller` per framework (matching the spec's own component-responsibility list minus the orientation branching). Task 15 in this plan is the provenance task (see below) — it is **not** reserved for `horizontal`/`both`. `horizontal`/`both` orientation support is a future follow-up **outside this plan entirely** (no task number reserved for it here — see **Explicitly Deferred**), to be scoped as its own plan once Tasks 1–15 below have landed.
 - **Accessibility (spec §13, §20 open decision): this plan implements `aria-busy` on the root container while `loading` is true, and nothing beyond that.** The spec confirms Prime's real upstream has zero `role`/`aria-*` attributes anywhere in Scroller, and leaves "should Ultimate add richer ARIA beyond upstream" as an explicit open design question rather than a resolved requirement. `aria-busy` is the one item the spec itself calls "the most direct, evidence-adjacent starting point, since `loading` state already exists as a real prop/field in all three" (spec §13) — this plan resolves that specific narrow item and defers any richer virtualized-grid ARIA (`aria-rowcount`/`aria-setsize`) to whichever future task addresses the spec's open decision in full, consistent with the spec's own framing that richer ARIA is "a genuine Ultimate improvement over upstream, not a source-verified requirement."
 - No new `@ultimate/uix-data` primitive, no ADR-043 change, no Blueprint change, no `BLUEPRINT_GAPS.md` change — these are out of scope for this plan.
 - **Confirmed real-source verification, this planning pass**: `packages/{ng,react,vue}/src/*` contains no existing Scroller/VirtualScroller component (only `autofocus`, `badge`, `button`, `checkbox`, `dialog`, `fluid`, `menu`, `ripple`, `tooltip` exist). Unlike Paginator, Scroller has **no missing-prerequisite-component blocker** — it has zero dropdown/select/input form-control children of any kind (spec §17, re-confirmed by this planning pass: no `select`/`input`/form-control reference found anywhere in the real PrimeNG/PrimeReact/PrimeVue Scroller source read while writing the spec). This plan is writable straight through with no gated Select/InputNumber-style stop.
 - Match every existing shipped-component convention exactly (verified this planning pass by reading `packages/{ng,react,vue}/src/button/*` in full, and cross-checked against `docs/superpowers/plans/2026-09-02-paginator-component-implementation.md`, commit `5074abf`, the most recent sibling plan of this same kind): Angular components extend `UBaseComponent` (`@ultimate/ng-core`) with a `componentName`/`styleModule` pair and Angular signal `input()`/`output()`; React components use `useComponentBase({ componentName, styleModule })` from `@ultimate/react-core`; Vue components use `createBaseComponent({ componentName, styleModule })` from `@ultimate/vue-core` via `extends:`. Every style module is `{ css, classes }`, with `css` sourced from `@ultimate/uix-styles/<component>` and `classes` a local class-name-slot resolver object (`.p-*` renamed to `.u-*`).
-- Provenance style tokens for Scroller (upstream name: `virtualscroller`) already exist, vendored, at `.vendor-extracted/uix-styles-components/src/virtualscroller/index.ts` (13 lines — much smaller than Paginator's 102-line token file, since Prime's own real `virtualscroller` tokens only cover the loader state: `virtualscroller.loader.mask.background`, `virtualscroller.loader.mask.color`, `virtualscroller.loader.icon.size` — there is no `virtualscroller.background`-style root token to port, confirmed by reading the real file in full). This plan ports that file into `packages/uix-styles/src/virtualscroller/index.ts` (Task 1), matching the exact pattern of `packages/uix-styles/src/paginator/index.ts`. No component *logic* source is vendored yet (`.vendor-extracted/{ng,react,vue}` has no `scroller`/`virtualscroller` directory) — real PrimeNG/PrimeReact/PrimeVue Scroller logic is read from the pinned cached tarballs (`.vendor-cache/{primeng,primereact,primevue}-<version>.tar.gz`, sha256-verified against `docs/architecture/checksums.json`) as each task requires it, per the spec's own citations.
+- Provenance style tokens for Scroller (upstream name: `virtualscroller`) already exist, vendored, at `.vendor-extracted/uix-styles-components/src/virtualscroller/index.ts` (13 lines — much smaller than Paginator's 102-line token file, since Prime's own real `virtualscroller` tokens only cover the loader state: `virtualscroller.loader.mask.background`, `virtualscroller.loader.mask.color`, `virtualscroller.loader.icon.size` — there is no `virtualscroller.background`-style root token to port, confirmed by reading the real file in full). This plan ports that file into `packages/uix-styles/src/virtualscroller/index.ts` (Task 1), matching the exact pattern of `packages/uix-styles/src/paginator/index.ts`. No component _logic_ source is vendored yet (`.vendor-extracted/{ng,react,vue}` has no `scroller`/`virtualscroller` directory) — real PrimeNG/PrimeReact/PrimeVue Scroller logic is read from the pinned cached tarballs (`.vendor-cache/{primeng,primereact,primevue}-<version>.tar.gz`, sha256-verified against `docs/architecture/checksums.json`) as each task requires it, per the spec's own citations.
 - **Package/directory naming**: the component's public class/export name is `UScroller` (matching the spec's own "Scroller" terminology throughout, not PrimeReact's internal `VirtualScroller` file name) — the directory is `scroller/` in every framework package, and the ported style-token subpath is `@ultimate/uix-styles/virtualscroller` (matching the real vendored token file's own directory name exactly, since renaming that subpath would break the direct-port traceability Task 1 depends on). This is a deliberate, stated naming choice for this plan, not an inconsistency: component directory name (`scroller`) and style-token subpath (`virtualscroller`) intentionally differ, tracking the spec's own component name vs. the real upstream package's own literal source directory name respectively.
 
 ---
@@ -40,10 +40,12 @@
 ### Task 1: Port Scroller style tokens into `@ultimate/uix-styles`
 
 **Files:**
+
 - Create: `packages/uix-styles/src/virtualscroller/index.ts`
 - Test: `packages/uix-styles/test/virtualscroller.test.ts`
 
 **Interfaces:**
+
 - Consumes: nothing new (plain string export, matching `packages/uix-styles/src/paginator/index.ts`'s `export const style = ...` shape)
 - Produces: `export const style: string` — importable as `@ultimate/uix-styles/virtualscroller`, consumed by Task 3/8/12's `scroller-style.ts` files
 
@@ -95,12 +97,14 @@ git commit -m "feat(uix-styles): add scroller (virtualscroller) style tokens"
 ### Task 2: Scaffold `UScroller` — state, `calculateNumItemsInViewport`/`calculateLast`/`getLast` consumption
 
 **Files:**
+
 - Create: `packages/ng/src/scroller/scroller.ts`
 - Test: `packages/ng/src/scroller/scroller.spec.ts`
 
 (`packages/ng/src/scroller/index.ts` does not exist yet — it is created in Task 5, once `UScroller` has its full public surface worth exporting, matching Paginator's Task 2/5 split exactly.)
 
 **Interfaces:**
+
 - Consumes: `calculateNumItemsInViewport`, `calculateLast` from `@ultimate/uix-data`; `UBaseComponent` from `@ultimate/ng-core`
 - Produces: `UScroller` class with signal inputs `items = input<unknown[]>([])`, `itemSize = input(0)`, `numToleratedItems = input<number | undefined>(undefined)`; protected getter `numItemsInViewportComputed(): number` (calls `calculateNumItemsInViewport`); protected getter `resolvedNumToleratedItems(): number` (returns the input value, or half of `numItemsInViewportComputed` rounded up when unset — matching real Prime's "defaults to half the viewport count when unset" behavior, spec §4.1); protected getter `last(): number` (calls `calculateLast` then clamps via `getLast`); private `getLast(last: number, isCols = false): number` method (signature fixed per Global Constraints — the `isCols` parameter is declared and unused in this task's vertical-only body, not omitted) — all consumed internally by the template (bound via `data-num-items-in-viewport`/`data-last`) and by Task 3's rendering; kept `protected`/private per the same access-control discipline established by Paginator's Task 2 (protected/private class members are not readable from an external `.spec.ts` file — tests assert against rendered DOM output, never `fixture.componentInstance.<protected member>`)
 
@@ -123,7 +127,10 @@ describe("UScroller", () => {
 
   it("computes numItemsInViewport via uix-data's calculateNumItemsInViewport, wired to the real shared function", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 100 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 100 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.detectChanges();
     // contentSize is a fixed 0 until Task 3's real DOM measurement lands, so
@@ -139,7 +146,10 @@ describe("UScroller", () => {
 
   it("clamps last (getLast) against the live items array length, per spec §9", () => {
     const fixture = TestBed.createComponent(UScroller);
-    fixture.componentRef.setInput("items", Array.from({ length: 5 }, (_, i) => i));
+    fixture.componentRef.setInput(
+      "items",
+      Array.from({ length: 5 }, (_, i) => i)
+    );
     fixture.componentRef.setInput("itemSize", 20);
     fixture.componentRef.setInput("numToleratedItems", 50); // deliberately large tolerance
     fixture.detectChanges();
@@ -205,7 +215,11 @@ export class UScroller extends UBaseComponent {
   }
 
   protected get last(): number {
-    const rawLast = calculateLast(0, this.numItemsInViewportComputed, this.resolvedNumToleratedItems);
+    const rawLast = calculateLast(
+      0,
+      this.numItemsInViewportComputed,
+      this.resolvedNumToleratedItems
+    );
     return this.getLast(rawLast);
   }
 
@@ -235,6 +249,7 @@ git commit -m "feat(ng): scaffold UScroller with uix-data virtualization consump
 ### Task 3: Angular — style module, content measurement, virtual item rendering, loader markup
 
 **Files:**
+
 - Modify: `packages/ng/src/scroller/scroller.ts`
 - Create: `packages/ng/src/scroller/scroller-style.ts`
 - Test: `packages/ng/src/scroller/scroller.spec.ts` (extend)
@@ -242,6 +257,7 @@ git commit -m "feat(ng): scaffold UScroller with uix-data virtualization consump
 **Measurement architecture — verified against real PrimeNG source** (`packages/primeng/src/scroller/scroller.ts`, pinned commit `c493b1c6d9f7cdffbe1c4dc195493dd73d733593`, lines 682-689, 852-856): real PrimeNG measures the **root/viewport element itself** (`elementViewChild`, i.e. the outer scrollable `<div>` — not the inner content wrapper) via `offsetHeight`/`offsetWidth` (`getHeight`/`getWidth`, which read `offsetHeight`/`offsetWidth`), not `clientHeight`. `contentHeight` used as `calculateNumItemsInViewport`'s `contentSize` argument is `elementViewChild.nativeElement.offsetHeight` (minus the content element's position offset, which is `0` for a simple top-anchored layout — the position-offset subtraction only matters for `both`/`horizontal` orientation, out of scope per Global Constraints). PrimeNG has **zero `ResizeObserver` usage anywhere in `scroller.ts`** — it re-measures on a `window` `resize`/`orientationchange` listener (`bindResizeListener`, lines 1142-1152), not per-element resize observation. This plan uses `ResizeObserver` anyway (a legitimate, more precise modern choice for a new component, not a strict provenance requirement — the spec itself does not mandate matching Prime's exact resize-invalidation mechanism, only the measured-value contract), but the **measured element and property** must match real upstream exactly: measure the same root `#element` div's `offsetHeight`, not an unlabeled `clientHeight` call that could silently target the wrong node.
 
 **Files:**
+
 - Consumes: `style` from `@ultimate/uix-styles/virtualscroller` (Task 1)
 - Produces: `first(): number` protected getter (window start index, driven by scroll position); real content-size measurement of the root viewport element's `offsetHeight` via `ElementRef`/`ResizeObserver` (replacing Task 2's `_contentSize = 0` stub with a real measured value, matching real PrimeNG's measured element/property exactly per the architecture note above); rendered item subset; conditional loader markup (`.u-scroller-loader`/`.u-scroller-loading-icon`, real PrimeNG loader class names per `scroller.ts`'s template, renamed `.p-*`→`.u-*`) shown while `loading()` is true — consumed by Task 4's `getLast` re-verification against a real, non-zero content size, by Task 5's `aria-busy`/lazy-load wiring, and by Task 14's cross-framework loader-token verification (this task, not Task 14, is where the loader markup that makes `virtualscroller.loader.mask.background`'s CSS selector actually present is implemented)
 
@@ -268,7 +284,10 @@ beforeEach(() => {
         // Synchronously invoke once, matching a real ResizeObserver's
         // initial-observation callback, so tests don't need to await a
         // real resize event loop.
-        resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        resizeObserverCallback?.(
+          [{ target } as ResizeObserverEntry],
+          this as unknown as ResizeObserver
+        );
       }
       disconnect() {}
     }
@@ -288,7 +307,10 @@ function mockViewportHeight(element: HTMLElement, height: number): void {
 // append to packages/ng/src/scroller/scroller.spec.ts
 it("measures the root viewport element's offsetHeight and computes numItemsInViewport from it, matching real PrimeNG's measured element/property", () => {
   const fixture = TestBed.createComponent(UScroller);
-  fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+  fixture.componentRef.setInput(
+    "items",
+    Array.from({ length: 1000 }, (_, i) => i)
+  );
   fixture.componentRef.setInput("itemSize", 20);
   fixture.detectChanges(); // triggers ngAfterViewInit, but offsetHeight is still 0 pre-mock
   const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
@@ -301,7 +323,10 @@ it("measures the root viewport element's offsetHeight and computes numItemsInVie
 
 it("renders only the windowed subset of items (first through last), not the full array, given a mocked 200px viewport", () => {
   const fixture = TestBed.createComponent(UScroller);
-  fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+  fixture.componentRef.setInput(
+    "items",
+    Array.from({ length: 1000 }, (_, i) => i)
+  );
   fixture.componentRef.setInput("itemSize", 20);
   fixture.detectChanges();
   const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
@@ -317,7 +342,10 @@ it("renders only the windowed subset of items (first through last), not the full
 
 it("advances first/last on scroll, given a mocked 200px viewport", () => {
   const fixture = TestBed.createComponent(UScroller);
-  fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+  fixture.componentRef.setInput(
+    "items",
+    Array.from({ length: 1000 }, (_, i) => i)
+  );
   fixture.componentRef.setInput("itemSize", 20);
   fixture.detectChanges();
   const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
@@ -495,7 +523,11 @@ export class UScroller extends UBaseComponent implements AfterViewInit, OnDestro
   }
 
   protected get last(): number {
-    const rawLast = calculateLast(this._first, this.numItemsInViewportComputed, this.resolvedNumToleratedItems);
+    const rawLast = calculateLast(
+      this._first,
+      this.numItemsInViewportComputed,
+      this.resolvedNumToleratedItems
+    );
     return this.getLast(rawLast);
   }
 
@@ -534,10 +566,12 @@ git commit -m "feat(ng): add UScroller content measurement, virtual item renderi
 ### Task 4: Angular — `scrollTo`/`scrollToIndex` public API, `disabled` passthrough mode
 
 **Files:**
+
 - Modify: `packages/ng/src/scroller/scroller.ts`
 - Test: `packages/ng/src/scroller/scroller.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `elementRef` (Task 3), `itemSize` input (Task 2)
 - Produces: public `scrollTo(options: ScrollToOptions): void`, `scrollToIndex(index: number, behavior?: ScrollBehavior): void` methods (matching spec §11's confirmed method names); `disabled = input(false)` input — consumed by Task 5's Vue/React parity check (naming only, not shared code) and by future Table composition
 
@@ -547,10 +581,14 @@ git commit -m "feat(ng): add UScroller content measurement, virtual item renderi
 // append to packages/ng/src/scroller/scroller.spec.ts
 it("scrollTo calls the native Element.scrollTo with the given options", () => {
   const fixture = TestBed.createComponent(UScroller);
-  fixture.componentRef.setInput("items", Array.from({ length: 100 }, (_, i) => i));
+  fixture.componentRef.setInput(
+    "items",
+    Array.from({ length: 100 }, (_, i) => i)
+  );
   fixture.componentRef.setInput("itemSize", 20);
   fixture.detectChanges();
-  const root = fixture.nativeElement.querySelector("[data-u-scroller-content]").parentElement as HTMLElement;
+  const root = fixture.nativeElement.querySelector("[data-u-scroller-content]")
+    .parentElement as HTMLElement;
   const scrollToSpy = vi.fn();
   root.scrollTo = scrollToSpy;
   fixture.componentInstance.scrollTo({ top: 100 });
@@ -559,10 +597,14 @@ it("scrollTo calls the native Element.scrollTo with the given options", () => {
 
 it("scrollToIndex computes the target position from index * itemSize", () => {
   const fixture = TestBed.createComponent(UScroller);
-  fixture.componentRef.setInput("items", Array.from({ length: 100 }, (_, i) => i));
+  fixture.componentRef.setInput(
+    "items",
+    Array.from({ length: 100 }, (_, i) => i)
+  );
   fixture.componentRef.setInput("itemSize", 20);
   fixture.detectChanges();
-  const root = fixture.nativeElement.querySelector("[data-u-scroller-content]").parentElement as HTMLElement;
+  const root = fixture.nativeElement.querySelector("[data-u-scroller-content]")
+    .parentElement as HTMLElement;
   const scrollToSpy = vi.fn();
   root.scrollTo = scrollToSpy;
   fixture.componentInstance.scrollToIndex(10);
@@ -571,7 +613,10 @@ it("scrollToIndex computes the target position from index * itemSize", () => {
 
 it("disabled mode renders all items with zero virtualization", () => {
   const fixture = TestBed.createComponent(UScroller);
-  fixture.componentRef.setInput("items", Array.from({ length: 50 }, (_, i) => i));
+  fixture.componentRef.setInput(
+    "items",
+    Array.from({ length: 50 }, (_, i) => i)
+  );
   fixture.componentRef.setInput("itemSize", 20);
   fixture.componentRef.setInput("disabled", true);
   fixture.detectChanges();
@@ -637,11 +682,13 @@ git commit -m "feat(ng): add UScroller scrollTo/scrollToIndex and disabled passt
 ### Task 5: Angular — lazy-load mechanics, `aria-busy`, `index.ts` export
 
 **Files:**
+
 - Modify: `packages/ng/src/scroller/scroller.ts`
 - Create: `packages/ng/src/scroller/index.ts`
 - Test: `packages/ng/src/scroller/scroller.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `first`/`last` (Task 3); `loading` input (Task 3, where it was introduced alongside loader markup — this task only adds the `aria-busy` attribute binding, it does not redeclare the input)
 - Produces: `lazy = input(false)` input; `onLazyLoad = output<{ first: number; last: number }>()` output, deferred via `Promise.resolve().then(...)` per spec §10; `[attr.aria-busy]` binding on the root; `UScroller` fully exported from `packages/ng/src/scroller/index.ts` — consumed by `packages/ng/src/index.ts` (Task 6)
 
@@ -653,7 +700,10 @@ Uses Task 3's `mockViewportHeight` helper and `beforeEach` `ResizeObserver` stub
 // append to packages/ng/src/scroller/scroller.spec.ts
 it("fires onLazyLoad with {first, last} after a scroll-triggered window change, when lazy is true", async () => {
   const fixture = TestBed.createComponent(UScroller);
-  fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+  fixture.componentRef.setInput(
+    "items",
+    Array.from({ length: 1000 }, (_, i) => i)
+  );
   fixture.componentRef.setInput("itemSize", 20);
   fixture.componentRef.setInput("lazy", true);
   fixture.detectChanges();
@@ -674,7 +724,10 @@ it("fires onLazyLoad with {first, last} after a scroll-triggered window change, 
 
 it("does not fire onLazyLoad when lazy is false", async () => {
   const fixture = TestBed.createComponent(UScroller);
-  fixture.componentRef.setInput("items", Array.from({ length: 1000 }, (_, i) => i));
+  fixture.componentRef.setInput(
+    "items",
+    Array.from({ length: 1000 }, (_, i) => i)
+  );
   fixture.componentRef.setInput("itemSize", 20);
   fixture.detectChanges();
   const root = fixture.nativeElement.querySelector("[class*=u-scroller]") as HTMLElement;
@@ -693,13 +746,17 @@ it("sets aria-busy=true on the root while loading is true", () => {
   const fixture = TestBed.createComponent(UScroller);
   fixture.componentRef.setInput("loading", true);
   fixture.detectChanges();
-  expect(fixture.nativeElement.querySelector("[class*=u-scroller]").getAttribute("aria-busy")).toBe("true");
+  expect(fixture.nativeElement.querySelector("[class*=u-scroller]").getAttribute("aria-busy")).toBe(
+    "true"
+  );
 });
 
 it("does not set aria-busy when loading is false or unset", () => {
   const fixture = TestBed.createComponent(UScroller);
   fixture.detectChanges();
-  expect(fixture.nativeElement.querySelector("[class*=u-scroller]").hasAttribute("aria-busy")).toBe(false);
+  expect(fixture.nativeElement.querySelector("[class*=u-scroller]").hasAttribute("aria-busy")).toBe(
+    false
+  );
 });
 ```
 
@@ -748,7 +805,7 @@ Update the template's root `<div>` to bind `aria-busy`:
   [attr.data-first]="first"
   [attr.aria-busy]="loading() ? 'true' : null"
   (scroll)="onScroll()"
->
+></div>
 ```
 
 ```typescript
@@ -773,11 +830,13 @@ git commit -m "feat(ng): add UScroller lazy-load mechanics and aria-busy"
 ### Task 6: Angular — wire into package barrel and secondary entry point
 
 **Files:**
+
 - Modify: `packages/ng/src/index.ts`
 - Modify: `packages/ng/package.json` (`description` field)
 - Test: `packages/ng/src/scroller/scroller.spec.ts` (extend — package/export smoke test)
 
 **Interfaces:**
+
 - Consumes: `UScroller` from `./scroller` (Task 5)
 - Produces: `UScroller` importable from `@ultimate/ng`'s root entry
 
@@ -827,10 +886,12 @@ git commit -m "feat(ng): export UScroller from package root"
 ### Task 7: Scaffold `UScroller` — controlled `items`/`itemSize`, internal derived-window `useState`, `calculateNumItemsInViewport`/`calculateLast`/`getLast` consumption
 
 **Files:**
+
 - Create: `packages/react/src/scroller/scroller.tsx`
 - Test: `packages/react/src/scroller/scroller.spec.tsx`
 
 **Interfaces:**
+
 - Consumes: `calculateNumItemsInViewport`, `calculateLast` from `@ultimate/uix-data`; `useComponentBase` from `@ultimate/react-core`
 - Produces: `UScrollerProps { items: unknown[]; itemSize: number; numToleratedItems?: number; disabled?: boolean; lazy?: boolean; loading?: boolean; onLazyLoad?: (event: { first: number; last: number }) => void }`; `UScroller: React.FC<UScrollerProps>` — root `<div>` carries `data-num-items-in-viewport`/`data-last` attributes reflecting the internally computed values (the same cross-framework DOM-observable-proxy convention Paginator's Task 7 established) — consumed by Task 8
 
@@ -849,7 +910,11 @@ import { UScroller } from "./scroller";
 describe("UScroller", () => {
   it("clamps last (getLast) against the live items array length, per spec §9", () => {
     const { container } = render(
-      <UScroller items={Array.from({ length: 5 }, (_, i) => i)} itemSize={20} numToleratedItems={50} />
+      <UScroller
+        items={Array.from({ length: 5 }, (_, i) => i)}
+        itemSize={20}
+        numToleratedItems={50}
+      />
     );
     expect(container.querySelector("[data-last]")?.getAttribute("data-last")).toBe("5");
   });
@@ -891,7 +956,11 @@ function getLast(items: unknown[], last = 0, isCols = false): number {
   return Math.min(liveLength, last);
 }
 
-export const UScroller: React.FC<UScrollerProps> = ({ items, itemSize, numToleratedItems: numToleratedItemsProp }) => {
+export const UScroller: React.FC<UScrollerProps> = ({
+  items,
+  itemSize,
+  numToleratedItems: numToleratedItemsProp,
+}) => {
   const { cx } = useComponentBase({ componentName: "scroller", styleModule: scrollerStyleModule });
 
   const [firstState] = React.useState(0);
@@ -908,7 +977,9 @@ export const UScroller: React.FC<UScrollerProps> = ({ items, itemSize, numTolera
   const rawLast = calculateLast(firstState, numItemsInViewport, numToleratedItems);
   const last = getLast(items, rawLast);
 
-  return <div className={cx("root")} data-num-items-in-viewport={numItemsInViewport} data-last={last} />;
+  return (
+    <div className={cx("root")} data-num-items-in-viewport={numItemsInViewport} data-last={last} />
+  );
 };
 ```
 
@@ -929,6 +1000,7 @@ git commit -m "feat(react): scaffold UScroller with uix-data virtualization cons
 ### Task 8: React — style module, content measurement, virtual item rendering, loader markup
 
 **Files:**
+
 - Modify: `packages/react/src/scroller/scroller.tsx`
 - Create: `packages/react/src/scroller/scroller-style.ts`
 - Test: `packages/react/src/scroller/scroller.spec.tsx` (extend)
@@ -936,6 +1008,7 @@ git commit -m "feat(react): scaffold UScroller with uix-data virtualization cons
 **Measurement architecture — verified against real PrimeReact source** (`components/lib/virtualscroller/VirtualScroller.js`, pinned commit `d0f574e39122668292fc7a740f081bae1b93b1e9`, lines 185-186): identical to Angular's real PrimeNG contract — `elementRef.current.offsetHeight` (the root/viewport element, minus content position offset), not `clientHeight`, and not the content wrapper. No `ResizeObserver` in real PrimeReact source either (same window-resize-listener pattern as Angular). This task uses `ResizeObserver` anyway (a legitimate modern choice, not a strict provenance requirement — see Task 3's identical note), but the measured element/property must match real upstream: `offsetHeight` on the root ref, mirroring Task 3's Angular fix exactly.
 
 **Interfaces:**
+
 - Consumes: `style` from `@ultimate/uix-styles/virtualscroller` (Task 1); `numToleratedItemsProp` handling (Task 7, already correctly implemented there — this task only replaces the `contentSizeState` measurement source, it does not reintroduce or duplicate the override logic)
 - Produces: real `useRef`-based content-size measurement of `offsetHeight` (`ResizeObserver`); `firstState` real internal `useState`, driven by scroll (replacing Task 7's stubbed `0`); rendered item subset; conditional loader markup (`.u-scroller-loader`/`.u-scroller-loading-icon`) shown while `loading` prop is true — consumed by Task 9's `scrollTo`/`scrollToIndex` and Task 14's cross-framework loader-token verification (this task, not Task 14, is where the loader markup that makes the loader CSS selector actually present is implemented)
 
@@ -957,7 +1030,10 @@ beforeEach(() => {
         resizeObserverCallback = cb;
       }
       observe(target: Element) {
-        resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        resizeObserverCallback?.(
+          [{ target } as ResizeObserverEntry],
+          this as unknown as ResizeObserver
+        );
       }
       disconnect() {}
     }
@@ -995,7 +1071,9 @@ it("measures the root viewport element's offsetHeight and computes numItemsInVie
 });
 
 it("renders only the windowed subset of items, not the full array, given a mocked 200px viewport", () => {
-  const { container } = render(<UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} />);
+  const { container } = render(
+    <UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} />
+  );
   const root = container.firstChild as HTMLElement;
   mockViewportHeight(root, 200);
   const observer = new ResizeObserver(() => {});
@@ -1067,7 +1145,13 @@ Rewrite `scroller.tsx`'s body:
 ```tsx
 // replace the UScroller function body in packages/react/src/scroller/scroller.tsx
 export const UScroller = React.forwardRef<HTMLDivElement, UScrollerProps>((props, forwardedRef) => {
-  const { items, itemSize, numToleratedItems: numToleratedItemsProp, disabled = false, loading } = props;
+  const {
+    items,
+    itemSize,
+    numToleratedItems: numToleratedItemsProp,
+    disabled = false,
+    loading,
+  } = props;
   const { cx } = useComponentBase({ componentName: "scroller", styleModule: scrollerStyleModule });
 
   const elementRef = React.useRef<HTMLDivElement>(null);
@@ -1125,7 +1209,11 @@ export const UScroller = React.forwardRef<HTMLDivElement, UScrollerProps>((props
           <span className="u-scroller-loading-icon" />
         </div>
       ) : null}
-      <div data-u-scroller-content className={cx("content") as string} style={{ height: items.length * itemSize }}>
+      <div
+        data-u-scroller-content
+        className={cx("content") as string}
+        style={{ height: items.length * itemSize }}
+      >
         {visibleItems.map(({ index, value }) => (
           <div
             key={index}
@@ -1160,10 +1248,12 @@ git commit -m "feat(react): add UScroller content measurement, virtual item rend
 ### Task 9: React — `scrollTo`/`scrollToIndex` public API (via `useImperativeHandle`), `disabled` passthrough mode, lazy-load, `aria-busy`
 
 **Files:**
+
 - Modify: `packages/react/src/scroller/scroller.tsx`
 - Test: `packages/react/src/scroller/scroller.spec.tsx` (extend)
 
 **Interfaces:**
+
 - Consumes: `elementRef` (Task 8)
 - Produces: `UScrollerHandle { scrollTo(options: ScrollToOptions): void; scrollToIndex(index: number, behavior?: ScrollBehavior): void }` exposed via `React.useImperativeHandle` (matching spec §4.2's confirmed public-methods mechanism); `onLazyLoad` firing, deferred via `Promise.resolve().then(...)`; `aria-busy` binding
 
@@ -1203,7 +1293,12 @@ it("sets aria-busy=true on the root while loading is true", () => {
 it("fires onLazyLoad with {first, last} after a scroll-triggered window change, when lazy is true, given a mocked 200px viewport", async () => {
   const onLazyLoad = vi.fn();
   const { container } = render(
-    <UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} lazy onLazyLoad={onLazyLoad} />
+    <UScroller
+      items={Array.from({ length: 1000 }, (_, i) => i)}
+      itemSize={20}
+      lazy
+      onLazyLoad={onLazyLoad}
+    />
   );
   const root = container.firstChild as HTMLElement;
   mockViewportHeight(root, 200);
@@ -1221,7 +1316,11 @@ it("fires onLazyLoad with {first, last} after a scroll-triggered window change, 
 it("does not fire onLazyLoad when lazy is false", async () => {
   const onLazyLoad = vi.fn();
   const { container } = render(
-    <UScroller items={Array.from({ length: 1000 }, (_, i) => i)} itemSize={20} onLazyLoad={onLazyLoad} />
+    <UScroller
+      items={Array.from({ length: 1000 }, (_, i) => i)}
+      itemSize={20}
+      onLazyLoad={onLazyLoad}
+    />
   );
   const root = container.firstChild as HTMLElement;
   Object.defineProperty(root, "scrollTop", { value: 2000, writable: true, configurable: true });
@@ -1245,84 +1344,111 @@ export interface UScrollerHandle {
   scrollToIndex: (index: number, behavior?: ScrollBehavior) => void;
 }
 
-export const UScroller = React.forwardRef<UScrollerHandle, UScrollerProps>((props, forwardedRef) => {
-  const { items, itemSize, numToleratedItems: numToleratedItemsProp, disabled = false, lazy = false, loading, onLazyLoad } = props;
-  const { cx } = useComponentBase({ componentName: "scroller", styleModule: scrollerStyleModule });
+export const UScroller = React.forwardRef<UScrollerHandle, UScrollerProps>(
+  (props, forwardedRef) => {
+    const {
+      items,
+      itemSize,
+      numToleratedItems: numToleratedItemsProp,
+      disabled = false,
+      lazy = false,
+      loading,
+      onLazyLoad,
+    } = props;
+    const { cx } = useComponentBase({
+      componentName: "scroller",
+      styleModule: scrollerStyleModule,
+    });
 
-  const elementRef = React.useRef<HTMLDivElement>(null);
+    const elementRef = React.useRef<HTMLDivElement>(null);
 
-  const [contentSizeState, setContentSizeState] = React.useState(0);
-  const [firstState, setFirstState] = React.useState(0);
+    const [contentSizeState, setContentSizeState] = React.useState(0);
+    const [firstState, setFirstState] = React.useState(0);
 
-  React.useImperativeHandle(forwardedRef, () => ({
-    scrollTo: (options: ScrollToOptions) => elementRef.current?.scrollTo(options),
-    scrollToIndex: (index: number, behavior: ScrollBehavior = "auto") =>
-      elementRef.current?.scrollTo({ top: index * itemSize, behavior }),
-  }));
+    React.useImperativeHandle(forwardedRef, () => ({
+      scrollTo: (options: ScrollToOptions) => elementRef.current?.scrollTo(options),
+      scrollToIndex: (index: number, behavior: ScrollBehavior = "auto") =>
+        elementRef.current?.scrollTo({ top: index * itemSize, behavior }),
+    }));
 
-  React.useEffect(() => {
-    const el = elementRef.current;
-    if (!el) return;
-    // Same offsetHeight-based measurement established in Task 8 — unchanged
-    // here, this task only adds scrollTo/lazy-load/aria-busy around it.
-    setContentSizeState(el.offsetHeight);
-    const observer = new ResizeObserver(() => setContentSizeState(el.offsetHeight));
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    React.useEffect(() => {
+      const el = elementRef.current;
+      if (!el) return;
+      // Same offsetHeight-based measurement established in Task 8 — unchanged
+      // here, this task only adds scrollTo/lazy-load/aria-busy around it.
+      setContentSizeState(el.offsetHeight);
+      const observer = new ResizeObserver(() => setContentSizeState(el.offsetHeight));
+      observer.observe(el);
+      return () => observer.disconnect();
+    }, []);
 
-  const numItemsInViewport = calculateNumItemsInViewport(contentSizeState, itemSize);
-  const numToleratedItems =
-    numToleratedItemsProp !== undefined ? numToleratedItemsProp : Math.ceil(numItemsInViewport / 2);
-  const rawLast = calculateLast(firstState, numItemsInViewport, numToleratedItems);
-  const last = getLast(items, rawLast);
+    const numItemsInViewport = calculateNumItemsInViewport(contentSizeState, itemSize);
+    const numToleratedItems =
+      numToleratedItemsProp !== undefined
+        ? numToleratedItemsProp
+        : Math.ceil(numItemsInViewport / 2);
+    const rawLast = calculateLast(firstState, numItemsInViewport, numToleratedItems);
+    const last = getLast(items, rawLast);
 
-  const visibleItems = disabled
-    ? items.map((value, index) => ({ index, value }))
-    : Array.from({ length: Math.max(0, last - firstState) }, (_, i) => ({
-        index: firstState + i,
-        value: items[firstState + i],
-      }));
+    const visibleItems = disabled
+      ? items.map((value, index) => ({ index, value }))
+      : Array.from({ length: Math.max(0, last - firstState) }, (_, i) => ({
+          index: firstState + i,
+          value: items[firstState + i],
+        }));
 
-  const handleScroll = () => {
-    const el = elementRef.current;
-    if (!el) return;
-    const newFirst = Math.floor(el.scrollTop / (itemSize || 1));
-    if (newFirst !== firstState) {
-      setFirstState(newFirst);
-      if (lazy && onLazyLoad) {
-        const first = newFirst;
-        const currentLast = getLast(items, calculateLast(first, numItemsInViewport, numToleratedItems));
-        Promise.resolve().then(() => onLazyLoad({ first, last: currentLast }));
+    const handleScroll = () => {
+      const el = elementRef.current;
+      if (!el) return;
+      const newFirst = Math.floor(el.scrollTop / (itemSize || 1));
+      if (newFirst !== firstState) {
+        setFirstState(newFirst);
+        if (lazy && onLazyLoad) {
+          const first = newFirst;
+          const currentLast = getLast(
+            items,
+            calculateLast(first, numItemsInViewport, numToleratedItems)
+          );
+          Promise.resolve().then(() => onLazyLoad({ first, last: currentLast }));
+        }
       }
-    }
-  };
+    };
 
-  return (
-    <div
-      ref={elementRef}
-      className={cx("root") as string}
-      data-num-items-in-viewport={numItemsInViewport}
-      data-last={last}
-      data-first={firstState}
-      aria-busy={loading ? "true" : undefined}
-      onScroll={handleScroll}
-    >
-      {loading ? (
-        <div className={cx("loader") as string}>
-          <span className="u-scroller-loading-icon" />
-        </div>
-      ) : null}
-      <div data-u-scroller-content className={cx("content") as string} style={{ height: items.length * itemSize }}>
-        {visibleItems.map(({ index, value }) => (
-          <div key={index} data-u-scroller-item className={cx("item") as string} style={{ top: index * itemSize }}>
-            {String(value)}
+    return (
+      <div
+        ref={elementRef}
+        className={cx("root") as string}
+        data-num-items-in-viewport={numItemsInViewport}
+        data-last={last}
+        data-first={firstState}
+        aria-busy={loading ? "true" : undefined}
+        onScroll={handleScroll}
+      >
+        {loading ? (
+          <div className={cx("loader") as string}>
+            <span className="u-scroller-loading-icon" />
           </div>
-        ))}
+        ) : null}
+        <div
+          data-u-scroller-content
+          className={cx("content") as string}
+          style={{ height: items.length * itemSize }}
+        >
+          {visibleItems.map(({ index, value }) => (
+            <div
+              key={index}
+              data-u-scroller-item
+              className={cx("item") as string}
+              style={{ top: index * itemSize }}
+            >
+              {String(value)}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 UScroller.displayName = "UScroller";
 ```
 
@@ -1343,6 +1469,7 @@ git commit -m "feat(react): add UScroller scrollTo/scrollToIndex, disabled mode,
 ### Task 10: React — package export, `index.ts`, root barrel, `tsup` entry
 
 **Files:**
+
 - Create: `packages/react/src/scroller/index.ts`
 - Modify: `packages/react/src/index.ts`
 - Modify: `packages/react/tsup.config.ts`
@@ -1350,6 +1477,7 @@ git commit -m "feat(react): add UScroller scrollTo/scrollToIndex, disabled mode,
 - Test: `packages/react/src/scroller/scroller.spec.tsx` (extend — package/export smoke test)
 
 **Interfaces:**
+
 - Consumes: `UScroller` from `./scroller` (Task 9)
 - Produces: `UScroller` importable from both `@ultimate/react` and `@ultimate/react/scroller`
 
@@ -1407,6 +1535,7 @@ git commit -m "feat(react): export UScroller from package root and dedicated sub
 ### Task 11: Scaffold `UScroller` — `createBaseComponent`, internal `first`/`last`/`numItemsInViewport` reactive data, `calculateNumItemsInViewport`/`calculateLast`/`getLast` consumption
 
 **Files:**
+
 - Create: `packages/vue/src/scroller/base-scroller.ts`
 - Create: `packages/vue/src/scroller/Scroller.vue`
 - Create: `packages/vue/src/scroller/scroller-style.ts`
@@ -1415,6 +1544,7 @@ git commit -m "feat(react): export UScroller from package root and dedicated sub
 (`packages/vue/src/scroller/index.ts` does not exist yet — package/subpath export wiring is Task 13's concern, matching Angular's Task 2/5 and React's Task 7/10 split, and Paginator's own Task 10/12 split. This task tests `Scroller.vue` directly, the same way Task 2 (Angular) and Task 7 (React) test their own component module directly before any barrel/index exists.)
 
 **Interfaces:**
+
 - Consumes: `calculateNumItemsInViewport`, `calculateLast` from `@ultimate/uix-data`; `createBaseComponent` from `@ultimate/vue-core`; `style` from `@ultimate/uix-styles/virtualscroller` (Task 1 — the real port, not a placeholder; this task only needs the `root`/`content` class slots, extended with `item` in Task 12)
 - Produces: `UScroller` SFC with props `items: { type: Array, default: () => [] }`, `itemSize: { type: Number, default: 0 }`, `numToleratedItems: { type: Number, default: null }`; internal `data()` fields `first`, `last`, `numItemsInViewport`, `contentSize` — consumed by Task 12
 
@@ -1446,7 +1576,9 @@ describe("UScroller", () => {
     expect(typeof (wrapper.vm as unknown as { first: number }).first).toBe("number");
     // Confirms these are NOT props: the component definition below has no
     // `first`/`last`/`numItemsInViewport` entries in its `props` object.
-    expect((wrapper.vm.$options as { props?: Record<string, unknown> }).props?.first).toBeUndefined();
+    expect(
+      (wrapper.vm.$options as { props?: Record<string, unknown> }).props?.first
+    ).toBeUndefined();
   });
 });
 ```
@@ -1530,7 +1662,9 @@ export default {
   },
   computed: {
     resolvedNumToleratedItems() {
-      return this.numToleratedItems !== null ? this.numToleratedItems : Math.ceil(this.numItemsInViewport / 2);
+      return this.numToleratedItems !== null
+        ? this.numToleratedItems
+        : Math.ceil(this.numItemsInViewport / 2);
     },
   },
   watch: {
@@ -1549,7 +1683,11 @@ export default {
   methods: {
     recompute() {
       this.numItemsInViewport = calculateNumItemsInViewport(this.contentSize, this.itemSize);
-      const rawLast = calculateLast(this.first, this.numItemsInViewport, this.resolvedNumToleratedItems);
+      const rawLast = calculateLast(
+        this.first,
+        this.numItemsInViewport,
+        this.resolvedNumToleratedItems
+      );
       this.last = this.getLast(rawLast);
     },
     getLast(last = 0, isCols = false) {
@@ -1579,6 +1717,7 @@ git commit -m "feat(vue): scaffold UScroller with uix-data virtualization consum
 ### Task 12: Vue — content measurement, virtual item rendering, loader markup, `scrollTo`/`scrollToIndex`, `disabled` passthrough mode
 
 **Files:**
+
 - Modify: `packages/vue/src/scroller/Scroller.vue`
 - Modify: `packages/vue/src/scroller/scroller-style.ts`
 - Test: `packages/vue/src/scroller/scroller.spec.ts` (extend)
@@ -1586,6 +1725,7 @@ git commit -m "feat(vue): scaffold UScroller with uix-data virtualization consum
 **Measurement architecture — verified against real PrimeVue source** (`packages/primevue/src/virtualscroller/VirtualScroller.vue`, pinned commit `66dde6788220fc9e6822342919d1ceb0e3460ece`, lines 288-289, 596-599): identical measured element/property contract to Angular/React — `this.element.offsetHeight` (the root/viewport element, minus content position offset), not `clientHeight`. Unlike Angular/React's real upstream (both use a `window` resize listener with no `ResizeObserver`), **PrimeVue's real source genuinely does use `ResizeObserver`** (`this.resizeObserver = new ResizeObserver(() => this.onResize()); this.resizeObserver.observe(this.element)`, `VirtualScroller.vue:596-599`), alongside a `window` `resize`/`orientationchange` listener — so this task's use of `ResizeObserver` is not just a legitimate modern choice here, it is a direct match to real upstream Vue's own mechanism, confirmed by this planning pass.
 
 **Interfaces:**
+
 - Consumes: `first`/`last`/`recompute()` (Task 11)
 - Produces: real `ResizeObserver`-based content-size measurement of `offsetHeight` (replacing Task 11's `contentSize: 0` stub, matching real PrimeVue's measured element/property exactly per the architecture note above); rendered virtual item subset; conditional loader markup (`.u-scroller-loader`/`.u-scroller-loading-icon`) shown while `loading` prop is true; `scrollTo(options)`, `scrollToIndex(index, behavior?)` public instance methods (matching spec §11's confirmed method names); `disabled: { type: Boolean, default: false }` prop — consumed by Task 13's lazy-load/`aria-busy` wiring and Task 14's cross-framework loader-token verification (this task, not Task 14, is where the loader markup that makes the loader CSS selector actually present is implemented)
 
@@ -1607,7 +1747,10 @@ beforeEach(() => {
         resizeObserverCallback = cb;
       }
       observe(target: Element) {
-        resizeObserverCallback?.([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver);
+        resizeObserverCallback?.(
+          [{ target } as ResizeObserverEntry],
+          this as unknown as ResizeObserver
+        );
       }
       disconnect() {}
     }
@@ -1781,7 +1924,9 @@ export default {
   },
   computed: {
     resolvedNumToleratedItems() {
-      return this.numToleratedItems !== null ? this.numToleratedItems : Math.ceil(this.numItemsInViewport / 2);
+      return this.numToleratedItems !== null
+        ? this.numToleratedItems
+        : Math.ceil(this.numItemsInViewport / 2);
     },
     visibleItems() {
       if (this.disabled) {
@@ -1827,7 +1972,11 @@ export default {
   methods: {
     recompute() {
       this.numItemsInViewport = calculateNumItemsInViewport(this.contentSize, this.itemSize);
-      const rawLast = calculateLast(this.first, this.numItemsInViewport, this.resolvedNumToleratedItems);
+      const rawLast = calculateLast(
+        this.first,
+        this.numItemsInViewport,
+        this.resolvedNumToleratedItems
+      );
       this.last = this.getLast(rawLast);
     },
     getLast(last = 0, isCols = false) {
@@ -1870,6 +2019,7 @@ git commit -m "feat(vue): add UScroller content measurement, virtual item render
 ### Task 13: Vue — lazy-load mechanics (`lazy-load` emit), `aria-busy`, package export
 
 **Files:**
+
 - Modify: `packages/vue/src/scroller/Scroller.vue`
 - Create: `packages/vue/src/scroller/index.ts`
 - Modify: `packages/vue/src/index.ts`
@@ -1878,6 +2028,7 @@ git commit -m "feat(vue): add UScroller content measurement, virtual item render
 - Test: `packages/vue/src/scroller/scroller.spec.ts` (extend)
 
 **Interfaces:**
+
 - Consumes: `onScroll`/`recompute` (Task 12); `loading` prop (Task 12, where it was introduced alongside loader markup — this task only adds the `aria-busy` attribute binding, it does not redeclare the prop)
 - Produces: `emits: ['lazy-load']` (matching spec §4.3's confirmed emit name — Scroller has no `v-model`-compatible emits at all, unlike Paginator, per spec §14/§20); `lazy: { type: Boolean, default: false }` prop; `aria-busy` binding on the root; `UScroller` exported from `packages/vue/src/scroller/index.ts` and the package root/subpath
 
@@ -1895,7 +2046,11 @@ it("emits lazy-load with {first, last} after a scroll-triggered window change, w
   const observer = new ResizeObserver(() => {});
   observer.observe(wrapper.element);
   await wrapper.vm.$nextTick();
-  Object.defineProperty(wrapper.element, "scrollTop", { value: 2000, writable: true, configurable: true });
+  Object.defineProperty(wrapper.element, "scrollTop", {
+    value: 2000,
+    writable: true,
+    configurable: true,
+  });
   await wrapper.trigger("scroll");
   await Promise.resolve(); // matches the real Promise.resolve().then() deferral, spec §10
   // first = floor(2000/20) = 100; numItemsInViewport=10, numToleratedItems=5,
@@ -1909,7 +2064,11 @@ it("does not emit lazy-load when lazy is false", async () => {
   const wrapper = mount(UScroller, {
     props: { items: Array.from({ length: 1000 }, (_, i) => i), itemSize: 20 },
   });
-  Object.defineProperty(wrapper.element, "scrollTop", { value: 2000, writable: true, configurable: true });
+  Object.defineProperty(wrapper.element, "scrollTop", {
+    value: 2000,
+    writable: true,
+    configurable: true,
+  });
   await wrapper.trigger("scroll");
   await Promise.resolve();
   expect(wrapper.emitted("lazy-load")).toBeFalsy();
@@ -1978,7 +2137,7 @@ Add `aria-busy` to the template's root `<div>`:
   :data-first="first"
   :aria-busy="loading ? 'true' : null"
   @scroll="onScroll"
->
+></div>
 ```
 
 ```typescript
@@ -2009,11 +2168,13 @@ git commit -m "feat(vue): add UScroller lazy-load, aria-busy, and export UScroll
 ### Task 14: Cross-framework theme-consistency test (matching `UButton`/`UPaginator`'s established pattern)
 
 **Files:**
+
 - Modify: `packages/themes/test/cross-framework-consistency.test.ts`
 - Modify: `packages/ng/src/scroller/scroller.spec.ts` (Angular's half — this convention proves the guarantee in two files, not one, per `UButton`'s and `UPaginator`'s own precedent)
 - Test: (this task's changes ARE the tests — no separate test file)
 
 **Interfaces:**
+
 - Consumes: `UScroller` from `@ultimate/react/scroller` and `@ultimate/vue/scroller` (built `dist/` output — see the existing build-freshness note at the top of `cross-framework-consistency.test.ts`); `dt` from `@ultimate/uix-styled`; `applyUltimateTheme` from `@ultimate/themes`; `TestBed` and `UScroller` from `./scroller` for the Angular half
 
 **What this test actually verifies** (confirmed by reading the real, already-existing `packages/themes/test/cross-framework-consistency.test.ts` in full — both `UButton`'s and, once Task 13 of the Paginator plan lands, `UPaginator`'s versions — before writing this task): style/design-**token resolution** consistency — that the same `dt(...)` token call resolves to the identical `var(--u-...)` CSS text regardless of which framework's `*-core` `StyleSheet` registered it. It is **not** a component-runtime-registration test. **Important divergence from `UPaginator`'s version of this test**: the real vendored `virtualscroller` style tokens (`.vendor-extracted/uix-styles-components/src/virtualscroller/index.ts`, read in full while writing this plan) contain **no root-level token** analogous to `paginator.background` — the only two real tokens are `virtualscroller.loader.mask.background` and `virtualscroller.loader.icon.size`, both scoped to the **loading state only** (`.p-virtualscroller-loader`/`.p-virtualscroller-loading-icon` selectors). This task's assertions therefore use `virtualscroller.loader.mask.background` as the proof token, and — since that token only appears in rendered CSS when the loader is actually shown — **both frameworks' test renders must pass `loading: true`/`loading` to make the loader markup (and its CSS) present**, unlike `UButton`'s/`UPaginator`'s tests, which don't need a special prop to exercise their root-level tokens. This is a real, source-confirmed difference in this component's own token surface, not an invented complication.
@@ -2064,8 +2225,8 @@ describe("React and Vue's real UScroller renders resolve the same virtualscrolle
     // the content match alone is only a sanity check that the found element
     // is really scroller CSS.
     const vueStyleEl = document.head.querySelector('style[data-u-style="scroller"]');
-    const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find((el) =>
-      (el.textContent ?? "").includes(".u-scroller-loader {")
+    const styleEl = Array.from(document.head.querySelectorAll("style:not([data-u-style])")).find(
+      (el) => (el.textContent ?? "").includes(".u-scroller-loader {")
     );
     expect(styleEl).not.toBeUndefined();
     expect(styleEl).not.toBe(vueStyleEl);
@@ -2127,10 +2288,12 @@ git commit -m "test(themes): verify UScroller cross-framework token consistency"
 ### Task 15: Provenance manifest entries
 
 **Files:**
+
 - Create/Modify: `docs/architecture/provenance/scroller.json` (new file, following the existing `originalPath`/`ultimateDestination` schema used by Phase 1/2 components and by `docs/architecture/provenance/paginator.json` — read that file, or an earlier component's, before writing this one, to match the exact schema shape)
 - Modify: `docs/architecture/PROVENANCE.md` (new package-level entry for Scroller, following the existing template)
 
 **Interfaces:**
+
 - Consumes: none (documentation only)
 - Produces: provenance coverage for every `.ts`/`.tsx`/`.vue` file created under `packages/{ng,react,vue}/src/scroller/` and `packages/uix-styles/src/virtualscroller/` across Tasks 1–14, satisfying `provenance:validate`'s existing per-file-manifest-entry requirement
 
@@ -2146,6 +2309,7 @@ The validator's failure output should list every file under `packages/{ng,react,
 - [ ] **Step 3: Write the provenance entries**
 
 Read `docs/architecture/provenance/paginator.json` (or `button.json`) first to copy its exact schema shape, then create `docs/architecture/provenance/scroller.json` with one entry per real source file created in Tasks 1–14 (`packages/uix-styles/src/virtualscroller/index.ts`; `packages/ng/src/scroller/{scroller.ts,scroller-style.ts,index.ts}`; `packages/react/src/scroller/{scroller.tsx,scroller-style.ts,index.ts}`; `packages/vue/src/scroller/{Scroller.vue,base-scroller.ts,scroller-style.ts,index.ts}`), each citing:
+
 - `originalPath`: the real pinned Prime source file this Ultimate file was informed by (`packages/primeng/src/scroller/scroller.ts` for the Angular files, `components/lib/virtualscroller/VirtualScroller.js` for React, `packages/primevue/src/virtualscroller/VirtualScroller.vue` for Vue, `.vendor-extracted/uix-styles-components/src/virtualscroller/index.ts` for the style-token file — matching the pinned revisions already cited throughout the spec and both research reports)
 - `ultimateDestination`: the real file path this task created
 - License/classification fields matching the existing schema's field names exactly (copy from `paginator.json`, do not invent new field names)

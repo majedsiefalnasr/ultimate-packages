@@ -31,12 +31,18 @@ const css = /*css*/ `
 `;
 
 const classes = {
-  root: (params: Record<string, unknown> = {}) => ["u-dock u-component", `u-dock-${params.position ?? "bottom"}`],
+  root: (params: Record<string, unknown> = {}) => [
+    "u-dock u-component",
+    `u-dock-${params.position ?? "bottom"}`,
+  ],
   listContainer: "u-dock-list-container",
   list: "u-dock-list",
   item: (params: Record<string, unknown> = {}) => [
     "u-dock-item",
-    { "u-dock-item-active": Boolean(params.active), "u-dock-item-disabled": Boolean(params.disabled) },
+    {
+      "u-dock-item-active": Boolean(params.active),
+      "u-dock-item-disabled": Boolean(params.disabled),
+    },
   ],
   itemLink: "u-dock-item-link",
   itemIcon: "u-dock-item-icon",

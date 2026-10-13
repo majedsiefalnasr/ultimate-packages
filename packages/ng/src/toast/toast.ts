@@ -51,7 +51,12 @@ let nextId = 0;
   selector: "u-toast",
   template: `
     @for (message of messages(); track message.id) {
-      <div [class]="cx('message', { severity: message.severity })" role="alert" aria-live="assertive" aria-atomic="true">
+      <div
+        [class]="cx('message', { severity: message.severity })"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
         <div [class]="cx('messageContent')">
           <div [class]="cx('messageText')">
             @if (message.summary) {
@@ -91,7 +96,13 @@ export class UToast extends UBaseComponent {
   key = input<string>();
   /** Position of the toast in the viewport. */
   position = input<
-    "top-right" | "top-left" | "bottom-right" | "bottom-left" | "top-center" | "bottom-center" | "center"
+    | "top-right"
+    | "top-left"
+    | "bottom-right"
+    | "bottom-left"
+    | "top-center"
+    | "bottom-center"
+    | "center"
   >("top-right");
   /** The default time to display messages for, in milliseconds. */
   life = input(3000, { transform: numberAttribute });

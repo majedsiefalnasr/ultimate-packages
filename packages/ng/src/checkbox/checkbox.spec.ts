@@ -89,7 +89,8 @@ describe("UCheckbox", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox").componentInstance as UCheckbox;
+    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox")
+      .componentInstance as UCheckbox;
 
     fixture.componentInstance.control.setValue(true);
     fixture.detectChanges();
@@ -107,7 +108,8 @@ describe("UCheckbox", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox").componentInstance as UCheckbox;
+    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox")
+      .componentInstance as UCheckbox;
 
     expect(checkbox.$filled()).toBe(false);
 
@@ -137,7 +139,8 @@ describe("UCheckbox", () => {
     }
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox").componentInstance as UCheckbox;
+    const checkbox = fixture.debugElement.query((de) => de.name === "u-checkbox")
+      .componentInstance as UCheckbox;
     const spy = vi.spyOn(checkbox, "writeControlValue");
 
     fixture.componentInstance.control.setValue(true);

@@ -34,58 +34,63 @@ export interface UTieredMenuHandle {
  * Real PrimeReact's `TieredMenu` (no import of `../menu`) is a standalone,
  * independent component — it does NOT compose `Menu`.
  */
-export const UTieredMenu = React.forwardRef<UTieredMenuHandle, UTieredMenuProps>(function UTieredMenu(
-  { model = [], popup = false, onItemSelect, onShow, onHide, className },
-  ref
-) {
-  const { cx } = useComponentBase({ componentName: "tiered-menu", styleModule: tieredMenuStyleModule });
-  const [visible, setVisible] = React.useState(!popup);
-
-  const hide = React.useCallback(() => {
-    setVisible((current) => {
-      if (!current) return current;
-      onHide?.();
-      return false;
+export const UTieredMenu = React.forwardRef<UTieredMenuHandle, UTieredMenuProps>(
+  function UTieredMenu(
+    { model = [], popup = false, onItemSelect, onShow, onHide, className },
+    ref
+  ) {
+    const { cx } = useComponentBase({
+      componentName: "tiered-menu",
+      styleModule: tieredMenuStyleModule,
     });
-  }, [onHide]);
+    const [visible, setVisible] = React.useState(!popup);
 
-  const show = React.useCallback(() => {
-    setVisible((current) => {
-      if (current) return current;
-      onShow?.();
-      return true;
-    });
-  }, [onShow]);
+    const hide = React.useCallback(() => {
+      setVisible((current) => {
+        if (!current) return current;
+        onHide?.();
+        return false;
+      });
+    }, [onHide]);
 
-  React.useImperativeHandle(
-    ref,
-    () => ({
-      toggle: () => (visible ? hide() : show()),
-      show,
-      hide,
-    }),
-    [visible, show, hide]
-  );
+    const show = React.useCallback(() => {
+      setVisible((current) => {
+        if (current) return current;
+        onShow?.();
+        return true;
+      });
+    }, [onShow]);
 
-  React.useEffect(() => {
-    if (!popup || !visible) return;
-    const onEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") hide();
+    React.useImperativeHandle(
+      ref,
+      () => ({
+        toggle: () => (visible ? hide() : show()),
+        show,
+        hide,
+      }),
+      [visible, show, hide]
+    );
+
+    React.useEffect(() => {
+      if (!popup || !visible) return;
+      const onEscape = (event: KeyboardEvent) => {
+        if (event.key === "Escape") hide();
+      };
+      document.addEventListener("keydown", onEscape);
+      return () => document.removeEventListener("keydown", onEscape);
+    }, [popup, visible, hide]);
+
+    const handleItemSelect = (event: { originalEvent: React.SyntheticEvent; item: UMenuItem }) => {
+      onItemSelect?.(event);
+      if (popup) hide();
     };
-    document.addEventListener("keydown", onEscape);
-    return () => document.removeEventListener("keydown", onEscape);
-  }, [popup, visible, hide]);
 
-  const handleItemSelect = (event: { originalEvent: React.SyntheticEvent; item: UMenuItem }) => {
-    onItemSelect?.(event);
-    if (popup) hide();
-  };
+    if (popup && !visible) return null;
 
-  if (popup && !visible) return null;
-
-  return (
-    <div className={[cx("root", { popup }), className].filter(Boolean).join(" ")}>
-      <UTieredMenuSub items={model} root cx={cx} onItemSelect={handleItemSelect} />
-    </div>
-  );
-});
+    return (
+      <div className={[cx("root", { popup }), className].filter(Boolean).join(" ")}>
+        <UTieredMenuSub items={model} root cx={cx} onItemSelect={handleItemSelect} />
+      </div>
+    );
+  }
+);

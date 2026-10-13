@@ -47,7 +47,11 @@ describe("UAutoComplete", () => {
     @Component({
       standalone: true,
       imports: [UAutoComplete],
-      template: `<u-autocomplete [delay]="1" [suggestions]="suggestions" (completeMethod)="load()" />`,
+      template: `<u-autocomplete
+        [delay]="1"
+        [suggestions]="suggestions"
+        (completeMethod)="load()"
+      />`,
     })
     class HostComponent {
       suggestions: string[] = [];
@@ -74,7 +78,11 @@ describe("UAutoComplete", () => {
     @Component({
       standalone: true,
       imports: [UAutoComplete],
-      template: `<u-autocomplete [delay]="1" [suggestions]="['Apple', 'Banana']" (onSelect)="onSelect($event)" />`,
+      template: `<u-autocomplete
+        [delay]="1"
+        [suggestions]="['Apple', 'Banana']"
+        (onSelect)="onSelect($event)"
+      />`,
     })
     class HostComponent {
       onSelect = vi.fn();

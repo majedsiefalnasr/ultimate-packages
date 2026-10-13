@@ -1,4 +1,13 @@
-import { Directive, ElementRef, Renderer2, inject, input, numberAttribute, booleanAttribute, DestroyRef } from "@angular/core";
+import {
+  Directive,
+  ElementRef,
+  Renderer2,
+  inject,
+  input,
+  numberAttribute,
+  booleanAttribute,
+  DestroyRef,
+} from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { PLATFORM_ID } from "@angular/core";
 
@@ -81,7 +90,11 @@ export class UAnimateOnScroll {
     this.observer = new IntersectionObserver(([entry]) => {
       if (this.isObserverActive) {
         if (entry.boundingClientRect.top > 0) {
-          entry.isIntersecting ? this.enter() : this.leave();
+          if (entry.isIntersecting) {
+            this.enter();
+          } else {
+            this.leave();
+          }
         }
       } else if (entry.isIntersecting) {
         this.enter();

@@ -76,7 +76,12 @@ interface Hsb {
             (mousedown)="onColorMouseDown($event)"
           >
             <div [class]="cx('colorBackground')">
-              <div #colorHandle [class]="cx('colorHandle')" [style.left.px]="colorHandleLeft()" [style.top.px]="colorHandleTop()"></div>
+              <div
+                #colorHandle
+                [class]="cx('colorHandle')"
+                [style.left.px]="colorHandleLeft()"
+                [style.top.px]="colorHandleTop()"
+              ></div>
             </div>
           </div>
           <div #hue [class]="cx('hue')" (mousedown)="onHueMouseDown($event)">
@@ -124,8 +129,12 @@ export class UColorPicker extends UBaseEditableHolder {
     return "#" + this.hsbToHex(this.validateHsb({ h: hsb.h, s: 100, b: 100 }));
   });
   protected readonly colorHandleLeft = computed(() => Math.floor((150 * this.hsbValue().s) / 100));
-  protected readonly colorHandleTop = computed(() => Math.floor((150 * (100 - this.hsbValue().b)) / 100));
-  protected readonly hueHandleTop = computed(() => Math.floor(150 - (150 * this.hsbValue().h) / 360));
+  protected readonly colorHandleTop = computed(() =>
+    Math.floor((150 * (100 - this.hsbValue().b)) / 100)
+  );
+  protected readonly hueHandleTop = computed(() =>
+    Math.floor(150 - (150 * this.hsbValue().h) / 360)
+  );
 
   protected previewClassesParams() {
     return { disabled: this.$disabled() };
@@ -154,7 +163,11 @@ export class UColorPicker extends UBaseEditableHolder {
   }
 
   private togglePanel(): void {
-    this.overlayVisible() ? this.hide() : this.show();
+    if (this.overlayVisible()) {
+      this.hide();
+    } else {
+      this.show();
+    }
   }
 
   private show(): void {
@@ -220,8 +233,12 @@ export class UColorPicker extends UBaseEditableHolder {
   private pickColor(event: MouseEvent): void {
     if (!this.colorSelectorEl) return;
     const rect = this.colorSelectorEl.getBoundingClientRect();
-    const saturation = Math.floor((100 * Math.max(0, Math.min(150, event.clientX - rect.left))) / 150);
-    const brightness = Math.floor((100 * (150 - Math.max(0, Math.min(150, event.clientY - rect.top)))) / 150);
+    const saturation = Math.floor(
+      (100 * Math.max(0, Math.min(150, event.clientX - rect.left))) / 150
+    );
+    const brightness = Math.floor(
+      (100 * (150 - Math.max(0, Math.min(150, event.clientY - rect.top)))) / 150
+    );
     const current = this.hsbValue();
     this.hsbValue.set(this.validateHsb({ h: current.h, s: saturation, b: brightness }));
     this.updateModel(event);
@@ -230,7 +247,9 @@ export class UColorPicker extends UBaseEditableHolder {
   private pickHue(event: MouseEvent): void {
     if (!this.hueEl) return;
     const rect = this.hueEl.getBoundingClientRect();
-    const hue = Math.floor((360 * (150 - Math.max(0, Math.min(150, event.clientY - rect.top)))) / 150);
+    const hue = Math.floor(
+      (360 * (150 - Math.max(0, Math.min(150, event.clientY - rect.top)))) / 150
+    );
     const current = this.hsbValue();
     this.hsbValue.set(this.validateHsb({ h: hue, s: current.s, b: current.b }));
     this.updateModel(event);
