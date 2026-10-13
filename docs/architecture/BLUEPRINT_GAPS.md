@@ -1667,21 +1667,22 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-092 — Existing lint and format debt fails the CI Lint and Format steps
 
-- **Status:** OPEN (registered 2026-10-07, CI-health registration; inherited code debt)
+- **Status:** RESOLVED (2026-10-13; [PR #9](https://github.com/majedsiefalnasr/ultimate-packages/pull/9) merged to `main` at `55a76296b58a91ffd7f349c3c343b94ae0118e5d`; [closeout record](research/2026-10-13-gap-092-lint-format-hooks-closeout.md)).
 - **Type:** CI, Code quality
 - **Blocking level:** LOW
-- **Current evidence:**
+- **Registration evidence:**
   - Lint: `✖ 60 problems (59 errors, 1 warning)` at `3d0203d` and at `4b9bfaa`. The errors are spread across existing files in `component-schema`, `mcp`, `ng` and `react`, for example `packages/ng/src/tiered-menu/tiered-menu.ts:73` (`no-unused-expressions`, from `494ff1ec`).
   - Format: Prettier reports 490 files (495 at `3d0203d`).
   - Both steps have failed since the first remote CI run (2026-10-04).
 - **Expected state:** Lint and Prettier pass, or the debt is explicitly baselined.
 - **Why it matters:** The steps are red on every push, so new violations are not visible.
-- **What it blocks:** Green Lint and Format steps.
+- **What it blocks:** Nothing for GAP-092 — the full Lint and Format check steps pass. C01 remains incomplete because other CI steps fail.
 - **Dependencies:** None.
 - **Framework scope:** Repository-wide.
-- **Existing reusable infrastructure:** The existing ESLint and Prettier configuration.
-- **Recommended resolution direction:** Directional only: a dedicated clean-up or baseline decision, separate from feature work.
-- **Source/evidence:** CI runs 37188652979, 37456600014, 37590590099 (`ci` job).
+- **Existing reusable infrastructure:** The existing ESLint and Prettier configuration, with Husky and lint-staged local checks installed by PR #9.
+- **Resolution and verification:** PR #9 repaired the measured lint/format debt without a broad ignore or CI exception, set ESLint to fail on warnings, preserved format-sensitive template/SVG text behavior, and added read-only staged `pre-commit` plus full build/typecheck/test `pre-push` hooks. [PR CI 38452047819](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38452047819) at approved head `de68356d98dc53de0a3cfdd67a866f180101d844` passed Lint, Format check, Build, Typecheck and Test. Its failed coverage, provenance and Angular/Vue browser steps match [pre-merge `main` CI 38447890724](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38447890724) at `a16719d`; they are separately tracked and are not excepted. Final Review was approved before the merge. See the closeout record for local hook probes and post-merge evidence.
+- **Recommended resolution direction:** Implemented under the approved [Spec](../superpowers/specs/2026-10-13-code-quality-local-developer-checks-design.md) and [Plan](../superpowers/plans/2026-10-13-code-quality-local-developer-checks.md), including Amendments A1–A3. No further GAP-092 implementation is pending.
+- **Source/evidence:** Historical CI runs 37188652979, 37456600014, 37590590099; approved Spec/Plan; PR #9 and its CI run 38452047819; merge `55a76296`; [closeout record](research/2026-10-13-gap-092-lint-format-hooks-closeout.md).
 - **Architectural decision required:** No.
 
 #### GAP-093 — Provenance script self-tests need vendor tarballs that CI does not have
