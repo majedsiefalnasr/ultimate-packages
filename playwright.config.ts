@@ -12,8 +12,8 @@ interface TrackESsrServer {
 
 /**
  * Track E SSR/hydration `webServer` entries, keyed by framework, kept
- * separate from Track A's own 3 Storybook `webServer` entries above (which
- * remain declared unconditionally, exactly as before).
+ * separate from Track A's three Storybook `webServer` entries, which are
+ * included only when `TRACK_E_SSR_FRAMEWORK` is unset.
  *
  * The `ng` key (the Angular SSR harness, `apps/playground-angular`, port
  * 6011), `react` key (the React SSR harness, `apps/playground-react`, port
@@ -232,27 +232,32 @@ export default defineConfig({
    * and 3 -- no Angular-style CLI restriction applies to either).
    */
   webServer: [
-    {
-      name: "ng-storybook",
-      command: "pnpm --filter @ultimate/ng exec ng run ng:storybook --port=6001 --compodoc=false",
-      url: "http://localhost:6001",
-      reuseExistingServer: !process.env.CI,
-      timeout: 120_000,
-    },
-    {
-      name: "react-storybook",
-      command: "pnpm --filter @ultimate/react exec storybook dev -p 6002",
-      url: "http://localhost:6002",
-      reuseExistingServer: !process.env.CI,
-      timeout: 120_000,
-    },
-    {
-      name: "vue-storybook",
-      command: "pnpm --filter @ultimate/vue exec storybook dev -p 6003",
-      url: "http://localhost:6003",
-      reuseExistingServer: !process.env.CI,
-      timeout: 120_000,
-    },
+    ...(!trackESsrFrameworkFilter
+      ? [
+          {
+            name: "ng-storybook",
+            command:
+              "pnpm --filter @ultimate/ng exec ng run ng:storybook --port=6001 --compodoc=false",
+            url: "http://localhost:6001",
+            reuseExistingServer: !process.env.CI,
+            timeout: 120_000,
+          },
+          {
+            name: "react-storybook",
+            command: "pnpm --filter @ultimate/react exec storybook dev -p 6002",
+            url: "http://localhost:6002",
+            reuseExistingServer: !process.env.CI,
+            timeout: 120_000,
+          },
+          {
+            name: "vue-storybook",
+            command: "pnpm --filter @ultimate/vue exec storybook dev -p 6003",
+            url: "http://localhost:6003",
+            reuseExistingServer: !process.env.CI,
+            timeout: 120_000,
+          },
+        ]
+      : []),
     ...trackESsrWebServers,
   ],
 });
