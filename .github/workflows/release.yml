@@ -7,91 +7,226 @@ on:
 permissions: {}
 
 jobs:
-  select-mode:
-    name: Select mode
+  ci-gate:
+    name: Verify same-commit CI
     runs-on: ubuntu-latest
-    outputs:
-      mode: ${{ steps.select-mode.outputs.mode }}
     permissions:
       contents: read
+      actions: read
+    outputs:
+      verified_sha: ${{ steps.ci.outputs.verified_sha }}
+      ci_run_id: ${{ steps.ci.outputs.ci_run_id }}
+      ci_job_id: ${{ steps.ci.outputs.ci_job_id }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Wait for successful CI on this main commit
+        id: ci
+        uses: actions/github-script@v7
         with:
-          node-version: "24.15.0"
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Select mode
-        id: select-mode
-        uses: changesets/action/select-mode@v2.1.2
+          script: |
+            const sha = context.sha;
+            if (context.eventName !== 'push' || context.ref !== 'refs/heads/main' || context.payload.after !== sha) {
+              throw new Error('Release requires a push to main at the exact event SHA');
+            }
+            const { owner, repo } = context.repo;
+            const deadline = Date.now() + 60 * 60 * 1000;
+            while (Date.now() < deadline) {
+              const runs = await github.paginate(github.rest.actions.listWorkflowRunsForWorkflow, {
+                owner, repo, workflow_id: 'ci.yml', branch: 'main', event: 'push',
+                head_sha: sha, per_page: 100,
+              });
+              const matches = runs.filter(run =>
+                run.head_sha === sha && run.head_branch === 'main' && run.event === 'push'
+              );
+              if (matches.length > 1) throw new Error('Ambiguous CI runs for the event SHA');
+              if (matches.length === 1) {
+                const run = matches[0];
+                if (!Number.isInteger(run.id) || !Number.isInteger(run.run_attempt) || run.run_attempt < 1) {
+                  throw new Error('Missing CI run or attempt identity');
+                }
+                if (run.status === 'completed') {
+                  if (!['success', 'failure'].includes(run.conclusion)) {
+                    throw new Error('CI run ' + run.id + ' concluded ' + run.conclusion);
+                  }
+                  const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRunAttempt, {
+                    owner, repo, run_id: run.id, attempt_number: run.run_attempt, per_page: 100,
+                  });
+                  const ciJobs = jobs.filter(job => job.name === 'ci');
+                  if (ciJobs.length !== 1 || ciJobs[0].head_sha !== sha ||
+                      ciJobs[0].status !== 'completed' || ciJobs[0].conclusion !== 'success' ||
+                      !Number.isInteger(ciJobs[0].id)) {
+                    throw new Error('CI job for run ' + run.id + ' is missing, ambiguous, or unsuccessful');
+                  }
+                  core.setOutput('verified_sha', sha);
+                  core.setOutput('ci_run_id', String(run.id));
+                  core.setOutput('ci_job_id', String(ciJobs[0].id));
+                  core.info('Verified CI run ' + run.id + ', attempt ' + run.run_attempt + ', job ' + ciJobs[0].id + ' for ' + sha);
+                  return;
+                }
+                if (!['queued', 'in_progress', 'pending', 'requested', 'waiting'].includes(run.status)) {
+                  throw new Error('Unexpected CI run status: ' + run.status);
+                }
+              }
+              await new Promise(resolve => setTimeout(resolve, 30 * 1000));
+            }
+            throw new Error('CI run for ' + sha + ' did not succeed within 60 minutes');
 
   version:
     name: Version
-    needs: select-mode
-    if: needs.select-mode.outputs.mode == 'version'
+    needs: ci-gate
+    if: needs['ci-gate'].outputs.verified_sha == github.sha
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
+    outputs:
+      hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
     steps:
-      - name: Checkout
+      - name: Checkout event commit
         uses: actions/checkout@v4
-
+        with:
+          ref: ${{ github.sha }}
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24.15.0"
           cache: "pnpm"
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Create or update release pull request
-        uses: changesets/action/version@v2.1.2
+      - name: Create or update Version Packages PR
+        id: changesets
+        uses: changesets/action@v1
         with:
-          script: pnpm run changeset:version
+          version: pnpm run changeset:version
+
+  publish-eligibility:
+    name: Verify reviewed release PR merge
+    needs: [ci-gate, version]
+    if: needs['ci-gate'].outputs.verified_sha == github.sha && needs.version.outputs.hasChangesets == 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      eligible: ${{ steps.pr.outputs.eligible }}
+      merge_sha: ${{ steps.pr.outputs.merge_sha }}
+    steps:
+      - name: Verify Version Packages PR and independent review
+        id: pr
+        uses: actions/github-script@v7
+        env:
+          VERIFIED_SHA: ${{ needs['ci-gate'].outputs.verified_sha }}
+          CI_RUN_ID: ${{ needs['ci-gate'].outputs.ci_run_id }}
+          CI_JOB_ID: ${{ needs['ci-gate'].outputs.ci_job_id }}
+        with:
+          script: |
+            core.setOutput('eligible', 'false');
+            const sha = context.sha;
+            if (context.eventName !== 'push' || context.ref !== 'refs/heads/main' ||
+                context.payload.after !== sha || process.env.VERIFIED_SHA !== sha ||
+                !/^\d+$/.test(process.env.CI_RUN_ID || '') || !/^\d+$/.test(process.env.CI_JOB_ID || '')) {
+              throw new Error('Missing exact-SHA push or successful CI identity');
+            }
+            const { owner, repo } = context.repo;
+            const repository = (owner + '/' + repo).toLowerCase();
+            const tip = await github.rest.repos.getBranch({ owner, repo, branch: 'main' });
+            if (tip.data.commit?.sha !== sha) throw new Error('main advanced before PR eligibility');
+            const associated = await github.paginate(github.rest.repos.listPullRequestsAssociatedWithCommit, {
+              owner, repo, commit_sha: sha, per_page: 100,
+            });
+            const matches = associated.filter(pr =>
+              pr.base?.repo?.full_name?.toLowerCase() === repository &&
+              pr.head?.repo?.full_name?.toLowerCase() === repository &&
+              pr.base?.ref === 'main' && pr.head?.ref === 'changeset-release/main' &&
+              pr.title === 'Version Packages' && pr.state === 'closed' &&
+              pr.merged_at && pr.merge_commit_sha === sha
+            );
+            if (matches.length !== 1) throw new Error('No unique merged Version Packages PR for this SHA');
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: matches[0].number });
+            if (pr.number !== matches[0].number || pr.base?.repo?.full_name?.toLowerCase() !== repository ||
+                pr.head?.repo?.full_name?.toLowerCase() !== repository || pr.base?.ref !== 'main' ||
+                pr.head?.ref !== 'changeset-release/main' || pr.title !== 'Version Packages' ||
+                pr.state !== 'closed' || !pr.merged_at || pr.merge_commit_sha !== sha ||
+                !pr.user?.login || !/^[0-9a-f]{40}$/.test(pr.head?.sha || '') ||
+                pr.merged_by?.type !== 'User' || !pr.merged_by?.login) {
+              throw new Error('Release PR identity or merge evidence changed');
+            }
+            const mergedAt = Date.parse(pr.merged_at);
+            if (!Number.isFinite(mergedAt)) throw new Error('Missing release PR merge time');
+            const reviews = await github.paginate(github.rest.pulls.listReviews, {
+              owner, repo, pull_number: pr.number, per_page: 100,
+            });
+            const latest = new Map();
+            for (const review of reviews) {
+              if (review.state === 'PENDING' && !review.submitted_at) continue;
+              if (!review.user?.login || !review.state || !review.submitted_at ||
+                  !Number.isFinite(Date.parse(review.submitted_at)) || !Number.isInteger(review.id)) {
+                throw new Error('Incomplete PR review evidence');
+              }
+              const key = review.user.login.toLowerCase();
+              const previous = latest.get(key);
+              if (!previous || Date.parse(review.submitted_at) > Date.parse(previous.submitted_at) ||
+                  (review.submitted_at === previous.submitted_at && review.id > previous.id)) {
+                latest.set(key, review);
+              }
+            }
+            const approved = [...latest.values()].find(review =>
+              review.state === 'APPROVED' && review.commit_id === pr.head.sha &&
+              review.user.type === 'User' &&
+              review.user.login.toLowerCase() !== pr.user.login.toLowerCase() &&
+              Date.parse(review.submitted_at) <= mergedAt
+            );
+            if (!approved) throw new Error('No current independent approval on the merged PR head');
+            core.setOutput('merge_sha', sha);
+            core.setOutput('eligible', 'true');
+            await core.summary.addRaw(
+              'PR #' + pr.number + '; merge SHA ' + sha + '; reviewer account ' + approved.user.login +
+              '; merge account ' + pr.merged_by.login + '; CI run ' + process.env.CI_RUN_ID +
+              '; CI job ' + process.env.CI_JOB_ID + '. Account types do not prove human operation.\n'
+            ).write();
 
   publish:
     name: Publish
-    needs: select-mode
-    if: needs.select-mode.outputs.mode == 'publish'
+    needs: publish-eligibility
+    if: needs['publish-eligibility'].outputs.eligible == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout
+      - name: Checkout event commit
         uses: actions/checkout@v4
-
+        with:
+          ref: ${{ github.sha }}
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24.15.0"
           cache: "pnpm"
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
+      - name: Recheck main before npm authentication
+        uses: actions/github-script@v7
+        env:
+          ELIGIBLE_MERGE_SHA: ${{ needs['publish-eligibility'].outputs.merge_sha }}
+        with:
+          script: |
+            const sha = context.sha;
+            if (context.eventName !== 'push' || context.ref !== 'refs/heads/main' ||
+                context.payload.after !== sha || process.env.ELIGIBLE_MERGE_SHA !== sha) {
+              throw new Error('Publish event and eligible merge SHA differ');
+            }
+            const { owner, repo } = context.repo;
+            const tip = await github.rest.repos.getBranch({ owner, repo, branch: 'main' });
+            if (tip.data.commit?.sha !== sha) throw new Error('main advanced before npm authentication');
+            core.info('main still points to reviewed release merge ' + sha);
       - name: Configure npm registry authentication
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
-
       - name: Publish packages
-        uses: changesets/action/publish@v2.1.2
+        uses: changesets/action@v1
         with:
-          script: pnpm run changeset:publish
+          publish: pnpm run changeset:publish
