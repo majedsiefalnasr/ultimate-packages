@@ -1587,22 +1587,23 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-088 — React and Vue SSR jobs start the Angular Storybook web server, which cannot build in those jobs
 
-- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI infrastructure defect)
+- **Status:** RESOLVED (2026-10-14; [PR #8](https://github.com/majedsiefalnasr/ultimate-packages/pull/8) merged the fix at `3f86cbce`; [closeout record](research/2026-10-14-gap-088-ssr-web-server-selection-closeout.md)).
 - **Type:** CI, Testing (Track E SSR/hydration)
-- **Blocking level:** HIGH (no React or Vue SSR test runs in CI)
-- **Current evidence:**
+- **Blocking level:** HIGH (original CI impact; resolved)
+- **Original registration evidence (2026-10-07):**
   - `playwright.config.ts` always includes the three Track A Storybook `webServer` entries (`ng-storybook`, `react-storybook`, `vue-storybook`); only the Track E SSR servers are filtered by `TRACK_E_SSR_FRAMEWORK`.
   - The `track-e-ssr-hydration (react|vue)` jobs build only their own harness closure. `[ng-storybook]` reports "An unhandled exception occurred: Broken build", and Playwright fails with `Timed out waiting 120000ms from config.webServer` before any SSR test runs.
   - The Angular SSR job passes, because it builds the Angular packages.
   - Failing on every `main` push since the first remote CI run (2026-10-04); `playwright.config.ts` is unchanged since `521b369`.
 - **Expected state:** Each SSR job starts only the servers its own projects need, and its SSR tests run.
-- **Why it matters:** React and Vue SSR/hydration verification (GAP-034) is not exercised in CI.
-- **What it blocks:** CI evidence for React/Vue SSR.
+- **Why it mattered:** React and Vue SSR/hydration verification (GAP-034) was not exercised in CI.
+- **What it blocked:** CI evidence for React/Vue SSR.
 - **Dependencies:** None. Related: GAP-034.
 - **Framework scope:** React, Vue (CI only).
 - **Existing reusable infrastructure:** The existing `TRACK_E_SSR_FRAMEWORK` filter for SSR servers.
-- **Recommended resolution direction:** Directional only: scope the Storybook servers by job, without weakening the SSR tests.
+- **Resolution:** Scope the Storybook servers by job without weakening the SSR tests, as implemented in `fe8073240d627f77b9a3178f6af36355678a204f`.
 - **Source/evidence:** CI runs 37438428821, 37456600014, 37590590099 (jobs `track-e-ssr-hydration (react, playground-react)` and `(vue, playground-vue)`).
+- **Resolution evidence:** [PR #8](https://github.com/majedsiefalnasr/ultimate-packages/pull/8) merged fix commit `fe8073240d627f77b9a3178f6af36355678a204f`, which excludes all three Storybook servers when `TRACK_E_SSR_FRAMEWORK` selects an SSR job while retaining the selected framework's SSR server. On `main` at `48c45eba40f62bb3106a4897b885bbb7bc87107c`, [CI run 38525033948](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38525033948) completed the Angular, React and Vue SSR jobs successfully: Playwright logs and uploaded HTML reports show Angular 10/10, React 9/9 and Vue 9/9 passed, with no unexpected, flaky or skipped tests. The overall CI run has separate failures; SSR success does not close C01 or approve an exception. See the [dated closeout record](research/2026-10-14-gap-088-ssr-web-server-selection-closeout.md).
 - **Architectural decision required:** No.
 
 #### GAP-089 — React package-exports test fails only in CI (missing built declarations)
