@@ -58,7 +58,7 @@ docs/       architecture records, ADRs, research, specs, and plans
 
 ## Development
 
-A pnpm workspace monorepo. Requires pnpm 9.6.0 (pinned through `packageManager`) and Node.js 24.15.0, the version CI uses. `pnpm install` enforces dependency engine ranges, and the Angular Storybook toolchain needs Node `^22.22.3` or `^24.15.0`.
+A pnpm workspace monorepo. The private workspace supports Node.js `^24.15.0`; use Node.js 24.15.0 as the pinned local and CI baseline. pnpm 9.6.0 is pinned through `packageManager`. `pnpm install` enforces dependency engine ranges. Individual dependencies may admit other Node majors, but those ranges do not extend this workspace's support policy.
 
 ```bash
 pnpm install
