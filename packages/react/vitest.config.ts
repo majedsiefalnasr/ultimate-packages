@@ -18,6 +18,18 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json-summary"],
       reportsDirectory: "./coverage",
+      all: true,
+      include: ["src/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,vue}"],
+      extension: [".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".mts", ".cts", ".vue"],
+      exclude: [
+        "src/**/*.stories.*",
+        "src/**/*.spec.*",
+        "src/**/*.test.*",
+        "src/**/*.d.ts",
+        "src/**/*.d.mts",
+        "src/**/*.d.cts",
+        "src/**/{__tests__,__fixtures__,__mocks__,fixtures,test-fixtures,mocks}/**",
+      ],
     },
   },
 });

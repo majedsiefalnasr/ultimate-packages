@@ -1,20 +1,157 @@
 // scripts/provenance/validate-coverage.test.mjs
 //
 // Tests for validate-coverage.mjs's two-step baseline acceptance lifecycle
-// (R7). Exercises the pure evaluatePackageCoverage() decision function
-// directly with hand-written fixture inputs — merge-base baseline value,
-// current measurement, and diff-shape boolean are all passed in directly,
-// so no real git state or measured coverage report is needed for any of
-// these cases. This mirrors validate-bundle-size.test.mjs's approach for
-// R6 (see task-6-brief.md's testing guidance, reused verbatim for R7 per
-// task-7-brief.md).
+// (R7). Real committed Git-diff fixtures exercise the CLI's branch selection;
+// pure evaluator fixtures preserve the threshold and integrity controls.
 //
 // Also includes a light parser test for parsePhase10CoverageTable(), the
 // one other pure function in the module worth covering directly.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { evaluatePackageCoverage, parsePhase10CoverageTable } from "./validate-coverage.mjs";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath, URL } from "node:url";
+import {
+  ALL_PACKAGES,
+  evaluatePackageCoverage,
+  packageCoverageSummaryPath,
+  parsePhase10CoverageTable,
+} from "./validate-coverage.mjs";
+
+// Exercise the CLI against committed Git diffs. A pure evaluator test cannot
+// detect an incorrect baseline-only classification of vitest.config.ts.
+const validatorPath = fileURLToPath(new URL("./validate-coverage.mjs", import.meta.url));
+
+function runGit(cwd, ...args) {
+  return execFileSync(
+    "git",
+    ["-c", "commit.gpgsign=false", "-c", "core.fsmonitor=false", ...args],
+    {
+      cwd,
+      encoding: "utf8",
+    }
+  ).trim();
+}
+
+function coverageTable(overrides = {}) {
+  return [
+    "## Phase 10 — CI/Security/Quality Gates",
+    "### Coverage",
+    "| Package | line-coverage % |",
+    "| ------- | ---------------- |",
+    ...ALL_PACKAGES.map((name) => `| packages/${name} | ${overrides[name] ?? 85.0} |`),
+    "",
+  ].join("\n");
+}
+
+function runDiffFixture({ packageName, changedPaths, writtenPct = 82, measuredPct = 82 }) {
+  const root = mkdtempSync(join(tmpdir(), "gap-091-coverage-"));
+  try {
+    runGit(root, "init", "-q");
+    runGit(root, "config", "user.name", "Coverage Fixture");
+    runGit(root, "config", "user.email", "coverage-fixture@example.invalid");
+    const performancePath = "docs/architecture/PERFORMANCE.md";
+    mkdirSync(join(root, dirname(performancePath)), { recursive: true });
+    writeFileSync(join(root, performancePath), coverageTable());
+    runGit(root, "add", performancePath);
+    runGit(root, "commit", "-qm", "baseline");
+    runGit(root, "branch", "baseline");
+
+    for (const relativePath of changedPaths) {
+      const absolutePath = join(root, relativePath);
+      mkdirSync(dirname(absolutePath), { recursive: true });
+      writeFileSync(
+        absolutePath,
+        relativePath === performancePath
+          ? coverageTable({ [packageName]: writtenPct })
+          : "// changed in feature commit\n"
+      );
+      runGit(root, "add", relativePath);
+    }
+    runGit(root, "commit", "-qm", "feature");
+
+    for (const name of ALL_PACKAGES) {
+      const reportPath = join(root, packageCoverageSummaryPath(name));
+      mkdirSync(dirname(reportPath), { recursive: true });
+      writeFileSync(
+        reportPath,
+        JSON.stringify({ total: { lines: { pct: name === packageName ? measuredPct : 85 } } })
+      );
+    }
+
+    const result = spawnSync(process.execPath, [validatorPath, "--base-ref", "baseline"], {
+      cwd: root,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        GIT_CONFIG_COUNT: "1",
+        GIT_CONFIG_KEY_0: "core.fsmonitor",
+        GIT_CONFIG_VALUE_0: "false",
+      },
+    });
+    return { status: result.status, output: `${result.stdout}\n${result.stderr}` };
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+for (const packageName of ["react", "vue"]) {
+  const performancePath = "docs/architecture/PERFORMANCE.md";
+  test(`${packageName}: committed config plus baseline edit cannot bypass merge-base regression`, () => {
+    const result = runDiffFixture({
+      packageName,
+      changedPaths: [`packages/${packageName}/vitest.config.ts`, performancePath],
+    });
+    assert.strictEqual(result.status, 1, result.output);
+    assert.match(
+      result.output,
+      new RegExp(`${packageName}: REGRESSION FAIL.*85% -> 82\\.0%.*-3\\.0 points`)
+    );
+    assert.doesNotMatch(result.output, new RegExp(`${packageName}: OK \\(baseline-only`));
+  });
+
+  test(`${packageName}: honest committed PERFORMANCE.md-only edit uses integrity`, () => {
+    const result = runDiffFixture({ packageName, changedPaths: [performancePath] });
+    assert.strictEqual(result.status, 0, result.output);
+    assert.match(result.output, new RegExp(`${packageName}: OK \\(baseline-only, integrity check`));
+  });
+
+  test(`${packageName}: dishonest committed PERFORMANCE.md-only edit fails integrity`, () => {
+    const result = runDiffFixture({
+      packageName,
+      changedPaths: [performancePath],
+      writtenPct: 84,
+    });
+    assert.strictEqual(result.status, 1, result.output);
+    assert.match(result.output, new RegExp(`${packageName}: INTEGRITY FAIL`));
+  });
+
+  for (const [label, secondPath] of [
+    ["source", `packages/${packageName}/src/runtime.ts`],
+    ["unrelated file", "docs/unrelated.md"],
+  ]) {
+    test(`${packageName}: ${label} plus baseline edit uses merge-base regression`, () => {
+      const result = runDiffFixture({
+        packageName,
+        changedPaths: [secondPath, performancePath],
+      });
+      assert.strictEqual(result.status, 1, result.output);
+      assert.match(result.output, new RegExp(`${packageName}: REGRESSION FAIL.*85% -> 82\\.0%`));
+    });
+  }
+}
+
+test("other package R7 keeps its existing per-package diff classification", () => {
+  const result = runDiffFixture({
+    packageName: "uix-utils",
+    changedPaths: ["packages/uix-utils/vitest.config.ts", "docs/architecture/PERFORMANCE.md"],
+  });
+  assert.strictEqual(result.status, 0, result.output);
+  assert.match(result.output, /uix-utils: OK \(baseline-only, integrity check/);
+});
 
 // --- Stage 1: no prior baseline ------------------------------------------
 
@@ -44,6 +181,18 @@ test("Stage 2 pass: 85.0% -> 84.0% (1-point drop) is under the 2-point threshold
   });
 
   assert.strictEqual(result.ok, true, "1-point drop must pass");
+  assert.match(result.message, /OK/);
+});
+
+test("Stage 2 boundary: an exact 2-point drop remains permitted", () => {
+  const result = evaluatePackageCoverage({
+    packageName: "react",
+    isBaselineOnly: false,
+    mergeBasePct: 85.0,
+    freshMeasuredPct: 83.0,
+    headWrittenPct: undefined,
+  });
+  assert.strictEqual(result.ok, true);
   assert.match(result.message, /OK/);
 });
 
