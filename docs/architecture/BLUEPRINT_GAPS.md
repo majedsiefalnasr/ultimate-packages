@@ -1567,23 +1567,24 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-087 — Release workflow runs on Node 20, below the Angular 21 toolchain's Node requirement
 
-- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI infrastructure defect)
+- **Status:** RESOLVED (2026-10-14; [PR #14](https://github.com/majedsiefalnasr/ultimate-packages/pull/14) merged the Node policy alignment at `6bba3115`; [closeout record](research/2026-10-14-gap-087-node-policy-closeout.md)).
 - **Type:** CI, Release
-- **Blocking level:** HIGH (no release job can run)
-- **Current evidence:**
+- **Blocking level:** HIGH (original Node install barrier; resolved). The Release workflow remains blocked later in Select mode by a separate Changesets action/CLI mismatch.
+- **Original evidence:**
   - `.github/workflows/release.yml` pins `node-version: "20"` in all three jobs (Select mode, Version, Publish).
   - The "Select mode" job fails at "Install dependencies" with `ERR_PNPM_UNSUPPORTED_ENGINE`: `@angular-devkit/architect@0.2201.7` requires Node `^22.22.3 || ^24.15.0 || >=26.0.0`; the job runs `v20.20.2`. Version and Publish are then skipped.
   - It has failed on every `main` push since the first remote CI run: `f05bd9b` (2026-10-04), `2c8ef45`, `3d0203d` and `4b9bfaa` (run 37590590050).
   - The root `package.json` still declares `"node": ">=20.0.0"`.
 - **Expected state:** The release workflow's Node version satisfies every workspace dependency's engine range, and the declared Node policy matches it.
-- **Why it matters:** No version or publish job can run, so the release path is unexercised.
-- **What it blocks:** Releasing.
+- **Why it mattered:** The Release install stopped before mode selection; Version and Publish could not run.
+- **What it blocked:** The Release install and downstream mode selection.
 - **Dependencies:** None. Related: the root `engines.node` declaration.
 - **Framework scope:** Repository-wide.
 - **Existing reusable infrastructure:** `ci.yml` already uses Node `24.15.0` for its jobs.
 - **Recommended resolution direction:** Directional only. A Node-version policy decision, then aligning `release.yml` and `engines`.
 - **Source/evidence:** Release runs 37456600129 and 37590590050; `.github/workflows/release.yml:27,55,83`.
-- **Architectural decision required:** Yes — the supported Node policy.
+- **Resolution evidence:** ADR-059 sets the private-workspace `^24.15.0` range and `24.15.0` execution baseline. Reviewed implementation `c78fd1ee` changed only the root Node engine, three Release Node pins and README guidance. On merged `main` `6bba3115`, [Release run 38551787782](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38551787782) set up Node `v24.15.0` and passed Select mode's frozen install without `ERR_PNPM_UNSUPPORTED_ENGINE`. The following Select mode action rejected Changesets CLI v2, so no mode was selected; Version and Publish were skipped and remain dynamically unverified. The run concluded failure for that separate reason. C01 remains incomplete, with no CI exception.
+- **Architectural decision required:** Yes — settled by ADR-059.
 
 #### GAP-088 — React and Vue SSR jobs start the Angular Storybook web server, which cannot build in those jobs
 

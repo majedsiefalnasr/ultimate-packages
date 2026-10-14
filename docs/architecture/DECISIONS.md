@@ -505,3 +505,19 @@ Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture 
 - **Generated API reference destination:** Storybook docs pages initially (consistent with ADR-044), kept composable with authored guidance.
 
 **Consequences.** CLI packaging and smoke-test work, and the metadata drift check and generated reference, each go through their own Spec and Plan gates; the documentation work is sequenced with the metadata coverage work.
+
+## ADR-059 — Node 24.15.0 baseline for the private workspace and release toolchain (GAP-087)
+
+Status: Accepted (user-authorized GAP-087 research, verification and Node.js support-policy decision gates, 2026-10-14). Evidence: `docs/architecture/research/2026-10-14-gap-087-node-policy-research.md`.
+
+**Context.** Remote `main` at `9ea303df` runs CI on Node `24.15.0` but all three Release jobs on Node 20. [Release run 38531782252](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38531782252) failed at Select mode → Install dependencies: strict pnpm engine checking rejected Node `v20.20.2` for locked `@angular-devkit/architect@0.2201.7`, which requires `^22.22.3 || ^24.15.0 || >=26.0.0`. The private root's `engines.node: ">=20.0.0"` also admits versions that the workspace cannot install. CI's frozen install has passed on the pinned 24.15.0 baseline. Earlier release specifications and ADRs do not establish a binding Node support range.
+
+**Decision.**
+
+- The **private workspace toolchain** supports Node 24 from `24.15.0` through the remainder of major 24. Express this as root `engines.node: "^24.15.0"`, retaining `engine-strict=true` and the existing `pnpm@9.6.0` package-manager pin.
+- Use Node `24.15.0` as the pinned execution baseline for local development guidance, CI, and **each** Release job. The existing CI pin establishes the verified baseline; a later patch release within the declared range is permitted but is not claimed as individually verified by this decision.
+- This decision is about installing and operating the complete repository workspace. It makes no claim about a published package's consumer Node runtime range and does not change any package-specific consumer contract.
+
+**Trade-off.** The locked Angular devkit also permits sufficiently recent Node 22 and Node 26+, but this repository currently verifies the complete workspace on 24.15.0 only. A single supported major avoids advertising untested major versions. Merely raising Release's Node pin would leave the private root's `>=20.0.0` declaration inconsistent with strict installation.
+
+**Consequences.** GAP-087 stays open until a separately authorized Specification, Spec Review, Plan, Plan Review, implementation and verification align the root engine declaration and all Release jobs, then verify the frozen install and reached release path. C01 stays incomplete. No CI exception is created. Version and Publish remain unexercised in the cited failed Release run.

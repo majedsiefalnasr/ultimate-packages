@@ -1,0 +1,35 @@
+# GAP-087 — Node.js workspace and Release toolchain alignment
+
+**Date:** 2026-10-14  
+**Status:** PROPOSED — awaiting Spec Review. This document authorizes no implementation, Implementation Plan, commit, publish, or tracking change.  
+**Baseline:** `main` and `origin/main` at `9ea303df0b27ab69487449bf32577e223cd8bbb0`; drafted on `docs/gap-087-node-policy-spec`.  
+**Authority:** [ADR-059](../../architecture/DECISIONS.md#adr-059--node-24150-baseline-for-the-private-workspace-and-release-toolchain-gap-087) is the binding Node policy. The [GAP-087 research record](../../architecture/research/2026-10-14-gap-087-node-policy-research.md) supplies its evidence; [GAP-087](../../architecture/BLUEPRINT_GAPS.md#gap-087--release-workflow-runs-on-node-20-below-the-angular-21-toolchains-node-requirement) defines the defect. The approved [Phase 10 release Specification](2026-09-10-phase-10-migration-release-provenance-design.md) governs release mode and publishing behavior. This Specification changes none of those decisions.
+
+## 1. Verified problem
+
+On the baseline commit, [Release run 38531782252](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38531782252) completed **failure** at Select mode → Install dependencies. Its log reports `ERR_PNPM_UNSUPPORTED_ENGINE`: locked `@angular-devkit/architect@0.2201.7` requires Node `^22.22.3 || ^24.15.0 || >=26.0.0`, while that job ran `v20.20.2`. Version and Publish were skipped. All three jobs in `.github/workflows/release.yml` pin `node-version: "20"` and run the same frozen install. Root `package.json` declares `engines.node: ">=20.0.0"`, despite `.npmrc` enabling `engine-strict=true`.
+
+The same commit's [CI run 38531782178](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38531782178) completed **failure**, but its root `Install dependencies` step passed under CI's pinned Node `24.15.0`. CI failed separately in coverage, provenance and Angular/Vue browser steps. Neither run demonstrates Version or Publish execution, and neither establishes a successful release. The research record's CI status is explicitly a dated earlier snapshot; this paragraph records the later completed result.
+
+## 2. Required behavior
+
+1. The private root workspace declares exactly `engines.node: "^24.15.0"`. This is ADR-059's Node 24 support range, starting at 24.15.0. Keep `private: true`, `packageManager: "pnpm@9.6.0"`, and `.npmrc`'s `engine-strict=true`. Do not create a published-package consumer Node contract from the private root declaration.
+2. Each existing Release job — Select mode, Version and Publish — pins `actions/setup-node` to the exact execution baseline `24.15.0` before its existing `pnpm install --frozen-lockfile`. Do not change the job graph, mode selection, triggers, permissions, authentication, Changesets actions, scripts, or publish access policy to accomplish this alignment.
+3. The local-development guidance identifies Node `24.15.0` as the recommended pinned baseline and Node `^24.15.0` as the supported private-workspace range, alongside the existing pnpm `9.6.0` pin. The existing README Development section is the expected guidance surface. It must distinguish the workspace policy from the broader engine ranges of individual dependencies; those ranges are not a promise of workspace support.
+4. Keep CI's existing Node `24.15.0` pins, frozen installs, gate behavior and failure propagation. No CI exception, `continue-on-error`, engine-check bypass, dependency change, or lockfile change is part of this repair. If a lockfile change proves mechanically unavoidable at the implementation gate, return with evidence for review before widening scope.
+
+The expected implementation surface is the root `package.json` Node engine, the three Node pins in `.github/workflows/release.yml`, and the README Development wording. The Implementation Plan must re-check those surfaces against its own baseline. This Specification does not authorize editing them.
+
+## 3. Acceptance evidence
+
+1. **Focused diff and policy consistency:** Record the reviewed implementation commit and the resulting `main` commit that contains it. Confirm the root is still private, its engine range is exactly `^24.15.0`, pnpm remains `9.6.0`, `engine-strict=true` remains, and all three Release jobs pin exactly `24.15.0` before unchanged frozen installs. The README must state the matching baseline and range. Confirm CI's existing pins and all unrelated release behavior remain unchanged. No dependency, lockfile, test, or CI-gate change is accepted under this scope.
+2. **Workspace install:** In a clean checkout of the implementation SHA using Node `24.15.0` and pinned pnpm `9.6.0`, run `pnpm install --frozen-lockfile` with the repository's normal strict engine setting. Record the versions, command, exit status and relevant output. A successful install establishes compatibility for that exact workspace and toolchain, not all later Node 24 patches or a successful publish. A failing install blocks GAP-087 verification; do not suppress engine checks.
+3. **Release path:** On a GitHub-hosted Release run for the `main` commit containing the implementation, record the run URL, SHA, Select mode job's actual Node version, frozen-install result, and whether the Select mode action ran and what mode it selected. The earlier `ERR_PNPM_UNSUPPORTED_ENGINE` must be absent and the Select mode install must pass. If a later step fails, report that separate result; do not call the whole Release workflow successful from an install alone.
+4. **Conditional jobs:** Review the workflow to confirm Version and Publish have the same Node setup and frozen-install contract as Select mode. Record whether each was executed or skipped in the observed run. A naturally reached Version or Publish job must pass its install before this requirement can be called dynamically verified for that job. Do not manufacture a publish, add a bypass, or require a real npm publish solely to test GAP-087. Skipped jobs remain explicitly unexercised; actual publishing belongs to C12's later external verification.
+5. **CI separation:** Inspect CI on that same `main` commit for its actual install result and any Node-related regressions. Report the overall CI conclusion and unrelated failing steps separately. A passing install or repaired Release path does not complete C01 or authorize an exception for existing CI failures.
+
+## 4. Boundaries and next gate
+
+This Specification decides no new Node support policy; ADR-059 already settled it. It does not change package consumer engines, release selection or publishing semantics, dependency versions, tests, CI workflow policy, GitHub branch settings, or tracking status. GAP-087 stays OPEN and C01 stays incomplete until their later authorized implementation, verification and closeout gates. No Release Version or Publish success is claimed here.
+
+**Next gate: Spec Review.** After review and separate approval, author a bounded Implementation Plan and submit it to Plan Review under [AGENTS.md §3](../../../AGENTS.md#3-workflow-and-approval-gates). No implementation follows from this draft alone.
