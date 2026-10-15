@@ -138,6 +138,10 @@ jobs:
         if: ${{ !cancelled() }}
         run: pnpm run coverage:validate
 
+      - name: Fetch pinned vendor archives
+        if: ${{ !cancelled() }}
+        run: pnpm run vendor:fetch -- primereact primevue
+
       - name: Provenance scripts self-tests
         if: ${{ !cancelled() }}
         run: pnpm run test:scripts
