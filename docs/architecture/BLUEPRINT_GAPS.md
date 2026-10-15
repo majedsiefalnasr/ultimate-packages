@@ -1723,15 +1723,21 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - "Provenance validation" fails with `packages/ng/src/accordion/accordion.spec.ts has no entry in docs/architecture/provenance/ng.json` (the first CI run reported `accordion-style.ts`; that entry has since been added).
   - Recorded as pre-existing in the G3-B, G3-C1 and G3-C2 closeouts. The G3-C2 files all have entries (X-12 changed-file completeness).
   - Failing since the first remote CI run (2026-10-04).
-- **Expected state:** Every tracked source file has a manifest entry and the validator passes.
+  - **Reconciled scope (2026-10-15):**
+    - Under ADR-062, the validator requires entries only for production (distributed) files. It classifies them from build evidence, fails closed and reports every problem.
+    - At `ccb97d68`, 1915 watched files = 1318 production + 597 excluded. The excluded files are 330 tests, 266 stories and 1 unreferenced `.d.ts`.
+    - **696 production files lack an entry.** The 467 excluded files without an entry are no longer required.
+    - A build-based soundness check found no distributed file classified as excluded.
+    - Evidence: [reconciliation note](research/2026-10-15-gap-094-production-scope-reconciliation.md).
+- **Expected state:** Every production file (ADR-062) has a manifest entry backed by per-file evidence, and the validator passes.
 - **Why it matters:** The step is red on every push.
 - **What it blocks:** A green provenance validation step.
 - **Dependencies:** None.
 - **Framework scope:** Angular (current failure).
 - **Existing reusable infrastructure:** `docs/architecture/provenance/ng.json`.
-- **Recommended resolution direction:** Directional only: add the missing entries in a dedicated provenance task.
-- **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job); G3-B/G3-C1/G3-C2 closeouts.
-- **Architectural decision required:** No.
+- **Recommended resolution direction:** Evidence-backed backfill of the 696 production entries, in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4.
+- **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job); G3-B/G3-C1/G3-C2 closeouts; [DR-5 options](research/2026-10-15-gap-094-dr5-provenance-scope-options.md).
+- **Architectural decision required:** Yes — decided: ADR-062 (DR-5 Option B, production scope, 2026-10-15).
 
 #### GAP-095 — Production dependency audit reports 1 critical and 6 high advisories
 
