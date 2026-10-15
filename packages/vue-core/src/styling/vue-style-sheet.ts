@@ -1,9 +1,11 @@
 import {
   StyleSheet,
   css,
+  registerBoxModel,
   registerHiddenAccessible,
   registerIconSpin,
   registerThemeVariables,
+  scopeRootsOf,
   type StyleMeta,
 } from "@ultimate/uix-styled";
 import { createStyleElement } from "@ultimate/uix-utils/dom";
@@ -55,6 +57,11 @@ export function registerComponentStyle(
   for (const presetKey of additionalPresetKeys) {
     registerThemeVariables(vueCoreStyleSheet, presetKey);
   }
+
+  // GAP-098 (ADR-063): the component's scoped border-box rule, guarded by its
+  // own key and placed before the early return below so it registers even when
+  // the component key already exists. A no-op for an empty name or no roots.
+  registerBoxModel(vueCoreStyleSheet, componentName, scopeRootsOf(styleModule.classes));
 
   if (vueCoreStyleSheet.has(componentName)) return;
   // Keep the style module's CSS bytes intact; the registered value is used as-is.

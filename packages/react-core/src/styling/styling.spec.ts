@@ -110,3 +110,42 @@ describe("useComponentStyle theme variable definitions", () => {
     expect(document.head.querySelectorAll("style").length).toBe(afterFirst + 1);
   });
 });
+
+describe("useComponentStyle box model (GAP-098)", () => {
+  beforeEach(() => {
+    reactCoreStyleSheet.clear();
+    document.head.querySelectorAll("style").forEach((el) => el.remove());
+  });
+
+  const texts = () =>
+    [...document.head.querySelectorAll("style")].map((el) => el.textContent ?? "");
+
+  it("registers the component's scoped box-model rule immediately before its CSS", () => {
+    renderHook(() =>
+      useComponentStyle("bm-dialog", {
+        css: ".u-bm-dialog-css {}",
+        classes: { root: "u-bm-dialog u-component", mask: "u-bm-dialog-mask" },
+      })
+    );
+    expect(reactCoreStyleSheet.has("u-box-model:bm-dialog")).toBe(true);
+    const all = texts();
+    const rule = all.findIndex((text) =>
+      text.includes(":where(.u-bm-dialog, .u-bm-dialog *, .u-bm-dialog-mask, .u-bm-dialog-mask *)")
+    );
+    expect(rule).toBeGreaterThanOrEqual(0);
+    expect(all[rule]).toContain("box-sizing: border-box;");
+    expect(all.findIndex((text) => text.includes(".u-bm-dialog-css"))).toBe(rule + 1);
+  });
+
+  it("registers the box-model rule once across repeated mounts", () => {
+    const style = { css: ".u-bm-once {}", classes: { root: "u-bm-once" } };
+    renderHook(() => useComponentStyle("bm-once", style));
+    renderHook(() => useComponentStyle("bm-once", style));
+    expect(texts().filter((text) => text.includes(":where(.u-bm-once,"))).toHaveLength(1);
+  });
+
+  it("registers nothing for a style module without scope roots (Amendment A1)", () => {
+    renderHook(() => useComponentStyle("bm-rootless", { css: ".x {}", classes: {} }));
+    expect(reactCoreStyleSheet.has("u-box-model:bm-rootless")).toBe(false);
+  });
+});

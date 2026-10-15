@@ -545,3 +545,27 @@ Status: Accepted (user decision DR-5 Option B, 2026-10-15). Evidence: [`research
 **Trade-off.** Tests and stories, which do not ship, lose their mandatory lineage record. In return the rule follows the licensing purpose and the backfill focuses on distributed code. Determining production status from build configuration needs an explicit, tested classifier that fails closed. A filename pattern alone would be simpler, but it is not evidence.
 
 **Consequences.** The GAP-094 Specification defines the classifier, a report-all validator mode, the per-file evidence method and backfill batching. Each step goes through its own review gates. `provenance:validate` stays red until the last backfill batch merges. No CI exception is granted. ADR-052 X-12 rule (2), changed-file completeness, now applies to the production files a tranche changes. Its rule (1), which expects the repository-wide validator to stay red, lapses once GAP-094 is resolved.
+
+## ADR-063 — Ultimate-scoped `border-box` base layer, registered per component through each framework core (GAP-098)
+
+Status: Accepted (user decision GAP-098 Option B, 2026-10-15). Evidence: [`research/2026-10-15-gap-098-box-model-options.md`](research/2026-10-15-gap-098-box-model-options.md); [GAP-097](BLUEPRINT_GAPS.md#gap-097--drawer-sizing-under-content-box-content-overflow-and-a-full-drawer-taller-than-the-viewport) and [GAP-098](BLUEPRINT_GAPS.md#gap-098--primes-global-base-style-box-sizing-border-box-is-not-applied-in-ultimate); `@primeuix/styles` 2.0.3 `base` (`*, ::before, ::after { box-sizing: border-box }`); PrimeReact 10.9.9 `components/lib/componentbase/ComponentBase.js` (`.p-component, .p-component * { box-sizing: border-box }` in `@layer primereact`); the user ruling of 2026-10-08 that excludes Prime's page-wide `*` rule.
+
+**Context.** Upstream component CSS assumes `border-box`. Ultimate ports that CSS, but nothing registers a box-model base, so components render under the browser default `content-box`. In the G3-D Drawer case, a full Drawer renders 722 px tall in a 720 px viewport, and the Angular and Vue G3-D CI steps are red.
+
+**Decision.** Apply `box-sizing: border-box` to Ultimate component DOM through a rule builder in `@ultimate/uix-styled`.
+
+- Each framework core registers one rule per component from its existing style-registration point, using the `has()`/`add()` pattern of the shared hidden-accessible and icon-spin rules. It therefore follows the GAP-074/GAP-078 per-document and SSR contracts.
+- The rule is scoped to the component's own root classes, taken from its style module: its root, and any overlay, panel or mask parts that a framework reparents. It covers their subtrees, as PrimeReact's `.p-component, .p-component *` does.
+- It has zero specificity and never targets the whole page.
+- Drawer-only workarounds are not used.
+
+The approved option's research named a list of component root classes generated from component metadata as an allowed form; this is that form.
+
+**Trade-off.**
+
+- Many components change size at once, so the visual baselines need a reviewed regeneration.
+- Application content projected inside a component's subtree also gets `border-box`, as it does under Prime. This includes wrapper components such as Fluid, Card, Panel and Dialog.
+- Elements outside Ultimate components are unaffected.
+- The rule is unlayered, as all Ultimate CSS is. A host rule inside an `@layer` cannot override it; an unlayered host rule or `!important` can.
+
+**Consequences.** The GAP-098 Specification fixes the selector, the registration points (Angular, Vue and React), the verification set and the baseline-review process. Changed baselines need the owner's visual acceptance before merge.

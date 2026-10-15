@@ -45,3 +45,44 @@ describe("VueStyleSheet adapter", () => {
     expect(styleEl?.textContent).not.toContain("dt(");
   });
 });
+
+describe("registerComponentStyle — box model (GAP-098)", () => {
+  const keys = () =>
+    Array.from(document.head.querySelectorAll("style[data-u-style]")).map((el) =>
+      el.getAttribute("data-u-style")
+    );
+
+  afterEach(() => {
+    vueCoreStyleSheet.clear();
+    document.head.querySelectorAll("style[data-u-style]").forEach((el) => el.remove());
+  });
+
+  it("registers the component's scoped box-model rule immediately before its CSS", () => {
+    registerComponentStyle("bm-drawer", {
+      css: ".u-bm-drawer {}",
+      classes: { root: "u-bm-drawer u-component", mask: "u-bm-drawer-mask" },
+    });
+    const all = keys();
+    expect(all.indexOf("u-box-model:bm-drawer")).toBe(all.indexOf("bm-drawer") - 1);
+    const rule = document.head.querySelector('style[data-u-style="u-box-model:bm-drawer"]');
+    expect(rule?.textContent).toContain(
+      ":where(.u-bm-drawer, .u-bm-drawer *, .u-bm-drawer-mask, .u-bm-drawer-mask *)"
+    );
+    expect(rule?.textContent).toContain("box-sizing: border-box;");
+  });
+
+  it("registers the box-model rule even when the component key already exists", () => {
+    vueCoreStyleSheet.add("bm-existing", ".u-bm-existing {}");
+    registerComponentStyle("bm-existing", {
+      css: ".u-bm-existing {}",
+      classes: { root: "u-bm-existing" },
+    });
+    expect(keys()).toContain("u-box-model:bm-existing");
+  });
+
+  it("registers nothing for an empty component name or a style module without scope roots (Amendment A1)", () => {
+    registerComponentStyle("", { css: "", classes: {} });
+    registerComponentStyle("bm-rootless", { css: ".x {}", classes: { header: "u-x" } });
+    expect(keys().filter((k) => k?.startsWith("u-box-model:"))).toEqual([]);
+  });
+});

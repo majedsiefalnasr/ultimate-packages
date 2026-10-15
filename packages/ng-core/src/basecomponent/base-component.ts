@@ -3,9 +3,11 @@ import { DOCUMENT } from "@angular/common";
 import { cn } from "@ultimate/uix-utils/classnames";
 import {
   css,
+  registerBoxModel,
   registerHiddenAccessible,
   registerIconSpin,
   registerThemeVariables,
+  scopeRootsOf,
 } from "@ultimate/uix-styled";
 import { UltimateConfig } from "../config/ultimate-config";
 import { ngCoreStyleSheetFor } from "./style-sheet";
@@ -63,6 +65,9 @@ export abstract class UBaseComponent {
     registerHiddenAccessible(sheet);
     // GAP-124: the opt-in `.u-icon-spin` rule (class-scoped; see uix-styled icon-spin.ts).
     registerIconSpin(sheet);
+    // GAP-098 (ADR-063): the component's scoped border-box rule, under its own
+    // key, before the component CSS. A no-op for an empty name or no roots.
+    registerBoxModel(sheet, this.componentName, scopeRootsOf(this.styleModule.classes));
 
     if (!sheet.has(this.componentName)) {
       // Keep the style module's CSS bytes intact; the registered value is used as-is.

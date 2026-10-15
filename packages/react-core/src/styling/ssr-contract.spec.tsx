@@ -6,7 +6,10 @@ import { useComponentStyle } from "./use-component-style";
 import { reactCoreStyleSheet } from "./react-style-sheet";
 
 function Probe() {
-  useComponentStyle("ssr-contract-probe", { css: ".ssr-contract-probe{color:red}", classes: {} });
+  useComponentStyle("ssr-contract-probe", {
+    css: ".ssr-contract-probe{color:red}",
+    classes: { root: "u-ssr-contract-probe" },
+  });
   return <span className="ssr-contract-probe">x</span>;
 }
 
@@ -16,5 +19,7 @@ describe("React styling server contract (GAP-078)", () => {
     const html = renderToString(<Probe />);
     expect(html).not.toContain("<style");
     expect(reactCoreStyleSheet.has("ssr-contract-probe")).toBe(false);
+    // GAP-098: the per-component box-model rule is client-only too.
+    expect(reactCoreStyleSheet.has("u-box-model:ssr-contract-probe")).toBe(false);
   });
 });

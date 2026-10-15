@@ -173,3 +173,7 @@ The Prime-parity Implementation Plans (GAP-041–GAP-070, `feature/prime-parity-
 ### GAP-124 icon-spin source disclosure
 
 The shared `.u-icon-spin` rule in `packages/uix-styled/src/stylesheet/icon-spin.ts` is adapted from PrimeNG 21.1.9 `icons/baseicon/style/baseiconstyle.ts` (identical in PrimeVue 4.5.5 `@primevue/icons`), renamed to the `u-` prefix. The reduced-motion stop and the `registerIconSpin()` helper are Ultimate-authored. Per-file records are in `docs/architecture/provenance/uix-styled.json`.
+
+### GAP-098 box-model source disclosure
+
+The per-component `border-box` rule built by `packages/uix-styled/src/stylesheet/box-model.ts` is reference-derived from PrimeReact 10.9.9 `components/lib/componentbase/ComponentBase.js` (`.p-component, .p-component * { box-sizing: border-box }`) and `@primeuix/styles` 2.0.3 `base` (`*, ::before, ::after { box-sizing: border-box }`). Ultimate's form is authored (ADR-063): one rule per component, scoped to that component's own root, overlay, panel, mask and list classes (and `*Root`/`*Overlay`/`*Mask` keys), with `:where()` zero specificity and no page-wide selector; the Angular, Vue and React cores register it from their existing style-registration points. Per-file records are in `docs/architecture/provenance/uix-styled.json`.

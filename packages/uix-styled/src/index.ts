@@ -23,6 +23,12 @@ export {
   registerHiddenAccessible,
 } from "./stylesheet/hidden-accessible";
 export { ICON_SPIN_KEY, iconSpinCss, registerIconSpin } from "./stylesheet/icon-spin";
+export {
+  BOX_MODEL_KEY_PREFIX,
+  boxModelCss,
+  registerBoxModel,
+  scopeRootsOf,
+} from "./stylesheet/box-model";
 
 export * from "./utils/index";
 
