@@ -552,3 +552,70 @@ test("every file is production when an ng-package.json copies assets", () =>
       assert.equal(result.excluded.size, 0);
     }
   ));
+
+// CodeQL review (PR #22): export patterns follow Node's subpath-pattern rules —
+// one `*` in the key, every `*` in the target replaced, `*` matching any string.
+
+const patternPkg = (exports, srcFiles) =>
+  tsupBase({
+    "package.json": pkgJson(TSUP_BUILD, { ".": DIST_EXPORT, ...exports }),
+    ...Object.fromEntries(Object.entries(srcFiles).map(([p, c]) => [`src/${p}`, c])),
+  });
+
+test("a target with several * replaces every occurrence with the same match", () =>
+  withPkg(
+    patternPkg(
+      { "./*": { import: "./dist/*/*.mjs" } },
+      { "alpha/alpha.ts": "export {};\n", "beta/other.ts": "export {};\n" }
+    ),
+    (dir) =>
+      expectSets(
+        classifyPackage(dir),
+        dir,
+        ["src/index.ts", "src/alpha/alpha.ts"],
+        ["src/beta/other.ts"]
+      )
+  ));
+
+test("a file-level * pattern matches files, not only directories", () =>
+  withPkg(
+    patternPkg(
+      { "./*": { import: "./dist/*.mjs" } },
+      { "foo.ts": "export {};\n", "foo.spec.ts": "export {};\n" }
+    ),
+    (dir) =>
+      expectSets(classifyPackage(dir), dir, ["src/index.ts", "src/foo.ts", "src/foo.spec.ts"], [])
+  ));
+
+test("a * pattern spanning path segments matches nested sources", () =>
+  withPkg(
+    patternPkg({ "./*": { import: "./dist/*/index.mjs" } }, { "a/b/index.ts": "export {};\n" }),
+    (dir) => expectSets(classifyPackage(dir), dir, ["src/index.ts", "src/a/b/index.ts"], [])
+  ));
+
+test("errors: an export key with more than one *", () =>
+  expectError(patternPkg({ "./*/*": { import: "./dist/*/*.mjs" } }, {}), /more than one \*/));
+
+test("errors: a * key whose target has no * (or the reverse)", () => {
+  expectError(patternPkg({ "./*": { import: "./dist/x.mjs" } }, { "x.ts": "export {};\n" }), /\*/);
+  expectError(patternPkg({ "./x": { import: "./dist/*.mjs" } }, { "x.ts": "export {};\n" }), /\*/);
+});
+
+test("errors: a * pattern that matches no source file", () =>
+  expectError(patternPkg({ "./*": { import: "./dist/*/index.mjs" } }, {}), /matches no source/));
+
+test("every * in a target takes the same value even when that value contains /", () =>
+  withPkg(
+    patternPkg({ "./*": { import: "./dist/*/*.mjs" } }, { "a/b/a/b.ts": "export {};\n" }),
+    (dir) => expectSets(classifyPackage(dir), dir, ["src/index.ts", "src/a/b/a/b.ts"], [])
+  ));
+
+test("a self specifier keeps $ sequences from the matched value literally", () =>
+  withPkg(
+    tsupBase({
+      "package.json": pkgJson(TSUP_BUILD, { ".": DIST_EXPORT, "./*": { import: "./dist/*.mjs" } }),
+      "src/index.ts": 'export * from "@demo/pkg/x$&y";\n',
+      "src/x$&y.ts": "export const v = 1;\n",
+    }),
+    (dir) => expectSets(classifyPackage(dir), dir, ["src/index.ts", "src/x$&y.ts"], [])
+  ));

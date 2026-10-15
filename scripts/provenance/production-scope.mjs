@@ -399,6 +399,34 @@ function sourceForKey(pkgDir, key) {
   return [`${key}.ts`, `${key}.tsx`].map((name) => resolve(pkgDir, "src", name)).find(isFile);
 }
 
+const escapeRegExp = (text) => text.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * Sources matching an export target pattern under Node's subpath-pattern rules:
+ * `*` matches any string (including `/`), and every `*` in the target takes the
+ * same value. Matched against every source path under src/ — conservative,
+ * since a match may name a file the build does not emit.
+ */
+function patternMatches(pkgDir, keyPattern) {
+  // First `*` captures; every later `*` must repeat that exact capture (\1).
+  const source = keyPattern
+    .split("*")
+    .map(escapeRegExp)
+    .reduce((acc, part, i) => acc + (i === 1 ? "(.+)" : "\\1") + part);
+  const matcher = new RegExp(`^${source}$`);
+  const matches = [];
+  for (const file of listWatchedFiles(pkgDir)) {
+    if (!/\.tsx?$/.test(file) || file.endsWith(".d.ts")) continue;
+    const stem = relative(join(pkgDir, "src"), file)
+      .split("\\")
+      .join("/")
+      .replace(/\.tsx?$/, "");
+    const match = matcher.exec(stem);
+    if (match) matches.push({ value: match[1], file: resolve(file) });
+  }
+  return matches;
+}
+
 /** Source files behind a tsup package's `exports` targets under ./dist/, keyed by self specifier. */
 function exportEntries(pkgDir, pkg) {
   const entries = [];
@@ -420,11 +448,21 @@ function exportEntries(pkgDir, pkg) {
           : /\.(mjs|cjs|js)$/;
       const key = target.slice("./dist/".length).replace(pattern, "");
       const selfSub = subpath === "." ? "" : subpath.slice(2);
-      if (key.includes("*")) {
-        for (const dir of readdirSync(join(pkgDir, "src"), { withFileTypes: true })) {
-          if (!dir.isDirectory()) continue;
-          const file = sourceForKey(pkgDir, key.replace("*", dir.name));
-          if (file) entries.push({ self: selfSub.replace("*", dir.name), file });
+      const keyStars = subpath.split("*").length - 1;
+      if (keyStars > 1) failClassification(`export "${subpath}" has more than one * in its key`);
+      if ((keyStars === 1) !== key.includes("*")) {
+        failClassification(
+          `export "${subpath}" target ${target}: * must appear in both key and target`
+        );
+      }
+      if (keyStars === 1) {
+        const matches = patternMatches(pkgDir, key);
+        if (matches.length === 0) {
+          failClassification(`export "${subpath}" target ${target} matches no source file`);
+        }
+        for (const { value, file } of matches) {
+          // split/join: literal substitution, no `$` replacement patterns.
+          entries.push({ self: selfSub.split("*").join(value), file });
         }
       } else {
         const file = sourceForKey(pkgDir, key);

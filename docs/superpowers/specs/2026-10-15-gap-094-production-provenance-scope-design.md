@@ -179,3 +179,10 @@ Classification follows that evidence. Re-export-only content does not by itself 
     - a `package.json` `files` list that is absent, or that contains anything other than `dist[/…]` and top-level docs;
     - an `ng-package.json` with non-empty `assets`.
   - **Partition.** The production/excluded partition holds by construction (each watched file is assigned to exactly one set), so no separate runtime check is kept.
+- **E4 — CodeQL review (PR #22, 2026-10-15): `exports` subpath patterns follow Node's rules.**
+  - **Key:** a key may contain at most one `*`. More than one → error.
+  - **Key and target agree:** a `*` must appear in both the key and the target, or in neither. Otherwise → error.
+  - **Target:** every `*` in a target takes the same value, enforced with a regex backreference (the first `*` captures and every later `*` must repeat it), so a value containing `/` still matches. `*` matches any non-empty string, including `/`. The self specifier substitutes the value literally (`split("*").join(value)`), so `$` sequences are never treated as replacement patterns.
+  - **Matching:** the pattern is matched against every non-`.d.ts` `.ts`/`.tsx` path under `src/`. This is conservative: a match may name a file the build does not emit.
+  - **No match:** a pattern that matches no source → error.
+  - **Previous behavior:** the first implementation replaced only the first `*` and only expanded over `src` directories. A multi-`*`, file-level or nested pattern therefore matched nothing, silently. That was fail-open.
