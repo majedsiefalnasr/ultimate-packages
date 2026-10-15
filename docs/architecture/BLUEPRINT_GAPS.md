@@ -1178,7 +1178,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **Visual baselines.** 102 updated after user review of all 12 groups.
   - **Accessibility.** 36 introduced SpeedDial `region` rows accepted as environmental.
   - **Size.** Angular fesm2022 total +0.34%, Vue +0.41%.
-  - **Known failure.** `Drawer full and RTL G3-D layout` fails in all engines (full drawer 2 px taller than the viewport), so the CI G3-D verification step stays red until GAP-097 is resolved (user decision 2026-10-08).
+  - **Known failure.** `Drawer full and RTL G3-D layout` fails in all engines (full drawer 2 px taller than the viewport), so the CI G3-D verification step stays red until GAP-097 is resolved (user decision 2026-10-08). _Resolved 2026-10-15 by GAP-098 (PR #23, `main` `46ec6d93`); Angular and Vue G3-D pass in main CI 38805415026._
   - **Still open:** G3-E (F6 + F7). GAP-064 stays PARTIAL.
   - **New gaps registered at this closeout:** GAP-096, GAP-097.
 - **Expected state:** Per-component Aura preset modules for the ~83 components built since Phase 5's original 5-component proof set, enabling theme-level customization for them via the same `dt()`-based mechanism the original 5 already use.
@@ -1789,41 +1789,56 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-097 — Drawer sizing under `content-box`: content overflow and a full Drawer taller than the viewport
 
-- **Status:** OPEN (registered 2026-10-08 at the GAP-064 G3-D closeout; follow-up of the faithful G3-D port)
+- **Status:** RESOLVED (through GAP-098's shared layer, [PR #23](https://github.com/majedsiefalnasr/ultimate-packages/pull/23) merged at `main` `46ec6d93`; closeout recorded 2026-10-16). Registered 2026-10-08 at the GAP-064 G3-D closeout as a follow-up of the faithful G3-D port.
+- **Closeout evidence (2026-10-16):**
+  - No Drawer-specific change was made, and `g3d-aura-styles.spec.ts` is unchanged in both frameworks.
+  - "Run G3-D verification specs" for Angular and Vue changed from failure to success:
+    - [Pre-merge main CI 38772859680](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38772859680) at `c9089b6b`: 3 failed (`Drawer full and RTL G3-D layout` in every engine) and 159 passed, per framework.
+    - [Post-merge main CI 38805415026](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38805415026) at `46ec6d93`: 162 passed per framework.
+  - The regenerated `Drawer-Full` baselines fit the 720 px viewport. The owner accepted them before merge.
+  - Record: [`research/2026-10-16-gap-097-098-scoped-box-model-closeout.md`](research/2026-10-16-gap-097-098-scoped-box-model-closeout.md).
+  - Other Drawer differences stay open under GAP-099 and GAP-100.
 - **Type:** Component layout, Visual, CI
-- **Blocking level:** MEDIUM
-- **Current evidence:** Measured during G3-D (Chromium, Firefox and WebKit, both frameworks).
+- **Blocking level:** MEDIUM (at the time this was open)
+- **Original evidence:** Measured during G3-D (Chromium, Firefox and WebKit, both frameworks).
   - The ported `.u-drawer-content { width: 100%; height: 100% }` plus content padding, without an upstream-style global `box-sizing: border-box`, makes the content box 40 px larger than the drawer's inner box: 360 inside 320 (left/right), 1314 inside 1274 (top/bottom).
   - The ported full rule (`height: 100vh !important` with a 1 px border) makes a `full` Drawer 1280 × 722 in a 1280 × 720 viewport (inner box 1278 × 720, `content-box`).
-  - `Drawer full and RTL G3-D layout` therefore fails in every engine, and the CI step "Run G3-D verification specs" is red. The check is kept unchanged (user decision 2026-10-08); its RTL half does not run while the full assertion fails.
+  - Before the fix, `Drawer full and RTL G3-D layout` therefore failed in every engine, and the CI step "Run G3-D verification specs" was red. The check is kept unchanged (user decision 2026-10-08); its RTL half does not run while the full assertion fails.
 - **Expected state:** Drawer content and the full Drawer fit their boxes, and the G3-D verification step passes without changing its assertions.
 - **Why it matters:** Visible overflow and a red CI step.
-- **What it blocks:** A green G3-D CI step.
+- **What it blocked (while open):** A green G3-D CI step.
 - **Dependencies:** None. Related: GAP-064 G3-D.
 - **Framework scope:** Angular, Vue.
 - **Existing reusable infrastructure:** The G3-D Drawer stories, layout tests and screenshots.
-- **Recommended resolution direction:** Directional only; a box-sizing decision needs its own Spec.
+- **Resolution:** Through GAP-098's box-sizing decision (ADR-063) and its Spec, not a Drawer-specific change.
 - **Source/evidence:** `docs/architecture/research/2026-10-08-gap-064-g3d-closeout.md`; G3-D Spec §17.
 - **Rendered Prime evidence (2026-10-08 pilot):** reproduced against PrimeNG 21.1.9 and PrimeVue 4.5.5 in every position: drawer 320 × 720 → 324 × 726, content 316 → 360 wide, RTL content at x = −39, full drawer 720 → 722 tall (`docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §3.3 D1).
 - **Architectural decision required:** No.
 
 #### GAP-098 — Prime's global base style (`box-sizing: border-box`) is not applied in Ultimate
 
-- **Status:** OPEN (registered 2026-10-08 by user decision P-7 on the verification-first Playbook proposal; cross-cutting base-style / parity issue)
+- **Status:** RESOLVED ([ADR-063](DECISIONS.md#adr-063--ultimate-scoped-border-box-base-layer-registered-per-component-through-each-framework-core-gap-098) Option B; [PR #23](https://github.com/majedsiefalnasr/ultimate-packages/pull/23) merged head `d248446c` as `main` `46ec6d93`; closeout recorded 2026-10-16). Registered 2026-10-08 by user decision P-7 on the verification-first Playbook proposal as a cross-cutting base-style / parity issue.
+- **Closeout evidence (2026-10-16):**
+  - Each component registers one zero-specificity `border-box` rule scoped to its own scope roots: `:where(.u-root, .u-root *)` plus `::before`/`::after`, for `root`, `overlay`, `panel`, `mask`, `list` and `*Root`/`*Overlay`/`*Mask` keys.
+  - The rule is registered through the existing `ng-core`, `vue-core` and `react-core` stylesheet registration, immediately before the component CSS. No page-wide selector is added, as the 2026-10-08 ruling requires.
+  - The owner accepted the 175 regenerated Angular and Vue baselines (React had none) before merge.
+  - [Post-merge main CI 38805415026](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38805415026): Angular and Vue G3-D pass (GAP-097), and the new box-model probes pass in the strict browser runs.
+  - Compared with [pre-merge main CI 38772859680](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38772859680), no step newly fails. The remaining failure is Provenance validation (GAP-094, 696 manifest problems in both runs), and Release Select mode still fails on the separate Changesets action v2 / CLI v2 mismatch (unregistered; noted under GAP-087 and C12), unchanged from pre-merge Release 38772859834.
+  - Unregistered follow-ups and disclosed probe skips are listed in the [closeout record](research/2026-10-16-gap-097-098-scoped-box-model-closeout.md).
 - **Type:** Styling, Visual, Cross-cutting
-- **Blocking level:** MEDIUM
-- **Current evidence:**
+- **Blocking level:** MEDIUM (at the time this was open)
+- **Original evidence:**
   - _Static (at `main` `4c099a9`):_ Prime's base style, `@primeuix/styles` 2.0.3 `base/index.ts`, starts with `*, ::before, ::after { box-sizing: border-box; }` and is loaded by every Prime app. Ultimate has a port of it in `packages/uix-styles/src/base/index.ts` (exported as `@ultimate/uix-styles/base`), but no source in `ng-core`, `vue-core`, `react-core`, `uix-styled`, `themes`, `ng`, `vue` or `react` imports it, and none of them declares a global `border-box` rule. A few React style modules set `border-box` locally (scroll-panel, multi-select, listbox, carousel, select).
-  - _Browser:_ the G3-D runs measured `box-sizing: content-box` on the Drawer, which causes GAP-097.
+  - _Browser:_ the G3-D runs measured `box-sizing: content-box` on the Drawer, which caused GAP-097.
 - **Expected state:** Ultimate components render under the same box model Prime's own base layer gives them, so ported upstream sizing rules produce Prime's rendered sizes. How it is applied (global base registration, a scoped rule, or per-component adaptation) is for the remediation's own decision.
 - **Why it matters:** Upstream component CSS assumes `border-box`. Any component that combines a fixed or percentage width/height with padding or borders can render larger than in Prime. Per-component source-parity checks cannot detect a missing global layer.
 - **What it blocks:** Nothing directly. GAP-097 is one known effect; affected components will show up as differences in rendered Prime-parity verification (`docs/architecture/PARITY_PLAYBOOK.md`).
 - **Dependencies:** None. Related: GAP-097, GAP-064, GAP-074 / GAP-078 (the approved shared-registration and SSR style contracts any global registration would follow).
 - **Framework scope:** Angular, React, Vue.
 - **Existing reusable infrastructure:** `@ultimate/uix-styles/base`; each core's `StyleSheet` registration.
-- **Recommended resolution direction:** Directional only. Remediation is separate, authorized work with its own Spec, because applying a global box model can change many components at once. It is not part of the Playbook work or the verification pilot. **Not** by importing Prime's global `*, ::before, ::after` rule as-is (user ruling 2026-10-08): that rule applies to every element on the page, so it would also change unrelated application content. The Spec must decide the Ultimate scoping/integration strategy.
+- **Recommended resolution direction:** Directional only. Remediation is separate, authorized work with its own Spec, because applying a global box model can change many components at once. It is not part of the Playbook work or the verification pilot. **Not** by importing Prime's global `*, ::before, ::after` rule as-is (user ruling 2026-10-08): that rule applies to every element on the page, so it would also change unrelated application content. The Spec must decide the Ultimate scoping/integration strategy (decided by ADR-063 and its Spec).
 - **Source/evidence:** `docs/architecture/research/2026-10-08-prime-parity-verification-playbook-proposal.md` §1.2 and §11; GAP-097. Rendered evidence: the 2026-10-08 pilot measured `box-sizing` border-box (Prime) versus content-box (Ultimate) on every probed Drawer, Message and Tag part; it changes geometry visibly on the Drawer and not at all on Tag (`docs/architecture/research/2026-10-08-prime-parity-pilot-report.md` §3, §6).
-- **Architectural decision required:** Yes, at remediation time: where and how the base layer is applied.
+- **Architectural decision required:** Made: [ADR-063](DECISIONS.md#adr-063--ultimate-scoped-border-box-base-layer-registered-per-component-through-each-framework-core-gap-098) (Option B, Ultimate-scoped per-component layer).
 
 #### GAP-099 — Drawer close button and full-drawer border differ from Prime (three distinct defects)
 
