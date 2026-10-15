@@ -319,3 +319,35 @@ test("a source path cannot hide a later classification error in the same diff", 
   assert.match(result.stderr, /cannot classify watched package: invalid/);
   assert.doesNotMatch(result.stdout, /diff check .* passed/);
 });
+
+test("watched path in a package without a manifest requires provenance", (t) => {
+  const { root, base } = repository(t);
+  write(root, "packages/uix/.gitkeep", "");
+  commit(root, "change package without manifest");
+  expectDiff(root, base, ["packages/uix/.gitkeep"]);
+  expectRequired(runValidator(root, ["--base-ref", base]));
+});
+
+test("watched path in a package without a manifest passes with provenance", (t) => {
+  const { root, base } = repository(t);
+  write(root, "packages/uix/.gitkeep", "");
+  write(root, PROVENANCE, `${HEADINGS}\nLineage note.\n`);
+  commit(root, "change package without manifest and record provenance");
+  expectDiff(root, base, ["packages/uix/.gitkeep", PROVENANCE]);
+  expectPass(runValidator(root, ["--base-ref", base]));
+});
+
+test("exempt config fails closed when its package manifest is missing", (t) => {
+  const { root, base } = repository(t);
+  write(root, "packages/react/vitest.config.ts", "export default {};\n");
+  rmSync(join(root, "docs/architecture/provenance/react.json"));
+  commit(root, "change config and remove manifest");
+  expectDiff(root, base, [
+    "packages/react/vitest.config.ts",
+    "docs/architecture/provenance/react.json",
+  ]);
+  const result = runValidator(root, ["--base-ref", base]);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /cannot classify watched package without/);
+  assert.doesNotMatch(result.stdout, /diff check .* passed/);
+});

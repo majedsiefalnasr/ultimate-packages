@@ -140,8 +140,10 @@ function requiresProvenance(path, cache) {
     fail(`cannot classify watched path ${JSON.stringify(path)}`);
   }
   if (insidePackage[0] === "src") return true;
-  if (manifestDestinations(packageName, cache).has(path)) return true;
-  return !TOOLING_CONFIG_PATHS.has(path);
+  // Only an exempt config's classification depends on the manifest; every other
+  // watched path requires provenance whether or not its package has a manifest.
+  if (!TOOLING_CONFIG_PATHS.has(path)) return true;
+  return manifestDestinations(packageName, cache).has(path);
 }
 
 const baseRefIndex = process.argv.indexOf("--base-ref");
