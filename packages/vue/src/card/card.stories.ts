@@ -30,7 +30,7 @@ export const WithHeaderAndFooter: Story = {
     template: `
       <UCard style="width: 20rem;">
         <template #header>
-          <img src="https://primefaces.org/cdn/primevue/images/usercard.jpg" style="width: 100%; display: block;" />
+          <img src="/media/landscape-1.png" style="width: 100%; height: 10rem; object-fit: cover; display: block;" />
         </template>
         <template #title>Advanced Card</template>
         <template #content>
