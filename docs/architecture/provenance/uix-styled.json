@@ -159,7 +159,7 @@
     "originalPath": "components/lib/componentbase/ComponentBase.js",
     "ultimateDestination": "packages/uix-styled/src/stylesheet/box-model.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Reference-derived from PrimeReact 10.9.9 components/lib/componentbase/ComponentBase.js lines 259-263 (`.p-component, .p-component * { box-sizing: border-box }` in @layer primereact) and @primeuix/styles 2.0.3 base (`*, ::before, ::after { box-sizing: border-box }`). Ultimate-authored form (GAP-098, ADR-063): one rule per component, scoped to the component's own root, overlay, panel and mask classes taken from its style module (scopeRootsOf), with :where() zero specificity and no page-wide or attribute-prefix selector; BOX_MODEL_KEY_PREFIX, boxModelCss(), scopeRootsOf() and registerBoxModel() are Ultimate-authored and registered by the Angular, Vue and React cores."
+    "modificationDescription": "Reference-derived from PrimeReact 10.9.9 components/lib/componentbase/ComponentBase.js lines 259-263 (`.p-component, .p-component * { box-sizing: border-box }` in @layer primereact) and @primeuix/styles 2.0.3 base (`*, ::before, ::after { box-sizing: border-box }`). Ultimate-authored form (GAP-098, ADR-063): one rule per component, scoped to the component's own root, overlay, panel, mask and list classes (and *Root/*Overlay/*Mask keys) taken from its style module (scopeRootsOf), with :where() zero specificity and no page-wide or attribute-prefix selector; BOX_MODEL_KEY_PREFIX, boxModelCss(), scopeRootsOf() and registerBoxModel() are Ultimate-authored and registered by the Angular, Vue and React cores."
   },
   {
     "originalPath": "n/a",
