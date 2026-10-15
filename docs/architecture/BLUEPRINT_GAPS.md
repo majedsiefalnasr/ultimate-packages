@@ -1689,21 +1689,29 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-093 — Provenance script self-tests need vendor tarballs that CI does not have
 
-- **Status:** OPEN (registered 2026-10-07, CI-health registration; CI infrastructure defect)
+- **Status:** RESOLVED (fix `efd677fd` on `main`; closeout recorded 2026-10-15).
 - **Type:** CI, Provenance tooling
-- **Blocking level:** LOW
+- **Blocking level:** LOW (at registration).
 - **Current evidence:**
-  - "Provenance scripts self-tests" fail with `tar (child): .vendor-cache/primereact-10.9.9.tar.gz: Cannot open: No such file or directory` (and `primevue-4.5.5.tar.gz`). `.vendor-cache/` is git-ignored and is not populated in CI.
-  - Locally the cache is populated, so the failure is CI-only.
-  - Failing since the first remote CI run (2026-10-04).
-- **Expected state:** The self-tests either fetch the pinned tarballs or skip the real-extraction cases explicitly when the cache is absent.
-- **Why it matters:** The step is red on every push.
-- **What it blocks:** A green provenance self-test step.
+  - Before the fix, "Provenance scripts self-tests" failed on every push: the real-extraction cases ran `tar xzf .vendor-cache/primereact-10.9.9.tar.gz` / `primevue-4.5.5.tar.gz`. `.vendor-cache/` is git-ignored, and nothing in CI filled it. The only producer, `vendor-snapshot.mjs`, is a generator that rewrites `checksums.json`; it is not a verifier. This happened from the first remote CI run (2026-10-04) through [run 38730856573](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38730856573) at `bdc4dbcf`.
+  - Fix `efd677fd`:
+    - `scripts/provenance/fetch-vendor-cache.mjs` (`pnpm run vendor:fetch -- <package>...`) downloads only the named archives, from the `sourceUrl` values in `docs/architecture/checksums.json`.
+    - It fails closed unless each SHA-256 matches the committed value. A mismatched download or existing file is never accepted, and `checksums.json` is never written.
+    - Offline tests cover the present, fetched, hash-mismatch, HTTP-failure, stale-file and argument cases.
+    - A CI step, "Fetch pinned vendor archives", runs before the unchanged self-tests. No test was skipped or weakened.
+  - Fresh downloads of both pinned archives on 2026-10-15 were byte-identical to the recorded hashes (`9598e1e3…8ecf`, `f34c320e…546d`).
+  - "Fetch pinned vendor archives" and "Provenance scripts self-tests" both pass in `main` CI runs [38737652296](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38737652296) at `efd677fd` and [38746333926](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38746333926) at `ccb97d68`. Every other failure in those runs predates the fix.
+  - **Process deviation, recorded:** `efd677fd` reached `main` without a pull request (a `push.default=upstream` configuration error). The user decided to keep it and record it; see [the record](research/2026-10-15-gap-093-vendor-archive-fetch-record.md) (PR #19).
+- **Expected state:** The self-tests run against the pinned archives in CI, and those archives are verified against the committed checksums.
+- **Why it matters:** The self-test step was red on every push.
+- **What it blocks:** Nothing — resolved.
 - **Dependencies:** None.
 - **Framework scope:** Repository-wide.
-- **Existing reusable infrastructure:** The pinned tarball versions in the provenance scripts.
-- **Recommended resolution direction:** Directional only.
-- **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job).
+- **Existing reusable infrastructure:** `docs/architecture/checksums.json`; `pnpm run vendor:fetch`.
+- **Recommended resolution direction:** Implemented: a verified fetch of the pinned archives in CI.
+- **Source/evidence:**
+  - Historical failures: CI runs 37188652979, 37590590099 and 38730856573 (`ci` job).
+  - Resolution: [Specification](../superpowers/specs/2026-10-15-gap-093-vendor-archive-fetch-design.md), [Implementation Plan](../superpowers/plans/2026-10-15-gap-093-vendor-archive-fetch.md) (Spec Review, Plan Review and code review passed with findings applied), commit `efd677fd`, the CI runs above, and the [evidence record](research/2026-10-15-gap-093-vendor-archive-fetch-record.md).
 - **Architectural decision required:** No.
 
 #### GAP-094 — `provenance:validate` fails on a missing manifest entry
