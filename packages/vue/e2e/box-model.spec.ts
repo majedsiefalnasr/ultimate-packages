@@ -162,10 +162,16 @@ for (const { story, open: action, ready } of CASES) {
   test(`Vue box model ${story}`, async ({ page }) => {
     await page.goto(storyUrl(story));
     await expect(page.locator("#storybook-root")).toBeAttached();
-    await open(page, action);
     // Opened overlays must be visible; static stories only need to be rendered.
+    // The open action is retried: an event sent before the story has attached
+    // its listeners (e.g. a global context menu in WebKit) is otherwise lost.
     if (action.kind === "none") await expect(page.locator(ready).first()).toBeAttached();
-    else await expect(page.locator(ready).first()).toBeVisible();
+    else {
+      await expect(async () => {
+        await open(page, action);
+        await expect(page.locator(ready).first()).toBeVisible({ timeout: 2000 });
+      }).toPass({ timeout: 15000 });
+    }
     expect(await contentBoxElements(page)).toEqual([]);
   });
 }
