@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync, spawnSync } from "node:child_process";
 
-const VALIDATOR = fileURLToPath(new URL("./validate-provenance.mjs", import.meta.url));
+const VALIDATOR = join(dirname(fileURLToPath(import.meta.url)), "validate-provenance.mjs");
 const GIT = execFileSync("which", ["git"], { encoding: "utf8" }).trim();
 const PROVENANCE = "docs/architecture/PROVENANCE.md";
 const HEADINGS = [

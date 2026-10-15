@@ -9,6 +9,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
+import { TextDecoder } from "node:util";
 
 const PROVENANCE_PATH = "docs/architecture/PROVENANCE.md";
 const REQUIRED_HEADINGS = [
