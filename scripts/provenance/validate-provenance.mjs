@@ -10,6 +10,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { TextDecoder } from "node:util";
+import { classifyPackage, listWatchedFiles } from "./production-scope.mjs";
 
 const PROVENANCE_PATH = "docs/architecture/PROVENANCE.md";
 const REQUIRED_HEADINGS = [
@@ -171,8 +172,11 @@ if (baseRefIndex !== -1) {
   pass(`diff check against ${baseRef} passed`);
 }
 
-// Manifest completeness: every .ts/.tsx file under packages/{uix,ng,react}-*/src/ must have
-// a corresponding entry in docs/architecture/provenance/<package-name>.json.
+// Manifest completeness (ADR-062): every production file — one the package's
+// own build distributes, classified from build evidence by production-scope.mjs
+// — under packages/{uix,ng,react,vue,themes}*/src/ must have an entry in
+// docs/architecture/provenance/<package-name>.json. Every problem is collected
+// and reported before the exit code is set.
 const MANIFEST_WATCHED_PREFIXES = ["uix", "ng", "react", "vue", "themes"];
 
 function findWatchedPackageDirs(root = "packages") {
@@ -183,43 +187,52 @@ function findWatchedPackageDirs(root = "packages") {
     .filter(({ path }) => statSync(path).isDirectory());
 }
 
-function walkTsFiles(dir, files = []) {
-  if (!existsSync(dir)) return files;
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const full = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      walkTsFiles(full, files);
-    } else if (
-      entry.name.endsWith(".ts") ||
-      entry.name.endsWith(".tsx") ||
-      entry.name.endsWith(".vue")
-    ) {
-      files.push(full);
-    }
+function readManifestPaths(manifestPath) {
+  try {
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    if (!Array.isArray(manifest)) return { error: "is not a JSON array" };
+    return { paths: new Set(manifest.map((entry) => entry?.ultimateDestination)) };
+  } catch (err) {
+    return { error: `is invalid: ${err.message}` };
   }
-  return files;
 }
 
-const watchedPackages = findWatchedPackageDirs();
-for (const { name, path } of watchedPackages) {
+const failures = [];
+for (const { name, path } of findWatchedPackageDirs()) {
+  if (listWatchedFiles(path).length === 0) continue;
+  const scope = classifyPackage(path);
+  if (scope.error) {
+    failures.push(`${name}: classifier error: ${scope.error}`);
+    continue;
+  }
+  const counts = `production=${scope.production.size} excluded=${scope.excluded.size}`;
+  if (scope.production.size === 0) {
+    pass(`${name}: ${counts} missing=0`);
+    continue;
+  }
+
   const manifestPath = join("docs/architecture/provenance", `${name}.json`);
-  const srcFiles = walkTsFiles(join(path, "src"));
-
-  if (srcFiles.length === 0) continue;
-
   if (!existsSync(manifestPath)) {
-    fail(`${path} has source files but no manifest at ${manifestPath}`);
+    failures.push(`${name}: production files but no manifest at ${manifestPath}`);
+    continue;
+  }
+  const manifest = readManifestPaths(manifestPath);
+  if (manifest.error) {
+    failures.push(`${name}: manifest ${manifestPath} ${manifest.error}`);
+    continue;
   }
 
-  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
-  const manifestPaths = new Set(manifest.map((entry) => entry.ultimateDestination));
+  const missing = [...scope.production].filter((file) => !manifest.paths.has(file)).sort();
+  const summary = `${name}: ${counts} missing=${missing.length}`;
+  if (missing.length === 0) pass(summary);
+  else console.error(`[provenance:validate] FAIL: ${summary}`);
+  for (const file of missing) failures.push(`${file} has no entry in ${manifestPath}`);
+}
 
-  for (const file of srcFiles) {
-    if (!manifestPaths.has(file)) {
-      fail(`${file} has no entry in ${manifestPath}`);
-    }
-  }
-  pass(`${name}: all ${srcFiles.length} source file(s) have manifest entries`);
+if (failures.length > 0) {
+  for (const failure of failures) console.error(`[provenance:validate] FAIL: ${failure}`);
+  console.error(`[provenance:validate] ${failures.length} manifest problem(s)`);
+  process.exit(1);
 }
 
 console.log("[provenance:validate] all checks passed");
