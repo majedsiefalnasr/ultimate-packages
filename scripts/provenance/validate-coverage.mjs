@@ -7,10 +7,9 @@
 // lifecycle" section (this task applies the identical lifecycle Task 6
 // defined, with the coverage-specific numbers substituted):
 //
-//   - Baseline-only diff for this package (per baseline-lib.mjs's
-//     isBaselineOnlyDiff — the diff touches only
-//     docs/architecture/PERFORMANCE.md, not this package's own
-//     packages/<name>/src/** or packages/<name>/package.json): run the
+//   - Baseline-only diff for this package (for React/Vue, the complete
+//     diff touches only docs/architecture/PERFORMANCE.md; other packages
+//     retain baseline-lib.mjs's existing per-package classification): run the
 //     INTEGRITY check — the value this PR writes into PERFORMANCE.md must
 //     equal a fresh real measurement of the package's current line
 //     coverage.
@@ -37,11 +36,32 @@
 // json-summary field this gate reads: total.lines.pct.
 
 import { getMergeBaseSha, readFileAtRef, isBaselineOnlyDiff } from "./baseline-lib.mjs";
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const REGRESSION_THRESHOLD_POINTS = 2.0;
 const PERFORMANCE_MD_PATH = "docs/architecture/PERFORMANCE.md";
+const STRICT_BASELINE_PACKAGES = new Set(["react", "vue"]);
+
+// React/Vue coverage configuration changes alter the R7 denominator. The
+// shared R6 detector does not classify vitest.config.ts as package-affecting,
+// so use the complete diff for these two R7 packages only. Git errors throw
+// and fail the validator instead of falling through to the integrity path.
+export function isCoverageBaselineOnlyDiff(mergeBaseSha, packageName) {
+  if (!STRICT_BASELINE_PACKAGES.has(packageName)) {
+    return isBaselineOnlyDiff(mergeBaseSha, packageName);
+  }
+
+  const changedFiles = execFileSync(
+    "git",
+    ["diff", "--name-only", "-z", `${mergeBaseSha}...HEAD`, "--"],
+    { encoding: "utf8" }
+  )
+    .split("\0")
+    .filter(Boolean);
+  return changedFiles.length === 1 && changedFiles[0] === PERFORMANCE_MD_PATH;
+}
 
 // Explicit, exhaustive list of all 17 publishable packages (same set
 // measure-package-size.mjs uses for R6). ng/ng-core's coverage report
@@ -148,7 +168,7 @@ export function parsePhase10CoverageTable(markdown) {
 //
 // Params:
 //   packageName        - e.g. "uix-utils"
-//   isBaselineOnly      - boolean, from isBaselineOnlyDiff(mergeBaseSha, packageName)
+//   isBaselineOnly      - boolean, from isCoverageBaselineOnlyDiff(mergeBaseSha, packageName)
 //   mergeBasePct        - number|undefined, the merge-base PERFORMANCE.md's recorded line-coverage % for this package
 //   freshMeasuredPct    - number, a fresh re-measurement of the package's current line coverage
 //   headWrittenPct      - number|undefined, the value the current diff's HEAD version of PERFORMANCE.md records for this package (only consulted in the baseline-only branch)
@@ -249,7 +269,7 @@ function runCli() {
       continue;
     }
 
-    const baselineOnly = isBaselineOnlyDiff(mergeBaseSha, packageName);
+    const baselineOnly = isCoverageBaselineOnlyDiff(mergeBaseSha, packageName);
 
     const result = evaluatePackageCoverage({
       packageName,
