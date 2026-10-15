@@ -76,6 +76,45 @@ describe("UBaseComponent", () => {
     expect(spin[0].textContent).toContain("@keyframes u-icon-spin");
   });
 
+  it("registers its scoped box-model rule once, immediately before its CSS (GAP-098)", () => {
+    TestBed.createComponent(TestHostComponent).detectChanges();
+    TestBed.createComponent(TestHostComponent).detectChanges();
+    const keys = Array.from(document.head.querySelectorAll("style")).map((s) =>
+      s.getAttribute("data-u-ng-style")
+    );
+    expect(keys.filter((key) => key === "u-box-model:test-component")).toHaveLength(1);
+    const rule = document.head.querySelector('style[data-u-ng-style="u-box-model:test-component"]');
+    expect(rule?.textContent).toContain(":where(.u-test-component-root, .u-test-component-root *)");
+    expect(rule?.textContent).toContain("box-sizing: border-box;");
+  });
+
+  it("adds the box-model rule before the component CSS (GAP-098)", () => {
+    ngCoreStyleSheet.delete("test-component");
+    ngCoreStyleSheet.delete("u-box-model:test-component");
+    const addSpy = vi.spyOn(ngCoreStyleSheet, "add");
+    TestBed.createComponent(TestHostComponent).detectChanges();
+    const order = addSpy.mock.calls.map(([key]) => key);
+    expect(order).toContain("u-box-model:test-component");
+    expect(order).toContain("test-component");
+    expect(order.indexOf("u-box-model:test-component")).toBe(order.indexOf("test-component") - 1);
+    addSpy.mockRestore();
+  });
+
+  it("registers no box-model rule for a style module without scope roots (GAP-098 Amendment A1)", () => {
+    @Component({
+      standalone: true,
+      selector: "u-test-rootless-component",
+      template: "<div></div>",
+      changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    class TestRootlessComponent extends UBaseComponent {
+      protected override readonly componentName = "test-rootless-component";
+      protected override readonly styleModule = { css: ".u-x {}", classes: {} };
+    }
+    TestBed.createComponent(TestRootlessComponent).detectChanges();
+    expect(ngCoreStyleSheet.has("u-box-model:test-rootless-component")).toBe(false);
+  });
+
   it("resolves dt() calls in registered CSS into var(--u-*, ...) references", () => {
     // Define a test component that uses dt() calls in its CSS
     @Component({
@@ -131,6 +170,12 @@ describe("UBaseComponent", () => {
     expect(
       Array.from(doc.head.querySelectorAll("style")).some(
         (s) => s.getAttribute("data-u-ng-style") === "test-component"
+      )
+    ).toBe(true);
+    // GAP-098: the box-model rule follows the same per-document (SSR) path.
+    expect(
+      Array.from(doc.head.querySelectorAll("style")).some(
+        (s) => s.getAttribute("data-u-ng-style") === "u-box-model:test-component"
       )
     ).toBe(true);
     expect(docSpy).not.toHaveBeenCalled();

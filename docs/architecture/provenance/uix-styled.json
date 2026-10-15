@@ -154,5 +154,17 @@
     "ultimateDestination": "packages/uix-styled/test/icon-spin.test.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the icon-spin rule text, its single class selector, its reduced-motion stop and once-per-sheet registration (GAP-124)."
+  },
+  {
+    "originalPath": "components/lib/componentbase/ComponentBase.js",
+    "ultimateDestination": "packages/uix-styled/src/stylesheet/box-model.ts",
+    "modificationStatus": "reference-derived",
+    "modificationDescription": "Reference-derived from PrimeReact 10.9.9 components/lib/componentbase/ComponentBase.js lines 259-263 (`.p-component, .p-component * { box-sizing: border-box }` in @layer primereact) and @primeuix/styles 2.0.3 base (`*, ::before, ::after { box-sizing: border-box }`). Ultimate-authored form (GAP-098, ADR-063): one rule per component, scoped to the component's own root, overlay, panel and mask classes taken from its style module (scopeRootsOf), with :where() zero specificity and no page-wide or attribute-prefix selector; BOX_MODEL_KEY_PREFIX, boxModelCss(), scopeRootsOf() and registerBoxModel() are Ultimate-authored and registered by the Angular, Vue and React cores."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/uix-styled/test/box-model.test.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the scoped box-model rule text, the rejection of empty or non-u- roots, scope-root extraction and once-per-key registration with the empty-name/empty-roots no-op (GAP-098)."
   }
 ]

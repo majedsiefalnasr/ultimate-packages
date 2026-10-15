@@ -62,4 +62,13 @@ describe("createBaseEditableHolder", () => {
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
     expect(wrapper.emitted("value-change")?.[0]).toEqual(["b"]);
   });
+
+  it("the empty-name default mounts without registering a box-model rule (GAP-098 Amendment A1)", () => {
+    const Base = createBaseEditableHolder();
+    mount({ extends: Base, template: `<div />` });
+    const boxModelKeys = Array.from(document.head.querySelectorAll("style[data-u-style]"))
+      .map((el) => el.getAttribute("data-u-style") ?? "")
+      .filter((key) => key.startsWith("u-box-model:"));
+    expect(boxModelKeys).toEqual([]);
+  });
 });

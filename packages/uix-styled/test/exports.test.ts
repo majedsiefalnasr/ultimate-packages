@@ -27,6 +27,10 @@ describe("package exports", () => {
     expect(mod.tint).toBeTypeOf("function");
     expect(mod.palette).toBeTypeOf("function");
     expect(mod.StyleSheet).toBeTypeOf("function");
+    expect(mod.BOX_MODEL_KEY_PREFIX).toBe("u-box-model:");
+    expect(mod.boxModelCss).toBeTypeOf("function");
+    expect(mod.scopeRootsOf).toBeTypeOf("function");
+    expect(mod.registerBoxModel).toBeTypeOf("function");
     expect(mod.Theme).toBeTypeOf("object");
     expect(mod.ThemeService).toBeTypeOf("object");
     expect(mod.ThemeUtils).toBeTypeOf("object");

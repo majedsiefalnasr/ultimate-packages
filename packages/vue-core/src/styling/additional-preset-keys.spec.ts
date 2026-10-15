@@ -8,7 +8,11 @@ import { registerComponentStyle, vueCoreStyleSheet } from "./vue-style-sheet";
  * registers theme VARIABLES for further preset keys and never structural CSS
  * under them. Omitting it keeps the existing behavior.
  */
-const alphaStyle: StyleModule = { css: ".u-alpha { color: dt('alpha.color'); }", classes: {} };
+// GAP-098: alpha has a real root so the box-model key's position is observable.
+const alphaStyle: StyleModule = {
+  css: ".u-alpha { color: dt('alpha.color'); }",
+  classes: { root: "u-alpha" },
+};
 const betaStyle: StyleModule = { css: ".u-beta { color: dt('beta.color'); }", classes: {} };
 
 function keys(): string[] {
@@ -50,6 +54,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
       "u-icon-spin",
       "u-common-variables",
       "alpha-variables",
+      "u-box-model:alpha",
       "alpha",
     ]);
   });
@@ -61,6 +66,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
       "u-icon-spin",
       "u-common-variables",
       "alpha-variables",
+      "u-box-model:alpha",
       "alpha",
     ]);
   });
@@ -74,6 +80,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
       "alpha-variables",
       "gamma-variables",
       "beta-variables",
+      "u-box-model:alpha",
       "alpha",
     ]);
     expect(
@@ -92,6 +99,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
       "u-common-variables",
       "alpha-variables",
       "beta-variables",
+      "u-box-model:alpha",
       "alpha",
     ]);
   });
