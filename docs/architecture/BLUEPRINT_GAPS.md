@@ -1731,14 +1731,15 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
     - Evidence: [reconciliation note](research/2026-10-15-gap-094-production-scope-reconciliation.md).
   - **Backfill progress:**
     - Batch 1 (2026-10-16) added evidence-backed entries for the 19 missing files in ng-core, react-core, vue-core and uix-styles; 696 → **677** missing ([evidence record](research/2026-10-16-gap-094-backfill-batch-1-evidence.md), [batch Plan](../superpowers/plans/2026-10-16-gap-094-backfill-batch-1.md)).
-    - Remaining: ng 172, react 228, vue 277.
+    - Batch 2 (2026-10-16) added ADR-064 entries for Chip and Tag in all three frameworks (16 files, 20 entries: 8 COPY, 8 REFERENCE); 677 → **661** missing ([evidence record](research/2026-10-16-gap-094-backfill-batch-2-evidence.md), [batch Plan](../superpowers/plans/2026-10-16-gap-094-backfill-batch-2.md)).
+    - Remaining: ng 168, react 222, vue 271.
 - **Expected state:** Every production file (ADR-062) has a manifest entry backed by per-file evidence, and the validator passes.
 - **Why it matters:** The step is red on every push.
 - **What it blocks:** A green provenance validation step.
 - **Dependencies:** None.
 - **Framework scope:** Angular (current failure).
 - **Existing reusable infrastructure:** `docs/architecture/provenance/ng.json`.
-- **Recommended resolution direction:** Evidence-backed backfill of the remaining production entries (677 after batch 1), in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4 as amended by A1. From batch 2 on, entries follow [ADR-064](DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label)'s source classes and compatibility matrix.
+- **Recommended resolution direction:** Evidence-backed backfill of the remaining production entries (661 after batch 2), in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4 as amended by A1. From batch 2 on, entries follow [ADR-064](DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label)'s source classes and compatibility matrix.
 - **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job); G3-B/G3-C1/G3-C2 closeouts; [DR-5 options](research/2026-10-15-gap-094-dr5-provenance-scope-options.md).
 - **Architectural decision required:** Yes — decided: ADR-062 (DR-5 Option B, production scope, 2026-10-15).
 
@@ -2302,6 +2303,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **Same change, different labels.** `@primeuix/styles` content kept with renamed selectors is `adapted` in `uix-styles.json` and `reference-derived` (described as "not verbatim") in the G3 `*-style.ts` entries.
   - **Labels by file role.** The Phase C Batch 3 Plan assigned labels by file role, including `authored` for structural style files.
   - **Incomplete or stale preambles.** `packages/ng-core/THIRD-PARTY-NOTICES.md`'s preamble covers only the `UBaseComponent`/`UBaseEditableHolder` hierarchy ("informed by, but not copied from" PrimeNG) and does not mention the `adapted` files in `ng-core.json`. `packages/{react,vue}/THIRD-PARTY-NOTICES.md` still say "will incorporate". The MIT license text is present in every affected notice.
+  - **Sources from another framework (found in GAP-094 batch 2, 2026-10-16).** React `chip.tsx` and Vue `Chip.vue` retain statements from PrimeNG's `chip.ts`, and their entries cite it. The `packages/{react,vue}/THIRD-PARTY-NOTICES.md` files name only PrimeReact or PrimeVue (all MIT, copyright PrimeTek). Whether they should also name PrimeNG is undecided.
   - **Uncertain batch 1 entries.** Four GAP-094 batch 1 entries are uncertain under ADR-064's ambiguity rule: ng-core `confirmation/confirmation.ts`, ng-core `dialog-service/dynamic-dialog-ref.ts`, and both react-core `confirmation/confirmation-event-bus.ts` entries.
 - **Expected state:** Existing entries and notice preambles are consistent with ADR-064, or each inconsistency carries a recorded, approved disposition.
 - **Why it matters:** Traceability records (Blueprint §8) that contradict the code or each other weaken the provenance evidence.

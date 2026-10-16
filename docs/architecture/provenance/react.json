@@ -334,5 +334,59 @@
     "ultimateDestination": "packages/react/e2e/gap-124-react-unchanged.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored browser test. Verifies a React-only Storybook page carries no icon-spin rule and the loading icon does not animate (GAP-124 R-AC3)."
+  },
+  {
+    "originalPath": "components/lib/chip/Chip.js",
+    "ultimateDestination": "packages/react/src/chip/chip.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2, evidence record research/2026-10-16-gap-094-backfill-batch-2-evidence.md). Compared with PrimeReact 10.9.9 Chip.js: the rendering statements are rewritten, but the control flow is kept (image else icon, then label, then the removable control with role=button, onClick close and onKeyDown), with root aria-label={label} and internal visible state. Statements retained from PrimeNG's Chip instead are recorded in this file's second entry. Drops template, removeIcon, the imageAlt default, onRemove's veto result, ids and pt; uses UTimesIcon. Added in c42f709d (Phase C Batch 1, Chip row); ecdbf793 only reformatted it."
+  },
+  {
+    "originalPath": "packages/primeng/src/chip/chip.ts",
+    "ultimateDestination": "packages/react/src/chip/chip.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2): second upstream source for this file, from another framework. The file keeps PrimeNG 21.1.9 Chip's keydown statement (event.key Enter or Backspace, also in PrimeVue Chip.vue), its remove-control attributes tabIndex disabled ? -1 : 0 and aria-label={removeAriaLabel} (absent from PrimeReact), and its close() order (hide, then emit, with no veto). The package's THIRD-PARTY-NOTICES.md names PrimeReact only; that notice question is recorded under GAP-132."
+  },
+  {
+    "originalPath": "components/lib/chip/ChipBase.js",
+    "ultimateDestination": "packages/react/src/chip/chip-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeReact 10.9.9 ChipBase's class map keys (root, icon, label, removeIcon; an image key is added and the root's conditional p-chip-image class is dropped), the label line-height: 1.5 and the root display: inline-flex/align-items: center, with p- renamed u- and -text renamed -label. The other selectors and property lists come from @primeuix/styles (second entry). Added in c42f709d."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 chip",
+    "ultimateDestination": "packages/react/src/chip/chip-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2): second upstream source for this file. Keeps @primeuix/styles 2.0.3 chip's selectors and their property lists with literal Ultimate values in place of dt() tokens: the root (gap, background, color, border-radius, padding), the image (width, height, border-radius: 50%, negative inline-start margin), the icon (font-size), the remove icon (cursor, font-size) and its :focus-visible outline and outline-offset."
+  },
+  {
+    "originalPath": "components/lib/chip/package.json",
+    "ultimateDestination": "packages/react/src/chip/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 2). The same-named PrimeReact 10.9.9 chip/ directory's entry is a package.json pointing at built chip files; this barrel shares only the exported component (UChip, plus its props type). Added in c42f709d."
+  },
+  {
+    "originalPath": "components/lib/tag/Tag.js",
+    "ultimateDestination": "packages/react/src/tag/tag.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064; GAP-094 backfill batch 2). Compared with PrimeReact 10.9.9 Tag.js: every statement is rewritten (no mergeProps, IconUtils or imperative handle). Shared are only the public props (severity, value, icon, rounded) and the equivalent span-root/icon/value output; the icon gets a wrapping span and children replace value in one label span instead of upstream's separate value and children spans. Added in be9f35e4 (Phase C Batch 1, Tag row); ecdbf793 only reformatted it."
+  },
+  {
+    "originalPath": "components/lib/tag/TagBase.js",
+    "ultimateDestination": "packages/react/src/tag/tag-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeReact 10.9.9 TagBase's root class logic (u-tag u-component plus u-tag-<severity> and u-tag-rounded) and its root display: inline-flex, align-items: center and justify-content: center; the value class is renamed label. The severity selectors come from @primeuix/styles (second entry for this file). Added in be9f35e4."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 tag",
+    "ultimateDestination": "packages/react/src/tag/tag-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2): second upstream source for this file. Keeps @primeuix/styles 2.0.3 tag's selector set (root, icon, rounded, success, info, warn, danger, secondary, contrast) and the root's declared properties (font-size, font-weight, padding, border-radius, gap, background, color), with literal Ultimate values in place of dt() tokens and backgrounds only on the severity selectors."
+  },
+  {
+    "originalPath": "components/lib/tag/package.json",
+    "ultimateDestination": "packages/react/src/tag/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 2). The same-named PrimeReact 10.9.9 tag/ directory's entry is a package.json pointing at built tag files; this barrel shares only the exported component (UTag, plus its props type). Added in be9f35e4."
   }
 ]

@@ -904,5 +904,29 @@
     "ultimateDestination": "packages/ng/e2e/gap-124-contrast.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored browser test. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement of the DataView loading icon (Spec §10)."
+  },
+  {
+    "originalPath": "packages/primeng/src/chip/chip.ts",
+    "ultimateDestination": "packages/ng/src/chip/chip.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2, evidence record research/2026-10-16-gap-094-backfill-batch-2-evidence.md). Keeps PrimeNG 21.1.9 Chip's template structure (ng-content, image else icon, label, removable span with role=button, tabindex disabled ? -1 : 0, aria-label, click/keydown) and its close()/onKeydown() statements (Enter or Backspace). Rewritten as signal inputs/outputs on UBaseComponent; drops chipProps, styleClass, the removeIcon input and removeicon template, pt/Bind, dataP, ChipModule and TimesCircleIcon (UTimesIcon instead); removeAriaLabel becomes an input instead of a translation getter; close() ignores clicks when disabled. Added in c42f709d (Phase C Batch 1, Chip row); ecdbf793 only reformatted it."
+  },
+  {
+    "originalPath": "packages/primeng/src/chip/public_api.ts",
+    "ultimateDestination": "packages/ng/src/chip/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 2). The same-named PrimeNG 21.1.9 chip/ entry public_api.ts re-exports primeng/types/chip, ./chip and ./style/chipstyle with export *; this barrel shares only the component re-export (export { UChip } from ./chip), not upstream's re-export structure. Added in c42f709d."
+  },
+  {
+    "originalPath": "packages/primeng/src/tag/tag.ts",
+    "ultimateDestination": "packages/ng/src/tag/tag.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeNG 21.1.9 Tag's icon-then-label template structure with cx('icon')/cx('label') and its input doc text verbatim (\"Severity type of the tag.\", \"Whether the corners of the tag are rounded.\"). Rewritten as signal inputs on UBaseComponent with the label as projected content falling back to value; drops styleClass, the icon template, pt/Bind and dataP. Added in be9f35e4 (Phase C Batch 1, Tag row); ecdbf793 only reformatted it."
+  },
+  {
+    "originalPath": "packages/primeng/src/tag/public_api.ts",
+    "ultimateDestination": "packages/ng/src/tag/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 2). The same-named PrimeNG 21.1.9 tag/ entry public_api.ts re-exports primeng/types/tag, ./tag and ./style/tagstyle with export *; this barrel shares only the component re-export (export { UTag } from ./tag). Added in be9f35e4."
   }
 ]
