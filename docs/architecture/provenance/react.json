@@ -400,5 +400,29 @@
     "ultimateDestination": "packages/react/src/tag/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 2). The same-named PrimeReact 10.9.9 tag/ directory's entry is a package.json pointing at built tag files; this barrel shares only the exported component (UTag, plus its props type). Added in be9f35e4."
+  },
+  {
+    "originalPath": "components/lib/divider/Divider.js",
+    "ultimateDestination": "packages/react/src/divider/divider.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064; GAP-094 backfill batch 3). Compared with PrimeReact 10.9.9 Divider.js: every statement is rewritten (no mergeProps, inline styles or imperative handle). Shared are only standard ARIA (role=\"separator\", aria-orientation bound to layout), the layout prop and its 'horizontal' default, and the equivalent root/content div output; the content div is rendered only when children exist, where upstream always renders it. Added in c42f709d (Phase C Batch 1, Divider row)."
+  },
+  {
+    "originalPath": "components/lib/divider/package.json",
+    "ultimateDestination": "packages/react/src/divider/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 3). The same-named PrimeReact 10.9.9 divider/ directory's entry is a package.json pointing at built divider files; this barrel shares only the exported component (UDivider, plus its props type). Added in c42f709d."
+  },
+  {
+    "originalPath": "components/lib/toolbar/Toolbar.js",
+    "ultimateDestination": "packages/react/src/toolbar/toolbar.tsx",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064; GAP-094 backfill batch 3). Compared with PrimeReact 10.9.9 Toolbar.js: every statement is rewritten (no mergeProps, ObjectUtils.getJSXElement, left/right aliases or imperative handle). Shared are only standard ARIA (role=\"toolbar\") and the public start/center/end props with equivalent slot output; children render first, slots render only when given, and aria-labelledby is an explicit prop (upstream passes it through as an other prop). Added in be9f35e4 (Phase C Batch 1, Toolbar row)."
+  },
+  {
+    "originalPath": "components/lib/toolbar/package.json",
+    "ultimateDestination": "packages/react/src/toolbar/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 3). The same-named PrimeReact 10.9.9 toolbar/ directory's entry is a package.json pointing at built toolbar files; this barrel shares only the exported component (UToolbar, plus its props type). Added in be9f35e4."
   }
 ]
