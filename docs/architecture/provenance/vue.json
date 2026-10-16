@@ -898,5 +898,47 @@
     "ultimateDestination": "packages/vue/e2e/gap-124-contrast.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored browser test. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement of the DataView loading icon (Spec §10)."
+  },
+  {
+    "originalPath": "packages/primevue/src/chip/Chip.vue",
+    "ultimateDestination": "packages/vue/src/chip/Chip.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2, evidence record research/2026-10-16-gap-094-backfill-batch-2-evidence.md). Keeps PrimeVue 4.5.5 Chip.vue's template structure (v-if visible root with cx('root') and aria-label, image v-if, icon v-else-if with [cx('icon'), icon], label v-if label !== null, now a span instead of a div) and its component options (extends base, inheritAttrs: false, data visible: true, onKeydown Enter/Backspace, close emitting remove). Adds alt, disabled, removeAriaLabel and the imageError emit; the remove control's role, tabindex and aria-label come from PrimeNG (second entry). Drops the default/removeicon slots, the icon slot, dataP and pt; uses UTimesIcon. Added in c42f709d (Phase C Batch 1, Chip row)."
+  },
+  {
+    "originalPath": "packages/primeng/src/chip/chip.ts",
+    "ultimateDestination": "packages/vue/src/chip/Chip.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2): second upstream source for this file, from another framework. The remove control keeps PrimeNG 21.1.9 Chip's template attributes role=\"button\", tabindex disabled ? -1 : 0 and aria-label bound to removeAriaLabel, which PrimeVue's Chip.vue does not have. The package's THIRD-PARTY-NOTICES.md names PrimeVue only; that notice question is recorded under GAP-132."
+  },
+  {
+    "originalPath": "packages/primevue/src/chip/BaseChip.vue",
+    "ultimateDestination": "packages/vue/src/chip/BaseChip.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeVue 4.5.5 BaseChip.vue's prop definitions (label [String, Number] default null, icon, image, removable) in a defineComponent factory extending createBaseComponent; adds alt, disabled and removeAriaLabel, drops removeIcon and provide. Added in c42f709d; f146ea8c and ec3112f3 (GAP-082) only added Vue typing."
+  },
+  {
+    "originalPath": "packages/primevue/src/chip/package.json",
+    "ultimateDestination": "packages/vue/src/chip/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 2). The same-named PrimeVue 4.5.5 chip/ directory's entry is a package.json pointing at Chip.vue; this barrel shares only the exported component (UChip, plus createBaseChip). Added in c42f709d."
+  },
+  {
+    "originalPath": "packages/primevue/src/tag/Tag.vue",
+    "ultimateDestination": "packages/vue/src/tag/Tag.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY, conservative under ADR-064's ambiguity rule (GAP-094 backfill batch 2). Compared with PrimeVue 4.5.5 Tag.vue: the template is rewritten (the icon span wraps an <i>, the slot moves inside the label span), but it keeps the root/icon/label cx sequence and upstream's component options, including inheritAttrs: false without a $attrs binding. Drops the icon slot, dataP and pt. Added in be9f35e4 (Phase C Batch 1, Tag row); ecdbf793 only reformatted it."
+  },
+  {
+    "originalPath": "packages/primevue/src/tag/BaseTag.vue",
+    "ultimateDestination": "packages/vue/src/tag/BaseTag.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064; GAP-094 backfill batch 2). Compared with PrimeVue 4.5.5 BaseTag.vue: shares only the public prop names (severity, value, icon, rounded), written as full typed definitions instead of upstream's shorthand, in a defineComponent factory extending createBaseComponent; no provide. Added in be9f35e4; f146ea8c (GAP-082) only added Vue typing."
+  },
+  {
+    "originalPath": "packages/primevue/src/tag/package.json",
+    "ultimateDestination": "packages/vue/src/tag/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 2). The same-named PrimeVue 4.5.5 tag/ directory's entry is a package.json pointing at Tag.vue; this barrel shares only the exported component (UTag, plus createBaseTag). Added in be9f35e4."
   }
 ]
