@@ -280,5 +280,29 @@
     "ultimateDestination": "packages/vue-core/src/styling/icon-spin.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the shared u-icon-spin rule is registered once on mount (GAP-124)."
+  },
+  {
+    "originalPath": "packages/primevue/src/confirmationservice/ConfirmationService.js",
+    "ultimateDestination": "packages/vue-core/src/service/confirmation-service.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeVue 4.5.5 ConfirmationService (GAP-094 backfill batch 1). Same require()/close() emitting 'confirm'/'close' and the same app.provide install. The event bus is created in this file with @ultimate/uix-utils EventBus() (upstream: confirmationeventbus/ConfirmationEventBus.js, also EventBus()). Drops app.config.globalProperties.$confirm; replaces PrimeVueConfirmSymbol with UConfirmationServiceKey and adds TypeScript API types. API fixed by the approved Phase C Batch 1 Plan section 1.2. Added in 13faa040; ecdbf793 only reformatted it."
+  },
+  {
+    "originalPath": "packages/primevue/src/dialogservice/DialogService.js",
+    "ultimateDestination": "packages/vue-core/src/service/dialog-service.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeVue 4.5.5 DialogService (GAP-094 backfill batch 1). open() builds the same { content: markRaw(component), options, data, close(params) } handle and emits 'open' and 'close'; the payload field is named ref where upstream uses instance, and a close(ref) method is added. The event bus is created in this file with @ultimate/uix-utils EventBus() (upstream: dynamicdialogeventbus/DynamicDialogEventBus.js). Drops app.config.globalProperties.$dialog. API fixed by Phase C Batch 1 Plan section 1.2. Added in 13faa040."
+  },
+  {
+    "originalPath": "packages/primevue/src/toastservice/ToastService.js",
+    "ultimateDestination": "packages/vue-core/src/service/toast-service.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeVue 4.5.5 ToastService (GAP-094 backfill batch 1). Same add()/remove() emitting 'add'/'remove'; upstream's removeGroup()/removeAllGroups() are replaced by removeAll() emitting 'remove-all', as Phase C Batch 1 Plan section 1.2 requires. The event bus is created in this file with @ultimate/uix-utils EventBus() (upstream: toasteventbus/ToastEventBus.js). Drops app.config.globalProperties.$toast. Added in 13faa040."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/vue-core/src/service/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored re-export barrel for vue-core's service entry (GAP-094 backfill batch 1). The same-named PrimeVue 4.5.5 directory packages/core/src/service/ exists but is not a counterpart: its only module, PrimeVueService.js, exports a single global EventBus(), while this barrel re-exports the three service plugins, their injection keys and their per-service event buses. Each upstream service and event bus is its own primevue package directory. Added in 13faa040."
   }
 ]

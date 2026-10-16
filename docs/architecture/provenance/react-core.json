@@ -286,5 +286,23 @@
     "ultimateDestination": "packages/react-core/src/styling/ssr-contract.spec.tsx",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the client-only styling contract: a server render emits no <style> and registers nothing (GAP-078)."
+  },
+  {
+    "originalPath": "components/lib/confirmdialog/ConfirmDialog.js",
+    "ultimateDestination": "packages/react-core/src/confirmation/confirmation-event-bus.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Reimplemented with PrimeReact 10.9.9's confirmDialog() as reference (GAP-094 backfill batch 1). Keeps the 'confirm-dialog' event carrying the options with visible defaulted to true, but emits through a module-level @ultimate/uix-utils EventBus instead of OverlayService, emits even when visible is false (upstream emits only when visible), and returns void instead of { show, hide }. UConfirmationOptions is a typed subset of the ConfirmDialog/ConfirmPopup props, plus acceptVisible/rejectVisible, which PrimeReact does not have. Added in b8e89232 (Phase C Batch 1, Overlay group)."
+  },
+  {
+    "originalPath": "components/lib/confirmpopup/ConfirmPopup.js",
+    "ultimateDestination": "packages/react-core/src/confirmation/confirmation-event-bus.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "confirmPopup() counterpart of the ConfirmDialog.js entry for this file (GAP-094 backfill batch 1): same 'confirm-popup' event and visible default, with the same differences from upstream's confirmPopup()."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react-core/src/confirmation/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored re-export barrel for react-core's confirmation entry (GAP-094 backfill batch 1). PrimeReact 10.9.9 has no confirmation/ directory; confirmDialog and confirmPopup live with their components. Added in b8e89232."
   }
 ]
