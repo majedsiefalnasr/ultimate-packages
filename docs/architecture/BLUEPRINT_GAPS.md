@@ -1738,7 +1738,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Dependencies:** None.
 - **Framework scope:** Angular (current failure).
 - **Existing reusable infrastructure:** `docs/architecture/provenance/ng.json`.
-- **Recommended resolution direction:** Evidence-backed backfill of the remaining production entries (677 after batch 1), in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4.
+- **Recommended resolution direction:** Evidence-backed backfill of the remaining production entries (677 after batch 1), in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4 as amended by A1. From batch 2 on, entries follow [ADR-064](DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label)'s source classes and compatibility matrix.
 - **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job); G3-B/G3-C1/G3-C2 closeouts; [DR-5 options](research/2026-10-15-gap-094-dr5-provenance-scope-options.md).
 - **Architectural decision required:** Yes — decided: ADR-062 (DR-5 Option B, production scope, 2026-10-15).
 
@@ -2289,6 +2289,28 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 - **Scope boundary:** Packaging change plus smoke tests through their own Spec and Plan; requires separate authorization.
 - **Reproduced (2026-10-11, Task 3):** the installed-package smoke harness failed on unmodified packages: `init`, `add`, `theme` and `doctor` exited with ENOENT on `compatibility-manifest.json` (resolved inside `node_modules/.pnpm/…`) in the Angular, React and Vue consumers, and MCP `check_framework_compatibility` returned `manifest_unreadable` for all four calls; `generate Button` and MCP initialize passed (`fb24b59`).
 - **Fix:** `84ccb4d` (CLI), `fc0e221` (MCP), `ff65e99` (CI smoke step), `ca1c033` and `0434407` (copy-script entry guard and lint), `0da4757` (the `packages/cli/README.md` its `files` already declared); installed-package smoke green locally (all checks PASS; packaged copy byte-identical in both tarballs) and in CI (PR run 38211485724 at `0434407`; post-merge run 38213822385 at `6f92dd0`). Merged as `6f92dd0` (PR #3).
+
+#### GAP-132 — Legacy provenance manifest entries use undefined or inconsistent classifications
+
+- **Status:** OPEN (registered 2026-10-16 by user decision on the GAP-094 classification semantics; follow-up of [ADR-064](DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label)).
+- **Type:** Provenance, Documentation
+- **Blocking level:** LOW
+- **Current evidence:** see [`research/2026-10-16-gap-094-provenance-classification-semantics.md`](research/2026-10-16-gap-094-provenance-classification-semantics.md) §2 (findings F3, F4) and §5.1. At `main` `f811c457`:
+  - **Undefined values.** 793 entries use 11 `modificationStatus` values, eight of which were never defined by a Specification.
+  - **`adapted` without an upstream file.** 10 `adapted` entries have `originalPath: "n/a"`: 5 vue-core composables derived from other Ultimate files and 5 Vue style modules.
+  - **`authored` tests pointing at themselves.** 9 Angular `authored` test entries set `originalPath` to their own Ultimate path.
+  - **Same change, different labels.** `@primeuix/styles` content kept with renamed selectors is `adapted` in `uix-styles.json` and `reference-derived` (described as "not verbatim") in the G3 `*-style.ts` entries.
+  - **Labels by file role.** The Phase C Batch 3 Plan assigned labels by file role, including `authored` for structural style files.
+  - **Incomplete or stale preambles.** `packages/ng-core/THIRD-PARTY-NOTICES.md`'s preamble covers only the `UBaseComponent`/`UBaseEditableHolder` hierarchy ("informed by, but not copied from" PrimeNG) and does not mention the `adapted` files in `ng-core.json`. `packages/{react,vue}/THIRD-PARTY-NOTICES.md` still say "will incorporate". The MIT license text is present in every affected notice.
+  - **Uncertain batch 1 entries.** Four GAP-094 batch 1 entries are uncertain under ADR-064's ambiguity rule: ng-core `confirmation/confirmation.ts`, ng-core `dialog-service/dynamic-dialog-ref.ts`, and both react-core `confirmation/confirmation-event-bus.ts` entries.
+- **Expected state:** Existing entries and notice preambles are consistent with ADR-064, or each inconsistency carries a recorded, approved disposition.
+- **Why it matters:** Traceability records (Blueprint §8) that contradict the code or each other weaken the provenance evidence.
+- **What it blocks:** Nothing directly. It does not block GAP-094: ADR-064 governs new entries only.
+- **Dependencies:** ADR-064. Related: GAP-094.
+- **Framework scope:** Angular, React, Vue, and the `uix-*` and `themes` manifests.
+- **Existing reusable infrastructure:** The pinned archives (`vendor:fetch`), the batch evidence-record format, and `generate-manifest.mjs`'s mechanical `unmodified`/`import-path-adapted` rule.
+- **Recommended resolution direction:** Directional only. A separately authorized review re-checks the listed entries against their upstream files under ADR-064 and records a disposition for each. Merged entries are not edited without that authorization.
+- **Architectural decision required:** No (ADR-064 decided the contract); per-entry dispositions need authorization.
 
 ---
 

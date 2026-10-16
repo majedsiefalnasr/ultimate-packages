@@ -569,3 +569,62 @@ The approved option's research named a list of component root classes generated 
 - The rule is unlayered, as all Ultimate CSS is. A host rule inside an `@layer` cannot override it; an unlayered host rule or `!important` can.
 
 **Consequences.** The GAP-098 Specification fixes the selector, the registration points (Angular, Vue and React), the verification set and the baseline-review process. Changed baselines need the owner's visual acceptance before merge.
+
+## ADR-064 — Provenance source class (COPY, REFERENCE, ORIGINAL) is evidence-based; `modificationStatus` is a descriptive sub-label
+
+Status: Accepted (user decision, Option B, 2026-10-16). Evidence: [`research/2026-10-16-gap-094-provenance-classification-semantics.md`](research/2026-10-16-gap-094-provenance-classification-semantics.md); [GAP-094](BLUEPRINT_GAPS.md#gap-094--provenancevalidate-fails-on-a-missing-manifest-entry); [ADR-062](#adr-062--provenance-manifest-scope-is-production-distributed-source-dr-5); Blueprint §2.3 and §8.
+
+**Context.**
+
+- **No contract is enforced.** The file-level manifests' `modificationStatus` has no machine-readable contract:
+  - `validate-provenance.mjs` reads only `ultimateDestination`;
+  - there is no manifest schema;
+  - nothing else consumes the value.
+- **Two historical vocabularies conflict:**
+  - the Phase 1 Specification enumerates `unmodified` | `import-path-adapted` | `modified`;
+  - the Phase 2 Specification enumerates `unmodified` | `import-path-adapted` | `refactored` | `reimplemented-with-reference`.
+
+  `modified` and `refactored` were never used.
+
+- **Most values in use were never defined.** At `main` `f811c457`, 793 entries use 11 values. Eight of them have no definition in any Specification: `adapted`, `authored`, `reference-derived`, `rebranded`, `reconstructed`, `transcribed`, `ultimate-authored` and `re-export`. Use is inconsistent: the same transformation carries different labels, some labels are assigned by file role, and some `originalPath` values contradict the label.
+- **The Blueprint needs a traceability answer.** §8 requires every copied or materially derived source area to be traceable and its notices preserved. That is a question about the content of each file.
+
+**Decision.**
+
+1. **Source class.** Every new or backfilled manifest entry has exactly one source class. The class is decided only by a side-by-side comparison of the file with its counterpart in the checksum-verified pinned upstream archive (`pnpm run vendor:fetch`):
+   - **COPY** — the file retains upstream expression: wording (including doc comments), statements, declaration blocks or selectors, or structure (the same members and control flow). This holds whether the expression is verbatim or has been renamed, subset, import-rewritten, extended or re-serialized by a generator.
+   - **REFERENCE** — a named upstream counterpart was compared, and the comparison shows only interface facts in common: public names, standard APIs, event names, parameter shapes and equivalent behavior.
+   - **ORIGINAL** — no upstream counterpart exists in any pinned archive. This is checked by name and by a same-named upstream file or directory, and the paths searched are recorded. A file derived only from other Ultimate files is ORIGINAL.
+2. **Ambiguity resolves to COPY.** When the evidence leaves genuine uncertainty about whether upstream wording, statements or structure are retained, the class is COPY. The evidence cites the compared upstream file and states the uncertainty. Standard APIs, public names or equivalent behavior alone never establish copying.
+3. **Where the class lives.**
+   - **Evidence record.** The class and its evidence live in the batch evidence record, which has a class column and the comparison per file.
+   - **Manifest.** The manifest schema is unchanged. `modificationStatus` is a descriptive sub-label constrained by the matrix below. `modificationDescription` cites the evidence record.
+   - **This ADR** is the authoritative contract. `PROVENANCE.md` carries the reader-facing summary.
+4. **Compatibility matrix for new entries.** Derived from the 11 values found in the repository.
+
+   | Source class | Allowed `modificationStatus` (new entries) | Meaning of the sub-label                                                                               | `originalPath`                                                        |
+   | ------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+   | COPY         | `unmodified`                               | Content identical to the upstream file.                                                                | The upstream file, in the manifest's established path form            |
+   | COPY         | `import-path-adapted`                      | Identical except for import specifiers rewritten to `@ultimate/*`.                                     | The upstream file                                                     |
+   | COPY         | `adapted`                                  | Any other COPY: renames, subsetting, additions, re-serialization. The description states what changed. | The upstream file (two entries when two upstream files contribute)    |
+   | REFERENCE    | `reimplemented-with-reference`             | Rewritten with the upstream file as reference, with no retained expression.                            | The compared upstream file                                            |
+   | ORIGINAL     | `authored`                                 | Ultimate-authored; no upstream counterpart.                                                            | Exactly `"n/a"`; any Ultimate source file is named in the description |
+
+   **Legacy-only values.** `reference-derived`, `rebranded`, `reconstructed`, `transcribed`, `ultimate-authored` and `re-export` stay valid on existing entries. They are not used for new entries and are not approved by this ADR merely because they are present.
+
+   **Never used.** `modified` and `refactored` (historical enumerations only) are not permitted.
+
+   No class is assigned retroactively to an existing entry.
+
+5. **No enforcement change.** There is no validator or schema change in this decision. A class or enum check needs its own decision.
+6. **Existing entries are not edited, migrated or reclassified**, including GAP-094 backfill batch 1. Their inconsistencies are recorded as [GAP-132](BLUEPRINT_GAPS.md#gap-132--legacy-provenance-manifest-entries-use-undefined-or-inconsistent-classifications) for separate authorization.
+
+This decision supersedes the Phase 1 and Phase 2 Specification vocabularies for new entries; those Specifications carry a note pointing here. It also overrides, for any new entry, the G3 Specifications' fixed `reference-derived` ("Ported (Option B — reference, not verbatim copy)") wording: a future ported style module is COPY with sub-label `adapted`. It amends the GAP-094 Specification §3.4 (Amendment A1).
+
+**Trade-off.** The class is decidable from evidence and matches the Blueprint's traceability purpose without migrating 793 merged entries. The cost is that existing entries remain inconsistent until GAP-132 is separately authorized. Over-attribution under the ambiguity rule is accepted, because every package that carries upstream code already ships the upstream MIT notice.
+
+**Consequences.**
+
+- Each GAP-094 backfill batch records a class per file and uses only the matrix's values.
+- Reviewers check the class against the comparison, not against file role or name.
+- A future enforcement step can read the class from the evidence records or adopt a schema field through its own decision.
