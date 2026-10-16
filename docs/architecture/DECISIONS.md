@@ -628,3 +628,38 @@ This decision supersedes the Phase 1 and Phase 2 Specification vocabularies for 
 - Each GAP-094 backfill batch records a class per file and uses only the matrix's values.
 - Reviewers check the class against the comparison, not against file role or name.
 - A future enforcement step can read the class from the evidence records or adopt a schema field through its own decision.
+
+## ADR-065 — Limited exception: two pre-existing React stylesheets retain PrimeReact theme CSS values outside `components/lib`
+
+Status: Accepted (user decision, Option 2 of the GAP-132 deviation report under Blueprint §37, 2026-10-16). Evidence: [batch 2 evidence record, Correction section](research/2026-10-16-gap-094-backfill-batch-2-evidence.md#correction-under-gap-132-2026-10-16); [GAP-132](BLUEPRINT_GAPS.md#gap-132--legacy-provenance-manifest-entries-use-undefined-or-inconsistent-classifications); PR #28 (merge `d21933be`).
+
+**Context.**
+
+- **The boundary.** The approved Phase 3 Specification §1 and the PrimeReact entry in `PROVENANCE.md` limit the PrimeReact library source path to `components/lib/`.
+- **The two files.** Both were added in Phase C Batch 1 on 2026-09-20 and are unchanged since:
+  - `packages/react/src/chip/chip-style.ts` (`c42f709d`);
+  - `packages/react/src/tag/tag-style.ts` (`be9f35e4`).
+- **What they retain.** The GAP-132 correction found, by direct comparison with the pinned PrimeReact 10.9.9 archive, that both files retain declaration values from PrimeReact theme CSS outside that path:
+  - Chip, from `public/themes/saga-blue/theme.css`, identical in the other saga themes;
+  - Tag, from `public/themes/tailwind-light/theme.css`. Its matched values are also stock Tailwind constants; the uncertainty is stated and resolved to COPY under ADR-064.
+- **How the theme ships.** PrimeReact's build copies `public/themes/**` into its published package as `resources/themes`, under the same MIT license and pinned commit.
+- **Why the entries stay.** ADR-064 and Blueprint §8 require the retained lineage to be recorded, so removing the entries would make the records false.
+- **How the values got there.** The repository cannot show how the values entered these files. The Batch 1 Plan required consulting only the cited `components/lib` paths, and `extract-primereact-source.mjs` extracts only from `components/lib`.
+
+**Decision.**
+
+- **Exception.** The two files above are an explicitly limited, recorded exception to the `components/lib/` source boundary. They are a pre-existing Phase C Batch 1 departure from it.
+- **What stays.** Their provenance entries remain unchanged, including the theme-source entries added in PR #28, and so does the PrimeReact theme disclosure in `packages/react/THIRD-PARTY-NOTICES.md`.
+- **What is not authorized.** The general PrimeReact source boundary stays `components/lib/`. This decision does not authorize PrimeReact theme CSS, or any other path outside `components/lib/`, as a source for any other file or any future work, including later GAP-094 batches.
+- **Stylesheets.** They are not rewritten, and their visual baselines are unchanged.
+
+**Trade-off.**
+
+- _Gained:_ the approved boundary is kept and the provenance records stay truthful, with no source or baseline change.
+- _Cost:_ a standing two-file exception remains. A later, separately authorized source change could rewrite the two stylesheets from admissible sources and retire it.
+
+**Consequences.**
+
+- Any other retained value from outside `components/lib/` that is found later is a new deviation needing its own decision under Blueprint §37. This ADR does not cover it.
+- The Phase 3 Specification is not amended.
+- GAP-132 records this disposition, and `PROVENANCE.md`'s GAP-132 disclosure cites this ADR.
