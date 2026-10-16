@@ -197,3 +197,12 @@ The shared `.u-icon-spin` rule in `packages/uix-styled/src/stylesheet/icon-spin.
 ### GAP-098 box-model source disclosure
 
 The per-component `border-box` rule built by `packages/uix-styled/src/stylesheet/box-model.ts` is reference-derived from PrimeReact 10.9.9 `components/lib/componentbase/ComponentBase.js` (`.p-component, .p-component * { box-sizing: border-box }`) and `@primeuix/styles` 2.0.3 `base` (`*, ::before, ::after { box-sizing: border-box }`). Ultimate's form is authored (ADR-063): one rule per component, scoped to that component's own root, overlay, panel, mask and list classes (and `*Root`/`*Overlay`/`*Mask` keys), with `:where()` zero specificity and no page-wide selector; the Angular, Vue and React cores register it from their existing style-registration points. Per-file records are in `docs/architecture/provenance/uix-styled.json`.
+
+### GAP-132 batch 2 correction source disclosure
+
+The GAP-132 correction of GAP-094 batch 2 (2026-10-16) recorded two kinds of source lineage beyond the per-package entries above. Per-file evidence is in [`research/2026-10-16-gap-094-backfill-batch-2-evidence.md`](research/2026-10-16-gap-094-backfill-batch-2-evidence.md#correction-under-gap-132-2026-10-16).
+
+- **PrimeNG material in the React and Vue packages.** `packages/react/src/chip/chip.tsx` and `packages/vue/src/chip/Chip.vue` retain a statement from PrimeNG 21.1.9 `packages/primeng/src/chip/chip.ts` (source class COPY under ADR-064). `packages/react/THIRD-PARTY-NOTICES.md` and `packages/vue/THIRD-PARTY-NOTICES.md` therefore add the PrimeNG Community Versions MIT notice, excluding the LTS section.
+- **PrimeReact theme CSS.** `packages/react/src/chip/chip-style.ts` and `packages/react/src/tag/tag-style.ts` retain declaration values from PrimeReact 10.9.9 theme CSS: `public/themes/saga-blue/theme.css` and `public/themes/tailwind-light/theme.css`. The `primereact` package distributes these as `resources/themes`.
+- **Unresolved discrepancy.** That theme source lies outside the `components/lib` source path recorded in the PrimeReact entry above. The discrepancy is open under GAP-132 and is not decided here.
+- **Legal review.** Whether any further notice is required is a legal question for company-policy review (Blueprint §8).
