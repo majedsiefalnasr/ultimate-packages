@@ -1729,13 +1729,16 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
     - **696 production files lack an entry.** The 467 excluded files without an entry are no longer required.
     - A build-based soundness check found no distributed file classified as excluded.
     - Evidence: [reconciliation note](research/2026-10-15-gap-094-production-scope-reconciliation.md).
+  - **Backfill progress:**
+    - Batch 1 (2026-10-16) added evidence-backed entries for the 19 missing files in ng-core, react-core, vue-core and uix-styles; 696 → **677** missing ([evidence record](research/2026-10-16-gap-094-backfill-batch-1-evidence.md), [batch Plan](../superpowers/plans/2026-10-16-gap-094-backfill-batch-1.md)).
+    - Remaining: ng 172, react 228, vue 277.
 - **Expected state:** Every production file (ADR-062) has a manifest entry backed by per-file evidence, and the validator passes.
 - **Why it matters:** The step is red on every push.
 - **What it blocks:** A green provenance validation step.
 - **Dependencies:** None.
 - **Framework scope:** Angular (current failure).
 - **Existing reusable infrastructure:** `docs/architecture/provenance/ng.json`.
-- **Recommended resolution direction:** Evidence-backed backfill of the 696 production entries, in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4.
+- **Recommended resolution direction:** Evidence-backed backfill of the remaining production entries (677 after batch 1), in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4.
 - **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job); G3-B/G3-C1/G3-C2 closeouts; [DR-5 options](research/2026-10-15-gap-094-dr5-provenance-scope-options.md).
 - **Architectural decision required:** Yes — decided: ADR-062 (DR-5 Option B, production scope, 2026-10-15).
 

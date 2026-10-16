@@ -226,5 +226,71 @@
     "ultimateDestination": "packages/ng-core/src/basecomponent/style-sheet.spec.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the per-document style registry (GAP-078): styles land in the given document, one registry per document, one element per key, adoption of server-rendered keyed <style> elements (including partial server output and selector-special keys), and no adoption of Vue-owned data-u-style elements."
+  },
+  {
+    "originalPath": "packages/primeng/src/api/confirmationservice.ts",
+    "ultimateDestination": "packages/ng-core/src/confirmation/confirmation-service.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeNG 21.1.9 ConfirmationService (GAP-094 backfill batch 1, evidence record research/2026-10-16-gap-094-backfill-batch-1-evidence.md). Keeps upstream's requireConfirmationSource Subject<Confirmation | null>, the requireConfirmation$ observable, and confirm()/close() emitting and returning this. Renamed UConfirmationService, typed to UConfirmation, provided in root; drops the accept stream and onAccept(). Added in b8e89232 (Phase C Batch 1, Overlay group: ConfirmDialog/ConfirmPopup)."
+  },
+  {
+    "originalPath": "packages/primeng/src/api/confirmation.ts",
+    "ultimateDestination": "packages/ng-core/src/confirmation/confirmation.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Subset of PrimeNG 21.1.9's Confirmation interface (GAP-094 backfill batch 1). Keeps message, key, icon, header, accept, reject, acceptLabel, rejectLabel, acceptVisible, rejectVisible, closeOnEscape, target and modal; callbacks are typed () => void and target is narrowed to HTMLElement. Drops the button icon/class/props fields, blockScroll, dismissableMask, defaultFocus, the EventEmitter accept/reject events, closable and position. Added in b8e89232."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/confirmation/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored re-export barrel for ng-core's confirmation entry (GAP-094 backfill batch 1). PrimeNG 21.1.9 has no confirmation/ directory; its ConfirmationService and Confirmation live in api/. Added in b8e89232."
+  },
+  {
+    "originalPath": "packages/primeng/src/dynamicdialog/dialogservice.ts",
+    "ultimateDestination": "packages/ng-core/src/dialog-service/dialog-service.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Reimplemented with PrimeNG 21.1.9 DialogService as reference (GAP-094 backfill batch 1). Keeps open(component, config) returning a dialog ref, but dispatches an open$ request (RxJS Subject) to the always-mounted UDynamicDialog instead of upstream's createComponent, ApplicationRef.attachView and document.body append, so ng-core does not depend on packages/ng. No duplicate check, getInstance or appendTo; adds a close(ref, result) convenience method. UDynamicDialogConfig is a header/data/inputValues/modal/closeOnEscape subset of DynamicDialogConfig. Added in b8e89232; ecdbf793 only reformatted it."
+  },
+  {
+    "originalPath": "packages/primeng/src/dynamicdialog/dynamicdialog-ref.ts",
+    "ultimateDestination": "packages/ng-core/src/dialog-service/dynamic-dialog-ref.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Reimplemented with PrimeNG 21.1.9 DynamicDialogRef as reference (GAP-094 backfill batch 1). Keeps close(result) and the onClose observable; close() completes immediately instead of after upstream's 1000 ms timeout and also emits an internal requestClose$ that UDynamicDialog uses to unmount the instance. Drops destroy and the drag, resize, maximize and child-load events. Added in b8e89232."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/dialog-service/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored re-export barrel for ng-core's dialog-service entry (GAP-094 backfill batch 1). PrimeNG 21.1.9 has no dialog-service/ directory; its DialogService is exported from dynamicdialog/ together with the DynamicDialog component. Added in b8e89232."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/id/component-id-generator.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored injectable per-application id counter, ComponentIdGenerator.next(prefix) (GAP-094 backfill batch 1). Added in 68d00a98 under the SSR-safe component id Spec and Plan (2026-09-12; both files still read Draft for review) to replace UDialog's module-scope counter. PrimeNG 21.1.9 has no counterpart class; its components call @primeuix/utils uuid('pn_id_')."
+  },
+  {
+    "originalPath": "packages/primeng/src/terminal/terminalservice.ts",
+    "ultimateDestination": "packages/ng-core/src/terminal-service/terminal-service.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeNG 21.1.9 TerminalService (GAP-094 backfill batch 1). Same command and response Subjects, commandHandler/responseHandler observables, and sendCommand()/sendResponse() with the same empty-value guards. Renamed UTerminalService, provided in root, with readonly members and void return types. Added in be9f35e4 (Phase C Batch 1, Terminal row)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/terminal-service/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored re-export barrel for ng-core's terminal-service entry (GAP-094 backfill batch 1). PrimeNG 21.1.9 has no terminal-service/ directory; its TerminalService lives in terminal/ with the Terminal component. Added in be9f35e4."
+  },
+  {
+    "originalPath": "packages/primeng/src/api/messageservice.ts",
+    "ultimateDestination": "packages/ng-core/src/toast-service/toast-service.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Adapted from PrimeNG 21.1.9 MessageService (GAP-094 backfill batch 1). Same message and clear Subjects, messageObserver/clearObserver, and add()/addAll()/clear() with the same guards; clear() uses key ?? null where upstream uses key || null. Renamed UToastService and provided in root. UToastMessageOptions is a local type based on upstream's api/toastmessage.ts ToastMessageOptions: a subset of its fields, severity narrowed to a union, plus an index signature. Added in be9f35e4 (Phase C Batch 1, Toast row)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/toast-service/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored re-export barrel for ng-core's toast-service entry (GAP-094 backfill batch 1). PrimeNG 21.1.9 has no toast-service/ directory; its MessageService lives in api/. Added in be9f35e4."
   }
 ]
