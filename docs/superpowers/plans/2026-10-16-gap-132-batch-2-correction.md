@@ -40,3 +40,14 @@
 - ADR-064 changes, the schema, the validator and production scope.
 - Other batches and other legacy entries.
 - Batch 3.
+
+## Erratum — approved scope deviation (2026-10-16)
+
+- **What happened.**
+  - This Plan's file list omitted `docs/architecture/PROVENANCE.md`.
+  - Scope item 3's notice changes touch watched package paths, so the ADR-061 PR-diff check (`requiresProvenance()` in `scripts/provenance/validate-provenance.mjs`) requires a `PROVENANCE.md` change in the same diff.
+  - PR #28's first CI run (38912565747) failed with `source-affecting or unclassified watched path does not update docs/architecture/PROVENANCE.md`.
+  - Commit `13cca895` then added the "GAP-132 batch 2 correction source disclosure" section, and the PR merged as `d21933be` without first asking for a scope decision. The conflict should have been surfaced before the scope was widened.
+- **Approval.** The user approved the change after the fact on 2026-10-16 (options A and D). `docs/architecture/PROVENANCE.md` is part of this correction's scope as of this erratum.
+- **Follow-up.** The disclosure wording was aligned with ADR-065, the limited exception for the two theme-derived React stylesheets.
+- **Unchanged.** No other part of this Plan changes.
