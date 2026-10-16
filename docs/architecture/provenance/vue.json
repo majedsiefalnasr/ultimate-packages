@@ -909,7 +909,7 @@
     "originalPath": "packages/primeng/src/chip/chip.ts",
     "ultimateDestination": "packages/vue/src/chip/Chip.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2): second upstream source for this file, from another framework. The remove control keeps PrimeNG 21.1.9 Chip's template attributes role=\"button\", tabindex disabled ? -1 : 0 and aria-label bound to removeAriaLabel, which PrimeVue's Chip.vue does not have. The package's THIRD-PARTY-NOTICES.md names PrimeVue only; that notice question is recorded under GAP-132."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed (ADR-064), assessed against PrimeNG 21.1.9 chip.ts on its own: the file retains its statement if (event.key === 'Enter' || event.key === 'Backspace') { close(event) } and close()'s hide-then-emit order, and its remove control carries the same role=\"button\", tabindex disabled ? -1 : 0 and aria-label bound to removeAriaLabel. The uncertainty is stated: the statement also occurs in PrimeVue Chip.vue and the attributes are standard ARIA; the statement match is the evidence. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md."
   },
   {
     "originalPath": "packages/primevue/src/chip/BaseChip.vue",
@@ -926,8 +926,8 @@
   {
     "originalPath": "packages/primevue/src/tag/Tag.vue",
     "ultimateDestination": "packages/vue/src/tag/Tag.vue",
-    "modificationStatus": "adapted",
-    "modificationDescription": "COPY, conservative under ADR-064's ambiguity rule (GAP-094 backfill batch 2). Compared with PrimeVue 4.5.5 Tag.vue: the template is rewritten (the icon span wraps an <i>, the slot moves inside the label span), but it keeps the root/icon/label cx sequence and upstream's component options, including inheritAttrs: false without a $attrs binding. Drops the icon slot, dataP and pt. Added in be9f35e4 (Phase C Batch 1, Tag row); ecdbf793 only reformatted it."
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): REFERENCE (ADR-064; was adapted under the ambiguity rule). Compared with PrimeVue 4.5.5 Tag.vue: the template is rewritten (icon span wraps an <i>, the slot moves inside the label span). inheritAttrs: false is a project-wide Ultimate pattern (57 of 108 Ultimate Vue SFCs, only 1 binding $attrs), not evidence of copying from this file; the remaining overlap is cx() key order and framework boilerplate. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md. Added in be9f35e4; ecdbf793 only reformatted it."
   },
   {
     "originalPath": "packages/primevue/src/tag/BaseTag.vue",

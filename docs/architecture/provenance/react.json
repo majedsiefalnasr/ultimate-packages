@@ -338,26 +338,32 @@
   {
     "originalPath": "components/lib/chip/Chip.js",
     "ultimateDestination": "packages/react/src/chip/chip.tsx",
-    "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2, evidence record research/2026-10-16-gap-094-backfill-batch-2-evidence.md). Compared with PrimeReact 10.9.9 Chip.js: the rendering statements are rewritten, but the control flow is kept (image else icon, then label, then the removable control with role=button, onClick close and onKeyDown), with root aria-label={label} and internal visible state. Statements retained from PrimeNG's Chip instead are recorded in this file's second entry. Drops template, removeIcon, the imageAlt default, onRemove's veto result, ids and pt; uses UTimesIcon. Added in c42f709d (Phase C Batch 1, Chip row); ecdbf793 only reformatted it."
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): REFERENCE (ADR-064; was adapted). Compared with PrimeReact 10.9.9 Chip.js on its own: no statement, wording or PrimeReact-specific structure is retained. What is shared is the rendering order (image else icon, label, removable control), root aria-label={label} and internal visible state, which are equivalent behavior common to all three upstreams. Chip.js's keydown (event.code incl. NumpadEnter), fixed tabIndex 0 and veto-returning onRemove are not kept. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md. Added in c42f709d; ecdbf793 only reformatted it."
   },
   {
     "originalPath": "packages/primeng/src/chip/chip.ts",
     "ultimateDestination": "packages/react/src/chip/chip.tsx",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2): second upstream source for this file, from another framework. The file keeps PrimeNG 21.1.9 Chip's keydown statement (event.key Enter or Backspace, also in PrimeVue Chip.vue), its remove-control attributes tabIndex disabled ? -1 : 0 and aria-label={removeAriaLabel} (absent from PrimeReact), and its close() order (hide, then emit, with no veto). The package's THIRD-PARTY-NOTICES.md names PrimeReact only; that notice question is recorded under GAP-132."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed on its own evidence (ADR-064): the file retains PrimeNG 21.1.9 chip.ts's statement if (event.key === 'Enter' || event.key === 'Backspace') { close(event) } (identical in PrimeVue 4.5.5 Chip.vue; cited here because the same remove control also carries PrimeNG's tabIndex disabled ? -1 : 0 and aria-label={removeAriaLabel}, which neither PrimeReact nor PrimeVue has). Uncertainty stated: the retained statement is one line and the attributes are standard ARIA patterns. Lineage: added in c42f709d together with Ultimate's Angular Chip, which carries the same statement. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md."
   },
   {
     "originalPath": "components/lib/chip/ChipBase.js",
     "ultimateDestination": "packages/react/src/chip/chip-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeReact 10.9.9 ChipBase's class map keys (root, icon, label, removeIcon; an image key is added and the root's conditional p-chip-image class is dropped), the label line-height: 1.5 and the root display: inline-flex/align-items: center, with p- renamed u- and -text renamed -label. The other selectors and property lists come from @primeuix/styles (second entry). Added in c42f709d."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed under ADR-064's ambiguity rule. Compared with PrimeReact 10.9.9 ChipBase.js on its own: nearly its whole styles block is kept rule by rule under renamed selectors (root display: inline-flex and align-items: center, label line-height: 1.5, remove icon cursor: pointer, image border-radius: 50%), with the same class-map keys (root, icon, label, removeIcon; image added). Each declaration is generic; the rule-by-rule retention of the small block is the evidence, and the uncertainty is stated. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md. Added in c42f709d."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 chip",
     "ultimateDestination": "packages/react/src/chip/chip-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2): second upstream source for this file. Keeps @primeuix/styles 2.0.3 chip's selectors and their property lists with literal Ultimate values in place of dt() tokens: the root (gap, background, color, border-radius, padding), the image (width, height, border-radius: 50%, negative inline-start margin), the icon (font-size), the remove icon (cursor, font-size) and its :focus-visible outline and outline-offset."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed under ADR-064's ambiguity rule. Compared with @primeuix/styles 2.0.3 chip on its own: identical declarations (root display: inline-flex and align-items: center, remove icon cursor: pointer, image border-radius: 50%) and the same property set per rule (root gap, background, color, border-radius, padding; image width, height, radius, negative inline-start margin; icon font-size; remove icon :focus-visible outline and outline-offset), with literal values in place of dt() tokens. The uncertainty is stated: the selectors follow public class names. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md."
+  },
+  {
+    "originalPath": "public/themes/saga-blue/theme.css",
+    "ultimateDestination": "packages/react/src/chip/chip-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY, added as a source missing from batch 2 (ADR-064). The file retains declaration values from the pinned PrimeReact 10.9.9 saga-blue theme's .p-chip rules (theme.css lines 6724-6743; identical in saga-green, saga-orange and saga-purple): background #dee2e6, color #495057, border-radius 16px, image width 2rem, height 2rem and margin-left -0.5rem, and label line-height 1.5 with 0.25rem vertical spacing (margins upstream, padding here). The root padding (0.75rem vs 0.5rem), gap, icon and remove-icon sizes and the focus ring are Ultimate values. Uncertainty stated: the two colors are also Bootstrap gray-300 and gray-700; the saga-only combination of retained values is the evidence. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md."
   },
   {
     "originalPath": "components/lib/chip/package.json",
@@ -374,14 +380,20 @@
   {
     "originalPath": "components/lib/tag/TagBase.js",
     "ultimateDestination": "packages/react/src/tag/tag-style.ts",
-    "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeReact 10.9.9 TagBase's root class logic (u-tag u-component plus u-tag-<severity> and u-tag-rounded) and its root display: inline-flex, align-items: center and justify-content: center; the value class is renamed label. The severity selectors come from @primeuix/styles (second entry for this file). Added in be9f35e4."
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): REFERENCE (ADR-064; was adapted). Compared with PrimeReact 10.9.9 TagBase.js on its own: shared are the class naming scheme (u-tag, u-tag-<severity>, u-tag-rounded; public names) and the generic centering declarations (display: inline-flex, align-items: center, justify-content: center). No TagBase-specific expression is retained. Added in be9f35e4."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 tag",
     "ultimateDestination": "packages/react/src/tag/tag-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2): second upstream source for this file. Keeps @primeuix/styles 2.0.3 tag's selector set (root, icon, rounded, success, info, warn, danger, secondary, contrast) and the root's declared properties (font-size, font-weight, padding, border-radius, gap, background, color), with literal Ultimate values in place of dt() tokens and backgrounds only on the severity selectors."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed under ADR-064's ambiguity rule. Compared with @primeuix/styles 2.0.3 tag on its own: the root keeps upstream's exact ten-property list (display, align-items, justify-content, background, color, font-size, font-weight, padding, border-radius, gap) including the identical display: inline-flex, align-items: center and justify-content: center, and the full selector set (icon, rounded, success, info, warn, danger, secondary, contrast), with literal values in place of dt() tokens. The uncertainty is stated: the severity selectors are public names. The pinned PrimeReact tailwind-light theme is a further source (separate entry). Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md."
+  },
+  {
+    "originalPath": "public/themes/tailwind-light/theme.css",
+    "ultimateDestination": "packages/react/src/tag/tag-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY, added under ADR-064's ambiguity rule. Compared with the pinned PrimeReact 10.9.9 tailwind-light theme's .p-tag rules (8 of 10 checked values match after normalizing #ffffff to #fff and 0.375rem to 6px): color #fff, font-size 0.75rem, font-weight 700, border-radius 6px, and the success #22c55e, info #3b82f6, warn #f59e0b and danger #ef4444 backgrounds. The info and warn values are what distinguish it from every lara-light theme. Uncertainty stated: every matched value is also a stock Tailwind palette or scale constant, so the values may come from Tailwind directly; the theme's padding 0.25rem 0.4rem and indigo-600 primary background are not retained, and Ultimate adds secondary and contrast rules and uses warn where the theme uses warning. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md."
   },
   {
     "originalPath": "components/lib/tag/package.json",

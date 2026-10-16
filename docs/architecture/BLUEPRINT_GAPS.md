@@ -1731,7 +1731,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
     - Evidence: [reconciliation note](research/2026-10-15-gap-094-production-scope-reconciliation.md).
   - **Backfill progress:**
     - Batch 1 (2026-10-16) added evidence-backed entries for the 19 missing files in ng-core, react-core, vue-core and uix-styles; 696 → **677** missing ([evidence record](research/2026-10-16-gap-094-backfill-batch-1-evidence.md), [batch Plan](../superpowers/plans/2026-10-16-gap-094-backfill-batch-1.md)).
-    - Batch 2 (2026-10-16) added ADR-064 entries for Chip and Tag in all three frameworks (16 files, 20 entries: 8 COPY, 8 REFERENCE); 677 → **661** missing ([evidence record](research/2026-10-16-gap-094-backfill-batch-2-evidence.md), [batch Plan](../superpowers/plans/2026-10-16-gap-094-backfill-batch-2.md)).
+    - Batch 2 (2026-10-16) added ADR-064 entries for Chip and Tag in all three frameworks (16 files, 20 entries: 8 COPY, 8 REFERENCE; corrected under GAP-132 on 2026-10-16 to 22 entries, 7 COPY and 9 REFERENCE files); 677 → **661** missing ([evidence record](research/2026-10-16-gap-094-backfill-batch-2-evidence.md), [batch Plan](../superpowers/plans/2026-10-16-gap-094-backfill-batch-2.md)).
     - Remaining: ng 168, react 222, vue 271.
 - **Expected state:** Every production file (ADR-062) has a manifest entry backed by per-file evidence, and the validator passes.
 - **Why it matters:** The step is red on every push.
@@ -2305,6 +2305,21 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **Incomplete or stale preambles.** `packages/ng-core/THIRD-PARTY-NOTICES.md`'s preamble covers only the `UBaseComponent`/`UBaseEditableHolder` hierarchy ("informed by, but not copied from" PrimeNG) and does not mention the `adapted` files in `ng-core.json`. `packages/{react,vue}/THIRD-PARTY-NOTICES.md` still say "will incorporate". The MIT license text is present in every affected notice.
   - **Sources from another framework (found in GAP-094 batch 2, 2026-10-16).** React `chip.tsx` and Vue `Chip.vue` retain statements from PrimeNG's `chip.ts`, and their entries cite it. The `packages/{react,vue}/THIRD-PARTY-NOTICES.md` files name only PrimeReact or PrimeVue (all MIT, copyright PrimeTek). Whether they should also name PrimeNG is undecided.
   - **Uncertain batch 1 entries.** Four GAP-094 batch 1 entries are uncertain under ADR-064's ambiguity rule: ng-core `confirmation/confirmation.ts`, ng-core `dialog-service/dynamic-dialog-ref.ts`, and both react-core `confirmation/confirmation-event-bus.ts` entries.
+- **Dispositions recorded (2026-10-16, batch 2 correction; user-authorized; evidence: [batch 2 evidence record, Correction section](research/2026-10-16-gap-094-backfill-batch-2-evidence.md#correction-under-gap-132-2026-10-16)).** Each source entry was re-assessed on its own direct comparison under ADR-064 as written:
+  - **Reclassified COPY → REFERENCE (3 entries):** React `chip.tsx` ⇐ PrimeReact `Chip.js`; React `tag-style.ts` ⇐ `TagBase.js`; Vue `Tag.vue` ⇐ PrimeVue `Tag.vue`.
+  - **Confirmed COPY, with uncertainty stated (5 entries):**
+    - React `chip.tsx` ⇐ PrimeNG `chip.ts`;
+    - Vue `Chip.vue` ⇐ PrimeNG `chip.ts`;
+    - React `chip-style.ts` ⇐ `ChipBase.js` and ⇐ `@primeuix/styles` chip;
+    - React `tag-style.ts` ⇐ `@primeuix/styles` tag.
+  - **Added COPY (2 entries), for retained theme declaration values:**
+    - React `chip-style.ts` ⇐ PrimeReact `public/themes/saga-blue/theme.css`;
+    - React `tag-style.ts` ⇐ PrimeReact `public/themes/tailwind-light/theme.css`, under the ambiguity rule because its matched values are also stock Tailwind constants.
+  - **Notices:** `packages/{react,vue}/THIRD-PARTY-NOTICES.md` no longer say "will incorporate", and they carry the PrimeNG Community Versions MIT notice. This addresses the "Sources from another framework" and React/Vue "stale preamble" items above for those two packages.
+  - **Still open from this correction:**
+    - **PrimeReact source path.** The saga and tailwind-light theme sources lie outside the `components/lib` path recorded by the Phase 3 Specification and `PROVENANCE.md`. Widening the recorded path, or reworking the stylesheet, needs a decision.
+    - **Source comments.** The comments in React `chip.tsx`, React `tag-style.ts` and Vue `Tag.vue` describe adaptations of the upstream files now classified REFERENCE.
+    - **Legal review.** Whether further notices are required is a legal question for company-policy review (Blueprint §8).
 - **Expected state:** Existing entries and notice preambles are consistent with ADR-064, or each inconsistency carries a recorded, approved disposition.
 - **Why it matters:** Traceability records (Blueprint §8) that contradict the code or each other weaken the provenance evidence.
 - **What it blocks:** Nothing directly. It does not block GAP-094: ADR-064 governs new entries only.
