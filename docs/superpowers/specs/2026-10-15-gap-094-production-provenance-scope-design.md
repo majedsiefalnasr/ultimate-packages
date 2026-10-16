@@ -186,3 +186,22 @@ Classification follows that evidence. Re-export-only content does not by itself 
   - **Matching:** the pattern is matched against every non-`.d.ts` `.ts`/`.tsx` path under `src/`. This is conservative: a match may name a file the build does not emit.
   - **No match:** a pattern that matches no source → error.
   - **Previous behavior:** the first implementation replaced only the first `*` and only expanded over `src` directories. A multi-`*`, file-level or nested pattern therefore matched nothing, silently. That was fail-open.
+
+## Amendment A1 — Classification contract (ADR-064, 2026-10-16)
+
+User decision, Option B, recorded in [ADR-064](../../architecture/DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label) with evidence in [`research/2026-10-16-gap-094-provenance-classification-semantics.md`](../../architecture/research/2026-10-16-gap-094-provenance-classification-semantics.md). This amends §3.4 for every backfill batch after batch 1.
+
+- **Evidence item 3 is a side-by-side comparison.** The comparison is made with the counterpart in the checksum-verified pinned archive. For ORIGINAL, the evidence records the names and the same-named file or directory paths searched in every pinned archive.
+- **Each evidence table has a Source class column** (COPY, REFERENCE or ORIGINAL), decided by ADR-064 Decision 1.
+- **"Classification follows that evidence"** now means:
+  - the source class follows the comparison;
+  - `modificationStatus` is chosen from ADR-064's compatibility matrix for that class (COPY: `unmodified`, `import-path-adapted` or `adapted`; REFERENCE: `reimplemented-with-reference`; ORIGINAL: `authored` with `originalPath: "n/a"`);
+  - legacy-only values are not used.
+- **Barrels.** §3.4's sentence that "an upstream counterpart can make it `adapted` or `unmodified`" reads under ADR-064 as follows:
+  - a barrel that retains a same-named upstream barrel's re-export structure is COPY;
+  - one that shares only export names is REFERENCE;
+  - genuine doubt between the two is COPY;
+  - a barrel with no counterpart is ORIGINAL.
+- **Ambiguity.** Genuine uncertainty about retained upstream wording, statements or structure is resolved as COPY, citing the compared upstream file and stating the uncertainty. That uncertainty is no longer "inconclusive".
+- **Inconclusive** now means only that the evidence cannot support any class: for example, the lineage or the upstream comparison cannot be established. Such a file gets no entry, stays a validator failure, and is listed for the user's decision.
+- **Batch 1 entries are unchanged.** Batch 1 (PR #25) merged before ADR-064, and its entries are not edited, migrated or reclassified. Its re-evaluation, including four entries that are uncertain under the new rule, is recorded in the research document §5.1 and tracked under GAP-132.

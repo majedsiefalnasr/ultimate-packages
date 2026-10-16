@@ -11,6 +11,26 @@ Copyright holder         Third-party notices     Ultimate destination
 Modification status      Modification description  Date incorporated
 ```
 
+## Manifest classification (ADR-064)
+
+The file-level manifests in `docs/architecture/provenance/*.json` record each production file's lineage. The authoritative contract is [ADR-064](DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label).
+
+- **Source class (evidence-based).** Each new entry's class is decided by a side-by-side comparison with the checksum-verified pinned upstream archive, and recorded with that evidence in the batch evidence record:
+  - **COPY** — upstream wording, statements or structure are retained.
+  - **REFERENCE** — only interface facts are shared with a compared upstream counterpart.
+  - **ORIGINAL** — no upstream counterpart exists.
+- **Ambiguity.** Genuine uncertainty about retained upstream expression is classified COPY, with the compared upstream file cited and the uncertainty stated. Standard APIs, public names or equivalent behavior alone do not establish copying.
+- **`modificationStatus` (descriptive sub-label).** New entries use only:
+
+  | Source class | `modificationStatus`                                                                                                       | `originalPath`                                            |
+  | ------------ | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+  | COPY         | `unmodified` (identical), `import-path-adapted` (only imports rewritten), `adapted` (any other retained-expression change) | the upstream file                                         |
+  | REFERENCE    | `reimplemented-with-reference`                                                                                             | the compared upstream file                                |
+  | ORIGINAL     | `authored`                                                                                                                 | `"n/a"` (any Ultimate source is named in the description) |
+
+- **Legacy-only values.** `reference-derived`, `rebranded`, `reconstructed`, `transcribed`, `ultimate-authored` and `re-export` remain on existing entries only. Historical enumerations (`modified`, `refactored`) are not permitted.
+- **Existing entries.** These are not reclassified. Their inconsistencies are tracked as [GAP-132](BLUEPRINT_GAPS.md#gap-132--legacy-provenance-manifest-entries-use-undefined-or-inconsistent-classifications).
+
 ---
 
 ## PrimeNG
