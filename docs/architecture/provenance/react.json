@@ -424,5 +424,17 @@
     "ultimateDestination": "packages/react/src/toolbar/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 3). The same-named PrimeReact 10.9.9 toolbar/ directory's entry is a package.json pointing at built toolbar files; this barrel shares only the exported component (UToolbar, plus its props type). Added in be9f35e4."
+  },
+  {
+    "originalPath": "components/lib/divider/DividerBase.js",
+    "ultimateDestination": "packages/react/src/divider/divider-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY, conservative under ADR-064's ambiguity rule (GAP-094 batch 3 follow-up). Keeps PrimeReact 10.9.9 DividerBase.js's style rules declaration by declaration under renamed selectors: vertical min-height: 100%, margin: 0 1rem and justify-content: center; the vertical ::before with content \"\", position: absolute, top: 0 and left: 50%; horizontal width: 100% and align-items: center; content z-index: 1. The class map is root (with layout) and content. Uncertainty stated: most declarations are common layout CSS; the rule-by-rule retention, including the literal margin: 0 1rem, is the evidence. Theme screening (ADR-064 clarification, 2026-10-16), on matching selectors: horizontal margin 1rem 0 in 29 of 56 themes (15 families), content padding 0 0.5rem in 56, content background #fff in 28 (15 families), and the #dee2e6 border (Bootstrap gray-300) in 7 themes across three families (saga, bootstrap4-light, nano). No combination of three or more occurs only within one family, so the screen is negative and no theme entry is added. Evidence: research/2026-10-16-gap-094-backfill-batch-3-evidence.md. Added in c42f709d."
+  },
+  {
+    "originalPath": "@primeuix/styles@2.0.3 divider",
+    "ultimateDestination": "packages/react/src/divider/divider-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY, conservative under ADR-064's ambiguity rule (GAP-094 batch 3 follow-up): second in-boundary source for this file. Compared with @primeuix/styles 2.0.3 divider on its own: the file keeps a subset of upstream's properties per rule, including five declarations not in DividerBase.js: a horizontal margin, a 1px solid border on the horizontal ::before (border-top), a 1px solid border on the vertical ::before (border-left), a content background, and content padding (on .p-divider-horizontal .p-divider-content upstream). Literal values replace dt() tokens and physical properties replace logical ones. Ultimate drops the rules' padding, the horizontal ::before's display/inset/width/height positioning (using flex: 1 1 0% instead), the vertical ::before's height: 100% (using bottom: 0), and the content color. Uncertainty stated: the declarations are common layout CSS and the selectors follow public class names."
   }
 ]

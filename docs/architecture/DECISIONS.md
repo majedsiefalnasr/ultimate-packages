@@ -629,6 +629,28 @@ This decision supersedes the Phase 1 and Phase 2 Specification vocabularies for 
 - Reviewers check the class against the comparison, not against file role or name.
 - A future enforcement step can read the class from the evidence records or adopt a schema field through its own decision.
 
+### Clarification (2026-10-16): theme comparisons are screening evidence
+
+Status: Accepted (user decision, Option 2 of the React theme-match impact assessment at `main` `12049bd0`, and the follow-up ruling on combinations, 2026-10-16). This clarifies Decisions 1 and 2 for **new** provenance entries only. It does not change ADR-065, its two stylesheet exceptions or the Phase 3 Specification, and no existing entry is reclassified or migrated.
+
+1. **Screening, not attribution.** Comparing a file with sources outside the admissible boundary is a screening step. For PrimeReact that means its theme CSS (`public/themes/*`) and any other path outside `components/lib/` (ADR-065). Its result is recorded in the evidence table. A theme match does not by itself make the theme a source, and does not by itself create an entry.
+2. **Generic and palette values alone are not evidence.** An individual value of the following kinds does not establish retained theme expression:
+   - generic CSS values, such as layout keywords, `0`, `100%`, `50%`, and common spacing, size and radius steps;
+   - values shared by many pinned themes across several families;
+   - published third-party palette and scale constants: the Tailwind, Bootstrap and Material colour palettes, white, black, transparent and plain `rgba` overlays.
+
+   Its overlap with a theme is not genuine uncertainty about out-of-boundary attribution.
+
+3. **Hold only on distinctive evidence.** A file is held for a possible ADR-065 source-boundary decision under Blueprint §37 only on specific, distinctive evidence that is absent from every admissible in-boundary source. Two kinds of evidence qualify:
+   - **An isolated distinctive value:** a single retained theme-only value that is not of a kind listed in §2 and appears in no admissible pinned source. It is held, with the value and the themes that carry it recorded.
+   - **A distinctive combination:** at least three retained theme-only declarations, on corresponding selectors, that occur together only within one theme family. A theme family is the pinned themes that differ only by accent colour, for example `lara-light-*` or `saga-*`. This holds even when each value alone is of a kind listed in §2, because the combination, not the individual value, is the evidence.
+
+   Any other isolated or scattered match of §2 values never holds a file.
+
+4. **The ambiguity rule is unchanged in scope.** Decision 2 concerns genuine uncertainty about retained upstream wording, statements or structure. It does not turn generic or palette overlap with a theme into evidence of copying. A file whose screening finds neither kind of §3 evidence is classified from its admissible sources alone.
+
+Recorded application: the two React style modules held in GAP-094 batch 3 are re-assessed under this clarification in [`research/2026-10-16-gap-094-backfill-batch-3-evidence.md`](research/2026-10-16-gap-094-backfill-batch-3-evidence.md#reassessment-under-the-adr-064-clarification-2026-10-16).
+
 ## ADR-065 — Limited exception: two pre-existing React stylesheets retain PrimeReact theme CSS values outside `components/lib`
 
 Status: Accepted (user decision, Option 2 of the GAP-132 deviation report under Blueprint §37, 2026-10-16). Evidence: [batch 2 evidence record, Correction section](research/2026-10-16-gap-094-backfill-batch-2-evidence.md#correction-under-gap-132-2026-10-16); [GAP-132](BLUEPRINT_GAPS.md#gap-132--legacy-provenance-manifest-entries-use-undefined-or-inconsistent-classifications); PR #28 (merge `d21933be`).

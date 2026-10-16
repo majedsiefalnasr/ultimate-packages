@@ -42,7 +42,7 @@ The full local validator output lists 661 missing production files: ng 168, reac
 | vue `toolbar/BaseToolbar.ts` | REFERENCE             | reimplemented-with-reference | `primevue/src/toolbar/BaseToolbar.vue` | Shares only the public `ariaLabelledby` prop (String, default `null`).                                                                                                                                                                                                                                                               |
 | vue `toolbar/index.ts`       | REFERENCE             | reimplemented-with-reference | `primevue/src/toolbar/package.json`    | Entry manifest only.                                                                                                                                                                                                                                                                                                                 |
 
-## Held for a separate decision (ADR-065): 2 React style modules
+## Held for a separate decision (ADR-065): 2 React style modules (re-assessed below)
 
 These files get no entry, and both stay validator failures (fail-closed). Each retains rule-by-rule declarations from its `components/lib` base style, which on its own would be COPY. Each also retains literal values that match pinned PrimeReact theme CSS outside `components/lib/`. ADR-065 does not authorize theme sources beyond its two named files, so classifying these files needs a separate decision.
 
@@ -72,3 +72,86 @@ The five matching divider values are below. The first four occur only in theme C
 
 - **Held.** 2 React style modules are held under ADR-065, as described above.
 - **Missing count.** 661 → 647. Remaining: ng 164, react 218, vue 265. The remaining React count includes the two held files.
+
+## Reassessment under the ADR-064 clarification (2026-10-16)
+
+**Authority:** the user approved Option 2 of the React theme-match impact assessment, recorded as the [ADR-064 clarification](../DECISIONS.md#clarification-2026-10-16-theme-comparisons-are-screening-evidence), and ruled on 2026-10-16 that a distinctive combination is one occurring only within one theme family. Only the two files held above are re-assessed. Each source entry is judged on its own direct comparison with the checksum-verified pinned archives. All theme counts below are taken on the matching selectors across the 56 pinned PrimeReact themes.
+
+### `divider/divider-style.ts`: classified COPY (2 entries)
+
+**Theme screening is negative.** Every matched value is of a §2 kind, and no combination of three or more occurs only within one theme family.
+
+| Retained value              | Themes (of 56) | Families                         | Kind                       |
+| --------------------------- | -------------- | -------------------------------- | -------------------------- |
+| Horizontal `margin: 1rem 0` | 29             | 15                               | Generic                    |
+| Content `padding: 0 0.5rem` | 56             | 24                               | Generic                    |
+| Content `background` `#fff` | 28             | 15                               | White (palette constant)   |
+| `1px … #dee2e6` borders     | 7              | 3 (saga, bootstrap4-light, nano) | Bootstrap gray-300 palette |
+
+The batch 3 "5 of 5" grouping (saga-* and bootstrap4-light-blue/purple) spans two families, so it is not family-unique either.
+
+**Classification from admissible sources:**
+
+| Entry (file ⇐ source)                                        | Class                            | Evidence                                                                                                                                                                                          |
+| ------------------------------------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `divider-style.ts` ⇐ `components/lib/divider/DividerBase.js` | COPY (ambiguity rule), `adapted` | Rules kept declaration by declaration (details below). Uncertainty: most declarations are common layout CSS; the rule-by-rule retention, including the literal `margin: 0 1rem`, is the evidence. |
+| `divider-style.ts` ⇐ `@primeuix/styles@2.0.3 divider`        | COPY (ambiguity rule), `adapted` | A subset of upstream's properties per rule, including five declarations not in DividerBase (details below).                                                                                       |
+
+**DividerBase declarations kept:**
+
+- vertical `min-height: 100%; margin: 0 1rem; justify-content: center`;
+- vertical `::before`: `content: ""; position: absolute; top: 0; left: 50%`;
+- horizontal `width: 100%; align-items: center`;
+- content `z-index: 1`.
+
+**The five `@primeuix/styles` declarations not in DividerBase:**
+
+- a horizontal `margin`;
+- a `1px solid` horizontal `::before` border;
+- a `1px solid` vertical `::before` border;
+- a content `background`;
+- content `padding`.
+
+**What Ultimate drops from `@primeuix/styles`:**
+
+- the rules' `padding`;
+- the horizontal `::before` positioning (it uses `flex: 1 1 0%` instead);
+- the vertical `::before`'s `height: 100%` (it uses `bottom: 0`);
+- the content `color`.
+
+### `toolbar/toolbar-style.ts`: remains held (no entry)
+
+**Theme screening finds a distinctive combination.** Several combinations of three or more retained theme-only declarations on `.p-toolbar` occur together only in the `lara-light` family:
+
+| Retained declaration        | Themes (of 56) | Families                                                            |
+| --------------------------- | -------------- | ------------------------------------------------------------------- |
+| `background: #f9fafb`       | 8              | lara-light only                                                     |
+| `border: 1px solid #e5e7eb` | 9              | lara-light, tailwind-light                                          |
+| `border-radius: 6px`        | 20             | lara-dark, lara-light, soho-dark, soho-light, viva-dark, viva-light |
+| `gap: 0.5rem`               | 56             | 24                                                                  |
+
+Each value alone is generic or a Tailwind palette constant (gray-50, gray-200). The largest family-unique combination is all four declarations, found in exactly the eight `lara-light-*` themes (amber, blue, cyan, green, indigo, pink, purple, teal). The other family-unique combinations are:
+
+- `#f9fafb`, `1px solid #e5e7eb`, `6px`;
+- `#f9fafb`, `1px solid #e5e7eb`, `0.5rem`;
+- `#f9fafb`, `6px`, `0.5rem`;
+- `1px solid #e5e7eb`, `6px`, `0.5rem`.
+
+Under clarification §3 that is a distinctive combination, so the file stays held for an ADR-065 source-boundary decision under Blueprint §37.
+
+Its admissible-source comparison is recorded here, but no entry is made while it is held:
+
+- **⇐ `ToolbarBase.js`:** the `.p-toolbar` block kept exactly (`display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap`).
+- **⇐ `@primeuix/styles` toolbar:** the same four declarations, and a subset of the remaining root properties (`padding`, `background`, `border: 1px solid`, `border-radius`, `gap`; `color` is dropped).
+- **Group rule:** Ultimate splits it into three rules, adds `gap: 0.5rem` to each, and uses `@primeuix/styles`' `-start`/`-center`/`-end` class names rather than ToolbarBase's `-group-*` names.
+
+### Result after reassessment
+
+|                                      | Before | After                                    |
+| ------------------------------------ | ------ | ---------------------------------------- |
+| Batch 3 entries                      | 14     | 16 (14 + 2), covering 15 of the 16 files |
+| Source classes (15 classified files) | —      | 5 COPY, 10 REFERENCE                     |
+| Held files                           | 2      | 1 (`toolbar-style.ts`)                   |
+| Missing production files             | 647    | 646 (ng 164, react 217, vue 265)         |
+
+`input-number/input-number-style.ts` and `terminal/terminal-style.ts` will be assessed with their own batches.

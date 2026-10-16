@@ -20,6 +20,7 @@ The file-level manifests in `docs/architecture/provenance/*.json` record each pr
   - **REFERENCE** — only interface facts are shared with a compared upstream counterpart.
   - **ORIGINAL** — no upstream counterpart exists.
 - **Ambiguity.** Genuine uncertainty about retained upstream expression is classified COPY, with the compared upstream file cited and the uncertainty stated. Standard APIs, public names or equivalent behavior alone do not establish copying.
+- **Theme screening ([ADR-064 clarification](DECISIONS.md#clarification-2026-10-16-theme-comparisons-are-screening-evidence)).** Comparisons with out-of-boundary sources such as PrimeReact theme CSS are screening evidence. A generic value or a published palette or scale constant alone does not establish retained theme expression. A file is held for an ADR-065 decision only on distinctive evidence absent from in-boundary sources: an isolated distinctive value, or three or more retained theme-only declarations that occur together only within one theme family. This applies to new entries only.
 - **`modificationStatus` (descriptive sub-label).** New entries use only:
 
   | Source class | `modificationStatus`                                                                                                       | `originalPath`                                            |
