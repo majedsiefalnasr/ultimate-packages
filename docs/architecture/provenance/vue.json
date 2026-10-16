@@ -940,5 +940,41 @@
     "ultimateDestination": "packages/vue/src/tag/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 2). The same-named PrimeVue 4.5.5 tag/ directory's entry is a package.json pointing at Tag.vue; this barrel shares only the exported component (UTag, plus createBaseTag). Added in be9f35e4."
+  },
+  {
+    "originalPath": "packages/primevue/src/divider/Divider.vue",
+    "ultimateDestination": "packages/vue/src/divider/Divider.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 3). Keeps PrimeVue 4.5.5 Divider.vue's template: the root div with role=\"separator\" and aria-orientation bound to layout, and the content wrapper <div v-if=\"$slots.default\" :class=\"cx('content')\"> around the default slot. Drops sx, dataP, pt and the align/type props; the root passes layout to cx(). Added in c42f709d (Phase C Batch 1, Divider row)."
+  },
+  {
+    "originalPath": "packages/primevue/src/divider/BaseDivider.vue",
+    "ultimateDestination": "packages/vue/src/divider/BaseDivider.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064; GAP-094 backfill batch 3). Compared with PrimeVue 4.5.5 BaseDivider.vue: shares only the public layout prop (String, default 'horizontal'), in upstream's literal form; a single prop's name, type and default is treated as an interface fact, in a defineComponent factory extending createBaseComponent; the align and type props and provide are not kept. Added in c42f709d; f146ea8c (GAP-082) only added Vue typing."
+  },
+  {
+    "originalPath": "packages/primevue/src/divider/package.json",
+    "ultimateDestination": "packages/vue/src/divider/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 3). The same-named PrimeVue 4.5.5 divider/ directory's entry is a package.json pointing at Divider.vue; this barrel shares only the exported component (UDivider, plus createBaseDivider). Added in c42f709d."
+  },
+  {
+    "originalPath": "packages/primevue/src/toolbar/Toolbar.vue",
+    "ultimateDestination": "packages/vue/src/toolbar/Toolbar.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY, conservative under ADR-064's ambiguity rule (GAP-094 backfill batch 3). Compared with PrimeVue 4.5.5 Toolbar.vue: the root element line is kept token for token apart from pt (:class=\"cx('root')\" role=\"toolbar\" :aria-labelledby=\"ariaLabelledby\", including PrimeVue's own ariaLabelledby spelling), and the div with cx('start'/'center'/'end') around each named slot is kept in the same order (rendered conditionally here). Uncertainty stated: these are standard attributes and public slot names. Adds a leading default slot and renders each region only when its slot is given. Added in be9f35e4 (Phase C Batch 1, Toolbar row)."
+  },
+  {
+    "originalPath": "packages/primevue/src/toolbar/BaseToolbar.vue",
+    "ultimateDestination": "packages/vue/src/toolbar/BaseToolbar.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064; GAP-094 backfill batch 3). Compared with PrimeVue 4.5.5 BaseToolbar.vue: shares only the public ariaLabelledby prop (String, default null), in upstream's literal form; a single prop's name, type and default is treated as an interface fact, in a defineComponent factory extending createBaseComponent; provide is not kept. Added in be9f35e4; f146ea8c (GAP-082) only added Vue typing."
+  },
+  {
+    "originalPath": "packages/primevue/src/toolbar/package.json",
+    "ultimateDestination": "packages/vue/src/toolbar/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 3). The same-named PrimeVue 4.5.5 toolbar/ directory's entry is a package.json pointing at Toolbar.vue; this barrel shares only the exported component (UToolbar, plus createBaseToolbar). Added in be9f35e4."
   }
 ]

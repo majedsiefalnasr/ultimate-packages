@@ -1732,14 +1732,16 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **Backfill progress:**
     - Batch 1 (2026-10-16) added evidence-backed entries for the 19 missing files in ng-core, react-core, vue-core and uix-styles; 696 → **677** missing ([evidence record](research/2026-10-16-gap-094-backfill-batch-1-evidence.md), [batch Plan](../superpowers/plans/2026-10-16-gap-094-backfill-batch-1.md)).
     - Batch 2 (2026-10-16) added ADR-064 entries for Chip and Tag in all three frameworks (16 files, 20 entries: 8 COPY, 8 REFERENCE; corrected under GAP-132 on 2026-10-16 to 22 entries, 7 COPY and 9 REFERENCE files); 677 → **661** missing ([evidence record](research/2026-10-16-gap-094-backfill-batch-2-evidence.md), [batch Plan](../superpowers/plans/2026-10-16-gap-094-backfill-batch-2.md)).
-    - Remaining: ng 168, react 222, vue 271.
+    - Batch 3 (2026-10-16) added ADR-064 entries for Divider and Toolbar (14 files: 4 COPY, 10 REFERENCE); 661 → **647** missing ([evidence record](research/2026-10-16-gap-094-backfill-batch-3-evidence.md), [batch Plan](../superpowers/plans/2026-10-16-gap-094-backfill-batch-3.md)).
+    - Held for a separate decision (ADR-065 boundary): React `divider/divider-style.ts` and `toolbar/toolbar-style.ts`, whose literal values match pinned PrimeReact theme CSS outside `components/lib/`. They have no entry and remain validator failures.
+    - Remaining: ng 164, react 218 (including the 2 held files), vue 265.
 - **Expected state:** Every production file (ADR-062) has a manifest entry backed by per-file evidence, and the validator passes.
 - **Why it matters:** The step is red on every push.
 - **What it blocks:** A green provenance validation step.
 - **Dependencies:** None.
 - **Framework scope:** Angular (current failure).
 - **Existing reusable infrastructure:** `docs/architecture/provenance/ng.json`.
-- **Recommended resolution direction:** Evidence-backed backfill of the remaining production entries (661 after batch 2), in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4 as amended by A1. From batch 2 on, entries follow [ADR-064](DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label)'s source classes and compatibility matrix.
+- **Recommended resolution direction:** Evidence-backed backfill of the remaining production entries (647 after batch 3), in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4 as amended by A1. From batch 2 on, entries follow [ADR-064](DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label)'s source classes and compatibility matrix.
 - **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job); G3-B/G3-C1/G3-C2 closeouts; [DR-5 options](research/2026-10-15-gap-094-dr5-provenance-scope-options.md).
 - **Architectural decision required:** Yes — decided: ADR-062 (DR-5 Option B, production scope, 2026-10-15).
 

@@ -928,5 +928,29 @@
     "ultimateDestination": "packages/ng/src/tag/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 2). The same-named PrimeNG 21.1.9 tag/ entry public_api.ts re-exports primeng/types/tag, ./tag and ./style/tagstyle with export *; this barrel shares only the component re-export (export { UTag } from ./tag). Added in be9f35e4."
+  },
+  {
+    "originalPath": "packages/primeng/src/divider/divider.ts",
+    "ultimateDestination": "packages/ng/src/divider/divider.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 3, evidence record research/2026-10-16-gap-094-backfill-batch-3-evidence.md). Keeps PrimeNG 21.1.9 Divider's template (a content div with cx('content') wrapping ng-content), its host role=\"separator\" and aria-orientation bound to layout, and the layout input's doc text verbatim (\"Specifies the orientation.\") with default 'horizontal'. Rewritten as a signal input on UBaseComponent; drops the type and align inputs, styleClass, pt/Bind, dataP and DividerModule. Added in c42f709d (Phase C Batch 1, Divider row)."
+  },
+  {
+    "originalPath": "packages/primeng/src/divider/public_api.ts",
+    "ultimateDestination": "packages/ng/src/divider/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 3). The same-named PrimeNG 21.1.9 divider/ entry public_api.ts re-exports ./divider and ./style/dividerstyle with export *; this barrel shares only the component re-export (export { UDivider } from ./divider). Added in c42f709d."
+  },
+  {
+    "originalPath": "packages/primeng/src/toolbar/toolbar.ts",
+    "ultimateDestination": "packages/ng/src/toolbar/toolbar.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 3). Keeps PrimeNG 21.1.9 Toolbar's template structure (ng-content first, then start, center and end divs with cx('start'/'center'/'end') rendering their ContentChild templates through ngTemplateOutlet), its host role=\"toolbar\" and aria-labelledby binding, and the ariaLabelledBy input's doc text verbatim (\"Defines a string value that labels an interactive element.\"). Rewritten with @if blocks and a signal input; drops the PrimeTemplate fallbacks, styleClass, pt/Bind, getBlockableElement and ToolbarModule. Added in be9f35e4 (Phase C Batch 1, Toolbar row)."
+  },
+  {
+    "originalPath": "packages/primeng/src/toolbar/public_api.ts",
+    "ultimateDestination": "packages/ng/src/toolbar/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 3). The same-named PrimeNG 21.1.9 toolbar/ entry public_api.ts re-exports primeng/types/toolbar, ./toolbar and ./style/toolbarstyle with export *; this barrel shares only the component re-export (export { UToolbar } from ./toolbar). Added in be9f35e4."
   }
 ]
