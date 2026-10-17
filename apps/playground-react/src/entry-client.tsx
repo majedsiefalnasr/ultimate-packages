@@ -16,4 +16,13 @@ if (!container) {
   throw new Error('Root element with id "root" not found for hydration.');
 }
 
+// ADR-057 Stage 1 P8 "time to hydrated" (scripts/perf/run-stage1.mjs):
+// marked when App.tsx's post-hydration effect sets data-hydrated="true".
+new MutationObserver((_records, observer) => {
+  if (container.querySelector('[data-hydrated="true"]')) {
+    performance.mark("u-perf:hydrated");
+    observer.disconnect();
+  }
+}).observe(container, { subtree: true, attributeFilter: ["data-hydrated"] });
+
 hydrateRoot(container, <App />);

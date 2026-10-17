@@ -32,6 +32,16 @@
             "production": {}
           },
           "defaultConfiguration": "production"
+        },
+        "build-perf": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/perf",
+            "index": "src/app/perf/index.html",
+            "browser": "src/app/perf/main.ts",
+            "tsConfig": "tsconfig.json",
+            "polyfills": []
+          }
         }
       }
     }

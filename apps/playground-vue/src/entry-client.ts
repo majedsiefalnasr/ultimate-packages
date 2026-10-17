@@ -15,3 +15,6 @@ if (!container) {
 }
 
 createSSRApp(App).mount(container);
+// ADR-057 Stage 1 P8 "time to hydrated" (scripts/perf/run-stage1.mjs):
+// mount() hydrates synchronously, including App.vue's onMounted hook.
+performance.mark("u-perf:hydrated");

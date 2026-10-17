@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "ng build",
+    "build:perf": "ng run playground-angular:build-perf",
     "start": "node dist/playground-angular/server/server.mjs"
   },
   "dependencies": {
