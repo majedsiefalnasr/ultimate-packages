@@ -1,7 +1,7 @@
 [
   {
     "framework": "angular",
-    "frameworkVersionRange": "^21.0.7",
+    "frameworkVersionRange": "^21.2.22",
     "ultimateFrameworkPackage": { "name": "@ultimate/ng", "versionRange": "^0.1.0" },
     "uixVersionRange": "^0.1.0",
     "themeVersionRange": "^0.1.0",
