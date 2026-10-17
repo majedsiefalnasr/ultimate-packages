@@ -522,6 +522,46 @@ Status: Accepted (user-authorized GAP-087 research, verification and Node.js sup
 
 **Consequences.** GAP-087 stays open until a separately authorized Specification, Spec Review, Plan, Plan Review, implementation and verification align the root engine declaration and all Release jobs, then verify the frozen install and reached release path. C01 stays incomplete. No CI exception is created. Version and Publish remain unexercised in the cited failed Release run.
 
+## ADR-060 — React and Vue R7 line coverage measures production runtime source (GAP-091)
+
+Status: Accepted (user decision X1, 2026-10-17, Workstream 2 Spec Review). **This entry records the decision now.** It does not claim that an ADR-060 text, a GAP-091 Specification or a GAP-091 Plan was approved earlier: none was committed, and no ADR-060 body survives. Evidence:
+
+- the implementation in [PR #16](https://github.com/majedsiefalnasr/ultimate-packages/pull/16), commit `65c2345c`, merged at `bdc4dbcf`;
+- [GAP-091](BLUEPRINT_GAPS.md#gap-091--the-coverage-gate-fails-because-the-coverage-scope-counts-storybook-stories-and-the-baselines-predate-them);
+- a dated copy of a draft GAP-091 Specification (`2026-10-14-gap-091-react-vue-coverage-scope-design.md`). It was read on 2026-10-15 from a since-deleted uncommitted worktree and survives only in a local session log. Its own status reads "human approval is pending". It is cited as point-in-time evidence only, not as an approved Specification.
+
+**Context.** The React and Vue coverage regression check failed on every push (for example at `3d0203d`: React `89.69% → 77.7%`, Vue `92.13% → 80.7%`). Neither package's Vitest configuration scoped coverage, so Storybook stories and other non-runtime files counted at 0% against baselines measured before the stories existed. GAP-091 records that this is a measurement-scope effect, not a source regression. A second defect: the shared baseline-only detector treated a diff touching `PERFORMANCE.md` plus a package's `vitest.config.ts` as baseline-only. So a coverage-configuration change could rewrite its own baseline in the same diff. PR #16 changed the scope and closed that path.
+
+**Decision.** For the R7 line-coverage gate of `@ultimate/react` and `@ultimate/vue`:
+
+- **Scope:**
+  - Coverage measures runtime modules under the package's `src/**` with the extensions `.js`, `.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts`, `.cts` and `.vue`.
+  - Untested runtime modules stay in the denominator (`all: true`).
+- **Exclusions, and only these:**
+  - `src/**/*.stories.*`, `src/**/*.spec.*`, `src/**/*.test.*`;
+  - `src/**/*.d.ts`, `src/**/*.d.mts`, `src/**/*.d.cts`;
+  - files under directories named `__tests__`, `__fixtures__`, `__mocks__`, `fixtures`, `test-fixtures` or `mocks`.
+
+  Files outside `src/**` are outside the denominator. Any further exclusion needs its own reviewed decision.
+
+- **Measurement only:** test discovery and execution, the `test`/`test:coverage` scripts and CI's coverage steps are unchanged. Excluding stories and tests from the denominator does not skip them.
+- **Gate unchanged:** the metric is `total.lines.pct`. A drop greater than 2 points fails. The comparison is with the merge-base's committed `PERFORMANCE.md` value, and the integrity check's 0.05 tolerance applies. The other 15 packages' scope, baselines and classification are unchanged.
+- **Baseline-only classification:**
+  - For React and Vue, a diff takes the baseline-integrity path only when the complete merge-base-to-HEAD diff is exactly `docs/architecture/PERFORMANCE.md`.
+  - Any other diff takes the regression path against the merge-base value, including a change to `vitest.config.ts`, to package source or manifest, or to a second file.
+  - A Git error fails the validator rather than defaulting to baseline-only.
+  - The bundle-size (R6) path is unchanged.
+- **Re-baselining:** new React and Vue baselines under this scope are recorded only in a separate, reviewed PR whose entire diff is `docs/architecture/PERFORMANCE.md`. Its values must come from a fresh measurement and pass the integrity check. A baseline written in the same PR as a scope change cannot make that PR pass.
+
+**Trade-off.** Excluding stories and tests means the R7 number no longer reflects story code, which does not ship. In return the gate measures the code that does ship and stops falling as stories are added. The strict baseline-only rule makes React/Vue baseline updates a separate PR. In exchange, a coverage-configuration change cannot approve its own baseline.
+
+**Consequences.**
+
+- The decision is already implemented on `main` by `65c2345c`. Recording it authorizes no further code change.
+- The React and Vue baselines in `PERFORMANCE.md` (`89.69`, `92.13`) are not yet re-measured under this scope. Their re-baseline PR follows its own Plan and review (Workstream 2, W2-B2-R2).
+- GAP-091 stays OPEN until that re-baseline and a closeout are complete. C01 stays incomplete.
+- No CI exception is created, and the threshold does not change.
+
 ## ADR-061 — Provenance PR diff enforcement follows source incorporation
 
 Status: Accepted (user PR #16 Architecture Discussion decision, 2026-10-14). Evidence: the approved Phase 0 Specification's Git/GitHub and CI requirements; `scripts/provenance/validate-provenance.mjs`; [PR #16 CI run 38615301042](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38615301042) at head `65c2345c`; [main baseline run 38555038184](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38555038184) at `94fac002`.
