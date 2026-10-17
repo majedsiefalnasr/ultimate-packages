@@ -65,6 +65,18 @@ jobs:
         if: ${{ !cancelled() }}
         run: pnpm run validate
 
+      - name: Metadata API drift check
+        if: ${{ !cancelled() }}
+        run: |
+          status=0
+          pnpm --filter @ultimate/component-metadata run drift:check || status=1
+          pnpm --filter @ultimate/component-metadata run docs:generate -- --check || status=1
+          exit "$status"
+
+      - name: Metadata coverage report
+        if: ${{ !cancelled() }}
+        run: pnpm --filter @ultimate/component-metadata run coverage:report
+
       - name: Test
         if: ${{ !cancelled() }}
         run: pnpm run test
