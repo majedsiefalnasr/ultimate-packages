@@ -151,22 +151,43 @@ export function assertVariants(results, framework) {
   }
 }
 
+/**
+ * Counts hydration-mismatch reports in console error/warning messages and in
+ * uncaught page errors (type "pageerror"): React 18's default
+ * onRecoverableError uses reportError, which surfaces as a page error.
+ */
 export function hydrationWarningCount(messages) {
   return messages.filter(
-    ({ type, text }) => (type === "error" || type === "warning") && HYDRATION_WARNING.test(text)
+    ({ type, text }) =>
+      (type === "error" || type === "warning" || type === "pageerror") &&
+      HYDRATION_WARNING.test(text)
   ).length;
 }
 
 // ----------------------------------------------------------- browser driver
 
-/** Installed in every perf-page context: long-task and layout-shift counters. */
-function installObservers() {
-  window.__perfObserved = { longTasks: 0, layoutShifts: 0 };
+/**
+ * Installed in every perf-page context: long-task and layout-shift counters.
+ * Observer callbacks run in a later task, so `flush()` drains each
+ * observer's pending entries with takeRecords() before the counts are read.
+ */
+export function installObservers() {
+  const observers = [];
+  const state = {
+    longTasks: 0,
+    layoutShifts: 0,
+    flush() {
+      for (const { observer, key } of observers) state[key] += observer.takeRecords().length;
+    },
+  };
+  window.__perfObserved = state;
   const count = (type, key) => {
     try {
-      new PerformanceObserver((list) => {
-        window.__perfObserved[key] += list.getEntries().length;
-      }).observe({ type });
+      const observer = new PerformanceObserver((list) => {
+        state[key] += list.getEntries().length;
+      });
+      observer.observe({ type });
+      observers.push({ observer, key });
     } catch {
       // The entry type is unsupported in this browser; the count stays 0.
     }
@@ -182,8 +203,14 @@ async function pageIteration({ category, subject, kind, steps, stepPx }) {
   const durations = (phase) =>
     performance.getEntriesByName(`u-perf:${subject}:${phase}`, "measure").map((e) => e.duration);
   const last = (phase) => durations(phase).at(-1);
-  const resetObserved = () =>
+  const resetObserved = () => {
+    window.__perfObserved.flush();
     Object.assign(window.__perfObserved, { longTasks: 0, layoutShifts: 0 });
+  };
+  const readObserved = () => {
+    window.__perfObserved.flush();
+    return { ...window.__perfObserved };
+  };
   const rows = () => root.querySelectorAll("[data-u-scroller-item], tbody > tr").length;
   let record;
   if (category === "P3") {
@@ -194,7 +221,7 @@ async function pageIteration({ category, subject, kind, steps, stepPx }) {
   } else if (category === "P4") {
     resetObserved();
     await perf.mount();
-    const { longTasks, layoutShifts } = window.__perfObserved;
+    const { longTasks, layoutShifts } = readObserved();
     record = { firstRender: last("mount"), longTasks, layoutShifts };
     await perf.unmount();
   } else if (category === "P5") {
@@ -211,7 +238,7 @@ async function pageIteration({ category, subject, kind, steps, stepPx }) {
     for (let i = 0; i < steps; i++) await perf.scroll(stepPx);
     record = {
       frameDuration: durations("scroll").slice(-steps),
-      longTasks: window.__perfObserved.longTasks,
+      longTasks: readObserved().longTasks,
       renderedRows: rows(),
     };
     await perf.unmount();
@@ -319,17 +346,43 @@ async function serverRenderTime(url) {
   return performance.now() - start;
 }
 
+export const HYDRATED_TIMEOUT_MS = 30_000;
+
+/** The P8 error when `u-perf:hydrated` never appears, with what the page reported. */
+export function hydrationTimeoutError(url, messages) {
+  const lines = messages.map(({ type, text }) => `  [${type}] ${text}`);
+  return new Error(
+    `P8: ${url} set no u-perf:hydrated mark within ${HYDRATED_TIMEOUT_MS} ms ` +
+      `(${hydrationWarningCount(messages)} hydration message(s)). Page messages:\n` +
+      (lines.length > 0 ? lines.join("\n") : "  (none)")
+  );
+}
+
 async function hydrationSample(page, url) {
   const messages = [];
   const onConsole = (message) => messages.push({ type: message.type(), text: message.text() });
+  const onPageError = (error) => messages.push({ type: "pageerror", text: String(error) });
   page.on("console", onConsole);
-  await page.goto(url);
-  await page.waitForFunction(() => performance.getEntriesByName("u-perf:hydrated").length > 0);
-  const timeToHydrated = await page.evaluate(
-    () => performance.getEntriesByName("u-perf:hydrated")[0].startTime
-  );
-  page.off("console", onConsole);
-  return { timeToHydrated, hydrationWarnings: hydrationWarningCount(messages) };
+  page.on("pageerror", onPageError);
+  try {
+    await page.goto(url);
+    try {
+      await page.waitForFunction(
+        () => performance.getEntriesByName("u-perf:hydrated").length > 0,
+        null,
+        { timeout: HYDRATED_TIMEOUT_MS }
+      );
+    } catch {
+      throw hydrationTimeoutError(url, messages);
+    }
+    const timeToHydrated = await page.evaluate(
+      () => performance.getEntriesByName("u-perf:hydrated")[0].startTime
+    );
+    return { timeToHydrated, hydrationWarnings: hydrationWarningCount(messages) };
+  } finally {
+    page.off("console", onConsole);
+    page.off("pageerror", onPageError);
+  }
 }
 
 export async function measureP8(browser, framework, protocol) {

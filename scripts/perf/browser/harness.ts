@@ -12,6 +12,15 @@
 // event for scroll), then one requestAnimationFrame callback, then one
 // microtask. Each call is bracketed by `u-perf:<subject>:<phase>:start|end`
 // marks and a `u-perf:<subject>:<phase>` measure.
+//
+// open() (P7 `openToVisible`, Controller ruling on review finding 2): the
+// awaited condition is "the overlay element is present AND
+// `overlay.getAnimations({ subtree: true })` has no animation whose
+// playState is "running"". It is re-checked on every DOM mutation and on
+// every animation frame (an enter animation ending mutates nothing), then
+// the same rAF + microtask settle applies. close() still waits only for the
+// overlay's removal. Animations driven without the Web Animations model
+// (for example per-frame inline style writes) are invisible to this check.
 
 export const SEED = 20261017;
 
@@ -166,26 +175,46 @@ function settle(): Promise<void> {
 }
 
 function timeout(subject: string, phase: string): Error {
-  return new Error(`perf harness: ${subject}:${phase} saw no DOM change within ${TIMEOUT_MS} ms`);
+  return new Error(
+    `perf harness: ${subject}:${phase} did not reach its settled state within ${TIMEOUT_MS} ms`
+  );
 }
 
 /**
  * Resolves when `done()` holds, re-checked on every DOM mutation under
- * `target`. With no `done`, it resolves on the first mutation.
+ * `target` and, with `everyFrame`, also on every animation frame. With no
+ * `done`, it resolves on the first mutation.
  */
-function whenDom(target: Node, onTimeout: () => Error, done?: () => boolean): Promise<void> {
+function whenDom(
+  target: Node,
+  onTimeout: () => Error,
+  done?: () => boolean,
+  everyFrame = false
+): Promise<void> {
   if (done?.()) return Promise.resolve();
   return new Promise((resolve, reject) => {
-    const observer = new MutationObserver(() => {
-      if (done && !done()) return;
+    let finished = false;
+    const finish = (error?: Error) => {
+      if (finished) return;
+      finished = true;
       observer.disconnect();
       clearTimeout(timer);
-      resolve();
-    });
-    const timer = setTimeout(() => {
-      observer.disconnect();
-      reject(onTimeout());
-    }, TIMEOUT_MS);
+      if (error) reject(error);
+      else resolve();
+    };
+    const check = () => {
+      if (!done || done()) finish();
+    };
+    const observer = new MutationObserver(check);
+    const timer = setTimeout(() => finish(onTimeout()), TIMEOUT_MS);
+    if (everyFrame) {
+      const onFrame = () => {
+        if (finished) return;
+        check();
+        requestAnimationFrame(onFrame);
+      };
+      requestAnimationFrame(onFrame);
+    }
     observer.observe(target, {
       subtree: true,
       childList: true,
@@ -229,7 +258,17 @@ async function timed(
 export function createPerfApi(subject: string, adapter: PerfAdapter): PerfApi {
   const fail = (phase: string) => () => timeout(subject, phase);
   const overlay = OVERLAY_SELECTORS[subject];
-  const overlayPresent = () => overlay !== undefined && document.querySelector(overlay) !== null;
+  const overlayElement = () => (overlay === undefined ? null : document.querySelector(overlay));
+  const overlayPresent = () => overlayElement() !== null;
+  const overlayVisible = () => {
+    const element = overlayElement();
+    return (
+      element !== null &&
+      !element
+        .getAnimations({ subtree: true })
+        .some((animation) => animation.playState === "running")
+    );
+  };
   const requireOverlay = (phase: string) => {
     if (!overlay) throw new Error(`perf harness: ${subject} has no overlay for ${phase}()`);
   };
@@ -260,7 +299,7 @@ export function createPerfApi(subject: string, adapter: PerfAdapter): PerfApi {
       return timed(
         subject,
         "open",
-        () => whenDom(document.body, fail("open"), overlayPresent),
+        () => whenDom(document.body, fail("open"), overlayVisible, true),
         () => adapter.open()
       );
     },

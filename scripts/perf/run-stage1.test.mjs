@@ -8,7 +8,10 @@ import {
   assembleArtifact,
   assertVariants,
   defaultOutPath,
+  HYDRATED_TIMEOUT_MS,
+  hydrationTimeoutError,
   hydrationWarningCount,
+  installObservers,
   parseArgs,
   plannedSubjects,
   pooledResult,
@@ -157,4 +160,69 @@ test("playwright.perf.config.ts serves the perf pages on PERF_PAGE_PORTS", () =>
     .map(([framework, port]) => `${framework}: ${port}`)
     .join(", ");
   assert.ok(config.includes(`{ ${literal} }`), `config must declare { ${literal} }`);
+});
+
+test("hydrationWarningCount counts React's reportError page errors (#418)", () => {
+  const messages = [
+    {
+      type: "pageerror",
+      text: "Error: Minified React error #418; visit https://react.dev/errors/418",
+    },
+    { type: "pageerror", text: "TypeError: x is undefined" },
+  ];
+  assert.equal(hydrationWarningCount(messages), 1);
+});
+
+test("hydrationTimeoutError names the URL, the timeout and every captured message", () => {
+  const error = hydrationTimeoutError("http://localhost:6011/", [
+    { type: "error", text: "NG0500: During hydration Angular expected <div>" },
+    { type: "log", text: "booting" },
+  ]);
+  assert.match(error.message, /http:\/\/localhost:6011\/ set no u-perf:hydrated mark/);
+  assert.match(
+    error.message,
+    new RegExp(`within ${HYDRATED_TIMEOUT_MS} ms \\(1 hydration message`)
+  );
+  assert.match(error.message, /\[error\] NG0500: During hydration/);
+  assert.match(error.message, /\[log\] booting/);
+  assert.match(hydrationTimeoutError("u", []).message, /\(none\)/);
+});
+
+test("installObservers flush() adds entries still pending in takeRecords()", () => {
+  const observers = [];
+  class FakeObserver {
+    constructor(callback) {
+      this.callback = callback;
+      this.pending = [];
+      observers.push(this);
+    }
+    observe({ type }) {
+      if (type === "layout-shift") throw new TypeError("unsupported");
+      this.type = type;
+    }
+    takeRecords() {
+      const records = this.pending;
+      this.pending = [];
+      return records;
+    }
+  }
+  const saved = { window: globalThis.window, PerformanceObserver: globalThis.PerformanceObserver };
+  globalThis.window = {};
+  globalThis.PerformanceObserver = FakeObserver;
+  try {
+    installObservers();
+    const state = globalThis.window.__perfObserved;
+    const longtask = observers.find((observer) => observer.type === "longtask");
+    longtask.callback({ getEntries: () => [{}] });
+    longtask.pending.push({}, {});
+    assert.equal(state.longTasks, 1, "delivered entries only, before flush");
+    state.flush();
+    assert.equal(state.longTasks, 3);
+    state.flush();
+    assert.equal(state.longTasks, 3, "takeRecords drains, so a second flush adds nothing");
+    assert.equal(state.layoutShifts, 0, "an unsupported entry type stays 0");
+  } finally {
+    globalThis.window = saved.window;
+    globalThis.PerformanceObserver = saved.PerformanceObserver;
+  }
 });
