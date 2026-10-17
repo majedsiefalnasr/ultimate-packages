@@ -13,6 +13,8 @@
     "prepare": "husky",
     "validate": "pnpm -r --if-present run validate",
     "test:scripts": "node --test scripts/provenance/*.test.mjs",
+    "perf:stats:test": "node --test scripts/perf/*.test.mjs",
+    "perf:p2": "node scripts/perf/measure-tree-shaking.mjs",
     "vendor:fetch": "node scripts/provenance/fetch-vendor-cache.mjs",
     "lint": "eslint . --max-warnings=0 && node scripts/check-svg-text-whitespace.mjs",
     "typecheck": "pnpm -r --if-present run typecheck",
