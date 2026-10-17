@@ -29,7 +29,8 @@
     "typecheck": "tsc --noEmit",
     "validate": "node scripts/validate-all.mjs",
     "drift:check": "node scripts/check-api-drift.mjs",
-    "docs:generate": "node scripts/generate-api-docs.mjs"
+    "docs:generate": "node scripts/generate-api-docs.mjs",
+    "coverage:report": "node scripts/coverage-report.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

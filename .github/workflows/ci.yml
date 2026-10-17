@@ -73,6 +73,10 @@ jobs:
           pnpm --filter @ultimate/component-metadata run docs:generate -- --check || status=1
           exit "$status"
 
+      - name: Metadata coverage report
+        if: ${{ !cancelled() }}
+        run: pnpm --filter @ultimate/component-metadata run coverage:report
+
       - name: Test
         if: ${{ !cancelled() }}
         run: pnpm run test
