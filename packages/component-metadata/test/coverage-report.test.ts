@@ -1,7 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ComponentMetadata } from "@ultimate/component-schema";
 import {
@@ -9,6 +10,8 @@ import {
   exitCodeFor,
   parseArgs,
   NON_COMPONENT_SUBPATHS,
+  readRepositoryInputs,
+  runCoverageReport,
   shippedComponents,
   unlistedDirs,
 } from "../scripts/coverage-report.mjs";
@@ -192,5 +195,111 @@ describe("exit codes", () => {
     const result = spawnSync(process.execPath, [SCRIPT, "--enforce"], { encoding: "utf8" });
     expect(result.status).toBe(1);
     expect(result.stderr).toMatch(/FAILED/);
+  });
+});
+
+// Writes `files` (repository-relative path -> contents) under a fresh temp root.
+function writeRepo(files: Record<string, string>): string {
+  const root = mkdtempSync(join(tmpdir(), "coverage-report-"));
+  for (const [path, contents] of Object.entries(files)) {
+    mkdirSync(dirname(join(root, path)), { recursive: true });
+    writeFileSync(join(root, path), contents);
+  }
+  return root;
+}
+
+const exportsJson = (subpaths: string[]) =>
+  JSON.stringify({ exports: Object.fromEntries(subpaths.map((subpath) => [subpath, {}])) });
+
+// Every framework ships button only, with stories and a Skill file.
+const COVERED_REPO = {
+  "packages/ng/package.json": exportsJson([".", "./button"]),
+  "packages/ng/src/button/index.ts": "",
+  "packages/ng/src/button/button.stories.ts": "",
+  "packages/react/package.json": exportsJson(["./button"]),
+  "packages/react/src/button/index.ts": "",
+  "packages/react/src/button/button.stories.tsx": "",
+  "packages/vue/package.json": exportsJson(["./button"]),
+  "packages/vue/src/button/index.ts": "",
+  "packages/vue/src/button/button.stories.ts": "",
+  "skills/button.md": "",
+};
+
+describe("readRepositoryInputs", () => {
+  it("reads exports and barrel components, story dirs, Skill files and unlisted dirs", () => {
+    const root = writeRepo({
+      ...COVERED_REPO,
+      "packages/ng/package.json": exportsJson([".", "./button", "./badge"]),
+      "packages/ng/src/index.ts": 'export * from "./dialog";\nexport * from "./ripple";',
+      "packages/ng/src/badge/index.ts": "",
+      "packages/ng/src/dialog/index.ts": "",
+      "packages/ng/src/ripple/index.ts": "",
+      "packages/ng/src/mystery/index.ts": "",
+      "packages/ng/src/helpers/util.ts": "",
+      "skills/README.md": "",
+      "skills/AGENT_CONVENTIONS.md": "",
+      "skills/badge.md": "",
+      "skills/notes.txt": "",
+    });
+    const inputs = readRepositoryInputs(root);
+    expect(inputs.shipped).toEqual({
+      ng: ["button", "badge", "dialog"],
+      react: ["button"],
+      vue: ["button"],
+    });
+    expect(inputs.stories).toEqual({ ng: ["button"], react: ["button"], vue: ["button"] });
+    expect([...inputs.skills].sort()).toEqual(["badge", "button"]);
+    expect(inputs.unlisted).toEqual({ ng: ["mystery"], react: [], vue: [] });
+  });
+
+  it("returns no Skill files when the skills directory is absent", () => {
+    const root = writeRepo(
+      Object.fromEntries(
+        Object.entries(COVERED_REPO).filter(([path]) => !path.startsWith("skills/"))
+      )
+    );
+    expect(readRepositoryInputs(root).skills).toEqual([]);
+  });
+});
+
+describe("runCoverageReport", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  const output = (spy: ReturnType<typeof vi.spyOn>) =>
+    spy.mock.calls.map((args: unknown[]) => args.join(" ")).join("\n");
+
+  it("prints per-framework counts, the gap table and the report-mode note, and returns 0", () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const root = writeRepo({ ...COVERED_REPO, "packages/vue/src/mystery/index.ts": "" });
+    expect(runCoverageReport([], [], root)).toBe(0);
+    const text = output(log);
+    expect(text).toContain("ng: 1 shipped, 1 with gaps (record 1)");
+    expect(text).toContain("total: 3 component/framework pair(s) with gaps");
+    expect(text).toContain("ng not in denominator: none");
+    expect(text).toContain("vue not in denominator: mystery");
+    expect(text).toMatch(/button\s+react\s+record/);
+    expect(text).toContain("[coverage] report mode: exiting 0");
+  });
+
+  it("--enforce returns 1 and reports FAILED while gaps remain", () => {
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    expect(runCoverageReport(["--enforce"], [], writeRepo(COVERED_REPO))).toBe(1);
+    expect(output(error)).toContain("[coverage] FAILED: --enforce and gaps remain");
+  });
+
+  it("--enforce returns 0 with no gap table when everything is covered", () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    expect(runCoverageReport(["--enforce"], [COMPLETE], writeRepo(COVERED_REPO))).toBe(0);
+    const text = output(log);
+    expect(text).toContain("total: 0 component/framework pair(s) with gaps");
+    expect(text).not.toContain("lacks");
+    expect(text).not.toContain("report mode");
+  });
+
+  it("returns 2 with usage on an unknown flag", () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    expect(runCoverageReport(["--bogus"], [])).toBe(2);
+    expect(output(error)).toMatch(/unknown option: --bogus[\s\S]*Usage/);
   });
 });

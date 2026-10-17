@@ -4,6 +4,7 @@
 // `--check` writes nothing and exits 1 when a committed page differs.
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { FRAMEWORKS, REPO_ROOT, readSourceMap } from "./check-api-drift.mjs";
 
 const GENERATOR = "packages/component-metadata/scripts/generate-api-docs.mjs";
@@ -78,15 +79,14 @@ export function plannedPages(records, sourceMap) {
   );
 }
 
-async function main() {
-  const { ALL_COMPONENTS } = await import("../dist/index.mjs");
-  const check = process.argv.includes("--check");
-  const pages = plannedPages(ALL_COMPONENTS, readSourceMap());
+// Writes each out-of-date page, or with `check` only reports it. Prints the
+// result and returns the process exit code.
+export function syncApiPages(pages, check, repoRoot = REPO_ROOT) {
   const stale = [];
   for (const page of pages) {
     const current = existsSync(page.path) ? readFileSync(page.path, "utf8") : undefined;
     if (current === page.contents) continue;
-    if (check) stale.push(relative(REPO_ROOT, page.path));
+    if (check) stale.push(relative(repoRoot, page.path));
     else writeFileSync(page.path, page.contents);
   }
   if (stale.length > 0) {
@@ -94,9 +94,14 @@ async function main() {
     console.error(
       "[docs] FAILED: run pnpm --filter @ultimate/component-metadata run docs:generate"
     );
-    process.exit(1);
+    return 1;
   }
   console.log(`[docs] OK: ${pages.length} API page(s) up to date`);
+  return 0;
 }
 
-await main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const { ALL_COMPONENTS } = await import("../dist/index.mjs");
+  const pages = plannedPages(ALL_COMPONENTS, readSourceMap());
+  process.exit(syncApiPages(pages, process.argv.includes("--check")));
+}

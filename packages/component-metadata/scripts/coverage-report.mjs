@@ -10,7 +10,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(SCRIPT_DIR, "../../..");
+export const REPO_ROOT = resolve(SCRIPT_DIR, "../../..");
 export const FRAMEWORKS = ["ng", "react", "vue"];
 
 // Entries of a framework package's `exports` map that are not documented
@@ -134,12 +134,14 @@ export function exitCodeFor(report, options) {
 
 const USAGE = "Usage: coverage-report.mjs [--enforce]";
 
-function readRepositoryInputs() {
+// Reads the shipped components, story directories, Skill files and unlisted
+// source directories of the repository rooted at `repoRoot`.
+export function readRepositoryInputs(repoRoot = REPO_ROOT) {
   const shipped = {};
   const stories = {};
   const unlisted = {};
   for (const framework of FRAMEWORKS) {
-    const packageRoot = resolve(REPO_ROOT, "packages", framework);
+    const packageRoot = resolve(repoRoot, "packages", framework);
     const srcRoot = resolve(packageRoot, "src");
     const packageJson = JSON.parse(readFileSync(resolve(packageRoot, "package.json"), "utf8"));
     const barrelPath = resolve(srcRoot, "index.ts");
@@ -159,7 +161,7 @@ function readRepositoryInputs() {
       shipped[framework]
     );
   }
-  const skillsDir = resolve(REPO_ROOT, "skills");
+  const skillsDir = resolve(repoRoot, "skills");
   const skills = existsSync(skillsDir)
     ? readdirSync(skillsDir)
         .filter((file) => file.endsWith(".md"))
@@ -200,28 +202,29 @@ function printReport(report, shipped, unlisted) {
   }
 }
 
-async function main() {
+// Prints the report for `argv` and returns the process exit code.
+export function runCoverageReport(argv, records, repoRoot = REPO_ROOT) {
   let options;
   try {
-    options = parseArgs(process.argv.slice(2));
+    options = parseArgs(argv);
   } catch (error) {
     console.error(`[coverage] ${error.message}`);
     console.error(USAGE);
-    process.exit(2);
+    return 2;
   }
-  const { ALL_COMPONENTS } = await import("../dist/index.mjs");
-  const inputs = readRepositoryInputs();
+  const inputs = readRepositoryInputs(repoRoot);
   const { unlisted, ...reportInputs } = inputs;
-  const report = coverageReport({ ...reportInputs, records: ALL_COMPONENTS });
+  const report = coverageReport({ ...reportInputs, records });
   printReport(report, inputs.shipped, unlisted);
   const code = exitCodeFor(report, options);
   if (code !== 0) console.error("[coverage] FAILED: --enforce and gaps remain");
   else if (report.missing.length > 0) {
     console.log("\n[coverage] report mode: exiting 0 (use --enforce after C02)");
   }
-  process.exit(code);
+  return code;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  await main();
+  const { ALL_COMPONENTS } = await import("../dist/index.mjs");
+  process.exit(runCoverageReport(process.argv.slice(2), ALL_COMPONENTS));
 }

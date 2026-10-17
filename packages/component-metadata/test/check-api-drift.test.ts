@@ -1,9 +1,15 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { ComponentMetadata } from "@ultimate/component-schema";
-import { diffApi, extractApi, extractSources } from "../scripts/check-api-drift.mjs";
+import {
+  diffApi,
+  driftProblems,
+  extractApi,
+  extractSources,
+  runDriftCheck,
+} from "../scripts/check-api-drift.mjs";
 import sourceMap from "../scripts/source-map.json";
 import { BUTTON_METADATA } from "../src/records/button";
 
@@ -112,5 +118,74 @@ describe("extractApi on seeded source fixtures", () => {
       "export interface ThingBindingValue { value: string; disabled?: boolean }"
     );
     expect(extractApi("vue", fixture)).toEqual({ props: ["value", "disabled"], events: [] });
+  });
+});
+
+describe("extractApi rejects Vue options it cannot read", () => {
+  const vueFixture = (options: string) =>
+    writeFixture("thing.ts", `export const T = defineComponent({ name: "UThing", ${options} });`);
+
+  it("throws, naming the file and component, when props is an identifier", () => {
+    const fixture = vueFixture("props: sharedProps");
+    expect(() => extractApi("vue", fixture)).toThrow(
+      `[drift] \`props\` of UThing in ${fixture} is not an object or array literal`
+    );
+  });
+
+  it("throws, naming the file and component, when emits is a call", () => {
+    const fixture = vueFixture("emits: makeEmits()");
+    expect(() => extractApi("vue", fixture)).toThrow(
+      `[drift] \`emits\` of UThing in ${fixture} is not an object or array literal`
+    );
+  });
+
+  it("throws on a spread in an object-literal props initializer", () => {
+    const fixture = vueFixture("props: { ...sharedProps, label: String }");
+    expect(() => extractApi("vue", fixture)).toThrow(
+      `[drift] spread in \`props\` of UThing in ${fixture} cannot be read`
+    );
+  });
+
+  it("throws on a spread in an array-literal emits initializer", () => {
+    const fixture = writeFixture("thing.ts", "export default { emits: [...shared, 'page'] };");
+    expect(() => extractApi("vue", fixture)).toThrow(
+      `[drift] spread in \`emits\` of <unnamed component> in ${fixture} cannot be read`
+    );
+  });
+});
+
+describe("driftProblems and runDriftCheck", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("reports no problems and exits 0 for the Button record against its sources", () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    expect(runDriftCheck([BUTTON_METADATA], { Button: sourceMap.Button })).toBe(0);
+    expect(log).toHaveBeenCalledWith("[drift] OK: 1 record(s) match their sources");
+  });
+
+  it("reports an orphan source-map entry, a record without an entry and missing files", () => {
+    const orphan = { ...structuredClone(BUTTON_METADATA), name: "Orphan" };
+    const missing = { ...structuredClone(BUTTON_METADATA), name: "Missing" };
+    expect(
+      driftProblems([orphan, missing], {
+        Ghost: sourceMap.Button,
+        Missing: { ng: ["packages/ng/src/missing/missing.ts"] },
+      })
+    ).toEqual([
+      "source-map.json entry Ghost has no metadata record",
+      "Orphan: no source-map.json entry",
+      "Missing: source file(s) not found: packages/ng/src/missing/missing.ts",
+    ]);
+  });
+
+  it("prints each drift problem and exits 1", () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    const seeded: ComponentMetadata = structuredClone(BUTTON_METADATA);
+    seeded.api?.react?.props.push({ name: "ghostProp", type: "string", required: false });
+    expect(runDriftCheck([seeded], { Button: sourceMap.Button })).toBe(1);
+    expect(error.mock.calls.map(([line]) => line)).toEqual([
+      "[drift] Button react missing-in-source: ghostProp",
+      "[drift] FAILED: 1 problem(s)",
+    ]);
   });
 });

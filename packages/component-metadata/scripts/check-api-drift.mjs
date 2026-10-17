@@ -153,12 +153,34 @@ function extractReact(sourceFile) {
   return { props, events };
 }
 
-function keysOf(node) {
-  if (ts.isObjectLiteralExpression(node)) return node.properties.map(propertyName);
+function componentName(component) {
+  const option = component.properties.find(
+    (prop) => ts.isPropertyAssignment(prop) && propertyName(prop) === "name"
+  );
+  return option && ts.isStringLiteralLike(option.initializer)
+    ? option.initializer.text
+    : "<unnamed component>";
+}
+
+// Only literal option keys are read. Any other initializer (an identifier, a
+// call) or a spread would silently drop keys, so it is an error instead.
+function keysOf(option, component, sourceFile) {
+  const node = option.initializer;
+  const where = () =>
+    `\`${propertyName(option)}\` of ${componentName(component)} in ${sourceFile.fileName}`;
+  if (ts.isObjectLiteralExpression(node)) {
+    if (node.properties.some(ts.isSpreadAssignment)) {
+      throw new Error(`[drift] spread in ${where()} cannot be read`);
+    }
+    return node.properties.map(propertyName);
+  }
   if (ts.isArrayLiteralExpression(node)) {
+    if (node.elements.some(ts.isSpreadElement)) {
+      throw new Error(`[drift] spread in ${where()} cannot be read`);
+    }
     return node.elements.filter(ts.isStringLiteralLike).map((element) => element.text);
   }
-  return [];
+  throw new Error(`[drift] ${where()} is not an object or array literal`);
 }
 
 function vueComponentObjects(sourceFile) {
@@ -186,8 +208,8 @@ function extractVue(sourceFile) {
   for (const component of components) {
     for (const option of component.properties) {
       if (!ts.isPropertyAssignment(option)) continue;
-      if (propertyName(option) === "props") props.push(...keysOf(option.initializer));
-      if (propertyName(option) === "emits") events.push(...keysOf(option.initializer));
+      if (propertyName(option) === "props") props.push(...keysOf(option, component, sourceFile));
+      if (propertyName(option) === "emits") events.push(...keysOf(option, component, sourceFile));
     }
   }
   if (components.length === 0) {
@@ -269,16 +291,15 @@ export function readSourceMap() {
   return JSON.parse(readFileSync(resolve(SCRIPT_DIR, "source-map.json"), "utf8"));
 }
 
-async function main() {
-  const { ALL_COMPONENTS } = await import("../dist/index.mjs");
-  const sourceMap = readSourceMap();
+// Every drift problem across `records`, as printable lines.
+export function driftProblems(records, sourceMap) {
   const problems = [];
   for (const name of Object.keys(sourceMap)) {
-    if (!ALL_COMPONENTS.some((record) => record.name === name)) {
+    if (!records.some((record) => record.name === name)) {
       problems.push(`source-map.json entry ${name} has no metadata record`);
     }
   }
-  for (const record of ALL_COMPONENTS) {
+  for (const record of records) {
     const entry = sourceMap[record.name];
     if (!entry) {
       problems.push(`${record.name}: no source-map.json entry`);
@@ -295,14 +316,22 @@ async function main() {
       problems.push(`${record.name} ${drift.framework} ${drift.kind}: ${drift.name}`);
     }
   }
+  return problems;
+}
+
+// Prints the result and returns the process exit code.
+export function runDriftCheck(records, sourceMap) {
+  const problems = driftProblems(records, sourceMap);
   if (problems.length > 0) {
     for (const problem of problems) console.error(`[drift] ${problem}`);
     console.error(`[drift] FAILED: ${problems.length} problem(s)`);
-    process.exit(1);
+    return 1;
   }
-  console.log(`[drift] OK: ${ALL_COMPONENTS.length} record(s) match their sources`);
+  console.log(`[drift] OK: ${records.length} record(s) match their sources`);
+  return 0;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  await main();
+  const { ALL_COMPONENTS } = await import("../dist/index.mjs");
+  process.exit(runDriftCheck(ALL_COMPONENTS, readSourceMap()));
 }
