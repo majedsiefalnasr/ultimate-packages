@@ -36,11 +36,11 @@ New tooling follows the existing `scripts/provenance/*.mjs` + `node:test` patter
 
 ## Review Focus
 
-1. **A Release run that finds pending changesets.** If `.changeset/*.md` exists when B1 runs, the run must open or update a Version Packages PR and must not publish. Task 12 checks `.changeset/` first and records the actual path taken.
+1. **A Release run that finds pending changesets.** If `.changeset/*.md` exists when B1 runs, the run must open or update a Version Packages PR and must not publish. Task 13 checks `.changeset/` first and records the actual path taken.
 2. **The CLI/MCP compatibility boundary at `21.2.21`/`21.2.22`, and prereleases.** `21.2.21` is incompatible, `21.2.22` and `21.9.0` are compatible, and `22.0.0` is incompatible. `21.2.22-rc.0` follows the existing `satisfiesCaretRange` semantics, asserted as they are today and not changed. Tests are in Task 4.
 3. **Re-baseline rounding.** The value written to `PERFORMANCE.md` must come from the same CI coverage summary the integrity check reproduces, to two decimals, so the 0.05 tolerance cannot fail on rounding. Task 1 takes it from the CI log of the PR head.
-4. **Native passthrough attributes in the drift check.** React props that come from extended native interfaces (`ButtonHTMLAttributes`), and Angular outputs that only wrap native events, are not drift. The records already exclude them by convention. Tested in Task 9.
-5. **Overlay timings with motion.** P7 is recorded both with motion and with `prefers-reduced-motion: reduce`. A missing reduced-motion variant is an error, not a silent omission. Tested in Task 7.
+4. **Native passthrough attributes in the drift check.** React props that come from extended native interfaces (`ButtonHTMLAttributes`), and Angular outputs that only wrap native events, are not drift. The records already exclude them by convention. Tested in Task 11.
+5. **Overlay timings with motion.** P7 is recorded both with motion and with `prefers-reduced-motion: reduce`. A missing reduced-motion variant is an error, not a silent omission. Tested in Task 8.
 
 ---
 
