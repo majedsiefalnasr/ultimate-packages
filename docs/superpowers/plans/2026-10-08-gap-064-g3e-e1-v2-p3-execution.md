@@ -2,7 +2,7 @@
 
 > **For agentic workers:** Documentation only until human P3 approval, exact artifact review and separate explicit implementation/verification authorization. Use executing-plans only after those gates. No command or recipe here grants execution authority.
 
-**Status:** P2 **APPROVED** by explicit human ruling; P3 **READY FOR HUMAN APPROVAL** as an execution design. Implementation and verification **UNAUTHORIZED**. The temporary artifacts below are specified, not created or executed.
+**Status:** SUPERSEDED — E1-V2 closed; see `research/2026-10-08-gap-064-g3e-closeout.md`
 
 **Goal:** Execute the exact approved C1 production delta once, then collect one bounded verification campaign for human review.
 

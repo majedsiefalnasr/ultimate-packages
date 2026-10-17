@@ -1,7 +1,7 @@
 # GAP-087 — Node.js workspace and Release toolchain alignment
 
 **Date:** 2026-10-14  
-**Status:** PROPOSED — awaiting Spec Review. This document authorizes no implementation, Implementation Plan, commit, publish, or tracking change.  
+**Status:** IMPLEMENTED — PR #14, merge `6bba3115`; closeout `research/2026-10-14-gap-087-node-policy-closeout.md`\
 **Baseline:** `main` and `origin/main` at `9ea303df0b27ab69487449bf32577e223cd8bbb0`; drafted on `docs/gap-087-node-policy-spec`.  
 **Authority:** [ADR-059](../../architecture/DECISIONS.md#adr-059--node-24150-baseline-for-the-private-workspace-and-release-toolchain-gap-087) is the binding Node policy. The [GAP-087 research record](../../architecture/research/2026-10-14-gap-087-node-policy-research.md) supplies its evidence; [GAP-087](../../architecture/BLUEPRINT_GAPS.md#gap-087--release-workflow-runs-on-node-20-below-the-angular-21-toolchains-node-requirement) defines the defect. The approved [Phase 10 release Specification](2026-09-10-phase-10-migration-release-provenance-design.md) governs release mode and publishing behavior. This Specification changes none of those decisions.
 

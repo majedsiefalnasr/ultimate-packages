@@ -1,7 +1,7 @@
 # Code Quality and Local Developer Checks — GAP-092
 
 **Date:** 2026-10-13\
-**Status:** PROPOSED — awaiting Spec Review. No implementation, Plan, commit, or tracking change is authorized.\
+**Status:** IMPLEMENTED — PR #9, merge `55a76296`; closeout `research/2026-10-13-gap-092-lint-format-hooks-closeout.md`\
 **Baseline:** fetched `origin/main` at `3f86cbce30fcde4fd0ff88756e2713b8daf0a6ae` (GAP-088 PR #8 merge).\
 **Authority:** [AGENTS.md §§2–4](../../../AGENTS.md), [Blueprint §§2.3, 8, 28 and 40](../../architecture/BLUEPRINT.md), [ADR-005, ADR-015 and ADR-052](../../architecture/DECISIONS.md), [GAP-092](../../architecture/BLUEPRINT_GAPS.md#gap-092--existing-lint-and-format-debt-fails-the-ci-lint-and-format-steps), and the approved [Phase 10 Track B Specification](2026-09-08-phase-10-ci-security-quality-gates-design.md) and [Implementation Plan](../plans/2026-09-08-phase-10-ci-security-quality-gates-implementation.md). This is one unified specification for the existing quality debt and local checks. It does not reopen Track B's CI/security, provenance, or package-boundary decisions.
 
