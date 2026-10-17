@@ -19,5 +19,7 @@ bootstrapApplication(ProofPageComponent, {
     // root element to know hydration finished — set only from this
     // post-bootstrap callback, never earlier.
     document.documentElement.setAttribute("data-hydrated", "true");
+    // ADR-057 Stage 1 P8 "time to hydrated" (scripts/perf/run-stage1.mjs).
+    performance.mark("u-perf:hydrated");
   })
   .catch((err) => console.error(err));

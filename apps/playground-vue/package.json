@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build && vite build --ssr src/entry-server.ts --outDir dist && node scripts/build-server.mjs",
+    "build:perf": "vite build --config vite.perf.config.ts",
     "start": "node dist/server.js"
   },
   "dependencies": {
