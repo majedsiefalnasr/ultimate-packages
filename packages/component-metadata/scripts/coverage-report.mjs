@@ -41,10 +41,33 @@ export function normalizeName(name) {
   return name.replace(/-/g, "").toLowerCase();
 }
 
-export function shippedComponents(packageJson) {
-  return Object.keys(packageJson.exports ?? {})
-    .filter((subpath) => !NON_COMPONENT_SUBPATHS.has(subpath))
-    .map((subpath) => normalizeName(subpath.replace(/^\.\//, "")));
+// A framework ships a component through an `exports` subpath or, for some ng
+// components, only through the root barrel (`src/index.ts`). The barrel is read
+// with a regex over `export * from "./<dir>"` and `export { ... } from "./<dir>"`
+// lines; self-references such as "@ultimate/ng/<dir>" are already `exports`
+// subpaths. The barrel text is passed in so this function stays pure.
+const BARREL_EXPORT = /^\s*export\s+(?:\*|\{[^}]*\})\s+from\s+["']\.\/([a-z0-9-]+)["']/gm;
+
+const stripDotSlash = (subpath) => subpath.replace(/^\.\//, "");
+
+export function shippedComponents(packageJson, barrelSource = "") {
+  const subpaths = Object.keys(packageJson.exports ?? {}).map(stripDotSlash);
+  const barrelDirs = [...barrelSource.matchAll(BARREL_EXPORT)].map((match) => match[1]);
+  const excluded = new Set([...NON_COMPONENT_SUBPATHS].map(stripDotSlash));
+  const candidates = [...subpaths, ...barrelDirs].filter(
+    (name) => name !== "." && !excluded.has(name)
+  );
+  return [...new Set(candidates.map(normalizeName))];
+}
+
+// Source directories that look like components (they have an index.ts) but are
+// neither in the denominator nor in the exclusion constant.
+export function unlistedDirs(srcDirs, shipped) {
+  const known = new Set([
+    ...shipped.map(normalizeName),
+    ...[...NON_COMPONENT_SUBPATHS].map((subpath) => normalizeName(stripDotSlash(subpath))),
+  ]);
+  return srcDirs.filter((dir) => !known.has(normalizeName(dir)));
 }
 
 // `shipped` is either a per-framework map or a flat list shipped by every
@@ -114,22 +137,27 @@ const USAGE = "Usage: coverage-report.mjs [--enforce]";
 function readRepositoryInputs() {
   const shipped = {};
   const stories = {};
+  const unlisted = {};
   for (const framework of FRAMEWORKS) {
     const packageRoot = resolve(REPO_ROOT, "packages", framework);
+    const srcRoot = resolve(packageRoot, "src");
     const packageJson = JSON.parse(readFileSync(resolve(packageRoot, "package.json"), "utf8"));
-    shipped[framework] = shippedComponents(packageJson);
-    stories[framework] = shipped[framework].filter((component) => {
-      const dirs = readdirSync(resolve(packageRoot, "src"), { withFileTypes: true }).filter((d) =>
-        d.isDirectory()
-      );
-      return dirs
-        .filter((dir) => normalizeName(dir.name) === component)
-        .some((dir) =>
-          readdirSync(resolve(packageRoot, "src", dir.name)).some((file) =>
-            /\.stories\.[^.]+$/.test(file)
-          )
-        );
-    });
+    const barrelPath = resolve(srcRoot, "index.ts");
+    const barrel = existsSync(barrelPath) ? readFileSync(barrelPath, "utf8") : "";
+    shipped[framework] = shippedComponents(packageJson, barrel);
+    const dirs = readdirSync(srcRoot, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => ({ name: entry.name, files: readdirSync(resolve(srcRoot, entry.name)) }));
+    const withStories = new Set(
+      dirs
+        .filter((dir) => dir.files.some((file) => /\.stories\.[^.]+$/.test(file)))
+        .map((dir) => normalizeName(dir.name))
+    );
+    stories[framework] = shipped[framework].filter((component) => withStories.has(component));
+    unlisted[framework] = unlistedDirs(
+      dirs.filter((dir) => dir.files.includes("index.ts")).map((dir) => dir.name),
+      shipped[framework]
+    );
   }
   const skillsDir = resolve(REPO_ROOT, "skills");
   const skills = existsSync(skillsDir)
@@ -138,10 +166,10 @@ function readRepositoryInputs() {
         .map((file) => file.replace(/\.md$/, ""))
         .filter((name) => name !== "README" && name !== "AGENT_CONVENTIONS")
     : [];
-  return { shipped, stories, skills };
+  return { shipped, stories, skills, unlisted };
 }
 
-function printReport(report, shipped) {
+function printReport(report, shipped, unlisted) {
   console.log("Metadata coverage report");
   for (const framework of FRAMEWORKS) {
     const entries = report.missing.filter((entry) => entry.framework === framework);
@@ -158,6 +186,10 @@ function printReport(report, shipped) {
     );
   }
   console.log(`  total: ${report.missing.length} component/framework pair(s) with gaps`);
+  for (const framework of FRAMEWORKS) {
+    const dirs = unlisted[framework];
+    console.log(`  ${framework} not in denominator: ${dirs.length > 0 ? dirs.join(", ") : "none"}`);
+  }
   if (report.missing.length === 0) return;
   const width = Math.max(...report.missing.map((entry) => entry.component.length), 9);
   console.log(`\n${"component".padEnd(width)}  fw     lacks`);
@@ -179,8 +211,9 @@ async function main() {
   }
   const { ALL_COMPONENTS } = await import("../dist/index.mjs");
   const inputs = readRepositoryInputs();
-  const report = coverageReport({ ...inputs, records: ALL_COMPONENTS });
-  printReport(report, inputs.shipped);
+  const { unlisted, ...reportInputs } = inputs;
+  const report = coverageReport({ ...reportInputs, records: ALL_COMPONENTS });
+  printReport(report, inputs.shipped, unlisted);
   const code = exitCodeFor(report, options);
   if (code !== 0) console.error("[coverage] FAILED: --enforce and gaps remain");
   else if (report.missing.length > 0) {

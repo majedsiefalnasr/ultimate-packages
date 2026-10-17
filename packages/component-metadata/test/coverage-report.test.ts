@@ -8,7 +8,9 @@ import {
   coverageReport,
   exitCodeFor,
   parseArgs,
+  NON_COMPONENT_SUBPATHS,
   shippedComponents,
+  unlistedDirs,
 } from "../scripts/coverage-report.mjs";
 import { BUTTON_METADATA } from "../src/records/button";
 
@@ -37,6 +39,43 @@ describe("shippedComponents", () => {
       },
     });
     expect(names).toEqual(["button", "radiobutton"]);
+  });
+
+  it("excludes every entry of NON_COMPONENT_SUBPATHS", () => {
+    const exports = Object.fromEntries([...NON_COMPONENT_SUBPATHS, "./badge"].map((s) => [s, {}]));
+    const barrel = [...NON_COMPONENT_SUBPATHS]
+      .filter((subpath) => subpath.startsWith("./") && subpath !== "./package.json")
+      .map((subpath) => `export * from "${subpath}";`)
+      .join("\n");
+    expect(shippedComponents({ exports }, barrel)).toEqual(["badge"]);
+  });
+
+  it("includes components shipped only through the root barrel (ng button)", () => {
+    const barrel = [
+      'export * from "@ultimate/ng/badge";',
+      'export * from "./button";',
+      'export { UDialog } from "./dialog";',
+      'export * from "./select-button";',
+      'export * from "./ripple";',
+    ].join("\n");
+    const names = shippedComponents({ exports: { ".": {}, "./badge": {} } }, barrel);
+    expect(names).toEqual(["badge", "button", "dialog", "selectbutton"]);
+  });
+
+  it("does not duplicate a component present in both exports and the barrel", () => {
+    const names = shippedComponents(
+      { exports: { "./card": {} } },
+      'export * from "./card";\nexport * from "./card";'
+    );
+    expect(names).toEqual(["card"]);
+  });
+});
+
+describe("unlistedDirs", () => {
+  it("lists directories in neither the denominator nor the exclusions", () => {
+    expect(
+      unlistedDirs(["button", "ripple", "mystery", "radio-button"], ["button", "radiobutton"])
+    ).toEqual(["mystery"]);
   });
 });
 
@@ -147,5 +186,11 @@ describe("exit codes", () => {
     const result = spawnSync(process.execPath, [SCRIPT], { encoding: "utf8" });
     expect(result.status).toBe(0);
     expect(result.stdout).toMatch(/ng/);
+  });
+
+  it.skipIf(!existsSync(DIST))("the CLI --enforce exits 1 while gaps remain", () => {
+    const result = spawnSync(process.execPath, [SCRIPT, "--enforce"], { encoding: "utf8" });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toMatch(/FAILED/);
   });
 });
