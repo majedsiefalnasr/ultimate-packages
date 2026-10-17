@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans when implementation is separately authorized. Steps use checkbox (`- [ ]`) syntax for tracking. This plan is for Plan Review; it authorizes no implementation, commit, push, PR, merge, or publish.
 
-**Status:** PROPOSED — awaiting Plan Review.  
+**Status:** IMPLEMENTED — PR #14, merge `6bba3115`; closeout `research/2026-10-14-gap-087-node-policy-closeout.md`\
 **Goal:** Make the private workspace Node declaration and every Release job match ADR-059's Node 24 policy, then verify the frozen install and report the actual release-path result.  
 **Architecture:** Change the root engine range and three existing Release Node pins without changing release control flow. Clarify the existing README Development guidance. Prove file-level consistency locally and installation on a clean Node 24.15.0 runner; verify Select mode after the implementation reaches `main` through separately authorized gates.  
 **Tech Stack:** Node.js 24.15.0 execution baseline; Node range `^24.15.0`; pnpm 9.6.0; GitHub Actions YAML; Markdown.

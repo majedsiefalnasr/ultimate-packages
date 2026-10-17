@@ -4,7 +4,7 @@
 
 > **For agentic workers:** Use the Superpowers executing-plans skill only after Plan Review and explicit implementation authorization. Respect the human gates below; do not dispatch another CLI or infer execution permission from this plan.
 
-**Status:** Plan creation authorized; draft for Plan Review. **Not execution-ready: P1/P2/P3 and explicit implementation authorization are outstanding.** No candidate is selected.
+**Status:** SUPERSEDED — E1-V2 closed; see `research/2026-10-08-gap-064-g3e-closeout.md`
 
 **Goal:** Remove the established Angular ImageCompare `imagecompare/root-style` displacement through one separately approved local adaptation, preserving existing DOM/template/runtime/API and behavior.
 

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:executing-plans` or `superpowers:subagent-driven-development` only after Plan Review approval and separate implementation authorization. Steps use checkbox (`- [ ]`) syntax for tracking. Do not infer authority to commit, push, or close tracking from this plan.
 
-**Status:** Proposed for Plan Review; implementation unauthorized. The unified [Specification](../specs/2026-10-13-code-quality-local-developer-checks-design.md) was approved by the user on 2026-10-13. Its unchanged on-disk `Status:` line is a document snapshot, not the current gate.
+**Status:** IMPLEMENTED — PR #9, merge `55a76296`; closeout `research/2026-10-13-gap-092-lint-format-hooks-closeout.md`
 
 **Amendment A1 (2026-10-13, proposed for Plan Review):** staged delivery. Tasks 1–4 ship as a first validated phase on a dedicated branch and draft PR for CI evidence; Task 5 stays blocked on GAP-089. See [Amendment A1 — staged delivery](#amendment-a1--staged-delivery). A1 changes sequencing and delivery only; it does not change any task's technical content, file boundary, or acceptance bar.
 
