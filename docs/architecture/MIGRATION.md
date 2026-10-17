@@ -196,3 +196,7 @@ Added for GAP-098 (`feature/gap-098-scoped-box-model`), same status — unreleas
 - **Scope.** The rule never targets the page: no `*`, `html` or `body` rule. Application content inside a component's subtree (for example inside Fluid, Card, Panel, Dialog or Drawer) is also `border-box`, as under Prime; a host-element directive such as `[uInputText]` applies it to the application's own `<input>`. Ultimate reserves its component root class names (for example `u-card`, `u-button`): a host element using one exactly is treated as part of a component.
 - **Overrides.** The rule has zero specificity but is unlayered, like all Ultimate CSS. An unlayered application rule overrides it; a rule inside an `@layer` (for example Tailwind's `box-content` utility) does not — use an unlayered rule or `!important`.
 - **Not the fix:** `@ultimate/uix-styles/base` still exports Prime's page-wide `*, ::before, ::after { box-sizing: border-box }` rule unchanged. It is not registered by any core and is not the supported way to get this behaviour.
+
+Added for W2-B3 (`fix/w2-b3-support-cli-evidence`), same status — unreleased, no changesets:
+
+- **Compatibility manifest:** Angular range corrected from `^21.0.7` to the published peer range `^21.2.22`; CLI and MCP report Angular below 21.2.22 as incompatible.
