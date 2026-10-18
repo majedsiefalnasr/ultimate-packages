@@ -19,12 +19,12 @@ const HELP_ROW: ExitCodeRow = { code: 0, meaning: "--help or -h: help printed" }
 
 const NO_FRAMEWORK_ROW: ExitCodeRow = {
   code: 1,
-  meaning: "refused: no Angular, React or Vue dependency in package.json",
+  meaning: "refused: no Angular, React or Vue project detected",
 };
 
 const INCOMPATIBLE_ROW: ExitCodeRow = {
   code: 1,
-  meaning: "refused: the framework version has no compatible Ultimate package",
+  meaning: "refused: no compatible Ultimate package for this project",
 };
 
 const INSTALL_FAILED_ROW: ExitCodeRow = {
@@ -172,5 +172,6 @@ export function renderHelp(command?: string): string {
     ...formatExitCodes(EXIT_CODES.ultimate),
     "",
     'Run "ultimate <command> --help" for that command\'s arguments and exit codes.',
+    "The help flag must come directly after the command: ultimate <command> --help.",
   ].join("\n");
 }
