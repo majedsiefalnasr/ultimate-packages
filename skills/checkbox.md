@@ -1,6 +1,6 @@
 ---
 component: Checkbox
-metadataVersion: 1
+metadataVersion: 2
 frameworks: [ng, react, vue]
 ---
 
@@ -35,6 +35,7 @@ frameworks: [ng, react, vue]
 - `value`: unknown
 - `id`: string | undefined
 - `inputId`: string | undefined
+- `inputRef`: React.Ref<HTMLInputElement> | undefined
 - `tooltip`: string | undefined
 - `tooltipOptions`: Record<string, unknown> | undefined
 - `autoFocus`: boolean (default: false)
@@ -66,6 +67,7 @@ frameworks: [ng, react, vue]
 ### vue events
 
 - `change` (emit): change
+- `update:indeterminate` (emit): indeterminateChange
 
 <!-- ultimate:generated:end section="allowed-apis" -->
 

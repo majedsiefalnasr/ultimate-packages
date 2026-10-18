@@ -77,6 +77,7 @@ A boolean input control rendered as a native checkbox, with an optional text lab
 - `value`: unknown
 - `id`: string | undefined
 - `inputId`: string | undefined
+- `inputRef`: React.Ref<HTMLInputElement> | undefined
 - `tooltip`: string | undefined
 - `tooltipOptions`: Record<string, unknown> | undefined
 - `autoFocus`: boolean
@@ -100,6 +101,7 @@ A boolean input control rendered as a native checkbox, with an optional text lab
 - `invalid`: Boolean
 - `name`: String
 - event `change` (emit)
+- event `update:indeterminate` (emit)
 
 ## Dialog
 Category: Overlay
@@ -110,6 +112,7 @@ A modal (or non-modal) overlay window that renders projected content above the p
 - `closable`: boolean
 - `closeOnEscape`: boolean
 - `modal`: boolean
+- `role`: "dialog" | "alertdialog"
 - event `visibleChange` (output)
 - event `onShow` (output)
 - event `onHide` (output)
@@ -142,6 +145,7 @@ A modal (or non-modal) overlay window that renders projected content above the p
 - `blockScroll`: Boolean
 - `baseZIndex`: Number
 - `autoZIndex`: Boolean
+- `role`: String
 - `position`: String
 - `appendTo`: [String, Object]
 - `ariaCloseLabel`: String
@@ -151,10 +155,15 @@ A modal (or non-modal) overlay window that renders projected content above the p
 
 ## Menu
 Category: Navigation
-A flat navigation/command list rendered as an ARIA menu, either inline or (React/Vue only) as a popup overlay, with roving-tabindex keyboard navigation.
+A flat navigation/command list rendered as an ARIA menu, either inline or as a popup overlay, with roving-tabindex keyboard navigation.
 ### ng API
 - `model`: UMenuItem[]
 - `popup`: boolean
+- `appendTo`: HTMLElement | (() => HTMLElement) | undefined
+- `baseZIndex`: number
+- `closeOnEscape`: boolean
+- event `onShow` (output)
+- event `onHide` (output)
 ### react API
 - `model`: UMenuItem[]
 - `popup`: boolean
@@ -248,6 +257,7 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `selectionMode`: SelectionMode | undefined
 - `selection`: T | T[] | undefined
 - `compareSelectionBy`: "equals" | "deepEquals"
+- `selectionColumn`: boolean
 - `paginator`: boolean
 - `first`: number
 - `rows`: number
@@ -259,11 +269,21 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `lazyLoadOnInit`: boolean
 - `editMode`: "cell" | "row" | undefined
 - `editingRowKeys`: Record<string, boolean>
+- `expandedRowKeys`: Record<string, boolean>
 - `rowGroupMode`: "subheader" | "rowspan" | undefined
 - `groupRowsBy`: string | undefined
+- `loading`: boolean
 - event `sortFieldChange` (output)
+- event `sortOrderChange` (output)
+- event `multiSortMetaChange` (output)
 - event `selectionChange` (output)
 - event `firstChange` (output)
+- event `rowsChange` (output)
+- event `onLazyLoad` (output)
+- event `editingRowKeysChange` (output)
+- event `expandedRowKeysChange` (output)
+- event `onRowExpand` (output)
+- event `onRowCollapse` (output)
 ### react API
 - `value`: T[]
 - `dataKey`: string
@@ -276,6 +296,7 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `selectionMode`: SelectionMode | undefined
 - `selection`: T | T[] | undefined
 - `compareSelectionBy`: "equals" | "deepEquals"
+- `selectionColumn`: boolean
 - `paginator`: boolean
 - `first`: number
 - `rows`: number
@@ -284,11 +305,25 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `lazy`: boolean | undefined
 - `editMode`: "cell" | "row" | undefined
 - `editingRows`: Record<string, boolean> | undefined
+- `cellEditValidator`: (event: { newValue: unknown; oldValue: unknown }) => boolean
+- `expandedRowKeys`: Record<string, boolean> | undefined
 - `rowGroupMode`: "subheader" | "rowspan" | undefined
 - `groupRowsBy`: string | undefined
+- `loading`: boolean
 - event `onSort` (callback-prop)
 - event `onSelectionChange` (callback-prop)
 - event `onPage` (callback-prop)
+- event `onFilter` (callback-prop)
+- event `onLazyLoad` (callback-prop)
+- event `onRowEditChange` (callback-prop)
+- event `onRowEditInit` (callback-prop)
+- event `onRowEditSave` (callback-prop)
+- event `onRowEditCancel` (callback-prop)
+- event `onCellEditComplete` (callback-prop)
+- event `onCellEditCancel` (callback-prop)
+- event `onExpandedRowKeysChange` (callback-prop)
+- event `onRowExpand` (callback-prop)
+- event `onRowCollapse` (callback-prop)
 ### vue API
 - `value`: Array
 - `dataKey`: String
@@ -301,6 +336,7 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `selectionMode`: String
 - `selection`: [Object, Array]
 - `compareSelectionBy`: String
+- `selectionColumn`: Boolean
 - `paginator`: Boolean
 - `first`: Number
 - `rows`: Number
@@ -310,11 +346,21 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `lazy`: Boolean
 - `editMode`: String
 - `editingRows`: Array
+- `expandedRowKeys`: Object
 - `rowGroupMode`: String
 - `groupRowsBy`: String
+- `loading`: Boolean
 - event `sort` (emit)
 - event `selection-change` (emit)
 - event `page` (emit)
+- event `filter` (emit)
+- event `lazy-load` (emit)
+- event `update:editingRows` (emit)
+- event `row-edit-save` (emit)
+- event `row-edit-cancel` (emit)
+- event `update:expandedRowKeys` (emit)
+- event `row-expand` (emit)
+- event `row-collapse` (emit)
 ### Accessibility
 Roles: table, rowgroup, row, columnheader
 Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the currently-rendered virtualized window, not the full logical dataset, when virtualScroll/virtualScrollerOptions is active — a row outside the window is not in the DOM to focus. This is a real, intentional, already-shipped limitation of Table's Scroller composition, documented inline at the row-keydown handler in all three frameworks' own source.

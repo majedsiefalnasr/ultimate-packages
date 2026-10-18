@@ -1,0 +1,45 @@
+{
+  "Button": {
+    "ng": ["packages/ng/src/button/button.ts"],
+    "react": ["packages/react/src/button/button.tsx"],
+    "vue": ["packages/vue/src/button/base-button.ts"]
+  },
+  "Checkbox": {
+    "ng": ["packages/ng/src/checkbox/checkbox.ts"],
+    "react": ["packages/react/src/checkbox/checkbox.tsx"],
+    "vue": ["packages/vue/src/checkbox/BaseCheckbox.ts", "packages/vue/src/checkbox/Checkbox.vue"]
+  },
+  "Dialog": {
+    "ng": ["packages/ng/src/dialog/dialog.ts"],
+    "react": ["packages/react/src/dialog/dialog.tsx"],
+    "vue": ["packages/vue/src/dialog/BaseDialog.ts", "packages/vue/src/dialog/Dialog.vue"]
+  },
+  "Menu": {
+    "ng": ["packages/ng/src/menu/menu.ts"],
+    "react": ["packages/react/src/menu/menu.tsx"],
+    "vue": ["packages/vue/src/menu/BaseMenu.ts", "packages/vue/src/menu/Menu.vue"]
+  },
+  "Paginator": {
+    "ng": ["packages/ng/src/paginator/paginator.ts"],
+    "react": ["packages/react/src/paginator/paginator.tsx"],
+    "vue": [
+      "packages/vue/src/paginator/base-paginator.ts",
+      "packages/vue/src/paginator/Paginator.vue"
+    ]
+  },
+  "Scroller": {
+    "ng": ["packages/ng/src/scroller/scroller.ts"],
+    "react": ["packages/react/src/scroller/scroller.tsx"],
+    "vue": ["packages/vue/src/scroller/base-scroller.ts", "packages/vue/src/scroller/Scroller.vue"]
+  },
+  "Table": {
+    "ng": ["packages/ng/src/table/table.ts"],
+    "react": ["packages/react/src/table/table.tsx"],
+    "vue": ["packages/vue/src/table/base-table.ts", "packages/vue/src/table/Table.vue"]
+  },
+  "Tooltip": {
+    "ng": ["packages/ng/src/tooltip/tooltip.ts"],
+    "react": ["packages/react/src/tooltip/tooltip.tsx"],
+    "vue": ["packages/vue/src/tooltip/tooltip.ts"]
+  }
+}

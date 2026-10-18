@@ -465,6 +465,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
     "@storybook/addon-a11y": "10.6.0",
+    "@storybook/addon-docs": "10.6.0",
     "@storybook/react-vite": "10.6.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^14.1.2",

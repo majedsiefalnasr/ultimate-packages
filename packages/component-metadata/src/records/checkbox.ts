@@ -34,7 +34,13 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
  *   as the same "change" EventFact concept as React's `onChange`, since both
  *   fire once per user-driven checked-state change (the wire-level payload
  *   differs, which is exactly what per-framework `EventFact` divergence is
- *   for).
+ *   for). `update:indeterminate` (Checkbox.vue:108) is the v-model
+ *   companion of the `indeterminate` prop, modeled as its own
+ *   `indeterminateChange` semanticId (Dialog's `update:visible` pattern).
+ *   `focus`/`blur` are native passthroughs and not EventFacts.
+ * - React's `inputRef` (checkbox.tsx:25) forwards the inner native input
+ *   element and is recorded as a prop. Both facts were added under Spec
+ *   W2-B4-R3 Amendment A1 (2026-10-18).
  */
 export const CHECKBOX_METADATA: ComponentMetadata = {
   name: "Checkbox",
@@ -42,7 +48,7 @@ export const CHECKBOX_METADATA: ComponentMetadata = {
   description:
     "A boolean input control rendered as a native checkbox, with an optional text label.",
   schemaVersion: SCHEMA_VERSION,
-  metadataVersion: 1,
+  metadataVersion: 2,
   packages: {
     ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/checkbox/checkbox.ts" },
     react: {
@@ -82,6 +88,7 @@ export const CHECKBOX_METADATA: ComponentMetadata = {
         { name: "value", type: "unknown", required: false },
         { name: "id", type: "string | undefined", required: false },
         { name: "inputId", type: "string | undefined", required: false },
+        { name: "inputRef", type: "React.Ref<HTMLInputElement> | undefined", required: false },
         { name: "tooltip", type: "string | undefined", required: false },
         { name: "tooltipOptions", type: "Record<string, unknown> | undefined", required: false },
         { name: "autoFocus", type: "boolean", default: "false", required: false },
@@ -123,6 +130,13 @@ export const CHECKBOX_METADATA: ComponentMetadata = {
           mechanism: "emit",
           payloadDescription:
             "Raw native DOM change Event, emitted after this component's own binary/array-mode value resolution.",
+        },
+        {
+          semanticId: "indeterminateChange",
+          frameworkName: "update:indeterminate",
+          mechanism: "emit",
+          payloadDescription:
+            "false — Vue's v-model convention companion to the `indeterminate` prop, emitted inside onChange() when a user change clears the indeterminate state.",
         },
       ],
     },

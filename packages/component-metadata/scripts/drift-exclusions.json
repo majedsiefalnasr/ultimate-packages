@@ -1,0 +1,26 @@
+[
+  {
+    "component": "Dialog",
+    "framework": "vue",
+    "apiKind": "event",
+    "name": "after-hide",
+    "rationale": "Deliberately unmodeled: a third, Vue-only emit after the leave motion completes, with no Angular or React counterpart and no demonstrated consumer need (YAGNI); a future task can add it if a real need arises.",
+    "source": "packages/component-metadata/src/records/dialog.ts:46-53"
+  },
+  {
+    "component": "Scroller",
+    "framework": "react",
+    "apiKind": "prop",
+    "name": "contentTemplate",
+    "rationale": "Deliberately unmodeled: the content-composition point (ng content template, react render prop, vue scoped slot) used by Table has no PropFact/EventFact shape and is left unmodeled rather than force-fit into either.",
+    "source": "packages/component-metadata/src/records/scroller.ts:79-91"
+  },
+  {
+    "component": "Table",
+    "framework": "vue",
+    "apiKind": "event",
+    "name": "update:selection",
+    "rationale": "v-model-only companion emitted with the identical payload alongside the modeled selection-change emit; it carries no independent semantic, so it is noted in the record header rather than double-counted as a fourth event.",
+    "source": "packages/component-metadata/src/records/table.ts:44-62"
+  }
+]

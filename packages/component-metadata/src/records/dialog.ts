@@ -58,7 +58,7 @@ export const DIALOG_METADATA: ComponentMetadata = {
   description:
     "A modal (or non-modal) overlay window that renders projected content above the page, with focus trapping and Escape-key dismissal.",
   schemaVersion: SCHEMA_VERSION,
-  metadataVersion: 1,
+  metadataVersion: 2,
   packages: {
     ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/dialog/dialog.ts" },
     react: { packageName: "@ultimate/react", sourcePath: "packages/react/src/dialog/dialog.tsx" },
@@ -100,6 +100,14 @@ export const DIALOG_METADATA: ComponentMetadata = {
           default: "true",
           required: false,
           description: "Defines if background should be blocked when dialog is displayed.",
+        },
+        {
+          name: "role",
+          type: '"dialog" | "alertdialog"',
+          default: '"dialog"',
+          required: false,
+          description:
+            'ARIA role override for the dialog\'s root element. Defaults to "dialog"; UConfirmDialog overrides this to "alertdialog" to match real upstream\'s own p-confirmdialog composition (GAP-049).',
         },
       ],
       events: [
@@ -171,6 +179,7 @@ export const DIALOG_METADATA: ComponentMetadata = {
         { name: "blockScroll", type: "Boolean", default: "false", required: false },
         { name: "baseZIndex", type: "Number", default: "0", required: false },
         { name: "autoZIndex", type: "Boolean", default: "true", required: false },
+        { name: "role", type: "String", default: "dialog", required: false },
         { name: "position", type: "String", default: "center", required: false },
         { name: "appendTo", type: "[String, Object]", default: "body", required: false },
         { name: "ariaCloseLabel", type: "String", default: "Close", required: false },

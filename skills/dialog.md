@@ -1,6 +1,6 @@
 ---
 component: Dialog
-metadataVersion: 1
+metadataVersion: 2
 frameworks: [ng, react, vue]
 ---
 
@@ -25,6 +25,7 @@ frameworks: [ng, react, vue]
 - `closable`: boolean (default: true)
 - `closeOnEscape`: boolean (default: true)
 - `modal`: boolean (default: true)
+- `role`: "dialog" | "alertdialog" (default: "dialog")
 
 ### ng events
 
@@ -67,6 +68,7 @@ frameworks: [ng, react, vue]
 - `blockScroll`: Boolean (default: false)
 - `baseZIndex`: Number (default: 0)
 - `autoZIndex`: Boolean (default: true)
+- `role`: String (default: dialog)
 - `position`: String (default: center)
 - `appendTo`: [String, Object] (default: body)
 - `ariaCloseLabel`: String (default: Close)
