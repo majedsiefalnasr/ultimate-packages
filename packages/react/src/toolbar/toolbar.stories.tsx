@@ -10,3 +10,7 @@ export default meta;
 type Story = StoryObj<typeof UToolbar>;
 
 export const Default: Story = { args: { start: "Left", end: "Right" } };
+
+export const WithConsumerStyle: Story = {
+  args: { start: "Left", end: "Right", style: { background: "rgb(1, 2, 3)" } },
+};

@@ -30,4 +30,9 @@ describe("UToolbar", () => {
     render(<UToolbar ariaLabelledBy="actions-heading" />);
     expect(screen.getByRole("toolbar").getAttribute("aria-labelledby")).toBe("actions-heading");
   });
+
+  it("applies a consumer style to the root", () => {
+    render(<UToolbar style={{ background: "rgb(1, 2, 3)" }} />);
+    expect(screen.getByRole("toolbar")).toHaveStyle({ background: "rgb(1, 2, 3)" });
+  });
 });
