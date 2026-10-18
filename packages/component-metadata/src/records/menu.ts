@@ -11,16 +11,15 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
  * Events, verified per framework — Menu's real, currently-shipped event
  * surface diverges sharply across frameworks (same discipline Task
  * 10/Checkbox and Task 11/Dialog applied):
- * - Angular's `UMenu` (menu.ts) declares NO `output()`s at all — confirmed
- *   by reading the full class body (menu.ts:138-230). Its only inputs are
- *   `model` (menu.ts:143) and `popup` (menu.ts:145); `popup` is accepted
- *   per this task's brief but is "currently inert beyond flagging the
- *   `u-menu-overlay` style-class variant" (menu.ts:38-42 doc comment) — there
- *   is no popup-overlay rendering, so no show/hide lifecycle exists to emit
- *   in the first place. Item interaction flows through `UMenuItem.command`
+ * - Angular's `UMenu` (menu.ts) gained a real popup mode in GAP-067
+ *   (menu.ts:36-51 doc comment): inputs `model`, `popup`, `appendTo`,
+ *   `baseZIndex` and `closeOnEscape` (menu.ts:177-185) and outputs
+ *   `onShow`/`onHide` (menu.ts:188-190), emitted synchronously from
+ *   `show()`/`hide()` with no motion (menu.ts:253,268). Inline mode is
+ *   unaffected. Item interaction still flows through `UMenuItem.command`
  *   (a plain callback field on each model entry, not a component-level
- *   output) — `onItemClick` calls `item.command?.(event)` directly
- *   (menu.ts:176), never emitting anything from `UMenu` itself.
+ *   output). Recorded under Spec W2-B4-R3 Amendment A1 (2026-10-18); before
+ *   it this record still described the pre-GAP-067 inert popup.
  * - React's `UMenuProps` has REAL `onShow?: () => void` and `onHide?: () =>
  *   void` callback props (menu.tsx:44-45). `onShow` fires synchronously
  *   inside `show()`, right after `setVisible(true)` (menu.tsx:134-141).
@@ -51,9 +50,9 @@ export const MENU_METADATA: ComponentMetadata = {
   name: "Menu",
   category: "Navigation",
   description:
-    "A flat navigation/command list rendered as an ARIA menu, either inline or (React/Vue only) as a popup overlay, with roving-tabindex keyboard navigation.",
+    "A flat navigation/command list rendered as an ARIA menu, either inline or as a popup overlay, with roving-tabindex keyboard navigation.",
   schemaVersion: SCHEMA_VERSION,
-  metadataVersion: 1,
+  metadataVersion: 2,
   packages: {
     ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/menu/menu.ts" },
     react: { packageName: "@ultimate/react", sourcePath: "packages/react/src/menu/menu.tsx" },
@@ -75,10 +74,45 @@ export const MENU_METADATA: ComponentMetadata = {
           default: "false",
           required: false,
           description:
-            "Defines if menu would displayed as a popup. Accepted as an input but currently inert beyond flagging the popup style-class variant — no popup-overlay rendering exists yet.",
+            "Defines if menu would displayed as a popup. When set, the menu stays hidden until opened imperatively via toggle(event)/show(event)/hide(event?).",
+        },
+        {
+          name: "appendTo",
+          type: "HTMLElement | (() => HTMLElement) | undefined",
+          required: false,
+          description: "Target element to attach the popup overlay to; defaults to document.body.",
+        },
+        {
+          name: "baseZIndex",
+          type: "number",
+          default: "0",
+          required: false,
+          description: "Base z-index value to use in layering of the popup.",
+        },
+        {
+          name: "closeOnEscape",
+          type: "boolean",
+          default: "true",
+          required: false,
+          description: "Whether Escape closes the popup; has no effect in inline mode.",
         },
       ],
-      events: [],
+      events: [
+        {
+          semanticId: "shown",
+          frameworkName: "onShow",
+          mechanism: "output",
+          payloadDescription:
+            "void — callback to invoke when the popup is shown; emitted synchronously at the end of show() (popup mode only, no motion).",
+        },
+        {
+          semanticId: "hidden",
+          frameworkName: "onHide",
+          mechanism: "output",
+          payloadDescription:
+            "void — callback to invoke when the popup is hidden; emitted synchronously at the end of hide() (popup mode only, no motion).",
+        },
+      ],
     },
     react: {
       props: [

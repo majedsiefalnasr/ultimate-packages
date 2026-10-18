@@ -48,6 +48,7 @@ A boolean input control rendered as a native checkbox, with an optional text lab
 - `invalid`: Boolean
 - `name`: String
 - event `change` (emit)
+- event `update:indeterminate` (emit)
 
 ## Dialog
 Category: Overlay
@@ -63,6 +64,7 @@ A modal (or non-modal) overlay window that renders projected content above the p
 - `blockScroll`: Boolean
 - `baseZIndex`: Number
 - `autoZIndex`: Boolean
+- `role`: String
 - `position`: String
 - `appendTo`: [String, Object]
 - `ariaCloseLabel`: String
@@ -72,7 +74,7 @@ A modal (or non-modal) overlay window that renders projected content above the p
 
 ## Menu
 Category: Navigation
-A flat navigation/command list rendered as an ARIA menu, either inline or (React/Vue only) as a popup overlay, with roving-tabindex keyboard navigation.
+A flat navigation/command list rendered as an ARIA menu, either inline or as a popup overlay, with roving-tabindex keyboard navigation.
 ### vue API
 - `model`: Array
 - `popup`: Boolean
@@ -124,6 +126,7 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `selectionMode`: String
 - `selection`: [Object, Array]
 - `compareSelectionBy`: String
+- `selectionColumn`: Boolean
 - `paginator`: Boolean
 - `first`: Number
 - `rows`: Number
@@ -133,11 +136,21 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `lazy`: Boolean
 - `editMode`: String
 - `editingRows`: Array
+- `expandedRowKeys`: Object
 - `rowGroupMode`: String
 - `groupRowsBy`: String
+- `loading`: Boolean
 - event `sort` (emit)
 - event `selection-change` (emit)
 - event `page` (emit)
+- event `filter` (emit)
+- event `lazy-load` (emit)
+- event `update:editingRows` (emit)
+- event `row-edit-save` (emit)
+- event `row-edit-cancel` (emit)
+- event `update:expandedRowKeys` (emit)
+- event `row-expand` (emit)
+- event `row-collapse` (emit)
 ### Accessibility
 Roles: table, rowgroup, row, columnheader
 Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the currently-rendered virtualized window, not the full logical dataset, when virtualScroll/virtualScrollerOptions is active — a row outside the window is not in the DOM to focus. This is a real, intentional, already-shipped limitation of Table's Scroller composition, documented inline at the row-keydown handler in all three frameworks' own source.

@@ -31,16 +31,22 @@ A modal (or non-modal) overlay window that renders projected content above the p
 - `closable`: boolean
 - `closeOnEscape`: boolean
 - `modal`: boolean
+- `role`: "dialog" | "alertdialog"
 - event `visibleChange` (output)
 - event `onShow` (output)
 - event `onHide` (output)
 
 ## Menu
 Category: Navigation
-A flat navigation/command list rendered as an ARIA menu, either inline or (React/Vue only) as a popup overlay, with roving-tabindex keyboard navigation.
+A flat navigation/command list rendered as an ARIA menu, either inline or as a popup overlay, with roving-tabindex keyboard navigation.
 ### ng API
 - `model`: UMenuItem[]
 - `popup`: boolean
+- `appendTo`: HTMLElement | (() => HTMLElement) | undefined
+- `baseZIndex`: number
+- `closeOnEscape`: boolean
+- event `onShow` (output)
+- event `onHide` (output)
 
 ## Paginator
 Category: Data
@@ -79,6 +85,7 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `selectionMode`: SelectionMode | undefined
 - `selection`: T | T[] | undefined
 - `compareSelectionBy`: "equals" | "deepEquals"
+- `selectionColumn`: boolean
 - `paginator`: boolean
 - `first`: number
 - `rows`: number
@@ -90,11 +97,18 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `lazyLoadOnInit`: boolean
 - `editMode`: "cell" | "row" | undefined
 - `editingRowKeys`: Record<string, boolean>
+- `expandedRowKeys`: Record<string, boolean>
 - `rowGroupMode`: "subheader" | "rowspan" | undefined
 - `groupRowsBy`: string | undefined
+- `loading`: boolean
 - event `sortFieldChange` (output)
 - event `selectionChange` (output)
 - event `firstChange` (output)
+- event `onLazyLoad` (output)
+- event `editingRowKeysChange` (output)
+- event `expandedRowKeysChange` (output)
+- event `onRowExpand` (output)
+- event `onRowCollapse` (output)
 ### Accessibility
 Roles: table, rowgroup, row, columnheader
 Keyboard navigation (ArrowDown/ArrowUp/Home/End) only operates within the currently-rendered virtualized window, not the full logical dataset, when virtualScroll/virtualScrollerOptions is active — a row outside the window is not in the DOM to focus. This is a real, intentional, already-shipped limitation of Table's Scroller composition, documented inline at the row-keydown handler in all three frameworks' own source.

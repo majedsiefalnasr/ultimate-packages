@@ -1,6 +1,6 @@
 ---
 component: Menu
-metadataVersion: 1
+metadataVersion: 2
 frameworks: [ng, react, vue]
 ---
 
@@ -22,6 +22,14 @@ frameworks: [ng, react, vue]
 
 - `model`: UMenuItem[] (default: [])
 - `popup`: boolean (default: false)
+- `appendTo`: HTMLElement | (() => HTMLElement) | undefined
+- `baseZIndex`: number (default: 0)
+- `closeOnEscape`: boolean (default: true)
+
+### ng events
+
+- `onShow` (output): shown
+- `onHide` (output): hidden
 
 ### react props
 

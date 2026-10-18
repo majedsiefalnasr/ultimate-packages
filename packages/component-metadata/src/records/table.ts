@@ -19,7 +19,7 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
  * (Table composes the already-catalogued Paginator and Scroller, not mocks
  * of them), and the spec §6.1a description/accessibility.guidance boundary.
  *
- * THREE events are modeled, each verified per framework — the semantic
+ * THREE flagship events are detailed here, each verified per framework — the semantic
  * payload is stable per event but the framework-level MECHANISM/NAME
  * diverges sharply:
  *
@@ -112,6 +112,15 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
  * the DOM to focus), not a bug" — this is a real, already-shipped and
  * already-tested limitation of Table's Scroller composition, not a newly
  * invented caveat.
+ *
+ * Drift classification (2026-10-18, Spec W2-B4-R3 Amendment A1; research
+ * record docs/architecture/research/2026-10-18-w2-b4-metadata-drift-classification.md):
+ * the selection-column, loading, lazy-load, row-editing, cell-editing,
+ * filter and row-expansion props/events the sources declare (GAP-042/043/044/046)
+ * are now recorded as their own facts. The sibling outputs/emits described
+ * above (ng sortOrderChange/multiSortMetaChange/rowsChange, vue
+ * update:selection) stay unmodeled and are listed in
+ * packages/component-metadata/scripts/drift-exclusions.json.
  */
 export const TABLE_METADATA: ComponentMetadata = {
   name: "Table",
@@ -119,7 +128,7 @@ export const TABLE_METADATA: ComponentMetadata = {
   description:
     "Table renders tabular data with sorting, filtering, selection, pagination, virtualization, and row/cell editing.",
   schemaVersion: SCHEMA_VERSION,
-  metadataVersion: 1,
+  metadataVersion: 2,
   packages: {
     ng: { packageName: "@ultimate/ng", sourcePath: "packages/ng/src/table/table.ts" },
     react: { packageName: "@ultimate/react", sourcePath: "packages/react/src/table/table.tsx" },
@@ -208,6 +217,14 @@ export const TABLE_METADATA: ComponentMetadata = {
             "Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals.",
         },
         {
+          name: "selectionColumn",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true and selectionMode is set, renders a leading selection column: a checkbox per row plus a header select-all checkbox in multiple mode, a radio per row in single mode.",
+        },
+        {
           name: "paginator",
           type: "boolean",
           default: "false",
@@ -289,6 +306,14 @@ export const TABLE_METADATA: ComponentMetadata = {
             "Key-map (keyed by dataKey-resolved row identity) of rows currently in edit mode.",
         },
         {
+          name: "expandedRowKeys",
+          type: "Record<string, boolean>",
+          default: "{}",
+          required: false,
+          description:
+            "Key-map (keyed by dataKey-resolved row identity) of rows currently expanded; a per-row expansion toggle renders when dataKey is set.",
+        },
+        {
           name: "rowGroupMode",
           type: '"subheader" | "rowspan" | undefined',
           required: false,
@@ -299,6 +324,14 @@ export const TABLE_METADATA: ComponentMetadata = {
           type: "string | undefined",
           required: false,
           description: "Field used to group adjacent rows sharing the same value.",
+        },
+        {
+          name: "loading",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, renders a single loading row in place of the body rows (non-virtualized rendering only).",
         },
       ],
       events: [
@@ -322,6 +355,41 @@ export const TABLE_METADATA: ComponentMetadata = {
           mechanism: "output",
           payloadDescription:
             "number — the composed UPaginator's onPageChange.first, re-broadcast by onPaginatorPageChange() after the internal _first signal is updated locally. A sibling rowsChange output re-broadcasts .rows from the same handler.",
+        },
+        {
+          semanticId: "lazy-load",
+          frameworkName: "onLazyLoad",
+          mechanism: "output",
+          payloadDescription:
+            "{ first: number; last: number } — the composed UScroller's own onLazyLoad payload, re-emitted unchanged by onScrollerLazyLoad().",
+        },
+        {
+          semanticId: "editing-rows-changed",
+          frameworkName: "editingRowKeysChange",
+          mechanism: "output",
+          payloadDescription:
+            "Record<string, boolean> — the next editing key-map, emitted by initRowEdit() when a row enters edit mode and by the save/cancel exit path when it leaves it.",
+        },
+        {
+          semanticId: "expanded-rows-changed",
+          frameworkName: "expandedRowKeysChange",
+          mechanism: "output",
+          payloadDescription:
+            "Record<string, boolean> — the next expansion key-map with the toggled row's dataKey identity flipped, emitted by toggleRowExpansion().",
+        },
+        {
+          semanticId: "row-expand",
+          frameworkName: "onRowExpand",
+          mechanism: "output",
+          payloadDescription:
+            "{ originalEvent: Event; data: T } — emitted by toggleRowExpansion(), after expandedRowKeysChange, when the row becomes expanded.",
+        },
+        {
+          semanticId: "row-collapse",
+          frameworkName: "onRowCollapse",
+          mechanism: "output",
+          payloadDescription:
+            "{ originalEvent: Event; data: T } — emitted by toggleRowExpansion(), after expandedRowKeysChange, when the row becomes collapsed.",
         },
       ],
     },
@@ -404,6 +472,14 @@ export const TABLE_METADATA: ComponentMetadata = {
             "Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals.",
         },
         {
+          name: "selectionColumn",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true and selectionMode is set, renders a leading selection column: a checkbox per row plus a header select-all checkbox in multiple mode, a radio per row in single mode.",
+        },
+        {
           name: "paginator",
           type: "boolean",
           default: "false",
@@ -460,6 +536,20 @@ export const TABLE_METADATA: ComponentMetadata = {
             "Controlled key-map of rows currently in edit mode; falls back to internal state when onRowEditChange is omitted.",
         },
         {
+          name: "cellEditValidator",
+          type: "(event: { newValue: unknown; oldValue: unknown }) => boolean",
+          required: false,
+          description:
+            "Accepted for interface-contract completeness (part of PrimeReact's real DataTable cell-edit surface) but not yet invoked: the cell-edit validator wiring is deferred beyond the row-edit lifecycle scope.",
+        },
+        {
+          name: "expandedRowKeys",
+          type: "Record<string, boolean> | undefined",
+          required: false,
+          description:
+            "Key-map (keyed by dataKey-resolved row identity) of rows currently expanded; fully parent-owned when onExpandedRowKeysChange is supplied, otherwise an internal state fallback is used when it is omitted.",
+        },
+        {
           name: "rowGroupMode",
           type: '"subheader" | "rowspan" | undefined',
           required: false,
@@ -470,6 +560,14 @@ export const TABLE_METADATA: ComponentMetadata = {
           type: "string | undefined",
           required: false,
           description: "Field used to group adjacent rows sharing the same value.",
+        },
+        {
+          name: "loading",
+          type: "boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, renders a single loading row in place of the body rows (non-virtualized rendering only).",
         },
       ],
       events: [
@@ -493,6 +591,83 @@ export const TABLE_METADATA: ComponentMetadata = {
           mechanism: "callback-prop",
           payloadDescription:
             "(event: PaginatorPageChangeEvent) => void — optional prop, wired as a bare forward directly to the composed UPaginator's own onPageChange callback (onPageChange={(event) => onPage?.(event)}) — not a renamed re-emission of a locally-owned value, unlike ng's firstChange.",
+        },
+        {
+          semanticId: "filter",
+          frameworkName: "onFilter",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(filters: Record<string, FilterMetadata | { operator; constraints }>) => void — optional prop, accepted for interface-contract completeness but not yet invoked: no trigger point or payload is defined yet.",
+        },
+        {
+          semanticId: "lazy-load",
+          frameworkName: "onLazyLoad",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(event: { first: number; last: number }) => void — optional prop, passed straight through to the composed UScroller's own onLazyLoad.",
+        },
+        {
+          semanticId: "editing-rows-changed",
+          frameworkName: "onRowEditChange",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(editingRows: Record<string, boolean>) => void — optional prop, called with the next editing key-map on row-edit init, save and cancel. When supplied, editingRows is fully parent-owned; when omitted, an internal useState fallback holds the map.",
+        },
+        {
+          semanticId: "row-edit-init",
+          frameworkName: "onRowEditInit",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(row: T) => void — optional prop, called with the row when its edit-init button is clicked, before the editing key-map update.",
+        },
+        {
+          semanticId: "row-edit-save",
+          frameworkName: "onRowEditSave",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(row: T) => void — optional prop, called with the committed (draft-merged) row when a row edit is saved.",
+        },
+        {
+          semanticId: "row-edit-cancel",
+          frameworkName: "onRowEditCancel",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(row: T) => void — optional prop, called with the original row when a row edit is cancelled.",
+        },
+        {
+          semanticId: "cell-edit-complete",
+          frameworkName: "onCellEditComplete",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(event: { newValue: unknown; oldValue: unknown }) => void — optional prop, accepted for interface-contract completeness but not yet invoked (cell-edit validator wiring is deferred).",
+        },
+        {
+          semanticId: "cell-edit-cancel",
+          frameworkName: "onCellEditCancel",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(event: { newValue: unknown; oldValue: unknown }) => void — optional prop, accepted for interface-contract completeness but not yet invoked (cell-edit validator wiring is deferred).",
+        },
+        {
+          semanticId: "expanded-rows-changed",
+          frameworkName: "onExpandedRowKeysChange",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(expandedRowKeys: Record<string, boolean>) => void — optional prop, called with the next expansion key-map on each row-expansion toggle. When supplied, expandedRowKeys is fully parent-owned; when omitted, an internal useState fallback holds the map.",
+        },
+        {
+          semanticId: "row-expand",
+          frameworkName: "onRowExpand",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(event: { originalEvent: React.SyntheticEvent; data: T }) => void — optional prop, called by the row-expansion toggle when the row becomes expanded.",
+        },
+        {
+          semanticId: "row-collapse",
+          frameworkName: "onRowCollapse",
+          mechanism: "callback-prop",
+          payloadDescription:
+            "(event: { originalEvent: React.SyntheticEvent; data: T }) => void — optional prop, called by the row-expansion toggle when the row becomes collapsed.",
         },
       ],
     },
@@ -581,6 +756,14 @@ export const TABLE_METADATA: ComponentMetadata = {
             "Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals.",
         },
         {
+          name: "selectionColumn",
+          type: "Boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true and selectionMode is set, renders a leading selection column: a checkbox per row plus a header select-all checkbox in multiple mode, a radio per row in single mode.",
+        },
+        {
           name: "paginator",
           type: "Boolean",
           default: "false",
@@ -649,6 +832,14 @@ export const TABLE_METADATA: ComponentMetadata = {
             "Array of rows currently in edit mode (Vue's array-append idiom, distinct from ng's/react's dataKey-based key-map shape).",
         },
         {
+          name: "expandedRowKeys",
+          type: "Object",
+          default: "{}",
+          required: false,
+          description:
+            "Key-map (keyed by dataKey-resolved row identity) of rows currently expanded, matching ng's/react's key-map shape; a per-row expansion toggle renders when dataKey is set.",
+        },
+        {
           name: "rowGroupMode",
           type: "String",
           default: "undefined",
@@ -661,6 +852,14 @@ export const TABLE_METADATA: ComponentMetadata = {
           default: "undefined",
           required: false,
           description: "Field used to group adjacent rows sharing the same value.",
+        },
+        {
+          name: "loading",
+          type: "Boolean",
+          default: "false",
+          required: false,
+          description:
+            "When true, renders a single loading row in place of the body rows (non-virtualized rendering only).",
         },
       ],
       events: [
@@ -684,6 +883,62 @@ export const TABLE_METADATA: ComponentMetadata = {
           mechanism: "emit",
           payloadDescription:
             "PaginatorPageChangeEvent — the composed UPaginator's own 'page' event, re-emitted verbatim by onPaginatorPage() as Table's own 'page' event. NOT named 'onPageChange' or 'firstChange'.",
+        },
+        {
+          semanticId: "filter",
+          frameworkName: "filter",
+          mechanism: "emit",
+          payloadDescription:
+            "Declared in the emits array but never emitted: Table.vue has no $emit('filter') call site.",
+        },
+        {
+          semanticId: "lazy-load",
+          frameworkName: "lazy-load",
+          mechanism: "emit",
+          payloadDescription:
+            "{ first, last } — the composed UScroller's own lazy-load event, re-emitted verbatim from the template listener.",
+        },
+        {
+          semanticId: "editing-rows-changed",
+          frameworkName: "update:editingRows",
+          mechanism: "emit",
+          payloadDescription:
+            "Array — the next editing-rows array, emitted by initRowEdit() (row appended) and by the save/cancel exit path (row removed); the editingRows prop itself is never mutated.",
+        },
+        {
+          semanticId: "row-edit-save",
+          frameworkName: "row-edit-save",
+          mechanism: "emit",
+          payloadDescription:
+            "The committed (draft-merged) row, emitted by saveRowEdit() before the row exits edit mode.",
+        },
+        {
+          semanticId: "row-edit-cancel",
+          frameworkName: "row-edit-cancel",
+          mechanism: "emit",
+          payloadDescription:
+            "The original row, emitted by cancelRowEdit() before the row exits edit mode.",
+        },
+        {
+          semanticId: "expanded-rows-changed",
+          frameworkName: "update:expandedRowKeys",
+          mechanism: "emit",
+          payloadDescription:
+            "Object — the next expansion key-map with the toggled row's dataKey identity flipped, emitted by toggleRowExpansion(); the expandedRowKeys prop itself is never mutated.",
+        },
+        {
+          semanticId: "row-expand",
+          frameworkName: "row-expand",
+          mechanism: "emit",
+          payloadDescription:
+            "{ originalEvent, data } — emitted by toggleRowExpansion(), after update:expandedRowKeys, when the row becomes expanded.",
+        },
+        {
+          semanticId: "row-collapse",
+          frameworkName: "row-collapse",
+          mechanism: "emit",
+          payloadDescription:
+            "{ originalEvent, data } — emitted by toggleRowExpansion(), after update:expandedRowKeys, when the row becomes collapsed.",
         },
       ],
     },

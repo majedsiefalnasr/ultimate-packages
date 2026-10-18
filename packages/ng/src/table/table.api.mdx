@@ -25,6 +25,7 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - **selectionMode** (type SelectionMode &#124; undefined, optional): When set, enables row-click selection (single replaces selection, multiple toggles rows in/out of it).
 - **selection** (type T &#124; T&#91;&#93; &#124; undefined, optional): Currently selected row (single mode) or rows (multiple mode).
 - **compareSelectionBy** (type "equals" &#124; "deepEquals", optional, default "equals"): Row-identity comparator for selection matching: dataKey-based field identity, or full structural deepEquals.
+- **selectionColumn** (type boolean, optional, default false): When true and selectionMode is set, renders a leading selection column: a checkbox per row plus a header select-all checkbox in multiple mode, a radio per row in single mode.
 - **paginator** (type boolean, optional, default false): When true, renders a composed UPaginator beneath the table and slices the filtered/sorted rows to the current page.
 - **first** (type number, optional, default 0): Zero-relative index of the first record on the current page.
 - **rows** (type number, optional, default 0): Number of rows to display per page.
@@ -36,11 +37,18 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - **lazyLoadOnInit** (type boolean, optional, default false): When true, triggers an initial lazy-load notification on first render.
 - **editMode** (type "cell" &#124; "row" &#124; undefined, optional): Enables the row-edit-init affordance ('row') or cell-level editing ('cell').
 - **editingRowKeys** (type Record&#60;string, boolean&#62;, optional, default &#123;&#125;): Key-map (keyed by dataKey-resolved row identity) of rows currently in edit mode.
+- **expandedRowKeys** (type Record&#60;string, boolean&#62;, optional, default &#123;&#125;): Key-map (keyed by dataKey-resolved row identity) of rows currently expanded; a per-row expansion toggle renders when dataKey is set.
 - **rowGroupMode** (type "subheader" &#124; "rowspan" &#124; undefined, optional): Row-grouping display strategy when groupRowsBy is set.
 - **groupRowsBy** (type string &#124; undefined, optional): Field used to group adjacent rows sharing the same value.
+- **loading** (type boolean, optional, default false): When true, renders a single loading row in place of the body rows (non-virtualized rendering only).
 
 ## Events
 
 - **sortFieldChange** (output, semantic id sort-changed): string &#124; undefined — the clicked column's field, emitted by onSort() on every header click in single-sort mode; sortOrderChange (always 1) and multiSortMetaChange (multi-sort mode) are sibling outputs emitted from the same handler, not folded into this one.
 - **selectionChange** (output, semantic id selection-changed): T &#124; T&#91;&#93; — the next selection value, emitted by onRowClick() on a row click when selectionMode is set. Single mode always emits the clicked row; multiple mode emits the toggled selection array.
 - **firstChange** (output, semantic id page-changed): number — the composed UPaginator's onPageChange.first, re-broadcast by onPaginatorPageChange() after the internal \_first signal is updated locally. A sibling rowsChange output re-broadcasts .rows from the same handler.
+- **onLazyLoad** (output, semantic id lazy-load): &#123; first: number; last: number &#125; — the composed UScroller's own onLazyLoad payload, re-emitted unchanged by onScrollerLazyLoad().
+- **editingRowKeysChange** (output, semantic id editing-rows-changed): Record&#60;string, boolean&#62; — the next editing key-map, emitted by initRowEdit() when a row enters edit mode and by the save/cancel exit path when it leaves it.
+- **expandedRowKeysChange** (output, semantic id expanded-rows-changed): Record&#60;string, boolean&#62; — the next expansion key-map with the toggled row's dataKey identity flipped, emitted by toggleRowExpansion().
+- **onRowExpand** (output, semantic id row-expand): &#123; originalEvent: Event; data: T &#125; — emitted by toggleRowExpansion(), after expandedRowKeysChange, when the row becomes expanded.
+- **onRowCollapse** (output, semantic id row-collapse): &#123; originalEvent: Event; data: T &#125; — emitted by toggleRowExpansion(), after expandedRowKeysChange, when the row becomes collapsed.
