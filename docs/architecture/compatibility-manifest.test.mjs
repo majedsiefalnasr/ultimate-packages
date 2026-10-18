@@ -5,9 +5,11 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 import { SCHEMA_VERSION } from "../../packages/component-schema/dist/index.mjs";
+import { findPeerRangeMismatches } from "./compatibility-peer-ranges.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MANIFEST_PATH = join(__dirname, "compatibility-manifest.json");
+const REPO_ROOT = join(__dirname, "..", "..");
 
 const REQUIRED_KEYS = [
   "framework",
@@ -81,4 +83,49 @@ test("no entry contains mcpVersionRange/aiSkillsVersionRange populated with a no
       }
     }
   }
+});
+
+function readPeersByPackage(manifest) {
+  const peersByPackage = {};
+  for (const entry of manifest) {
+    const name = entry.ultimateFrameworkPackage.name;
+    const packageDir = name.replace("@ultimate/", "");
+    const pkg = JSON.parse(
+      readFileSync(join(REPO_ROOT, "packages", packageDir, "package.json"), "utf8")
+    );
+    peersByPackage[name] = pkg.peerDependencies ?? {};
+  }
+  return peersByPackage;
+}
+
+test("manifest framework ranges equal the framework package peer ranges", () => {
+  const manifest = readManifest();
+  assert.deepEqual(findPeerRangeMismatches(manifest, readPeersByPackage(manifest)), []);
+});
+
+test("seeded mismatch is reported", () => {
+  assert.deepEqual(
+    findPeerRangeMismatches(
+      [
+        {
+          framework: "angular",
+          frameworkVersionRange: "^21.0.7",
+          ultimateFrameworkPackage: { name: "@ultimate/ng" },
+        },
+      ],
+      { "@ultimate/ng": { "@angular/core": "^21.2.22" } }
+    ),
+    [{ framework: "angular", manifestRange: "^21.0.7", peerRange: "^21.2.22" }]
+  );
+});
+
+test("missing framework package or peer key is reported with an undefined peerRange", () => {
+  const entry = {
+    framework: "vue",
+    frameworkVersionRange: "^3.5.2",
+    ultimateFrameworkPackage: { name: "@ultimate/vue" },
+  };
+  const expected = [{ framework: "vue", manifestRange: "^3.5.2", peerRange: undefined }];
+  assert.deepEqual(findPeerRangeMismatches([entry], {}), expected);
+  assert.deepEqual(findPeerRangeMismatches([entry], { "@ultimate/vue": {} }), expected);
 });

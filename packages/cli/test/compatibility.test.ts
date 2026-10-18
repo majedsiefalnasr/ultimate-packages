@@ -5,7 +5,7 @@ import { matchCompatibility, type CompatibilityEntry } from "../src/compatibilit
 /** A fully-populated entry mirroring the real manifest's angular record. */
 const angularEntry: CompatibilityEntry = {
   framework: "angular",
-  frameworkVersionRange: "^21.0.7",
+  frameworkVersionRange: "^21.2.22",
   ultimateFrameworkPackage: { name: "@ultimate/ng", versionRange: "^0.1.0" },
   uixVersionRange: "^0.1.0",
   themeVersionRange: "^0.1.0",
@@ -30,7 +30,7 @@ describe("matchCompatibility", () => {
     const result = matchCompatibility(
       {
         framework: "angular",
-        frameworkVersion: "21.0.7",
+        frameworkVersion: "21.2.22",
         ultimateFrameworkPackageVersion: "0.1.0",
         uixVersion: "0.1.0",
         themeVersion: "0.1.0",
@@ -65,7 +65,7 @@ describe("matchCompatibility", () => {
     const result = matchCompatibility(
       {
         framework: "angular",
-        frameworkVersion: "21.0.7",
+        frameworkVersion: "21.2.22",
         ultimateFrameworkPackageVersion: "0.1.0",
         uixVersion: "0.1.0",
         themeVersion: "0.1.0",
@@ -90,7 +90,7 @@ describe("matchCompatibility", () => {
     const result = matchCompatibility(
       {
         framework: "angular",
-        frameworkVersion: "21.0.7",
+        frameworkVersion: "21.2.22",
         ultimateFrameworkPackageVersion: "0.1.0",
         uixVersion: "0.1.0",
         themeVersion: "0.1.0",
@@ -110,7 +110,7 @@ describe("matchCompatibility", () => {
     const result = matchCompatibility(
       {
         framework: "angular",
-        frameworkVersion: "21.0.7",
+        frameworkVersion: "21.2.22",
         cliVersion: "0.1.0",
         // ultimateFrameworkPackageVersion, uixVersion, themeVersion,
         // metadataSchemaVersion all omitted - not applicable, not failures.
@@ -170,7 +170,7 @@ describe("matchCompatibility", () => {
     const result = matchCompatibility(
       {
         framework: "angular",
-        frameworkVersion: "21.0.7",
+        frameworkVersion: "21.2.22",
         ultimateFrameworkPackageVersion: "0.2.0",
         cliVersion: "0.1.0",
       },
@@ -187,7 +187,7 @@ describe("matchCompatibility", () => {
     const result = matchCompatibility(
       {
         framework: "angular",
-        frameworkVersion: "21.0.7",
+        frameworkVersion: "21.2.22",
         cliVersion: "9.9.9",
       },
       manifest
@@ -197,5 +197,50 @@ describe("matchCompatibility", () => {
     if (result.matched === false) {
       expect(result.reason).toMatch(/cliVersionRange/);
     }
+  });
+
+  it("refuses Angular 21.2.21, one patch below the ^21.2.22 floor, naming frameworkVersionRange", () => {
+    const result = matchCompatibility(
+      { framework: "angular", frameworkVersion: "21.2.21", cliVersion: "0.1.0" },
+      manifest
+    );
+
+    expect(result.matched).toBe(false);
+    if (result.matched === false) {
+      expect(result.reason).toMatch(/frameworkVersionRange/);
+    }
+  });
+
+  it("matches Angular 21.9.0, a later minor inside the ^21.2.22 caret range", () => {
+    const result = matchCompatibility(
+      { framework: "angular", frameworkVersion: "21.9.0", cliVersion: "0.1.0" },
+      manifest
+    );
+
+    expect(result).toEqual({ matched: true, entry: angularEntry });
+  });
+
+  it("refuses Angular 22.0.0, the next major outside the ^21.2.22 caret range", () => {
+    const result = matchCompatibility(
+      { framework: "angular", frameworkVersion: "22.0.0", cliVersion: "0.1.0" },
+      manifest
+    );
+
+    expect(result.matched).toBe(false);
+    if (result.matched === false) {
+      expect(result.reason).toMatch(/frameworkVersionRange/);
+    }
+  });
+
+  it("pins existing behaviour for Angular 21.2.22-rc.0: the prerelease suffix is ignored, so it matches ^21.2.22", () => {
+    // parseVersion reads only the leading x.y.z, so "21.2.22-rc.0" is treated as
+    // "21.2.22". Strict semver would order the prerelease below 21.2.22. This test
+    // records today's result; it is not an endorsement of it.
+    const result = matchCompatibility(
+      { framework: "angular", frameworkVersion: "21.2.22-rc.0", cliVersion: "0.1.0" },
+      manifest
+    );
+
+    expect(result).toEqual({ matched: true, entry: angularEntry });
   });
 });
