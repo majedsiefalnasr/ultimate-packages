@@ -9,11 +9,14 @@
 //
 //   - Baseline-only diff for this package (for React/Vue, the complete
 //     diff touches only docs/architecture/PERFORMANCE.md; other packages
-//     retain baseline-lib.mjs's existing per-package classification): run the
-//     INTEGRITY check — the value this PR writes into PERFORMANCE.md must
-//     equal a fresh real measurement of the package's current line
-//     coverage.
-//   - Otherwise (diff touches this package's source/manifest): run the
+//     use baseline-lib.mjs's per-package classification, with their own
+//     vitest.config.ts also package-affecting) AND the diff changes or adds
+//     this package's row (ADR-066): run the INTEGRITY check — the value this
+//     PR writes into PERFORMANCE.md must equal a fresh real measurement of
+//     the package's current line coverage.
+//   - A merge-base row removed at HEAD fails ("baseline removed"), as does
+//     an unreadable PERFORMANCE.md or an empty merge-base table.
+//   - Otherwise (including an unchanged row on a baseline-only diff): run the
 //     REGRESSION check against the merge-base's own recorded baseline
 //     value only — never a value the current diff itself wrote. No prior
 //     entry: informational only (Stage 1). Prior entry: fail if the
@@ -35,24 +38,31 @@
 // path.join("coverage", projectName)). Both shapes expose the same
 // json-summary field this gate reads: total.lines.pct.
 
-import { getMergeBaseSha, readFileAtRef, isBaselineOnlyDiff } from "./baseline-lib.mjs";
+import {
+  PERFORMANCE_MD_PATH,
+  boundedTableRows,
+  isBaselineOnlyDiff,
+  readBaselineTables,
+  selectBaselinePath,
+} from "./baseline-lib.mjs";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const REGRESSION_THRESHOLD_POINTS = 2.0;
-const PERFORMANCE_MD_PATH = "docs/architecture/PERFORMANCE.md";
 const STRICT_BASELINE_PACKAGES = new Set(["react", "vue"]);
 
-// React/Vue coverage configuration changes alter the R7 denominator. The
-// shared R6 detector does not classify vitest.config.ts as package-affecting,
-// so use the complete diff for these two R7 packages only. Git errors throw
-// and fail the validator instead of falling through to the integrity path.
+// Coverage configuration changes alter the R7 denominator. The shared R6
+// detector does not classify vitest.config.ts as package-affecting, so:
+//   - React/Vue (ADR-060): baseline-only only when the complete diff is
+//     exactly PERFORMANCE.md;
+//   - every other package (ADR-066): its own vitest.config.ts is
+//     package-affecting, otherwise the shared per-package classification.
+//     ng/ng-core configure coverage in angular.json, which this rule does
+//     not cover.
+// Git errors throw and fail the validator instead of falling through to the
+// integrity path.
 export function isCoverageBaselineOnlyDiff(mergeBaseSha, packageName) {
-  if (!STRICT_BASELINE_PACKAGES.has(packageName)) {
-    return isBaselineOnlyDiff(mergeBaseSha, packageName);
-  }
-
   const changedFiles = execFileSync(
     "git",
     ["diff", "--name-only", "-z", `${mergeBaseSha}...HEAD`, "--"],
@@ -60,7 +70,12 @@ export function isCoverageBaselineOnlyDiff(mergeBaseSha, packageName) {
   )
     .split("\0")
     .filter(Boolean);
-  return changedFiles.length === 1 && changedFiles[0] === PERFORMANCE_MD_PATH;
+
+  if (STRICT_BASELINE_PACKAGES.has(packageName)) {
+    return changedFiles.length === 1 && changedFiles[0] === PERFORMANCE_MD_PATH;
+  }
+  if (changedFiles.includes(`packages/${packageName}/vitest.config.ts`)) return false;
+  return isBaselineOnlyDiff(mergeBaseSha, packageName);
 }
 
 // Explicit, exhaustive list of all 17 publishable packages (same set
@@ -123,7 +138,8 @@ export function readLineCoveragePct(summaryPath) {
 // under "## Phase 10 — ...", mirroring
 // validate-bundle-size.mjs's parsePhase10SizeTable. Extracts
 // { packageDirName -> lineCoveragePct } from the "Package" and
-// "line-coverage %" columns. Only the Phase 10 table is parsed.
+// "line-coverage %" columns. Only the Phase 10 table is parsed, and parsing
+// stops at the next "##"/"###" heading after that table starts.
 export function parsePhase10CoverageTable(markdown) {
   const coverageByPackage = new Map();
   if (!markdown) return coverageByPackage;
@@ -135,9 +151,8 @@ export function parsePhase10CoverageTable(markdown) {
   const coverageHeadingIndex = section.indexOf("### Coverage");
   if (coverageHeadingIndex === -1) return coverageByPackage;
 
-  const coverageSection = section.slice(coverageHeadingIndex);
-  const lines = coverageSection.split("\n");
-  const rowLines = lines.filter((line) => line.trim().startsWith("|"));
+  const coverageSection = section.slice(coverageHeadingIndex + "### Coverage".length);
+  const rowLines = boundedTableRows(coverageSection);
 
   for (const line of rowLines) {
     const cells = line
@@ -168,7 +183,7 @@ export function parsePhase10CoverageTable(markdown) {
 //
 // Params:
 //   packageName        - e.g. "uix-utils"
-//   isBaselineOnly      - boolean, from isCoverageBaselineOnlyDiff(mergeBaseSha, packageName)
+//   isBaselineOnly      - boolean, true when selectBaselinePath returns "integrity"
 //   mergeBasePct        - number|undefined, the merge-base PERFORMANCE.md's recorded line-coverage % for this package
 //   freshMeasuredPct    - number, a fresh re-measurement of the package's current line coverage
 //   headWrittenPct      - number|undefined, the value the current diff's HEAD version of PERFORMANCE.md records for this package (only consulted in the baseline-only branch)
@@ -247,12 +262,14 @@ function runCli() {
   const baseRefIndex = process.argv.indexOf("--base-ref");
   const baseRef = baseRefIndex !== -1 ? process.argv[baseRefIndex + 1] : "origin/main";
 
-  const mergeBaseSha = getMergeBaseSha(baseRef);
-  const mergeBaseMarkdown = readFileAtRef(mergeBaseSha, PERFORMANCE_MD_PATH);
-  const mergeBaseCoverage = parsePhase10CoverageTable(mergeBaseMarkdown);
-
-  const headMarkdown = readFileAtRef("HEAD", PERFORMANCE_MD_PATH);
-  const headCoverage = parsePhase10CoverageTable(headMarkdown);
+  let baselines;
+  try {
+    baselines = readBaselineTables(baseRef, parsePhase10CoverageTable, "coverage");
+  } catch (error) {
+    fail(`could not read PERFORMANCE.md baselines (${error.message})`);
+    process.exit(1);
+  }
+  const { mergeBaseSha, mergeBase: mergeBaseCoverage, head: headCoverage } = baselines;
 
   let anyFailed = false;
 
@@ -269,14 +286,27 @@ function runCli() {
       continue;
     }
 
-    const baselineOnly = isCoverageBaselineOnlyDiff(mergeBaseSha, packageName);
+    const mergeBasePct = mergeBaseCoverage.get(packageName);
+    const headWrittenPct = headCoverage.get(packageName);
+    const baselinePath = selectBaselinePath({
+      baselineOnly: isCoverageBaselineOnlyDiff(mergeBaseSha, packageName),
+      mergeBaseValue: mergeBasePct,
+      headValue: headWrittenPct,
+    });
+    if (baselinePath === "removed") {
+      fail(
+        `${packageName}: baseline removed — merge-base PERFORMANCE.md records ${mergeBasePct}% but HEAD has no row`
+      );
+      anyFailed = true;
+      continue;
+    }
 
     const result = evaluatePackageCoverage({
       packageName,
-      isBaselineOnly: baselineOnly,
-      mergeBasePct: mergeBaseCoverage.get(packageName),
+      isBaselineOnly: baselinePath === "integrity",
+      mergeBasePct,
       freshMeasuredPct,
-      headWrittenPct: headCoverage.get(packageName),
+      headWrittenPct,
     });
 
     if (result.ok) {
