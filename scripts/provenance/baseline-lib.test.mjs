@@ -8,7 +8,13 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { getMergeBaseSha, readFileAtRef, isBaselineOnlyDiff } from "./baseline-lib.mjs";
+import {
+  getMergeBaseSha,
+  readFileAtRef,
+  readFileAtRefStrict,
+  isBaselineOnlyDiff,
+  selectBaselinePath,
+} from "./baseline-lib.mjs";
 import { execSync } from "node:child_process";
 import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -174,4 +180,70 @@ test("isBaselineOnlyDiff returns false when the diff touches the package's packa
   );
 
   rmSync(dir, { recursive: true, force: true });
+});
+
+// --- readFileAtRefStrict (ADR-066 fail-closed reads) -------------------------
+
+test("readFileAtRefStrict returns the file text at a real ref", () => {
+  const content = readFileAtRefStrict(currentHeadSha, "package.json");
+  const directContent = execSync(`git show ${currentHeadSha}:package.json`, { encoding: "utf8" });
+  assert.strictEqual(content, directContent);
+});
+
+test("readFileAtRefStrict returns null only for a path absent at the ref", () => {
+  assert.strictEqual(readFileAtRefStrict(currentHeadSha, "this/path/does/not/exist.md"), null);
+});
+
+test("readFileAtRefStrict throws for a ref that does not exist", () => {
+  assert.throws(() => readFileAtRefStrict("no-such-ref-adr-066", "package.json"));
+});
+
+// --- selectBaselinePath (ADR-066 changed-rows rule) ---------------------------
+
+test("selectBaselinePath: a baseline-only diff that changes the row takes the integrity path", () => {
+  assert.strictEqual(
+    selectBaselinePath({ baselineOnly: true, mergeBaseValue: 85.0, headValue: 90.0 }),
+    "integrity"
+  );
+});
+
+test("selectBaselinePath: a baseline-only diff that adds the row takes the integrity path", () => {
+  assert.strictEqual(
+    selectBaselinePath({ baselineOnly: true, mergeBaseValue: undefined, headValue: 90.0 }),
+    "integrity"
+  );
+});
+
+test("selectBaselinePath: a baseline-only diff that leaves the row unchanged takes the regression path", () => {
+  assert.strictEqual(
+    selectBaselinePath({ baselineOnly: true, mergeBaseValue: 86.9, headValue: 86.9 }),
+    "regression"
+  );
+});
+
+test("selectBaselinePath: 89.70 and 89.7 parse to the same number and count as unchanged", () => {
+  assert.strictEqual(
+    selectBaselinePath({
+      baselineOnly: true,
+      mergeBaseValue: parseFloat("89.70"),
+      headValue: parseFloat("89.7"),
+    }),
+    "regression"
+  );
+});
+
+test("selectBaselinePath: a changed row in a diff that is not baseline-only takes the regression path", () => {
+  assert.strictEqual(
+    selectBaselinePath({ baselineOnly: false, mergeBaseValue: 85.0, headValue: 82.0 }),
+    "regression"
+  );
+});
+
+test("selectBaselinePath: a row removed at HEAD is reported as removed, baseline-only or not", () => {
+  for (const baselineOnly of [true, false]) {
+    assert.strictEqual(
+      selectBaselinePath({ baselineOnly, mergeBaseValue: 85.0, headValue: undefined }),
+      "removed"
+    );
+  }
 });

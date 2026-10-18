@@ -47,28 +47,32 @@ function coverageTable(overrides = {}) {
   ].join("\n");
 }
 
-function runDiffFixture({ packageName, changedPaths, writtenPct = 82, measuredPct = 82 }) {
+const performancePath = "docs/architecture/PERFORMANCE.md";
+
+// Builds a temporary repository with a committed merge-base and a committed
+// HEAD, writes a fresh coverage report per package, and runs the validator
+// CLI with --base-ref. `headFiles` maps repository paths to HEAD contents;
+// `measured` overrides the fresh line-coverage % (default 85).
+function runCoverageCli({ baseMarkdown, headFiles, measured = {}, baseRef = "baseline" }) {
   const root = mkdtempSync(join(tmpdir(), "gap-091-coverage-"));
   try {
     runGit(root, "init", "-q");
     runGit(root, "config", "user.name", "Coverage Fixture");
     runGit(root, "config", "user.email", "coverage-fixture@example.invalid");
-    const performancePath = "docs/architecture/PERFORMANCE.md";
     mkdirSync(join(root, dirname(performancePath)), { recursive: true });
-    writeFileSync(join(root, performancePath), coverageTable());
+    writeFileSync(join(root, performancePath), baseMarkdown);
     runGit(root, "add", performancePath);
     runGit(root, "commit", "-qm", "baseline");
     runGit(root, "branch", "baseline");
 
-    for (const relativePath of changedPaths) {
+    for (const [relativePath, content] of Object.entries(headFiles)) {
       const absolutePath = join(root, relativePath);
+      if (content === null) {
+        runGit(root, "rm", "-q", relativePath);
+        continue;
+      }
       mkdirSync(dirname(absolutePath), { recursive: true });
-      writeFileSync(
-        absolutePath,
-        relativePath === performancePath
-          ? coverageTable({ [packageName]: writtenPct })
-          : "// changed in feature commit\n"
-      );
+      writeFileSync(absolutePath, content);
       runGit(root, "add", relativePath);
     }
     runGit(root, "commit", "-qm", "feature");
@@ -78,11 +82,11 @@ function runDiffFixture({ packageName, changedPaths, writtenPct = 82, measuredPc
       mkdirSync(dirname(reportPath), { recursive: true });
       writeFileSync(
         reportPath,
-        JSON.stringify({ total: { lines: { pct: name === packageName ? measuredPct : 85 } } })
+        JSON.stringify({ total: { lines: { pct: measured[name] ?? 85 } } })
       );
     }
 
-    const result = spawnSync(process.execPath, [validatorPath, "--base-ref", "baseline"], {
+    const result = spawnSync(process.execPath, [validatorPath, "--base-ref", baseRef], {
       cwd: root,
       encoding: "utf8",
       env: {
@@ -98,8 +102,22 @@ function runDiffFixture({ packageName, changedPaths, writtenPct = 82, measuredPc
   }
 }
 
+function runDiffFixture({ packageName, changedPaths, writtenPct = 82, measuredPct = 82 }) {
+  const headFiles = {};
+  for (const relativePath of changedPaths) {
+    headFiles[relativePath] =
+      relativePath === performancePath
+        ? coverageTable({ [packageName]: writtenPct })
+        : "// changed in feature commit\n";
+  }
+  return runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles,
+    measured: { [packageName]: measuredPct },
+  });
+}
+
 for (const packageName of ["react", "vue"]) {
-  const performancePath = "docs/architecture/PERFORMANCE.md";
   test(`${packageName}: committed config plus baseline edit cannot bypass merge-base regression`, () => {
     const result = runDiffFixture({
       packageName,
@@ -144,13 +162,126 @@ for (const packageName of ["react", "vue"]) {
   }
 }
 
-test("other package R7 keeps its existing per-package diff classification", () => {
+// ADR-066 inverts the earlier "other package R7 keeps its existing
+// per-package diff classification" test: a vitest.config.ts change is
+// package-affecting for every package, so it takes the regression path.
+test("other package R7: committed vitest.config.ts plus baseline edit uses merge-base regression", () => {
   const result = runDiffFixture({
     packageName: "uix-utils",
-    changedPaths: ["packages/uix-utils/vitest.config.ts", "docs/architecture/PERFORMANCE.md"],
+    changedPaths: ["packages/uix-utils/vitest.config.ts", performancePath],
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /uix-utils: REGRESSION FAIL.*85% -> 82\.0%.*-3\.0 points/);
+  assert.doesNotMatch(result.output, /baseline-only/);
+});
+
+// --- ADR-066: integrity applies only to rows the diff changes ---------------
+
+const STAGE1_APPENDIX = [
+  "## Stage 1 — Performance baselines (ADR-057)",
+  "",
+  "Measured in the pinned Playwright CI environment of record.",
+  "",
+  "### P1 — Bundle size",
+  "",
+  "| Package | dist/ size | dist/ file count | index.mjs gzip size |",
+  "| ------- | ---------- | ---------------- | ------------------- |",
+  "| packages/ng | 70.0 KB | 4 | 12.30 KB |",
+  "| packages/react | 50.0 KB | 3 | 9.10 KB |",
+  "",
+  "### P2 — Component creation",
+  "",
+  "| Package | Median (ms) | p95 (ms) | Runs |",
+  "| ------- | ----------- | -------- | ---- |",
+  "| react | 12.3 | 14.1 | 30 |",
+  "| vue | 11.8 | 13.0 | 30 |",
+  "| ng | 15.2 | 17.9 | 30 |",
+  "",
+].join("\n");
+
+test("changed row on a PERFORMANCE.md-only diff gets integrity; unchanged stale row gets regression", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable({ react: "85.0", cli: "86.9" }),
+    headFiles: { [performancePath]: coverageTable({ react: "90.0", cli: "86.9" }) },
+    measured: { react: 90.0, cli: 86.3 },
   });
   assert.strictEqual(result.status, 0, result.output);
-  assert.match(result.output, /uix-utils: OK \(baseline-only, integrity check/);
+  assert.match(result.output, /react: OK \(baseline-only, integrity check: 90% matches/);
+  assert.match(result.output, /cli: OK \(86\.9% -> 86\.3%, -0\.6 points\)/);
+  assert.doesNotMatch(result.output, /cli: OK \(baseline-only/);
+});
+
+test("changed row on a PERFORMANCE.md-only diff fails integrity when it does not match", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable({ react: "85.0", cli: "86.9" }),
+    headFiles: { [performancePath]: coverageTable({ react: "95.0", cli: "86.9" }) },
+    measured: { react: 90.0, cli: 86.3 },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /react: INTEGRITY FAIL/);
+  assert.doesNotMatch(result.output, /cli: .*FAIL/);
+});
+
+test("appending a Stage 1 table with package-named rows leaves stale rows on the regression path", () => {
+  const base = coverageTable({ react: "85.0", ng: "88.6" });
+  const result = runCoverageCli({
+    baseMarkdown: base,
+    headFiles: { [performancePath]: `${base}\n${STAGE1_APPENDIX}` },
+    measured: { react: 89.0, ng: 90.1 },
+  });
+  assert.strictEqual(result.status, 0, result.output);
+  assert.doesNotMatch(result.output, /integrity/i);
+  assert.match(result.output, /react: OK \(85% -> 89\.0%/);
+});
+
+test("a coverage row removed at HEAD fails as baseline removed", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: {
+      [performancePath]: coverageTable()
+        .split("\n")
+        .filter((line) => !line.includes("| packages/cli |"))
+        .join("\n"),
+    },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /cli: baseline removed/);
+});
+
+test("an unreadable merge-base ref fails closed", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    baseRef: "no-such-ref-adr-066",
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /\[validate-coverage\] FAIL: could not read PERFORMANCE\.md/);
+});
+
+test("a merge-base PERFORMANCE.md with no Phase 10 coverage table fails closed", () => {
+  const result = runCoverageCli({
+    baseMarkdown: "# Performance Baseline\n\nNo Phase 10 section.\n",
+    headFiles: { [performancePath]: coverageTable() },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /merge-base PERFORMANCE\.md has no Phase 10 coverage rows/);
+});
+
+test("PERFORMANCE.md deleted at HEAD fails closed", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { [performancePath]: null },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /PERFORMANCE\.md does not exist at HEAD/);
+});
+
+test("parsePhase10CoverageTable stops at the next heading after its table", () => {
+  const coverage = parsePhase10CoverageTable(
+    `${coverageTable({ react: "85.0" })}\n${STAGE1_APPENDIX}`
+  );
+  assert.strictEqual(coverage.get("react"), 85.0);
+  assert.strictEqual(coverage.size, ALL_PACKAGES.length);
 });
 
 // --- Stage 1: no prior baseline ------------------------------------------
