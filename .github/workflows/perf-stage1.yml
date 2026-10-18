@@ -1,0 +1,96 @@
+name: Perf Stage 1
+
+# ADR-057 Stage 1 performance measurement (Spec B4-R1) in the CI environment
+# of record. Manual dispatch only: it is non-gating and never runs on push or
+# pull request. It measures and uploads; it asserts nothing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      repeat:
+        description: "Number of runner invocations at this SHA (one result file each)"
+        required: false
+        default: "2"
+      W:
+        description: "Warm-up iterations per repeat (discarded)"
+        required: false
+        default: "5"
+      R:
+        description: "Repeats per browser category (fresh browser context each)"
+        required: false
+        default: "10"
+      I:
+        description: "Recorded iterations per repeat"
+        required: false
+        default: "20"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: perf-stage1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  stage1:
+    runs-on: ubuntu-24.04-arm
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-jammy
+      options: --user 1001
+    env:
+      PERF_IMAGE: mcr.microsoft.com/playwright:v1.63.0-jammy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.15.0"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Perf unit tests
+        run: pnpm run perf:stats:test
+
+      # The runner builds nothing (scripts/perf/run-stage1.mjs). `build` yields
+      # the packages' dist (P1, P2) and the playgrounds' SSR builds (P8); the
+      # per-playground `build:perf` yields the client-only perf pages (P3-P7).
+      - name: Build workspace packages and SSR harnesses
+        run: pnpm run build
+
+      - name: Build playground perf pages
+        run: |
+          pnpm --filter playground-angular run build:perf
+          pnpm --filter playground-react run build:perf
+          pnpm --filter playground-vue run build:perf
+
+      - name: Run Stage 1 runner
+        env:
+          REPEAT: ${{ inputs.repeat }}
+          PERF_W: ${{ inputs.W }}
+          PERF_R: ${{ inputs.R }}
+          PERF_I: ${{ inputs.I }}
+        run: |
+          case "$REPEAT" in
+            ''|*[!0-9]*|0) echo "repeat must be a positive integer, got '$REPEAT'" >&2; exit 1 ;;
+          esac
+          mkdir -p perf-results
+          for k in $(seq 1 "$REPEAT"); do
+            node scripts/perf/run-stage1.mjs \
+              --W "$PERF_W" --R "$PERF_R" --I "$PERF_I" \
+              --out "perf-results/stage1-${GITHUB_SHA}-run${k}.json"
+          done
+
+      - name: Upload Stage 1 results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-stage1-${{ github.sha }}-${{ github.run_id }}
+          path: perf-results/
+          if-no-files-found: error

@@ -15,3 +15,4 @@ out-tsc/
 coverage/
 storybook-static/
 test-results/
+perf-results/
