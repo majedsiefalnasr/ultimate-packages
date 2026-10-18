@@ -256,11 +256,22 @@ describe("applyExclusions (Spec W2-B4-R3 Amendment A1)", () => {
     expect(result.stale).toEqual([exclusion()]);
   });
 
-  it("never suppresses a structural problem", () => {
-    const structural = { component: "Dialog", kind: "no-entry" };
+  it.each([
+    { component: "Dialog", kind: "no-entry" },
+    { component: "Dialog", kind: "orphan-entry" },
+    { component: "Dialog", kind: "missing-files", files: ["packages/vue/src/dialog/Dialog.vue"] },
+  ])("never suppresses a structural $kind problem", (structural) => {
     const result = applyExclusions([structural], [exclusion()], COMPONENTS);
     expect(result.remaining).toEqual([structural]);
     expect(result.stale).toEqual([exclusion()]);
+  });
+
+  it("reports a non-array exclusion list as invalid and suppresses nothing", () => {
+    expect(applyExclusions([afterHide], { entries: [exclusion()] }, COMPONENTS)).toEqual({
+      remaining: [afterHide],
+      stale: [],
+      invalid: ["drift-exclusions.json must hold an array of exclusion entries"],
+    });
   });
 
   it("reports an exclusion that matches no current drift item as stale", () => {
@@ -289,6 +300,12 @@ describe("applyExclusions (Spec W2-B4-R3 Amendment A1)", () => {
       exclusion({ source: "dialog.ts" }),
       /file:line or an ADR/,
     ],
+    [
+      "an ADR id embedded in other text",
+      exclusion({ source: "see ADR-058 somewhere" }),
+      /file:line or an ADR/,
+    ],
+    ["an ADR id with a suffix", exclusion({ source: "ADR-058x" }), /file:line or an ADR/],
     ["a non-object entry", "Dialog vue after-hide", /must be an object/],
   ])("rejects %s as invalid without suppressing anything", (_label, entry, message) => {
     const result = applyExclusions([afterHide], [entry], COMPONENTS);

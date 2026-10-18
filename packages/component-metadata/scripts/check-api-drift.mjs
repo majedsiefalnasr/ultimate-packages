@@ -353,8 +353,8 @@ export function driftProblems(records, sourceMap) {
 const EXCLUSION_FIELDS = ["component", "framework", "apiKind", "name", "rationale", "source"];
 const API_KINDS = ["prop", "event"];
 const WILDCARD = /[*?]/;
-// A file:line (or file:start-end) citation, or an ADR id.
-const CITATION = /^[^\s:]+:\d+(-\d+)?$|\bADR-\d+\b/;
+// A file:line (or file:start-end) citation, or a bare ADR id.
+const CITATION = /^[^\s:]+:\d+(-\d+)?$|^ADR-\d+$/;
 
 function exclusionKey(entry) {
   return `${entry.component} ${entry.framework} ${entry.apiKind} ${entry.name}`;
@@ -385,6 +385,13 @@ function exclusionError(entry, components) {
 // and structural problems are never suppressed. `components` lists the known
 // record names, so an exclusion for an unknown component is invalid.
 export function applyExclusions(problems, exclusions, components) {
+  if (!Array.isArray(exclusions)) {
+    return {
+      remaining: problems,
+      stale: [],
+      invalid: ["drift-exclusions.json must hold an array of exclusion entries"],
+    };
+  }
   const invalid = [];
   const valid = new Map();
   exclusions.forEach((entry, index) => {
