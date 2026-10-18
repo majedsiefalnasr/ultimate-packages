@@ -450,7 +450,7 @@ This section supersedes the text it names. Everything else above stands. It was 
 ### Task 1 (re-baseline): amended
 
 - **Prerequisites:** Task 0 and Task 1a are merged.
-- **Diff:** exactly `docs/architecture/PERFORMANCE.md`. It changes only the `react` and `vue` coverage rows, plus exactly one sentence describing those two rows: the measuring CI run, the SHA and the ADR-060 scope. No other row or section changes. This replaces the original "plus one sentence stating the ADR-060 scope" with that narrower sentence.
+- **Diff:** exactly `docs/architecture/PERFORMANCE.md`. It changes only the `react` and `vue` coverage rows, plus, if the user confirms it, exactly one sentence describing those two rows: the measuring CI run, the SHA and the ADR-060 scope. The sentence is **proposed, pending the user's confirmation**. Without confirmation, the re-baseline PR changes only the two rows, and the provenance note goes in the Task 2 closeout record. No other row or section changes. This replaces the original "plus one sentence stating the ADR-060 scope" with that narrower, conditional sentence.
 - **Step 4 expected result:**
   - `coverage:validate` prints integrity for react and vue and regression for the other 15;
   - `size:validate` prints no integrity line;
