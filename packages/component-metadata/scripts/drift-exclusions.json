@@ -17,30 +17,6 @@
   },
   {
     "component": "Table",
-    "framework": "ng",
-    "apiKind": "event",
-    "name": "sortOrderChange",
-    "rationale": "Sibling output of the modeled sort-changed event (ng sortFieldChange), emitted from the same onSort() handler; the ng payload split across sibling outputs is recorded in sort-changed's payloadDescription instead of as a separate event.",
-    "source": "packages/component-metadata/src/records/table.ts:26-42"
-  },
-  {
-    "component": "Table",
-    "framework": "ng",
-    "apiKind": "event",
-    "name": "multiSortMetaChange",
-    "rationale": "Sibling output of the modeled sort-changed event (ng sortFieldChange), emitted from the same onSort() handler in multi-sort mode; recorded in sort-changed's payloadDescription instead of as a separate event.",
-    "source": "packages/component-metadata/src/records/table.ts:26-42"
-  },
-  {
-    "component": "Table",
-    "framework": "ng",
-    "apiKind": "event",
-    "name": "rowsChange",
-    "rationale": "Sibling output of the modeled page-changed event (ng firstChange), re-broadcasting .rows from the same onPaginatorPageChange() handler; recorded in page-changed's payloadDescription instead of as a separate event.",
-    "source": "packages/component-metadata/src/records/table.ts:64-66"
-  },
-  {
-    "component": "Table",
     "framework": "vue",
     "apiKind": "event",
     "name": "update:selection",

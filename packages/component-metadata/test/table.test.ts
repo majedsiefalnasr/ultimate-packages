@@ -17,6 +17,18 @@ describe("Table metadata record (spec §12's own worked example: sort-changed di
     expect(vue).toMatchObject({ frameworkName: "sort", mechanism: "emit" });
   });
 
+  it("records ng's two-way companion outputs sortOrderChange, multiSortMetaChange and rowsChange as their own events", () => {
+    const ng = TABLE_METADATA.api?.ng?.events ?? [];
+    const pairs = ng.map((e) => [e.semanticId, e.frameworkName, e.mechanism]);
+    expect(pairs).toEqual(
+      expect.arrayContaining([
+        ["sort-order-changed", "sortOrderChange", "output"],
+        ["multi-sort-meta-changed", "multiSortMetaChange", "output"],
+        ["rows-changed", "rowsChange", "output"],
+      ])
+    );
+  });
+
   it("declares Paginator and Scroller as real, valid dependencies (spec §12, §6.5)", () => {
     expect(TABLE_METADATA.relationships?.dependsOn).toEqual(
       expect.arrayContaining(["Paginator", "Scroller"])

@@ -51,8 +51,11 @@ frameworks: [ng, react, vue]
 ### ng events
 
 - `sortFieldChange` (output): sort-changed
+- `sortOrderChange` (output): sort-order-changed
+- `multiSortMetaChange` (output): multi-sort-meta-changed
 - `selectionChange` (output): selection-changed
 - `firstChange` (output): page-changed
+- `rowsChange` (output): rows-changed
 - `onLazyLoad` (output): lazy-load
 - `editingRowKeysChange` (output): editing-rows-changed
 - `expandedRowKeysChange` (output): expanded-rows-changed

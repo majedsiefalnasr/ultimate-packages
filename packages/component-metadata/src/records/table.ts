@@ -117,10 +117,10 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
  * record docs/architecture/research/2026-10-18-w2-b4-metadata-drift-classification.md):
  * the selection-column, loading, lazy-load, row-editing, cell-editing,
  * filter and row-expansion props/events the sources declare (GAP-042/043/044/046)
- * are now recorded as their own facts. The sibling outputs/emits described
- * above (ng sortOrderChange/multiSortMetaChange/rowsChange, vue
- * update:selection) stay unmodeled and are listed in
- * packages/component-metadata/scripts/drift-exclusions.json.
+ * are now recorded as their own facts. So are ng's two-way companion
+ * outputs sortOrderChange, multiSortMetaChange and rowsChange (semanticIds
+ * sort-order-changed, multi-sort-meta-changed, rows-changed); in multi-sort
+ * mode multiSortMetaChange is the only sort output onSort() emits.
  */
 export const TABLE_METADATA: ComponentMetadata = {
   name: "Table",
@@ -343,6 +343,20 @@ export const TABLE_METADATA: ComponentMetadata = {
             "string | undefined — the clicked column's field, emitted by onSort() on every header click in single-sort mode; sortOrderChange (always 1) and multiSortMetaChange (multi-sort mode) are sibling outputs emitted from the same handler, not folded into this one.",
         },
         {
+          semanticId: "sort-order-changed",
+          frameworkName: "sortOrderChange",
+          mechanism: "output",
+          payloadDescription:
+            "1 | 0 | -1 — always 1 (ascending), emitted by onSort() right after sortFieldChange on every header click in single-sort mode; not emitted in multi-sort mode. The two-way companion of the sortOrder input ([(sortOrder)]).",
+        },
+        {
+          semanticId: "multi-sort-meta-changed",
+          frameworkName: "multiSortMetaChange",
+          mechanism: "output",
+          payloadDescription:
+            "SortMeta[] — the next multiSortMeta array with the clicked field added or replaced at order 1, emitted by onSort() on every header click in multi-sort mode, where it is the only sort output. The two-way companion of the multiSortMeta input ([(multiSortMeta)]).",
+        },
+        {
           semanticId: "selection-changed",
           frameworkName: "selectionChange",
           mechanism: "output",
@@ -355,6 +369,13 @@ export const TABLE_METADATA: ComponentMetadata = {
           mechanism: "output",
           payloadDescription:
             "number — the composed UPaginator's onPageChange.first, re-broadcast by onPaginatorPageChange() after the internal _first signal is updated locally. A sibling rowsChange output re-broadcasts .rows from the same handler.",
+        },
+        {
+          semanticId: "rows-changed",
+          frameworkName: "rowsChange",
+          mechanism: "output",
+          payloadDescription:
+            "number — the composed UPaginator's onPageChange.rows, emitted by onPaginatorPageChange() right after firstChange so a [(rows)] two-way binding stays in sync.",
         },
         {
           semanticId: "lazy-load",

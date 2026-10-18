@@ -102,8 +102,11 @@ Table renders tabular data with sorting, filtering, selection, pagination, virtu
 - `groupRowsBy`: string | undefined
 - `loading`: boolean
 - event `sortFieldChange` (output)
+- event `sortOrderChange` (output)
+- event `multiSortMetaChange` (output)
 - event `selectionChange` (output)
 - event `firstChange` (output)
+- event `rowsChange` (output)
 - event `onLazyLoad` (output)
 - event `editingRowKeysChange` (output)
 - event `expandedRowKeysChange` (output)
