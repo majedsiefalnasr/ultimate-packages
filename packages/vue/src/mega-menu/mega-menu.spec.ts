@@ -303,3 +303,30 @@ describe("UMegaMenu with a plain, non-reactive model (GAP-084)", () => {
     expect(productsItem.find("a").attributes("aria-expanded")).toBe("true");
   });
 });
+
+describe("UMegaMenu disabled column items (GAP-085)", () => {
+  it("GAP-085 disabled megamenu column item carries the disabled class", async () => {
+    const wrapper = mount(UMegaMenu, {
+      props: {
+        model: [
+          {
+            label: "Products",
+            items: [
+              [
+                {
+                  label: "Category A",
+                  items: [{ label: "Item A1" }, { label: "Item A2", disabled: true }],
+                },
+              ],
+            ],
+          },
+        ],
+      },
+    });
+    const productsItem = wrapper.findAll('[role="menubar"] > li')[0];
+    await productsItem.find("a").trigger("click");
+    const [enabled, disabled] = productsItem.findAll(".u-megamenu-submenu > .u-megamenu-item");
+    expect(disabled.classes()).toContain("u-megamenu-item-disabled");
+    expect(enabled.classes()).not.toContain("u-megamenu-item-disabled");
+  });
+});
