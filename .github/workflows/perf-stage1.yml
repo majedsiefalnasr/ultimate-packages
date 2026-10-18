@@ -55,6 +55,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Perf unit tests
+        run: pnpm run perf:stats:test
+
       # The runner builds nothing (scripts/perf/run-stage1.mjs). `build` yields
       # the packages' dist (P1, P2) and the playgrounds' SSR builds (P8); the
       # per-playground `build:perf` yields the client-only perf pages (P3-P7).
