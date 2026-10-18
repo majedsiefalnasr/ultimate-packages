@@ -423,6 +423,16 @@ jobs:
             test-results/accessibility/${{ matrix.framework }}/
             test-results/g3e-accessibility/
 
+      # Workstream 1 (ADR-067): React components consume Aura tokens through dt(). Computed-style
+      # checks against the Aura values; no accessibility rows, so no validator step.
+      - name: Run W1 verification specs (react)
+        if: ${{ !cancelled() && matrix.framework == 'react' }}
+        run: |
+          npx playwright test packages/react/e2e/w1-toolbar.spec.ts \
+            --project=react-chromium \
+            --project=react-firefox \
+            --project=react-webkit
+
   track-e-ssr-hydration:
     runs-on: ubuntu-latest
     strategy:
