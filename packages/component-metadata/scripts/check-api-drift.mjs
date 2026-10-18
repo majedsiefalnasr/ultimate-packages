@@ -254,13 +254,17 @@ export function extractSources(entry) {
   return extracted;
 }
 
-function compareNames(framework, recordNames, sourceNames) {
+function compareNames(framework, apiKind, recordNames, sourceNames) {
   const drift = [];
   for (const name of sourceNames) {
-    if (!recordNames.includes(name)) drift.push({ framework, kind: "missing-in-record", name });
+    if (!recordNames.includes(name)) {
+      drift.push({ framework, kind: "missing-in-record", apiKind, name });
+    }
   }
   for (const name of recordNames) {
-    if (!sourceNames.includes(name)) drift.push({ framework, kind: "missing-in-source", name });
+    if (!sourceNames.includes(name)) {
+      drift.push({ framework, kind: "missing-in-source", apiKind, name });
+    }
   }
   return drift;
 }
@@ -274,11 +278,13 @@ export function diffApi(record, extracted) {
     drift.push(
       ...compareNames(
         framework,
+        "prop",
         api.props.map((prop) => prop.name),
         source.props
       ),
       ...compareNames(
         framework,
+        "event",
         api.events.map((event) => event.frameworkName),
         source.events
       )
@@ -291,47 +297,142 @@ export function readSourceMap() {
   return JSON.parse(readFileSync(resolve(SCRIPT_DIR, "source-map.json"), "utf8"));
 }
 
-// Every drift problem across `records`, as printable lines.
-export function driftProblems(records, sourceMap) {
+export function readExclusions() {
+  return JSON.parse(readFileSync(resolve(SCRIPT_DIR, "drift-exclusions.json"), "utf8"));
+}
+
+// Every drift problem across `records`, as structured items. A drift item is
+// { component, framework, kind, apiKind, name } with kind "missing-in-record"
+// or "missing-in-source"; any other kind ("orphan-entry", "no-entry",
+// "missing-files") is a structural problem.
+export function collectDrift(records, sourceMap) {
   const problems = [];
   for (const name of Object.keys(sourceMap)) {
     if (!records.some((record) => record.name === name)) {
-      problems.push(`source-map.json entry ${name} has no metadata record`);
+      problems.push({ component: name, kind: "orphan-entry" });
     }
   }
   for (const record of records) {
     const entry = sourceMap[record.name];
     if (!entry) {
-      problems.push(`${record.name}: no source-map.json entry`);
+      problems.push({ component: record.name, kind: "no-entry" });
       continue;
     }
     const missingFiles = FRAMEWORKS.flatMap((fw) => entry[fw] ?? []).filter(
       (sourcePath) => !existsSync(resolve(REPO_ROOT, sourcePath))
     );
     if (missingFiles.length > 0) {
-      problems.push(`${record.name}: source file(s) not found: ${missingFiles.join(", ")}`);
+      problems.push({ component: record.name, kind: "missing-files", files: missingFiles });
       continue;
     }
     for (const drift of diffApi(record, extractSources(entry))) {
-      problems.push(`${record.name} ${drift.framework} ${drift.kind}: ${drift.name}`);
+      problems.push({ component: record.name, ...drift });
     }
   }
   return problems;
 }
 
+export function formatProblem(problem) {
+  switch (problem.kind) {
+    case "orphan-entry":
+      return `source-map.json entry ${problem.component} has no metadata record`;
+    case "no-entry":
+      return `${problem.component}: no source-map.json entry`;
+    case "missing-files":
+      return `${problem.component}: source file(s) not found: ${problem.files.join(", ")}`;
+    default:
+      return `${problem.component} ${problem.framework} ${problem.kind}: ${problem.name}`;
+  }
+}
+
+// Every drift problem across `records`, as printable lines.
+export function driftProblems(records, sourceMap) {
+  return collectDrift(records, sourceMap).map(formatProblem);
+}
+
+const EXCLUSION_FIELDS = ["component", "framework", "apiKind", "name", "rationale", "source"];
+const API_KINDS = ["prop", "event"];
+const WILDCARD = /[*?]/;
+// A file:line (or file:start-end) citation, or an ADR id.
+const CITATION = /^[^\s:]+:\d+(-\d+)?$|\bADR-\d+\b/;
+
+function exclusionKey(entry) {
+  return `${entry.component} ${entry.framework} ${entry.apiKind} ${entry.name}`;
+}
+
+function exclusionError(entry, components) {
+  if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
+    return "must be an object";
+  }
+  const unexpected = Object.keys(entry).find((key) => !EXCLUSION_FIELDS.includes(key));
+  if (unexpected) return `unexpected field "${unexpected}"`;
+  const missing = EXCLUSION_FIELDS.find(
+    (field) => typeof entry[field] !== "string" || entry[field].trim() === ""
+  );
+  if (missing) return `"${missing}" must be a non-empty string`;
+  if (WILDCARD.test(entry.component) || WILDCARD.test(entry.name)) {
+    return "wildcards are not allowed";
+  }
+  if (!components.includes(entry.component)) return `unknown component "${entry.component}"`;
+  if (!FRAMEWORKS.includes(entry.framework)) return `unknown framework "${entry.framework}"`;
+  if (!API_KINDS.includes(entry.apiKind)) return `unknown apiKind "${entry.apiKind}"`;
+  if (!CITATION.test(entry.source)) return "source must cite a file:line or an ADR";
+  return undefined;
+}
+
+// Suppresses each missing-in-record item that one valid exclusion names
+// exactly by (component, framework, apiKind, name). missing-in-source items
+// and structural problems are never suppressed. `components` lists the known
+// record names, so an exclusion for an unknown component is invalid.
+export function applyExclusions(problems, exclusions, components) {
+  const invalid = [];
+  const valid = new Map();
+  exclusions.forEach((entry, index) => {
+    const isObject = typeof entry === "object" && entry !== null;
+    const label = `exclusion #${index + 1}${isObject ? ` (${exclusionKey(entry)})` : ""}`;
+    const error = exclusionError(entry, components);
+    if (error) invalid.push(`${label}: ${error}`);
+    else if (valid.has(exclusionKey(entry))) invalid.push(`${label}: duplicates an earlier entry`);
+    else valid.set(exclusionKey(entry), entry);
+  });
+  const used = new Set();
+  const remaining = problems.filter((problem) => {
+    if (problem.kind !== "missing-in-record") return true;
+    const key = exclusionKey(problem);
+    if (!valid.has(key)) return true;
+    used.add(key);
+    return false;
+  });
+  const stale = [...valid].filter(([key]) => !used.has(key)).map(([, entry]) => entry);
+  return { remaining, stale, invalid };
+}
+
 // Prints the result and returns the process exit code.
-export function runDriftCheck(records, sourceMap) {
-  const problems = driftProblems(records, sourceMap);
-  if (problems.length > 0) {
-    for (const problem of problems) console.error(`[drift] ${problem}`);
-    console.error(`[drift] FAILED: ${problems.length} problem(s)`);
+export function runDriftCheck(records, sourceMap, exclusions = []) {
+  const { remaining, stale, invalid } = applyExclusions(
+    collectDrift(records, sourceMap),
+    exclusions,
+    records.map((record) => record.name)
+  );
+  const lines = [
+    ...remaining.map(formatProblem),
+    ...stale.map(
+      (entry) => `stale exclusion ${exclusionKey(entry)}: matches no missing-in-record item`
+    ),
+    ...invalid,
+  ];
+  if (lines.length > 0) {
+    for (const line of lines) console.error(`[drift] ${line}`);
+    console.error(`[drift] FAILED: ${lines.length} problem(s)`);
     return 1;
   }
-  console.log(`[drift] OK: ${records.length} record(s) match their sources`);
+  const applied =
+    exclusions.length > 0 ? ` (${exclusions.length} documented exclusion(s) applied)` : "";
+  console.log(`[drift] OK: ${records.length} record(s) match their sources${applied}`);
   return 0;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const { ALL_COMPONENTS } = await import("../dist/index.mjs");
-  process.exit(runDriftCheck(ALL_COMPONENTS, readSourceMap()));
+  process.exit(runDriftCheck(ALL_COMPONENTS, readSourceMap(), readExclusions()));
 }
