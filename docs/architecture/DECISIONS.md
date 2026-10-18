@@ -562,6 +562,12 @@ Status: Accepted (user decision X1, 2026-10-17, Workstream 2 Spec Review). **Thi
 - GAP-091 stays OPEN until that re-baseline and a closeout are complete. C01 stays incomplete.
 - No CI exception is created, and the threshold does not change.
 
+**Amended by ADR-066 (2026-10-18):**
+
+- The baseline-integrity path applies only to baseline rows that a baseline-only diff changes. The strict React/Vue rule above stays: a diff must be exactly `PERFORMANCE.md` to be baseline-only.
+- For all 17 packages, a `vitest.config.ts` change is now package-affecting for R7. This amends "the other 15 packages' … classification are unchanged".
+- Proposed, pending the user's confirmation: R6 bundle size becomes subject to the same changed-rows rule. This would amend "The bundle-size (R6) path is unchanged".
+
 ## ADR-061 — Provenance PR diff enforcement follows source incorporation
 
 Status: Accepted (user PR #16 Architecture Discussion decision, 2026-10-14). Evidence: the approved Phase 0 Specification's Git/GitHub and CI requirements; `scripts/provenance/validate-provenance.mjs`; [PR #16 CI run 38615301042](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38615301042) at head `65c2345c`; [main baseline run 38555038184](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38555038184) at `94fac002`.
@@ -725,3 +731,48 @@ Status: Accepted (user decision, Option 2 of the GAP-132 deviation report under 
 - Any other retained value from outside `components/lib/` that is found later is a new deviation needing its own decision under Blueprint §37. This ADR does not cover it.
 - The Phase 3 Specification is not amended.
 - GAP-132 records this disposition, and `PROVENANCE.md`'s GAP-132 disclosure cites this ADR.
+
+## ADR-066 — `PERFORMANCE.md` integrity checks compare only baseline rows the diff changes
+
+Status:
+
+- **R7 coverage:** Accepted (user ruling, Workstream 2 finding F1, Option 2, 2026-10-18).
+- **R6 bundle size:** Proposed, pending the user's confirmation. The extension is a controller ruling under the same principle, and the implementing PR merges only after it is confirmed.
+
+Evidence:
+
+- Workstream 2 Spec W2-B2-R2a;
+- `scripts/provenance/validate-coverage.mjs`, `scripts/provenance/validate-bundle-size.mjs` and `scripts/provenance/baseline-lib.mjs` at `main` `f5a0f138`;
+- [main CI run 38966084260](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38966084260): at least 13 of 17 coverage rows differ from fresh values by more than 0.05 (log values rounded to 0.1); bundle size `ng` is recorded at 202.86 KB but measures 65.8 KB.
+
+**Context.**
+
+- The coverage (R7) and bundle-size (R6) validators treat a diff that touches `docs/architecture/PERFORMANCE.md`, and not a package's `src/` or `package.json`, as baseline-only for that package (ADR-060 makes React/Vue stricter).
+- Every package on the baseline-only path gets an integrity check: the written value must match a fresh measurement. That includes packages whose row the diff never changed.
+- Many recorded rows are stale. So any `PERFORMANCE.md` change fails CI unless every unrelated baseline is refreshed. That covers the React/Vue coverage re-baseline (GAP-091) and the Stage 1 performance sections (ADR-057).
+
+**Decision.**
+
+- **When integrity applies.** For each package and each check (R7 coverage, R6 bundle size), the integrity check applies only when both hold:
+  - (a) the diff is baseline-only for that package under the existing rules, including ADR-060's React/Vue rule;
+  - (b) that package's value in `PERFORMANCE.md` differs between the merge-base and HEAD, compared as parsed numbers, including a row added.
+- **Every other case** takes the normal regression path against the merge-base value.
+- **`vitest.config.ts` (user ruling).** For every package, a change to its `vitest.config.ts` is package-affecting for R7. It therefore always takes the regression path, which inverts today's classification for the 15 non-React/Vue packages.
+- **Fail closed.** These fail rather than pass:
+  - `PERFORMANCE.md` unreadable at either ref;
+  - an empty or missing merge-base baseline table;
+  - a baseline row removed at HEAD.
+- **Parser bounds.** Each parser reads only its own baseline table, up to the next heading.
+- **Unchanged rules:** tolerances (0.05 coverage, 0.005 KB size), thresholds (2 points, 15%), merge-base lookup and ADR-060's strict React/Vue rule.
+
+**Trade-off.**
+
+- _Lost:_ a `PERFORMANCE.md` edit no longer forces re-verification of rows it does not touch. Those rows get the same regression check as any other PR.
+- _Gained:_ a reviewed baseline change can land without rewriting, or quietly lowering, unrelated baselines.
+
+**Consequences.**
+
+- One separate validator PR implements this, with real-Git fixture tests (Workstream 2 B2-A2a).
+- It inverts the existing test "other package R7 keeps its existing per-package diff classification", because of the `vitest.config.ts` ruling.
+- The React/Vue re-baseline PR follows it. It changes only those two coverage rows, plus one sentence describing them.
+- No baseline is normalised, and no CI exception is created.

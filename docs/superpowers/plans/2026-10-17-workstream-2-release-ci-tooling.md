@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** APPROVED (Plan Review, 2026-10-17). Execution: subagent-driven. No PR merge or perf-stage1.yml dispatch without explicit user approval.
+**Status:** APPROVED (Plan Review, 2026-10-17). Amendment A1 (2026-10-18) passed independent Plan Review (approve with changes, applied, re-reviewed). The ADR-066 R6 part awaits user confirmation before Task 1a merges. Execution: subagent-driven. No PR merge or perf-stage1.yml dispatch without explicit user approval.
 
 **Goal:** Implement Spec B1–B4: the release-path verification, CI record reconciliation, support-range and CLI evidence, and Stage 1 performance and documentation tooling.
 
@@ -16,7 +16,7 @@ New tooling follows the existing `scripts/provenance/*.mjs` + `node:test` patter
 
 **Tech stack:** Node `24.15.0`, pnpm `9.6.0`, `node:test`, Vitest, Playwright `1.63.0` (image `mcr.microsoft.com/playwright:v1.63.0-jammy`, runner `ubuntu-24.04-arm`), esbuild, TypeScript compiler API `5.9.3`, Storybook `10.6.0`.
 
-**Spec:** [`2026-10-17-workstream-2-release-ci-tooling-design.md`](../specs/2026-10-17-workstream-2-release-ci-tooling-design.md). Decisions: ADR-057, ADR-058, ADR-059, ADR-060, ADR-061.
+**Spec:** [`2026-10-17-workstream-2-release-ci-tooling-design.md`](../specs/2026-10-17-workstream-2-release-ci-tooling-design.md). Decisions: ADR-057, ADR-058, ADR-059, ADR-060, ADR-061, ADR-066.
 
 ## Global Constraints
 
@@ -385,17 +385,242 @@ The CLI prints the report and exits 0 in report mode. With `--enforce` it exits 
 
 ---
 
+## Amendment A1 (2026-10-18, user rulings 1–6; Spec Amendment A1, ADR-066)
+
+This section supersedes the text it names. Everything else above stands. It was revised after the independent Plan Review on 2026-10-18; see the Self-review list.
+
+### Task 1a: Integrity check compares only changed rows (B2-R2a, ADR-066) — new
+
+**Branch:** `fix/w2-coverage-integrity-rows` from `origin/main`, as its own PR.
+
+- It must merge before Task 1 and Task 10.
+- It merges as one PR, and only after the user confirms the R6 extension (ADR-066 Status). Task 1 and Task 10 cannot pass without the R6 part.
+- If the user declines R6, Tasks 1, 2 and 10 stay blocked pending a new ruling. No part of Task 1a is split off to land alone.
+
+**Files:**
+
+- Modify: `scripts/provenance/baseline-lib.mjs`, `scripts/provenance/validate-coverage.mjs`, `scripts/provenance/validate-bundle-size.mjs`.
+- Test: `scripts/provenance/baseline-lib.test.mjs`, `validate-coverage.test.mjs`, `validate-bundle-size.test.mjs`.
+- Not touched: `PERFORMANCE.md`, any threshold or tolerance, `ci.yml`.
+
+**Interfaces:**
+
+- **`selectBaselinePath`.** `baseline-lib.mjs` exports `selectBaselinePath({ baselineOnly, mergeBaseValue, headValue }) → "integrity" | "regression" | "removed"`:
+  - `"removed"` when `mergeBaseValue !== undefined && headValue === undefined`;
+  - `"integrity"` when `baselineOnly && headValue !== mergeBaseValue`;
+  - otherwise `"regression"`.
+  - Values are the parsed numbers from the table Maps, so `89.70` and `89.7` count as unchanged.
+- **Reading files at a ref.** `baseline-lib.mjs` also exports `readFileAtRefStrict(ref, path)`:
+  - it returns the file text;
+  - it returns `null` only when Git reports that the path does not exist at that ref;
+  - it throws on every other Git error.
+
+  Keep the existing `readFileAtRef` and its tests.
+
+- **Fail closed.** Both validators use `readFileAtRefStrict` for `PERFORMANCE.md`, and fail when:
+  - the file is unreadable at either ref;
+  - the merge-base baseline table is empty or missing;
+  - `selectBaselinePath` returns `"removed"`.
+- **Parser bounds.** `parsePhase10CoverageTable` and `parsePhase10SizeTable` stop at the next heading (`/^#{2,3} /`) after their table starts, so later tables are never read.
+- **`vitest.config.ts` (user ruling 1).** For every package, `validate-coverage.mjs` treats `packages/<name>/vitest.config.ts` as package-affecting, so it always takes the regression path.
+  - React/Vue keep ADR-060's exact-diff rule.
+  - ng and ng-core configure coverage in `angular.json`, which this rule does not cover. That is noted as a limitation.
+
+**Steps:**
+
+- [ ] **Step 1: failing tests.**
+  - **Unit tests.**
+    - `selectBaselinePath`: all three outcomes, including an added row, and `89.70` vs `89.7` → `"regression"` when baseline-only.
+    - `readFileAtRefStrict`: a missing path → `null`; a bad ref → throws.
+    - Bounded parsers: a Stage 1 table after Phase 10 with a row `| react | 12.3 | … |` is not read.
+  - **Real-Git fixture tests.** Use a temporary repo with a committed merge-base and HEAD, and run the validator CLI with `--base-ref`. For R6 fixtures, commit `packages/<n>/package.json` and `dist/index.mjs` at the merge-base, and compute honest values with the exported `measurePackage`.
+    1. The merge-base has `react 85.0` and `cli 86.9`. HEAD writes `react 90.0` (fresh 90.0) and leaves `cli 86.9` (fresh 86.3). → exit 0: react integrity OK, cli regression OK.
+    2. Same, with react written `95.0` and fresh `90.0` → exit 1, react INTEGRITY FAIL.
+    3. A realistic Stage 1 table, including package-named rows, is appended after Phase 10, with stale coverage and size rows left unchanged → exit 0, and no integrity line printed.
+    4. `packages/react/vitest.config.ts` plus a react row change `85.0 → 82.0`, fresh `82.0` → exit 1, REGRESSION FAIL against `85.0`. This is the existing ADR-060 test, kept.
+    5. **Inverted existing test.** `validate-coverage.test.mjs`'s "other package R7 keeps its existing per-package diff classification" becomes: `packages/uix-utils/vitest.config.ts` plus a `uix-utils` row change `85.0 → 82.0`, fresh `82.0` → exit 1, REGRESSION FAIL against `85.0`, with no baseline-only line.
+    6. A row removed at HEAD → exit 1, "baseline removed".
+    7. An unreadable merge-base ref, or a merge-base `PERFORMANCE.md` with no Phase 10 table → exit 1.
+  - **R6 equivalents:** cases 1, 2, 3, 6 and 7 for `size:validate`, with a stale `ng` size row left unchanged → exit 0 in case 3.
+  - Keep every other existing test.
+- [ ] **Step 2:** run `node --test scripts/provenance/baseline-lib.test.mjs scripts/provenance/validate-coverage.test.mjs scripts/provenance/validate-bundle-size.test.mjs`. Expected: FAIL.
+- [ ] **Step 3:** implement. Run again: PASS. Run `pnpm run test:scripts`; there must be no new failures.
+- [ ] **Step 4:** commit as `fix(baselines): integrity-check only PERFORMANCE.md rows the diff changes`. Open the PR. CI failure lines must be identical to `main`.
+
+### Task 1 (re-baseline): amended
+
+- **Prerequisites:** Task 0 and Task 1a are merged.
+- **Diff:** exactly `docs/architecture/PERFORMANCE.md`. It changes only the `react` and `vue` coverage rows, plus exactly one sentence describing those two rows: the measuring CI run, the SHA and the ADR-060 scope. No other row or section changes. This replaces the original "plus one sentence stating the ADR-060 scope" with that narrower sentence.
+- **Step 4 expected result:**
+  - `coverage:validate` prints integrity for react and vue and regression for the other 15;
+  - `size:validate` prints no integrity line;
+  - both pass.
+
+### Task 6R: CLI-1, CLI-5 and CLI-6 remediation (B3-R4) — replaces Task 6
+
+**Gate:** held until this Amendment passes Plan Review.
+
+**Branch:** `fix/w2-b3-cli-remediation` from `origin/main`. It is a separate PR from #34.
+
+**Files:**
+
+- Modify: `packages/cli/src/cli.ts` (help routing), `packages/cli/README.md`, `scripts/provenance/installed-cli-mcp-smoke.mjs`.
+- Create: `packages/cli/src/help.ts`.
+- Test: `packages/cli/test/help.test.ts`, `packages/cli/test/commands/{doctor,add,theme}.test.ts`, `scripts/provenance/installed-cli-mcp-smoke.test.mjs`.
+
+**Interfaces:**
+
+- `EXIT_CODES` is a per-command table of `{ code: number | "package-manager exit code", meaning }`. It is the single source for both the help output and the README check. It covers:
+  - each command's success, refusal and error exits;
+  - missing-argument exits (`add`/`theme`/`generate` → 1);
+  - no command → usage, exit 1;
+  - unknown command → exit 1;
+  - the install-failure pass-through (`add.ts:113`, `theme.ts:153`, `init.ts:130`).
+- `renderHelp(command?: string): string`.
+- `runCli` returns 0 after printing help for `--help` or `-h`, either globally or as `<cmd> --help` / `<cmd> -h`.
+
+**Steps (TDD, each failing first):**
+
+1. **CLI-1.** These pin existing behaviour; no exit code changes.
+   - `doctor` exits 0 on a detected framework, both compatible and incompatible. Assert the incompatible rows in its output (`doctor.ts:157-158`).
+   - `doctor` exits 1 when no framework is detected (`doctor.ts:111-117`).
+   - `add` and `theme` with no detectable framework exit with their existing refusal code (`add.ts:81-87`, `theme.ts:122-128`), and each refusal message is asserted.
+2. **CLI-6.**
+   - `ultimate --help` and `-h` list every `KNOWN_COMMANDS` entry with its arguments and exit codes.
+   - `ultimate <cmd> --help` and `-h` work for every command. EX-1 (`create`) and EX-2 (the `ai` stub) are shown as documented exceptions, not as implemented commands.
+   - A test asserts that every `EXIT_CODES` row appears in both `renderHelp()` and `packages/cli/README.md`.
+3. **CLI-5.** The former Task 6 functions (`PACKAGE_MANAGERS`, `installCommand`, `addCommand`, consumers × {pnpm, npm}) plus these npm-specific mechanics:
+   - npm consumers get top-level `overrides` (npm ignores `pnpm.overrides`);
+   - the lockfile assertion branches by package manager: `pnpm-lock.yaml` for pnpm, `package-lock.json` for npm, so the CLI's `detectPackageManager` really selects npm;
+   - an npm OQ-2 probe checks that `npm install <bare @ultimate name>` resolves through `overrides` to the local tarball offline, and fails loudly if it does not.
+   - **Stop rule:** if npm cannot resolve bare names offline, stop and report a Plan amendment. Do not add a workaround.
+4. **Verification:**
+   - `pnpm --filter @ultimate/cli test`;
+   - `pnpm run build && pnpm run smoke:installed`, which must log both package managers;
+   - `cli` coverage must not regress by more than 2 points against its merge-base row;
+   - the research record's CLI table is updated to Met, citing the new tests;
+   - commit, push, open the PR, compare CI.
+
+No change to EX-1 or EX-2. No new command or behaviour beyond help output and documentation.
+
+### Task 8b: P7 `openToVisible` ends at first visible (B4-R1 A1) — on PR #35
+
+- **Predicate.** Replace `overlayVisible` in `scripts/perf/browser/harness.ts`. It is true when the overlay root exists and both of these hold:
+  - `element.checkVisibility({ opacityProperty: true, visibilityProperty: true })` returns true, which catches ancestors at opacity 0 or with `display: none`;
+  - `getBoundingClientRect()` has non-zero width and height.
+- **Settle.** The predicate is re-checked on mutation and on every rAF. The settle rule (rAF + microtask) is unchanged, and `close()` is unchanged.
+- Update the harness header to describe this.
+- **Tests:**
+  - **A test-only fixture page,** for example `scripts/perf/browser/fixtures/overlay-visibility.html`, served only by the perf spec. It is not in `stage1-subjects.mjs`, the P7 subjects or the artifacts.
+    - `harness.ts` exports `isOverlayVisible(el)`. The spec bundles `harness.ts` with esbuild and injects it with `page.addScriptTag`, the same way for the `createPerfApi` used in the 500 ms case.
+    - Each of `display:none`, `visibility:hidden`, `opacity:0` and a zero-size box is not visible.
+    - A 500 ms opacity transition from `0.01` to `1` ends `openToVisible` in under 250 ms with `reducedMotion: "no-preference"`. Run it under `page.emulateMedia({ reducedMotion: "reduce" })` as well.
+  - Keep `assertVariants`.
+- Run the unit tests, the perf spec and a local smoke of `--categories P7`.
+
+### Task 9b: unit-test gate in `perf-stage1.yml` — on PR #35
+
+- Add a step "Perf unit tests" that runs `pnpm run perf:stats:test` after install and before every build or measurement step.
+- Run `actionlint`.
+
+### Task 10: amendment
+
+- **Prerequisite:** Task 1a is merged. With the bounded parsers, the Stage 1 tables are never read as baselines, so they may sit after Phase 10.
+- **The section must state:**
+  - the frame-granularity limitation (about 16.7 ms), and that counts carry the signal;
+  - that P2 tree-shaking results are findings, not targets;
+  - that no timing threshold is introduced.
+
+### Task 11b: drift classification and narrow exclusions (B4-R3 A1) — on PR #36
+
+**Files:**
+
+- Create:
+  - `docs/architecture/research/2026-10-18-w2-b4-metadata-drift-classification.md`;
+  - `packages/component-metadata/scripts/drift-exclusions.json`.
+- Modify:
+  - the affected `packages/component-metadata/src/records/*.ts`, bumping `metadataVersion` by one per changed record via `nextMetadataVersion` (Phase 6 Spec §5.1);
+  - `check-api-drift.mjs` and its test.
+- Regenerate:
+  - `packages/*/src/**/*.api.mdx`, via `docs:generate`;
+  - `skills/<component>.md` and `packages/ai/context/llms*.txt`, via `pnpm --filter @ultimate/ai run build`.
+
+**Interfaces:**
+
+- `diffApi` items gain `apiKind: "prop" | "event"`, alongside the existing `framework`, `kind` (`"missing-in-record"` / `"missing-in-source"`) and `name`.
+- **Exclusion entry:** `{ component, framework: "ng"|"react"|"vue", apiKind: "prop"|"event", name, rationale, source }`.
+  - Every field is required.
+  - `source` cites a file:line or an ADR.
+  - Wildcards are rejected.
+- **`applyExclusions(problems, exclusions) → { remaining, stale, invalid }`** works on structured items, not strings. It suppresses only `kind: "missing-in-record"` items matching `(component, framework, apiKind, name)`. These are never suppressed:
+  - `missing-in-source` items;
+  - structural problems (a missing map entry, a missing source file, an orphan entry).
+- `drift:check` exits 1 when any of the three lists is non-empty.
+
+**Steps:**
+
+- [ ] **Step 1: classify all 49 items** in the research record. For each item, give the source file:line and the record and documented-decision evidence, then a verdict:
+  - **Stale record (add the fact):** includes Dialog `role` (ng/vue), the Menu ng `appendTo`/`baseZIndex`/`closeOnEscape`/`onShow`/`onHide`, and the Table GAP-042/044 additions.
+  - **Deliberate, documented omission (exclude).** Each must cite an existing record header, ADR or gap that documents it.
+  - **Undocumented omission.** Add the fact, unless a documented decision exists. **Stop rule:** any item that is neither a public API fact nor documented is listed for the user. Step 4 is not reached, and PR #36 stays red until the user rules.
+- [ ] **Step 2: failing tests** for `applyExclusions`:
+  - an exclusion suppresses exactly its item;
+  - the same `name` under a different component, framework or `apiKind` is not suppressed;
+  - a `missing-in-source` item is never suppressed;
+  - a stale exclusion (no matching problem) fails;
+  - an unknown component or framework, a missing field or a wildcard is invalid;
+  - an unexcluded mismatch fails.
+- [ ] **Step 3:** update the records and write the exclusions. Regenerate the pages and the Skills/`llms` artifacts. Run `pnpm run validate`.
+- [ ] **Step 4: expected results:**
+  - `drift:check` exits 0;
+  - `docs:generate -- --check` is OK;
+  - `pnpm run validate` passes;
+  - `component-metadata` coverage is ≥ 93.85;
+  - the provenance FAIL set is unchanged;
+  - the PR #36 drift step is green.
+
+  Commit, push, update the PR #36 body. PR #36 stays unmerged until its drift step is green under these rules.
+
+### Task 12: amendment
+
+No code change. The root-barrel denominator is retained. Before `--enforce` is ever enabled, a separate step reconciles the denominator with the C02 component list (Spec B4-R4 A1).
+
+### PR #34 (Tasks 4–5): sequencing
+
+- Marked ready for review on 2026-10-18. Its scope stays Tasks 4–5 only.
+- It may merge only after this Amendment passes its review gates and PR #32 merges. Its CI failure lines must still match `main`.
+- No other merge is authorized.
+
+---
+
 ## Self-review (author)
 
 - **Spec coverage:**
   - B1: Task 13.
-  - B2-R1: Task 0. B2-R2: Task 1. B2-R3/R4: Task 2. B2-R5: Task 3.
-  - B3-R1/R2: Task 4. B3-R3: Task 5. B3-R4: Task 6.
-  - B4-R1: Tasks 7–9. B4-R2: Task 10. B4-R3: Tasks 11–12. B4-R4: Task 12.
+  - B2-R1: Task 0. B2-R2a: Task 1a. B2-R2: Task 1. B2-R3/R4: Task 2. B2-R5: Task 3.
+  - B3-R1/R2: Task 4. B3-R3: Task 5. B3-R4: Task 6R.
+  - B4-R1: Tasks 7–9, plus 8b and 9b. B4-R2: Task 10. B4-R3: Tasks 11, 11b and 12. B4-R4: Task 12.
   - §7's PR list matches the task branches. §8's dependencies are respected: C02 gates `--enforce`, and Tree, Chart and Editor are excluded from the perf subjects.
-- **Consistency:** `summarize`, `sameCommitDiff`, `runIdentity` and the artifact shape (Task 7) are used unchanged in Tasks 8–10. `findPeerRangeMismatches` is Task 4 only. `extractApi`/`diffApi` belong to Task 11, and `coverageReport` to Task 12.
+- **Consistency:**
+  - `summarize`, `sameCommitDiff`, `runIdentity` and the artifact shape (Task 7) are used unchanged in Tasks 8–10.
+  - `findPeerRangeMismatches` is Task 4 only.
+  - `selectBaselinePath` and `readFileAtRefStrict` are Task 1a only.
+  - `applyExclusions` and `apiKind` are Task 11b.
+  - `EXIT_CODES` and `renderHelp` are Task 6R.
+- **A1 Plan Review fixes applied (2026-10-18):**
+  - C-1: the `doctor` exit facts.
+  - I-1: case 5 inverts an existing test.
+  - I-2: strict reads and an empty-table failure.
+  - I-4: `apiKind` matching.
+  - I-5: Skills/`llms` regeneration and the `metadataVersion` bump.
+  - I-6: the single re-baseline sentence.
+  - I-8: npm mechanics and a stop rule.
+  - I-9: the visibility fixture and the predicate tests.
+  - I-10: bounded parsers.
+  - Minors: numeric comparison, R6 fixtures, the `EXIT_CODES` shape, `-h`, and the classification stop rule.
 - **Points for Plan Review:**
-  1. Adding `@storybook/addon-docs@10.6.0` to the three framework packages (Task 11).
-  2. Two new CI steps (Tasks 11–12) and one new `workflow_dispatch`-only workflow (Task 9). They add checks; none relaxes one.
-  3. Task 11's `PROVENANCE.md` disclosure under ADR-061 (the only task touching watched non-`src` paths).
-  4. The Task 5 stop rule for any Missing CLI bar other than CLI-5.
+  1. Adding `@storybook/addon-docs@10.6.0` (Task 11; done).
+  2. Two new CI steps (Tasks 11–12) and the `workflow_dispatch`-only workflow (Task 9). They add checks; none relaxes one.
+  3. Task 11's `PROVENANCE.md` disclosure under ADR-061.
+  4. ADR-066's R6 extension, proposed pending the user's confirmation (Task 1a merge gate).
+  5. Task 6R's npm stop rule.
