@@ -41,7 +41,7 @@ import type { UMegaMenuGroup } from "./mega-menu-item";
       }
       @for (item of group.items ?? []; track $index) {
         @if (item.visible !== false) {
-          <li [class]="cx('item')" role="none">
+          <li [class]="cx('item', { disabled: !!item.disabled })" role="none">
             <div [class]="cx('itemContent')">
               <a
                 role="menuitem"
