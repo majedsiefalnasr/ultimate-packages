@@ -776,3 +776,31 @@ Evidence:
 - It inverts the existing test "other package R7 keeps its existing per-package diff classification", because of the `vitest.config.ts` ruling.
 - The React/Vue re-baseline PR follows it. It changes only those two coverage rows, plus one sentence describing them.
 - No baseline is normalised, and no CI exception is created.
+
+## ADR-067 — React components consume Aura preset tokens (amends ADR-051's React carve-out)
+
+Status: Accepted (user approval of the Workstream 1 Specification, decision D1, 2026-10-18). Evidence: [Workstream 1 Specification](../superpowers/specs/2026-10-18-workstream-1-shipped-component-completion-design.md) §4 and §9. Its React classification was verified against the built Aura preset during Spec Review.
+
+**Context.**
+
+- GAP-064 excluded React from Aura token consumption "unless that exception is revisited". ADR-051 recorded React as unaffected.
+- React registers theme variables through `registerThemeVariables(componentName)`, which calls `Theme.getComponent(componentName)` with no key normalization. Most React style modules therefore receive no Aura values. Some are layout-only, some hard-code colours, some read variable names Aura does not define, and some register under keys the preset lacks.
+
+**Decision.**
+
+- **(a) Scope.** React consumes Aura tokens, through `dt()` rendered by `renderCss`, for every module whose component has a module in Ultimate's Aura preset (`packages/themes/src/presets/aura`).
+- **(b) Keys.** React registers under the preset key, as ADR-051 requires for Angular and Vue.
+  - `react-core` gains ADR-051's additional-preset-keys support. Additional keys register variables only, never structural CSS or box-model roots.
+  - A module whose primary key would collide with another component's structural sheet keeps its own key and uses an additional key instead. For example, `input-mask` keeps its key and adds `inputtext`.
+- **(c) Exceptions.** These modules have no module in Ultimate's Aura preset, so they keep their current CSS: `mention`, `multi-state-checkbox`, `tri-state-checkbox`, `data-scroller`, `button-group`, `scroll-top`, `scroller` and `table`. For `scroller` and `table`, the upstream `virtualscroller` and `datatable` modules stay out of scope under the earlier GAP-064 decision.
+- **Source.** Ported visual CSS comes from the pinned `@primeuix/styles@2.0.3` (see `PROVENANCE.md`). No PrimeReact theme CSS is used (ADR-065).
+
+**Rejected.**
+
+- Normalizing names inside `registerThemeVariables`. ADR-051's reasons still hold.
+- Leaving React on static CSS. That would leave most React components unthemed under Aura, failing the first-publish parity goal.
+
+**Consequences.**
+
+- The Workstream 1 waves implement this. Changed visual baselines need the user's acceptance for each wave.
+- ROADMAP footnote 1 is corrected in Workstream 1's W1 wave.
