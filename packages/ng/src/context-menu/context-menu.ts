@@ -50,9 +50,15 @@ import { contextMenuStyleModule } from "./context-menu-style";
  * window resize — the same real dismissal triggers upstream's own
  * `bindGlobalListeners`/`onEscapeKey`/`resizeListener` implement.
  *
- * Deliberately excludes upstream's much larger surface: nested submenus,
- * roving/virtual keyboard focus beyond a simple focused-index highlight,
- * touch long-press activation, `breakpoints`-driven responsive `<style>`
+ * Keyboard (GAP-086), as upstream: opening focuses the list, which tracks
+ * the focused item with `aria-activedescendant`. ArrowDown/ArrowUp move to
+ * the next/previous enabled item without wrapping, Home/End to the first/
+ * last, Enter/Space activate the focused item, and Tab closes the menu.
+ * Escape stays with the shared Escape registry below.
+ *
+ * Deliberately excludes upstream's much larger surface: nested submenus
+ * (and so ArrowLeft/ArrowRight), type-ahead search, touch long-press
+ * activation, `breakpoints`-driven responsive `<style>`
  * injection, and router-link items — none of these appear in this
  * capability's spec-mandated surface (same "smaller surface than upstream"
  * precedent as every sibling component).
@@ -67,12 +73,20 @@ import { contextMenuStyleModule } from "./context-menu-style";
   template: `
     @if (render()) {
       <div uOverlay [visible]="visible()" appendTo="body" [class]="cx('root')">
-        <ul #list [class]="cx('rootList')" role="menu">
+        <ul
+          #list
+          [class]="cx('rootList')"
+          role="menu"
+          tabindex="0"
+          [attr.aria-activedescendant]="focusedIndex() === -1 ? null : itemId(focusedIndex())"
+          (keydown)="onListKeyDown($event)"
+        >
           @for (item of model(); track $index) {
             @if (item.separator) {
               <li [class]="cx('separator')" role="separator"></li>
             } @else if (item.visible !== false) {
               <li
+                [attr.id]="itemId($index)"
                 [class]="cx('item', itemParams(item, $index))"
                 role="menuitem"
                 [attr.data-u-disabled]="!!item.disabled"
@@ -148,6 +162,10 @@ export class UContextMenu extends UBaseComponent {
     }
   }
 
+  protected itemId(index: number): string {
+    return `u_contextmenu_${this.instanceUid}_${index}`;
+  }
+
   protected itemParams(item: UMenuItem, index: number) {
     return { disabled: !!item.disabled, focused: this.focusedIndex() === index };
   }
@@ -165,6 +183,85 @@ export class UContextMenu extends UBaseComponent {
     this.hide();
   }
 
+  /** Upstream `onKeyDown`, limited to this flat list's keys (GAP-086). */
+  protected onListKeyDown(event: KeyboardEvent): void {
+    switch (event.code) {
+      case "ArrowDown":
+        this.focusItem(this.nextItemIndex(1));
+        event.preventDefault();
+        break;
+      case "ArrowUp":
+        this.focusItem(this.nextItemIndex(-1));
+        event.preventDefault();
+        break;
+      case "Home":
+        this.focusItem(this.edgeItemIndex(1));
+        event.preventDefault();
+        break;
+      case "End":
+        this.focusItem(this.edgeItemIndex(-1));
+        event.preventDefault();
+        break;
+      case "Enter":
+      case "NumpadEnter":
+      case "Space":
+        this.activateFocusedItem();
+        event.preventDefault();
+        break;
+      case "Tab":
+        this.hide();
+        break;
+    }
+  }
+
+  private isFocusable(item: UMenuItem | undefined): boolean {
+    return !!item && !item.separator && item.visible !== false && !item.disabled;
+  }
+
+  /** The next focusable index in `direction`, or the current one at the end (no wrap). */
+  private nextItemIndex(direction: 1 | -1): number {
+    const current = this.focusedIndex();
+    if (current === -1) {
+      return this.edgeItemIndex(direction);
+    }
+    const model = this.model();
+    for (let i = current + direction; i >= 0 && i < model.length; i += direction) {
+      if (this.isFocusable(model[i])) {
+        return i;
+      }
+    }
+    return current;
+  }
+
+  /** The first (`1`) or last (`-1`) focusable index, or -1 when none. */
+  private edgeItemIndex(direction: 1 | -1): number {
+    const model = this.model();
+    const start = direction === 1 ? 0 : model.length - 1;
+    for (let i = start; i >= 0 && i < model.length; i += direction) {
+      if (this.isFocusable(model[i])) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  private focusItem(index: number): void {
+    if (index !== -1) {
+      this.focusedIndex.set(index);
+    }
+  }
+
+  /** Clicks the focused item's link, as upstream `onEnterKey`, so the pointer path runs. */
+  private activateFocusedItem(): void {
+    const index = this.focusedIndex();
+    if (index === -1) {
+      return;
+    }
+    this.listRef?.nativeElement
+      .querySelector<HTMLAnchorElement>(`[id="${this.itemId(index)}"] a`)
+      ?.click();
+  }
+
   /** Shows the menu positioned at the given event's page coordinates. */
   show(event: MouseEvent): void {
     event.preventDefault();
@@ -180,7 +277,13 @@ export class UContextMenu extends UBaseComponent {
     // position after the next render (PrimeNG positions in onBeforeEnter,
     // once its container exists). position() is unchanged and still returns
     // early if the menu was hidden before this runs.
-    afterNextRender(() => this.position(pageX, pageY), { injector: this.injector });
+    afterNextRender(
+      () => {
+        this.position(pageX, pageY);
+        this.listRef?.nativeElement.focus();
+      },
+      { injector: this.injector }
+    );
     this.onShow.emit();
   }
 
