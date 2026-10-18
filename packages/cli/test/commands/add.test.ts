@@ -90,4 +90,21 @@ describe("runAdd", () => {
 
     expect(result.exitCode).toBe(7);
   });
+
+  it("refuses with exit 1 and the documented message when no framework is detected (CLI-1)", async () => {
+    const { runAdd } = await import("../../src/commands/add.js");
+    const dir = mkdtempSync(join(tmpdir(), "ultimate-cli-add-none-"));
+    tempDirs.push(dir);
+    cpSync(join(fixturesDir, "..", "unknown-project"), dir, { recursive: true });
+    const spawnSpy = mockSpawn(0);
+
+    const result = await runAdd(dir, "@ultimate/react-table");
+
+    expect(result.exitCode).toBe(1);
+    expect(result.message).toBe(
+      "add requires an existing, already-scaffolded Angular/React/Vue project " +
+        "(an angular.json or a recognizable framework dependency in package.json)."
+    );
+    expect(spawnSpy).not.toHaveBeenCalled();
+  });
 });
