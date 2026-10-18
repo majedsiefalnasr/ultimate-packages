@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
+import { h } from "vue";
 import { UTieredMenu } from "./index";
 
 // UTieredMenu's imperative show()/hide()/toggle() methods (declared inside
@@ -281,5 +282,54 @@ describe("UTieredMenu", () => {
         wrapper.unmount();
       });
     });
+  });
+});
+
+// `mount(UTieredMenu, { props })` wraps props in a reactive object, which hides
+// GAP-084; rendering through `h()` passes the plain array unchanged, as a
+// consumer's constant array would.
+describe("UTieredMenu with a plain, non-reactive model (GAP-084)", () => {
+  const plainModel = [
+    { label: "File", items: [{ label: "New" }, { label: "Open", items: [{ label: "Recent" }] }] },
+    { label: "Edit" },
+  ];
+  const mountPlain = () => mount({ render: () => h(UTieredMenu, { model: plainModel }) });
+
+  it("GAP-084 tiered menu hover opens the item for a plain model", async () => {
+    const wrapper = mountPlain();
+    const fileItem = wrapper.find(".u-tieredmenu-root-list > li");
+    await fileItem.trigger("mouseenter");
+    expect(fileItem.attributes("data-u-open")).toBe("true");
+    expect(fileItem.classes()).toContain("u-tieredmenu-item-open");
+    const openItem = fileItem.findAll(".u-tieredmenu-submenu > li")[1];
+    await openItem.trigger("mouseenter");
+    expect(openItem.attributes("data-u-open")).toBe("true");
+  });
+
+  it("GAP-084 tiered menu click opens the item for a plain model", async () => {
+    const wrapper = mountPlain();
+    const fileItem = wrapper.find(".u-tieredmenu-root-list > li");
+    await fileItem.find("a").trigger("click");
+    expect(fileItem.attributes("data-u-open")).toBe("true");
+    expect(fileItem.find("a").attributes("aria-expanded")).toBe("true");
+  });
+
+  it("GAP-084 tiered menu Escape closes and refocuses the trigger for a plain model", async () => {
+    const wrapper = mount(
+      { render: () => h(UTieredMenu, { model: plainModel }) },
+      { attachTo: document.body }
+    );
+    const fileItem = wrapper.find(".u-tieredmenu-root-list > li");
+    const file = fileItem.find("a");
+    (file.element as HTMLElement).focus();
+    await file.trigger("keydown", { code: "Enter" });
+    const firstSubItemLink = fileItem.find(
+      ".u-tieredmenu-submenu > li:first-child > .u-tieredmenu-item-content > a"
+    );
+    expect(document.activeElement).toBe(firstSubItemLink.element);
+    await firstSubItemLink.trigger("keydown", { code: "Escape" });
+    expect(fileItem.attributes("data-u-open")).toBe("false");
+    expect(document.activeElement).toBe(file.element);
+    wrapper.unmount();
   });
 });
