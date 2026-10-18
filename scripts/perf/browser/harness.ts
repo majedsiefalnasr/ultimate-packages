@@ -13,14 +13,21 @@
 // microtask. Each call is bracketed by `u-perf:<subject>:<phase>:start|end`
 // marks and a `u-perf:<subject>:<phase>` measure.
 //
-// open() (P7 `openToVisible`, Controller ruling on review finding 2): the
-// awaited condition is "the overlay element is present AND
-// `overlay.getAnimations({ subtree: true })` has no animation whose
-// playState is "running"". It is re-checked on every DOM mutation and on
-// every animation frame (an enter animation ending mutates nothing), then
-// the same rAF + microtask settle applies. close() still waits only for the
-// overlay's removal. Animations driven without the Web Animations model
-// (for example per-frame inline style writes) are invisible to this check.
+// open() (P7 `openToVisible`, Controller ruling of 2026-10-18, which
+// supersedes the earlier "no running animations" rule): the awaited condition
+// is the first frame at which the overlay is rendered visible, i.e.
+// `isOverlayVisible()`: the overlay root exists,
+// `checkVisibility({ opacityProperty: true, visibilityProperty: true })` is
+// true (so `display: none`, `visibility: hidden` and `opacity: 0`, also on an
+// ancestor, are not visible) and its bounding box has a non-zero width and
+// height. It is re-checked on every DOM mutation and on every animation frame,
+// then the same rAF + microtask settle applies. An enter animation that is
+// still running therefore does not delay the mark, and no animation duration
+// is measured. The value has frame granularity (one rAF, about 16.7 ms at
+// 60 Hz). close() still waits only for the overlay's removal.
+//
+// checkVisibility() with opacityProperty and visibilityProperty needs
+// Chromium 121 or newer (Playwright 1.63 ships a newer one).
 
 export const SEED = 20261017;
 
@@ -34,6 +41,18 @@ export function seededRandom(seed: number = SEED): () => number {
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+/**
+ * True when `element` is rendered visible: it exists, passes
+ * `checkVisibility({ opacityProperty, visibilityProperty })` and its bounding
+ * box is not empty.
+ */
+export function isOverlayVisible(element: Element | null): boolean {
+  if (element === null) return false;
+  if (!element.checkVisibility({ opacityProperty: true, visibilityProperty: true })) return false;
+  const box = element.getBoundingClientRect();
+  return box.width > 0 && box.height > 0;
 }
 
 export interface PerfRow {
@@ -260,15 +279,7 @@ export function createPerfApi(subject: string, adapter: PerfAdapter): PerfApi {
   const overlay = OVERLAY_SELECTORS[subject];
   const overlayElement = () => (overlay === undefined ? null : document.querySelector(overlay));
   const overlayPresent = () => overlayElement() !== null;
-  const overlayVisible = () => {
-    const element = overlayElement();
-    return (
-      element !== null &&
-      !element
-        .getAnimations({ subtree: true })
-        .some((animation) => animation.playState === "running")
-    );
-  };
+  const overlayVisible = () => isOverlayVisible(overlayElement());
   const requireOverlay = (phase: string) => {
     if (!overlay) throw new Error(`perf harness: ${subject} has no overlay for ${phase}()`);
   };

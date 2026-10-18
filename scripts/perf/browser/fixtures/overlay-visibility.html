@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  Test-only fixture for the P7 first-visible predicate (Spec B4-R1 Amendment
+  A1, scripts/perf/stage1.perf.ts). Not a perf subject: it is not listed in
+  stage1-subjects.mjs, is not a P7 subject and never appears in an artifact.
+  The spec loads it with page.setContent() and injects the bundled
+  scripts/perf/browser/harness.ts.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>overlay visibility fixture</title>
+    <style>
+      .box {
+        width: 200px;
+        height: 100px;
+      }
+      /* The overlay enters by a 500 ms opacity transition from 0.01 to 1. */
+      .u-dialog {
+        width: 200px;
+        height: 100px;
+        opacity: 0.01;
+        transition: opacity 500ms linear;
+      }
+      .u-dialog.entered {
+        opacity: 1;
+      }
+      .hidden-display {
+        display: none;
+      }
+      .hidden-visibility {
+        visibility: hidden;
+      }
+      .transparent {
+        opacity: 0;
+      }
+      .zero-size {
+        width: 0;
+        height: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cases">
+      <div id="plain" class="box">plain</div>
+      <div id="display-none" class="box hidden-display">display none</div>
+      <div id="visibility-hidden" class="box hidden-visibility">visibility hidden</div>
+      <div id="opacity-zero" class="box transparent">opacity zero</div>
+      <div class="transparent">
+        <div id="ancestor-opacity-zero" class="box">ancestor opacity zero</div>
+      </div>
+      <div class="hidden-display">
+        <div id="ancestor-display-none" class="box">ancestor display none</div>
+      </div>
+      <div id="zero-size" class="zero-size">zero size</div>
+    </div>
+  </body>
+</html>

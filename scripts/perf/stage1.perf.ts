@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { build } from "esbuild";
+import { readFileSync } from "node:fs";
 import {
   CATEGORY_SUBJECTS,
   FRAMEWORKS,
@@ -22,6 +24,10 @@ import { measureBrowserCategory } from "./run-stage1.mjs";
 declare global {
   interface Window {
     __perf?: Record<string, (...args: unknown[]) => Promise<void>>;
+    perfHarness: {
+      isOverlayVisible(element: Element | null): boolean;
+      createPerfApi(subject: string, adapter: Record<string, () => void>): Record<string, unknown>;
+    };
   }
 }
 
@@ -75,4 +81,86 @@ test.describe("P7 overlays", () => {
       }
     }
   });
+});
+
+// Spec B4-R1 Amendment A1: openToVisible ends at the first frame the overlay is
+// rendered visible. The fixture is test-only; it is served by no perf page. The
+// harness is bundled with esbuild and injected, so the code under test is the
+// code the playgrounds import. Chromium 121+ is needed for
+// checkVisibility({ opacityProperty, visibilityProperty }); Playwright 1.63
+// ships a newer one.
+test.describe("P7 first-visible predicate (fixture)", () => {
+  const fixtureHtml = readFileSync(
+    new URL("./browser/fixtures/overlay-visibility.html", import.meta.url),
+    "utf8"
+  );
+  let harnessSource = "";
+
+  test.beforeAll(async () => {
+    const result = await build({
+      entryPoints: [new URL("./browser/harness.ts", import.meta.url).pathname],
+      bundle: true,
+      format: "iife",
+      globalName: "perfHarness",
+      write: false,
+    });
+    harnessSource = result.outputFiles[0].text;
+  });
+
+  test.beforeEach(async ({ page }) => {
+    await page.setContent(fixtureHtml);
+    await page.addScriptTag({ content: harnessSource });
+  });
+
+  const cases = [
+    { id: "plain", visible: true },
+    { id: "display-none", visible: false },
+    { id: "visibility-hidden", visible: false },
+    { id: "opacity-zero", visible: false },
+    { id: "ancestor-opacity-zero", visible: false },
+    { id: "ancestor-display-none", visible: false },
+    { id: "zero-size", visible: false },
+  ];
+  for (const { id, visible } of cases) {
+    test(`isOverlayVisible(#${id}) is ${visible}`, async ({ page }) => {
+      const result = await page.evaluate(
+        (elementId) => window.perfHarness.isOverlayVisible(document.getElementById(elementId)),
+        id
+      );
+      expect(result).toBe(visible);
+    });
+  }
+
+  test("isOverlayVisible(null) is false", async ({ page }) => {
+    expect(await page.evaluate(() => window.perfHarness.isOverlayVisible(null))).toBe(false);
+  });
+
+  for (const reducedMotion of ["no-preference", "reduce"] as const) {
+    test(`openToVisible ends at the first visible frame of a 500 ms opacity transition (${reducedMotion})`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ reducedMotion });
+      const duration = await page.evaluate(async () => {
+        const adapter = {
+          mount() {},
+          unmount() {},
+          update() {},
+          close() {},
+          open() {
+            const overlay = document.createElement("div");
+            overlay.className = "u-dialog";
+            document.body.appendChild(overlay);
+            void getComputedStyle(overlay).opacity; // commit opacity 0.01 before the transition
+            overlay.classList.add("entered"); // the 500 ms transition is running at the first check
+          },
+        };
+        const api = window.perfHarness.createPerfApi("dialog", adapter) as {
+          open(): Promise<void>;
+        };
+        await api.open();
+        return performance.getEntriesByName("u-perf:dialog:open", "measure")[0].duration;
+      });
+      expect(duration).toBeLessThan(250);
+    });
+  }
 });
