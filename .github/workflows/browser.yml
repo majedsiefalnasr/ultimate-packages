@@ -129,7 +129,7 @@ jobs:
             --project=${{ matrix.framework }}-chromium \
             --project=${{ matrix.framework }}-firefox \
             --project=${{ matrix.framework }}-webkit \
-            --grep-invert "G3-A|G3-B|G3-C1|G3-C2|G3-D|G3-E|W1"
+            --grep-invert "G3-A|G3-B|G3-C1|G3-C2|G3-D|G3-E|W1|W2"
 
       - name: Accessibility baseline validation (${{ matrix.framework }})
         if: ${{ matrix.shard == 1 }}

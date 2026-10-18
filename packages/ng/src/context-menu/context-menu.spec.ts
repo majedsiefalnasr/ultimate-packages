@@ -468,4 +468,90 @@ describe("UContextMenu", () => {
       fixture.nativeElement.remove();
     });
   });
+  describe("keyboard navigation (GAP-086)", () => {
+    @Component({
+      standalone: true,
+      imports: [UContextMenu],
+      template: `<u-context-menu
+        [model]="items"
+        (onItemSelect)="selected = $event.item"
+      ></u-context-menu>`,
+    })
+    class KeyboardHostComponent {
+      items: UMenuItem[] = items;
+      selected: UMenuItem | null = null;
+    }
+
+    afterEach(() => {
+      document.querySelectorAll(".u-contextmenu").forEach((el) => el.remove());
+    });
+
+    async function open(model: UMenuItem[] = items) {
+      const fixture = TestBed.createComponent(KeyboardHostComponent);
+      fixture.componentInstance.items = model;
+      document.body.appendChild(fixture.nativeElement);
+      fixture.detectChanges();
+      const host: HTMLElement = fixture.nativeElement.querySelector("u-context-menu");
+      host.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
+      await Promise.resolve();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      const list = document.querySelector<HTMLElement>(".u-contextmenu-root-list")!;
+      const press = async (code: string) => {
+        list.dispatchEvent(new KeyboardEvent("keydown", { code, bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+        await fixture.whenStable();
+      };
+      return { fixture, list, press };
+    }
+
+    const focused = () => document.querySelector(".u-contextmenu-item-focused");
+
+    it("GAP-086 context menu opening moves focus to the menu list", async () => {
+      const { fixture, list } = await open();
+      expect(document.activeElement).toBe(list);
+      expect(focused()).toBeNull();
+      fixture.nativeElement.remove();
+    });
+
+    it("GAP-086 context menu arrow keys move focus", async () => {
+      const { fixture, list, press } = await open();
+      await press("ArrowDown");
+      expect(focused()?.textContent?.trim()).toBe("Copy");
+      expect(list.getAttribute("aria-activedescendant")).toBe(focused()?.id);
+      await press("ArrowDown");
+      expect(focused()?.textContent?.trim()).toBe("Paste");
+      await press("ArrowDown"); // separator and disabled item skipped, no wrap
+      expect(focused()?.textContent?.trim()).toBe("Paste");
+      await press("ArrowUp");
+      expect(focused()?.textContent?.trim()).toBe("Copy");
+      await press("End");
+      expect(focused()?.textContent?.trim()).toBe("Paste");
+      await press("Home");
+      expect(focused()?.textContent?.trim()).toBe("Copy");
+      fixture.nativeElement.remove();
+    });
+
+    it.each(["Enter", "Space"])(
+      "GAP-086 context menu %s activates the focused item and closes the menu",
+      async (code) => {
+        const command = vi.fn();
+        const { fixture, press } = await open([{ label: "Copy", command }, { label: "Paste" }]);
+        await press("ArrowDown");
+        await press(code);
+        expect(command).toHaveBeenCalledTimes(1);
+        expect(fixture.componentInstance.selected?.label).toBe("Copy");
+        expect(document.querySelector(".u-contextmenu")).toBeNull();
+        fixture.nativeElement.remove();
+      }
+    );
+
+    it("GAP-086 context menu Tab closes the menu", async () => {
+      const { fixture, press } = await open();
+      await press("ArrowDown");
+      await press("Tab");
+      expect(document.querySelector(".u-contextmenu")).toBeNull();
+      fixture.nativeElement.remove();
+    });
+  });
 });
