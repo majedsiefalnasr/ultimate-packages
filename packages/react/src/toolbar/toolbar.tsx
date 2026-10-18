@@ -9,6 +9,7 @@ export interface UToolbarProps {
   end?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 /**
@@ -25,7 +26,7 @@ export interface UToolbarProps {
  * default content.
  */
 export const UToolbar = React.forwardRef<HTMLDivElement, UToolbarProps>(function UToolbar(
-  { ariaLabelledBy, start, center, end, children, className },
+  { ariaLabelledBy, start, center, end, children, className, style },
   ref
 ) {
   const { cx } = useComponentBase({ componentName: "toolbar", styleModule: toolbarStyleModule });
@@ -36,6 +37,7 @@ export const UToolbar = React.forwardRef<HTMLDivElement, UToolbarProps>(function
       className={[cx("root"), className].filter(Boolean).join(" ")}
       role="toolbar"
       aria-labelledby={ariaLabelledBy}
+      style={style}
     >
       {children}
       {start !== undefined && <div className={cx("start")}>{start}</div>}

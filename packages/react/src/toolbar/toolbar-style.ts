@@ -4,12 +4,16 @@
  * `useComponentBase`'s `styleModule: {css, classes}` contract. No
  * `@ultimate/uix-styles/toolbar` entry exists yet, so `css`/`classes` are
  * authored locally (same precedent as `messageStyleModule`).
+ *
+ * W1 (ADR-067, Option B): the colours, border, radius, gap and padding come from
+ * the Aura `toolbar.*` tokens through `dt()`, resolved by `useComponentStyle`'s
+ * `css` tag; there are no literal fallbacks. The rules mirror Ultimate's Vue
+ * Toolbar style (`packages/vue/src/toolbar/toolbar-style.ts`), the applicable
+ * `@primeuix/styles` 2.0.3 structural CSS.
  */
 const css = /*css*/ `
-.u-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; padding: 0.75rem 1rem; background: var(--u-toolbar-bg, #f9fafb); border: 1px solid var(--u-toolbar-border, #e5e7eb); border-radius: 6px; }
-.u-toolbar-start { display: flex; align-items: center; gap: 0.5rem; }
-.u-toolbar-center { display: flex; align-items: center; gap: 0.5rem; }
-.u-toolbar-end { display: flex; align-items: center; gap: 0.5rem; }
+.u-toolbar{display: flex;align-items: center;justify-content: space-between;flex-wrap: wrap;padding: dt('toolbar.padding');background: dt('toolbar.background');border: 1px solid dt('toolbar.border.color');color: dt('toolbar.color');border-radius: dt('toolbar.border.radius');gap: dt('toolbar.gap');}
+.u-toolbar-start, .u-toolbar-center, .u-toolbar-end{display: flex;align-items: center;}
 `;
 
 const classes = {
