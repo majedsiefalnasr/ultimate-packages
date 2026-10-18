@@ -29,6 +29,18 @@ test.describe("React/Toolbar W1", () => {
     });
   }
 
+  for (const story of ["default", "with-consumer-style"] as const) {
+    for (const scheme of ["light", "dark"] as const) {
+      test(`toolbar ${story} visual (${scheme})`, async ({ page }) => {
+        await page.emulateMedia({ colorScheme: scheme });
+        await page.goto(storyUrl(`react-toolbar--${story}`));
+        const root = page.locator(ROOT);
+        await expect(root).toBeVisible();
+        await expect(root).toHaveScreenshot(`toolbar-${story}-${scheme}.png`);
+      });
+    }
+  }
+
   test("consumer style wins", async ({ page }) => {
     await page.goto(storyUrl("react-toolbar--with-consumer-style"));
     const root = page.locator(ROOT);
