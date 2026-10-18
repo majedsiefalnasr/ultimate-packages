@@ -1,7 +1,7 @@
 # G3-E E-1 — E1-V2 Angular ImageCompare remediation specification
 
 **Date:** 2026-10-08  
-**Status:** Draft for specification review. Preparation authorized; remediation, implementation planning and verification are not authorized by this document.  
+**Status:** SUPERSEDED — E1-V2 closed; see `research/2026-10-08-gap-064-g3e-closeout.md`\
 **Finding:** E1-V2 remains **Class B / OPEN**, cause established; Task 6 remains **STOPPED / not complete**.
 
 ## 1. Authority and problem
