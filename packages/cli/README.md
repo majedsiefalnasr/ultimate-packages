@@ -18,7 +18,7 @@ Run it from the root of an existing project; `init` does not scaffold a new proj
 
 ## Commands
 
-Run `ultimate --help` for this list, or `ultimate <command> --help` (or `-h`) for one command's arguments and exit codes. Help always exits 0.
+Run `ultimate --help` for this list, or `ultimate <command> --help` (or `-h`) for one command's arguments and exit codes. The help flag must come directly after the command (`ultimate <command> --help`). Help always exits 0.
 
 | Usage                           | Arguments                                             | What it does                                                                      |
 | ------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------- |
@@ -45,21 +45,21 @@ Every exit path of the `ultimate` bin. The table matches `EXIT_CODES` in `src/he
 | `ultimate` | 1                         | unknown command (including create, EX-1): usage printed               |
 | `ultimate` | 1                         | unexpected error, such as a package manager that cannot be started    |
 | `init`     | 0                         | framework package installed and ultimate.config.json written          |
-| `init`     | 1                         | refused: no Angular, React or Vue dependency in package.json          |
-| `init`     | 1                         | refused: the framework version has no compatible Ultimate package     |
+| `init`     | 1                         | refused: no Angular, React or Vue project detected                    |
+| `init`     | 1                         | refused: no compatible Ultimate package for this project              |
 | `init`     | package-manager exit code | the package-manager install failed; its exit code is passed through   |
 | `init`     | 0                         | --help or -h: help printed                                            |
 | `add`      | 0                         | package installed                                                     |
 | `add`      | 1                         | missing argument: no package name given                               |
-| `add`      | 1                         | refused: no Angular, React or Vue dependency in package.json          |
-| `add`      | 1                         | refused: the framework version has no compatible Ultimate package     |
+| `add`      | 1                         | refused: no Angular, React or Vue project detected                    |
+| `add`      | 1                         | refused: no compatible Ultimate package for this project              |
 | `add`      | package-manager exit code | the package-manager install failed; its exit code is passed through   |
 | `add`      | 0                         | --help or -h: help printed                                            |
 | `theme`    | 0                         | preset applied, ultimate.config.json and the theme entry file written |
 | `theme`    | 1                         | missing argument: no preset name given                                |
 | `theme`    | 1                         | refused: unknown preset (v1 accepts only aura)                        |
-| `theme`    | 1                         | refused: no Angular, React or Vue dependency in package.json          |
-| `theme`    | 1                         | refused: the framework version has no compatible Ultimate package     |
+| `theme`    | 1                         | refused: no Angular, React or Vue project detected                    |
+| `theme`    | 1                         | refused: no compatible Ultimate package for this project              |
 | `theme`    | package-manager exit code | the package-manager install failed; its exit code is passed through   |
 | `theme`    | 0                         | --help or -h: help printed                                            |
 | `doctor`   | 0                         | report printed for a detected framework, compatible or incompatible   |
@@ -67,7 +67,7 @@ Every exit path of the `ultimate` bin. The table matches `EXIT_CODES` in `src/he
 | `doctor`   | 0                         | --help or -h: help printed                                            |
 | `generate` | 0                         | snippet printed to stdout                                             |
 | `generate` | 1                         | missing argument: no component name given                             |
-| `generate` | 1                         | refused: no Angular, React or Vue dependency in package.json          |
+| `generate` | 1                         | refused: no Angular, React or Vue project detected                    |
 | `generate` | 1                         | refused: unknown component name                                       |
 | `generate` | 0                         | --help or -h: help printed                                            |
 | `ai`       | 1                         | always: stub, Phase 9 (AI Skills) not started (EX-2)                  |

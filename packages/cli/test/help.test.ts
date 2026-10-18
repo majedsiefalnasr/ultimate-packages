@@ -59,6 +59,11 @@ describe("renderHelp", () => {
     expect(help).toMatch(/ai\s+EX-2/);
   });
 
+  it("says the help flag must come directly after the command, in help and README", () => {
+    expect(renderHelp()).toContain("must come directly after the command");
+    expect(README).toContain("must come directly after the command");
+  });
+
   it.each(KNOWN_COMMANDS)("renders `%s` help with its arguments and every exit code", (command) => {
     const help = renderHelp(command);
 
