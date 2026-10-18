@@ -20,7 +20,7 @@ W1 (PR #39) changed four files under `packages/react/src/toolbar/`:
 ## Method
 
 - **Upstream archives.** Verified against `docs/architecture/checksums.json` by SHA-256, from the local `.vendor-cache`:
-  - PrimeReact 10.9.9 at `d0f574e3`, `9598e1e3709641b13111a0b222db1430160ae47c08277d2037520482e0e78ec`;
+  - PrimeReact 10.9.9 at `d0f574e3`, `9598e1e3709641b13111a0b222db1430160ae47c08277d2037520482e0e78ecf`;
   - `@primeuix/styles` 2.0.3, `e4f6ef614d2412c223560403c8b0c1bebe6ab07d8242470572310f3e23423403`.
 - **Classification.** ADR-064 is applied to the file as it stands after PR #39, not to the earlier file that batch 3 held.
 - **Name and directory search for ORIGINAL.** Not needed: counterparts exist (`components/lib/toolbar/ToolbarBase.js`, `@primeuix/styles` `dist/toolbar/index.mjs`).
