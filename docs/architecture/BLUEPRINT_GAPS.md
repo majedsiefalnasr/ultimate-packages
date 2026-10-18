@@ -1100,7 +1100,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **Missing module, CSS already token-based:** `badge`, `inputgroup`, `paginator` (Angular and Vue). Also `datatable` (Table) and `virtualscroller` (Scroller), both out of scope by earlier decision.
   - **Hand-written CSS, module registered but unused:** 46 Angular and 48 Vue components (e.g. accordion, card, tabs, timeline); wiring these is a style-file rewrite per component.
   - **Module not ported, no Ultimate consumer yet:** `tabview`/`tabmenu` (React `UTabView`/`UTabMenu` only), `ripple` (inclusion undecided).
-  - **React:** no component consumes tokens — React style files are hand-written static CSS (the accepted `ROADMAP.md` footnote exception); React consumption is outside this GAP unless that exception is revisited.
+  - **React (corrected 2026-10-18):** the earlier statement that no React component consumes tokens, and that React is outside this GAP, is superseded by [ADR-067](DECISIONS.md#adr-067--react-components-consume-aura-preset-tokens-amends-adr-051s-react-carve-out), which makes React consume Aura tokens. React Toolbar consumes `toolbar.*` through `dt()` as of Workstream 1 W1 (PR #39, merge `4a426b34`). React Paginator and Scroller compose `@ultimate/uix-styles`. The remaining React modules are in Workstream 1 waves W2–W6.
 - **Progress (2026-10-04, Tranche 1 — complete; ADR-051, decisions D1–D6; record `docs/architecture/research/2026-10-04-gap-064-tranche-1-closeout.md`):**
   - **Key wiring:** the 15 Angular / 16 Vue key-mismatch components, plus InputGroup in both frameworks, register under the upstream preset key: 16 Angular and 17 Vue components in total.
   - **Vue InputNumber** also registers the `inputtext` variables, through `registerComponentStyle`'s optional `additionalPresetKeys` (variables only).
@@ -1146,7 +1146,7 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
      - The baseline is intentionally not accepted, and the test is unchanged.
      - It is the single known failing G3-B visual test, so the CI vue visual job stays red until the story is made deterministic.
      - The rejected capture is in local `stash@{0}`.
-     - Open.
+     - **Closed (2026-10-15):** `1888d4b7` (PR #20, merge `ccb97d68`) replaced the CDN image with the committed local fixture `/media/landscape-1.png` (G3E-1) and regenerated the three Linux baselines in the CI image; the test is unchanged.
   3. **Vue BlockUI story.**
      - The story's inline `height`/`border` do not reach the container, because of the existing `inheritAttrs: false` (G3-B Spec §14).
      - Open.
@@ -1181,6 +1181,10 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **Known failure.** `Drawer full and RTL G3-D layout` fails in all engines (full drawer 2 px taller than the viewport), so the CI G3-D verification step stays red until GAP-097 is resolved (user decision 2026-10-08). _Resolved 2026-10-15 by GAP-098 (PR #23, `main` `46ec6d93`); Angular and Vue G3-D pass in main CI 38805415026._
   - **Still open:** G3-E (F6 + F7). GAP-064 stays PARTIAL.
   - **New gaps registered at this closeout:** GAP-096, GAP-097.
+- **Progress (2026-10-18, Workstream 1 W1 — React Toolbar pilot, [ADR-067](DECISIONS.md#adr-067--react-components-consume-aura-preset-tokens-amends-adr-051s-react-carve-out); PR #39, merge `4a426b34`):**
+  - **Scope.** React `UToolbar` consumes the Aura `toolbar.*` tokens (colours, border, radius, gap and padding) through `dt()`. The literal fallbacks are removed and `UToolbar` gains a `style` prop. W1 visual baselines were accepted by the user.
+  - **Provenance.** `toolbar-style.ts` is classified COPY and given its manifest entries in the W1 manifest-only batch ([evidence](research/2026-10-18-gap-094-w1-batch-evidence.md)); changed-file completeness (ADR-052 X-12(2)) for W1 is satisfied by that batch.
+  - **Still open:** React modules in Workstream 1 waves W2–W6. GAP-064 stays PARTIAL.
 - **Expected state:** Per-component Aura preset modules for the ~83 components built since Phase 5's original 5-component proof set, enabling theme-level customization for them via the same `dt()`-based mechanism the original 5 already use.
 - **Why it matters:** The original 5-component scope boundary (Phase 5 Spec §108/§203/§245) was fully, explicitly disclosed at the time it was written — but it was never revisited or re-affirmed as Phase C's real component count grew roughly 15x beyond that original proof set. This gap registers that unrevisited extension, not the original (still-valid) boundary.
 - **What it blocks:** Nothing further downstream.
@@ -1738,14 +1742,15 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
       - `divider/divider-style.ts`: its theme matches are scattered generic or palette values only. It is COPY from `DividerBase.js` and `@primeuix/styles` (2 entries).
       - `toolbar/toolbar-style.ts`: four retained declarations occur together only in the `lara-light` family, so it stays held for an ADR-065 decision.
       - 647 → **646** missing ([evidence](research/2026-10-16-gap-094-backfill-batch-3-evidence.md#reassessment-under-the-adr-064-clarification-2026-10-16)).
-    - Remaining: ng 164, react 217 (including the held `toolbar-style.ts`), vue 265.
+    - Remaining after batch 3: ng 164, react 217 (including the held `toolbar-style.ts`), vue 265.
+    - W1 Toolbar batch (2026-10-18): the `toolbar-style.ts` hold (the `lara-light` combination) is resolved by Toolbar Option B (Workstream 1 W1, PR #39, merge `4a426b34`), which replaced the literal values with `dt('toolbar.*')` paths. The file is COPY from `ToolbarBase.js` and `@primeuix/styles@2.0.3` toolbar (2 entries, 1 file, no theme entry); 646 → **645** missing ([evidence](research/2026-10-18-gap-094-w1-batch-evidence.md)). Remaining: ng 164, react 216, vue 265, with no held file.
 - **Expected state:** Every production file (ADR-062) has a manifest entry backed by per-file evidence, and the validator passes.
 - **Why it matters:** The step is red on every push.
 - **What it blocks:** A green provenance validation step.
 - **Dependencies:** None.
 - **Framework scope:** Angular (current failure).
 - **Existing reusable infrastructure:** `docs/architecture/provenance/ng.json`.
-- **Recommended resolution direction:** Evidence-backed backfill of the remaining production entries (646 after the batch 3 follow-up), in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4 as amended by A1. From batch 2 on, entries follow [ADR-064](DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label)'s source classes and compatibility matrix.
+- **Recommended resolution direction:** Evidence-backed backfill of the remaining production entries (645 after the W1 Toolbar batch), in batch PRs under the [GAP-094 Specification](../superpowers/specs/2026-10-15-gap-094-production-provenance-scope-design.md) §3.4 as amended by A1. From batch 2 on, entries follow [ADR-064](DECISIONS.md#adr-064--provenance-source-class-copy-reference-original-is-evidence-based-modificationstatus-is-a-descriptive-sub-label)'s source classes and compatibility matrix.
 - **Source/evidence:** CI runs 37188652979, 37590590099 (`ci` job); G3-B/G3-C1/G3-C2 closeouts; [DR-5 options](research/2026-10-15-gap-094-dr5-provenance-scope-options.md).
 - **Architectural decision required:** Yes — decided: ADR-062 (DR-5 Option B, production scope, 2026-10-15).
 
