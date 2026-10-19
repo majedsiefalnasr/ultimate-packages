@@ -1,6 +1,6 @@
 # Gitflow setup — closeout record (2026-10-19)
 
-**Status:** Closeout record for Phase 1 (Gitflow Setup), the Plan's Task 7. It records evidence only. It changes no workflow, setting or GAP status. AC8 is shown by this record's own PR into `develop` (§3): met. GF-6 Stage B is not applied (§5).
+**Status:** Closeout record for Phase 1 (Gitflow Setup), the Plan's Task 7. It records evidence only. It changes no workflow, setting or GAP status. AC8 is shown by this record's own PR into `develop` (§3): met. GF-6 Stage B was applied after this record first merged (§4).
 
 **Records:** research `2026-10-19-gitflow-setup-research.md`; Spec `docs/superpowers/specs/2026-10-19-gitflow-setup-design.md` (revision 2, Amendments A1–A2); Plan `docs/superpowers/plans/2026-10-19-gitflow-setup.md` (revision 2); ADR-068.
 
@@ -49,15 +49,16 @@ Neither is repaired here.
 
 ## 4. External steps, each authorized by the user on 2026-10-19
 
-| Step                                    | Verified state                                                                                                                                                          |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Create `develop`                        | `git push origin 03aeb1a6…:refs/heads/develop`. `git ls-remote` shows `develop` = `03aeb1a6`                                                                            |
-| GF-7 default branch                     | `gh repo view` reads `defaultBranchRef` = `develop`                                                                                                                     |
-| GF-6 Stage A on `main` and on `develop` | `GET …/protection` reads back on both: 0 required approvals; required status checks none; `enforce_admins` true; force pushes false; deletions false; restrictions none |
+| Step                                    | Verified state                                                                                                                                                                                                           |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Create `develop`                        | `git push origin 03aeb1a6…:refs/heads/develop`. `git ls-remote` shows `develop` = `03aeb1a6`                                                                                                                             |
+| GF-7 default branch                     | `gh repo view` reads `defaultBranchRef` = `develop`                                                                                                                                                                      |
+| GF-6 Stage A on `main` and on `develop` | `GET …/protection` reads back on both: 0 required approvals; required status checks none; `enforce_admins` true; force pushes false; deletions false; restrictions none                                                  |
+| GF-6 Stage B on `develop` only          | Applied after PR #44 merged. `GET …/branches/develop/protection` reads back required status checks `contexts: ["ci"]`, `strict: false`; the Stage A fields are unchanged. `main` still reads required status checks none |
 
 ## 5. Not yet done or not provable here
 
-- **GF-6 Stage B:** requiring `ci` on `develop` now has its three named green runs (AC6, AC7, AC8). It waits only for its own authorization. `main` stays at Stage A while the Version Packages PR is created with `GITHUB_TOKEN` (ADR-068; MIGRATION §7.4).
+- **GF-6 Stage B:** applied on `develop` after its three named green runs (AC6, AC7, AC8); see §4. `main` stays at Stage A while the Version Packages PR is created with `GITHUB_TOKEN` (ADR-068; MIGRATION §7.4).
 - **Externally unexercisable so far:**
   - a `release/*` or `hotfix/*` PR into `main`;
   - a `main` → `develop` back-merge PR;
