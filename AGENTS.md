@@ -48,7 +48,7 @@ These four claims are distinct — name which one applies, don't say "done" or "
 
 - **Implemented** — the code exists. Confirmed by reading the source directly.
 - **Verified** — a check was run once and passed at that moment.
-- **CI-enforced** — a script in `.github/workflows/ci.yml` will fail the build if the condition regresses.
+- **CI-enforced** — a script in `.github/workflows/ci.yml` or `.github/workflows/browser.yml` will fail the build if the condition regresses. Whether a check also blocks merges depends on branch protection (ADR-068).
 - **Externally unexercisable** — the claim can't be proven locally because it requires a real external event (an actual npm publish, an actual GitHub branch-protection setting, an actual security advisory). Disclose this honestly rather than falsely claiming it's proven, or endlessly trying to simulate it.
 
 Verification evidence lives in different places depending on its durability: CI artifacts are ephemeral (e.g. `test-results/`); committed baseline documents are durable (e.g. `docs/architecture/SAST_BASELINE.md`, `ACCESSIBILITY_BASELINE.md`, `PERFORMANCE.md`); dated research artifacts are durable point-in-time snapshots (`docs/architecture/research/*.md`).
@@ -84,11 +84,12 @@ Some architectural decisions are explicitly protected against reopening without 
 
 - Before starting work, check the current branch and working-tree state (`git status`, `git branch --show-current`) — don't assume the current branch is the right one.
 - Unless the task's own context already establishes the branch, ask whether to continue on the current branch or create a new one.
-- Direct work on `main` requires explicit authorization.
+- `main` is the release branch and `develop` the integration branch (ADR-068). Direct work on either requires explicit authorization.
 - Preserve existing uncommitted changes — never `reset --hard`, `clean -f`, `checkout --`, or otherwise discard working-tree state you didn't create, without confirming it's safe first.
 - Destructive git operations (force-push, hard reset, branch deletion, history rewrite) require explicit authorization each time — a prior authorization for a different operation doesn't carry forward.
 - Pushing to a remote requires explicit authorization unless the task's context already grants it.
-- No single branch-naming convention is established across this repository's history — naming is an implementation-level choice, not a fixed pattern.
+- New work branches from `develop` and opens its PR against `develop`. `release/*` (from `develop`) and `hotfix/*` (from `main`) are reserved: each merges into `main` and back into `develop`. After any merge into `main`, including the Version Packages PR, `main` is merged back into `develop`. Other prefixes stay an implementation-level choice.
+- Create work branches and worktrees with `--no-track`, and push with an explicit `src:dst` refspec. With `push.default=upstream`, a branch tracking `origin/develop` or `origin/main` pushes straight to it.
 
 ### 7.2 Superpowers usage
 
@@ -106,6 +107,7 @@ Some architectural decisions are explicitly protected against reopening without 
 - Never include unrelated changes (the user's own in-progress edits, another agent's work) in a commit.
 - Research, specification, and plan artifacts wait for their own applicable approval gate before being committed.
 - Never push a commit unless the task's context explicitly authorizes it.
+- Feature PRs merge into `develop` with a merge commit; squash and rebase merges are not used (ADR-068).
 
 ### 7.4 Pre-work repository safety
 
