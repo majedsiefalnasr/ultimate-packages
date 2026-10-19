@@ -1,7 +1,7 @@
 # Specification: Workstream 2 — Release, CI and Tooling (B1–B4)
 
 **Document:** `docs/superpowers/specs/2026-10-17-workstream-2-release-ci-tooling-design.md`
-**Status:** REVIEWED — Spec Review complete (2026-10-17, §11). Amendment A1 (2026-10-18, user rulings) passed independent Spec Review (approve with changes, applied, re-reviewed). The user authorized proceeding to the Implementation Plan and its Plan Review. This document authorizes no implementation, workflow change, status edit, exception, commit or push.
+**Status:** DEFERRED — suspended indefinitely (user, 2026-10-19). No further implementation is authorized. Resuming needs a new explicit authorization; the work may be discontinued in the planned restructuring. Shipped: PRs #32–#36. See COMPLETION_REGISTER "Deferred (suspended) work". (Previously: REVIEWED — Spec Review complete (2026-10-17, §11). Amendment A1 (2026-10-18, user rulings) passed independent Spec Review (approve with changes, applied, re-reviewed). The user authorized proceeding to the Implementation Plan and its Plan Review. This document authorizes no implementation, workflow change, status edit, exception, commit or push.)
 **Baseline:** `origin/main` at `f5a0f1387b71b4955b93eb361df5684805c83b07` (PR #31 merge), verified 2026-10-17.
 **Origin:** the 2026-10-17 remaining-work audit and its consolidation into two workstreams. This is Workstream 2. Workstream 1 (component behaviour, visual parity and accessibility) is a separate Specification.
 **Register rows covered:** [C01](../../architecture/COMPLETION_REGISTER.md), C03 (support ranges only), C09 (tooling), C10 (Stage 1), C11 (remainder), C12 (release path; not final acceptance).

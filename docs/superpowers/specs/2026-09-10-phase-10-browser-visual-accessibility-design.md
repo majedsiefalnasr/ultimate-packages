@@ -1,7 +1,7 @@
 # Specification: Phase 10 Track A — Browser / Visual / Accessibility
 
 **Document:** `docs/superpowers/specs/2026-09-10-phase-10-browser-visual-accessibility-design.md`
-**Status:** Draft for review
+**Status:** IMPLEMENTED — Track A merge 02c60d71. (Previously: Draft for review. The Status detail line below is historical.)
 **Companion research:** `docs/architecture/research/2026-09-08-phase-10-production-hardening.md`
 **Companion architecture discussion:** `docs/architecture/research/2026-09-08-phase-10-architecture-discussion.md` (§2, §3, §10, §11, §12)
 **Related, already-recorded decision:** `docs/architecture/DECISIONS.md` ADR-044 (DECISION-A — Storybook + Playwright, distinct responsibilities)

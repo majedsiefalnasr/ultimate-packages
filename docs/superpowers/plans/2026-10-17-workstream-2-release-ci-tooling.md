@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** APPROVED (Plan Review, 2026-10-17). Amendment A1 (2026-10-18) passed independent Plan Review (approve with changes, applied, re-reviewed). The ADR-066 R6 part awaits user confirmation before Task 1a merges. Execution: subagent-driven. No PR merge or perf-stage1.yml dispatch without explicit user approval.
+**Status:** DEFERRED — suspended indefinitely (user, 2026-10-19). No further implementation is authorized. Resuming needs a new explicit authorization; the work may be discontinued in the planned restructuring. Shipped: PRs #32–#36. See COMPLETION_REGISTER "Deferred (suspended) work". (Previously: APPROVED (Plan Review, 2026-10-17). Amendment A1 (2026-10-18) passed independent Plan Review (approve with changes, applied, re-reviewed). The ADR-066 R6 part awaits user confirmation before Task 1a merges. Execution: subagent-driven. No PR merge or perf-stage1.yml dispatch without explicit user approval.)
 
 **Goal:** Implement Spec B1–B4: the release-path verification, CI record reconciliation, support-range and CLI evidence, and Stage 1 performance and documentation tooling.
 
