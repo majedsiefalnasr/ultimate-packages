@@ -2,6 +2,8 @@
 
 **Status:** read-only assessment, **uncommitted draft** for user review. **Revision 2** recorded the user's scope rulings S-1 to S-5. **Revision 3** records the further rulings K-7, K-8, K-9, S-4 (refined), S-5 (refined), N-1 and D-40 (§1.4), and updates only the dependent conclusions. No newly authorized research has been conducted in this revision. It implements nothing, changes no GAP status, and amends no ADR, Spec, Plan, `BLUEPRINT.md`, `BLUEPRINT_GAPS.md` or `ROADMAP.md`. Proposals are recommendations only.
 
+**Status note (2026-10-19):** committed, no longer an uncommitted draft; the proposals it left pending were decided as ADR-053 to ADR-058; see `docs/architecture/COMPLETION_REGISTER.md`, "Completion target and authority". The text below is the point-in-time record.
+
 **Baseline:** `main` == `origin/main` == `99364dc`. Actual CI: run 38138916464 (CI) and 38138916465 (Release) at `99364dc`; the same failing step sets as 38137093707 / 38137093724 at `e32c224`.
 
 **Sources, in AGENTS.md §2 order:**

@@ -3,6 +3,8 @@
 **Date:** 2026-10-09  
 **Status:** Prepared for human decision; no investigation, correction or execution authorized by this packet.
 
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 ## 1. Authority and bounded Auto Mode
 
 The human's Auto Mode ruling authorizes autonomous continuation only where an action is already explicitly authorized, within scope and within its remaining budget. Routine authorized steps need no repeated approval. Silence, Auto Mode and earlier approvals do not reset budgets or waive a stop. The current V1 stop remains binding; preparing this packet is the only newly authorized action.

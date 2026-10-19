@@ -3,6 +3,8 @@
 **Date:** 2026-10-08  
 **Status:** Proposal for human approval; no disposition, remediation or next step is applied by this document.
 
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 ## 1. Decision scope
 
 Decide how to carry forward Angular `imagecompare/root-style` now that E1-V2's cause is established. The finding remains **Class B / OPEN**. This document analyzes A (retain open), B (separate remediation workstream), and C (intentional difference). A and B can coexist: opening a separately gated workstream would not close the finding.

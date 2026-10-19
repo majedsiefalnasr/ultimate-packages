@@ -4,6 +4,8 @@
 **Status:** READY FOR HUMAN EXPERIMENT AUTHORIZATION  
 **Execution authorization:** NOT GRANTED. This document proposes one falsifiable mutation, not a proven remediation or an implementation packet.
 
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 ## 1. Authority and hypothesis
 
 Sources: [approved remediation Spec](../../superpowers/specs/2026-10-08-gap-064-g3e-e1-v2-remediation-design.md), [approved Plan](../../superpowers/plans/2026-10-08-gap-064-g3e-e1-v2-remediation.md), [corrected Stage 2 evidence](2026-10-08-gap-064-g3e-e1-v2-stage2-corrected-investigation.md), [typography/P1 ruling](2026-10-08-gap-064-g3e-e1-v2-typography-p1-ruling.md), and [blocked P2 assessment](2026-10-08-gap-064-g3e-e1-v2-p2-design.md). P1 selects C1 only. P2 remains blocked because an exact safe production delta is not established.

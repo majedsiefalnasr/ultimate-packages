@@ -3,6 +3,8 @@
 **Date:** 2026-10-08  
 **Status:** Proposal for human decision; no disposition or next action approved by this document.
 
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 ## 1. Decision scope
 
 Choose how to carry the E1-B1 blocker and E1-V2 open finding forward. This is decision analysis only. The primary source is the [E-1 record](2026-10-08-gap-064-g3e-e1-record.md), especially its E1-B1 escalation/ruling, full visual review, and final E1-V2 ruling. This proposal does not amend that record, the approved [Spec](../../superpowers/specs/2026-10-08-gap-064-g3e-media-data-design.md), the approved [Plan](../../superpowers/plans/2026-10-08-gap-064-g3e-media-data.md), or any ADR.

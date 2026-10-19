@@ -2,6 +2,8 @@
 
 **Status:** research record, **uncommitted draft** for user review. Authorized by the user on 2026-10-11 (Final Project Completion Assessment, revision 3, ruling K-7). This record does not authorize implementation, does not amend or reinterpret ADR-043, and does not reopen DECISION-D. Recommendations are marked **[Rec]** and need approval.
 
+**Status note (2026-10-19):** committed, no longer an uncommitted draft; the proposals it left pending were decided as ADR-054; see `docs/architecture/DECISIONS.md`, the ADR-054 heading (line 420 as of `94807833`). The text below is the point-in-time record.
+
 **Labels:** [R] repository evidence · [U] pinned upstream source (`.vendor-cache/` tarballs: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5, extracted read-only to a scratch directory) · [D] decision record · [A] assumption or inference · [Rec] recommendation.
 
 **Baseline:** `main` == `99364dc`.

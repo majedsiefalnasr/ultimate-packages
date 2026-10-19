@@ -2,6 +2,8 @@
 
 **Status:** research record, **uncommitted draft** for user review. Authorized by the user on 2026-10-11 (assessment revision 3, ruling K-9). The YAGNI decisions (GAP-021; ADR-018, ADR-024, ADR-032) remain in force; nothing here changes them. Recommendations are marked **[Rec]**.
 
+**Status note (2026-10-19):** committed, no longer an uncommitted draft; the proposals it left pending were decided as ADR-056; see `docs/architecture/DECISIONS.md`, the ADR-056 heading (line 461 as of `94807833`). The text below is the point-in-time record.
+
 **Labels:** [R] repository evidence · [U] pinned upstream source (`.vendor-cache/`) · [D] decision record · [A] assumption · [Rec] recommendation.
 
 **Baseline:** `main` == `99364dc`.

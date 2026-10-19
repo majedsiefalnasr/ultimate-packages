@@ -3,6 +3,8 @@
 **Date:** 2026-10-09  
 **Status:** Prepared for human decision only. No evidence acceptance, audit, repair, rerun or continuation authorized by this document.
 
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 ## 1. Decision scope and authority
 
 The human authorized a research/documentation review of the completed D2 attempt and preparation of this packet. The [D2 authorization packet](2026-10-09-gap-064-g3e-e1-v2-d2-readiness-authorization.md) was subsequently approved for one bounded diagnostic. Its original preparation header remains historical; the human ruling supplied execution authority without granting another attempt or campaign continuation.

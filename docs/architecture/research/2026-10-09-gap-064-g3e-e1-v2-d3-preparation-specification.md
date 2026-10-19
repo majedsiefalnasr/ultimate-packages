@@ -4,6 +4,8 @@
 **Status:** PROPOSED — NOT AUTHORIZED FOR EXECUTION  
 **Current write scope:** this new document only. No execution artifacts are created by this specification.
 
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 ## 1. Authority and preserved state
 
 This document supplies preparation details for review alongside the unchanged [D3 authorization packet](2026-10-09-gap-064-g3e-e1-v2-d3-authorization-packet.md), particularly §7. It neither amends that packet nor supplies a runtime grant. The human accepts D2 as qualified evidence while its final container-byte audit remains **UNAVAILABLE**. That disposition is a conversation ruling; it does not rewrite historical results.
