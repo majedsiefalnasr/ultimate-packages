@@ -1,0 +1,301 @@
+# Playwright browser, visual, accessibility and SSR jobs, moved unchanged from
+# ci.yml (ADR-068). They keep running on every push and pull request, but they
+# are not required checks: they take 22-26 minutes, and the required `ci` check
+# holds only the fast checks.
+name: Browser
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # Screenshot baselines and CI visual execution use the same pinned
+  # Playwright image and the same CPU architecture (arm64); see
+  # docs/superpowers/specs/2026-10-05-ci-visual-environment-design.md.
+  track-a-browser-visual-a11y:
+    runs-on: ubuntu-24.04-arm
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-jammy
+      options: --user 1001
+    strategy:
+      fail-fast: false
+      matrix:
+        framework: [ng, react, vue]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.15.0"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace packages
+        run: pnpm run build
+
+      # The G3-A verification specs run in their own steps below (GAP-064
+      # G3-A Spec §14); the strict baseline contract covers every other spec.
+      - name: Run Playwright projects (${{ matrix.framework }})
+        run: |
+          npx playwright test \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit \
+            --grep-invert "G3-A|G3-B|G3-C1|G3-C2|G3-D|G3-E|W1"
+
+      - name: Accessibility baseline validation (${{ matrix.framework }})
+        run: node scripts/provenance/validate-accessibility-baseline.mjs --check "test-results/accessibility/${{ matrix.framework }}/**/*.json"
+
+      - name: Upload accessibility reports (${{ matrix.framework }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-reports-${{ matrix.framework }}
+          path: test-results/accessibility/${{ matrix.framework }}/
+
+      - name: Upload Playwright HTML report (${{ matrix.framework }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.framework }}
+          path: playwright-report/
+
+      # GAP-064 G3-A Spec §14: differential accessibility contract for the
+      # G3-A verification stories (introduced violations must be baselined;
+      # pre-existing ones are evidence-listed, never baselined). The visual
+      # tests in this run stay a hard gate.
+      - name: Run G3-A verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3a-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-A differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        # An explicit bash shell adds pipefail, so the validator's exit code
+        # survives the pipe into tee.
+        shell: bash
+        run: |
+          mkdir -p test-results/g3a-accessibility
+          node scripts/provenance/validate-g3a-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3a-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-A accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3a-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3a-accessibility/
+
+      # GAP-064 G3-B Spec §9: differential accessibility contract for the G3-B
+      # verification stories (same contract as G3-A, own story set and evidence
+      # list). The visual and layout tests in this run stay a hard gate.
+      - name: Run G3-B verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3b-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-B differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        # An explicit bash shell adds pipefail, so the validator's exit code
+        # survives the pipe into tee.
+        shell: bash
+        run: |
+          mkdir -p test-results/g3b-accessibility
+          node scripts/provenance/validate-g3b-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3b-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-B accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3b-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3b-accessibility/
+
+      # GAP-064 G3-C1 Spec §10 (SR-C1-2): differential accessibility contract for
+      # the G3-C1 verification stories (same contract as G3-A/G3-B, own story set
+      # and evidence list). The visual and layout tests in this run stay a hard gate.
+      - name: Run G3-C1 verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3c1-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-C1 differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        # An explicit bash shell adds pipefail, so the validator's exit code
+        # survives the pipe into tee.
+        shell: bash
+        run: |
+          mkdir -p test-results/g3c1-accessibility
+          node scripts/provenance/validate-g3c1-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3c1-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-C1 accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3c1-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3c1-accessibility/
+
+      # GAP-064 G3-C2 Spec §9.5 AC8: differential accessibility contract for
+      # the G3-C2 menu stories (same contract as G3-A/G3-B/G3-C1, own story set
+      # and evidence list). The visual, open, layout, x3b and reach tests in this run stay a hard gate.
+      - name: Run G3-C2 verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3c2-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-C2 differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        shell: bash
+        run: |
+          mkdir -p test-results/g3c2-accessibility
+          node scripts/provenance/validate-g3c2-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3c2-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-C2 accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3c2-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3c2-accessibility/
+
+      # GAP-064 G3-D Spec §9.5 AC8: differential accessibility contract for
+      # the G3-D overlay and composite stories (same contract as G3-A..G3-C2, own story set
+      # and evidence list). The visual, open, layout, x3b and reach tests in this run stay a hard gate.
+      - name: Run G3-D verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3d-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-D differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        shell: bash
+        run: |
+          mkdir -p test-results/g3d-accessibility
+          node scripts/provenance/validate-g3d-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3d-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-D accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3d-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3d-accessibility/
+
+      # GAP-064 G3-E Spec §8 / OI-E3: Ultimate regression evidence for the G3-E verification
+      # stories (screenshots, reach, differential accessibility). Not a Prime-parity gate:
+      # the Prime comparison harness (tooling/prime-reference) is not run in CI.
+      - name: Run G3-E verification specs (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        run: |
+          npx playwright test packages/${{ matrix.framework }}/e2e/g3e-aura-styles.spec.ts \
+            --project=${{ matrix.framework }}-chromium \
+            --project=${{ matrix.framework }}-firefox \
+            --project=${{ matrix.framework }}-webkit
+
+      - name: G3-E differential accessibility validation (${{ matrix.framework }})
+        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        shell: bash
+        run: |
+          mkdir -p test-results/g3e-accessibility
+          node scripts/provenance/validate-g3e-accessibility.mjs ${{ matrix.framework }} 2>&1 \
+            | tee test-results/g3e-accessibility/${{ matrix.framework }}-validation.txt
+
+      - name: Upload G3-E accessibility reports (${{ matrix.framework }})
+        if: ${{ always() && matrix.framework != 'react' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: g3e-accessibility-reports-${{ matrix.framework }}
+          path: |
+            test-results/accessibility/${{ matrix.framework }}/
+            test-results/g3e-accessibility/
+
+      # Workstream 1 (ADR-067): React components consume Aura tokens through dt(). Computed-style
+      # checks against the Aura values; no accessibility rows, so no validator step.
+      - name: Run W1 verification specs (react)
+        if: ${{ !cancelled() && matrix.framework == 'react' }}
+        run: |
+          npx playwright test packages/react/e2e/w1-toolbar.spec.ts \
+            --project=react-chromium \
+            --project=react-firefox \
+            --project=react-webkit
+
+  track-e-ssr-hydration:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - framework: ng
+            dir: playground-angular
+          - framework: react
+            dir: playground-react
+          - framework: vue
+            dir: playground-vue
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.15.0"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build harness and its workspace dependencies (${{ matrix.dir }})
+        run: pnpm --filter-prod "${{ matrix.dir }}..." run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright SSR project (${{ matrix.framework }})
+        env:
+          TRACK_E_SSR_FRAMEWORK: ${{ matrix.framework }}
+        run: npx playwright test --project=${{ matrix.framework }}-ssr-chromium
+
+      - name: Upload Playwright HTML report (${{ matrix.framework }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-ssr-${{ matrix.framework }}
+          path: playwright-report/
