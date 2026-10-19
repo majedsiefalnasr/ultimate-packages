@@ -1,6 +1,6 @@
 # Specification — Phase C, Batch 3: OrderList, PickList, DataView, OrganizationChart
 
-**Status:** Spec Review passed on 2026-09-22 after the explicitly authorized generic Angular `UListbox` `trackBy` amendment; awaiting human approval.
+**Status:** IMPLEMENTED — merge 389386b3; the batch 3 Plan records it complete. This line infers no Spec approval. (Previously: Spec Review passed on 2026-09-22 after the explicitly authorized generic Angular `UListbox` `trackBy` amendment; awaiting human approval.)
 **Date:** 2026-09-21
 **Branch:** `feature/phase-c-batch-3-migration` (created off clean `main` at `f8cd78b`, this specification's own commit is its first content).
 

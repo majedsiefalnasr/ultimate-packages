@@ -1,6 +1,6 @@
 # GAP-039 — Vue Tooltip Visibility Fix
 
-**Status:** Draft for Spec Review
+**Status:** IMPLEMENTED — merge b8042a9f; GAP-039 RESOLVED in BLUEPRINT_GAPS. (Previously: Draft for Spec Review.)
 **Date:** 2026-09-25
 **Scope:** Vue only (`packages/vue/src/tooltip/`). No other framework, package, or component is touched.
 

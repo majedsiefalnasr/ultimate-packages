@@ -1,7 +1,10 @@
 # G3-E E-1 — E1-V2 C1 experiment authorization packet
 
 **Date:** 2026-10-08  
-**Status:** READY FOR HUMAN EXPERIMENT AUTHORIZATION  
+**Status:** READY FOR HUMAN EXPERIMENT AUTHORIZATION
+
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 **Execution authorization:** NOT GRANTED. This document proposes one falsifiable mutation, not a proven remediation or an implementation packet.
 
 ## 1. Authority and hypothesis

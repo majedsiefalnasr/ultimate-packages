@@ -3,6 +3,8 @@
 **Date:** 2026-10-09  
 **Status:** Design prepared for human review; D2 execution unauthorized. Proposed disposable configuration and decoding instrumentation require explicit approval.
 
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 ## 1. Scope, authority and evidence
 
 The human authorized preparation of this packet only. The proposed diagnostic is **one PrimeNG Angular `imagecompare/default` observation**, one worker, retries **0**, with no reload, second page, second pass or campaign member. It is not V1 verification. Ultimate, `root-style`, other cases/frameworks and all V1–V8 invocations are excluded.

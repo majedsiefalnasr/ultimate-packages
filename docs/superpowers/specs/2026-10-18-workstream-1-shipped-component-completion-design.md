@@ -1,7 +1,7 @@
 # Specification: Workstream 1 — Shipped-component completion (behaviour, visual parity, accessibility, React Aura tokens)
 
 **Document:** `docs/superpowers/specs/2026-10-18-workstream-1-shipped-component-completion-design.md`
-**Status:** APPROVED (user, 2026-10-18), including decisions D1 and D2 as written. D1 is recorded as ADR-067. An independent Spec Review and its re-review (both "approve with changes") were applied first; see §11. This approval authorizes Plan authorship only. It does not authorize implementation, baseline changes, merges or dispatch.
+**Status:** DEFERRED — suspended indefinitely (user, 2026-10-19). No further implementation is authorized. Resuming needs a new explicit authorization; the work may be discontinued in the planned restructuring. Shipped: W1 (PR #39, merge 4a426b34; PR #40, merge 94807833). See COMPLETION_REGISTER "Deferred (suspended) work". (Previously: APPROVED (user, 2026-10-18), including decisions D1 and D2 as written. D1 is recorded as ADR-067. An independent Spec Review and its re-review (both "approve with changes") were applied first; see §11. This approval authorizes Plan authorship only. It does not authorize implementation, baseline changes, merges or dispatch.)
 **Baseline:** `origin/main` at `c77173ef` (2026-10-18).
 **Origin:** the 2026-10-17 remaining-work audit and the two-workstream consolidation the user accepted. Workstream 2 (release, CI and tooling) has its own Spec, [`2026-10-17-workstream-2-release-ci-tooling-design.md`](2026-10-17-workstream-2-release-ci-tooling-design.md).
 **Register rows:** C05 (parity defects); C08 (accessibility for shipped components); the React part of GAP-064 (Aura tokens); C04 (provenance, coordinated here but not owned).

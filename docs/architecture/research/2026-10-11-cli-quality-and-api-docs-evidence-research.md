@@ -2,6 +2,8 @@
 
 **Status:** research record, **uncommitted draft** for user review. Authorized by the user on 2026-10-11. Assessment revision 3 recorded that ruling D-40 makes "CLI quality" and "documented APIs" required for the pre-1.0 publish, while no source gives a measurable bar (assessment §9, item 3). This record proposes bars **[Rec]**; it decides nothing and changes no file other than itself.
 
+**Status note (2026-10-19):** committed, no longer an uncommitted draft; the proposals it left pending were decided as ADR-058; see `docs/architecture/DECISIONS.md`, the ADR-058 heading (line 493 as of `94807833`). The text below is the point-in-time record.
+
 **Labels:** [R] repository evidence · [D] decision record · [A] assumption · [Rec] recommendation.
 
 **Baseline:** `main` == `99364dc`.

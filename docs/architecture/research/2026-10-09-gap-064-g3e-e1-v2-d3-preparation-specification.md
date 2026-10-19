@@ -1,7 +1,10 @@
 # G3-E E1-V2 — D3 preparation specification
 
 **Date:** 2026-10-09  
-**Status:** PROPOSED — NOT AUTHORIZED FOR EXECUTION  
+**Status:** PROPOSED — NOT AUTHORIZED FOR EXECUTION
+
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 **Current write scope:** this new document only. No execution artifacts are created by this specification.
 
 ## 1. Authority and preserved state

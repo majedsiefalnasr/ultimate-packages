@@ -2,6 +2,8 @@
 
 **Status:** research record, **uncommitted draft** for user review. Authorized by the user on 2026-10-11. It refines assessment revision 3 §6. The **required fixes** recorded by ruling S-5 are approved scope and are not re-litigated here. Everything else, including the acceptance policy, is a recommendation **[Rec]** pending a separate decision. No finding is treated as an accepted residual.
 
+**Status note (2026-10-19):** committed, no longer an uncommitted draft; the proposals it left pending were decided as ADR-053; see `docs/architecture/DECISIONS.md`, the ADR-053 heading (line 391 as of `94807833`). The text below is the point-in-time record.
+
 **Labels:** [R] repository evidence · [AX] axe-core 4.13.0 rule metadata (installed package) · [D] decision record · [A] assumption or inference · [X] not provable by repository checks · [Rec] recommendation.
 
 **Baseline:** `main` == `99364dc`.

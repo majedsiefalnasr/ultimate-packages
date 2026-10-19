@@ -2,6 +2,7 @@
 
 **Document:** `docs/architecture/BLUEPRINT_GAPS.md`
 **Purpose:** Discovery/audit only. A single authoritative registry of gaps between `docs/architecture/BLUEPRINT.md` and the actual repository state, as of Phase 5 completion + the post-Phase-5 `@ultimate/uix-data` work.
+**Superseded notice (2026-10-19):** the "as of Phase 5 completion" wording in the Purpose line above is historical. Current state is in the sections below and in the [Completion Register](COMPLETION_REGISTER.md).
 **Status:** Discovery snapshot. Does not commit to sequencing or phase numbers. Does not modify the Blueprint or reopen `@ultimate/uix-data`'s architecture.
 **Method:** Every claim below is sourced from direct repository inspection (file reads, directory walks, `grep`/`find`) performed in this session, cross-referenced against `docs/architecture/BLUEPRINT.md`, `docs/architecture/*.md`, `docs/architecture/provenance/*.json`, `docs/superpowers/specs/*` and `docs/superpowers/plans/*`, `scripts/provenance/*`, `.github/workflows/ci.yml`, and every `packages/*/package.json`. Anything not directly verifiable is marked `UNVERIFIED`.
 
@@ -9,7 +10,7 @@
 
 ## 1. How to read this document
 
-- **Status**: `MISSING` / `PARTIAL` / `IMPLEMENTED-BUT-UNVERIFIED` / `IMPLEMENTED-BUT-NOT-ENFORCED` / `DOCUMENTATION-GAP` / `ARCHITECTURAL-GAP` / `DEFERRED` / `RESOLVED`
+- **Status**: `MISSING` / `PARTIAL` / `IMPLEMENTED-BUT-UNVERIFIED` / `IMPLEMENTED-BUT-NOT-ENFORCED` / `DOCUMENTATION-GAP` / `ARCHITECTURAL-GAP` / `OPEN` / `DEFERRED` / `RESOLVED`
 - **Type**: one or more of Architecture, Foundation, Component, Framework, Data, Styling, Accessibility, Testing, CI, Packaging, Developer Experience, Documentation, Provenance, Licensing, CLI, MCP, AI, Production
 - **Blocking level**: `BLOCKER` (prevents multiple important capabilities) / `HIGH` (blocks a major family/workstream) / `MEDIUM` (independently addressable) / `LOW` (polish/optimization)
 - Gap IDs are stable (`GAP-001`, …) and should not be renumbered once assigned in a later revision of this document.

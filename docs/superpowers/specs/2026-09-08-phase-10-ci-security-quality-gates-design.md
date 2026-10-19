@@ -1,7 +1,7 @@
 # Specification: Phase 10 Track B — CI / Security / Quality Gates
 
 **Document:** `docs/superpowers/specs/2026-09-08-phase-10-ci-security-quality-gates-design.md`
-**Status:** Draft for review
+**Status:** IMPLEMENTED — Track B merge 6428d018. (Previously: Draft for review. The Status detail line below is historical.)
 **Companion research:** `docs/architecture/research/2026-09-08-phase-10-production-hardening.md`
 **Companion architecture discussion:** `docs/architecture/research/2026-09-08-phase-10-architecture-discussion.md`
 **Baseline:** `main` at `ee2713f` (Phase 9 — AI Skills and LLM Context, closed)

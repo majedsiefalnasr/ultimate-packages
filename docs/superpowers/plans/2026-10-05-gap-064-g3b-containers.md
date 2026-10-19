@@ -16,7 +16,7 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-05-gap-064-g3b-containers-design.md` (Approved, `fc5bad8`; §13 decisions; §5.9 data model). Research and decisions: `docs/architecture/research/2026-10-05-gap-064-g3b-containers-research.md` §11 (`f2698e3`). ADR-051.
 
-**Status:** Approved (Plan Review 2026-10-05; decisions recorded under "Plan Review Decisions"). Implementation not started; requires separate authorization.
+**Status:** IMPLEMENTED — merge f008a736. (Previously: Approved (Plan Review 2026-10-05; decisions recorded under "Plan Review Decisions"). Implementation not started; requires separate authorization.)
 
 ## Global Constraints
 

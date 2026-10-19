@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** APPROVED. The user approved Plan Review on 2026-10-18. Each wave PR and batch PR still needs the user's merge authorization, and baseline changes need the user's visual acceptance.
+**Status:** DEFERRED — suspended indefinitely (user, 2026-10-19). No further implementation is authorized. Resuming needs a new explicit authorization; the work may be discontinued in the planned restructuring. Shipped: W1 (PR #39, merge 4a426b34; PR #40, merge 94807833). See COMPLETION_REGISTER "Deferred (suspended) work". (Previously: APPROVED. The user approved Plan Review on 2026-10-18. Each wave PR and batch PR still needs the user's merge authorization, and baseline changes need the user's visual acceptance.)
 
 **Goal:** fix the shipped components in six family waves. Each wave delivers the Spec §4 parity gaps, the ADR-053 accessibility items and React Aura token consumption, then a manifest-only provenance batch.
 

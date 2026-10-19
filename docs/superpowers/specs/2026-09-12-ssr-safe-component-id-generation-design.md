@@ -1,6 +1,6 @@
 # SSR-Safe Component ID Generation — Specification Proposal
 
-**Status:** Draft for review. **Not part of Phase 10 Track E.** This is a separate, standalone work item with its own gate sequence (Specification → Spec Review → Implementation Plan → Plan Review → Implementation), scoped and requested independently after Track E's escalated finding.
+**Status:** IMPLEMENTED — commits 3203ce6e (React), 68d00a98 (Angular), 496e509b (Vue Menu), all in Track E merge 9ec78838. (Previously: Draft for review. **Not part of Phase 10 Track E.** This is a separate, standalone work item with its own gate sequence (Specification → Spec Review → Implementation Plan → Plan Review → Implementation), scoped and requested independently after Track E's escalated finding.)
 **Date:** 2026-09-12
 **Scope:** Specification only. No implementation, no `packages/*` changes, no commit.
 **Origin:** `docs/architecture/research/2026-09-12-track-e-ssr-id-nondeterminism-finding.md` (Track E's escalated finding, evidence and reproduction already established there — not re-derived here).

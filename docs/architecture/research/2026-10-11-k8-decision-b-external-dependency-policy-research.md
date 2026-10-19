@@ -2,6 +2,8 @@
 
 **Status:** research record, **uncommitted draft** for user review. Authorized by the user on 2026-10-11 (Final Project Completion Assessment, revision 3, ruling K-8). It neither implements nor excludes Chart or Editor, and decides nothing. Recommendations are marked **[Rec]**.
 
+**Status note (2026-10-19):** committed, no longer an uncommitted draft; the proposals it left pending were decided as ADR-055; see `docs/architecture/DECISIONS.md`, the ADR-055 heading (line 440 as of `94807833`). The text below is the point-in-time record.
+
 **Labels:** [R] repository evidence · [U] pinned upstream source (PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5 from `.vendor-cache/`) · [N] npm registry metadata (read-only `npm view`, 2026-10-11) · [D] decision record · [A] assumption · [Rec] recommendation.
 
 **Baseline:** `main` == `99364dc`.

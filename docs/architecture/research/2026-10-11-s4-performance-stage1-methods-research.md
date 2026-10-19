@@ -2,6 +2,8 @@
 
 **Status:** research record, **uncommitted draft** for user review. Authorized by the user on 2026-10-11 (ruling S-4: all of P1–P8 in scope, two-stage). It proposes methods only. **No measurement has been run, and no threshold is proposed.** Stage 2 gates will follow per category from Stage 1 evidence, by separate decision. Recommendations are marked **[Rec]**.
 
+**Status note (2026-10-19):** committed, no longer an uncommitted draft; the proposals it left pending were decided as ADR-057; see `docs/architecture/DECISIONS.md`, the ADR-057 heading (line 478 as of `94807833`). The text below is the point-in-time record.
+
 **Labels:** [R] repository evidence · [D] decision record · [A] assumption · [Rec] recommendation.
 
 **Baseline:** `main` == `99364dc`.

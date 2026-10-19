@@ -1,7 +1,7 @@
 # Plan Amendment / Implementation Plan: Vue `Dialog.vue` Module-Scope ID Counter (Sixth Instance)
 
 **Document:** `docs/superpowers/plans/2026-09-12-vue-dialog-id-scope-amendment-implementation.md`
-**Status:** Draft for review (implementation-ready)
+**Status:** IMPLEMENTED — commit d6f6fb2b, in Track E merge 9ec78838. (Previously: Draft for review (implementation-ready).)
 **Approved specification:** `docs/superpowers/specs/2026-09-12-vue-dialog-id-scope-amendment.md` (Spec Gate: APPROVED — final review)
 **Not part of Phase 10 Track E. Not a modification of the completed 5-instance SSR-ID-generation fix.** This is the sixth, separately-gated instance of the same defect class, addressed under its own Scope Amendment.
 **Frozen, not reopened by this plan:** the completed 5-instance implementation (commits `3203ce6`, `db8faea`, `68d00a9`, `496e509`) — no file from that work is touched here.

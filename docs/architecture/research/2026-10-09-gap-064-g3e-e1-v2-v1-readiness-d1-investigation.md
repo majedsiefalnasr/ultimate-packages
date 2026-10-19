@@ -3,6 +3,8 @@
 **Date:** 2026-10-09  
 **Status:** One authorized review pass complete; STOP. No correction or further execution authorized.
 
+**Status note (2026-10-19):** nothing here is pending: E1-V2 CLOSED, E1-B1 RESOLVED (2026-10-11); see `2026-10-08-gap-064-g3e-closeout.md` lines 42–43 and 101 (line numbers as of `94807833`). The text below is the point-in-time record.
+
 ## 1. Scope and authority
 
 The human authorized D1 from the [V1 readiness decision packet](2026-10-09-gap-064-g3e-e1-v2-v1-readiness-decision-packet.md): inspect existing evidence and directly relevant source for the V1 Angular PrimeNG `imagecompare/default` readiness failure. This report is the only file created by the review. No container, server, browser, Playwright, network, campaign member, generator, experiment or diagnostic hook was run or created.
