@@ -826,3 +826,18 @@ Status: Accepted (user decisions GF-1 to GF-11 and CI-1 to CI-5, 2026-10-19). Ev
 - MIGRATION §7.4's fail-closed guarantee is not in place until `ci` is required on `main`.
 - The `ci` check is the merge signal. The `CI` workflow's overall result can be red because of `ci-extended`. A check outside `ci` can go red without blocking a merge; the CI closeout rule in `COMPLETION_REGISTER.md` still applies to it.
 - Earlier records that cite `.github/workflows/ci.yml` for the `track-a-browser-visual-a11y` or `track-e-ssr-hydration` jobs (for example in `BLUEPRINT_GAPS.md`) now refer to `.github/workflows/browser.yml`. Those records are not rewritten. ADR-052 X-12's "merge commit's run" means the merge commit's `CI` and `Browser` runs together.
+
+## ADR-069 — Change-scoped CI keeps the required `ci` check always reporting
+
+Status: Accepted (user decisions AO-1 to AO-7, 2026-10-19). Evidence: `docs/architecture/research/2026-10-19-affected-only-ci-research.md`.
+
+**Decision.**
+
+- A single tested classifier decides scope.
+- The required `ci` job always runs. It skips only expensive steps, and only for a pull request whose every changed path is docs-only Markdown that no CI script reads.
+- Any other path, any push, an empty diff or a classifier error runs everything.
+- Non-required Browser jobs run only the changed frameworks on pull requests and all frameworks on pushes.
+- `affected-packages` treats any non-package, non-docs change as affecting every package.
+- Workflow path filters and job-level conditions on required jobs are not used.
+
+**Consequences.** A docs-only PR's `ci` check proves formatting, lint, supply-chain and the fast validators, not build or tests. Push runs on `develop` and `main` run every step and all browser frameworks, and are the source of ADR-052 X-12 evidence. Pack/install integrity checks no package on a push, because a push's diff against its own branch is empty; this predates ADR-069 and is not changed by it. Package-level scoping (AO-3) is deferred.

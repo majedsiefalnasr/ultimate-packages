@@ -90,6 +90,7 @@ Some architectural decisions are explicitly protected against reopening without 
 - Pushing to a remote requires explicit authorization unless the task's context already grants it.
 - New work branches from `develop` and opens its PR against `develop`. `release/*` (from `develop`) and `hotfix/*` (from `main`) are reserved: each merges into `main` and back into `develop`. After any merge into `main`, including the Version Packages PR, `main` is merged back into `develop`. Other prefixes stay an implementation-level choice.
 - Create work branches and worktrees with `--no-track`, and push with an explicit `src:dst` refspec. With `push.default=upstream`, a branch tracking `origin/develop` or `origin/main` pushes straight to it.
+- Run `pnpm install` under Node 24.15.0 in each checkout or worktree before committing. Git hooks live in `.husky/_` (`core.hooksPath`), which husky creates per checkout. Without it git runs no hooks and gives no warning.
 
 ### 7.2 Superpowers usage
 
