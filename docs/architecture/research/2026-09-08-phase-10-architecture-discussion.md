@@ -1,11 +1,12 @@
 # Phase 10 — Production Hardening: Architecture Discussion
 
 **Status:** Draft for review
+
+**Status note (2026-10-19):** the phase is complete and Decision D6, which kept this record at "Draft for review", was superseded by the user on 2026-10-19; see `docs/architecture/ROADMAP.md` row 10 and `docs/superpowers/specs/2026-10-19-documentation-hygiene-and-suspended-work-design.md` §7. The text below is the point-in-time record.
+
 **Date:** 2026-09-08
 **Scope:** Architecture Discussion only. No specification, no implementation plan, no source/CI changes, no branch, no commit.
 **Baseline:** `main` at `ee2713f`. Builds on `docs/architecture/research/2026-09-08-phase-10-production-hardening.md` ("the Research doc"), which remains the evidence record — this document captures decisions, not re-derivation of evidence already gathered there.
-
-**Status note (2026-10-19):** the phase is complete and Decision D6, which kept this record at "Draft for review", was superseded by the user on 2026-10-19; see `docs/architecture/ROADMAP.md` row 10 and `docs/superpowers/specs/2026-10-19-documentation-hygiene-and-suspended-work-design.md` §7. The text below is the point-in-time record.
 
 ---
 

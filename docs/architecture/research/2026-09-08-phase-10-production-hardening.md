@@ -1,11 +1,12 @@
 # Phase 10 — Production Hardening: Research
 
 **Status:** Draft for review
+
+**Status note (2026-10-19):** the phase is complete and Decision D6, which kept this record at "Draft for review", was superseded by the user on 2026-10-19; see `docs/architecture/ROADMAP.md` row 10 and `docs/superpowers/specs/2026-10-19-documentation-hygiene-and-suspended-work-design.md` §7. The text below is the point-in-time record.
+
 **Date:** 2026-09-08
 **Scope:** Research only. No specification, no implementation plan, no source/CI changes, no branch, no commit.
 **Baseline:** `main` at `ee2713f` (Phase 9 merged, working tree clean, full verification passed per the Phase 9 closeout).
-
-**Status note (2026-10-19):** the phase is complete and Decision D6, which kept this record at "Draft for review", was superseded by the user on 2026-10-19; see `docs/architecture/ROADMAP.md` row 10 and `docs/superpowers/specs/2026-10-19-documentation-hygiene-and-suspended-work-design.md` §7. The text below is the point-in-time record.
 
 ---
 

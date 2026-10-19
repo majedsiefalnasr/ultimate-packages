@@ -3,7 +3,8 @@
 **Date:** 2026-10-11
 **Status:** **ACCEPTED as PARTIAL** (user, 2026-10-11): an accurate record of the executed G3-E work and its remaining limitations. G3-E is **executed, not fully complete**, and GAP-064 stays **PARTIAL**. Merge and push are **not** authorized (see §9 and §10).
 
-**Status note (2026-10-19):** original lines 20, 67, 85 and 97 (E1-V2 OPEN, E1-B1 BLOCKED, merge not ready) are superseded by original lines 42–43 and 101 (E1-B1 RESOLVED, E1-V2 CLOSED, 2026-10-11), and original lines 3–5 (merge and push not authorized, not merged) are superseded by merge `d3aabf57` on `main`; original line numbers are as of `94807833`; see merge `d3aabf57`. The text below is the point-in-time record.
+**Status note (2026-10-19):** original lines 20, 67, 85 and 97 (E1-V2 OPEN, E1-B1 BLOCKED, merge not ready) are superseded by original lines 42–43 and 101 (E1-B1 RESOLVED, E1-V2 CLOSED, 2026-10-11), and original lines 4–5 (merge and push not authorized, not merged) are superseded by merge `d3aabf57` on `main`; original line numbers are as of `94807833`; see merge `d3aabf57`. The text below is the point-in-time record.
+
 **Branch:** `feature/gap-064-g3e-media-data`, head `57a3ced` (plus this draft), branched from `main` `cad9f85`. Not merged, not pushed.
 **Scope:** Spec `docs/superpowers/specs/2026-10-08-gap-064-g3e-media-data-design.md`; Plan `docs/superpowers/plans/2026-10-08-gap-064-g3e-media-data.md`. Batch records:
 

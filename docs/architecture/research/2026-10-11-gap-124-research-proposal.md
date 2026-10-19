@@ -2,9 +2,10 @@
 
 **Date:** 2026-10-11 (revision 3, after user rulings D-124-1..7)
 **Status:** DRAFT research input, all design rulings recorded (D-124-1..7). The implementation Spec is separate: `docs/superpowers/specs/2026-10-11-gap-124-loading-spinner-design.md`. Not committed. No code changes. GAP-124 stays PARTIAL, GAP-064 stays PARTIAL, GAP-098 and its 2026-10-08 ruling are unchanged, and no other GAP status changes.
-**Baseline:** `main` `b2bd892`.
 
 **Status note (2026-10-19):** committed; its Spec was executed and merged to `main` as `e32c224`, and GAP-124 is `PARTIAL`; see merge `e32c224` and the GAP-124 entry in `docs/architecture/BLUEPRINT_GAPS.md`. The text below is the point-in-time record.
+
+**Baseline:** `main` `b2bd892`.
 
 ## 1. Scope and rulings
 
