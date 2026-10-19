@@ -117,6 +117,7 @@
 - **§7.1:** step 2 says feature PRs merge into `develop`. A new step says a `release/*` or `hotfix/*` PR merges into `main`, and that push starts the existing flow. A final step says `main` is merged back into `develop` after the Version Packages PR merges.
 - **§7.2:** row 2 says "Release or hotfix PR merges to `main`". Row 5's trigger cell drops "unmodified", because ADR-068 changes `ci.yml`'s triggers, and the row adds that GitHub starts no workflow run for a PR created with `GITHUB_TOKEN`, so `ci` does not run on the Version Packages PR while `release.yml` uses the default token.
 - **§7.4:** add a dated paragraph: as of ADR-068, `main` has PR-required protection without a required `ci` check. The fail-closed guarantee described above is therefore **not in place**, until the release token is decided (deferred S3) and `ci` is required on `main`.
+- **Amendment A1 (final review, 2026-10-19):** §7.1 step 6 and the Prerequisite and Failure cells of §7.2 rows 2, 5 and 6 no longer claim a required `ci` check on `main`. Each now points to §7.4.
 - Existing text is otherwise kept.
 
 ### R10 — ADR-068 in `DECISIONS.md`
@@ -197,5 +198,10 @@ The review checked every requirement against `61f90979`, the GitHub API and the 
 | SR-4 | Resolved `BLUEPRINT_GAPS.md` entries (file lines 125, 141, 656 and 2358) and ADR-052 X-12 point to the Playwright jobs in `ci.yml`. After the move these pointers are stale.                             | ADR-068 Consequences; no tier-5 edits. |
 | SR-5 | R9 left MIGRATION §7.2 row 5 claiming `ci.yml`'s trigger is "unmodified".                                                                                                                                | R9.                                    |
 | SR-6 | AC2's wording was ambiguous about the overlap between the two jobs.                                                                                                                                      | AC2 now gives counts 37, 32, 11 and 6. |
+
+**Amendments after approval (2026-10-19, implementation):**
+
+- **A1:** R9 extended. The final whole-branch review found that MIGRATION §7.2 rows 2, 5 and 6 and §7.1 step 6 still claimed a required `ci` gate on `main`, contradicting ADR-068 and §7.4.
+- **A2:** in R10's ADR text, "two registered debts" became "two known debts". The `component-metadata` size regression has no GAP (research §5.1).
 
 Checked and found correct: the `ci` job's permissions (R3); `ci-extended`'s Node setup matching `ci` (R4); no `needs:`, `secrets` or step outputs crossing between the moved jobs and `ci`, and no workflow-level `permissions` in `ci.yml`, so `browser.yml` inherits the same defaults (R5); AC3's line range 193–480 (R5); the Provenance validator does not read vendor archives (R4); `actionlint` passes on `ci.yml` at `61f90979` (AC1).
