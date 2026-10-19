@@ -127,7 +127,7 @@ Append this text after ADR-067, with its status set to the actual decision date:
 >
 > Status: Accepted (user decisions GF-1 to GF-11 and CI-1 to CI-5, 2026-10-19). Evidence: `docs/architecture/research/2026-10-19-gitflow-setup-research.md`.
 >
-> **Context.** Every PR targeted `main`, which also triggers releases. The single CI job was red from two registered debts, so no check could block merges, and `main` had no branch protection.
+> **Context.** Every PR targeted `main`, which also triggers releases. The single CI job was red from two known debts, so no check could block merges, and `main` had no branch protection.
 >
 > **Decision.**
 >

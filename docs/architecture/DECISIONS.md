@@ -804,3 +804,25 @@ Status: Accepted (user approval of the Workstream 1 Specification, decision D1, 
 
 - The Workstream 1 waves implement this. Changed visual baselines need the user's acceptance for each wave.
 - ROADMAP footnote 1 is corrected in Workstream 1's W1 wave.
+
+## ADR-068 — Gitflow branching model and a required fast `ci` check
+
+Status: Accepted (user decisions GF-1 to GF-11 and CI-1 to CI-5, 2026-10-19). Evidence: `docs/architecture/research/2026-10-19-gitflow-setup-research.md`.
+
+**Context.** Every PR targeted `main`, which also triggers releases. The single CI job was red from two known debts, so no check could block merges, and `main` had no branch protection.
+
+**Decision.**
+
+- `main` is the release branch; `develop` is the integration branch. Work branches from `develop` and merges into it. `release/*` branches from `develop` and `hotfix/*` from `main`; both merge into `main` and back into `develop`. After every merge into `main`, `main` is merged back into `develop`.
+- Changesets versioning stays on `main` (`release.yml` unchanged); `baseBranch` is `develop`.
+- CI runs for pushes and PRs on both branches. Diff-based checks measure against the PR's target branch.
+- The `ci` job holds the fast checks that were reliably green. Known-red and slow baseline checks run in the non-required `ci-extended` job. The Playwright jobs run in the non-required `Browser` workflow. Nothing stops running.
+- Merge commits only.
+- Protection on both branches: PR required, 0 approvals, no force-push, no deletion, applied to administrators too. `ci` becomes a required check on `develop` after it passes on three named runs. It is not required on `main` while the Version Packages PR is created with `GITHUB_TOKEN`.
+
+**Consequences.**
+
+- This extends the Phase 0 Specification's branch requirements.
+- MIGRATION §7.4's fail-closed guarantee is not in place until `ci` is required on `main`.
+- The `ci` check is the merge signal. The `CI` workflow's overall result can be red because of `ci-extended`. A check outside `ci` can go red without blocking a merge; the CI closeout rule in `COMPLETION_REGISTER.md` still applies to it.
+- Earlier records that cite `.github/workflows/ci.yml` for the `track-a-browser-visual-a11y` or `track-e-ssr-hydration` jobs (for example in `BLUEPRINT_GAPS.md`) now refer to `.github/workflows/browser.yml`. Those records are not rewritten. ADR-052 X-12's "merge commit's run" means the merge commit's `CI` and `Browser` runs together.
