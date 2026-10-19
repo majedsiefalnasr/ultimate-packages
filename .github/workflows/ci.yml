@@ -32,6 +32,12 @@ jobs:
           node-version: "24.15.0"
           cache: "pnpm"
 
+      - name: Classify changes
+        id: classify
+        env:
+          EVENT: ${{ github.event_name }}
+        run: node scripts/provenance/classify-changes.mjs --base-ref "origin/$BASE" --event "$EVENT"
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -56,19 +62,19 @@ jobs:
         run: pnpm run format:check
 
       - name: Build
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run build
 
       - name: Typecheck
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run typecheck
 
       - name: Validate generated artifacts
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run validate
 
       - name: Metadata API drift check
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: |
           status=0
           pnpm --filter @ultimate/component-metadata run drift:check || status=1
@@ -76,20 +82,20 @@ jobs:
           exit "$status"
 
       - name: Metadata coverage report
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm --filter @ultimate/component-metadata run coverage:report
 
       - name: Test
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run test
 
       - name: Determine affected packages
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         id: affected
         run: pnpm run affected:packages -- --base-ref "origin/$BASE"
 
       - name: Pack/install integrity (affected)
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         env:
           AFFECTED_PACKAGES: ${{ steps.affected.outputs.packages }}
         run: |
@@ -100,23 +106,23 @@ jobs:
           done
 
       - name: Installed-package smoke (CLI/MCP)
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run smoke:installed
 
       - name: CodeQL init
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         uses: github/codeql-action/init@v3
         with:
           languages: javascript-typescript
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: CodeQL analyze
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         id: codeql-analyze
         uses: github/codeql-action/analyze@v3
 
       - name: Resolve SARIF path
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         env:
           SARIF_OUTPUT_DIR: ${{ steps.codeql-analyze.outputs.sarif-output }}
         run: |
@@ -133,15 +139,15 @@ jobs:
           echo "Resolved CodeQL SARIF: $SARIF_PATH"
 
       - name: SAST baseline validation
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run sast:validate -- "$SARIF_PATH"
 
       - name: Fetch pinned vendor archives
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run vendor:fetch -- primereact primevue
 
       - name: Provenance scripts self-tests
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run test:scripts
 
       - name: Package boundary validation
@@ -153,7 +159,7 @@ jobs:
         run: pnpm run ceiling:validate
 
       - name: Compatibility manifest validation
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run compatibility-manifest:validate
 
       - name: CLI package boundary validation
