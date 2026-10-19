@@ -23,6 +23,7 @@ import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
 import { getAllPackageNames, getReverseTransitiveClosure } from "./workspace-graph.mjs";
 import { getMergeBaseSha } from "./baseline-lib.mjs";
+import { isDocsOnlyPath } from "./classify-changes.mjs";
 
 function toShortName(scopedName) {
   return scopedName.replace(/^@ultimate\//, "");
@@ -52,8 +53,16 @@ export function mapChangedFileToPackageName(filePath) {
 // getAllPackageNames() so a changed path under a non-workspace directory
 // (e.g. packages/uix/, which has no package.json) is silently ignored
 // rather than throwing.
+//
+// ADR-069: a changed path outside packages/ that is not docs-only Markdown
+// (the lockfile, root config, scripts/, apps/, workflows) can affect any
+// package, so it widens the result to every package instead of none.
 export function computeAffectedPackages(changedFiles) {
   const allRealPackages = new Set(getAllPackageNames());
+
+  if (changedFiles.some((file) => !mapChangedFileToPackageName(file) && !isDocsOnlyPath(file))) {
+    return [...allRealPackages].map(toShortName).sort();
+  }
 
   const directlyChangedShortNames = new Set(
     changedFiles.map(mapChangedFileToPackageName).filter(Boolean)
