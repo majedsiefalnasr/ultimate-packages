@@ -840,4 +840,4 @@ Status: Accepted (user decisions AO-1 to AO-7, 2026-10-19). Evidence: `docs/arch
 - `affected-packages` treats any non-package, non-docs change as affecting every package.
 - Workflow path filters and job-level conditions on required jobs are not used.
 
-**Consequences.** A docs-only PR's `ci` check proves formatting, lint, supply-chain and the fast validators, not build or tests. Push runs on `develop` and `main` remain the full post-merge signal and the source of ADR-052 X-12 evidence. Package-level scoping (AO-3) is deferred.
+**Consequences.** A docs-only PR's `ci` check proves formatting, lint, supply-chain and the fast validators, not build or tests. Push runs on `develop` and `main` run every step and all browser frameworks, and are the source of ADR-052 X-12 evidence. Pack/install integrity checks no package on a push, because a push's diff against its own branch is empty; this predates ADR-069 and is not changed by it. Package-level scoping (AO-3) is deferred.

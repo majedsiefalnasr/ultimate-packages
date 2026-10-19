@@ -119,7 +119,7 @@ Add: "Run `pnpm install` under Node 24.15.0 in each checkout or worktree before 
 > - `affected-packages` treats any non-package, non-docs change as affecting every package.
 > - Workflow path filters and job-level conditions on required jobs are not used.
 >
-> **Consequences.** A docs-only PR's `ci` check proves formatting, lint, supply-chain and the fast validators, not build or tests. Push runs on `develop` and `main` remain the full post-merge signal and the source of ADR-052 X-12 evidence. Package-level scoping (AO-3) is deferred.
+> **Consequences.** A docs-only PR's `ci` check proves formatting, lint, supply-chain and the fast validators, not build or tests. Push runs on `develop` and `main` run every step and all browser frameworks, and are the source of ADR-052 X-12 evidence. Pack/install integrity checks no package on a push, because a push's diff against its own branch is empty; this predates ADR-069 and is not changed by it. Package-level scoping (AO-3) is deferred.
 
 ### R7 — Landing
 
@@ -158,6 +158,10 @@ The review checked every requirement against `84fcdce2` and the workflow and scr
 | SR-4 | R1 did not fix the JSON form of `frameworks`. R4's `!= '[]'` relies on it.                                                                                                                                                                 | R1 requires `JSON.stringify`.           |
 | SR-5 | The cost of R2's widening was not stated.                                                                                                                                                                                                  | Measured and recorded in §6.            |
 | SR-6 | `develop` moved to `2b93c2e2` after the evidence baseline.                                                                                                                                                                                 | Recorded; the change is unrelated.      |
+
+**Amendment after approval (2026-10-19, final review):**
+
+- **A1:** R6's ADR text said push runs "remain the full post-merge signal". Pack/install integrity selects no package on a push, because the push diff is empty. That predates this work and was not part of R2. The ADR now says so, and the behavior is unchanged.
 
 Checked and found correct:
 
