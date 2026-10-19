@@ -1,7 +1,7 @@
 # Implementation Plan: SSR-Safe Component ID Generation
 
 **Document:** `docs/superpowers/plans/2026-09-12-ssr-safe-component-id-generation-implementation.md`
-**Status:** Draft for review (implementation-ready)
+**Status:** IMPLEMENTED — commits 3203ce6e (React), 68d00a98 (Angular), 496e509b (Vue Menu), all in Track E merge 9ec78838. (Previously: Draft for review (implementation-ready).)
 **Approved specification:** `docs/superpowers/specs/2026-09-12-ssr-safe-component-id-generation-design.md` (Spec Gate: APPROVED)
 **Not part of Phase 10 Track E.** Separate work item, own gate sequence. Track E remains paused at Task 4 complete pending this fix landing (spec §10).
 **Baseline:** `main` at `57772ff`, or the current `phase-10-track-e-ssr-hydration` branch — this plan's tasks apply cleanly to either, since they touch only `packages/ng-core`, `packages/ng`, `packages/react`, `packages/vue`, none of which Track E's Tasks 1-4 modified. Exact base branch/commit to work from is a sequencing decision for whoever executes this plan, not fixed here.

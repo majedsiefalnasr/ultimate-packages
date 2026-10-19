@@ -1,6 +1,6 @@
 # GAP-064 G3-C2 Visual and Accessibility Review Record (Plan Task 10)
 
-**Status:** Task 10 Step 1 record, prepared for the Step 2 HARD USER STOP. No baseline, snapshot or `ACCESSIBILITY_BASELINE.md` change has been made, and nothing is staged or committed. This record states facts for the user's decision; it approves no screenshot or accessibility row.
+**Status:** IMPLEMENTED — closeout b1f6bfa; merge 4b9bfaa5. (Previously: Task 10 Step 1 record, prepared for the Step 2 HARD USER STOP. No baseline, snapshot or `ACCESSIBILITY_BASELINE.md` change has been made, and nothing is staged or committed. This record states facts for the user's decision; it approves no screenshot or accessibility row.)
 
 **Branch / HEAD:** `feature/gap-064-g3c2-menus` @ `c2abcea` (clean). The after run is `0344039` (`git archive`); `c2abcea` adds only the validator, its test, the pre-existing evidence file and CI wiring, and changes no style module, story or e2e spec.
 

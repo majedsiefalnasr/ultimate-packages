@@ -1,6 +1,6 @@
 # Scope Amendment — Vue `Dialog.vue` Module-Scope ID Counter (Sixth Instance)
 
-**Status:** Draft for Spec Review. New, separate gated artifact — not a rewrite of the existing approved specification/plan.
+**Status:** IMPLEMENTED — commit d6f6fb2b, in Track E merge 9ec78838. (Previously: Draft for Spec Review. New, separate gated artifact — not a rewrite of the existing approved specification/plan. The Spec Gate Status section below is historical.)
 **Date:** 2026-09-12
 **Not part of Phase 10 Track E.** Not a modification of the already-completed "SSR-Safe Component ID Generation" work item. This is a narrow, standalone follow-on amendment, addressing exactly one additional instance of the same defect class, discovered after that work item's own Task 4 verification.
 **Origin:** `docs/architecture/research/2026-09-12-vue-dialog-id-counter-sixth-instance-finding.md` (the escalation this amendment answers — full evidence, reproduction reasoning, and fresh exhaustive re-search already established there; not re-derived here).

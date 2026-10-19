@@ -1,6 +1,6 @@
 # Specification — Root-Level `AGENTS.md` Orientation File
 
-**Status:** Draft for Spec Review (amended once — see "Amendment Note" below).
+**Status:** IMPLEMENTED — merge ff2fdad6; AGENTS.md on main. (Previously: Draft for Spec Review (amended once — see "Amendment Note" below).)
 **Date:** 2026-09-12
 **Origin:** `docs/architecture/research/2026-09-12-ai-orientation-design.md` (the approved design this specification implements — every binding decision below traces to that document, referenced as `[Design §N]`). That design itself traces to `docs/architecture/research/2026-09-12-project-reality-and-ai-operating-model-audit.md` (referenced as `[Audit §N]`).
 **Baseline:** `main` at `d391acf`.
