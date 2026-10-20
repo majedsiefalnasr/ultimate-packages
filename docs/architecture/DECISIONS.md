@@ -849,7 +849,7 @@ Status: Accepted (user decisions CO-1 to CO-13, 2026-10-20). Evidence: `docs/arc
 **Decision.**
 
 - **Browser inputs (CO-1).** On a pull request into `develop`, a path may skip a framework's Browser jobs only in two cases:
-  - it is a workspace package in no framework's dependency closure, derived from the package manifests at the PR head, whose contents the Browser jobs delete after building, on every event;
+  - it is a workspace package in no framework's dependency closure, derived from the package manifests at the PR head, whose contents the Browser jobs remove before building, on every event;
   - it is on a closed `NON_BROWSER_PATHS` list, whose files the Browser jobs delete before installing, on every event.
 
   A package in any closure runs all three frameworks.
