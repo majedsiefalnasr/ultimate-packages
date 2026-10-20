@@ -17,7 +17,8 @@
 //
 // Usage (CLI): node scripts/provenance/classify-changes.mjs --event <github.event_name> [--base-ref origin/develop] [--repo-root <dir>]
 //   Prints the result and, inside GitHub Actions ($GITHUB_OUTPUT set),
-//   appends `scope=<docs|full>` and `frameworks=<JSON array>`.
+//   appends `scope=<docs|full>`, `frameworks=<JSON array>` and
+//   `track_a=<JSON matrix>`, the Browser track-a shard matrix (ADR-071).
 //   --remove-non-browser-paths / --remove-out-of-closure-packages [--repo-root <dir>]:
 //   the Browser jobs' removal steps; they exit non-zero on any error.
 
@@ -366,7 +367,7 @@ function runCli() {
   }
 
   console.log(
-    `[classify-changes] event=${event} base=${baseRef ?? "(none)"} scope=${result.scope} frameworks=${JSON.stringify(result.frameworks)}`
+    `[classify-changes] event=${event} base=${baseRef ?? "(none)"} scope=${result.scope} frameworks=${JSON.stringify(result.frameworks)} track_a=${JSON.stringify(trackAMatrix(result.frameworks))}`
   );
   if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, formatOutput(result));
 }

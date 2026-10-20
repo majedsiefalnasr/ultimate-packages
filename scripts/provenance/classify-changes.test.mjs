@@ -159,7 +159,7 @@ test("parseNameStatus: both sides of a rename count, so a file moved out of pack
   assert.deepEqual(classifyChanges(paths, PR), { scope: "full", frameworks: ["ng"] });
 });
 
-test("formatOutput: frameworks are compact JSON, so the empty case is exactly []", () => {
+test('formatOutput: frameworks and track_a are compact JSON, so the empty cases are exactly [] and {"include":[]}', () => {
   assert.equal(
     formatOutput({ scope: "docs", frameworks: [] }),
     'scope=docs\nframeworks=[]\ntrack_a={"include":[]}\n'
@@ -186,6 +186,17 @@ test("CLI: a push is full with all frameworks and calls no git command", () => {
   const notARepo = mkdtempSync(join(tmpdir(), "classify-norepo-"));
   const { output } = runCli(["--event", "push"], notARepo);
   assert.equal(output, `scope=full\nframeworks=["ng","react","vue"]\ntrack_a=${FULL_TRACK_A}\n`);
+});
+
+test("CLI: the log line includes the track_a matrix", () => {
+  const notARepo = mkdtempSync(join(tmpdir(), "classify-norepo-"));
+  const { stdout } = runCli(["--event", "push"], notARepo);
+  assert.match(
+    stdout,
+    new RegExp(
+      `frameworks=\\["ng","react","vue"\\] track_a=${FULL_TRACK_A.replace(/[{}[\]]/g, "\\$&")}`
+    )
+  );
 });
 
 test("CLI: an unresolvable base ref fails closed to full and exits 0", () => {
