@@ -508,3 +508,138 @@ test("CLI --remove-out-of-closure-packages: exits non-zero when the closures can
   assert.notEqual(result.status, 0);
   assert.ok(existsSync(join(root, "packages/x/package.json")));
 });
+
+// --- ADR-070: the framework rule (Spec R5.4) and PRs into main (R6) ---
+
+const CLOSURES = {
+  ng: new Set(["ng", "ng-core", "uix-utils", "onlyng"]),
+  react: new Set(["react", "react-core", "uix-utils"]),
+  vue: new Set(["vue", "vue-core", "uix-utils"]),
+  all: new Set([
+    "ng",
+    "ng-core",
+    "react",
+    "react-core",
+    "vue",
+    "vue-core",
+    "uix-utils",
+    "onlyng",
+    "cli",
+  ]),
+};
+const PRC = { event: "pull_request", baseRef: "origin/develop", closures: CLOSURES };
+const frameworksOf = (paths, options = PRC) => classifyChanges(paths, options).frameworks;
+
+test("rule 3: a package in no closure selects no framework", () => {
+  assert.deepEqual(frameworksOf(["packages/cli/src/x.ts"]), []);
+});
+
+test("rule 3: a package in every closure, in only some closures, or unknown selects all", () => {
+  for (const p of ["packages/uix-utils/x", "packages/onlyng/x", "packages/nope/x"]) {
+    assert.deepEqual(frameworksOf([p]), ALL, p);
+  }
+});
+
+test("rule 4: listed non-browser paths select no framework", () => {
+  for (const p of [
+    "docs/architecture/provenance/react.json",
+    "AGENTS.md",
+    ".changeset/x.md",
+    ".github/codeql/codeql-config.yml",
+    ".github/workflows/ci.yml",
+    "scripts/provenance/validate-provenance.mjs",
+  ]) {
+    assert.deepEqual(frameworksOf([p]), [], p);
+  }
+});
+
+test("rule 5: unlisted paths, browser inputs and new paths select all", () => {
+  for (const p of [
+    "scripts/perf/browser/harness.ts",
+    "scripts/provenance/validate-g3a-accessibility.mjs",
+    "scripts/provenance/new.mjs",
+    "docs/architecture/compatibility-manifest.json",
+    "docs/architecture/ACCESSIBILITY_BASELINE.md",
+    "skills/a/b.md",
+    ".github/workflows/browser.yml",
+    "playwright.config.ts",
+    "pnpm-lock.yaml",
+    "apps/docs/x",
+    "newdir/x",
+  ]) {
+    assert.deepEqual(frameworksOf([p]), ALL, p);
+  }
+});
+
+test("rules combine: a no-closure package next to a framework change selects that framework", () => {
+  assert.deepEqual(frameworksOf(["packages/cli/x", "packages/react/y"]), ["react"]);
+});
+
+test("renames count on both sides across classes", () => {
+  assert.deepEqual(frameworksOf(parseNameStatus("R100\tpackages/ng/a.ts\tpackages/cli/a.ts\n")), [
+    "ng",
+  ]);
+  assert.deepEqual(
+    frameworksOf(
+      parseNameStatus("R100\tdocs/architecture/provenance/a.json\tdocs/architecture/a.json\n")
+    ),
+    ALL
+  );
+});
+
+test("without closures, packages select all; listed and docs-only paths need none", () => {
+  const options = { ...PRC, closures: null };
+  assert.deepEqual(frameworksOf(["packages/cli/x"], options), ALL);
+  assert.deepEqual(frameworksOf(["AGENTS.md"], options), []);
+  assert.deepEqual(classifyChanges(["docs/a.md"], options), { scope: "docs", frameworks: [] });
+});
+
+test("R6: a pull request into main runs everything, even when docs-only", () => {
+  assert.deepEqual(
+    classifyChanges(["docs/a.md"], {
+      event: "pull_request",
+      baseRef: "origin/main",
+      closures: CLOSURES,
+    }),
+    { scope: "full", frameworks: ALL }
+  );
+});
+
+test("CLI: closures that cannot be derived leave packages selecting all, and exit 0", () => {
+  const root = makeTree(
+    defaultRoots({
+      "packages/tool": {},
+      "packages/x": { peerDependencies: { "@ultimate/ng": "workspace:*" } },
+    })
+  );
+  const git = (...a) => execFileSync("git", a, { cwd: root, encoding: "utf8" });
+  git("init", "-q", "-b", "base");
+  git("add", ".");
+  git("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "-m", "base");
+  git("switch", "-q", "-c", "head");
+  writeFileSync(join(root, "packages/tool/x.ts"), "x");
+  git("add", ".");
+  git("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "-m", "head");
+  const { output } = runCli(
+    ["--event", "pull_request", "--base-ref", "base", "--repo-root", root],
+    root
+  );
+  assert.equal(output, 'scope=full\nframeworks=["ng","react","vue"]\n');
+});
+
+test("CLI: a no-closure package change selects no framework", () => {
+  const root = makeTree(defaultRoots({ "packages/tool": {} }));
+  const git = (...a) => execFileSync("git", a, { cwd: root, encoding: "utf8" });
+  git("init", "-q", "-b", "base");
+  git("add", ".");
+  git("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "-m", "base");
+  git("switch", "-q", "-c", "head");
+  writeFileSync(join(root, "packages/tool/x.ts"), "x");
+  git("add", ".");
+  git("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "-m", "head");
+  const { output } = runCli(
+    ["--event", "pull_request", "--base-ref", "base", "--repo-root", root],
+    root
+  );
+  assert.equal(output, "scope=full\nframeworks=[]\n");
+});

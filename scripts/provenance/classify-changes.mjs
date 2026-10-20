@@ -7,14 +7,19 @@
 //   - scope: "docs" when every changed path is Markdown that no CI script
 //     reads, so the required `ci` job may skip its expensive steps; "full"
 //     otherwise.
-//   - frameworks: which of ng/react/vue the Browser track-a jobs must run.
+//   - frameworks: which of ng/react/vue the Browser jobs must run. Only a
+//     workspace package in no framework closure, or a path on the closed
+//     NON_BROWSER_PATHS list, selects none; the Browser jobs physically remove
+//     both (ADR-070).
 //
-// It fails closed: a push, an empty diff, an unknown path or any error
-// yields scope "full" with all three frameworks.
+// It fails closed: a push, a pull request into main, an empty diff, an
+// unknown path or any error yields scope "full" with all three frameworks.
 //
-// Usage (CLI): node scripts/provenance/classify-changes.mjs --event <github.event_name> [--base-ref origin/develop]
+// Usage (CLI): node scripts/provenance/classify-changes.mjs --event <github.event_name> [--base-ref origin/develop] [--repo-root <dir>]
 //   Prints the result and, inside GitHub Actions ($GITHUB_OUTPUT set),
 //   appends `scope=<docs|full>` and `frameworks=<JSON array>`.
+//   --remove-non-browser-paths / --remove-out-of-closure-packages [--repo-root <dir>]:
+//   the Browser jobs' removal steps; they exit non-zero on any error.
 
 import { execFileSync } from "node:child_process";
 import { appendFileSync, existsSync, readdirSync, readFileSync, rmSync } from "node:fs";
@@ -63,20 +68,31 @@ export function isDocsOnlyPath(path) {
   return !ACCESSIBILITY_PREEXISTING.test(path);
 }
 
-function frameworksForPath(path) {
+// Spec R5.4 (ADR-070), rules in order. Only rules 3 and 4 narrow, and the
+// Browser jobs physically remove what they narrow. Without closures, rule 3
+// selects all three.
+function frameworksForPath(path, closures) {
   if (isDocsOnlyPath(path)) return [];
   const matched = ALL_FRAMEWORKS.filter((fw) =>
     FRAMEWORK_PREFIXES[fw].some((prefix) => path.startsWith(prefix))
   );
-  return matched.length > 0 ? matched : ALL_FRAMEWORKS;
+  if (matched.length > 0) return matched;
+  const pkg = /^packages\/([^/]+)\//.exec(path)?.[1];
+  if (pkg !== undefined) {
+    const inNoClosure =
+      closures?.all.has(pkg) && !ALL_FRAMEWORKS.some((fw) => closures[fw].has(pkg));
+    return inNoClosure ? [] : ALL_FRAMEWORKS;
+  }
+  return isNonBrowserPath(path) ? [] : ALL_FRAMEWORKS;
 }
 
-export function classifyChanges(paths, { event }) {
-  if (event !== "pull_request" || paths.length === 0) {
+export function classifyChanges(paths, { event, baseRef, closures = null }) {
+  // ADR-070 (CO-5): a pull request into main runs everything.
+  if (event !== "pull_request" || paths.length === 0 || baseRef === "origin/main") {
     return { scope: "full", frameworks: [...ALL_FRAMEWORKS] };
   }
   const scope = paths.every(isDocsOnlyPath) ? "docs" : "full";
-  const frameworks = new Set(paths.flatMap(frameworksForPath));
+  const frameworks = new Set(paths.flatMap((path) => frameworksForPath(path, closures)));
   return { scope, frameworks: ALL_FRAMEWORKS.filter((fw) => frameworks.has(fw)) };
 }
 
@@ -296,10 +312,19 @@ function runCli() {
   const event = argValue(args, "--event") ?? "";
   const baseRef = argValue(args, "--base-ref");
 
+  let closures = null;
+  try {
+    closures = deriveFrameworkClosures(repoRoot);
+  } catch (error) {
+    console.error(
+      `[classify-changes] framework closures unavailable, packages select all frameworks: ${error.message}`
+    );
+  }
+
   let result;
   try {
     const paths = event === "pull_request" ? getChangedPaths(baseRef) : [];
-    result = classifyChanges(paths, { event });
+    result = classifyChanges(paths, { event, baseRef, closures });
   } catch (error) {
     console.error(`[classify-changes] could not classify, running everything: ${error.message}`);
     result = classifyChanges([], { event: "error" });
