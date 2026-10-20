@@ -33,6 +33,7 @@ concurrency:
 
 jobs:
   stage1:
+    name: Perf Stage 1 measurement
     runs-on: ubuntu-24.04-arm
     container:
       image: mcr.microsoft.com/playwright:v1.63.0-jammy

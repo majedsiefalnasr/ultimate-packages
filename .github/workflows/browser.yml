@@ -11,11 +11,19 @@ on:
   pull_request:
     branches: [main, develop]
 
+# A new push to a pull request cancels that PR's older run. Push runs are
+# keyed by ref and SHA, so they are never cancelled (ADR-070, CO-3).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || format('{0}-{1}', github.ref, github.sha) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   # Decides which frameworks' track-a jobs run (ADR-069): only the changed
   # frameworks on a pull request, all three on a push or when unsure.
   changes:
+    name: Classify changes
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     env:
@@ -46,9 +54,11 @@ jobs:
   # Playwright image and the same CPU architecture (arm64); see
   # docs/superpowers/specs/2026-10-05-ci-visual-environment-design.md.
   track-a-browser-visual-a11y:
+    name: Playwright visual + a11y
     needs: changes
     if: needs.changes.outputs.frameworks != '[]'
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 45
     container:
       image: mcr.microsoft.com/playwright:v1.63.0-jammy
       options: --user 1001
@@ -108,6 +118,8 @@ jobs:
       # tests in this run stay a hard gate.
       - name: Run G3-A verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3a
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3a-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -138,6 +150,8 @@ jobs:
       # list). The visual and layout tests in this run stay a hard gate.
       - name: Run G3-B verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3b
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3b-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -168,6 +182,8 @@ jobs:
       # and evidence list). The visual and layout tests in this run stay a hard gate.
       - name: Run G3-C1 verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3c1
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3c1-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -198,6 +214,8 @@ jobs:
       # and evidence list). The visual, open, layout, x3b and reach tests in this run stay a hard gate.
       - name: Run G3-C2 verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3c2
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3c2-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -226,6 +244,8 @@ jobs:
       # and evidence list). The visual, open, layout, x3b and reach tests in this run stay a hard gate.
       - name: Run G3-D verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3d
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3d-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -254,6 +274,8 @@ jobs:
       # the Prime comparison harness (tooling/prime-reference) is not run in CI.
       - name: Run G3-E verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3e
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3e-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -281,24 +303,32 @@ jobs:
       # checks against the Aura values; no accessibility rows, so no validator step.
       - name: Run W1 verification specs (react)
         if: ${{ !cancelled() && matrix.framework == 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/w1
         run: |
           npx playwright test packages/react/e2e/w1-toolbar.spec.ts \
             --project=react-chromium \
             --project=react-firefox \
             --project=react-webkit
 
+      # One HTML report per tranche invocation (ADR-070, CO-9): each step above
+      # writes its own folder, so a failing tranche keeps its report and traces.
+      - name: Upload Playwright HTML reports (tranches)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-tranches-${{ matrix.framework }}
+          path: playwright-report-tranches/
+          if-no-files-found: ignore
+
   track-e-ssr-hydration:
+    name: SSR hydration
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - framework: ng
-            dir: playground-angular
-          - framework: react
-            dir: playground-react
-          - framework: vue
-            dir: playground-vue
+        framework: [ng, react, vue]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -315,8 +345,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build harness and its workspace dependencies (${{ matrix.dir }})
-        run: pnpm --filter-prod "${{ matrix.dir }}..." run build
+      - name: Build harness and its workspace dependencies (${{ matrix.framework == 'ng' && 'playground-angular' || format('playground-{0}', matrix.framework) }})
+        run: pnpm --filter-prod "${{ matrix.framework == 'ng' && 'playground-angular' || format('playground-{0}', matrix.framework) }}..." run build
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
