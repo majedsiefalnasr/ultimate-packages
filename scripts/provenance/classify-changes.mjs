@@ -116,11 +116,17 @@ export function parseNameStatus(text) {
 // three shards each; react runs as one.
 export const TRACK_A_SHARDS = Object.freeze({ ng: 3, react: 1, vue: 3 });
 
+// A framework without a shard count throws, so its track-a job can never
+// silently vanish from the matrix.
 export function trackAMatrix(frameworks) {
   return {
-    include: frameworks.flatMap((framework) =>
-      Array.from({ length: TRACK_A_SHARDS[framework] }, (_, i) => ({ framework, shard: i + 1 }))
-    ),
+    include: frameworks.flatMap((framework) => {
+      const shards = TRACK_A_SHARDS[framework];
+      if (!Object.hasOwn(TRACK_A_SHARDS, framework)) {
+        throw new Error(`no track-a shard count for ${framework}`);
+      }
+      return Array.from({ length: shards }, (_, i) => ({ framework, shard: i + 1 }));
+    }),
   };
 }
 

@@ -688,3 +688,7 @@ test("trackAMatrix: one framework, and no framework", () => {
   assert.deepEqual(trackAMatrix(["react"]), { include: [{ framework: "react", shard: 1 }] });
   assert.deepEqual(trackAMatrix([]), { include: [] });
 });
+
+test("trackAMatrix: a framework without a shard count throws instead of vanishing", () => {
+  assert.throws(() => trackAMatrix(["svelte"]), /no track-a shard count for svelte/);
+});
