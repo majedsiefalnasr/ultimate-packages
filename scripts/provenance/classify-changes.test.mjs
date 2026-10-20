@@ -480,12 +480,16 @@ test("CLI --remove-non-browser-paths: exits non-zero outside a git repository", 
   assert.notEqual(result.status, 0);
 });
 
-test("CLI --remove-out-of-closure-packages: empties no-closure packages except package.json", () => {
+test("CLI --remove-out-of-closure-packages: empties no-closure packages except a script-less package.json", () => {
   const root = makeTree(
     defaultRoots({
       "packages/ng": { dependencies: { "@ultimate/uix-utils": "workspace:*" } },
-      "packages/uix-utils": {},
-      "packages/cli": {},
+      "packages/uix-utils": { scripts: { build: "tsup" } },
+      "packages/cli": {
+        version: "1.2.3",
+        scripts: { build: "tsup", prepare: "x" },
+        dependencies: { "@ultimate/uix-utils": "workspace:*" },
+      },
     }),
     {
       "packages/cli/src/a.ts": "x",
@@ -496,7 +500,18 @@ test("CLI --remove-out-of-closure-packages: empties no-closure packages except p
   const result = runMode(["--remove-out-of-closure-packages", "--repo-root", root], root);
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(readdirSync(join(root, "packages/cli")), ["package.json"]);
+  // Spec Amendment A1: without scripts, a whole-workspace build skips it.
+  assert.deepEqual(JSON.parse(readFileSync(join(root, "packages/cli/package.json"), "utf8")), {
+    name: "@ultimate/cli",
+    version: "1.2.3",
+    dependencies: { "@ultimate/uix-utils": "workspace:*" },
+  });
   assert.ok(existsSync(join(root, "packages/uix-utils/src/b.ts")), "closure package untouched");
+  assert.deepEqual(
+    JSON.parse(readFileSync(join(root, "packages/uix-utils/package.json"), "utf8")).scripts,
+    { build: "tsup" },
+    "closure package keeps its scripts"
+  );
   assert.match(result.stdout, /cli/);
 });
 

@@ -22,7 +22,14 @@
 //   the Browser jobs' removal steps; they exit non-zero on any error.
 
 import { execFileSync } from "node:child_process";
-import { appendFileSync, existsSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import {
+  appendFileSync,
+  existsSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { join } from "node:path";
 import { getMergeBaseSha } from "./baseline-lib.mjs";
 
@@ -257,7 +264,10 @@ function removeNonBrowserPaths(repoRoot) {
 }
 
 // Empties every packages/* directory in no framework closure, except its
-// package.json, which keeps the pnpm workspace intact. Throws on any error.
+// package.json, which keeps the pnpm workspace intact. The browser jobs run
+// this before building, so the kept package.json loses its scripts and a
+// whole-workspace build skips the package (Spec Amendment A1). Throws on any
+// error.
 function removeOutOfClosurePackages(repoRoot) {
   const packages = noClosurePackages(deriveFrameworkClosures(repoRoot));
   console.log(
@@ -267,6 +277,10 @@ function removeOutOfClosurePackages(repoRoot) {
     const dir = join(repoRoot, "packages", pkg);
     const entries = readdirSync(dir).filter((entry) => entry !== "package.json");
     for (const entry of entries) rmSync(join(dir, entry), { recursive: true, force: true });
+    const manifestPath = join(dir, "package.json");
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    delete manifest.scripts;
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
     console.log(
       `  packages/${pkg}: ${entries.length} entr${entries.length === 1 ? "y" : "ies"} removed`
     );

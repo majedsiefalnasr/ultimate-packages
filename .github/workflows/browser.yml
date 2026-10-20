@@ -87,14 +87,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build workspace packages
-        run: pnpm run build
-
-      # ADR-070 (CO-1): packages in no framework closure are emptied (except
-      # package.json) before Playwright runs, so no browser result can depend
-      # on them.
+      # ADR-070 (CO-1, Spec Amendment A1): packages in no framework closure are
+      # emptied, keeping a script-less package.json, before anything is built,
+      # so no build output or browser result can depend on them.
       - name: Remove packages outside the framework closures
         run: node scripts/provenance/classify-changes.mjs --remove-out-of-closure-packages
+
+      - name: Build workspace packages
+        run: pnpm run build
 
       # The G3-A verification specs run in their own steps below (GAP-064
       # G3-A Spec §14); the strict baseline contract covers every other spec.
@@ -363,14 +363,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build harness and its workspace dependencies (${{ matrix.framework == 'ng' && 'playground-angular' || format('playground-{0}', matrix.framework) }})
-        run: pnpm --filter-prod "${{ matrix.framework == 'ng' && 'playground-angular' || format('playground-{0}', matrix.framework) }}..." run build
-
-      # ADR-070 (CO-1): packages in no framework closure are emptied (except
-      # package.json) before Playwright runs, so no browser result can depend
-      # on them.
+      # ADR-070 (CO-1, Spec Amendment A1): packages in no framework closure are
+      # emptied, keeping a script-less package.json, before anything is built,
+      # so no build output or browser result can depend on them.
       - name: Remove packages outside the framework closures
         run: node scripts/provenance/classify-changes.mjs --remove-out-of-closure-packages
+
+      - name: Build harness and its workspace dependencies (${{ matrix.framework == 'ng' && 'playground-angular' || format('playground-{0}', matrix.framework) }})
+        run: pnpm --filter-prod "${{ matrix.framework == 'ng' && 'playground-angular' || format('playground-{0}', matrix.framework) }}..." run build
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium

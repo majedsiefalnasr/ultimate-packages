@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** APPROVED — Plan Review passed (user, 2026-10-20), revision 4; native execution chosen (superpowers:executing-plans, then one fresh whole-branch review per stage). Spec revision 3 is approved. Stage 1 (Tasks 1–3) merged as [PR #48](https://github.com/majedsiefalnasr/ultimate-packages/pull/48) (`986fe941`); its closeout is `docs/architecture/research/2026-10-20-ci-cd-optimization-stage-1-closeout.md`. Stage 2 (Tasks 4–8) is authorized (user, 2026-10-20), up to but not including the merge; Stage 3 is not. Each stage needs its own implementation authorization (Spec §8), and every commit, push, PR and merge its own.
+**Status:** APPROVED — Plan Review passed (user, 2026-10-20), revision 4; native execution chosen (superpowers:executing-plans, then one fresh whole-branch review per stage). Spec revision 3 is approved. Stage 1 (Tasks 1–3) merged as [PR #48](https://github.com/majedsiefalnasr/ultimate-packages/pull/48) (`986fe941`); its closeout is `docs/architecture/research/2026-10-20-ci-cd-optimization-stage-1-closeout.md`. Stage 2 (Tasks 4–8) is authorized (user, 2026-10-20), up to but not including the merge, with Spec Amendment A1 (user, 2026-10-20); Stage 3 is not. Each stage needs its own implementation authorization (Spec §8), and every commit, push, PR and merge its own.
 
 **Goal:** Implement ADR-070 in three gated stages:
 
@@ -132,7 +132,7 @@
   isNonBrowserPath(path: string): boolean
   noClosurePackages(closures): string[] // packages/* dir names in no closure, sorted
   // CLI: --remove-non-browser-paths [--repo-root <dir>] → deletes matching tracked files, prints count and paths
-  // CLI: --remove-out-of-closure-packages [--repo-root <dir>] → empties each no-closure package dir except package.json, prints packages and counts
+  // CLI: --remove-out-of-closure-packages [--repo-root <dir>] → empties each no-closure package dir except a script-less package.json, prints packages and counts (Spec Amendment A1)
   // both modes exit non-zero on any error (Spec R5.3)
   ```
 
@@ -152,7 +152,7 @@
     - in a temp git repository with tracked `AGENTS.md`, `docs/architecture/provenance/a.json`, `scripts/provenance/classify-changes.mjs` and `README.md`, plus an untracked `.changeset/u.md`: exactly the first two are deleted, and stdout names them;
     - in a non-git temp directory, it exits non-zero.
   - **`--remove-out-of-closure-packages`:**
-    - on a fixture tree with roots `packages/fw` (depends on `packages/shared`) and a no-closure `packages/tool` holding `package.json`, `src/a.ts` and an untracked `dist/a.js`: afterwards `packages/tool` contains only `package.json`, and `packages/shared` is untouched;
+    - on a fixture tree with roots `packages/fw` (depends on `packages/shared`) and a no-closure `packages/tool` holding `package.json`, `src/a.ts` and an untracked `dist/a.js`: afterwards `packages/tool` contains only `package.json`, which has no `scripts`, and `packages/shared` is untouched with its `scripts`;
     - on the `peer-edge` fixture, it exits non-zero.
   - Fixture closures need framework roots. Give `deriveFrameworkClosures` an optional second parameter `roots` (default: Spec R5.1's roots), used only by tests.
 - [ ] **Step 2: Run** `node --test scripts/provenance/classify-changes.test.mjs`. Expected: the new tests FAIL (exports missing); the 15 existing tests pass.
@@ -223,7 +223,7 @@
 - [ ] **Step 2:** In the SSR job, add `needs: changes`, `if: needs.changes.outputs.frameworks != '[]'` and `framework: ${{ fromJSON(needs.changes.outputs.frameworks) }}`.
 - [ ] **Step 3:** In both browser jobs, with no `if:` (Spec R5.3):
   - add "Remove non-browser inputs" (`run: node scripts/provenance/classify-changes.mjs --remove-non-browser-paths`) right after "Setup Node.js";
-  - add "Remove packages outside the framework closures" (`run: node scripts/provenance/classify-changes.mjs --remove-out-of-closure-packages`) right after the job's build step.
+  - add "Remove packages outside the framework closures" (`run: node scripts/provenance/classify-changes.mjs --remove-out-of-closure-packages`) right after "Install dependencies" and before the job's build step (Spec Amendment A1).
 - [ ] **Step 4: Verify.**
   - `actionlint` is clean.
   - `grep -n "== 'full'"` over `.github/workflows` returns nothing.
