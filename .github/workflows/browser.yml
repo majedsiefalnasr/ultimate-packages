@@ -118,6 +118,8 @@ jobs:
       # tests in this run stay a hard gate.
       - name: Run G3-A verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3a
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3a-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -148,6 +150,8 @@ jobs:
       # list). The visual and layout tests in this run stay a hard gate.
       - name: Run G3-B verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3b
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3b-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -178,6 +182,8 @@ jobs:
       # and evidence list). The visual and layout tests in this run stay a hard gate.
       - name: Run G3-C1 verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3c1
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3c1-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -208,6 +214,8 @@ jobs:
       # and evidence list). The visual, open, layout, x3b and reach tests in this run stay a hard gate.
       - name: Run G3-C2 verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3c2
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3c2-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -236,6 +244,8 @@ jobs:
       # and evidence list). The visual, open, layout, x3b and reach tests in this run stay a hard gate.
       - name: Run G3-D verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3d
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3d-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -264,6 +274,8 @@ jobs:
       # the Prime comparison harness (tooling/prime-reference) is not run in CI.
       - name: Run G3-E verification specs (${{ matrix.framework }})
         if: ${{ !cancelled() && matrix.framework != 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3e
         run: |
           npx playwright test packages/${{ matrix.framework }}/e2e/g3e-aura-styles.spec.ts \
             --project=${{ matrix.framework }}-chromium \
@@ -291,11 +303,23 @@ jobs:
       # checks against the Aura values; no accessibility rows, so no validator step.
       - name: Run W1 verification specs (react)
         if: ${{ !cancelled() && matrix.framework == 'react' }}
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/w1
         run: |
           npx playwright test packages/react/e2e/w1-toolbar.spec.ts \
             --project=react-chromium \
             --project=react-firefox \
             --project=react-webkit
+
+      # One HTML report per tranche invocation (ADR-070, CO-9): each step above
+      # writes its own folder, so a failing tranche keeps its report and traces.
+      - name: Upload Playwright HTML reports (tranches)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-tranches-${{ matrix.framework }}
+          path: playwright-report-tranches/
+          if-no-files-found: ignore
 
   track-e-ssr-hydration:
     name: SSR hydration
