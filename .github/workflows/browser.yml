@@ -1,8 +1,8 @@
 # Playwright browser, visual, accessibility and SSR jobs, moved unchanged from
 # ci.yml (ADR-068). They are not required checks: they take 22-26 minutes, and
-# the required `ci` check holds only the fast checks. On a pull request,
-# track-a runs only the changed frameworks; on a push it runs all three
-# (ADR-069). SSR runs on every push and pull request.
+# the required `ci` check holds only the fast checks. On a pull request into
+# develop, track-a and SSR run only the frameworks the change can affect; on a
+# push or a pull request into main they run all three (ADR-069, ADR-070).
 name: Browser
 
 on:
@@ -18,8 +18,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # Decides which frameworks' track-a jobs run (ADR-069): only the changed
-  # frameworks on a pull request, all three on a push or when unsure.
+  # Decides which frameworks' track-a and SSR jobs run (ADR-069, ADR-070): only
+  # the affected frameworks on a pull request, all three on a push or when unsure.
   changes:
     name: Classify changes
     runs-on: ubuntu-latest
@@ -79,11 +79,22 @@ jobs:
           node-version: "24.15.0"
           cache: "pnpm"
 
+      # ADR-070 (CO-1): files on the closed NON_BROWSER_PATHS list are deleted
+      # before anything runs, so no browser result can depend on them.
+      - name: Remove non-browser inputs
+        run: node scripts/provenance/classify-changes.mjs --remove-non-browser-paths
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build workspace packages
         run: pnpm run build
+
+      # ADR-070 (CO-1): packages in no framework closure are emptied (except
+      # package.json) before Playwright runs, so no browser result can depend
+      # on them.
+      - name: Remove packages outside the framework closures
+        run: node scripts/provenance/classify-changes.mjs --remove-out-of-closure-packages
 
       # The G3-A verification specs run in their own steps below (GAP-064
       # G3-A Spec §14); the strict baseline contract covers every other spec.
@@ -323,12 +334,14 @@ jobs:
 
   track-e-ssr-hydration:
     name: SSR hydration
+    needs: changes
+    if: needs.changes.outputs.frameworks != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        framework: [ng, react, vue]
+        framework: ${{ fromJSON(needs.changes.outputs.frameworks) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -342,11 +355,22 @@ jobs:
           node-version: "24.15.0"
           cache: "pnpm"
 
+      # ADR-070 (CO-1): files on the closed NON_BROWSER_PATHS list are deleted
+      # before anything runs, so no browser result can depend on them.
+      - name: Remove non-browser inputs
+        run: node scripts/provenance/classify-changes.mjs --remove-non-browser-paths
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build harness and its workspace dependencies (${{ matrix.framework == 'ng' && 'playground-angular' || format('playground-{0}', matrix.framework) }})
         run: pnpm --filter-prod "${{ matrix.framework == 'ng' && 'playground-angular' || format('playground-{0}', matrix.framework) }}..." run build
+
+      # ADR-070 (CO-1): packages in no framework closure are emptied (except
+      # package.json) before Playwright runs, so no browser result can depend
+      # on them.
+      - name: Remove packages outside the framework closures
+        run: node scripts/provenance/classify-changes.mjs --remove-out-of-closure-packages
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium

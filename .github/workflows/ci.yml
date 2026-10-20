@@ -219,29 +219,37 @@ jobs:
           node-version: "24.15.0"
           cache: "pnpm"
 
+      # Same classifier as `ci`: on a docs-only pull request the steps below
+      # are skipped (ADR-070, CO-2). Pushes and other changes run them all.
+      - name: Classify changes
+        id: classify
+        env:
+          EVENT: ${{ github.event_name }}
+        run: node scripts/provenance/classify-changes.mjs --base-ref "origin/$BASE" --event "$EVENT"
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run build
 
       - name: Bundle-size measurement
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run size:measure
 
       - name: Bundle-size regression check
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run size:validate -- --base-ref "origin/$BASE"
 
       - name: Coverage measurement
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run coverage:measure
 
       - name: Coverage regression check
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run coverage:validate -- --base-ref "origin/$BASE"
 
       - name: Provenance validation
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run provenance:validate -- --base-ref "origin/$BASE"
