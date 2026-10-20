@@ -30,6 +30,7 @@ jobs:
       BASE: ${{ github.base_ref || github.ref_name }}
     outputs:
       frameworks: ${{ steps.classify.outputs.frameworks }}
+      track_a: ${{ steps.classify.outputs.track_a }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -67,8 +68,9 @@ jobs:
       options: --user 1001
     strategy:
       fail-fast: false
-      matrix:
-        framework: ${{ fromJSON(needs.changes.outputs.frameworks) }}
+      # ADR-071 (CO-8): ng and vue run as three shards each, react as one;
+      # the classifier decides the matrix.
+      matrix: ${{ fromJSON(needs.changes.outputs.track_a) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -102,6 +104,7 @@ jobs:
       # The G3-A verification specs run in their own steps below (GAP-064
       # G3-A Spec §14); the strict baseline contract covers every other spec.
       - name: Run Playwright projects (${{ matrix.framework }})
+        if: ${{ matrix.shard == 1 }}
         run: |
           npx playwright test \
             --project=${{ matrix.framework }}-chromium \
@@ -110,17 +113,18 @@ jobs:
             --grep-invert "G3-A|G3-B|G3-C1|G3-C2|G3-D|G3-E|W1"
 
       - name: Accessibility baseline validation (${{ matrix.framework }})
+        if: ${{ matrix.shard == 1 }}
         run: node scripts/provenance/validate-accessibility-baseline.mjs --check "test-results/accessibility/${{ matrix.framework }}/**/*.json"
 
       - name: Upload accessibility reports (${{ matrix.framework }})
-        if: always()
+        if: ${{ always() && matrix.shard == 1 }}
         uses: actions/upload-artifact@v4
         with:
           name: accessibility-reports-${{ matrix.framework }}
           path: test-results/accessibility/${{ matrix.framework }}/
 
       - name: Upload Playwright HTML report (${{ matrix.framework }})
-        if: always()
+        if: ${{ always() && matrix.shard == 1 }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ matrix.framework }}
@@ -131,7 +135,7 @@ jobs:
       # pre-existing ones are evidence-listed, never baselined). The visual
       # tests in this run stay a hard gate.
       - name: Run G3-A verification specs (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 2 }}
         env:
           PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3a
         run: |
@@ -141,7 +145,7 @@ jobs:
             --project=${{ matrix.framework }}-webkit
 
       - name: G3-A differential accessibility validation (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 2 }}
         # An explicit bash shell adds pipefail, so the validator's exit code
         # survives the pipe into tee.
         shell: bash
@@ -151,7 +155,7 @@ jobs:
             | tee test-results/g3a-accessibility/${{ matrix.framework }}-validation.txt
 
       - name: Upload G3-A accessibility reports (${{ matrix.framework }})
-        if: ${{ always() && matrix.framework != 'react' }}
+        if: ${{ always() && matrix.framework != 'react' && matrix.shard == 2 }}
         uses: actions/upload-artifact@v4
         with:
           name: g3a-accessibility-reports-${{ matrix.framework }}
@@ -163,7 +167,7 @@ jobs:
       # verification stories (same contract as G3-A, own story set and evidence
       # list). The visual and layout tests in this run stay a hard gate.
       - name: Run G3-B verification specs (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 3 }}
         env:
           PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3b
         run: |
@@ -173,7 +177,7 @@ jobs:
             --project=${{ matrix.framework }}-webkit
 
       - name: G3-B differential accessibility validation (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 3 }}
         # An explicit bash shell adds pipefail, so the validator's exit code
         # survives the pipe into tee.
         shell: bash
@@ -183,7 +187,7 @@ jobs:
             | tee test-results/g3b-accessibility/${{ matrix.framework }}-validation.txt
 
       - name: Upload G3-B accessibility reports (${{ matrix.framework }})
-        if: ${{ always() && matrix.framework != 'react' }}
+        if: ${{ always() && matrix.framework != 'react' && matrix.shard == 3 }}
         uses: actions/upload-artifact@v4
         with:
           name: g3b-accessibility-reports-${{ matrix.framework }}
@@ -195,7 +199,7 @@ jobs:
       # the G3-C1 verification stories (same contract as G3-A/G3-B, own story set
       # and evidence list). The visual and layout tests in this run stay a hard gate.
       - name: Run G3-C1 verification specs (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 3 }}
         env:
           PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3c1
         run: |
@@ -205,7 +209,7 @@ jobs:
             --project=${{ matrix.framework }}-webkit
 
       - name: G3-C1 differential accessibility validation (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 3 }}
         # An explicit bash shell adds pipefail, so the validator's exit code
         # survives the pipe into tee.
         shell: bash
@@ -215,7 +219,7 @@ jobs:
             | tee test-results/g3c1-accessibility/${{ matrix.framework }}-validation.txt
 
       - name: Upload G3-C1 accessibility reports (${{ matrix.framework }})
-        if: ${{ always() && matrix.framework != 'react' }}
+        if: ${{ always() && matrix.framework != 'react' && matrix.shard == 3 }}
         uses: actions/upload-artifact@v4
         with:
           name: g3c1-accessibility-reports-${{ matrix.framework }}
@@ -227,7 +231,7 @@ jobs:
       # the G3-C2 menu stories (same contract as G3-A/G3-B/G3-C1, own story set
       # and evidence list). The visual, open, layout, x3b and reach tests in this run stay a hard gate.
       - name: Run G3-C2 verification specs (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 1 }}
         env:
           PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3c2
         run: |
@@ -237,7 +241,7 @@ jobs:
             --project=${{ matrix.framework }}-webkit
 
       - name: G3-C2 differential accessibility validation (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 1 }}
         shell: bash
         run: |
           mkdir -p test-results/g3c2-accessibility
@@ -245,7 +249,7 @@ jobs:
             | tee test-results/g3c2-accessibility/${{ matrix.framework }}-validation.txt
 
       - name: Upload G3-C2 accessibility reports (${{ matrix.framework }})
-        if: ${{ always() && matrix.framework != 'react' }}
+        if: ${{ always() && matrix.framework != 'react' && matrix.shard == 1 }}
         uses: actions/upload-artifact@v4
         with:
           name: g3c2-accessibility-reports-${{ matrix.framework }}
@@ -257,7 +261,7 @@ jobs:
       # the G3-D overlay and composite stories (same contract as G3-A..G3-C2, own story set
       # and evidence list). The visual, open, layout, x3b and reach tests in this run stay a hard gate.
       - name: Run G3-D verification specs (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 2 }}
         env:
           PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3d
         run: |
@@ -267,7 +271,7 @@ jobs:
             --project=${{ matrix.framework }}-webkit
 
       - name: G3-D differential accessibility validation (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 2 }}
         shell: bash
         run: |
           mkdir -p test-results/g3d-accessibility
@@ -275,7 +279,7 @@ jobs:
             | tee test-results/g3d-accessibility/${{ matrix.framework }}-validation.txt
 
       - name: Upload G3-D accessibility reports (${{ matrix.framework }})
-        if: ${{ always() && matrix.framework != 'react' }}
+        if: ${{ always() && matrix.framework != 'react' && matrix.shard == 2 }}
         uses: actions/upload-artifact@v4
         with:
           name: g3d-accessibility-reports-${{ matrix.framework }}
@@ -287,7 +291,7 @@ jobs:
       # stories (screenshots, reach, differential accessibility). Not a Prime-parity gate:
       # the Prime comparison harness (tooling/prime-reference) is not run in CI.
       - name: Run G3-E verification specs (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 3 }}
         env:
           PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/g3e
         run: |
@@ -297,7 +301,7 @@ jobs:
             --project=${{ matrix.framework }}-webkit
 
       - name: G3-E differential accessibility validation (${{ matrix.framework }})
-        if: ${{ !cancelled() && matrix.framework != 'react' }}
+        if: ${{ !cancelled() && matrix.framework != 'react' && matrix.shard == 3 }}
         shell: bash
         run: |
           mkdir -p test-results/g3e-accessibility
@@ -305,7 +309,7 @@ jobs:
             | tee test-results/g3e-accessibility/${{ matrix.framework }}-validation.txt
 
       - name: Upload G3-E accessibility reports (${{ matrix.framework }})
-        if: ${{ always() && matrix.framework != 'react' }}
+        if: ${{ always() && matrix.framework != 'react' && matrix.shard == 3 }}
         uses: actions/upload-artifact@v4
         with:
           name: g3e-accessibility-reports-${{ matrix.framework }}
@@ -316,7 +320,7 @@ jobs:
       # Workstream 1 (ADR-067): React components consume Aura tokens through dt(). Computed-style
       # checks against the Aura values; no accessibility rows, so no validator step.
       - name: Run W1 verification specs (react)
-        if: ${{ !cancelled() && matrix.framework == 'react' }}
+        if: ${{ !cancelled() && matrix.framework == 'react' && matrix.shard == 1 }}
         env:
           PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report-tranches/w1
         run: |
@@ -331,7 +335,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-tranches-${{ matrix.framework }}
+          name: playwright-report-tranches-${{ matrix.framework }}-${{ matrix.shard }}
           path: playwright-report-tranches/
           if-no-files-found: ignore
 
