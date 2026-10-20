@@ -104,9 +104,15 @@ function runCli() {
   if (cliArgs[0] === "--") cliArgs.shift();
   const baseRefIndex = cliArgs.indexOf("--base-ref");
   const baseRef = baseRefIndex !== -1 ? cliArgs[baseRefIndex + 1] : "origin/main";
+  const eventIndex = cliArgs.indexOf("--event");
+  const event = eventIndex !== -1 ? cliArgs[eventIndex + 1] : undefined;
 
-  const changedFiles = getChangedFiles(baseRef);
-  const affectedPackages = computeAffectedPackages(changedFiles);
+  // ADR-070 (CO-6): a push's diff against its own branch is empty, so a push
+  // checks every package instead of none.
+  const affectedPackages =
+    event === "push"
+      ? getAllPackageNames().map(toShortName).sort()
+      : computeAffectedPackages(getChangedFiles(baseRef));
 
   console.log(
     `[affected-packages] ${affectedPackages.length} affected package(s) relative to ${baseRef}: ${affectedPackages.join(", ") || "(none)"}`

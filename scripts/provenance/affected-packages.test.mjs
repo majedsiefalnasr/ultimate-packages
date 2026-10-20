@@ -13,6 +13,10 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { computeAffectedPackages, mapChangedFileToPackageName } from "./affected-packages.mjs";
 import { getAllPackageNames, getReverseTransitiveClosure } from "./workspace-graph.mjs";
 
@@ -164,4 +168,21 @@ test("computeAffectedPackages: a scripts/ change affects every package", () => {
 
 test("computeAffectedPackages: a docs-only change affects no package", () => {
   assert.deepEqual(computeAffectedPackages(["docs/superpowers/specs/x-design.md"]), []);
+});
+
+// ADR-070 (CO-6): a push's diff against its own branch is empty, so the CLI
+// checks every package on a push and calls no git command.
+test("CLI --event push lists every package without calling git", () => {
+  const script = resolve(import.meta.dirname, "affected-packages.mjs");
+  const notARepo = mkdtempSync(join(tmpdir(), "affected-norepo-"));
+  const out = join(notARepo, "github-output");
+  writeFileSync(out, "");
+  const stdout = execFileSync(
+    process.execPath,
+    [script, "--event", "push", "--base-ref", "refs/does-not-exist"],
+    { cwd: notARepo, encoding: "utf8", env: { ...process.env, GITHUB_OUTPUT: out } }
+  );
+  assert.match(stdout, new RegExp(`${ALL_SHORT_NAMES.length} affected package`));
+  assert.equal(readFileSync(out, "utf8"), `packages=${ALL_SHORT_NAMES.join(" ")}\n`);
+  assert.equal(ALL_SHORT_NAMES.length, 17);
 });

@@ -100,7 +100,9 @@ jobs:
       - name: Determine affected packages
         if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         id: affected
-        run: pnpm run affected:packages -- --base-ref "origin/$BASE"
+        env:
+          EVENT: ${{ github.event_name }}
+        run: pnpm run affected:packages -- --base-ref "origin/$BASE" --event "$EVENT"
 
       - name: Pack/install integrity (affected)
         if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
