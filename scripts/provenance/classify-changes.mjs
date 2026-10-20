@@ -112,8 +112,23 @@ export function parseNameStatus(text) {
     .flatMap((line) => line.split("\t").slice(1));
 }
 
+// ADR-071 (CO-8): the Browser track-a jobs per framework. ng and vue run as
+// three shards each; react runs as one.
+export const TRACK_A_SHARDS = Object.freeze({ ng: 3, react: 1, vue: 3 });
+
+export function trackAMatrix(frameworks) {
+  return {
+    include: frameworks.flatMap((framework) =>
+      Array.from({ length: TRACK_A_SHARDS[framework] }, (_, i) => ({ framework, shard: i + 1 }))
+    ),
+  };
+}
+
 export function formatOutput({ scope, frameworks }) {
-  return `scope=${scope}\nframeworks=${JSON.stringify(frameworks)}\n`;
+  return (
+    `scope=${scope}\nframeworks=${JSON.stringify(frameworks)}\n` +
+    `track_a=${JSON.stringify(trackAMatrix(frameworks))}\n`
+  );
 }
 
 // --- Browser inputs (ADR-070) ------------------------------------------------
