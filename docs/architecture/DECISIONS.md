@@ -841,3 +841,33 @@ Status: Accepted (user decisions AO-1 to AO-7, 2026-10-19). Evidence: `docs/arch
 - Workflow path filters and job-level conditions on required jobs are not used.
 
 **Consequences.** A docs-only PR's `ci` check proves formatting, lint, supply-chain and the fast validators, not build or tests. Push runs on `develop` and `main` run every step and all browser frameworks, and are the source of ADR-052 X-12 evidence. Pack/install integrity checks no package on a push, because a push's diff against its own branch is empty; this predates ADR-069 and is not changed by it. Package-level scoping (AO-3) is deferred.
+
+## ADR-070 — CI/CD optimization: browser-input scoping, full validation for `main`, run hygiene (amends ADR-069)
+
+Status: Accepted (user decisions CO-1 to CO-13, 2026-10-20). Evidence: `docs/architecture/research/2026-10-20-ci-cd-optimization-research.md`. Each implementation stage needs its own approvals (Spec `docs/superpowers/specs/2026-10-20-ci-cd-optimization-design.md`).
+
+**Decision.**
+
+- **Browser inputs (CO-1).** On a pull request into `develop`, a path may skip a framework's Browser jobs only in two cases:
+  - it is a workspace package in no framework's dependency closure, derived from the package manifests at the PR head, whose contents the Browser jobs delete after building, on every event;
+  - it is on a closed `NON_BROWSER_PATHS` list, whose files the Browser jobs delete before installing, on every event.
+
+  A package in any closure runs all three frameworks.
+
+  No path is narrowed because an analysis found no reference to it. Any other path, any failure to derive the closures and any unmodeled dependency edge runs all three frameworks.
+
+- **Docs-only PRs (CO-2).** The non-required `ci-extended` steps and the SSR jobs follow the same classification as ADR-069's gated steps and track-a.
+- **PRs into `main` (CO-5)** run everything, whatever they change.
+- **Pushes (CO-6).** Pack/install integrity covers every package on a push. This replaces the ADR-069 consequence that it checked none.
+- **Run hygiene (CO-3, CO-4, CO-9).** Superseded pull-request runs are cancelled; push runs never are. Every job in `ci.yml` and `browser.yml` has a timeout. Each Playwright invocation keeps its own HTML report.
+- **Storybook servers (CO-7).** Each track-a job starts only its own framework's Storybook server, and none of the SSR harness servers, which no track-a test uses.
+- **Names (CO-10).** The required check stays `ci`. Non-required jobs get descriptive display names, and step names cited as evidence are kept.
+- **Unchanged.** Push runs stay full, including after docs-only merges (CO-13, AO-6). Hooks are unchanged (CO-12, AO-7). Track-a sharding (CO-8) is reconsidered only after CO-7 has been measured, and only if the critical path is still above about 15 minutes. Parallelizing `ci` (CO-11) stays research-only. ADR-069's other rules still hold: one tested classifier, fail-closed defaults, no workflow path filters, and no job-level conditions on the required job.
+
+**Consequences.**
+
+- A pull request that changes only workspace packages outside the framework closures, `NON_BROWSER_PATHS` files or docs-only Markdown runs no Browser jobs. Push runs on `develop` and `main` still run all of them, so ADR-052 X-12 and ADR-053 AC-1/AC-4/AC-5 CI evidence is unaffected.
+- A dependency edge becomes part of a closure without a classifier change. A new path outside `packages/` runs all frameworks until a reviewed classifier change lists it. A Browser job that comes to need a listed file or a no-closure package fails on every run until the rule changes; it can never pass while depending on one.
+- ADR-069's constraints are unchanged. It made no decision about tooling packages; they ran all frameworks only by its classifier's default (research §13.1).
+- Earlier records that cite the old job names (`ci-extended`, `changes`, `track-a-browser-visual-a11y`, `track-e-ssr-hydration`) refer to the renamed jobs. The job IDs are unchanged, and those records are not rewritten.
+- Runtime savings are estimates until the stage closeouts measure them.
