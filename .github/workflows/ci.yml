@@ -6,9 +6,17 @@ on:
   pull_request:
     branches: [main, develop]
 
+# A new push to a pull request cancels that PR's older run. Push runs are
+# keyed by ref and SHA, so they are never cancelled (ADR-070, CO-3).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || format('{0}-{1}', github.ref, github.sha) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   ci:
+    name: ci
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: read
       security-events: write
@@ -184,7 +192,9 @@ jobs:
   # (GAP-094, missing manifest entries) and Bundle-size regression check
   # (`component-metadata` exceeds its PERFORMANCE.md baseline).
   ci-extended:
+    name: "Baselines (advisory): size, coverage, provenance"
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
     env:
