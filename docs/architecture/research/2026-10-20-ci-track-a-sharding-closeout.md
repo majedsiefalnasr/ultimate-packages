@@ -42,13 +42,13 @@ Push runs, job times from the jobs API:
 
 | Track-a job | Before (Stage 3 push, 39422318507) | After (push, 39468266064)                      |
 | ----------- | ---------------------------------- | ---------------------------------------------- |
-| ng          | 24.6 min                           | shard 1 9.4, shard 2 8.5, shard 3 **10.1** min |
-| vue         | 22.4 min                           | shard 1 7.4, shard 2 7.8, shard 3 8.4 min      |
+| ng          | 24.7 min                           | shard 1 9.5, shard 2 8.5, shard 3 **10.1** min |
+| vue         | 22.4 min                           | shard 1 7.5, shard 2 7.9, shard 3 8.4 min      |
 | react       | 5.5 min                            | 5.6 min                                        |
 
-- **Longest Browser job:** 24.6 → **10.1 min** (estimate: about 10 min).
+- **Longest Browser job:** 24.7 → **10.1 min** (estimate: about 10 min).
 - **Browser workflow wall time** (run start to finish): 25.0 → **10.5 min**.
-- **Track-a runner time:** 52.5 → 57.2 min, **+4.7 runner-minutes** per full run (estimate: +6 to +7).
+- **Track-a runner time:** 52.6 → 57.5 min, **+4.9 runner-minutes** per full run (estimate: +6 to +7). Job times are rounded to 0.1 min from the jobs API's start and completion times (for example ng before: 1 481 s).
 - **Test counts:** every Playwright invocation's count is unchanged: ng 435, 189, 174, 120, 147, 162, 153; vue 396, 207, 174, 123, 138, 162, 162; react 294, 24. All passed, none flaky.
 - **Shard balance:** ng shard 3 (G3-B, G3-C1, G3-E) is the longest shard, as Spec R1 estimated.
 - **Variation:** these are one run each, and GitHub-hosted runner times vary by about a minute between runs of the same commit. The PR run gave the same picture: longest shard 10.2 min.
