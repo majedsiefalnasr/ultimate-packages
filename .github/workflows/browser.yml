@@ -1,6 +1,7 @@
 # Playwright browser, visual, accessibility and SSR jobs, moved unchanged from
-# ci.yml (ADR-068). They are not required checks: they take 22-26 minutes, and
-# the required `ci` check holds only the fast checks. On a pull request into
+# ci.yml (ADR-068). They are not required checks, and the required `ci` check
+# holds only the fast checks. With track-a sharded (ADR-071), a full run's
+# longest job took about 10 minutes when measured on 2026-10-20. On a pull request into
 # develop, track-a and SSR run only the frameworks the change can affect; on a
 # push or a pull request into main they run all three (ADR-069, ADR-070).
 name: Browser

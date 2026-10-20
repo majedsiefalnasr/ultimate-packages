@@ -1,6 +1,6 @@
 # Track-a sharding (CO-8) — closeout record (2026-10-20)
 
-**Status:** Closeout record for the track-a sharding work (ADR-071; Plan Tasks 1–4). It records evidence only. It changes no workflow, script, setting or GAP status. AC1–AC4 are met.
+**Status:** Closeout record for the track-a sharding work (ADR-071; Plan Tasks 1–4). It records evidence and, at the user's request, carries the four final-review minors (§5): comment, log-line and test-name changes to the classifier and a comment change to `browser.yml`. It changes no CI behaviour, setting or GAP status. AC1–AC4 are met.
 
 **Records:** ADR-071; Spec `docs/superpowers/specs/2026-10-20-ci-track-a-sharding-design.md` (revision 2, approved); Plan `docs/superpowers/plans/2026-10-20-ci-track-a-sharding.md` (revision 2, approved); inputs from `2026-10-20-ci-cd-optimization-research.md` §7 and `2026-10-20-ci-cd-optimization-stage-3-closeout.md` §4.
 
@@ -25,7 +25,7 @@
 - `actionlint`, Prettier and lint clean; the pre-push hook passed on Node 24.15.0.
 - Final whole-branch review by a fresh reviewer: 0 Critical, 0 Important, 5 Minor.
   - One Minor was re-graded to Important and fixed test-first: an unknown framework silently dropped its job, which would be a silent narrowing.
-  - Four are deferred (§5).
+  - Four were deferred, then resolved in the closeout PR at the user's request (§5).
 
 ## 3. Acceptance criteria
 
@@ -57,9 +57,9 @@ The critical path was materially shortened: the last Browser check on a full run
 
 ## 5. Open items
 
-- **Deferred minors from the final review:**
-  - `classify-changes.mjs`'s Usage header does not mention the `track_a` output;
-  - the CLI's log line does not print `track_a`;
-  - the existing `formatOutput` test's name predates the `track_a` line;
-  - `browser.yml`'s header comment still says the Browser jobs take 22–26 minutes.
+- **Final-review minors:** at the user's request (2026-10-20), the four deferred minors are resolved in this closeout PR (#53):
+  - `classify-changes.mjs`'s Usage header documents the `track_a` output;
+  - the CLI's log line prints `track_a` (a test that failed first pins it);
+  - the `formatOutput` test name covers the `track_a` line;
+  - `browser.yml`'s header gives the measured duration (about 10 minutes for a full run's longest job) instead of 22–26 minutes.
 - **Not started:** CO-11 (research only); Phase 2; deferred S1–S7.
