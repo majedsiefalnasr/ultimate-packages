@@ -65,6 +65,53 @@ const trackESsrWebServers: TrackESsrServer[] = trackESsrFrameworkFilter
     );
 
 /**
+ * Track A Storybook `webServer` entries, keyed by framework. The rationale for
+ * each entry (ports, the Angular CLI architect target, `--compodoc=false`,
+ * `url` readiness) is documented at the `webServer` array below.
+ */
+const trackAStorybookServers: Record<TrackEFramework, TrackESsrServer> = {
+  ng: {
+    name: "ng-storybook",
+    command: "pnpm --filter @ultimate/ng exec ng run ng:storybook --port=6001 --compodoc=false",
+    url: "http://localhost:6001",
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
+  react: {
+    name: "react-storybook",
+    command: "pnpm --filter @ultimate/react exec storybook dev -p 6002",
+    url: "http://localhost:6002",
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
+  vue: {
+    name: "vue-storybook",
+    command: "pnpm --filter @ultimate/vue exec storybook dev -p 6003",
+    url: "http://localhost:6003",
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
+};
+
+/**
+ * `TRACK_A_FRAMEWORK`-driven selection (ADR-070, CO-7): each Browser track-a
+ * job sets it to its own framework, so only that framework's Storybook server
+ * starts, and no SSR harness server (no track-a spec uses them). When unset,
+ * the selection is unchanged: every Storybook server unless
+ * `TRACK_E_SSR_FRAMEWORK` is set, plus the Track E servers.
+ */
+const trackAFrameworkFilter = process.env.TRACK_A_FRAMEWORK || undefined;
+if (trackAFrameworkFilter !== undefined && !(trackAFrameworkFilter in trackAStorybookServers)) {
+  throw new Error(`TRACK_A_FRAMEWORK must be ng, react or vue, got ${trackAFrameworkFilter}`);
+}
+const webServers: TrackESsrServer[] = trackAFrameworkFilter
+  ? [trackAStorybookServers[trackAFrameworkFilter as TrackEFramework]]
+  : [
+      ...(!trackESsrFrameworkFilter ? Object.values(trackAStorybookServers) : []),
+      ...trackESsrWebServers,
+    ];
+
+/**
  * Root Playwright configuration shared by all three framework packages
  * (@ultimate/ng, @ultimate/react, @ultimate/vue).
  *
@@ -231,33 +278,5 @@ export default defineConfig({
    * `storybook dev -p <port>` package.json scripts (confirmed in Tasks 2
    * and 3 -- no Angular-style CLI restriction applies to either).
    */
-  webServer: [
-    ...(!trackESsrFrameworkFilter
-      ? [
-          {
-            name: "ng-storybook",
-            command:
-              "pnpm --filter @ultimate/ng exec ng run ng:storybook --port=6001 --compodoc=false",
-            url: "http://localhost:6001",
-            reuseExistingServer: !process.env.CI,
-            timeout: 120_000,
-          },
-          {
-            name: "react-storybook",
-            command: "pnpm --filter @ultimate/react exec storybook dev -p 6002",
-            url: "http://localhost:6002",
-            reuseExistingServer: !process.env.CI,
-            timeout: 120_000,
-          },
-          {
-            name: "vue-storybook",
-            command: "pnpm --filter @ultimate/vue exec storybook dev -p 6003",
-            url: "http://localhost:6003",
-            reuseExistingServer: !process.env.CI,
-            timeout: 120_000,
-          },
-        ]
-      : []),
-    ...trackESsrWebServers,
-  ],
+  webServer: webServers,
 });
