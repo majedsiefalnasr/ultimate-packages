@@ -112,8 +112,29 @@ export function parseNameStatus(text) {
     .flatMap((line) => line.split("\t").slice(1));
 }
 
+// ADR-071 (CO-8): the Browser track-a jobs per framework. ng and vue run as
+// three shards each; react runs as one.
+export const TRACK_A_SHARDS = Object.freeze({ ng: 3, react: 1, vue: 3 });
+
+// A framework without a shard count throws, so its track-a job can never
+// silently vanish from the matrix.
+export function trackAMatrix(frameworks) {
+  return {
+    include: frameworks.flatMap((framework) => {
+      const shards = TRACK_A_SHARDS[framework];
+      if (!Object.hasOwn(TRACK_A_SHARDS, framework)) {
+        throw new Error(`no track-a shard count for ${framework}`);
+      }
+      return Array.from({ length: shards }, (_, i) => ({ framework, shard: i + 1 }));
+    }),
+  };
+}
+
 export function formatOutput({ scope, frameworks }) {
-  return `scope=${scope}\nframeworks=${JSON.stringify(frameworks)}\n`;
+  return (
+    `scope=${scope}\nframeworks=${JSON.stringify(frameworks)}\n` +
+    `track_a=${JSON.stringify(trackAMatrix(frameworks))}\n`
+  );
 }
 
 // --- Browser inputs (ADR-070) ------------------------------------------------

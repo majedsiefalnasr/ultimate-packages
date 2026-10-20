@@ -871,3 +871,20 @@ Status: Accepted (user decisions CO-1 to CO-13, 2026-10-20). Evidence: `docs/arc
 - ADR-069's constraints are unchanged. It made no decision about tooling packages; they ran all frameworks only by its classifier's default (research §13.1).
 - Earlier records that cite the old job names (`ci-extended`, `changes`, `track-a-browser-visual-a11y`, `track-e-ssr-hydration`) refer to the renamed jobs. The job IDs are unchanged, and those records are not rewritten.
 - Runtime savings are estimates until the stage closeouts measure them.
+
+## ADR-071 — Shard the Angular and Vue Browser track-a jobs (CO-8)
+
+Status: Accepted (user decision, 2026-10-20). Evidence: `docs/architecture/research/2026-10-20-ci-cd-optimization-research.md` §7 (A2b) and the R11 measurement in `docs/architecture/research/2026-10-20-ci-cd-optimization-stage-3-closeout.md` §4. Implemented by `docs/superpowers/specs/2026-10-20-ci-track-a-sharding-design.md`, separately from the completed ADR-070 stages.
+
+**Context.** ADR-070 deferred CO-8 until CO-7 was measured, and made it eligible only if the longest Browser job stayed above about 15 minutes. After CO-7, track-a ng took 24.6 minutes and vue 22.4 on the push run.
+
+**Decision.**
+
+- The ng and vue track-a jobs each split into three parallel shards. Each shard runs whole suites: a tranche's verification specs and its differential accessibility validator always run in the same shard. React stays one job.
+- The track-a matrix (framework and shard) comes from the tested change classifier, as ADR-069 requires for every scoping decision. Its framework selection is unchanged.
+- No test, validator, baseline, step name, required check or trigger changes.
+
+**Consequences.**
+
+- Each verification step still runs exactly once per framework per run, now in one of three jobs named `Playwright visual + a11y (<framework>, <shard>)`. ADR-052 X-12 evidence reads the same step names across those jobs.
+- A full run uses more runner-minutes (estimated +6 to +7) in exchange for a shorter critical path (estimated about 10 minutes). Both are estimates until measured.

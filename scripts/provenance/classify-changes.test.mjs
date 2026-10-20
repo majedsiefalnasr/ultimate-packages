@@ -21,6 +21,8 @@ import {
   classifyChanges,
   deriveFrameworkClosures,
   formatOutput,
+  TRACK_A_SHARDS,
+  trackAMatrix,
   isDocsOnlyPath,
   isNonBrowserPath,
   NON_BROWSER_PATHS,
@@ -30,6 +32,8 @@ import {
 import { getTransitiveClosure } from "./workspace-graph.mjs";
 
 const ALL = ["ng", "react", "vue"];
+const FULL_TRACK_A =
+  '{"include":[{"framework":"ng","shard":1},{"framework":"ng","shard":2},{"framework":"ng","shard":3},{"framework":"react","shard":1},{"framework":"vue","shard":1},{"framework":"vue","shard":2},{"framework":"vue","shard":3}]}';
 const PR = { event: "pull_request" };
 const SCRIPT = resolve(import.meta.dirname, "classify-changes.mjs");
 
@@ -156,10 +160,13 @@ test("parseNameStatus: both sides of a rename count, so a file moved out of pack
 });
 
 test("formatOutput: frameworks are compact JSON, so the empty case is exactly []", () => {
-  assert.equal(formatOutput({ scope: "docs", frameworks: [] }), "scope=docs\nframeworks=[]\n");
+  assert.equal(
+    formatOutput({ scope: "docs", frameworks: [] }),
+    'scope=docs\nframeworks=[]\ntrack_a={"include":[]}\n'
+  );
   assert.equal(
     formatOutput({ scope: "full", frameworks: ["ng"] }),
-    'scope=full\nframeworks=["ng"]\n'
+    'scope=full\nframeworks=["ng"]\ntrack_a={"include":[{"framework":"ng","shard":1},{"framework":"ng","shard":2},{"framework":"ng","shard":3}]}\n'
   );
 });
 
@@ -178,7 +185,7 @@ function runCli(args, cwd) {
 test("CLI: a push is full with all frameworks and calls no git command", () => {
   const notARepo = mkdtempSync(join(tmpdir(), "classify-norepo-"));
   const { output } = runCli(["--event", "push"], notARepo);
-  assert.equal(output, 'scope=full\nframeworks=["ng","react","vue"]\n');
+  assert.equal(output, `scope=full\nframeworks=["ng","react","vue"]\ntrack_a=${FULL_TRACK_A}\n`);
 });
 
 test("CLI: an unresolvable base ref fails closed to full and exits 0", () => {
@@ -186,7 +193,7 @@ test("CLI: an unresolvable base ref fails closed to full and exits 0", () => {
     ["--event", "pull_request", "--base-ref", "origin/no-such-branch-for-test"],
     process.cwd()
   );
-  assert.equal(output, 'scope=full\nframeworks=["ng","react","vue"]\n');
+  assert.equal(output, `scope=full\nframeworks=["ng","react","vue"]\ntrack_a=${FULL_TRACK_A}\n`);
 });
 
 // --- ADR-070: framework closures, the non-browser list and the removal modes ---
@@ -639,7 +646,7 @@ test("CLI: closures that cannot be derived leave packages selecting all, and exi
     ["--event", "pull_request", "--base-ref", "base", "--repo-root", root],
     root
   );
-  assert.equal(output, 'scope=full\nframeworks=["ng","react","vue"]\n');
+  assert.equal(output, `scope=full\nframeworks=["ng","react","vue"]\ntrack_a=${FULL_TRACK_A}\n`);
 });
 
 test("CLI: a no-closure package change selects no framework", () => {
@@ -656,5 +663,32 @@ test("CLI: a no-closure package change selects no framework", () => {
     ["--event", "pull_request", "--base-ref", "base", "--repo-root", root],
     root
   );
-  assert.equal(output, "scope=full\nframeworks=[]\n");
+  assert.equal(output, 'scope=full\nframeworks=[]\ntrack_a={"include":[]}\n');
+});
+
+// --- ADR-071: the track-a shard matrix ---
+
+test("trackAMatrix: ng and vue get three shards, react one, in framework then shard order", () => {
+  const { include } = trackAMatrix(["ng", "react", "vue"]);
+  assert.deepEqual(include, [
+    { framework: "ng", shard: 1 },
+    { framework: "ng", shard: 2 },
+    { framework: "ng", shard: 3 },
+    { framework: "react", shard: 1 },
+    { framework: "vue", shard: 1 },
+    { framework: "vue", shard: 2 },
+    { framework: "vue", shard: 3 },
+  ]);
+  for (const entry of include) assert.equal(typeof entry.shard, "number");
+  assert.deepEqual({ ...TRACK_A_SHARDS }, { ng: 3, react: 1, vue: 3 });
+  assert.ok(Object.isFrozen(TRACK_A_SHARDS));
+});
+
+test("trackAMatrix: one framework, and no framework", () => {
+  assert.deepEqual(trackAMatrix(["react"]), { include: [{ framework: "react", shard: 1 }] });
+  assert.deepEqual(trackAMatrix([]), { include: [] });
+});
+
+test("trackAMatrix: a framework without a shard count throws instead of vanishing", () => {
+  assert.throws(() => trackAMatrix(["svelte"]), /no track-a shard count for svelte/);
 });
