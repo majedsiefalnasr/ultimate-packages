@@ -86,13 +86,15 @@ Real Stage-1 baseline, measured 2026-09-09 against commit `62480b6` (Node v22.22
 
 Re-baselined rows (`ng-core`, `ng`, `react-core`, `react`, `themes`, `uix-utils`, `vue-core`, `vue`), measured 2026-10-03 against commit `986dbcc` (Node v20.19.2, pnpm 9.6.0) via `pnpm run build && pnpm run size:measure`: Prime-parity component additions (Phase C on `main`, then the Prime-parity audit and follow-up phases' Aura preset modules, 61 additional `ng` secondary entry points and per-component React/Vue subpaths) grew these barrels past the 15% gate. All other rows are unchanged from the Stage-1 baseline.
 
+Re-baselined row (`component-metadata`), measured 2026-10-21 against commit `a5195a6b` (Node v24.15.0, pnpm 9.6.0) via `pnpm run build && pnpm run size:measure`: the package ships its component records as data, and their source grew from about 85 KB to about 110 KB after the Table, Scroller and Paginator public-API facts were recorded (`320dfc78`, `286eac66`, 2026-10-18; `table.ts` alone grew from about 25 KB to about 42 KB). `index.mjs` gzip went from 7.93 KB to 10.03 KB (+26.5%), past the 15% gate. All other rows are unchanged.
+
 ### Package size
 
 | Package                     | dist/ size | dist/ file count | index.mjs gzip size |
 | --------------------------- | ---------- | ---------------- | ------------------- |
 | packages/ai                 | 162.7 KB   | 12               | 3.35 KB             |
 | packages/cli                | 84.0 KB    | 5                | 0.05 KB             |
-| packages/component-metadata | 165.0 KB   | 3                | 7.93 KB             |
+| packages/component-metadata | 214.4 KB   | 3                | 10.03 KB            |
 | packages/component-schema   | 29.3 KB    | 3                | 2.37 KB             |
 | packages/mcp                | 93.0 KB    | 5                | 2.97 KB             |
 | packages/ng-core            | 190.0 KB   | 6                | 16.53 KB            |
