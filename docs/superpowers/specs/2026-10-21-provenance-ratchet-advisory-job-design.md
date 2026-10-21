@@ -1,7 +1,7 @@
 # Provenance Ratchet for the Advisory CI Job — Design
 
 **Date:** 2026-10-21
-**Status:** DRAFT (revision 2; the three open questions of revision 1 are decided by the user, 2026-10-21, §7). Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
+**Status:** DRAFT (revision 3). Spec Review round 1 returned APPROVED WITH CHANGES (findings SR-1 to SR-5 applied, §8); awaiting the user's Spec Review decision. Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
 
 - Brainstorming outcome of 2026-10-21, after the user chose Option 3 of the open questions in `docs/architecture/research/2026-10-21-co-11-ci-parallelization-and-advisory-failures.md` §5.
 - ADR-072 (draft) records the decision. This work is separate from the CI/CD optimization (ADR-070) and the sharding work (ADR-071).
@@ -47,10 +47,13 @@ The `CI` workflow is red on almost every run because the advisory job "Baselines
   - listed but no longer missing (an entry now exists, or the file is gone): failure, with the instruction to remove it from the list, so the list only shrinks.
 - Without the flag the validator behaves exactly as today (strict, exit 1 on any missing entry).
 - The ratchet also reports the remaining count, so the log shows progress.
+- The flag's value is validated: the file must exist, be valid JSON of the shape in R1, and have sorted, duplicate-free arrays. A malformed list is a failure, never an empty list (fail closed).
+- A package that fails for any other reason (classifier error, missing or invalid manifest) still fails with the ratchet on. Only "has no entry" lines are matched against the list.
 
 ### R3 — CI
 
 - The Provenance validation step in the advisory job passes the flag. The step name stays, because closeouts cite step names.
+- The classifier's own tests enumerate files by path (`NON_BROWSER_PATHS` snapshot and the `scripts/provenance/` entries). The implementation PR updates those tests for `known-missing.json` and for any new script or test file, and shows the classifier output for the PR's own diff.
 - No other step, job, trigger or required check changes.
 
 ### R4 — Backfill batches
@@ -97,3 +100,15 @@ The `CI` workflow is red on almost every run because the advisory job "Baselines
 3. **Order:** the Bundle-size baseline PR and this work are independent PRs. The Bundle-size PR goes first, so that when this one lands the whole advisory job can turn green.
 
 **Still open for Spec Review:** whether the validator also rejects an unsorted or duplicated list, and whether a review note (for example CODEOWNERS) guards edits to the list (K3).
+
+## 8. Spec Review record
+
+**Round 1 (in-session, 2026-10-21),** against ADR-072 (draft), `AGENTS.md`, `scripts/provenance/validate-provenance.mjs`, `classify-changes.mjs` and its tests, and the other readers of `docs/architecture/provenance/`:
+
+- **SR-1 (applied, §3 R2):** the validator reads `docs/architecture/provenance/<name>.json` by explicit name only, and no other script lists that directory (checked with grep), so a `known-missing.json` file beside the manifests breaks no reader. No change to behaviour, recorded as evidence.
+- **SR-2 (applied, §3 R2):** the ratchet must match only "has no entry" lines. Classifier errors, missing manifests and invalid manifests are different failures and must stay failures with the flag on, or the ratchet would hide them.
+- **SR-3 (applied, §3 R2):** a missing, unreadable or malformed list must fail, not be treated as empty.
+- **SR-4 (applied, §3 R3):** `classify-changes.test.mjs` has a snapshot test that lists every tracked file `isNonBrowserPath` matches, and a list of `scripts/provenance/` files. Adding `known-missing.json` and any new script or test changes those snapshots. The implementation PR must update them. Checked: a diff of only `known-missing.json` classifies as `scope=full`, `frameworks=[]`, so no Browser job runs, as intended.
+- **SR-5 (applied, §7):** the evidence count was re-run under Node 24.15.0 (the version the repository expects) and equals the Node 23.11 count, so risk K5 is reduced to a re-check at implementation time.
+
+**Not found:** a conflict with ADR-062, ADR-064, ADR-068, ADR-069 or ADR-070. The ratchet is limited to the advisory job, so ADR-069's rules on the required job are untouched.
