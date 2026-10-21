@@ -104,6 +104,48 @@ export const ALL_PACKAGES = [
 
 const ANGULAR_PACKAGES = new Set(["ng", "ng-core"]);
 
+// --- Report freshness ----------------------------------------------------
+//
+// A coverage-summary.json only describes the code that existed when it was
+// written. Without this check, a report left behind by an older run is read as
+// if it were current: a local `coverage:measure` that stopped early once made
+// React and Vue look like 8.6% and 11.3% because their September reports were
+// still on disk. CI measures from scratch, so this guards local use and any
+// setup where a report can outlive the code.
+//
+// The tolerance covers clock and file-system timestamp granularity only. It is
+// not a way to hide a generated file that is rewritten after the report: such a
+// file must be excluded from the measured roots instead.
+export const FRESHNESS_TOLERANCE_SECONDS = 2;
+
+// The paths whose files count as the code a package's coverage report
+// describes: the package's source tree and the config that decides what is
+// measured. ng and ng-core are driven by `ng test`, which reads angular.json.
+export function measuredSourceRoots(packageName) {
+  const pkgRoot = `packages/${packageName}`;
+  const config = ANGULAR_PACKAGES.has(packageName) ? "angular.json" : "vitest.config.ts";
+  return [`${pkgRoot}/src`, `${pkgRoot}/${config}`];
+}
+
+// Pure decision. `sourceMtimes` is [{ path, mtimeMs }]. The report is stale when
+// the newest source file is newer than the report by more than the tolerance.
+// With no source files there is nothing to compare, so it is ok; a missing
+// report is reported separately by the caller.
+export function evaluateReportFreshness({ reportMtimeMs, sourceMtimes, toleranceSeconds }) {
+  let newest = null;
+  for (const source of sourceMtimes) {
+    if (newest === null || source.mtimeMs > newest.mtimeMs) newest = source;
+  }
+  if (newest === null) return { ok: true };
+  if (newest.mtimeMs - reportMtimeMs <= toleranceSeconds * 1000) return { ok: true };
+  return {
+    ok: false,
+    newestPath: newest.path,
+    newestMtimeMs: newest.mtimeMs,
+    reportMtimeMs,
+  };
+}
+
 // Resolves each package's coverage-summary.json path. The 15 Vitest-native
 // packages write to <pkg>/coverage/coverage-summary.json (this task's
 // `reportsDirectory: "./coverage"` in each vitest.config.ts). ng/ng-core

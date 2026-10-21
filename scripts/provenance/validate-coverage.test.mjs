@@ -16,7 +16,10 @@ import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
 import {
   ALL_PACKAGES,
+  FRESHNESS_TOLERANCE_SECONDS,
   evaluatePackageCoverage,
+  evaluateReportFreshness,
+  measuredSourceRoots,
   packageCoverageSummaryPath,
   parsePhase10CoverageTable,
 } from "./validate-coverage.mjs";
@@ -500,4 +503,104 @@ test("parsePhase10CoverageTable returns an empty map when there is no Phase 10 C
   const coverage = parsePhase10CoverageTable(markdown);
 
   assert.strictEqual(coverage.size, 0);
+});
+
+// --- Report freshness (coverage-baselines-and-report-freshness Spec R1) -----------
+
+const T0 = 1_800_000_000_000; // a fixed instant, in ms
+const SEC = 1000;
+
+test("FRESHNESS_TOLERANCE_SECONDS is a small positive number", () => {
+  assert.equal(typeof FRESHNESS_TOLERANCE_SECONDS, "number");
+  assert.ok(FRESHNESS_TOLERANCE_SECONDS > 0 && FRESHNESS_TOLERANCE_SECONDS <= 10);
+});
+
+test("freshness: a report newer than every source is ok", () => {
+  const result = evaluateReportFreshness({
+    reportMtimeMs: T0 + 60 * SEC,
+    sourceMtimes: [
+      { path: "packages/x/src/a.ts", mtimeMs: T0 },
+      { path: "packages/x/src/b.ts", mtimeMs: T0 + 10 * SEC },
+    ],
+    toleranceSeconds: 2,
+  });
+  assert.deepEqual(result, { ok: true });
+});
+
+test("freshness: a report older than one source by more than the tolerance is stale and names that source", () => {
+  const result = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [
+      { path: "packages/x/src/old.ts", mtimeMs: T0 - 100 * SEC },
+      { path: "packages/x/src/new.ts", mtimeMs: T0 + 3 * SEC },
+    ],
+    toleranceSeconds: 2,
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.newestPath, "packages/x/src/new.ts");
+  assert.equal(result.newestMtimeMs, T0 + 3 * SEC);
+  assert.equal(result.reportMtimeMs, T0);
+});
+
+test("freshness: a source newer than the report by less than the tolerance is still ok", () => {
+  const result = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [{ path: "packages/x/src/a.ts", mtimeMs: T0 + 1 * SEC }],
+    toleranceSeconds: 2,
+  });
+  assert.deepEqual(result, { ok: true });
+});
+
+test("freshness: a source newer by exactly the tolerance is ok, one millisecond more is stale", () => {
+  const at = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [{ path: "a", mtimeMs: T0 + 2 * SEC }],
+    toleranceSeconds: 2,
+  });
+  const over = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [{ path: "a", mtimeMs: T0 + 2 * SEC + 1 }],
+    toleranceSeconds: 2,
+  });
+  assert.equal(at.ok, true);
+  assert.equal(over.ok, false);
+});
+
+test("freshness: equal times are ok", () => {
+  const result = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [{ path: "a", mtimeMs: T0 }],
+    toleranceSeconds: 2,
+  });
+  assert.deepEqual(result, { ok: true });
+});
+
+test("freshness: no source files means nothing to compare, so ok", () => {
+  assert.deepEqual(
+    evaluateReportFreshness({ reportMtimeMs: T0, sourceMtimes: [], toleranceSeconds: 2 }),
+    { ok: true }
+  );
+});
+
+test("measuredSourceRoots: Vitest-native packages measure src and vitest.config.ts", () => {
+  assert.deepEqual(measuredSourceRoots("react"), [
+    "packages/react/src",
+    "packages/react/vitest.config.ts",
+  ]);
+});
+
+test("measuredSourceRoots: ng and ng-core measure src and angular.json", () => {
+  assert.deepEqual(measuredSourceRoots("ng"), ["packages/ng/src", "packages/ng/angular.json"]);
+  assert.deepEqual(measuredSourceRoots("ng-core"), [
+    "packages/ng-core/src",
+    "packages/ng-core/angular.json",
+  ]);
+});
+
+test("measuredSourceRoots: every gated package has a non-empty list under its own directory", () => {
+  for (const name of ALL_PACKAGES) {
+    const roots = measuredSourceRoots(name);
+    assert.ok(roots.length > 0, name);
+    for (const root of roots) assert.ok(root.startsWith(`packages/${name}/`), `${name}: ${root}`);
+  }
 });
