@@ -1,14 +1,14 @@
 # Provenance Ratchet for the Advisory CI Job — Design
 
 **Date:** 2026-10-21
-**Status:** DRAFT (revision 1). Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
+**Status:** DRAFT (revision 2; the three open questions of revision 1 are decided by the user, 2026-10-21, §7). Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
 
 - Brainstorming outcome of 2026-10-21, after the user chose Option 3 of the open questions in `docs/architecture/research/2026-10-21-co-11-ci-parallelization-and-advisory-failures.md` §5.
 - ADR-072 (draft) records the decision. This work is separate from the CI/CD optimization (ADR-070) and the sharding work (ADR-071).
 
 **Inputs, not guarantees:** the research note above (§3: the advisory job failed in 10 of 10 full runs on the same two steps); the GAP-094 Specification `2026-10-15-gap-094-production-provenance-scope-design.md` (§3.4, §4 items 4 and 6); `scripts/provenance/validate-provenance.mjs`; `scripts/provenance/validate-sast-baseline.mjs` as the precedent for a grandfathered list.
 
-**Evidence baseline:** `develop` = `2f1d1b86`. Local run of `node scripts/provenance/validate-provenance.mjs --base-ref origin/develop` on Node 23.11 (the repository expects Node 24.15): 645 missing entries, split ng 164, react 216, vue 265. The classifier output is not expected to depend on the Node version, but a run under Node 24.15 must confirm the count before implementation.
+**Evidence baseline:** `develop` = `2f1d1b86`. `node scripts/provenance/validate-provenance.mjs --base-ref origin/develop` under **Node 24.15.0** (the version the repository expects; Node 23.11 gave the same count): 645 missing entries, split ng 164, react 216, vue 265.
 
 ## 1. Problem
 
@@ -36,7 +36,7 @@ The `CI` workflow is red on almost every run because the advisory job "Baselines
 
 ### R1 — Known-missing list
 
-- A committed file holds the grandfathered list, one entry per production file, grouped by manifest. Its path and format follow the SAST baseline precedent and are settled in the Plan.
+- A committed JSON file, `docs/architecture/provenance/known-missing.json`, holds the grandfathered list: an object keyed by manifest name (`ng`, `react`, `vue`), each value a sorted array of production file paths. The path sits beside the manifests, so the classifier already treats it as a provenance path (`NON_BROWSER_PATHS`) and it triggers no extra browser job.
 - The list is generated from the validator's own output at the evidence baseline. It is never edited by hand to make a failure pass.
 
 ### R2 — Ratchet mode in the validator
@@ -90,8 +90,10 @@ The `CI` workflow is red on almost every run because the advisory job "Baselines
 2. One implementation PR from `develop` to `develop`: the list, the validator flag and its tests, the `ci.yml` flag, and the record updates (R5).
 3. The Bundle-size baseline update is a separate PR and is not a dependency.
 
-## 7. Open questions for Spec Review
+## 7. Decisions taken at brainstorming (user, 2026-10-21)
 
-1. List location and format (a Markdown table like `SAST_BASELINE.md`, or a JSON file next to the manifests).
-2. Flag name, and whether the CI call should also fail when the list is not sorted.
-3. Whether the advisory job's red result is acceptable until the Bundle-size PR lands, or the two PRs land together.
+1. **List:** JSON beside the manifests (`docs/architecture/provenance/known-missing.json`), not a Markdown table (R1).
+2. **Flag:** `--known-missing <path>`. The ratchet cannot run without an explicit list (R2).
+3. **Order:** the Bundle-size baseline PR and this work are independent PRs. The Bundle-size PR goes first, so that when this one lands the whole advisory job can turn green.
+
+**Still open for Spec Review:** whether the validator also rejects an unsorted or duplicated list, and whether a review note (for example CODEOWNERS) guards edits to the list (K3).
