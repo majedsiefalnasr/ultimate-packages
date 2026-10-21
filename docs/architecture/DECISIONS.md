@@ -888,3 +888,22 @@ Status: Accepted (user decision, 2026-10-20). Evidence: `docs/architecture/resea
 
 - Each verification step still runs exactly once per framework per run, now in one of three jobs named `Playwright visual + a11y (<framework>, <shard>)`. ADR-052 X-12 evidence reads the same step names across those jobs.
 - A full run uses more runner-minutes (estimated +6 to +7) in exchange for a shorter critical path (estimated about 10 minutes). Both are estimates until measured.
+
+## ADR-072 — Provenance validation in the advisory CI job becomes a ratchet over the known-missing list
+
+Status: Proposed (draft, 2026-10-21; not accepted until the user decides). Evidence: `docs/architecture/research/2026-10-21-co-11-ci-parallelization-and-advisory-failures.md` §3. Would be implemented by `docs/superpowers/specs/2026-10-21-provenance-ratchet-advisory-job-design.md`.
+
+**Context.** The advisory job "Baselines (advisory): size, coverage, provenance" failed in every full run inspected, so the `CI` workflow is red while the required `ci` check is green (ADR-068). One of the two failing steps, Provenance validation, fails on 645 known missing manifest entries (GAP-094: ng 164, react 216, vue 265). A new missing entry cannot be told apart from the old debt.
+
+**Decision.**
+
+- In the advisory job only, the Provenance validation step compares missing entries with a committed known-missing list. A missing entry not on the list fails. A listed entry that is no longer missing also fails, so the list can only shrink.
+- Without the ratchet flag the validator stays strict. No manifest entry is backfilled by this decision.
+- GAP-094 stays OPEN until the list is empty and the validator exits 0 without the flag.
+
+**Consequences.**
+
+- The advisory job's Provenance step turns green and starts to catch new debt. The Bundle-size step remains red until its own baseline is updated in a separate PR.
+- Backfill batch PRs also edit the list. The GAP-094 Specification's resolved condition is amended accordingly.
+- The advisory job stays a non-required check. Making it required is a separate decision.
+- Not a change to the production-scope classifier (ADR-062), the diff check, or the `ci` job.
