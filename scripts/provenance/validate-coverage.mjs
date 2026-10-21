@@ -46,7 +46,7 @@ import {
   selectBaselinePath,
 } from "./baseline-lib.mjs";
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const REGRESSION_THRESHOLD_POINTS = 2.0;
@@ -103,6 +103,48 @@ export const ALL_PACKAGES = [
 ];
 
 const ANGULAR_PACKAGES = new Set(["ng", "ng-core"]);
+
+// --- Report freshness ----------------------------------------------------
+//
+// A coverage-summary.json only describes the code that existed when it was
+// written. Without this check, a report left behind by an older run is read as
+// if it were current: a local `coverage:measure` that stopped early once made
+// React and Vue look like 8.6% and 11.3% because their September reports were
+// still on disk. CI measures from scratch, so this guards local use and any
+// setup where a report can outlive the code.
+//
+// The tolerance covers clock and file-system timestamp granularity only. It is
+// not a way to hide a generated file that is rewritten after the report: such a
+// file must be excluded from the measured roots instead.
+export const FRESHNESS_TOLERANCE_SECONDS = 2;
+
+// The paths whose files count as the code a package's coverage report
+// describes: the package's source tree and the config that decides what is
+// measured. ng and ng-core are driven by `ng test`, which reads angular.json.
+export function measuredSourceRoots(packageName) {
+  const pkgRoot = `packages/${packageName}`;
+  const config = ANGULAR_PACKAGES.has(packageName) ? "angular.json" : "vitest.config.ts";
+  return [`${pkgRoot}/src`, `${pkgRoot}/${config}`];
+}
+
+// Pure decision. `sourceMtimes` is [{ path, mtimeMs }]. The report is stale when
+// the newest source file is newer than the report by more than the tolerance.
+// With no source files there is nothing to compare, so it is ok; a missing
+// report is reported separately by the caller.
+export function evaluateReportFreshness({ reportMtimeMs, sourceMtimes, toleranceSeconds }) {
+  let newest = null;
+  for (const source of sourceMtimes) {
+    if (newest === null || source.mtimeMs > newest.mtimeMs) newest = source;
+  }
+  if (newest === null) return { ok: true };
+  if (newest.mtimeMs - reportMtimeMs <= toleranceSeconds * 1000) return { ok: true };
+  return {
+    ok: false,
+    newestPath: newest.path,
+    newestMtimeMs: newest.mtimeMs,
+    reportMtimeMs,
+  };
+}
 
 // Resolves each package's coverage-summary.json path. The 15 Vitest-native
 // packages write to <pkg>/coverage/coverage-summary.json (this task's
@@ -250,6 +292,37 @@ export function evaluatePackageCoverage({
 
 // --- CLI wrapper --------------------------------------------------------
 
+// Directories that hold generated output, never measured source.
+const IGNORED_DIRECTORIES = new Set(["node_modules", "dist", "coverage", "storybook-static"]);
+
+// The modification time of every file under the given roots (a root may be a
+// file or a directory), skipping generated-output directories. A root that does
+// not exist contributes nothing; the report's own absence is reported elsewhere.
+export function collectSourceMtimes(roots) {
+  const found = [];
+  const visit = (path) => {
+    let stats;
+    try {
+      stats = statSync(path);
+    } catch {
+      return;
+    }
+    if (stats.isDirectory()) {
+      for (const entry of readdirSync(path)) {
+        if (!IGNORED_DIRECTORIES.has(entry)) visit(join(path, entry));
+      }
+    } else {
+      found.push({ path, mtimeMs: stats.mtimeMs });
+    }
+  };
+  for (const root of roots) visit(root);
+  return found;
+}
+
+function formatTime(ms) {
+  return new Date(ms).toISOString();
+}
+
 function fail(message) {
   console.error(`[validate-coverage] FAIL: ${message}`);
 }
@@ -277,6 +350,28 @@ function runCli() {
     let freshMeasuredPct;
     try {
       const summaryPath = packageCoverageSummaryPath(packageName);
+      // A report older than the code it describes is not a measurement of that
+      // code. Reject it before any number is compared (never read its value).
+      let reportMtimeMs = null;
+      try {
+        reportMtimeMs = statSync(summaryPath).mtimeMs;
+      } catch {
+        // Missing report: the read below reports it with the existing message.
+      }
+      if (reportMtimeMs !== null) {
+        const freshness = evaluateReportFreshness({
+          reportMtimeMs,
+          sourceMtimes: collectSourceMtimes(measuredSourceRoots(packageName)),
+          toleranceSeconds: FRESHNESS_TOLERANCE_SECONDS,
+        });
+        if (!freshness.ok) {
+          fail(
+            `${packageName}: coverage report is stale — ${summaryPath} (${formatTime(freshness.reportMtimeMs)}) is older than ${freshness.newestPath} (${formatTime(freshness.newestMtimeMs)}); run "pnpm run coverage:measure" and retry`
+          );
+          anyFailed = true;
+          continue;
+        }
+      }
       freshMeasuredPct = readLineCoveragePct(summaryPath);
     } catch (error) {
       fail(

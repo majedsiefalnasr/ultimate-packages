@@ -425,6 +425,7 @@ test("NON_BROWSER_PATHS: the tracked files it matches are this snapshot, and non
     "docs/architecture/provenance/vue.json",
     "scripts/provenance/affected-packages.mjs",
     "scripts/provenance/affected-packages.test.mjs",
+    "scripts/provenance/coverage-measure.test.mjs",
     "scripts/provenance/generate-manifest.mjs",
     "scripts/provenance/installed-cli-mcp-smoke.mjs",
     "scripts/provenance/installed-cli-mcp-smoke.test.mjs",

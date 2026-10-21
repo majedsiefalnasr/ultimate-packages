@@ -10,13 +10,16 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
 import {
   ALL_PACKAGES,
+  FRESHNESS_TOLERANCE_SECONDS,
   evaluatePackageCoverage,
+  evaluateReportFreshness,
+  measuredSourceRoots,
   packageCoverageSummaryPath,
   parsePhase10CoverageTable,
 } from "./validate-coverage.mjs";
@@ -53,7 +56,18 @@ const performancePath = "docs/architecture/PERFORMANCE.md";
 // HEAD, writes a fresh coverage report per package, and runs the validator
 // CLI with --base-ref. `headFiles` maps repository paths to HEAD contents;
 // `measured` overrides the fresh line-coverage % (default 85).
-function runCoverageCli({ baseMarkdown, headFiles, measured = {}, baseRef = "baseline" }) {
+// `sourceFiles` maps uncommitted repository paths to a modification time in
+// seconds since the epoch; they are written after the commits, before the
+// reports. `reportMtimes` sets a package's report modification time in seconds
+// (default: now), which is how a stale report is simulated.
+function runCoverageCli({
+  baseMarkdown,
+  headFiles,
+  measured = {},
+  baseRef = "baseline",
+  sourceFiles = {},
+  reportMtimes = {},
+}) {
   const root = mkdtempSync(join(tmpdir(), "gap-091-coverage-"));
   try {
     runGit(root, "init", "-q");
@@ -77,6 +91,13 @@ function runCoverageCli({ baseMarkdown, headFiles, measured = {}, baseRef = "bas
     }
     runGit(root, "commit", "-qm", "feature");
 
+    for (const [relativePath, mtimeSeconds] of Object.entries(sourceFiles)) {
+      const absolutePath = join(root, relativePath);
+      mkdirSync(dirname(absolutePath), { recursive: true });
+      writeFileSync(absolutePath, "// source\n");
+      utimesSync(absolutePath, mtimeSeconds, mtimeSeconds);
+    }
+
     for (const name of ALL_PACKAGES) {
       const reportPath = join(root, packageCoverageSummaryPath(name));
       mkdirSync(dirname(reportPath), { recursive: true });
@@ -84,6 +105,9 @@ function runCoverageCli({ baseMarkdown, headFiles, measured = {}, baseRef = "bas
         reportPath,
         JSON.stringify({ total: { lines: { pct: measured[name] ?? 85 } } })
       );
+      if (reportMtimes[name] !== undefined) {
+        utimesSync(reportPath, reportMtimes[name], reportMtimes[name]);
+      }
     }
 
     const result = spawnSync(process.execPath, [validatorPath, "--base-ref", baseRef], {
@@ -500,4 +524,190 @@ test("parsePhase10CoverageTable returns an empty map when there is no Phase 10 C
   const coverage = parsePhase10CoverageTable(markdown);
 
   assert.strictEqual(coverage.size, 0);
+});
+
+// --- Report freshness (coverage-baselines-and-report-freshness Spec R1) -----------
+
+const T0 = 1_800_000_000_000; // a fixed instant, in ms
+const SEC = 1000;
+
+test("FRESHNESS_TOLERANCE_SECONDS is a small positive number", () => {
+  assert.equal(typeof FRESHNESS_TOLERANCE_SECONDS, "number");
+  assert.ok(FRESHNESS_TOLERANCE_SECONDS > 0 && FRESHNESS_TOLERANCE_SECONDS <= 10);
+});
+
+test("freshness: a report newer than every source is ok", () => {
+  const result = evaluateReportFreshness({
+    reportMtimeMs: T0 + 60 * SEC,
+    sourceMtimes: [
+      { path: "packages/x/src/a.ts", mtimeMs: T0 },
+      { path: "packages/x/src/b.ts", mtimeMs: T0 + 10 * SEC },
+    ],
+    toleranceSeconds: 2,
+  });
+  assert.deepEqual(result, { ok: true });
+});
+
+test("freshness: a report older than one source by more than the tolerance is stale and names that source", () => {
+  const result = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [
+      { path: "packages/x/src/old.ts", mtimeMs: T0 - 100 * SEC },
+      { path: "packages/x/src/new.ts", mtimeMs: T0 + 3 * SEC },
+    ],
+    toleranceSeconds: 2,
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.newestPath, "packages/x/src/new.ts");
+  assert.equal(result.newestMtimeMs, T0 + 3 * SEC);
+  assert.equal(result.reportMtimeMs, T0);
+});
+
+test("freshness: a source newer than the report by less than the tolerance is still ok", () => {
+  const result = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [{ path: "packages/x/src/a.ts", mtimeMs: T0 + 1 * SEC }],
+    toleranceSeconds: 2,
+  });
+  assert.deepEqual(result, { ok: true });
+});
+
+test("freshness: a source newer by exactly the tolerance is ok, one millisecond more is stale", () => {
+  const at = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [{ path: "a", mtimeMs: T0 + 2 * SEC }],
+    toleranceSeconds: 2,
+  });
+  const over = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [{ path: "a", mtimeMs: T0 + 2 * SEC + 1 }],
+    toleranceSeconds: 2,
+  });
+  assert.equal(at.ok, true);
+  assert.equal(over.ok, false);
+});
+
+test("freshness: equal times are ok", () => {
+  const result = evaluateReportFreshness({
+    reportMtimeMs: T0,
+    sourceMtimes: [{ path: "a", mtimeMs: T0 }],
+    toleranceSeconds: 2,
+  });
+  assert.deepEqual(result, { ok: true });
+});
+
+test("freshness: no source files means nothing to compare, so ok", () => {
+  assert.deepEqual(
+    evaluateReportFreshness({ reportMtimeMs: T0, sourceMtimes: [], toleranceSeconds: 2 }),
+    { ok: true }
+  );
+});
+
+test("measuredSourceRoots: Vitest-native packages measure src and vitest.config.ts", () => {
+  assert.deepEqual(measuredSourceRoots("react"), [
+    "packages/react/src",
+    "packages/react/vitest.config.ts",
+  ]);
+});
+
+test("measuredSourceRoots: ng and ng-core measure src and angular.json", () => {
+  assert.deepEqual(measuredSourceRoots("ng"), ["packages/ng/src", "packages/ng/angular.json"]);
+  assert.deepEqual(measuredSourceRoots("ng-core"), [
+    "packages/ng-core/src",
+    "packages/ng-core/angular.json",
+  ]);
+});
+
+test("measuredSourceRoots: every gated package has a non-empty list under its own directory", () => {
+  for (const name of ALL_PACKAGES) {
+    const roots = measuredSourceRoots(name);
+    assert.ok(roots.length > 0, name);
+    for (const root of roots) assert.ok(root.startsWith(`packages/${name}/`), `${name}: ${root}`);
+  }
+});
+
+// --- CLI: a stale report is rejected before any number is compared ---------------
+
+const SEPTEMBER = Date.UTC(2026, 8, 9, 21, 20) / 1000;
+const NOW = Math.floor(Date.now() / 1000);
+
+test("a report older than a source file fails as stale and prints no percentage for it", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    sourceFiles: { "packages/uix-utils/src/index.ts": NOW },
+    reportMtimes: { "uix-utils": NOW - 3600 },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  const line = result.output.split("\n").find((l) => l.includes("uix-utils"));
+  assert.match(line, /uix-utils: coverage report is stale/);
+  assert.match(line, /packages\/uix-utils\/src\/index\.ts/);
+  assert.doesNotMatch(line, /%/);
+});
+
+test("React and Vue reports left from September are reported stale, not as a regression", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable({ react: "89.69", vue: "92.13" }),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    measured: { react: 8.6, vue: 11.3 },
+    sourceFiles: {
+      "packages/react/src/index.ts": NOW,
+      "packages/vue/src/index.ts": NOW,
+    },
+    reportMtimes: { react: SEPTEMBER, vue: SEPTEMBER },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /react: coverage report is stale/);
+  assert.match(result.output, /vue: coverage report is stale/);
+  assert.doesNotMatch(result.output, /REGRESSION FAIL/);
+  assert.doesNotMatch(result.output, /8\.6%|11\.3%/);
+});
+
+test("ng is checked against its own angular.json and report path", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    sourceFiles: { "packages/ng/angular.json": NOW },
+    reportMtimes: { ng: NOW - 3600 },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /ng: coverage report is stale.*packages\/ng\/angular\.json/);
+});
+
+test("a fresh report still goes through the existing regression path", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    measured: { "uix-utils": 82 },
+    sourceFiles: { "packages/uix-utils/src/index.ts": NOW - 3600 },
+    reportMtimes: { "uix-utils": NOW },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /uix-utils: REGRESSION FAIL.*85% -> 82\.0%/);
+  assert.doesNotMatch(result.output, /stale/);
+});
+
+test("a source file touched within the tolerance does not make a fresh report stale", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    sourceFiles: { "packages/uix-utils/src/index.ts": NOW + 1 },
+    reportMtimes: { "uix-utils": NOW },
+  });
+  assert.strictEqual(result.status, 0, result.output);
+  assert.doesNotMatch(result.output, /stale/);
+});
+
+test("node_modules, dist, coverage and storybook-static under a package never make a report stale", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    sourceFiles: {
+      "packages/uix-utils/src/index.ts": NOW - 3600,
+      "packages/uix-utils/src/node_modules/x/index.js": NOW + 3600,
+      "packages/uix-utils/src/dist/out.js": NOW + 3600,
+    },
+    reportMtimes: { "uix-utils": NOW },
+  });
+  assert.strictEqual(result.status, 0, result.output);
 });
