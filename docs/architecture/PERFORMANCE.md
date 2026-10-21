@@ -126,7 +126,7 @@ Real Stage-1 baseline, measured 2026-09-09 against commit `62480b6` (Node v22.22
 | ng-core            | 83.54           |
 | ng                 | 88.6            |
 | react-core         | 89.39           |
-| react              | 89.69           |
+| react              | 91.65           |
 | themes             | 97.9            |
 | uix-data           | 40.0            |
 | uix-motion         | 33.45           |
@@ -134,7 +134,7 @@ Real Stage-1 baseline, measured 2026-09-09 against commit `62480b6` (Node v22.22
 | uix-styles         | 28.57           |
 | uix-utils          | 18.16           |
 | vue-core           | 90.59           |
-| vue                | 92.13           |
+| vue                | 95.11           |
 
 ## GAP-064 G3-E — X-10 size measurement
 
