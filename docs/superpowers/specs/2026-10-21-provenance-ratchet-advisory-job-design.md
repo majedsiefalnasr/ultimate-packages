@@ -1,7 +1,7 @@
 # Provenance Ratchet for the Advisory CI Job — Design
 
 **Date:** 2026-10-21
-**Status:** DRAFT (revision 3). Spec Review round 1 returned APPROVED WITH CHANGES (findings SR-1 to SR-5 applied, §8); awaiting the user's Spec Review decision. Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
+**Status:** DRAFT (revision 4). Spec Review round 1 returned APPROVED WITH CHANGES (findings SR-1 to SR-5 applied, §8; revision 4 records two further user decisions, §7); awaiting the user's Spec Review decision. Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
 
 - Brainstorming outcome of 2026-10-21, after the user chose Option 3 of the open questions in `docs/architecture/research/2026-10-21-co-11-ci-parallelization-and-advisory-failures.md` §5.
 - ADR-072 (draft) records the decision. This work is separate from the CI/CD optimization (ADR-070) and the sharding work (ADR-071).
@@ -47,7 +47,7 @@ The `CI` workflow is red on almost every run because the advisory job "Baselines
   - listed but no longer missing (an entry now exists, or the file is gone): failure, with the instruction to remove it from the list, so the list only shrinks.
 - Without the flag the validator behaves exactly as today (strict, exit 1 on any missing entry).
 - The ratchet also reports the remaining count, so the log shows progress.
-- The flag's value is validated: the file must exist, be valid JSON of the shape in R1, and have sorted, duplicate-free arrays. A malformed list is a failure, never an empty list (fail closed).
+- The flag's value is validated: the file must exist, be valid JSON of the shape in R1, and have sorted, duplicate-free arrays (an unsorted or duplicated list fails, so a batch PR shows up as deleted lines only). A malformed list is a failure, never an empty list (fail closed).
 - A package that fails for any other reason (classifier error, missing or invalid manifest) still fails with the ratchet on. Only "has no entry" lines are matched against the list.
 
 ### R3 — CI
@@ -58,6 +58,7 @@ The `CI` workflow is red on almost every run because the advisory job "Baselines
 
 ### R4 — Backfill batches
 
+- The list only shrinks. A PR that adds a line to it is rejected in review: the diff shows the added line, and no CODEOWNERS rule is added (branch protection requires no approvals, ADR-068, so such a rule would enforce nothing). An automatic check against the base branch's copy of the list is an option for the Plan, not a requirement of this Spec.
 - A batch PR removes exactly its files from the list, and the validator's missing count drops by exactly the batch (GAP-094 Specification §4 item 6 is unchanged, and now also checked by the ratchet).
 
 ### R5 — Records
@@ -99,7 +100,10 @@ The `CI` workflow is red on almost every run because the advisory job "Baselines
 2. **Flag:** `--known-missing <path>`. The ratchet cannot run without an explicit list (R2).
 3. **Order:** the Bundle-size baseline PR and this work are independent PRs. The Bundle-size PR goes first, so that when this one lands the whole advisory job can turn green.
 
-**Still open for Spec Review:** whether the validator also rejects an unsorted or duplicated list, and whether a review note (for example CODEOWNERS) guards edits to the list (K3).
+4. **Sorted list:** the validator rejects an unsorted or duplicated list (R2).
+5. **No CODEOWNERS:** the repository has none, and branch protection requires no approvals. Edits to the list are guarded by review of the diff and the shrink-only rule (R4, K3).
+
+**Still open for the Plan:** whether to add an automatic comparison of the list with the base branch's copy.
 
 ## 8. Spec Review record
 
