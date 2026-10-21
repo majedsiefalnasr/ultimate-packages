@@ -10,7 +10,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
@@ -56,7 +56,18 @@ const performancePath = "docs/architecture/PERFORMANCE.md";
 // HEAD, writes a fresh coverage report per package, and runs the validator
 // CLI with --base-ref. `headFiles` maps repository paths to HEAD contents;
 // `measured` overrides the fresh line-coverage % (default 85).
-function runCoverageCli({ baseMarkdown, headFiles, measured = {}, baseRef = "baseline" }) {
+// `sourceFiles` maps uncommitted repository paths to a modification time in
+// seconds since the epoch; they are written after the commits, before the
+// reports. `reportMtimes` sets a package's report modification time in seconds
+// (default: now), which is how a stale report is simulated.
+function runCoverageCli({
+  baseMarkdown,
+  headFiles,
+  measured = {},
+  baseRef = "baseline",
+  sourceFiles = {},
+  reportMtimes = {},
+}) {
   const root = mkdtempSync(join(tmpdir(), "gap-091-coverage-"));
   try {
     runGit(root, "init", "-q");
@@ -80,6 +91,13 @@ function runCoverageCli({ baseMarkdown, headFiles, measured = {}, baseRef = "bas
     }
     runGit(root, "commit", "-qm", "feature");
 
+    for (const [relativePath, mtimeSeconds] of Object.entries(sourceFiles)) {
+      const absolutePath = join(root, relativePath);
+      mkdirSync(dirname(absolutePath), { recursive: true });
+      writeFileSync(absolutePath, "// source\n");
+      utimesSync(absolutePath, mtimeSeconds, mtimeSeconds);
+    }
+
     for (const name of ALL_PACKAGES) {
       const reportPath = join(root, packageCoverageSummaryPath(name));
       mkdirSync(dirname(reportPath), { recursive: true });
@@ -87,6 +105,9 @@ function runCoverageCli({ baseMarkdown, headFiles, measured = {}, baseRef = "bas
         reportPath,
         JSON.stringify({ total: { lines: { pct: measured[name] ?? 85 } } })
       );
+      if (reportMtimes[name] !== undefined) {
+        utimesSync(reportPath, reportMtimes[name], reportMtimes[name]);
+      }
     }
 
     const result = spawnSync(process.execPath, [validatorPath, "--base-ref", baseRef], {
@@ -603,4 +624,90 @@ test("measuredSourceRoots: every gated package has a non-empty list under its ow
     assert.ok(roots.length > 0, name);
     for (const root of roots) assert.ok(root.startsWith(`packages/${name}/`), `${name}: ${root}`);
   }
+});
+
+// --- CLI: a stale report is rejected before any number is compared ---------------
+
+const SEPTEMBER = Date.UTC(2026, 8, 9, 21, 20) / 1000;
+const NOW = Math.floor(Date.now() / 1000);
+
+test("a report older than a source file fails as stale and prints no percentage for it", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    sourceFiles: { "packages/uix-utils/src/index.ts": NOW },
+    reportMtimes: { "uix-utils": NOW - 3600 },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  const line = result.output.split("\n").find((l) => l.includes("uix-utils"));
+  assert.match(line, /uix-utils: coverage report is stale/);
+  assert.match(line, /packages\/uix-utils\/src\/index\.ts/);
+  assert.doesNotMatch(line, /%/);
+});
+
+test("React and Vue reports left from September are reported stale, not as a regression", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable({ react: "89.69", vue: "92.13" }),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    measured: { react: 8.6, vue: 11.3 },
+    sourceFiles: {
+      "packages/react/src/index.ts": NOW,
+      "packages/vue/src/index.ts": NOW,
+    },
+    reportMtimes: { react: SEPTEMBER, vue: SEPTEMBER },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /react: coverage report is stale/);
+  assert.match(result.output, /vue: coverage report is stale/);
+  assert.doesNotMatch(result.output, /REGRESSION FAIL/);
+  assert.doesNotMatch(result.output, /8\.6%|11\.3%/);
+});
+
+test("ng is checked against its own angular.json and report path", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    sourceFiles: { "packages/ng/angular.json": NOW },
+    reportMtimes: { ng: NOW - 3600 },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /ng: coverage report is stale.*packages\/ng\/angular\.json/);
+});
+
+test("a fresh report still goes through the existing regression path", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    measured: { "uix-utils": 82 },
+    sourceFiles: { "packages/uix-utils/src/index.ts": NOW - 3600 },
+    reportMtimes: { "uix-utils": NOW },
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /uix-utils: REGRESSION FAIL.*85% -> 82\.0%/);
+  assert.doesNotMatch(result.output, /stale/);
+});
+
+test("a source file touched within the tolerance does not make a fresh report stale", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    sourceFiles: { "packages/uix-utils/src/index.ts": NOW + 1 },
+    reportMtimes: { "uix-utils": NOW },
+  });
+  assert.strictEqual(result.status, 0, result.output);
+  assert.doesNotMatch(result.output, /stale/);
+});
+
+test("node_modules, dist, coverage and storybook-static under a package never make a report stale", () => {
+  const result = runCoverageCli({
+    baseMarkdown: coverageTable(),
+    headFiles: { "docs/unrelated.md": "changed\n" },
+    sourceFiles: {
+      "packages/uix-utils/src/index.ts": NOW - 3600,
+      "packages/uix-utils/src/node_modules/x/index.js": NOW + 3600,
+      "packages/uix-utils/src/dist/out.js": NOW + 3600,
+    },
+    reportMtimes: { "uix-utils": NOW },
+  });
+  assert.strictEqual(result.status, 0, result.output);
 });

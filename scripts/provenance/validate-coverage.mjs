@@ -46,7 +46,7 @@ import {
   selectBaselinePath,
 } from "./baseline-lib.mjs";
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const REGRESSION_THRESHOLD_POINTS = 2.0;
@@ -292,6 +292,37 @@ export function evaluatePackageCoverage({
 
 // --- CLI wrapper --------------------------------------------------------
 
+// Directories that hold generated output, never measured source.
+const IGNORED_DIRECTORIES = new Set(["node_modules", "dist", "coverage", "storybook-static"]);
+
+// The modification time of every file under the given roots (a root may be a
+// file or a directory), skipping generated-output directories. A root that does
+// not exist contributes nothing; the report's own absence is reported elsewhere.
+export function collectSourceMtimes(roots) {
+  const found = [];
+  const visit = (path) => {
+    let stats;
+    try {
+      stats = statSync(path);
+    } catch {
+      return;
+    }
+    if (stats.isDirectory()) {
+      for (const entry of readdirSync(path)) {
+        if (!IGNORED_DIRECTORIES.has(entry)) visit(join(path, entry));
+      }
+    } else {
+      found.push({ path, mtimeMs: stats.mtimeMs });
+    }
+  };
+  for (const root of roots) visit(root);
+  return found;
+}
+
+function formatTime(ms) {
+  return new Date(ms).toISOString();
+}
+
 function fail(message) {
   console.error(`[validate-coverage] FAIL: ${message}`);
 }
@@ -319,6 +350,28 @@ function runCli() {
     let freshMeasuredPct;
     try {
       const summaryPath = packageCoverageSummaryPath(packageName);
+      // A report older than the code it describes is not a measurement of that
+      // code. Reject it before any number is compared (never read its value).
+      let reportMtimeMs = null;
+      try {
+        reportMtimeMs = statSync(summaryPath).mtimeMs;
+      } catch {
+        // Missing report: the read below reports it with the existing message.
+      }
+      if (reportMtimeMs !== null) {
+        const freshness = evaluateReportFreshness({
+          reportMtimeMs,
+          sourceMtimes: collectSourceMtimes(measuredSourceRoots(packageName)),
+          toleranceSeconds: FRESHNESS_TOLERANCE_SECONDS,
+        });
+        if (!freshness.ok) {
+          fail(
+            `${packageName}: coverage report is stale — ${summaryPath} (${formatTime(freshness.reportMtimeMs)}) is older than ${freshness.newestPath} (${formatTime(freshness.newestMtimeMs)}); run "pnpm run coverage:measure" and retry`
+          );
+          anyFailed = true;
+          continue;
+        }
+      }
       freshMeasuredPct = readLineCoveragePct(summaryPath);
     } catch (error) {
       fail(
