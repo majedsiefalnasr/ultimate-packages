@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** DRAFT (revision 2). In-session Plan Review round 1 found five issues (PR-1 to PR-5, record at the end), all applied. Awaiting the user's Plan Review decision. Spec revision 2 is approved (user, 2026-10-21). No task is authorized; implementation needs its own authorization.
+**Status:** APPROVED — Plan Review passed (user, 2026-10-21), revision 3. In-session Plan Review findings PR-1 to PR-5 are applied, and at the user's request Task 5 no longer needs a human step (PR-6). Spec revision 2 is approved (user, 2026-10-21). No task is authorized; implementation needs its own authorization.
 
 **Goal:** Stop `validate-coverage.mjs` from judging a report that is older than the code it describes, make `coverage:measure` report every failing package instead of stopping at the first, and then re-baseline React and Vue to values that CI reproduces (GAP-091, ADR-060).
 
@@ -31,6 +31,7 @@
   - every `PERFORMANCE.md` row except `react` and `vue` coverage (PR 2 only);
   - `ci.yml`, `browser.yml`, `release.yml`, branch protection;
   - the unrelated `ai` packaging test.
+- **Throwaway probes:** the only probe is Task 5's `spike/coverage-numbers`. It is never merged, never opened as a pull request, and deleted from the remote and locally when its numbers are read. Confirm with `git ls-remote --heads origin 'spike/*'`.
 - **Pre-existing, unrelated:** `.dsh/rules.yaml` is an untracked file in the working tree that is not this work's. Never stage it. Stage files by name.
 
 ## Review Focus
@@ -40,7 +41,7 @@
 3. **`ng` and `ng-core` have a different report path and source tree** (K5). Task 1 lists the measured sources per package and Task 2 tests the `ng` shape.
 4. **R2 must keep the step's meaning.** `--no-bail` must still exit non-zero when any package fails, and the CI step name and `if:` are untouched (AC4b). Task 3 proves both with an experiment and a test.
 5. **PR 2 is two rows** (AC5). Task 6 checks `git diff --stat` and `git diff -U0` before the push.
-6. **CI is the authority for the numbers** (R5, K1). Task 5 gets the values from CI, not from the local run.
+6. **CI is the authority for the numbers** (R5, K1). Task 5 reads the values from CI through check-run annotations, with no human step, and not from the local run.
 
 ---
 
@@ -120,7 +121,7 @@
 ### Task 4: Land PR 1 and confirm on CI (AC4, AC4b)
 
 - [ ] **Step 1:** Run Prettier and ESLint on every changed file, `pnpm run test:scripts`, and the full local sequence in Task 2 Step 5. Push with an explicit refspec (hook running) and open the PR against `develop`. The description states: the stale-report defect and how it was found, that CI measures from scratch so it was not affected, that `coverage:measure` now continues past a failure and still fails, and that nothing about what is measured changed.
-- [ ] **Step 2: Read the real CI run** of the PR's advisory job (step conclusions from the jobs API; logs are not downloadable here, so a message-level check needs the user to read the log):
+- [ ] **Step 2: Read the real CI run** of the PR's advisory job (step conclusions from the jobs API; logs are not downloadable here, and a step conclusion is enough for these checks):
   - "Coverage measurement" passes;
   - "Coverage regression check" concludes `success`, which means no package was reported stale (a stale package fails the step) (AC4);
   - `ci` is green.
@@ -134,14 +135,16 @@
 
 ### Task 5: Get the real numbers from CI (R5)
 
-**Files:** none changed in this task.
+**Files:** none in the repository. A throwaway workflow exists only on a throwaway branch and is deleted at the end.
 
-CI job logs cannot be downloaded from this environment (the log host rejects the request; checked 2026-10-21), the check-run output carries no coverage numbers, and the advisory job uploads no artifact. So the CI value is not read from a log here. It is obtained by the validator's own output, which a pull request run prints and which is readable from the PR's check annotations or the user's browser.
+CI job logs cannot be downloaded from this environment, the advisory job uploads no artifact, and the validator prints a mismatch at one decimal only. But a workflow can write a `::notice` annotation, and the check-run annotations are readable through the REST API from here. A probe on 2026-10-21 (run 39590086685) wrote `react=91.65 vue=95.11 (two decimals)` as a notice and `gh api repos/<repo>/check-runs/<job id>/annotations` returned it in full. So the CI value is read with no human step.
 
-- [ ] **Step 1: Make CI print the number without changing the gate.** On the PR 2 branch only, before the two-row change is final, push the branch with the candidate values (Task 6 Step 1). The "Coverage regression check" step's integrity path prints either `OK (baseline-only, integrity check: <value>% matches fresh measurement)` or `INTEGRITY FAIL — PERFORMANCE.md writes <value>% but fresh measurement is <x.x>%`. The first proves the candidate matches CI within 0.05. The second prints CI's value at **one decimal only**, which is not enough to write a two-decimal baseline.
-- [ ] **Step 2: If the candidate fails, get the full-precision CI value from the user.** Ask the user to open the failing job's "Coverage measurement" log in the browser and read the `All files` line coverage for `react` and `vue` (it prints two decimals). Do not guess a value from a one-decimal message. Record the two values and say they came from the user's reading of the run, with the run id.
-- [ ] **Step 3: Measure locally** with `npx vitest run --coverage` in `packages/react` and `packages/vue` on Node 24.15.0, twice each, after the Task 2 check confirms the reports are fresh. If CI and local differ, CI's value is used (K1) and the difference is recorded in the PR description.
-- [ ] **Step 4:** The final two values and their sources are written down before the PR leaves draft. No other file is edited.
+- [ ] **Step 1: Create the throwaway probe branch** `spike/coverage-numbers`, `--no-track`, from `origin/develop` **after PR 1 is merged** (so `coverage:measure` is the merged `--no-bail` form and the freshness check is in place). It adds one file, `.github/workflows/spike-coverage-numbers.yml`, and nothing else. The workflow runs on pushes to `spike/**` only, so it never runs on a normal branch.
+- [ ] **Step 2: The probe measures the way the advisory job does.** Same runner (`ubuntu-latest`), `actions/checkout@v4` with `fetch-depth: 0`, `pnpm/action-setup@v4`, `actions/setup-node@v4` with Node `24.15.0` and the pnpm cache, `pnpm install --frozen-lockfile`, `pnpm run build`, then `pnpm run coverage:measure`. After that, in a step with `if: always()`, it reads `total.lines.pct`, `total.lines.covered` and `total.lines.total` from `packages/react/coverage/coverage-summary.json` and `packages/vue/coverage/coverage-summary.json` and writes one notice annotation per package: `coverage <package> pct=<value> covered=<n> total=<n>`. It prints the value as the JSON holds it, not rounded. `actionlint` must be clean.
+- [ ] **Step 3: Push the probe** with the pre-push hook running (explicit `src:dst` refspec). Wait for its run to complete. Read the annotations with `gh api repos/majedsiefalnasr/ultimate-packages/check-runs/<job id>/annotations`, matching the notice titles. If the run did not produce both annotations, the probe failed: read the job's step conclusions, fix the probe, and push again. Do not fall back to a guessed number.
+- [ ] **Step 4: Delete the probe.** `git push origin --delete spike/coverage-numbers`, delete the local branch, and confirm `git ls-remote --heads origin 'spike/*'` is empty. The probe workflow is never merged and never opened as a pull request.
+- [ ] **Step 5: Compare with the local value.** Measure locally with `npx vitest run --coverage` in `packages/react` and `packages/vue` on Node 24.15.0, twice each, after Task 2's freshness check confirms the reports are fresh. If CI and local differ, **CI's value is used** (K1), and the difference is recorded in the PR description.
+- [ ] **Step 6:** The final two values, each with its source (run id and annotation), are written down before Task 6 starts. No repository file is edited by this task.
 
 ### Task 6: The two-row PR
 
@@ -192,13 +195,15 @@ CI job logs cannot be downloaded from this environment (the log host rejects the
 
 **In-session review, round 1 (2026-10-21),** against the approved Spec revision 2, `validate-coverage.mjs` and its tests, `ci.yml`, `classify-changes.mjs`, and experiments on the real environment:
 
-| ID   | Finding                                                                                                                                                                                                                                                    | Resolution                                                                                                                                     |
-| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| PR-1 | **Task 5 relied on reading CI logs, which cannot be downloaded here** (the log host returns an error; no artifact; check-run output has no numbers). The validator prints a mismatch at one decimal (`toFixed(1)`), too coarse for a two-decimal baseline. | Task 5 rewritten: push the candidate, read the integrity result, and if it fails ask the user to read the two-decimal values from the job log. |
-| PR-2 | Task 4 Step 2 asked for per-package tables from the log.                                                                                                                                                                                                   | Reworded to use step conclusions, which the jobs API gives.                                                                                    |
-| PR-3 | The freshness check would make every package stale if a build or test wrote any file under `src` after the report. Not true today (no ignored or generated file under the four checked `src` trees), but nothing guarded it.                               | Task 2 Step 2b checks it after a full build and test, and forbids hiding it with the tolerance.                                                |
-| PR-4 | The new test file `coverage-measure.test.mjs` is not in the classifier's script list, so the classifier snapshot tests would fail, as they did for `known-missing.test.mjs`. `package.json` makes PR 1 `scope=full`, running all Browser jobs.             | Task 3 Step 5b adds the file to the list and snapshots, and records the expected Browser run.                                                  |
-| PR-5 | The `PERFORMANCE.md` Package-size table has `react` and `vue` rows too; an edit by name could hit the wrong table.                                                                                                                                         | Task 6 Step 1 names the table and forbids the other.                                                                                           |
+| ID   | Finding                                                                                                                                                                                                                                                    | Resolution                                                                                         |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| PR-1 | **Task 5 relied on reading CI logs, which cannot be downloaded here** (the log host returns an error; no artifact; check-run output has no numbers). The validator prints a mismatch at one decimal (`toFixed(1)`), too coarse for a two-decimal baseline. | Task 5 rewritten (see PR-6): the CI value is read from a check-run annotation, with no human step. |
+| PR-2 | Task 4 Step 2 asked for per-package tables from the log.                                                                                                                                                                                                   | Reworded to use step conclusions, which the jobs API gives.                                        |
+| PR-3 | The freshness check would make every package stale if a build or test wrote any file under `src` after the report. Not true today (no ignored or generated file under the four checked `src` trees), but nothing guarded it.                               | Task 2 Step 2b checks it after a full build and test, and forbids hiding it with the tolerance.    |
+| PR-4 | The new test file `coverage-measure.test.mjs` is not in the classifier's script list, so the classifier snapshot tests would fail, as they did for `known-missing.test.mjs`. `package.json` makes PR 1 `scope=full`, running all Browser jobs.             | Task 3 Step 5b adds the file to the list and snapshots, and records the expected Browser run.      |
+| PR-5 | The `PERFORMANCE.md` Package-size table has `react` and `vue` rows too; an edit by name could hit the wrong table.                                                                                                                                         | Task 6 Step 1 names the table and forbids the other.                                               |
+
+| PR-6 | **User request (2026-10-21):** remove the human step from Task 5. | A throwaway probe branch measures exactly as the advisory job does and writes the two-decimal values as `::notice` annotations, which the REST API returns to this environment. Verified with a real probe run (39590086685). The probe is deleted afterwards. |
 
 **Checked and found consistent:**
 
@@ -208,4 +213,4 @@ CI job logs cannot be downloaded from this environment (the log host rejects the
 - **Mtime on a fresh checkout:** a clone had 446 React source files within 0.05 s, and a report written afterwards was newer than all of them.
 - **Hands off:** no task changes what a package measures, a threshold, a tolerance, another baseline row, `ci.yml`, `browser.yml` or `release.yml`.
 
-**Open for the user's Plan Review decision:** whether to approve revision 2 as written. The remaining risk is the tolerance's first value (2 s), which Task 4 turns into a measured fact before PR 1 is merged.
+**Plan Review approved (user, 2026-10-21)** on revision 3. The remaining risk is the tolerance's first value (2 s), which Task 4 turns into a measured fact before PR 1 is merged. Task 5 needs no human step.
