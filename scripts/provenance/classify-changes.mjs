@@ -175,6 +175,8 @@ export const NON_BROWSER_PATHS = Object.freeze({
       "installed-cli-mcp-smoke.test.mjs",
       "validate-sast-baseline.mjs",
       "validate-sast-baseline.test.mjs",
+      "known-missing.mjs",
+      "known-missing.test.mjs",
     ].map((name) => `scripts/provenance/${name}`),
   ]),
 });
