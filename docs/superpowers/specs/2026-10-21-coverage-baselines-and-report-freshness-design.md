@@ -88,15 +88,16 @@ Measured on the author's machine (macOS, Node 24.15.0) on `develop` at `a5195a6b
 
 ## 5. Acceptance criteria
 
-| ID  | Criterion                                                                                                                                     | Evidence                            |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| AC1 | With a report older than one source file, `validate-coverage.mjs` fails that package with a stale-report message and does not compare numbers | Unit and CLI tests                  |
-| AC2 | With the real September `coverage-summary.json` files present, the validator fails React and Vue as stale, not as 8.6% and 11.3%              | Local run before `coverage:measure` |
-| AC3 | `coverage:measure` runs every package even when one fails, then exits non-zero naming each failed package                                     | Script test and a local run         |
-| AC4 | On CI the validator passes with fresh reports (no false staleness from checkout time)                                                         | Real GitHub run of the R1 PR        |
-| AC5 | The R4 PR's diff is exactly two table rows in `PERFORMANCE.md`, with values that CI reproduced                                                | `git diff --stat`, CI log           |
-| AC6 | After the R4 PR, a push run on `develop` is green and the React and Vue coverage rows pass the regression path against the new baselines      | Real GitHub run                     |
-| AC7 | `pnpm run test:scripts`, Prettier, ESLint and `actionlint` stay clean                                                                         | Command output                      |
+| ID   | Criterion                                                                                                                                     | Evidence                            |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| AC1  | With a report older than one source file, `validate-coverage.mjs` fails that package with a stale-report message and does not compare numbers | Unit and CLI tests                  |
+| AC2  | With the real September `coverage-summary.json` files present, the validator fails React and Vue as stale, not as 8.6% and 11.3%              | Local run before `coverage:measure` |
+| AC3  | `coverage:measure` runs every package even when one fails, then exits non-zero naming each failed package                                     | Script test and a local run         |
+| AC4  | On CI the validator passes with fresh reports (no false staleness from checkout time)                                                         | Real GitHub run of the R1 PR        |
+| AC4b | On CI, "Coverage measurement" still fails when a package fails and passes when all pass                                                       | Script test and the R1 PR's run     |
+| AC5  | The R4 PR's diff is exactly two table rows in `PERFORMANCE.md`, with values that CI reproduced                                                | `git diff --stat`, CI log           |
+| AC6  | After the R4 PR, a push run on `develop` is green and the React and Vue coverage rows pass the regression path against the new baselines      | Real GitHub run                     |
+| AC7  | `pnpm run test:scripts`, Prettier, ESLint and `actionlint` stay clean                                                                         | Command output                      |
 
 ## 6. Risks
 
