@@ -1,7 +1,7 @@
 # Coverage: React/Vue Re-baseline and Report Freshness — Design
 
 **Date:** 2026-10-21
-**Status:** DRAFT (revision 1). Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
+**Status:** APPROVED — Spec Review passed (user, 2026-10-21), revision 2. The open questions of §8 are settled with the Spec's own defaults (§8). Nothing in it is authorized for implementation until the Implementation Plan passes Plan Review and implementation is authorized.
 
 - Brainstorming outcome of 2026-10-21. The user chose the scope on 2026-10-21: close GAP-091 by re-baselining React and Vue, **and** fix the local tooling defect in the same Spec, as two PRs in a fixed order.
 - It carries out ADR-060's "Re-baselining" rule. It adds no new architectural decision except R1 to R3 below, which change `validate-coverage.mjs` and `coverage:measure`. Those two need the user's decision at Spec Review.
@@ -119,9 +119,13 @@ Measured on the author's machine (macOS, Node 24.15.0) on `develop` at `a5195a6b
 
 PR 1 first, because PR 2's measurement must go through the freshness check, and because ADR-060 forbids a baseline from landing in the same PR as a change to how coverage is judged.
 
-## 8. Open questions for Spec Review
+## 8. Decisions at Spec Review (user, 2026-10-21)
 
-1. R1's measured-source set: the package's whole `src` tree and its config, or only the files the coverage `include` selects. The first is simpler and slightly stricter.
-2. R1's clock-skew tolerance value (the Plan proposes a small fixed number of seconds, with a test).
-3. R2: whether `coverage:measure` should also skip packages that are not Vitest-native, or keep running all of them as today.
-4. Whether R6 (GAP-091 and C01) is done in PR 2 or in a separate docs PR after the green push run. The Spec assumes separate, because the green push run is its evidence.
+The user approved the Spec without changing the proposals below, so they stand as decisions:
+
+1. **Measured-source set (R1):** the package's whole source tree and its config file, not only the files the coverage `include` selects. Simpler and slightly stricter. The Plan lists the exact paths per package, including `ng` and `ng-core`.
+2. **Clock-skew tolerance (R1):** a small fixed number of seconds, set in the Plan as a named constant with a test. It is not a free parameter: AC4 checks it on a real CI run.
+3. **`coverage:measure` (R2):** it keeps running all packages, as today, and now reports every failure at the end instead of stopping at the first.
+4. **Records (R6):** GAP-091 and C01 are updated in a separate docs PR after the green push run on `develop` with the new baselines, not in the baselines PR.
+
+No question is left open for the Plan except the exact file lists and the tolerance value.
