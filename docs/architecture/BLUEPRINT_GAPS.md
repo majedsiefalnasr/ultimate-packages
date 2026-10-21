@@ -1745,9 +1745,13 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
       - 647 → **646** missing ([evidence](research/2026-10-16-gap-094-backfill-batch-3-evidence.md#reassessment-under-the-adr-064-clarification-2026-10-16)).
     - Remaining after batch 3: ng 164, react 217 (including the held `toolbar-style.ts`), vue 265.
     - W1 Toolbar batch (2026-10-18): the `toolbar-style.ts` hold (the `lara-light` combination) is resolved by Toolbar Option B (Workstream 1 W1, PR #39, merge `4a426b34`), which replaced the literal values with `dt('toolbar.*')` paths. The file is COPY from `ToolbarBase.js` and `@primeuix/styles@2.0.3` toolbar (2 entries, 1 file, no theme entry); 646 → **645** missing ([evidence](research/2026-10-18-gap-094-w1-batch-evidence.md)). Remaining: ng 164, react 216, vue 265, with no held file.
-- **Expected state:** Every production file (ADR-062) has a manifest entry backed by per-file evidence, and the validator passes.
-- **Why it matters:** The step is red on every push.
-- **What it blocks:** A green provenance validation step.
+  - **CI ratchet (2026-10-21, [ADR-072](DECISIONS.md#adr-072--provenance-validation-in-the-advisory-ci-job-becomes-a-ratchet-over-the-known-missing-list)):**
+    - The advisory job's "Provenance validation" step runs `provenance:validate --known-missing docs/architecture/provenance/known-missing.json`. It excuses only the 645 files in that list (ng 164, react 216, vue 265), fails on any new missing entry, and fails on a listed file that is no longer missing, so the list only shrinks.
+    - Run without the flag, the validator is unchanged and still exits 1 on the 645 missing entries. The ratchet changes what CI reports, not the debt: GAP-094 stays OPEN.
+    - Each backfill batch PR also deletes exactly its files from the list.
+- **Expected state:** Every production file (ADR-062) has a manifest entry backed by per-file evidence, the known-missing list is empty, and `provenance:validate` exits 0 without `--known-missing`.
+- **Why it matters:** Without the flag the validator is red on every run. In CI the advisory job's step is a ratchet (ADR-072), so it now catches new missing entries instead of hiding them among the known 645.
+- **What it blocks:** A green provenance validation without the known-missing list.
 - **Dependencies:** None.
 - **Framework scope:** Angular (current failure).
 - **Existing reusable infrastructure:** `docs/architecture/provenance/ng.json`.

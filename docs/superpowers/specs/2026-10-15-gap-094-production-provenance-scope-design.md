@@ -148,11 +148,12 @@ Classification follows that evidence. Re-export-only content does not by itself 
    - After `pnpm run build`, every source file named in the JS sourcemaps (`dist/**/*.map` `sources`) and every per-file declaration emitted for `vue`/`react` maps to a production file. Zero distributed files are classified as excluded.
    - Limitation, stated rather than claimed: bundled declarations (tsup `dts: true`, ng-packagr) carry no per-file mapping. Type-only files in those packages are covered by the static reachability walk only.
 4. `pnpm run provenance:validate` lists all missing production files and exits 1 until the backfill completes. CI "Provenance validation" stays red only for missing production entries. Every other step is compared against the current `main` baseline.
+   - _Amendment (2026-10-21, ADR-072):_ without the flag the validator is unchanged and still exits 1 on every missing entry. In the advisory CI job the step now runs as a ratchet over `docs/architecture/provenance/known-missing.json`, so CI no longer stays red for the known missing entries; see `2026-10-21-provenance-ratchet-advisory-job-design.md`. GAP-094 is resolved only when that list is empty and `provenance:validate` exits 0 without the flag.
 5. Lint and format checks are clean.
 6. **Each backfill batch PR:**
    - passes review with its evidence table;
    - shows the validator's missing count dropping by exactly the batch's files, with no new missing file and an unchanged excluded set.
-     GAP-094 is resolved only when `provenance:validate` exits 0 in CI.
+     GAP-094 is resolved only when `provenance:validate` exits 0 in CI without `--known-missing` (see the 2026-10-21 amendment under item 4).
 
 ## 5. Boundaries
 
