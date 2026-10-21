@@ -1,4 +1,9 @@
-name: CI
+# The merge gate: the fast checks whose job `ci` is the required status check on
+# develop (ADR-068). The workflow is named for that role. The job key and name
+# stay `ci` on purpose: branch protection requires the check by that name, and
+# renaming the job would leave every pull request waiting on a check that no
+# longer exists (ADR-069, ADR-070 CO-10).
+name: Quality gate
 
 on:
   push:
