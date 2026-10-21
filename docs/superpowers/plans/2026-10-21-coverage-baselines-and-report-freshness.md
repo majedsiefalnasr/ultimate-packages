@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** DRAFT (revision 1), awaiting Plan Review. Spec revision 2 is approved (user, 2026-10-21). No task is authorized; implementation needs its own authorization.
+**Status:** DRAFT (revision 2). In-session Plan Review round 1 found five issues (PR-1 to PR-5, record at the end), all applied. Awaiting the user's Plan Review decision. Spec revision 2 is approved (user, 2026-10-21). No task is authorized; implementation needs its own authorization.
 
 **Goal:** Stop `validate-coverage.mjs` from judging a report that is older than the code it describes, make `coverage:measure` report every failing package instead of stopping at the first, and then re-baseline React and Vue to values that CI reproduces (GAP-091, ADR-060).
 
@@ -91,6 +91,7 @@
   - A fresh report still goes through the existing integrity and regression paths unchanged: run two existing scenarios again unchanged and confirm they pass.
   - A missing report keeps its existing "could not read coverage report" message.
 - [ ] **Step 2: Run** the file. Expected: the new tests FAIL.
+- [ ] **Step 2b: Check for files under the measured roots that a build or test writes after the report.** At plan time `git status --ignored` showed no generated file under `packages/{react,vue,ng,ng-core}/src`. Re-run it after a full `pnpm run build` and a `coverage:measure` at implementation time. A generated file under `src` that is newer than the report would make every package stale; if any exists, exclude its path in `measuredSourceRoots` with a comment and a test, never raise the tolerance to hide it.
 - [ ] **Step 3: Implement.** In `runCli`, after reading the report path and before `readLineCoveragePct`, collect the modification times of the files under `measuredSourceRoots(packageName)` (a small recursive walk that skips `node_modules`, `dist`, `coverage` and `storybook-static`), stat the report, call `evaluateReportFreshness`, and on failure call `fail(...)`, set `anyFailed`, and `continue`. A report that cannot be stat'ed falls through to the existing read, which reports it as missing.
 - [ ] **Step 4: Run** the test file, then `pnpm run test:scripts`. Expected: all pass.
 - [ ] **Step 5: Reproduce the original defect locally (AC2, real files).** With the old September `packages/react/coverage/coverage-summary.json` restored by `touch -t 202609092120`, run `node scripts/provenance/validate-coverage.mjs --base-ref origin/develop` and record that React is reported as stale. This step changes only git-ignored files. Re-run `pnpm run coverage:measure` afterwards (it needs Task 3) or `npx vitest run --coverage` in the package to restore a fresh report.
@@ -112,15 +113,16 @@
 - [ ] **Step 3: Run** it. Expected: FAIL (the current script has no `--no-bail`).
 - [ ] **Step 4: Change** the one script line in `package.json`. Nothing else in the file.
 - [ ] **Step 5: Run** the new test and `pnpm run test:scripts`. Expected: pass.
+- [ ] **Step 5b: Classifier check.** `package.json` and the new test file are not docs and not non-browser paths (checked at plan time), so PR 1 is `scope=full frameworks=["ng","react","vue"]` and all nine Browser jobs run on it. That is expected. `scripts/provenance/coverage-measure.test.mjs` is a new test file, so add it to the `scripts/provenance/` list in `NON_BROWSER_PATHS` and the two snapshot tests in `classify-changes.test.mjs`, exactly as the ratchet PR did for `known-missing.test.mjs`, and show the classifier output for the PR's diff.
 - [ ] **Step 6: Check the CI step is untouched.** `git diff --stat` shows `package.json` and the test file only; `.github/workflows/ci.yml` is not in the diff (AC4b). `actionlint .github/workflows/ci.yml` stays clean.
 - [ ] **Step 7: Commit** `fix(ci): let coverage:measure run every package and fail at the end`.
 
 ### Task 4: Land PR 1 and confirm on CI (AC4, AC4b)
 
 - [ ] **Step 1:** Run Prettier and ESLint on every changed file, `pnpm run test:scripts`, and the full local sequence in Task 2 Step 5. Push with an explicit refspec (hook running) and open the PR against `develop`. The description states: the stale-report defect and how it was found, that CI measures from scratch so it was not affected, that `coverage:measure` now continues past a failure and still fails, and that nothing about what is measured changed.
-- [ ] **Step 2: Read the real CI run** of the PR's advisory job:
-  - "Coverage measurement" passes, and its log shows every package's coverage table;
-  - "Coverage regression check" passes with no stale-report message for any package (AC4);
+- [ ] **Step 2: Read the real CI run** of the PR's advisory job (step conclusions from the jobs API; logs are not downloadable here, so a message-level check needs the user to read the log):
+  - "Coverage measurement" passes;
+  - "Coverage regression check" concludes `success`, which means no package was reported stale (a stale package fails the step) (AC4);
   - `ci` is green.
   - If any package is reported stale on CI, the tolerance is too small or the modification-time assumption is wrong. Do not merge. Raise `FRESHNESS_TOLERANCE_SECONDS` or fix the source set in a new commit on the same branch and read the run again.
 - [ ] **Step 3: Prove AC4b on CI.** A deliberate failure is not pushed to `develop`'s PR. Instead state in the PR that the failure path is covered by the Task 3 test, and read the "Coverage measurement" step's conclusion on the real run (success when all packages pass).
@@ -134,9 +136,12 @@
 
 **Files:** none changed in this task.
 
-- [ ] **Step 1:** After PR 1 is merged and `develop` is synced, read the Coverage measurement log of the push run on `develop` (the advisory job). From the printed per-package tables, read the `All files` line coverage for `react` and `vue`. Record both with the run id.
-- [ ] **Step 2:** Measure locally with `npx vitest run --coverage` in `packages/react` and `packages/vue` on Node 24.15.0 after a clean build, twice each. If the CI value and the local value differ, **CI's value is used** and the difference is recorded in the PR description (K1).
-- [ ] **Step 3:** Write down the two final values (to the precision the report prints, two decimals) and where each came from. Do not edit any file yet.
+CI job logs cannot be downloaded from this environment (the log host rejects the request; checked 2026-10-21), the check-run output carries no coverage numbers, and the advisory job uploads no artifact. So the CI value is not read from a log here. It is obtained by the validator's own output, which a pull request run prints and which is readable from the PR's check annotations or the user's browser.
+
+- [ ] **Step 1: Make CI print the number without changing the gate.** On the PR 2 branch only, before the two-row change is final, push the branch with the candidate values (Task 6 Step 1). The "Coverage regression check" step's integrity path prints either `OK (baseline-only, integrity check: <value>% matches fresh measurement)` or `INTEGRITY FAIL — PERFORMANCE.md writes <value>% but fresh measurement is <x.x>%`. The first proves the candidate matches CI within 0.05. The second prints CI's value at **one decimal only**, which is not enough to write a two-decimal baseline.
+- [ ] **Step 2: If the candidate fails, get the full-precision CI value from the user.** Ask the user to open the failing job's "Coverage measurement" log in the browser and read the `All files` line coverage for `react` and `vue` (it prints two decimals). Do not guess a value from a one-decimal message. Record the two values and say they came from the user's reading of the run, with the run id.
+- [ ] **Step 3: Measure locally** with `npx vitest run --coverage` in `packages/react` and `packages/vue` on Node 24.15.0, twice each, after the Task 2 check confirms the reports are fresh. If CI and local differ, CI's value is used (K1) and the difference is recorded in the PR description.
+- [ ] **Step 4:** The final two values and their sources are written down before the PR leaves draft. No other file is edited.
 
 ### Task 6: The two-row PR
 
@@ -144,7 +149,7 @@
 
 - Modify: `docs/architecture/PERFORMANCE.md` (two rows)
 
-- [ ] **Step 1:** Create `chore/coverage-baselines-react-vue` `--no-track` from `origin/develop`. In the Coverage table only, change `react` and `vue` to the Task 5 values. Add no sentence elsewhere in the file unless the existing table note already describes these rows; if it does, change only that sentence and say so in the PR.
+- [ ] **Step 1:** Create `chore/coverage-baselines-react-vue` `--no-track` from `origin/develop`. In the Coverage table only (rows `react` and `vue` under `### Coverage` in `## Phase 10`; the Package-size table has rows with the same names and must not be touched), change `react` and `vue` to the Task 5 values. Add no sentence elsewhere in the file unless the existing table note already describes these rows; if it does, change only that sentence and say so in the PR.
 - [ ] **Step 2: Check the diff is exactly what Spec R4 allows.**
   - `git diff --stat` shows one file, `docs/architecture/PERFORMANCE.md`;
   - `git diff -U0` shows only the two rows (plus the one sentence, if the note had to change);
@@ -185,4 +190,22 @@
 
 ## Plan Review record
 
-Not yet reviewed.
+**In-session review, round 1 (2026-10-21),** against the approved Spec revision 2, `validate-coverage.mjs` and its tests, `ci.yml`, `classify-changes.mjs`, and experiments on the real environment:
+
+| ID   | Finding                                                                                                                                                                                                                                                    | Resolution                                                                                                                                     |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| PR-1 | **Task 5 relied on reading CI logs, which cannot be downloaded here** (the log host returns an error; no artifact; check-run output has no numbers). The validator prints a mismatch at one decimal (`toFixed(1)`), too coarse for a two-decimal baseline. | Task 5 rewritten: push the candidate, read the integrity result, and if it fails ask the user to read the two-decimal values from the job log. |
+| PR-2 | Task 4 Step 2 asked for per-package tables from the log.                                                                                                                                                                                                   | Reworded to use step conclusions, which the jobs API gives.                                                                                    |
+| PR-3 | The freshness check would make every package stale if a build or test wrote any file under `src` after the report. Not true today (no ignored or generated file under the four checked `src` trees), but nothing guarded it.                               | Task 2 Step 2b checks it after a full build and test, and forbids hiding it with the tolerance.                                                |
+| PR-4 | The new test file `coverage-measure.test.mjs` is not in the classifier's script list, so the classifier snapshot tests would fail, as they did for `known-missing.test.mjs`. `package.json` makes PR 1 `scope=full`, running all Browser jobs.             | Task 3 Step 5b adds the file to the list and snapshots, and records the expected Browser run.                                                  |
+| PR-5 | The `PERFORMANCE.md` Package-size table has `react` and `vue` rows too; an edit by name could hit the wrong table.                                                                                                                                         | Task 6 Step 1 names the table and forbids the other.                                                                                           |
+
+**Checked and found consistent:**
+
+- **Requirement coverage:** R1 to R6 map to tasks (R1: 1, 2; R2: 3; R3: 1 to 3; R4: 6; R5: 5, 6; R6: 8). AC1 to AC7 and AC4b each have a verifying step.
+- **`--no-bail`:** an experiment in a temporary pnpm workspace showed the default run stops at the failing package (exit 3, third package not run) and `--no-bail` runs all three and exits 1, naming the failing package.
+- **Measured sources exist:** all 17 packages have `src`; the 15 Vitest-native have `vitest.config.ts`; `ng` and `ng-core` have `angular.json`.
+- **Mtime on a fresh checkout:** a clone had 446 React source files within 0.05 s, and a report written afterwards was newer than all of them.
+- **Hands off:** no task changes what a package measures, a threshold, a tolerance, another baseline row, `ci.yml`, `browser.yml` or `release.yml`.
+
+**Open for the user's Plan Review decision:** whether to approve revision 2 as written. The remaining risk is the tolerance's first value (2 s), which Task 4 turns into a measured fact before PR 1 is merged.
