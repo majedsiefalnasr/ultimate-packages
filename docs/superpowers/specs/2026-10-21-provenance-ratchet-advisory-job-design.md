@@ -1,7 +1,7 @@
 # Provenance Ratchet for the Advisory CI Job — Design
 
 **Date:** 2026-10-21
-**Status:** DRAFT (revision 4). Spec Review round 1 returned APPROVED WITH CHANGES (findings SR-1 to SR-5 applied, §8; revision 4 records two further user decisions, §7); awaiting the user's Spec Review decision. Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
+**Status:** DRAFT (revision 4). Spec Review round 1 returned APPROVED WITH CHANGES (findings SR-1 to SR-5 applied, §8; revision 4 records two further user decisions, §7); awaiting the user's Spec Review decision. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
 
 - Brainstorming outcome of 2026-10-21, after the user chose Option 3 of the open questions in `docs/architecture/research/2026-10-21-co-11-ci-parallelization-and-advisory-failures.md` §5.
 - ADR-072 (draft) records the decision. This work is separate from the CI/CD optimization (ADR-070) and the sharding work (ADR-071).
@@ -84,7 +84,7 @@ The `CI` workflow is red on almost every run because the advisory job "Baselines
 | --- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | K1  | A classifier change (ADR-062) makes the list stale.                            | The ratchet fails on both sides: new missing files and listed files that are not missing. The PR that changes the classifier updates the list in the same PR. |
 | K2  | A renamed or moved file shows as one new missing file and one stale list line. | Both fail loudly. The PR author renames the line in the list and gives the evidence. No special-casing.                                                       |
-| K3  | The list is edited to hide a regression.                                       | Changes to the list are a normal reviewed diff. The Plan decides whether a CODEOWNERS or review note is needed.                                               |
+| K3  | The list is edited to hide a regression.                                       | Shrink-only rule (R4) and review of the diff. No CODEOWNERS (§7). The Plan may add a base-branch comparison.                                                  |
 | K4  | The list gives the impression that the debt is accepted.                       | GAP-094 stays OPEN and its resolved condition is explicit (R5).                                                                                               |
 | K5  | Count differs between Node 23 and Node 24.                                     | Generate the list under Node 24.15 and compare with the CI count before landing.                                                                              |
 
