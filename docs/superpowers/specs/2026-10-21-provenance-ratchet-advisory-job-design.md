@@ -1,7 +1,7 @@
 # Provenance Ratchet for the Advisory CI Job — Design
 
 **Date:** 2026-10-21
-**Status:** DRAFT (revision 4). Spec Review round 1 returned APPROVED WITH CHANGES (findings SR-1 to SR-5 applied, §8; revision 4 records two further user decisions, §7); awaiting the user's Spec Review decision. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
+**Status:** APPROVED — Spec Review passed (user, 2026-10-21), revision 4 (SR-1 to SR-5 applied, §8; the user decisions of §7 recorded). Nothing in it is authorized for implementation until the Implementation Plan passes Plan Review and implementation is authorized.
 
 - Brainstorming outcome of 2026-10-21, after the user chose Option 3 of the open questions in `docs/architecture/research/2026-10-21-co-11-ci-parallelization-and-advisory-failures.md` §5.
 - ADR-072 (draft) records the decision. This work is separate from the CI/CD optimization (ADR-070) and the sharding work (ADR-071).

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** DRAFT (revision 1), awaiting Plan Review. It depends on the Spec being approved and on the user accepting ADR-072; neither has happened yet. No task is authorized; implementation needs its own authorization.
+**Status:** APPROVED — Plan Review passed (user, 2026-10-21), revision 1. Spec revision 4 is approved and ADR-072 is accepted (user, 2026-10-21). No task is authorized; implementation needs its own authorization.
 
 **Goal:** Make the Provenance validation step of the advisory CI job fail only on _new_ missing manifest entries, by comparing the validator's missing set with a committed known-missing list, so the job stops being red for debt that is already tracked (ADR-072, GAP-094).
 
@@ -137,7 +137,7 @@
 - [ ] **Step 1: Records (Spec R5).**
   - GAP-094: stays OPEN. Add the ratchet to its evidence. Change the resolved condition to "the known-missing list is empty and `provenance:validate` exits 0 without the flag". Do not change its status, type or blocking level.
   - GAP-094 Specification: a short amendment note under §4 item 4 saying CI reporting is superseded by ADR-072 and pointing to the new Spec. The Specification's other text is unchanged.
-  - ADR-072: change "Proposed" to "Accepted" only if the user has accepted it by then; otherwise leave it and say so in the PR.
+  - ADR-072: already Accepted (user, 2026-10-21); no change.
   - Run `npx prettier --check` on the changed files.
 - [ ] **Step 2: Landing.** With authorization, push with an explicit `src:dst` refspec and open the PR against `develop`. State in the description what the ratchet does and does not excuse. Stop; the merge needs the user's authorization.
 - [ ] **Step 3: AC5 evidence.** On the PR's `CI` run, read the advisory job's steps:
@@ -149,11 +149,11 @@
 
 ---
 
-## Self-check against the Spec (not yet a Plan Review)
+## Self-check against the Spec and Plan Review record
 
 - **Requirement coverage:** R1 → Task 3; R2 → Tasks 1 and 2; R3 → Task 4; R4 → Global Constraints (the list only shrinks, no task adds a line) and the Task 3 Step 5 check; R5 → Task 5.
 - **Acceptance coverage:** AC1 → Task 3 Step 3; AC2, AC3 → Task 1, Task 2 and Task 3 Step 5; AC4 → Task 2 and Task 3 Step 4; AC5 → Task 5 Step 3; AC6 → Task 3 Step 3; AC7 → Tasks 1, 2 and 5 Step 4.
-- **Known gaps to settle at Plan Review:**
-  - The Spec leaves open an automatic comparison of the list with the base branch's copy; this plan does not include it. Add a task if the user wants it.
-  - Task 3 uses a one-off generation command and no committed generator. If a repeatable generator is wanted, it is a new script and a new classifier entry.
-  - The docs-only PR and the implementation PR are separate; if the user prefers one PR, Tasks 1–5 move onto the current branch.
+- **Settled at Plan Review (user approved the plan as written, 2026-10-21):**
+  - The Spec leaves open an automatic comparison of the list with the base branch's copy; the plan does not include it. A later change can add it.
+  - Task 3 uses a one-off generation command and no committed generator. A repeatable generator would be a new script and a new classifier entry, outside this plan.
+  - The docs-only PR and the implementation PR are separate; the user approved this split.

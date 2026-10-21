@@ -891,7 +891,7 @@ Status: Accepted (user decision, 2026-10-20). Evidence: `docs/architecture/resea
 
 ## ADR-072 — Provenance validation in the advisory CI job becomes a ratchet over the known-missing list
 
-Status: Proposed (draft, 2026-10-21; not accepted until the user decides). Evidence: `docs/architecture/research/2026-10-21-co-11-ci-parallelization-and-advisory-failures.md` §3. Would be implemented by `docs/superpowers/specs/2026-10-21-provenance-ratchet-advisory-job-design.md`.
+Status: Accepted (user decision, 2026-10-21). Evidence: `docs/architecture/research/2026-10-21-co-11-ci-parallelization-and-advisory-failures.md` §3. Implemented, once authorized, by `docs/superpowers/specs/2026-10-21-provenance-ratchet-advisory-job-design.md` and `docs/superpowers/plans/2026-10-21-provenance-ratchet-advisory-job.md`.
 
 **Context.** The advisory job "Baselines (advisory): size, coverage, provenance" failed in every full run inspected, so the `CI` workflow is red while the required `ci` check is green (ADR-068). One of the two failing steps, Provenance validation, fails on 645 known missing manifest entries (GAP-094: ng 164, react 216, vue 265). A new missing entry cannot be told apart from the old debt.
 
