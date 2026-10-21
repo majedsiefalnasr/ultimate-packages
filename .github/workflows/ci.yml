@@ -190,9 +190,11 @@ jobs:
 
   # Not a required check (ADR-068). It runs the slow baseline checks and the
   # checks with known failures, so the CI workflow result can be red while the
-  # required `ci` check is green. Known failures: Provenance validation
-  # (GAP-094, missing manifest entries) and Bundle-size regression check
-  # (`component-metadata` exceeds its PERFORMANCE.md baseline).
+  # required `ci` check is green. Provenance validation is a ratchet (ADR-072):
+  # it excuses only the files in docs/architecture/provenance/known-missing.json
+  # (GAP-094) and fails on any new missing manifest entry. Known failure:
+  # Bundle-size regression check (`component-metadata` exceeds its
+  # PERFORMANCE.md baseline).
   ci-extended:
     name: "Baselines (advisory): size, coverage, provenance"
     runs-on: ubuntu-latest
@@ -252,4 +254,4 @@ jobs:
 
       - name: Provenance validation
         if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
-        run: pnpm run provenance:validate -- --base-ref "origin/$BASE"
+        run: pnpm run provenance:validate -- --base-ref "origin/$BASE" --known-missing docs/architecture/provenance/known-missing.json
