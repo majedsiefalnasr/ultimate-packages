@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** APPROVED — Plan Review passed (user, 2026-10-21), revision 1. Spec revision 4 is approved and ADR-072 is accepted (user, 2026-10-21). No task is authorized; implementation needs its own authorization.
+**Status:** APPROVED — Plan Review passed (user, 2026-10-21), revision 2 (one branch and one PR, user, 2026-10-21). Spec revision 4 is approved and ADR-072 is accepted (user, 2026-10-21). The user asked to implement on the existing branch (2026-10-21); that is the authorization for Tasks 1–5 up to opening the PR. Each merge still needs the user's explicit authorization.
 
 **Goal:** Make the Provenance validation step of the advisory CI job fail only on _new_ missing manifest entries, by comparing the validator's missing set with a committed known-missing list, so the job stops being red for debt that is already tracked (ADR-072, GAP-094).
 
@@ -19,9 +19,7 @@
 
 ## Global Constraints
 
-- **Branches:**
-  - The spec, ADR-072, the research note and this plan are on `docs/provenance-ratchet-advisory-job`. They land first, as one docs-only PR, after their own approvals.
-  - Implementation uses a new branch, `feat/provenance-ratchet`, created `--no-track` from `develop` after that PR merges. Run `pnpm install` under Node 24.15.0 in that checkout before the first commit, so the hooks exist.
+- **Branch:** everything, the docs and the implementation, lands on `docs/provenance-ratchet-advisory-job` in one PR against `develop` (user decision, 2026-10-21). It was created `--no-track` from `develop`. Node 24.15.0 is used in this checkout; the hooks already run here.
 - **Push:** only with an explicit `src:dst` refspec. Each merge needs the user's explicit authorization.
 - **Node:** prefix every `pnpm`/`node` command with `source ~/.nvm/nvm.sh && nvm use 24.15.0`.
 - **Independent of this plan:** the Bundle-size baseline PR (`component-metadata`, +26.5%). It goes first (Spec §7). Nothing here depends on it, and AC5 is written for both orders.
@@ -156,4 +154,4 @@
 - **Settled at Plan Review (user approved the plan as written, 2026-10-21):**
   - The Spec leaves open an automatic comparison of the list with the base branch's copy; the plan does not include it. A later change can add it.
   - Task 3 uses a one-off generation command and no committed generator. A repeatable generator would be a new script and a new classifier entry, outside this plan.
-  - The docs-only PR and the implementation PR are separate; the user approved this split.
+  - One branch and one PR carry the docs and the implementation (user, 2026-10-21). The closeout record is the only separate, later docs-only PR.
