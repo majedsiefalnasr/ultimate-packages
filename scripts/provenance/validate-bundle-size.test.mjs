@@ -14,7 +14,13 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath, URL } from "node:url";
 import { evaluatePackageSize, parsePhase10SizeTable } from "./validate-bundle-size.mjs";
+import { ALL_PUBLISHABLE_PACKAGES, measurePackage } from "./measure-package-size.mjs";
 
 // --- Stage 1: no prior baseline ------------------------------------------
 
@@ -181,4 +187,185 @@ test("parsePhase10SizeTable returns an empty map when there is no Phase 10 secti
   const sizes = parsePhase10SizeTable(markdown);
 
   assert.strictEqual(sizes.size, 0);
+});
+
+// --- ADR-066: real-Git CLI fixtures ------------------------------------------
+//
+// Each fixture commits packages/<name>/package.json and dist/index.mjs for
+// all 17 packages at the merge-base, so the CLI measures real files. Honest
+// values come from the exported measurePackage, formatted as the table is.
+
+const validatorPath = fileURLToPath(new URL("./validate-bundle-size.mjs", import.meta.url));
+const performancePath = "docs/architecture/PERFORMANCE.md";
+
+function runGit(cwd, ...args) {
+  return execFileSync(
+    "git",
+    ["-c", "commit.gpgsign=false", "-c", "core.fsmonitor=false", ...args],
+    { cwd, encoding: "utf8" }
+  ).trim();
+}
+
+function sizeTable(gzipKBByPackage) {
+  return [
+    "## Phase 10 — CI/Security/Quality Gates",
+    "",
+    "### Package size",
+    "",
+    "| Package | dist/ size | dist/ file count | index.mjs gzip size |",
+    "| ------- | ---------- | ---------------- | ------------------- |",
+    ...Object.entries(gzipKBByPackage).map(
+      ([name, kb]) => `| packages/${name} | 10.0 KB | 1 | ${kb} KB |`
+    ),
+    "",
+    "### Coverage",
+    "",
+    "| Package | line-coverage % |",
+    "| ------- | --------------- |",
+    "| ai | 75.7 |",
+    "",
+  ].join("\n");
+}
+
+// `buildMarkdowns(honest)` receives the honest gzip KB strings per package and
+// returns { baseMarkdown, headMarkdown } (headMarkdown null deletes the file).
+function runSizeCli(buildMarkdowns, { baseRef = "baseline" } = {}) {
+  const root = mkdtempSync(join(tmpdir(), "adr-066-size-"));
+  try {
+    runGit(root, "init", "-q");
+    runGit(root, "config", "user.name", "Size Fixture");
+    runGit(root, "config", "user.email", "size-fixture@example.invalid");
+
+    const honest = {};
+    ALL_PUBLISHABLE_PACKAGES.forEach((name, index) => {
+      const pkgPath = join(root, "packages", name);
+      mkdirSync(join(pkgPath, "dist"), { recursive: true });
+      writeFileSync(join(pkgPath, "package.json"), JSON.stringify({ name: `@ultimate/${name}` }));
+      const body = Array.from({ length: 40 * (index + 1) }, (_, i) => `export const v${i} = ${i};`);
+      writeFileSync(join(pkgPath, "dist", "index.mjs"), `${body.join("\n")}\n`);
+      honest[name] = (measurePackage(pkgPath).gzipBytes / 1024).toFixed(2);
+    });
+
+    const { baseMarkdown, headMarkdown } = buildMarkdowns(honest);
+    mkdirSync(join(root, dirname(performancePath)), { recursive: true });
+    writeFileSync(join(root, performancePath), baseMarkdown);
+    runGit(root, "add", "-A");
+    runGit(root, "commit", "-qm", "baseline");
+    runGit(root, "branch", "baseline");
+
+    if (headMarkdown === null) {
+      runGit(root, "rm", "-q", performancePath);
+    } else {
+      writeFileSync(join(root, performancePath), headMarkdown);
+      runGit(root, "add", performancePath);
+    }
+    runGit(root, "commit", "-qm", "feature");
+
+    const result = spawnSync(process.execPath, [validatorPath, "--base-ref", baseRef], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    return { status: result.status, output: `${result.stdout}\n${result.stderr}`, honest };
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+function addKB(value, delta) {
+  return (parseFloat(value) + delta).toFixed(2);
+}
+
+const STAGE1_APPENDIX = [
+  "## Stage 1 — Performance baselines (ADR-057)",
+  "",
+  "### P1 — Bundle size",
+  "",
+  "| Package | dist/ size | dist/ file count | index.mjs gzip size |",
+  "| ------- | ---------- | ---------------- | ------------------- |",
+  "| packages/ng | 70.0 KB | 4 | 12.30 KB |",
+  "| packages/react | 50.0 KB | 3 | 9.10 KB |",
+  "",
+  "### P2 — Component creation",
+  "",
+  "| Package | Median (ms) | p95 (ms) | Runs |",
+  "| ------- | ----------- | -------- | ---- |",
+  "| react | 12.3 | 14.1 | 30 |",
+  "",
+].join("\n");
+
+test("R6: changed row on a PERFORMANCE.md-only diff gets integrity; unchanged stale row gets regression", () => {
+  const result = runSizeCli((honest) => ({
+    baseMarkdown: sizeTable({ ...honest, react: "0.10", cli: addKB(honest.cli, 0.2) }),
+    headMarkdown: sizeTable({ ...honest, cli: addKB(honest.cli, 0.2) }),
+  }));
+  assert.strictEqual(result.status, 0, result.output);
+  assert.match(result.output, /react: OK \(baseline-only, integrity check/);
+  assert.match(result.output, /cli: OK \([\d.]+ KB -> [\d.]+ KB, -[\d.]+%\)/);
+  assert.doesNotMatch(result.output, /cli: OK \(baseline-only/);
+});
+
+test("R6: changed row on a PERFORMANCE.md-only diff fails integrity when it does not match", () => {
+  const result = runSizeCli((honest) => ({
+    baseMarkdown: sizeTable({ ...honest, react: "0.10" }),
+    headMarkdown: sizeTable({ ...honest, react: addKB(honest.react, 0.5) }),
+  }));
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /react: INTEGRITY FAIL/);
+});
+
+test("R6: appending a Stage 1 table leaves a stale unchanged ng row on the regression path", () => {
+  const result = runSizeCli((honest) => {
+    const base = sizeTable({ ...honest, ng: addKB(honest.ng, 3) });
+    return { baseMarkdown: base, headMarkdown: `${base}\n${STAGE1_APPENDIX}` };
+  });
+  assert.strictEqual(result.status, 0, result.output);
+  assert.doesNotMatch(result.output, /integrity/i);
+  assert.match(result.output, /ng: OK \([\d.]+ KB -> [\d.]+ KB, -[\d.]+%\)/);
+});
+
+test("R6: a size row removed at HEAD fails as baseline removed", () => {
+  const result = runSizeCli((honest) => {
+    const withoutCli = { ...honest };
+    delete withoutCli.cli;
+    return { baseMarkdown: sizeTable(honest), headMarkdown: sizeTable(withoutCli) };
+  });
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /cli: baseline removed/);
+});
+
+test("R6: an unreadable merge-base ref fails closed", () => {
+  const result = runSizeCli(
+    (honest) => ({ baseMarkdown: sizeTable(honest), headMarkdown: sizeTable(honest) + "\n" }),
+    { baseRef: "no-such-ref-adr-066" }
+  );
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /\[validate-bundle-size\] FAIL: could not read PERFORMANCE\.md/);
+});
+
+test("R6: a merge-base PERFORMANCE.md with no Phase 10 size table fails closed", () => {
+  const result = runSizeCli((honest) => ({
+    baseMarkdown: "# Performance Baseline\n\nNo Phase 10 section.\n",
+    headMarkdown: sizeTable(honest),
+  }));
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /merge-base PERFORMANCE\.md has no Phase 10 package size rows/);
+});
+
+test("R6: PERFORMANCE.md deleted at HEAD fails closed", () => {
+  const result = runSizeCli((honest) => ({ baseMarkdown: sizeTable(honest), headMarkdown: null }));
+  assert.strictEqual(result.status, 1, result.output);
+  assert.match(result.output, /PERFORMANCE\.md does not exist at HEAD/);
+});
+
+test("parsePhase10SizeTable stops at the next heading after its table", () => {
+  const sizes = parsePhase10SizeTable(
+    `${sizeTable({ ng: "65.80", react: "87.16" })}\n${STAGE1_APPENDIX}`
+  );
+  assert.deepStrictEqual(
+    [...sizes],
+    [
+      ["ng", 65.8],
+      ["react", 87.16],
+    ]
+  );
 });
