@@ -11,6 +11,7 @@ import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { TextDecoder } from "node:util";
 import { classifyPackage, listWatchedFiles } from "./production-scope.mjs";
+import { parseKnownMissing, compareKnownMissing } from "./known-missing.mjs";
 
 const PROVENANCE_PATH = "docs/architecture/PROVENANCE.md";
 const REQUIRED_HEADINGS = [
@@ -197,36 +198,108 @@ function readManifestPaths(manifestPath) {
   }
 }
 
+// Ratchet (ADR-072): with --known-missing <path>, a missing entry is excused only
+// when the committed list names it, and a listed file that is no longer missing
+// fails, so the list only shrinks. Without the flag nothing below changes.
+const knownMissingIndex = process.argv.indexOf("--known-missing");
+let knownMissing = null;
+let knownMissingPath = null;
+if (knownMissingIndex !== -1) {
+  knownMissingPath = process.argv[knownMissingIndex + 1];
+  if (!knownMissingPath || knownMissingPath.startsWith("--")) {
+    fail("--known-missing requires a value");
+  }
+  if (!existsSync(knownMissingPath)) fail(`known-missing list ${knownMissingPath} does not exist`);
+  let text;
+  try {
+    text = readFileSync(knownMissingPath, "utf8");
+  } catch (err) {
+    fail(`known-missing list ${knownMissingPath} is unreadable: ${err.message}`);
+  }
+  const parsed = parseKnownMissing(text);
+  if (!parsed.ok) fail(`known-missing list ${knownMissingPath}: ${parsed.error}`);
+  knownMissing = parsed.list;
+}
+// Packages whose missing set was computed, or that failed for another reason.
+// A list key for a package that failed otherwise is not compared: its missing
+// set is unknown, and the other failure is already reported.
+const comparedPackages = new Set();
+const erroredPackages = new Set();
+let knownRemaining = 0;
+
 const failures = [];
 for (const { name, path } of findWatchedPackageDirs()) {
-  if (listWatchedFiles(path).length === 0) continue;
+  if (listWatchedFiles(path).length === 0) {
+    comparedPackages.add(name);
+    continue;
+  }
   const scope = classifyPackage(path);
   if (scope.error) {
+    erroredPackages.add(name);
     failures.push(`${name}: classifier error: ${scope.error}`);
     continue;
   }
   const counts = `production=${scope.production.size} excluded=${scope.excluded.size}`;
   if (scope.production.size === 0) {
+    comparedPackages.add(name);
     pass(`${name}: ${counts} missing=0`);
     continue;
   }
 
   const manifestPath = join("docs/architecture/provenance", `${name}.json`);
   if (!existsSync(manifestPath)) {
+    erroredPackages.add(name);
     failures.push(`${name}: production files but no manifest at ${manifestPath}`);
     continue;
   }
   const manifest = readManifestPaths(manifestPath);
   if (manifest.error) {
+    erroredPackages.add(name);
     failures.push(`${name}: manifest ${manifestPath} ${manifest.error}`);
     continue;
   }
 
   const missing = [...scope.production].filter((file) => !manifest.paths.has(file)).sort();
-  const summary = `${name}: ${counts} missing=${missing.length}`;
-  if (missing.length === 0) pass(summary);
-  else console.error(`[provenance:validate] FAIL: ${summary}`);
-  for (const file of missing) failures.push(`${file} has no entry in ${manifestPath}`);
+  comparedPackages.add(name);
+
+  if (knownMissing === null) {
+    const summary = `${name}: ${counts} missing=${missing.length}`;
+    if (missing.length === 0) pass(summary);
+    else console.error(`[provenance:validate] FAIL: ${summary}`);
+    for (const file of missing) failures.push(`${file} has no entry in ${manifestPath}`);
+    continue;
+  }
+
+  const { added, stale, remaining } = compareKnownMissing(
+    { [name]: missing },
+    { [name]: knownMissing[name] ?? [] }
+  );
+  knownRemaining += remaining;
+  const summary = `${name}: ${counts} missing=${missing.length} known=${remaining} new=${added.length}`;
+  if (added.length === 0 && stale.length === 0) pass(summary);
+  else console.error(`[provenance:validate] FAIL: ${summary} stale=${stale.length}`);
+  for (const file of added) {
+    failures.push(`${file} has no entry in ${manifestPath} and is not in the known-missing list`);
+  }
+  for (const file of stale) {
+    failures.push(
+      `${file} is listed in ${knownMissingPath} but is no longer missing; remove it from the list`
+    );
+  }
+}
+
+// A list key for a package that was never compared (renamed, removed, or whose
+// production set is empty) cannot excuse anything: every line under it is stale.
+// Packages that failed for another reason are skipped; that failure is reported.
+if (knownMissing !== null) {
+  for (const [name, files] of Object.entries(knownMissing)) {
+    if (comparedPackages.has(name) || erroredPackages.has(name)) continue;
+    for (const file of files) {
+      failures.push(
+        `${file} is listed in ${knownMissingPath} but package ${name} was not checked; remove it from the list`
+      );
+    }
+  }
 }
 
 if (failures.length > 0) {
@@ -236,4 +309,6 @@ if (failures.length > 0) {
 }
 
 console.log("[provenance:validate] all checks passed");
+if (knownMissing !== null)
+  console.log(`[provenance:validate] known-missing: ${knownRemaining} remaining`);
 process.exit(0);
