@@ -56,6 +56,23 @@ jobs:
   # Screenshot baselines and CI visual execution use the same pinned
   # Playwright image and the same CPU architecture (arm64); see
   # docs/superpowers/specs/2026-10-05-ci-visual-environment-design.md.
+  #
+  # Check names read `Playwright visual + a11y (<framework>, <shard>)`. The job
+  # name has no expression on purpose: a name that uses the matrix renders raw
+  # (for example `matrix.label`) when the job is skipped, so the skipped check
+  # keeps its plain name. The shard decides which suites a job runs (ADR-071;
+  # each suite's run, validation and upload steps share a shard):
+  #
+  #   shard  ng and vue                                  react
+  #   1      strict suite + its accessibility baseline   strict suite + its
+  #          validation and uploads; G3-C2               validation and
+  #                                                      uploads; W1
+  #   2      G3-A; G3-D                                  -
+  #   3      G3-B; G3-C1; G3-E                           -
+  #
+  # The matrix (framework and shard) comes from scripts/provenance/classify-changes.mjs
+  # (TRACK_A_SHARDS); the `matrix.shard == N` conditions on the steps below are
+  # the source of this table.
   track-a-browser-visual-a11y:
     name: Playwright visual + a11y
     needs: changes
