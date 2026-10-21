@@ -1,10 +1,12 @@
 # Browser track-a Job Names — Design
 
 **Date:** 2026-10-21
-**Status:** DRAFT (revision 1). Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
+**Status:** DRAFT (revision 2). The blocking spike is done (§7.1). Not reviewed. Nothing in it is authorized for implementation until Spec Review passes, an Implementation Plan exists and passes Plan Review, and implementation is authorized.
 
 - The user asked on 2026-10-21 why the sharded Browser jobs read `Playwright visual + a11y (ng, 1)` and why the names do not say what each job does. This Spec answers with a naming change. It amends ADR-071's "Check names" line, so it needs the user's decision on that amendment.
 - It changes display names only. No test, step, validator, baseline, trigger or required check changes.
+
+**Spike outcome (2026-10-21):** a `name:` that uses `matrix.label` works on normal runs but renders raw (for example `matrix.label`) when the job is skipped, and no fallback expression avoids it (§7.1). R1 to R3 and AC1 to AC3 below describe the labelled-name design and **do not hold as written**. They stay as the record of the proposal. The recommended way forward is §7.1 option B or D (document or summarise the shard map, keep the names), which needs a different, much smaller Spec if the user chooses it.
 
 **Evidence baseline:** `develop` = `a5195a6b`. On PR #54 the Browser run [39565891490](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/39565891490) showed the ten checks `Playwright visual + a11y (ng, 1)` to `(vue, 3)`, `(react, 1)` and `SSR hydration (…)`.
 
@@ -40,7 +42,7 @@
 - The track-a job's `name:` uses the label: `name: ${{ matrix.label }}`, or the fixed prefix and the label. It must not append `(framework, shard)` any more.
 - Every step keeps its name, its position and its `matrix.shard` condition. The tranche artifact name keeps `${{ matrix.framework }}-${{ matrix.shard }}`.
 - The job's `if:` and the `fromJSON` matrix are unchanged, so `frameworks=[]` still skips the job as one.
-- **The skipped job must keep the bare name `Playwright visual + a11y`** (AC1.3 (b) of the CI/CD optimization). A `name:` that contains a matrix expression is not expanded when the job is skipped before the matrix exists, so GitHub may render the raw expression. Whether any `name:` form avoids that is **not known yet**; §7 makes it a spike that must pass before a Plan is written.
+- **The skipped job's name depends on the form, and only one form keeps it (spike, §7.1).** The bare `name: Playwright visual + a11y` is the only form that renders that name when the job is skipped. Every form that uses `matrix.label` renders raw when skipped. So this Spec cannot give the track-a job a label-based name and also keep the skipped name, unless the job is split in two (see §7.1, options).
 
 ### R3 — Tests
 
@@ -64,12 +66,12 @@
 
 ## 5. Risks
 
-| ID  | Risk                                                                                                                                                                                                          | Mitigation                                                                                                                                                                             |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| K1  | The check name is longer and GitHub truncates it in the checks list.                                                                                                                                          | Keep the label short; the Plan fixes a length limit and a test enforces it.                                                                                                            |
-| K2  | A label disagrees with what the shard runs (a suite moves, the label does not).                                                                                                                               | R3's agreement test reads `browser.yml`; a mismatch fails the classifier tests, which run in `ci`.                                                                                     |
-| K3  | Something outside the repository keys on the old names.                                                                                                                                                       | Branch protection requires only `ci` (checked 2026-10-21). Repository text that quotes the names is listed in R4.                                                                      |
-| K4  | A `name:` with a matrix expression may render raw (`${{ matrix.label }}`) when the job is skipped, because the matrix is never expanded. The current name has no expression, which is why it renders cleanly. | Spike before the Plan (§7 item 1). If no `name:` form keeps the bare skipped name, this Spec is withdrawn or reduced to a documentation table, not shipped with a worse skipped check. |
+| ID  | Risk                                                                            | Mitigation                                                                                                             |
+| --- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| K1  | The check name is longer and GitHub truncates it in the checks list.            | Keep the label short; the Plan fixes a length limit and a test enforces it.                                            |
+| K2  | A label disagrees with what the shard runs (a suite moves, the label does not). | R3's agreement test reads `browser.yml`; a mismatch fails the classifier tests, which run in `ci`.                     |
+| K3  | Something outside the repository keys on the old names.                         | Branch protection requires only `ci` (checked 2026-10-21). Repository text that quotes the names is listed in R4.      |
+| K4  | A `name:` with a matrix expression renders raw when the job is skipped.         | **Confirmed by the spike (§7.1).** A fallback expression does not avoid it. The Plan must use one of the §7.1 options. |
 
 ## 6. Landing
 
@@ -79,7 +81,29 @@
 
 ## 7. Open questions for Spec Review
 
-1. **Spike (blocking):** on a throwaway branch, push a change that gives `frameworks=[]` (for example a docs-only file) and read how the skipped track-a check renders under each candidate `name:` form: the matrix expression alone, an expression with a fixed prefix, and an expression with a fallback (`format`/`||`). Also read how a normal run renders. Record the results. Without a form that keeps the bare skipped name, this Spec does not proceed. The spike also records whether GitHub still appends matrix values after an explicit `name:` that uses the matrix, since this Spec's wording depends on it.
+1. **Spike (done, 2026-10-21).** A throwaway workflow on a throwaway branch ran the real track-a job's shape (`needs`, `if:`, `fromJSON` matrix) with only `name:` varying, once with an empty matrix (skipped) and once with two entries (normal). Run [39571416493](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/39571416493). The branch was deleted afterwards.
+
+   | `name:` form                                          | Skipped job renders as                           | Normal job renders as                                            |
+   | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------- |
+   | `Playwright visual + a11y` (today)                    | `Playwright visual + a11y`                       | `Playwright visual + a11y (ng, 1, Angular strict suite + G3-C2)` |
+   | `${{ matrix.label }}`                                 | `matrix.label`                                   | `Angular strict suite + G3-C2`                                   |
+   | `Playwright visual + a11y · ${{ matrix.label }}`      | `Playwright visual + a11y · ${{ matrix.label }}` | `Playwright visual + a11y · Angular strict suite + G3-C2`        |
+   | `${{ matrix.label \|\| 'Playwright visual + a11y' }}` | `matrix.label \|\| 'Playwright visual + a11y'`   | `Angular strict suite + G3-C2`                                   |
+
+   Findings:
+
+   - **A `name:` that uses the matrix replaces GitHub's `(framework, shard)` suffix.** That is the wanted behaviour on normal runs, and it works for every form that uses `matrix.label`. (Today's form, with no expression, gets the suffix of all matrix values, here `(ng, 1, <label>)` because the probe's matrix had a `label` key. In `browser.yml` today the matrix has no `label`, so it reads `(ng, 1)`.)
+   - **Every form that uses the matrix renders raw when the job is skipped.** The fallback form does not help, because the expression is never evaluated for a skipped job. A skipped check would read `matrix.label` or `${{ matrix.label }}`, which is worse than today. It would break AC1.3 (b) of the CI/CD optimization, which records the bare skipped name.
+   - **Only a `name:` with no expression keeps the bare skipped name.**
+   - **Scope of the probe:** it used the same `needs`, job-level `if:` and `fromJSON` matrix shape as `browser.yml`, on `ubuntu-latest` instead of the Playwright container. Container and runner do not affect how a name renders.
+
+   **Options for the Plan (user decision):**
+
+   - **A. Split into two jobs.** Keep `track-a-browser-visual-a11y` with its bare name for the skipped case and add a second, labelled job with opposite `if:` conditions. Every step would exist twice, which doubles the YAML. Not recommended.
+   - **B. Keep the names and document the shard map.** Leave `(ng, 1)` and put a table of which suites each number runs in `browser.yml`'s header. No risk to the skipped name. Recommended.
+   - **C. Accept a worse skipped name.** Take the labelled names and accept that a skipped track-a check reads `matrix.label`. Not recommended: it shows a confusing check on every docs-only PR.
+   - **D. Put the label in the job summary.** The first step of each job writes its shard's suites to `$GITHUB_STEP_SUMMARY`. The check name stays and the summary says what ran. Complements B.
+
 2. The label wording: framework and suites (`Angular · strict suite + G3-C2`), or shorter (`Angular 1/3: strict + C2`).
 3. Whether the display name should say `Angular` and `Vue` in full, or keep the short `ng` and `vue` that the repository uses elsewhere.
 4. Whether the SSR jobs (`SSR hydration (ng)`) get the same treatment. They are one job per framework and already read clearly, so this Spec leaves them alone.
