@@ -1652,9 +1652,9 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
 
 #### GAP-091 — The coverage gate fails because the coverage scope counts Storybook stories and the baselines predate them
 
-- **Status:** OPEN (registered 2026-10-07, CI-health registration; coverage-scope and baseline defect)
+- **Status:** RESOLVED on `develop` (2026-10-21; registered 2026-10-07, CI-health registration; coverage-scope and baseline defect). The scope is ADR-060 (PR #16, `bdc4dbcf`); the re-baseline is [PR #61](https://github.com/majedsiefalnasr/ultimate-packages/pull/61) at `f5834c05`. `main` receives it with the next `develop` to `main` merge.
 - **Type:** CI, Testing
-- **Blocking level:** MEDIUM (the coverage gate is red on every push)
+- **Blocking level:** MEDIUM (was: the coverage gate is red on every push; the gate passes on `develop` since `f5834c05`)
 - **Current evidence:**
   - "Coverage regression check" fails: React `89.69% -> 77.7%`, Vue `92.13% -> 80.7%` at `3d0203d` and `-> 80.2%` at `4b9bfaa` (2-point threshold). The React failure is present since the first remote CI run (2026-10-04).
   - The baselines (React 89.69%, Vue 92.13%) were measured 2026-09-09 at `62480b6` (`docs/architecture/PERFORMANCE.md`), before the packages had Storybook stories.
@@ -1662,7 +1662,11 @@ Every entry below originates from the exhaustive Prime-vs-Ultimate parity audit 
   - **The 0.48-point Vue drop** between `3d0203d` and `4b9bfaa` is entirely the 114 uncovered lines that GAP-064 G3-C2 added to five Vue menu stories files (`mega-menu`, `panel-menu`, `menubar`, `tiered-menu`, `context-menu` `.stories.ts`), partly offset by 3 newly covered lines in `MenubarSub.vue`. No component source coverage changed. **Classified under this gap (user decision 2026-10-07):** G3-C2 added story lines that the current coverage scope counts, but there is no evidence of a source or component coverage regression. The cause is the coverage scope and baseline model. G3-C2 is not reopened.
   - **React:** not yet verified; likely the same scope effect.
   - **Local evidence correction.** The git-ignored local `packages/vue/coverage/coverage-summary.json` is the 2026-09-09 artifact. The local `coverage:validate` pass reported by the G3-C2 Task 11 verification read stale artifacts without a fresh measurement, so it is not valid coverage evidence (erratum in `docs/architecture/research/2026-10-07-gap-064-g3c2-closeout.md`).
-- **Expected state:** The coverage scope and the baselines measure the same file set, and the gate fails only on real regressions.
+- **Resolution evidence (2026-10-21):** [closeout record](research/2026-10-21-coverage-rebaseline-closeout.md).
+  - The scope was already in place (ADR-060, PR #16). The missing part was the re-baseline: React `89.69` to `91.65` (11107/12118 lines) and Vue `92.13` to `95.11` (15503/16299 lines) in `docs/architecture/PERFORMANCE.md`, a diff of exactly those two table rows ([PR #61](https://github.com/majedsiefalnasr/ultimate-packages/pull/61), merge `f5834c05`). The values were measured on CI (run [39599816154](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/39599816154), a throwaway probe branch since deleted) and match the local measurement.
+  - Push run on `develop` at `f5834c05`: Quality gate [39604028937](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/39604028937) and Browser [39604028812](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/39604028812) succeeded; "Coverage measurement" and "Coverage regression check" in the advisory job succeeded.
+  - The local-evidence defect above (a stale report read as a measurement) is closed by [PR #59](https://github.com/majedsiefalnasr/ultimate-packages/pull/59) (`56051598`): `validate-coverage.mjs` fails a report older than the code it measures, and `coverage:measure` runs every package (`--no-bail`).
+- **Expected state:** The coverage scope and the baselines measure the same file set, and the gate fails only on real regressions. **Met on `develop`** (see Resolution evidence).
 - **Why it matters:** The coverage gate cannot distinguish real regressions (see GAP-033), and adding stories lowers the reported number.
 - **What it blocks:** A working coverage gate.
 - **Dependencies:** None. Related: GAP-033, GAP-089.
