@@ -85,6 +85,12 @@ Before modifying any repository file, establish: the current branch, the current
 - Approval for one task does not automatically authorize a different task.
 - Surface ambiguity or conflicting evidence to the human rather than silently resolving an architectural question that belongs to them.
 
+### 5.5 Project language
+
+- Write every repository artifact in English: documentation, ADRs, glossary entries, code, code comments, test names, commit messages, branch names, and GitHub issue and PR titles and bodies.
+- Converse with the user in whatever language they use; translate decisions into English when recording them.
+- Use another language for a specific artifact only when the user explicitly requests it for that artifact.
+
 ---
 
 ## 6. Agent skills
