@@ -49,6 +49,7 @@ Verification evidence lives in different places depending on its durability: CI 
 | Performance/bundle-size baselines                   | `docs/architecture/PERFORMANCE.md`                                            |
 | Accessibility baseline                              | `docs/architecture/ACCESSIBILITY_BASELINE.md`                                 |
 | Source provenance of ported code                    | `docs/architecture/PROVENANCE.md`                                             |
+| What the Prime baseline ships (upstream reference)  | `docs/prime-reference/README.md`                                              |
 
 ---
 
