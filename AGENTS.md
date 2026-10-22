@@ -93,6 +93,10 @@ Before modifying any repository file, establish: the current branch, the current
 
 Issues are tracked in GitHub Issues (`majedsiefalnasr/ultimate-packages`) via the `gh` CLI. See `docs/agents/issue-tracker.md`.
 
+### Triage labels
+
+The five canonical triage roles map one-to-one to GitHub labels of the same name: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
 ### Domain docs
 
 Single-context: root `GLOSSARY.md` (if present) plus ADRs in `docs/architecture/DECISIONS.md`. See `docs/agents/domain.md`.

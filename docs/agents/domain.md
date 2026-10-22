@@ -16,6 +16,19 @@ Source-of-truth precedence is defined in `AGENTS.md` §2; real repository eviden
 
 Creating, triaging, or publishing issues does not authorize implementation; each task needs its own authorization (`AGENTS.md` §5.4).
 
+## File structure
+
+Single-context repo. The glossary lives at the root; ADRs live in `docs/architecture/DECISIONS.md` (not `docs/adr/`):
+
+```
+/
+├── GLOSSARY.md                       ← created lazily by /domain-modeling
+├── docs/architecture/
+│   ├── BLUEPRINT.md                  ← architectural intent and governance
+│   └── DECISIONS.md                  ← ADR log
+└── packages/                         ← 18 packages share one vocabulary
+```
+
 ## Use the glossary's vocabulary
 
 When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, a test name), use the term as defined in `GLOSSARY.md`. Don't drift to synonyms the glossary explicitly avoids.
