@@ -4,7 +4,7 @@
 **Version:** 0.1  
 **Status:** Architecture Baseline  
 **Language:** English  
-**Audience:** Platform architects, framework engineers, design-system engineers, developer-experience engineers, AI/tooling engineers, Codex/Superpowers agents
+**Audience:** Platform architects, framework engineers, design-system engineers, developer-experience engineers, AI/tooling engineers, AI coding agents
 
 ---
 
@@ -22,14 +22,7 @@ The initial target frameworks are:
 
 The architecture must remain extensible to additional frameworks in the future.
 
-This document is the architectural baseline for implementation. Implementation work must follow the Superpowers workflow:
-
-1. Specification
-2. Implementation Plan
-3. Implementation
-4. Verification
-
-Architectural deviations require explicit review.
+This document is the architectural baseline for implementation. Architectural deviations require explicit review (see §37).
 
 ---
 
@@ -1224,29 +1217,9 @@ Objectives:
 
 ---
 
-## 36. Superpowers Workflow
+## 36. Implementation Principles
 
-Every implementation phase must use:
-
-```text
-Phase
-  ↓
-Spec
-  ↓
-Review
-  ↓
-Implementation Plan
-  ↓
-Implementation
-  ↓
-Verification
-  ↓
-Phase Exit Review
-```
-
-The specification must reference this blueprint.
-
-The implementation plan must not silently redefine architecture.
+Implementation must reference this blueprint and must not silently redefine architecture.
 
 Implementation should be incremental and verifiable.
 
@@ -1314,8 +1287,7 @@ docs/architecture/
 ├── DEPENDENCIES.md
 ├── COMPATIBILITY.md
 ├── PACKAGE_ARCHITECTURE.md
-├── AI_ARCHITECTURE.md
-└── ROADMAP.md
+└── AI_ARCHITECTURE.md
 ```
 
 `BLUEPRINT.md` is the baseline.
@@ -1491,4 +1463,4 @@ It should be updated only when:
 
 Implementation details should not be added here unless they affect architecture.
 
-For implementation details, use phase specifications and implementation plans.
+For implementation details, use issues and pull requests.
