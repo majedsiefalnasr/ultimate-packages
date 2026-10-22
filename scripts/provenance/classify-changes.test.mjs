@@ -194,7 +194,7 @@ test("CLI: the log line includes the track_a matrix", () => {
   assert.match(
     stdout,
     new RegExp(
-      `frameworks=\\["ng","react","vue"\\] track_a=${FULL_TRACK_A.replace(/[{}[\]]/g, "\\$&")}`
+      `frameworks=\\["ng","react","vue"\\] track_a=${FULL_TRACK_A.replace(/[\\{}[\]]/g, "\\$&")}`
     )
   );
 });
