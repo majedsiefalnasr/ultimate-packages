@@ -113,8 +113,7 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
  * already-tested limitation of Table's Scroller composition, not a newly
  * invented caveat.
  *
- * Drift classification (2026-10-18, Spec W2-B4-R3 Amendment A1; research
- * record docs/architecture/research/2026-10-18-w2-b4-metadata-drift-classification.md):
+ * Drift classification (2026-10-18, W2-B4 metadata drift classification):
  * the selection-column, loading, lazy-load, row-editing, cell-editing,
  * filter and row-expansion props/events the sources declare (GAP-042/043/044/046)
  * are now recorded as their own facts. So are ng's two-way companion

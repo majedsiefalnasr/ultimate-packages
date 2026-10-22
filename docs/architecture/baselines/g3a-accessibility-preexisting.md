@@ -1,6 +1,6 @@
 # GAP-064 G3-A — pre-existing accessibility violations on the G3-A verification stories
 
-**Date:** 2026-10-04. **Type:** dated evidence (AGENTS.md tier 6). This file is **not** an accessibility baseline and not CI configuration.
+**Date:** 2026-10-04. **Type:** pre-existing axe violation allowlist read by one CI validator. It is not the accessibility baseline (`docs/architecture/ACCESSIBILITY_BASELINE.md`).
 
 ## What this is
 

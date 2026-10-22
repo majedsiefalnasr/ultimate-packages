@@ -1,12 +1,12 @@
 # GAP-064 G3-C2 — pre-existing accessibility violations on the G3-C2 verification stories
 
-**Date:** 2026-10-06. **Type:** dated evidence (AGENTS.md tier 6). This file is **not** an accessibility baseline and not CI configuration.
+**Date:** 2026-10-06. **Type:** pre-existing axe violation allowlist read by one CI validator. It is not the accessibility baseline (`docs/architecture/ACCESSIBILITY_BASELINE.md`).
 
 ## What this is
 
 These are the 85 axe violation fingerprints (`rule:story:target`) that the 19 G3-C2 stories (ng 10, vue 9) show **before and after** the G3-C2 CSS port. They predate G3-C2; the G3-C2 stories only expose them, because most of those story IDs were never scanned before.
 
-- Derivation: the unique rows observed both in the pre-port run (`6ef9dd4`, Plan Task 2) and the post-port run (`0344039`, Plan Task 9 Step 3). Both are Docker `mcr.microsoft.com/playwright:v1.63.0-jammy` runs of `packages/{ng,vue}/e2e/g3c2-aura-styles.spec.ts`, per `docs/superpowers/plans/2026-10-06-gap-064-g3c2-menus.md`. Counts: before 85, after 101, pre-existing 85, introduced 16, fixed 0.
+- Derivation: the unique rows observed both in the pre-port run (`6ef9dd4`) and the post-port run (`0344039`). Both are Docker `mcr.microsoft.com/playwright:v1.63.0-jammy` runs of `packages/{ng,vue}/e2e/g3c2-aura-styles.spec.ts`, per `docs/superpowers/plans/2026-10-06-gap-064-g3c2-menus.md`. Counts: before 85, after 101, pre-existing 85, introduced 16, fixed 0.
 - Consumer: `scripts/provenance/validate-g3c2-accessibility.mjs` only. `validate-accessibility-baseline.mjs`, `validate-g3a-accessibility.mjs`, `validate-g3b-accessibility.mjs` and `validate-g3c1-accessibility.mjs` never read it.
 - Introduced rows are **not** listed here; they go to the Task 10 review gate, and only approved ones enter `ACCESSIBILITY_BASELINE.md`.
 - Changes are human-authored, reviewed edits only. Remove a row once its debt is fixed (the check reports it as STALE). Never add a row to silence a violation introduced by a later change.

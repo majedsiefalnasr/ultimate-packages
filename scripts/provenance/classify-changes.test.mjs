@@ -57,7 +57,7 @@ test("isDocsOnlyPath: Markdown that a CI script reads is not docs-only", () => {
     "docs/architecture/SAST_BASELINE.md",
     "docs/architecture/PROVENANCE.md",
     "docs/architecture/COMPATIBILITY.md",
-    "docs/architecture/research/2026-10-08-gap-064-g3e-accessibility-preexisting.md",
+    "docs/architecture/baselines/g3e-accessibility-preexisting.md",
   ]) {
     assert.equal(isDocsOnlyPath(p), false, p);
   }

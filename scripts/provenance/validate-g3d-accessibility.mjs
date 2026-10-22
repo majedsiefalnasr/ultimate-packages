@@ -30,8 +30,7 @@ import {
   parseBaselineFingerprints,
 } from "./validate-accessibility-baseline.mjs";
 
-const PREEXISTING_PATH =
-  "docs/architecture/research/2026-10-07-gap-064-g3d-accessibility-preexisting.md";
+const PREEXISTING_PATH = "docs/architecture/baselines/g3d-accessibility-preexisting.md";
 const BROWSERS = ["chromium", "firefox", "webkit"];
 const EXPECTED_STORY_COUNT = { ng: 17, vue: 17 };
 
