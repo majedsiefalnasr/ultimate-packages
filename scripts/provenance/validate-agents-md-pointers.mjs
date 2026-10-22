@@ -29,7 +29,7 @@ const content = readFileSync(AGENTS_MD_PATH, "utf8");
 
 // Extract the first backtick-quoted repository-relative path in each data
 // row's "See" column. The table's rows look like:
-//   | Current phase/track status | `docs/architecture/ROADMAP.md` |
+//   | Current phase/track status | `docs/architecture/DECISIONS.md` |
 // Some rows annotate the path with trailing prose (e.g. "(dated files)")
 // or reference a non-filesystem target (e.g. a package name) alongside a
 // real path — this extracts only the first backtick-quoted token per row,

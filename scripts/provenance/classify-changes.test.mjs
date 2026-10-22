@@ -39,8 +39,8 @@ const SCRIPT = resolve(import.meta.dirname, "classify-changes.mjs");
 
 test("isDocsOnlyPath: Markdown outside code and tool-read paths is docs-only", () => {
   for (const p of [
-    "docs/superpowers/specs/x-design.md",
-    "docs/architecture/research/2026-10-19-x.md",
+    "docs/notes/x-design.md",
+    "docs/architecture/notes/2026-10-19-x.md",
     "README.md",
     "CHANGELOG.md",
     "SECURITY.md",

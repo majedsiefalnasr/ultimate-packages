@@ -54,8 +54,7 @@ jobs:
         run: node scripts/provenance/classify-changes.mjs --base-ref "origin/$BASE" --event "$EVENT"
 
   # Screenshot baselines and CI visual execution use the same pinned
-  # Playwright image and the same CPU architecture (arm64); see
-  # docs/superpowers/specs/2026-10-05-ci-visual-environment-design.md.
+  # Playwright image and the same CPU architecture (arm64).
   #
   # Check names read `Playwright visual + a11y (<framework>, <shard>)`. The job
   # name has no expression on purpose: a name that uses the matrix renders raw

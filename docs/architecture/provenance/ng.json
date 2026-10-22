@@ -357,7 +357,7 @@
     "originalPath": "@primeuix/styles@2.0.3 orderlist",
     "ultimateDestination": "packages/ng/src/order-list/order-list-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the list rule targets the list container [data-pc-section=\"listcontainer\"]. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the drag-mode list reset (E3-V1), drag items and selected drag items, and striped rows. Record: docs/architecture/research/2026-10-08-gap-064-g3e-e3-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the list rule targets the list container [data-pc-section=\"listcontainer\"]. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the drag-mode list reset (E3-V1), drag items and selected drag items, and striped rows."
   },
   {
     "originalPath": "n/a",
@@ -387,7 +387,7 @@
     "originalPath": "@primeuix/styles@2.0.3 picklist",
     "ultimateDestination": "packages/ng/src/pick-list/pick-list-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for the drag-mode list reset (E3-V1), drag items and selected drag items, and the source/controls/target order (GAP-122). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e3-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for the drag-mode list reset (E3-V1), drag items and selected drag items, and the source/controls/target order (GAP-122)."
   },
   {
     "originalPath": "n/a",
@@ -411,7 +411,7 @@
     "originalPath": "@primeuix/styles@2.0.3 dataview",
     "ultimateDestination": "packages/ng/src/data-view/data-view-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1) and the Angular list reset. Record: docs/architecture/research/2026-10-08-gap-064-g3e-e4-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1) and the Angular list reset."
   },
   {
     "originalPath": "n/a",
@@ -831,13 +831,13 @@
     "originalPath": "@primeuix/styles@2.0.3 imagecompare",
     "ultimateDestination": "packages/ng/src/image-compare/image-compare-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "GAP-064 G3-E E-1: 12 ImageCompare upstream groups ported with the approved selector mapping in packages/themes/test/utils/g3e-port.mjs. The final D5 retained span rule is Ultimate-authored, not an upstream declaration. E1-V2 C1 adapts that rule with top:auto, bottom:auto and height:100%, preserving the absolute span as image/clipping carrier; design and experiment evidence: docs/architecture/research/2026-10-08-gap-064-g3e-e1-v2-p2-production-proposal.md and docs/architecture/research/2026-10-08-gap-064-g3e-e1-v2-c1-experiment-result.md. The approved Firefox thumb declaration, undefined border-style token and E1-B1 assertions remain unchanged."
+    "modificationDescription": "GAP-064 G3-E E-1: 12 ImageCompare upstream groups ported with the approved selector mapping in packages/themes/test/utils/g3e-port.mjs. The final D5 retained span rule is Ultimate-authored, not an upstream declaration. E1-V2 C1 adapts that rule with top:auto, bottom:auto and height:100%, preserving the absolute span as image/clipping carrier. The approved Firefox thumb declaration, undefined border-style token and E1-B1 assertions remain unchanged."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 image",
     "ultimateDestination": "packages/ng/src/image/image-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13–16 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e1-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13–16 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained)."
   },
   {
     "originalPath": "packages/primeng/src/imagecompare/imagecompare.ts",
@@ -861,13 +861,13 @@
     "originalPath": "@primeuix/styles@2.0.3 carousel",
     "ultimateDestination": "packages/ng/src/carousel/carousel-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16–17 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e2-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16–17 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 galleria",
     "ultimateDestination": "packages/ng/src/galleria/galleria-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e2-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4)."
   },
   {
     "originalPath": "n/a",
@@ -909,7 +909,7 @@
     "originalPath": "packages/primeng/src/chip/chip.ts",
     "ultimateDestination": "packages/ng/src/chip/chip.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2, evidence record research/2026-10-16-gap-094-backfill-batch-2-evidence.md). Keeps PrimeNG 21.1.9 Chip's template structure (ng-content, image else icon, label, removable span with role=button, tabindex disabled ? -1 : 0, aria-label, click/keydown) and its close()/onKeydown() statements (Enter or Backspace). Rewritten as signal inputs/outputs on UBaseComponent; drops chipProps, styleClass, the removeIcon input and removeicon template, pt/Bind, dataP, ChipModule and TimesCircleIcon (UTimesIcon instead); removeAriaLabel becomes an input instead of a translation getter; close() ignores clicks when disabled. Added in c42f709d (Phase C Batch 1, Chip row); ecdbf793 only reformatted it."
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeNG 21.1.9 Chip's template structure (ng-content, image else icon, label, removable span with role=button, tabindex disabled ? -1 : 0, aria-label, click/keydown) and its close()/onKeydown() statements (Enter or Backspace). Rewritten as signal inputs/outputs on UBaseComponent; drops chipProps, styleClass, the removeIcon input and removeicon template, pt/Bind, dataP, ChipModule and TimesCircleIcon (UTimesIcon instead); removeAriaLabel becomes an input instead of a translation getter; close() ignores clicks when disabled. Added in c42f709d (Phase C Batch 1, Chip row); ecdbf793 only reformatted it."
   },
   {
     "originalPath": "packages/primeng/src/chip/public_api.ts",
@@ -933,7 +933,7 @@
     "originalPath": "packages/primeng/src/divider/divider.ts",
     "ultimateDestination": "packages/ng/src/divider/divider.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 3, evidence record research/2026-10-16-gap-094-backfill-batch-3-evidence.md). Keeps PrimeNG 21.1.9 Divider's template (a content div with cx('content') wrapping ng-content), its host role=\"separator\" and aria-orientation bound to layout, and the layout input's doc text verbatim (\"Specifies the orientation.\") with default 'horizontal'. Rewritten as a signal input on UBaseComponent; drops the type and align inputs, styleClass, pt/Bind, dataP and DividerModule. Added in c42f709d (Phase C Batch 1, Divider row)."
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 3). Keeps PrimeNG 21.1.9 Divider's template (a content div with cx('content') wrapping ng-content), its host role=\"separator\" and aria-orientation bound to layout, and the layout input's doc text verbatim (\"Specifies the orientation.\") with default 'horizontal'. Rewritten as a signal input on UBaseComponent; drops the type and align inputs, styleClass, pt/Bind, dataP and DividerModule. Added in c42f709d (Phase C Batch 1, Divider row)."
   },
   {
     "originalPath": "packages/primeng/src/divider/public_api.ts",

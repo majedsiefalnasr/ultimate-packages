@@ -12,7 +12,6 @@ It resolves GAP-034 (SSR/hydration verification) — it does **not** close
 GAP-008 in full. GAP-008's broader scope (a real consumer/demo application,
 tree-shaking re-measurement via a real app build, and genuine
 bundle-size/performance benchmarking) remains separately open backlog. See
-`docs/architecture/BLUEPRINT_GAPS.md` (GAP-034, GAP-008) and
 `docs/architecture/DECISIONS.md` (ADR-045) for the full scoping.
 
 ## Running locally

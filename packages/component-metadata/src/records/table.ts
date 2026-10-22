@@ -9,8 +9,7 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
  *   and packages/vue/src/table/Table.vue (real `$emit` call sites, `sortColumn()`/
  *   `selectRow()`/`onPaginatorPage()` methods)
  *
- * Table was the subject of its own separate, closed 29-task implementation
- * plan (docs/superpowers/plans/2026-09-02-table-component-implementation.md)
+ * Table was the subject of its own separate, closed implementation effort
  * immediately before Phase 6 began — its props/events below are drawn from a
  * component whose API surface is already stable and shipped, not newly
  * authored for this metadata task. This is the plan's central worked

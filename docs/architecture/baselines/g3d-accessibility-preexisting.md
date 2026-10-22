@@ -6,7 +6,7 @@
 
 These are the 66 axe violation fingerprints (`rule:story:target`) that the 34 G3-D stories (ng 17, vue 17) show **before and after** the G3-D CSS port. They predate G3-D; the G3-D stories only expose them, because most of those story IDs were never scanned before.
 
-- Derivation: the unique rows observed both in the pre-port run (`fb9c480`) and the post-port run (`ace4c4b`). Both are Docker `mcr.microsoft.com/playwright:v1.63.0-jammy` runs of `packages/{ng,vue}/e2e/g3d-aura-styles.spec.ts`, per `docs/superpowers/plans/2026-10-07-gap-064-g3d-overlays-composites.md`. Counts: before 78, after 102, pre-existing 66, introduced 36, fixed 12.
+- Derivation: the unique rows observed both in the pre-port run (`fb9c480`) and the post-port run (`ace4c4b`). Both are Docker `mcr.microsoft.com/playwright:v1.63.0-jammy` runs of `packages/{ng,vue}/e2e/g3d-aura-styles.spec.ts`. Counts: before 78, after 102, pre-existing 66, introduced 36, fixed 12.
 - Consumer: `scripts/provenance/validate-g3d-accessibility.mjs` only. `validate-accessibility-baseline.mjs` and the G3-A, G3-B, G3-C1 and G3-C2 validators never read it.
 - Introduced rows are **not** listed here; they go to the Task 11 review gate, and only approved ones enter `ACCESSIBILITY_BASELINE.md`.
 - Changes are human-authored, reviewed edits only. Remove a row once its debt is fixed (the check reports it as STALE). Never add a row to silence a violation introduced by a later change.

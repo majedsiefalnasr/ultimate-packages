@@ -1,6 +1,6 @@
 # Skills
 
-One Skill file per Ultimate component currently in `@ultimate/component-metadata`'s `ALL_COMPONENTS` set (8 in v1: Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip). See `docs/superpowers/specs/2026-09-07-phase-9-ai-skills-llm-context-design.md` §6 for the full contract; summarized here for contributors authoring or editing a Skill file by hand.
+One Skill file per Ultimate component currently in `@ultimate/component-metadata`'s `ALL_COMPONENTS` set (8 in v1: Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip). Summarized here for contributors authoring or editing a Skill file by hand.
 
 ## Structure
 
