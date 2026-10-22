@@ -232,6 +232,13 @@ Status: Accepted (user decision, 2026-10-01, post-closeout reconciliation of `fe
 
 **Scope boundary.** New post-baseline Prime features are outside the current parity scope unless a new scope is explicitly authorized. Moving the baseline to a newer version is itself a separate decision that would need a licensing review.
 
+**Re-check, 2026-10-22 (user decision, Phase 2 Prime reference study).** The npm registry was checked for MIT releases published after each pin. Six pins are still the last MIT stable release of their package. Two are not, and both pins stay:
+
+- **PrimeNG `21.1.10`** (2026-09-09, commit `e35af53afc675c9565b4aba07e6ec9f39bff7c5e`) is MIT under the same community licence text as `21.1.9`. Its only library change is a MultiSelect fix (upstream #19640): `onOverlayHide` is removed and the overlay calls `hide()`. The rest is formatting, README, showcase, LTS changelog and lockfile changes. Its dependencies match `21.1.9`. The pin stays at `21.1.9` because every existing Ultimate record is built on it and moving it would shift the parity baseline for one fix.
+- **`@primeuix/motion` `0.1.1`** (2026-02-25) is MIT, but no pinned framework release can use it. PrimeNG `21.1.9` and `21.1.10` declare `^0.0.10`, and PrimeVue `4.5.5` and PrimeReact `10.9.9` do not depend on it. The pin stays at `0.0.10`, the version Prime actually ships.
+
+Every package's next release after these is commercial (PrimeUI License), so no periodic re-check is scheduled. All eight cached archives match their `docs/architecture/checksums.json` sha256 values.
+
 ## ADR-049 — Vue component prop types flow from inferred typed factories; type-only typing; contract-based nullability
 
 Status: Accepted (user decision, 2026-10-03, GAP-082 Architecture Discussion).
