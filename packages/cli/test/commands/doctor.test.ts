@@ -98,4 +98,55 @@ describe("runDoctor", () => {
       true
     );
   });
+
+  it("exits 0 for a detected, compatible framework (CLI-1)", async () => {
+    const { runDoctor, formatDoctorReport } = await import("../../src/commands/doctor.js");
+    const dir = copyFixture("react-partial");
+
+    const result = runDoctor(dir);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.framework).toBe("react");
+    expect(result.components.every((component) => component.compatibility === "compatible")).toBe(
+      true
+    );
+    expect(formatDoctorReport(result)).toContain("Framework: react");
+  });
+
+  it("exits 0 for a detected but incompatible framework and reports each row as incompatible (CLI-1)", async () => {
+    const { runDoctor, formatDoctorReport } = await import("../../src/commands/doctor.js");
+    const dir = mkdtempSync(join(tmpdir(), "ultimate-cli-doctor-incompatible-"));
+    tempDirs.push(dir);
+    cpSync(join(fixturesDir, "..", "add", "react-incompatible-project"), dir, { recursive: true });
+
+    const result = runDoctor(dir);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.framework).toBe("react");
+    expect(result.components).toHaveLength(8);
+    for (const component of result.components) {
+      expect(component.compatibility).toBe("incompatible");
+      expect(component.compatibilityReason).toEqual(expect.any(String));
+    }
+    const report = formatDoctorReport(result);
+    for (const component of result.components) {
+      expect(report).toContain(
+        `- ${component.name}: missing, incompatible (${component.compatibilityReason})`
+      );
+    }
+  });
+
+  it("exits 1 when no supported framework is detected (CLI-1)", async () => {
+    const { runDoctor } = await import("../../src/commands/doctor.js");
+    const dir = mkdtempSync(join(tmpdir(), "ultimate-cli-doctor-none-"));
+    tempDirs.push(dir);
+    cpSync(join(fixturesDir, "..", "unknown-project"), dir, { recursive: true });
+
+    const result = runDoctor(dir);
+
+    expect(result.exitCode).toBe(1);
+    expect(result.message).toBe(
+      "doctor: no supported framework detected (Angular/React/Vue). 8 of 8 known components reported."
+    );
+  });
 });

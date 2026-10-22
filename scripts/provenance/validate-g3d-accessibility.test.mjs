@@ -7,8 +7,7 @@ import { spawnSync } from "node:child_process";
 
 const SCRIPT_PATH = join(process.cwd(), "scripts/provenance/validate-g3d-accessibility.mjs");
 const BASELINE = "docs/architecture/ACCESSIBILITY_BASELINE.md";
-const PREEXISTING =
-  "docs/architecture/research/2026-10-07-gap-064-g3d-accessibility-preexisting.md";
+const PREEXISTING = "docs/architecture/baselines/g3d-accessibility-preexisting.md";
 const BROWSERS = ["chromium", "firefox", "webkit"];
 const STORIES = Array.from({ length: 17 }, (_, i) => `ng-story${i}--default`);
 
@@ -42,7 +41,7 @@ function makeWorkDir({
   specExtra = "",
 }) {
   const dir = mkdtempSync(join(tmpdir(), "g3d-a11y-"));
-  mkdirSync(join(dir, "docs/architecture/research"), { recursive: true });
+  mkdirSync(join(dir, "docs/architecture/baselines"), { recursive: true });
   writeFileSync(join(dir, BASELINE), table(baseline));
   writeFileSync(join(dir, PREEXISTING), table(preexisting));
   mkdirSync(join(dir, "packages/ng/e2e"), { recursive: true });

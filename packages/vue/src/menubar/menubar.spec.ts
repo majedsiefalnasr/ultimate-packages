@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
+import { h } from "vue";
 import { UMenubar } from "./index";
 
 const items = [
@@ -281,5 +282,32 @@ describe("UMenubar", () => {
         wrapper.unmount();
       });
     });
+  });
+});
+
+// `mount(UMenubar, { props })` wraps props in a reactive object, which hides
+// GAP-084; rendering through `h()` passes the plain array unchanged, as a
+// consumer's constant array would.
+describe("UMenubar with a plain, non-reactive model (GAP-084)", () => {
+  const plainModel = [
+    { label: "File", items: [{ label: "New" }, { label: "Open", items: [{ label: "Recent" }] }] },
+    { label: "Help", url: "/help" },
+  ];
+  const mountPlain = () => mount({ render: () => h(UMenubar, { model: plainModel }) });
+
+  it("GAP-084 menubar hover opens the item for a plain model", async () => {
+    const wrapper = mountPlain();
+    const fileItem = wrapper.find(".u-menubar-root-list > li");
+    await fileItem.trigger("mouseenter");
+    expect(fileItem.attributes("data-u-open")).toBe("true");
+    expect(fileItem.classes()).toContain("u-menubar-item-open");
+  });
+
+  it("GAP-084 menubar click opens the item for a plain model", async () => {
+    const wrapper = mountPlain();
+    const fileItem = wrapper.find(".u-menubar-root-list > li");
+    await fileItem.find("a").trigger("click");
+    expect(fileItem.attributes("data-u-open")).toBe("true");
+    expect(fileItem.find("a").attributes("aria-expanded")).toBe("true");
   });
 });

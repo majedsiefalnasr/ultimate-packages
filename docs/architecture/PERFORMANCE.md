@@ -68,15 +68,15 @@ Following Blueprint Completion's addition of 8 real `ng-packagr` secondary entry
 
 ## Phase 3 — UltimateReact
 
-No dedicated narrative section was recorded at Phase 3's own completion (unlike Phase 1/2, which were baselined immediately). Real package-size and coverage measurements for `packages/react-core`/`packages/react` do exist, however — Phase 10 Track B extended `scripts/provenance/measure-package-size.mjs`'s scope from the original `uix*`/`ng*` prefix filter to all 17 publishable packages, so the "Phase 10 — CI/Security/Quality Gates" section below already carries both packages' real numbers as part of that later, broader baseline. See that section's Package size table for `packages/react-core` (67.0 KB dist, 3 files, 6.64 KB gzip) and `packages/react` (370.6 KB dist, 27 files, 10.60 KB gzip), and its Coverage table for `react-core` (89.39%) and `react` (89.69%) — both measured 2026-09-09 against commit `62480b6`. No React-specific tree-shaking spot-check or component-creation-cost benchmark analogous to Phase 2's has been performed; this remains open backlog (tracked as GAP-037 in `docs/architecture/BLUEPRINT_GAPS.md`).
+No dedicated narrative section was recorded at Phase 3's own completion (unlike Phase 1/2, which were baselined immediately). Real package-size and coverage measurements for `packages/react-core`/`packages/react` do exist, however — Phase 10 Track B extended `scripts/provenance/measure-package-size.mjs`'s scope from the original `uix*`/`ng*` prefix filter to all 17 publishable packages, so the "Phase 10 — CI/Security/Quality Gates" section below already carries both packages' real numbers as part of that later, broader baseline. See that section's Package size table for `packages/react-core` (67.0 KB dist, 3 files, 6.64 KB gzip) and `packages/react` (370.6 KB dist, 27 files, 10.60 KB gzip), and its Coverage table for `react-core` (89.39%) and `react` (89.69%) — both measured 2026-09-09 against commit `62480b6`. No React-specific tree-shaking spot-check or component-creation-cost benchmark analogous to Phase 2's has been performed; this remains open backlog.
 
 ## Phase 4 — UltimateVue
 
-No dedicated narrative section was recorded at Phase 4's own completion. Real package-size and coverage measurements for `packages/vue-core`/`packages/vue` do exist, carried by the same Phase 10 Track B baseline-scope extension described above. See the "Phase 10 — CI/Security/Quality Gates" section below's Package size table for `packages/vue-core` (82.2 KB dist, 3 files, 8.22 KB gzip) and `packages/vue` (643.5 KB dist, 90 files, 19.68 KB gzip), and its Coverage table for `vue-core` (90.59%) and `vue` (92.13%) — both measured 2026-09-09 against commit `62480b6`. No Vue-specific tree-shaking spot-check or component-creation-cost benchmark analogous to Phase 2's has been performed; this remains open backlog (tracked as GAP-037 in `docs/architecture/BLUEPRINT_GAPS.md`).
+No dedicated narrative section was recorded at Phase 4's own completion. Real package-size and coverage measurements for `packages/vue-core`/`packages/vue` do exist, carried by the same Phase 10 Track B baseline-scope extension described above. See the "Phase 10 — CI/Security/Quality Gates" section below's Package size table for `packages/vue-core` (82.2 KB dist, 3 files, 8.22 KB gzip) and `packages/vue` (643.5 KB dist, 90 files, 19.68 KB gzip), and its Coverage table for `vue-core` (90.59%) and `vue` (92.13%) — both measured 2026-09-09 against commit `62480b6`. No Vue-specific tree-shaking spot-check or component-creation-cost benchmark analogous to Phase 2's has been performed; this remains open backlog.
 
 ## Phase 5 — Themes
 
-No dedicated narrative section was recorded at Phase 5's own completion. Real package-size and coverage measurements for `packages/themes` do exist, carried by the same Phase 10 Track B baseline-scope extension described above. See the "Phase 10 — CI/Security/Quality Gates" section below's Package size table for `packages/themes` (110.7 KB dist, 3 files, 5.23 KB gzip), and its Coverage table for `themes` (97.9%) — both measured 2026-09-09 against commit `62480b6`. No Themes-specific tree-shaking spot-check or component-creation-cost benchmark analogous to Phase 2's has been performed; this remains open backlog (tracked as GAP-037 in `docs/architecture/BLUEPRINT_GAPS.md`).
+No dedicated narrative section was recorded at Phase 5's own completion. Real package-size and coverage measurements for `packages/themes` do exist, carried by the same Phase 10 Track B baseline-scope extension described above. See the "Phase 10 — CI/Security/Quality Gates" section below's Package size table for `packages/themes` (110.7 KB dist, 3 files, 5.23 KB gzip), and its Coverage table for `themes` (97.9%) — both measured 2026-09-09 against commit `62480b6`. No Themes-specific tree-shaking spot-check or component-creation-cost benchmark analogous to Phase 2's has been performed; this remains open backlog.
 
 ## Phase 10 — CI/Security/Quality Gates
 
@@ -86,13 +86,15 @@ Real Stage-1 baseline, measured 2026-09-09 against commit `62480b6` (Node v22.22
 
 Re-baselined rows (`ng-core`, `ng`, `react-core`, `react`, `themes`, `uix-utils`, `vue-core`, `vue`), measured 2026-10-03 against commit `986dbcc` (Node v20.19.2, pnpm 9.6.0) via `pnpm run build && pnpm run size:measure`: Prime-parity component additions (Phase C on `main`, then the Prime-parity audit and follow-up phases' Aura preset modules, 61 additional `ng` secondary entry points and per-component React/Vue subpaths) grew these barrels past the 15% gate. All other rows are unchanged from the Stage-1 baseline.
 
+Re-baselined row (`component-metadata`), measured 2026-10-21 against commit `a5195a6b` (Node v24.15.0, pnpm 9.6.0) via `pnpm run build && pnpm run size:measure`: the package ships its component records as data, and their source grew from about 85 KB to about 110 KB after the Table, Scroller and Paginator public-API facts were recorded (`320dfc78`, `286eac66`, 2026-10-18; `table.ts` alone grew from about 25 KB to about 42 KB). `index.mjs` gzip went from 7.93 KB to 10.03 KB (+26.5%), past the 15% gate. All other rows are unchanged.
+
 ### Package size
 
 | Package                     | dist/ size | dist/ file count | index.mjs gzip size |
 | --------------------------- | ---------- | ---------------- | ------------------- |
 | packages/ai                 | 162.7 KB   | 12               | 3.35 KB             |
 | packages/cli                | 84.0 KB    | 5                | 0.05 KB             |
-| packages/component-metadata | 165.0 KB   | 3                | 7.93 KB             |
+| packages/component-metadata | 214.4 KB   | 3                | 10.03 KB            |
 | packages/component-schema   | 29.3 KB    | 3                | 2.37 KB             |
 | packages/mcp                | 93.0 KB    | 5                | 2.97 KB             |
 | packages/ng-core            | 190.0 KB   | 6                | 16.53 KB            |
@@ -124,7 +126,7 @@ Real Stage-1 baseline, measured 2026-09-09 against commit `62480b6` (Node v22.22
 | ng-core            | 83.54           |
 | ng                 | 88.6            |
 | react-core         | 89.39           |
-| react              | 89.69           |
+| react              | 91.65           |
 | themes             | 97.9            |
 | uix-data           | 40.0            |
 | uix-motion         | 33.45           |
@@ -132,7 +134,7 @@ Real Stage-1 baseline, measured 2026-09-09 against commit `62480b6` (Node v22.22
 | uix-styles         | 28.57           |
 | uix-utils          | 18.16           |
 | vue-core           | 90.59           |
-| vue                | 92.13           |
+| vue                | 95.11           |
 
 ## GAP-064 G3-E — X-10 size measurement
 
@@ -152,4 +154,4 @@ Both are well below the 15 % X-10 limit. Per-batch measurements:
 | E-3   | +0.01 % | −0.07 % |
 | E-4   | +0.08 % | +0.28 % |
 
-The E-4 figures exclude the later E4-V1 spinner template change, which is included in the branch totals. Evidence: the G3-E batch records and `docs/architecture/research/2026-10-08-gap-064-g3e-closeout.md`.
+The E-4 figures exclude the later E4-V1 spinner template change, which is included in the branch totals. Evidence: the G3-E batch records.

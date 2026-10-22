@@ -141,3 +141,76 @@ describe("UContextMenu", () => {
     wrapper.unmount();
   });
 });
+
+describe("UContextMenu keyboard navigation (GAP-086)", () => {
+  afterEach(() => {
+    document.querySelectorAll(".u-contextmenu").forEach((el) => el.remove());
+  });
+
+  async function openWith(model: unknown[]) {
+    const wrapper = mount(UContextMenu, {
+      props: { model },
+      slots: { default: '<div class="target">Target</div>' },
+      attachTo: document.body,
+    });
+    wrapper
+      .find(".target")
+      .element.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+    const list = document.querySelector<HTMLElement>(".u-contextmenu-root-list")!;
+    const press = async (code: string) => {
+      list.dispatchEvent(new KeyboardEvent("keydown", { code, bubbles: true, cancelable: true }));
+      await wrapper.vm.$nextTick();
+    };
+    return { wrapper, list, press };
+  }
+
+  it("GAP-086 context menu opening moves focus to the menu list", async () => {
+    const { wrapper, list } = await openWith(items);
+    expect(document.activeElement).toBe(list);
+    expect(document.querySelector(".u-contextmenu-item-focused")).toBeNull();
+    wrapper.unmount();
+  });
+
+  it("GAP-086 context menu arrow keys move focus", async () => {
+    const { wrapper, list, press } = await openWith(items);
+    const focused = () => document.querySelector(".u-contextmenu-item-focused");
+    await press("ArrowDown");
+    expect(focused()?.textContent?.trim()).toBe("Copy");
+    expect(list.getAttribute("aria-activedescendant")).toBe(focused()?.id);
+    await press("ArrowDown");
+    expect(focused()?.textContent?.trim()).toBe("Paste");
+    await press("ArrowDown"); // separator and disabled item skipped, no wrap
+    expect(focused()?.textContent?.trim()).toBe("Paste");
+    await press("ArrowUp");
+    expect(focused()?.textContent?.trim()).toBe("Copy");
+    await press("End");
+    expect(focused()?.textContent?.trim()).toBe("Paste");
+    await press("Home");
+    expect(focused()?.textContent?.trim()).toBe("Copy");
+    wrapper.unmount();
+  });
+
+  it.each(["Enter", "Space"])(
+    "GAP-086 context menu %s activates the focused item and closes the menu",
+    async (code) => {
+      const command = vi.fn();
+      const { wrapper, press } = await openWith([{ label: "Copy", command }, { label: "Paste" }]);
+      await press("ArrowDown");
+      await press(code);
+      expect(command).toHaveBeenCalledTimes(1);
+      expect(wrapper.emitted("item-select")?.[0]?.[0]).toMatchObject({ item: { label: "Copy" } });
+      expect(document.querySelector(".u-contextmenu")).toBeNull();
+      wrapper.unmount();
+    }
+  );
+
+  it("GAP-086 context menu Tab closes the menu", async () => {
+    const { wrapper, press } = await openWith(items);
+    await press("ArrowDown");
+    await press("Tab");
+    expect(document.querySelector(".u-contextmenu")).toBeNull();
+    wrapper.unmount();
+  });
+});

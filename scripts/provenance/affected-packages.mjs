@@ -23,6 +23,7 @@ import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
 import { getAllPackageNames, getReverseTransitiveClosure } from "./workspace-graph.mjs";
 import { getMergeBaseSha } from "./baseline-lib.mjs";
+import { isDocsOnlyPath } from "./classify-changes.mjs";
 
 function toShortName(scopedName) {
   return scopedName.replace(/^@ultimate\//, "");
@@ -52,8 +53,16 @@ export function mapChangedFileToPackageName(filePath) {
 // getAllPackageNames() so a changed path under a non-workspace directory
 // (e.g. packages/uix/, which has no package.json) is silently ignored
 // rather than throwing.
+//
+// ADR-069: a changed path outside packages/ that is not docs-only Markdown
+// (the lockfile, root config, scripts/, apps/, workflows) can affect any
+// package, so it widens the result to every package instead of none.
 export function computeAffectedPackages(changedFiles) {
   const allRealPackages = new Set(getAllPackageNames());
+
+  if (changedFiles.some((file) => !mapChangedFileToPackageName(file) && !isDocsOnlyPath(file))) {
+    return [...allRealPackages].map(toShortName).sort();
+  }
 
   const directlyChangedShortNames = new Set(
     changedFiles.map(mapChangedFileToPackageName).filter(Boolean)
@@ -95,9 +104,15 @@ function runCli() {
   if (cliArgs[0] === "--") cliArgs.shift();
   const baseRefIndex = cliArgs.indexOf("--base-ref");
   const baseRef = baseRefIndex !== -1 ? cliArgs[baseRefIndex + 1] : "origin/main";
+  const eventIndex = cliArgs.indexOf("--event");
+  const event = eventIndex !== -1 ? cliArgs[eventIndex + 1] : undefined;
 
-  const changedFiles = getChangedFiles(baseRef);
-  const affectedPackages = computeAffectedPackages(changedFiles);
+  // ADR-070 (CO-6): a push's diff against its own branch is empty, so a push
+  // checks every package instead of none.
+  const affectedPackages =
+    event === "push"
+      ? getAllPackageNames().map(toShortName).sort()
+      : computeAffectedPackages(getChangedFiles(baseRef));
 
   console.log(
     `[affected-packages] ${affectedPackages.length} affected package(s) relative to ${baseRef}: ${affectedPackages.join(", ") || "(none)"}`

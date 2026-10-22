@@ -62,7 +62,7 @@ Status: Accepted (plan-level decision; spec left this open). Phase 0 has no pack
 
 ## ADR-016 — Sourcemap extraction as the Phase 1 vendoring mechanism
 
-Status: Accepted (Phase 1 spec, `docs/superpowers/specs/2026-08-28-phase-1-uix-foundation-design.md`). The four pinned `@primeuix/*` npm tarballs ship only compiled dist output (`.mjs`/`.d.mts`), no `src/` directory, and the upstream `primefaces/primeuix` GitHub repository's history never reached these exact pinned versions (confirmed gap, Phase 0 Finding 3). Investigation found that every pinned tarball's published `.mjs.map` sourcemaps embed a complete `sourcesContent` array — the original per-file TypeScript source at the exact pinned MIT baseline. `scripts/provenance/extract-source.mjs` recovers this source deterministically from the same checksummed tarballs Phase 0 already pinned (`docs/architecture/checksums.json`), with no network access required at extraction time. This is the official Phase 1+ vendoring mechanism for these four packages.
+Status: Accepted (Phase 1). The four pinned `@primeuix/*` npm tarballs ship only compiled dist output (`.mjs`/`.d.mts`), no `src/` directory, and the upstream `primefaces/primeuix` GitHub repository's history never reached these exact pinned versions (confirmed gap, Phase 0 Finding 3). Investigation found that every pinned tarball's published `.mjs.map` sourcemaps embed a complete `sourcesContent` array — the original per-file TypeScript source at the exact pinned MIT baseline. `scripts/provenance/extract-source.mjs` recovers this source deterministically from the same checksummed tarballs Phase 0 already pinned (`docs/architecture/checksums.json`), with no network access required at extraction time. This is the official Phase 1+ vendoring mechanism for these four packages.
 
 ## ADR-017 — `uix-styles` Phase 1 scope is the `base` module only
 
@@ -132,11 +132,11 @@ Status: Accepted (Phase 3 spec, confirmed by implementation). The Real-Source Ve
 
 ## ADR-030 — `UDialog` does not implement draggable, resizable, or maximizable behavior in Phase 3
 
-Status: Accepted (Phase 3 spec, confirmed by implementation). Verified PrimeReact's real `Dialog.js` supports draggable/resizable/maximizable behavior — a materially larger feature surface than Angular's already-shipped `UDialog`, which has none of these. Phase 3's `UDialog` deliberately does not include them: no such props exist on `UDialogProps`, no drag/resize handlers are wired, no maximize-toggle UI is rendered. Not an oversight — a firm, explicitly-scoped boundary (spec §15), with a dedicated negative regression test (`packages/react/src/dialog/dialog.spec.tsx`) guarding against silent scope creep. Revisit only via a separately approved future scope decision.
+Status: Superseded pending Prime study (2026-10-22). This ADR excluded a verified upstream feature under the old phase scope; the exclusion is under review and no longer binding. Original status: Accepted (Phase 3 spec, confirmed by implementation). Verified PrimeReact's real `Dialog.js` supports draggable/resizable/maximizable behavior — a materially larger feature surface than Angular's already-shipped `UDialog`, which has none of these. Phase 3's `UDialog` deliberately does not include them: no such props exist on `UDialogProps`, no drag/resize handlers are wired, no maximize-toggle UI is rendered. Not an oversight — a firm, explicitly-scoped boundary (spec §15), with a dedicated negative regression test (`packages/react/src/dialog/dialog.spec.tsx`) guarding against silent scope creep. Revisit only via a separately approved future scope decision.
 
 ## ADR-031 — `URipple` is not built in Phase 3
 
-Status: Accepted (Phase 3 spec, confirmed by implementation). Verified PrimeReact's `Button`/`Dialog`/`Menu` all import and render `Ripple` upstream. Phase 3's `UButton`/`UDialog`/`UMenu` render without a ripple effect — `URipple` is not a Phase 3 proof-set component, and no ad-hoc ripple implementation was folded into any individual component. Matches Angular's own Phase 2 precedent exactly: `URipple` was built as its own standalone primitive (`packages/ng/src/ripple`), not embedded per-component. A future `URipple` for React, if built, gets its own scope, provenance, and tests — not inherited from this phase.
+Status: Superseded pending Prime study (2026-10-22). This ADR excluded a verified upstream feature under the old phase scope; the exclusion is under review and no longer binding. Original status: Accepted (Phase 3 spec, confirmed by implementation). Verified PrimeReact's `Button`/`Dialog`/`Menu` all import and render `Ripple` upstream. Phase 3's `UButton`/`UDialog`/`UMenu` render without a ripple effect — `URipple` is not a Phase 3 proof-set component, and no ad-hoc ripple implementation was folded into any individual component. Matches Angular's own Phase 2 precedent exactly: `URipple` was built as its own standalone primitive (`packages/ng/src/ripple`), not embedded per-component. A future `URipple` for React, if built, gets its own scope, provenance, and tests — not inherited from this phase.
 
 ## ADR-032 — Option B: Ultimate-owned Vue base architecture (Options-API `extends` mixin)
 
@@ -168,11 +168,11 @@ Status: Accepted (Phase 4 spec, confirmed by implementation). Verified PrimeVue'
 
 ## ADR-039 — `UCheckbox` excludes `@primevue/forms` integration despite it being a real, verified, working upstream feature
 
-Status: Accepted (Phase 4 spec, confirmed by implementation, resolved fork — Gate 6 #2). Verified PrimeVue's real `BaseEditableHolder.vue` has a live, working integration with a separate PrimeVue package, `@primevue/forms` (`inject: { $pcForm, $pcFormField }`, `formField.onChange`, `$formNovalidate`/`$formValue`/`$formDefaultValue`/`$formControl`). Unlike Phase 3's equivalent Checkbox-forms decision (where PrimeReact genuinely has no broader form abstraction to exclude — nothing existed to cut), this is a deliberate boundary cut of a real, verified, functioning upstream feature. `@primevue/forms` remains unpinned, unevaluated, with no provenance record — incorporating it is deferred to its own future evidence-based evaluation (pinning its real source, running its own Real-Source Verification Gate), not silently absorbed into Phase 4 because `UCheckbox` happened to touch its edge.
+Status: Superseded pending Prime study (2026-10-22). This ADR excluded a verified upstream feature under the old phase scope; the exclusion is under review and no longer binding. Original status: Accepted (Phase 4 spec, confirmed by implementation, resolved fork — Gate 6 #2). Verified PrimeVue's real `BaseEditableHolder.vue` has a live, working integration with a separate PrimeVue package, `@primevue/forms` (`inject: { $pcForm, $pcFormField }`, `formField.onChange`, `$formNovalidate`/`$formValue`/`$formDefaultValue`/`$formControl`). Unlike Phase 3's equivalent Checkbox-forms decision (where PrimeReact genuinely has no broader form abstraction to exclude — nothing existed to cut), this is a deliberate boundary cut of a real, verified, functioning upstream feature. `@primevue/forms` remains unpinned, unevaluated, with no provenance record — incorporating it is deferred to its own future evidence-based evaluation (pinning its real source, running its own Real-Source Verification Gate), not silently absorbed into Phase 4 because `UCheckbox` happened to touch its edge.
 
 ## ADR-040 — `UDialog` excludes draggable and maximizable behavior despite verified upstream support; resizable was never a PrimeVue Dialog feature at all
 
-Status: Accepted (Phase 4 spec, confirmed by implementation, resolved fork — this Phase's architecture-approval gate). Verified PrimeVue's real `Dialog.vue` implements both draggable (full mouse-drag positioning with `keepInViewport` bounds-checking) and maximizable (maximize/unmaximize state, icon swap, scroll-lock toggling) as first-class features — a materially larger feature surface than Angular's or React's already-shipped `UDialog`, neither of which has either. Resizable, unlike PrimeReact's Dialog (which has all three: draggable/resizable/maximizable, explicitly excluded per ADR-030), was never found as a feature anywhere in PrimeVue's real `Dialog.vue` source at all — nothing to exclude there, a genuinely different upstream feature surface than React's reference. Phase 4's `UDialog` excludes draggable and maximizable to keep scope identical across all three frameworks — no such props, handlers, or UI anywhere in the implementation.
+Status: Superseded pending Prime study (2026-10-22). This ADR excluded a verified upstream feature under the old phase scope; the exclusion is under review and no longer binding. Original status: Accepted (Phase 4 spec, confirmed by implementation, resolved fork — this Phase's architecture-approval gate). Verified PrimeVue's real `Dialog.vue` implements both draggable (full mouse-drag positioning with `keepInViewport` bounds-checking) and maximizable (maximize/unmaximize state, icon swap, scroll-lock toggling) as first-class features — a materially larger feature surface than Angular's or React's already-shipped `UDialog`, neither of which has either. Resizable, unlike PrimeReact's Dialog (which has all three: draggable/resizable/maximizable, explicitly excluded per ADR-030), was never found as a feature anywhere in PrimeVue's real `Dialog.vue` source at all — nothing to exclude there, a genuinely different upstream feature surface than React's reference. Phase 4's `UDialog` excludes draggable and maximizable to keep scope identical across all three frameworks — no such props, handlers, or UI anywhere in the implementation.
 
 ## ADR-041 — `v-tooltip`'s content-injection contract preserves PrimeVue's verified two-mode shape (safe default, explicit opt-in raw-HTML escape hatch)
 
@@ -234,7 +234,7 @@ Status: Accepted (user decision, 2026-10-01, post-closeout reconciliation of `fe
 
 ## ADR-049 — Vue component prop types flow from inferred typed factories; type-only typing; contract-based nullability
 
-Status: Accepted (user decision, 2026-10-03, GAP-082 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-03-gap-082-typed-vue-props-research.md`.
+Status: Accepted (user decision, 2026-10-03, GAP-082 Architecture Discussion).
 
 **Context.** `@ultimate/vue` components ship empty or partial prop types. The 95 Vue base factories (90 in `packages/vue`, 5 in `packages/vue-core`) are annotated `: ComponentOptions`, which erases the props that every SFC inherits through `extends:` (ADR-032).
 
@@ -275,7 +275,7 @@ Status: Accepted (user decision, 2026-10-03, GAP-082 Architecture Discussion). E
 
 ## ADR-050 — Vue floor raised to `^3.5.2` (amends ADR-042)
 
-Status: Accepted (user decision, 2026-10-04, GAP-083 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-04-gap-083-vue-floor-compat-research.md`.
+Status: Accepted (user decision, 2026-10-04, GAP-083 Architecture Discussion).
 
 **Context.** ADR-042 set the `vue` peer range of `@ultimate/vue` and `@ultimate/vue-core` to `^3.5.0`, following `@primevue/core@4.5.5`. Their shipped declarations reference Vue's `DefineComponent` with 20 type arguments. Vue 3.5.2 added the 20th type parameter (`TypeEl extends Element = any`); Vue 3.5.0 and 3.5.1 accept at most 19. A consumer type-check of the packed packages therefore fails on Vue 3.5.0 and 3.5.1 (TS2707, in both packages, and the component types are lost) and passes on 3.5.2 and later.
 
@@ -298,7 +298,7 @@ Status: Accepted (user decision, 2026-10-04, GAP-083 Architecture Discussion). E
 
 ## ADR-051 — Component style keys equal the upstream Aura preset key; components may register additional preset keys' variables
 
-Status: Accepted (user decision, 2026-10-04, GAP-064 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-04-gap-064-aura-token-wiring-research.md`.
+Status: Accepted (user decision, 2026-10-04, GAP-064 Architecture Discussion).
 
 **Context.** A component's `componentName` is both its structural-stylesheet key and the key `registerThemeVariables` passes to `Theme.getComponent()`, which reads `preset.components[name]` without normalization. `dt()` emits `var(--u-…)` references with no fallback. Fifteen Angular and sixteen Vue components, and InputGroup in both frameworks, register hyphenated keys (`input-text`) while the Aura preset uses the upstream keys (`inputtext`). Their token variables are therefore never defined. Separately, Vue `InputNumber` renders a plain `<input>` whose CSS uses only `inputtext.*` tokens; upstream obtains those variables from a child InputText.
 
@@ -322,7 +322,7 @@ Status: Accepted (user decision, 2026-10-04, GAP-064 Architecture Discussion). E
 
 ## ADR-052 — GAP-064 cross-tranche parity rules for the remaining G3 tranches (selector reachability, DOM admissibility, state selectors, runtime roles, open-state screenshots, tranche CI evidence)
 
-Status: Accepted (user decisions, 2026-10-06, GAP-064 cross-tranche decision gate and C2-0 Spec Review). Evidence: `docs/architecture/research/2026-10-06-gap-064-cross-tranche-study.md` (§2–§5 evidence; §10 rulings; §11 amendments). This ADR is the normative record of those rulings. The study is their evidence and history, not the authority. The rule text below is transcribed from the approved rulings without change of substance; X-12 is given in its §11-corrected form.
+Status: Accepted (user decisions, 2026-10-06, GAP-064 cross-tranche decision gate and C2-0 Spec Review). This ADR is the normative record of those rulings. The rule text below is transcribed from the approved rulings without change of substance; X-12 is given in its corrected form.
 
 **Context.** The selector-reach audit of the shipped G3-A, G3-B and G3-C1 CSS found that upstream selector text can be ported faithfully while a selector never reaches Ultimate's rendered DOM (G3-C1 Errata E2 and E3). It also found pre-existing component defects that a CSS port alone cannot evidence (study §4.1), and CI signals that a red global run masks (study §5, §11). The rules below apply to G3-C2, G3-D and G3-E. They extend, and do not reverse, ADR-051, D-G3-1..9 and C-1..C-11.
 
@@ -390,7 +390,7 @@ Unrelated CI debt is not fixed under this rule. Any change to the named pre-exis
 
 ## ADR-053 — Accessibility acceptance policy for the first pre-1.0 publish (P-B, AC-1 to AC-7; decides the X-8 (a) row policy)
 
-Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-s5-accessibility-acceptance-research.md`.
+Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture Discussion).
 
 **Context.** Blueprint §30 makes accessibility regressions release blockers but does not say how pre-existing findings are treated. The user ruled on 2026-10-11 that every Blueprint §40 criterion applies to the first pre-1.0 publish, that an unmet criterion is an exception only when explicitly documented and approved, and that GAP-086, GAP-100, GAP-111, GAP-112, GAP-123 and every critical-severity component-level baseline finding (19 rows at `99364dc`) are required fixes. ADR-052 left the cross-tranche proposal X-8 undecided.
 
@@ -405,7 +405,7 @@ Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture 
   - **AC-6:** the 246 Storybook-shell rows (`region`, `landmark-one-main`, `page-has-heading-one`) are one documented environmental class, not component defects. A non-shell row under these rules is a component finding.
   - **AC-7:** a dated manual assistive-technology check (screen reader and browser named) for each required fix and each new component family.
 - **Required fixes (unchanged, not re-scoped):** GAP-086, GAP-100, GAP-111, GAP-112, GAP-123 and the 19 critical baseline rows (Checkbox `label`, Table `aria-required-children`).
-- **Approved dispositions:** fix the 7 `svg-img-alt` rows, the 3 Scroller `scrollable-region-focusable` rows, and GAP-114, GAP-115 and GAP-122. GAP-103 and GAP-104 are fixed or become explicitly approved exceptions. GAP-116 may be recorded as an intended-divergence exception, effective only once entered in the approved exception register (entered 2026-10-11 as `BLUEPRINT_GAPS.md` §10 EX-3).
+- **Approved dispositions:** fix the 7 `svg-img-alt` rows, the 3 Scroller `scrollable-region-focusable` rows, and GAP-114, GAP-115 and GAP-122. GAP-103 and GAP-104 are fixed or become explicitly approved exceptions. GAP-116 may be recorded as an intended-divergence exception, effective only once entered in the approved exception register (entered 2026-10-11 as exception EX-3).
 - **Contrast rows:** the 29 rows earlier approved as Aura parity exceptions (11 on 2026-10-04, 18 on 2026-10-06) are **candidates only**. Each must meet AC-3a and receive explicit publish-level approval. The 5 Button contrast rows are tested against AC-3a independently.
 - **AC-8 (high contrast, RTL):** a research spike is authorized. Both stay unresolved §40 items until a decision follows the evidence; missing evidence is not an accepted exception.
 
@@ -415,13 +415,13 @@ Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture 
 
 - `ACCESSIBILITY_BASELINE.md` rows leave the baseline only by real scans (its one-way-door contract is unchanged).
 - The required fixes and the approved dispositions each need their own Specs and normal approval gates.
-- Publish exceptions live in the exception register (gate G14), `BLUEPRINT_GAPS.md` §10, one row per approved exception.
+- Publish exceptions were recorded one row per approved exception in the exception register (gate G14); that register has been retired.
 
 ## ADR-054 — Tree-family components are implementation-eligible as framework-native components
 
-Status: Accepted (user decision, 2026-10-11, K-7 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-k7-tree-family-architecture-research.md`.
+Status: Accepted (user decision, 2026-10-11, K-7 Architecture Discussion).
 
-**Context.** ADR-043 excludes Tree-family identity/selection/expansion from any shared contract and states the components remain framework-native. GAP-013 and DECISION-D's 2026-09-21 OrganizationChart clarification (`BLUEPRINT_GAPS.md`) nevertheless recorded the four components, or Angular OrganizationChart, as blocked or excluded from implementation. The 2026-10-11 scope ruling includes all remaining inventory areas. Re-verification against the pinned PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5 sources confirmed the divergent state models ADR-043 recorded. React and Vue OrganizationChart already ship with framework-local node types (G3-E, `dd4c963`).
+**Context.** ADR-043 excludes Tree-family identity/selection/expansion from any shared contract and states the components remain framework-native. GAP-013 and DECISION-D's 2026-09-21 OrganizationChart clarification nevertheless recorded the four components, or Angular OrganizationChart, as blocked or excluded from implementation. The 2026-10-11 scope ruling includes all remaining inventory areas. Re-verification against the pinned PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5 sources confirmed the divergent state models ADR-043 recorded. React and Vue OrganizationChart already ship with framework-local node types (G3-E, `dd4c963`).
 
 **Decision.**
 
@@ -439,7 +439,7 @@ Status: Accepted (user decision, 2026-10-11, K-7 Architecture Discussion). Evide
 
 ## ADR-055 — External runtime dependency approval policy (DECISION-B); `chart.js` and `quill` approved as optional peers
 
-Status: Accepted (user decision, 2026-10-11, K-8 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-k8-decision-b-external-dependency-policy-research.md`. Does not amend ADR-004 or ADR-005.
+Status: Accepted (user decision, 2026-10-11, K-8 Architecture Discussion). Does not amend ADR-004 or ADR-005.
 
 **Context.** ADR-004 covers Prime packages only, and no process existed for a non-Prime runtime dependency (DECISION-B). Chart (Chart.js) and Editor (Quill) are in scope. Upstream Prime packages load both libraries from the consumer's install without declaring them.
 
@@ -460,7 +460,7 @@ Status: Accepted (user decision, 2026-10-11, K-8 Architecture Discussion). Evide
 
 ## ADR-056 — No `config`, `passthrough` or shared `api` surface is needed for the approved component scope; icons are need-driven
 
-Status: Accepted (user decision, 2026-10-11, K-9 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-k9-config-passthrough-api-research.md`.
+Status: Accepted (user decision, 2026-10-11, K-9 Architecture Discussion).
 
 **Context.** The remaining inventory lists `config` (full surface), `passthrough`, `api` (remaining surface) and the remaining icons. GAP-021 and ADR-018, ADR-024 and ADR-032 defer `config` and `passthrough` until real duplicate-pattern pressure. Research found that every upstream use in the components still to build maps to an established per-component Ultimate pattern, and that shipped components contain no passthrough usage.
 
@@ -477,7 +477,7 @@ Status: Accepted (user decision, 2026-10-11, K-9 Architecture Discussion). Evide
 
 ## ADR-057 — Performance benchmarks: Stage 1 protocol and P1–P8 measurement methods
 
-Status: Accepted (user decision, 2026-10-11, S-4 Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-s4-performance-stage1-methods-research.md`.
+Status: Accepted (user decision, 2026-10-11, S-4 Architecture Discussion).
 
 **Context.** Blueprint §31 requires established benchmarks. The user ruled all of P1–P8 in scope with two stages: Stage 1 records baselines; Stage 2 adds gates only where measured evidence supports them.
 
@@ -492,14 +492,14 @@ Status: Accepted (user decision, 2026-10-11, S-4 Architecture Discussion). Evide
 
 ## ADR-058 — CLI quality and documented-API evidence bars for the first pre-1.0 publish
 
-Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture Discussion). Evidence: `docs/architecture/research/2026-10-11-cli-quality-and-api-docs-evidence-research.md`.
+Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture Discussion).
 
 **Context.** The user ruled that every Blueprint §40 criterion, including CLI quality and documented APIs, applies to the first pre-1.0 publish, but no source gave a measurable bar. Code inspection found that `@ultimate/cli` and `@ultimate/mcp` read the compatibility manifest from the monorepo root, which an installed package does not contain (GAP-131).
 
 **Decision.**
 
 - **CLI bar CLI-1 to CLI-6:** unit tests per command and documented error exit; installed-package smoke tests for the CLI per framework fixture; an installed-package smoke test for MCP; every Blueprint §19 duty implemented or an approved exception; smoke tests with pnpm and npm at minimum; `--help` and README list every command, its arguments and exit codes. Installed-package CLI and MCP smoke tests are **required evidence**; the current pack/install check is insufficient because it never runs the published binaries.
-- **Approved first pre-1.0 publish exceptions:** the deferred `create` command and the `ai` stub. Neither is represented as implemented. They are entered in the exception register (gate G14), `BLUEPRINT_GAPS.md` §10 (EX-1, EX-2).
+- **Approved first pre-1.0 publish exceptions:** the deferred `create` command and the `ai` stub. Neither is represented as implemented. They were entered in the exception register (gate G14) as EX-1 and EX-2.
 - **GAP-131 is not covered by any exception:** it must be resolved before the CLI or MCP packages are published to consumers.
 - **Documented-API bar DOC-1 to DOC-5:** populated `api`, `accessibility` and `guidance` metadata for every in-scope shipped component and framework; an automated metadata-versus-API drift check; a generated API reference; story coverage of documented states; README validation.
 - **Generated API reference destination:** Storybook docs pages initially (consistent with ADR-044), kept composable with authored guidance.
@@ -508,7 +508,7 @@ Status: Accepted (user decision, 2026-10-11, completion-assessment Architecture 
 
 ## ADR-059 — Node 24.15.0 baseline for the private workspace and release toolchain (GAP-087)
 
-Status: Accepted (user-authorized GAP-087 research, verification and Node.js support-policy decision gates, 2026-10-14). Evidence: `docs/architecture/research/2026-10-14-gap-087-node-policy-research.md`.
+Status: Accepted (user-authorized GAP-087 research, verification and Node.js support-policy decision gates, 2026-10-14).
 
 **Context.** Remote `main` at `9ea303df` runs CI on Node `24.15.0` but all three Release jobs on Node 20. [Release run 38531782252](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38531782252) failed at Select mode → Install dependencies: strict pnpm engine checking rejected Node `v20.20.2` for locked `@angular-devkit/architect@0.2201.7`, which requires `^22.22.3 || ^24.15.0 || >=26.0.0`. The private root's `engines.node: ">=20.0.0"` also admits versions that the workspace cannot install. CI's frozen install has passed on the pinned 24.15.0 baseline. Earlier release specifications and ADRs do not establish a binding Node support range.
 
@@ -527,7 +527,7 @@ Status: Accepted (user-authorized GAP-087 research, verification and Node.js sup
 Status: Accepted (user decision X1, 2026-10-17, Workstream 2 Spec Review). **This entry records the decision now.** It does not claim that an ADR-060 text, a GAP-091 Specification or a GAP-091 Plan was approved earlier: none was committed, and no ADR-060 body survives. Evidence:
 
 - the implementation in [PR #16](https://github.com/majedsiefalnasr/ultimate-packages/pull/16), commit `65c2345c`, merged at `bdc4dbcf`;
-- [GAP-091](BLUEPRINT_GAPS.md#gap-091--the-coverage-gate-fails-because-the-coverage-scope-counts-storybook-stories-and-the-baselines-predate-them);
+- GAP-091;
 - a dated copy of a draft GAP-091 Specification (`2026-10-14-gap-091-react-vue-coverage-scope-design.md`). It was read on 2026-10-15 from a since-deleted uncommitted worktree and survives only in a local session log. Its own status reads "human approval is pending". It is cited as point-in-time evidence only, not as an approved Specification.
 
 **Context.** The React and Vue coverage regression check failed on every push (for example at `3d0203d`: React `89.69% → 77.7%`, Vue `92.13% → 80.7%`). Neither package's Vitest configuration scoped coverage, so Storybook stories and other non-runtime files counted at 0% against baselines measured before the stories existed. GAP-091 records that this is a measurement-scope effect, not a source regression. A second defect: the shared baseline-only detector treated a diff touching `PERFORMANCE.md` plus a package's `vitest.config.ts` as baseline-only. So a coverage-configuration change could rewrite its own baseline in the same diff. PR #16 changed the scope and closed that path.
@@ -572,7 +572,7 @@ Status: Accepted (user decision X1, 2026-10-17, Workstream 2 Spec Review). **Thi
 
 Status: Accepted (user PR #16 Architecture Discussion decision, 2026-10-14). Evidence: the approved Phase 0 Specification's Git/GitHub and CI requirements; `scripts/provenance/validate-provenance.mjs`; [PR #16 CI run 38615301042](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38615301042) at head `65c2345c`; [main baseline run 38555038184](https://github.com/majedsiefalnasr/ultimate-packages/actions/runs/38555038184) at `94fac002`.
 
-**Context.** Phase 0 requires a `PROVENANCE.md` update for a PR that incorporates Prime-derived source under the watched package paths. The current validator triggers its same-diff requirement for any path beginning `packages/uix`, `packages/ng`, `packages/react`, or `packages/vue`. This path-only rule is not undocumented implementation drift: the approved Phase 0 Implementation Plan's validator task (`docs/superpowers/plans/2026-08-28-phase-0-repository-foundation.md`) specified it without the Specification's source-incorporation qualifier, and the validator's diff check implements that Plan task as written. The conflict is between that Plan task and the Phase 0 Specification's source-incorporation requirement. PR #16 changes React/Vue coverage configuration, incorporates no Prime-derived source, and therefore fails this broader path-only check without a corresponding source-lineage change. The baseline run reaches a separate missing `ng.json` manifest entry; correcting the diff check does not establish repository-wide provenance completeness.
+**Context.** Phase 0 requires a `PROVENANCE.md` update for a PR that incorporates Prime-derived source under the watched package paths. The current validator triggers its same-diff requirement for any path beginning `packages/uix`, `packages/ng`, `packages/react`, or `packages/vue`. This path-only rule is not undocumented implementation drift: the approved Phase 0 Implementation Plan's validator task specified it without the Specification's source-incorporation qualifier, and the validator's diff check implements that Plan task as written. The conflict is between that Plan task and the Phase 0 Specification's source-incorporation requirement. PR #16 changes React/Vue coverage configuration, incorporates no Prime-derived source, and therefore fails this broader path-only check without a corresponding source-lineage change. The baseline run reaches a separate missing `ng.json` manifest entry; correcting the diff check does not establish repository-wide provenance completeness.
 
 **Decision.** Correct the PR-diff enforcement to reflect the Phase 0 source-incorporation requirement in separately scoped provenance-validator work. Keep the positive requirement for an incorporating-source PR, preserve truthful provenance records and fail-closed Git-diff handling, and retain the independent heading and manifest-completeness checks. Do not add a `PROVENANCE.md` edit merely to make a configuration-only PR pass. Keep GAP-091 PR #16's approved four-file scope unchanged. This decision supersedes the Phase 0 Plan validator task's path-only same-diff rule; the Phase 0 Specification's source-incorporation requirement governs.
 
@@ -582,7 +582,7 @@ Status: Accepted (user PR #16 Architecture Discussion decision, 2026-10-14). Evi
 
 ## ADR-062 — Provenance manifest scope is production (distributed) source (DR-5)
 
-Status: Accepted (user decision DR-5 Option B, 2026-10-15). Evidence: [`research/2026-10-15-gap-094-dr5-provenance-scope-options.md`](research/2026-10-15-gap-094-dr5-provenance-scope-options.md); [GAP-094](BLUEPRINT_GAPS.md#gap-094--provenancevalidate-fails-on-a-missing-manifest-entry); the approved Phase 0 Specification's "every Prime-derived source area incorporated" requirement; the Phase 1/2 Specifications' and Phase 3/4 Plans' "every `.ts`/`.tsx`/`.vue` file under `src/`" validator rule.
+Status: Accepted (user decision DR-5 Option B, 2026-10-15). Evidence: GAP-094; the approved Phase 0 Specification's "every Prime-derived source area incorporated" requirement; the Phase 1/2 Specifications' and Phase 3/4 Plans' "every `.ts`/`.tsx`/`.vue` file under `src/`" validator rule.
 
 **Context.** The approved documents contain two scopes for the file-level provenance manifests: one entry per _incorporated_ source file (Phase 0, Phase 1 manifest bullet), and an entry for _every_ `.ts`/`.tsx`/`.vue` file under each watched package's `src/` (the Phase 1–4 validator rule, which `validate-provenance.mjs` implements). At `main` `ccb97d68`, 1163 of 1915 watched files have no entry. Of those, 467 are test and story files and 696 are files that reach the published packages.
 
@@ -594,7 +594,7 @@ Status: Accepted (user decision DR-5 Option B, 2026-10-15). Evidence: [`research
 
 ## ADR-063 — Ultimate-scoped `border-box` base layer, registered per component through each framework core (GAP-098)
 
-Status: Accepted (user decision GAP-098 Option B, 2026-10-15). Evidence: [`research/2026-10-15-gap-098-box-model-options.md`](research/2026-10-15-gap-098-box-model-options.md); [GAP-097](BLUEPRINT_GAPS.md#gap-097--drawer-sizing-under-content-box-content-overflow-and-a-full-drawer-taller-than-the-viewport) and [GAP-098](BLUEPRINT_GAPS.md#gap-098--primes-global-base-style-box-sizing-border-box-is-not-applied-in-ultimate); `@primeuix/styles` 2.0.3 `base` (`*, ::before, ::after { box-sizing: border-box }`); PrimeReact 10.9.9 `components/lib/componentbase/ComponentBase.js` (`.p-component, .p-component * { box-sizing: border-box }` in `@layer primereact`); the user ruling of 2026-10-08 that excludes Prime's page-wide `*` rule.
+Status: Accepted (user decision GAP-098 Option B, 2026-10-15). Evidence: GAP-097 and GAP-098; `@primeuix/styles` 2.0.3 `base` (`*, ::before, ::after { box-sizing: border-box }`); PrimeReact 10.9.9 `components/lib/componentbase/ComponentBase.js` (`.p-component, .p-component * { box-sizing: border-box }` in `@layer primereact`); the user ruling of 2026-10-08 that excludes Prime's page-wide `*` rule.
 
 **Context.** Upstream component CSS assumes `border-box`. Ultimate ports that CSS, but nothing registers a box-model base, so components render under the browser default `content-box`. In the G3-D Drawer case, a full Drawer renders 722 px tall in a 720 px viewport, and the Angular and Vue G3-D CI steps are red.
 
@@ -618,7 +618,7 @@ The approved option's research named a list of component root classes generated 
 
 ## ADR-064 — Provenance source class (COPY, REFERENCE, ORIGINAL) is evidence-based; `modificationStatus` is a descriptive sub-label
 
-Status: Accepted (user decision, Option B, 2026-10-16). Evidence: [`research/2026-10-16-gap-094-provenance-classification-semantics.md`](research/2026-10-16-gap-094-provenance-classification-semantics.md); [GAP-094](BLUEPRINT_GAPS.md#gap-094--provenancevalidate-fails-on-a-missing-manifest-entry); [ADR-062](#adr-062--provenance-manifest-scope-is-production-distributed-source-dr-5); Blueprint §2.3 and §8.
+Status: Accepted (user decision, Option B, 2026-10-16). Evidence: GAP-094; [ADR-062](#adr-062--provenance-manifest-scope-is-production-distributed-source-dr-5); Blueprint §2.3 and §8.
 
 **Context.**
 
@@ -663,7 +663,7 @@ Status: Accepted (user decision, Option B, 2026-10-16). Evidence: [`research/202
    No class is assigned retroactively to an existing entry.
 
 5. **No enforcement change.** There is no validator or schema change in this decision. A class or enum check needs its own decision.
-6. **Existing entries are not edited, migrated or reclassified**, including GAP-094 backfill batch 1. Their inconsistencies are recorded as [GAP-132](BLUEPRINT_GAPS.md#gap-132--legacy-provenance-manifest-entries-use-undefined-or-inconsistent-classifications) for separate authorization.
+6. **Existing entries are not edited, migrated or reclassified**, including GAP-094 backfill batch 1. Their inconsistencies are recorded as GAP-132 for separate authorization.
 
 This decision supersedes the Phase 1 and Phase 2 Specification vocabularies for new entries; those Specifications carry a note pointing here. It also overrides, for any new entry, the G3 Specifications' fixed `reference-derived` ("Ported (Option B — reference, not verbatim copy)") wording: a future ported style module is COPY with sub-label `adapted`. It amends the GAP-094 Specification §3.4 (Amendment A1).
 
@@ -695,11 +695,11 @@ Status: Accepted (user decision, Option 2 of the React theme-match impact assess
 
 4. **The ambiguity rule is unchanged in scope.** Decision 2 concerns genuine uncertainty about retained upstream wording, statements or structure. It does not turn generic or palette overlap with a theme into evidence of copying. A file whose screening finds neither kind of §3 evidence is classified from its admissible sources alone.
 
-Recorded application: the two React style modules held in GAP-094 batch 3 are re-assessed under this clarification in [`research/2026-10-16-gap-094-backfill-batch-3-evidence.md`](research/2026-10-16-gap-094-backfill-batch-3-evidence.md#reassessment-under-the-adr-064-clarification-2026-10-16).
+Recorded application: the two React style modules held in GAP-094 batch 3 are re-assessed under this clarification in the retired evidence record.
 
 ## ADR-065 — Limited exception: two pre-existing React stylesheets retain PrimeReact theme CSS values outside `components/lib`
 
-Status: Accepted (user decision, Option 2 of the GAP-132 deviation report under Blueprint §37, 2026-10-16). Evidence: [batch 2 evidence record, Correction section](research/2026-10-16-gap-094-backfill-batch-2-evidence.md#correction-under-gap-132-2026-10-16); [GAP-132](BLUEPRINT_GAPS.md#gap-132--legacy-provenance-manifest-entries-use-undefined-or-inconsistent-classifications); PR #28 (merge `d21933be`).
+Status: Accepted (user decision, Option 2 of the GAP-132 deviation report under Blueprint §37, 2026-10-16). Evidence: GAP-132; PR #28 (merge `d21933be`).
 
 **Context.**
 
@@ -779,7 +779,7 @@ Evidence:
 
 ## ADR-067 — React components consume Aura preset tokens (amends ADR-051's React carve-out)
 
-Status: Accepted (user approval of the Workstream 1 Specification, decision D1, 2026-10-18). Evidence: [Workstream 1 Specification](../superpowers/specs/2026-10-18-workstream-1-shipped-component-completion-design.md) §4 and §9. Its React classification was verified against the built Aura preset during Spec Review.
+Status: Accepted (user approval of the Workstream 1 Specification, decision D1, 2026-10-18). Its React classification was verified against the built Aura preset during Spec Review.
 
 **Context.**
 
@@ -803,11 +803,10 @@ Status: Accepted (user approval of the Workstream 1 Specification, decision D1, 
 **Consequences.**
 
 - The Workstream 1 waves implement this. Changed visual baselines need the user's acceptance for each wave.
-- ROADMAP footnote 1 is corrected in Workstream 1's W1 wave.
 
 ## ADR-068 — Gitflow branching model and a required fast `ci` check
 
-Status: Accepted (user decisions GF-1 to GF-11 and CI-1 to CI-5, 2026-10-19). Evidence: `docs/architecture/research/2026-10-19-gitflow-setup-research.md`.
+Status: Accepted (user decisions GF-1 to GF-11 and CI-1 to CI-5, 2026-10-19).
 
 **Context.** Every PR targeted `main`, which also triggers releases. The single CI job was red from two known debts, so no check could block merges, and `main` had no branch protection.
 
@@ -824,5 +823,86 @@ Status: Accepted (user decisions GF-1 to GF-11 and CI-1 to CI-5, 2026-10-19). Ev
 
 - This extends the Phase 0 Specification's branch requirements.
 - MIGRATION §7.4's fail-closed guarantee is not in place until `ci` is required on `main`.
-- The `ci` check is the merge signal. The `CI` workflow's overall result can be red because of `ci-extended`. A check outside `ci` can go red without blocking a merge; the CI closeout rule in `COMPLETION_REGISTER.md` still applies to it.
-- Earlier records that cite `.github/workflows/ci.yml` for the `track-a-browser-visual-a11y` or `track-e-ssr-hydration` jobs (for example in `BLUEPRINT_GAPS.md`) now refer to `.github/workflows/browser.yml`. Those records are not rewritten. ADR-052 X-12's "merge commit's run" means the merge commit's `CI` and `Browser` runs together.
+- The `ci` check is the merge signal. The `CI` workflow's overall result can be red because of `ci-extended`. A check outside `ci` can go red without blocking a merge.
+- Earlier records that cite `.github/workflows/ci.yml` for the `track-a-browser-visual-a11y` or `track-e-ssr-hydration` jobs now refer to `.github/workflows/browser.yml`. Those records are not rewritten. ADR-052 X-12's "merge commit's run" means the merge commit's `CI` and `Browser` runs together.
+
+## ADR-069 — Change-scoped CI keeps the required `ci` check always reporting
+
+Status: Accepted (user decisions AO-1 to AO-7, 2026-10-19).
+
+**Decision.**
+
+- A single tested classifier decides scope.
+- The required `ci` job always runs. It skips only expensive steps, and only for a pull request whose every changed path is docs-only Markdown that no CI script reads.
+- Any other path, any push, an empty diff or a classifier error runs everything.
+- Non-required Browser jobs run only the changed frameworks on pull requests and all frameworks on pushes.
+- `affected-packages` treats any non-package, non-docs change as affecting every package.
+- Workflow path filters and job-level conditions on required jobs are not used.
+
+**Consequences.** A docs-only PR's `ci` check proves formatting, lint, supply-chain and the fast validators, not build or tests. Push runs on `develop` and `main` run every step and all browser frameworks, and are the source of ADR-052 X-12 evidence. Pack/install integrity checks no package on a push, because a push's diff against its own branch is empty; this predates ADR-069 and is not changed by it. Package-level scoping (AO-3) is deferred.
+
+## ADR-070 — CI/CD optimization: browser-input scoping, full validation for `main`, run hygiene (amends ADR-069)
+
+Status: Accepted (user decisions CO-1 to CO-13, 2026-10-20). Each implementation stage needs its own approvals.
+
+**Decision.**
+
+- **Browser inputs (CO-1).** On a pull request into `develop`, a path may skip a framework's Browser jobs only in two cases:
+  - it is a workspace package in no framework's dependency closure, derived from the package manifests at the PR head, whose contents the Browser jobs remove before building, on every event;
+  - it is on a closed `NON_BROWSER_PATHS` list, whose files the Browser jobs delete before installing, on every event.
+
+  A package in any closure runs all three frameworks.
+
+  No path is narrowed because an analysis found no reference to it. Any other path, any failure to derive the closures and any unmodeled dependency edge runs all three frameworks.
+
+- **Docs-only PRs (CO-2).** The non-required `ci-extended` steps and the SSR jobs follow the same classification as ADR-069's gated steps and track-a.
+- **PRs into `main` (CO-5)** run everything, whatever they change.
+- **Pushes (CO-6).** Pack/install integrity covers every package on a push. This replaces the ADR-069 consequence that it checked none.
+- **Run hygiene (CO-3, CO-4, CO-9).** Superseded pull-request runs are cancelled; push runs never are. Every job in `ci.yml` and `browser.yml` has a timeout. Each Playwright invocation keeps its own HTML report.
+- **Storybook servers (CO-7).** Each track-a job starts only its own framework's Storybook server, and none of the SSR harness servers, which no track-a test uses.
+- **Names (CO-10).** The required check stays `ci`. Non-required jobs get descriptive display names, and step names cited as evidence are kept.
+- **Unchanged.** Push runs stay full, including after docs-only merges (CO-13, AO-6). Hooks are unchanged (CO-12, AO-7). Track-a sharding (CO-8) is reconsidered only after CO-7 has been measured, and only if the critical path is still above about 15 minutes. Parallelizing `ci` (CO-11) stays research-only. ADR-069's other rules still hold: one tested classifier, fail-closed defaults, no workflow path filters, and no job-level conditions on the required job.
+
+**Consequences.**
+
+- A pull request that changes only workspace packages outside the framework closures, `NON_BROWSER_PATHS` files or docs-only Markdown runs no Browser jobs. Push runs on `develop` and `main` still run all of them, so ADR-052 X-12 and ADR-053 AC-1/AC-4/AC-5 CI evidence is unaffected.
+- A dependency edge becomes part of a closure without a classifier change. A new path outside `packages/` runs all frameworks until a reviewed classifier change lists it. A Browser job that comes to need a listed file or a no-closure package fails on every run until the rule changes; it can never pass while depending on one.
+- ADR-069's constraints are unchanged. It made no decision about tooling packages; they ran all frameworks only by its classifier's default (research §13.1).
+- Earlier records that cite the old job names (`ci-extended`, `changes`, `track-a-browser-visual-a11y`, `track-e-ssr-hydration`) refer to the renamed jobs. The job IDs are unchanged, and those records are not rewritten.
+- Runtime savings are estimates until the stage closeouts measure them.
+
+## ADR-071 — Shard the Angular and Vue Browser track-a jobs (CO-8)
+
+Status: Accepted (user decision, 2026-10-20). Implemented separately from the completed ADR-070 stages.
+
+**Context.** ADR-070 deferred CO-8 until CO-7 was measured, and made it eligible only if the longest Browser job stayed above about 15 minutes. After CO-7, track-a ng took 24.6 minutes and vue 22.4 on the push run.
+
+**Decision.**
+
+- The ng and vue track-a jobs each split into three parallel shards. Each shard runs whole suites: a tranche's verification specs and its differential accessibility validator always run in the same shard. React stays one job.
+- The track-a matrix (framework and shard) comes from the tested change classifier, as ADR-069 requires for every scoping decision. Its framework selection is unchanged.
+- No test, validator, baseline, step name, required check or trigger changes.
+
+**Consequences.**
+
+- Each verification step still runs exactly once per framework per run, now in one of three jobs named `Playwright visual + a11y (<framework>, <shard>)`. ADR-052 X-12 evidence reads the same step names across those jobs.
+- A full run uses more runner-minutes (estimated +6 to +7) in exchange for a shorter critical path (estimated about 10 minutes). Both are estimates until measured.
+
+## ADR-072 — Provenance validation in the advisory CI job becomes a ratchet over the known-missing list
+
+Status: Accepted (user decision, 2026-10-21). Implemented once authorized.
+
+**Context.** The advisory job "Baselines (advisory): size, coverage, provenance" failed in every full run inspected, so the `CI` workflow is red while the required `ci` check is green (ADR-068). One of the two failing steps, Provenance validation, fails on 645 known missing manifest entries (GAP-094: ng 164, react 216, vue 265). A new missing entry cannot be told apart from the old debt.
+
+**Decision.**
+
+- In the advisory job only, the Provenance validation step compares missing entries with a committed known-missing list. A missing entry not on the list fails. A listed entry that is no longer missing also fails, so the list can only shrink.
+- Without the ratchet flag the validator stays strict. No manifest entry is backfilled by this decision.
+- GAP-094 stays OPEN until the list is empty and the validator exits 0 without the flag.
+
+**Consequences.**
+
+- The advisory job's Provenance step turns green and starts to catch new debt. The Bundle-size step remains red until its own baseline is updated in a separate PR.
+- Backfill batch PRs also edit the list. The GAP-094 Specification's resolved condition is amended accordingly.
+- The advisory job stays a non-required check. Making it required is a separate decision.
+- Not a change to the production-scope classifier (ADR-062), the diff check, or the `ci` job.

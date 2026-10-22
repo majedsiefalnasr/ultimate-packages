@@ -7,8 +7,7 @@ import { spawnSync } from "node:child_process";
 
 const SCRIPT_PATH = join(process.cwd(), "scripts/provenance/validate-g3e-accessibility.mjs");
 const BASELINE = "docs/architecture/ACCESSIBILITY_BASELINE.md";
-const PREEXISTING =
-  "docs/architecture/research/2026-10-08-gap-064-g3e-accessibility-preexisting.md";
+const PREEXISTING = "docs/architecture/baselines/g3e-accessibility-preexisting.md";
 const BROWSERS = ["chromium", "firefox", "webkit"];
 // The G3-E story set grows per batch; the expected size is the validator's own constant.
 const N = Number(/EXPECTED_STORY_COUNT = \{ ng: (\d+),/.exec(readFileSync(SCRIPT_PATH, "utf8"))[1]);
@@ -46,7 +45,7 @@ function makeWorkDir({
   specExtra = "",
 }) {
   const dir = mkdtempSync(join(tmpdir(), "g3e-a11y-"));
-  mkdirSync(join(dir, "docs/architecture/research"), { recursive: true });
+  mkdirSync(join(dir, "docs/architecture/baselines"), { recursive: true });
   writeFileSync(join(dir, BASELINE), table(baseline));
   writeFileSync(join(dir, PREEXISTING), table(preexisting));
   mkdirSync(join(dir, "packages/ng/e2e"), { recursive: true });

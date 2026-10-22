@@ -7,8 +7,7 @@ import { spawnSync } from "node:child_process";
 
 const SCRIPT_PATH = join(process.cwd(), "scripts/provenance/validate-g3c1-accessibility.mjs");
 const BASELINE = "docs/architecture/ACCESSIBILITY_BASELINE.md";
-const PREEXISTING =
-  "docs/architecture/research/2026-10-05-gap-064-g3c1-accessibility-preexisting.md";
+const PREEXISTING = "docs/architecture/baselines/g3c1-accessibility-preexisting.md";
 const BROWSERS = ["chromium", "firefox", "webkit"];
 const STORIES = Array.from({ length: 17 }, (_, i) => `ng-story${i}--default`);
 
@@ -36,7 +35,7 @@ function writeEnvelope(dir, browser, storyId, violations) {
 // table, and one envelope per story x browser with the given violations.
 function makeWorkDir({ baseline = [], preexisting = [], stories = STORIES, violations = {} }) {
   const dir = mkdtempSync(join(tmpdir(), "g3c1-a11y-"));
-  mkdirSync(join(dir, "docs/architecture/research"), { recursive: true });
+  mkdirSync(join(dir, "docs/architecture/baselines"), { recursive: true });
   writeFileSync(join(dir, BASELINE), table(baseline));
   writeFileSync(join(dir, PREEXISTING), table(preexisting));
   mkdirSync(join(dir, "packages/ng/e2e"), { recursive: true });

@@ -2,7 +2,7 @@
   <ul ref="listEl" :class="cx('submenu')" role="menu" @keydown="onKeydown">
     <li v-if="group.label" :class="cx('submenuLabel')" role="presentation">{{ group.label }}</li>
     <template v-for="(item, i) in group.items || []" :key="(item.label || '') + i">
-      <li v-if="isVisible(item)" :class="cx('item')" role="none">
+      <li v-if="isVisible(item)" :class="cx('item', { disabled: isDisabled(item) })" role="none">
         <div :class="cx('itemContent')">
           <a
             role="menuitem"

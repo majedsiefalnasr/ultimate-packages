@@ -97,6 +97,7 @@
 // `MegaMenu.vue`/`MegaMenuColumnGroup.vue` — the overlay renders as plain
 // in-tree DOM, CSS-positioned — so this ancestor relationship holds with no
 // portal escape hatch to account for.
+import { toRaw } from "vue";
 import { createBaseMegaMenu } from "./BaseMegaMenu";
 import MegaMenuColumnGroup from "./MegaMenuColumnGroup.vue";
 
@@ -124,8 +125,10 @@ export default {
     hasColumns(item) {
       return !!item.items && item.items.length > 0;
     },
+    // GAP-084: `openItem` is read back from reactive data as a proxy, while a
+    // plain model's items are raw objects, so items are compared unwrapped.
     isOpen(item) {
-      return this.openItem === item;
+      return toRaw(this.openItem) === toRaw(item);
     },
     onMouseEnter(item) {
       if (this.hasColumns(item) && !this.isDisabled(item)) {
@@ -139,7 +142,7 @@ export default {
       }
       if (this.hasColumns(item)) {
         event.preventDefault();
-        this.openItem = this.openItem === item ? null : item;
+        this.openItem = this.isOpen(item) ? null : item;
         return;
       }
       if (!item.url && !item.routerLink) {
@@ -201,7 +204,9 @@ export default {
     closeAndRefocus(item) {
       this.openItem = null;
       const links = this.getRootLinks();
-      const targetIndex = this.renderedRootItems().indexOf(item);
+      const targetIndex = this.renderedRootItems().findIndex(
+        (candidate) => toRaw(candidate) === toRaw(item)
+      );
       links[targetIndex]?.focus();
     },
 

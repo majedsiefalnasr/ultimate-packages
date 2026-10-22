@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
+import { h } from "vue";
 import { UMegaMenu } from "./index";
 
 const model = [
@@ -277,5 +278,55 @@ describe("UMegaMenu", () => {
         wrapper.unmount();
       });
     });
+  });
+});
+
+// `mount(UMegaMenu, { props })` wraps props in a reactive object, which hides
+// GAP-084; rendering through `h()` passes the plain array unchanged, as a
+// consumer's constant array would.
+describe("UMegaMenu with a plain, non-reactive model (GAP-084)", () => {
+  const mountPlain = () => mount({ render: () => h(UMegaMenu, { model }) });
+
+  it("GAP-084 mega menu hover opens the item for a plain model", async () => {
+    const wrapper = mountPlain();
+    const productsItem = wrapper.findAll('[role="menubar"] > li')[0];
+    await productsItem.trigger("mouseenter");
+    expect(productsItem.attributes("data-u-open")).toBe("true");
+    expect(productsItem.classes()).toContain("u-megamenu-item-open");
+  });
+
+  it("GAP-084 mega menu click opens the item for a plain model", async () => {
+    const wrapper = mountPlain();
+    const productsItem = wrapper.findAll('[role="menubar"] > li')[0];
+    await productsItem.find("a").trigger("click");
+    expect(productsItem.attributes("data-u-open")).toBe("true");
+    expect(productsItem.find("a").attributes("aria-expanded")).toBe("true");
+  });
+});
+
+describe("UMegaMenu disabled column items (GAP-085)", () => {
+  it("GAP-085 disabled megamenu column item carries the disabled class", async () => {
+    const wrapper = mount(UMegaMenu, {
+      props: {
+        model: [
+          {
+            label: "Products",
+            items: [
+              [
+                {
+                  label: "Category A",
+                  items: [{ label: "Item A1" }, { label: "Item A2", disabled: true }],
+                },
+              ],
+            ],
+          },
+        ],
+      },
+    });
+    const productsItem = wrapper.findAll('[role="menubar"] > li')[0];
+    await productsItem.find("a").trigger("click");
+    const [enabled, disabled] = productsItem.findAll(".u-megamenu-submenu > .u-megamenu-item");
+    expect(disabled.classes()).toContain("u-megamenu-item-disabled");
+    expect(enabled.classes()).not.toContain("u-megamenu-item-disabled");
   });
 });

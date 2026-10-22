@@ -4,11 +4,19 @@
   </div>
   <UPortal v-if="visible">
     <div ref="container" :class="cx('root')">
-      <ul ref="list" :class="cx('rootList')" role="menu">
+      <ul
+        ref="list"
+        :class="cx('rootList')"
+        role="menu"
+        tabindex="0"
+        :aria-activedescendant="focusedIndex === -1 ? undefined : itemId(focusedIndex)"
+        @keydown="onListKeyDown"
+      >
         <template v-for="(item, index) in model" :key="item.label + index">
           <li v-if="item.separator" :class="cx('separator')" role="separator" />
           <li
             v-else-if="item.visible !== false"
+            :id="itemId(index)"
             :class="cx('item', { disabled: item.disabled, focused: focusedIndex === index })"
             role="menuitem"
             :data-u-disabled="!!item.disabled"
@@ -42,6 +50,7 @@ import {
   createDisplayOrderMixin,
 } from "@ultimate/vue-core";
 import { ESCAPE_PRIORITIES } from "@ultimate/uix-utils/escape";
+import { useId } from "vue";
 import { createBaseContextMenu } from "./BaseContextMenu";
 
 const { set: setZIndex, clear: clearZIndex } = useZIndex();
@@ -58,10 +67,20 @@ const { set: setZIndex, clear: clearZIndex } = useZIndex();
 // established reduction of PrimeVue's real recursive ContextMenuSub
 // structure; nested-submenu support belongs to UTieredMenu, not duplicated
 // here. Dismissed on outside click, Escape, and window resize.
+//
+// Keyboard (GAP-086), as upstream: opening focuses the list, which tracks the
+// focused item with `aria-activedescendant`. ArrowDown/ArrowUp move to the
+// next/previous enabled item without wrapping, Home/End to the first/last,
+// Enter/Space activate the focused item, and Tab closes the menu. Escape stays
+// with the shared global Escape mixin. Upstream's ArrowLeft/ArrowRight
+// (submenus) and type-ahead search are not ported.
 export default {
   name: "UContextMenu",
   extends: createBaseContextMenu(),
   emits: ["show", "hide", "item-select"],
+  setup() {
+    return { menuId: `u-contextmenu-${useId()}` };
+  },
   data() {
     return {
       visible: false,
@@ -116,7 +135,10 @@ export default {
       this.bindDismissListeners();
       const pageX = event.pageX;
       const pageY = event.pageY;
-      this.$nextTick(() => this.position(pageX, pageY));
+      this.$nextTick(() => {
+        this.position(pageX, pageY);
+        this.$refs.list?.focus();
+      });
     },
     hide() {
       if (!this.visible) return;
@@ -136,6 +158,66 @@ export default {
       container.style.left = `${Math.max(0, left)}px`;
       container.style.top = `${Math.max(0, top)}px`;
       setZIndex(Z_INDEX_KEYS.menu, container);
+    },
+    itemId(index) {
+      return `${this.menuId}_${index}`;
+    },
+    /** Upstream `onKeyDown`, limited to this flat list's keys (GAP-086). */
+    onListKeyDown(event) {
+      switch (event.code) {
+        case "ArrowDown":
+          this.focusItem(this.nextItemIndex(1));
+          event.preventDefault();
+          break;
+        case "ArrowUp":
+          this.focusItem(this.nextItemIndex(-1));
+          event.preventDefault();
+          break;
+        case "Home":
+          this.focusItem(this.edgeItemIndex(1));
+          event.preventDefault();
+          break;
+        case "End":
+          this.focusItem(this.edgeItemIndex(-1));
+          event.preventDefault();
+          break;
+        case "Enter":
+        case "NumpadEnter":
+        case "Space":
+          this.activateFocusedItem();
+          event.preventDefault();
+          break;
+        case "Tab":
+          this.hide();
+          break;
+      }
+    },
+    isFocusable(item) {
+      return !!item && !item.separator && item.visible !== false && !item.disabled;
+    },
+    /** The next focusable index in `direction`, or the current one at the end (no wrap). */
+    nextItemIndex(direction) {
+      if (this.focusedIndex === -1) return this.edgeItemIndex(direction);
+      for (let i = this.focusedIndex + direction; i >= 0 && i < this.model.length; i += direction) {
+        if (this.isFocusable(this.model[i])) return i;
+      }
+      return this.focusedIndex;
+    },
+    /** The first (`1`) or last (`-1`) focusable index, or -1 when none. */
+    edgeItemIndex(direction) {
+      const start = direction === 1 ? 0 : this.model.length - 1;
+      for (let i = start; i >= 0 && i < this.model.length; i += direction) {
+        if (this.isFocusable(this.model[i])) return i;
+      }
+      return -1;
+    },
+    focusItem(index) {
+      if (index !== -1) this.focusedIndex = index;
+    },
+    /** Clicks the focused item's link, as upstream `onEnterKey`, so the pointer path runs. */
+    activateFocusedItem() {
+      if (this.focusedIndex === -1) return;
+      this.$refs.list?.querySelector(`[id="${this.itemId(this.focusedIndex)}"] a`)?.click();
     },
     onItemClick(event, item) {
       if (item.disabled) {

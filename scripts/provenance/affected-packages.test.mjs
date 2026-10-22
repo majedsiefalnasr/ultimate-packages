@@ -13,8 +13,16 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { computeAffectedPackages, mapChangedFileToPackageName } from "./affected-packages.mjs";
-import { getReverseTransitiveClosure } from "./workspace-graph.mjs";
+import { getAllPackageNames, getReverseTransitiveClosure } from "./workspace-graph.mjs";
+
+const ALL_SHORT_NAMES = getAllPackageNames()
+  .map((name) => name.replace(/^@ultimate\//, ""))
+  .sort();
 
 test("mapChangedFileToPackageName extracts the short package dir name from a packages/<name>/... path", () => {
   assert.strictEqual(mapChangedFileToPackageName("packages/uix-data/src/index.ts"), "uix-data");
@@ -100,13 +108,19 @@ test("computeAffectedPackages: a change to packages/uix-utils/package.json (mani
 
 // --- Non-package changes and multi-package diffs -----------------------
 
-test("computeAffectedPackages returns an empty list when no changed file is under packages/", () => {
+// ADR-069 replaced the earlier contract here: a workflow or tool-read docs
+// change used to select no package (the fail-open gap, research F-2).
+test("computeAffectedPackages: a non-package change that is not docs-only widens to every package", () => {
   const changedFiles = [
     "docs/architecture/PERFORMANCE.md",
     "README.md",
     ".github/workflows/ci.yml",
   ];
-  assert.deepEqual(computeAffectedPackages(changedFiles), []);
+  assert.deepEqual(computeAffectedPackages(changedFiles), ALL_SHORT_NAMES);
+});
+
+test("computeAffectedPackages returns an empty list when every changed file is docs-only Markdown", () => {
+  assert.deepEqual(computeAffectedPackages(["README.md", "docs/notes/x.md"]), []);
 });
 
 test("computeAffectedPackages ignores a changed path under packages/uix/ (not a real workspace package — no package.json)", () => {
@@ -135,4 +149,40 @@ test("computeAffectedPackages result is always sorted with no duplicates", () =>
   const affected = computeAffectedPackages(changedFiles);
   const sortedUnique = [...new Set(affected)].sort();
   assert.deepEqual(affected, sortedUnique);
+});
+
+// --- ADR-069: root and shared changes widen to every package ------------
+//
+// A changed path outside packages/ that is not docs-only Markdown (the
+// lockfile, root config, scripts/, apps/, workflows) can affect any
+// package, so it must select all of them rather than none.
+
+test("computeAffectedPackages: a lockfile change affects every package", () => {
+  assert.deepEqual(computeAffectedPackages(["pnpm-lock.yaml"]), ALL_SHORT_NAMES);
+  assert.equal(ALL_SHORT_NAMES.length, 17);
+});
+
+test("computeAffectedPackages: a scripts/ change affects every package", () => {
+  assert.deepEqual(computeAffectedPackages(["scripts/provenance/x.mjs"]), ALL_SHORT_NAMES);
+});
+
+test("computeAffectedPackages: a docs-only change affects no package", () => {
+  assert.deepEqual(computeAffectedPackages(["docs/notes/x-design.md"]), []);
+});
+
+// ADR-070 (CO-6): a push's diff against its own branch is empty, so the CLI
+// checks every package on a push and calls no git command.
+test("CLI --event push lists every package without calling git", () => {
+  const script = resolve(import.meta.dirname, "affected-packages.mjs");
+  const notARepo = mkdtempSync(join(tmpdir(), "affected-norepo-"));
+  const out = join(notARepo, "github-output");
+  writeFileSync(out, "");
+  const stdout = execFileSync(
+    process.execPath,
+    [script, "--event", "push", "--base-ref", "refs/does-not-exist"],
+    { cwd: notARepo, encoding: "utf8", env: { ...process.env, GITHUB_OUTPUT: out } }
+  );
+  assert.match(stdout, new RegExp(`${ALL_SHORT_NAMES.length} affected package`));
+  assert.equal(readFileSync(out, "utf8"), `packages=${ALL_SHORT_NAMES.join(" ")}\n`);
+  assert.equal(ALL_SHORT_NAMES.length, 17);
 });

@@ -9,11 +9,14 @@
 //   - Baseline-only diff for this package (per
 //     baseline-lib.mjs's isBaselineOnlyDiff — the diff touches only
 //     docs/architecture/PERFORMANCE.md, not this package's own
-//     packages/<name>/src/** or packages/<name>/package.json): run the
-//     INTEGRITY check — the value this PR writes into PERFORMANCE.md must
-//     equal a fresh real measurement of the package's current (unchanged)
-//     dist/ output.
-//   - Otherwise (diff touches this package's source/manifest): run the
+//     packages/<name>/src/** or packages/<name>/package.json) AND the diff
+//     changes or adds this package's row (ADR-066): run the INTEGRITY
+//     check — the value this PR writes into PERFORMANCE.md must equal a
+//     fresh real measurement of the package's current (unchanged) dist/
+//     output.
+//   - A merge-base row removed at HEAD fails ("baseline removed"), as does
+//     an unreadable PERFORMANCE.md or an empty merge-base table.
+//   - Otherwise (including an unchanged row on a baseline-only diff): run the
 //     REGRESSION check against the merge-base's own recorded baseline
 //     value only — never a value the current diff itself wrote. No prior
 //     entry: informational only (Stage 1). Prior entry: fail if the
@@ -22,12 +25,16 @@
 // This script never reads or trusts any PERFORMANCE.md value the current
 // PR itself wrote for the regression branch — only the merge-base's.
 
-import { getMergeBaseSha, readFileAtRef, isBaselineOnlyDiff } from "./baseline-lib.mjs";
+import {
+  boundedTableRows,
+  isBaselineOnlyDiff,
+  readBaselineTables,
+  selectBaselinePath,
+} from "./baseline-lib.mjs";
 import { measurePackage, ALL_PUBLISHABLE_PACKAGES } from "./measure-package-size.mjs";
 import { join } from "node:path";
 
 const REGRESSION_THRESHOLD = 0.15;
-const PERFORMANCE_MD_PATH = "docs/architecture/PERFORMANCE.md";
 
 // Simple line-based Markdown table parser, same style as
 // validate-sast-baseline.mjs's parseBaselineFingerprints: finds "|"-led
@@ -38,7 +45,8 @@ const PERFORMANCE_MD_PATH = "docs/architecture/PERFORMANCE.md";
 // column, which includes sourcemaps and type declarations irrelevant to
 // what ships over the wire. Only the Phase 10 table is parsed — Phase 1/2's
 // tables use the same column shape but are a different section, and this
-// gate only tracks the Phase 10 baseline of record.
+// gate only tracks the Phase 10 baseline of record. Parsing stops at the
+// next "##"/"###" heading after the first table under "## Phase 10".
 export function parsePhase10SizeTable(markdown) {
   const sizesByPackage = new Map();
   if (!markdown) return sizesByPackage;
@@ -46,9 +54,8 @@ export function parsePhase10SizeTable(markdown) {
   const phase10Index = markdown.indexOf("## Phase 10");
   if (phase10Index === -1) return sizesByPackage;
 
-  const section = markdown.slice(phase10Index);
-  const lines = section.split("\n");
-  const rowLines = lines.filter((line) => line.trim().startsWith("|"));
+  const section = markdown.slice(phase10Index + "## Phase 10".length);
+  const rowLines = boundedTableRows(section);
 
   for (const line of rowLines) {
     const cells = line
@@ -78,7 +85,7 @@ export function parsePhase10SizeTable(markdown) {
 //
 // Params:
 //   packageName        - e.g. "uix-utils"
-//   isBaselineOnly      - boolean, from isBaselineOnlyDiff(mergeBaseSha, packageName)
+//   isBaselineOnly      - boolean, true when selectBaselinePath returns "integrity"
 //   mergeBaseSizeKB     - number|undefined, the merge-base PERFORMANCE.md's recorded dist/ size for this package
 //   freshMeasuredSizeKB - number, a fresh re-measurement of the package's current dist/ output
 //   headWrittenSizeKB   - number|undefined, the value the current diff's HEAD version of PERFORMANCE.md records for this package (only consulted in the baseline-only branch)
@@ -157,12 +164,14 @@ function runCli() {
   const baseRefIndex = process.argv.indexOf("--base-ref");
   const baseRef = baseRefIndex !== -1 ? process.argv[baseRefIndex + 1] : "origin/main";
 
-  const mergeBaseSha = getMergeBaseSha(baseRef);
-  const mergeBaseMarkdown = readFileAtRef(mergeBaseSha, PERFORMANCE_MD_PATH);
-  const mergeBaseSizes = parsePhase10SizeTable(mergeBaseMarkdown);
-
-  const headMarkdown = readFileAtRef("HEAD", PERFORMANCE_MD_PATH);
-  const headSizes = parsePhase10SizeTable(headMarkdown);
+  let baselines;
+  try {
+    baselines = readBaselineTables(baseRef, parsePhase10SizeTable, "package size");
+  } catch (error) {
+    fail(`could not read PERFORMANCE.md baselines (${error.message})`);
+    process.exit(1);
+  }
+  const { mergeBaseSha, mergeBase: mergeBaseSizes, head: headSizes } = baselines;
 
   let anyFailed = false;
 
@@ -181,14 +190,27 @@ function runCli() {
       continue;
     }
 
-    const baselineOnly = isBaselineOnlyDiff(mergeBaseSha, packageName);
+    const mergeBaseSizeKB = mergeBaseSizes.get(packageName);
+    const headWrittenSizeKB = headSizes.get(packageName);
+    const baselinePath = selectBaselinePath({
+      baselineOnly: isBaselineOnlyDiff(mergeBaseSha, packageName),
+      mergeBaseValue: mergeBaseSizeKB,
+      headValue: headWrittenSizeKB,
+    });
+    if (baselinePath === "removed") {
+      fail(
+        `${packageName}: baseline removed — merge-base PERFORMANCE.md records ${mergeBaseSizeKB} KB but HEAD has no row`
+      );
+      anyFailed = true;
+      continue;
+    }
 
     const result = evaluatePackageSize({
       packageName,
-      isBaselineOnly: baselineOnly,
-      mergeBaseSizeKB: mergeBaseSizes.get(packageName),
+      isBaselineOnly: baselinePath === "integrity",
+      mergeBaseSizeKB,
       freshMeasuredSizeKB,
-      headWrittenSizeKB: headSizes.get(packageName),
+      headWrittenSizeKB,
     });
 
     if (result.ok) {

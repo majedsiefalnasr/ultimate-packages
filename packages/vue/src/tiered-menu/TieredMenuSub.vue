@@ -82,6 +82,7 @@
 // in-tree DOM, CSS-positioned (`.u-tieredmenu-submenu { position: absolute
 // }` in `tiered-menu-style.ts`) — so this ancestor relationship holds all
 // the way down with no portal escape hatch to account for.
+import { toRaw } from "vue";
 import { createBaseComponent } from "@ultimate/vue-core";
 import { tieredMenuStyleModule } from "./tiered-menu-style";
 
@@ -114,8 +115,10 @@ export default {
     hasItems(item) {
       return !!item.items && item.items.length > 0;
     },
+    // GAP-084: `openItem` is read back from reactive data as a proxy, while a
+    // plain model's items are raw objects, so items are compared unwrapped.
     isOpen(item) {
-      return this.openItem === item;
+      return toRaw(this.openItem) === toRaw(item);
     },
     onMouseEnter(item) {
       if (this.hasItems(item) && !this.isDisabled(item)) {
@@ -129,7 +132,7 @@ export default {
       }
       if (this.hasItems(item)) {
         event.preventDefault();
-        this.openItem = this.openItem === item ? null : item;
+        this.openItem = this.isOpen(item) ? null : item;
         return;
       }
       if (!item.url && !item.routerLink) {
@@ -196,7 +199,9 @@ export default {
     closeAndRefocus(item) {
       this.openItem = null;
       const links = this.getItemLinks();
-      const targetIndex = this.renderedItems().indexOf(item);
+      const targetIndex = this.renderedItems().findIndex(
+        (candidate) => toRaw(candidate) === toRaw(item)
+      );
       links[targetIndex]?.focus();
     },
 

@@ -1,4 +1,9 @@
-name: CI
+# The merge gate: the fast checks whose job `ci` is the required status check on
+# develop (ADR-068). The workflow is named for that role. The job key and name
+# stay `ci` on purpose: branch protection requires the check by that name, and
+# renaming the job would leave every pull request waiting on a check that no
+# longer exists (ADR-069, ADR-070 CO-10).
+name: Quality gate
 
 on:
   push:
@@ -6,9 +11,17 @@ on:
   pull_request:
     branches: [main, develop]
 
+# A new push to a pull request cancels that PR's older run. Push runs are
+# keyed by ref and SHA, so they are never cancelled (ADR-070, CO-3).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || format('{0}-{1}', github.ref, github.sha) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   ci:
+    name: ci
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: read
       security-events: write
@@ -31,6 +44,12 @@ jobs:
         with:
           node-version: "24.15.0"
           cache: "pnpm"
+
+      - name: Classify changes
+        id: classify
+        env:
+          EVENT: ${{ github.event_name }}
+        run: node scripts/provenance/classify-changes.mjs --base-ref "origin/$BASE" --event "$EVENT"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -56,19 +75,19 @@ jobs:
         run: pnpm run format:check
 
       - name: Build
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run build
 
       - name: Typecheck
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run typecheck
 
       - name: Validate generated artifacts
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run validate
 
       - name: Metadata API drift check
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: |
           status=0
           pnpm --filter @ultimate/component-metadata run drift:check || status=1
@@ -76,20 +95,22 @@ jobs:
           exit "$status"
 
       - name: Metadata coverage report
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm --filter @ultimate/component-metadata run coverage:report
 
       - name: Test
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run test
 
       - name: Determine affected packages
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         id: affected
-        run: pnpm run affected:packages -- --base-ref "origin/$BASE"
+        env:
+          EVENT: ${{ github.event_name }}
+        run: pnpm run affected:packages -- --base-ref "origin/$BASE" --event "$EVENT"
 
       - name: Pack/install integrity (affected)
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         env:
           AFFECTED_PACKAGES: ${{ steps.affected.outputs.packages }}
         run: |
@@ -100,23 +121,23 @@ jobs:
           done
 
       - name: Installed-package smoke (CLI/MCP)
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run smoke:installed
 
       - name: CodeQL init
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         uses: github/codeql-action/init@v3
         with:
           languages: javascript-typescript
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: CodeQL analyze
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         id: codeql-analyze
         uses: github/codeql-action/analyze@v3
 
       - name: Resolve SARIF path
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         env:
           SARIF_OUTPUT_DIR: ${{ steps.codeql-analyze.outputs.sarif-output }}
         run: |
@@ -133,15 +154,15 @@ jobs:
           echo "Resolved CodeQL SARIF: $SARIF_PATH"
 
       - name: SAST baseline validation
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run sast:validate -- "$SARIF_PATH"
 
       - name: Fetch pinned vendor archives
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run vendor:fetch -- primereact primevue
 
       - name: Provenance scripts self-tests
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run test:scripts
 
       - name: Package boundary validation
@@ -153,7 +174,7 @@ jobs:
         run: pnpm run ceiling:validate
 
       - name: Compatibility manifest validation
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run compatibility-manifest:validate
 
       - name: CLI package boundary validation
@@ -174,11 +195,15 @@ jobs:
 
   # Not a required check (ADR-068). It runs the slow baseline checks and the
   # checks with known failures, so the CI workflow result can be red while the
-  # required `ci` check is green. Known failures: Provenance validation
-  # (GAP-094, missing manifest entries) and Bundle-size regression check
-  # (`component-metadata` exceeds its PERFORMANCE.md baseline).
+  # required `ci` check is green. Provenance validation is a ratchet (ADR-072):
+  # it excuses only the files in docs/architecture/provenance/known-missing.json
+  # (GAP-094) and fails on any new missing manifest entry. Known failure:
+  # Bundle-size regression check (`component-metadata` exceeds its
+  # PERFORMANCE.md baseline).
   ci-extended:
+    name: "Baselines (advisory): size, coverage, provenance"
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
     env:
@@ -201,29 +226,37 @@ jobs:
           node-version: "24.15.0"
           cache: "pnpm"
 
+      # Same classifier as `ci`: on a docs-only pull request the steps below
+      # are skipped (ADR-070, CO-2). Pushes and other changes run them all.
+      - name: Classify changes
+        id: classify
+        env:
+          EVENT: ${{ github.event_name }}
+        run: node scripts/provenance/classify-changes.mjs --base-ref "origin/$BASE" --event "$EVENT"
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run build
 
       - name: Bundle-size measurement
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run size:measure
 
       - name: Bundle-size regression check
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run size:validate -- --base-ref "origin/$BASE"
 
       - name: Coverage measurement
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run coverage:measure
 
       - name: Coverage regression check
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
         run: pnpm run coverage:validate -- --base-ref "origin/$BASE"
 
       - name: Provenance validation
-        if: ${{ !cancelled() }}
-        run: pnpm run provenance:validate -- --base-ref "origin/$BASE"
+        if: ${{ !cancelled() && steps.classify.outputs.scope != 'docs' }}
+        run: pnpm run provenance:validate -- --base-ref "origin/$BASE" --known-missing docs/architecture/provenance/known-missing.json
