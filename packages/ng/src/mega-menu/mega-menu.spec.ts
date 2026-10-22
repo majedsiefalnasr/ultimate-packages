@@ -327,4 +327,29 @@ describe("UMegaMenu", () => {
       });
     });
   });
+  it("GAP-085 disabled megamenu column item carries the disabled class", () => {
+    const fixture = setup([
+      {
+        label: "Products",
+        items: [
+          [
+            {
+              label: "Category A",
+              items: [{ label: "Item A1" }, { label: "Item A2", disabled: true }],
+            },
+          ],
+        ],
+      },
+    ]);
+    const productsItem = fixture.nativeElement.querySelector(
+      ".u-megamenu-root-list > li:first-child"
+    );
+    productsItem.querySelector("a").click();
+    fixture.detectChanges();
+    const [enabled, disabled] = productsItem.querySelectorAll(
+      ".u-megamenu-submenu > .u-megamenu-item"
+    );
+    expect(disabled.classList).toContain("u-megamenu-item-disabled");
+    expect(enabled.classList).not.toContain("u-megamenu-item-disabled");
+  });
 });

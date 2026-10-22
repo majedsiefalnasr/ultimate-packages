@@ -160,4 +160,22 @@ describe("runTheme", () => {
     const occurrences = themeEntry.split("applyUltimateTheme()").length - 1;
     expect(occurrences).toBe(1);
   });
+
+  it("refuses with exit 1 and the documented message when no framework is detected (CLI-1)", async () => {
+    const { runTheme } = await import("../../src/commands/theme.js");
+    const dir = mkdtempSync(join(tmpdir(), "ultimate-cli-theme-none-"));
+    tempDirs.push(dir);
+    cpSync(join(fixturesDir, "..", "unknown-project"), dir, { recursive: true });
+    const spawnSpy = mockSpawn(0);
+
+    const result = await runTheme(dir, "aura");
+
+    expect(result.exitCode).toBe(1);
+    expect(result.message).toBe(
+      "theme requires an existing, already-scaffolded Angular/React/Vue project " +
+        "(an angular.json or a recognizable framework dependency in package.json)."
+    );
+    expect(spawnSpy).not.toHaveBeenCalled();
+    expect(existsSync(join(dir, "ultimate.config.json"))).toBe(false);
+  });
 });

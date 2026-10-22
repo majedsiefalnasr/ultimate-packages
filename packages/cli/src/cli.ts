@@ -4,11 +4,13 @@ import { formatDoctorReport, runDoctor } from "./commands/doctor.js";
 import { runGenerate } from "./commands/generate.js";
 import { runInit } from "./commands/init.js";
 import { runTheme } from "./commands/theme.js";
+import { KNOWN_COMMANDS, renderHelp } from "./help.js";
 
-/** The five real v1 commands (spec §7.1/§7.2) plus `ai`'s stub (spec §7.3). */
-const KNOWN_COMMANDS = ["init", "add", "theme", "doctor", "generate", "ai"] as const;
+const USAGE_MESSAGE =
+  `Usage: ultimate <command> [args]\n\nCommands:\n  ${KNOWN_COMMANDS.join(", ")}\n\n` +
+  'Run "ultimate --help" for arguments and exit codes.';
 
-const USAGE_MESSAGE = `Usage: ultimate <command> [args]\n\nCommands:\n  ${KNOWN_COMMANDS.join(", ")}`;
+const HELP_FLAGS: readonly string[] = ["--help", "-h"];
 
 /**
  * Prints a handler's `{ exitCode, message }` result: `message` to stdout on
@@ -41,6 +43,19 @@ export async function runCli(argv: string[], projectDir: string = process.cwd())
   if (command === undefined) {
     console.error(USAGE_MESSAGE);
     return 1;
+  }
+
+  // `--help`/`-h` globally, or as the first argument after a known command.
+  if (HELP_FLAGS.includes(command)) {
+    console.log(renderHelp());
+    return 0;
+  }
+  if (
+    (KNOWN_COMMANDS as readonly string[]).includes(command) &&
+    HELP_FLAGS.includes(args[0] ?? "")
+  ) {
+    console.log(renderHelp(command));
+    return 0;
   }
 
   switch (command) {
