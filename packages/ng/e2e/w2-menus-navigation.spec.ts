@@ -3,7 +3,7 @@ import { storyUrl } from "./accessibility-envelope";
 
 /**
  * Workstream 1 wave W2 (Menus and navigation) behaviour fixes. Assertions come
- * from the "Expected state" of each gap in BLUEPRINT_GAPS.md; the expected key
+ * from the "Expected state" of each gap; the expected key
  * results were taken from the pinned PrimeNG 21.1.9 ContextMenu and MegaMenu.
  * GAP-084 is Vue-only and has no Angular test.
  */

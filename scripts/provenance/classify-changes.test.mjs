@@ -39,8 +39,8 @@ const SCRIPT = resolve(import.meta.dirname, "classify-changes.mjs");
 
 test("isDocsOnlyPath: Markdown outside code and tool-read paths is docs-only", () => {
   for (const p of [
-    "docs/superpowers/specs/x-design.md",
-    "docs/architecture/research/2026-10-19-x.md",
+    "docs/notes/x-design.md",
+    "docs/architecture/notes/2026-10-19-x.md",
     "README.md",
     "CHANGELOG.md",
     "SECURITY.md",
@@ -57,7 +57,7 @@ test("isDocsOnlyPath: Markdown that a CI script reads is not docs-only", () => {
     "docs/architecture/SAST_BASELINE.md",
     "docs/architecture/PROVENANCE.md",
     "docs/architecture/COMPATIBILITY.md",
-    "docs/architecture/research/2026-10-08-gap-064-g3e-accessibility-preexisting.md",
+    "docs/architecture/baselines/g3e-accessibility-preexisting.md",
   ]) {
     assert.equal(isDocsOnlyPath(p), false, p);
   }
@@ -194,7 +194,7 @@ test("CLI: the log line includes the track_a matrix", () => {
   assert.match(
     stdout,
     new RegExp(
-      `frameworks=\\["ng","react","vue"\\] track_a=${FULL_TRACK_A.replace(/[{}[\]]/g, "\\$&")}`
+      `frameworks=\\["ng","react","vue"\\] track_a=${FULL_TRACK_A.replace(/[\\{}[\]]/g, "\\$&")}`
     )
   );
 });

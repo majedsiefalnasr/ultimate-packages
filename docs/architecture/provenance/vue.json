@@ -327,7 +327,7 @@
     "originalPath": "@primeuix/styles@2.0.3 orderlist",
     "ultimateDestination": "packages/vue/src/order-list/order-list-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the root rule targets the section wrapper and the list rule targets .u-order-list-list. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the narrow responsive controls and striped rows (E3-R2). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e3-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the root rule targets the section wrapper and the list rule targets .u-order-list-list. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the narrow responsive controls and striped rows (E3-R2)."
   },
   {
     "originalPath": "packages/primevue/src/picklist/PickList.vue",
@@ -363,7 +363,7 @@
     "originalPath": "@primeuix/styles@2.0.3 picklist",
     "ultimateDestination": "packages/vue/src/pick-list/pick-list-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for striped rows. Record: docs/architecture/research/2026-10-08-gap-064-g3e-e3-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for striped rows."
   },
   {
     "originalPath": "packages/primevue/src/dataview/DataView.vue",
@@ -399,7 +399,7 @@
     "originalPath": "@primeuix/styles@2.0.3 dataview",
     "ultimateDestination": "packages/vue/src/data-view/data-view-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e4-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1)."
   },
   {
     "originalPath": "packages/primevue/src/organizationchart/OrganizationChart.vue",
@@ -435,7 +435,7 @@
     "originalPath": "@primeuix/styles@2.0.3 organizationchart",
     "ultimateDestination": "packages/vue/src/organization-chart/organization-chart-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 organizationchart: 9 of 18 upstream groups (table layout and connectors omitted, GAP-127), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained flex-tree layout and pseudo-element connector rules. Record: docs/architecture/research/2026-10-08-gap-064-g3e-e4-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 organizationchart: 9 of 18 upstream groups (table layout and connectors omitted, GAP-127), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained flex-tree layout and pseudo-element connector rules."
   },
   {
     "originalPath": "packages/primevue/src/stepper/StepperSeparator.vue",
@@ -825,13 +825,13 @@
     "originalPath": "@primeuix/styles@2.0.3 image",
     "ultimateDestination": "packages/vue/src/image/image-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13–16 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e1-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13–16 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 imagecompare",
     "ultimateDestination": "packages/vue/src/image-compare/image-compare-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 imagecompare: 12 of 12 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs). The final D5 retained span rule `.u-image-compare > span { position: absolute; inset: 0; }` is Ultimate-authored, not an upstream declaration (the E1-V2 C1 adaptation is Angular-only). The approved Firefox thumb declaration references the undefined imagecompare.handle.border.style token (E1-B1). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e1-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 imagecompare: 12 of 12 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs). The final D5 retained span rule `.u-image-compare > span { position: absolute; inset: 0; }` is Ultimate-authored, not an upstream declaration (the E1-V2 C1 adaptation is Angular-only). The approved Firefox thumb declaration references the undefined imagecompare.handle.border.style token (E1-B1)."
   },
   {
     "originalPath": "packages/primevue/src/imagecompare/BaseImageCompare.vue",
@@ -855,13 +855,13 @@
     "originalPath": "@primeuix/styles@2.0.3 carousel",
     "ultimateDestination": "packages/vue/src/carousel/carousel-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16–17 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e2-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16–17 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 galleria",
     "ultimateDestination": "packages/vue/src/galleria/galleria-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4). Record: docs/architecture/research/2026-10-08-gap-064-g3e-e2-record.md."
+    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4)."
   },
   {
     "originalPath": "n/a",
@@ -903,13 +903,13 @@
     "originalPath": "packages/primevue/src/chip/Chip.vue",
     "ultimateDestination": "packages/vue/src/chip/Chip.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2, evidence record research/2026-10-16-gap-094-backfill-batch-2-evidence.md). Keeps PrimeVue 4.5.5 Chip.vue's template structure (v-if visible root with cx('root') and aria-label, image v-if, icon v-else-if with [cx('icon'), icon], label v-if label !== null, now a span instead of a div) and its component options (extends base, inheritAttrs: false, data visible: true, onKeydown Enter/Backspace, close emitting remove). Adds alt, disabled, removeAriaLabel and the imageError emit; the remove control's role, tabindex and aria-label come from PrimeNG (second entry). Drops the default/removeicon slots, the icon slot, dataP and pt; uses UTimesIcon. Added in c42f709d (Phase C Batch 1, Chip row)."
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeVue 4.5.5 Chip.vue's template structure (v-if visible root with cx('root') and aria-label, image v-if, icon v-else-if with [cx('icon'), icon], label v-if label !== null, now a span instead of a div) and its component options (extends base, inheritAttrs: false, data visible: true, onKeydown Enter/Backspace, close emitting remove). Adds alt, disabled, removeAriaLabel and the imageError emit; the remove control's role, tabindex and aria-label come from PrimeNG (second entry). Drops the default/removeicon slots, the icon slot, dataP and pt; uses UTimesIcon. Added in c42f709d (Phase C Batch 1, Chip row)."
   },
   {
     "originalPath": "packages/primeng/src/chip/chip.ts",
     "ultimateDestination": "packages/vue/src/chip/Chip.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed (ADR-064), assessed against PrimeNG 21.1.9 chip.ts on its own: the file retains its statement if (event.key === 'Enter' || event.key === 'Backspace') { close(event) } and close()'s hide-then-emit order, and its remove control carries the same role=\"button\", tabindex disabled ? -1 : 0 and aria-label bound to removeAriaLabel. The uncertainty is stated: the statement also occurs in PrimeVue Chip.vue and the attributes are standard ARIA; the statement match is the evidence. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed (ADR-064), assessed against PrimeNG 21.1.9 chip.ts on its own: the file retains its statement if (event.key === 'Enter' || event.key === 'Backspace') { close(event) } and close()'s hide-then-emit order, and its remove control carries the same role=\"button\", tabindex disabled ? -1 : 0 and aria-label bound to removeAriaLabel. The uncertainty is stated: the statement also occurs in PrimeVue Chip.vue and the attributes are standard ARIA; the statement match is the evidence."
   },
   {
     "originalPath": "packages/primevue/src/chip/BaseChip.vue",
@@ -927,7 +927,7 @@
     "originalPath": "packages/primevue/src/tag/Tag.vue",
     "ultimateDestination": "packages/vue/src/tag/Tag.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Corrected under GAP-132 (2026-10-16): REFERENCE (ADR-064; was adapted under the ambiguity rule). Compared with PrimeVue 4.5.5 Tag.vue: the template is rewritten (icon span wraps an <i>, the slot moves inside the label span). inheritAttrs: false is a project-wide Ultimate pattern (57 of 108 Ultimate Vue SFCs, only 1 binding $attrs), not evidence of copying from this file; the remaining overlap is cx() key order and framework boilerplate. Evidence: research/2026-10-16-gap-094-backfill-batch-2-evidence.md. Added in be9f35e4; ecdbf793 only reformatted it."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): REFERENCE (ADR-064; was adapted under the ambiguity rule). Compared with PrimeVue 4.5.5 Tag.vue: the template is rewritten (icon span wraps an <i>, the slot moves inside the label span). inheritAttrs: false is a project-wide Ultimate pattern (57 of 108 Ultimate Vue SFCs, only 1 binding $attrs), not evidence of copying from this file; the remaining overlap is cx() key order and framework boilerplate. Added in be9f35e4; ecdbf793 only reformatted it."
   },
   {
     "originalPath": "packages/primevue/src/tag/BaseTag.vue",

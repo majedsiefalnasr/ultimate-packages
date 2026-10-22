@@ -9,8 +9,7 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
  *   and packages/vue/src/table/Table.vue (real `$emit` call sites, `sortColumn()`/
  *   `selectRow()`/`onPaginatorPage()` methods)
  *
- * Table was the subject of its own separate, closed 29-task implementation
- * plan (docs/superpowers/plans/2026-09-02-table-component-implementation.md)
+ * Table was the subject of its own separate, closed implementation effort
  * immediately before Phase 6 began — its props/events below are drawn from a
  * component whose API surface is already stable and shipped, not newly
  * authored for this metadata task. This is the plan's central worked
@@ -113,8 +112,7 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
  * already-tested limitation of Table's Scroller composition, not a newly
  * invented caveat.
  *
- * Drift classification (2026-10-18, Spec W2-B4-R3 Amendment A1; research
- * record docs/architecture/research/2026-10-18-w2-b4-metadata-drift-classification.md):
+ * Drift classification (2026-10-18, W2-B4 metadata drift classification):
  * the selection-column, loading, lazy-load, row-editing, cell-editing,
  * filter and row-expansion props/events the sources declare (GAP-042/043/044/046)
  * are now recorded as their own facts. So are ng's two-way companion

@@ -14,5 +14,3 @@ import type { ComponentMetadata } from "@ultimate/component-schema";
 ```
 
 ## Scope
-
-See `docs/superpowers/specs/2026-09-06-phase-6-component-metadata-design.md` for the contract.

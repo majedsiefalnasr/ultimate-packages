@@ -6,19 +6,18 @@ Ultimate owns its source, public API, package architecture, tooling, and metadat
 
 ## Status
 
-Pre-release. Every package is at version `0.1.0`, and nothing has been published to npm yet; unreleased consumer-facing changes are collected in [`docs/architecture/MIGRATION.md`](docs/architecture/MIGRATION.md).
+Pre-release. Every package is at version `0.1.0`, and nothing has been published to npm yet;
 
-Current work, open gaps, and decisions are tracked in the repository itself:
+Current work is tracked in GitHub Issues. Architecture and coverage live in the repository itself:
 
-- [`docs/architecture/ROADMAP.md`](docs/architecture/ROADMAP.md) — phase status
-- [`docs/architecture/BLUEPRINT_GAPS.md`](docs/architecture/BLUEPRINT_GAPS.md) — gap registry and open architectural decisions
+- [`docs/architecture/DECISIONS.md`](docs/architecture/DECISIONS.md) — architectural decisions
 - [`docs/architecture/COMPONENT_INVENTORY.md`](docs/architecture/COMPONENT_INVENTORY.md) — component coverage
 
 The `ci` workflow runs every gate and reports each step on its own. Some gates currently fail on known, pre-existing repository debt, so a red job does not by itself mean a regression; check the individual step results.
 
 ## Prime parity
 
-Component behavior is measured against the last MIT-licensed Prime releases — PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5, and the pinned `@primeuix/*` versions ([ADR-048](docs/architecture/DECISIONS.md)). Differences found by the parity audit are registered and resolved as gaps in [`BLUEPRINT_GAPS.md`](docs/architecture/BLUEPRINT_GAPS.md). Framework-native differences that are intentional are recorded there too, so they are not "fixed" for false parity.
+Component behavior is measured against the last MIT-licensed Prime releases — PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5, and the pinned `@primeuix/*` versions ([ADR-048](docs/architecture/DECISIONS.md)). The verification process is in [`PARITY_PLAYBOOK.md`](docs/architecture/PARITY_PLAYBOOK.md).
 
 ## What the repository focuses on
 
@@ -53,7 +52,7 @@ packages/   framework and shared packages
 apps/       SSR playgrounds (docs and showcase are placeholders)
 skills/     per-component Skill files and agent conventions
 scripts/    provenance, validation, and CI gate scripts
-docs/       architecture records, ADRs, research, specs, and plans
+docs/       architecture records, ADRs, and baselines
 ```
 
 ## Development
@@ -87,14 +86,13 @@ npx playwright test --project=vue-chromium   # projects are defined in playwrigh
 
 Other gates that CI runs are available as root scripts, for example `size:validate`, `coverage:validate`, `provenance:validate`, `boundary:validate`, and `integrity:pack-install`. See [`.github/workflows/ci.yml`](.github/workflows/ci.yml) for the full list.
 
-Contributors and AI agents should start with [`AGENTS.md`](AGENTS.md): it sets out the source-of-truth hierarchy and the gated workflow (research, decision, spec, plan, implementation, review) used for every change.
+Contributors and AI agents should start with [`AGENTS.md`](AGENTS.md): it sets out the source-of-truth hierarchy and the operating rules used for every change.
 
 ## Documentation
 
 - [Architecture blueprint](docs/architecture/BLUEPRINT.md) and [decision records](docs/architecture/DECISIONS.md)
 - [Package architecture](docs/architecture/PACKAGE_ARCHITECTURE.md) and [compatibility](docs/architecture/COMPATIBILITY.md)
 - [Performance and size baselines](docs/architecture/PERFORMANCE.md)
-- [Migration and release process](docs/architecture/MIGRATION.md)
 - [Security policy](SECURITY.md) and [changelog](CHANGELOG.md)
 
 ## Provenance and license

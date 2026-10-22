@@ -1,8 +1,6 @@
 // scripts/provenance/installed-cli-mcp-smoke.mjs
 //
-// GAP-131 installed-package smoke harness (Spec
-// docs/superpowers/specs/2026-10-11-gap-131-installed-compatibility-manifest-design.md
-// §6.2). Packs @ultimate/cli, @ultimate/mcp and the packages their commands
+// Installed-package smoke harness. Packs @ultimate/cli, @ultimate/mcp and the packages their commands
 // install, installs them into Angular, React and Vue pnpm consumers, and runs
 // the published binaries. pnpm only (OQ-1). The bare-name override behaviour
 // is probed before it is relied on (OQ-2).

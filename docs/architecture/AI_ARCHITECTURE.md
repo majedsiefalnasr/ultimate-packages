@@ -4,7 +4,7 @@ Restated from Blueprint §14/§2.6/§2.7/§6. These constraints are enforced arc
 
 ## Constraints
 
-- `packages/cli`, `packages/mcp`, `packages/ai` are real, shipped packages (Phases 7, 8, 9 respectively per `ROADMAP.md`).
+- `packages/cli`, `packages/mcp`, `packages/ai` are real, shipped packages (Phases 7, 8, 9).
 - These packages must never become a runtime dependency of `packages/{uix,ng,react,vue}*` — enforced by CI package-boundary check.
 - Component metadata (Phase 6+) is expected to live in `packages/component-schema` and `packages/component-metadata`, consumed by `cli`/`mcp`/`ai`/`skills`.
 

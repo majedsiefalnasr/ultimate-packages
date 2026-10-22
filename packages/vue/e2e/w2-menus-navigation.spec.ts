@@ -3,7 +3,7 @@ import { storyUrl } from "./accessibility-envelope";
 
 /**
  * Workstream 1 wave W2 (Menus and navigation) behaviour fixes. Assertions come
- * from the "Expected state" of each gap in BLUEPRINT_GAPS.md; the expected key
+ * from the "Expected state" of each gap; the expected key
  * results were taken from the pinned PrimeVue 4.5.5 ContextMenu and MegaMenu.
  * GAP-084 (plain model arrays) is pinned by the jsdom component specs, because
  * every Storybook story passes a reactive model.

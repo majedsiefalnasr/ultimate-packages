@@ -120,7 +120,7 @@ test("computeAffectedPackages: a non-package change that is not docs-only widens
 });
 
 test("computeAffectedPackages returns an empty list when every changed file is docs-only Markdown", () => {
-  assert.deepEqual(computeAffectedPackages(["README.md", "docs/superpowers/plans/x.md"]), []);
+  assert.deepEqual(computeAffectedPackages(["README.md", "docs/notes/x.md"]), []);
 });
 
 test("computeAffectedPackages ignores a changed path under packages/uix/ (not a real workspace package — no package.json)", () => {
@@ -167,7 +167,7 @@ test("computeAffectedPackages: a scripts/ change affects every package", () => {
 });
 
 test("computeAffectedPackages: a docs-only change affects no package", () => {
-  assert.deepEqual(computeAffectedPackages(["docs/superpowers/specs/x-design.md"]), []);
+  assert.deepEqual(computeAffectedPackages(["docs/notes/x-design.md"]), []);
 });
 
 // ADR-070 (CO-6): a push's diff against its own branch is empty, so the CLI

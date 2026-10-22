@@ -74,5 +74,3 @@ Every exit path of the `ultimate` bin. The table matches `EXIT_CODES` in `src/he
 | `ai`       | 0                         | --help or -h: help printed                                            |
 
 ## Scope
-
-See `docs/superpowers/specs/2026-09-07-phase-7-cli-design.md` for the v1 contract.

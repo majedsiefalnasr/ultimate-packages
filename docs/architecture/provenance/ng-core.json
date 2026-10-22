@@ -231,7 +231,7 @@
     "originalPath": "packages/primeng/src/api/confirmationservice.ts",
     "ultimateDestination": "packages/ng-core/src/confirmation/confirmation-service.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from PrimeNG 21.1.9 ConfirmationService (GAP-094 backfill batch 1, evidence record research/2026-10-16-gap-094-backfill-batch-1-evidence.md). Keeps upstream's requireConfirmationSource Subject<Confirmation | null>, the requireConfirmation$ observable, and confirm()/close() emitting and returning this. Renamed UConfirmationService, typed to UConfirmation, provided in root; drops the accept stream and onAccept(). Added in b8e89232 (Phase C Batch 1, Overlay group: ConfirmDialog/ConfirmPopup)."
+    "modificationDescription": "Adapted from PrimeNG 21.1.9 ConfirmationService (GAP-094 backfill batch 1). Keeps upstream's requireConfirmationSource Subject<Confirmation | null>, the requireConfirmation$ observable, and confirm()/close() emitting and returning this. Renamed UConfirmationService, typed to UConfirmation, provided in root; drops the accept stream and onAccept(). Added in b8e89232 (Phase C Batch 1, Overlay group: ConfirmDialog/ConfirmPopup)."
   },
   {
     "originalPath": "packages/primeng/src/api/confirmation.ts",

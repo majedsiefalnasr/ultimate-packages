@@ -39,7 +39,7 @@ const ALL_FRAMEWORKS = ["ng", "react", "vue"];
 // Markdown under these prefixes is product or tool input, never docs-only.
 const NON_DOCS_PREFIXES = ["packages/", "apps/", "skills/", "tooling/", ".github/", ".husky/"];
 
-// Markdown files that CI scripts read (research §2.5).
+// Markdown files that CI scripts read.
 const TOOL_READ_MARKDOWN = new Set([
   "AGENTS.md",
   "docs/architecture/PERFORMANCE.md",
@@ -49,7 +49,7 @@ const TOOL_READ_MARKDOWN = new Set([
   "docs/architecture/COMPATIBILITY.md",
 ]);
 const ACCESSIBILITY_PREEXISTING =
-  /^docs\/architecture\/research\/[^/]*-accessibility-preexisting\.md$/;
+  /^docs\/architecture\/baselines\/[^/]*-accessibility-preexisting\.md$/;
 
 const FRAMEWORK_PREFIXES = {
   ng: [
