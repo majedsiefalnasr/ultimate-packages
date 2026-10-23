@@ -46,6 +46,27 @@ Every record has these twelve sections, in this order. A section with nothing to
 11. **Framework differences** — table.
 12. **Sources** — archive paths.
 
+## Checking the records
+
+`scripts/prime-reference/check-records.mjs` checks the hand-written notes against the pinned archives, offline:
+
+```sh
+node scripts/prime-reference/check-records.mjs            # report, exit 1 on any problem
+node scripts/prime-reference/check-records.mjs --json     # same result as JSON
+node --test scripts/prime-reference/check-records.test.mjs
+```
+
+It reports, one line per problem and sorted, these kinds:
+
+- `section` — a record without all twelve sections in template order, or with an empty section.
+- `citation` — a `<package>-<version>:<path>` citation (records and foundation notes) whose archive or path does not exist.
+- `unmapped-item` — a showcase menu item (PrimeNG, PrimeVue, PrimeReact) that maps to no record, foundation note or exclusion.
+- `missing-target` — a mapping that names a record or foundation note that does not exist.
+- `stale-mapping` — a mapping that matches no menu item.
+- `orphan` — a record that no menu item maps to.
+
+An item under `Components` whose name matches a record file name maps to it automatically. Everything else (aliases, foundation topics, exclusions) is listed in `coverage-map.json`, keyed by menu path (`Components / Form / Dropdown`); a key on a group covers every item below it and the most specific key wins. The archives come from `.vendor-cache/` (same lookup as the catalog generator). This check is verified on demand; CI does not hold all archives, so it is not CI-enforced.
+
 ## Writing rules
 
 - API facts (names, signatures, types, defaults) are recorded exactly.
