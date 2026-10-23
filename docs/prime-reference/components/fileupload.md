@@ -148,7 +148,7 @@ Sources: `primeng-21.1.9:packages/primeng/src/fileupload/fileupload.ts`, `primen
 - PrimeNG: `@angular/common`, `@angular/common/http` (`HttpClient`, `HttpEventType`), `@angular/core`, `@angular/platform-browser` (`DomSanitizer`), `rxjs`, `@primeuix/utils` (`addClass`, `removeClass`), `primeng/api` (`BlockableUI`, `PrimeTemplate`, `SharedModule`, `TranslationKeys`), `primeng/badge`, `primeng/basecomponent`, `primeng/bind`, `primeng/button`, `primeng/icons` (`PlusIcon`, `TimesIcon`, `UploadIcon`), `primeng/message`, `primeng/progressbar`, `primeng/base` (style), `@primeuix/styles/fileupload` (`primeng-21.1.9:packages/primeng/src/fileupload/fileupload.ts`, `primeng-21.1.9:packages/primeng/src/fileupload/style/fileuploadstyle.ts`).
 - PrimeVue: `@primeuix/utils/dom`, `@primevue/core/basecomponent`, `@primevue/core/base/style`, `@primevue/icons/{plus,times,upload}`, `primevue/button`, `primevue/message`, `primevue/progressbar`, `primevue/badge`, `primevue/ripple`, `@primeuix/styles/fileupload` (`primevue-4.5.5:packages/primevue/src/fileupload/FileUpload.vue`, `primevue-4.5.5:packages/primevue/src/fileupload/FileContent.vue`, `primevue-4.5.5:packages/primevue/src/fileupload/style/FileUploadStyle.js`).
 - PrimeReact: `../api/Api` (`localeOption`, `PrimeReactContext`), `../badge/Badge`, `../button/Button`, `../componentbase/ComponentBase`, `../hooks/Hooks`, `../icons/{plus,times,upload}`, `../messages/Messages`, `../progressbar/ProgressBar`, `../ripple/Ripple`, `../utils/Utils` (`primereact-10.9.9:components/lib/fileupload/FileUpload.js`).
-- Locale keys used: `choose`, `upload`, `cancel`, `pending`, `completed`, `fileSizeTypes`, `fileChosenMessage` / `noFileChosenMessage` (PrimeNG, PrimeVue), and for PrimeNG `aria.browseFiles` (`primeng-21.1.9:packages/primeng/src/api/translation.ts`, `primereact-10.9.9:components/lib/api/locale.js`).
+- Locale keys used: `choose`, `upload`, `cancel`, `pending`, `completed`, `fileSizeTypes`, `fileChosenMessage` / `noFileChosenMessage` (PrimeNG, PrimeVue), and for PrimeNG `aria.browseFiles` (`primeng-21.1.9:packages/primeng/src/api/translation.ts`, `primereact-10.9.9:components/lib/api/Locale.js`).
 - External npm packages: none beyond the framework runtime (Angular, Vue, React) and `rxjs` for PrimeNG.
 
 ## 11. Framework differences
@@ -193,7 +193,7 @@ Source/doc mismatches found:
 - `primevue-4.5.5:apps/showcase/pages/fileupload/index.vue`
 - `primevue-4.5.5:apps/showcase/assets/menu/menu.json`
 - `primereact-10.9.9:components/lib/fileupload/` (`FileUpload.js`, `FileUploadBase.js`, `fileupload.d.ts`, `package.json`)
-- `primereact-10.9.9:components/lib/api/locale.js`
+- `primereact-10.9.9:components/lib/api/Locale.js`
 - `primereact-10.9.9:components/doc/fileupload/` (`importdoc.js`, `basicdoc.js`, `autodoc.js`, `advanceddoc.js`, `templatedoc.js`, `customuploaddoc.js`, `accessibilitydoc.js`, `pt/wireframe.js`, `theming/styleddoc.js`, `theming/tailwinddoc.js`)
 - `primereact-10.9.9:components/layout/menu.json`
 - `@primeuix/styles-2.0.3:dist/fileupload/index.mjs`
