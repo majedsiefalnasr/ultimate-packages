@@ -1,6 +1,6 @@
 # FileUpload
 
-**Category:** File · **Frameworks:** PrimeNG 21.1.9 · PrimeVue 4.5.5 · PrimeReact 10.9.9
+**Category:** Misc · **Frameworks:** PrimeNG 21.1.9 · PrimeVue 4.5.5 · PrimeReact 10.9.9
 
 ## 1. Summary
 
