@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "primeng": {
+    "AI Tools": {
+      "foundation": "foundations/primeng.md"
+    },
+    "Components / Chart / Chart.js": {
+      "record": "chart"
+    },
+    "Components / Data / OrgChart": {
+      "record": "organizationchart"
+    },
+    "Components / Data / Table": {
+      "record": "datatable"
+    },
+    "Components / File / Upload": {
+      "record": "fileupload"
+    },
+    "Components / Misc / AutoFocus": {
+      "foundation": "foundations/primeng.md"
+    },
+    "Components / Misc / Bind": {
+      "foundation": "foundations/primeng.md"
+    },
+    "Components / Misc / ClassNames": {
+      "foundation": "foundations/primeng.md"
+    },
+    "Components / Utilities / FilterService": {
+      "foundation": "foundations/primeng.md"
+    },
+    "Discover": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Figma UI Kit": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Getting Started": {
+      "foundation": "foundations/primeng.md"
+    },
+    "Getting Started / Playground": {
+      "excluded": "External link or video page without library content"
+    },
+    "Guides": {
+      "foundation": "foundations/primeng.md"
+    },
+    "Guides / PrimeTV": {
+      "excluded": "External link or video page without library content"
+    },
+    "Icons": {
+      "foundation": "foundations/primeng.md"
+    },
+    "Migration": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Pass Through": {
+      "foundation": "foundations/primeng.md"
+    },
+    "PrimeBlocks": {
+      "excluded": "Commercial product or marketing page, not part of the open-source library"
+    },
+    "Support": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Templates": {
+      "excluded": "Commercial product or marketing page, not part of the open-source library"
+    },
+    "Theme Designer": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Theming": {
+      "foundation": "foundations/primeng.md"
+    }
+  },
+  "primevue": {
+    "AI Tools": {
+      "foundation": "foundations/primevue.md"
+    },
+    "Components / Chart / Chart.js": {
+      "record": "chart"
+    },
+    "Components / Data / OrgChart": {
+      "record": "organizationchart"
+    },
+    "Components / File / Upload": {
+      "record": "fileupload"
+    },
+    "Components / Panel / Deferred": {
+      "record": "deferredcontent"
+    },
+    "Configuration": {
+      "foundation": "foundations/primevue.md"
+    },
+    "Discover": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Figma UI Kit": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Forms": {
+      "foundation": "foundations/primevue.md"
+    },
+    "Getting Started": {
+      "foundation": "foundations/primevue.md"
+    },
+    "Getting Started / Playground": {
+      "excluded": "External link or video page without library content"
+    },
+    "Guides": {
+      "foundation": "foundations/primevue.md"
+    },
+    "Guides / Migration to V4": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Guides / PrimeTV": {
+      "excluded": "External link or video page without library content"
+    },
+    "Icons": {
+      "foundation": "foundations/primevue.md"
+    },
+    "Installation": {
+      "foundation": "foundations/primevue.md"
+    },
+    "PrimeBlocks": {
+      "excluded": "Commercial product or marketing page, not part of the open-source library"
+    },
+    "Store": {
+      "excluded": "Commercial product or marketing page, not part of the open-source library"
+    },
+    "Support": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Templates": {
+      "excluded": "Commercial product or marketing page, not part of the open-source library"
+    },
+    "Theme Designer": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Theming": {
+      "foundation": "foundations/primevue.md"
+    },
+    "Volt UI": {
+      "foundation": "foundations/primevue.md"
+    }
+  },
+  "primereact": {
+    "Components / Chart / Chart.js": {
+      "record": "chart"
+    },
+    "Components / Data / Org Chart": {
+      "record": "organizationchart"
+    },
+    "Components / File / Upload": {
+      "record": "fileupload"
+    },
+    "Components / Form / Calendar": {
+      "record": "datepicker"
+    },
+    "Components / Form / Dropdown": {
+      "record": "select"
+    },
+    "Components / Form / InputSwitch": {
+      "record": "toggleswitch"
+    },
+    "Components / Form / InputTextarea": {
+      "record": "textarea"
+    },
+    "Components / Overlay / OverlayPanel": {
+      "record": "popover"
+    },
+    "Components / Overlay / Sidebar": {
+      "record": "drawer"
+    },
+    "Components / Panel / Deferred": {
+      "record": "deferredcontent"
+    },
+    "Components / Panel / TabView": {
+      "record": "tabs"
+    },
+    "Contribution": {
+      "excluded": "Contribution guidelines, not library content"
+    },
+    "Discover": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Figma UI Kit": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Getting Started": {
+      "foundation": "foundations/primereact/index.md"
+    },
+    "Getting Started / Playground": {
+      "excluded": "External link or video page without library content"
+    },
+    "Guides": {
+      "foundation": "foundations/primereact/icons-and-guides.md"
+    },
+    "Guides / PrimeTV": {
+      "excluded": "External link or video page without library content"
+    },
+    "Hooks": {
+      "foundation": "foundations/primereact/hooks.md"
+    },
+    "Icons": {
+      "foundation": "foundations/primereact/icons-and-guides.md"
+    },
+    "New PrimeBlocks": {
+      "excluded": "Commercial product or marketing page, not part of the open-source library"
+    },
+    "Pass Through": {
+      "foundation": "foundations/primereact/architecture.md"
+    },
+    "PrimeFlex CSS": {
+      "foundation": "foundations/primereact/index.md"
+    },
+    "Support": {
+      "excluded": "Out of scope in docs/prime-reference/README.md"
+    },
+    "Tailwind": {
+      "foundation": "foundations/primereact/icons-and-guides.md"
+    },
+    "Templates": {
+      "excluded": "Commercial product or marketing page, not part of the open-source library"
+    },
+    "Theming": {
+      "foundation": "foundations/primereact/architecture.md"
+    }
+  }
+}
