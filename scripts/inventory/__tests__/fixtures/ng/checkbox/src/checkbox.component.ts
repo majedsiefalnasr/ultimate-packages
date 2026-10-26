@@ -1,1 +1,0 @@
-import { Component, Input } from '@angular/core';@Component({  selector: 'u-checkbox',  template: `<input type="checkbox" [checked]="checked" [disabled]="disabled" />`,  standalone: true})export class UCheckboxComponent {  @Input() checked = false;  @Input() disabled = false;}

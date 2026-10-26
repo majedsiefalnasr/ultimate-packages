@@ -1,0 +1,27 @@
+# Ultimate inventory pilot (#105)
+
+This bounded pilot supersedes the earlier Phase 3 automation as an inventory method, not as a platform-wide inventory. Run under Node 24.15.0 after `pnpm install`:
+
+- Test: `node --test scripts/inventory/pilot.test.mjs`
+- Validate: `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/pilot-sample.json`
+- Regenerate: `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/pilot-sample.json --out docs/inventory/pilot`
+
+Start with [the generated index](pilot/index.md) and [validation](pilot/validation.md). The structured authored input is `scripts/inventory/pilot-sample.json`; its schema is `scripts/inventory/pilot-schema.json`. Edit that input, not generated Markdown. Output order is stable for fixed inputs. Generation never rewrites authored input. No parity or matching reports are produced.
+
+## Why this sample
+
+Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
+
+## Scope and limitations
+
+Discovery recursively enumerates every file under four declared button roots. It checks explicitly mapped package entries against actual manifests and extracts named exports and declarations with TypeScript's parser. Angular's root export traverses a selected local barrel; evidence anchors verify the root link. Other root exports and package subpaths are outside this pilot, not absent products. Star/namespace exports at a mapped entry fail closed; a full package resolver is intentionally deferred. Authored entry mappings and semantic interpretations require human review; anchor presence cannot prove their meaning.
+
+Record IDs are durable logical identities, independent of display names and paths. Pending relationships must name another batch and rationale; they do not establish that a target exists or that global coverage is complete. Scope reconciliation never asserts platform completeness.
+
+Verification states are separate from implementation evidence. No CI enforcement is claimed. Angular/Vue behavioral tests and visual CSS checks remain unrun. React's existing button check was attempted but aborted because the host ancestor PostCSS configuration requires missing `postcss-import`; the captured failure is recorded, not repaired or reported as product success. Inventory tests do not verify rendered product behavior.
+
+The earlier single-line hashbang automation, fixtures and schema were removed because they did not execute their apparent checks. Its integration report is explicitly superseded. The original component inventory from 6c0358ca is preserved verbatim below a historical notice; the incorrect generated Phase 3 additions were removed. Git history retains the withdrawn additions. Future coverage tickets must expand discovery, entry resolution and authored records rather than treating this sample as exhaustive.
+
+Verified claims must reference a repository-relative `run` JSON evidence file containing matching nonblank `command`, `revision`, `outcome` and `output`; the outcome must be `passed` and revision must match the scoped input. Missing evidence and contradictory command, revision, outcome or output are rejected. This consistency check is not cryptographic authentication, nor does the specification require that. Human review must still assess whether the captured run actually supports the behavior. No real pilot product claim is promoted to verified.
+
+Generated verification blocks use plain-text fences so formatting cannot reinterpret captured output. Run regeneration directly, then `git diff --exit-code -- docs/inventory/pilot` after committing; no separate formatting pass should be needed. Owner review remains required for overall inventory closeout.

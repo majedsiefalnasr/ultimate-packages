@@ -1,1 +1,0 @@
-export { UInputTextComponent } from './inputtext.component';

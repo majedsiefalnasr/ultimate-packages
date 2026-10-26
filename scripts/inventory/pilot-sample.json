@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "scope": "pilot",
+  "revision": "f0ad62b3",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": ["packages/ng/src/button"],
+      "entries": [{ "subpath": ".", "source": "packages/ng/src/button/index.ts" }]
+    },
+    {
+      "path": "packages/react",
+      "roots": ["packages/react/src/button"],
+      "entries": [{ "subpath": "./button", "source": "packages/react/src/button/index.ts" }]
+    },
+    {
+      "path": "packages/vue",
+      "roots": ["packages/vue/src/button"],
+      "entries": [{ "subpath": "./button", "source": "packages/vue/src/button/index.ts" }]
+    },
+    {
+      "path": "packages/uix-styles",
+      "roots": ["packages/uix-styles/src/button"],
+      "entries": [{ "subpath": "./button", "source": "packages/uix-styles/src/button/index.ts" }]
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.button",
+      "name": "Angular UButton",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Standalone action component. This sample uses the same responsibility across frameworks specifically to expose different contracts rather than imply behavioral equivalence. Angular uses signal inputs and event outputs, React uses DOM props and forwarded refs, and Vue uses a base factory with props, slots and dynamic root rendering. Shared CSS is an independently consumed foundation, not another rendered component.",
+      "surface": "Root @ultimate/ng exports UButton through src/index.ts -> ./button. There is no @ultimate/ng/button manifest subpath. Selector u-button; standalone component extends UBaseComponent. Signal inputs include label, icon, iconPos, loading, disabled, severity, raised, rounded, text, outlined, size and fluid; outputs onClick, onFocus and onBlur. Private/protected styling helpers belong to this record, not additional products.",
+      "files": [
+        "packages/ng/src/button/index.ts",
+        "packages/ng/src/button/button.ts",
+        "packages/ng/src/button/button-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UButton"],
+      "evidence": [
+        { "path": "packages/ng/src/index.ts", "contains": "export * from \"./button\";" },
+        {
+          "path": "packages/ng/src/button/button.ts",
+          "contains": "export class UButton extends UBaseComponent"
+        },
+        { "path": "packages/ng/src/button/button.ts", "contains": "selector: \"u-button\"" },
+        { "path": "packages/ng/src/button/button.spec.ts", "contains": "UButton" }
+      ],
+      "relationships": [
+        "shared.button-style",
+        "angular.core",
+        "angular.ripple",
+        "metadata.button",
+        "themes.button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Signal-input component and native button template exist; source inspection only."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular button behavioral suite has not been executed for this pilot."
+        }
+      ]
+    },
+    {
+      "id": "react.button",
+      "name": "React UButton",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Action button with a forwarded native HTMLButtonElement ref, inherited native button attributes, ReactNode icon/loadingIcon and optional tooltip. Internal buttonStyleModule and render helpers are owned here rather than counted independently.",
+      "surface": "@ultimate/react/button exports UButton and type UButtonProps. UButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, disabled>; properties add label, icon, iconPos, loading, loadingIcon, disabled, severity, size, text, raised, rounded, outlined, link, plain, badge, badgeClassName, visible, tooltip and tooltipOptions. Children render inside the button; visible=false returns null. The source combines disabled with loading. This is implementation evidence, not executed behavior proof.",
+      "files": [
+        "packages/react/src/button/index.ts",
+        "packages/react/src/button/button.tsx",
+        "packages/react/src/button/button-style.ts"
+      ],
+      "exports": ["@ultimate/react/button#UButton", "@ultimate/react/button#UButtonProps"],
+      "evidence": [
+        {
+          "path": "packages/react/src/button/button.tsx",
+          "contains": "React.forwardRef<HTMLButtonElement, UButtonProps>"
+        },
+        {
+          "path": "packages/react/src/button/button.tsx",
+          "contains": "const isDisabled = disabled || loading;"
+        },
+        { "path": "packages/react/src/button/button.spec.tsx", "contains": "UButton" }
+      ],
+      "relationships": ["react.core", "react.tooltip", "metadata.button", "themes.button"],
+      "claims": [
+        { "state": "implemented", "behavior": "Forward-ref native button source and props exist." },
+        {
+          "state": "unavailable",
+          "behavior": "React button test runner aborted before executing assertions.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/button/button.spec.tsx",
+          "outcome": "unavailable",
+          "revision": "f0ad62b3",
+          "limitations": "Host ancestor PostCSS configuration outside the checkout references an unavailable plugin. No product behavior verified; no external configuration changed.",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.button",
+      "name": "Vue UButton and base factory",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Vue action component with dynamic root tag and default slot. createBaseButton is independently callable through the same public entry, so is documented as a public surface of this owning record rather than hidden as an internal part. buttonStyleModule and computed rendering helpers remain internal ownership.",
+      "surface": "@ultimate/vue/button exports UButton (default SFC alias) and createBaseButton. The factory declares label, icon, iconPos, iconClass, badge, badgeClass, badgeSeverity, loading, loadingIcon, as, asChild, link, severity, raised, rounded, text, outlined, size, variant, plain, fluid, ariaLabel, tooltip and tooltipOptions. The SFC uses a dynamic component root, default slot, ripple and tooltip directives, computed rootAttrs and inherited base props; asChild switches to a slot-only branch. These are not forced into the Angular or React contracts.",
+      "files": [
+        "packages/vue/src/button/index.ts",
+        "packages/vue/src/button/Button.vue",
+        "packages/vue/src/button/base-button.ts",
+        "packages/vue/src/button/button-style.ts"
+      ],
+      "exports": ["@ultimate/vue/button#UButton", "@ultimate/vue/button#createBaseButton"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/button/base-button.ts",
+          "contains": "export function createBaseButton()"
+        },
+        { "path": "packages/vue/src/button/Button.vue", "contains": "extends: createBaseButton()" },
+        { "path": "packages/vue/src/button/Button.vue", "contains": "v-if=\"!asChild\"" },
+        { "path": "packages/vue/src/button/button.spec.ts", "contains": "UButton" }
+      ],
+      "relationships": [
+        "shared.button-style",
+        "vue.core",
+        "vue.ripple",
+        "vue.tooltip",
+        "metadata.button",
+        "themes.button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Base props factory and dynamic-root SFC are source-present."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Vue button behavioral suite has not been executed for this pilot."
+        }
+      ]
+    },
+    {
+      "id": "shared.button-style",
+      "name": "Shared button CSS",
+      "framework": "shared",
+      "availability": "public",
+      "purpose": "Framework-neutral CSS template exported as style. It supplies tokenized button states and layout rules imported by Angular and Vue style modules; React instead embeds its own small CSS string in button-style.ts; it is not a renderable component or an assertion that all consuming frameworks expose every selector.",
+      "surface": "@ultimate/uix-styles/button exports the style string. It includes .u-button, disabled cursor, icon ordering, small/large, fluid, hover, active, focus-visible, severity, outlined, text and link rules with dt(...) token placeholders. Each framework owns its button-style adapter.",
+      "files": ["packages/uix-styles/src/button/index.ts"],
+      "exports": ["@ultimate/uix-styles/button#style"],
+      "evidence": [
+        { "path": "packages/uix-styles/src/button/index.ts", "contains": "export const style =" },
+        {
+          "path": "packages/uix-styles/src/button/index.ts",
+          "contains": ".u-button:focus-visible"
+        },
+        {
+          "path": "packages/ng/src/button/button-style.ts",
+          "contains": "@ultimate/uix-styles/button"
+        },
+        { "path": "packages/react/src/button/button-style.ts", "contains": "const css = /*css*/" },
+        {
+          "path": "packages/vue/src/button/button-style.ts",
+          "contains": "@ultimate/uix-styles/button"
+        }
+      ],
+      "relationships": ["themes.button"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Tokenized CSS exists; Angular and Vue adapters import it. React owns separate inline CSS; no shared import is claimed."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Visual behavior and token rendering are not exercised by inventory validation."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/button/button.api.mdx",
+      "reason": "Supporting API documentation, not an independent product."
+    },
+    {
+      "path": "packages/ng/src/button/button.spec.ts",
+      "reason": "Supporting behavioral tests, not an independent product."
+    },
+    {
+      "path": "packages/ng/src/button/button.stories.ts",
+      "reason": "Supporting Storybook examples, not an independent product."
+    },
+    {
+      "path": "packages/react/src/button/button.api.mdx",
+      "reason": "Supporting API documentation, not an independent product."
+    },
+    {
+      "path": "packages/react/src/button/button.spec.tsx",
+      "reason": "Supporting behavioral tests, not an independent product."
+    },
+    {
+      "path": "packages/react/src/button/gap-124-react-unchanged.spec.tsx",
+      "reason": "Historical regression test filename; supporting evidence only, no inventory comparison performed."
+    },
+    {
+      "path": "packages/react/src/button/button.stories.tsx",
+      "reason": "Supporting Storybook examples, not an independent product."
+    },
+    {
+      "path": "packages/vue/src/button/button.api.mdx",
+      "reason": "Supporting API documentation, not an independent product."
+    },
+    {
+      "path": "packages/vue/src/button/button.spec.ts",
+      "reason": "Supporting behavioral tests, not an independent product."
+    },
+    {
+      "path": "packages/vue/src/button/button.stories.ts",
+      "reason": "Supporting Storybook examples, not an independent product."
+    }
+  ],
+  "pending": [
+    {
+      "id": "angular.core",
+      "batch": "angular-foundations",
+      "reason": "Base component and spinner are outside the four pilot roots."
+    },
+    {
+      "id": "angular.ripple",
+      "batch": "angular-foundations",
+      "reason": "Imported directive outside this pilot."
+    },
+    {
+      "id": "react.core",
+      "batch": "react-foundations",
+      "reason": "useComponentBase and spinner are outside this pilot."
+    },
+    {
+      "id": "react.tooltip",
+      "batch": "react-overlays",
+      "reason": "Imported tooltip outside this pilot."
+    },
+    {
+      "id": "vue.core",
+      "batch": "vue-foundations",
+      "reason": "Base component factory and spinner outside this pilot."
+    },
+    {
+      "id": "vue.ripple",
+      "batch": "vue-foundations",
+      "reason": "Imported directive outside this pilot."
+    },
+    {
+      "id": "vue.tooltip",
+      "batch": "vue-overlays",
+      "reason": "Imported directive outside this pilot."
+    },
+    {
+      "id": "metadata.button",
+      "batch": "metadata",
+      "reason": "Metadata relationship requires separate inspection; not validated by this pilot."
+    },
+    {
+      "id": "themes.button",
+      "batch": "themes",
+      "reason": "Token definitions require separate inventory; CSS token use is not token correctness proof."
+    }
+  ]
+}

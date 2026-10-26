@@ -1,1 +1,0 @@
-export const buttonStyles = '.u-button { padding: 0.5rem 1rem; }';export const checkboxStyles = '.u-checkbox { accent-color: var(--primary); }';

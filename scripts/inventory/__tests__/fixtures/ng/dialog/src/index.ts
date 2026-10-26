@@ -1,1 +1,0 @@
-export { UDialogComponent } from './dialog.component';
