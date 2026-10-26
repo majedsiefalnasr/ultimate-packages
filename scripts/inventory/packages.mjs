@@ -178,11 +178,15 @@ export function reconcilePackages({ root, input }) {
         for (const [key, source] of buildSources)
           if (key !== "index") {
             const name = key.replace(/\/index$/, "");
-            addEntry(subpath.replace("*", name), source, "manifest-pattern", target);
+            const expanded = subpath.replace("*", name);
+            // Exact declarations take precedence even when they block public access.
+            if (Object.hasOwn(publicEntries, expanded)) continue;
+            addEntry(expanded, source, "manifest-pattern", target);
             mapped.add(key);
           }
         continue;
       }
+      if (target === null) continue;
       const key = subpath === "." ? "index" : `${subpath.slice(2)}/index`;
       let source = buildSources.get(key);
       if (!source) {

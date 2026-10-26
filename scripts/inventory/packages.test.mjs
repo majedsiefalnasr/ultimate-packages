@@ -100,6 +100,54 @@ test("inline observed build entries expand wildcard exports without inventing pr
   );
 });
 
+test("exact exports override wildcard entries including blocked public access", (t) => {
+  const root = mkdtempSync(join(tmpdir(), "inventory-exact-"));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  for (const name of ["public", "private"]) {
+    mkdirSync(join(root, `packages/odd/src/${name}`), { recursive: true });
+    writeFileSync(join(root, `packages/odd/src/${name}/index.ts`), "export {};");
+  }
+  writeFileSync(
+    join(root, "packages/odd/tsup.config.ts"),
+    `import { defineConfig } from "tsup";
+    export default defineConfig({ entry: {
+      "public/index": "src/public/index.ts",
+      "private/index": "src/private/index.ts"
+    }});`
+  );
+  const input = {
+    mode: "packages",
+    version: 1,
+    scope: "packages",
+    revision: "test",
+    ownership: ["package.test.odd", "package.test.odd.public", "package.test.odd.private"].map(
+      (id) => ({ id, reason: "Synthetic regression fixture" })
+    ),
+  };
+  for (const exactFirst of [false, true]) {
+    const exact = { "./public": "./dist/public/index.mjs", "./private": null };
+    writeFileSync(
+      join(root, "packages/odd/package.json"),
+      JSON.stringify({
+        name: "@test/odd",
+        exports: exactFirst
+          ? { ...exact, "./*": "./dist/*/index.mjs" }
+          : { "./*": "./dist/*/index.mjs", ...exact },
+      })
+    );
+    const result = inventory({ root, input });
+    assert.deepEqual(result.problems, []);
+    assert.equal(new Set(result.facts.entries.map((e) => e.id)).size, result.facts.entries.length);
+    assert.deepEqual(
+      result.facts.entries.map((e) => [e.subpath, e.origin]),
+      [
+        ["./public", "manifest"],
+        ["./private", "build-only"],
+      ]
+    );
+  }
+});
+
 test("unsupported or unobserved wildcard exports fail closed", (t) => {
   const root = mkdtempSync(join(tmpdir(), "inventory-unsupported-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
