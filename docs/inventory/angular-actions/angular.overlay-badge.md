@@ -35,7 +35,7 @@ packages/ng/package.json: "test": "ng test --project=ng"
 
 ## Relationships
 
-package.ultimate.ng.overlay-badge (pending cross-batch)
+package.ultimate.ng.overlay-badge → [angular.overlay-badge](angular.overlay-badge.md) (reconciled family alias)
 package.ultimate.ng-core.basecomponent (pending cross-batch)
 package.ultimate.themes.presets (pending cross-batch)
 angular.badge

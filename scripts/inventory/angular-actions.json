@@ -951,62 +951,12 @@
       "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
     },
     {
-      "id": "package.ultimate.ng.avatar",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
-      "id": "package.ultimate.ng.avatar-group",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
-      "id": "package.ultimate.ng.badge",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
-      "id": "package.ultimate.ng.button",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
-      "id": "package.ultimate.ng.button-group",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
-      "id": "package.ultimate.ng.chip",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
       "id": "package.ultimate.ng.menu",
       "batch": "packages",
       "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
     },
     {
-      "id": "package.ultimate.ng.overlay-badge",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
       "id": "package.ultimate.ng.ripple",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
-      "id": "package.ultimate.ng.split-button",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
-      "id": "package.ultimate.ng.tag",
-      "batch": "packages",
-      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
-    },
-    {
-      "id": "package.ultimate.ng.toolbar",
       "batch": "packages",
       "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
     },
@@ -1024,6 +974,52 @@
       "id": "package.ultimate.uix-styles.button",
       "batch": "packages",
       "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
+    }
+  ],
+  "ownership": {
+    "ticket": 107,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.button",
+      "record": "angular.button"
+    },
+    {
+      "id": "package.ultimate.ng.button-group",
+      "record": "angular.button-group"
+    },
+    {
+      "id": "package.ultimate.ng.split-button",
+      "record": "angular.split-button"
+    },
+    {
+      "id": "package.ultimate.ng.avatar",
+      "record": "angular.avatar"
+    },
+    {
+      "id": "package.ultimate.ng.avatar-group",
+      "record": "angular.avatar-group"
+    },
+    {
+      "id": "package.ultimate.ng.badge",
+      "record": "angular.badge"
+    },
+    {
+      "id": "package.ultimate.ng.overlay-badge",
+      "record": "angular.overlay-badge"
+    },
+    {
+      "id": "package.ultimate.ng.chip",
+      "record": "angular.chip"
+    },
+    {
+      "id": "package.ultimate.ng.tag",
+      "record": "angular.tag"
+    },
+    {
+      "id": "package.ultimate.ng.toolbar",
+      "record": "angular.toolbar"
     }
   ]
 }

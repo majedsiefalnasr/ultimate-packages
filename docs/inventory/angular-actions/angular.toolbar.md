@@ -36,7 +36,7 @@ packages/ng/package.json: "test": "ng test --project=ng"
 
 ## Relationships
 
-package.ultimate.ng.toolbar (pending cross-batch)
+package.ultimate.ng.toolbar → [angular.toolbar](angular.toolbar.md) (reconciled family alias)
 package.ultimate.ng-core.basecomponent (pending cross-batch)
 package.ultimate.themes.presets (pending cross-batch)
 

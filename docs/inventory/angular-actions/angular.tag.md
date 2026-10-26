@@ -36,7 +36,7 @@ packages/ng/package.json: "test": "ng test --project=ng"
 
 ## Relationships
 
-package.ultimate.ng.tag (pending cross-batch)
+package.ultimate.ng.tag → [angular.tag](angular.tag.md) (reconciled family alias)
 package.ultimate.ng-core.basecomponent (pending cross-batch)
 package.ultimate.themes.presets (pending cross-batch)
 

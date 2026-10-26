@@ -62,6 +62,56 @@ test("every scoped source export and composition member is interpreted, not coun
   for (const member of ["startTemplate", "centerTemplate", "endTemplate"])
     assert.ok(toolbar.surface.includes(member));
 });
+test("same-ticket reconciled families cannot be deferred to another batch", () => {
+  const input = load();
+  const alias = input.aliases.shift();
+  input.pending.push({ id: alias.id, batch: "packages", reason: "Incorrect deferral" });
+  assert.ok(run(input).problems.some((p) => p.kind === "ownership" && p.subject === alias.id));
+  const missing = load();
+  missing.aliases.shift();
+  assert.ok(run(missing).problems.some((p) => p.kind === "ownership"));
+  const dangling = load();
+  dangling.aliases[0].record = "angular.missing";
+  assert.ok(run(dangling).problems.some((p) => p.kind === "identity"));
+  const duplicate = load();
+  duplicate.aliases.push(duplicate.aliases[0]);
+  assert.ok(run(duplicate).problems.some((p) => p.kind === "identity"));
+  const external = load();
+  external.aliases.push({ id: "package.ultimate.ng.menu", record: "angular.button" });
+  assert.ok(run(external).problems.some((p) => p.kind === "ownership"));
+});
+
+test("reconciled family aliases retain authored identities and external ticket boundaries", () => {
+  const input = load();
+  const families = [
+    "avatar",
+    "avatar-group",
+    "badge",
+    "button",
+    "button-group",
+    "chip",
+    "overlay-badge",
+    "split-button",
+    "tag",
+    "toolbar",
+  ];
+  assert.equal(input.records.length, families.length);
+  assert.deepEqual(
+    input.aliases.map((a) => [a.id, a.record]).sort(),
+    families.map((family) => [`package.ultimate.ng.${family}`, `angular.${family}`]).sort()
+  );
+  for (const alias of input.aliases) {
+    const detail = run(input).views[`${alias.record}.md`];
+    assert.ok(detail.includes(`${alias.id} → [${alias.record}](${alias.record}.md)`));
+    assert.ok(!detail.includes(`${alias.id} (pending cross-batch)`));
+  }
+  const coverage = JSON.parse(readFileSync(input.ownership.path, "utf8"));
+  for (const pending of input.pending)
+    assert.ok(
+      !coverage.ownership.find((o) => o.id === pending.id).tickets.includes(input.ownership.ticket)
+    );
+});
+
 test("cross-batch package identities reconcile against package coverage", () => {
   const coverage = JSON.parse(readFileSync("scripts/inventory/package-coverage.json", "utf8"));
   for (const pending of load().pending)

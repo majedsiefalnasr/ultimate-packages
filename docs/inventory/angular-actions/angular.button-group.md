@@ -35,7 +35,7 @@ packages/ng/package.json: "test": "ng test --project=ng"
 
 ## Relationships
 
-package.ultimate.ng.button-group (pending cross-batch)
+package.ultimate.ng.button-group → [angular.button-group](angular.button-group.md) (reconciled family alias)
 package.ultimate.ng-core.basecomponent (pending cross-batch)
 angular.button
 

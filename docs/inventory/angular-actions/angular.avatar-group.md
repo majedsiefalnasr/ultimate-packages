@@ -35,7 +35,7 @@ packages/ng/package.json: "test": "ng test --project=ng"
 
 ## Relationships
 
-package.ultimate.ng.avatar-group (pending cross-batch)
+package.ultimate.ng.avatar-group → [angular.avatar-group](angular.avatar-group.md) (reconciled family alias)
 package.ultimate.ng-core.basecomponent (pending cross-batch)
 angular.avatar
 

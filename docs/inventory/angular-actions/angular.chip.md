@@ -36,7 +36,7 @@ packages/ng/package.json: "test": "ng test --project=ng"
 
 ## Relationships
 
-package.ultimate.ng.chip (pending cross-batch)
+package.ultimate.ng.chip → [angular.chip](angular.chip.md) (reconciled family alias)
 package.ultimate.ng-core.basecomponent (pending cross-batch)
 package.ultimate.themes.presets (pending cross-batch)
 package.ultimate.ng-core.icons (pending cross-batch)

@@ -35,7 +35,7 @@ packages/ng/package.json: "test": "ng test --project=ng"
 
 ## Relationships
 
-package.ultimate.ng.split-button (pending cross-batch)
+package.ultimate.ng.split-button → [angular.split-button](angular.split-button.md) (reconciled family alias)
 package.ultimate.ng-core.basecomponent (pending cross-batch)
 package.ultimate.themes.presets (pending cross-batch)
 angular.button
