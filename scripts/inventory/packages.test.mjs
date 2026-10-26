@@ -35,6 +35,42 @@ test("real package reservations permit scoped targets but global closeout reject
   );
 });
 
+test("build artifacts do not become source families while ignored real sources remain visible", (t) => {
+  const root = mkdtempSync(join(tmpdir(), "inventory-artifacts-"));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  for (const directory of ["src/button", "hidden", ".angular/cache", "storybook-static/assets"]) {
+    mkdirSync(join(root, `packages/odd/${directory}`), { recursive: true });
+    writeFileSync(join(root, `packages/odd/${directory}/index.js`), "export {};");
+  }
+  writeFileSync(join(root, ".gitignore"), "packages/odd/hidden/\n");
+  writeFileSync(join(root, "packages/odd/package.json"), JSON.stringify({ name: "@test/odd" }));
+  const result = inventory({
+    root,
+    input: {
+      mode: "packages",
+      version: 1,
+      scope: "packages",
+      revision: "test",
+      ownership: ["package.test.odd", "package.test.odd.button", "package.test.odd.hidden"].map(
+        (id) => ({ id, reason: "Synthetic source discovery fixture" })
+      ),
+    },
+  });
+  assert.deepEqual(result.problems, []);
+  assert.deepEqual(
+    result.facts.families.map((family) => family.name),
+    ["hidden", "button"]
+  );
+  assert.equal(
+    readFileSync(join(root, "packages/odd/.angular/cache/index.js"), "utf8"),
+    "export {};"
+  );
+  assert.equal(
+    readFileSync(join(root, "packages/odd/storybook-static/assets/index.js"), "utf8"),
+    "export {};"
+  );
+});
+
 test("utility wildcard exports retain every observed public subpath", () => {
   const input = JSON.parse(readFileSync(new URL("./package-coverage.json", import.meta.url)));
   const result = inventory({ root: ".", input });

@@ -57,7 +57,22 @@ export function reconcilePackages({ root, input }) {
     readdirSync(resolve(root, p), { withFileTypes: true })
       .sort((a, b) => a.name.localeCompare(b.name))
       .flatMap((e) => {
-        if (["node_modules", "dist", ".git", "coverage", ".storybook"].includes(e.name)) return [];
+        // Angular CLI caches and Storybook build output are generated artifacts,
+        // not source roots (packages/ng/angular.json declares storybook-static).
+        // Do not consult gitignore: ignored source-only helpers still need owners.
+        if (
+          [
+            "node_modules",
+            "dist",
+            ".git",
+            "coverage",
+            ".storybook",
+            ".angular",
+            "storybook-static",
+            ".DS_Store",
+          ].includes(e.name)
+        )
+          return [];
         const path = `${p}/${e.name}`;
         return e.isDirectory() ? walk(path) : e.isFile() ? [path] : [];
       });
