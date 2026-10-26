@@ -578,6 +578,15 @@ Coverage: #143, #144
 - package.ultimate.uix-utils.zindex: #144 (pending)
 
 - Entry .: packages/uix-utils/src/index.ts (manifest)
+- Entry ./classnames: packages/uix-utils/src/classnames/index.ts (manifest-pattern)
+- Entry ./dom: packages/uix-utils/src/dom/index.ts (manifest-pattern)
+- Entry ./escape: packages/uix-utils/src/escape/index.ts (manifest-pattern)
+- Entry ./eventbus: packages/uix-utils/src/eventbus/index.ts (manifest-pattern)
+- Entry ./mergeprops: packages/uix-utils/src/mergeprops/index.ts (manifest-pattern)
+- Entry ./object: packages/uix-utils/src/object/index.ts (manifest-pattern)
+- Entry ./scroll-lock: packages/uix-utils/src/scroll-lock/index.ts (manifest-pattern)
+- Entry ./uuid: packages/uix-utils/src/uuid/index.ts (manifest-pattern)
+- Entry ./zindex: packages/uix-utils/src/zindex/index.ts (manifest-pattern)
 
 ## @ultimate/vue
 

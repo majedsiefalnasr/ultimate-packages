@@ -1,5 +1,51 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { resolve, posix } from "node:path";
+import { resolve, posix, relative } from "node:path";
+import { runInNewContext } from "node:vm";
+import ts from "typescript";
+
+// Observe directory-generated entries rather than guessing from variable names or
+// treating every source directory as public. Only the build's read-only directory
+// discovery and tsup configuration declaration are available to this evaluation.
+function observedEntries(text, root, path) {
+  const output = {};
+  const code = ts.transpileModule(text, {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+  }).outputText;
+  runInNewContext(
+    code,
+    {
+      exports: output,
+      require(name) {
+        if (name === "tsup") return { defineConfig: (config) => config };
+        if (name === "node:fs")
+          return {
+            readdirSync(directory, options) {
+              const base = resolve(root, path);
+              const target = resolve(base, directory);
+              if (relative(base, target).startsWith(".."))
+                throw new Error("Directory outside package");
+              return readdirSync(target, options).sort((a, b) =>
+                (typeof a === "string" ? a : a.name).localeCompare(
+                  typeof b === "string" ? b : b.name
+                )
+              );
+            },
+          };
+        throw new Error(`Unsupported build import: ${name}`);
+      },
+    },
+    { timeout: 1000 }
+  );
+  const configs = Array.isArray(output.default) ? output.default : [output.default];
+  return configs.flatMap((config) => {
+    if (!config?.entry || Array.isArray(config.entry) || typeof config.entry !== "object")
+      throw new Error("Unsupported build entry declaration");
+    return Object.entries(config.entry).map(([key, source]) => {
+      if (typeof source !== "string") throw new Error("Unsupported build entry source");
+      return [key, `${path}/${source}`];
+    });
+  });
+}
 
 // Package topology is not an item/component census. Fine-grained authored records
 // remain in the pilot schema; these reservations allocate later coverage work.
@@ -74,11 +120,20 @@ export function reconcilePackages({ root, input }) {
         /(?:"([^"\n]+)"|\b(index|bin[\w-]*))\s*:\s*"((?:src|lib)\/[^"\n]+)"/g
       ))
         buildSources.set(match[1] ?? match[2], `${path}/${match[3]}`);
-      if (text.includes("submoduleEntries"))
-        for (const file of sources.filter((f) =>
-          /^src\/[^/]+\/index\.ts$/.test(f.slice(path.length + 1))
-        ))
-          buildSources.set(file.slice(path.length + 5, -3), file);
+      if (Object.keys(manifest?.exports ?? {}).some((key) => key.includes("*"))) {
+        try {
+          const observed = observedEntries(text, root, path);
+          buildSources.clear();
+          for (const [key, source] of observed) buildSources.set(key, source);
+        } catch (error) {
+          buildSources.clear();
+          problems.push({
+            kind: "entry",
+            subject: id,
+            detail: `Cannot observe wildcard build entries: ${error.message}`,
+          });
+        }
+      }
     }
     const ngEntries = files.filter((f) => f.endsWith("/ng-package.json"));
     for (const ng of ngEntries) {
@@ -96,6 +151,30 @@ export function reconcilePackages({ root, input }) {
     const mapped = new Set();
     for (const [subpath, target] of Object.entries(publicEntries)) {
       if (subpath.includes("*")) {
+        const targets = (value) =>
+          typeof value === "string"
+            ? [value]
+            : value && typeof value === "object"
+              ? Object.values(value).flatMap(targets)
+              : [];
+        const leaves = targets(target);
+        const candidates = [...buildSources].filter(([key]) => key !== "index");
+        if (
+          subpath !== "./*" ||
+          !leaves.length ||
+          leaves.some(
+            (leaf) => !/^\.\/dist\/\*\/index\.(?:mjs|js|cjs|d\.mts|d\.ts|d\.cts)$/.test(leaf)
+          ) ||
+          !candidates.length ||
+          candidates.some(([key]) => !/^[^/*]+\/index$/.test(key))
+        ) {
+          problems.push({
+            kind: "entry",
+            subject: `${id}:${subpath}`,
+            detail: "Unsupported or unobserved wildcard export mapping",
+          });
+          continue;
+        }
         for (const [key, source] of buildSources)
           if (key !== "index") {
             const name = key.replace(/\/index$/, "");

@@ -17529,6 +17529,114 @@
       }
     },
     {
+      "id": "package.ultimate.uix-utils:./classnames",
+      "package": "package.ultimate.uix-utils",
+      "subpath": "./classnames",
+      "source": "packages/uix-utils/src/classnames/index.ts",
+      "origin": "manifest-pattern",
+      "target": {
+        "types": "./dist/*/index.d.mts",
+        "import": "./dist/*/index.mjs",
+        "default": "./dist/*/index.mjs"
+      }
+    },
+    {
+      "id": "package.ultimate.uix-utils:./dom",
+      "package": "package.ultimate.uix-utils",
+      "subpath": "./dom",
+      "source": "packages/uix-utils/src/dom/index.ts",
+      "origin": "manifest-pattern",
+      "target": {
+        "types": "./dist/*/index.d.mts",
+        "import": "./dist/*/index.mjs",
+        "default": "./dist/*/index.mjs"
+      }
+    },
+    {
+      "id": "package.ultimate.uix-utils:./escape",
+      "package": "package.ultimate.uix-utils",
+      "subpath": "./escape",
+      "source": "packages/uix-utils/src/escape/index.ts",
+      "origin": "manifest-pattern",
+      "target": {
+        "types": "./dist/*/index.d.mts",
+        "import": "./dist/*/index.mjs",
+        "default": "./dist/*/index.mjs"
+      }
+    },
+    {
+      "id": "package.ultimate.uix-utils:./eventbus",
+      "package": "package.ultimate.uix-utils",
+      "subpath": "./eventbus",
+      "source": "packages/uix-utils/src/eventbus/index.ts",
+      "origin": "manifest-pattern",
+      "target": {
+        "types": "./dist/*/index.d.mts",
+        "import": "./dist/*/index.mjs",
+        "default": "./dist/*/index.mjs"
+      }
+    },
+    {
+      "id": "package.ultimate.uix-utils:./mergeprops",
+      "package": "package.ultimate.uix-utils",
+      "subpath": "./mergeprops",
+      "source": "packages/uix-utils/src/mergeprops/index.ts",
+      "origin": "manifest-pattern",
+      "target": {
+        "types": "./dist/*/index.d.mts",
+        "import": "./dist/*/index.mjs",
+        "default": "./dist/*/index.mjs"
+      }
+    },
+    {
+      "id": "package.ultimate.uix-utils:./object",
+      "package": "package.ultimate.uix-utils",
+      "subpath": "./object",
+      "source": "packages/uix-utils/src/object/index.ts",
+      "origin": "manifest-pattern",
+      "target": {
+        "types": "./dist/*/index.d.mts",
+        "import": "./dist/*/index.mjs",
+        "default": "./dist/*/index.mjs"
+      }
+    },
+    {
+      "id": "package.ultimate.uix-utils:./scroll-lock",
+      "package": "package.ultimate.uix-utils",
+      "subpath": "./scroll-lock",
+      "source": "packages/uix-utils/src/scroll-lock/index.ts",
+      "origin": "manifest-pattern",
+      "target": {
+        "types": "./dist/*/index.d.mts",
+        "import": "./dist/*/index.mjs",
+        "default": "./dist/*/index.mjs"
+      }
+    },
+    {
+      "id": "package.ultimate.uix-utils:./uuid",
+      "package": "package.ultimate.uix-utils",
+      "subpath": "./uuid",
+      "source": "packages/uix-utils/src/uuid/index.ts",
+      "origin": "manifest-pattern",
+      "target": {
+        "types": "./dist/*/index.d.mts",
+        "import": "./dist/*/index.mjs",
+        "default": "./dist/*/index.mjs"
+      }
+    },
+    {
+      "id": "package.ultimate.uix-utils:./zindex",
+      "package": "package.ultimate.uix-utils",
+      "subpath": "./zindex",
+      "source": "packages/uix-utils/src/zindex/index.ts",
+      "origin": "manifest-pattern",
+      "target": {
+        "types": "./dist/*/index.d.mts",
+        "import": "./dist/*/index.mjs",
+        "default": "./dist/*/index.mjs"
+      }
+    },
+    {
       "id": "package.ultimate.vue:.",
       "package": "package.ultimate.vue",
       "subpath": ".",
