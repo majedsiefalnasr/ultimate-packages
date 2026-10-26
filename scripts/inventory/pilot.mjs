@@ -139,6 +139,19 @@ export function inventory({ root, input }) {
       });
   }
   for (const record of input.records) {
+    if (record.availability === "public" && !record.exports.length)
+      problems.push({
+        kind: "availability",
+        subject: record.id,
+        detail: "Public availability requires a discovered export",
+      });
+    for (const file of record.files)
+      if (!files.includes(file))
+        problems.push({
+          kind: "disposition",
+          subject: file,
+          detail: "Owned source is outside discovered scope or missing",
+        });
     for (const evidence of record.evidence) {
       try {
         if (!read(evidence.path).includes(evidence.contains))
@@ -152,6 +165,28 @@ export function inventory({ root, input }) {
       }
     }
     for (const claim of record.claims) {
+      if (claim.state === "verified") {
+        try {
+          const run = JSON.parse(read(claim.run));
+          if (
+            !["command", "revision", "outcome", "output"].every(
+              (key) =>
+                typeof claim[key] === "string" && claim[key].trim() && run[key] === claim[key]
+            ) ||
+            run.outcome !== "passed" ||
+            claim.revision !== input.revision
+          )
+            throw new Error(
+              "Run command, revision, outcome and output must support the claim at the scoped revision"
+            );
+        } catch (error) {
+          problems.push({
+            kind: "claim",
+            subject: record.id,
+            detail: `Unsupported verified claim: ${error.message}`,
+          });
+        }
+      }
       if (
         claim.state === "verified" &&
         (!claim.command ||
@@ -204,7 +239,7 @@ export function inventory({ root, input }) {
   };
   for (const record of records)
     views[`${record.id}.md`] =
-      `# ${record.name}\n\nID: ${record.id}\n\nFramework: ${record.framework}; availability: ${record.availability}\n\n## Authored interpretation\n\n${record.purpose}\n\n## Framework surface\n\n${record.surface}\n\n## Public exports\n\n${record.exports.join("\n") || "None; owned internal source."}\n\n## Owned source and evidence\n\n${record.files.join("\n")}\n\n${record.evidence.map((e) => `${e.path}: ${e.contains}`).join("\n")}\n\n## Relationships\n\n${record.relationships.map((id) => `${id}${ids.has(id) ? "" : " (pending cross-batch)"}`).join("\n") || "None recorded."}\n\n## Verification\n\n${JSON.stringify(record.claims, null, 2)}\n`;
+      `# ${record.name}\n\nID: ${record.id}\n\nFramework: ${record.framework}; availability: ${record.availability}\n\n## Authored interpretation\n\n${record.purpose}\n\n## Framework surface\n\n${record.surface}\n\n## Public exports\n\n${record.exports.join("\n") || "None; owned internal source."}\n\n## Owned source and evidence\n\n${record.files.join("\n")}\n\n\`\`\`text\n${record.evidence.map((e) => `${e.path}: ${e.contains}`).join("\n")}\n\`\`\`\n\n## Relationships\n\n${record.relationships.map((id) => `${id}${ids.has(id) ? "" : " (pending cross-batch)"}`).join("\n") || "None recorded."}\n\n## Verification\n\n\`\`\`text\n${JSON.stringify(record.claims, null, 2)}\n\`\`\`\n`;
   views["validation.md"] =
     `# Scoped validation\n\nScope: ${input.scope}; source revision: ${input.revision}\n\nGlobal completeness: not asserted.\n\n${problems.length ? problems.map((p) => `${p.kind}: ${p.subject}: ${p.detail}`).join("\n") : "Scoped reconciliation passed."}\n\nPending references:\n${input.pending.map((p) => `${p.id}: ${p.batch}: ${p.reason}`).join("\n")}\n`;
   return {

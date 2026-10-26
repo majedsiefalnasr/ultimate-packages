@@ -22,10 +22,12 @@ packages/ng/src/button/index.ts
 packages/ng/src/button/button.ts
 packages/ng/src/button/button-style.ts
 
+```text
 packages/ng/src/index.ts: export * from "./button";
 packages/ng/src/button/button.ts: export class UButton extends UBaseComponent
 packages/ng/src/button/button.ts: selector: "u-button"
 packages/ng/src/button/button.spec.ts: UButton
+```
 
 ## Relationships
 
@@ -37,13 +39,15 @@ themes.button (pending cross-batch)
 
 ## Verification
 
+```text
 [
-{
-"state": "implemented",
-"behavior": "Signal-input component and native button template exist; source inspection only."
-},
-{
-"state": "not-run",
-"behavior": "Angular button behavioral suite has not been executed for this pilot."
-}
+  {
+    "state": "implemented",
+    "behavior": "Signal-input component and native button template exist; source inspection only."
+  },
+  {
+    "state": "not-run",
+    "behavior": "Angular button behavioral suite has not been executed for this pilot."
+  }
 ]
+```

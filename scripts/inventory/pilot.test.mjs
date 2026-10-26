@@ -51,6 +51,89 @@ function fixture(t) {
   return { root, input };
 }
 
+test("committed views are byte-exact CLI generation", (t) => {
+  const out = mkdtempSync(join(tmpdir(), "inventory-views-"));
+  t.after(() => rmSync(out, { recursive: true, force: true }));
+  const cli = spawnSync(
+    process.execPath,
+    [
+      "scripts/inventory/pilot.mjs",
+      "--root",
+      ".",
+      "--input",
+      "scripts/inventory/pilot-sample.json",
+      "--out",
+      out,
+    ],
+    { encoding: "utf8" }
+  );
+  assert.equal(cli.status, 0, cli.stderr);
+  for (const name of Object.keys(JSON.parse(cli.stdout).views))
+    assert.equal(
+      readFileSync(join(out, name), "utf8"),
+      readFileSync(join("docs/inventory/pilot", name), "utf8"),
+      name
+    );
+});
+
+test("verified claims need matching supporting run evidence, not just populated fields", (t) => {
+  const { root, input } = fixture(t);
+  const claim = {
+    state: "verified",
+    behavior: "button check",
+    command: "node check.mjs",
+    revision: "abc123",
+    outcome: "passed",
+    limitations: "Synthetic only",
+    output: "passed",
+    run: "run.json",
+  };
+  input.records[0].claims = [claim];
+  const run = {
+    command: claim.command,
+    revision: claim.revision,
+    outcome: "passed",
+    output: "passed",
+  };
+  writeFileSync(join(root, "run.json"), JSON.stringify(run));
+  assert.deepEqual(inventory({ root, input }).problems, []);
+  for (const [key, value] of [
+    ["command", "other"],
+    ["revision", "stale"],
+    ["outcome", "failed"],
+    ["output", "failed"],
+  ]) {
+    writeFileSync(join(root, "run.json"), JSON.stringify({ ...run, [key]: value }));
+    assert.ok(
+      inventory({ root, input }).problems.some((p) => p.kind === "claim"),
+      key
+    );
+    const authored = join(root, "authored.json");
+    writeFileSync(authored, JSON.stringify(input));
+    const cli = spawnSync(
+      process.execPath,
+      ["scripts/inventory/pilot.mjs", "--root", root, "--input", authored],
+      { encoding: "utf8" }
+    );
+    assert.equal(cli.status, 1, key);
+    assert.ok(JSON.parse(cli.stdout).problems.some((p) => p.kind === "claim"));
+  }
+  claim.run = "missing.json";
+  assert.ok(inventory({ root, input }).problems.some((p) => p.kind === "claim"));
+});
+
+test("public availability requires a discovered public surface", (t) => {
+  const { root, input } = fixture(t);
+  input.records.push({ ...input.records[0], id: "test.helper", files: [], exports: [] });
+  assert.ok(inventory({ root, input }).problems.some((p) => p.kind === "availability"));
+});
+
+test("internal records cannot claim public exports", (t) => {
+  const { root, input } = fixture(t);
+  input.records[0].availability = "internal";
+  assert.ok(inventory({ root, input }).problems.some((p) => p.kind === "export"));
+});
+
 test("undisposed discovered source blocks scoped coverage", (t) => {
   const { root, input } = fixture(t);
   writeFileSync(join(root, "pkg/src/extra.ts"), "export const Extra = 3;");

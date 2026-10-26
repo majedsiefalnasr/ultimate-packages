@@ -1,50 +1,5 @@
-# Phase 3 Integration Validation Report
+# Superseded Phase 3 report
 
-Generated: 2026-10-26T16:30:05.650Z
+The report introduced by f0ad62b3 is withdrawn: its scripts were single-line hashbang no-ops, so their successful exits did not establish inventory correctness. Its generated classifications and parity judgments are not evidence. The original migration baseline is preserved in [Component Inventory](../COMPONENT_INVENTORY.md) and explicitly marked historical.
 
-## Summary
-
-- Pass: 4
-- Fail: 1
-- Info: 1
-
-## Detailed Checks
-
-### Cross-framework category alignment: PASS
-
-Categories used: Layout, Misc, Form, Primitive, Feedback, Navigation, Overlay, Data
-
-### Status enum consistency: PASS
-
-Statuses found: BUILT
-
-### Parity scale consistency: PASS
-
-Parity values found: FULL
-
-### Foundation dependency traceability: FAIL
-
-538 unresolved uixDependencies out of total
-
-### Combined Prime coverage: INFO
-
-Angular: 83, React: 79, Vue: 84 matched
-
-### Schema validation: PASS
-
-All inventories have required metadata structure
-
-## Phase 4 Readiness Assessment
-
-⚠️ **Not ready for Phase 4**
-
-1 check(s) failed. Resolve before proceeding to gap analysis.
-
-## Cross-Framework Component Coverage
-
-| Framework | Components Scanned | Prime Matched | Ultimate-Specific | Prime Missing |
-|-----------|-------------------|---------------|-------------------|---------------|
-| Angular | 89 | 83 | 6 | 17 |
-| React | 86 | 79 | 7 | 21 |
-| Vue | 94 | 84 | 10 | 16 |
-| Foundation | 0 | N/A | N/A | N/A |
+Use [the scoped pilot](../../inventory/README.md) for the replacement method and its disclosed limitations. No platform-wide completeness or product verification is asserted. Prior script and fixture additions were removed; git history retains them.

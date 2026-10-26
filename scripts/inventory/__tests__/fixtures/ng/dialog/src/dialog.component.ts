@@ -1,1 +1,0 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';@Component({  selector: 'u-dialog',  template: `<div role="dialog"><ng-content></ng-content></div>`,  standalone: true})export class UDialogComponent {  @Input() visible = false;  @Input() header = '';  @Output() visibleChange = new EventEmitter<boolean>();}

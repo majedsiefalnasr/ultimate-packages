@@ -93,7 +93,8 @@
                 "revision": { "type": "string" },
                 "limitations": { "type": "string" },
                 "output": { "type": "string" },
-                "workflow": { "type": "string" }
+                "workflow": { "type": "string" },
+                "run": { "type": "string", "minLength": 1 }
               }
             }
           }

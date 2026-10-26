@@ -1,1 +1,0 @@
-export { UCheckboxComponent } from './checkbox.component';

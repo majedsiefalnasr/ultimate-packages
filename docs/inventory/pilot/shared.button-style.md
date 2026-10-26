@@ -20,11 +20,13 @@ Framework-neutral CSS template exported as style. It supplies tokenized button s
 
 packages/uix-styles/src/button/index.ts
 
+```text
 packages/uix-styles/src/button/index.ts: export const style =
 packages/uix-styles/src/button/index.ts: .u-button:focus-visible
 packages/ng/src/button/button-style.ts: @ultimate/uix-styles/button
-packages/react/src/button/button-style.ts: const css = /_css_/
+packages/react/src/button/button-style.ts: const css = /*css*/
 packages/vue/src/button/button-style.ts: @ultimate/uix-styles/button
+```
 
 ## Relationships
 
@@ -32,13 +34,15 @@ themes.button (pending cross-batch)
 
 ## Verification
 
+```text
 [
-{
-"state": "implemented",
-"behavior": "Tokenized CSS exists; Angular and Vue adapters import it. React owns separate inline CSS; no shared import is claimed."
-},
-{
-"state": "not-run",
-"behavior": "Visual behavior and token rendering are not exercised by inventory validation."
-}
+  {
+    "state": "implemented",
+    "behavior": "Tokenized CSS exists; Angular and Vue adapters import it. React owns separate inline CSS; no shared import is claimed."
+  },
+  {
+    "state": "not-run",
+    "behavior": "Visual behavior and token rendering are not exercised by inventory validation."
+  }
 ]
+```

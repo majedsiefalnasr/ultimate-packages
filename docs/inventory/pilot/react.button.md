@@ -23,9 +23,11 @@ packages/react/src/button/index.ts
 packages/react/src/button/button.tsx
 packages/react/src/button/button-style.ts
 
+```text
 packages/react/src/button/button.tsx: React.forwardRef<HTMLButtonElement, UButtonProps>
 packages/react/src/button/button.tsx: const isDisabled = disabled || loading;
 packages/react/src/button/button.spec.tsx: UButton
+```
 
 ## Relationships
 
@@ -36,18 +38,20 @@ themes.button (pending cross-batch)
 
 ## Verification
 
+```text
 [
-{
-"state": "implemented",
-"behavior": "Forward-ref native button source and props exist."
-},
-{
-"state": "unavailable",
-"behavior": "React button test runner aborted before executing assertions.",
-"command": "pnpm --filter @ultimate/react exec vitest run src/button/button.spec.tsx",
-"outcome": "unavailable",
-"revision": "f0ad62b3",
-"limitations": "Host ancestor PostCSS configuration outside the checkout references an unavailable plugin. No product behavior verified; no external configuration changed.",
-"output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
-}
+  {
+    "state": "implemented",
+    "behavior": "Forward-ref native button source and props exist."
+  },
+  {
+    "state": "unavailable",
+    "behavior": "React button test runner aborted before executing assertions.",
+    "command": "pnpm --filter @ultimate/react exec vitest run src/button/button.spec.tsx",
+    "outcome": "unavailable",
+    "revision": "f0ad62b3",
+    "limitations": "Host ancestor PostCSS configuration outside the checkout references an unavailable plugin. No product behavior verified; no external configuration changed.",
+    "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+  }
 ]
+```

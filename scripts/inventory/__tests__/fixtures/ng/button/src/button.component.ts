@@ -1,1 +1,0 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';@Component({  selector: 'u-button',  template: `<button [disabled]="disabled"><ng-content></ng-content></button>`,  standalone: true})export class UButtonComponent {  @Input() disabled = false;  @Input() label = '';  @Output() clicked = new EventEmitter<void>();}

@@ -24,10 +24,12 @@ packages/vue/src/button/Button.vue
 packages/vue/src/button/base-button.ts
 packages/vue/src/button/button-style.ts
 
+```text
 packages/vue/src/button/base-button.ts: export function createBaseButton()
 packages/vue/src/button/Button.vue: extends: createBaseButton()
 packages/vue/src/button/Button.vue: v-if="!asChild"
 packages/vue/src/button/button.spec.ts: UButton
+```
 
 ## Relationships
 
@@ -40,13 +42,15 @@ themes.button (pending cross-batch)
 
 ## Verification
 
+```text
 [
-{
-"state": "implemented",
-"behavior": "Base props factory and dynamic-root SFC are source-present."
-},
-{
-"state": "not-run",
-"behavior": "Vue button behavioral suite has not been executed for this pilot."
-}
+  {
+    "state": "implemented",
+    "behavior": "Base props factory and dynamic-root SFC are source-present."
+  },
+  {
+    "state": "not-run",
+    "behavior": "Vue button behavioral suite has not been executed for this pilot."
+  }
 ]
+```
