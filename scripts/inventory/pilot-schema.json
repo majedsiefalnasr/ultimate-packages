@@ -1,10 +1,47 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Scoped Ultimate inventory authored input",
+  "packageReconciliation": {
+    "type": "object",
+    "required": ["mode", "version", "scope", "revision", "ownership"],
+    "additionalProperties": false,
+    "properties": {
+      "mode": { "enum": ["packages"] },
+      "version": { "enum": [1] },
+      "scope": { "type": "string", "minLength": 1 },
+      "revision": { "type": "string", "minLength": 1 },
+      "closeout": { "enum": [true, false] },
+      "tickets": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["number", "title"],
+          "properties": {
+            "number": { "type": "number" },
+            "title": { "type": "string", "minLength": 1 }
+          }
+        }
+      },
+      "ownership": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["id"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "tickets": { "type": "array", "items": { "type": "number" } },
+            "reason": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  },
   "type": "object",
   "required": ["version", "scope", "revision", "packages", "records", "dispositions", "pending"],
   "additionalProperties": false,
   "properties": {
+    "closeout": { "enum": [true, false] },
     "version": { "enum": [1] },
     "scope": { "type": "string", "minLength": 1 },
     "revision": { "type": "string", "minLength": 1 },

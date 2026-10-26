@@ -2,6 +2,7 @@ import { readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL, URL } from "node:url";
 import ts from "typescript";
+import { reconcilePackages } from "./packages.mjs";
 
 const schema = JSON.parse(readFileSync(new URL("./pilot-schema.json", import.meta.url), "utf8"));
 
@@ -48,7 +49,13 @@ function validate(value, rule, path, problems) {
 /** Reconcile an explicitly bounded inventory; never asserts platform completeness. */
 export function inventory({ root, input }) {
   const problems = [];
-  validate(input, schema, "input", problems);
+  validate(
+    input,
+    input.mode === "packages" ? schema.packageReconciliation : schema,
+    "input",
+    problems
+  );
+  if (!problems.length && input.mode === "packages") return reconcilePackages({ root, input });
   if (problems.length)
     return { problems, complete: false, facts: { files: [], exports: [] }, views: {} };
   const files = [];
@@ -230,6 +237,12 @@ export function inventory({ root, input }) {
           detail: `Unknown relationship ${target}`,
         });
     }
+  if (input.closeout && input.pending.length)
+    problems.push({
+      kind: "reference",
+      subject: input.scope,
+      detail: "Global closeout rejects unresolved relationship targets",
+    });
   const records = [...input.records].sort((a, b) => a.id.localeCompare(b.id));
   const views = {
     "index.md":
