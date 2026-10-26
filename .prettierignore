@@ -1,3 +1,6 @@
+# Byte-exact inventory generator outputs (validated by inventory tests)
+docs/inventory/packages/packages.json
+docs/inventory/packages/packages.md
 pnpm-lock.yaml
 dist/
 node_modules/
