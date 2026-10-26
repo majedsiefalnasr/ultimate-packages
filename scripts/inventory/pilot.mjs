@@ -145,6 +145,13 @@ export function inventory({ root, input }) {
         detail: "Expected exactly one record owner or reasoned disposition",
       });
   }
+  for (const disposition of input.dispositions)
+    if (!files.includes(disposition.path))
+      problems.push({
+        kind: "disposition",
+        subject: disposition.path,
+        detail: "Disposition is outside discovered scope or missing",
+      });
   for (const record of input.records) {
     if (record.availability === "public" && !record.exports.length)
       problems.push({
@@ -246,7 +253,7 @@ export function inventory({ root, input }) {
   const records = [...input.records].sort((a, b) => a.id.localeCompare(b.id));
   const views = {
     "index.md":
-      "# Ultimate inventory pilot\n\nScoped sample only; not platform completeness.\n\n" +
+      `# Ultimate inventory ${input.scope}\n\nScoped sample only; not platform completeness.\n\n` +
       records.map((r) => `- [${r.name}](${r.id}.md)`).join("\n") +
       "\n",
   };
