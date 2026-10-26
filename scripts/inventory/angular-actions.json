@@ -1,0 +1,1025 @@
+{
+  "version": 1,
+  "scope": "angular-actions",
+  "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/button",
+        "packages/ng/src/button-group",
+        "packages/ng/src/split-button",
+        "packages/ng/src/avatar",
+        "packages/ng/src/avatar-group",
+        "packages/ng/src/badge",
+        "packages/ng/src/overlay-badge",
+        "packages/ng/src/chip",
+        "packages/ng/src/tag",
+        "packages/ng/src/toolbar"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/button-group/index.ts"
+        },
+        {
+          "subpath": "./button-group",
+          "source": "packages/ng/src/button-group/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/split-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/avatar/index.ts"
+        },
+        {
+          "subpath": "./avatar",
+          "source": "packages/ng/src/avatar/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/avatar-group/index.ts"
+        },
+        {
+          "subpath": "./avatar-group",
+          "source": "packages/ng/src/avatar-group/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/badge/index.ts"
+        },
+        {
+          "subpath": "./badge",
+          "source": "packages/ng/src/badge/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/overlay-badge/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/chip/index.ts"
+        },
+        {
+          "subpath": "./chip",
+          "source": "packages/ng/src/chip/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/tag/index.ts"
+        },
+        {
+          "subpath": "./tag",
+          "source": "packages/ng/src/tag/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/toolbar/index.ts"
+        },
+        {
+          "subpath": "./toolbar",
+          "source": "packages/ng/src/toolbar/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.button",
+      "name": "Angular UButton",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Native action button with loading/disabled gating and icon/label rendering.",
+      "surface": "Root @ultimate/ng exports UButton through src/index.ts -> ./button. There is no @ultimate/ng/button manifest subpath. Selector u-button; standalone component extends UBaseComponent. Signal inputs include label, icon, iconPos, loading, disabled, severity, raised, rounded, text, outlined, size and fluid; outputs onClick, onFocus and onBlur. Private/protected styling helpers belong to this record, not additional products. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. No dedicated manifest subpath; root entry only. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. CSS imports @ultimate/uix-styles/button; local buttonStyleModule supplies css/classes. Theme identity button matches componentName and Aura components registry; dt() resolves those token references via base registration. BUTTON_METADATA associates ng sourcePath with this source; its native-event convention is not absence of Angular outputs. Owned source-only declarations: ButtonClassesParams, buttonStyleModule. ButtonClassesParams describes hasIcon/label/loading/severity/raised/rounded/text/outlined/size/fluid/iconPos for local root/icon class resolution.",
+      "files": [
+        "packages/ng/src/button/index.ts",
+        "packages/ng/src/button/button.ts",
+        "packages/ng/src/button/button-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UButton"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/button/index.ts",
+          "contains": "export { UButton }"
+        },
+        {
+          "path": "packages/ng/src/button/button.ts",
+          "contains": "export class UButton extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/button/button-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    button,"
+        },
+        {
+          "path": "packages/component-metadata/src/records/button.ts",
+          "contains": "export const BUTTON_METADATA"
+        },
+        {
+          "path": "packages/ng/src/button/button-style.ts",
+          "contains": "ButtonClassesParams"
+        },
+        {
+          "path": "packages/ng/src/button/button-style.ts",
+          "contains": "buttonStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.button",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.uix-styles.button",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng.ripple",
+        "package.ultimate.ng-core.icons",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.button-group",
+      "name": "Angular UButtonGroup",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Content-projecting action group; adjoining borders are CSS composition, not imported child components.",
+      "surface": "No own inputs or outputs; projects arbitrary content inside span role=group. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/button-group. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. No matching Aura component registry entry; fixed local layout CSS is not a theme-token relationship. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: buttonGroupStyleModule.",
+      "files": [
+        "packages/ng/src/button-group/index.ts",
+        "packages/ng/src/button-group/button-group.ts",
+        "packages/ng/src/button-group/button-group-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UButtonGroup", "@ultimate/ng/button-group#UButtonGroup"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/button-group/index.ts",
+          "contains": "export { UButtonGroup }"
+        },
+        {
+          "path": "packages/ng/src/button-group/button-group.ts",
+          "contains": "export class UButtonGroup extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/button-group/button-group-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/ng/src/button-group/button-group-style.ts",
+          "contains": "buttonGroupStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.button-group",
+        "package.ultimate.ng-core.basecomponent",
+        "angular.button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.split-button",
+      "name": "Angular USplitButton",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Default command plus secondary popup commands; imports UButton and UMenu, forwarding popup lifecycle and closing the menu on default click.",
+      "surface": "model: UMenuItem[] default []; label/icon/severity strings; iconPos left|right|top|bottom default left; text/outlined/disabled boolean false; size small|large. Outputs onClick(MouseEvent), onShow/onHide(void). Menu ViewChild is private. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. No dedicated manifest subpath; root entry only. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity splitbutton matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: splitButtonStyleModule.",
+      "files": [
+        "packages/ng/src/split-button/index.ts",
+        "packages/ng/src/split-button/split-button.ts",
+        "packages/ng/src/split-button/split-button-style.ts"
+      ],
+      "exports": ["@ultimate/ng#USplitButton"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/split-button/index.ts",
+          "contains": "export { USplitButton }"
+        },
+        {
+          "path": "packages/ng/src/split-button/split-button.ts",
+          "contains": "export class USplitButton extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/split-button/split-button-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "splitbutton:"
+        },
+        {
+          "path": "packages/ng/src/split-button/split-button-style.ts",
+          "contains": "splitButtonStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.split-button",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "angular.button",
+        "package.ultimate.ng.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.avatar",
+      "name": "Angular UAvatar",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Person identity rendered as image, label or icon; image failure switches to label/icon fallback.",
+      "surface": "label/icon/image/ariaLabel string inputs; size normal|large|xlarge default normal; shape square|circle default square; onImageError(Event). imageFailed and handlers are protected internals. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/avatar. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity avatar matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: AvatarClassesParams, avatarStyleModule. AvatarClassesParams describes hasImage/imageFailed/shape/size for local root classes.",
+      "files": [
+        "packages/ng/src/avatar/index.ts",
+        "packages/ng/src/avatar/avatar.ts",
+        "packages/ng/src/avatar/avatar-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UAvatar", "@ultimate/ng/avatar#UAvatar"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/avatar/index.ts",
+          "contains": "export { UAvatar }"
+        },
+        {
+          "path": "packages/ng/src/avatar/avatar.ts",
+          "contains": "export class UAvatar extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/avatar/avatar-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    avatar,"
+        },
+        {
+          "path": "packages/ng/src/avatar/avatar-style.ts",
+          "contains": "AvatarClassesParams"
+        },
+        {
+          "path": "packages/ng/src/avatar/avatar-style.ts",
+          "contains": "avatarStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.avatar",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.avatar-group",
+      "name": "Angular UAvatarGroup",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Projected identity group; overlap is CSS-only and there is no UAvatar import or child-management API.",
+      "surface": "No own inputs/outputs; ng-content wrapper, no public child collection. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/avatar-group. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. No matching Aura component registry entry; fixed local layout CSS is not a theme-token relationship. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: avatarGroupStyleModule.",
+      "files": [
+        "packages/ng/src/avatar-group/index.ts",
+        "packages/ng/src/avatar-group/avatar-group.ts",
+        "packages/ng/src/avatar-group/avatar-group-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UAvatarGroup", "@ultimate/ng/avatar-group#UAvatarGroup"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/avatar-group/index.ts",
+          "contains": "export { UAvatarGroup }"
+        },
+        {
+          "path": "packages/ng/src/avatar-group/avatar-group.ts",
+          "contains": "export class UAvatarGroup extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/avatar-group/avatar-group-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/ng/src/avatar-group/avatar-group-style.ts",
+          "contains": "avatarGroupStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.avatar-group",
+        "package.ultimate.ng-core.basecomponent",
+        "angular.avatar"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.badge",
+      "name": "Angular UBadge",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Status/count indicator with null-value dot and single-character circle styling.",
+      "surface": "badgeSize and deprecated size: small|large|xlarge|null; severity secondary|info|success|warn|danger|contrast|null; value string|number|null; badgeDisabled boolean false. No outputs or attribute directive exported. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/badge. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. CSS imports @ultimate/uix-styles/badge; local badgeStyleModule supplies css/classes. Theme identity badge matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: BadgeClassesParams, badgeStyleModule. BadgeClassesParams describes value/size/badgeSize/severity for local root classes.",
+      "files": [
+        "packages/ng/src/badge/index.ts",
+        "packages/ng/src/badge/badge.ts",
+        "packages/ng/src/badge/badge-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UBadge", "@ultimate/ng/badge#UBadge"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/badge/index.ts",
+          "contains": "export { UBadge }"
+        },
+        {
+          "path": "packages/ng/src/badge/badge.ts",
+          "contains": "export class UBadge extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/badge/badge-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    badge,"
+        },
+        {
+          "path": "packages/ng/src/badge/badge-style.ts",
+          "contains": "BadgeClassesParams"
+        },
+        {
+          "path": "packages/ng/src/badge/badge-style.ts",
+          "contains": "badgeStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.badge",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.uix-styles.badge",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.overlay-badge",
+      "name": "Angular UOverlayBadge",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Projects arbitrary content and positions a composed UBadge at its corner; this is not an overlay service.",
+      "surface": "value string|number|null; severity secondary|info|success|warn|danger|contrast|null; badgeSize small|large|xlarge|null; badgeDisabled boolean false; all forwarded to UBadge. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. No dedicated manifest subpath; root entry only. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity overlaybadge matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: overlayBadgeStyleModule.",
+      "files": [
+        "packages/ng/src/overlay-badge/index.ts",
+        "packages/ng/src/overlay-badge/overlay-badge.ts",
+        "packages/ng/src/overlay-badge/overlay-badge-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UOverlayBadge"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/overlay-badge/index.ts",
+          "contains": "export { UOverlayBadge }"
+        },
+        {
+          "path": "packages/ng/src/overlay-badge/overlay-badge.ts",
+          "contains": "export class UOverlayBadge extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/overlay-badge/overlay-badge-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "overlaybadge:"
+        },
+        {
+          "path": "packages/ng/src/overlay-badge/overlay-badge-style.ts",
+          "contains": "overlayBadgeStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.overlay-badge",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "angular.badge"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.chip",
+      "name": "Angular UChip",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Identity/item token with optional image/icon and disabled-aware removal; Enter/Backspace invoke removal, internal visible signal is not an input.",
+      "surface": "label/icon/image/alt/removeAriaLabel strings; disabled/removable boolean false; onRemove(MouseEvent), onImageError(Event). Projects default content. Removal glyph UTimesIcon is imported from ng-core. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/chip. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity chip matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: chipStyleModule.",
+      "files": [
+        "packages/ng/src/chip/index.ts",
+        "packages/ng/src/chip/chip.ts",
+        "packages/ng/src/chip/chip-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UChip", "@ultimate/ng/chip#UChip"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/chip/index.ts",
+          "contains": "export { UChip }"
+        },
+        {
+          "path": "packages/ng/src/chip/chip.ts",
+          "contains": "export class UChip extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/chip/chip-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    chip,"
+        },
+        {
+          "path": "packages/ng/src/chip/chip-style.ts",
+          "contains": "chipStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.chip",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng-core.icons"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.tag",
+      "name": "Angular UTag",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Non-form status/category label with projected content overriding value fallback.",
+      "surface": "severity success|secondary|info|warn|danger|contrast; value/icon strings; rounded boolean false; no outputs. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/tag. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity tag matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: tagStyleModule.",
+      "files": [
+        "packages/ng/src/tag/index.ts",
+        "packages/ng/src/tag/tag.ts",
+        "packages/ng/src/tag/tag-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UTag", "@ultimate/ng/tag#UTag"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/tag/index.ts",
+          "contains": "export { UTag }"
+        },
+        {
+          "path": "packages/ng/src/tag/tag.ts",
+          "contains": "export class UTag extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/tag/tag-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    tag,"
+        },
+        {
+          "path": "packages/ng/src/tag/tag-style.ts",
+          "contains": "tagStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.tag",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.toolbar",
+      "name": "Angular UToolbar",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Toolbar layout with default projected content and named start/center/end TemplateRef composition members.",
+      "surface": "ariaLabelledBy string input sets aria-labelledby; host role toolbar. Public startTemplate, centerTemplate, endTemplate?: TemplateRef<void> are ContentChild queries for #start/#center/#end; default content projects independently. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/toolbar. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity toolbar matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: toolbarStyleModule.",
+      "files": [
+        "packages/ng/src/toolbar/index.ts",
+        "packages/ng/src/toolbar/toolbar.ts",
+        "packages/ng/src/toolbar/toolbar-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UToolbar", "@ultimate/ng/toolbar#UToolbar"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/toolbar/index.ts",
+          "contains": "export { UToolbar }"
+        },
+        {
+          "path": "packages/ng/src/toolbar/toolbar.ts",
+          "contains": "export class UToolbar extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/toolbar/toolbar-style.ts",
+          "contains": "export const"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    toolbar,"
+        },
+        {
+          "path": "packages/ng/src/toolbar/toolbar-style.ts",
+          "contains": "toolbarStyleModule"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.toolbar",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style slots, source-only helpers and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded Angular suite aborted during bundle compilation before assertions.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{button,button-group,split-button,avatar,avatar-group,badge,overlay-badge,chip,tag,toolbar}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "4ad393323af126b83c46c40a53d34cdadf2070ef",
+          "limitations": "Node 24.15.0. Angular compiles broader tsconfig sources despite include filter. Missing workspace dependency artifacts prevent runtime proof; no product repairs attempted. No CI run observed.",
+          "output": "Application bundle generation failed. TS2307: Cannot find module '@ultimate/ng-core'; cascading TS2339 cx and TS4112 override diagnostics; exit 1."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/button/button.api.mdx",
+      "reason": "Authored documentation/example fixture for UButton; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/button/button.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/button/button.stories.ts",
+      "reason": "Authored documentation/example fixture for UButton; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/button-group/button-group.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/button-group/button-group.stories.ts",
+      "reason": "Authored documentation/example fixture for UButtonGroup; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/split-button/split-button.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/split-button/split-button.stories.ts",
+      "reason": "Authored documentation/example fixture for USplitButton; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/avatar/avatar.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/avatar/avatar.stories.ts",
+      "reason": "Authored documentation/example fixture for UAvatar; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/avatar-group/avatar-group.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/avatar-group/avatar-group.stories.ts",
+      "reason": "Authored documentation/example fixture for UAvatarGroup; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/badge/badge.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/badge/badge.stories.ts",
+      "reason": "Authored documentation/example fixture for UBadge; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/overlay-badge/overlay-badge.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/overlay-badge/overlay-badge.stories.ts",
+      "reason": "Authored documentation/example fixture for UOverlayBadge; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/chip/chip.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/chip/chip.stories.ts",
+      "reason": "Authored documentation/example fixture for UChip; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/tag/tag.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/tag/tag.stories.ts",
+      "reason": "Authored documentation/example fixture for UTag; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/toolbar/toolbar.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/toolbar/toolbar.stories.ts",
+      "reason": "Authored documentation/example fixture for UToolbar; not a separately exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "packages",
+      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "packages",
+      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
+    },
+    {
+      "id": "package.ultimate.ng-core.icons",
+      "batch": "packages",
+      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
+    },
+    {
+      "id": "package.ultimate.ng.menu",
+      "batch": "packages",
+      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
+    },
+    {
+      "id": "package.ultimate.ng.ripple",
+      "batch": "packages",
+      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "packages",
+      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
+    },
+    {
+      "id": "package.ultimate.uix-styles.badge",
+      "batch": "packages",
+      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
+    },
+    {
+      "id": "package.ultimate.uix-styles.button",
+      "batch": "packages",
+      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
+    }
+  ],
+  "ownership": {
+    "ticket": 107,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.button",
+      "record": "angular.button"
+    },
+    {
+      "id": "package.ultimate.ng.button-group",
+      "record": "angular.button-group"
+    },
+    {
+      "id": "package.ultimate.ng.split-button",
+      "record": "angular.split-button"
+    },
+    {
+      "id": "package.ultimate.ng.avatar",
+      "record": "angular.avatar"
+    },
+    {
+      "id": "package.ultimate.ng.avatar-group",
+      "record": "angular.avatar-group"
+    },
+    {
+      "id": "package.ultimate.ng.badge",
+      "record": "angular.badge"
+    },
+    {
+      "id": "package.ultimate.ng.overlay-badge",
+      "record": "angular.overlay-badge"
+    },
+    {
+      "id": "package.ultimate.ng.chip",
+      "record": "angular.chip"
+    },
+    {
+      "id": "package.ultimate.ng.tag",
+      "record": "angular.tag"
+    },
+    {
+      "id": "package.ultimate.ng.toolbar",
+      "record": "angular.toolbar"
+    }
+  ]
+}

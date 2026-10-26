@@ -145,6 +145,13 @@ export function inventory({ root, input }) {
         detail: "Expected exactly one record owner or reasoned disposition",
       });
   }
+  for (const disposition of input.dispositions)
+    if (!files.includes(disposition.path))
+      problems.push({
+        kind: "disposition",
+        subject: disposition.path,
+        detail: "Disposition is outside discovered scope or missing",
+      });
   for (const record of input.records) {
     if (record.availability === "public" && !record.exports.length)
       problems.push({
@@ -213,9 +220,44 @@ export function inventory({ root, input }) {
   const ids = new Set(input.records.map((r) => r.id));
   if (ids.size !== input.records.length)
     problems.push({ kind: "identity", subject: input.scope, detail: "Duplicate record ID" });
+  // Aliases resolve reconciled family identities without creating duplicate products.
+  const aliases = new Map();
+  const ownership = input.ownership ? JSON.parse(read(input.ownership.path)).ownership : [];
+  for (const alias of input.aliases || []) {
+    if (ids.has(alias.id) || aliases.has(alias.id) || !ids.has(alias.record))
+      problems.push({
+        kind: "identity",
+        subject: alias.id,
+        detail: "Alias must uniquely target an authored record",
+      });
+    if (
+      !input.ownership ||
+      !ownership.some((o) => o.id === alias.id && o.tickets?.includes(input.ownership.ticket))
+    )
+      problems.push({
+        kind: "ownership",
+        subject: alias.id,
+        detail: "Alias requires reconciled ownership by this ticket",
+      });
+    aliases.set(alias.id, alias.record);
+  }
+  const local = (id) => ids.has(id) || aliases.has(id);
+  for (const target of new Set([
+    ...input.pending.map((p) => p.id),
+    ...input.records.flatMap((r) => r.relationships),
+  ]))
+    if (
+      ownership.some((o) => o.id === target && o.tickets?.includes(input.ownership.ticket)) &&
+      !local(target)
+    )
+      problems.push({
+        kind: "ownership",
+        subject: target,
+        detail: "Same-ticket identity requires an authored record or explicit alias, not pending",
+      });
   for (const pending of input.pending)
     if (
-      ids.has(pending.id) ||
+      local(pending.id) ||
       pending.batch === input.scope ||
       !pending.batch ||
       !pending.reason?.trim()
@@ -228,7 +270,7 @@ export function inventory({ root, input }) {
   for (const record of input.records)
     for (const target of record.relationships) {
       if (
-        !ids.has(target) &&
+        !local(target) &&
         !input.pending.some((p) => p.id === target && p.batch !== input.scope && p.reason?.trim())
       )
         problems.push({
@@ -246,13 +288,13 @@ export function inventory({ root, input }) {
   const records = [...input.records].sort((a, b) => a.id.localeCompare(b.id));
   const views = {
     "index.md":
-      "# Ultimate inventory pilot\n\nScoped sample only; not platform completeness.\n\n" +
+      `# Ultimate inventory ${input.scope}\n\nScoped sample only; not platform completeness.\n\n` +
       records.map((r) => `- [${r.name}](${r.id}.md)`).join("\n") +
       "\n",
   };
   for (const record of records)
     views[`${record.id}.md`] =
-      `# ${record.name}\n\nID: ${record.id}\n\nFramework: ${record.framework}; availability: ${record.availability}\n\n## Authored interpretation\n\n${record.purpose}\n\n## Framework surface\n\n${record.surface}\n\n## Public exports\n\n${record.exports.join("\n") || "None; owned internal source."}\n\n## Owned source and evidence\n\n${record.files.join("\n")}\n\n\`\`\`text\n${record.evidence.map((e) => `${e.path}: ${e.contains}`).join("\n")}\n\`\`\`\n\n## Relationships\n\n${record.relationships.map((id) => `${id}${ids.has(id) ? "" : " (pending cross-batch)"}`).join("\n") || "None recorded."}\n\n## Verification\n\n\`\`\`text\n${JSON.stringify(record.claims, null, 2)}\n\`\`\`\n`;
+      `# ${record.name}\n\nID: ${record.id}\n\nFramework: ${record.framework}; availability: ${record.availability}\n\n## Authored interpretation\n\n${record.purpose}\n\n## Framework surface\n\n${record.surface}\n\n## Public exports\n\n${record.exports.join("\n") || "None; owned internal source."}\n\n## Owned source and evidence\n\n${record.files.join("\n")}\n\n\`\`\`text\n${record.evidence.map((e) => `${e.path}: ${e.contains}`).join("\n")}\n\`\`\`\n\n## Relationships\n\n${record.relationships.map((id) => `${id}${aliases.has(id) ? ` → [${aliases.get(id)}](${aliases.get(id)}.md) (reconciled family alias)` : ids.has(id) ? "" : " (pending cross-batch)"}`).join("\n") || "None recorded."}\n\n## Verification\n\n\`\`\`text\n${JSON.stringify(record.claims, null, 2)}\n\`\`\`\n`;
   views["validation.md"] =
     `# Scoped validation\n\nScope: ${input.scope}; source revision: ${input.revision}\n\nGlobal completeness: not asserted.\n\n${problems.length ? problems.map((p) => `${p.kind}: ${p.subject}: ${p.detail}`).join("\n") : "Scoped reconciliation passed."}\n\nPending references:\n${input.pending.map((p) => `${p.id}: ${p.batch}: ${p.reason}`).join("\n")}\n`;
   return {
