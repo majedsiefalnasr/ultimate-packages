@@ -1,0 +1,1 @@
+<script setup lang="ts">defineProps<{  value?: string;  disabled?: boolean;  position?: 'top' | 'bottom' | 'left' | 'right';}>();defineEmits<{  update:value: [value: string];}>();defineSlots<{  default: () => any;}>();</script><template>  <div class="u-tooltip" :data-position="position">    <slot />    <div class="u-tooltip-text">{{ value }}</div>  </div></template>

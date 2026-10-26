@@ -1,0 +1,1 @@
+export { UButtonComponent } from './button.component';

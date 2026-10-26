@@ -1,0 +1,1 @@
+export function classNames(...classes: (string | boolean | undefined)[]): string {  return classes.filter(Boolean).join(' ');}export function mergeProps(...objects: Record<string, any>[]): Record<string, any> {  return Object.assign({}, ...objects);}export type { ClassValue } from 'clsx';

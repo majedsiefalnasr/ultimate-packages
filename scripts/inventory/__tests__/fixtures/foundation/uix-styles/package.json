@@ -1,0 +1,11 @@
+{
+  "name": "@ultimate/uix-styles",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@ultimate/uix-utils": "^1.0.0"
+  }
+}

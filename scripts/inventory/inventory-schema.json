@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ultimate-packages.dev/schemas/inventory-schema.json",
+  "title": "Ultimate Inventory Schema",
+  "description": "Unified schema for Ultimate component and foundation inventory across Angular, React, Vue",
+  "type": "object",
+  "definitions": {
+    "componentStatus": {
+      "type": "string",
+      "enum": ["BUILT", "PARTIAL", "PLANNED", "NOT_NEEDED", "NEEDS_ARCHITECTURE_DECISION"]
+    },
+    "parityStatus": {
+      "type": "string",
+      "enum": ["FULL", "PARTIAL", "NONE"]
+    },
+    "migrationClassification": {
+      "type": "string",
+      "enum": ["ADAPT", "NOT_NEEDED", "NEEDS_ARCHITECTURE_DECISION"]
+    },
+    "migrationPhase": {
+      "type": "string",
+      "enum": ["Phase 2", "Phase C Batch 1", "Later Phase", "Not Applicable"]
+    },
+    "riskLevel": {
+      "type": "string",
+      "enum": ["Low", "Medium", "High"]
+    },
+    "matchingStatus": {
+      "type": "string",
+      "enum": ["MATCHED", "PARTIAL", "MISSING", "ARCHITECTURALLY_DIFFERENT", "NOT_NEEDED"]
+    },
+    "foundationStatus": {
+      "type": "string",
+      "enum": ["IMPLEMENTED", "PARTIAL", "PLANNED", "DEPRECATED"]
+    },
+    "framework": {
+      "type": "string",
+      "enum": ["ng", "react", "vue", "shared"]
+    },
+    "category": {
+      "type": "string",
+      "enum": ["Primitive", "Form", "Overlay", "Navigation", "Data", "Layout", "Feedback", "Misc", "Chart", "Utilities", "Foundation", "Directive"]
+    }
+  },
+  "properties": {
+    "inventoryMetadata": {
+      "type": "object",
+      "required": ["generatedAt", "generatorVersion", "sourceRoot", "framework"],
+      "properties": {
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "generatorVersion": { "type": "string" },
+        "sourceRoot": { "type": "string" },
+        "framework": { "$ref": "#/definitions/framework" },
+        "scanDurationMs": { "type": "integer" },
+        "totalComponentsScanned": { "type": "integer" }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "category", "status", "parity", "primeReference", "framework"],
+        "properties": {
+          "name": { "type": "string" },
+          "primeSourcePath": { "type": "string" },
+          "category": { "$ref": "#/definitions/category" },
+          "status": { "$ref": "#/definitions/componentStatus" },
+          "parity": { "$ref": "#/definitions/parityStatus" },
+          "primeReference": { "type": "string" },
+          "framework": { "$ref": "#/definitions/framework" },
+          "dependencies": { "type": "array", "items": { "type": "string" } },
+          "uixDependencies": { "type": "array", "items": { "type": "string" } },
+          "frameworkSpecificResponsibilities": { "type": "string" },
+          "styleDependencies": { "type": "array", "items": { "type": "string" } },
+          "accessibilityResponsibilities": { "type": "string" },
+          "migrationClassification": { "$ref": "#/definitions/migrationClassification" },
+          "migrationPhase": { "$ref": "#/definitions/migrationPhase" },
+          "risk": { "$ref": "#/definitions/riskLevel" },
+          "tests": { "type": "string" },
+          "accessibility": { "type": "string" },
+          "documentation": { "type": "string" },
+          "bundleImpact": { "type": "string" },
+          "notes": { "type": "string" },
+          "owner": { "type": "string" },
+          "angular": {
+            "type": "object",
+            "properties": {
+              "inputs": { "type": "array", "items": { "type": "string" } },
+              "outputs": { "type": "array", "items": { "type": "string" } },
+              "directives": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "react": {
+            "type": "object",
+            "properties": {
+              "props": { "type": "array", "items": { "type": "string" } },
+              "ref": { "type": "boolean" },
+              "hooks": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "vue": {
+            "type": "object",
+            "properties": {
+              "props": { "type": "array", "items": { "type": "string" } },
+              "emits": { "type": "array", "items": { "type": "string" } },
+              "slots": { "type": "array", "items": { "type": "string" } },
+              "composables": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "foundationModules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "package", "frameworks", "purpose", "status"],
+        "properties": {
+          "name": { "type": "string" },
+          "package": { "type": "string" },
+          "frameworks": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/framework" }
+          },
+          "purpose": { "type": "string" },
+          "exports": { "type": "array", "items": { "type": "string" } },
+          "dependencies": { "type": "array", "items": { "type": "string" } },
+          "tests": { "type": "string" },
+          "status": { "$ref": "#/definitions/foundationStatus" },
+          "consumedBy": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "matchingMatrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ultimateComponent", "framework", "primeReference", "status"],
+        "properties": {
+          "ultimateComponent": { "type": "string" },
+          "framework": { "$ref": "#/definitions/framework" },
+          "primeReference": { "type": "string" },
+          "status": { "$ref": "#/definitions/matchingStatus" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  },
+  "required": ["inventoryMetadata"],
+  "additionalProperties": false
+}
