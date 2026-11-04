@@ -1,0 +1,1233 @@
+{
+  "version": 1,
+  "scope": "vue-overlays-notifications",
+  "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/dialog",
+        "packages/vue/src/drawer",
+        "packages/vue/src/popover",
+        "packages/vue/src/confirm-dialog",
+        "packages/vue/src/confirm-popup",
+        "packages/vue/src/dynamic-dialog",
+        "packages/vue/src/tooltip",
+        "packages/vue/src/toast",
+        "packages/vue/src/message",
+        "packages/vue/src/inline-message",
+        "packages/vue/src/block-ui"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/dialog/index.ts"
+        },
+        {
+          "subpath": "./dialog",
+          "source": "packages/vue/src/dialog/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/drawer/index.ts"
+        },
+        {
+          "subpath": "./drawer",
+          "source": "packages/vue/src/drawer/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/popover/index.ts"
+        },
+        {
+          "subpath": "./popover",
+          "source": "packages/vue/src/popover/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/confirm-dialog/index.ts"
+        },
+        {
+          "subpath": "./confirm-dialog",
+          "source": "packages/vue/src/confirm-dialog/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/confirm-popup/index.ts"
+        },
+        {
+          "subpath": "./confirm-popup",
+          "source": "packages/vue/src/confirm-popup/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/dynamic-dialog/index.ts"
+        },
+        {
+          "subpath": "./dynamic-dialog",
+          "source": "packages/vue/src/dynamic-dialog/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/tooltip/index.ts"
+        },
+        {
+          "subpath": "./tooltip",
+          "source": "packages/vue/src/tooltip/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/toast/index.ts"
+        },
+        {
+          "subpath": "./toast",
+          "source": "packages/vue/src/toast/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/message/index.ts"
+        },
+        {
+          "subpath": "./message",
+          "source": "packages/vue/src/message/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/inline-message/index.ts"
+        },
+        {
+          "subpath": "./inline-message",
+          "source": "packages/vue/src/inline-message/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/block-ui/index.ts"
+        },
+        {
+          "subpath": "./block-ui",
+          "source": "packages/vue/src/block-ui/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/dialog/dialog.api.mdx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/dialog/dialog.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/dialog/dialog.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/drawer/drawer.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/drawer/drawer.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/popover/popover.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/popover/popover.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/confirm-dialog/confirm-dialog.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/confirm-dialog/confirm-dialog.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/confirm-popup/confirm-popup.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/confirm-popup/confirm-popup.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/dynamic-dialog/dynamic-dialog.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/dynamic-dialog/dynamic-dialog.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/tooltip/tooltip.api.mdx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/tooltip/tooltip.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/tooltip/tooltip.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/toast/toast.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/toast/toast.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/message/message.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/message/message.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/inline-message/inline-message.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/inline-message/inline-message.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/block-ui/block-ui.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/block-ui/block-ui.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.overlay",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.escape",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.focus-trap",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.zindex",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.scroll-lock",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.motion",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.icons",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.service",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.directive",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Detailed inventory remains owned by [#153](https://github.com/majedsiefalnasr/ultimate-packages/issues/153). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-styles.dialog",
+      "batch": "ticket-146",
+      "reason": "Detailed inventory remains owned by [#146](https://github.com/majedsiefalnasr/ultimate-packages/issues/146). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-styles.tooltip",
+      "batch": "ticket-146",
+      "reason": "Detailed inventory remains owned by [#146](https://github.com/majedsiefalnasr/ultimate-packages/issues/146). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "ticket-143",
+      "reason": "Detailed inventory remains owned by [#143](https://github.com/majedsiefalnasr/ultimate-packages/issues/143). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.escape",
+      "batch": "ticket-144",
+      "reason": "Detailed inventory remains owned by [#144](https://github.com/majedsiefalnasr/ultimate-packages/issues/144). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.uuid",
+      "batch": "ticket-144",
+      "reason": "Detailed inventory remains owned by [#144](https://github.com/majedsiefalnasr/ultimate-packages/issues/144). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue.ripple",
+      "batch": "ticket-142",
+      "reason": "Detailed inventory remains owned by [#142](https://github.com/majedsiefalnasr/ultimate-packages/issues/142). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.dialog",
+      "record": "vue.dialog"
+    },
+    {
+      "id": "package.ultimate.vue.drawer",
+      "record": "vue.drawer"
+    },
+    {
+      "id": "package.ultimate.vue.popover",
+      "record": "vue.popover"
+    },
+    {
+      "id": "package.ultimate.vue.confirm-dialog",
+      "record": "vue.confirm-dialog"
+    },
+    {
+      "id": "package.ultimate.vue.confirm-popup",
+      "record": "vue.confirm-popup"
+    },
+    {
+      "id": "package.ultimate.vue.dynamic-dialog",
+      "record": "vue.dynamic-dialog"
+    },
+    {
+      "id": "package.ultimate.vue.tooltip",
+      "record": "vue.tooltip"
+    },
+    {
+      "id": "package.ultimate.vue.toast",
+      "record": "vue.toast"
+    },
+    {
+      "id": "package.ultimate.vue.message",
+      "record": "vue.message"
+    },
+    {
+      "id": "package.ultimate.vue.inline-message",
+      "record": "vue.inline-message"
+    },
+    {
+      "id": "package.ultimate.vue.block-ui",
+      "record": "vue.block-ui"
+    }
+  ],
+  "ownership": {
+    "ticket": 124,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "records": [
+    {
+      "id": "vue.dialog",
+      "name": "Vue UDialog",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Controlled modal dialog with header, footer, close button, Escape and mask dismissal, optional scroll lock, z-index stacking, enter and leave motion hooks and focus restore, rendered into a portal.",
+      "surface": "UDialog is an Options API component (the only family component with a setup() function, used for useId) rendered through UPortal with the appendTo prop forwarded to it. Barrel exports: UDialog and createBaseDialog; dialogStyleModule and DialogClassesParams are exported from dialog-style.ts but not re-exported. componentName dialog; Aura registry key dialog. Declared emits: update:visible, show, hide and after-hide, declared at Dialog.vue line 117 and emitted at lines 189 (show), 211 (hide) and 220 (after-hide); close() only emits update:visible false, so visibility is controlled by the parent. Props and defaults: visible = false, header = null, footer = null, modal = true, closable = true, closeOnEscape = true, dismissableMask = false, blockScroll = false, baseZIndex = 0, autoZIndex = true, role = \"dialog\", position = \"center\", appendTo = \"body\", ariaCloseLabel = \"Close\". There is no draggable or maximizable support (no draggable or maximizable) in the component. The focus trap directive is disabled when modal is false; scroll lock is registered on enter and unregistered on after-leave and unmount when modal or blockScroll is set. The z-index entry (Z_INDEX_KEYS.modal) is set on enter when autoZIndex and cleared on after-leave and on unmount. Escape is registered through createGlobalEscapeKeyMixin with the DIALOG priority and a display-order mixin (group dialog) shares the Escape registry with drawer, popover and confirm-popup. Mask dismissal needs dismissableMask and modal and requires mouse-down and the event target to be the mask. aria-labelledby is set only when header is truthy (the title span receives the id ${dialogId}_header built from useId). Focus search order footer, header, content, then the close button on after-enter; focus returns to the previously focused element on leave. onBeforeLeave is an empty handler. The footer renders when the footer prop or the footer slot is present. The metadata record packages/component-metadata/src/records/dialog.ts cites lines 118, 177, 199 and 208 of Dialog.vue, which differ from the current lines 117, 189, 211 and 220 (the record cites lines 118, 177, 199 and 208); its event facts list update:visible, show and hide and omit after-hide, although the source declares and emits after-hide. dialog-style.ts is a typed StyleModule that combines the uix-styles dialog stylesheet with a local mask rule; the class u-overlay-mask (applied when modal) and u-dialog-close-button have no CSS rule in either stylesheet. dialog.api.mdx is a generated API page and is excluded as supporting documentation. Foundation imports: vue-core base, overlay, escape, focus-trap, zindex, scroll-lock, motion and icons; uix-utils escape and dom; uix-styles dialog; ripple.",
+      "files": [
+        "packages/vue/src/dialog/BaseDialog.ts",
+        "packages/vue/src/dialog/Dialog.vue",
+        "packages/vue/src/dialog/dialog-style.ts",
+        "packages/vue/src/dialog/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UDialog",
+        "@ultimate/vue/dialog#UDialog",
+        "@ultimate/vue#createBaseDialog",
+        "@ultimate/vue/dialog#createBaseDialog"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/dialog/index.ts",
+          "contains": "export { default as UDialog }"
+        },
+        {
+          "path": "packages/vue/src/dialog/Dialog.vue",
+          "contains": "emits: [\"update:visible\", \"show\", \"hide\", \"after-hide\"]"
+        },
+        {
+          "path": "packages/vue/src/dialog/Dialog.vue",
+          "contains": "v-focustrap=\"{ disabled: !modal }\""
+        },
+        {
+          "path": "packages/vue/src/dialog/Dialog.vue",
+          "contains": "this.dismissableMask &&"
+        },
+        {
+          "path": "packages/vue/src/dialog/dialog-style.ts",
+          "contains": "export const dialogStyleModule: StyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./dialog\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./dialog\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.dialog",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.vue-core.focus-trap",
+        "package.ultimate.vue-core.zindex",
+        "package.ultimate.vue-core.scroll-lock",
+        "package.ultimate.vue-core.motion",
+        "package.ultimate.vue-core.icons",
+        "package.ultimate.themes.presets",
+        "package.ultimate.component-metadata.records",
+        "package.ultimate.uix-utils.escape",
+        "package.ultimate.uix-utils.dom",
+        "package.ultimate.uix-styles.dialog",
+        "package.ultimate.vue.ripple"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.drawer",
+      "name": "Vue UDrawer",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Controlled edge-anchored panel with header, close button, Escape and mask dismissal and a focus trap, rendered into a portal without leave motion.",
+      "surface": "UDrawer is an Options API component rendered through UPortal with the appendTo prop forwarded to it. Barrel exports: UDrawer and createBaseDrawer; drawerStyleModule and DrawerClassesParams are exported from drawer-style.ts but not re-exported. componentName drawer; Aura registry key drawer. Declared emits: update:visible, show and hide; show and hide are emitted only by the visible watcher, so mount with visible true does not emit show. Props and defaults: visible = false, header = null, position = \"left\", modal = true, dismissible = true, closable = true, closeOnEscape = true, appendTo = \"body\", ariaCloseLabel = \"Close\". modal is read only by the mask-click dismissal condition: the mask is always rendered and the focus trap is always enabled whatever modal is. Escape reaches close() through two paths: the global Escape mixin (SIDEBAR priority, display-order group sidebar, sharing the Escape registry) and a root keydown handler that checks event.code. The root has role complementary and no aria-labelledby or id on the title; the footer renders only for the footer slot (there is no footer prop). There is no scroll lock, no motion hook and no leave transition: hiding removes the mask immediately. The ZIndex entry is not reverted on hide: z-index is set (Z_INDEX_KEYS.modal) after show and cleared only on unmount, when the mask ref is still present. drawer-style.ts is an untyped style module; u-drawer-close-button has no CSS rule. This family has no @ultimate/uix-styles entry and keeps its css locally.",
+      "files": [
+        "packages/vue/src/drawer/BaseDrawer.ts",
+        "packages/vue/src/drawer/Drawer.vue",
+        "packages/vue/src/drawer/drawer-style.ts",
+        "packages/vue/src/drawer/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UDrawer",
+        "@ultimate/vue/drawer#UDrawer",
+        "@ultimate/vue#createBaseDrawer",
+        "@ultimate/vue/drawer#createBaseDrawer"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/drawer/index.ts",
+          "contains": "export { default as UDrawer }"
+        },
+        {
+          "path": "packages/vue/src/drawer/Drawer.vue",
+          "contains": "emits: [\"update:visible\", \"show\", \"hide\"]"
+        },
+        {
+          "path": "packages/vue/src/drawer/Drawer.vue",
+          "contains": "role=\"complementary\""
+        },
+        {
+          "path": "packages/vue/src/drawer/drawer-style.ts",
+          "contains": "export const drawerStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./drawer\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./drawer\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.drawer",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.vue-core.focus-trap",
+        "package.ultimate.vue-core.zindex",
+        "package.ultimate.vue-core.icons",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-utils.escape",
+        "package.ultimate.vue.ripple"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.popover",
+      "name": "Vue UPopover",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Imperatively opened floating panel positioned under a trigger element, dismissed by outside click, resize or Escape, rendered into a portal.",
+      "surface": "UPopover is an Options API component rendered through UPortal with the appendTo prop forwarded to it. Barrel exports: only UPopover; createBasePopover is exported from BasePopover.ts but is not re-exported by the family barrel (so it is also absent from the package root and the ./popover subpath), and popoverStyleModule is exported from popover-style.ts but not re-exported. componentName popover; Aura registry key popover. Declared emits: show and hide. There is no visible prop: visibility is internal state (visible and render) driven by the imperative methods toggle, show, hide and align. Component options also declare target, selfClick, documentClickListener and windowResizeListener fields. Props and defaults: dismissable = true, appendTo = \"body\". The document click and window resize listeners are bound in show and removed in hide and on unmount. dismissable false returns before selfClick is reset, and dismissable gates only the document click handler: resize always hides. Escape hides regardless of dismissable (OVERLAY_PANEL priority, display-order group overlay-panel, sharing the Escape registry). The panel has role dialog and aria-modal bound to visible. Each align call pushes a new ZIndex entry (Z_INDEX_KEYS.overlay) because align runs after show and again from updated() while visible; the ZIndex entry is not reverted on hide and the unmount clear receives a null content ref once hidden. popover-style.ts is an untyped style module. This family has no @ultimate/uix-styles entry and keeps its css locally.",
+      "files": [
+        "packages/vue/src/popover/BasePopover.ts",
+        "packages/vue/src/popover/Popover.vue",
+        "packages/vue/src/popover/index.ts",
+        "packages/vue/src/popover/popover-style.ts"
+      ],
+      "exports": ["@ultimate/vue#UPopover", "@ultimate/vue/popover#UPopover"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/popover/index.ts",
+          "contains": "export { default as UPopover }"
+        },
+        {
+          "path": "packages/vue/src/popover/Popover.vue",
+          "contains": "emits: [\"show\", \"hide\"]"
+        },
+        {
+          "path": "packages/vue/src/popover/Popover.vue",
+          "contains": "if (!this.dismissable) return;"
+        },
+        {
+          "path": "packages/vue/src/popover/BasePopover.ts",
+          "contains": "export function createBasePopover"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./popover\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./popover\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.popover",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.vue-core.zindex",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-utils.escape"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.confirm-dialog",
+      "name": "Vue UConfirmDialog",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Confirmation dialog that listens on the confirmation event bus and renders accept and reject buttons inside a UDialog.",
+      "surface": "UConfirmDialog is an Options API component that renders a UDialog (imported from ../dialog/Dialog.vue) with role alertdialog; class is passed to UDialog whose template root is UPortal. Barrel exports: only UConfirmDialog; createBaseConfirmDialog is exported from BaseConfirmDialog.ts but is not re-exported, and confirmDialogStyleModule is not re-exported. componentName confirmdialog differs from the family directory confirm-dialog; Aura registry key confirmdialog. Prop and default: group = undefined. No emits are declared. The component subscribes to confirmationEventBus confirm and close events in mounted and unsubscribes both in beforeUnmount; a confirm event is accepted when options.key equal to the group prop (undefined matches undefined). header, modal and closeOnEscape come from the confirmation options (modal and closeOnEscape default to true). Labels default to \"No\" and \"Yes\" and each button is hidden when rejectVisible or acceptVisible is false. Dismissal through Escape, mask or the close button hides without calling reject; only the reject button calls the reject callback. dismissableMask, appendTo, blockScroll, closable and footer are not forwarded to the dialog. The icon element applies cx('icon') only when the confirmation has an icon. confirm-dialog-style.ts is an untyped style module; u-confirmdialog has no rule in its stylesheet. This family has no @ultimate/uix-styles entry and keeps its css locally.",
+      "files": [
+        "packages/vue/src/confirm-dialog/BaseConfirmDialog.ts",
+        "packages/vue/src/confirm-dialog/ConfirmDialog.vue",
+        "packages/vue/src/confirm-dialog/confirm-dialog-style.ts",
+        "packages/vue/src/confirm-dialog/index.ts"
+      ],
+      "exports": ["@ultimate/vue#UConfirmDialog", "@ultimate/vue/confirm-dialog#UConfirmDialog"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/confirm-dialog/index.ts",
+          "contains": "export { default as UConfirmDialog }"
+        },
+        {
+          "path": "packages/vue/src/confirm-dialog/ConfirmDialog.vue",
+          "contains": "role=\"alertdialog\""
+        },
+        {
+          "path": "packages/vue/src/confirm-dialog/ConfirmDialog.vue",
+          "contains": "options && options.key === this.group"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./confirm-dialog\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./confirm-dialog\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.confirm-dialog",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.service",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue.dialog"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.confirm-popup",
+      "name": "Vue UConfirmPopup",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Confirmation popup that listens on the confirmation event bus and renders a panel anchored to the confirmation target with accept and reject buttons.",
+      "surface": "UConfirmPopup is an Options API component rendered through UPortal (v-if confirmation, no appendTo). Barrel exports: only UConfirmPopup; createBaseConfirmPopup and confirmPopupStyleModule are not re-exported. componentName confirmpopup differs from the family directory confirm-popup; Aura registry key confirmpopup. Prop and default: group = undefined. No emits are declared. The component subscribes to confirmationEventBus confirm and close events in mounted and unsubscribes both in beforeUnmount; a confirm event is accepted when options.key equal to the group prop. Escape calls reject (OVERLAY_PANEL priority, display-order group overlay-panel, sharing the Escape registry). The outside click and resize hide without calling reject; the document click and window resize listeners are bound after the confirmation is positioned and removed in hide and on unmount. Accept and reject return focus to the target. Panel role alertdialog without aria-modal or labelling. The ZIndex entry is not reverted on hide: the overlay z-index is set in align and cleared only on unmount, when the content ref is null once hidden. confirm-popup-style.ts is an untyped style module; u-confirmpopup-message has no CSS rule. This family has no @ultimate/uix-styles entry and keeps its css locally.",
+      "files": [
+        "packages/vue/src/confirm-popup/BaseConfirmPopup.ts",
+        "packages/vue/src/confirm-popup/ConfirmPopup.vue",
+        "packages/vue/src/confirm-popup/confirm-popup-style.ts",
+        "packages/vue/src/confirm-popup/index.ts"
+      ],
+      "exports": ["@ultimate/vue#UConfirmPopup", "@ultimate/vue/confirm-popup#UConfirmPopup"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/confirm-popup/index.ts",
+          "contains": "export { default as UConfirmPopup }"
+        },
+        {
+          "path": "packages/vue/src/confirm-popup/ConfirmPopup.vue",
+          "contains": "role=\"alertdialog\""
+        },
+        {
+          "path": "packages/vue/src/confirm-popup/ConfirmPopup.vue",
+          "contains": "options && options.key === this.group"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./confirm-popup\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./confirm-popup\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.confirm-popup",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.vue-core.zindex",
+        "package.ultimate.vue-core.service",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-utils.escape"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.dynamic-dialog",
+      "name": "Vue UDynamicDialog",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Host component that listens on the dialog event bus and renders one UDialog per opened dialog reference with the requested content component.",
+      "surface": "UDynamicDialog is an Options API host component with no props and no emits. Barrel exports: only UDynamicDialog; createBaseDynamicDialog and dynamicDialogStyleModule are not re-exported. componentName dynamic-dialog. No Aura registry key exists for dynamic-dialog and no preset file exists for it. It subscribes to dialogEventBus open and close events in mounted and unsubscribes in beforeUnmount, keeps instances in data and filters by toRaw identity on close. It renders one UDialog per instance with visible fixed to true; only header, modal, closeOnEscape and inputValues are forwarded from instance.options (footer, position, dismissableMask, closable, blockScroll, appendTo and data are not). A dialog visibility change calls instance.close(). dynamic-dialog-style.ts is an untyped style module with empty css; cx('root') is never called and u-dynamic-dialog has no CSS rule. This family has no @ultimate/uix-styles entry and keeps its css locally.",
+      "files": [
+        "packages/vue/src/dynamic-dialog/BaseDynamicDialog.ts",
+        "packages/vue/src/dynamic-dialog/DynamicDialog.vue",
+        "packages/vue/src/dynamic-dialog/dynamic-dialog-style.ts",
+        "packages/vue/src/dynamic-dialog/index.ts"
+      ],
+      "exports": ["@ultimate/vue#UDynamicDialog", "@ultimate/vue/dynamic-dialog#UDynamicDialog"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/dynamic-dialog/index.ts",
+          "contains": "export { default as UDynamicDialog }"
+        },
+        {
+          "path": "packages/vue/src/dynamic-dialog/DynamicDialog.vue",
+          "contains": ":visible=\"true\""
+        },
+        {
+          "path": "packages/vue/src/dynamic-dialog/DynamicDialog.vue",
+          "contains": "dialogEventBus"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./dynamic-dialog\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./dynamic-dialog\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.dynamic-dialog",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.service",
+        "package.ultimate.vue.dialog"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.tooltip",
+      "name": "Vue v-tooltip directive",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Directive that shows a body-appended tooltip panel for the host element on hover or focus with optional delays, HTML content and auto-hide control.",
+      "surface": "v-tooltip is a directive (no component, no Base factory, no plugin install): tooltipDirective is created with createDirective and has mounted, updated and unmounted hooks; users register it with app.directive or a local directives option. Barrel exports: tooltipDirective and type TooltipBindingValue; tooltipStyleModule is exported from tooltip-style.ts but not re-exported. Aura registry key tooltip. The binding is a string shorthand or an object with value, disabled, escape, class, fitContent, id, showDelay, hideDelay and autoHide; defaults: escape = true, showDelay = 0, hideDelay = 0, autoHide = true, id from uuid(\"u_tooltip\"), fitContent applied unless false. Listeners mouseenter, mouseleave, focus and blur are attached with addEventListener on the host and removed on unbind. updated unbinds and rebinds, which removes an open panel. onEnter does not clear showTimer (it clears only hideTimer) and showTooltip does not check for an existing panel, so repeated entries can append duplicate panels. autoHide false leaves the panel until unbind. escape false assigns innerHTML; otherwise textContent is used. The panel is appended to document.body with role tooltip and an aria-describedby token on the host, positioned from the host rect plus scroll offsets plus 4, with Z_INDEX_KEYS.tooltip set and cleared on hide. No resize or scroll handling and no Escape handling. The directive never reads tooltipStyleModule.classes: u-tooltip-arrow and the position classes are never applied (only u-tooltip, the custom class and u-tooltip-text). The metadata record packages/component-metadata/src/records/tooltip.ts cites tooltip.ts:150-161 for the hooks, whereas the hooks block starts at line 167; its Vue events: [] matches the absence of emits in a directive. tooltip-style.ts is a typed StyleModule over the uix-styles tooltip stylesheet.",
+      "files": [
+        "packages/vue/src/tooltip/index.ts",
+        "packages/vue/src/tooltip/tooltip-style.ts",
+        "packages/vue/src/tooltip/tooltip.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#tooltipDirective",
+        "@ultimate/vue/tooltip#tooltipDirective",
+        "@ultimate/vue#TooltipBindingValue",
+        "@ultimate/vue/tooltip#TooltipBindingValue"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/tooltip/index.ts",
+          "contains": "export { tooltipDirective }"
+        },
+        {
+          "path": "packages/vue/src/tooltip/tooltip.ts",
+          "contains": "export const tooltipDirective"
+        },
+        {
+          "path": "packages/vue/src/tooltip/tooltip.ts",
+          "contains": "autoHide === false"
+        },
+        {
+          "path": "packages/vue/src/tooltip/tooltip-style.ts",
+          "contains": "export const tooltipStyleModule: StyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./tooltip\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./tooltip\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.tooltip",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.zindex",
+        "package.ultimate.vue-core.directive",
+        "package.ultimate.themes.presets",
+        "package.ultimate.component-metadata.records",
+        "package.ultimate.uix-utils.dom",
+        "package.ultimate.uix-utils.uuid",
+        "package.ultimate.uix-styles.tooltip"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.toast",
+      "name": "Vue UToast",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Event-bus driven stack of timed toast messages grouped by an optional group key and positioned by a style class.",
+      "surface": "UToast is an Options API component with inheritAttrs false with no $attrs binding. Barrel exports: UToast and createBaseToast; toastStyleModule is not re-exported. componentName toast; Aura registry key toast. Props and defaults: group = null, position = \"top-right\", life = 3000. No emits are declared. It has no UPortal and no useZIndex: the stylesheet fixes position: fixed and z-index 1200. It subscribes to toastEventBus add, remove and remove-all in mounted and unsubscribes and clears timers on unmount. A module-level counter nextId is incremented for every added message and never reset. A message is accepted when (message.group ?? null) equals the group prop; each non-sticky message gets a timer using entry.life ?? this.life. remove(message) with the original options object removes nothing, because removal needs an id key that only the stored entry carries. Each message has role alert with aria-live assertive; the close button aria-label is the literal \"Close\" and there is no label prop. Root and message class resolvers return joined strings. toast-style.ts is an untyped style module. This family has no @ultimate/uix-styles entry and keeps its css locally.",
+      "files": [
+        "packages/vue/src/toast/BaseToast.ts",
+        "packages/vue/src/toast/Toast.vue",
+        "packages/vue/src/toast/index.ts",
+        "packages/vue/src/toast/toast-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UToast",
+        "@ultimate/vue/toast#UToast",
+        "@ultimate/vue#createBaseToast",
+        "@ultimate/vue/toast#createBaseToast"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/toast/index.ts",
+          "contains": "export { default as UToast }"
+        },
+        {
+          "path": "packages/vue/src/toast/Toast.vue",
+          "contains": "nextId"
+        },
+        {
+          "path": "packages/vue/src/toast/Toast.vue",
+          "contains": "entry.life ?? this.life"
+        },
+        {
+          "path": "packages/vue/src/toast/Toast.vue",
+          "contains": "aria-live=\"assertive\""
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./toast\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./toast\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.toast",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.service",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.message",
+      "name": "Vue UMessage",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Inline severity message with optional close button, optional automatic dismissal and default severity icons.",
+      "surface": "UMessage is an Options API component with inheritAttrs false with no $attrs binding. Barrel exports: UMessage and createBaseMessage; messageStyleModule is not re-exported. componentName message; Aura registry key message. Declared emits: close with { originalEvent }, emitted only by the close button. Props and defaults: severity = \"info\", closable = false, life = null, icon = undefined, closeIcon = undefined, closeAriaLabel = \"Close\". life is read once on mount (no watcher); timer dismissal does not emit close, it only hides. Default icon classes map info, success, warn and error; secondary and contrast severities have no default icon. role alert with aria-live polite. message-style.ts is an untyped style module. This family has no @ultimate/uix-styles entry and keeps its css locally.",
+      "files": [
+        "packages/vue/src/message/BaseMessage.ts",
+        "packages/vue/src/message/Message.vue",
+        "packages/vue/src/message/index.ts",
+        "packages/vue/src/message/message-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UMessage",
+        "@ultimate/vue/message#UMessage",
+        "@ultimate/vue#createBaseMessage",
+        "@ultimate/vue/message#createBaseMessage"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/message/index.ts",
+          "contains": "export { default as UMessage }"
+        },
+        {
+          "path": "packages/vue/src/message/Message.vue",
+          "contains": "emits: [\"close\"]"
+        },
+        {
+          "path": "packages/vue/src/message/Message.vue",
+          "contains": "aria-live=\"polite\""
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./message\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./message\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.message",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.inline-message",
+      "name": "Vue UInlineMessage",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Compact inline severity message with a default severity icon and a default slot.",
+      "surface": "UInlineMessage is an Options API component with inheritAttrs false with no $attrs binding. Barrel exports: UInlineMessage and createBaseInlineMessage; inlineMessageStyleModule is not re-exported. componentName inlinemessage differs from the family directory inline-message; Aura registry key inlinemessage. Props and defaults: severity = \"error\", icon = undefined. No emits, timers or close button. The default icon map is identical to UMessage; secondary and contrast severities have no default icon. role alert with aria-live polite. inline-message-style.ts is an untyped style module. This family has no @ultimate/uix-styles entry and keeps its css locally.",
+      "files": [
+        "packages/vue/src/inline-message/BaseInlineMessage.ts",
+        "packages/vue/src/inline-message/InlineMessage.vue",
+        "packages/vue/src/inline-message/index.ts",
+        "packages/vue/src/inline-message/inline-message-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UInlineMessage",
+        "@ultimate/vue/inline-message#UInlineMessage",
+        "@ultimate/vue#createBaseInlineMessage",
+        "@ultimate/vue/inline-message#createBaseInlineMessage"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/inline-message/index.ts",
+          "contains": "export { default as UInlineMessage }"
+        },
+        {
+          "path": "packages/vue/src/inline-message/InlineMessage.vue",
+          "contains": "aria-live=\"polite\""
+        },
+        {
+          "path": "packages/vue/src/inline-message/InlineMessage.vue",
+          "contains": "inheritAttrs: false"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./inline-message\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./inline-message\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.inline-message",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.block-ui",
+      "name": "Vue UBlockUI",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Wrapper that overlays its content with a blocking mask, optionally fixed to the document with scroll lock and z-index stacking.",
+      "surface": "UBlockUI is an Options API component with inheritAttrs false with no $attrs binding. Barrel exports: UBlockUI and createBaseBlockUI; blockUiStyleModule and BlockUIMaskParams are exported from block-ui-style.ts but not re-exported. componentName blockui differs from the family directory block-ui; Aura registry key blockui. Declared emits: blocked and unblocked. Props and defaults: blocked = false, fullScreen = false, baseZIndex = 0, autoZIndex = true. A module-level counter instanceCount builds the scroll lock id per instance. blocked at mount runs block() and emits blocked; the blocked watcher calls block() and unblock(). block() registers the scroll lock when fullScreen and sets the z-index after nextTick when autoZIndex, the z-index key is the string literal \"modal\"; unblock() clears the z-index while the mask is still rendered and clearZIndex is not gated by autoZIndex. unmount while blocked emits no unblocked. The root has aria-busy bound to blocked; the mask has no role or aria-hidden. The fullScreen mask is positioned fixed by the document rule; the stylesheet gives the mask position fixed, then absolute in a later rule, then fixed again only for the document variant. block-ui-style.ts is an untyped style module. This family has no @ultimate/uix-styles entry and keeps its css locally.",
+      "files": [
+        "packages/vue/src/block-ui/BaseBlockUI.ts",
+        "packages/vue/src/block-ui/BlockUI.vue",
+        "packages/vue/src/block-ui/block-ui-style.ts",
+        "packages/vue/src/block-ui/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UBlockUI",
+        "@ultimate/vue/block-ui#UBlockUI",
+        "@ultimate/vue#createBaseBlockUI",
+        "@ultimate/vue/block-ui#createBaseBlockUI"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/block-ui/index.ts",
+          "contains": "export { default as UBlockUI }"
+        },
+        {
+          "path": "packages/vue/src/block-ui/BlockUI.vue",
+          "contains": "emits: [\"blocked\", \"unblocked\"]"
+        },
+        {
+          "path": "packages/vue/src/block-ui/BlockUI.vue",
+          "contains": "instanceCount"
+        },
+        {
+          "path": "packages/vue/src/block-ui/BlockUI.vue",
+          "contains": ":aria-busy=\"blocked\""
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./block-ui\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./block-ui\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.block-ui",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.zindex",
+        "package.ultimate.vue-core.scroll-lock",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/dynamic-dialog/ src/tooltip/ src/toast/ src/message/ src/inline-message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "ce6cb351653cbbb19cc0b0246942082dd0aff73d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}
