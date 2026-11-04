@@ -71,7 +71,7 @@ The root `test:scripts` glob does not include inventory tests.
   arrow keys change the value; clicking the active star clears it.
 - slider and knob remove document listeners only on mouseup (no unmount cleanup),
   have no aria-label, and have no touch handling; slider drag callbacks capture
-  the render-time value and slider `toPercent` evaluates 0 / 0 when max equals min.
+  the render-time value and slider `toPercent` evaluates 0 / 0 (NaN) when max equals min and the value equals min.
 - knob `onChange` receives a bare number, PageUp and PageDown change by a fixed
   10, the root class ignores disabled and readOnly, and no change-event type is exported.
 
