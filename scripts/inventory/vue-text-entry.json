@@ -1,0 +1,1060 @@
+{
+  "version": 1,
+  "scope": "vue-text-entry",
+  "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/input-text",
+        "packages/vue/src/textarea",
+        "packages/vue/src/input-mask",
+        "packages/vue/src/input-otp",
+        "packages/vue/src/password",
+        "packages/vue/src/input-chips",
+        "packages/vue/src/float-label",
+        "packages/vue/src/ifta-label",
+        "packages/vue/src/icon-field",
+        "packages/vue/src/input-group"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/input-text/index.ts"
+        },
+        {
+          "subpath": "./input-text",
+          "source": "packages/vue/src/input-text/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/textarea/index.ts"
+        },
+        {
+          "subpath": "./textarea",
+          "source": "packages/vue/src/textarea/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/input-mask/index.ts"
+        },
+        {
+          "subpath": "./input-mask",
+          "source": "packages/vue/src/input-mask/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/input-otp/index.ts"
+        },
+        {
+          "subpath": "./input-otp",
+          "source": "packages/vue/src/input-otp/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/password/index.ts"
+        },
+        {
+          "subpath": "./password",
+          "source": "packages/vue/src/password/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/input-chips/index.ts"
+        },
+        {
+          "subpath": "./input-chips",
+          "source": "packages/vue/src/input-chips/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/float-label/index.ts"
+        },
+        {
+          "subpath": "./float-label",
+          "source": "packages/vue/src/float-label/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/ifta-label/index.ts"
+        },
+        {
+          "subpath": "./ifta-label",
+          "source": "packages/vue/src/ifta-label/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/icon-field/index.ts"
+        },
+        {
+          "subpath": "./icon-field",
+          "source": "packages/vue/src/icon-field/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/input-group/index.ts"
+        },
+        {
+          "subpath": "./input-group",
+          "source": "packages/vue/src/input-group/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "vue.input-text",
+      "name": "Vue UInputText",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Single native text input with v-model, invalid/variant/fluid state classes and focus/blur emits.",
+      "surface": "UInputText (Options API SFC InputText.vue, name \"UInputText\") and createBaseInputText (BaseInputText.ts) plus inputTextStyleModule and InputTextClassesParams (input-text-style.ts). Base factory chain: createBaseX extends createBaseInput (vue-core base-input: size, fluid, variant props, resolvedVariant, resolvedFluid) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue); because createBaseInput takes no arguments, the factory shadows cx() and mounted() locally over its own style module. The inherited size prop is never read by the template. Declared props: disabled, invalid, name, placeholder (plus inherited size, fluid, variant, modelValue, defaultValue). Emits focus and blur (native event); update:modelValue and value-change come from writeValue on every native input event. Template: one input type=\"text\" bound to dValue with aria-invalid set from invalid; no slots. styleParams passes invalid, fluid (resolvedFluid) and filled (resolvedVariant === \"filled\"); the root resolver renders u-input-text with p-invalid, u-input-text-fluid and p-variant-filled, so state classes mix u- and p- prefixes. Style module registered as inputtext.",
+      "files": [
+        "packages/vue/src/input-text/BaseInputText.ts",
+        "packages/vue/src/input-text/InputText.vue",
+        "packages/vue/src/input-text/index.ts",
+        "packages/vue/src/input-text/input-text-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UInputText",
+        "@ultimate/vue/input-text#UInputText",
+        "@ultimate/vue#createBaseInputText",
+        "@ultimate/vue/input-text#createBaseInputText"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/input-text/InputText.vue",
+          "contains": "name: \"UInputText\""
+        },
+        {
+          "path": "packages/vue/src/input-text/InputText.vue",
+          "contains": "filled: this.resolvedVariant === \"filled\""
+        },
+        {
+          "path": "packages/vue/src/input-text/input-text-style.ts",
+          "contains": "export const inputTextStyleModule"
+        },
+        {
+          "path": "packages/vue/src/input-text/input-text-style.ts",
+          "contains": "\"p-variant-filled\""
+        },
+        {
+          "path": "packages/vue/src/input-text/BaseInputText.ts",
+          "contains": "export function createBaseInputText"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./input-text\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./input-text\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.input-text",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.textarea",
+      "name": "Vue UTextarea",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Native textarea with v-model, invalid/variant/fluid state classes and optional auto-resize.",
+      "surface": "UTextarea (Textarea.vue, name \"UTextarea\") and createBaseTextarea (BaseTextarea.ts) plus textareaStyleModule and TextareaClassesParams (textarea-style.ts). Base factory chain: createBaseX extends createBaseInput (vue-core base-input: size, fluid, variant props, resolvedVariant, resolvedFluid) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue); because createBaseInput takes no arguments, the factory shadows cx() and mounted() locally over its own style module. The inherited size prop is never read by the template. Declared props: autoResize, disabled, invalid, name, placeholder. Emits focus and blur; v-model through writeValue on input; no slots. Template: one textarea with a template ref and aria-invalid from invalid. autoResize: a ResizeObserver is created in mounted only when autoResize is true at mount time and ResizeObserver exists; updated() and onInput also call resize(), which returns when the element has no offsetParent, then shrinks or grows style.height from scrollHeight; beforeUnmount disconnects the observer. styleParams passes invalid, fluid, variantFilled and autoResize but never filled, so TextareaClassesParams.filled and the p-filled class are never applied by the component (the filled state is not rendered). Style module registered as textarea.",
+      "files": [
+        "packages/vue/src/textarea/BaseTextarea.ts",
+        "packages/vue/src/textarea/Textarea.vue",
+        "packages/vue/src/textarea/index.ts",
+        "packages/vue/src/textarea/textarea-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UTextarea",
+        "@ultimate/vue/textarea#UTextarea",
+        "@ultimate/vue#createBaseTextarea",
+        "@ultimate/vue/textarea#createBaseTextarea"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/textarea/Textarea.vue",
+          "contains": "name: \"UTextarea\""
+        },
+        {
+          "path": "packages/vue/src/textarea/Textarea.vue",
+          "contains": "new ResizeObserver"
+        },
+        {
+          "path": "packages/vue/src/textarea/Textarea.vue",
+          "contains": "!el.offsetParent"
+        },
+        {
+          "path": "packages/vue/src/textarea/textarea-style.ts",
+          "contains": "export const textareaStyleModule"
+        },
+        {
+          "path": "packages/vue/src/textarea/textarea-style.ts",
+          "contains": "\"p-filled\": Boolean(filled)"
+        },
+        {
+          "path": "packages/vue/src/textarea/BaseTextarea.ts",
+          "contains": "export function createBaseTextarea"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./textarea\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./textarea\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.textarea",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.input-mask",
+      "name": "Vue UInputMask",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Masked text input with token mask, slot character, auto-clear and unmask options.",
+      "surface": "UInputMask (InputMask.vue, name \"UInputMask\") and createBaseInputMask (BaseInputMask.ts) plus inputMaskStyleModule (input-mask-style.ts). Base factory chain: createBaseX extends createBaseInput (vue-core base-input: size, fluid, variant props, resolvedVariant, resolvedFluid) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue); because createBaseInput takes no arguments, the factory shadows cx() and mounted() locally over its own style module. The inherited size prop is never read by the template. Declared props: slotChar (\"_\"), mask, placeholder, autoClear (true), unmask (false), readonly, disabled, invalid, name. Emits focus, blur, keydown, complete ({ originalEvent, value }, only when the mask is completed and not blank) and paste; v-model through writeValue (unmask writes raw characters instead of the formatted buffer). Mask tokens: 9 digit, a letter, * alphanumeric, ? marks the remainder optional, anything else is a literal. The template is a plain input type=\"text\" whose class is cx('root') with no params, so it renders only u-input-mask (display: inline-block); although the style header describes rendering UInputText, the template does not apply the u-input-text class, so no input-text token CSS reaches it. The mask watcher calls initMask only and does not re-sync the buffer from the model value. initMask assigns this.partialPosition, which is not declared in data(). onPaste returns early without emitting paste when readonly, disabled or no mask is set; otherwise it calls preventDefault and emits paste. Style module registered as input-mask. The Aura preset registry has no inputmask key.",
+      "files": [
+        "packages/vue/src/input-mask/BaseInputMask.ts",
+        "packages/vue/src/input-mask/InputMask.vue",
+        "packages/vue/src/input-mask/index.ts",
+        "packages/vue/src/input-mask/input-mask-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UInputMask",
+        "@ultimate/vue/input-mask#UInputMask",
+        "@ultimate/vue#createBaseInputMask",
+        "@ultimate/vue/input-mask#createBaseInputMask"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/input-mask/InputMask.vue",
+          "contains": "name: \"UInputMask\""
+        },
+        {
+          "path": "packages/vue/src/input-mask/InputMask.vue",
+          "contains": "this.partialPosition = partialPosition;"
+        },
+        {
+          "path": "packages/vue/src/input-mask/InputMask.vue",
+          "contains": "if (this.readonly || this.disabled || !this.mask) return;"
+        },
+        {
+          "path": "packages/vue/src/input-mask/InputMask.vue",
+          "contains": ":class=\"cx('root')\""
+        },
+        {
+          "path": "packages/vue/src/input-mask/input-mask-style.ts",
+          "contains": "export const inputMaskStyleModule"
+        },
+        {
+          "path": "packages/vue/src/input-mask/BaseInputMask.ts",
+          "contains": "export function createBaseInputMask"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./input-mask\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./input-mask\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.input-mask",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.input-otp",
+      "name": "Vue UInputOtp",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "One-time-code entry rendering one native input per character with paste and arrow-key navigation.",
+      "surface": "UInputOtp (InputOtp.vue, name \"UInputOtp\") and createBaseInputOtp (BaseInputOtp.ts) plus inputOtpStyleModule (input-otp-style.ts). Base factory chain: createBaseX extends createBaseInput (vue-core base-input: size, fluid, variant props, resolvedVariant, resolvedFluid) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue); because createBaseInput takes no arguments, the factory shadows cx() and mounted() locally over its own style module. The inherited size prop is never read by the template. Declared props: readonly, tabindex, length (4), mask, integerOnly, disabled, invalid, name. Emits change ({ originalEvent, value }), focus and blur; keydown is not emitted. v-model writes the joined token string once per edit through writeValue. Template: a root div containing length native inputs (type password when mask, inputmode numeric when integerOnly) each carrying name and aria-invalid; no per-input aria-label is rendered. Typing moves focus to the next segment; Arrow keys and Backspace on an empty segment navigate; the keydown filter for integerOnly uses /^[0-9]$/ while handlePaste uses !isNaN(Number(pastedCode)), a looser check. onClick selects through an untracked setTimeout of 1 ms. Segment class u-input-otp-input only; the u-input-text class is not applied. Style module registered as inputotp.",
+      "files": [
+        "packages/vue/src/input-otp/BaseInputOtp.ts",
+        "packages/vue/src/input-otp/InputOtp.vue",
+        "packages/vue/src/input-otp/index.ts",
+        "packages/vue/src/input-otp/input-otp-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UInputOtp",
+        "@ultimate/vue/input-otp#UInputOtp",
+        "@ultimate/vue#createBaseInputOtp",
+        "@ultimate/vue/input-otp#createBaseInputOtp"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/input-otp/InputOtp.vue",
+          "contains": "name: \"UInputOtp\""
+        },
+        {
+          "path": "packages/vue/src/input-otp/InputOtp.vue",
+          "contains": "/^[0-9]$/.test(event.key)"
+        },
+        {
+          "path": "packages/vue/src/input-otp/InputOtp.vue",
+          "contains": "!isNaN(Number(pastedCode))"
+        },
+        {
+          "path": "packages/vue/src/input-otp/InputOtp.vue",
+          "contains": "setTimeout(() => event.target.select(), 1)"
+        },
+        {
+          "path": "packages/vue/src/input-otp/input-otp-style.ts",
+          "contains": "export const inputOtpStyleModule"
+        },
+        {
+          "path": "packages/vue/src/input-otp/BaseInputOtp.ts",
+          "contains": "export function createBaseInputOtp"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./input-otp\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./input-otp\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.input-otp",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.password",
+      "name": "Vue UPassword",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Password input with strength feedback overlay and optional visibility toggle.",
+      "surface": "UPassword (Password.vue, name \"UPassword\") and createBasePassword (BasePassword.ts) plus passwordStyleModule and PasswordClassesParams (password-style.ts). Base factory chain: createBaseX extends createBaseInput (vue-core base-input: size, fluid, variant props, resolvedVariant, resolvedFluid) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue); because createBaseInput takes no arguments, the factory shadows cx() and mounted() locally over its own style module. The inherited size prop is never read by the template. Declared props: feedback (true), toggleMask, promptLabel, weakLabel, mediumLabel, strongLabel, mediumRegex, strongRegex, placeholder, disabled, inputId, ariaLabel, ariaLabelledby, appendTo (\"body\"). It declares no invalid or name prop and the template renders no aria-invalid. Emits change (the native event, not a { originalEvent, value } object), focus and blur; v-model through writeValue. Template: root div (cx root with filled, fluid, disabled, so p-filled is applied), input, optional toggle svg icons with role=\"button\" and aria-label but only an @click handler (no tabindex or key handler), an overlay with role=\"dialog\" rendered through Portal (UPortal from vue-core overlay) when feedback is on and the overlay is visible, and an always-rendered u-hidden-accessible aria-live span. Strength: strongRegex 3, mediumRegex 2, otherwise 1; Escape is detected on keyup via event.code. The clearIcon class is defined in the style module but no template uses it. The root also emits u-component. Style module registered as password.",
+      "files": [
+        "packages/vue/src/password/BasePassword.ts",
+        "packages/vue/src/password/Password.vue",
+        "packages/vue/src/password/index.ts",
+        "packages/vue/src/password/password-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UPassword",
+        "@ultimate/vue/password#UPassword",
+        "@ultimate/vue#createBasePassword",
+        "@ultimate/vue/password#createBasePassword"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/password/Password.vue",
+          "contains": "name: \"UPassword\""
+        },
+        {
+          "path": "packages/vue/src/password/Password.vue",
+          "contains": "role=\"button\""
+        },
+        {
+          "path": "packages/vue/src/password/Password.vue",
+          "contains": "event.code === \"Escape\""
+        },
+        {
+          "path": "packages/vue/src/password/Password.vue",
+          "contains": "this.$emit(\"change\", event);"
+        },
+        {
+          "path": "packages/vue/src/password/password-style.ts",
+          "contains": "export const passwordStyleModule"
+        },
+        {
+          "path": "packages/vue/src/password/password-style.ts",
+          "contains": "clearIcon:"
+        },
+        {
+          "path": "packages/vue/src/password/BasePassword.ts",
+          "contains": "export function createBasePassword"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./password\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./password\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.password",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue-core.overlay"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.input-chips",
+      "name": "Vue UInputChips",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Chip list input that turns typed or pasted text into array entries.",
+      "surface": "UInputChips (InputChips.vue, name \"UInputChips\") and createBaseInputChips (BaseInputChips.ts) plus inputChipsStyleModule (input-chips-style.ts). Base chain: createBaseInputChips extends createBaseComponent directly (not createBaseInput), so there is no dValue, writeValue or value-change; modelValue (Array) and update:modelValue are implemented manually in the SFC. Declared props: modelValue, max, separator (typed String or Object but used as a string), addOnBlur (default null), allowDuplicate (true), placeholder, invalid, disabled, inputId, ariaLabelledby, ariaLabel. inheritAttrs is false and the template has no $attrs binding, so fallthrough attributes are dropped. Emits update:modelValue, add, remove, focus, blur. The add event carries { originalEvent, value } where value is the full new array, and it is emitted from Enter, the separator key, paste and blur-add (when addOnBlur is true), unlike the React inventory; remove carries the removed item. Template: ul role=\"listbox\" with li role=\"option\" chips, an inline remove button with aria-label, and a text input li disabled when disabled or maxed out; no chip sub-component is used. Paste splits on the separator using non-global replace for the escape sequences and does not enforce max (Enter and the separator key do). onContainerBlur sets focusedIndex to -1 whereas other paths use null. styleParams passes filled but the root resolver only reads disabled, invalid and focused. Style module registered as inputchips.",
+      "files": [
+        "packages/vue/src/input-chips/BaseInputChips.ts",
+        "packages/vue/src/input-chips/InputChips.vue",
+        "packages/vue/src/input-chips/index.ts",
+        "packages/vue/src/input-chips/input-chips-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UInputChips",
+        "@ultimate/vue/input-chips#UInputChips",
+        "@ultimate/vue#createBaseInputChips",
+        "@ultimate/vue/input-chips#createBaseInputChips"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/input-chips/InputChips.vue",
+          "contains": "name: \"UInputChips\""
+        },
+        {
+          "path": "packages/vue/src/input-chips/InputChips.vue",
+          "contains": "inheritAttrs: false"
+        },
+        {
+          "path": "packages/vue/src/input-chips/InputChips.vue",
+          "contains": "this.$emit(\"add\", { originalEvent: event, value });"
+        },
+        {
+          "path": "packages/vue/src/input-chips/InputChips.vue",
+          "contains": "this.focusedIndex = -1;"
+        },
+        {
+          "path": "packages/vue/src/input-chips/InputChips.vue",
+          "contains": ".replace(\"\\\\n\", \"\\n\")"
+        },
+        {
+          "path": "packages/vue/src/input-chips/input-chips-style.ts",
+          "contains": "export const inputChipsStyleModule"
+        },
+        {
+          "path": "packages/vue/src/input-chips/BaseInputChips.ts",
+          "contains": "extends: createBaseComponent({"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./input-chips\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./input-chips\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.input-chips",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.float-label",
+      "name": "Vue UFloatLabel",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Label wrapper that floats a slotted label by CSS :has selectors.",
+      "surface": "UFloatLabel (FloatLabel.vue, name \"UFloatLabel\") and createBaseFloatLabel (BaseFloatLabel.ts) plus floatLabelStyleModule (float-label-style.ts). Base chain: createBaseComponent directly, componentName floatlabel, no v-model. Declared prop: variant (String, default \"over\"; in, over and on are styled but the value is not validated). No emits. Template: a root span rendering the default slot, class cx('root', { variant }). The float behavior is pure CSS :has() with no JavaScript focus or value tracking. The filled and invalid selectors target input.u-filled, textarea.u-filled, .u-inputwrapper-focus, .u-inputwrapper-filled and .u-invalid, but UInputText and UTextarea render p-invalid, p-variant-filled and p-filled, and no scoped template renders u-inputwrapper, so those selectors do not match those inputs (focus, placeholder and autofill selectors do not depend on classes; UInputChips root renders u-invalid). Style module registered as floatlabel.",
+      "files": [
+        "packages/vue/src/float-label/BaseFloatLabel.ts",
+        "packages/vue/src/float-label/FloatLabel.vue",
+        "packages/vue/src/float-label/float-label-style.ts",
+        "packages/vue/src/float-label/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UFloatLabel",
+        "@ultimate/vue/float-label#UFloatLabel",
+        "@ultimate/vue#createBaseFloatLabel",
+        "@ultimate/vue/float-label#createBaseFloatLabel"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/float-label/FloatLabel.vue",
+          "contains": "name: \"UFloatLabel\""
+        },
+        {
+          "path": "packages/vue/src/float-label/BaseFloatLabel.ts",
+          "contains": "variant: { type: String, default: \"over\" }"
+        },
+        {
+          "path": "packages/vue/src/float-label/float-label-style.ts",
+          "contains": "export const floatLabelStyleModule"
+        },
+        {
+          "path": "packages/vue/src/float-label/float-label-style.ts",
+          "contains": ".u-float-label:has(input.u-filled) label"
+        },
+        {
+          "path": "packages/vue/src/float-label/BaseFloatLabel.ts",
+          "contains": "export function createBaseFloatLabel"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./float-label\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./float-label\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.float-label",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.ifta-label",
+      "name": "Vue UIftaLabel",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Label wrapper positioning a slotted label above the input by CSS.",
+      "surface": "UIftaLabel (IftaLabel.vue, name \"UIftaLabel\") and createBaseIftaLabel (BaseIftaLabel.ts) plus iftaLabelStyleModule (ifta-label-style.ts). Base chain: createBaseComponent directly, componentName iftalabel; no props, no emits, no v-model. Template: a root span rendering the default slot. Behavior is pure CSS :has(); the invalid selector .u-ifta-label:has(.u-invalid) label does not match UInputText or UTextarea, which render p-invalid. Padding rules target .u-input-text, .u-textarea and other select classes. Style module registered as iftalabel.",
+      "files": [
+        "packages/vue/src/ifta-label/BaseIftaLabel.ts",
+        "packages/vue/src/ifta-label/IftaLabel.vue",
+        "packages/vue/src/ifta-label/ifta-label-style.ts",
+        "packages/vue/src/ifta-label/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UIftaLabel",
+        "@ultimate/vue/ifta-label#UIftaLabel",
+        "@ultimate/vue#createBaseIftaLabel",
+        "@ultimate/vue/ifta-label#createBaseIftaLabel"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/ifta-label/IftaLabel.vue",
+          "contains": "name: \"UIftaLabel\""
+        },
+        {
+          "path": "packages/vue/src/ifta-label/ifta-label-style.ts",
+          "contains": "export const iftaLabelStyleModule"
+        },
+        {
+          "path": "packages/vue/src/ifta-label/ifta-label-style.ts",
+          "contains": ".u-ifta-label:has(.u-invalid) label"
+        },
+        {
+          "path": "packages/vue/src/ifta-label/BaseIftaLabel.ts",
+          "contains": "export function createBaseIftaLabel"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./ifta-label\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./ifta-label\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.ifta-label",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.icon-field",
+      "name": "Vue UIconField and UInputIcon",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Icon-adornment wrapper pair positioned by CSS around a slotted input.",
+      "surface": "UIconField (IconField.vue) and UInputIcon (InputIcon.vue) with createBaseIconField (BaseIconField.ts) and createBaseInputIcon (BaseInputIcon.ts), plus iconFieldStyleModule and inputIconStyleModule (icon-field-style.ts). Base chain: createBaseComponent directly (componentName iconfield and input-icon); both declare no props and no emits, and there is no iconPosition prop. Template: UIconField is a root div rendering the default slot; UInputIcon is a root span with aria-hidden=\"true\" rendering the default slot. Leading or trailing placement is resolved by .u-input-icon:first-child and :last-child CSS against DOM order, and the padding rules target only .u-input-text. inputIconStyleModule has an empty css string; the shared CSS lives in iconFieldStyleModule. The Aura registry key for this family is iconfield; there is no inputicon key.",
+      "files": [
+        "packages/vue/src/icon-field/BaseIconField.ts",
+        "packages/vue/src/icon-field/BaseInputIcon.ts",
+        "packages/vue/src/icon-field/IconField.vue",
+        "packages/vue/src/icon-field/InputIcon.vue",
+        "packages/vue/src/icon-field/icon-field-style.ts",
+        "packages/vue/src/icon-field/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UIconField",
+        "@ultimate/vue/icon-field#UIconField",
+        "@ultimate/vue#createBaseIconField",
+        "@ultimate/vue/icon-field#createBaseIconField",
+        "@ultimate/vue#UInputIcon",
+        "@ultimate/vue/icon-field#UInputIcon",
+        "@ultimate/vue#createBaseInputIcon",
+        "@ultimate/vue/icon-field#createBaseInputIcon"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/icon-field/IconField.vue",
+          "contains": "name: \"UIconField\""
+        },
+        {
+          "path": "packages/vue/src/icon-field/InputIcon.vue",
+          "contains": "aria-hidden=\"true\""
+        },
+        {
+          "path": "packages/vue/src/icon-field/icon-field-style.ts",
+          "contains": "export const iconFieldStyleModule"
+        },
+        {
+          "path": "packages/vue/src/icon-field/icon-field-style.ts",
+          "contains": "export const inputIconStyleModule"
+        },
+        {
+          "path": "packages/vue/src/icon-field/BaseIconField.ts",
+          "contains": "export function createBaseIconField"
+        },
+        {
+          "path": "packages/vue/src/icon-field/BaseInputIcon.ts",
+          "contains": "export function createBaseInputIcon"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./icon-field\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./icon-field\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.icon-field",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.input-group",
+      "name": "Vue UInputGroup and UInputGroupAddon",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Layout wrapper pair joining inputs and addons into one bordered group by CSS.",
+      "surface": "UInputGroup (InputGroup.vue) and UInputGroupAddon (InputGroupAddon.vue) with createBaseInputGroup (BaseInputGroup.ts) and createBaseInputGroupAddon (BaseInputGroupAddon.ts), plus inputGroupStyleModule and inputGroupAddonStyleModule (input-group-style.ts). Base chain: createBaseComponent directly (componentName inputgroup and input-group-addon); both declare no props and no emits. Template: each is a root div rendering the default slot. inputGroupAddonStyleModule has an empty css string; the shared CSS is in inputGroupStyleModule and depends on u-component, u-inputwrapper and u-button classes: among the scoped sources only the password root emits u-component, no scoped template renders u-inputwrapper or u-button, so the radius and border rules keyed on them do not apply to UInputText, UTextarea, UInputMask or UInputOtp. The Aura registry key for this family is inputgroup; there is no inputgroupaddon key.",
+      "files": [
+        "packages/vue/src/input-group/BaseInputGroup.ts",
+        "packages/vue/src/input-group/BaseInputGroupAddon.ts",
+        "packages/vue/src/input-group/InputGroup.vue",
+        "packages/vue/src/input-group/InputGroupAddon.vue",
+        "packages/vue/src/input-group/index.ts",
+        "packages/vue/src/input-group/input-group-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UInputGroup",
+        "@ultimate/vue/input-group#UInputGroup",
+        "@ultimate/vue#createBaseInputGroup",
+        "@ultimate/vue/input-group#createBaseInputGroup",
+        "@ultimate/vue#UInputGroupAddon",
+        "@ultimate/vue/input-group#UInputGroupAddon",
+        "@ultimate/vue#createBaseInputGroupAddon",
+        "@ultimate/vue/input-group#createBaseInputGroupAddon"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/input-group/InputGroup.vue",
+          "contains": "name: \"UInputGroup\""
+        },
+        {
+          "path": "packages/vue/src/input-group/InputGroupAddon.vue",
+          "contains": "name: \"UInputGroupAddon\""
+        },
+        {
+          "path": "packages/vue/src/input-group/input-group-style.ts",
+          "contains": "export const inputGroupStyleModule"
+        },
+        {
+          "path": "packages/vue/src/input-group/input-group-style.ts",
+          "contains": "export const inputGroupAddonStyleModule"
+        },
+        {
+          "path": "packages/vue/src/input-group/BaseInputGroup.ts",
+          "contains": "export function createBaseInputGroup"
+        },
+        {
+          "path": "packages/vue/src/input-group/BaseInputGroupAddon.ts",
+          "contains": "export function createBaseInputGroupAddon"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./input-group\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./input-group\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.input-group",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-text/ src/textarea/ src/input-mask/ src/input-otp/ src/password/ src/input-chips/ src/float-label/ src/ifta-label/ src/icon-field/ src/input-group/",
+          "outcome": "not-run",
+          "revision": "849ec35cc57b459cf1a6fb24f83b24d4beff559a",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/input-text/input-text.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-text/input-text.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/textarea/textarea.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/textarea/textarea.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-mask/input-mask.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-mask/input-mask.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-otp/input-otp.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-otp/input-otp.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/password/password.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/password/password.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-chips/input-chips.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-chips/input-chips.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/float-label/float-label.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/float-label/float-label.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/ifta-label/ifta-label.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/ifta-label/ifta-label.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/icon-field/icon-field.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/icon-field/icon-field.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-group/input-group.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-group/input-group.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.overlay",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.input-text",
+      "record": "vue.input-text"
+    },
+    {
+      "id": "package.ultimate.vue.textarea",
+      "record": "vue.textarea"
+    },
+    {
+      "id": "package.ultimate.vue.input-mask",
+      "record": "vue.input-mask"
+    },
+    {
+      "id": "package.ultimate.vue.input-otp",
+      "record": "vue.input-otp"
+    },
+    {
+      "id": "package.ultimate.vue.password",
+      "record": "vue.password"
+    },
+    {
+      "id": "package.ultimate.vue.input-chips",
+      "record": "vue.input-chips"
+    },
+    {
+      "id": "package.ultimate.vue.float-label",
+      "record": "vue.float-label"
+    },
+    {
+      "id": "package.ultimate.vue.ifta-label",
+      "record": "vue.ifta-label"
+    },
+    {
+      "id": "package.ultimate.vue.icon-field",
+      "record": "vue.icon-field"
+    },
+    {
+      "id": "package.ultimate.vue.input-group",
+      "record": "vue.input-group"
+    }
+  ],
+  "ownership": {
+    "ticket": 112,
+    "path": "scripts/inventory/package-coverage.json"
+  }
+}
