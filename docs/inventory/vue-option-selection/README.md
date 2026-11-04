@@ -33,7 +33,7 @@ family binds `aria-controls`; autocomplete's debounce timer is not cleared by hi
 blur, its overlay class is unused, and Enter on an empty suggestion list writes
 `undefined`; cascade-select applies no fluid class, keys its items by `node.key`
 (the others key by index), renders `role="tree"` at every depth, and its group click
-logic prevents groups two or more levels deep from expanding visibly; the option
+logic prevents nested groups (any group below the root level) from expanding visibly; the option
 click handlers of all five families never read the component `disabled` prop.
 
 Regenerate and validate from the checkout root under Node 24.15.0:
