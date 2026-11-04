@@ -1,0 +1,651 @@
+{
+  "version": 1,
+  "scope": "angular-numeric-date-color-file",
+  "revision": "73cc77945ad2e4213695c2d140166822dc1ad12c",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/color-picker",
+        "packages/ng/src/date-picker",
+        "packages/ng/src/file-upload",
+        "packages/ng/src/input-number"
+      ],
+      "entries": [
+        {
+          "subpath": "./input-number",
+          "source": "packages/ng/src/input-number/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/date-picker/index.ts"
+        },
+        {
+          "subpath": "./date-picker",
+          "source": "packages/ng/src/date-picker/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/color-picker/index.ts"
+        },
+        {
+          "subpath": "./color-picker",
+          "source": "packages/ng/src/color-picker/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/file-upload/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/input-number/input-number.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/input-number/input-number.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/date-picker/date-picker.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/date-picker/date-picker.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/color-picker/color-picker.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/color-picker/color-picker.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/file-upload/file-upload.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/file-upload/file-upload.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.ng-core.base-editable-holder",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.base-input",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.model-holder",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.overlay",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng.fluid",
+      "batch": "ticket-140",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng.progress-bar",
+      "batch": "ticket-140",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-styles.inputnumber",
+      "batch": "ticket-146",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 119,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.input-number",
+      "record": "angular.input-number"
+    },
+    {
+      "id": "package.ultimate.ng.date-picker",
+      "record": "angular.date-picker"
+    },
+    {
+      "id": "package.ultimate.ng.color-picker",
+      "record": "angular.color-picker"
+    },
+    {
+      "id": "package.ultimate.ng.file-upload",
+      "record": "angular.file-upload"
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.input-number",
+      "name": "Angular UInputNumber",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Single numeric text field: a native text input with decimal input mode that parses each input event with Number(), clamps the result to min and max, and reports it to the form control.",
+      "surface": "Extends UBaseInput (which extends UBaseEditableHolder and UModelHolder) so it inherits the disabled signal input, $disabled, modelValue/$filled and the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState; provides NG_VALUE_ACCESSOR via useExisting with multi and overrides writeControlValue. Selector u-input-number; componentName inputnumber. Own members: the invalid signal input (booleanAttribute) and a public value signal (number|null). Inherited UBaseInput inputs read by the template: min, max, step, minlength, maxlength, pattern and inputSize (bound to the size attribute); variant and size are not read anywhere in this component's source; fluid is consumed only through hasFluid in classesParams. No outputs: the component declares no output() and has no blur, focus, keydown, paste or spinner-button handler; the only listener is (input). Template: one native input type=text with inputmode=decimal and role=spinbutton, [value]=value() ?? '', aria-valuemin/aria-valuemax/aria-valuenow bound to min()/max()/value(), min and max attributes, step attribute defaulting to 1 (step is never used for stepping), maxlength, minlength, pattern, size and a disabled attribute from $disabled(). There is no inputId, ariaLabel or placeholder input, so the template binds no aria-label or label association to the input. onInput: an empty string becomes null, any other text becomes Number(raw) with no guard, so non-numeric text yields NaN; clampToRange returns early for null and its comparisons are false for NaN, so NaN is stored unclamped and rendered back as NaN. It then calls writeModelValue, onModelChange and onModelTouched on every input event (touched is not tied to blur). writeControlValue stores Number(value) only for truthy values; falsy values (0, empty string, null, undefined) are stored without conversion. It then runs clampToRange, calls setModelValue with the stored value and also calls onModelChange on every CVA write, so a write can push the clamped value back to the form control. clampToRange (private) clamps to min, else to max, and is not re-run when min or max change. Locale or currency formatting (Intl), paste handling, caret logic, prefix/suffix and stepper buttons are not implemented in the source; they appear only in a doc comment as excluded. Host class cx('root', {invalid, fluid}); inner input gets cx('pcInputText') = u-inputnumber-input. The local style module imports the CSS from @ultimate/uix-styles/inputnumber (subpath exported by packages/uix-styles/package.json; defines .u-inputnumber, .u-inputnumber-fluid and .u-inputnumber-input among others). Owned source-only declarations: InputNumberClassesParams and inputNumberStyleModule (root 'u-inputnumber u-component' with p-invalid and u-inputnumber-fluid). Consumer availability: exported as UInputNumber from the @ultimate/ng/input-number manifest subpath only; it is not re-exported by the root barrel packages/ng/src/index.ts, which has no input-number line. Overlay: none; the component does not use UOverlay. Aura registry key is inputnumber (folder and selector use the hyphenated name); aura-token-wiring.spec.ts lists no approved unresolved variables for UInputNumber. That spec was not executed. There is no component-metadata record for this family (packages/component-metadata/src/records holds none for it). Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; those declared inputs are not read anywhere in ng-core, so they are not evidence that unstyled suppresses registration. Standalone, OnPush, ViewEncapsulation.None. Style helper exports are source-only internals, not barrel exports or independent rendered components. The spec and stories files are excluded.",
+      "files": [
+        "packages/ng/src/input-number/index.ts",
+        "packages/ng/src/input-number/input-number.ts",
+        "packages/ng/src/input-number/input-number-style.ts"
+      ],
+      "exports": ["@ultimate/ng/input-number#UInputNumber"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/input-number/index.ts",
+          "contains": "export { UInputNumber }"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number.ts",
+          "contains": "export class UInputNumber extends UBaseInput"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number.ts",
+          "contains": "role=\"spinbutton\""
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number.ts",
+          "contains": "providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UInputNumber, multi: true }],"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number.ts",
+          "contains": "const next = raw === \"\" ? null : Number(raw);"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number.ts",
+          "contains": "this.value.set(value ? Number(value) : (value as number | null));"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number.ts",
+          "contains": "    this.onModelChange(this.value());\n  }\n\n  protected onInput"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number.ts",
+          "contains": "    this.onModelTouched();"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number.ts",
+          "contains": "if (min != null && current < min) {"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number-style.ts",
+          "contains": "import { style as inputNumberStyle } from \"@ultimate/uix-styles/inputnumber\";"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number-style.ts",
+          "contains": "export interface InputNumberClassesParams"
+        },
+        {
+          "path": "packages/ng/src/input-number/input-number-style.ts",
+          "contains": "export const inputNumberStyleModule"
+        },
+        {
+          "path": "packages/uix-styles/package.json",
+          "contains": "\"./inputnumber\": {"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./input-number\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    inputnumber: inputNumber,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.input-number",
+        "package.ultimate.ng-core.base-input",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng.fluid",
+        "package.ultimate.uix-styles.inputnumber",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the numeric, date, color and file input families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-number,date-picker,color-picker,file-upload}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "73cc77945ad2e4213695c2d140166822dc1ad12c",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.date-picker",
+      "name": "Angular UDatePicker",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Single-date picker: a readonly text input opens an overlay calendar for one month at a time; selecting a day writes a Date to the form control.",
+      "surface": "Extends UBaseInput (which extends UBaseEditableHolder and UModelHolder) so it inherits the disabled signal input, $disabled, modelValue/$filled and the ControlValueAccessor methods; provides NG_VALUE_ACCESSOR via useExisting with multi and overrides writeControlValue. None of the inherited UBaseInput config inputs variant, size, inputSize, pattern, min, max, step, minlength and maxlength is read in this component's source; fluid is consumed only through hasFluid in rootClassesParams. Selector u-date-picker; componentName datepicker. Composes UOverlay (uOverlay on a panel div with appendTo=body, rendered only while the overlay is visible). Signal inputs: dateFormat (default mm/dd/yy; never read, because the private formatDate always renders mm/dd/yyyy with the four-digit year from getFullYear()), placeholder, inputId, minDate, maxDate, disabledDates (Date[], default []), showIcon, showClear (booleanAttribute), dayNames (default Su to Sa) and monthNames (English defaults). No time, range, multiple or month/year view inputs exist. Outputs: onSelect (output<Date>(): it emits a plain Date), onClear (void), onShow (void), onHide (void). The exported interface UDatePickerSelectEvent {originalEvent: Event; value: Date} is not used by any output or other source in packages/ng/src; the event argument of onDateSelect is discarded with void event. Template: a readonly input type=text with aria-haspopup=dialog, aria-expanded bound to the overlay state, tabindex -1 when disabled, and click/keydown handlers; an optional clear span (shown when showClear, $filled and not disabled) and an optional trigger span with role=button, aria-hidden=true and no tabindex or key handler; a panel with role=dialog (no aria-label or aria-modal), previous/next buttons labelled Previous month and Next month, a month and year title made of two non-interactive spans, and a table role=grid whose day cells are span role=gridcell with tabindex 0 only on the focused cell, aria-selected and aria-disabled. Opening the panel never moves DOM focus (no focus() call exists in the source). Selection: onDateSelect returns early for a disabled cell, otherwise calls writeModelValue, onModelChange, onModelTouched, emits onSelect, moves the view for other-month cells, sets the focused cell and hides the panel. clear() stops propagation, calls writeModelValue(null) and onModelChange(null) and emits onClear, but does not call onModelTouched. minDate and maxDate compare against date-stripped values; disabledDates compare by year, month and day; the previous/next month buttons are never disabled by minDate or maxDate. Keyboard: the input handles Enter, NumpadEnter and Space (toggle) and Escape (hide only while visible); it returns early when disabled. Day cells handle ArrowLeft/ArrowRight (one day), ArrowUp/ArrowDown (seven days) through moveFocusByDays, Enter/NumpadEnter/Space (select) and Escape (hide); moveFocusByDays updates the focused-cell signal and the view month only, may land on disabled dates, and no Home, End, PageUp or PageDown handler exists. No click-outside handler exists, so the panel closes only through the input (click, Enter, NumpadEnter, Space or Escape), a day selection or a day-cell Escape. show() emits onShow and hide() emits onHide on every call. The input click, Enter, NumpadEnter and Space handlers call hide() when the panel is visible and the input Escape handler only while it is visible, but onDateSelect (after a successful selection) and the day-cell Escape handler call it without an open check. The date field initializer captures today once (new Date()) at instance creation and never refreshes it. The weeks computed fills leading and trailing days with a while loop on cells.length % 7, which terminates because it tests the remainder. writeControlValue calls setModelValue(value instanceof Date ? value : null) only: strings and timestamps become null, it does not call onModelChange, and an invalid Date instance is accepted. An invalid Date renders in the input as NaN/NaN/NaN, and opening the panel from it sets the view month and year from NaN, which yields a day grid with no cells (read from source and checked in plain Node arithmetic, not executed in the component). Host class cx('root', {disabled, fluid}). Owned source-only declarations: UDatePickerDayCell, DEFAULT_DAY_NAMES, DEFAULT_MONTH_NAMES, DatePickerClassesParams (its overlayVisible member is never read by a class resolver nor passed by the component) and datePickerStyleModule (root 'u-date-picker u-component p-inputwrapper'; day classes p-datepicker-other-month, p-datepicker-today, p-datepicker-day-selected, p-focus, p-disabled). navButton receives no params in the template, so its p-disabled branch is never applied. Consumer availability: exported (UDatePicker, type UDatePickerSelectEvent) from the root barrel via @ultimate/ng/date-picker and from the @ultimate/ng/date-picker manifest subpath. No dedicated @ultimate/uix-styles export exists for this family: its CSS is hand-ported into the local style file. Aura registry key is datepicker (folder and selector use the hyphenated name); aura-token-wiring.spec.ts lists nine approved unresolved variables (day border radius, day cell padding, day color, day height, day selected background, color and focus shadow, day width, select month font weight). That spec was not executed. There is no component-metadata record for this family (packages/component-metadata/src/records holds none for it). Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; those declared inputs are not read anywhere in ng-core, so they are not evidence that unstyled suppresses registration. Standalone, OnPush, ViewEncapsulation.None. Style helper exports are source-only internals, not barrel exports or independent rendered components. The spec and stories files are excluded.",
+      "files": [
+        "packages/ng/src/date-picker/index.ts",
+        "packages/ng/src/date-picker/date-picker.ts",
+        "packages/ng/src/date-picker/date-picker-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UDatePicker",
+        "@ultimate/ng/date-picker#UDatePicker",
+        "@ultimate/ng#UDatePickerSelectEvent",
+        "@ultimate/ng/date-picker#UDatePickerSelectEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/date-picker/index.ts",
+          "contains": "export { UDatePicker }"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "export class UDatePicker extends UBaseInput"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "dateFormat = input(\"mm/dd/yy\");"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "return `${mm}/${dd}/${yy}`;"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "onSelect = output<Date>();"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "export interface UDatePickerSelectEvent"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "void event;"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UDatePicker, multi: true }],"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "role=\"dialog\""
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "role=\"gridcell\""
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "while (cells.length % 7 !== 0) {"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "private moveFocusByDays(cell: UDatePickerDayCell, delta: number): void {"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "setModelValue(value instanceof Date ? value : null);"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker.ts",
+          "contains": "this.onModelChange(null);\n    this.onClear.emit();"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker-style.ts",
+          "contains": "export const datePickerStyleModule"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker-style.ts",
+          "contains": "export interface DatePickerClassesParams"
+        },
+        {
+          "path": "packages/ng/src/date-picker/date-picker-style.ts",
+          "contains": "overlayVisible?: boolean;"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./date-picker\": {"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/date-picker\";"
+        },
+        {
+          "path": "packages/ng-core/src/overlay/overlay.ts",
+          "contains": "selector: \"[uOverlay]\","
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    datepicker: datePicker,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.date-picker",
+        "package.ultimate.ng-core.base-input",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.ng.fluid",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the numeric, date, color and file input families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-number,date-picker,color-picker,file-upload}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "73cc77945ad2e4213695c2d140166822dc1ad12c",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.color-picker",
+      "name": "Angular UColorPicker",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Color picker: a readonly preview input opens an overlay panel with a saturation/brightness square and a vertical hue strip; mouse selection writes a hex string, RGB object or HSB object to the form control.",
+      "surface": "Extends UBaseEditableHolder directly (not UBaseInput), so it inherits the disabled signal input, $disabled, modelValue/$filled and the ControlValueAccessor methods, and has no fluid, variant, size or min/max inputs. Provides NG_VALUE_ACCESSOR via useExisting with multi and overrides writeControlValue. Selector u-color-picker; componentName colorpicker. Composes UOverlay (panel div with appendTo=body, rendered only while visible). Signal inputs: format (hex, rgb or hsb; default hex), defaultColor (default ff0000, a hex string without #) and autoZIndex (default true; declared but never read). Outputs: onChange (UColorPickerChangeEvent {originalEvent: Event; value: string | {r,g,b} | {h,s,b}}), onShow (void), onHide (void). Template: a readonly input type=text with a background color from the HSB state, aria-label Select color, aria-haspopup=true, aria-expanded bound to the overlay state, tabindex -1 when disabled; the panel holds a color square (mousedown) with a handle and a hue strip (mousedown) with a handle. The square and strip have no role, aria attribute, tabindex or key handler, so selection is mouse-only. Keyboard on the input: Space toggles the panel with preventDefault; Escape and Tab call hide() unconditionally, so onHide is emitted on each Escape or Tab even when the panel is already closed; Enter is not handled. These key handlers do not check $disabled themselves (show() and the click and mousedown handlers do). No click-outside handler exists, so the panel closes only through the input (click, Space, Escape, Tab). Dragging: mousedown on the square or strip returns early when disabled, then picks a value and binds document mousemove and mouseup listeners; the mouseup handler of that binding removes them. There is no ngOnDestroy, so a component destroyed mid-drag keeps the listeners until the next mouseup. Pixel math is fixed at 150 px: saturation and brightness are floor-ed clamped offsets, hue is floor(360 * (150 - clamped y) / 150); HSB values are clamped by validateHsb. Every pick calls writeModelValue, onModelChange and onModelTouched and emits onChange with the real mouse event. Conversion math is local: hsbToRgb rounds channels; rgbToHsb gives hue 300 for any gray (saturation 0 sets hue to -1 before the 60x scale and wrap); hexToRgb uses parseInt with bit shifts and no validation, so a 3-digit value such as #fff is read as {r:0,g:15,b:255} and an unparsable value as black. writeControlValue: a truthy value is converted by the current format (rgb through rgbToHsb, hsb taken as-is without validateHsb, hex through hexToHsb) with no shape checks; a falsy value uses defaultColor. It then calls setModelValue(value ?? getValueToUpdate()), so null or undefined stores the default color in the active format as modelValue; it does not call onModelChange and does not emit onChange. Changing format does not convert an existing model value. Host class cx('root') with no params; preview gets p-disabled while disabled. Owned source-only declarations: Hsb (interface) and colorPickerStyleModule (classes root, preview, panel, content, colorSelector, colorBackground, colorHandle, hue, hueHandle). Consumer availability: exported (UColorPicker, type UColorPickerChangeEvent) from the root barrel via @ultimate/ng/color-picker and from the @ultimate/ng/color-picker manifest subpath. No dedicated @ultimate/uix-styles export exists for this family: its CSS is hand-ported into the local style file. Aura registry key is colorpicker (folder and selector use the hyphenated name); aura-token-wiring.spec.ts lists one approved unresolved variable (--u-colorpicker-preview-border-color). That spec was not executed. There is no component-metadata record for this family (packages/component-metadata/src/records holds none for it). Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; those declared inputs are not read anywhere in ng-core, so they are not evidence that unstyled suppresses registration. Standalone, OnPush, ViewEncapsulation.None. Style helper exports are source-only internals, not barrel exports or independent rendered components. The spec and stories files are excluded.",
+      "files": [
+        "packages/ng/src/color-picker/index.ts",
+        "packages/ng/src/color-picker/color-picker.ts",
+        "packages/ng/src/color-picker/color-picker-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UColorPicker",
+        "@ultimate/ng/color-picker#UColorPicker",
+        "@ultimate/ng#UColorPickerChangeEvent",
+        "@ultimate/ng/color-picker#UColorPickerChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/color-picker/index.ts",
+          "contains": "export { UColorPicker }"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "export class UColorPicker extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UColorPicker, multi: true }],"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "autoZIndex = input(true, { transform: booleanAttribute });"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "onChange = output<UColorPickerChangeEvent>();"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "case \"Tab\":\n        this.hide();"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "document.addEventListener(\"mousemove\", move);"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "this.onChange.emit({ originalEvent: event, value });"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "const hexValue = parseInt(hex.indexOf(\"#\") > -1 ? hex.substring(1) : hex, 16);"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "setModelValue(value ?? this.getValueToUpdate());"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker.ts",
+          "contains": "<div uOverlay [visible]=\"overlayVisible()\" appendTo=\"body\" [class]=\"cx('panel')\">"
+        },
+        {
+          "path": "packages/ng/src/color-picker/color-picker-style.ts",
+          "contains": "export const colorPickerStyleModule"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./color-picker\": {"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/color-picker\";"
+        },
+        {
+          "path": "packages/ng-core/src/overlay/overlay.ts",
+          "contains": "selector: \"[uOverlay]\","
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    colorpicker: colorPicker,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.color-picker",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the numeric, date, color and file input families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-number,date-picker,color-picker,file-upload}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "73cc77945ad2e4213695c2d140166822dc1ad12c",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.file-upload",
+      "name": "Angular UFileUpload",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Inline file chooser and uploader: choose or drop files into a list with size, type and count validation, then upload them by XMLHttpRequest or hand them to a consumer handler.",
+      "surface": "Extends UBaseComponent directly: not UBaseEditableHolder or UBaseInput, so it has no ControlValueAccessor, no NG_VALUE_ACCESSOR provider, no modelValue and no fluid input; it declares its own disabled input. No overlay is used; the widget is inline. Selector u-file-upload; componentName fileupload. Composes UProgressBar (u-progress-bar, shown only while uploading with showValue false). Signal inputs: name, url, method (POST or PUT, default POST), multiple, accept, disabled, auto, withCredentials, maxFileSize and fileLimit (numberAttribute), customUpload, chooseLabel (Choose), uploadLabel (Upload), cancelLabel (Cancel) and emptyMessage. Outputs: onSelect (UFileUploadSelectEvent {originalEvent, files, currentFiles}), onProgress (UFileUploadProgressEvent {originalEvent: ProgressEvent, progress}), onUpload (UFileUploadEvent {originalEvent, files}), onError (UFileUploadErrorEvent {originalEvent, files}), onClear (void), onRemove (UFileUploadRemoveEvent {originalEvent, file}) and uploadHandler (UFileUploadHandlerEvent {files}). All six exported event interfaces are used by an output. onUpload and onError carry a newly constructed synthetic Event (new Event('upload') / new Event('error')), not an XHR event. Public methods: formatSize(bytes), upload(), clear() and remove(event, index). Template: choose button (click opens the hidden native file input unless disabled), upload and cancel buttons only while auto is false (disabled without files; upload also while uploading), the hidden input type=file (class display none), validation messages as plain divs without role or aria-live, a drop zone with dragenter/dragover/dragleave/drop handlers and no keyboard handler, and per-file rows with a remove button aria-label Remove file. The disabled input is applied to the choose button, the file input and the four drag handlers (each returns early when disabled); the upload and cancel buttons do not read it and are governed by file state. Selection (picker or drop): drop is accepted only when multiple is set or exactly one file was dropped, otherwise it is ignored without a message. handleSelectedFiles returns early for an empty list; in single mode it starts from an empty list, so a new selection replaces the current one even if every new file is rejected; duplicates (name, type, size) are skipped silently; maxFileSize, accept and fileLimit failures add plain-English messages; onSelect is always emitted afterwards with files = all incoming files (including rejected) and currentFiles = the kept list; with auto set and files present, upload() runs. accept matching: comma-split and trimmed; a type containing * is matched by file.type.startsWith of the text before '/', so a bare * (no '/') yields an empty prefix that matches every file; otherwise the MIME type must equal the entry or '.' + the last dot-separated segment of the file name must equal it case-insensitively. upload(): returns when there are no files; with customUpload it emits uploadHandler and returns without setting the uploading state; without a url it returns silently; otherwise it posts FormData (field name from name(), default files) through XMLHttpRequest. Progress is emitted only when lengthComputable. onreadystatechange at readyState 4 resets uploading and progress, emits onUpload then calls clear() (which emits onClear) for 2xx, else emits onError (a network failure with status 0 also ends here). No other xhr handler is attached, and a direct upload() call while uploading starts another request. clear() and remove() reset the native input value; clear() emits onClear even when the list is already empty. formatSize math: 0 gives '0 B'; the unit index is floor(log(bytes)/log(1024)) with the label capped at TB while the divisor keeps the uncapped index (1024^5 bytes shows 1.00 TB); a fractional size below 1 byte gives a negative index and shows 512.00 TB for 0.5; negative or NaN input shows NaN TB (checked in plain Node arithmetic, not executed in the component). Host class cx('root'). Owned source-only declarations: FileUploadClassesParams and fileUploadStyleModule (classes root, header, chooseButton, uploadButton, cancelButton, input, content, file, fileThumbnail, fileInfo, fileName, fileSize, fileRemoveButton, empty, message). The fileThumbnail class and its CSS rule exist but no template element uses them. Consumer availability: exported from the root barrel through ./file-upload (UFileUpload and the type exports UFileUploadSelectEvent, UFileUploadProgressEvent, UFileUploadEvent, UFileUploadErrorEvent, UFileUploadRemoveEvent, UFileUploadHandlerEvent). There is no ./file-upload manifest subpath in packages/ng/package.json and no packages/ng/file-upload entry-point directory. No dedicated @ultimate/uix-styles export exists for this family: its CSS is hand-ported into the local style file. Aura registry key is fileupload (folder and selector use the hyphenated name); aura-token-wiring.spec.ts lists eleven approved unresolved variables (two button tokens, seven fileupload tokens and two message error tokens). That spec was not executed. There is no component-metadata record for this family (packages/component-metadata/src/records holds none for it). Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; those declared inputs are not read anywhere in ng-core, so they are not evidence that unstyled suppresses registration. Standalone, OnPush, ViewEncapsulation.None. Style helper exports are source-only internals, not barrel exports or independent rendered components. The spec and stories files are excluded.",
+      "files": [
+        "packages/ng/src/file-upload/index.ts",
+        "packages/ng/src/file-upload/file-upload.ts",
+        "packages/ng/src/file-upload/file-upload-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UFileUpload",
+        "@ultimate/ng#UFileUploadSelectEvent",
+        "@ultimate/ng#UFileUploadProgressEvent",
+        "@ultimate/ng#UFileUploadEvent",
+        "@ultimate/ng#UFileUploadErrorEvent",
+        "@ultimate/ng#UFileUploadRemoveEvent",
+        "@ultimate/ng#UFileUploadHandlerEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/file-upload/index.ts",
+          "contains": "export { UFileUpload }"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "export class UFileUpload extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "uploadHandler = output<UFileUploadHandlerEvent>();"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "imports: [UProgressBar],"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "const next = this.multiple() ? [...this.files()] : [];"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "this.onSelect.emit({ originalEvent: event, files: incoming, currentFiles: next });"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "const allowDrop = this.multiple() || fileList.length === 1;"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "const xhr = new XMLHttpRequest();"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "this.onUpload.emit({ originalEvent: new Event(\"upload\"), files: uploadedFiles });"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "const i = Math.floor(Math.log(bytes) / Math.log(k));"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload.ts",
+          "contains": "aria-label=\"Remove file\""
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload-style.ts",
+          "contains": "export interface FileUploadClassesParams"
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload-style.ts",
+          "contains": "fileThumbnail: \"u-file-upload-file-thumbnail\","
+        },
+        {
+          "path": "packages/ng/src/file-upload/file-upload-style.ts",
+          "contains": "export const fileUploadStyleModule"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"./file-upload\";"
+        },
+        {
+          "path": "packages/ng/src/progress-bar/progress-bar.ts",
+          "contains": "selector: \"u-progress-bar\","
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    fileupload: fileUpload,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.file-upload",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng.progress-bar",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the numeric, date, color and file input families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-number,date-picker,color-picker,file-upload}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "73cc77945ad2e4213695c2d140166822dc1ad12c",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}
