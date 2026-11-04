@@ -71,9 +71,11 @@ sites in all four components:
   and stay open when `disabled` becomes true.
   input-number and file-upload are inline and have no overlay.
 - input-number: every blur emits `onValueChange`; the focus text is `String(value)`, which
-  a `,`-decimal locale parses as a different number (12345 for 1234.5 in de); percent mode
-  does not scale; `Intl.NumberFormat` construction can throw during render; the key handler calls
-  `preventDefault` for ArrowUp and ArrowDown without checking `disabled` or `readOnly`.
+  a locale with `.` group and `,` decimal separators parses as a different number (12345 for
+  1234.5 in de, pt-BR, nl and tr); percent mode does not scale; `Intl.NumberFormat` construction
+  can throw during render; the key handler calls `preventDefault` for ArrowUp and ArrowDown
+  without checking `disabled` or `readOnly`; while focused, a step or an external `value` change
+  does not update the shown text, so the next blur emits the stale typed text.
 - date-picker: fixed MM/DD/YYYY format, Sunday-first grid, `today` captured once per
   mount, `setViewYear` called inside the `setViewMonth` updater, years 0 to 99 mapped to
   the 1900s, no `focus()` call so DOM focus does not follow the roving cell, clear and icon
