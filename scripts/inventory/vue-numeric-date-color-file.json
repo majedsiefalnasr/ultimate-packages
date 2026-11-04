@@ -1,0 +1,498 @@
+{
+  "version": 1,
+  "scope": "vue-numeric-date-color-file",
+  "revision": "3143b1f248e72addb28087e65a31014466c5969d",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/input-number",
+        "packages/vue/src/date-picker",
+        "packages/vue/src/color-picker",
+        "packages/vue/src/file-upload"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/input-number/index.ts"
+        },
+        {
+          "subpath": "./input-number",
+          "source": "packages/vue/src/input-number/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/date-picker/index.ts"
+        },
+        {
+          "subpath": "./date-picker",
+          "source": "packages/vue/src/date-picker/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/color-picker/index.ts"
+        },
+        {
+          "subpath": "./color-picker",
+          "source": "packages/vue/src/color-picker/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/file-upload/index.ts"
+        },
+        {
+          "subpath": "./file-upload",
+          "source": "packages/vue/src/file-upload/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "vue.input-number",
+      "name": "Vue UInputNumber",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Numeric text input with Intl.NumberFormat display, min/max/step clamping and ArrowUp/ArrowDown stepping.",
+      "surface": "UInputNumber (Options API SFC InputNumber.vue, name \"UInputNumber\") and createBaseInputNumber (BaseInputNumber.ts) plus inputNumberStyleModule and InputNumberClassesParams (input-number-style.ts; neither style export is re-exported from index.ts). Base factory chain: createBaseInputNumber extends createBaseInput() (size, fluid, variant, resolvedVariant, resolvedFluid) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, filled, writeValue); because createBaseInput takes no arguments the factory shadows cx() and mounted(); mounted registers the style under the name inputnumber, which is also the Aura registry key, and is the only scoped base that passes additional preset keys ([\"inputtext\"]) to registerComponentStyle. Declared props: locale, mode (\"decimal\", \"currency\" or \"percent\" are the only values the formatter maps; any other string behaves as decimal), currency, useGrouping (true), minFractionDigits, maxFractionDigits, min (null), max (null), step (1), allowEmpty (true), prefix, suffix, placeholder, readonly, disabled, invalid, name, plus inherited size, fluid, variant, modelValue and defaultValue. There is no inputId or aria-label prop, no showButtons or spin buttons, no slots and no v-model/defineModel declaration. Emits declared: focus, blur, input. focus and blur forward the native event; input carries { originalEvent, value } with the clamped value and is emitted by commit(), i.e. on every native input event and every ArrowUp/ArrowDown step; the native input event itself is not forwarded. update:modelValue and value-change come from writeValue(value, event) in commit(). Template: span root and one input type=text inputmode=decimal role=\"spinbutton\" with aria-valuemin, aria-valuemax, aria-valuenow (numericValue ?? undefined) and aria-invalid (invalid || undefined); ref=\"input\" is declared and never read ($refs is not used in this component). No UPortal, no overlay. Formatting: the formatter computed builds new Intl.NumberFormat(locale, { useGrouping, minimumFractionDigits, maximumFractionDigits, style }) with currency (currency ?? \"USD\") only in currency mode; construction can throw during render (RangeError, for example minFractionDigits 5 with maxFractionDigits 2, an invalid locale tag or an invalid currency code); the TypeError that Intl raises for a currency style without a code cannot occur here because currency falls back to \"USD\". displayValue returns rawText while focused, \"\" for null or NaN, otherwise prefix + formatted + suffix. Note that percent mode does not scale: percent mode formats the stored number with style percent, so 0.5 shows 50% and 50 shows 5,000%, and parsing 50 stores 50. State: focused, rawText. On focus rawText becomes String(numericValue) (\"\" when null or NaN); while focused the shown text is rawText, so an external modelValue change while focused does not change the shown text (only typing or a step updates rawText). Parsing (parseValue): strips a leading prefix and trailing suffix, removes the group separator and maps the decimal separator to \".\" from formatter.formatToParts(1234.5) (fallbacks \",\" and \".\"), then removes everything outside [0-9.-]; \"\" and \"-\" give null, NaN gives null. Locale fact computed with Intl in plain Node: with useGrouping true, a locale whose formatToParts(1234.5) group is \".\" and decimal is \",\" (de, pt, pt-BR, nl, tr, es, es-AR, it, sl, da, ro, hr, el, id, vi, sr, ca, gl, eu and is among those tested) turns the focus text \"1234.5\" into 12345 and typed \"1234.56\" into 123456, because \".\" is removed as the group separator; locales whose group is not \".\" (en, fr, pl, ru and pt-PT among those tested) parse the focus text correctly. When useGrouping is false the formatter has no group part, the fallback group \",\" is stripped, and a typed decimal comma in any locale with decimal \",\" (de, fr, es, pt, it, pl, ru among those tested) is removed: \"1,5\" becomes 15. Exponent text: String(1e21) is \"1e+21\", which parses to 121 (the \"e\" and \"+\" are removed); String(1e-7) is \"1e-7\", which parses to null. Non-ASCII digits and a non-ASCII minus (such as the sv U+2212) are dropped by the same regex. Commit logic: clamp(min, max); null with allowEmpty false writes min ?? 0 to the model but still emits input with value null. onInput commits on every keystroke (a partial entry such as \"-\" writes null). Note that blur does not commit: onBlur only clears focused and emits blur, so no clamp or reformat is written on blur. Keyboard: onKeyDown returns early for readonly or disabled; ArrowUp/ArrowDown call preventDefault and spin(event, ±step); no Home, End, PageUp, PageDown or Enter. spin uses numericValue ?? 0 + delta clamped, with no rounding to fraction digits (0.1 + 0.2 is 0.30000000000000004), and a NaN numericValue stays NaN. onPaste only calls preventDefault for readonly or disabled; otherwise the browser pastes and the input event path runs. Model: when only defaultValue is passed (controlled is false) writeValue emits value-change only and never updates dValue, so the text after blur keeps showing the initial defaultValue instead of later input. Unused: the inherited size and variant props are never read; filled is never passed to a class resolver (InputNumberClassesParams.filled is declared and unused); invalid is applied through inputParams as p-invalid. Styles (input-number-style.ts, hand-ported, no @ultimate/uix-styles import, only a mention in a comment): classes root (u-input-number, u-input-number-fluid) and input (u-input-number-input, p-invalid); CSS tokens are dt('inputtext.…') (15 uses), the spin-button rules are intentionally excluded, no z-index and no overlay. Theme: Aura registry key inputnumber (value inputNumber), differing from the family name input-number. No component-metadata record exists. input-number.spec.ts and input-number.stories.ts are excluded supporting files. Composes no UPortal: no UPortal in this component.",
+      "files": [
+        "packages/vue/src/input-number/BaseInputNumber.ts",
+        "packages/vue/src/input-number/InputNumber.vue",
+        "packages/vue/src/input-number/index.ts",
+        "packages/vue/src/input-number/input-number-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UInputNumber",
+        "@ultimate/vue/input-number#UInputNumber",
+        "@ultimate/vue#createBaseInputNumber",
+        "@ultimate/vue/input-number#createBaseInputNumber"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/input-number/InputNumber.vue",
+          "contains": "name: \"UInputNumber\","
+        },
+        {
+          "path": "packages/vue/src/input-number/InputNumber.vue",
+          "contains": "emits: [\"focus\", \"blur\", \"input\"],"
+        },
+        {
+          "path": "packages/vue/src/input-number/InputNumber.vue",
+          "contains": "this.$emit(\"input\", { originalEvent: event, value: clamped });"
+        },
+        {
+          "path": "packages/vue/src/input-number/InputNumber.vue",
+          "contains": "const parts = this.formatter.formatToParts(1234.5);"
+        },
+        {
+          "path": "packages/vue/src/input-number/InputNumber.vue",
+          "contains": "ref=\"input\""
+        },
+        {
+          "path": "packages/vue/src/input-number/BaseInputNumber.ts",
+          "contains": "extends: createBaseInput(),"
+        },
+        {
+          "path": "packages/vue/src/input-number/BaseInputNumber.ts",
+          "contains": "registerComponentStyle(\"inputnumber\", inputNumberStyleModule, [\"inputtext\"]);"
+        },
+        {
+          "path": "packages/vue/src/input-number/input-number-style.ts",
+          "contains": "export const inputNumberStyleModule"
+        },
+        {
+          "path": "packages/vue/src/input-number/index.ts",
+          "contains": "createBaseInputNumber"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./input-number\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./input-number\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.input-number",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the numeric, date, color and file families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-number/ src/date-picker/ src/color-picker/ src/file-upload/",
+          "outcome": "not-run",
+          "revision": "3143b1f248e72addb28087e65a31014466c5969d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.date-picker",
+      "name": "Vue UDatePicker",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Single-date picker: a readonly text input opens a portal calendar panel with month navigation and a day grid.",
+      "surface": "UDatePicker (Options API SFC DatePicker.vue, name \"UDatePicker\") and createBaseDatePicker (BaseDatePicker.ts) plus datePickerStyleModule and DatePickerClassesParams (date-picker-style.ts; neither style export is re-exported from index.ts). Base factory chain: createBaseDatePicker extends createBaseInput() over createBaseEditableHolder; the factory shadows cx() and mounted() and registers the style under the name datepicker, which is also the Aura registry key. Declared props: placeholder, disabled, inputId, minDate (Date), maxDate (Date), disabledDates (array, typed readonly unknown[]), showIcon, showClear, dayNames (Su..Sa), monthNames (English names), appendTo (\"body\"), plus inherited size, fluid, variant, modelValue and defaultValue. Emits declared: select, clear, show, hide. select carries the bare Date (no originalEvent); clear, show and hide carry no payload. There are no slots and no v-model/defineModel declaration; writes use writeValue(value, event). Only a Date is accepted as the model: selectedDate is dValue instanceof Date, so any other model value is silently treated as empty. The initial view month and year come from defaultValue (else modelValue) when it is a Date, otherwise from today; today is captured once per mount (new Date() in data(), never refreshed). Display: the input is type=text readonly, so no typed entry; the text is the fixed MM/DD/YYYY format of formatDate (month and day zero-padded, year String(getFullYear()), no locale or format prop); an invalid Date shows NaN/NaN/NaN. Template: div root; input with id=inputId, tabindex, disabled, aria-haspopup=\"dialog\", aria-expanded; clear span (v-if showClear && filled && !disabled, aria-hidden, click only) and trigger span role=button aria-hidden (click only), so neither is keyboard operable; UPortal (appendTo) rendered only while overlayVisible, containing a panel div role=\"dialog\" (no aria-label or aria-modal), a header with two buttons labelled \"Previous month\" and \"Next month\" and the month and year title, and a table role=\"grid\" whose th cells use scope=col and whose cells are span role=gridcell with tabindex 0 only on the focused cell, aria-selected and aria-disabled. Grid: weeks is Sunday first (offset from getDay()), padded with previous and next month days to full rows of 7; cell keys are month-day-year; dayNames also act as v-for keys, so duplicate names would collide. isCellDisabled compares against stripTime(minDate)/stripTime(maxDate) and calls isSameDay(d, date) for every disabledDates entry, which calls d.getFullYear(), so a non-Date entry throws a TypeError during render. Cell click calls onDateSelect(cell) without an event, so writeValue receives no event; keydown on a cell passes the event. Years 0 to 99 map to 1900 to 1999 through new Date(year, month, day) (new Date(50, 0, 1) is 1950). Keyboard: on the input Enter, NumpadEnter and Space toggle with preventDefault and Escape hides when open (no ArrowDown open); on a cell ArrowRight/Left move ±1 day, ArrowDown/Up ±7 days (focusedCell moves even onto disabled or out-of-range dates and changes the viewed month), Enter/NumpadEnter/Space select, Escape hides; no Home, End, PageUp, PageDown or Tab handling. There is no .focus( call anywhere in the scope, so DOM focus never moves into the grid (roving tabindex only). There is no outside-click handler and the panel stays open when disabled becomes true (no watcher). hide() emits hide unconditionally (cell Escape and selection call it without checking overlayVisible). Model: when only defaultValue is passed (controlled is false) writeValue emits value-change only and dValue is never updated, so later selections are not displayed (only an initial defaultValue Date shows). Selecting a date in an adjacent month switches the view to that month. Styles (date-picker-style.ts, hand-ported, no @ultimate/uix-styles import, 26 dt('datepicker.…') uses): root classes u-date-picker u-component p-inputwrapper with p-disabled (no CSS rule for p-disabled in this module) and u-date-picker-fluid; day classes other-month, today, selected, focused and disabled (only the disabled class has a rule: opacity 0.5); panel is position absolute with min-width 260px and no z-index. Theme: Aura registry key datepicker (value datePicker), differing from the family name date-picker. No component-metadata record exists. date-picker.spec.ts and date-picker.stories.ts are excluded supporting files. Composes UPortal.",
+      "files": [
+        "packages/vue/src/date-picker/BaseDatePicker.ts",
+        "packages/vue/src/date-picker/DatePicker.vue",
+        "packages/vue/src/date-picker/date-picker-style.ts",
+        "packages/vue/src/date-picker/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UDatePicker",
+        "@ultimate/vue/date-picker#UDatePicker",
+        "@ultimate/vue#createBaseDatePicker",
+        "@ultimate/vue/date-picker#createBaseDatePicker"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/date-picker/DatePicker.vue",
+          "contains": "name: \"UDatePicker\","
+        },
+        {
+          "path": "packages/vue/src/date-picker/DatePicker.vue",
+          "contains": "emits: [\"select\", \"clear\", \"show\", \"hide\"],"
+        },
+        {
+          "path": "packages/vue/src/date-picker/DatePicker.vue",
+          "contains": "return `${mm}/${dd}/${yy}`;"
+        },
+        {
+          "path": "packages/vue/src/date-picker/DatePicker.vue",
+          "contains": "return (this.disabledDates || []).some((d) => isSameDay(d, date));"
+        },
+        {
+          "path": "packages/vue/src/date-picker/DatePicker.vue",
+          "contains": "role=\"dialog\""
+        },
+        {
+          "path": "packages/vue/src/date-picker/BaseDatePicker.ts",
+          "contains": "extends: createBaseInput(),"
+        },
+        {
+          "path": "packages/vue/src/date-picker/BaseDatePicker.ts",
+          "contains": "registerComponentStyle(\"datepicker\", datePickerStyleModule);"
+        },
+        {
+          "path": "packages/vue/src/date-picker/date-picker-style.ts",
+          "contains": "export const datePickerStyleModule"
+        },
+        {
+          "path": "packages/vue/src/date-picker/index.ts",
+          "contains": "createBaseDatePicker"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./date-picker\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./date-picker\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.date-picker",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the numeric, date, color and file families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-number/ src/date-picker/ src/color-picker/ src/file-upload/",
+          "outcome": "not-run",
+          "revision": "3143b1f248e72addb28087e65a31014466c5969d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.color-picker",
+      "name": "Vue UColorPicker",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Colour picker: a preview swatch opens a portal panel with a saturation/brightness square and a hue strip, producing hex, rgb or hsb values.",
+      "surface": "UColorPicker (Options API SFC ColorPicker.vue, name \"UColorPicker\") and createBaseColorPicker (BaseColorPicker.ts) plus colorPickerStyleModule and ColorPickerPreviewClassesParams (color-picker-style.ts; neither style export is re-exported from index.ts). Base factory chain: createBaseColorPicker extends createBaseEditableHolder() directly, so it has no size, fluid or variant (it has no size, fluid or variant props); the factory shadows cx() and mounted() and registers the style under the name colorpicker, which is also the Aura registry key. Declared props: format (\"hex\" default; \"rgb\" and \"hsb\" supported, any other value behaves as hex), defaultColor (\"ff0000\"), disabled, appendTo (\"body\"), plus inherited modelValue and defaultValue. No id, placeholder or invalid prop. Emits declared: change, show, hide. change carries { originalEvent, value }; show and hide carry no payload. Value shapes: hex is written as \"#rrggbb\", rgb as { r, g, b } (rounded) and hsb as { h, s, b }; defaultColor is used only when the model is falsy and is read without a leading \"#\". Math (hand-written, replayed in plain Node): hexToRgb uses parseInt(hex, 16) with bit masks, so a 3-digit \"#fff\" becomes 0x0fff and yields { r: 0, g: 15, b: 255 }, an 8-digit hex gives a negative r (-256 for \"#ff0000ff\"), and invalid text gives NaN and { r: 0, g: 0, b: 0 }; rgbToHsb sets hsb.h = -1 for gray, black and white, which becomes h = 300 after the multiply and wrap; validateHsb clamps h to 0-360 and s, b to 0-100. Template: div root; input type=text readonly (the preview swatch, inline backgroundColor) with aria-label \"Select color\", aria-haspopup=\"true\", aria-expanded, tabindex and disabled; UPortal (appendTo) rendered only while overlayVisible, containing a panel div with no role or label, a saturation/brightness square (ref colorSelectorRef, mousedown) and a hue strip (ref hueRef, mousedown) with positioned handle divs. Interaction is mouse-only: there is no touch, pointer or keyboard handling inside the panel, so the colour cannot be changed with the keyboard. Input keys: Space toggles with preventDefault; Escape and Tab hide when open; Enter does not toggle. There is no outside-click handler and the panel stays open when disabled becomes true (no watcher). Drag: each mousedown adds a document mousemove and mouseup listener pair, removed only inside the mouseup handler; there is no unmount cleanup (no beforeUnmount or unmounted hook), so a component unmounted mid-drag leaves its listeners until the next mouseup; pickColor and pickHue read getBoundingClientRect and use 150 px constants, floor and clamping. Model: when only defaultValue is passed (controlled is false) writeValue emits value-change only and dValue is not updated, so the swatch does not follow later selections (it keeps the initial defaultValue colour). Styles (color-picker-style.ts, hand-ported, no @ultimate/uix-styles import, 6 dt('colorpicker.…') uses): classes root, preview (disabled), panel, content, colorSelector, colorBackground, colorHandle, hue and hueHandle all used; the panel is position absolute with z-index: 1000, the only z-index among the four scoped families. Theme: Aura registry key colorpicker (value colorPicker), differing from the family name color-picker. No component-metadata record exists. color-picker.spec.ts and color-picker.stories.ts are excluded supporting files. Composes UPortal.",
+      "files": [
+        "packages/vue/src/color-picker/BaseColorPicker.ts",
+        "packages/vue/src/color-picker/ColorPicker.vue",
+        "packages/vue/src/color-picker/color-picker-style.ts",
+        "packages/vue/src/color-picker/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UColorPicker",
+        "@ultimate/vue/color-picker#UColorPicker",
+        "@ultimate/vue#createBaseColorPicker",
+        "@ultimate/vue/color-picker#createBaseColorPicker"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/color-picker/ColorPicker.vue",
+          "contains": "name: \"UColorPicker\","
+        },
+        {
+          "path": "packages/vue/src/color-picker/ColorPicker.vue",
+          "contains": "emits: [\"change\", \"show\", \"hide\"],"
+        },
+        {
+          "path": "packages/vue/src/color-picker/ColorPicker.vue",
+          "contains": "document.addEventListener(\"mousemove\", move);"
+        },
+        {
+          "path": "packages/vue/src/color-picker/ColorPicker.vue",
+          "contains": "const hexValue = parseInt(hex.indexOf(\"#\") > -1 ? hex.substring(1) : hex, 16);"
+        },
+        {
+          "path": "packages/vue/src/color-picker/BaseColorPicker.ts",
+          "contains": "extends: createBaseEditableHolder(),"
+        },
+        {
+          "path": "packages/vue/src/color-picker/BaseColorPicker.ts",
+          "contains": "registerComponentStyle(\"colorpicker\", colorPickerStyleModule);"
+        },
+        {
+          "path": "packages/vue/src/color-picker/color-picker-style.ts",
+          "contains": "z-index: 1000;"
+        },
+        {
+          "path": "packages/vue/src/color-picker/color-picker-style.ts",
+          "contains": "export const colorPickerStyleModule"
+        },
+        {
+          "path": "packages/vue/src/color-picker/index.ts",
+          "contains": "createBaseColorPicker"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./color-picker\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./color-picker\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.color-picker",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the numeric, date, color and file families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-number/ src/date-picker/ src/color-picker/ src/file-upload/",
+          "outcome": "not-run",
+          "revision": "3143b1f248e72addb28087e65a31014466c5969d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.file-upload",
+      "name": "Vue UFileUpload",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Inline file chooser and drop zone that validates selected files and uploads them with XMLHttpRequest or hands them to a custom handler.",
+      "surface": "UFileUpload (Options API SFC FileUpload.vue, name \"UFileUpload\") and createBaseFileUpload (BaseFileUpload.ts) plus fileUploadStyleModule and FileUploadClassesParams (file-upload-style.ts; neither style export is re-exported from index.ts). Base factory chain: createBaseFileUpload extends createBaseComponent({ componentName \"fileupload\", styleModule }) only, so there is no modelValue, defaultValue, dValue or writeValue and no update:modelValue (no modelValue binding at all) and no size, fluid or variant; the factory also shadows cx() and declares mounted() with registerComponentStyle(\"fileupload\"), the same name as the Aura registry key. Declared props: name (\"files\"), url, method (\"POST\"), multiple, accept, disabled, auto, withCredentials, maxFileSize, fileLimit, customUpload, chooseLabel, uploadLabel, cancelLabel, emptyMessage. Emits declared: select, progress, upload, error, clear, remove, upload-handler; payloads: select { originalEvent, files (incoming), currentFiles }, progress { originalEvent, progress }, upload { files }, error { files }, remove { originalEvent, file }, upload-handler { files }, clear none. No slots. Template: root div; header with choose button, then (v-if !auto) Upload and Cancel buttons, and a hidden input type=file (class display none); UProgressBar (imported by relative path ../progress-bar/ProgressBar.vue) while uploading with showValue false; message divs with no role or aria-live (no role or aria-live on validation messages); a drop zone with dragenter, dragover, dragleave and drop handlers; empty message; file rows (key name-size-index) with the formatted size and a remove button whose aria-label is the fixed English text \"Remove file\". No UPortal and no overlay. Validation (handleSelectedFiles): empty lists return; single mode starts from an empty list, multiple mode from the existing list; duplicates (name, type and size) are skipped; maxFileSize and accept failures add a message; fileLimit truncates the list; messages are replaced on each call; select is emitted even when every file was rejected; then the native input is cleared and, when auto is set and files exist, upload() runs. accept matching (isFileTypeValid): entries containing an asterisk compare file.type with the text before the first \"/\", so the pattern `*/*` (typeClass `*`) rejects every file because no type starts with \"*\", while a bare `*` has no \"/\" and its empty prefix accepts every file; other entries match the exact type or the extension case-insensitively. Dropping several files in single mode is ignored without a message; drag handlers return early when disabled. Upload (upload): returns silently without files, or without url unless customUpload; customUpload emits upload-handler and sends nothing; otherwise a FormData (field name) is sent with XMLHttpRequest, method, withCredentials and an upload progress listener that emits progress only when lengthComputable (Math.round(loaded*100/total)). Completion is handled only in onreadystatechange at readyState 4: a 2xx status emits upload with the files read at completion time, clears the list and messages, and emits clear; any other status, including status 0 for a network failure, emits error. There is no onerror, onabort or ontimeout handler and no abort: the XHR is not retained, so Cancel (clear) and remove do not abort an in-flight request; clear() during an upload empties the list, and the later completion reads the then-empty list. The Upload button is disabled while uploading and without files, but the Upload and Cancel buttons do not read the disabled prop (only the choose button, the hidden input and drag handlers do). formatSize: 0 gives \"0 B\"; each 1024 step moves through B/KB/MB/GB/TB with toFixed(2); sizes of 1024^5 bytes or more are not scaled past TB (1024^5 shows \"1.00 TB\"); fractional sizes below 1 give a negative index that falls back to \"TB\" (0.5 gives \"512.00 TB\") and negative sizes give \"NaN TB\". Styles (file-upload-style.ts, hand-ported, no @ultimate/uix-styles import): 13 dt('fileupload.…') uses plus dt('button.…') (button.border.radius, button.secondary.background) and dt('message.…') (message.error.background, message.error.color), i.e. it reads button and message theme tokens; classes root, header, chooseButton (disabled gives p-disabled), uploadButton, cancelButton, input, content (highlight gives u-file-upload-highlight), file, fileInfo, fileName, fileSize, fileRemoveButton, empty and message all used; FileUploadClassesParams.disabled and highlight are both read; the rule .u-file-upload .u-progress-bar sizes the child progress bar; no position or z-index. Theme: Aura registry key fileupload (value fileUpload), differing from the family name file-upload. No component-metadata record exists. file-upload.spec.ts and file-upload.stories.ts are excluded supporting files. Composes no UPortal: no UPortal in this component.",
+      "files": [
+        "packages/vue/src/file-upload/BaseFileUpload.ts",
+        "packages/vue/src/file-upload/FileUpload.vue",
+        "packages/vue/src/file-upload/file-upload-style.ts",
+        "packages/vue/src/file-upload/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UFileUpload",
+        "@ultimate/vue/file-upload#UFileUpload",
+        "@ultimate/vue#createBaseFileUpload",
+        "@ultimate/vue/file-upload#createBaseFileUpload"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/file-upload/FileUpload.vue",
+          "contains": "name: \"UFileUpload\","
+        },
+        {
+          "path": "packages/vue/src/file-upload/FileUpload.vue",
+          "contains": "emits: [\"select\", \"progress\", \"upload\", \"error\", \"clear\", \"remove\", \"upload-handler\"],"
+        },
+        {
+          "path": "packages/vue/src/file-upload/FileUpload.vue",
+          "contains": "import UProgressBar from \"../progress-bar/ProgressBar.vue\";"
+        },
+        {
+          "path": "packages/vue/src/file-upload/FileUpload.vue",
+          "contains": "xhr.onreadystatechange = () => {"
+        },
+        {
+          "path": "packages/vue/src/file-upload/BaseFileUpload.ts",
+          "contains": "componentName: \"fileupload\","
+        },
+        {
+          "path": "packages/vue/src/file-upload/file-upload-style.ts",
+          "contains": "export const fileUploadStyleModule"
+        },
+        {
+          "path": "packages/vue/src/file-upload/index.ts",
+          "contains": "createBaseFileUpload"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./file-upload\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./file-upload\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.file-upload",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue.progress-bar"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the numeric, date, color and file families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/input-number/ src/date-picker/ src/color-picker/ src/file-upload/",
+          "outcome": "not-run",
+          "revision": "3143b1f248e72addb28087e65a31014466c5969d",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/input-number/input-number.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/input-number/input-number.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/date-picker/date-picker.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/date-picker/date-picker.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/color-picker/color-picker.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/color-picker/color-picker.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/file-upload/file-upload.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/file-upload/file-upload.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.overlay",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue.progress-bar",
+      "batch": "ticket-142",
+      "reason": "Detailed inventory remains owned by [#142](https://github.com/majedsiefalnasr/ultimate-packages/issues/142). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.input-number",
+      "record": "vue.input-number"
+    },
+    {
+      "id": "package.ultimate.vue.date-picker",
+      "record": "vue.date-picker"
+    },
+    {
+      "id": "package.ultimate.vue.color-picker",
+      "record": "vue.color-picker"
+    },
+    {
+      "id": "package.ultimate.vue.file-upload",
+      "record": "vue.file-upload"
+    }
+  ],
+  "ownership": {
+    "ticket": 121,
+    "path": "scripts/inventory/package-coverage.json"
+  }
+}
