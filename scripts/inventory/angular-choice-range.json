@@ -1,0 +1,921 @@
+{
+  "version": 1,
+  "scope": "angular-choice-range",
+  "revision": "d2e8101bf77e8e440c7166211ad5eae0e0ac6df8",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/checkbox",
+        "packages/ng/src/knob",
+        "packages/ng/src/radio-button",
+        "packages/ng/src/rating",
+        "packages/ng/src/select-button",
+        "packages/ng/src/slider",
+        "packages/ng/src/toggle-button",
+        "packages/ng/src/toggle-switch"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/checkbox/index.ts"
+        },
+        {
+          "subpath": "./checkbox",
+          "source": "packages/ng/src/checkbox/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/knob/index.ts"
+        },
+        {
+          "subpath": "./knob",
+          "source": "packages/ng/src/knob/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/radio-button/index.ts"
+        },
+        {
+          "subpath": "./radio-button",
+          "source": "packages/ng/src/radio-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/rating/index.ts"
+        },
+        {
+          "subpath": "./rating",
+          "source": "packages/ng/src/rating/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/select-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/slider/index.ts"
+        },
+        {
+          "subpath": "./slider",
+          "source": "packages/ng/src/slider/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/toggle-button/index.ts"
+        },
+        {
+          "subpath": "./toggle-button",
+          "source": "packages/ng/src/toggle-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/toggle-switch/index.ts"
+        },
+        {
+          "subpath": "./toggle-switch",
+          "source": "packages/ng/src/toggle-switch/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.checkbox",
+      "name": "Angular UCheckbox",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Boolean checkbox control backed by a native input with an optional text label and a ControlValueAccessor contract.",
+      "surface": "Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. From UBaseEditableHolder it inherits the disabled signal input, $disabled (disabled() or the setDisabledState signal), the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. The component extends UBaseEditableHolder, provides NG_VALUE_ACCESSOR via useExisting with multi, and overrides writeControlValue. Standalone, OnPush, ViewEncapsulation.None. Component selector u-checkbox; componentName checkbox. Signal inputs: binary (booleanAttribute, default false) and label (string). binary has no read site in checkbox.ts (declared at the input line only, so it does not change behavior in this source). No outputs; state flows through the ControlValueAccessor methods. Template: native input type=checkbox with [checked] from the checked signal, [disabled]=$disabled(), [attr.aria-label]=label(), (change) and (keydown.space) handlers (handleSpace calls preventDefault then toggles), a box div, and a label span rendered only when label() is set. The only accessible name is label() through aria-label; there is no ariaLabel or ariaLabelledBy input. writeControlValue sets the checked signal to !!value and calls setModelValue(value); toggle() writes the next boolean to modelValue and calls onModelChange and onModelTouched. Host class from cx('root') with checked and disabled params. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/checkbox. Public API: UCheckbox (class). Owned source-only declarations: CheckboxClassesParams (checked, disabled), checkboxStyleModule (classes root, box, input, icon, label; the icon key has no template element in this source). CSS comes from the @ultimate/uix-styles/checkbox style export interpolated by checkboxStyleModule; root class u-checkbox with u-checkbox-checked p-highlight and p-disabled modifiers. Theme identity checkbox matches componentName and the Aura components registry. CHECKBOX_METADATA in packages/component-metadata/src/records/checkbox.ts associates sourcePath packages/ng/src/checkbox/checkbox.ts with this source; the generated checkbox.api.mdx is an excluded documentation fixture. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/checkbox/index.ts",
+        "packages/ng/src/checkbox/checkbox.ts",
+        "packages/ng/src/checkbox/checkbox-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UCheckbox", "@ultimate/ng/checkbox#UCheckbox"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/checkbox/index.ts",
+          "contains": "export { UCheckbox }"
+        },
+        {
+          "path": "packages/ng/src/checkbox/checkbox.ts",
+          "contains": "export class UCheckbox extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/checkbox/checkbox.ts",
+          "contains": "binary = input(false, { transform: booleanAttribute });"
+        },
+        {
+          "path": "packages/ng/src/checkbox/checkbox-style.ts",
+          "contains": "import { style as checkboxStyle } from \"@ultimate/uix-styles/checkbox\";"
+        },
+        {
+          "path": "packages/ng/src/checkbox/checkbox-style.ts",
+          "contains": "export const checkboxStyleModule"
+        },
+        {
+          "path": "packages/ng/src/checkbox/checkbox-style.ts",
+          "contains": "export interface CheckboxClassesParams"
+        },
+        {
+          "path": "packages/component-metadata/src/records/checkbox.ts",
+          "contains": "export const CHECKBOX_METADATA"
+        },
+        {
+          "path": "packages/ng/src/checkbox/checkbox.ts",
+          "contains": "[attr.aria-label]=\"label()\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    checkbox,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.checkbox",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-styles.checkbox",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{checkbox,radio-button,toggle-button,toggle-switch,select-button,rating,slider,knob}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "d2e8101bf77e8e440c7166211ad5eae0e0ac6df8",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.knob",
+      "name": "Angular UKnob",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Circular value dial drawn as an inline SVG arc pair, adjustable by click, drag and keyboard, with a change output and a ControlValueAccessor contract.",
+      "surface": "Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. From UBaseEditableHolder it inherits the disabled signal input, $disabled (disabled() or the setDisabledState signal), the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. The component extends UBaseEditableHolder, provides NG_VALUE_ACCESSOR via useExisting with multi, and overrides writeControlValue. Standalone, OnPush, ViewEncapsulation.None. Component selector u-knob; componentName knob. Signal inputs: size (default 100), min (0), max (100), step (1), strokeWidth (14), showValue (booleanAttribute, default true), readonly (booleanAttribute), valueTemplate (default '{value}'), valueColor, rangeColor and textColor (CSS var() fallback strings). Output onChange: output<number>() emitted from updateModelValue with the clamped value. Template: one SVG with viewBox 0 0 100 100 and role=slider, aria-valuemin, aria-valuemax and aria-valuenow from the protected _value computed, tabindex -1 when readonly or disabled else 0, click/keydown/mousedown handlers, a range path, a value path and an optional text element. There is no aria-label or aria-labelledby and no input to supply one. Keyboard uses event.code: ArrowRight/ArrowUp add step, ArrowLeft/ArrowDown subtract step, Home, End, and PageUp/PageDown add or subtract a fixed 10. Mouse drag registers document mousemove and mouseup listeners removed on mouseup. Host class is cx('root') only; $disabled is not passed to the class resolver, so no p-disabled class is emitted and disabled is not reflected in the root class. writeControlValue writes the value when it is a number, otherwise min, to setModelValue. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/knob. Public API: UKnob (class). Owned source-only declarations: knobStyleModule (classes root, range, value, text, as plain strings; no ClassesParams interface is exported). CSS is hand-ported locally with no uix-styles import and its comment cites GAP-064 G3-A. Root class u-knob u-component. Theme identity knob matches componentName and the Aura components registry key knob. No dedicated component-metadata record exists in the current records directory. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/knob/index.ts",
+        "packages/ng/src/knob/knob.ts",
+        "packages/ng/src/knob/knob-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UKnob", "@ultimate/ng/knob#UKnob"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/knob/index.ts",
+          "contains": "export { UKnob }"
+        },
+        {
+          "path": "packages/ng/src/knob/knob.ts",
+          "contains": "export class UKnob extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/knob/knob.ts",
+          "contains": "onChange = output<number>();"
+        },
+        {
+          "path": "packages/ng/src/knob/knob.ts",
+          "contains": "switch (event.code) {"
+        },
+        {
+          "path": "packages/ng/src/knob/knob.ts",
+          "contains": "role=\"slider\""
+        },
+        {
+          "path": "packages/ng/src/knob/knob-style.ts",
+          "contains": "export const knobStyleModule"
+        },
+        {
+          "path": "packages/ng/src/knob/knob-style.ts",
+          "contains": "root: \"u-knob u-component\","
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    knob,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.knob",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{checkbox,radio-button,toggle-button,toggle-switch,select-button,rating,slider,knob}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "d2e8101bf77e8e440c7166211ad5eae0e0ac6df8",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.radio-button",
+      "name": "Angular URadioButton",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Radio control backed by a native radio input, with value matching or binary mode and a ControlValueAccessor contract.",
+      "surface": "Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. From UBaseEditableHolder it inherits the disabled signal input, $disabled (disabled() or the setDisabledState signal), the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. The component extends UBaseEditableHolder, provides NG_VALUE_ACCESSOR via useExisting with multi, and overrides writeControlValue. Standalone, OnPush, ViewEncapsulation.None. Component selector u-radio-button; componentName radiobutton. Signal inputs: value (unknown), binary (booleanAttribute, default false), name (string) and ariaLabel (string). No outputs. Template: native input type=radio with [attr.name], [checked], [disabled]=$disabled(), [attr.value] and [attr.aria-label]=ariaLabel(), plus a box div wrapping an icon div; there is no label element. writeControlValue sets checked to !!value in binary mode, otherwise to value === value(), then calls setModelValue(value). select() sets checked true and writes value() (or true in binary mode) to modelValue, onModelChange and onModelTouched; the component has no code path that unchecks itself, and mutual exclusion relies on the native name grouping per its doc comment. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/radio-button. Public API: URadioButton (class). Owned source-only declarations: RadioButtonClassesParams (checked, disabled), radioButtonStyleModule (classes root, box, input, icon). CSS is hand-ported locally with no @ultimate/uix-styles/radiobutton import; the CSS contains p-invalid and p-variant-filled selectors, but classesParams emits only checked and disabled (no invalid or variant input exists), so those modifiers are never applied by this source. Root class u-radio-button with u-radio-button-checked and p-disabled. Theme identity radiobutton matches componentName and the Aura components registry key radiobutton. No dedicated component-metadata record exists in the current records directory. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/radio-button/index.ts",
+        "packages/ng/src/radio-button/radio-button.ts",
+        "packages/ng/src/radio-button/radio-button-style.ts"
+      ],
+      "exports": ["@ultimate/ng#URadioButton", "@ultimate/ng/radio-button#URadioButton"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/radio-button/index.ts",
+          "contains": "export { URadioButton }"
+        },
+        {
+          "path": "packages/ng/src/radio-button/radio-button.ts",
+          "contains": "export class URadioButton extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/radio-button/radio-button.ts",
+          "contains": "ariaLabel = input<string>();"
+        },
+        {
+          "path": "packages/ng/src/radio-button/radio-button.ts",
+          "contains": "const isChecked = this.binary() ? !!value : value === this.value();"
+        },
+        {
+          "path": "packages/ng/src/radio-button/radio-button-style.ts",
+          "contains": "export interface RadioButtonClassesParams"
+        },
+        {
+          "path": "packages/ng/src/radio-button/radio-button-style.ts",
+          "contains": "export const radioButtonStyleModule"
+        },
+        {
+          "path": "packages/ng/src/radio-button/radio-button-style.ts",
+          "contains": ".u-radio-button.p-variant-filled .u-radio-button-box"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    radiobutton: radioButton,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.radio-button",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{checkbox,radio-button,toggle-button,toggle-switch,select-button,rating,slider,knob}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "d2e8101bf77e8e440c7166211ad5eae0e0ac6df8",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.rating",
+      "name": "Angular URating",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Star rating control built from per-star radio inputs, with keyboard stepping, focus and rate outputs and a ControlValueAccessor contract.",
+      "surface": "Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. From UBaseEditableHolder it inherits the disabled signal input, $disabled (disabled() or the setDisabledState signal), the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. The component extends UBaseEditableHolder, provides NG_VALUE_ACCESSOR via useExisting with multi, and overrides writeControlValue. Standalone, OnPush, ViewEncapsulation.None. Component selector u-rating; componentName rating. Signal inputs: readonly (booleanAttribute), stars (numberAttribute, default 5) and name (string). The name doc comment says it defaults to a generated id, but the source has no id generation: name only feeds [attr.name] on each radio input. Outputs: onRate: output<URatingRateEvent>() emitted from onOptionSelect, onFocus: output<FocusEvent>() emitted from onInputFocus with a synthetic new FocusEvent('focus'), and onBlur: output<FocusEvent>() emitted from onInputBlur with a synthetic new FocusEvent('blur'). Exported type URatingRateEvent is { originalEvent: Event; value: number | null }. Template: per star a div (cx('option')) with a click handler, a span.u-hidden-accessible wrapping a native input type=radio ([attr.name], [attr.disabled], [attr.readonly], [checked] when modelValue() === star + 1, [attr.aria-label] of '1 star' or 'N stars', focus/blur/change/keydown handlers), and an aria-hidden inline SVG star-fill (onIcon) or star (offIcon). Selecting the already selected value writes null. onStarKeyDown handles Enter and space (select), ArrowLeft/ArrowUp (previous, wrapping) and ArrowRight/ArrowDown (next, wrapping). The host sets no role or aria attributes. writeControlValue passes the value to setModelValue. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/rating. Public API: URating (class), URatingRateEvent (type). Owned source-only declarations: RatingClassesParams (star, value, focused; only focused is read by the option class resolver), ratingStyleModule (classes root, option, onIcon, offIcon). CSS is hand-ported locally with no uix-styles import; root class u-rating with p-disabled, option class u-rating-option with p-focus-visible. Theme identity rating matches componentName and the Aura components registry key rating. No dedicated component-metadata record exists in the current records directory. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/rating/index.ts",
+        "packages/ng/src/rating/rating.ts",
+        "packages/ng/src/rating/rating-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#URating",
+        "@ultimate/ng#URatingRateEvent",
+        "@ultimate/ng/rating#URating",
+        "@ultimate/ng/rating#URatingRateEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/rating/index.ts",
+          "contains": "export { URating }"
+        },
+        {
+          "path": "packages/ng/src/rating/rating.ts",
+          "contains": "export class URating extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/rating/index.ts",
+          "contains": "export type { URatingRateEvent }"
+        },
+        {
+          "path": "packages/ng/src/rating/rating.ts",
+          "contains": "onRate = output<URatingRateEvent>();"
+        },
+        {
+          "path": "packages/ng/src/rating/rating.ts",
+          "contains": "this.onFocus.emit(new FocusEvent(\"focus\"));"
+        },
+        {
+          "path": "packages/ng/src/rating/rating.ts",
+          "contains": "/** Name of the underlying radio group (defaults to a generated id). */"
+        },
+        {
+          "path": "packages/ng/src/rating/rating-style.ts",
+          "contains": "export interface RatingClassesParams"
+        },
+        {
+          "path": "packages/ng/src/rating/rating-style.ts",
+          "contains": "export const ratingStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    rating,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.rating",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{checkbox,radio-button,toggle-button,toggle-switch,select-button,rating,slider,knob}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "d2e8101bf77e8e440c7166211ad5eae0e0ac6df8",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.select-button",
+      "name": "Angular USelectButton",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Group of toggle buttons, one per option, supporting single or multiple selection, option accessors and a ControlValueAccessor contract.",
+      "surface": "Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. From UBaseEditableHolder it inherits the disabled signal input, $disabled (disabled() or the setDisabledState signal), the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. The component extends UBaseEditableHolder, provides NG_VALUE_ACCESSOR via useExisting with multi, and overrides writeControlValue. Standalone, OnPush, ViewEncapsulation.None. Component selector u-select-button; componentName selectbutton. Composition: imports UToggleButton (from @ultimate/ng/toggle-button) and ReactiveFormsModule and renders one u-toggle-button per option in an @for loop, each bound with [formControl] to an entry of the optionControls computed array of FormControl<boolean>; each control's valueChanges subscription calls onOptionSelect, and the source has no explicit unsubscribe. A constructor effect syncs every control's value and disabled state with emitEvent false. Signal inputs: options (unknown[], default []), optionLabel, optionValue and optionDisabled (each a property name string or function), multiple (booleanAttribute, default false), allowEmpty (booleanAttribute, default true) and ariaLabelledBy (string). Output onChange: output<USelectButtonChangeEvent>() emitted from onOptionSelect with a synthetic new Event('change') as originalEvent and the new value. Exported type USelectButtonChangeEvent is { originalEvent: Event; value: unknown }. Host bindings: role group and aria-labelledby from ariaLabelledBy(). Selection compares by ===: single mode writes the option value or null (blocked when allowEmpty is false); multiple mode writes an array. classesParams returns the constant { invalid: false, fluid: false } because no invalid or fluid input exists. writeControlValue passes the value to setModelValue. No dedicated manifest subpath: @ultimate/ng/select-button is not in packages/ng/package.json exports, and the root barrel re-exports it from './select-button'. Public API: USelectButton (class), USelectButtonChangeEvent (type). Owned source-only declarations: SelectButtonClassesParams (invalid, fluid), selectButtonStyleModule (classes root only). CSS is hand-ported locally with no uix-styles import; root class u-select-button with p-invalid and u-select-button-fluid modifiers. Theme identity selectbutton matches componentName and the Aura components registry key selectbutton. No dedicated component-metadata record exists in the current records directory. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/select-button/index.ts",
+        "packages/ng/src/select-button/select-button.ts",
+        "packages/ng/src/select-button/select-button-style.ts"
+      ],
+      "exports": ["@ultimate/ng#USelectButton", "@ultimate/ng#USelectButtonChangeEvent"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/select-button/index.ts",
+          "contains": "export { USelectButton }"
+        },
+        {
+          "path": "packages/ng/src/select-button/select-button.ts",
+          "contains": "export class USelectButton extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/select-button/index.ts",
+          "contains": "export type { USelectButtonChangeEvent }"
+        },
+        {
+          "path": "packages/ng/src/select-button/select-button.ts",
+          "contains": "import { UToggleButton } from \"@ultimate/ng/toggle-button\";"
+        },
+        {
+          "path": "packages/ng/src/select-button/select-button.ts",
+          "contains": "return { invalid: false, fluid: false };"
+        },
+        {
+          "path": "packages/ng/src/select-button/select-button.ts",
+          "contains": "this.onChange.emit({ originalEvent: new Event(\"change\"), value: newValue });"
+        },
+        {
+          "path": "packages/ng/src/select-button/select-button-style.ts",
+          "contains": "export interface SelectButtonClassesParams"
+        },
+        {
+          "path": "packages/ng/src/select-button/select-button-style.ts",
+          "contains": "export const selectButtonStyleModule"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"./select-button\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    selectbutton: selectButton,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.select-button",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng.toggle-button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{checkbox,radio-button,toggle-button,toggle-switch,select-button,rating,slider,knob}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "d2e8101bf77e8e440c7166211ad5eae0e0ac6df8",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.slider",
+      "name": "Angular USlider",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Single or two-handle range slider with horizontal and vertical orientation, mouse drag and keyboard stepping, change and slide-end outputs and a ControlValueAccessor contract.",
+      "surface": "Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. From UBaseEditableHolder it inherits the disabled signal input, $disabled (disabled() or the setDisabledState signal), the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. The component extends UBaseEditableHolder, provides NG_VALUE_ACCESSOR via useExisting with multi, and overrides writeControlValue. Standalone, OnPush, ViewEncapsulation.None. Component selector u-slider; componentName slider. Signal inputs: min (numberAttribute, default 0), max (numberAttribute, default 100), orientation ('horizontal' | 'vertical', default horizontal), step (number | undefined) and range (booleanAttribute, default false). Outputs: onChange: output<USliderChangeEvent>() emitted from updateValue, and onSlideEnd: output<USliderChangeEvent>() emitted from emitSlideEnd on mouseup and on a bar click. Exported type USliderChangeEvent is { originalEvent: Event; value: number | number[] }. Template: a range span plus one handle span (range false) or two handle spans (range true), each handle with role=slider, tabindex 0, aria-valuemin, aria-valuenow, aria-valuemax and aria-orientation. There is no aria-label or aria-labelledby on the handles and no input to supply one. Drag is mouse only: onMouseDown registers document mousemove and mouseup listeners that are removed only on mouseup, and neither slider.ts nor knob.ts defines ngOnDestroy. Host (click) calls onBarClick, which picks the nearest handle in range mode. Without step, applyStep floors the value; keyboard handling covers ArrowDown/ArrowLeft and ArrowUp/ArrowRight by step (default 1), PageDown/PageUp by (step || 1) * 10, Home and End. Range mode models [start, end] and falls back to [min, max] when modelValue is not an array. writeControlValue writes value ?? (range ? [min, min] : min) to setModelValue. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/slider. Public API: USlider (class), USliderChangeEvent (type). Owned source-only declarations: sliderStyleModule (classes root, range, handle; the root resolver takes an inline params type and no ClassesParams interface is exported). CSS is hand-ported locally with no uix-styles import; root class u-slider with u-slider-horizontal or u-slider-vertical and p-disabled. Theme identity slider matches componentName and the Aura components registry key slider. No dedicated component-metadata record exists in the current records directory. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/slider/index.ts",
+        "packages/ng/src/slider/slider.ts",
+        "packages/ng/src/slider/slider-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#USlider",
+        "@ultimate/ng#USliderChangeEvent",
+        "@ultimate/ng/slider#USlider",
+        "@ultimate/ng/slider#USliderChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/slider/index.ts",
+          "contains": "export { USlider }"
+        },
+        {
+          "path": "packages/ng/src/slider/slider.ts",
+          "contains": "export class USlider extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/slider/index.ts",
+          "contains": "export type { USliderChangeEvent }"
+        },
+        {
+          "path": "packages/ng/src/slider/slider.ts",
+          "contains": "onSlideEnd = output<USliderChangeEvent>();"
+        },
+        {
+          "path": "packages/ng/src/slider/slider.ts",
+          "contains": "document.addEventListener(\"mousemove\", move);"
+        },
+        {
+          "path": "packages/ng/src/slider/slider.ts",
+          "contains": "range = input(false, { transform: booleanAttribute });"
+        },
+        {
+          "path": "packages/ng/src/slider/slider-style.ts",
+          "contains": "export const sliderStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    slider,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.slider",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{checkbox,radio-button,toggle-button,toggle-switch,select-button,rating,slider,knob}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "d2e8101bf77e8e440c7166211ad5eae0e0ac6df8",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.toggle-button",
+      "name": "Angular UToggleButton",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Two-state button whose host element is the interactive role=button element, with on and off labels and a ControlValueAccessor contract.",
+      "surface": "Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. From UBaseEditableHolder it inherits the disabled signal input, $disabled (disabled() or the setDisabledState signal), the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. The component extends UBaseEditableHolder, provides NG_VALUE_ACCESSOR via useExisting with multi, and overrides writeControlValue. Standalone, OnPush, ViewEncapsulation.None. Component selector u-toggle-button; componentName togglebutton. Signal inputs: onLabel (string, default 'Yes'), offLabel (string, default 'No') and fluid (booleanAttribute). No outputs. Host bindings: role button, aria-pressed 'true'/'false' from checked(), tabindex -1 when $disabled() else 0, (click)=handleToggle, (keydown.enter) and (keydown.space)=handleKeydown (preventDefault then toggle); a HostListener on blur calls onModelTouched. Template: a content span wrapping a label span showing onLabel or offLabel. writeControlValue sets checked to !!value and calls setModelValue(value); handleToggle writes the negated boolean to modelValue, onModelChange and onModelTouched. Disabled is exposed through tabindex and the skipped handler; the host sets no aria-disabled. USelectButton composes this component. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/toggle-button. Public API: UToggleButton (class). Owned source-only declarations: ToggleButtonClassesParams (checked, disabled, fluid), toggleButtonStyleModule (classes root, content, icon, label; the icon key has no template element in this source). CSS is hand-ported locally with no uix-styles import; it contains a p-invalid selector that classesParams never emits. Root class u-toggle-button with u-toggle-button-checked, p-disabled and u-toggle-button-fluid. Theme identity togglebutton matches componentName and the Aura components registry key togglebutton. No dedicated component-metadata record exists in the current records directory. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/toggle-button/index.ts",
+        "packages/ng/src/toggle-button/toggle-button.ts",
+        "packages/ng/src/toggle-button/toggle-button-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UToggleButton", "@ultimate/ng/toggle-button#UToggleButton"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/toggle-button/index.ts",
+          "contains": "export { UToggleButton }"
+        },
+        {
+          "path": "packages/ng/src/toggle-button/toggle-button.ts",
+          "contains": "export class UToggleButton extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/toggle-button/toggle-button.ts",
+          "contains": "\"[attr.role]\": \"'button'\","
+        },
+        {
+          "path": "packages/ng/src/toggle-button/toggle-button.ts",
+          "contains": "@HostListener(\"blur\")"
+        },
+        {
+          "path": "packages/ng/src/toggle-button/toggle-button.ts",
+          "contains": "onLabel = input<string>(\"Yes\");"
+        },
+        {
+          "path": "packages/ng/src/toggle-button/toggle-button-style.ts",
+          "contains": "export interface ToggleButtonClassesParams"
+        },
+        {
+          "path": "packages/ng/src/toggle-button/toggle-button-style.ts",
+          "contains": "export const toggleButtonStyleModule"
+        },
+        {
+          "path": "packages/ng/src/toggle-button/toggle-button-style.ts",
+          "contains": ".u-toggle-button.p-invalid {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    togglebutton: toggleButton,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.toggle-button",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{checkbox,radio-button,toggle-button,toggle-switch,select-button,rating,slider,knob}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "d2e8101bf77e8e440c7166211ad5eae0e0ac6df8",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.toggle-switch",
+      "name": "Angular UToggleSwitch",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "On/off switch backed by a native checkbox input with role=switch, configurable true and false values and a ControlValueAccessor contract.",
+      "surface": "Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. From UBaseEditableHolder it inherits the disabled signal input, $disabled (disabled() or the setDisabledState signal), the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. The component extends UBaseEditableHolder, provides NG_VALUE_ACCESSOR via useExisting with multi, and overrides writeControlValue. Standalone, OnPush, ViewEncapsulation.None. Component selector u-toggle-switch; componentName toggleswitch. Signal inputs: trueValue (unknown, default true) and falseValue (unknown, default false). No outputs. checked is a plain arrow function (not a signal) returning modelValue() === trueValue(). Template: native input type=checkbox role=switch with [checked], [disabled]=$disabled(), [attr.aria-checked]=checked() and (change)=handleChange, then a slider div wrapping a handle div; there is no label input and no aria-label or aria-labelledby input. writeControlValue passes the value straight to setModelValue; handleChange writes falseValue() when checked, otherwise trueValue(), to modelValue, onModelChange and onModelTouched. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/toggle-switch. Public API: UToggleSwitch (class). Owned source-only declarations: ToggleSwitchClassesParams (checked, disabled), toggleSwitchStyleModule (classes root, input, slider, handle). CSS is hand-ported locally with no uix-styles import; it contains a p-invalid selector that classesParams never emits. Root class u-toggle-switch with u-toggle-switch-checked and p-disabled. Theme identity toggleswitch matches componentName and the Aura components registry key toggleswitch. No dedicated component-metadata record exists in the current records directory. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/toggle-switch/index.ts",
+        "packages/ng/src/toggle-switch/toggle-switch.ts",
+        "packages/ng/src/toggle-switch/toggle-switch-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UToggleSwitch", "@ultimate/ng/toggle-switch#UToggleSwitch"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/toggle-switch/index.ts",
+          "contains": "export { UToggleSwitch }"
+        },
+        {
+          "path": "packages/ng/src/toggle-switch/toggle-switch.ts",
+          "contains": "export class UToggleSwitch extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/toggle-switch/toggle-switch.ts",
+          "contains": "role=\"switch\""
+        },
+        {
+          "path": "packages/ng/src/toggle-switch/toggle-switch.ts",
+          "contains": "readonly checked = () => this.modelValue() === this.trueValue();"
+        },
+        {
+          "path": "packages/ng/src/toggle-switch/toggle-switch.ts",
+          "contains": "trueValue = input<unknown>(true);"
+        },
+        {
+          "path": "packages/ng/src/toggle-switch/toggle-switch-style.ts",
+          "contains": "export interface ToggleSwitchClassesParams"
+        },
+        {
+          "path": "packages/ng/src/toggle-switch/toggle-switch-style.ts",
+          "contains": "export const toggleSwitchStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    toggleswitch: toggleSwitch,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.toggle-switch",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{checkbox,radio-button,toggle-button,toggle-switch,select-button,rating,slider,knob}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "d2e8101bf77e8e440c7166211ad5eae0e0ac6df8",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/checkbox/checkbox.api.mdx",
+      "reason": "Generated API documentation fixture for UCheckbox; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/checkbox/checkbox.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/checkbox/checkbox.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/knob/knob.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/knob/knob.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/radio-button/radio-button.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/radio-button/radio-button.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/rating/rating.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/rating/rating.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/select-button/select-button.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/select-button/select-button.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/slider/slider.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/slider/slider.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/toggle-button/toggle-button.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/toggle-button/toggle-button.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/toggle-switch/toggle-switch.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/toggle-switch/toggle-switch.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.base-editable-holder",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.model-holder",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-styles.checkbox",
+      "batch": "ticket-146",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 113,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.checkbox",
+      "record": "angular.checkbox"
+    },
+    {
+      "id": "package.ultimate.ng.knob",
+      "record": "angular.knob"
+    },
+    {
+      "id": "package.ultimate.ng.radio-button",
+      "record": "angular.radio-button"
+    },
+    {
+      "id": "package.ultimate.ng.rating",
+      "record": "angular.rating"
+    },
+    {
+      "id": "package.ultimate.ng.select-button",
+      "record": "angular.select-button"
+    },
+    {
+      "id": "package.ultimate.ng.slider",
+      "record": "angular.slider"
+    },
+    {
+      "id": "package.ultimate.ng.toggle-button",
+      "record": "angular.toggle-button"
+    },
+    {
+      "id": "package.ultimate.ng.toggle-switch",
+      "record": "angular.toggle-switch"
+    }
+  ]
+}
