@@ -1,0 +1,648 @@
+{
+  "version": 1,
+  "scope": "vue-option-selection",
+  "revision": "ba145d8cfc110bae18e4787a1242d51e38da9cd1",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/autocomplete",
+        "packages/vue/src/cascade-select",
+        "packages/vue/src/listbox",
+        "packages/vue/src/multi-select",
+        "packages/vue/src/select"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/autocomplete/index.ts"
+        },
+        {
+          "subpath": "./autocomplete",
+          "source": "packages/vue/src/autocomplete/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/cascade-select/index.ts"
+        },
+        {
+          "subpath": "./cascade-select",
+          "source": "packages/vue/src/cascade-select/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/listbox/index.ts"
+        },
+        {
+          "subpath": "./listbox",
+          "source": "packages/vue/src/listbox/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/multi-select/index.ts"
+        },
+        {
+          "subpath": "./multi-select",
+          "source": "packages/vue/src/multi-select/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/select/index.ts"
+        },
+        {
+          "subpath": "./select",
+          "source": "packages/vue/src/select/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "vue.autocomplete",
+      "name": "Vue UAutoComplete",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Text combobox whose suggestion list is supplied by the consumer: typing emits a debounced complete event with the query, and the suggestions prop is rendered in an overlay list from which one option is selected.",
+      "surface": "UAutoComplete (Options API SFC AutoComplete.vue, name \"UAutoComplete\") and createBaseAutoComplete (BaseAutoComplete.ts) plus autoCompleteStyleModule and AutoCompleteClassesParams (autocomplete-style.ts; neither style export is re-exported from index.ts). Base factory chain: createBaseAutoComplete extends createBaseInput() (vue-core base-input: size, fluid and variant props, resolvedFluid, resolvedVariant) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, filled, writeValue); because createBaseInput takes no arguments the factory shadows cx() and mounted() locally over its own style module, and mounted registers the style under the name autocomplete. Declared props: suggestions (default empty array), optionLabel (string or function), minLength (1), delay (300 ms), placeholder, disabled, loading, emptyMessage (\"No results found\"), showEmptyMessage (true), inputId, ariaLabel, appendTo (\"body\"), plus inherited size, fluid, variant, modelValue and defaultValue. There is no optionValue prop: the model value is the whole suggestion option. Emits declared: change, focus, blur, complete, option-select, clear. change is declared and never emitted by this component; focus and blur forward the native input events, complete carries { originalEvent, query }, option-select carries { originalEvent, value }, and clear carries no payload. Model updates flow through the base writeValue (update:modelValue when controlled; value-change always). No slots, no v-model/defineModel declaration (consumers bind modelValue and update:modelValue). Template: root div, a native input type=\"text\" role=\"combobox\" with aria-autocomplete=\"list\", aria-expanded, aria-activedescendant (uid + \"_option_\" + focusedIndex when focusedIndex is not -1), aria-label from ariaLabel, id from inputId and ref=\"input\" (the ref is declared and never read; no code calls focus), an aria-hidden loader span rendering a literal ellipsis character when loading, and a UPortal (vue-core Portal, a Teleport wrapper, appendTo) rendering ul role=\"listbox\" id uid + \"_list\" only while overlayVisible. The list items are keyed by index; a trailing li role=\"option\" shows emptyMessage when suggestions is empty and showEmptyMessage is true. There is no aria-controls and no aria-haspopup although the list carries an id; uid is `u_autocomplete_${++instanceCount}` from a module-level counter. State: inputValue is seeded in data() from defaultValue (when not undefined) else modelValue through getOptionLabel, and a dValue watcher rewrites inputValue from getOptionLabel(newValue); getOptionLabel returns an empty string for null or undefined, calls optionLabel when it is a function, reads the optionLabel property of an object when it is a string, and otherwise stringifies. isSelected uses strict equality (dValue === option), so object suggestions are matched by reference. Typing: onInput sets inputValue and clears any pending searchTimeout; an empty query calls writeValue(null, event), emits clear and hides; a query of at least minLength resets focusedIndex to -1 and schedules a setTimeout of delay ms that emits complete and then sets overlayVisible true, so the overlay opens after the delay even when suggestions is empty; a shorter query hides. searchTimeout is not cleared by hide, onBlur or unmount (no unmount hook exists), so a pending timer can still emit complete and open the overlay after blur. onBlur hides the overlay and emits blur; no mousedown handler exists on the list. Keyboard (event.code, onKeyDown on the input): when disabled it calls preventDefault and returns. ArrowDown and ArrowUp return without preventDefault when the overlay is closed; when open they wrap focusedIndex. When suggestions is empty ArrowDown sets focusedIndex to 0 and a following Enter calls onOptionSelect with suggestions[focusedIndex], which is undefined, writing undefined and emitting option-select with an undefined value. Enter and NumpadEnter select the focused suggestion and call preventDefault only when the overlay is open; Escape hides and calls preventDefault only when open. No Home, End or Tab handling. Hover sets focusedIndex. Option-click handlers never read the component disabled prop: onOptionSelect writes the value, sets inputValue, emits option-select and hides without checking disabled; the native input is disabled, so the overlay is normally unreachable. There is no optionDisabled prop and no per-option disabled state. No outside-click handler exists; the overlay is dismissed by blur, Escape, selection, or an empty or shorter-than-minLength query. Styles (autocomplete-style.ts, hand-ported, no @ultimate/uix-styles import, theme tokens through dt('autocomplete.…') and one dt('icon.size')): root classes u-autocomplete u-component with p-filled, u-autocomplete-fluid and p-disabled from styleParams { filled, fluid (resolvedFluid), disabled }; pcInputText, loader, overlay, list, option (focused, selected) and emptyMessage keys. The overlay key and its .u-autocomplete-overlay rule are defined but never used by the template, because the ul list sits directly inside UPortal; p-filled and p-disabled have no CSS rule in this module (only .u-autocomplete.u-autocomplete-fluid is a state rule on the root). The inherited size and variant props are never read, and there is no invalid prop. Theme: Aura registry key autocomplete (packages/themes/src/presets/aura/index.ts), matching the registered style name. No component-metadata record exists for this family. autocomplete.spec.ts and autocomplete.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/vue/src/autocomplete/BaseAutoComplete.ts",
+        "packages/vue/src/autocomplete/AutoComplete.vue",
+        "packages/vue/src/autocomplete/index.ts",
+        "packages/vue/src/autocomplete/autocomplete-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UAutoComplete",
+        "@ultimate/vue/autocomplete#UAutoComplete",
+        "@ultimate/vue#createBaseAutoComplete",
+        "@ultimate/vue/autocomplete#createBaseAutoComplete"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/autocomplete/AutoComplete.vue",
+          "contains": "name: \"UAutoComplete\","
+        },
+        {
+          "path": "packages/vue/src/autocomplete/AutoComplete.vue",
+          "contains": "emits: [\"change\", \"focus\", \"blur\", \"complete\", \"option-select\", \"clear\"],"
+        },
+        {
+          "path": "packages/vue/src/autocomplete/AutoComplete.vue",
+          "contains": "this.$emit(\"complete\", { originalEvent: event, query });"
+        },
+        {
+          "path": "packages/vue/src/autocomplete/AutoComplete.vue",
+          "contains": "this.onOptionSelect(event, this.suggestions[this.focusedIndex]);"
+        },
+        {
+          "path": "packages/vue/src/autocomplete/AutoComplete.vue",
+          "contains": "<UPortal v-if=\"overlayVisible\" :appendTo=\"appendTo\">"
+        },
+        {
+          "path": "packages/vue/src/autocomplete/AutoComplete.vue",
+          "contains": "return this.dValue === option;"
+        },
+        {
+          "path": "packages/vue/src/autocomplete/BaseAutoComplete.ts",
+          "contains": "extends: createBaseInput(),"
+        },
+        {
+          "path": "packages/vue/src/autocomplete/BaseAutoComplete.ts",
+          "contains": "registerComponentStyle(\"autocomplete\", autoCompleteStyleModule);"
+        },
+        {
+          "path": "packages/vue/src/autocomplete/autocomplete-style.ts",
+          "contains": "export const autoCompleteStyleModule"
+        },
+        {
+          "path": "packages/vue/src/autocomplete/autocomplete-style.ts",
+          "contains": "overlay: \"u-autocomplete-overlay\","
+        },
+        {
+          "path": "packages/vue/src/autocomplete/index.ts",
+          "contains": "createBaseAutoComplete"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./autocomplete\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./autocomplete\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.autocomplete",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/autocomplete/ src/cascade-select/ src/listbox/ src/multi-select/ src/select/",
+          "outcome": "not-run",
+          "revision": "ba145d8cfc110bae18e4787a1242d51e38da9cd1",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.cascade-select",
+      "name": "Vue UCascadeSelect",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Single-value selector over a tree of options: a trigger opens an overlay with a recursive nested list in which group nodes expand and leaf nodes are selected.",
+      "surface": "UCascadeSelect (Options API SFC CascadeSelect.vue, name \"UCascadeSelect\") and createBaseCascadeSelect (BaseCascadeSelect.ts) plus cascadeSelectStyleModule and CascadeSelectClassesParams (cascade-select-style.ts; neither style export is re-exported from index.ts). CascadeSelectSublist.vue (name \"CascadeSelectSublist\") is an owned internal recursive renderer registered locally and not exported from index.ts. Base factory chain: createBaseCascadeSelect extends createBaseInput() over createBaseEditableHolder (size, fluid, variant, modelValue, defaultValue, update:modelValue, value-change, dValue, filled, writeValue); the factory shadows cx() and mounted() and registers the style under the name cascadeselect, which is also the Aura registry key (the family and style module are named cascade-select). Declared props: options, optionLabel, optionValue, optionGroupChildren (\"items\"), optionDisabled, placeholder, disabled, emptyMessage (\"No results found\"), appendTo (\"body\"), plus inherited size, fluid, variant, modelValue and defaultValue. There is no inputId, ariaLabel, filter or showClear prop. Emits declared: change, focus, blur, select. change is declared and never emitted; focus and blur forward the trigger's native events; select carries { value } only, with no originalEvent. CascadeSelectSublist emits option-click (internal) with the processed node, re-emitted up each level. Writes use writeValue(value) without an event. No slots; no v-model/defineModel declaration. Tree: processedOptions computed calls buildTree, which maps each option to { option, key, parentKey, children } with an index-path key (\"0\", \"0_1\", …) and children read from option[optionGroupChildren] when it is an array; a node with an empty or missing child array is a leaf. Only leaves are selectable and only leaves can match the model: findPathToValue compares getOptionValue against dValue for leaves only, so a model value equal to a group's value renders the placeholder; isSelected in CascadeSelectSublist is likewise leaf-only. activeOptionPath is an array of node keys. onOptionClick returns for a disabled node (option-level optionDisabled only); a group click removes the key and its descendant keys when already active, otherwise it filters out only the entry equal to node.parentKey and appends node.key. Root-level groups have parentKey \"\" so nothing is removed and several root groups can be open at once; a nested group removes its parent's key, which unmounts the parent's sublist (rendered only while activePath includes the parent key) containing the clicked group, so any nested group (a group below the root level) cannot be expanded visibly. show() sets activeOptionPath to the ancestor keys of the selected leaf when dValue is not null; hide() clears it. A leaf click writes the value, emits select and hides. Template: trigger span role=\"combobox\" with aria-haspopup=\"tree\", aria-expanded, aria-disabled, tabindex 0 or -1 and a label of the selected leaf's label or the placeholder; a dropdown div role=\"button\" aria-hidden; UPortal (appendTo) containing the overlay div and CascadeSelectSublist. The sublist renders ul role=\"tree\" at every depth (nested lists are also role=\"tree\"), li role=\"treeitem\" keyed by node.key (the other four families key by index), aria-selected, aria-expanded only for groups (null for leaves), and an emptyMessage li role=\"treeitem\" when nodes is empty. No treeitem carries aria-disabled and there is no aria-activedescendant, aria-controls or aria-label. Keyboard (event.code on the trigger): Enter, NumpadEnter, Space and ArrowDown open the overlay when closed and call preventDefault; Escape hides when open. No keyboard drill-down or focus within the tree, no Tab handling (blur emits blur without hiding) and no outside-click handler; the overlay also stays open when disabled becomes true (no watcher). No Home, End or filtering. Option-click handlers never read the component disabled prop: onOptionClick checks only the node's option-level disabled state; the disabled prop guards the trigger click and key handler, not the tree items. Styles (cascade-select-style.ts, hand-ported, no @ultimate/uix-styles import, tokens through dt('cascadeselect.…')): root classes u-cascade-select u-component p-inputwrapper with p-disabled, p-cascadeselect-open and p-inputwrapper-filled; styleParams passes fluid but the root class map has no fluid class and no fluid rule exists (no fluid class is applied); keys label (placeholder), dropdown, overlay, list, sublist, option, optionContent (selected, disabled), groupIcon and emptyMessage are all used. Only here among the five families is a z-index set (z-index: 1 on .u-cascade-select-sublist, positioned absolute at inset-inline-start 100%). The inherited size and variant props are never read and there is no invalid prop. Theme: Aura registry key cascadeselect (value cascadeSelect), which differs from the family name cascade-select. No component-metadata record exists. cascade-select.spec.ts and cascade-select.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/vue/src/cascade-select/BaseCascadeSelect.ts",
+        "packages/vue/src/cascade-select/CascadeSelect.vue",
+        "packages/vue/src/cascade-select/CascadeSelectSublist.vue",
+        "packages/vue/src/cascade-select/index.ts",
+        "packages/vue/src/cascade-select/cascade-select-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UCascadeSelect",
+        "@ultimate/vue/cascade-select#UCascadeSelect",
+        "@ultimate/vue#createBaseCascadeSelect",
+        "@ultimate/vue/cascade-select#createBaseCascadeSelect"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/cascade-select/CascadeSelect.vue",
+          "contains": "name: \"UCascadeSelect\","
+        },
+        {
+          "path": "packages/vue/src/cascade-select/CascadeSelect.vue",
+          "contains": "emits: [\"change\", \"focus\", \"blur\", \"select\"],"
+        },
+        {
+          "path": "packages/vue/src/cascade-select/CascadeSelect.vue",
+          "contains": "this.$emit(\"select\", { value });"
+        },
+        {
+          "path": "packages/vue/src/cascade-select/CascadeSelect.vue",
+          "contains": "children: childrenSource.length > 0 ? this.buildTree(childrenSource, key) : [],"
+        },
+        {
+          "path": "packages/vue/src/cascade-select/CascadeSelect.vue",
+          "contains": ": [...this.activeOptionPath.filter((key) => key !== node.parentKey), node.key];"
+        },
+        {
+          "path": "packages/vue/src/cascade-select/CascadeSelectSublist.vue",
+          "contains": "name: \"CascadeSelectSublist\","
+        },
+        {
+          "path": "packages/vue/src/cascade-select/CascadeSelectSublist.vue",
+          "contains": ":key=\"node.key\""
+        },
+        {
+          "path": "packages/vue/src/cascade-select/CascadeSelectSublist.vue",
+          "contains": "return node.children.length === 0 && this.getValue(node.option) === this.selectedValue;"
+        },
+        {
+          "path": "packages/vue/src/cascade-select/BaseCascadeSelect.ts",
+          "contains": "extends: createBaseInput(),"
+        },
+        {
+          "path": "packages/vue/src/cascade-select/BaseCascadeSelect.ts",
+          "contains": "registerComponentStyle(\"cascadeselect\", cascadeSelectStyleModule);"
+        },
+        {
+          "path": "packages/vue/src/cascade-select/cascade-select-style.ts",
+          "contains": "export const cascadeSelectStyleModule"
+        },
+        {
+          "path": "packages/vue/src/cascade-select/cascade-select-style.ts",
+          "contains": "z-index: 1;"
+        },
+        {
+          "path": "packages/vue/src/cascade-select/index.ts",
+          "contains": "createBaseCascadeSelect"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./cascade-select\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./cascade-select\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.cascade-select",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/autocomplete/ src/cascade-select/ src/listbox/ src/multi-select/ src/select/",
+          "outcome": "not-run",
+          "revision": "ba145d8cfc110bae18e4787a1242d51e38da9cd1",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.listbox",
+      "name": "Vue UListbox",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Always-visible option list with an optional filter input, supporting single selection or, with multiple, an array of selected values with a checkbox per option.",
+      "surface": "UListbox (Options API SFC Listbox.vue, name \"UListbox\") and createBaseListbox (BaseListbox.ts) plus listboxStyleModule and ListboxClassesParams (listbox-style.ts; neither style export is re-exported from index.ts). Base factory chain: createBaseListbox extends createBaseEditableHolder() directly (modelValue, defaultValue, update:modelValue, value-change, dValue, filled, writeValue), not createBaseInput, so there are no size, fluid or variant props and no fluid handling; the factory shadows cx() and mounted() and registers the style under the name listbox, which is also the Aura registry key. Declared props: options, optionLabel, optionValue, optionDisabled, multiple (false), filter (false), filterPlaceholder, disabled, ariaLabel, emptyMessage (\"No results found\"), plus modelValue and defaultValue. No inputId, showClear or appendTo prop. Emits declared: change, focus, blur; all three are emitted. change carries { originalEvent, value } from onOptionSelect; focus and blur forward the list's native events. No slots; no v-model/defineModel declaration. Template: root div (cx('root', { disabled })); an optional header div with a native input type=\"text\" role=\"searchbox\" autocomplete=\"off\" and filterPlaceholder, whose filter input is not disabled when disabled is set and has no keydown handler and no aria-label; a list container with ul role=\"listbox\" bound to aria-multiselectable (the multiple prop), aria-label (ariaLabel), tabindex 0 (-1 when disabled) and the keydown, focus and blur handlers; li role=\"option\" keyed by index with aria-selected, aria-disabled and, when multiple, a readonly tabindex=-1 checkbox; an emptyMessage li role=\"option\" when no option is visible. No uid, so options have no ids and the list has no aria-activedescendant (no aria-controls either). There is no Portal and no overlay: the list is rendered inline. Behaviour: visibleOptions filters by case-insensitive trimmed substring of getOptionLabel (which assumes a string result when optionLabel is a function); isSelected is strict equality of dValue and the option value, or Array includes when multiple. onOptionSelect returns for an option-level disabled option; in multiple mode it toggles the value in a copy of the array (a non-array dValue counts as empty), in single mode it writes the option value, so selecting the selected option again rewrites the same value and the component never emits null (no deselect, no clear). Writes pass the native event; change is emitted after writeValue. Keyboard (event.code on the list): when disabled onKeyDown returns without preventDefault. ArrowDown and ArrowUp call moveFocus; Home and End set focusedIndex to 0 or length-1 without skipping disabled options (and with an empty visibleOptions Home sets 0); Enter, NumpadEnter and Space select visibleOptions[focusedIndex] when it exists and always call preventDefault. moveFocus is a do/while that advances while the next option is disabled and next differs from focusedIndex, which is non-terminating when focusedIndex is -1 and every visible option is disabled (and is the only exit otherwise). No Escape or Tab handling; hover sets focusedIndex for enabled options only. Option-click handlers never read the component disabled prop: onOptionSelect checks only the option-level disabled state, so options remain clickable when the disabled prop is true; disabled adds the p-disabled root class, tabindex -1 and the keydown early return. Styles (listbox-style.ts, hand-ported, no @ultimate/uix-styles import, tokens through dt('listbox.…')): root classes u-listbox u-component with p-disabled (the only root state; there is no filled, fluid or open state); keys header, pcFilter, listContainer, list, option (focused, selected, disabled) and emptyMessage are all used by the template. The overlay-less list sets position: relative on one rule and no z-index. Theme: Aura registry key listbox. No component-metadata record exists. listbox.spec.ts and listbox.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/vue/src/listbox/BaseListbox.ts",
+        "packages/vue/src/listbox/Listbox.vue",
+        "packages/vue/src/listbox/index.ts",
+        "packages/vue/src/listbox/listbox-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UListbox",
+        "@ultimate/vue/listbox#UListbox",
+        "@ultimate/vue#createBaseListbox",
+        "@ultimate/vue/listbox#createBaseListbox"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/listbox/Listbox.vue",
+          "contains": "name: \"UListbox\","
+        },
+        {
+          "path": "packages/vue/src/listbox/Listbox.vue",
+          "contains": "emits: [\"change\", \"focus\", \"blur\"],"
+        },
+        {
+          "path": "packages/vue/src/listbox/Listbox.vue",
+          "contains": ":aria-multiselectable=\"multiple\""
+        },
+        {
+          "path": "packages/vue/src/listbox/Listbox.vue",
+          "contains": "this.$emit(\"change\", { originalEvent: event, value: newValue });"
+        },
+        {
+          "path": "packages/vue/src/listbox/Listbox.vue",
+          "contains": "} while (this.isOptionDisabled(options[next]) && next !== this.focusedIndex);"
+        },
+        {
+          "path": "packages/vue/src/listbox/BaseListbox.ts",
+          "contains": "extends: createBaseEditableHolder(),"
+        },
+        {
+          "path": "packages/vue/src/listbox/BaseListbox.ts",
+          "contains": "registerComponentStyle(\"listbox\", listboxStyleModule);"
+        },
+        {
+          "path": "packages/vue/src/listbox/listbox-style.ts",
+          "contains": "export const listboxStyleModule"
+        },
+        {
+          "path": "packages/vue/src/listbox/index.ts",
+          "contains": "createBaseListbox"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./listbox\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./listbox\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.listbox",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/autocomplete/ src/cascade-select/ src/listbox/ src/multi-select/ src/select/",
+          "outcome": "not-run",
+          "revision": "ba145d8cfc110bae18e4787a1242d51e38da9cd1",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.multi-select",
+      "name": "Vue UMultiSelect",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Multiple-value selector: a trigger shows the selected labels and opens an overlay with an optional select-all checkbox, optional filter input and a checkbox per option; the model is an array of option values.",
+      "surface": "UMultiSelect (Options API SFC MultiSelect.vue, name \"UMultiSelect\") and createBaseMultiSelect (BaseMultiSelect.ts) plus multiSelectStyleModule and MultiSelectClassesParams (multi-select-style.ts; neither style export is re-exported from index.ts). Base factory chain: createBaseMultiSelect extends createBaseInput() over createBaseEditableHolder; the factory shadows cx() and mounted() and registers the style under the name multiselect, which is also the Aura registry key (the family is named multi-select, the DOM classes u-multi-select). Declared props: options, optionLabel, optionValue, optionDisabled, placeholder, disabled, filter, filterPlaceholder, showClear, showToggleAll (true), maxSelectedLabels (3), selectedItemsLabel (\"{0} items selected\"), emptyMessage, appendTo (\"body\"), plus inherited size, fluid, variant, modelValue and defaultValue. There is no inputId, ariaLabel or ariaFilterLabel prop (no inputId is bound anywhere). Emits declared: change, focus, blur, select-all-change, clear; all are emitted. change carries { originalEvent, value } from onOptionSelect only; select-all-change carries { value } from toggleAll and clear carries no payload, and neither also emits change. toggleAll calls writeValue(newValue) without an event; clear writes an empty array with the event. No slots; no v-model/defineModel declaration. selectedValues treats a non-array dValue as an empty array. Label: placeholder when nothing is selected; selectedItemsLabel with its first \"{0}\" replaced by the count when the count exceeds maxSelectedLabels; otherwise the selected option labels joined with \", \" (String(value) when no option matches the value). The clear icon shows when showClear, something is selected and not disabled. Template: trigger span role=\"combobox\" with aria-haspopup=\"listbox\", aria-expanded, aria-disabled and tabindex 0 or -1 (no aria-label; there is no aria-activedescendant); a dropdown div role=\"button\" aria-hidden; UPortal (appendTo) with an overlay whose header div is always rendered and holds, when showToggleAll, a checkbox with the fixed aria-label \"Select All\" (bound to allSelected, change calls toggleAll) and, when filter, a searchbox input with filterPlaceholder, no aria-label and no keydown handler; the list is ul role=\"listbox\" with aria-multiselectable=\"true\" and no id, and li role=\"option\" keyed by index with aria-selected, aria-disabled and a readonly tabindex=-1 checkbox. There is no uid, so options and the list have no ids (no aria-controls). The filterInput ref is declared and never read; no code calls focus. Behaviour: visibleOptions filters by case-insensitive trimmed substring of getOptionLabel (assumes a string result); toggleAll acts only on visible, enabled options (allSelected requires at least one such option and all selected) and selecting all appends missing values while clearing removes only those values; isSelected uses Array includes. onOptionSelect returns for option-level disabled options, otherwise toggles the value and leaves the overlay open (it never calls hide). Keyboard (event.code on the trigger): ArrowDown and ArrowUp open when closed (show does not set focusedIndex) or call moveFocus when open; Enter, NumpadEnter and Space open when closed or select the focused option, with preventDefault; Escape hides when open; Tab hides. No Home or End. moveFocus is a do/while that advances while the next option is disabled and next differs from focusedIndex, non-terminating when focusedIndex is -1 and every visible option is disabled. Blur emits blur without hiding, no outside-click handler exists, and with no watcher on disabled the overlay stays open when disabled becomes true (the trigger's keydown then returns early). Option-click handlers never read the component disabled prop: onOptionSelect, toggleAll and clear do not check disabled; the disabled prop guards the trigger click, show(), the key handler and the clear icon's visibility, and the checkbox inside each li carries only the option-level disabled attribute. Styles (multi-select-style.ts, hand-ported, no @ultimate/uix-styles import, tokens through dt('multiselect.…')): root classes u-multi-select u-component p-inputwrapper with p-disabled, p-multiselect-open, p-inputwrapper-filled and u-multi-select-fluid (from resolvedFluid); keys label (placeholder), clearIcon, dropdown, overlay, header, pcFilter, listContainer, list, option (focused, selected, disabled) and emptyMessage are all used. The inherited size and variant props are never read and there is no invalid prop. Theme: Aura registry key multiselect (value multiSelect), which differs from the family name multi-select. No component-metadata record exists. multi-select.spec.ts and multi-select.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/vue/src/multi-select/BaseMultiSelect.ts",
+        "packages/vue/src/multi-select/MultiSelect.vue",
+        "packages/vue/src/multi-select/index.ts",
+        "packages/vue/src/multi-select/multi-select-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UMultiSelect",
+        "@ultimate/vue/multi-select#UMultiSelect",
+        "@ultimate/vue#createBaseMultiSelect",
+        "@ultimate/vue/multi-select#createBaseMultiSelect"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/multi-select/MultiSelect.vue",
+          "contains": "name: \"UMultiSelect\","
+        },
+        {
+          "path": "packages/vue/src/multi-select/MultiSelect.vue",
+          "contains": "emits: [\"change\", \"focus\", \"blur\", \"select-all-change\", \"clear\"],"
+        },
+        {
+          "path": "packages/vue/src/multi-select/MultiSelect.vue",
+          "contains": "this.$emit(\"select-all-change\", { value: newValue });"
+        },
+        {
+          "path": "packages/vue/src/multi-select/MultiSelect.vue",
+          "contains": "aria-label=\"Select All\""
+        },
+        {
+          "path": "packages/vue/src/multi-select/MultiSelect.vue",
+          "contains": "return this.selectedItemsLabel.replace(\"{0}\", String(selected.length));"
+        },
+        {
+          "path": "packages/vue/src/multi-select/MultiSelect.vue",
+          "contains": "} while (this.isOptionDisabled(options[next]) && next !== this.focusedIndex);"
+        },
+        {
+          "path": "packages/vue/src/multi-select/BaseMultiSelect.ts",
+          "contains": "extends: createBaseInput(),"
+        },
+        {
+          "path": "packages/vue/src/multi-select/BaseMultiSelect.ts",
+          "contains": "registerComponentStyle(\"multiselect\", multiSelectStyleModule);"
+        },
+        {
+          "path": "packages/vue/src/multi-select/multi-select-style.ts",
+          "contains": "export const multiSelectStyleModule"
+        },
+        {
+          "path": "packages/vue/src/multi-select/index.ts",
+          "contains": "createBaseMultiSelect"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./multi-select\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./multi-select\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.multi-select",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/autocomplete/ src/cascade-select/ src/listbox/ src/multi-select/ src/select/",
+          "outcome": "not-run",
+          "revision": "ba145d8cfc110bae18e4787a1242d51e38da9cd1",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.select",
+      "name": "Vue USelect",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Single-value dropdown: a combobox trigger shows the selected option's label or the placeholder and opens an overlay list with an optional filter input; selecting an option writes its value and closes the overlay.",
+      "surface": "USelect (Options API SFC Select.vue, name \"USelect\") and createBaseSelect (BaseSelect.ts) plus selectStyleModule and SelectClassesParams (select-style.ts; neither style export is re-exported from index.ts). Base factory chain: createBaseSelect extends createBaseInput() over createBaseEditableHolder; the factory shadows cx() and mounted() and registers the style under the name select, which is also the Aura registry key. Declared props: options, optionLabel, optionValue, optionDisabled (string or function), placeholder, disabled, filter, filterPlaceholder, ariaFilterLabel, showClear, inputId, ariaLabel, emptyMessage (\"No results found\"), appendTo (\"body\"), plus inherited size, fluid, variant, modelValue and defaultValue. Emits declared: change, focus, blur, select, clear. change is declared and never emitted; focus forwards the trigger's native event, blur is emitted from onBlur, select carries { originalEvent, value } and clear carries no payload. No slots; no v-model/defineModel declaration. selectedOption is options.find with getOptionValue strictly equal to dValue; label is that option's label else the placeholder (default null), so the single-space fallback for label === undefined is not reached with the declared default. Template: trigger span role=\"combobox\" with id from inputId (the id sits on the span, not an input), aria-label (ariaLabel or the label), aria-haspopup=\"listbox\", aria-expanded, aria-disabled, aria-activedescendant (uid + \"_option_\" + focusedIndex when not -1) and tabindex 0 or -1; a clear icon span (aria-hidden, click only, shown when showClear, filled and not disabled; it stops propagation, writes null with the event and emits clear); a dropdown div role=\"button\" aria-hidden; UPortal (appendTo) with the overlay div, an optional header with a searchbox input (ref=\"filterInput\" declared and never read, aria-label ariaFilterLabel, filterPlaceholder, keydown handler) and ul role=\"listbox\" id uid + \"_list\" with li role=\"option\" ids uid + \"_option_\" + index keyed by index, aria-selected, aria-disabled and an emptyMessage li. There is no aria-controls; nothing calls focus; uid is `u_select_${++instanceCount}`. Behaviour: visibleOptions filters by case-insensitive trimmed substring of getOptionLabel (assumes a string result); show() sets focusedIndex to the selected visible option's index (or -1) and hide() resets focusedIndex and filterValue. onOptionSelect returns for an option-level disabled option, otherwise writes the option value with the event, emits select and hides. Keyboard (event.code): the trigger handler returns without preventDefault when disabled; ArrowDown and ArrowUp open when closed or call moveFocus; Home and End set focusedIndex to 0 or length-1 when open without skipping disabled options; Enter, NumpadEnter and Space open when closed or select the focused option; Escape hides when open; Tab hides without preventDefault. The filter input's onFilterKeyDown handles ArrowDown, ArrowUp, Enter and Escape without a disabled guard. moveFocus is a do/while that advances while the next option is disabled and next differs from focusedIndex, non-terminating when focusedIndex is -1 and every visible option is disabled. Blur emits blur without hiding, there is no outside-click handler, and with no watcher on disabled the overlay stays open when disabled becomes true. Option-click handlers never read the component disabled prop: onOptionSelect checks only the option-level disabled state (isOptionDisabled), not the disabled prop; the disabled prop guards the trigger click, show() and the key handler. Styles (select-style.ts, hand-ported, no @ultimate/uix-styles import, tokens through dt('select.…')): root classes u-select u-component p-inputwrapper with p-disabled, p-select-open, p-inputwrapper-filled and u-select-fluid (from resolvedFluid); keys label (placeholder), clearIcon, dropdown, overlay, header, pcFilter, listContainer, list, option (focused, selected, disabled) and emptyMessage are all used. The inherited size and variant props are never read and there is no invalid prop. The overlay CSS is position: absolute; top: 0; left: 0 with no positioning code or z-index. Theme: Aura registry key select. No component-metadata record exists. select.spec.ts and select.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/vue/src/select/BaseSelect.ts",
+        "packages/vue/src/select/Select.vue",
+        "packages/vue/src/select/index.ts",
+        "packages/vue/src/select/select-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#USelect",
+        "@ultimate/vue/select#USelect",
+        "@ultimate/vue#createBaseSelect",
+        "@ultimate/vue/select#createBaseSelect"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/select/Select.vue",
+          "contains": "name: \"USelect\","
+        },
+        {
+          "path": "packages/vue/src/select/Select.vue",
+          "contains": "emits: [\"change\", \"focus\", \"blur\", \"select\", \"clear\"],"
+        },
+        {
+          "path": "packages/vue/src/select/Select.vue",
+          "contains": "this.$emit(\"select\", { originalEvent: event, value });"
+        },
+        {
+          "path": "packages/vue/src/select/Select.vue",
+          "contains": ":aria-label=\"ariaLabel || label\""
+        },
+        {
+          "path": "packages/vue/src/select/Select.vue",
+          "contains": "} while (this.isOptionDisabled(options[next]) && next !== this.focusedIndex);"
+        },
+        {
+          "path": "packages/vue/src/select/Select.vue",
+          "contains": "onFilterKeyDown(event) {"
+        },
+        {
+          "path": "packages/vue/src/select/BaseSelect.ts",
+          "contains": "extends: createBaseInput(),"
+        },
+        {
+          "path": "packages/vue/src/select/BaseSelect.ts",
+          "contains": "registerComponentStyle(\"select\", selectStyleModule);"
+        },
+        {
+          "path": "packages/vue/src/select/select-style.ts",
+          "contains": "export const selectStyleModule"
+        },
+        {
+          "path": "packages/vue/src/select/index.ts",
+          "contains": "createBaseSelect"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./select\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./select\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.select",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/autocomplete/ src/cascade-select/ src/listbox/ src/multi-select/ src/select/",
+          "outcome": "not-run",
+          "revision": "ba145d8cfc110bae18e4787a1242d51e38da9cd1",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); no product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/autocomplete/autocomplete.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/autocomplete/autocomplete.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/cascade-select/cascade-select.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/cascade-select/cascade-select.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/listbox/listbox.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/listbox/listbox.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/multi-select/multi-select.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/multi-select/multi-select.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/select/select.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/select/select.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.overlay",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.autocomplete",
+      "record": "vue.autocomplete"
+    },
+    {
+      "id": "package.ultimate.vue.cascade-select",
+      "record": "vue.cascade-select"
+    },
+    {
+      "id": "package.ultimate.vue.listbox",
+      "record": "vue.listbox"
+    },
+    {
+      "id": "package.ultimate.vue.multi-select",
+      "record": "vue.multi-select"
+    },
+    {
+      "id": "package.ultimate.vue.select",
+      "record": "vue.select"
+    }
+  ],
+  "ownership": {
+    "ticket": 118,
+    "path": "scripts/inventory/package-coverage.json"
+  }
+}
