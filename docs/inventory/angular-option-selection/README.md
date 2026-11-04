@@ -59,8 +59,8 @@ classes and has an unused `optionGroup` class; multi-select option classes are n
 ones its CSS targets and `toggleAll` emits a synthetic `change` event; cascade-select
 never emits its fluid or focused classes and its `onOptionMouseEnter` is a no-op;
 listbox option classes are not the ones its CSS targets and `invalid` is the constant
-`false`. select and multi-select `moveFocus` has an index `-1` edge case described in
-those records; it was read from source, not executed. The full wording and conditions are
+`false`. select, multi-select and listbox `moveFocus` have an index `-1` edge case
+described in those records; it was read from source, not executed. The full wording and conditions are
 in the records.
 
 ## Local review
