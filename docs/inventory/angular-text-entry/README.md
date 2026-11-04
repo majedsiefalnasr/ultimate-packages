@@ -15,7 +15,7 @@ input-group under `packages/ng/src`. Each family owns its index, component or di
 source and style module. `spec.ts` and `stories.ts` files are explicit supporting-file
 exclusions; every scoped file has an owner or exclusion. `UInputIcon` and
 `UInputGroupAddon` are recorded inside their composition records.
-`input-text`, `textarea` and `float-label` have no `@ultimate/ng/<family>` manifest
+`input-text` and `textarea` have no `@ultimate/ng/<family>` manifest
 subpath (root entry only); the others do. No scoped hooks or standalone helpers
 are exported. `UInputText` and `UTextarea` are attribute directives.
 
