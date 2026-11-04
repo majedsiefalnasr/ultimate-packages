@@ -1,0 +1,1000 @@
+{
+  "version": 1,
+  "scope": "angular-text-entry",
+  "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/float-label",
+        "packages/ng/src/icon-field",
+        "packages/ng/src/ifta-label",
+        "packages/ng/src/input-group",
+        "packages/ng/src/input-mask",
+        "packages/ng/src/input-otp",
+        "packages/ng/src/input-text",
+        "packages/ng/src/password",
+        "packages/ng/src/textarea"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/float-label/index.ts"
+        },
+        {
+          "subpath": "./float-label",
+          "source": "packages/ng/src/float-label/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/icon-field/index.ts"
+        },
+        {
+          "subpath": "./icon-field",
+          "source": "packages/ng/src/icon-field/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/ifta-label/index.ts"
+        },
+        {
+          "subpath": "./ifta-label",
+          "source": "packages/ng/src/ifta-label/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/input-group/index.ts"
+        },
+        {
+          "subpath": "./input-group",
+          "source": "packages/ng/src/input-group/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/input-mask/index.ts"
+        },
+        {
+          "subpath": "./input-mask",
+          "source": "packages/ng/src/input-mask/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/input-otp/index.ts"
+        },
+        {
+          "subpath": "./input-otp",
+          "source": "packages/ng/src/input-otp/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/input-text/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/password/index.ts"
+        },
+        {
+          "subpath": "./password",
+          "source": "packages/ng/src/password/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/textarea/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.float-label",
+      "name": "Angular UFloatLabel",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Container that positions a projected label over or in a projected form control according to a variant.",
+      "surface": "Component selector u-float-label; standalone, OnPush, ViewEncapsulation.None; extends UBaseComponent; template projects content. Signal input variant: 'in'|'over'|'on' (default 'over'); no outputs. Host class cx('root', {variant}) producing u-float-label plus u-float-label-over, -on or -in. componentName floatlabel; Theme identity floatlabel matches the Aura components registry and CSS reads dt('floatlabel.*'). CSS is hand-ported locally (no @ultimate/uix-styles/float-label subpath) and selects descendants by class name (.u-textarea, .u-input-icon, .u-input-text, .u-inputwrapper, fluid suffix); the selector .u-input-text differs from the u-inputtext class UInputText emits, and no scoped source emits u-inputwrapper, so how the selectors apply was not evaluated. Public API: UFloatLabel (class). Owned source-only declarations: FloatLabelClassesParams, floatLabelStyleModule. Layout-only wrapper: template is <ng-content>, no ControlValueAccessor or model tier; it extends UBaseComponent so it inherits dt/unstyled. No dedicated component-metadata record exists in the current records directory. Also exposed via @ultimate/ng/float-label. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/float-label/index.ts",
+        "packages/ng/src/float-label/float-label.ts",
+        "packages/ng/src/float-label/float-label-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UFloatLabel", "@ultimate/ng/float-label#UFloatLabel"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/float-label/index.ts",
+          "contains": "export { UFloatLabel }"
+        },
+        {
+          "path": "packages/ng/src/float-label/float-label.ts",
+          "contains": "export class UFloatLabel extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/float-label/float-label.ts",
+          "contains": "variant = input<\"in\" | \"over\" | \"on\">(\"over\");"
+        },
+        {
+          "path": "packages/ng/src/float-label/float-label-style.ts",
+          "contains": "export interface FloatLabelClassesParams"
+        },
+        {
+          "path": "packages/ng/src/float-label/float-label-style.ts",
+          "contains": "export const floatLabelStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "floatlabel: floatLabel"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.float-label",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component or directive, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-text,textarea,input-mask,input-otp,password,float-label,ifta-label,icon-field,input-group}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. The #107 record of a compile-time failure of this suite at 4ad39332 covered other families at another revision and is not evidence for this one. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.icon-field",
+      "name": "Angular UIconField and UInputIcon",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Composition pair placing a projected icon beside a projected input inside a shared field wrapper.",
+      "surface": "Two standalone OnPush components in one file. UIconField selector u-icon-field extends UBaseComponent, projects content and declares iconPosition: 'left'|'right' (default 'left'); that input is declared but not read by the host class or style in this source. UInputIcon selector u-input-icon extends UBaseComponent and projects the icon content; it has no inputs. Both host classes are cx('root'): u-icon-field and u-input-icon. componentNames iconfield and input-icon; Theme identity iconfield matches the Aura components registry, while input-icon has no registry key. UIconField's style module owns the shared .u-icon-field/.u-input-icon CSS; UInputIcon's style module has empty css. CSS is hand-ported locally. Public API: UIconField, UInputIcon (classes). Owned source-only declarations: iconFieldStyleModule, inputIconStyleModule. Layout-only wrapper: template is <ng-content>, no ControlValueAccessor or model tier; it extends UBaseComponent so it inherits dt/unstyled. No dedicated component-metadata record exists in the current records directory. Also exposed via @ultimate/ng/icon-field. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/icon-field/index.ts",
+        "packages/ng/src/icon-field/icon-field.ts",
+        "packages/ng/src/icon-field/icon-field-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UIconField",
+        "@ultimate/ng#UInputIcon",
+        "@ultimate/ng/icon-field#UIconField",
+        "@ultimate/ng/icon-field#UInputIcon"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/icon-field/index.ts",
+          "contains": "export { UIconField, UInputIcon }"
+        },
+        {
+          "path": "packages/ng/src/icon-field/icon-field.ts",
+          "contains": "export class UIconField extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/icon-field/icon-field.ts",
+          "contains": "export class UInputIcon extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/icon-field/icon-field.ts",
+          "contains": "iconPosition = input<\"left\" | \"right\">(\"left\");"
+        },
+        {
+          "path": "packages/ng/src/icon-field/icon-field-style.ts",
+          "contains": "export const iconFieldStyleModule"
+        },
+        {
+          "path": "packages/ng/src/icon-field/icon-field-style.ts",
+          "contains": "export const inputIconStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "iconfield: iconField"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.icon-field",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component or directive, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-text,textarea,input-mask,input-otp,password,float-label,ifta-label,icon-field,input-group}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. The #107 record of a compile-time failure of this suite at 4ad39332 covered other families at another revision and is not evidence for this one. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.ifta-label",
+      "name": "Angular UIftaLabel",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Container for a projected label and control using the inline top-aligned label layout.",
+      "surface": "Component selector u-ifta-label; standalone, OnPush, ViewEncapsulation.None; extends UBaseComponent; template projects content; no own inputs or outputs. Host class cx('root') = 'u-ifta-label'. componentName iftalabel; Theme identity iftalabel matches the Aura components registry. CSS is hand-ported locally (comment records no @ultimate/uix-styles/ifta-label subpath) and selects descendants by class name (.u-input-text, .u-textarea, .u-input-icon, .u-inputwrapper-focus). Public API: UIftaLabel (class). Owned source-only declaration: iftaLabelStyleModule (no class-parameter interface). Layout-only wrapper: template is <ng-content>, no ControlValueAccessor or model tier; it extends UBaseComponent so it inherits dt/unstyled. No dedicated component-metadata record exists in the current records directory. Also exposed via @ultimate/ng/ifta-label. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/ifta-label/index.ts",
+        "packages/ng/src/ifta-label/ifta-label.ts",
+        "packages/ng/src/ifta-label/ifta-label-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UIftaLabel", "@ultimate/ng/ifta-label#UIftaLabel"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/ifta-label/index.ts",
+          "contains": "export { UIftaLabel }"
+        },
+        {
+          "path": "packages/ng/src/ifta-label/ifta-label.ts",
+          "contains": "export class UIftaLabel extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/ifta-label/ifta-label.ts",
+          "contains": "selector: \"u-ifta-label\""
+        },
+        {
+          "path": "packages/ng/src/ifta-label/ifta-label-style.ts",
+          "contains": "export const iftaLabelStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "iftalabel: iftaLabel"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.ifta-label",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component or directive, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-text,textarea,input-mask,input-otp,password,float-label,ifta-label,icon-field,input-group}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. The #107 record of a compile-time failure of this suite at 4ad39332 covered other families at another revision and is not evidence for this one. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.input-group",
+      "name": "Angular UInputGroup and UInputGroupAddon",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Composition pair joining projected controls and addons into one connected group.",
+      "surface": "Two standalone OnPush components in one file. UInputGroup selector u-input-group extends UBaseComponent, projects content, no inputs or outputs, host class u-input-group. UInputGroupAddon selector u-input-group-addon extends UBaseComponent, projects content, declares inlineStyle: Record<string, unknown>|null|undefined bound to host [style], host class u-input-group-addon. componentNames inputgroup and input-group-addon; Theme identity inputgroup matches the Aura components registry, input-group-addon has no registry key. The group style module owns all CSS (including addon rules and nested .u-icon-field/.u-float-label/.u-ifta-label layout); the addon style module has empty css. CSS is hand-ported locally (no @ultimate/uix-styles/input-group subpath). Public API: UInputGroup, UInputGroupAddon (classes). Owned source-only declarations: inputGroupStyleModule, inputGroupAddonStyleModule; no class-parameter interface. Layout-only wrapper: template is <ng-content>, no ControlValueAccessor or model tier; it extends UBaseComponent so it inherits dt/unstyled. No dedicated component-metadata record exists in the current records directory. Also exposed via @ultimate/ng/input-group. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/input-group/index.ts",
+        "packages/ng/src/input-group/input-group.ts",
+        "packages/ng/src/input-group/input-group-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UInputGroup",
+        "@ultimate/ng#UInputGroupAddon",
+        "@ultimate/ng/input-group#UInputGroup",
+        "@ultimate/ng/input-group#UInputGroupAddon"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/input-group/index.ts",
+          "contains": "export { UInputGroup, UInputGroupAddon }"
+        },
+        {
+          "path": "packages/ng/src/input-group/input-group.ts",
+          "contains": "export class UInputGroup extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/input-group/input-group.ts",
+          "contains": "export class UInputGroupAddon extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/input-group/input-group.ts",
+          "contains": "inlineStyle = input<Record<string, unknown> | null | undefined>(undefined);"
+        },
+        {
+          "path": "packages/ng/src/input-group/input-group-style.ts",
+          "contains": "export const inputGroupStyleModule"
+        },
+        {
+          "path": "packages/ng/src/input-group/input-group-style.ts",
+          "contains": "export const inputGroupAddonStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "inputgroup: inputGroup"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.input-group",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "angular.icon-field",
+        "angular.float-label",
+        "angular.ifta-label"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component or directive, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-text,textarea,input-mask,input-otp,password,float-label,ifta-label,icon-field,input-group}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. The #107 record of a compile-time failure of this suite at 4ad39332 covered other families at another revision and is not evidence for this one. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.input-mask",
+      "name": "Angular UInputMask",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Native text input that formats typed and pasted characters against a mask pattern and reports completion and the unmasked value.",
+      "surface": "Component selector u-input-mask; standalone, OnPush, ViewEncapsulation.None; extends UBaseInput and provides NG_VALUE_ACCESSOR (useExisting UInputMask, multi). Template is one native <input type=text> (ViewChild inputEl) with keypress, keydown, input, paste, focus and blur handlers and disabled/readonly/placeholder/maxlength/minlength/size attributes. Signal inputs: mask, slotChar ('_'), autoClear (true), characterPattern ('[A-Za-z]'), unmask, readonly, placeholder, invalid. Outputs: onCompleteEvent: output<void>() and onUnmaskedChange: output<string>(). onFocus/onBlur are protected handlers, not outputs. writeControlValue override reformats a written string through the mask buffer; the model value is the unmasked or the formatted buffer string according to unmask(). From UBaseInput it inherits signal inputs fluid, variant, size, inputSize, pattern, min, max, step, minlength and maxlength; from UBaseEditableHolder disabled, the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. hasFluid is true when fluid() is set or an ancestor UFluid provides U_FLUID_ANCESTOR. componentName input-mask; ngOnInit builds the mask definitions. Public API: UInputMask (class). Host class cx('root', {invalid, fluid}); inner input uses cx('pcInputText') = 'u-inputtext', so its look relies on the inputtext class name coupling rather than an import. No dedicated Aura registry key (aura/index.ts records that inputmask has no upstream module and reuses InputText tokens). Owned source-only declarations: InputMaskClassesParams, inputMaskStyleModule (root 'u-inputmask u-component' with p-invalid and u-inputmask-fluid). No dedicated component-metadata record exists in the current records directory. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Also exposed via @ultimate/ng/input-mask. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/input-mask/index.ts",
+        "packages/ng/src/input-mask/input-mask.ts",
+        "packages/ng/src/input-mask/input-mask-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UInputMask", "@ultimate/ng/input-mask#UInputMask"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/input-mask/index.ts",
+          "contains": "export { UInputMask }"
+        },
+        {
+          "path": "packages/ng/src/input-mask/input-mask.ts",
+          "contains": "export class UInputMask extends UBaseInput"
+        },
+        {
+          "path": "packages/ng/src/input-mask/input-mask.ts",
+          "contains": "selector: \"u-input-mask\""
+        },
+        {
+          "path": "packages/ng/src/input-mask/input-mask.ts",
+          "contains": "onCompleteEvent = output<void>();"
+        },
+        {
+          "path": "packages/ng/src/input-mask/input-mask.ts",
+          "contains": "onUnmaskedChange = output<string>();"
+        },
+        {
+          "path": "packages/ng/src/input-mask/input-mask.ts",
+          "contains": "override writeControlValue"
+        },
+        {
+          "path": "packages/ng/src/input-mask/input-mask-style.ts",
+          "contains": "export interface InputMaskClassesParams"
+        },
+        {
+          "path": "packages/ng/src/input-mask/input-mask-style.ts",
+          "contains": "export const inputMaskStyleModule"
+        },
+        {
+          "path": "packages/ng/src/input-mask/input-mask-style.ts",
+          "contains": "pcInputText: \"u-inputtext\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "`inputmask` has no upstream module"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.input-mask",
+        "package.ultimate.ng-core.base-input",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng.fluid",
+        "package.ultimate.uix-styles.inputtext"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component or directive, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-text,textarea,input-mask,input-otp,password,float-label,ifta-label,icon-field,input-group}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. The #107 record of a compile-time failure of this suite at 4ad39332 covered other families at another revision and is not evidence for this one. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.input-otp",
+      "name": "Angular UInputOtp",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "One-time-code entry rendering one single-character native input per segment backed by one string model value.",
+      "surface": "Component selector u-input-otp; standalone, OnPush, ViewEncapsulation.None; extends UBaseEditableHolder (not UBaseInput) and provides NG_VALUE_ACCESSOR via forwardRef. Template loops over range() rendering native inputs with maxlength 1, type from inputType() (password when mask), inputmode from inputMode() (numeric when integerOnly), disabled/readonly attributes and input, keydown, paste and focus handlers. Signal inputs: length (4), mask, integerOnly, readonly. Outputs: onChange: output<{ value: string }>(), onFocus: output<Event>(), onBlur: output<Event>(); onChange and onFocus have emit sites, onBlur is declared but has no emit site in this source. Public readonly computed inputMode and inputType. Local private tokens signal holds one character per segment; keyboard navigation (ArrowLeft/ArrowRight/Backspace via sibling traversal), integerOnly keydown filtering and paste splitting are implemented; writeControlValue override populates tokens. It inherits disabled and the CVA methods from UBaseEditableHolder and modelValue/$filled from UModelHolder, not the UBaseInput signal inputs. componentName inputotp; Theme identity inputotp matches the Aura components registry. Public API: UInputOtp (class). Segment inputs use cx('pcInputText') = 'u-inputtext u-inputotp-input' (class-name coupling to inputtext, no import). Owned source-only declarations: InputOtpClassesParams (Record<string, never>), inputOtpStyleModule. The doc comment records omitted upstream inputTemplate and passthrough. No dedicated component-metadata record exists in the current records directory. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Also exposed via @ultimate/ng/input-otp. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/input-otp/index.ts",
+        "packages/ng/src/input-otp/input-otp.ts",
+        "packages/ng/src/input-otp/input-otp-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UInputOtp", "@ultimate/ng/input-otp#UInputOtp"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/input-otp/index.ts",
+          "contains": "export { UInputOtp }"
+        },
+        {
+          "path": "packages/ng/src/input-otp/input-otp.ts",
+          "contains": "export class UInputOtp extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/input-otp/input-otp.ts",
+          "contains": "selector: \"u-input-otp\""
+        },
+        {
+          "path": "packages/ng/src/input-otp/input-otp.ts",
+          "contains": "onChange = output<{ value: string }>();"
+        },
+        {
+          "path": "packages/ng/src/input-otp/input-otp.ts",
+          "contains": "onBlur = output<Event>();"
+        },
+        {
+          "path": "packages/ng/src/input-otp/input-otp.ts",
+          "contains": "override writeControlValue"
+        },
+        {
+          "path": "packages/ng/src/input-otp/input-otp-style.ts",
+          "contains": "export type InputOtpClassesParams"
+        },
+        {
+          "path": "packages/ng/src/input-otp/input-otp-style.ts",
+          "contains": "export const inputOtpStyleModule"
+        },
+        {
+          "path": "packages/ng/src/input-otp/input-otp-style.ts",
+          "contains": "pcInputText: \"u-inputtext u-inputotp-input\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "inputotp: inputOtp"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.input-otp",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.uix-styles.inputtext",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component or directive, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-text,textarea,input-mask,input-otp,password,float-label,ifta-label,icon-field,input-group}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. The #107 record of a compile-time failure of this suite at 4ad39332 covered other families at another revision and is not evidence for this one. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.input-text",
+      "name": "Angular UInputText",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Styles a native input element in place and mirrors its value into model state for filled styling; not a wrapping component.",
+      "surface": "Attribute directive (selector [uInputText], exportAs uInputText) applied to a native <input>, not a wrapping component; there is no template. Standalone; extends UModelHolder directly (skipping UBaseEditableHolder) so it has no disabled input of its own. It injects NgControl optionally (self) read-only and does not implement ControlValueAccessor or provide NG_VALUE_ACCESSOR: Angular's native DefaultValueAccessor stays the only accessor, and the directive only mirrors NgControl.value (or the native value) into modelValue/$filled for styling via the native input event, ngAfterViewInit, NgControl.valueChanges (takeUntilDestroyed) and ngDoCheck. Optionally injects an ancestor UFluid (host, skipSelf); hasFluid is fluid() ?? presence of that ancestor. Signal inputs: variant ('filled'|'outlined'|undefined), fluid and invalid (boolean attribute transforms). Computed $variant. Host binds class via cx('root', classesParams()) and host attribute data-p from a cn() token string (invalid, fluid, filled). componentName inputtext; imports cn from @ultimate/uix-utils/classnames. Public API: UInputText (class). The doc comment records omitted upstream passthrough, pSize and NgModule wrapper; no outputs are declared. Theme identity inputtext matches componentName and the Aura components registry; dt() resolves those token references via base registration. CSS comes from @ultimate/uix-styles/inputtext (style import) with local inputTextStyleModule supplying css/classes: root class 'u-inputtext u-component' plus p-filled, p-invalid, u-inputtext-fluid and p-variant-filled modifiers. Owned source-only declarations: InputTextClassesParams, inputTextStyleModule. No dedicated component-metadata record exists in the current records directory. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. No dedicated manifest subpath; root entry only. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/input-text/index.ts",
+        "packages/ng/src/input-text/input-text.ts",
+        "packages/ng/src/input-text/input-text-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UInputText"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/input-text/index.ts",
+          "contains": "export { UInputText }"
+        },
+        {
+          "path": "packages/ng/src/input-text/input-text.ts",
+          "contains": "export class UInputText extends UModelHolder"
+        },
+        {
+          "path": "packages/ng/src/input-text/input-text.ts",
+          "contains": "selector: \"[uInputText]\""
+        },
+        {
+          "path": "packages/ng/src/input-text/input-text.ts",
+          "contains": "inject(NgControl, { optional: true, self: true })"
+        },
+        {
+          "path": "packages/ng/src/input-text/input-text-style.ts",
+          "contains": "import { style as inputTextStyle } from \"@ultimate/uix-styles/inputtext\";"
+        },
+        {
+          "path": "packages/ng/src/input-text/input-text-style.ts",
+          "contains": "export interface InputTextClassesParams"
+        },
+        {
+          "path": "packages/ng/src/input-text/input-text-style.ts",
+          "contains": "export const inputTextStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "inputtext: inputText"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.input-text",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng.fluid",
+        "package.ultimate.uix-styles.inputtext",
+        "package.ultimate.uix-utils.classnames",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component or directive, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-text,textarea,input-mask,input-otp,password,float-label,ifta-label,icon-field,input-group}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. The #107 record of a compile-time failure of this suite at 4ad39332 covered other families at another revision and is not evidence for this one. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.password",
+      "name": "Angular UPassword",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Password field with optional visibility toggle and an overlay strength meter driven by configurable regular expressions.",
+      "surface": "Component selector u-password; standalone, OnPush, ViewEncapsulation.None; imports UOverlay and extends UBaseInput; provides NG_VALUE_ACCESSOR. Template: a native input switching type between password and text via the unmasked signal, optional inline SVG toggle icons (role=button, aria-labels 'Show Password'/'Hide Password') when toggleMask, and, when feedback, a uOverlay appended to body containing a meter bar and info text. Signal inputs: ariaLabel, inputId, placeholder, feedback (true), toggleMask (false), promptLabel, weakLabel, mediumLabel, strongLabel, mediumRegex and strongRegex (string patterns). Outputs onFocus: output<Event>() and onBlur: output<Event>() are declared but have no emit site in this source (the handlers only toggle the overlay and mark touched). Strength levels weak/medium/strong set meter width 33.33%/66.66%/100%; Escape key hides the overlay. writeControlValue override normalizes the value to a string and refreshes meter state. There is no invalid input; classesParams passes invalid: false constantly. From UBaseInput it inherits signal inputs fluid, variant, size, inputSize, pattern, min, max, step, minlength and maxlength; from UBaseEditableHolder disabled, the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. hasFluid is true when fluid() is set or an ancestor UFluid provides U_FLUID_ANCESTOR. componentName password; Theme identity password matches the Aura components registry. Public API: UPassword (class). Owned source-only declarations: PasswordClassesParams, passwordStyleModule (keys root, pcInputText, maskIcon, unmaskIcon, clearIcon, overlay, meter, meterLabel, meterText; clearIcon has a class key and CSS but no template element in this source). A comment records that no @ultimate/uix-styles/password subpath exists, so CSS is local. No dedicated component-metadata record exists in the current records directory. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Also exposed via @ultimate/ng/password. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/password/index.ts",
+        "packages/ng/src/password/password.ts",
+        "packages/ng/src/password/password-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UPassword", "@ultimate/ng/password#UPassword"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/password/index.ts",
+          "contains": "export { UPassword }"
+        },
+        {
+          "path": "packages/ng/src/password/password.ts",
+          "contains": "export class UPassword extends UBaseInput"
+        },
+        {
+          "path": "packages/ng/src/password/password.ts",
+          "contains": "selector: \"u-password\""
+        },
+        {
+          "path": "packages/ng/src/password/password.ts",
+          "contains": "toggleMask = input(false, { transform: booleanAttribute });"
+        },
+        {
+          "path": "packages/ng/src/password/password.ts",
+          "contains": "onBlur = output<Event>();"
+        },
+        {
+          "path": "packages/ng/src/password/password.ts",
+          "contains": "imports: [UOverlay]"
+        },
+        {
+          "path": "packages/ng/src/password/password-style.ts",
+          "contains": "export interface PasswordClassesParams"
+        },
+        {
+          "path": "packages/ng/src/password/password-style.ts",
+          "contains": "export const passwordStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    password,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.password",
+        "package.ultimate.ng-core.base-input",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.ng.fluid",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component or directive, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-text,textarea,input-mask,input-otp,password,float-label,ifta-label,icon-field,input-group}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. The #107 record of a compile-time failure of this suite at 4ad39332 covered other families at another revision and is not evidence for this one. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.textarea",
+      "name": "Angular UTextarea",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Styles a native textarea in place, mirrors its value into model state and optionally grows with content.",
+      "surface": "Attribute directive (selector [uTextarea], exportAs uTextarea) applied to a native <textarea>, not a wrapping component; there is no template. Standalone; extends UModelHolder directly (skipping UBaseEditableHolder) so it has no disabled input of its own. It injects NgControl optionally (self) read-only and does not implement ControlValueAccessor or provide NG_VALUE_ACCESSOR: Angular's native DefaultValueAccessor stays the only accessor, and the directive only mirrors NgControl.value (or the native value) into modelValue/$filled for styling via the native input event, ngAfterViewInit, NgControl.valueChanges (takeUntilDestroyed) and ngDoCheck. Optionally injects an ancestor UFluid (host, skipSelf); hasFluid is fluid() ?? presence of that ancestor. Signal inputs: variant ('filled'|'outlined'|undefined), fluid and invalid (boolean attribute transforms), plus autoResize (boolean attribute) and the output onResize: output<Event | Record<string, never>>() emitted by the private resize(), which resets height to auto, sets height from scrollHeight and switches overflow/overflowY according to a CSS max-height; autoResize runs it from ngAfterViewInit and each input event. Computed $variant. Host binds class via cx('root', classesParams()). componentName textarea. Public API: UTextarea (class). No data-p host attribute. Theme identity textarea matches componentName and the Aura components registry. CSS is hand-ported locally (a comment records that no @ultimate/uix-styles/textarea subpath exists); root class 'u-textarea u-component' plus p-invalid, u-textarea-fluid, p-variant-filled and u-textarea-resizable. Owned source-only declarations: TextareaClassesParams, textareaStyleModule. No dedicated component-metadata record exists in the current records directory. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. No dedicated manifest subpath; root entry only. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.",
+      "files": [
+        "packages/ng/src/textarea/index.ts",
+        "packages/ng/src/textarea/textarea.ts",
+        "packages/ng/src/textarea/textarea-style.ts"
+      ],
+      "exports": ["@ultimate/ng#UTextarea"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/textarea/index.ts",
+          "contains": "export { UTextarea }"
+        },
+        {
+          "path": "packages/ng/src/textarea/textarea.ts",
+          "contains": "export class UTextarea extends UModelHolder"
+        },
+        {
+          "path": "packages/ng/src/textarea/textarea.ts",
+          "contains": "selector: \"[uTextarea]\""
+        },
+        {
+          "path": "packages/ng/src/textarea/textarea.ts",
+          "contains": "onResize = output<Event | Record<string, never>>();"
+        },
+        {
+          "path": "packages/ng/src/textarea/textarea-style.ts",
+          "contains": "export interface TextareaClassesParams"
+        },
+        {
+          "path": "packages/ng/src/textarea/textarea-style.ts",
+          "contains": "export const textareaStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    textarea,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.textarea",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng.fluid",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component or directive, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{input-text,textarea,input-mask,input-otp,password,float-label,ifta-label,icon-field,input-group}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "07ced02e76e763352e806fc53006976eb0f6259d",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. The #107 record of a compile-time failure of this suite at 4ad39332 covered other families at another revision and is not evidence for this one. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/float-label/float-label.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/float-label/float-label.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/icon-field/icon-field.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/icon-field/icon-field.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/ifta-label/ifta-label.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/ifta-label/ifta-label.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/input-group/input-group.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/input-group/input-group.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/input-mask/input-mask.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/input-mask/input-mask.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/input-otp/input-otp.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/input-otp/input-otp.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/input-text/input-text.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/input-text/input-text.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/password/password.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/password/password.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/textarea/textarea.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/textarea/textarea.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.ng-core.base-editable-holder",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.base-input",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.model-holder",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.overlay",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng.fluid",
+      "batch": "ticket-140",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-styles.inputtext",
+      "batch": "ticket-146",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-utils.classnames",
+      "batch": "ticket-144",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 110,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.float-label",
+      "record": "angular.float-label"
+    },
+    {
+      "id": "package.ultimate.ng.icon-field",
+      "record": "angular.icon-field"
+    },
+    {
+      "id": "package.ultimate.ng.ifta-label",
+      "record": "angular.ifta-label"
+    },
+    {
+      "id": "package.ultimate.ng.input-group",
+      "record": "angular.input-group"
+    },
+    {
+      "id": "package.ultimate.ng.input-mask",
+      "record": "angular.input-mask"
+    },
+    {
+      "id": "package.ultimate.ng.input-otp",
+      "record": "angular.input-otp"
+    },
+    {
+      "id": "package.ultimate.ng.input-text",
+      "record": "angular.input-text"
+    },
+    {
+      "id": "package.ultimate.ng.password",
+      "record": "angular.password"
+    },
+    {
+      "id": "package.ultimate.ng.textarea",
+      "record": "angular.textarea"
+    }
+  ]
+}
