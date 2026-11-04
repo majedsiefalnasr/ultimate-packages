@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "scope": "angular-option-selection",
+  "revision": "f8fc98fc26ad56886dfe9af8714fb6b6f66e78a7",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/autocomplete",
+        "packages/ng/src/cascade-select",
+        "packages/ng/src/listbox",
+        "packages/ng/src/multi-select",
+        "packages/ng/src/select"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/autocomplete/index.ts"
+        },
+        {
+          "subpath": "./autocomplete",
+          "source": "packages/ng/src/autocomplete/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/cascade-select/index.ts"
+        },
+        {
+          "subpath": "./cascade-select",
+          "source": "packages/ng/src/cascade-select/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/listbox/index.ts"
+        },
+        {
+          "subpath": "./listbox",
+          "source": "packages/ng/src/listbox/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/multi-select/index.ts"
+        },
+        {
+          "subpath": "./multi-select",
+          "source": "packages/ng/src/multi-select/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/select/index.ts"
+        },
+        {
+          "subpath": "./select",
+          "source": "packages/ng/src/select/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/autocomplete/autocomplete.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/autocomplete/autocomplete.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/cascade-select/cascade-select.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/cascade-select/cascade-select.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/listbox/listbox.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/listbox/listbox.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/multi-select/multi-select.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/multi-select/multi-select.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/select/select.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
+    },
+    {
+      "path": "packages/ng/src/select/select.stories.ts",
+      "reason": "Storybook example source, not a separately exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.ng-core.base-editable-holder",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.base-input",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.model-holder",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.overlay",
+      "batch": "ticket-148",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 116,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.autocomplete",
+      "record": "angular.autocomplete"
+    },
+    {
+      "id": "package.ultimate.ng.select",
+      "record": "angular.select"
+    },
+    {
+      "id": "package.ultimate.ng.multi-select",
+      "record": "angular.multi-select"
+    },
+    {
+      "id": "package.ultimate.ng.cascade-select",
+      "record": "angular.cascade-select"
+    },
+    {
+      "id": "package.ultimate.ng.listbox",
+      "record": "angular.listbox"
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.autocomplete",
+      "name": "Angular UAutoComplete",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Text input with a consumer-driven suggestion list: the component emits a search request and renders whatever suggestions array the consumer supplies in an overlay listbox, selecting one option as the form value.",
+      "surface": "Extends UBaseInput (which extends UBaseEditableHolder and UModelHolder) so it inherits the disabled signal input, $disabled, modelValue/$filled and the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState. The inherited UBaseInput inputs variant, size, inputSize, pattern, min, max, step, minlength and maxlength are not read anywhere in this component's source; fluid is consumed only through hasFluid in classesParams. Standalone, OnPush, ViewEncapsulation.None; provides NG_VALUE_ACCESSOR via useExisting with multi and overrides writeControlValue. Selector u-autocomplete; componentName autocomplete. Signal inputs: suggestions (unknown[], default []), optionLabel (string or function), minLength (default 1, numberAttribute), delay (default 300 ms, numberAttribute), ariaLabel, inputId, placeholder, loading (booleanAttribute), emptyMessage (default \"No results found\"), showEmptyMessage (default true). There are no optionValue, optionDisabled, filter, showClear or multiple inputs. Outputs: completeMethod (UAutoCompleteCompleteEvent {originalEvent, query}), onSelect (UAutoCompleteSelectEvent {originalEvent, value}), onFocus (Event), onBlur (Event), onClear (void). onFocus and onBlur emit a newly constructed synthetic Event (new Event(\"focus\") / new Event(\"blur\")), not the DOM event. Template: one native input type=text with role=combobox and aria-autocomplete=list, bound to [value]=inputValue(), placeholder, id (inputId), disabled attribute, aria-label (ariaLabel), aria-expanded (overlayVisible) and aria-activedescendant (id_option_N when focusedOptionIndex is not -1, else null); there is no aria-controls and no aria-haspopup. A loader span (aria-hidden) renders while loading() is true. The overlay (UOverlay directive, appendTo body, rendered only while overlayVisible) holds a ul role=listbox with id <id>_list and li role=option elements (id <id>_option_N, aria-selected from isSelected, click selects, mouseenter sets the focused index); when suggestions is empty and showEmptyMessage() is true an li role=option shows emptyMessage. The instance id is u_autocomplete_<n> from a static counter and is not applied to the host. Behaviour: onInput clears any pending timer; an empty query writes null, calls onModelChange(null), emits onClear and hides; a query with length >= minLength resets the focused index to -1 and schedules setTimeout(delay()) that emits completeMethod({originalEvent, query}) and then sets overlayVisible true; a shorter non-empty query hides. Typing alone never changes modelValue; it changes only on option select, an emptied input or writeValue. The pending timer is cleared only by the next onInput (there is no ngOnDestroy), so a scheduled search can still emit and open the overlay after blur or after a selection. onInputBlur calls onModelTouched, hide() and then emits onBlur; onModelTouched is not called by option selection. Keyboard (event.code, ignored with preventDefault when disabled): ArrowDown/ArrowUp act only while the overlay is visible and wrap modulo the suggestion count (ArrowDown from the last goes to 0; ArrowUp from index <= 0 goes to count-1); with an empty suggestions array ArrowDown sets the focused index to 0, and a following Enter calls onOptionSelect with suggestions()[0] which is undefined. Enter/NumpadEnter act only while visible, select the focused option when the index is not -1, and always preventDefault; Escape hides and preventDefault only while visible. There is no Home/End/Tab handling. onOptionSelect writes the option itself as modelValue (no optionValue mapping), calls onModelChange, sets the native input value to the option label, emits onSelect({originalEvent, value}) and hides. getOptionLabel returns \"\" for null/undefined, calls a function optionLabel, reads a string optionLabel from an object via String(obj[key] ?? \"\"), otherwise returns a string as is or String(option). isSelected compares modelValue() === option by identity. writeControlValue calls setModelValue(value) and sets the native input value to the label. Overlay composition: UOverlay (ng-core) moves the element to document.body and assigns a z-index while visible; the component binds only [visible] and appendTo and does not bind visibleChange. Nothing in autocomplete.ts or overlay.ts registers an outside-click listener or positions the panel; the CSS positions it absolute at top 0, left 0. Public API: UAutoComplete (class), UAutoCompleteCompleteEvent and UAutoCompleteSelectEvent (types). Owned source-only declarations: AutoCompleteClassesParams (filled, invalid, fluid, disabled, focused, selected) and autoCompleteStyleModule {css, classes} in autocomplete-style.ts; neither is a barrel export. Style facts: host class from cx('root') with filled, fluid (hasFluid) and disabled params only; classes.root can emit u-autocomplete u-component, p-filled, p-invalid, u-autocomplete-fluid and p-disabled, but invalid is never passed so p-invalid is never emitted, and the CSS in autocomplete-style.ts has no rule for p-filled, p-invalid or p-disabled. classes.option accepts selected but optionClassesParams passes only focused, so u-autocomplete-option-selected (which has a CSS rule) is never emitted. Class keys: root, pcInputText, loader, overlay, list, option, emptyMessage. Theme: the Aura components registry key autocomplete (packages/themes/src/presets/aura/index.ts, preset file autocomplete.ts) equals componentName autocomplete. Root @ultimate/ng re-exports this family (barrel line export * from \"@ultimate/ng/autocomplete\"); it is also exposed via the @ultimate/ng/autocomplete manifest subpath. No outputs besides those listed; no ngOnInit/ngOnDestroy override, HostListener, document listener, ContentChild/ContentChildren or virtual scroll (Scroller) usage exists in autocomplete.ts. dt and unstyled are inherited UBaseComponent inputs and nothing in this component reads them. Component-metadata: no component-metadata record exists for autocomplete (packages/component-metadata/src/records has button, checkbox, dialog, menu, paginator, scroller, table, tooltip only). Styles: No dedicated @ultimate/uix-styles/autocomplete export exists; the CSS is hand-ported inside autocomplete-style.ts. The generated autocomplete.spec.ts and autocomplete.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/ng/src/autocomplete/index.ts",
+        "packages/ng/src/autocomplete/autocomplete.ts",
+        "packages/ng/src/autocomplete/autocomplete-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UAutoComplete",
+        "@ultimate/ng/autocomplete#UAutoComplete",
+        "@ultimate/ng#UAutoCompleteCompleteEvent",
+        "@ultimate/ng/autocomplete#UAutoCompleteCompleteEvent",
+        "@ultimate/ng#UAutoCompleteSelectEvent",
+        "@ultimate/ng/autocomplete#UAutoCompleteSelectEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/autocomplete/index.ts",
+          "contains": "export { UAutoComplete }"
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete.ts",
+          "contains": "export class UAutoComplete extends UBaseInput"
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete.ts",
+          "contains": "completeMethod = output<UAutoCompleteCompleteEvent>();"
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete.ts",
+          "contains": "this.searchTimeout = setTimeout(() => {"
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete.ts",
+          "contains": "this.onFocus.emit(new Event(\"focus\"));"
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete.ts",
+          "contains": "aria-autocomplete=\"list\""
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete.ts",
+          "contains": "return { focused: this.focusedOptionIndex() === index };"
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete-style.ts",
+          "contains": "export const autoCompleteStyleModule"
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete-style.ts",
+          "contains": "export interface AutoCompleteClassesParams"
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete.ts",
+          "contains": "providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UAutoComplete, multi: true }],"
+        },
+        {
+          "path": "packages/ng/src/autocomplete/autocomplete.ts",
+          "contains": "<div uOverlay [visible]=\"overlayVisible()\" appendTo=\"body\" [class]=\"cx('overlay')\">"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    autocomplete,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.autocomplete",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.base-input",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{autocomplete,select,multi-select,cascade-select,listbox}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "f8fc98fc26ad56886dfe9af8714fb6b6f66e78a7",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.select",
+      "name": "Angular USelect",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Single-value dropdown: a combobox trigger opens an overlay listbox of options with optional text filtering and an optional clear icon.",
+      "surface": "Extends UBaseInput (which extends UBaseEditableHolder and UModelHolder) so it inherits the disabled signal input, $disabled, modelValue/$filled and the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState. The inherited UBaseInput inputs variant, size, inputSize, pattern, min, max, step, minlength and maxlength are not read anywhere in this component's source; fluid is consumed only through hasFluid in classesParams. Standalone, OnPush, ViewEncapsulation.None; provides NG_VALUE_ACCESSOR via useExisting with multi and overrides writeControlValue. Selector u-select; componentName select; the host also binds [attr.id] to the instance id u_select_<n> (static counter). Signal inputs: options, optionLabel, optionValue, optionDisabled (each string property name or function), placeholder, filter, filterPlaceholder, ariaFilterLabel, showClear (all booleanAttribute where boolean), ariaLabel, inputId, emptyMessage (default \"No results found\"). Outputs: onChange (USelectChangeEvent {originalEvent, value}), onFocus (Event), onBlurEmit (Event), onClear (void). onFocus forwards the real DOM focus event ($event); onBlurEmit emits a newly constructed synthetic new Event(\"blur\"). onChange is emitted only from onOptionSelect (click or keyboard) and not from clear or writeValue. Template: trigger span role=combobox with aria-haspopup=listbox, aria-expanded, aria-controls (the <id>_list value only while the overlay is open, else null), aria-activedescendant (<id>_option_N when the focused index is not -1), aria-disabled, tabindex 0 or -1 when disabled, and aria-label computed as ariaLabel() || label() (the displayed label is the fallback when ariaLabel is unset). The label shows the selected option label or placeholder(); when label() is undefined the interpolation expression selects the string \"&nbsp;\" (how that text is rendered was not verified). A clear span (aria-hidden) renders only when showClear() && $filled() && !$disabled(); clear() stops propagation, writes null, calls onModelChange(null) and emits onClear, without onModelTouched or onChange. A dropdown div role=button aria-hidden toggles the overlay. The overlay (UOverlay, appendTo body, rendered only while visible) contains an optional filter header (input role=searchbox, aria-label from ariaFilterLabel(), click propagation stopped) and ul role=listbox with li role=option (aria-selected, aria-disabled, ids <id>_option_N); the empty-message li role=option is always shown when there are no visible options. State: selectedOption is options().find(o => getOptionValue(o) === modelValue()) using strict equality; visibleOptions filters by a case-insensitive trimmed substring of the option label. show() is a no-op when disabled, opens the overlay and sets the focused index to the selected option's index in visibleOptions (or -1); hide() closes, resets the focused index to -1 and clears the filter text. Keyboard on the trigger (ignored when disabled): ArrowDown/ArrowUp open when closed, else move focus; Home/End act only while open (Home sets 0, End sets visibleOptions().length - 1, neither skips disabled options); Enter/NumpadEnter/Space open when closed or select the focused option when open, with preventDefault; Escape closes (preventDefault) only while open; Tab closes without preventDefault. The filter input handles ArrowDown/ArrowUp/Enter/NumpadEnter/Escape with preventDefault. Edge cases from moveFocus: next = (next + delta + length) % length, repeated while the option is disabled and next !== focusedOptionIndex(); from index -1, ArrowDown reaches 0 and ArrowUp reaches length-2 (not the last option) when length >= 2; when every visible option is disabled and the focused index is -1 the exit condition next !== -1 cannot become false, so by reading the source the loop does not terminate (not executed). onOptionSelect ignores disabled options but does not check $disabled(); it writes the option value, calls onModelChange and onModelTouched, emits onChange and hides. Overlay composition: UOverlay moves the panel to document.body with a z-index while visible; visibleChange is not bound and no outside-click listener exists in select.ts or overlay.ts. The trigger blur does not close the overlay. Public API: USelect (class), USelectChangeEvent (type). Owned source-only declarations: SelectClassesParams (disabled, filled, focused, invalid, fluid, overlayVisible, selected, placeholder) and selectStyleModule in select-style.ts; neither is a barrel export. Style facts: classesParams passes disabled, filled, fluid and overlayVisible and never passes focused or invalid, so the root classes p-focus and p-invalid (which have CSS rules .u-select.p-focus and .u-select.p-invalid) are never emitted; the root emits u-select u-component p-inputwrapper plus p-disabled, p-inputwrapper-filled, p-select-open and u-select-fluid as applicable (p-inputwrapper and p-inputwrapper-filled have no rule in select-style.ts). Option classes emit u-select-option with p-select-option-selected, p-disabled and p-focus, and the CSS styles all three. classes.optionGroup (u-select-option-group, with a CSS rule) is defined but no template element uses it. Class keys: root, label, clearIcon, dropdown, overlay, header, pcFilter, listContainer, list, optionGroup, option, emptyMessage. Theme: the Aura components registry key select (packages/themes/src/presets/aura/index.ts, preset file select.ts) equals componentName select. Root @ultimate/ng re-exports this family (barrel line export * from \"@ultimate/ng/select\"); it is also exposed via the @ultimate/ng/select manifest subpath. No outputs besides those listed; no ngOnInit/ngOnDestroy override, HostListener, document listener, ContentChild/ContentChildren or virtual scroll (Scroller) usage exists in select.ts. dt and unstyled are inherited UBaseComponent inputs and nothing in this component reads them. Component-metadata: no component-metadata record exists for select (packages/component-metadata/src/records has button, checkbox, dialog, menu, paginator, scroller, table, tooltip only). Styles: No dedicated @ultimate/uix-styles/select export exists; the CSS is hand-ported inside select-style.ts. The generated select.spec.ts and select.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/ng/src/select/index.ts",
+        "packages/ng/src/select/select.ts",
+        "packages/ng/src/select/select-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#USelect",
+        "@ultimate/ng/select#USelect",
+        "@ultimate/ng#USelectChangeEvent",
+        "@ultimate/ng/select#USelectChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/select/index.ts",
+          "contains": "export { USelect }"
+        },
+        {
+          "path": "packages/ng/src/select/select.ts",
+          "contains": "export class USelect extends UBaseInput"
+        },
+        {
+          "path": "packages/ng/src/select/select.ts",
+          "contains": "onChange = output<USelectChangeEvent>();"
+        },
+        {
+          "path": "packages/ng/src/select/select.ts",
+          "contains": "this.onBlurEmit.emit(new Event(\"blur\"));"
+        },
+        {
+          "path": "packages/ng/src/select/select.ts",
+          "contains": "[attr.aria-controls]=\"overlayVisible() ? id + '_list' : null\""
+        },
+        {
+          "path": "packages/ng/src/select/select.ts",
+          "contains": "[attr.aria-label]=\"ariaFilterLabel()\""
+        },
+        {
+          "path": "packages/ng/src/select/select.ts",
+          "contains": "} while (this.isOptionDisabled(options[next]) && next !== this.focusedOptionIndex());"
+        },
+        {
+          "path": "packages/ng/src/select/select.ts",
+          "contains": "protected readonly id = `u_select_${++USelect.instanceCount}`;"
+        },
+        {
+          "path": "packages/ng/src/select/select-style.ts",
+          "contains": "export const selectStyleModule"
+        },
+        {
+          "path": "packages/ng/src/select/select-style.ts",
+          "contains": "export interface SelectClassesParams"
+        },
+        {
+          "path": "packages/ng/src/select/select.ts",
+          "contains": "providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: USelect, multi: true }],"
+        },
+        {
+          "path": "packages/ng/src/select/select.ts",
+          "contains": "<div uOverlay [visible]=\"overlayVisible()\" appendTo=\"body\" [class]=\"cx('overlay')\">"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    select,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.select",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.base-input",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{autocomplete,select,multi-select,cascade-select,listbox}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "f8fc98fc26ad56886dfe9af8714fb6b6f66e78a7",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.multi-select",
+      "name": "Angular UMultiSelect",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Multi-value dropdown: a combobox trigger opens an overlay listbox of checkbox options with optional select-all, filtering and clear; the model is an array of option values.",
+      "surface": "Extends UBaseEditableHolder directly (not UBaseInput), so it inherits the disabled signal input, $disabled, modelValue/$filled and the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and has no fluid, variant, size, pattern, min, max or step inputs. Standalone, OnPush, ViewEncapsulation.None; provides NG_VALUE_ACCESSOR via useExisting with multi and overrides writeControlValue. Selector u-multi-select; componentName multiselect (the registry key differs from the folder and selector names). Signal inputs: options, optionLabel, optionValue, optionDisabled, placeholder, filter, filterPlaceholder, showClear, showToggleAll (default true), ariaLabel, inputId, emptyMessage, maxSelectedLabels (default 3, no transform), selectedItemsLabel (default \"{0} items selected\"). There is no ariaFilterLabel input. Outputs: onChange (UMultiSelectChangeEvent {originalEvent, value: unknown[]}), onFocus (Event, the real DOM event), onBlurEmit (Event, synthetic new Event(\"blur\")), onClear (void). Template: trigger span role=combobox with aria-haspopup=listbox, aria-expanded, aria-disabled, aria-label from ariaLabel() and tabindex; there is no aria-controls, no aria-activedescendant and no id on the list or options. The overlay (UOverlay) always renders its header div; inside it a select-all input type=checkbox with the hard-coded aria-label \"Select All\" renders when showToggleAll() is true and a filter input role=searchbox (no aria-label) renders when filter() is true. The list is ul role=listbox with aria-multiselectable=true; each li role=option has aria-selected, aria-disabled and an inner checkbox input (tabindex -1, disabled for disabled options). State: selectedValues is modelValue() when it is an array, else []; isSelected uses includes (SameValueZero) on the option value. The label is placeholder() ?? \"\" when nothing is selected, selectedItemsLabel with the first \"{0}\" replaced by the count when the count exceeds maxSelectedLabels, otherwise the joined \", \" labels of the matching options (String(value) when no option matches). writeControlValue stores the value when it is an array and [] otherwise. show() only opens the overlay and leaves the focused index unchanged. Keyboard on the trigger (ignored when disabled): ArrowDown/ArrowUp open when closed else move focus; Enter/NumpadEnter/Space open when closed or select the focused option when open (preventDefault); Escape closes only while open; Tab closes. There is no Home/End handling. The filter input handles only Escape. moveFocus uses the same modulo arithmetic as USelect, including ArrowUp from index -1 reaching length-2 and, by reading the source, a non-terminating loop when every visible option is disabled and the focused index is -1 (not executed). Mutations: onOptionSelect ignores disabled options (it does not check $disabled()), toggles the option value in a new array, writes it, calls onModelChange and onModelTouched, emits onChange({originalEvent, value}) and never closes the overlay. toggleAll (select-all checkbox change) operates on enabled visible options (removes them all when allSelected(), else appends the missing ones), writes the model, calls onModelChange and onModelTouched and emits onChange with a newly constructed new Event(\"change\") as originalEvent; allSelected is false when no enabled option is visible. clear() stops propagation, writes [], calls onModelChange([]) and emits onClear without onModelTouched. The clear icon renders only when showClear() && $filled() && !$disabled(); $filled is false for an empty array. Overlay composition: UOverlay moves the panel to document.body while visible; visibleChange is not bound; no outside-click listener exists in multi-select.ts. Public API: UMultiSelect (class), UMultiSelectChangeEvent (type). Owned source-only declarations: MultiSelectClassesParams (disabled, filled, focused, fluid, overlayVisible, selected, placeholder) and multiSelectStyleModule in multi-select-style.ts; neither is a barrel export. Style facts: classesParams passes fluid as the constant false, so u-multi-select-fluid is never emitted. The option class set emits u-multi-select-option with p-multiselect-option-selected, p-disabled and p-focus, none of which is targeted by an option-level CSS rule in multi-select-style.ts (its only p- rules are root-scoped), while the CSS styles .u-multi-select-option-selected, .u-multi-select-option-focused and .u-multi-select-option-disabled, which classes.option never emitted. The root rules .u-multi-select.p-multiselect-open and .u-multi-select.p-disabled match emitted classes. Class keys: root, label, clearIcon, dropdown, overlay, header, pcFilter, listContainer, list, option, emptyMessage. Theme: the Aura components registry key multiselect (assigned from the multiSelect export of multi-select.ts in packages/themes/src/presets/aura/index.ts) equals componentName multiselect. Root @ultimate/ng re-exports this family (barrel line export * from \"@ultimate/ng/multi-select\"); it is also exposed via the @ultimate/ng/multi-select manifest subpath. No outputs besides those listed; no ngOnInit/ngOnDestroy override, HostListener, document listener, ContentChild/ContentChildren or virtual scroll (Scroller) usage exists in multi-select.ts. dt and unstyled are inherited UBaseComponent inputs and nothing in this component reads them. Component-metadata: no component-metadata record exists for multi-select (packages/component-metadata/src/records has button, checkbox, dialog, menu, paginator, scroller, table, tooltip only). Styles: No dedicated @ultimate/uix-styles/multi-select export exists; the CSS is hand-ported inside multi-select-style.ts. The generated multi-select.spec.ts and multi-select.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/ng/src/multi-select/index.ts",
+        "packages/ng/src/multi-select/multi-select.ts",
+        "packages/ng/src/multi-select/multi-select-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UMultiSelect",
+        "@ultimate/ng/multi-select#UMultiSelect",
+        "@ultimate/ng#UMultiSelectChangeEvent",
+        "@ultimate/ng/multi-select#UMultiSelectChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/multi-select/index.ts",
+          "contains": "export { UMultiSelect }"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select.ts",
+          "contains": "export class UMultiSelect extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select.ts",
+          "contains": "showToggleAll = input(true, { transform: booleanAttribute });"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select.ts",
+          "contains": "aria-label=\"Select All\""
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select.ts",
+          "contains": "maxSelectedLabels = input<number>(3);"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select.ts",
+          "contains": "this.onChange.emit({ originalEvent: new Event(\"change\"), value: newValue });"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select.ts",
+          "contains": "setModelValue(Array.isArray(value) ? value : []);"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select.ts",
+          "contains": "} while (this.isOptionDisabled(options[next]) && next !== this.focusedOptionIndex());"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select-style.ts",
+          "contains": "\"p-multiselect-option-selected\": params.selected,"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select-style.ts",
+          "contains": "export const multiSelectStyleModule"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select-style.ts",
+          "contains": "export interface MultiSelectClassesParams"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select.ts",
+          "contains": "providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UMultiSelect, multi: true }],"
+        },
+        {
+          "path": "packages/ng/src/multi-select/multi-select.ts",
+          "contains": "<div uOverlay [visible]=\"overlayVisible()\" appendTo=\"body\" [class]=\"cx('overlay')\">"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    multiselect: multiSelect,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.multi-select",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{autocomplete,select,multi-select,cascade-select,listbox}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "f8fc98fc26ad56886dfe9af8714fb6b6f66e78a7",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.cascade-select",
+      "name": "Angular UCascadeSelect",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Single-leaf dropdown over nested option groups: a combobox trigger opens an overlay tree where clicking a group drills into its submenu and clicking a leaf selects it.",
+      "surface": "Extends UBaseEditableHolder directly (not UBaseInput), so it inherits the disabled signal input, $disabled, modelValue/$filled and the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and has no fluid, variant, size, pattern, min, max or step inputs. Standalone, OnPush, ViewEncapsulation.None; provides NG_VALUE_ACCESSOR via useExisting with multi and overrides writeControlValue. Selector u-cascade-select; componentName cascadeselect (the registry key differs from the folder and selector names). Imports UOverlay and NgTemplateOutlet. Signal inputs: options, optionLabel, optionValue, optionGroupChildren (default \"items\", names the child array property), optionDisabled, placeholder, emptyMessage. There are no ariaLabel, inputId, filter or showClear inputs. Outputs: onChange (UCascadeSelectChangeEvent {originalEvent, value}), onFocus (Event, the real DOM event), onBlurEmit (Event, synthetic new Event(\"blur\")); there is no onClear. onChange is emitted only when a leaf is clicked. Tree model: a non-exported ProcessedOption {option, key, parentKey, children} is built recursively by buildTree (key is the index at the root and <parentKey>_<index> below); an option is a group only when option[optionGroupChildren()] is a non-empty array. findPathToValue matches leaf nodes only, so a group's own value is never matched. The label is placeholder() ?? \"\" when modelValue is null/undefined or matches no leaf, otherwise the matched leaf's label; the placeholder class applies only when modelValue() == null. Template: trigger span role=combobox with aria-haspopup=tree, aria-expanded and aria-disabled and tabindex; no aria-label, aria-controls or aria-activedescendant. The overlay renders a recursive ng-template #sublist through NgTemplateOutlet: ul role=tree (cx('list') at the root, cx('sublist') nested) with li role=treeitem (aria-selected bound on every item and true only for the selected leaf, aria-expanded bound to isActiveNode for groups and null for leaves) whose inner div cx('optionContent') takes the click and mouseenter handlers; onOptionMouseEnter is an intentional no-op (its body is only void _node). A group icon span is aria-hidden. The empty-message li role=treeitem renders only for an empty list. Behaviour: show() opens the overlay and, when modelValue != null and a leaf matches, sets activeOptionPath to the ancestor keys of that leaf; hide() clears it. onOptionClick returns for disabled options (no drill, no select); for a group it collapses an active node (removing its key and descendant keys) or expands it with [...path.filter(key => key !== node.parentKey), node.key]; read literally, expanding a group below the root level removes its parent's key from the path, and the template renders a node's children only while isActiveNode(node) is true, so by reading the source the parent's submenu (which contains the expanded group) stops rendering (not executed); expanding a root group filters nothing out because root parentKey is \"\", so sibling root groups can stay open together. A leaf click writes the value, calls onModelChange and onModelTouched, emits onChange and hides. The trigger keydown (ignored when disabled) opens on Enter/NumpadEnter/Space/ArrowDown when closed (preventDefault is called even when already open), closes on Escape while open and closes on Tab; options have no tabindex and no keyboard path selects or navigates options. onOptionClick does not check $disabled(). Overlay composition: UOverlay moves the panel to document.body while visible; visibleChange is not bound; no outside-click listener exists in cascade-select.ts. Public API: UCascadeSelect (class), UCascadeSelectChangeEvent (type). Owned source-only declarations: ProcessedOption (non-exported interface in cascade-select.ts), CascadeSelectClassesParams (disabled, filled, fluid, overlayVisible, placeholder, selected, focused) and cascadeSelectStyleModule in cascade-select-style.ts; the last two are not barrel exports. Style facts: classesParams passes fluid as the constant false, so u-cascade-select-fluid is never emitted, and nodeClassesParams passes focused as the constant false, so u-cascade-select-option-focused is never emitted. Option classes u-cascade-select-option-selected and -disabled match CSS rules (child combinator to option-content). The root p-cascadeselect-open and p-disabled match emitted classes. Class keys: root, label, dropdown, overlay, list, sublist, option, optionContent, groupIcon, emptyMessage. Theme: the Aura components registry key cascadeselect (assigned from the cascadeSelect export of cascade-select.ts in packages/themes/src/presets/aura/index.ts) equals componentName cascadeselect. Root @ultimate/ng re-exports this family (barrel line export * from \"@ultimate/ng/cascade-select\"); it is also exposed via the @ultimate/ng/cascade-select manifest subpath. No outputs besides those listed; no ngOnInit/ngOnDestroy override, HostListener, document listener, ContentChild/ContentChildren or virtual scroll (Scroller) usage exists in cascade-select.ts. dt and unstyled are inherited UBaseComponent inputs and nothing in this component reads them. Component-metadata: no component-metadata record exists for cascade-select (packages/component-metadata/src/records has button, checkbox, dialog, menu, paginator, scroller, table, tooltip only). Styles: No dedicated @ultimate/uix-styles/cascade-select export exists; the CSS is hand-ported inside cascade-select-style.ts. The generated cascade-select.spec.ts and cascade-select.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/ng/src/cascade-select/index.ts",
+        "packages/ng/src/cascade-select/cascade-select.ts",
+        "packages/ng/src/cascade-select/cascade-select-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UCascadeSelect",
+        "@ultimate/ng/cascade-select#UCascadeSelect",
+        "@ultimate/ng#UCascadeSelectChangeEvent",
+        "@ultimate/ng/cascade-select#UCascadeSelectChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/cascade-select/index.ts",
+          "contains": "export { UCascadeSelect }"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "export class UCascadeSelect extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "optionGroupChildren = input(\"items\");"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "interface ProcessedOption {"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "<ul [class]=\"parentKey === '' ? cx('list') : cx('sublist')\" role=\"tree\">"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "[attr.aria-haspopup]=\"'tree'\""
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "protected onOptionMouseEnter(_node: ProcessedOption): void {"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": ": [...path.filter((key) => key !== node.parentKey), node.key]"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "@if (node.children.length > 0 && isActiveNode(node)) {"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "focused: false,"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select-style.ts",
+          "contains": "export const cascadeSelectStyleModule"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select-style.ts",
+          "contains": "export interface CascadeSelectClassesParams"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UCascadeSelect, multi: true }],"
+        },
+        {
+          "path": "packages/ng/src/cascade-select/cascade-select.ts",
+          "contains": "<div uOverlay [visible]=\"overlayVisible()\" appendTo=\"body\" [class]=\"cx('overlay')\">"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    cascadeselect: cascadeSelect,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.cascade-select",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{autocomplete,select,multi-select,cascade-select,listbox}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "f8fc98fc26ad56886dfe9af8714fb6b6f66e78a7",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.listbox",
+      "name": "Angular UListbox",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Always-visible listbox of selectable options with optional filtering, single or multiple selection and keyboard navigation; it does not use an overlay.",
+      "surface": "Extends UBaseEditableHolder directly (not UBaseInput), so it inherits the disabled signal input, $disabled, modelValue/$filled and the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and has no fluid, variant, size, pattern, min, max or step inputs. Standalone, OnPush, ViewEncapsulation.None; provides NG_VALUE_ACCESSOR via useExisting with multi and overrides writeControlValue. Selector u-listbox; componentName listbox. There is no UOverlay import: the list renders directly in the host (no UOverlay, trigger or panel). Signal inputs: options, optionLabel, optionValue, optionDisabled, trackBy ((index, option) => unknown), multiple, filter, filterPlaceholder, ariaLabel, emptyMessage. There is no ariaFilterLabel and no showClear. Outputs: onChange (UListboxChangeEvent {originalEvent, value}), onFocus (Event, the real DOM event), onBlurEmit (Event, synthetic new Event(\"blur\")). Template: optional header with a filter input role=searchbox (input handler only; no keydown handler and no aria-label); ul role=listbox with aria-multiselectable bound to multiple(), aria-label from ariaLabel(), tabindex 0 or -1 when disabled, and the keydown, focus and blur handlers on the ul itself; there is no aria-activedescendant and options have no ids, so the focused index only drives a CSS class. Each li role=option has aria-selected, aria-disabled and, when multiple() is true, an inner checkbox input (tabindex -1). The @for track expression is trackOption: trackBy(index, option) when supplied, else the index. The empty-message li role=option shows when no option is visible. Selection: in single mode isSelected is modelValue() === optionValue and onOptionSelect sets the option value (selecting the current value again keeps it; there is no deselect); in multiple mode isSelected requires an array containing the value and onOptionSelect toggles membership in a new array (a non-array model is treated as []). onOptionSelect ignores disabled options but does not check $disabled(), and the listbox CSS has no pointer-events rule, so by reading the source a click on an enabled option still selects while the component is disabled (not executed). It writes the model, calls onModelChange and onModelTouched and emits onChange({originalEvent, value}). writeControlValue stores the value without array coercion. Keyboard on the ul (ignored when disabled): ArrowDown/ArrowUp move focus; Home sets index 0 and End sets visibleOptions().length - 1 (-1 when empty), neither skipping disabled options; Enter/NumpadEnter/Space select the focused option and always preventDefault. moveFocus uses the same modulo arithmetic as USelect, including ArrowUp from -1 reaching length-2 and, by reading the source, a non-terminating loop when every visible option is disabled and the focused index is -1 (not executed). Filtering uses a case-insensitive trimmed substring of the option label and resets the focused index to -1. Public API: UListbox (class), UListboxChangeEvent (type). Owned source-only declarations: ListboxClassesParams (disabled, invalid, selected, focused) and listboxStyleModule in listbox-style.ts; neither is a barrel export. Style facts: classesParams passes invalid as the constant false, so p-invalid (which has the CSS rule .u-listbox.p-invalid) is never emitted. The option class set emits u-listbox-option with p-listbox-option-selected, p-disabled and p-focus, none of which is targeted by an option-level CSS rule in listbox-style.ts (its p- rules are root-scoped), while the CSS styles .u-listbox-option-selected, .u-listbox-option-focused and .u-listbox-option-disabled, which classes.option never emitted. The root .u-listbox.p-disabled rule sets opacity 1 with disabled background and color tokens. Class keys: root, header, pcFilter, listContainer, list, option, emptyMessage. Theme: the Aura components registry key listbox (packages/themes/src/presets/aura/index.ts, preset file listbox.ts) equals componentName listbox. Root @ultimate/ng re-exports this family (barrel line export * from \"@ultimate/ng/listbox\"); it is also exposed via the @ultimate/ng/listbox manifest subpath. No outputs besides those listed; no ngOnInit/ngOnDestroy override, HostListener, document listener, ContentChild/ContentChildren or virtual scroll (Scroller) usage exists in listbox.ts. dt and unstyled are inherited UBaseComponent inputs and nothing in this component reads them. Component-metadata: no component-metadata record exists for listbox (packages/component-metadata/src/records has button, checkbox, dialog, menu, paginator, scroller, table, tooltip only). Styles: No dedicated @ultimate/uix-styles/listbox export exists; the CSS is hand-ported inside listbox-style.ts. The generated listbox.spec.ts and listbox.stories.ts are excluded supporting files.",
+      "files": [
+        "packages/ng/src/listbox/index.ts",
+        "packages/ng/src/listbox/listbox.ts",
+        "packages/ng/src/listbox/listbox-style.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UListbox",
+        "@ultimate/ng/listbox#UListbox",
+        "@ultimate/ng#UListboxChangeEvent",
+        "@ultimate/ng/listbox#UListboxChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/listbox/index.ts",
+          "contains": "export { UListbox }"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox.ts",
+          "contains": "export class UListbox extends UBaseEditableHolder"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox.ts",
+          "contains": "trackBy = input<(index: number, option: unknown) => unknown>();"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox.ts",
+          "contains": "[attr.aria-multiselectable]=\"multiple()\""
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox.ts",
+          "contains": "return callback ? callback(index, option) : index;"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox.ts",
+          "contains": "newValue = optionValue;"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox.ts",
+          "contains": "case \"Home\":"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox.ts",
+          "contains": "return { disabled: this.$disabled(), invalid: false };"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox-style.ts",
+          "contains": "\"p-listbox-option-selected\": params.selected,"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox-style.ts",
+          "contains": "export const listboxStyleModule"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox-style.ts",
+          "contains": "export interface ListboxClassesParams"
+        },
+        {
+          "path": "packages/ng/src/listbox/listbox.ts",
+          "contains": "providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UListbox, multi: true }],"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    listbox,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"test\": \"ng test --project=ng\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng.listbox",
+        "package.ultimate.ng-core.base-editable-holder",
+        "package.ultimate.ng-core.model-holder",
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, local style module and behavioral spec exist; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Angular product suite for the option-selection families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{autocomplete,select,multi-select,cascade-select,listbox}/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "f8fc98fc26ad56886dfe9af8714fb6b6f66e78a7",
+          "limitations": "Not run by instruction to avoid heavy local load (no ng test, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/ng test. This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}
