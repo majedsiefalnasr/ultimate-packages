@@ -1,0 +1,831 @@
+{
+  "version": 1,
+  "scope": "react-text-entry",
+  "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/input-text",
+        "packages/react/src/input-textarea",
+        "packages/react/src/input-mask",
+        "packages/react/src/input-otp",
+        "packages/react/src/password",
+        "packages/react/src/float-label",
+        "packages/react/src/icon-field",
+        "packages/react/src/input-chips",
+        "packages/react/src/mention"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/input-text/index.ts"
+        },
+        {
+          "subpath": "./input-text",
+          "source": "packages/react/src/input-text/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/input-textarea/index.ts"
+        },
+        {
+          "subpath": "./input-textarea",
+          "source": "packages/react/src/input-textarea/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/input-mask/index.ts"
+        },
+        {
+          "subpath": "./input-mask",
+          "source": "packages/react/src/input-mask/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/input-otp/index.ts"
+        },
+        {
+          "subpath": "./input-otp",
+          "source": "packages/react/src/input-otp/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/password/index.ts"
+        },
+        {
+          "subpath": "./password",
+          "source": "packages/react/src/password/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/float-label/index.ts"
+        },
+        {
+          "subpath": "./float-label",
+          "source": "packages/react/src/float-label/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/icon-field/index.ts"
+        },
+        {
+          "subpath": "./icon-field",
+          "source": "packages/react/src/icon-field/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/input-chips/index.ts"
+        },
+        {
+          "subpath": "./input-chips",
+          "source": "packages/react/src/input-chips/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/mention/index.ts"
+        },
+        {
+          "subpath": "./mention",
+          "source": "packages/react/src/mention/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "react.input-text",
+      "name": "React UInputText",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled native text input with invalid/variant/fluid state classes.",
+      "surface": "UInputText and UInputTextProps expose a forwarded HTMLInputElement ref plus an inputRef prop; both are merged by an internal setRef (forwardRef callback or object, then inputRef). UInputTextProps extends Omit<InputHTMLAttributes<HTMLInputElement>, value|onChange|size> and adds value?:string, onChange?:ChangeEventHandler, invalid, variant:filled|outlined, fluid and inputRef. The component renders a single native input with type=\"text\", disabled, aria-invalid when invalid, and className = cx(root with invalid/variantFilled/fluid/disabled) plus className; the rest spread comes last, so rest can override type and other attributes. InputTextClassesParams declares a filled param that the component never passes: the u-inputtext-filled class is never set by the component, and variant=outlined has no distinct class (only variant=filled adds u-inputtext-variant-filled). inputTextStyleModule defines classes u-inputtext/u-component, -disabled, -filled, -invalid, -variant-filled, -fluid and --u-inputtext-* CSS variables. componentName is input-text while the Aura registry key is inputtext, so registry existence is not proof of token resolution. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/input-text. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/input-text/index.ts",
+        "packages/react/src/input-text/input-text.tsx",
+        "packages/react/src/input-text/input-text-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UInputText",
+        "@ultimate/react/input-text#UInputText",
+        "@ultimate/react#UInputTextProps",
+        "@ultimate/react/input-text#UInputTextProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/input-text/input-text.tsx",
+          "contains": "export interface UInputTextProps"
+        },
+        {
+          "path": "packages/react/src/input-text/input-text-style.ts",
+          "contains": "export const inputTextStyleModule"
+        },
+        {
+          "path": "packages/react/src/input-text/input-text-style.ts",
+          "contains": "filled?: boolean"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./input-text\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./input-text\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.input-text",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+          "outcome": "not-run",
+          "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.input-textarea",
+      "name": "React UInputTextarea",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled native textarea with optional auto-resize.",
+      "surface": "UInputTextarea and UInputTextareaProps expose a forwarded HTMLTextAreaElement ref plus inputRef. UInputTextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, value|onChange> and adds value, onChange, invalid, variant:filled|outlined, fluid, autoResize and inputRef. With autoResize the component keeps a cachedScrollHeight ref, a resize() routine that resets height and sets it from scrollHeight, an effect keyed on autoResize and rest.value, and an onInput wrapper that calls resize and then the consumer onInput. autoResize adds the -resizable class. InputTextareaClassesParams declares filled but the component never passes it: the filled class is never set by the component; variant=outlined has no distinct class. inputTextareaStyleModule defines the u-inputtextarea classes. componentName is input-textarea while the Aura registry key is textarea (name mismatch; registry existence is not proof of resolution). Exports are named from @ultimate/react and @ultimate/react/input-textarea. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/input-textarea/index.ts",
+        "packages/react/src/input-textarea/input-textarea.tsx",
+        "packages/react/src/input-textarea/input-textarea-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UInputTextarea",
+        "@ultimate/react/input-textarea#UInputTextarea",
+        "@ultimate/react#UInputTextareaProps",
+        "@ultimate/react/input-textarea#UInputTextareaProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/input-textarea/input-textarea.tsx",
+          "contains": "export interface UInputTextareaProps"
+        },
+        {
+          "path": "packages/react/src/input-textarea/input-textarea-style.ts",
+          "contains": "export const inputTextareaStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./input-textarea\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./input-textarea\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.input-textarea",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+          "outcome": "not-run",
+          "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.input-mask",
+      "name": "React UInputMask",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Masked text input with buffer-based slot editing.",
+      "surface": "UInputMask, UInputMaskProps and UInputMaskChangeEvent{originalEvent,value,target{name,id,value}}. UInputMaskProps is a closed prop list with no native attribute spread: value:string|null, mask (required), slotChar default _, autoClear default true, unmask default false, onChange(event), onComplete({originalEvent,value}), disabled, readOnly, invalid, variant, fluid, name, id, placeholder, className and inputRef. Consumer onFocus/onBlur/onKeyDown and other native attributes are not accepted. Forwarded HTMLInputElement ref. A buffer/mask algorithm is ported from PrimeReact: definitions 9, a and * plus ? for optional tail; the regex slots are unanchored per-character tests (unanchored). Handlers: onFocus, onBlur, onKeyDown (Backspace/Delete/Escape), onKeyPress (React keypress, deprecated), onInput and onPaste; onChange is also invoked from blur and key handling, not only from typing. A single effect depends on [mask, value] with an eslint-disable comment, so updateValue/initMask are not in the dependency list; the last-required-position ref is not reset when mask changes. Mobile (Android/iOS) branches are excluded. inputMaskStyleModule and the source-only InputMaskClassesParams resolver contract (not a barrel export) reuse --u-inputtext-* variables with fallbacks; the Aura registry has no inputmask module. Exports from @ultimate/react and @ultimate/react/input-mask. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/input-mask/index.ts",
+        "packages/react/src/input-mask/input-mask.tsx",
+        "packages/react/src/input-mask/input-mask-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UInputMask",
+        "@ultimate/react/input-mask#UInputMask",
+        "@ultimate/react#UInputMaskProps",
+        "@ultimate/react/input-mask#UInputMaskProps",
+        "@ultimate/react#UInputMaskChangeEvent",
+        "@ultimate/react/input-mask#UInputMaskChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/input-mask/input-mask.tsx",
+          "contains": "export interface UInputMaskProps"
+        },
+        {
+          "path": "packages/react/src/input-mask/input-mask-style.ts",
+          "contains": "export const inputMaskStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./input-mask\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./input-mask\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.input-mask",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+          "outcome": "not-run",
+          "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.input-otp",
+      "name": "React UInputOtp",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Fixed-length one-time-code entry made of per-character inputs.",
+      "surface": "UInputOtp, UInputOtpProps and UInputOtpChangeEvent{originalEvent,value}. Props: value default empty string, length default 4, mask, integerOnly, disabled, readOnly, invalid, onChange(event), className; no native spread. forwardRef<HTMLDivElement>: the ref targets the root div, not an input. Renders length native inputs with aria-label \"Character N\" (Character 1..length); mask switches type to password, integerOnly sets inputMode numeric. Each input has a no-op React onChange (() => {}); state flows through onInput, key and paste handlers (paste splits across slots). Tokens are derived from value. Module helpers findNextInput/findPrevInput are not exported. inputOtpStyleModule: root u-inputotp u-component and an input class function (u-inputotp-input, -invalid). Aura key inputotp. Exports from @ultimate/react and @ultimate/react/input-otp. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/input-otp/index.ts",
+        "packages/react/src/input-otp/input-otp.tsx",
+        "packages/react/src/input-otp/input-otp-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UInputOtp",
+        "@ultimate/react/input-otp#UInputOtp",
+        "@ultimate/react#UInputOtpProps",
+        "@ultimate/react/input-otp#UInputOtpProps",
+        "@ultimate/react#UInputOtpChangeEvent",
+        "@ultimate/react/input-otp#UInputOtpChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/input-otp/input-otp.tsx",
+          "contains": "export interface UInputOtpProps"
+        },
+        {
+          "path": "packages/react/src/input-otp/input-otp-style.ts",
+          "contains": "export const inputOtpStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./input-otp\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./input-otp\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.input-otp",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+          "outcome": "not-run",
+          "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.password",
+      "name": "React UPassword",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Password input with optional strength feedback overlay and visibility toggle.",
+      "surface": "UPassword and UPasswordProps; forwarded HTMLInputElement ref plus inputRef. UPasswordProps extends Omit<InputHTMLAttributes<HTMLInputElement>, value|onChange|type|size> and adds value, onChange, feedback default true, toggleMask default false, promptLabel/weakLabel/mediumLabel/strongLabel, mediumRegex, strongRegex, fluid, className, inputRef, onFocus, onBlur. There are no invalid or variant props. className lands on the root div, not the input; the rest spread follows the explicit handlers on the input and can override them. The strength overlay is an inline absolutely-positioned div (no portal) and uses useDisplayOrder and useGlobalEscapeKey with ESCAPE_PRIORITIES.DIALOG from @ultimate/react-core while the overlay is visible and feedback is on. An onKeyUp handler computes strength 0..3 from the regexes. The toggleMask icons are inline SVG role=button with aria-label Show Password/Hide Password and only onClick, with no tabIndex or key handler, so they are not keyboard reachable. passwordStyleModule defines maskIcon, unmaskIcon and clearIcon classes: clearIcon is defined but never used by the component. PasswordClassesParams carries filled, disabled, fluid and strength; filled is never set by the component. Aura key password. Exports from @ultimate/react and @ultimate/react/password. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/password/index.ts",
+        "packages/react/src/password/password.tsx",
+        "packages/react/src/password/password-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UPassword",
+        "@ultimate/react/password#UPassword",
+        "@ultimate/react#UPasswordProps",
+        "@ultimate/react/password#UPasswordProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/password/password.tsx",
+          "contains": "export interface UPasswordProps"
+        },
+        {
+          "path": "packages/react/src/password/password-style.ts",
+          "contains": "export const passwordStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./password\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./password\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.password",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react-core.escape"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+          "outcome": "not-run",
+          "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.float-label",
+      "name": "React UFloatLabel",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Wrapper span that hosts a floating label variant around an input.",
+      "surface": "UFloatLabel and UFloatLabelProps{variant?:in|on|over (default over), className?, children?}; no native props. forwardRef<HTMLSpanElement>. Renders a span with cx(root, {variant}) around children. floatLabelStyleModule root class function yields u-float-label with -over/-on/-in. The CSS uses :has() selectors keyed on u-input-text, u-textarea, u-filled, u-invalid and u-inputwrapper-* class names; UInputText and UInputTextarea render u-inputtext and u-inputtextarea with u-inputtext-filled/-invalid, so these selectors does not match the sibling components' classes by default. The spec and stories add class names such as u-input-text and u-filled by hand. Aura key floatlabel; componentName float-label. Exports from @ultimate/react and @ultimate/react/float-label. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/float-label/index.ts",
+        "packages/react/src/float-label/float-label.tsx",
+        "packages/react/src/float-label/float-label-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UFloatLabel",
+        "@ultimate/react/float-label#UFloatLabel",
+        "@ultimate/react#UFloatLabelProps",
+        "@ultimate/react/float-label#UFloatLabelProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/float-label/float-label.tsx",
+          "contains": "export interface UFloatLabelProps"
+        },
+        {
+          "path": "packages/react/src/float-label/float-label-style.ts",
+          "contains": "export const floatLabelStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./float-label\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./float-label\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.float-label",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+          "outcome": "not-run",
+          "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.icon-field",
+      "name": "React UIconField and UInputIcon",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Layout wrapper placing an icon beside an input, plus the UInputIcon span.",
+      "surface": "UIconField, UInputIcon, UIconFieldProps{iconPosition:left|right (default left in code), className, children} and UInputIconProps{className, children}. UIconField is forwardRef<HTMLDivElement>; UInputIcon is forwardRef<HTMLSpanElement> and always sets aria-hidden=\"true\". iconPosition only toggles the root class u-icon-field-left or u-icon-field-right; the CSS has no rules for those two classes and positions icons through :first-child/:last-child. The doc comment names right as a default while the code defaults to left. CSS selectors for .u-input-text inside the field do not match the u-inputtext class rendered by UInputText. iconFieldStyleModule and inputIconStyleModule (root u-input-icon, empty CSS) are separate registrations; the Aura registry has iconfield but no inputicon key. Exports from @ultimate/react and @ultimate/react/icon-field. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/icon-field/index.ts",
+        "packages/react/src/icon-field/icon-field.tsx",
+        "packages/react/src/icon-field/icon-field-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UIconField",
+        "@ultimate/react/icon-field#UIconField",
+        "@ultimate/react#UInputIcon",
+        "@ultimate/react/icon-field#UInputIcon",
+        "@ultimate/react#UIconFieldProps",
+        "@ultimate/react/icon-field#UIconFieldProps",
+        "@ultimate/react#UInputIconProps",
+        "@ultimate/react/icon-field#UInputIconProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/icon-field/icon-field.tsx",
+          "contains": "export interface UIconFieldProps"
+        },
+        {
+          "path": "packages/react/src/icon-field/icon-field-style.ts",
+          "contains": "export const iconFieldStyleModule"
+        },
+        {
+          "path": "packages/react/src/icon-field/icon-field-style.ts",
+          "contains": "export const inputIconStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./icon-field\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./icon-field\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.icon-field",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+          "outcome": "not-run",
+          "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.input-chips",
+      "name": "React UInputChips",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Chip-based multi-value entry with add/remove handling.",
+      "surface": "UInputChips, UInputChipsProps, UInputChipsAddEvent and UInputChipsRemoveEvent{originalEvent,value}. forwardRef<HTMLDivElement>. Props: value:string[] and onChange(value:string[]) required, max, separator, allowDuplicate default true, addOnBlur default false, disabled, readOnly, invalid, placeholder, inputId, name, aria-label, aria-labelledby, onAdd, onRemove, onFocus, onBlur, className. onAdd is emitted only from the add routine (Enter, separator or blur with addOnBlur); the paste path calls onChange directly, so onAdd is not emitted on paste and pasted parts are not trimmed. With allowDuplicate=false a duplicate only clears the input. The max check is Boolean(max && value.length >= max), so max=0 means unlimited; separator splits typed text. The chips list is ul role=listbox with li role=option aria-selected=true; remove buttons use UTimesIcon from @ultimate/react-core. invalid sets aria-invalid on the input and a root class. The input is a native uncontrolled element driven by onInput. inputChipsStyleModule; Aura key inputchips. Exports from @ultimate/react and @ultimate/react/input-chips. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/input-chips/index.ts",
+        "packages/react/src/input-chips/input-chips.tsx",
+        "packages/react/src/input-chips/input-chips-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UInputChips",
+        "@ultimate/react/input-chips#UInputChips",
+        "@ultimate/react#UInputChipsProps",
+        "@ultimate/react/input-chips#UInputChipsProps",
+        "@ultimate/react#UInputChipsAddEvent",
+        "@ultimate/react/input-chips#UInputChipsAddEvent",
+        "@ultimate/react#UInputChipsRemoveEvent",
+        "@ultimate/react/input-chips#UInputChipsRemoveEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/input-chips/input-chips.tsx",
+          "contains": "export interface UInputChipsProps"
+        },
+        {
+          "path": "packages/react/src/input-chips/input-chips-style.ts",
+          "contains": "export const inputChipsStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./input-chips\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./input-chips\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.input-chips",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react-core.icons"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+          "outcome": "not-run",
+          "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.mention",
+      "name": "React UMention",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Textarea with trigger-character suggestion overlay.",
+      "surface": "UMention<T>, UMentionProps<T>, UMentionSearchEvent{originalEvent,trigger,query} and UMentionSelectEvent<T>{originalEvent,suggestion}. UMention is a generic function component and not a forwardRef: it accepts no ref. Props: value default empty, onChange(value), suggestions, field, trigger default @, delay default 0, autoHighlight default true, placeholder, disabled, rows default 3, inputId, className, onSearch, onSelect, onFocus, onBlur. The textarea has role=combobox, aria-expanded, aria-autocomplete=list and aria-activedescendant but no aria-controls although the list ul carries its own id. The search debounce uses setTimeout with delay and the timer is not cleared on unmount. Enter selects only when a highlight index is set. The overlay is an inline absolute div: no portal and no caret-based positioning. trigger is located with lastIndexOf on the text before the caret. mentionStyleModule is hard-coded CSS without tokens; the Aura registry has no mention key. Exports from @ultimate/react and @ultimate/react/mention. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/mention/index.ts",
+        "packages/react/src/mention/mention.tsx",
+        "packages/react/src/mention/mention-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UMention",
+        "@ultimate/react/mention#UMention",
+        "@ultimate/react#UMentionProps",
+        "@ultimate/react/mention#UMentionProps",
+        "@ultimate/react#UMentionSearchEvent",
+        "@ultimate/react/mention#UMentionSearchEvent",
+        "@ultimate/react#UMentionSelectEvent",
+        "@ultimate/react/mention#UMentionSelectEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/mention/mention.tsx",
+          "contains": "export interface UMentionProps"
+        },
+        {
+          "path": "packages/react/src/mention/mention-style.ts",
+          "contains": "export const mentionStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./mention\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./mention\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.mention",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+          "outcome": "not-run",
+          "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/input-text/input-text.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-text/input-text.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-textarea/input-textarea.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-textarea/input-textarea.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-mask/input-mask.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-mask/input-mask.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-otp/input-otp.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-otp/input-otp.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/password/password.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/password/password.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/float-label/float-label.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/float-label/float-label.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/icon-field/icon-field.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/icon-field/icon-field.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-chips/input-chips.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-chips/input-chips.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/mention/mention.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/mention/mention.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.escape",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.icons",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.react.input-text",
+      "record": "react.input-text"
+    },
+    {
+      "id": "package.ultimate.react.input-textarea",
+      "record": "react.input-textarea"
+    },
+    {
+      "id": "package.ultimate.react.input-mask",
+      "record": "react.input-mask"
+    },
+    {
+      "id": "package.ultimate.react.input-otp",
+      "record": "react.input-otp"
+    },
+    {
+      "id": "package.ultimate.react.password",
+      "record": "react.password"
+    },
+    {
+      "id": "package.ultimate.react.float-label",
+      "record": "react.float-label"
+    },
+    {
+      "id": "package.ultimate.react.icon-field",
+      "record": "react.icon-field"
+    },
+    {
+      "id": "package.ultimate.react.input-chips",
+      "record": "react.input-chips"
+    },
+    {
+      "id": "package.ultimate.react.mention",
+      "record": "react.mention"
+    }
+  ],
+  "ownership": {
+    "ticket": 111,
+    "path": "scripts/inventory/package-coverage.json"
+  }
+}
