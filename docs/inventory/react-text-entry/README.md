@@ -24,7 +24,7 @@ Aura registry has no inputmask, mention or inputicon key, so those records do
 not link presets. No metadata record exists for these families.
 
 Source facts recorded without repair include: `filled` class params never passed
-(input-text, input-textarea, password); `clearIcon` class unused; input-chips
+(input-text, input-textarea; password does pass it); `clearIcon` class unused; input-chips
 `onAdd` not emitted on paste; mention lacks `aria-controls`, is not a forwardRef
 and its debounce timer is not cleared; input-mask accepts no native attributes;
 float-label and icon-field CSS selectors do not match the class names the
