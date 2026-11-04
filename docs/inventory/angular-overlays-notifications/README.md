@@ -68,8 +68,9 @@ conditions; nothing was repaired:
 - dialog requires an application-provided `ComponentIdGenerator` (no `providedIn`), has
   no close button without a header, restores focus on close but does not move focus in, and
   has no mask-click dismissal.
-- drawer has two Escape paths (the root `onKeyDown` and the escape registry); a second
-  emission from one keypress was not established. It sets no `aria-modal`, and the focus
+- drawer has two Escape paths (the root `onKeyDown` and the escape registry); a keydown
+  inside the root closes it once, because `close()` unregisters the registry callback before
+  the document listener runs. It sets no `aria-modal`, and the focus
   trap is on regardless of `modal`.
 - popover and confirm-popup each keep a class-private `instanceCount`, so their first
   instances share an escape-registry key at the OVERLAY_PANEL priority.
