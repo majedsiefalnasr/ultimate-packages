@@ -1,0 +1,1272 @@
+{
+  "version": 1,
+  "scope": "react-choice-range",
+  "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/checkbox",
+        "packages/react/src/radio-button",
+        "packages/react/src/toggle-button",
+        "packages/react/src/input-switch",
+        "packages/react/src/select-button",
+        "packages/react/src/multi-state-checkbox",
+        "packages/react/src/tri-state-checkbox",
+        "packages/react/src/rating",
+        "packages/react/src/slider",
+        "packages/react/src/knob"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/checkbox/index.ts"
+        },
+        {
+          "subpath": "./checkbox",
+          "source": "packages/react/src/checkbox/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/radio-button/index.ts"
+        },
+        {
+          "subpath": "./radio-button",
+          "source": "packages/react/src/radio-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/toggle-button/index.ts"
+        },
+        {
+          "subpath": "./toggle-button",
+          "source": "packages/react/src/toggle-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/input-switch/index.ts"
+        },
+        {
+          "subpath": "./input-switch",
+          "source": "packages/react/src/input-switch/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/select-button/index.ts"
+        },
+        {
+          "subpath": "./select-button",
+          "source": "packages/react/src/select-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/multi-state-checkbox/index.ts"
+        },
+        {
+          "subpath": "./multi-state-checkbox",
+          "source": "packages/react/src/multi-state-checkbox/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/tri-state-checkbox/index.ts"
+        },
+        {
+          "subpath": "./tri-state-checkbox",
+          "source": "packages/react/src/tri-state-checkbox/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/rating/index.ts"
+        },
+        {
+          "subpath": "./rating",
+          "source": "packages/react/src/rating/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/slider/index.ts"
+        },
+        {
+          "subpath": "./slider",
+          "source": "packages/react/src/slider/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/knob/index.ts"
+        },
+        {
+          "subpath": "./knob",
+          "source": "packages/react/src/knob/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/checkbox/checkbox.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/checkbox/checkbox.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/checkbox/checkbox.api.mdx",
+      "reason": "Generated API documentation fixture for UCheckbox (from the component-metadata Checkbox record); not a separately exported runtime API."
+    },
+    {
+      "path": "packages/react/src/radio-button/radio-button.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/radio-button/radio-button.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/toggle-button/toggle-button.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/toggle-button/toggle-button.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-switch/input-switch.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-switch/input-switch.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/select-button/select-button.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/select-button/select-button.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/multi-state-checkbox/multi-state-checkbox.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/multi-state-checkbox/multi-state-checkbox.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tri-state-checkbox/tri-state-checkbox.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tri-state-checkbox/tri-state-checkbox.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/rating/rating.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/rating/rating.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/slider/slider.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/slider/slider.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/knob/knob.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/knob/knob.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Detailed inventory remains owned by [#153](https://github.com/majedsiefalnasr/ultimate-packages/issues/153). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.icons",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react.tooltip",
+      "batch": "ticket-123",
+      "reason": "Detailed inventory remains owned by [#123](https://github.com/majedsiefalnasr/ultimate-packages/issues/123). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.react.checkbox",
+      "record": "react.checkbox"
+    },
+    {
+      "id": "package.ultimate.react.input-switch",
+      "record": "react.input-switch"
+    },
+    {
+      "id": "package.ultimate.react.knob",
+      "record": "react.knob"
+    },
+    {
+      "id": "package.ultimate.react.multi-state-checkbox",
+      "record": "react.multi-state-checkbox"
+    },
+    {
+      "id": "package.ultimate.react.radio-button",
+      "record": "react.radio-button"
+    },
+    {
+      "id": "package.ultimate.react.rating",
+      "record": "react.rating"
+    },
+    {
+      "id": "package.ultimate.react.select-button",
+      "record": "react.select-button"
+    },
+    {
+      "id": "package.ultimate.react.slider",
+      "record": "react.slider"
+    },
+    {
+      "id": "package.ultimate.react.toggle-button",
+      "record": "react.toggle-button"
+    },
+    {
+      "id": "package.ultimate.react.tri-state-checkbox",
+      "record": "react.tri-state-checkbox"
+    }
+  ],
+  "ownership": {
+    "ticket": 114,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "records": [
+    {
+      "id": "react.checkbox",
+      "name": "React UCheckbox",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled native checkbox with true/false value mapping, an optional tooltip and a change event object.",
+      "surface": "UCheckbox is a plain function component, not a forwardRef. UCheckboxProps requires checked:unknown and adds trueValue (default true), falseValue (default false), onChange, disabled, readOnly, invalid, name, value:unknown, id, inputId, inputRef:React.Ref<HTMLInputElement>, tooltip, tooltipOptions:Record<string, unknown>, autoFocus and className. Refs: inputRef (function or object) is merged by setInputRef, which also writes an internalInputRef that is never read; elementRef targets the root div for the tooltip. State is fully controlled: isChecked = checked === trueValue, and handleChange returns without calling onChange when disabled, readOnly or onChange is absent; otherwise it emits UCheckboxChangeEvent {originalEvent, value, checked (the other of trueValue/falseValue), target {type:\"checkbox\", name, id, value, checked}}. The value prop is only passed into the event, never to the DOM input. The component renders a fragment: a root div (id, cx root with checked, plus className) containing a native input type=checkbox (id=inputId, name, checked, disabled, readOnly, autoFocus, aria-invalid={invalid}) and a box div that holds UCheckIcon from @ultimate/react-core only when checked; there is no label, aria-label or aria-labelledby prop. When tooltip is set, UTooltip from ../tooltip is rendered with target=elementRef and tooltipOptions spread after content. checkboxStyleModule defines classes root (checked), box (checked), input and icon; there is no ClassesParams interface, and no disabled or invalid class. componentName checkbox matches the Aura components registry key checkbox. CHECKBOX_METADATA in packages/component-metadata/src/records/checkbox.ts lists packages/react/src/checkbox/checkbox.tsx as the React source; checkbox.api.mdx is a generated documentation fixture and is excluded. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/checkbox; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/checkbox/index.ts",
+        "packages/react/src/checkbox/checkbox.tsx",
+        "packages/react/src/checkbox/checkbox-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UCheckbox",
+        "@ultimate/react/checkbox#UCheckbox",
+        "@ultimate/react#UCheckboxProps",
+        "@ultimate/react/checkbox#UCheckboxProps",
+        "@ultimate/react#UCheckboxChangeEvent",
+        "@ultimate/react/checkbox#UCheckboxChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/checkbox/index.ts",
+          "contains": "export { UCheckbox } from"
+        },
+        {
+          "path": "packages/react/src/checkbox/checkbox.tsx",
+          "contains": "export function UCheckbox({"
+        },
+        {
+          "path": "packages/react/src/checkbox/checkbox.tsx",
+          "contains": "export interface UCheckboxChangeEvent"
+        },
+        {
+          "path": "packages/react/src/checkbox/checkbox.tsx",
+          "contains": "const isChecked = checked === trueValue;"
+        },
+        {
+          "path": "packages/react/src/checkbox/checkbox.tsx",
+          "contains": "{tooltip && <UTooltip target={elementRef}"
+        },
+        {
+          "path": "packages/react/src/checkbox/checkbox.tsx",
+          "contains": "internalInputRef.current = node;"
+        },
+        {
+          "path": "packages/react/src/checkbox/checkbox-style.ts",
+          "contains": "export const checkboxStyleModule"
+        },
+        {
+          "path": "packages/react/src/checkbox/checkbox.tsx",
+          "contains": "aria-invalid={invalid}"
+        },
+        {
+          "path": "packages/component-metadata/src/records/checkbox.ts",
+          "contains": "export const CHECKBOX_METADATA"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    checkbox,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./checkbox\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./checkbox\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.checkbox",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react-core.icons",
+        "package.ultimate.react.tooltip",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.radio-button",
+      "name": "React URadioButton",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled native radio input that reports the negation of its checked prop through a change event.",
+      "surface": "URadioButton is a plain function component, not a forwardRef. URadioButtonProps requires checked:boolean and adds value:unknown, onChange, disabled, readOnly, invalid, name, id, inputId, inputRef:React.Ref<HTMLInputElement>, autoFocus and className. Refs: inputRef (function or object) is merged by setInputRef, which also writes an internalInputRef that is never read. State is fully controlled and never flips internally: handleChange returns when disabled, readOnly or onChange is absent; otherwise nextChecked = !checked and the component emits URadioButtonChangeEvent {originalEvent, value, checked: !checked, target {type:\"radio\", name, id, value, checked}}. The input is type=radio with id=inputId, name, checked, disabled, readOnly, autoFocus and aria-invalid={invalid}; there is no value attribute on the DOM input (value only travels in the event), no group management and no label, aria-label or aria-labelledby prop. Markup is a root div (cx root with checked, plus className) around the input and a box div (cx box with checked) holding an icon div. radioButtonStyleModule defines classes root (checked), box (checked), input and icon; there is no ClassesParams interface and no invalid or disabled class. componentName radio-button differs from the Aura components registry key radiobutton, so registry existence is not proof of token resolution. The style file comments mention @ultimate/uix-styles but nothing is imported. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/radio-button; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/radio-button/index.ts",
+        "packages/react/src/radio-button/radio-button.tsx",
+        "packages/react/src/radio-button/radio-button-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#URadioButton",
+        "@ultimate/react/radio-button#URadioButton",
+        "@ultimate/react#URadioButtonProps",
+        "@ultimate/react/radio-button#URadioButtonProps",
+        "@ultimate/react#URadioButtonChangeEvent",
+        "@ultimate/react/radio-button#URadioButtonChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/radio-button/index.ts",
+          "contains": "export { URadioButton } from"
+        },
+        {
+          "path": "packages/react/src/radio-button/radio-button.tsx",
+          "contains": "export function URadioButton({"
+        },
+        {
+          "path": "packages/react/src/radio-button/radio-button.tsx",
+          "contains": "export interface URadioButtonChangeEvent"
+        },
+        {
+          "path": "packages/react/src/radio-button/radio-button.tsx",
+          "contains": "const nextChecked = !checked;"
+        },
+        {
+          "path": "packages/react/src/radio-button/radio-button.tsx",
+          "contains": "internalInputRef.current = node;"
+        },
+        {
+          "path": "packages/react/src/radio-button/radio-button-style.ts",
+          "contains": "export const radioButtonStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    radiobutton:"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./radio-button\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./radio-button\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.radio-button",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.toggle-button",
+      "name": "React UToggleButton",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled on/off toggle rendered as a native checkbox input with a text label.",
+      "surface": "UToggleButton is a plain function component, not a forwardRef, and UToggleButtonProps has no inputRef. Props: checked:boolean (required), onChange, onLabel (default \"Yes\"), offLabel (default \"No\"), disabled, readOnly, invalid, name, id, inputId, autoFocus, tabIndex and className. The label is onLabel when checked and offLabel otherwise, but only when both labels are non-empty; otherwise a single space is rendered. State is fully controlled: toggle returns when disabled, readOnly or onChange is absent, else emits UToggleButtonChangeEvent {originalEvent: React.SyntheticEvent, value: !checked, target {name, id, value}}. The input is type=checkbox with onChange=toggle and an onKeyDown handler: Space toggles and calls preventDefault, Enter toggles without preventDefault. The root div carries data-p-highlight={checked} and data-p-disabled={disabled}; the input has aria-invalid={invalid}; there is no role=button, aria-pressed, aria-label or icon prop. toggleButtonStyleModule defines classes root (checked, disabled), input, box (checked) and label; the CSS contains a :has(.u-toggle-button-input:disabled) rule; there is no ClassesParams interface and invalid is not reflected in a class. componentName toggle-button differs from the Aura components registry key togglebutton, so registry existence is not proof of token resolution. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/toggle-button; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/toggle-button/index.ts",
+        "packages/react/src/toggle-button/toggle-button.tsx",
+        "packages/react/src/toggle-button/toggle-button-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UToggleButton",
+        "@ultimate/react/toggle-button#UToggleButton",
+        "@ultimate/react#UToggleButtonProps",
+        "@ultimate/react/toggle-button#UToggleButtonProps",
+        "@ultimate/react#UToggleButtonChangeEvent",
+        "@ultimate/react/toggle-button#UToggleButtonChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/toggle-button/index.ts",
+          "contains": "export { UToggleButton } from"
+        },
+        {
+          "path": "packages/react/src/toggle-button/toggle-button.tsx",
+          "contains": "export function UToggleButton({"
+        },
+        {
+          "path": "packages/react/src/toggle-button/toggle-button.tsx",
+          "contains": "export interface UToggleButtonChangeEvent"
+        },
+        {
+          "path": "packages/react/src/toggle-button/toggle-button.tsx",
+          "contains": "onLabel = \"Yes\","
+        },
+        {
+          "path": "packages/react/src/toggle-button/toggle-button.tsx",
+          "contains": "} else if (event.key === \"Enter\") {"
+        },
+        {
+          "path": "packages/react/src/toggle-button/toggle-button.tsx",
+          "contains": "data-p-highlight={checked}"
+        },
+        {
+          "path": "packages/react/src/toggle-button/toggle-button-style.ts",
+          "contains": "export const toggleButtonStyleModule"
+        },
+        {
+          "path": "packages/react/src/toggle-button/toggle-button-style.ts",
+          "contains": ".u-toggle-button:has(.u-toggle-button-input:disabled)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    togglebutton:"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./toggle-button\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./toggle-button\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.toggle-button",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.input-switch",
+      "name": "React UInputSwitch",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled on/off switch rendered as a native checkbox input with role=switch and a slider element.",
+      "surface": "UInputSwitch is a plain function component, not a forwardRef. UInputSwitchProps requires checked:unknown and adds trueValue (default true), falseValue (default false), onChange, disabled, invalid, name, id, inputId, inputRef:React.Ref<HTMLInputElement>, autoFocus and className; it has no readOnly prop. Refs: inputRef (function or object) is merged by setInputRef, which also writes an internalInputRef that is never read. State is fully controlled: isChecked = checked === trueValue; handleChange returns when disabled or onChange is absent, else emits UInputSwitchChangeEvent {originalEvent, value (falseValue when checked, otherwise trueValue), target {name, id, value}}. Markup: a root div with data-p-highlight and data-p-disabled around a native input type=checkbox role=\"switch\" (id=inputId, name, checked, disabled, autoFocus, aria-invalid={invalid}, aria-checked={isChecked}) and an empty span for the slider; there is no label, aria-label or aria-labelledby prop. inputSwitchStyleModule defines classes root (checked, disabled), input and slider; there is no ClassesParams interface. Aura components registry has no key for input-switch (componentName input-switch), so no theme link is recorded. The component is React-native naming and is separate from the Angular and Vue toggle-switch records. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/input-switch; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/input-switch/index.ts",
+        "packages/react/src/input-switch/input-switch.tsx",
+        "packages/react/src/input-switch/input-switch-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UInputSwitch",
+        "@ultimate/react/input-switch#UInputSwitch",
+        "@ultimate/react#UInputSwitchProps",
+        "@ultimate/react/input-switch#UInputSwitchProps",
+        "@ultimate/react#UInputSwitchChangeEvent",
+        "@ultimate/react/input-switch#UInputSwitchChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/input-switch/index.ts",
+          "contains": "export { UInputSwitch } from"
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch.tsx",
+          "contains": "export function UInputSwitch({"
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch.tsx",
+          "contains": "export interface UInputSwitchChangeEvent"
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch.tsx",
+          "contains": "const isChecked = checked === trueValue;"
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch.tsx",
+          "contains": "role=\"switch\""
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch.tsx",
+          "contains": "aria-checked={isChecked}"
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch.tsx",
+          "contains": "internalInputRef.current = node;"
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch-style.ts",
+          "contains": "export const inputSwitchStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./input-switch\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./input-switch\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.input-switch",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.select-button",
+      "name": "React USelectButton",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled single or multiple option group built from UToggleButton items with roving keyboard focus.",
+      "surface": "USelectButton<T> is a generic plain function component, not a forwardRef. USelectButtonProps<T> requires value:T, onChange and options:unknown[] and adds optionLabel, optionValue and optionDisabled (each a property-name string or accessor function), multiple (default false), allowEmpty (default true), disabled, className and aria-labelledby; USelectButtonChangeEvent<T> is {originalEvent, value:T}. There are no name, id, invalid, readOnly or fluid props and no ref prop. The module-private resolve helper reads an accessor, a property of an object option, or a fallback. Single mode emits null when the selected option is clicked and allowEmpty is true, and ignores the click when allowEmpty is false; multiple mode filters or appends option values and ignores removing the last value when allowEmpty is false. Selection uses strict equality. Each option renders UToggleButton imported from ../toggle-button/toggle-button with onLabel = offLabel = the option label, checked from isSelected, and disabled from disabled or optionDisabled; the key is label_index. Keyboard: the root div handles ArrowRight/ArrowDown (+1) and ArrowLeft/ArrowUp (-1) by event.code, skips disabled options, wraps, and moves focus to the matching input; it does nothing when the input count differs from options.length. A roving tab stop gives tabIndex 0 to one enabled option. The root div has role=\"group\" and aria-labelledby and its class comes from cx(\"root\", { fluid: false }); invalid is never passed, so the u-select-button-invalid and u-select-button-fluid classes defined by SelectButtonClassesParams and the CSS are never emitted by the component. selectButtonStyleModule is exported alongside the SelectButtonClassesParams interface. componentName select-button differs from the Aura components registry key selectbutton, so registry existence is not proof of token resolution. The style file comment mentions @ultimate/uix-styles but nothing is imported. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/select-button; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/select-button/index.ts",
+        "packages/react/src/select-button/select-button.tsx",
+        "packages/react/src/select-button/select-button-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#USelectButton",
+        "@ultimate/react/select-button#USelectButton",
+        "@ultimate/react#USelectButtonProps",
+        "@ultimate/react/select-button#USelectButtonProps",
+        "@ultimate/react#USelectButtonChangeEvent",
+        "@ultimate/react/select-button#USelectButtonChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/select-button/index.ts",
+          "contains": "export { USelectButton } from"
+        },
+        {
+          "path": "packages/react/src/select-button/select-button.tsx",
+          "contains": "export function USelectButton<T = unknown>({"
+        },
+        {
+          "path": "packages/react/src/select-button/select-button.tsx",
+          "contains": "import { UToggleButton } from \"../toggle-button/toggle-button\";"
+        },
+        {
+          "path": "packages/react/src/select-button/select-button.tsx",
+          "contains": "cx(\"root\", { fluid: false })"
+        },
+        {
+          "path": "packages/react/src/select-button/select-button.tsx",
+          "contains": "const tabStopIndex ="
+        },
+        {
+          "path": "packages/react/src/select-button/select-button.tsx",
+          "contains": "optionDisabled,"
+        },
+        {
+          "path": "packages/react/src/select-button/select-button-style.ts",
+          "contains": "export interface SelectButtonClassesParams"
+        },
+        {
+          "path": "packages/react/src/select-button/select-button-style.ts",
+          "contains": "export const selectButtonStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    selectbutton:"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./select-button\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./select-button\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.select-button",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react.toggle-button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.multi-state-checkbox",
+      "name": "React UMultiStateCheckbox",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled click-to-cycle control that steps through a list of option values and optionally back to null.",
+      "surface": "UMultiStateCheckbox<T, V = T> is a generic plain function component, not a forwardRef. UMultiStateCheckboxProps requires value:V|null, options:T[] and onChange, and adds optionValue and optionLabel (property-name strings), optionIcon:(option:T)=>React.ReactNode, empty (default true), disabled, readOnly, tabIndex (default 0), id, className and aria-label; UMultiStateCheckboxChangeEvent<V> is {originalEvent, value:V|null}. Module-private getOptionValue and getOptionLabel are not exported. State is fully controlled: the selected index is found by strict equality, and toggle (skipped when disabled or readOnly) advances to the next option; after the last option it emits null when empty is true and the first option when empty is false; when no option matches it advances to the first option. Space (event.code or event.key) toggles with preventDefault; click toggles. The component does not emit an onChange on mount. Markup: a root div with role=\"button\", tabIndex (-1 when disabled), onClick, onKeyDown and aria-label (the aria-label prop, else the selected option label, else \"none\") containing a box div that renders optionIcon(selectedOption) when both exist; there is no native input and no aria-checked or aria-disabled. The style classes.root is a plain string, so the {disabled} parameter passed to cx is ignored and no disabled class is emitted even though the CSS defines .u-multi-state-checkbox-disabled; the classes object also has an icon key that the component never uses. multiStateCheckboxStyleModule is exported; there is no ClassesParams interface. Aura components registry has no key for multi-state-checkbox (componentName multi-state-checkbox), so no theme link is recorded. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/multi-state-checkbox; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/multi-state-checkbox/index.ts",
+        "packages/react/src/multi-state-checkbox/multi-state-checkbox.tsx",
+        "packages/react/src/multi-state-checkbox/multi-state-checkbox-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UMultiStateCheckbox",
+        "@ultimate/react/multi-state-checkbox#UMultiStateCheckbox",
+        "@ultimate/react#UMultiStateCheckboxProps",
+        "@ultimate/react/multi-state-checkbox#UMultiStateCheckboxProps",
+        "@ultimate/react#UMultiStateCheckboxChangeEvent",
+        "@ultimate/react/multi-state-checkbox#UMultiStateCheckboxChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/multi-state-checkbox/index.ts",
+          "contains": "export { UMultiStateCheckbox } from"
+        },
+        {
+          "path": "packages/react/src/multi-state-checkbox/multi-state-checkbox.tsx",
+          "contains": "export function UMultiStateCheckbox<T = unknown, V = T>({"
+        },
+        {
+          "path": "packages/react/src/multi-state-checkbox/multi-state-checkbox.tsx",
+          "contains": "return empty ? null : (options[0] ?? null);"
+        },
+        {
+          "path": "packages/react/src/multi-state-checkbox/multi-state-checkbox.tsx",
+          "contains": "role=\"button\""
+        },
+        {
+          "path": "packages/react/src/multi-state-checkbox/multi-state-checkbox.tsx",
+          "contains": "ariaLabel ?? (selectedOption ? getOptionLabel(selectedOption, optionLabel) : \"none\")"
+        },
+        {
+          "path": "packages/react/src/multi-state-checkbox/multi-state-checkbox-style.ts",
+          "contains": "root: \"u-multi-state-checkbox u-component\","
+        },
+        {
+          "path": "packages/react/src/multi-state-checkbox/multi-state-checkbox-style.ts",
+          "contains": "icon: \"u-multi-state-checkbox-icon\","
+        },
+        {
+          "path": "packages/react/src/multi-state-checkbox/multi-state-checkbox-style.ts",
+          "contains": "export const multiStateCheckboxStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./multi-state-checkbox\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./multi-state-checkbox\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.multi-state-checkbox",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.tri-state-checkbox",
+      "name": "React UTriStateCheckbox",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled true/false/null checkbox that cycles states on click, Space or Enter.",
+      "surface": "UTriStateCheckbox is a plain function component, not a forwardRef. UTriStateCheckboxProps requires value:boolean|null and adds onChange, disabled, readOnly, invalid, id, inputId, tabIndex (default 0), className and aria-label; there is no name, inputRef or autoFocus prop. State is fully controlled and has no internal state: cycle (skipped when disabled or readOnly) emits UTriStateCheckboxChangeEvent {originalEvent, value} following null -> true -> false -> null, calling onChange optionally. Click, Enter, Space (key \" \" or code Space) all cycle; keydown calls preventDefault. Markup inside the root div (cx root with disabled and invalid): a hidden native input type=checkbox (id=inputId, checked={value === true}, readOnly, disabled, aria-invalid={invalid || undefined}, aria-hidden=\"true\", tabIndex=-1) with no onChange so it is inert; a span with className u-hidden-accessible and aria-live=\"polite\" whose text is \"true\", \"false\" or \"none\" (the class is registered by useComponentStyle via the shared hidden-accessible rule); and a sibling box div with role=\"checkbox\", aria-checked \"true\"/\"false\"/\"mixed\", aria-label, tabIndex and the click and key handlers, showing UCheckIcon for true and UTimesIcon for false from @ultimate/react-core. triStateCheckboxStyleModule defines classes root (disabled, invalid), box, input and icon; the icon key is unused because the icon elements carry no className; there is no ClassesParams interface. Aura components registry has no key for tri-state-checkbox (componentName tri-state-checkbox), so no theme link is recorded. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/tri-state-checkbox; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/tri-state-checkbox/index.ts",
+        "packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx",
+        "packages/react/src/tri-state-checkbox/tri-state-checkbox-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UTriStateCheckbox",
+        "@ultimate/react/tri-state-checkbox#UTriStateCheckbox",
+        "@ultimate/react#UTriStateCheckboxProps",
+        "@ultimate/react/tri-state-checkbox#UTriStateCheckboxProps",
+        "@ultimate/react#UTriStateCheckboxChangeEvent",
+        "@ultimate/react/tri-state-checkbox#UTriStateCheckboxChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/tri-state-checkbox/index.ts",
+          "contains": "export { UTriStateCheckbox } from"
+        },
+        {
+          "path": "packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx",
+          "contains": "export function UTriStateCheckbox({"
+        },
+        {
+          "path": "packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx",
+          "contains": "if (value === null) next = true;"
+        },
+        {
+          "path": "packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx",
+          "contains": "className=\"u-hidden-accessible\" aria-live=\"polite\""
+        },
+        {
+          "path": "packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx",
+          "contains": "role=\"checkbox\""
+        },
+        {
+          "path": "packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx",
+          "contains": "\"mixed\""
+        },
+        {
+          "path": "packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx",
+          "contains": "<UTimesIcon />"
+        },
+        {
+          "path": "packages/react/src/tri-state-checkbox/tri-state-checkbox-style.ts",
+          "contains": "export const triStateCheckboxStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./tri-state-checkbox\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./tri-state-checkbox\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.tri-state-checkbox",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.react-core.icons"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.rating",
+      "name": "React URating",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled star rating row with click and arrow-key selection.",
+      "surface": "URating is a plain function component, not a forwardRef. URatingProps requires value:number|null and onChange and adds stars (default 5), readOnly, disabled, className and aria-labelledby; URatingChangeEvent is {originalEvent, value:number|null}. There is no name, id or cancel prop and no ref prop. State is fully controlled plus one internal focusedIndex state: rate (skipped unless enabled = !disabled && !readOnly) sets next to null when the clicked star equals value, so clicking the active star toggles the rating off, then calls onChange. Keyboard per star: Enter and Space rate that star; ArrowLeft/ArrowUp rate (value ?? 0) - 1, wrapping to stars below 1; ArrowRight/ArrowDown rate (value ?? 0) + 1, wrapping to 1 above stars; arrow keys therefore change the value, not only focus. Markup: a root div with role=\"group\" and aria-labelledby (cx root with disabled: !enabled), then one div per star with role=\"radio\", aria-checked={value === starValue}, aria-label \"1 star\" or \"N stars\", tabIndex 0 when enabled else -1 (every star is tabbable), click, key, focus and blur handlers, and an inline svg with className onIcon or offIcon, aria-hidden and a data-testid of star-on-N or star-off-N that ships in production markup. ratingStyleModule is exported with the RatingClassesParams and RatingOptionClassesParams interfaces; classes root, option, onIcon, offIcon. componentName rating matches the Aura components registry key rating. The style file comment mentions @ultimate/uix-styles but nothing is imported. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/rating; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/rating/index.ts",
+        "packages/react/src/rating/rating.tsx",
+        "packages/react/src/rating/rating-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#URating",
+        "@ultimate/react/rating#URating",
+        "@ultimate/react#URatingProps",
+        "@ultimate/react/rating#URatingProps",
+        "@ultimate/react#URatingChangeEvent",
+        "@ultimate/react/rating#URatingChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/rating/index.ts",
+          "contains": "export { URating } from"
+        },
+        {
+          "path": "packages/react/src/rating/rating.tsx",
+          "contains": "export function URating({"
+        },
+        {
+          "path": "packages/react/src/rating/rating.tsx",
+          "contains": "const next = value === newValue ? null : newValue;"
+        },
+        {
+          "path": "packages/react/src/rating/rating.tsx",
+          "contains": "role=\"radio\""
+        },
+        {
+          "path": "packages/react/src/rating/rating.tsx",
+          "contains": "data-testid={`star-on-${starValue}`}"
+        },
+        {
+          "path": "packages/react/src/rating/rating-style.ts",
+          "contains": "export interface RatingClassesParams"
+        },
+        {
+          "path": "packages/react/src/rating/rating-style.ts",
+          "contains": "export interface RatingOptionClassesParams"
+        },
+        {
+          "path": "packages/react/src/rating/rating-style.ts",
+          "contains": "export const ratingStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    rating,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./rating\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./rating\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.rating",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.slider",
+      "name": "React USlider",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled single-handle or two-handle range slider with mouse and keyboard interaction and an optional slide-end callback.",
+      "surface": "USlider is a plain function component, not a forwardRef. USliderProps requires value:number|number[] and onChange and adds min (default 0), max (default 100), step (no default), range (default false), orientation \"horizontal\"|\"vertical\" (default horizontal), disabled, className and onSlideEnd; USliderChangeEvent is {originalEvent: Event|React.SyntheticEvent, value:number|number[]}. There is no name, id or aria-label prop and no ref prop. State is fully controlled; internal refs hold the active handle index, the bar rect and a dragging flag. In range mode value is read as an array (falling back to [min, max]); otherwise a number (falling back to min). applyStep floors the raw value when step is falsy, else rounds to the step with decimal correction; updateValue clamps and, in range mode, copies the array and replaces the active handle. onMouseDown (skipped when disabled) focuses the target, calls preventDefault and adds document mousemove and mouseup listeners that are removed only on mouseup, with no unmount cleanup. Those listeners are closures from the render in which mousedown ran, so they capture that render's value (stale after later renders) and onSlideEnd after a drag reports that captured value. onSlideEnd is also emitted after a bar click, which ignores clicks on role=slider elements and picks the nearest handle in range mode. Keyboard (event.key): ArrowDown/ArrowLeft subtract step, ArrowUp/ArrowRight add step (step ?? 1), PageDown/PageUp change by ten steps, Home sets min, End sets max. Handles are span elements with role=\"slider\", tabIndex={0}, aria-valuemin, aria-valuenow, aria-valuemax and aria-orientation; there is no aria-label or aria-labelledby and no aria-disabled, and disabled does not change tabIndex. No touch event handlers exist, and when max equals min and the value equals min, toPercent evaluates 0 / 0 (NaN). sliderStyleModule is exported with the SliderClassesParams interface (orientation, disabled); classes root, range, handle. componentName slider matches the Aura components registry key slider. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/slider; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/slider/index.ts",
+        "packages/react/src/slider/slider.tsx",
+        "packages/react/src/slider/slider-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#USlider",
+        "@ultimate/react/slider#USlider",
+        "@ultimate/react#USliderProps",
+        "@ultimate/react/slider#USliderProps",
+        "@ultimate/react#USliderChangeEvent",
+        "@ultimate/react/slider#USliderChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/slider/index.ts",
+          "contains": "export { USlider } from"
+        },
+        {
+          "path": "packages/react/src/slider/slider.tsx",
+          "contains": "export function USlider({"
+        },
+        {
+          "path": "packages/react/src/slider/slider.tsx",
+          "contains": "export interface USliderChangeEvent"
+        },
+        {
+          "path": "packages/react/src/slider/slider.tsx",
+          "contains": "onSlideEnd?: (event: USliderChangeEvent) => void;"
+        },
+        {
+          "path": "packages/react/src/slider/slider.tsx",
+          "contains": "document.addEventListener(\"mousemove\", move);"
+        },
+        {
+          "path": "packages/react/src/slider/slider.tsx",
+          "contains": "tabIndex={0}"
+        },
+        {
+          "path": "packages/react/src/slider/slider.tsx",
+          "contains": "role=\"slider\""
+        },
+        {
+          "path": "packages/react/src/slider/slider-style.ts",
+          "contains": "export interface SliderClassesParams"
+        },
+        {
+          "path": "packages/react/src/slider/slider-style.ts",
+          "contains": "export const sliderStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    slider,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./slider\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./slider\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.slider",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.knob",
+      "name": "React UKnob",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled circular SVG dial adjusted by click, drag and keyboard.",
+      "surface": "UKnob is a plain function component, not a forwardRef; index.ts exports only UKnob and UKnobProps (no change-event type). UKnobProps requires value:number and onChange(value: number) which receives a bare number, not an event object, and adds size (100), min (0), max (100), step (1), strokeWidth (14), showValue (true), readOnly, disabled, valueTemplate (\"{value}\"), valueColor (\"#3B82F6\"), rangeColor (\"#D1D5DB\"), textColor (\"#374151\") and className. There is no name, id or aria-label prop and no ref prop; an internal svgRef is used only for pointer geometry. State is fully controlled. updateModelValue clamps to [min, max] before onChange. Click maps event.nativeEvent.offsetX and offsetY to an angle; mousedown adds document mousemove and mouseup listeners (removed on mouseup, no unmount cleanup) and uses svg getBoundingClientRect. Keyboard (event.code): ArrowRight/ArrowUp add step, ArrowLeft/ArrowDown subtract step, Home sets min, End sets max, PageUp and PageDown change by a fixed 10 regardless of step. The enabled flag (!disabled && !readOnly) gates the handlers. Markup: a root div (cx root only, so disabled and readOnly are not reflected in a class) around an svg with role=\"slider\", width and height equal to size, viewBox 0 0 100 100, tabIndex 0 when enabled else -1, aria-valuemin, aria-valuemax and aria-valuenow; there is no aria-label, aria-labelledby, aria-disabled or aria-readonly. Two paths draw the range and value arcs, and an optional text element shows valueTemplate with {value} replaced. The source header comment states touch handling is excluded; no touch handling exists. knobStyleModule is exported; classes root (plain string), range, value, text; there is no ClassesParams interface. componentName knob matches the Aura components registry key knob. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/knob; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "files": [
+        "packages/react/src/knob/index.ts",
+        "packages/react/src/knob/knob.tsx",
+        "packages/react/src/knob/knob-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UKnob",
+        "@ultimate/react/knob#UKnob",
+        "@ultimate/react#UKnobProps",
+        "@ultimate/react/knob#UKnobProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/knob/index.ts",
+          "contains": "export { UKnob } from"
+        },
+        {
+          "path": "packages/react/src/knob/knob.tsx",
+          "contains": "export function UKnob({"
+        },
+        {
+          "path": "packages/react/src/knob/knob.tsx",
+          "contains": "export interface UKnobProps"
+        },
+        {
+          "path": "packages/react/src/knob/knob.tsx",
+          "contains": "onChange: (value: number) => void;"
+        },
+        {
+          "path": "packages/react/src/knob/knob.tsx",
+          "contains": "event.nativeEvent.offsetX"
+        },
+        {
+          "path": "packages/react/src/knob/knob.tsx",
+          "contains": "case \"PageUp\":"
+        },
+        {
+          "path": "packages/react/src/knob/knob.tsx",
+          "contains": "valueTemplate.replace(\"{value}\", value.toString())"
+        },
+        {
+          "path": "packages/react/src/knob/knob.tsx",
+          "contains": "role=\"slider\""
+        },
+        {
+          "path": "packages/react/src/knob/knob-style.ts",
+          "contains": "export const knobStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    knob,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./knob\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./knob\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.knob",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/input-switch/ src/select-button/ src/multi-state-checkbox/ src/tri-state-checkbox/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "8d8d52094058993d3ca29823d1c2cd922805570e",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}
