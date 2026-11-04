@@ -189,20 +189,20 @@ test("props, state, overlay, accessibility, parsing, upload and source-only quir
   }
   assert.ok(by("react.file-upload").relationships.includes("package.ultimate.react.progress-bar"));
   // Plain Node replays of the arithmetic claimed in the records.
-  const nf = new Intl.NumberFormat("de", { useGrouping: true });
-  const parts = nf.formatToParts(1234.5);
-  const group = parts.find((p) => p.type === "group").value;
-  const decimal = parts.find((p) => p.type === "decimal").value;
-  assert.equal(
-    Number(
+  const focusParse = (locale) => {
+    const parts = new Intl.NumberFormat(locale, { useGrouping: true }).formatToParts(1234.5);
+    const group = parts.find((p) => p.type === "group")?.value ?? ",";
+    const decimal = parts.find((p) => p.type === "decimal")?.value ?? ".";
+    return Number(
       String(1234.5)
         .split(group)
         .join("")
         .replace(decimal, ".")
         .replace(/[^\d.-]/g, "")
-    ),
-    12345
-  );
+    );
+  };
+  for (const l of ["de", "pt-BR", "nl", "tr", "es", "it"]) assert.equal(focusParse(l), 12345, l);
+  for (const l of ["en", "fr", "pl", "ru", "pt-PT"]) assert.equal(focusParse(l), 1234.5, l);
   assert.throws(() => new Intl.NumberFormat(undefined, { style: "currency" }), TypeError);
   assert.throws(
     () => new Intl.NumberFormat(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 2 }),

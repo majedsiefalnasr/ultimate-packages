@@ -72,7 +72,7 @@ sites in all four components:
   input-number and file-upload are inline and have no overlay.
 - input-number: every blur emits `onValueChange`; the focus text is `String(value)`, which
   a locale with `.` group and `,` decimal separators parses as a different number (12345 for
-  1234.5 in de, pt-BR, nl and tr); percent mode does not scale; `Intl.NumberFormat` construction
+  1234.5 in de, pt-BR, nl, tr, es and it; en, fr, pl, ru and pt-PT are unaffected); percent mode does not scale; `Intl.NumberFormat` construction
   can throw during render; the key handler calls `preventDefault` for ArrowUp and ArrowDown
   without checking `disabled` or `readOnly`; while focused, a step or an external `value` change
   does not update the shown text, so the next blur emits the stale typed text.
