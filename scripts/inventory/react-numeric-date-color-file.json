@@ -1,0 +1,513 @@
+{
+  "version": 1,
+  "scope": "react-numeric-date-color-file",
+  "revision": "e99d41249677496cf6c531576dd6e1c181544883",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/input-number",
+        "packages/react/src/date-picker",
+        "packages/react/src/color-picker",
+        "packages/react/src/file-upload"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/input-number/index.ts"
+        },
+        {
+          "subpath": "./input-number",
+          "source": "packages/react/src/input-number/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/date-picker/index.ts"
+        },
+        {
+          "subpath": "./date-picker",
+          "source": "packages/react/src/date-picker/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/color-picker/index.ts"
+        },
+        {
+          "subpath": "./color-picker",
+          "source": "packages/react/src/color-picker/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/file-upload/index.ts"
+        },
+        {
+          "subpath": "./file-upload",
+          "source": "packages/react/src/file-upload/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/input-number/input-number.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/input-number/input-number.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/date-picker/date-picker.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/date-picker/date-picker.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/color-picker/color-picker.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/color-picker/color-picker.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/file-upload/file-upload.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/file-upload/file-upload.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react.progress-bar",
+      "batch": "ticket-141",
+      "reason": "Detailed inventory remains owned by [#141](https://github.com/majedsiefalnasr/ultimate-packages/issues/141). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.react.input-number",
+      "record": "react.input-number"
+    },
+    {
+      "id": "package.ultimate.react.date-picker",
+      "record": "react.date-picker"
+    },
+    {
+      "id": "package.ultimate.react.color-picker",
+      "record": "react.color-picker"
+    },
+    {
+      "id": "package.ultimate.react.file-upload",
+      "record": "react.file-upload"
+    }
+  ],
+  "ownership": {
+    "ticket": 120,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "records": [
+    {
+      "id": "react.input-number",
+      "name": "React UInputNumber",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled numeric text input with locale-aware display formatting, parse-on-blur with min/max clamping, ArrowUp/ArrowDown stepping and optional increment/decrement buttons.",
+      "surface": "UInputNumber is React.forwardRef<HTMLInputElement, UInputNumberProps>; among the four families in this inventory only input-number is a forwardRef. UInputNumberProps declares value (default null), onValueChange, min, max, step (1), mode (decimal | currency | percent), currency, locale, useGrouping (true), minFractionDigits, maxFractionDigits, prefix and suffix (both empty string), format (true), allowEmpty (true), showButtons (false), disabled, readOnly, invalid, fluid, name, id, placeholder, className and inputRef. UInputNumberValueChangeEvent carries originalEvent (React.SyntheticEvent) and value (number | null). The style module exports InputNumberClassesParams (invalid, fluid, focused) and inputNumberStyleModule; these two are not re-exported by index.ts.\n\nRef and state: a setRef callback assigns the forwarded ref and the inputRef prop to the same input element; an internal elementRef is assigned but never read. The value is controlled; local state is focused and rawText. The displayed text is rawText ?? String(value) while focused, otherwise the Intl.NumberFormat result (format=false shows String(value); prefix and suffix wrap the formatted text).\n\nCallbacks: onFocus sets focused and copies String(value) into rawText. onChange only updates rawText and never calls onValueChange. onBlur always calls commit with rawText ?? \"\", so every blur emits onValueChange, including when the text is unchanged, and then clears focused and rawText. commit parses the text: a null parse emits null when allowEmpty is true, otherwise emits the clamp of 0 to min/max; any other parse emits the value clamped to min/max.\n\nParsing: parseValue strips prefix and suffix when present, trims, maps empty text to null, reads the group and decimal separators from formatToParts(1234.5) (fallback ',' and '.'), removes the group separator, replaces the decimal separator with '.', deletes every character outside digits, '.' and '-', then calls Number; NaN becomes null. Checked in plain Node: the focus text is String(value), which always uses '.', so in a locale whose group separator is '.' and decimal separator is ',' (checked for de, pt-BR, nl and tr) the focus text of 1234.5 parses to 12345 on blur, while en parses it as 1234.5 (es, fr, it and ru also parse it as 1234.5 because their group separator is not '.'). Non-ASCII digits are deleted. '-' or '.' alone parses to null. Repeated '-' or '.' characters are not guarded. With de and useGrouping false, '12,5' parses to 125 because the ',' fallback group separator is removed. In percent mode the formatter treats the value as a fraction (0.5 shows 50%, 50 shows 5,000%) and the parser never divides by 100, so percent mode does not scale typed text.\n\nFormatting is unguarded: the Intl.NumberFormat is built inside useMemo during render, so mode currency without currency throws a TypeError ('Currency code is required with currency style.'), and an invalid locale, minFractionDigits greater than maxFractionDigits, or minFractionDigits of 200 throw a RangeError.\n\nStepping and keys: applyStep returns when disabled or readOnly, otherwise emits clamp((value ?? 0) + direction * step, min, max) with no floating-point rounding, no snapping to step multiples and no press-and-hold repeat. onKeyDown handles only key ArrowUp and ArrowDown, calls applyStep and always calls preventDefault inside the handler regardless of the disabled and readOnly props (a natively disabled input does not receive key events, a readOnly one does); Home, End, PageUp, PageDown and Enter are not handled. While focused the input shows rawText, which only typing changes: a step emitted by ArrowUp or ArrowDown (or a value prop changed from outside) does not update the displayed text, and the next blur commits the stale rawText, emitting the pre-step value again.\n\nMarkup and accessibility: root span with root, invalid, fluid and focused classes plus className; input type=text inputMode=decimal role=spinbutton with id, name, placeholder, disabled, readOnly, aria-invalid (invalid or undefined), aria-valuemin, aria-valuemax and aria-valuenow (value ?? undefined). There is no aria-valuetext and no aria-label prop. With showButtons, a buttonGroup span holds two type=button buttons with tabIndex -1, disabled when disabled or readOnly, aria-label Increment and Decrement, text + and -. Inline widget: no overlay, portal, imperative handle, useEffect or document listener.\n\nStyles: root class string is u-inputnumber u-component u-inputnumber-buttons-stacked plus -invalid, -fluid and -focus modifiers; u-inputnumber-focus and the button-up and button-down class names have no CSS rule. Class keys: root, input, buttonGroup, incrementButton, decrementButton. This is the only family in the inventory whose CSS reads var(--u-inputtext-*) custom properties (background, border-color, border-radius, color, disabled-background, disabled-color, focus-border-color, hover-border-color, invalid-border-color, padding-x, padding-y). The component doc comment lists caret-position insert/delete, clipboard paste parsing, buttonLayout and roundingMode as not implemented. The component registers as componentName input-number while the Aura registry key is inputnumber.",
+      "files": [
+        "packages/react/src/input-number/index.ts",
+        "packages/react/src/input-number/input-number.tsx",
+        "packages/react/src/input-number/input-number-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UInputNumber",
+        "@ultimate/react/input-number#UInputNumber",
+        "@ultimate/react#UInputNumberProps",
+        "@ultimate/react/input-number#UInputNumberProps",
+        "@ultimate/react#UInputNumberValueChangeEvent",
+        "@ultimate/react/input-number#UInputNumberValueChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/input-number/index.ts",
+          "contains": "export { UInputNumber } from"
+        },
+        {
+          "path": "packages/react/src/input-number/input-number.tsx",
+          "contains": "export const UInputNumber = React.forwardRef<HTMLInputElement, UInputNumberProps>("
+        },
+        {
+          "path": "packages/react/src/input-number/input-number.tsx",
+          "contains": "onBlur"
+        },
+        {
+          "path": "packages/react/src/input-number/input-number.tsx",
+          "contains": "const applyStep = React.useCallback("
+        },
+        {
+          "path": "packages/react/src/input-number/input-number.tsx",
+          "contains": "if (event.key === \"ArrowUp\") {"
+        },
+        {
+          "path": "packages/react/src/input-number/input-number-style.ts",
+          "contains": "export const inputNumberStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "inputnumber: inputNumber,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./input-number\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./input-number\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.input-number",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the numeric, date, color and file input families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-number/ src/date-picker/ src/color-picker/ src/file-upload/",
+          "outcome": "not-run",
+          "revision": "e99d41249677496cf6c531576dd6e1c181544883",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.date-picker",
+      "name": "React UDatePicker",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled single-date picker with a read-only formatted input, optional icon and clear controls, and a month-grid dialog overlay with min/max and disabled-date constraints.",
+      "surface": "UDatePicker is a plain function component (not a forwardRef) with UDatePickerProps. Props: value (Date | null, required), onChange (required, receives Date | null), placeholder, disabled, fluid, minDate, maxDate, disabledDates (default [], a new array each render), showIcon, showClear, dayNames (default Su to Sa), monthNames (English default), className, inputId, onSelect, onClear, onShow and onHide. There are no locale, dateFormat, selectionMode or time props. The style module exports DatePickerClassesParams (disabled, fluid, otherMonth, today, selected, focused) and datePickerStyleModule; neither is re-exported by index.ts.\n\nFormatting: the input text comes from a fixed MM/DD/YYYY formatter (month plus one and day padded, year not padded). State: overlayVisible, viewMonth, viewYear and focusedCell. today is computed with useMemo and an empty dependency list, so it is captured once per mount and the today highlight is not refreshed afterwards.\n\nConstraints: isCellDisabled compares the cell date with stripTime(minDate) and stripTime(maxDate) and checks disabledDates with isSameDay. stripTime, selectCell and isCellDisabled construct dates with new Date(year, month, day), which maps years 0 to 99 to 1900 to 1999.\n\nOpen and close: show() returns when disabled, then sets the view and focused cell from value or today, sets overlayVisible and calls onShow. hide() sets overlayVisible false and calls onHide. selectCell returns for disabled cells; otherwise it calls onChange(date) then onSelect(date), moves the view for other-month cells, sets focusedCell and calls hide(). A cell click calls selectCell; disabled cells only carry aria-disabled. There is no outside-click or blur handler: the overlay closes only through cell selection, Escape, a click, Enter or Space on the input, or a click on the icon, and it stays open when disabled becomes true.\n\nNavigation: navBackward and navForward call setViewYear inside the setViewMonth updater function, so a StrictMode double invocation can shift the year twice. Nav buttons have aria-label Previous month and Next month. Cell keys use event.code: ArrowRight and ArrowLeft move one day, ArrowDown and ArrowUp move seven, through moveFocusByDays, which does not skip disabled dates and only updates focusedCell state. No call to focus() exists, so DOM focus is never moved and only the roving tabIndex changes. Enter, NumpadEnter and Space select; Escape hides; PageUp, PageDown, Home, End and Tab are not handled.\n\nInput and controls: a read-only text input with aria-haspopup=dialog, aria-expanded, tabIndex -1 and disabled attribute when disabled; click toggles the overlay (no-op when disabled); onKeyDown returns when disabled, toggles on Enter, NumpadEnter and Space with preventDefault, and hides on Escape when visible; ArrowDown does not open the overlay. The clear control renders when showClear, value is not null and not disabled: a span with aria-hidden, a click handler that stops propagation, calls onChange(null) and onClear, is not keyboard accessible and does not hide the overlay. The icon is a span with role=button and aria-hidden=true, no tabIndex, which toggles the overlay.\n\nOverlay markup: an absolutely positioned div role=dialog without aria-label or aria-modal and without a portal; a table role=grid whose th cells use scope=col and key=dayName (duplicate names would collide); td cells hold a span role=gridcell with tabIndex, aria-selected and aria-disabled and key month-day-year. Weeks are laid out Sunday first and this is not configurable; dayNames is independent of that layout.\n\nStyles: root class u-date-picker u-component plus u-date-picker-fluid (root reads only fluid); the day resolver reads otherMonth, today, selected, focused and disabled. Class keys: root, input, trigger, clearIcon, panel, header, navButton, title, dayView, weekdayCell, dayCell, day. The CSS rule .u-date-picker-nav-button:disabled never applies because nav buttons are never disabled. The doc comment lists selectionMode, month and year views, time, inline, touch UI, week numbers, button bar, multi-month and Intl as not implemented. componentName is date-picker while the Aura registry key is datepicker.",
+      "files": [
+        "packages/react/src/date-picker/index.ts",
+        "packages/react/src/date-picker/date-picker.tsx",
+        "packages/react/src/date-picker/date-picker-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UDatePicker",
+        "@ultimate/react/date-picker#UDatePicker",
+        "@ultimate/react#UDatePickerProps",
+        "@ultimate/react/date-picker#UDatePickerProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/date-picker/index.ts",
+          "contains": "export { UDatePicker } from"
+        },
+        {
+          "path": "packages/react/src/date-picker/date-picker.tsx",
+          "contains": "export function UDatePicker({"
+        },
+        {
+          "path": "packages/react/src/date-picker/date-picker.tsx",
+          "contains": "const today = React.useMemo(() => new Date(), []);"
+        },
+        {
+          "path": "packages/react/src/date-picker/date-picker.tsx",
+          "contains": "setViewYear((year) => year - 1);"
+        },
+        {
+          "path": "packages/react/src/date-picker/date-picker.tsx",
+          "contains": "function stripTime(date: Date): Date {"
+        },
+        {
+          "path": "packages/react/src/date-picker/date-picker-style.ts",
+          "contains": "export const datePickerStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "datepicker: datePicker,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./date-picker\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./date-picker\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.date-picker",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the numeric, date, color and file input families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-number/ src/date-picker/ src/color-picker/ src/file-upload/",
+          "outcome": "not-run",
+          "revision": "e99d41249677496cf6c531576dd6e1c181544883",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.color-picker",
+      "name": "React UColorPicker",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Controlled color picker with a read-only swatch input and a mouse-driven saturation/brightness and hue panel that emits hex, RGB or HSB values.",
+      "surface": "UColorPicker is a plain function component (not a forwardRef) with UColorPickerProps. Props: value (UColorPickerValue | null, required), onChange (required, receives UColorPickerChangeEvent), format (hex | rgb | hsb, default hex), defaultColor (default \"ff0000\"), disabled, className, onShow and onHide. UColorPickerValue is string | Rgb | Hsb; Rgb and Hsb are local and not exported. UColorPickerChangeEvent carries originalEvent (Event | React.SyntheticEvent) and value. The style module exports ColorPickerPreviewClassesParams (disabled) and colorPickerStyleModule; neither is re-exported by index.ts.\n\nValue handling: toHsb converts value by format without checking its type against format (rgb is cast to Rgb, hsb is cast to Hsb unvalidated, hex is cast to string); a null value uses defaultColor. hexToRgb calls parseInt(hex without '#', 16) and splits it with >> 16, (& 0x00ff00) >> 8 and & 0x0000ff, so 3-digit hex misparses (#fff is 0x0fff and gives 0, 15, 255), 8-digit hex gives out-of-range channels (#12345678 gives 4660, 86, 120) and non-hex text gives NaN that becomes black. rgbToHsb returns h = 300 for gray and black (s = 0 path computes -1 * 60 + 360); HSB output is unrounded. hsbToRgb rounds and treats 360 as 0; rgbToHex does not clamp. Emitted hex is '#' plus six lowercase digits; the hsb format emits a copy of the HSB object.\n\nOpen and close: togglePanel returns when disabled and calls onShow or onHide inside the setOverlayVisible updater function, so these callbacks run during state processing and may run twice under StrictMode. Escape and Tab on the input call setOverlayVisible(false) and onHide when visible. There is no outside-click or blur handler; the panel also closes on input click and Space, and it stays open when disabled becomes true.\n\nInput: a read-only text input with className preview (disabled modifier), backgroundColor from the unvalidated HSB value, hard-coded aria-label 'Select color', aria-haspopup=true, aria-expanded, tabIndex -1 and disabled attribute when disabled. Space toggles with preventDefault; Enter does nothing. Color changes are mouse-only: there is no keyboard adjustment and no touch or pointer handler.\n\nPanel: an absolutely positioned div without role, aria-label or portal, holding a 150 x 150 colorSelector and a hue strip, each with a ref and onMouseDown and without ARIA roles. Mousedown returns when disabled, marks dragging, picks immediately and calls bindDragListeners, which adds document mousemove and mouseup listeners on every mousedown; mouseup removes both and resets the refs. There is no unmount cleanup, and the mousemove handler closes over the pickColor and hsbValue of the render in which the drag started. pickColor sets saturation floor(100 * clamp(x, 0, 150) / 150) and brightness floor(100 * (150 - clamp(y, 0, 150)) / 150) and keeps the current hue; pickHue sets hue floor(360 * (150 - clamp(y)) / 150) and keeps saturation and brightness. validateHsb clamps picks and the selector background but the input swatch uses the unvalidated value. The 150 px size is hard-coded; handle positions use floor(150 * s / 100), floor(150 * (100 - b) / 100) and floor(150 - 150 * h / 360).\n\nStyles: root class u-color-picker u-component; class keys root, preview (reads disabled), panel, content, colorSelector, colorBackground, colorHandle, hue, hueHandle. The doc comment lists inline mode, touch, context configuration and portal as not implemented. componentName is color-picker while the Aura registry key is colorpicker.",
+      "files": [
+        "packages/react/src/color-picker/index.ts",
+        "packages/react/src/color-picker/color-picker.tsx",
+        "packages/react/src/color-picker/color-picker-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UColorPicker",
+        "@ultimate/react/color-picker#UColorPicker",
+        "@ultimate/react#UColorPickerProps",
+        "@ultimate/react/color-picker#UColorPickerProps",
+        "@ultimate/react#UColorPickerChangeEvent",
+        "@ultimate/react/color-picker#UColorPickerChangeEvent",
+        "@ultimate/react#UColorPickerValue",
+        "@ultimate/react/color-picker#UColorPickerValue"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/color-picker/index.ts",
+          "contains": "export { UColorPicker } from"
+        },
+        {
+          "path": "packages/react/src/color-picker/color-picker.tsx",
+          "contains": "export function UColorPicker({"
+        },
+        {
+          "path": "packages/react/src/color-picker/color-picker.tsx",
+          "contains": "if (next) onShow?.();"
+        },
+        {
+          "path": "packages/react/src/color-picker/color-picker.tsx",
+          "contains": "document.addEventListener(\"mousemove\""
+        },
+        {
+          "path": "packages/react/src/color-picker/color-picker.tsx",
+          "contains": "function validateHsb(hsb: Hsb): Hsb {"
+        },
+        {
+          "path": "packages/react/src/color-picker/color-picker-style.ts",
+          "contains": "export const colorPickerStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "colorpicker: colorPicker,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./color-picker\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./color-picker\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.color-picker",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the numeric, date, color and file input families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-number/ src/date-picker/ src/color-picker/ src/file-upload/",
+          "outcome": "not-run",
+          "revision": "e99d41249677496cf6c531576dd6e1c181544883",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.file-upload",
+      "name": "React UFileUpload",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Inline file chooser and drop zone that validates selections, lists files and uploads them with XMLHttpRequest or hands them to a custom handler.",
+      "surface": "UFileUpload is a plain function component (not a forwardRef) with UFileUploadProps. Props: name (default \"files\"), url, method (POST | PUT, default POST), multiple, accept, disabled, auto, withCredentials, maxFileSize, fileLimit, customUpload, chooseLabel, uploadLabel, cancelLabel, emptyMessage, className, onSelect, onProgress, onUpload, onError, onClear, onRemove and onUploadHandler. Event types: UFileUploadSelectEvent (originalEvent, files, currentFiles), UFileUploadProgressEvent (originalEvent ProgressEvent, progress), UFileUploadEvent and UFileUploadErrorEvent (files), UFileUploadRemoveEvent (originalEvent, file) and UFileUploadHandlerEvent (files). The style module exports FileUploadClassesParams (disabled, highlight) and fileUploadStyleModule; neither is re-exported by index.ts.\n\nState: the selected list, uploading, progress, highlight and validation messages are internal; the list cannot be bound or set from props, and there is no ref or imperative API. Inline widget: no overlay and no portal. It renders UProgressBar (imported from ../progress-bar/progress-bar) with value=progress and showValue=false only while uploading.\n\nUpload: upload(currentFiles) returns on an empty list. With customUpload it calls onUploadHandler({ files }) and returns, without setting uploading and without clearing the list. Without url it returns silently. Otherwise it sets uploading and progress 0, builds a FormData with append(name, file, file.name) per file, and sends an XMLHttpRequest with the configured method, url and withCredentials. Progress comes from xhr.upload's progress listener and is applied only when lengthComputable, as round(loaded * 100 / total), updating state and calling onProgress. onreadystatechange acts at readyState 4: it clears uploading and progress, and for 2xx statuses calls onUpload({ files }), empties the list and messages, clears the native input and calls onClear; other statuses (including 0) call onError({ files }). There is no onerror or onabort handler, no abort (the Cancel button only calls clear(), is enabled while uploading and the request continues), no setRequestHeader, no response exposure and no unmount cleanup. onUpload and onError carry only files.\n\nSelection: handleSelectedFiles returns for a null or empty FileList. The next list starts from the current list when multiple, otherwise empty, so single mode replaces the list even when every new file is rejected. A file with the same name, type and size is skipped silently. Files over maxFileSize add the message '{name}: invalid file size, maximum upload size is {formatSize}.'; files failing accept add '{name}: invalid file type, allowed file types: {accept}.'. When the list exceeds fileLimit a message is added and the newest entries are truncated. Messages are replaced on each selection. onSelect always fires with files (all incoming, including rejected) and currentFiles (the kept list), even if nothing was accepted; the native input is cleared; with auto and a non-empty list the whole kept list is uploaded again.\n\nAccept matching: isFileTypeValid splits accept on commas and trims; an entry containing `*` matches file.type.startsWith(entry up to the first `/`), so `'*'` matches every file, `'image/*'` matches image types and `'*/*'` uses prefix `*` and rejects every file; other entries match file.type exactly (case-sensitive) or the lowercase '.' plus last name segment. formatSize returns '0 B' for 0, otherwise floor(log(bytes) / log(1024)) with toFixed(2), a label from sizes[i] ?? 'TB' and an uncapped divisor (1024^5 gives '1.00 TB'; 0.5 gives '512.00 TB'; negative or NaN gives 'NaN TB'; 1536 gives '1.50 KB').\n\nControls and markup: the Choose button uses the disabled attribute and its click returns when disabled before clicking a hidden input type=file (class u-file-upload-input, display none) that carries multiple, accept, disabled and onChange but no id, name or aria attributes. Upload and Cancel buttons render only when auto is false: Upload is disabled when there are no files or while uploading, Cancel when there are no files; neither reads the disabled prop. The content zone handles dragenter, dragover, dragleave and drop, returning early when disabled; dragover sets highlight, dragleave clears it (so child entry can flicker), all stop propagation and preventDefault, and a drop is processed only when multiple or exactly one file, otherwise ignored silently. The drop zone has no role and is not keyboard operable. Messages render in a plain div with no role or aria-live. File rows show name and formatSize, with a type=button remove button whose aria-label is Remove file on every row; removeFile filters the list, clears the native input, calls onRemove only when a file was removed and does not clear messages. clear() empties files and messages, clears the input and calls onClear even when the list was already empty. Keys: messages by text, files by name-size-index.\n\nStyles: root class u-file-upload u-component; content reads highlight only, and FileUploadClassesParams.disabled is never read by any class resolver. Class keys: header, chooseButton, uploadButton, cancelButton, input, content, file, fileInfo, fileName, fileSize, fileRemoveButton, empty, message. The CSS contains no var(--) custom properties. The doc comment states that only advanced mode is implemented. componentName is file-upload while the Aura registry key is fileupload.",
+      "files": [
+        "packages/react/src/file-upload/index.ts",
+        "packages/react/src/file-upload/file-upload.tsx",
+        "packages/react/src/file-upload/file-upload-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UFileUpload",
+        "@ultimate/react/file-upload#UFileUpload",
+        "@ultimate/react#UFileUploadProps",
+        "@ultimate/react/file-upload#UFileUploadProps",
+        "@ultimate/react#UFileUploadSelectEvent",
+        "@ultimate/react/file-upload#UFileUploadSelectEvent",
+        "@ultimate/react#UFileUploadProgressEvent",
+        "@ultimate/react/file-upload#UFileUploadProgressEvent",
+        "@ultimate/react#UFileUploadEvent",
+        "@ultimate/react/file-upload#UFileUploadEvent",
+        "@ultimate/react#UFileUploadErrorEvent",
+        "@ultimate/react/file-upload#UFileUploadErrorEvent",
+        "@ultimate/react#UFileUploadRemoveEvent",
+        "@ultimate/react/file-upload#UFileUploadRemoveEvent",
+        "@ultimate/react#UFileUploadHandlerEvent",
+        "@ultimate/react/file-upload#UFileUploadHandlerEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/file-upload/index.ts",
+          "contains": "export { UFileUpload } from"
+        },
+        {
+          "path": "packages/react/src/file-upload/file-upload.tsx",
+          "contains": "export function UFileUpload({"
+        },
+        {
+          "path": "packages/react/src/file-upload/file-upload.tsx",
+          "contains": "onUploadHandler?.({ files: currentFiles });"
+        },
+        {
+          "path": "packages/react/src/file-upload/file-upload.tsx",
+          "contains": "if (event.lengthComputable) {"
+        },
+        {
+          "path": "packages/react/src/file-upload/file-upload.tsx",
+          "contains": "function isFileTypeValid(file: File, accept: string): boolean {"
+        },
+        {
+          "path": "packages/react/src/file-upload/file-upload-style.ts",
+          "contains": "export const fileUploadStyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "fileupload: fileUpload,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./file-upload\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./file-upload\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.file-upload",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react.progress-bar"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product spec for the numeric, date, color and file input families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/input-number/ src/date-picker/ src/color-picker/ src/file-upload/",
+          "outcome": "not-run",
+          "revision": "e99d41249677496cf6c531576dd6e1c181544883",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}
