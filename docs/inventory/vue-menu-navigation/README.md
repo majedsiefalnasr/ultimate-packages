@@ -40,6 +40,9 @@ host repair, product edit, commit, push or branch switch was performed by the im
 Before committing, the lead subsequently ran `pnpm install --frozen-lockfile` under Node
 `v24.15.0` with pnpm `9.6.0`: passed, lockfile unchanged, Husky prepare completed.
 The earlier verification environment above remains the provenance of the worker's results.
+The lead also reran `node --test scripts/inventory/*.test.mjs` under Node `v24.15.0`
+before implementation commit `b74bb5f9`: 135/135 passed. Scoped Prettier and the actual
+Husky ESLint/Prettier pre-commit checks passed on that implementation snapshot.
 
 The inventory regression seam was authorized in the task. First,
 `node --test scripts/inventory/vue-menu-navigation.test.mjs` failed all four tests with
