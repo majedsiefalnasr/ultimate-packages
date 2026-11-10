@@ -1,0 +1,495 @@
+{
+  "version": 1,
+  "scope": "angular-disclosure-steps",
+  "revision": "fcd2e02d28e0b9a678262d4731bb7ae31732d574",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/accordion",
+        "packages/ng/src/tabs",
+        "packages/ng/src/stepper",
+        "packages/ng/src/steps"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/accordion/index.ts"
+        },
+        {
+          "subpath": "./accordion",
+          "source": "packages/ng/src/accordion/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/tabs/index.ts"
+        },
+        {
+          "subpath": "./tabs",
+          "source": "packages/ng/src/tabs/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/stepper/index.ts"
+        },
+        {
+          "subpath": "./stepper",
+          "source": "packages/ng/src/stepper/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/steps/index.ts"
+        },
+        {
+          "subpath": "./steps",
+          "source": "packages/ng/src/steps/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/accordion/accordion.spec.ts",
+      "reason": "Supporting behavioral test source; presence is not execution evidence."
+    },
+    {
+      "path": "packages/ng/src/accordion/accordion.stories.ts",
+      "reason": "Supporting Storybook usage example; not a runtime export."
+    },
+    {
+      "path": "packages/ng/src/tabs/tabs.spec.ts",
+      "reason": "Supporting behavioral test source; presence is not execution evidence."
+    },
+    {
+      "path": "packages/ng/src/tabs/tabs.stories.ts",
+      "reason": "Supporting Storybook usage example; not a runtime export."
+    },
+    {
+      "path": "packages/ng/src/stepper/stepper.spec.ts",
+      "reason": "Supporting behavioral test source; presence is not execution evidence."
+    },
+    {
+      "path": "packages/ng/src/stepper/stepper.stories.ts",
+      "reason": "Supporting Storybook usage example; not a runtime export."
+    },
+    {
+      "path": "packages/ng/src/steps/steps.spec.ts",
+      "reason": "Supporting behavioral test source; presence is not execution evidence."
+    },
+    {
+      "path": "packages/ng/src/steps/steps.stories.ts",
+      "reason": "Supporting Storybook usage example; not a runtime export."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.ng-core.api",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 128,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.accordion",
+      "record": "angular.accordion"
+    },
+    {
+      "id": "package.ultimate.ng.tabs",
+      "record": "angular.tabs"
+    },
+    {
+      "id": "package.ultimate.ng.stepper",
+      "record": "angular.stepper"
+    },
+    {
+      "id": "package.ultimate.ng.steps",
+      "record": "angular.steps"
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.accordion",
+      "name": "Angular UAccordion",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Data-model-driven collapsible panel disclosure with one shared content template.",
+      "surface": "Selector u-accordion; one standalone UAccordion, not separate panel/header/content components. Public UAccordionPanel has required value: string | number, header?: string, disabled?: boolean; UAccordionTabEvent has originalEvent?: Event and index: string | number (the panel value, not positional index); UAccordionContentContext has $implicit: UAccordionPanel. Inputs panels: UAccordionPanel[] = [], multiple=false (booleanAttribute), value: string | number | (string | number)[] | undefined. Outputs valueChange of that same value union and onOpen/onClose: UAccordionTabEvent. ContentChild panelContent uses descendants:false and TemplateRef<UAccordionContentContext>, instantiated only for active panels. internalValue is fallback when value() is nullish; clicks update internal state and emit even with external value supplied. Multiple mode starts from an array or [], single mode toggles matching value to undefined. Disabled headers ignore interaction; click/Enter/Space toggle and preventDefault; headers expose role=button, aria-expanded/disabled and native Tab order, not arrow-key roving. AccordionClassesParams (active?/disabled?) and accordionStyleModule are source-only exports, absent from family barrel. All owned components extend UBaseComponent; inherited dt?: Record<string,unknown> and unstyled?: boolean inputs exist. Base ngOnInit registers theme variables and local structural CSS under componentName=accordion; local dt() token CSS and Aura accordion registration establish an indirect theme relationship, not a direct themes import or rendered-theme proof. No direct UIX style import, owned factories, base classes, hooks, separate directives or dedicated component-metadata record were found. No metadata relationship is inferred from names. Consumer availability: @ultimate/ng#UAccordion, @ultimate/ng/accordion#UAccordion, @ultimate/ng#UAccordionPanel, @ultimate/ng/accordion#UAccordionPanel, @ultimate/ng#UAccordionTabEvent, @ultimate/ng/accordion#UAccordionTabEvent, @ultimate/ng#UAccordionContentContext, @ultimate/ng/accordion#UAccordionContentContext. Manifest dist targets declare consumer entries, not verified publication/build artifacts. All remaining local css/classes constants, signals, DI references, DOM handlers and private/protected helpers in owned files belong to this family, not independent public products. Prime source comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/accordion/accordion-style.ts",
+        "packages/ng/src/accordion/accordion.ts",
+        "packages/ng/src/accordion/index.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UAccordion",
+        "@ultimate/ng/accordion#UAccordion",
+        "@ultimate/ng#UAccordionPanel",
+        "@ultimate/ng/accordion#UAccordionPanel",
+        "@ultimate/ng#UAccordionTabEvent",
+        "@ultimate/ng/accordion#UAccordionTabEvent",
+        "@ultimate/ng#UAccordionContentContext",
+        "@ultimate/ng/accordion#UAccordionContentContext"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/accordion/index.ts",
+          "contains": "export { UAccordion } from \"./accordion\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/accordion\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./accordion\""
+        },
+        {
+          "path": "packages/ng/src/accordion/accordion-style.ts",
+          "contains": "export const accordionStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    accordion,"
+        },
+        {
+          "path": "packages/ng/src/accordion/accordion.ts",
+          "contains": "export class UAccordion extends UBaseComponent"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, public composition/types and local style adapters exist; source evidence alone is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded four-family Angular specs passed once (48 total assertions counted as tests).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{accordion,tabs,stepper,steps}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "fcd2e02d28e0b9a678262d4731bb7ae31732d574",
+          "output": "Exit 0. Vitest 4.0.8: Test Files 4 passed (4); Tests 48 passed (48). accordion 8, tabs 13, stepper 6, steps 21. Angular build completed; warnings NG8113 (UStepList and UStepPanels unused in VerticalStepperHost in src/g3c1-aura-styles.spec.ts), NG8102 (src/input-number/input-number.ts:90:19 step() ?? 1).",
+          "run": "docs/inventory/angular-disclosure-steps/product-run.json",
+          "limitations": "Local Angular unit-test environment only; not browser/visual, Storybook, package build, publication or remote CI verification. Coverage includes imported foundations, not full family/platform coverage; warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including @ultimate/ng ng test --project=ng. Configuration only, not an observed successful remote run. Inventory tests are not in provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection and remote executions not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.tabs",
+      "name": "Angular UTabs",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Value-linked tab triggers and persistent projected panels with overflow navigation.",
+      "surface": "UTabs (u-tabs) owns value = model<string | number | undefined>(undefined), including generated valueChange; inputs selectOnFocus=false and showNavigators=true (booleanAttribute), tabindex=0. Public updateValue(newValue: string | number | undefined) directly sets the model. UTabList (u-tab-list) projects triggers into role=tablist with optional Previous/Next buttons, no own inputs; public updateInkBar() measures the active tab and sets indicator width/left. Browser-only ResizeObserver updates overflow state on init/resize and is disconnected on destroy; scroll also updates buttons. UTab (u-tab) requires value: string | number, disabled=false; injects both UTabs and UTabList. Active equality drives aria-selected, data state and tabindex (disabled or inactive -1). Focus activates only with selectOnFocus; click and Enter/Space/NumpadEnter activate enabled tabs. ArrowRight/Left wrap across eligible sibling u-tab elements, Home/End jump, focus scrolls into view; activation schedules updateInkBar() with setTimeout. UTabPanels (u-tab-panels) is a stateless role=presentation projection wrapper. UTabPanel (u-tab-panel) requires value: string | number; role=tabpanel, [hidden] when inactive, projected content stays mounted. All five classes are public components (not attribute directives). tabsStyleModule is source-only; its tab class resolver uses inline active?/disabled? parameter types, no named class-parameter interface. All owned components extend UBaseComponent; inherited dt?: Record<string,unknown> and unstyled?: boolean inputs exist. Base ngOnInit registers theme variables and local structural CSS under componentName=tabs; local dt() token CSS and Aura tabs registration establish an indirect theme relationship, not a direct themes import or rendered-theme proof. No direct UIX style import, owned factories, base classes, hooks, separate directives or dedicated component-metadata record were found. No metadata relationship is inferred from names. Consumer availability: @ultimate/ng#UTabs, @ultimate/ng/tabs#UTabs, @ultimate/ng#UTabList, @ultimate/ng/tabs#UTabList, @ultimate/ng#UTab, @ultimate/ng/tabs#UTab, @ultimate/ng#UTabPanels, @ultimate/ng/tabs#UTabPanels, @ultimate/ng#UTabPanel, @ultimate/ng/tabs#UTabPanel. Manifest dist targets declare consumer entries, not verified publication/build artifacts. All remaining local css/classes constants, signals, DI references, DOM handlers and private/protected helpers in owned files belong to this family, not independent public products. Prime source comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/tabs/index.ts",
+        "packages/ng/src/tabs/tab-list.ts",
+        "packages/ng/src/tabs/tab-panel.ts",
+        "packages/ng/src/tabs/tab-panels.ts",
+        "packages/ng/src/tabs/tab.ts",
+        "packages/ng/src/tabs/tabs-style.ts",
+        "packages/ng/src/tabs/tabs.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UTabs",
+        "@ultimate/ng/tabs#UTabs",
+        "@ultimate/ng#UTabList",
+        "@ultimate/ng/tabs#UTabList",
+        "@ultimate/ng#UTab",
+        "@ultimate/ng/tabs#UTab",
+        "@ultimate/ng#UTabPanels",
+        "@ultimate/ng/tabs#UTabPanels",
+        "@ultimate/ng#UTabPanel",
+        "@ultimate/ng/tabs#UTabPanel"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/tabs/index.ts",
+          "contains": "export { UTabs } from \"./tabs\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/tabs\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./tabs\""
+        },
+        {
+          "path": "packages/ng/src/tabs/tabs-style.ts",
+          "contains": "export const tabsStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    tabs,"
+        },
+        {
+          "path": "packages/ng/src/tabs/tab-list.ts",
+          "contains": "export class UTabList extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/tabs/tab-panel.ts",
+          "contains": "export class UTabPanel extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/tabs/tab-panels.ts",
+          "contains": "export class UTabPanels extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/tabs/tab.ts",
+          "contains": "export class UTab extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/tabs/tabs.ts",
+          "contains": "export class UTabs extends UBaseComponent"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, public composition/types and local style adapters exist; source evidence alone is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded four-family Angular specs passed once (48 total assertions counted as tests).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{accordion,tabs,stepper,steps}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "fcd2e02d28e0b9a678262d4731bb7ae31732d574",
+          "output": "Exit 0. Vitest 4.0.8: Test Files 4 passed (4); Tests 48 passed (48). accordion 8, tabs 13, stepper 6, steps 21. Angular build completed; warnings NG8113 (UStepList and UStepPanels unused in VerticalStepperHost in src/g3c1-aura-styles.spec.ts), NG8102 (src/input-number/input-number.ts:90:19 step() ?? 1).",
+          "run": "docs/inventory/angular-disclosure-steps/product-run.json",
+          "limitations": "Local Angular unit-test environment only; not browser/visual, Storybook, package build, publication or remote CI verification. Coverage includes imported foundations, not full family/platform coverage; warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including @ultimate/ng ng test --project=ng. Configuration only, not an observed successful remote run. Inventory tests are not in provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection and remote executions not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.stepper",
+      "name": "Angular UStepper",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Value-linked wizard headers and content panels with consumer-controlled navigation.",
+      "surface": "UStepper (u-stepper, role=tablist) owns value = model<number | undefined>(undefined), including valueChange, and linear=false (booleanAttribute). Public updateValue(value: number) sets value without gating; isStepActive(value: number) compares equality. UStepList (u-step-list) and UStepPanels (u-step-panels) are stateless projection wrappers. UStepItem (u-step-item) requires numeric value, injects UStepper and exposes active styling for vertical grouping. UStep (u-step) requires numeric value and disabled=false; projects title beside the value number in a button. Exact disabled condition is !active && (linear || disabled): linear disables every non-active step, not only future steps; the active step remains enabled even when disabled input is true. Button click calls updateValue; native button activation, not custom arrow roving. UStepPanel (u-step-panel, exportAs uStepPanel) requires numeric value and hides inactive projected content with [hidden]; public activate(value: number) delegates directly to parent, with validation/gating left to the consumer. UStepperSeparator (u-stepper-separator) is empty visual projection-free connector with aria-hidden=true. All seven classes are public components. stepperStyleModule is source-only with inline active?/disabled? resolver parameters, no named class-parameter interface; CSS explicitly hides .u-step-panel[hidden]. All owned components extend UBaseComponent; inherited dt?: Record<string,unknown> and unstyled?: boolean inputs exist. Base ngOnInit registers theme variables and local structural CSS under componentName=stepper; local dt() token CSS and Aura stepper registration establish an indirect theme relationship, not a direct themes import or rendered-theme proof. No direct UIX style import, owned factories, base classes, hooks, separate directives or dedicated component-metadata record were found. No metadata relationship is inferred from names. Consumer availability: @ultimate/ng#UStepper, @ultimate/ng/stepper#UStepper, @ultimate/ng#UStepList, @ultimate/ng/stepper#UStepList, @ultimate/ng#UStepItem, @ultimate/ng/stepper#UStepItem, @ultimate/ng#UStep, @ultimate/ng/stepper#UStep, @ultimate/ng#UStepPanels, @ultimate/ng/stepper#UStepPanels, @ultimate/ng#UStepPanel, @ultimate/ng/stepper#UStepPanel, @ultimate/ng#UStepperSeparator, @ultimate/ng/stepper#UStepperSeparator. Manifest dist targets declare consumer entries, not verified publication/build artifacts. All remaining local css/classes constants, signals, DI references, DOM handlers and private/protected helpers in owned files belong to this family, not independent public products. Prime source comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/stepper/index.ts",
+        "packages/ng/src/stepper/step-item.ts",
+        "packages/ng/src/stepper/step-list.ts",
+        "packages/ng/src/stepper/step-panel.ts",
+        "packages/ng/src/stepper/step-panels.ts",
+        "packages/ng/src/stepper/step.ts",
+        "packages/ng/src/stepper/stepper-separator.ts",
+        "packages/ng/src/stepper/stepper-style.ts",
+        "packages/ng/src/stepper/stepper.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UStepper",
+        "@ultimate/ng/stepper#UStepper",
+        "@ultimate/ng#UStepList",
+        "@ultimate/ng/stepper#UStepList",
+        "@ultimate/ng#UStepItem",
+        "@ultimate/ng/stepper#UStepItem",
+        "@ultimate/ng#UStep",
+        "@ultimate/ng/stepper#UStep",
+        "@ultimate/ng#UStepPanels",
+        "@ultimate/ng/stepper#UStepPanels",
+        "@ultimate/ng#UStepPanel",
+        "@ultimate/ng/stepper#UStepPanel",
+        "@ultimate/ng#UStepperSeparator",
+        "@ultimate/ng/stepper#UStepperSeparator"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/stepper/index.ts",
+          "contains": "export { UStepper } from \"./stepper\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/stepper\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./stepper\""
+        },
+        {
+          "path": "packages/ng/src/stepper/stepper-style.ts",
+          "contains": "export const stepperStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    stepper,"
+        },
+        {
+          "path": "packages/ng/src/stepper/step-item.ts",
+          "contains": "export class UStepItem extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/stepper/step-list.ts",
+          "contains": "export class UStepList extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/stepper/step-panel.ts",
+          "contains": "export class UStepPanel extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/stepper/step-panels.ts",
+          "contains": "export class UStepPanels extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/stepper/step.ts",
+          "contains": "export class UStep extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/stepper/stepper-separator.ts",
+          "contains": "export class UStepperSeparator extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/stepper/stepper.ts",
+          "contains": "export class UStepper extends UBaseComponent"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, public composition/types and local style adapters exist; source evidence alone is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded four-family Angular specs passed once (48 total assertions counted as tests).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{accordion,tabs,stepper,steps}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "fcd2e02d28e0b9a678262d4731bb7ae31732d574",
+          "output": "Exit 0. Vitest 4.0.8: Test Files 4 passed (4); Tests 48 passed (48). accordion 8, tabs 13, stepper 6, steps 21. Angular build completed; warnings NG8113 (UStepList and UStepPanels unused in VerticalStepperHost in src/g3c1-aura-styles.spec.ts), NG8102 (src/input-number/input-number.ts:90:19 step() ?? 1).",
+          "run": "docs/inventory/angular-disclosure-steps/product-run.json",
+          "limitations": "Local Angular unit-test environment only; not browser/visual, Storybook, package build, publication or remote CI verification. Coverage includes imported foundations, not full family/platform coverage; warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including @ultimate/ng ng test --project=ng. Configuration only, not an observed successful remote run. Inventory tests are not in provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection and remote executions not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.steps",
+      "name": "Angular USteps",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Flat workflow progress indicator with optional command and router selection.",
+      "surface": "USteps (u-steps) is an indicator driven by model: UMenuItem[] = [], activeIndex=0 (numberAttribute), readonly=true (booleanAttribute), not a UStepper composition. onSelect emits {originalEvent: MouseEvent; item: UMenuItem; index: number}; there is no activeIndexChange or internal selection update. UMenuItem is imported from ng-core, not declared or re-exported by this family. Visible items render labels and one-based model-index numbers; routerLink is used only when !readonly and !item.disabled, otherwise url or # anchor. isItemDisabled is item.disabled || (readonly && index !== activeIndex); current readonly item can receive focus, but onItemClick rejects all readonly activation. Enabled clicks emit onSelect then command with the same payload and preventDefault if no url. Keyboard ArrowRight/Left (nonwrapping), Home/End move among enabled anchors. rendered entries preserve original model indices when invisible items are removed. Consumes label, visible, disabled, routerLink, url, target and command, not every UMenuItem field. stepsStyleModule is source-only with inline active?/disabled? resolver parameters; no named class-parameter interface. All owned components extend UBaseComponent; inherited dt?: Record<string,unknown> and unstyled?: boolean inputs exist. Base ngOnInit registers theme variables and local structural CSS under componentName=steps; local dt() token CSS and Aura steps registration establish an indirect theme relationship, not a direct themes import or rendered-theme proof. No direct UIX style import, owned factories, base classes, hooks, separate directives or dedicated component-metadata record were found. No metadata relationship is inferred from names. Consumer availability: @ultimate/ng#USteps, @ultimate/ng/steps#USteps. Manifest dist targets declare consumer entries, not verified publication/build artifacts. All remaining local css/classes constants, signals, DI references, DOM handlers and private/protected helpers in owned files belong to this family, not independent public products. Prime source comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/steps/index.ts",
+        "packages/ng/src/steps/steps-style.ts",
+        "packages/ng/src/steps/steps.ts"
+      ],
+      "exports": ["@ultimate/ng#USteps", "@ultimate/ng/steps#USteps"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/steps/index.ts",
+          "contains": "export { USteps } from \"./steps\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/steps\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./steps\""
+        },
+        {
+          "path": "packages/ng/src/steps/steps-style.ts",
+          "contains": "export const stepsStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    steps,"
+        },
+        {
+          "path": "packages/ng/src/steps/steps.ts",
+          "contains": "export class USteps extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/steps/steps.ts",
+          "contains": "import { UBaseComponent, type UMenuItem } from \"@ultimate/ng-core\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng-core.api"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, public composition/types and local style adapters exist; source evidence alone is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded four-family Angular specs passed once (48 total assertions counted as tests).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{accordion,tabs,stepper,steps}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "fcd2e02d28e0b9a678262d4731bb7ae31732d574",
+          "output": "Exit 0. Vitest 4.0.8: Test Files 4 passed (4); Tests 48 passed (48). accordion 8, tabs 13, stepper 6, steps 21. Angular build completed; warnings NG8113 (UStepList and UStepPanels unused in VerticalStepperHost in src/g3c1-aura-styles.spec.ts), NG8102 (src/input-number/input-number.ts:90:19 step() ?? 1).",
+          "run": "docs/inventory/angular-disclosure-steps/product-run.json",
+          "limitations": "Local Angular unit-test environment only; not browser/visual, Storybook, package build, publication or remote CI verification. Coverage includes imported foundations, not full family/platform coverage; warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including @ultimate/ng ng test --project=ng. Configuration only, not an observed successful remote run. Inventory tests are not in provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection and remote executions not observed."
+        }
+      ]
+    }
+  ]
+}
