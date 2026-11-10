@@ -72,7 +72,7 @@ package.ultimate.themes.presets (pending cross-batch)
   },
   {
     "state": "verified",
-    "behavior": "Existing bounded four-family Angular specs passed once (48 total assertions counted as tests).",
+    "behavior": "Existing bounded four-family Angular specs passed once (48 tests).",
     "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{accordion,tabs,stepper,steps}/*.spec.ts'",
     "outcome": "passed",
     "revision": "fcd2e02d28e0b9a678262d4731bb7ae31732d574",
