@@ -16,6 +16,8 @@ Read the React menu and command navigation [scoped index](react-menu-navigation/
 
 Read the Vue menu and command navigation [scoped index](vue-menu-navigation/index.md), [validation](vue-menu-navigation/validation.md) and [authored verification notes](vue-menu-navigation/README.md) (#127); authored input: `scripts/inventory/vue-menu-navigation.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-menu-navigation.json --out docs/inventory/vue-menu-navigation`.
 
+Read the Angular compound disclosure and step navigation [scoped index](angular-disclosure-steps/index.md), [validation](angular-disclosure-steps/validation.md) and [authored verification notes](angular-disclosure-steps/README.md) (#128); authored input: `scripts/inventory/angular-disclosure-steps.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-disclosure-steps.json --out docs/inventory/angular-disclosure-steps`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
