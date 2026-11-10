@@ -12,7 +12,7 @@ Start with [the generated index](pilot/index.md) and [validation](pilot/validati
 
 Read the [scoped index](angular-menu-navigation/index.md), [validation](angular-menu-navigation/validation.md) and [authored verification notes](angular-menu-navigation/README.md). The authored input is `scripts/inventory/angular-menu-navigation.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-menu-navigation.json --out docs/inventory/angular-menu-navigation`.
 
-Read the React menu and command navigation [scoped index](react-menu-navigation/index.md), [validation](react-menu-navigation/validation.md) and [authored verification notes](react-menu-navigation/README.md) (#126); authored input: `scripts/inventory/react-menu-navigation.json`.
+Read the React menu and command navigation [scoped index](react-menu-navigation/index.md), [validation](react-menu-navigation/validation.md) and [authored verification notes](react-menu-navigation/README.md) (#126); authored input: `scripts/inventory/react-menu-navigation.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-menu-navigation.json --out docs/inventory/react-menu-navigation`.
 
 ## Why this sample
 
