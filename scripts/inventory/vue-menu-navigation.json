@@ -1,0 +1,1051 @@
+{
+  "version": 1,
+  "scope": "vue-menu-navigation",
+  "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/menu",
+        "packages/vue/src/context-menu",
+        "packages/vue/src/breadcrumb",
+        "packages/vue/src/mega-menu",
+        "packages/vue/src/menubar",
+        "packages/vue/src/panel-menu",
+        "packages/vue/src/tiered-menu",
+        "packages/vue/src/dock",
+        "packages/vue/src/speed-dial"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/menu/index.ts"
+        },
+        {
+          "subpath": "./menu",
+          "source": "packages/vue/src/menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/context-menu/index.ts"
+        },
+        {
+          "subpath": "./context-menu",
+          "source": "packages/vue/src/context-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/breadcrumb/index.ts"
+        },
+        {
+          "subpath": "./breadcrumb",
+          "source": "packages/vue/src/breadcrumb/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/mega-menu/index.ts"
+        },
+        {
+          "subpath": "./mega-menu",
+          "source": "packages/vue/src/mega-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/menubar/index.ts"
+        },
+        {
+          "subpath": "./menubar",
+          "source": "packages/vue/src/menubar/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/panel-menu/index.ts"
+        },
+        {
+          "subpath": "./panel-menu",
+          "source": "packages/vue/src/panel-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/tiered-menu/index.ts"
+        },
+        {
+          "subpath": "./tiered-menu",
+          "source": "packages/vue/src/tiered-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/dock/index.ts"
+        },
+        {
+          "subpath": "./dock",
+          "source": "packages/vue/src/dock/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/speed-dial/index.ts"
+        },
+        {
+          "subpath": "./speed-dial",
+          "source": "packages/vue/src/speed-dial/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/menu/menu.api.mdx",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/menu/menu.spec.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/menu/menu.stories.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/context-menu/context-menu.spec.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/context-menu/context-menu.stories.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/breadcrumb/breadcrumb.spec.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/breadcrumb/breadcrumb.stories.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/mega-menu/mega-menu.spec.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/mega-menu/mega-menu.stories.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/menubar/menubar.spec.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/menubar/menubar.stories.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/panel-menu/panel-menu.spec.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/panel-menu/panel-menu.stories.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/tiered-menu/tiered-menu.spec.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/tiered-menu/tiered-menu.stories.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/dock/dock.spec.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/dock/dock.stories.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/speed-dial/speed-dial.spec.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/speed-dial/speed-dial.stories.ts",
+      "reason": "Supporting test, story or API documentation, not an independent runtime export; presence is not passing execution evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Detailed inventory remains owned by [#153](https://github.com/majedsiefalnasr/ultimate-packages/issues/153). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-styles.menu",
+      "batch": "ticket-146",
+      "reason": "Detailed inventory owned by [#146](https://github.com/majedsiefalnasr/ultimate-packages/issues/146); reconciled identity in [package index](../packages/packages.md). This relationship is not external scope completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "ticket-143",
+      "reason": "Detailed inventory remains owned by [#143](https://github.com/majedsiefalnasr/ultimate-packages/issues/143). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.escape",
+      "batch": "ticket-144",
+      "reason": "Detailed inventory remains owned by [#144](https://github.com/majedsiefalnasr/ultimate-packages/issues/144). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.escape",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.motion",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.overlay",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.zindex",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue.ripple",
+      "batch": "ticket-142",
+      "reason": "Detailed inventory remains owned by [#142](https://github.com/majedsiefalnasr/ultimate-packages/issues/142). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.menu",
+      "record": "vue.menu"
+    },
+    {
+      "id": "package.ultimate.vue.context-menu",
+      "record": "vue.context-menu"
+    },
+    {
+      "id": "package.ultimate.vue.breadcrumb",
+      "record": "vue.breadcrumb"
+    },
+    {
+      "id": "package.ultimate.vue.mega-menu",
+      "record": "vue.mega-menu"
+    },
+    {
+      "id": "package.ultimate.vue.menubar",
+      "record": "vue.menubar"
+    },
+    {
+      "id": "package.ultimate.vue.panel-menu",
+      "record": "vue.panel-menu"
+    },
+    {
+      "id": "package.ultimate.vue.tiered-menu",
+      "record": "vue.tiered-menu"
+    },
+    {
+      "id": "package.ultimate.vue.dock",
+      "record": "vue.dock"
+    },
+    {
+      "id": "package.ultimate.vue.speed-dial",
+      "record": "vue.speed-dial"
+    }
+  ],
+  "ownership": {
+    "ticket": 127,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "records": [
+    {
+      "id": "vue.menu",
+      "name": "Vue UMenu",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Flat command list; nested model entries are skipped.",
+      "surface": "Flat command list; nested model entries are skipped. UMenuitem is source-only (not barrel exported): item/id/focusedOptionId props, item-click/item-mousemove emits, ripple directive. List focus uses aria-activedescendant, ArrowUp/Down, Home/End, Enter/Space and local Escape/Tab dismissal. Public instance show/hide/toggle manages popup state and target alignment; UPortal is disabled inline. Motion hooks drive show/hide emits and onAfterLeave clears z-index. Outside click, resize and scroll listeners are removed on hide/unmount. No focus trap or shared global Escape adapter. Default/start/end/item slots are not implemented; model renders fixed markup. Public root and secondary entry exports: UMenu, createBaseMenu. All SFC names: UMenu, UMenuitem. createBaseMenu, MenuItemClassesParams, menuStyleModule: base factories return defineComponent Options API objects extending createBaseComponent, not composables/hooks or plugin installers. The base factory is public through both barrels. Style modules and class parameter interfaces are source-only (not re-exported); their consumer is cx(key,params) in the component/base, not a supported package subpath. Class parameter fields: MenuItemClassesParams: focused?: boolean; disabled?: boolean;. Props source/default declarations: model: { type: Array as PropType<readonly unknown[]>, default: () => [] }, popup: { type: Boolean, default: false }, appendTo: { type: [String, Object], default: \"body\" }, autoZIndex: { type: Boolean, default: true }, baseZIndex: { type: Number, default: 0 }, tabindex: { type: Number, default: 0 }, ariaLabel: { type: String, default: null }, ariaLabelledby: { type: String, default: null }. Declared main emits: \"show\", \"hide\", \"focus\", \"blur\". All families declare model as readonly unknown[] (runtime Array) default []; no independently exported MenuItem model type. createBaseComponent registers local structural CSS/classes on mount through registerComponentStyle; styling registers theme variables for componentName then CSS idempotently. Aura key menu exists. menuStyleModule imports shared @ultimate/uix-styles/menu CSS; other navigation families author local structural CSS. Menu metadata exists but is selective and source line references may be historical; current Vue emits include focus/blur. Prime source references in style comments are provenance, not parity or gap judgments. UMenuitem requires item:Object and id:String; focusedOptionId:String|Number|null defaults null; its direct base registers componentName menuitem with the menu style module.",
+      "files": [
+        "packages/vue/src/menu/BaseMenu.ts",
+        "packages/vue/src/menu/Menu.vue",
+        "packages/vue/src/menu/Menuitem.vue",
+        "packages/vue/src/menu/index.ts",
+        "packages/vue/src/menu/menu-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UMenu",
+        "@ultimate/vue/menu#UMenu",
+        "@ultimate/vue#createBaseMenu",
+        "@ultimate/vue/menu#createBaseMenu"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/menu/Menu.vue",
+          "contains": "name: \"UMenu\""
+        },
+        {
+          "path": "packages/vue/src/menu/index.ts",
+          "contains": "export { default as UMenu }"
+        },
+        {
+          "path": "packages/vue/src/menu/BaseMenu.ts",
+          "contains": "createBaseComponent"
+        },
+        {
+          "path": "packages/vue/src/menu/menu-style.ts",
+          "contains": "menuStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./menu\";"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule)"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "registerThemeVariables(vueCoreStyleSheet, componentName)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "menu"
+        },
+        {
+          "path": "packages/component-metadata/src/records/menu.ts",
+          "contains": "Vue: packages/vue/src/menu/BaseMenu.ts"
+        },
+        {
+          "path": "packages/vue/src/menu/Menuitem.vue",
+          "contains": "props: {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.menu",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.vue-core.zindex",
+        "package.ultimate.vue-core.motion",
+        "package.ultimate.uix-utils.dom",
+        "package.ultimate.vue.ripple",
+        "package.ultimate.uix-styles.menu",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Owned Vue component/base/style/helper sources and declared interfaces inspected; this is not executed runtime verification."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded existing Vue product specs attempted; startup aborted before assertions, not a component assertion failure.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/menu/menu.spec.ts src/context-menu/context-menu.spec.ts src/breadcrumb/breadcrumb.spec.ts src/mega-menu/mega-menu.spec.ts src/menubar/menubar.spec.ts src/panel-menu/panel-menu.spec.ts src/tiered-menu/tiered-menu.spec.ts src/dock/dock.spec.ts src/speed-dial/speed-dial.spec.ts --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1",
+          "limitations": "Vitest 2.1.9 on Node v24.22.2 / pnpm 9.6.0. No product assertions, host or product repair, visual/browser checks or CI run. Inventory tests are separate."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured root pnpm run test invokes Vue vitest for non-docs CI classification; configuration evidence only, not observed CI execution. Inventory Node tests are not claimed CI-enforced.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional scope and upstream steps; no branch-protection claim."
+        }
+      ]
+    },
+    {
+      "id": "vue.context-menu",
+      "name": "Vue UContextMenu",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Flat contextual command list; global=false uses the default slot trigger wrapper, global=true binds document contextmenu.",
+      "surface": "Flat contextual command list; global=false uses the default slot trigger wrapper, global=true binds document contextmenu. show(event) reads pageX/pageY, prevents native menu, focuses the list; hide dismisses. UPortal and z-index, shared global Escape/display-order, outside-click and resize cleanup. aria-activedescendant, ArrowUp/Down, Home/End and Enter/Space activation; Tab closes. No recursive submenu or item template slot. Public root and secondary entry exports: UContextMenu. All SFC names: UContextMenu. createBaseContextMenu, ContextMenuItemClassesParams, contextMenuStyleModule: base factories return defineComponent Options API objects extending createBaseComponent, not composables/hooks or plugin installers. createBaseContextMenu is source-only, not a package export. Style modules and class parameter interfaces are source-only (not re-exported); their consumer is cx(key,params) in the component/base, not a supported package subpath. Class parameter fields: ContextMenuItemClassesParams: disabled?: boolean; focused?: boolean;. Props source/default declarations: model: { type: Array as PropType<readonly unknown[]>, default: () => [] }, global: { type: Boolean, default: false }. Declared main emits: \"show\", \"hide\", \"item-select\". All families declare model as readonly unknown[] (runtime Array) default []; no independently exported MenuItem model type. createBaseComponent registers local structural CSS/classes on mount through registerComponentStyle; styling registers theme variables for componentName then CSS idempotently. Aura key contextmenu exists. No dedicated component-metadata record found for this family. Prime source references in style comments are provenance, not parity or gap judgments.",
+      "files": [
+        "packages/vue/src/context-menu/BaseContextMenu.ts",
+        "packages/vue/src/context-menu/ContextMenu.vue",
+        "packages/vue/src/context-menu/context-menu-style.ts",
+        "packages/vue/src/context-menu/index.ts"
+      ],
+      "exports": ["@ultimate/vue#UContextMenu", "@ultimate/vue/context-menu#UContextMenu"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/context-menu/ContextMenu.vue",
+          "contains": "name: \"UContextMenu\""
+        },
+        {
+          "path": "packages/vue/src/context-menu/index.ts",
+          "contains": "export { default as UContextMenu }"
+        },
+        {
+          "path": "packages/vue/src/context-menu/BaseContextMenu.ts",
+          "contains": "createBaseComponent"
+        },
+        {
+          "path": "packages/vue/src/context-menu/context-menu-style.ts",
+          "contains": "contextMenuStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./context-menu\";"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule)"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "registerThemeVariables(vueCoreStyleSheet, componentName)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "contextmenu"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.context-menu",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.vue-core.zindex",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.uix-utils.escape"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Owned Vue component/base/style/helper sources and declared interfaces inspected; this is not executed runtime verification."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded existing Vue product specs attempted; startup aborted before assertions, not a component assertion failure.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/menu/menu.spec.ts src/context-menu/context-menu.spec.ts src/breadcrumb/breadcrumb.spec.ts src/mega-menu/mega-menu.spec.ts src/menubar/menubar.spec.ts src/panel-menu/panel-menu.spec.ts src/tiered-menu/tiered-menu.spec.ts src/dock/dock.spec.ts src/speed-dial/speed-dial.spec.ts --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1",
+          "limitations": "Vitest 2.1.9 on Node v24.22.2 / pnpm 9.6.0. No product assertions, host or product repair, visual/browser checks or CI run. Inventory tests are separate."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured root pnpm run test invokes Vue vitest for non-docs CI classification; configuration evidence only, not observed CI execution. Inventory Node tests are not claimed CI-enforced.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional scope and upstream steps; no branch-protection claim."
+        }
+      ]
+    },
+    {
+      "id": "vue.breadcrumb",
+      "name": "Vue UBreadcrumb",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Navigation landmark and ordered path with optional home.",
+      "surface": "Navigation landmark and ordered path with optional home. homeAriaLabel labels home; aria-current=page is conditional on the raw last model index and URL matching location.pathname, not simply last visible entry. Functional visible/disabled accepted; routerLink suppresses href but does not render a router component. item-select and item.command invocation on enabled links. Native anchor focus; no bespoke arrow-key system or slots. Public root and secondary entry exports: UBreadcrumb, createBaseBreadcrumb. All SFC names: UBreadcrumb. createBaseBreadcrumb, BreadcrumbClassesParams, breadcrumbStyleModule: base factories return defineComponent Options API objects extending createBaseComponent, not composables/hooks or plugin installers. The base factory is public through both barrels. Style modules and class parameter interfaces are source-only (not re-exported); their consumer is cx(key,params) in the component/base, not a supported package subpath. Class parameter fields: BreadcrumbClassesParams: disabled?: boolean;. Props source/default declarations: model: { type: Array as PropType<readonly unknown[]>, default: () => [] }, home: { type: Object, default: null }, homeAriaLabel: { type: String, default: null }. Declared main emits: \"item-select\". All families declare model as readonly unknown[] (runtime Array) default []; no independently exported MenuItem model type. createBaseComponent registers local structural CSS/classes on mount through registerComponentStyle; styling registers theme variables for componentName then CSS idempotently. Aura key breadcrumb exists. No dedicated component-metadata record found for this family. Prime source references in style comments are provenance, not parity or gap judgments.",
+      "files": [
+        "packages/vue/src/breadcrumb/BaseBreadcrumb.ts",
+        "packages/vue/src/breadcrumb/Breadcrumb.vue",
+        "packages/vue/src/breadcrumb/breadcrumb-style.ts",
+        "packages/vue/src/breadcrumb/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UBreadcrumb",
+        "@ultimate/vue/breadcrumb#UBreadcrumb",
+        "@ultimate/vue#createBaseBreadcrumb",
+        "@ultimate/vue/breadcrumb#createBaseBreadcrumb"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/breadcrumb/Breadcrumb.vue",
+          "contains": "name: \"UBreadcrumb\""
+        },
+        {
+          "path": "packages/vue/src/breadcrumb/index.ts",
+          "contains": "export { default as UBreadcrumb }"
+        },
+        {
+          "path": "packages/vue/src/breadcrumb/BaseBreadcrumb.ts",
+          "contains": "createBaseComponent"
+        },
+        {
+          "path": "packages/vue/src/breadcrumb/breadcrumb-style.ts",
+          "contains": "breadcrumbStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./breadcrumb\";"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule)"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "registerThemeVariables(vueCoreStyleSheet, componentName)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "breadcrumb"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.breadcrumb",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Owned Vue component/base/style/helper sources and declared interfaces inspected; this is not executed runtime verification."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded existing Vue product specs attempted; startup aborted before assertions, not a component assertion failure.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/menu/menu.spec.ts src/context-menu/context-menu.spec.ts src/breadcrumb/breadcrumb.spec.ts src/mega-menu/mega-menu.spec.ts src/menubar/menubar.spec.ts src/panel-menu/panel-menu.spec.ts src/tiered-menu/tiered-menu.spec.ts src/dock/dock.spec.ts src/speed-dial/speed-dial.spec.ts --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1",
+          "limitations": "Vitest 2.1.9 on Node v24.22.2 / pnpm 9.6.0. No product assertions, host or product repair, visual/browser checks or CI run. Inventory tests are separate."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured root pnpm run test invokes Vue vitest for non-docs CI classification; configuration evidence only, not observed CI execution. Inventory Node tests are not claimed CI-enforced.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional scope and upstream steps; no branch-protection claim."
+        }
+      ]
+    },
+    {
+      "id": "vue.mega-menu",
+      "name": "Vue UMegaMenu",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Horizontal root with inline columns/groups, not arbitrary recursive nesting.",
+      "surface": "Horizontal root with inline columns/groups, not arbitrary recursive nesting. UMegaMenuColumnGroup is a public composition export with required group prop and item-select emit, extending the shared base/style directly. toRaw preserves open-item identity. Root ArrowLeft/ArrowRight, Home/End and Enter/Space open; group leaves use ArrowUp/Down, Escape closes/refocuses root. Inline overlay DOM, no portal or shared z-index. Fixed item markup and no named template slots. Public root and secondary entry exports: UMegaMenu, UMegaMenuColumnGroup, createBaseMegaMenu. All SFC names: UMegaMenu, UMegaMenuColumnGroup. createBaseMegaMenu, MegaMenuClassesParams, megaMenuStyleModule: base factories return defineComponent Options API objects extending createBaseComponent, not composables/hooks or plugin installers. The base factory is public through both barrels. Style modules and class parameter interfaces are source-only (not re-exported); their consumer is cx(key,params) in the component/base, not a supported package subpath. Class parameter fields: MegaMenuClassesParams: disabled?: boolean; open?: boolean;. Props source/default declarations: model: { type: Array as PropType<readonly unknown[]>, default: () => [] }, ariaLabel: { type: String, default: null }. Declared main emits: \"item-select\". All families declare model as readonly unknown[] (runtime Array) default []; no independently exported MenuItem model type. createBaseComponent registers local structural CSS/classes on mount through registerComponentStyle; styling registers theme variables for componentName then CSS idempotently. Aura key megamenu exists. No dedicated component-metadata record found for this family. Prime source references in style comments are provenance, not parity or gap judgments.",
+      "files": [
+        "packages/vue/src/mega-menu/BaseMegaMenu.ts",
+        "packages/vue/src/mega-menu/MegaMenu.vue",
+        "packages/vue/src/mega-menu/MegaMenuColumnGroup.vue",
+        "packages/vue/src/mega-menu/index.ts",
+        "packages/vue/src/mega-menu/mega-menu-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UMegaMenu",
+        "@ultimate/vue/mega-menu#UMegaMenu",
+        "@ultimate/vue#UMegaMenuColumnGroup",
+        "@ultimate/vue/mega-menu#UMegaMenuColumnGroup",
+        "@ultimate/vue#createBaseMegaMenu",
+        "@ultimate/vue/mega-menu#createBaseMegaMenu"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/mega-menu/MegaMenu.vue",
+          "contains": "name: \"UMegaMenu\""
+        },
+        {
+          "path": "packages/vue/src/mega-menu/index.ts",
+          "contains": "export { default as UMegaMenu }"
+        },
+        {
+          "path": "packages/vue/src/mega-menu/BaseMegaMenu.ts",
+          "contains": "createBaseComponent"
+        },
+        {
+          "path": "packages/vue/src/mega-menu/mega-menu-style.ts",
+          "contains": "megaMenuStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./mega-menu\";"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule)"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "registerThemeVariables(vueCoreStyleSheet, componentName)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "megamenu"
+        },
+        {
+          "path": "packages/vue/src/mega-menu/MegaMenuColumnGroup.vue",
+          "contains": "props: {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.mega-menu",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Owned Vue component/base/style/helper sources and declared interfaces inspected; this is not executed runtime verification."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded existing Vue product specs attempted; startup aborted before assertions, not a component assertion failure.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/menu/menu.spec.ts src/context-menu/context-menu.spec.ts src/breadcrumb/breadcrumb.spec.ts src/mega-menu/mega-menu.spec.ts src/menubar/menubar.spec.ts src/panel-menu/panel-menu.spec.ts src/tiered-menu/tiered-menu.spec.ts src/dock/dock.spec.ts src/speed-dial/speed-dial.spec.ts --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1",
+          "limitations": "Vitest 2.1.9 on Node v24.22.2 / pnpm 9.6.0. No product assertions, host or product repair, visual/browser checks or CI run. Inventory tests are separate."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured root pnpm run test invokes Vue vitest for non-docs CI classification; configuration evidence only, not observed CI execution. Inventory Node tests are not claimed CI-enforced.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional scope and upstream steps; no branch-protection claim."
+        }
+      ]
+    },
+    {
+      "id": "vue.menubar",
+      "name": "Vue UMenubar",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "UMenubar delegates to public recursive UMenubarSub (items default [], root default false, item-select).",
+      "surface": "UMenubar delegates to public recursive UMenubarSub (items default [], root default false, item-select). toRaw compares open-item identity. Horizontal root ArrowRight/Left; vertical submenu ArrowDown/Up; Home/End, Enter/Space open and focus first child. Escape closes innermost open submenu and stops propagation. Inline CSS-positioned submenus, no portal/global overlay manager; enabled leaf invokes command then item-select. No named template slots. Public root and secondary entry exports: UMenubar, UMenubarSub, createBaseMenubar. All SFC names: UMenubar, UMenubarSub. createBaseMenubar, MenubarClassesParams, menubarStyleModule: base factories return defineComponent Options API objects extending createBaseComponent, not composables/hooks or plugin installers. The base factory is public through both barrels. Style modules and class parameter interfaces are source-only (not re-exported); their consumer is cx(key,params) in the component/base, not a supported package subpath. Class parameter fields: MenubarClassesParams: disabled?: boolean; open?: boolean;. Props source/default declarations: model: { type: Array as PropType<readonly unknown[]>, default: () => [] }, ariaLabel: { type: String, default: null }. Declared main emits: \"item-select\". All families declare model as readonly unknown[] (runtime Array) default []; no independently exported MenuItem model type. createBaseComponent registers local structural CSS/classes on mount through registerComponentStyle; styling registers theme variables for componentName then CSS idempotently. Aura key menubar exists. No dedicated component-metadata record found for this family. Prime source references in style comments are provenance, not parity or gap judgments.",
+      "files": [
+        "packages/vue/src/menubar/BaseMenubar.ts",
+        "packages/vue/src/menubar/Menubar.vue",
+        "packages/vue/src/menubar/MenubarSub.vue",
+        "packages/vue/src/menubar/index.ts",
+        "packages/vue/src/menubar/menubar-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UMenubar",
+        "@ultimate/vue/menubar#UMenubar",
+        "@ultimate/vue#UMenubarSub",
+        "@ultimate/vue/menubar#UMenubarSub",
+        "@ultimate/vue#createBaseMenubar",
+        "@ultimate/vue/menubar#createBaseMenubar"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/menubar/Menubar.vue",
+          "contains": "name: \"UMenubar\""
+        },
+        {
+          "path": "packages/vue/src/menubar/index.ts",
+          "contains": "export { default as UMenubar }"
+        },
+        {
+          "path": "packages/vue/src/menubar/BaseMenubar.ts",
+          "contains": "createBaseComponent"
+        },
+        {
+          "path": "packages/vue/src/menubar/menubar-style.ts",
+          "contains": "menubarStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./menubar\";"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule)"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "registerThemeVariables(vueCoreStyleSheet, componentName)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "menubar"
+        },
+        {
+          "path": "packages/vue/src/menubar/MenubarSub.vue",
+          "contains": "props: {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.menubar",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Owned Vue component/base/style/helper sources and declared interfaces inspected; this is not executed runtime verification."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded existing Vue product specs attempted; startup aborted before assertions, not a component assertion failure.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/menu/menu.spec.ts src/context-menu/context-menu.spec.ts src/breadcrumb/breadcrumb.spec.ts src/mega-menu/mega-menu.spec.ts src/menubar/menubar.spec.ts src/panel-menu/panel-menu.spec.ts src/tiered-menu/tiered-menu.spec.ts src/dock/dock.spec.ts src/speed-dial/speed-dial.spec.ts --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1",
+          "limitations": "Vitest 2.1.9 on Node v24.22.2 / pnpm 9.6.0. No product assertions, host or product repair, visual/browser checks or CI run. Inventory tests are separate."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured root pnpm run test invokes Vue vitest for non-docs CI classification; configuration evidence only, not observed CI execution. Inventory Node tests are not claimed CI-enforced.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional scope and upstream steps; no branch-protection claim."
+        }
+      ]
+    },
+    {
+      "id": "vue.panel-menu",
+      "name": "Vue UPanelMenu",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "UPanelMenu owns expandedItems Set with position-derived hierarchical keys, passes it to public recursive UPanelMenuList (items/nodeKey/expandedItems/multiple props, item-select).",
+      "surface": "UPanelMenu owns expandedItems Set with position-derived hierarchical keys, passes it to public recursive UPanelMenuList (items/nodeKey/expandedItems/multiple props, item-select). multiple=false enforces sibling exclusivity; expansion is internal, not controlled expandedKeys. Tree/treeitem roles and aria-expanded; vertical arrows/Home/End and Enter/Space toggle or activate; no Escape system. v-if removes collapsed children; no overlay or transition service. No named template slots. Public root and secondary entry exports: UPanelMenu, UPanelMenuList, createBasePanelMenu. All SFC names: UPanelMenu, UPanelMenuList. createBasePanelMenu, PanelMenuClassesParams, panelMenuStyleModule: base factories return defineComponent Options API objects extending createBaseComponent, not composables/hooks or plugin installers. The base factory is public through both barrels. Style modules and class parameter interfaces are source-only (not re-exported); their consumer is cx(key,params) in the component/base, not a supported package subpath. Class parameter fields: PanelMenuClassesParams: disabled?: boolean; expanded?: boolean;. Props source/default declarations: model: { type: Array as PropType<readonly unknown[]>, default: () => [] }, multiple: { type: Boolean, default: false }. Declared main emits: \"item-select\". All families declare model as readonly unknown[] (runtime Array) default []; no independently exported MenuItem model type. createBaseComponent registers local structural CSS/classes on mount through registerComponentStyle; styling registers theme variables for componentName then CSS idempotently. Aura key panelmenu exists. No dedicated component-metadata record found for this family. Prime source references in style comments are provenance, not parity or gap judgments. UPanelMenuList items:Array defaults [], nodeKey:String defaults empty string, expandedItems:Object is required, multiple:Boolean defaults false.",
+      "files": [
+        "packages/vue/src/panel-menu/BasePanelMenu.ts",
+        "packages/vue/src/panel-menu/PanelMenu.vue",
+        "packages/vue/src/panel-menu/PanelMenuList.vue",
+        "packages/vue/src/panel-menu/index.ts",
+        "packages/vue/src/panel-menu/panel-menu-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UPanelMenu",
+        "@ultimate/vue/panel-menu#UPanelMenu",
+        "@ultimate/vue#UPanelMenuList",
+        "@ultimate/vue/panel-menu#UPanelMenuList",
+        "@ultimate/vue#createBasePanelMenu",
+        "@ultimate/vue/panel-menu#createBasePanelMenu"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/panel-menu/PanelMenu.vue",
+          "contains": "name: \"UPanelMenu\""
+        },
+        {
+          "path": "packages/vue/src/panel-menu/index.ts",
+          "contains": "export { default as UPanelMenu }"
+        },
+        {
+          "path": "packages/vue/src/panel-menu/BasePanelMenu.ts",
+          "contains": "createBaseComponent"
+        },
+        {
+          "path": "packages/vue/src/panel-menu/panel-menu-style.ts",
+          "contains": "panelMenuStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./panel-menu\";"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule)"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "registerThemeVariables(vueCoreStyleSheet, componentName)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "panelmenu"
+        },
+        {
+          "path": "packages/vue/src/panel-menu/PanelMenuList.vue",
+          "contains": "props: {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.panel-menu",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Owned Vue component/base/style/helper sources and declared interfaces inspected; this is not executed runtime verification."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded existing Vue product specs attempted; startup aborted before assertions, not a component assertion failure.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/menu/menu.spec.ts src/context-menu/context-menu.spec.ts src/breadcrumb/breadcrumb.spec.ts src/mega-menu/mega-menu.spec.ts src/menubar/menubar.spec.ts src/panel-menu/panel-menu.spec.ts src/tiered-menu/tiered-menu.spec.ts src/dock/dock.spec.ts src/speed-dial/speed-dial.spec.ts --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1",
+          "limitations": "Vitest 2.1.9 on Node v24.22.2 / pnpm 9.6.0. No product assertions, host or product repair, visual/browser checks or CI run. Inventory tests are separate."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured root pnpm run test invokes Vue vitest for non-docs CI classification; configuration evidence only, not observed CI execution. Inventory Node tests are not claimed CI-enforced.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional scope and upstream steps; no branch-protection claim."
+        }
+      ]
+    },
+    {
+      "id": "vue.tiered-menu",
+      "name": "Vue UTieredMenu",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "UTieredMenu composes public recursive UTieredMenuSub (items/root props, item-select), with toRaw open identity.",
+      "surface": "UTieredMenu composes public recursive UTieredMenuSub (items/root props, item-select), with toRaw open identity. Vertical arrows/Home/End at each level, ArrowRight and Enter/Space open child; Escape closes innermost submenu with stopPropagation. Root popup show/hide/toggle uses document Escape and outside-click listeners with cleanup; no portal or target-coordinate alignment. Local CSS overlay root starts at top/left -9999px, a source observation not repaired. Fixed templates; no named slots. Public root and secondary entry exports: UTieredMenu, UTieredMenuSub, createBaseTieredMenu. All SFC names: UTieredMenu, UTieredMenuSub. createBaseTieredMenu, TieredMenuClassesParams, tieredMenuStyleModule: base factories return defineComponent Options API objects extending createBaseComponent, not composables/hooks or plugin installers. The base factory is public through both barrels. Style modules and class parameter interfaces are source-only (not re-exported); their consumer is cx(key,params) in the component/base, not a supported package subpath. Class parameter fields: TieredMenuClassesParams: disabled?: boolean; open?: boolean;. Props source/default declarations: model: { type: Array as PropType<readonly unknown[]>, default: () => [] }, popup: { type: Boolean, default: false }. Declared main emits: \"item-select\", \"show\", \"hide\". All families declare model as readonly unknown[] (runtime Array) default []; no independently exported MenuItem model type. createBaseComponent registers local structural CSS/classes on mount through registerComponentStyle; styling registers theme variables for componentName then CSS idempotently. Aura key tieredmenu exists. No dedicated component-metadata record found for this family. Prime source references in style comments are provenance, not parity or gap judgments. UTieredMenuSub items:Array defaults [], root:Boolean defaults false.",
+      "files": [
+        "packages/vue/src/tiered-menu/BaseTieredMenu.ts",
+        "packages/vue/src/tiered-menu/TieredMenu.vue",
+        "packages/vue/src/tiered-menu/TieredMenuSub.vue",
+        "packages/vue/src/tiered-menu/index.ts",
+        "packages/vue/src/tiered-menu/tiered-menu-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UTieredMenu",
+        "@ultimate/vue/tiered-menu#UTieredMenu",
+        "@ultimate/vue#UTieredMenuSub",
+        "@ultimate/vue/tiered-menu#UTieredMenuSub",
+        "@ultimate/vue#createBaseTieredMenu",
+        "@ultimate/vue/tiered-menu#createBaseTieredMenu"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/tiered-menu/TieredMenu.vue",
+          "contains": "name: \"UTieredMenu\""
+        },
+        {
+          "path": "packages/vue/src/tiered-menu/index.ts",
+          "contains": "export { default as UTieredMenu }"
+        },
+        {
+          "path": "packages/vue/src/tiered-menu/BaseTieredMenu.ts",
+          "contains": "createBaseComponent"
+        },
+        {
+          "path": "packages/vue/src/tiered-menu/tiered-menu-style.ts",
+          "contains": "tieredMenuStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./tiered-menu\";"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule)"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "registerThemeVariables(vueCoreStyleSheet, componentName)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "tieredmenu"
+        },
+        {
+          "path": "packages/vue/src/tiered-menu/TieredMenuSub.vue",
+          "contains": "props: {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.tiered-menu",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Owned Vue component/base/style/helper sources and declared interfaces inspected; this is not executed runtime verification."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded existing Vue product specs attempted; startup aborted before assertions, not a component assertion failure.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/menu/menu.spec.ts src/context-menu/context-menu.spec.ts src/breadcrumb/breadcrumb.spec.ts src/mega-menu/mega-menu.spec.ts src/menubar/menubar.spec.ts src/panel-menu/panel-menu.spec.ts src/tiered-menu/tiered-menu.spec.ts src/dock/dock.spec.ts src/speed-dial/speed-dial.spec.ts --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1",
+          "limitations": "Vitest 2.1.9 on Node v24.22.2 / pnpm 9.6.0. No product assertions, host or product repair, visual/browser checks or CI run. Inventory tests are separate."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured root pnpm run test invokes Vue vitest for non-docs CI classification; configuration evidence only, not observed CI execution. Inventory Node tests are not claimed CI-enforced.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional scope and upstream steps; no branch-protection claim."
+        }
+      ]
+    },
+    {
+      "id": "vue.dock",
+      "name": "Vue UDock",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Flat command dock positioned bottom by default; visible!==false filters model, disabled items cannot activate.",
+      "surface": "Flat command dock positioned bottom by default; visible!==false filters model, disabled items cannot activate. Position controls horizontal/vertical arrow axis with Home and End. item-select is emitted then command callback invoked. Native anchors and aria-label, CSS hover/active scale(1.5), no JS magnification engine or overlay/portal. No item template slot. Public root and secondary entry exports: UDock, createBaseDock. All SFC names: UDock. createBaseDock, dockStyleModule: base factories return defineComponent Options API objects extending createBaseComponent, not composables/hooks or plugin installers. The base factory is public through both barrels. Style modules and class parameter interfaces are source-only (not re-exported); their consumer is cx(key,params) in the component/base, not a supported package subpath. Class parameter fields: [. Props source/default declarations: model: { type: Array as PropType<readonly unknown[]>, default: () => [] }, position: { type: String, default: \"bottom\" }, ariaLabel: { type: String, default: null }. Declared main emits: \"item-select\". All families declare model as readonly unknown[] (runtime Array) default []; no independently exported MenuItem model type. createBaseComponent registers local structural CSS/classes on mount through registerComponentStyle; styling registers theme variables for componentName then CSS idempotently. Aura key dock exists. No dedicated component-metadata record found for this family. Prime source references in style comments are provenance, not parity or gap judgments.",
+      "files": [
+        "packages/vue/src/dock/BaseDock.ts",
+        "packages/vue/src/dock/Dock.vue",
+        "packages/vue/src/dock/dock-style.ts",
+        "packages/vue/src/dock/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UDock",
+        "@ultimate/vue/dock#UDock",
+        "@ultimate/vue#createBaseDock",
+        "@ultimate/vue/dock#createBaseDock"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/dock/Dock.vue",
+          "contains": "name: \"UDock\""
+        },
+        {
+          "path": "packages/vue/src/dock/index.ts",
+          "contains": "export { default as UDock }"
+        },
+        {
+          "path": "packages/vue/src/dock/BaseDock.ts",
+          "contains": "createBaseComponent"
+        },
+        {
+          "path": "packages/vue/src/dock/dock-style.ts",
+          "contains": "dockStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./dock\";"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule)"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "registerThemeVariables(vueCoreStyleSheet, componentName)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "dock"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.dock",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Owned Vue component/base/style/helper sources and declared interfaces inspected; this is not executed runtime verification."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded existing Vue product specs attempted; startup aborted before assertions, not a component assertion failure.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/menu/menu.spec.ts src/context-menu/context-menu.spec.ts src/breadcrumb/breadcrumb.spec.ts src/mega-menu/mega-menu.spec.ts src/menubar/menubar.spec.ts src/panel-menu/panel-menu.spec.ts src/tiered-menu/tiered-menu.spec.ts src/dock/dock.spec.ts src/speed-dial/speed-dial.spec.ts --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1",
+          "limitations": "Vitest 2.1.9 on Node v24.22.2 / pnpm 9.6.0. No product assertions, host or product repair, visual/browser checks or CI run. Inventory tests are separate."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured root pnpm run test invokes Vue vitest for non-docs CI classification; configuration evidence only, not observed CI execution. Inventory Node tests are not claimed CI-enforced.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional scope and upstream steps; no branch-protection claim."
+        }
+      ]
+    },
+    {
+      "id": "vue.speed-dial",
+      "name": "Vue USpeedDial",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Native toggle/action buttons and optional mask, d_visible initialized/watched from visible; emits update:visible/click/show/hide.",
+      "surface": "Native toggle/action buttons and optional mask, d_visible initialized/watched from visible; emits update:visible/click/show/hide. linear, circle, semi-circle and quarter-circle item geometry uses radius and transitionDelay. Hidden items stay in DOM with CSS visibility, focus search skips hidden/disabled items. Direction controls arrow axis, Home/End, Escape closes/refocuses. document Escape binds on show and unbinds hide/unmount; external visible watch updates state without show/hide lifecycle. No UButton dependency, portal, motion service or named template slot. Public root and secondary entry exports: USpeedDial, createBaseSpeedDial. All SFC names: USpeedDial. createBaseSpeedDial, speedDialStyleModule: base factories return defineComponent Options API objects extending createBaseComponent, not composables/hooks or plugin installers. The base factory is public through both barrels. Style modules and class parameter interfaces are source-only (not re-exported); their consumer is cx(key,params) in the component/base, not a supported package subpath. Class parameter fields: [. Props source/default declarations: model: { type: Array as PropType<readonly unknown[]>, default: () => [] }, visible: { type: Boolean, default: false }, icon: { type: String, default: undefined }, direction: { type: String, default: \"up\" }, type: { type: String, default: \"linear\" }, radius: { type: Number, default: 0 }, transitionDelay: { type: Number, default: 30 }, mask: { type: Boolean, default: false }, disabled: { type: Boolean, default: false }, closeOnEscape: { type: Boolean, default: true }, ariaLabel: { type: String, default: null }. Declared main emits: \"update:visible\", \"click\", \"show\", \"hide\". All families declare model as readonly unknown[] (runtime Array) default []; no independently exported MenuItem model type. createBaseComponent registers local structural CSS/classes on mount through registerComponentStyle; styling registers theme variables for componentName then CSS idempotently. Aura key speeddial exists. No dedicated component-metadata record found for this family. Prime source references in style comments are provenance, not parity or gap judgments.",
+      "files": [
+        "packages/vue/src/speed-dial/BaseSpeedDial.ts",
+        "packages/vue/src/speed-dial/SpeedDial.vue",
+        "packages/vue/src/speed-dial/index.ts",
+        "packages/vue/src/speed-dial/speed-dial-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#USpeedDial",
+        "@ultimate/vue/speed-dial#USpeedDial",
+        "@ultimate/vue#createBaseSpeedDial",
+        "@ultimate/vue/speed-dial#createBaseSpeedDial"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/speed-dial/SpeedDial.vue",
+          "contains": "name: \"USpeedDial\""
+        },
+        {
+          "path": "packages/vue/src/speed-dial/index.ts",
+          "contains": "export { default as USpeedDial }"
+        },
+        {
+          "path": "packages/vue/src/speed-dial/BaseSpeedDial.ts",
+          "contains": "createBaseComponent"
+        },
+        {
+          "path": "packages/vue/src/speed-dial/speed-dial-style.ts",
+          "contains": "speedDialStyleModule"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./speed-dial\";"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule)"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "registerThemeVariables(vueCoreStyleSheet, componentName)"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "speeddial"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.speed-dial",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Owned Vue component/base/style/helper sources and declared interfaces inspected; this is not executed runtime verification."
+        },
+        {
+          "state": "failed",
+          "behavior": "Bounded existing Vue product specs attempted; startup aborted before assertions, not a component assertion failure.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/menu/menu.spec.ts src/context-menu/context-menu.spec.ts src/breadcrumb/breadcrumb.spec.ts src/mega-menu/mega-menu.spec.ts src/menubar/menubar.spec.ts src/panel-menu/panel-menu.spec.ts src/tiered-menu/tiered-menu.spec.ts src/dock/dock.spec.ts src/speed-dial/speed-dial.spec.ts --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "c15f80a751deffcf91566d7a4353d95d73548589",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1",
+          "limitations": "Vitest 2.1.9 on Node v24.22.2 / pnpm 9.6.0. No product assertions, host or product repair, visual/browser checks or CI run. Inventory tests are separate."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured root pnpm run test invokes Vue vitest for non-docs CI classification; configuration evidence only, not observed CI execution. Inventory Node tests are not claimed CI-enforced.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional scope and upstream steps; no branch-protection claim."
+        }
+      ]
+    }
+  ]
+}
