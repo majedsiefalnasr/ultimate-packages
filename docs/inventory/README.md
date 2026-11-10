@@ -8,6 +8,10 @@ This bounded pilot supersedes the earlier Phase 3 automation as an inventory met
 
 Start with [the generated index](pilot/index.md) and [validation](pilot/validation.md). The structured authored input is `scripts/inventory/pilot-sample.json`; its schema is `scripts/inventory/pilot-schema.json`. Edit that input, not generated Markdown. Output order is stable for fixed inputs. Generation never rewrites authored input. No parity or matching reports are produced.
 
+## Angular menu and command navigation (#125)
+
+Read the [scoped index](angular-menu-navigation/index.md), [validation](angular-menu-navigation/validation.md) and [authored verification notes](angular-menu-navigation/README.md). The authored input is `scripts/inventory/angular-menu-navigation.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-menu-navigation.json --out docs/inventory/angular-menu-navigation`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
