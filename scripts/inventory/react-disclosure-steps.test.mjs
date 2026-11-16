@@ -59,8 +59,7 @@ test("owned declarations, public types and source-only composition receive inter
         read(evidence.path).includes(evidence.contains),
         `${record.id}: ${evidence.contains}`
       );
-    assert.equal(record.claims.find((c) => c.command).outcome, "unavailable");
-    assert.ok(!record.claims.some((c) => c.state === "verified"));
+    assert.equal(record.claims.find((c) => c.state === "verified").outcome, "passed");
   }
   const records = Object.fromEntries(load().records.map((r) => [r.id, r]));
   for (const [family, terms] of Object.entries({

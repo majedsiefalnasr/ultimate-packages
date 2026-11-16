@@ -20,15 +20,15 @@ Source baseline: `87100121a16fd637290078679faf1bc47fcb1190`. Product sources wer
 
 ## Product execution and CI configuration
 
-Attempted bounded product command:
+The default bounded product command was first blocked before assertions because Vitest discovered the host ancestor `/Users/majedsiefalnasr/postcss.config.mjs`, which requires unavailable `postcss-import`. Product execution then passed with a temporary config outside the repository that sets `css.postcss.plugins=[]`:
 
 ```sh
-NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --maxWorkers=1 --no-file-parallelism
+NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /tmp/vitest-react129.config.mjs --maxWorkers=1 --no-file-parallelism
 ```
 
-Vitest exited 1 before product assertions: `Failed to load PostCSS config` / `Cannot find module 'postcss-import'`, required by the host ancestor `/Users/majedsiefalnasr/postcss.config.mjs`. Each record captures the command, revision, unavailable outcome, output and limitation. No host configuration or product repair was attempted. Test presence is not pass evidence. Builds, browser tests and Storybook were not run.
+Vitest 2.1.9, Node v24.15.0: 4 files and 65 tests passed at source revision `ac4fc25447d81612681a7a7a075ce569e0490498`. Because the temporary override disables PostCSS plugins for this run, it does not verify CSS PostCSS processing. Accordion tests emitted React `act(...)` warnings; assertions passed. No repository product code or host configuration was changed.
 
-The existing `.github/workflows/ci.yml` Test step invokes root `pnpm run test`, recursively including React's `vitest run`. This is workflow configuration only; no successful remote run was observed. The `test:scripts` glob covers provenance tests only, not this inventory suite. No CI configuration was changed.
+The existing `.github/workflows/ci.yml` Test step invokes root `pnpm run test`, recursively including React's `vitest run`. This is workflow configuration only; no successful remote CI run was observed. The `test:scripts` glob covers provenance tests only, not this inventory suite. No CI configuration was changed.
 
 ## Source observations, not repaired
 

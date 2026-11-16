@@ -1,6 +1,6 @@
 # Scoped validation
 
-Scope: react-disclosure-steps; source revision: 87100121a16fd637290078679faf1bc47fcb1190
+Scope: react-disclosure-steps; source revision: ac4fc25447d81612681a7a7a075ce569e0490498
 
 Global completeness: not asserted.
 

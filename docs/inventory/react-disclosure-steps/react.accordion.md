@@ -61,13 +61,14 @@ package.ultimate.themes.presets (pending cross-batch)
     "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
   },
   {
-    "state": "unavailable",
-    "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
-    "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --maxWorkers=1 --no-file-parallelism",
-    "outcome": "unavailable",
-    "revision": "87100121a16fd637290078679faf1bc47fcb1190",
-    "output": "Vitest exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
-    "limitations": "Node v24.15.0 and pnpm; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+    "state": "verified",
+    "behavior": "Existing React product specifications passed: 4 test files and 65 tests.",
+    "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /tmp/vitest-react129.config.mjs --maxWorkers=1 --no-file-parallelism",
+    "outcome": "passed",
+    "revision": "ac4fc25447d81612681a7a7a075ce569e0490498",
+    "output": "Vitest 2.1.9, Node v24.15.0: Test Files 4 passed (4); Tests 65 passed (65). React act(...) warnings appeared during accordion tests; all assertions passed.",
+    "limitations": "Node v24.15.0 and pnpm; temporary Vitest config supplied css.postcss.plugins=[] to bypass discovery of the unrelated host /Users/majedsiefalnasr/postcss.config.mjs, which requires unavailable postcss-import. CSS PostCSS processing was therefore not exercised. React emitted act(...) warnings during accordion tests; all assertions passed.",
+    "run": "docs/inventory/react-disclosure-steps/product-run.json"
   },
   {
     "state": "ci-enforced",
