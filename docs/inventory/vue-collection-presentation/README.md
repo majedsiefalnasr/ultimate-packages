@@ -6,7 +6,7 @@ Start with the [generated index](index.md) and [scoped validation](validation.md
 
 Each family is exported from the package root barrel and from a `./<family>` manifest subpath with the same named surface; declared distribution paths do not establish publication. Family barrels export the `.vue` component. Only timeline also exports its base factory `createBaseTimeline`; the other base factories and all style modules are source files that the barrels do not expose.
 
-All five use Vue core base and styling and have Aura preset registrations. Data-view composes the paginator and order-list and pick-list compose the listbox; those identities are already recorded by the completed #133 and #116 scopes. Organization-chart uses the `SelectionMode` type from UIX data. No component-metadata record or UIX style entry exists for these families in this revision. Remaining external identities stay with their owning tickets. Prime references in source are provenance context, without parity judgments.
+All five use Vue core base and styling and have Aura preset registrations. Data-view composes the paginator, and order-list and pick-list compose the listbox; those identities are already recorded by the completed #133 and #118 scopes. Organization-chart uses the `SelectionMode` type from UIX data. No component-metadata record or UIX style entry exists for these families in this revision. Remaining external identities stay with their owning tickets. Prime references in source are provenance context, without parity judgments.
 
 ## Product execution
 
