@@ -122,7 +122,7 @@
     {
       "id": "package.ultimate.react.paginator",
       "batch": "ticket-132",
-      "reason": "Detailed inventory remains owned by #132; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+      "reason": "External reconciled identity already inventoried by the completed #132 scope; this batch describes its source relationship without completing the owning ticket."
     }
   ],
   "ownership": {

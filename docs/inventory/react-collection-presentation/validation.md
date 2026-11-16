@@ -11,4 +11,4 @@ package.ultimate.react-core.base: ticket-149: Detailed inventory remains owned b
 package.ultimate.react-core.styling: ticket-149: Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion.
 package.ultimate.themes.presets: ticket-151: Detailed inventory remains owned by #151; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion.
 package.ultimate.uix-data.root: ticket-147: Detailed inventory remains owned by #147; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion.
-package.ultimate.react.paginator: ticket-132: Detailed inventory remains owned by #132; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion.
+package.ultimate.react.paginator: ticket-132: External reconciled identity already inventoried by the completed #132 scope; this batch describes its source relationship without completing the owning ticket.

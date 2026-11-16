@@ -63,12 +63,7 @@ test("owned declarations, public types and source-only composition receive inter
   }
   const records = Object.fromEntries(load().records.map((r) => [r.id, r]));
   for (const [family, terms] of Object.entries({
-    "data-view": [
-      "UPaginator",
-      "onLazyLoad",
-      "field()",
-      "does not import UListbox".replace("does not import UListbox", "no filter"),
-    ],
+    "data-view": ["UPaginator", "onLazyLoad", "field()", "no filter"],
     "order-list": ["Move up", "searchbox", "does not import UListbox"],
     "organization-chart": ["OrganizationChartNodeData", "SelectionMode", "role tree"],
     "pick-list": ["All To Target", "metaKeySelection", "does not import UListbox"],
