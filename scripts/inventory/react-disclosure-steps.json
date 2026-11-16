@@ -1,0 +1,566 @@
+{
+  "version": 1,
+  "scope": "react-disclosure-steps",
+  "revision": "87100121a16fd637290078679faf1bc47fcb1190",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/accordion",
+        "packages/react/src/tabs",
+        "packages/react/src/stepper",
+        "packages/react/src/steps"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/accordion/index.ts"
+        },
+        {
+          "subpath": "./accordion",
+          "source": "packages/react/src/accordion/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/tabs/index.ts"
+        },
+        {
+          "subpath": "./tabs",
+          "source": "packages/react/src/tabs/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/stepper/index.ts"
+        },
+        {
+          "subpath": "./stepper",
+          "source": "packages/react/src/stepper/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/steps/index.ts"
+        },
+        {
+          "subpath": "./steps",
+          "source": "packages/react/src/steps/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/accordion/accordion.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/accordion/accordion.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tabs/tabs.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tabs/tabs.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/stepper/stepper.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/stepper/stepper.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/steps/steps.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/steps/steps.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by #151; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.react.accordion",
+      "record": "react.accordion"
+    },
+    {
+      "id": "package.ultimate.react.tabs",
+      "record": "react.tabs"
+    },
+    {
+      "id": "package.ultimate.react.stepper",
+      "record": "react.stepper"
+    },
+    {
+      "id": "package.ultimate.react.steps",
+      "record": "react.steps"
+    }
+  ],
+  "ownership": {
+    "ticket": 129,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "records": [
+    {
+      "id": "react.accordion",
+      "name": "React UAccordion",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Collapsible panel group with single or multiple expansion.",
+      "surface": "UAccordion forwards HTMLDivElement. UAccordionProps: panels (UAccordionPanel[]), multiple=false, value, defaultValue (string | number | array of those), onValueChange(value | undefined), onTabOpen and onTabClose (UAccordionTabEvent with optional originalEvent and the panel value as index), className. UAccordionPanel: value, header, disabled, content. State is controlled when value !== undefined, otherwise internal state seeded from defaultValue. In multiple mode toggling adds or removes the value in an array; in single mode an open panel toggles to undefined. onValueChange fires first, then onTabOpen or onTabClose based on the prior active state. Header is a div role=button with tabIndex 0 (-1 when disabled), aria-expanded, aria-disabled, data-u-active and data-u-disabled; Enter and Space activate. A disabled panel returns before preventDefault. Content is rendered only while active (unmounted otherwise) inside role=region. Glyphs are aria-hidden. AccordionClassesParams is exported from accordion-style.ts but is not re-exported by the barrel (source-only). accordionStyleModule is exported untyped, unlike the other three families. accordionStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. The family uses useComponentBase from react-core/base with componentName \"accordion\", whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/accordion expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers accordion; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision, so no metadata relationship is claimed. Prime mentions in source comments are provenance context only; no parity or gap judgment is made.",
+      "files": [
+        "packages/react/src/accordion/accordion-style.ts",
+        "packages/react/src/accordion/accordion.tsx",
+        "packages/react/src/accordion/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UAccordion",
+        "@ultimate/react/accordion#UAccordion",
+        "@ultimate/react#UAccordionPanel",
+        "@ultimate/react/accordion#UAccordionPanel",
+        "@ultimate/react#UAccordionTabEvent",
+        "@ultimate/react/accordion#UAccordionTabEvent",
+        "@ultimate/react#UAccordionProps",
+        "@ultimate/react/accordion#UAccordionProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/accordion/index.ts",
+          "contains": "export { UAccordion } from \"./accordion\";"
+        },
+        {
+          "path": "packages/react/src/accordion/accordion.tsx",
+          "contains": "componentName: \"accordion\""
+        },
+        {
+          "path": "packages/react/src/accordion/accordion-style.ts",
+          "contains": "export const accordionStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/accordion/accordion-style.ts",
+          "contains": "export interface AccordionClassesParams {"
+        },
+        {
+          "path": "packages/react/src/accordion/accordion.tsx",
+          "contains": "export interface UAccordionProps {"
+        },
+        {
+          "path": "packages/react/src/accordion/accordion.tsx",
+          "contains": "export const UAccordion = React.forwardRef<HTMLDivElement, UAccordionProps>(function UAccordion("
+        },
+        {
+          "path": "packages/react/src/accordion/accordion.tsx",
+          "contains": "aria-expanded"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./accordion\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./accordion\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    accordion,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.accordion",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "87100121a16fd637290078679faf1bc47fcb1190",
+          "output": "Vitest exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.15.0 and pnpm; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.tabs",
+      "name": "React UTabView and UTabMenu",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Tabbed content views with panel markers, plus a model-driven tab navigation strip.",
+      "surface": "Three public components share one family and one tabsStyleModule. UTabView forwards HTMLDivElement. UTabViewProps: activeIndex, onTabChange({originalEvent,index}), tabIndex=0, scrollable=false, onBeforeTabClose (returning false cancels), onTabClose, children, className. UTabView is controlled only when onTabChange is supplied (activeIndex defaults to 0 then); otherwise internal state is used. Children are filtered by child.type === UTabPanel, so other children are ignored. UTabPanel is a marker declared React.FC<UTabPanelProps> = () => null and never rendered itself; UTabPanelProps: header, disabled, closable, closeIcon, children. Closed tabs are tracked in internal hiddenTabs state keyed by an explicit React key (EXPLICIT_KEY regex) else by index, and are not synced back to props. findVisibleActiveTab picks the first enabled visible tab at or after the closed index, else the nearest before. Tab list items are role=tab with aria-selected; the button tabIndex is the configured tabIndex only when selected, else -1. Keyboard: ArrowRight/ArrowLeft wrap, Home/End jump, Enter and Space activate; focus alone does not activate. Close button has aria-label Close and default glyph ×. Scrollable mode adds Previous Page and Next Page buttons shown only when scrolling is possible, recomputed by an effect on every render and on scroll using getComputedStyle widths. Panels are role=tabpanel and hidden when unselected; all non-closed panels stay mounted. The tabViewInkbar class exists in local CSS but is never rendered. UTabMenu forwards HTMLDivElement. UTabMenuProps: model (UMenuItem[], type-only import from ../menu), activeIndex, onTabChange({originalEvent,value,index}), className; controlled only when onTabChange is supplied. Items render role=tab with aria-selected and an anchor (href item.url ?? #, tabIndex -1 when disabled). Disabled clicks preventDefault; item.command runs; navigation is prevented when no url. Icon is a class-name string, not a ReactNode. UTabMenu has no panels and no keyboard handler, and ignores visible, separator and nested items; tabMenuInkbar is likewise unused. Public types are UTabViewProps, UTabPanelProps and UTabMenuProps. tabsStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. The family uses useComponentBase from react-core/base with componentName \"tabs\", whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/tabs expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers tabs; registration is not rendered theme verification. UTabMenu reuses UMenuItem from the React menu family as a type only; react.menu is not an owned part of this scope. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision, so no metadata relationship is claimed. Prime mentions in source comments are provenance context only; no parity or gap judgment is made.",
+      "files": [
+        "packages/react/src/tabs/index.ts",
+        "packages/react/src/tabs/tab-menu.tsx",
+        "packages/react/src/tabs/tab-panel.tsx",
+        "packages/react/src/tabs/tab-view.tsx",
+        "packages/react/src/tabs/tabs-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UTabView",
+        "@ultimate/react/tabs#UTabView",
+        "@ultimate/react#UTabViewProps",
+        "@ultimate/react/tabs#UTabViewProps",
+        "@ultimate/react#UTabPanel",
+        "@ultimate/react/tabs#UTabPanel",
+        "@ultimate/react#UTabPanelProps",
+        "@ultimate/react/tabs#UTabPanelProps",
+        "@ultimate/react#UTabMenu",
+        "@ultimate/react/tabs#UTabMenu",
+        "@ultimate/react#UTabMenuProps",
+        "@ultimate/react/tabs#UTabMenuProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/tabs/index.ts",
+          "contains": "export { UTabView } from \"./tab-view\";"
+        },
+        {
+          "path": "packages/react/src/tabs/tab-view.tsx",
+          "contains": "componentName: \"tabs\""
+        },
+        {
+          "path": "packages/react/src/tabs/tab-menu.tsx",
+          "contains": "componentName: \"tabs\""
+        },
+        {
+          "path": "packages/react/src/tabs/tabs-style.ts",
+          "contains": "export const tabsStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/tabs/tab-panel.tsx",
+          "contains": "export const UTabPanel: React.FC<UTabPanelProps> = () => null;"
+        },
+        {
+          "path": "packages/react/src/tabs/tab-view.tsx",
+          "contains": "export interface UTabViewProps {"
+        },
+        {
+          "path": "packages/react/src/tabs/tab-menu.tsx",
+          "contains": "export interface UTabMenuProps {"
+        },
+        {
+          "path": "packages/react/src/tabs/tab-view.tsx",
+          "contains": "const EXPLICIT_KEY = /(^\\.|:)\\$/;"
+        },
+        {
+          "path": "packages/react/src/tabs/tab-view.tsx",
+          "contains": "aria-label=\"Previous Page\""
+        },
+        {
+          "path": "packages/react/src/tabs/tab-menu.tsx",
+          "contains": "import type { UMenuItem } from \"../menu\";"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./tabs\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./tabs\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    tabs,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.tabs",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "87100121a16fd637290078679faf1bc47fcb1190",
+          "output": "Vitest exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.15.0 and pnpm; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.stepper",
+      "name": "React UStepper",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Step container with a header strip and panel markers rendering per-step content.",
+      "surface": "UStepper forwards HTMLDivElement. UStepperProps: activeStep=0, linear=false, onChangeStep({originalEvent | undefined, index}), children, className. Children are filtered to UStepperPanel elements. UStepperPanel is a marker declared React.FC<UStepperPanelProps> = () => null and never rendered itself. UStepperPanelProps: header, disabled, children as ReactNode or a render function receiving UStepperPanelRenderProps {index, active, prevCallback, nextCallback}. Internal activeStepState is synced from the activeStep prop by an effect, so the component is not purely controlled: clicks always update state and fire onChangeStep. The programmatic activeStep prop bypasses linear gating. Root is role=tablist; the header list item carries aria-current=step for the active step; header buttons are disabled when (linear and not active) or the panel is disabled, so a disabled active step is also disabled. Panels are role=tabpanel and hidden unless active, but every panel content is rendered each render, and render-prop children are invoked for every panel. prevCallback and nextCallback are no-ops at the ends. No keyboard handler exists. The separator class is defined in local CSS but never rendered. Public types are UStepperProps, UStepperPanelProps and UStepperPanelRenderProps. stepperStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. The family uses useComponentBase from react-core/base with componentName \"stepper\", whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/stepper expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers stepper; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision, so no metadata relationship is claimed. Prime mentions in source comments are provenance context only; no parity or gap judgment is made.",
+      "files": [
+        "packages/react/src/stepper/index.ts",
+        "packages/react/src/stepper/stepper-panel.tsx",
+        "packages/react/src/stepper/stepper-style.ts",
+        "packages/react/src/stepper/stepper.tsx"
+      ],
+      "exports": [
+        "@ultimate/react#UStepper",
+        "@ultimate/react/stepper#UStepper",
+        "@ultimate/react#UStepperProps",
+        "@ultimate/react/stepper#UStepperProps",
+        "@ultimate/react#UStepperPanel",
+        "@ultimate/react/stepper#UStepperPanel",
+        "@ultimate/react#UStepperPanelProps",
+        "@ultimate/react/stepper#UStepperPanelProps",
+        "@ultimate/react#UStepperPanelRenderProps",
+        "@ultimate/react/stepper#UStepperPanelRenderProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/stepper/index.ts",
+          "contains": "export { UStepper } from \"./stepper\";"
+        },
+        {
+          "path": "packages/react/src/stepper/stepper.tsx",
+          "contains": "componentName: \"stepper\""
+        },
+        {
+          "path": "packages/react/src/stepper/stepper-style.ts",
+          "contains": "export const stepperStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/stepper/stepper-panel.tsx",
+          "contains": "export const UStepperPanel: React.FC<UStepperPanelProps> = () => null;"
+        },
+        {
+          "path": "packages/react/src/stepper/stepper.tsx",
+          "contains": "export interface UStepperProps {"
+        },
+        {
+          "path": "packages/react/src/stepper/stepper-panel.tsx",
+          "contains": "export interface UStepperPanelRenderProps {"
+        },
+        {
+          "path": "packages/react/src/stepper/stepper.tsx",
+          "contains": "aria-current={active ? \"step\" : undefined}"
+        },
+        {
+          "path": "packages/react/src/stepper/stepper.tsx",
+          "contains": "role=\"tablist\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./stepper\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./stepper\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    stepper,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.stepper",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "87100121a16fd637290078679faf1bc47fcb1190",
+          "output": "Vitest exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.15.0 and pnpm; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.steps",
+      "name": "React USteps",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Model-driven step indicator navigation with optional readonly mode.",
+      "surface": "USteps forwards HTMLElement (nav, ol, li, a). UStepsProps: model (UMenuItem[], type-only import from ../menu), activeIndex=0, readonly=true, onSelect({originalEvent,item,index}), className. activeIndex is consumer-owned and never mutated internally. An item is disabled when item.disabled or (readonly and index differs from activeIndex). Clicks on readonly or disabled items preventDefault and return, so even the active item does not fire onSelect in readonly mode; otherwise onSelect then item.command run, and default navigation is prevented unless the item has a url. The ol handles ArrowRight, ArrowLeft, Home and End via event.code to move focus across enabled links; disabled links get tabIndex -1. The active li carries aria-current=step, links carry aria-disabled and href item.url ?? #. Items with visible === false are skipped but numbering keeps the model index. Only item.label is rendered; icon is not. Public type is UStepsProps. stepsStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. The family uses useComponentBase from react-core/base with componentName \"steps\", whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/steps expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers steps; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision, so no metadata relationship is claimed. Prime mentions in source comments are provenance context only; no parity or gap judgment is made.",
+      "files": [
+        "packages/react/src/steps/index.ts",
+        "packages/react/src/steps/steps-style.ts",
+        "packages/react/src/steps/steps.tsx"
+      ],
+      "exports": [
+        "@ultimate/react#USteps",
+        "@ultimate/react/steps#USteps",
+        "@ultimate/react#UStepsProps",
+        "@ultimate/react/steps#UStepsProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/steps/index.ts",
+          "contains": "export { USteps } from \"./steps\";"
+        },
+        {
+          "path": "packages/react/src/steps/steps.tsx",
+          "contains": "componentName: \"steps\""
+        },
+        {
+          "path": "packages/react/src/steps/steps-style.ts",
+          "contains": "export const stepsStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/steps/steps.tsx",
+          "contains": "export interface UStepsProps {"
+        },
+        {
+          "path": "packages/react/src/steps/steps.tsx",
+          "contains": "export const USteps = React.forwardRef<HTMLElement, UStepsProps>(function USteps("
+        },
+        {
+          "path": "packages/react/src/steps/steps.tsx",
+          "contains": "aria-current={active ? \"step\" : undefined}"
+        },
+        {
+          "path": "packages/react/src/steps/steps.tsx",
+          "contains": "if (readonly || item.disabled) {"
+        },
+        {
+          "path": "packages/react/src/steps/steps.tsx",
+          "contains": "import type { UMenuItem } from \"../menu\";"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./steps\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./steps\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    steps,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.steps",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "87100121a16fd637290078679faf1bc47fcb1190",
+          "output": "Vitest exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.15.0 and pnpm; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}
