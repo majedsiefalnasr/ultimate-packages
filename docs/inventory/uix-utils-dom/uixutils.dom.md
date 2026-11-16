@@ -10,7 +10,7 @@ DOM and browser utilities exported through the UIX utility package root and DOM 
 
 ## Framework surface
 
-The DOM barrel exposes 84 method defaults and four helper defaults as named exports. [The authored README](docs/inventory/uix-utils-dom/README.md) lists each call signature, source path, purpose, and observed runtime boundary. The source files do not access DOM/browser globals during module initialization; functions may access them when invoked, so this does not establish blanket SSR safety. Helper option interfaces are exported only from helper modules and omitted from the barrel; BrowserType is local to getBrowser.ts.
+The DOM barrel exposes 84 method defaults and four helper defaults as named exports. [The authored README](README.md) lists each call signature, source path, purpose, and observed runtime boundary. The source files do not access DOM/browser globals during module initialization; functions may access them when invoked, so this does not establish blanket SSR safety. Helper option interfaces are exported only from helper modules and omitted from the barrel; BrowserType is local to getBrowser.ts.
 
 ## Public exports
 
@@ -307,6 +307,16 @@ package.ultimate.uix-utils.scroll-lock (pending cross-batch)
   {
     "state": "not-run",
     "behavior": "Product behavior tests were intentionally not run for this documentation-only inventory."
+  },
+  {
+    "state": "verified",
+    "behavior": "The inventory generator regression suite passed, including exact and wildcard package export key reconciliation.",
+    "command": "node --test scripts/inventory/pilot.test.mjs",
+    "revision": "41e8047c4ed60eed2789c89c1bb67b27469cd039",
+    "outcome": "passed",
+    "limitations": "This suite verifies inventory-tool behavior, not product behavior.",
+    "output": "18 tests passed; 0 failed.",
+    "run": "docs/inventory/uix-utils-dom/inventory-test-run.json"
   },
   {
     "state": "ci-enforced",

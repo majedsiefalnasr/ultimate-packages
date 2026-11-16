@@ -161,7 +161,8 @@ packages/uix-utils/src/dom/methods/isClient.ts:1-3; isServer.ts:1-5 — environm
 packages/uix-utils/src/dom/methods/isPrefersReducedMotion.ts:1-6; isCssSupported.ts:28-43 — guarded browser feature probes.
 ```
 
-- Implementation: present in source; source inspection only. Behavioral tests were not run for this inventory, so no product behavior is claimed as tested.
+- Implementation: present in source; source inspection only. Product behavior tests were not run, so no product behavior is claimed as tested.
+- The inventory generator regression suite passed all 18 tests, including wildcard export-key matching; see [inventory test evidence](inventory-test-run.json). These tests validate the inventory tool, not product behavior.
 - Repository lint passed; captured in [lint evidence](lint-run.json). Repository typecheck passed; captured in [typecheck evidence](typecheck-run.json). Repository formatting passed; captured in [format evidence](format-run.json). These checks do not establish runtime behavior.
 - `pnpm build` did not complete because `apps/playground-react` could not load `postcss-import` from `/Users/majedsiefalnasr/postcss.config.mjs`. The build failure is captured as unavailable evidence in the generated record.
 - CI configuration inspection only: `.github/workflows/ci.yml:69-87` runs lint and formatting on pull requests; build, typecheck and general validation are skipped for docs-only changes. No remote CI run was observed. Configuration is not execution evidence.
