@@ -1,0 +1,540 @@
+{
+  "version": 1,
+  "scope": "react-table-viewport",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/table",
+        "packages/react/src/paginator",
+        "packages/react/src/scroller",
+        "packages/react/src/data-scroller"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/table/index.ts"
+        },
+        {
+          "subpath": "./table",
+          "source": "packages/react/src/table/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/paginator/index.ts"
+        },
+        {
+          "subpath": "./paginator",
+          "source": "packages/react/src/paginator/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/scroller/index.ts"
+        },
+        {
+          "subpath": "./scroller",
+          "source": "packages/react/src/scroller/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/data-scroller/index.ts"
+        },
+        {
+          "subpath": "./data-scroller",
+          "source": "packages/react/src/data-scroller/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/table/table.api.mdx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/table/table.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/table/table.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/paginator/paginator.api.mdx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/paginator/paginator.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/paginator/paginator.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/scroller/scroller.api.mdx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/scroller/scroller.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/scroller/scroller.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/data-scroller/data-scroller.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/data-scroller/data-scroller.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Detailed inventory remains owned by #153; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by #151; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-data.root",
+      "batch": "ticket-147",
+      "reason": "Detailed inventory remains owned by #147; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-styles.paginator",
+      "batch": "ticket-146",
+      "reason": "Detailed inventory remains owned by #146; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-styles.table",
+      "batch": "ticket-146",
+      "reason": "Detailed inventory remains owned by #146; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-styles.virtualscroller",
+      "batch": "ticket-146",
+      "reason": "Detailed inventory remains owned by #146; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.object",
+      "batch": "ticket-144",
+      "reason": "Detailed inventory remains owned by #144; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.react.table",
+      "record": "react.table"
+    },
+    {
+      "id": "package.ultimate.react.paginator",
+      "record": "react.paginator"
+    },
+    {
+      "id": "package.ultimate.react.scroller",
+      "record": "react.scroller"
+    },
+    {
+      "id": "package.ultimate.react.data-scroller",
+      "record": "react.data-scroller"
+    }
+  ],
+  "ownership": {
+    "ticket": 132,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "records": [
+    {
+      "id": "react.table",
+      "name": "React UTable",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Render tabular data with sorting, filtering, selection, editing, grouping, pagination and optional virtual scrolling.",
+      "surface": "UTable<T> renders value and columns (UTableColumn<T>: field, header, optional body). UTableProps<T> exposes dataKey, sortMode, sortField, sortOrder, multiSortMeta, onSort, filters, onFilter, selectionMode, selection, onSelectionChange, compareSelectionBy, selectionColumn, paginator, first, rows, totalRecords, onPage, virtualScrollerOptions, lazy, onLazyLoad, editMode, editingRows, onRowEditChange, onRowEditInit, onRowEditSave, onRowEditCancel, cellEditValidator, onCellEditComplete, onCellEditCancel, expandedRowKeys, onExpandedRowKeysChange, onRowExpand, onRowCollapse, rowGroupMode, groupRowsBy and loading. UTableSortEvent is source-exported but omitted from the public barrel. onFilter and the cell-edit callbacks and validator are accepted but not invoked. Sort, selection and pagination are controlled; row editing and expansion have internal fallbacks. The table composes UPaginator and UScroller; virtualization renders the filtered value separately and keyboard navigation reaches mounted rows. custom filtering returns false. tableStyleModule composes @ultimate/uix-styles/table; equals and types come from @ultimate/uix-data and deepEquals from @ultimate/uix-utils/object. tableStyleModule is a source-only adapter, not a public barrel export. The family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/table expose the same named barrel surface; declared dist artifacts do not prove publication. Aura has no matching family registration at this revision. Component metadata references this React source; metadata is not runtime integration. Prime mentions in source comments are provenance context only; no parity or gap judgment is made.",
+      "files": [
+        "packages/react/src/table/table-style.ts",
+        "packages/react/src/table/table.tsx",
+        "packages/react/src/table/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UTable",
+        "@ultimate/react/table#UTable",
+        "@ultimate/react#UTableProps",
+        "@ultimate/react/table#UTableProps",
+        "@ultimate/react#UTableColumn",
+        "@ultimate/react/table#UTableColumn"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/table/index.ts",
+          "contains": "export { UTable } from \"./table\";"
+        },
+        {
+          "path": "packages/react/src/table/table.tsx",
+          "contains": "componentName: \"table\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./table\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./table\": {"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/component-metadata/src/records/table.ts",
+          "contains": "packages/react/src/table/table.tsx"
+        },
+        {
+          "path": "packages/react/src/table/table.tsx",
+          "contains": "@ultimate/uix-data"
+        },
+        {
+          "path": "packages/react/src/table/table-style.ts",
+          "contains": "@ultimate/uix-styles/table"
+        },
+        {
+          "path": "packages/react/src/table/table.tsx",
+          "contains": "@ultimate/uix-utils/object"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.table",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.uix-data.root",
+        "package.ultimate.uix-styles.table",
+        "package.ultimate.uix-utils.object",
+        "package.ultimate.component-metadata.records",
+        "package.ultimate.react.paginator",
+        "package.ultimate.react.scroller"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed: 4 test files and 103 tests.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/table/ src/paginator/ src/scroller/ src/data-scroller/ --config /tmp/vitest-react132.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 4 passed (4); Tests 103 passed (103): table 70, paginator 7, scroller 20, data-scroller 6.",
+          "limitations": "Temporary config outside the repository set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were built before this run.",
+          "run": "docs/inventory/react-table-viewport/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.paginator",
+      "name": "React UPaginator",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Offer controlled page navigation.",
+      "surface": "UPaginatorProps requires first, rows, totalRecords and onPageChange; pageLinkSize is optional. PaginatorPageChangeEvent carries page, first, rows and pageCount. UPaginator is controlled and emits changes without owning page state. It renders first, previous, next, last and page controls. getPageCount comes from @ultimate/uix-data; paginatorStyleModule composes @ultimate/uix-styles/paginator. paginatorStyleModule is a source-only adapter, not a public barrel export. The family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/paginator expose the same named barrel surface; declared dist artifacts do not prove publication. Aura registers paginator; registration is not rendered theme verification. Component metadata references this React source; metadata is not runtime integration. Prime mentions in source comments are provenance context only; no parity or gap judgment is made.",
+      "files": [
+        "packages/react/src/paginator/paginator-style.ts",
+        "packages/react/src/paginator/paginator.tsx",
+        "packages/react/src/paginator/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UPaginator",
+        "@ultimate/react/paginator#UPaginator",
+        "@ultimate/react#UPaginatorProps",
+        "@ultimate/react/paginator#UPaginatorProps",
+        "@ultimate/react#PaginatorPageChangeEvent",
+        "@ultimate/react/paginator#PaginatorPageChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/paginator/index.ts",
+          "contains": "export { UPaginator } from \"./paginator\";"
+        },
+        {
+          "path": "packages/react/src/paginator/paginator.tsx",
+          "contains": "componentName: \"paginator\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./paginator\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./paginator\": {"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/component-metadata/src/records/paginator.ts",
+          "contains": "packages/react/src/paginator/paginator.tsx"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    paginator,"
+        },
+        {
+          "path": "packages/react/src/paginator/paginator.tsx",
+          "contains": "@ultimate/uix-data"
+        },
+        {
+          "path": "packages/react/src/paginator/paginator-style.ts",
+          "contains": "@ultimate/uix-styles/paginator"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.paginator",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.uix-data.root",
+        "package.ultimate.uix-styles.paginator",
+        "package.ultimate.component-metadata.records",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed: 4 test files and 103 tests.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/table/ src/paginator/ src/scroller/ src/data-scroller/ --config /tmp/vitest-react132.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 4 passed (4); Tests 103 passed (103): table 70, paginator 7, scroller 20, data-scroller 6.",
+          "limitations": "Temporary config outside the repository set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were built before this run.",
+          "run": "docs/inventory/react-table-viewport/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.scroller",
+      "name": "React UScroller",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Render a windowed vertical list and support lazy loading.",
+      "surface": "UScrollerProps accepts items, itemSize, numToleratedItems, disabled, lazy, loading, onLazyLoad and contentTemplate. UScrollerHandle exposes scrollTo and scrollToIndex through a forwarded ref; UScrollerContentOptions describes visible items, getItemOptions, itemSize and loading. ResizeObserver measures the viewport and lazy callbacks are scheduled on scrolling. calculateLast and calculateNumItemsInViewport come from @ultimate/uix-data; scrollerStyleModule composes @ultimate/uix-styles/virtualscroller. scrollerStyleModule is a source-only adapter, not a public barrel export. The family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/scroller expose the same named barrel surface; declared dist artifacts do not prove publication. Aura has no matching family registration at this revision. Component metadata references this React source; metadata is not runtime integration. Prime mentions in source comments are provenance context only; no parity or gap judgment is made.",
+      "files": [
+        "packages/react/src/scroller/scroller-style.ts",
+        "packages/react/src/scroller/scroller.tsx",
+        "packages/react/src/scroller/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UScroller",
+        "@ultimate/react/scroller#UScroller",
+        "@ultimate/react#UScrollerProps",
+        "@ultimate/react/scroller#UScrollerProps",
+        "@ultimate/react#UScrollerHandle",
+        "@ultimate/react/scroller#UScrollerHandle",
+        "@ultimate/react#UScrollerContentOptions",
+        "@ultimate/react/scroller#UScrollerContentOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/scroller/index.ts",
+          "contains": "export { UScroller } from \"./scroller\";"
+        },
+        {
+          "path": "packages/react/src/scroller/scroller.tsx",
+          "contains": "componentName: \"scroller\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./scroller\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./scroller\": {"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/component-metadata/src/records/scroller.ts",
+          "contains": "packages/react/src/scroller/scroller.tsx"
+        },
+        {
+          "path": "packages/react/src/scroller/scroller.tsx",
+          "contains": "@ultimate/uix-data"
+        },
+        {
+          "path": "packages/react/src/scroller/scroller-style.ts",
+          "contains": "@ultimate/uix-styles/virtualscroller"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.scroller",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.uix-data.root",
+        "package.ultimate.uix-styles.virtualscroller",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed: 4 test files and 103 tests.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/table/ src/paginator/ src/scroller/ src/data-scroller/ --config /tmp/vitest-react132.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 4 passed (4); Tests 103 passed (103): table 70, paginator 7, scroller 20, data-scroller 6.",
+          "limitations": "Temporary config outside the repository set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were built before this run.",
+          "run": "docs/inventory/react-table-viewport/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.data-scroller",
+      "name": "React UDataScroller",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Load and render an accumulating sequence of data items.",
+      "surface": "UDataScrollerProps<T> exposes value, rows, inline, lazy, loader, buffer, scrollHeight, header, footer, itemTemplate, emptyMessage, onLazyLoad and className. UDataScrollerRef exposes load and reset, and UDataScrollerLazyLoadEvent supplies first and rows. UDataScroller loads an accumulating slice, or delegates lazy loading through the callback; loader disables its scroll listener. It does not compose UScroller. dataScrollerStyleModule supplies local CSS and classes. dataScrollerStyleModule is a source-only adapter, not a public barrel export. The family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/data-scroller expose the same named barrel surface; declared dist artifacts do not prove publication. Aura has no matching family registration at this revision. No dedicated component-metadata record exists for this family at the inspected revision. Prime mentions in source comments are provenance context only; no parity or gap judgment is made.",
+      "files": [
+        "packages/react/src/data-scroller/data-scroller-style.ts",
+        "packages/react/src/data-scroller/data-scroller.tsx",
+        "packages/react/src/data-scroller/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UDataScroller",
+        "@ultimate/react/data-scroller#UDataScroller",
+        "@ultimate/react#UDataScrollerProps",
+        "@ultimate/react/data-scroller#UDataScrollerProps",
+        "@ultimate/react#UDataScrollerRef",
+        "@ultimate/react/data-scroller#UDataScrollerRef",
+        "@ultimate/react#UDataScrollerLazyLoadEvent",
+        "@ultimate/react/data-scroller#UDataScrollerLazyLoadEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/data-scroller/index.ts",
+          "contains": "export { UDataScroller } from \"./data-scroller\";"
+        },
+        {
+          "path": "packages/react/src/data-scroller/data-scroller.tsx",
+          "contains": "componentName: \"data-scroller\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./data-scroller\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./data-scroller\": {"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.data-scroller",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed: 4 test files and 103 tests.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/table/ src/paginator/ src/scroller/ src/data-scroller/ --config /tmp/vitest-react132.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 4 passed (4); Tests 103 passed (103): table 70, paginator 7, scroller 20, data-scroller 6.",
+          "limitations": "Temporary config outside the repository set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were built before this run.",
+          "run": "docs/inventory/react-table-viewport/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}
