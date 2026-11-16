@@ -1,0 +1,30 @@
+{
+  "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+  "runs": [
+    {
+      "command": "pnpm lint",
+      "outcome": "passed",
+      "output": "ESLint passed with maxWarnings=0; check-svg-text-whitespace checked 1,964 files with no SVG text whitespace."
+    },
+    {
+      "command": "pnpm typecheck",
+      "outcome": "passed",
+      "output": "All 22 of 23 workspace projects with typecheck scripts passed. Required ignored dist declarations were generated with scoped package builds first."
+    },
+    {
+      "command": "pnpm format:check",
+      "outcome": "passed",
+      "output": "All matched files used Prettier code style."
+    },
+    {
+      "command": "pnpm validate",
+      "outcome": "failed",
+      "output": "component-metadata validation passed for 8 records; AI validation passed for 8 skills and 5 generated LLM context files. Vue consumer-type validation failed in both workspace Vue 3.5.42 and floor Vue 3.5.2 passes because the isolated 'pnpm install --no-lockfile --prefer-offline' command exited nonzero; the validation script suppresses install output, so the underlying reason is unavailable. This docs-only ticket does not change Vue consumer types."
+    },
+    {
+      "command": "pnpm test",
+      "outcome": "not-run",
+      "output": "Product behavior tests were intentionally not run for this source inventory; no product source was changed."
+    }
+  ]
+}
