@@ -1,0 +1,6 @@
+{
+  "command": "node --test scripts/inventory/pilot.test.mjs",
+  "revision": "41e8047c4ed60eed2789c89c1bb67b27469cd039",
+  "outcome": "passed",
+  "output": "18 tests passed; 0 failed."
+}
