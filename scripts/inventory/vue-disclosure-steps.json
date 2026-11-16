@@ -1,0 +1,784 @@
+{
+  "version": 1,
+  "scope": "vue-disclosure-steps",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/accordion",
+        "packages/vue/src/accordion-panel",
+        "packages/vue/src/accordion-header",
+        "packages/vue/src/accordion-content",
+        "packages/vue/src/tabs",
+        "packages/vue/src/stepper",
+        "packages/vue/src/steps"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/accordion/index.ts"
+        },
+        {
+          "subpath": "./accordion",
+          "source": "packages/vue/src/accordion/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/accordion-panel/index.ts"
+        },
+        {
+          "subpath": "./accordion-panel",
+          "source": "packages/vue/src/accordion-panel/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/accordion-header/index.ts"
+        },
+        {
+          "subpath": "./accordion-header",
+          "source": "packages/vue/src/accordion-header/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/accordion-content/index.ts"
+        },
+        {
+          "subpath": "./accordion-content",
+          "source": "packages/vue/src/accordion-content/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/tabs/index.ts"
+        },
+        {
+          "subpath": "./tabs",
+          "source": "packages/vue/src/tabs/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/stepper/index.ts"
+        },
+        {
+          "subpath": "./stepper",
+          "source": "packages/vue/src/stepper/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/steps/index.ts"
+        },
+        {
+          "subpath": "./steps",
+          "source": "packages/vue/src/steps/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/accordion/accordion.spec.ts",
+      "reason": "Supporting spec or story, not an independent runtime export; existence alone is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/accordion/accordion.stories.ts",
+      "reason": "Supporting spec or story, not an independent runtime export; existence alone is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/stepper/stepper.spec.ts",
+      "reason": "Supporting spec or story, not an independent runtime export; existence alone is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/stepper/stepper.stories.ts",
+      "reason": "Supporting spec or story, not an independent runtime export; existence alone is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/steps/steps.spec.ts",
+      "reason": "Supporting spec or story, not an independent runtime export; existence alone is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/steps/steps.stories.ts",
+      "reason": "Supporting spec or story, not an independent runtime export; existence alone is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/tabs/tabs.spec.ts",
+      "reason": "Supporting spec or story, not an independent runtime export; existence alone is not passing execution evidence."
+    },
+    {
+      "path": "packages/vue/src/tabs/tabs.stories.ts",
+      "reason": "Supporting spec or story, not an independent runtime export; existence alone is not passing execution evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.accordion",
+      "record": "vue.accordion"
+    },
+    {
+      "id": "package.ultimate.vue.accordion-panel",
+      "record": "vue.accordion-panel"
+    },
+    {
+      "id": "package.ultimate.vue.accordion-header",
+      "record": "vue.accordion-header"
+    },
+    {
+      "id": "package.ultimate.vue.accordion-content",
+      "record": "vue.accordion-content"
+    },
+    {
+      "id": "package.ultimate.vue.tabs",
+      "record": "vue.tabs"
+    },
+    {
+      "id": "package.ultimate.vue.stepper",
+      "record": "vue.stepper"
+    },
+    {
+      "id": "package.ultimate.vue.steps",
+      "record": "vue.steps"
+    }
+  ],
+  "ownership": {
+    "ticket": 130,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "records": [
+    {
+      "id": "vue.accordion",
+      "name": "Vue UAccordion",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Compound disclosure selection root.",
+      "surface": "UAccordion provides $pcAccordion and owns selection state. createBaseAccordion declares value (String, Number or readonly unknown[], undefined), multiple (false) and selectOnFocus (false). A prop watcher synchronizes d_value; updateValue toggles single or multiple selection and emits update:value, then tab-open or tab-close with {originalEvent: undefined, index: newValue}; index is a value, not position. Default slot composes the separate panel, header and content entries. accordionStyleModule is publicly exported and shared by all four base factories; its local dt() CSS and class keys root, panel, header, toggleicon, contentRoot and content support cx. Factories return Options API components extending createBaseComponent, which registers component styles on mount. No Prime parity judgment is implied.",
+      "files": [
+        "packages/vue/src/accordion/Accordion.vue",
+        "packages/vue/src/accordion/BaseAccordion.ts",
+        "packages/vue/src/accordion/accordion-style.ts",
+        "packages/vue/src/accordion/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UAccordion",
+        "@ultimate/vue/accordion#UAccordion",
+        "@ultimate/vue#createBaseAccordion",
+        "@ultimate/vue/accordion#createBaseAccordion",
+        "@ultimate/vue#accordionStyleModule",
+        "@ultimate/vue/accordion#accordionStyleModule"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/accordion/index.ts",
+          "contains": "UAccordion"
+        },
+        {
+          "path": "packages/vue/src/accordion/Accordion.vue",
+          "contains": "this.$emit(active ? \"tab-close\" : \"tab-open\""
+        },
+        {
+          "path": "packages/vue/src/accordion/BaseAccordion.ts",
+          "contains": "selectOnFocus"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./accordion\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    accordion,"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule);"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "vue.accordion-panel",
+        "vue.accordion-header",
+        "vue.accordion-content"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The documented public entries and family implementation are source-present."
+        },
+        {
+          "state": "verified",
+          "behavior": "The scoped existing Vue product suite passed locally; accordion parts are exercised by the accordion suite.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /var/folders/vt/w58l5fv17nz9s5ybrbgpkgh80000gn/T/ultimate-vue130-4eWj6F/vitest.config.mjs --maxWorkers=1 --minWorkers=1",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "limitations": "Local jsdom unit tests only with built workspace prerequisites and a temporary PostCSS override; not browser, accessibility, visual, published-package or remote CI verification.",
+          "output": "Vitest 2.1.9: 4 files passed, 63 tests passed (accordion 9, tabs 17, stepper 21, steps 16).",
+          "run": "docs/inventory/vue-disclosure-steps/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Existing CI conditionally runs the root product test script for non-docs changes; no remote run or branch protection was observed. Inventory tests are not part of test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on non-docs scope and !cancelled(); no remote run or branch protection observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.accordion-panel",
+      "name": "Vue UAccordionPanel",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Panel context and value for compound disclosure.",
+      "surface": "UAccordionPanel injects $pcAccordion and provides $pcAccordionPanel. createBaseAccordionPanel declares value (String or Number, undefined) and disabled (false). The default slot renders a div with active/disabled data attributes; active is derived from the parent selection. It shares the public accordionStyleModule and its componentName is accordion. Factories return Options API components extending createBaseComponent, which registers component styles on mount. No Prime parity judgment is implied.",
+      "files": [
+        "packages/vue/src/accordion-panel/AccordionPanel.vue",
+        "packages/vue/src/accordion-panel/BaseAccordionPanel.ts",
+        "packages/vue/src/accordion-panel/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UAccordionPanel",
+        "@ultimate/vue/accordion-panel#UAccordionPanel",
+        "@ultimate/vue#createBaseAccordionPanel",
+        "@ultimate/vue/accordion-panel#createBaseAccordionPanel"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/accordion-panel/index.ts",
+          "contains": "UAccordionPanel"
+        },
+        {
+          "path": "packages/vue/src/accordion-panel/AccordionPanel.vue",
+          "contains": "$pcAccordionPanel"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./accordion-panel\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    accordion,"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule);"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "vue.accordion"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The documented public entries and family implementation are source-present."
+        },
+        {
+          "state": "verified",
+          "behavior": "The scoped existing Vue product suite passed locally; accordion parts are exercised by the accordion suite.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /var/folders/vt/w58l5fv17nz9s5ybrbgpkgh80000gn/T/ultimate-vue130-4eWj6F/vitest.config.mjs --maxWorkers=1 --minWorkers=1",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "limitations": "Local jsdom unit tests only with built workspace prerequisites and a temporary PostCSS override; not browser, accessibility, visual, published-package or remote CI verification.",
+          "output": "Vitest 2.1.9: 4 files passed, 63 tests passed (accordion 9, tabs 17, stepper 21, steps 16).",
+          "run": "docs/inventory/vue-disclosure-steps/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Existing CI conditionally runs the root product test script for non-docs changes; no remote run or branch protection was observed. Inventory tests are not part of test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on non-docs scope and !cancelled(); no remote run or branch protection observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.accordion-header",
+      "name": "Vue UAccordionHeader",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Interactive compound disclosure header.",
+      "surface": "UAccordionHeader injects accordion and panel. createBaseAccordionHeader declares no additional props and shares accordionStyleModule. Its role=button header exposes aria-expanded, aria-disabled and disabled tabindex; default and toggleicon slots receive active. Click and Enter, Space or NumpadEnter toggle an enabled panel. Arrow/Home/End navigation and selectOnFocus activation are not implemented here. Factories return Options API components extending createBaseComponent, which registers component styles on mount. No Prime parity judgment is implied.",
+      "files": [
+        "packages/vue/src/accordion-header/AccordionHeader.vue",
+        "packages/vue/src/accordion-header/BaseAccordionHeader.ts",
+        "packages/vue/src/accordion-header/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UAccordionHeader",
+        "@ultimate/vue/accordion-header#UAccordionHeader",
+        "@ultimate/vue#createBaseAccordionHeader",
+        "@ultimate/vue/accordion-header#createBaseAccordionHeader"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/accordion-header/index.ts",
+          "contains": "UAccordionHeader"
+        },
+        {
+          "path": "packages/vue/src/accordion-header/AccordionHeader.vue",
+          "contains": "event.code === \"NumpadEnter\""
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./accordion-header\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    accordion,"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule);"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "vue.accordion"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The documented public entries and family implementation are source-present."
+        },
+        {
+          "state": "verified",
+          "behavior": "The scoped existing Vue product suite passed locally; accordion parts are exercised by the accordion suite.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /var/folders/vt/w58l5fv17nz9s5ybrbgpkgh80000gn/T/ultimate-vue130-4eWj6F/vitest.config.mjs --maxWorkers=1 --minWorkers=1",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "limitations": "Local jsdom unit tests only with built workspace prerequisites and a temporary PostCSS override; not browser, accessibility, visual, published-package or remote CI verification.",
+          "output": "Vitest 2.1.9: 4 files passed, 63 tests passed (accordion 9, tabs 17, stepper 21, steps 16).",
+          "run": "docs/inventory/vue-disclosure-steps/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Existing CI conditionally runs the root product test script for non-docs changes; no remote run or branch protection was observed. Inventory tests are not part of test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on non-docs scope and !cancelled(); no remote run or branch protection observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.accordion-content",
+      "name": "Vue UAccordionContent",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Compound disclosure content region.",
+      "surface": "UAccordionContent injects accordion and panel. createBaseAccordionContent declares no additional props and shares accordionStyleModule. Its default slot renders in a role=region with v-show: inactive content remains mounted. Factories return Options API components extending createBaseComponent, which registers component styles on mount. No Prime parity judgment is implied.",
+      "files": [
+        "packages/vue/src/accordion-content/AccordionContent.vue",
+        "packages/vue/src/accordion-content/BaseAccordionContent.ts",
+        "packages/vue/src/accordion-content/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UAccordionContent",
+        "@ultimate/vue/accordion-content#UAccordionContent",
+        "@ultimate/vue#createBaseAccordionContent",
+        "@ultimate/vue/accordion-content#createBaseAccordionContent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/accordion-content/index.ts",
+          "contains": "UAccordionContent"
+        },
+        {
+          "path": "packages/vue/src/accordion-content/AccordionContent.vue",
+          "contains": "v-show="
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./accordion-content\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    accordion,"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule);"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "vue.accordion"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The documented public entries and family implementation are source-present."
+        },
+        {
+          "state": "verified",
+          "behavior": "The scoped existing Vue product suite passed locally; accordion parts are exercised by the accordion suite.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /var/folders/vt/w58l5fv17nz9s5ybrbgpkgh80000gn/T/ultimate-vue130-4eWj6F/vitest.config.mjs --maxWorkers=1 --minWorkers=1",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "limitations": "Local jsdom unit tests only with built workspace prerequisites and a temporary PostCSS override; not browser, accessibility, visual, published-package or remote CI verification.",
+          "output": "Vitest 2.1.9: 4 files passed, 63 tests passed (accordion 9, tabs 17, stepper 21, steps 16).",
+          "run": "docs/inventory/vue-disclosure-steps/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Existing CI conditionally runs the root product test script for non-docs changes; no remote run or branch protection was observed. Inventory tests are not part of test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on non-docs scope and !cancelled(); no remote run or branch protection observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.tabs",
+      "name": "Vue UTabs",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Compound tab navigation and panels.",
+      "surface": "UTabs, UTabList, UTab, UTabPanels and UTabPanel are public compositions with createBaseTabs. Its props are value (String or Number, undefined), lazy (false), scrollable (false), showNavigators (true), tabindex (0), selectOnFocus (false). UTabs provides $pcTabs, synchronizes local d_value and emits update:value on a changed selection. UTab requires value, accepts disabled (false), exposes role=tab, aria-selected/disabled and roving tabindex; ArrowRight/Left wrap among eligible tabs, Home/End focus boundaries, PageUp/Down scroll boundaries, Enter/Space/NumpadEnter activate; focus activates only when selectOnFocus. UTabList provides role=tablist, prev/next scroll buttons, a measured ink bar, and manages a ResizeObserver. UTabPanel requires value and uses role=tabpanel with v-show; panels stay mounted even when lazy is true. UTabPanels wraps the default slot. scrollable is declared but not consulted in the current list implementation. tabsStyleModule is source-only local CSS/classes; no independently exported types or part factories. Factories return Options API components extending createBaseComponent, which registers component styles on mount. No Prime parity judgment is implied.",
+      "files": [
+        "packages/vue/src/tabs/BaseTabs.ts",
+        "packages/vue/src/tabs/Tab.vue",
+        "packages/vue/src/tabs/TabList.vue",
+        "packages/vue/src/tabs/TabPanel.vue",
+        "packages/vue/src/tabs/TabPanels.vue",
+        "packages/vue/src/tabs/Tabs.vue",
+        "packages/vue/src/tabs/index.ts",
+        "packages/vue/src/tabs/tabs-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UTabs",
+        "@ultimate/vue/tabs#UTabs",
+        "@ultimate/vue#UTabList",
+        "@ultimate/vue/tabs#UTabList",
+        "@ultimate/vue#UTab",
+        "@ultimate/vue/tabs#UTab",
+        "@ultimate/vue#UTabPanels",
+        "@ultimate/vue/tabs#UTabPanels",
+        "@ultimate/vue#UTabPanel",
+        "@ultimate/vue/tabs#UTabPanel",
+        "@ultimate/vue#createBaseTabs",
+        "@ultimate/vue/tabs#createBaseTabs"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/tabs/index.ts",
+          "contains": "UTabs"
+        },
+        {
+          "path": "packages/vue/src/tabs/Tab.vue",
+          "contains": "this.$pcTabs.selectOnFocus"
+        },
+        {
+          "path": "packages/vue/src/tabs/TabList.vue",
+          "contains": "new ResizeObserver"
+        },
+        {
+          "path": "packages/vue/src/tabs/TabPanel.vue",
+          "contains": "v-show="
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./tabs\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    tabs,"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule);"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The documented public entries and family implementation are source-present."
+        },
+        {
+          "state": "verified",
+          "behavior": "The scoped existing Vue product suite passed locally.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /var/folders/vt/w58l5fv17nz9s5ybrbgpkgh80000gn/T/ultimate-vue130-4eWj6F/vitest.config.mjs --maxWorkers=1 --minWorkers=1",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "limitations": "Local jsdom unit tests only with built workspace prerequisites and a temporary PostCSS override; not browser, accessibility, visual, published-package or remote CI verification.",
+          "output": "Vitest 2.1.9: 4 files passed, 63 tests passed (accordion 9, tabs 17, stepper 21, steps 16).",
+          "run": "docs/inventory/vue-disclosure-steps/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Existing CI conditionally runs the root product test script for non-docs changes; no remote run or branch protection was observed. Inventory tests are not part of test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on non-docs scope and !cancelled(); no remote run or branch protection observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.stepper",
+      "name": "Vue UStepper",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Compound horizontal and vertical step navigation.",
+      "surface": "UStepper, UStepList, UStep, UStepItem, UStepPanels and UStepPanel are public compositions; createBaseStepper declares value (String or Number, undefined) and linear (false). UStepper provides $pcStepper, syncs d_value and emits update:value on change. UStepList registers children and refreshes separators. UStep requires value and accepts disabled (false); its disabled expression is !active && (linear || disabled), so active stays enabled and linear blocks non-active headers. UStep has role=tab with native button behavior; no explicit arrow-key handler. UStepItem requires value and provides vertical grouping. UStepPanel requires value, stays mounted with v-show, and exposes default scoped slot {active, activateCallback}; callback invokes updateValue without linear gating. UStepPanels wraps its default slot. UStepperSeparator is internal, not a barrel export; stepperStyleModule is source-only. No named part factories or public interfaces are declared. Factories return Options API components extending createBaseComponent, which registers component styles on mount. No Prime parity judgment is implied.",
+      "files": [
+        "packages/vue/src/stepper/BaseStepper.ts",
+        "packages/vue/src/stepper/Step.vue",
+        "packages/vue/src/stepper/StepItem.vue",
+        "packages/vue/src/stepper/StepList.vue",
+        "packages/vue/src/stepper/StepPanel.vue",
+        "packages/vue/src/stepper/StepPanels.vue",
+        "packages/vue/src/stepper/Stepper.vue",
+        "packages/vue/src/stepper/StepperSeparator.vue",
+        "packages/vue/src/stepper/index.ts",
+        "packages/vue/src/stepper/stepper-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UStepper",
+        "@ultimate/vue/stepper#UStepper",
+        "@ultimate/vue#UStepList",
+        "@ultimate/vue/stepper#UStepList",
+        "@ultimate/vue#UStep",
+        "@ultimate/vue/stepper#UStep",
+        "@ultimate/vue#UStepItem",
+        "@ultimate/vue/stepper#UStepItem",
+        "@ultimate/vue#UStepPanels",
+        "@ultimate/vue/stepper#UStepPanels",
+        "@ultimate/vue#UStepPanel",
+        "@ultimate/vue/stepper#UStepPanel",
+        "@ultimate/vue#createBaseStepper",
+        "@ultimate/vue/stepper#createBaseStepper"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/stepper/index.ts",
+          "contains": "UStepper"
+        },
+        {
+          "path": "packages/vue/src/stepper/Step.vue",
+          "contains": "return !this.active && (this.$pcStepper.isStepDisabled() || this.disabled);"
+        },
+        {
+          "path": "packages/vue/src/stepper/StepPanel.vue",
+          "contains": ":activateCallback=\"activate\""
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./stepper\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    stepper,"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule);"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The documented public entries and family implementation are source-present."
+        },
+        {
+          "state": "verified",
+          "behavior": "The scoped existing Vue product suite passed locally.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /var/folders/vt/w58l5fv17nz9s5ybrbgpkgh80000gn/T/ultimate-vue130-4eWj6F/vitest.config.mjs --maxWorkers=1 --minWorkers=1",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "limitations": "Local jsdom unit tests only with built workspace prerequisites and a temporary PostCSS override; not browser, accessibility, visual, published-package or remote CI verification.",
+          "output": "Vitest 2.1.9: 4 files passed, 63 tests passed (accordion 9, tabs 17, stepper 21, steps 16).",
+          "run": "docs/inventory/vue-disclosure-steps/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Existing CI conditionally runs the root product test script for non-docs changes; no remote run or branch protection was observed. Inventory tests are not part of test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on non-docs scope and !cancelled(); no remote run or branch protection observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.steps",
+      "name": "Vue USteps",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Model-driven step navigation.",
+      "surface": "USteps is model-driven fixed nav/ol markup, without slots. createBaseSteps declares model (readonly unknown[], default []), readonly (true), activeStep (0). Model fields used are label, url, visible, disabled and command; there is no exported model interface. d_activeStep mirrors the prop and click never mutates it: consumers own selection. Enabled non-readonly clicks emit select {originalEvent, item, index}, then invoke item.command with the same payload; readonly or disabled clicks are blocked. Numbers use original model indices even for hidden items. ArrowRight/Left, Home and End move focus among eligible visible links without wrapping; aria-current marks the active item. stepsStyleModule is source-only local CSS/classes. Factories return Options API components extending createBaseComponent, which registers component styles on mount. No Prime parity judgment is implied.",
+      "files": [
+        "packages/vue/src/steps/BaseSteps.ts",
+        "packages/vue/src/steps/Steps.vue",
+        "packages/vue/src/steps/index.ts",
+        "packages/vue/src/steps/steps-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#USteps",
+        "@ultimate/vue/steps#USteps",
+        "@ultimate/vue#createBaseSteps",
+        "@ultimate/vue/steps#createBaseSteps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/steps/index.ts",
+          "contains": "USteps"
+        },
+        {
+          "path": "packages/vue/src/steps/Steps.vue",
+          "contains": "if (item.command) item.command"
+        },
+        {
+          "path": "packages/vue/src/steps/Steps.vue",
+          "contains": "case \"ArrowRight\""
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./steps\";"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    steps,"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "registerComponentStyle(componentName, styleModule);"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The documented public entries and family implementation are source-present."
+        },
+        {
+          "state": "verified",
+          "behavior": "The scoped existing Vue product suite passed locally.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /var/folders/vt/w58l5fv17nz9s5ybrbgpkgh80000gn/T/ultimate-vue130-4eWj6F/vitest.config.mjs --maxWorkers=1 --minWorkers=1",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "limitations": "Local jsdom unit tests only with built workspace prerequisites and a temporary PostCSS override; not browser, accessibility, visual, published-package or remote CI verification.",
+          "output": "Vitest 2.1.9: 4 files passed, 63 tests passed (accordion 9, tabs 17, stepper 21, steps 16).",
+          "run": "docs/inventory/vue-disclosure-steps/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Existing CI conditionally runs the root product test script for non-docs changes; no remote run or branch protection was observed. Inventory tests are not part of test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on non-docs scope and !cancelled(); no remote run or branch protection observed."
+        }
+      ]
+    }
+  ]
+}
