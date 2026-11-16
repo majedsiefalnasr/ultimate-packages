@@ -22,6 +22,8 @@ Read the React compound disclosure and step navigation [scoped index](react-disc
 
 Read the React table and viewport data [scoped index](react-table-viewport/index.md), [validation](react-table-viewport/validation.md) and [authored verification notes](react-table-viewport/README.md) (#132); authored input: `scripts/inventory/react-table-viewport.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-table-viewport.json --out docs/inventory/react-table-viewport`.
 
+Read the Vue table and viewport data [scoped index](vue-table-viewport/index.md), [validation](vue-table-viewport/validation.md) and [authored verification notes](vue-table-viewport/README.md) (#133); authored input: `scripts/inventory/vue-table-viewport.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-table-viewport.json --out docs/inventory/vue-table-viewport`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
