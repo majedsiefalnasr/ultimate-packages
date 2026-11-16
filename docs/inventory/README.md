@@ -49,6 +49,8 @@ Read the Vue feedback and interaction utilities [scoped index](vue-feedback/inde
 
 Read the [DOM utilities inventory](uix-utils-dom/index.md), [generated record](uix-utils-dom/uixutils.dom.md), [authored signatures and interpretation](uix-utils-dom/README.md), and [scoped validation](uix-utils-dom/validation.md) for ticket #143. Its structured input is `scripts/inventory/uix-utils-dom.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-dom.json --out docs/inventory/uix-utils-dom`.
 
+Read the [value and event utilities inventory](uix-utils-values/index.md), [authored signatures and interpretation](uix-utils-values/README.md), and [scoped validation](uix-utils-values/validation.md) for ticket #144. Its structured input is `scripts/inventory/uix-utils-values.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-values.json --out docs/inventory/uix-utils-values`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
