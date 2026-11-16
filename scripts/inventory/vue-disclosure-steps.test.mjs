@@ -39,8 +39,21 @@ test("Vue disclosure and steps reconcile every scoped source and public entry", 
   assert.equal(new Set(accounted).size, listed.length);
   assert.equal(input.records.flatMap((r) => r.exports).length, 48);
   const manifest = JSON.parse(read("packages/vue/package.json"));
+  const entries = input.packages[0].entries;
+  const rootBarrel = read("packages/vue/src/index.ts");
+  assert.equal(manifest.exports["."].import, "./dist/index.mjs");
+  assert.equal(entries.length, families.length * 2);
   for (const f of families) {
-    assert.ok(read("packages/vue/src/index.ts").includes(`export * from "./${f}";`));
+    const familySource = `packages/vue/src/${f}/index.ts`;
+    assert.ok(rootBarrel.includes(`export * from "./${f}";`));
+    assert.equal(
+      entries.filter((entry) => entry.subpath === "." && entry.source === familySource).length,
+      1
+    );
+    assert.equal(
+      entries.filter((entry) => entry.subpath === `./${f}` && entry.source === familySource).length,
+      1
+    );
     assert.equal(manifest.exports[`./${f}`].import, `./dist/${f}/index.mjs`);
     assert.ok(read("packages/vue/tsup.config.ts").includes(`"${f}/index"`));
   }
@@ -68,6 +81,47 @@ test("owned declarations, compositions and contracts have consumer interpretatio
       const name = /name: "(\w+)"/.exec(read(file))[1];
       assert.ok(record.surface.includes(name), `${file}#${name}`);
     }
+  }
+  const metadataRecords = execFileSync(
+    "git",
+    ["ls-files", "packages/component-metadata/src/records/"],
+    { encoding: "utf8" }
+  )
+    .trim()
+    .split("\n");
+  assert.ok(!metadataRecords.some((path) => /accordion|tabs|stepper|steps/.test(path)));
+  const input = load();
+  const attempts = JSON.parse(read("docs/inventory/vue-disclosure-steps/product-attempts.json"));
+  for (const record of input.records) {
+    assert.ok(
+      record.surface.includes(
+        "No direct UIX style-module import or component-metadata record exists"
+      )
+    );
+    assert.ok(
+      record.files.every(
+        (path) => !/\b(?:from|import)\s*(?:\(\s*)?["']@ultimate\/uix-styles\//.test(read(path))
+      )
+    );
+    const failures = record.claims.filter((claim) => claim.state === "failed");
+    assert.equal(failures.length, 2);
+    for (const claim of failures)
+      assert.ok(
+        attempts.attempts.some(
+          (attempt) =>
+            attempt.command === claim.command &&
+            attempt.outcome === claim.outcome &&
+            attempt.output === claim.output
+        )
+      );
+    const ci = record.claims.find((claim) => claim.state === "ci-enforced");
+    assert.ok(ci);
+    assert.ok(
+      record.evidence.some((e) => e.path === "package.json" && e.contains.includes('"test":'))
+    );
+    assert.ok(
+      !record.evidence.some((e) => e.path === "package.json" && e.contains.includes("test:scripts"))
+    );
   }
   const by = (f) => load().records.find((r) => r.id === `vue.${f}`);
   for (const [f, terms] of Object.entries({
