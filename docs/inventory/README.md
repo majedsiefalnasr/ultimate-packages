@@ -43,6 +43,8 @@ Read the Angular feedback and interaction utilities [scoped index](angular-feedb
 
 Read the React feedback and interaction utilities [scoped index](react-feedback/index.md), [validation](react-feedback/validation.md) and [authored verification notes](react-feedback/README.md) (#141); authored input: `scripts/inventory/react-feedback.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-feedback.json --out docs/inventory/react-feedback`.
 
+Read the Vue feedback and interaction utilities [scoped index](vue-feedback/index.md), [validation](vue-feedback/validation.md) and [authored verification notes](vue-feedback/README.md) (#142); authored input: `scripts/inventory/vue-feedback.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-feedback.json --out docs/inventory/vue-feedback`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.

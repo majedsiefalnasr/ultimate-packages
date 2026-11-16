@@ -1,0 +1,1008 @@
+{
+  "version": 1,
+  "scope": "vue-feedback",
+  "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+  "ownership": {
+    "ticket": 142,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/progress-bar",
+        "packages/vue/src/progress-spinner",
+        "packages/vue/src/meter-group",
+        "packages/vue/src/skeleton",
+        "packages/vue/src/terminal",
+        "packages/vue/src/inplace",
+        "packages/vue/src/scroll-top",
+        "packages/vue/src/deferred-content",
+        "packages/vue/src/ripple",
+        "packages/vue/src/key-filter",
+        "packages/vue/src/style-class",
+        "packages/vue/src/animate-on-scroll"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/progress-bar/index.ts"
+        },
+        {
+          "subpath": "./progress-bar",
+          "source": "packages/vue/src/progress-bar/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/progress-spinner/index.ts"
+        },
+        {
+          "subpath": "./progress-spinner",
+          "source": "packages/vue/src/progress-spinner/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/meter-group/index.ts"
+        },
+        {
+          "subpath": "./meter-group",
+          "source": "packages/vue/src/meter-group/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/skeleton/index.ts"
+        },
+        {
+          "subpath": "./skeleton",
+          "source": "packages/vue/src/skeleton/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/terminal/index.ts"
+        },
+        {
+          "subpath": "./terminal",
+          "source": "packages/vue/src/terminal/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/inplace/index.ts"
+        },
+        {
+          "subpath": "./inplace",
+          "source": "packages/vue/src/inplace/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/scroll-top/index.ts"
+        },
+        {
+          "subpath": "./scroll-top",
+          "source": "packages/vue/src/scroll-top/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/deferred-content/index.ts"
+        },
+        {
+          "subpath": "./deferred-content",
+          "source": "packages/vue/src/deferred-content/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/ripple/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/key-filter/index.ts"
+        },
+        {
+          "subpath": "./key-filter",
+          "source": "packages/vue/src/key-filter/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/style-class/index.ts"
+        },
+        {
+          "subpath": "./style-class",
+          "source": "packages/vue/src/style-class/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/animate-on-scroll/index.ts"
+        },
+        {
+          "subpath": "./animate-on-scroll",
+          "source": "packages/vue/src/animate-on-scroll/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "vue.progress-bar",
+      "name": "Vue UProgressBar",
+      "framework": "vue",
+      "purpose": "Displays determinate or indeterminate progress.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/progress-bar/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/progress-bar/BaseProgressBar.ts",
+        "packages/vue/src/progress-bar/ProgressBar.vue",
+        "packages/vue/src/progress-bar/index.ts",
+        "packages/vue/src/progress-bar/progress-bar-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#UProgressBar",
+        "@ultimate/vue#createBaseProgressBar",
+        "@ultimate/vue/progress-bar#UProgressBar",
+        "@ultimate/vue/progress-bar#createBaseProgressBar"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/progress-bar/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.progress-bar",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.progress-spinner",
+      "name": "Vue UProgressSpinner",
+      "framework": "vue",
+      "purpose": "Displays circular progress indication.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/progress-spinner/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/progress-spinner/BaseProgressSpinner.ts",
+        "packages/vue/src/progress-spinner/ProgressSpinner.vue",
+        "packages/vue/src/progress-spinner/index.ts",
+        "packages/vue/src/progress-spinner/progress-spinner-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#UProgressSpinner",
+        "@ultimate/vue#createBaseProgressSpinner",
+        "@ultimate/vue/progress-spinner#UProgressSpinner",
+        "@ultimate/vue/progress-spinner#createBaseProgressSpinner"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/progress-spinner/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.progress-spinner",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.meter-group",
+      "name": "Vue UMeterGroup",
+      "framework": "vue",
+      "purpose": "Displays grouped meter values.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/meter-group/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/meter-group/BaseMeterGroup.ts",
+        "packages/vue/src/meter-group/MeterGroup.vue",
+        "packages/vue/src/meter-group/index.ts",
+        "packages/vue/src/meter-group/meter-group-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#UMeterGroup",
+        "@ultimate/vue#createBaseMeterGroup",
+        "@ultimate/vue/meter-group#UMeterGroup",
+        "@ultimate/vue/meter-group#createBaseMeterGroup"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/meter-group/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.meter-group",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.skeleton",
+      "name": "Vue USkeleton",
+      "framework": "vue",
+      "purpose": "Displays a loading placeholder.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/skeleton/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/skeleton/BaseSkeleton.ts",
+        "packages/vue/src/skeleton/Skeleton.vue",
+        "packages/vue/src/skeleton/index.ts",
+        "packages/vue/src/skeleton/skeleton-style.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/vue#USkeleton", "@ultimate/vue/skeleton#USkeleton"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/skeleton/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.skeleton",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.terminal",
+      "name": "Vue UTerminal",
+      "framework": "vue",
+      "purpose": "Displays terminal output and accepts command input.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/terminal/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/terminal/BaseTerminal.ts",
+        "packages/vue/src/terminal/Terminal.vue",
+        "packages/vue/src/terminal/index.ts",
+        "packages/vue/src/terminal/terminal-event-bus.ts",
+        "packages/vue/src/terminal/terminal-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#UTerminal",
+        "@ultimate/vue#createBaseTerminal",
+        "@ultimate/vue#terminalEventBus",
+        "@ultimate/vue/terminal#UTerminal",
+        "@ultimate/vue/terminal#createBaseTerminal",
+        "@ultimate/vue/terminal#terminalEventBus"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/terminal/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.terminal",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.inplace",
+      "name": "Vue UInplace",
+      "framework": "vue",
+      "purpose": "Switches between display and editable content.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/inplace/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/inplace/BaseInplace.ts",
+        "packages/vue/src/inplace/Inplace.vue",
+        "packages/vue/src/inplace/index.ts",
+        "packages/vue/src/inplace/inplace-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#UInplace",
+        "@ultimate/vue#createBaseInplace",
+        "@ultimate/vue/inplace#UInplace",
+        "@ultimate/vue/inplace#createBaseInplace"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/inplace/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.inplace",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.scroll-top",
+      "name": "Vue UScrollTop",
+      "framework": "vue",
+      "purpose": "Provides a control to scroll the page to the top.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/scroll-top/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/scroll-top/BaseScrollTop.ts",
+        "packages/vue/src/scroll-top/ScrollTop.vue",
+        "packages/vue/src/scroll-top/index.ts",
+        "packages/vue/src/scroll-top/scroll-top-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#UScrollTop",
+        "@ultimate/vue#createBaseScrollTop",
+        "@ultimate/vue/scroll-top#UScrollTop",
+        "@ultimate/vue/scroll-top#createBaseScrollTop"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/scroll-top/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.scroll-top",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.deferred-content",
+      "name": "Vue UDeferredContent",
+      "framework": "vue",
+      "purpose": "Defers content activation until it approaches the viewport.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/deferred-content/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/deferred-content/DeferredContent.vue",
+        "packages/vue/src/deferred-content/index.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#UDeferredContent",
+        "@ultimate/vue/deferred-content#UDeferredContent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/deferred-content/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.deferred-content",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.vue-core.motion",
+        "package.ultimate.uix-utils.dom"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.ripple",
+      "name": "Vue ripple",
+      "framework": "vue",
+      "purpose": "Adds a ripple effect through a Vue directive.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/ripple/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": ["packages/vue/src/ripple/index.ts", "packages/vue/src/ripple/ripple.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/vue#rippleDirective"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/ripple/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.ripple",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.vue-core.motion",
+        "package.ultimate.uix-utils.dom"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.key-filter",
+      "name": "Vue key-filter",
+      "framework": "vue",
+      "purpose": "Filters keyboard input through a Vue directive.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/key-filter/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/key-filter/index.ts",
+        "packages/vue/src/key-filter/key-filter.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#UKeyFilter",
+        "@ultimate/vue#UKeyFilterPattern",
+        "@ultimate/vue#UKeyFilterOptions",
+        "@ultimate/vue/key-filter#UKeyFilter",
+        "@ultimate/vue/key-filter#UKeyFilterPattern",
+        "@ultimate/vue/key-filter#UKeyFilterOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/key-filter/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.key-filter",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.vue-core.motion",
+        "package.ultimate.uix-utils.dom"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.style-class",
+      "name": "Vue style-class",
+      "framework": "vue",
+      "purpose": "Applies and removes style classes through a Vue directive.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/style-class/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/style-class/index.ts",
+        "packages/vue/src/style-class/style-class.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#UStyleClass",
+        "@ultimate/vue#UStyleClassOptions",
+        "@ultimate/vue/style-class#UStyleClass",
+        "@ultimate/vue/style-class#UStyleClassOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/style-class/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.style-class",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.vue-core.motion",
+        "package.ultimate.uix-utils.dom"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    },
+    {
+      "id": "vue.animate-on-scroll",
+      "name": "Vue animate-on-scroll",
+      "framework": "vue",
+      "purpose": "Toggles animation classes based on viewport visibility.",
+      "surface": "Public Vue entry exports are declared in packages/vue/src/animate-on-scroll/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "files": [
+        "packages/vue/src/animate-on-scroll/animate-on-scroll.ts",
+        "packages/vue/src/animate-on-scroll/index.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue#animateOnScrollDirective",
+        "@ultimate/vue#AnimateOnScrollValue",
+        "@ultimate/vue/animate-on-scroll#animateOnScrollDirective",
+        "@ultimate/vue/animate-on-scroll#AnimateOnScrollValue"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/animate-on-scroll/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.animate-on-scroll",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.vue-core.motion",
+        "package.ultimate.uix-utils.dom"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Scoped source and package entrypoint declarations inspected; runtime behavior is not inferred from another framework."
+        },
+        {
+          "state": "verified",
+          "behavior": "Scoped Vue unit suite passed with all assertions after building workspace prerequisites.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "passed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "limitations": "Vitest 2.1.9 on Node v24.15.0. Local jsdom unit tests only. The inventory PostCSS override bypassed the host ancestor PostCSS config, so PostCSS processing, browser behavior, visual output, accessibility, publication and remote CI were not verified.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json",
+          "output": "Vitest 2.1.9, Node v24.15.0: 12 files passed, 68 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 6, scroll-top 6, deferred-content 5, ripple 3, key-filter 8, style-class 7, animate-on-scroll 6)."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial unmodified scoped product test attempt stopped during PostCSS configuration loading before any product assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/ripple/ src/key-filter/ src/style-class/ src/animate-on-scroll/ --maxWorkers=1 --minWorkers=1",
+          "outcome": "failed",
+          "revision": "fdd42818185ed77ae0c025f732310672581c1cea",
+          "output": "Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.worktrees/docs-142-vue-feedback/packages/vue): [Error] Loading PostCSS Plugin failed: Cannot find module 'postcss-import'\nRequire stack:\n- /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Environment/configuration failure before assertions; no product behavior was tested by this attempt.",
+          "run": "docs/inventory/vue-feedback/product-attempts.json"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/progress-bar/progress-bar.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/progress-bar/progress-bar.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/progress-spinner/progress-spinner.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/progress-spinner/progress-spinner.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/meter-group/meter-group.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/meter-group/meter-group.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/skeleton/skeleton.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/skeleton/skeleton.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/terminal/terminal.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/terminal/terminal.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/inplace/inplace.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/inplace/inplace.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/scroll-top/scroll-top.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/scroll-top/scroll-top.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/deferred-content/deferred-content.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/deferred-content/deferred-content.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/ripple/ripple.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/ripple/ripple.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/key-filter/key-filter.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/key-filter/key-filter.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/style-class/style-class.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/style-class/style-class.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    },
+    {
+      "path": "packages/vue/src/animate-on-scroll/animate-on-scroll.spec.ts",
+      "reason": "Product test source; execution is recorded as product-run evidence, not API ownership."
+    },
+    {
+      "path": "packages/vue/src/animate-on-scroll/animate-on-scroll.stories.ts",
+      "reason": "Storybook demonstration source; not a package API declaration."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Detailed inventory remains owned by [#153](https://github.com/majedsiefalnasr/ultimate-packages/issues/153). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-styles.menu",
+      "batch": "ticket-146",
+      "reason": "Detailed inventory owned by [#146](https://github.com/majedsiefalnasr/ultimate-packages/issues/146); reconciled identity in [package index](../packages/packages.md). This relationship is not external scope completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "ticket-143",
+      "reason": "Detailed inventory remains owned by [#143](https://github.com/majedsiefalnasr/ultimate-packages/issues/143). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.escape",
+      "batch": "ticket-144",
+      "reason": "Detailed inventory remains owned by [#144](https://github.com/majedsiefalnasr/ultimate-packages/issues/144). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.escape",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.motion",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.overlay",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.zindex",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.progress-bar",
+      "record": "vue.progress-bar"
+    },
+    {
+      "id": "package.ultimate.vue.progress-spinner",
+      "record": "vue.progress-spinner"
+    },
+    {
+      "id": "package.ultimate.vue.meter-group",
+      "record": "vue.meter-group"
+    },
+    {
+      "id": "package.ultimate.vue.skeleton",
+      "record": "vue.skeleton"
+    },
+    {
+      "id": "package.ultimate.vue.terminal",
+      "record": "vue.terminal"
+    },
+    {
+      "id": "package.ultimate.vue.inplace",
+      "record": "vue.inplace"
+    },
+    {
+      "id": "package.ultimate.vue.scroll-top",
+      "record": "vue.scroll-top"
+    },
+    {
+      "id": "package.ultimate.vue.deferred-content",
+      "record": "vue.deferred-content"
+    },
+    {
+      "id": "package.ultimate.vue.ripple",
+      "record": "vue.ripple"
+    },
+    {
+      "id": "package.ultimate.vue.key-filter",
+      "record": "vue.key-filter"
+    },
+    {
+      "id": "package.ultimate.vue.style-class",
+      "record": "vue.style-class"
+    },
+    {
+      "id": "package.ultimate.vue.animate-on-scroll",
+      "record": "vue.animate-on-scroll"
+    }
+  ]
+}
