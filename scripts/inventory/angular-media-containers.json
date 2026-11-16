@@ -1,0 +1,1118 @@
+{
+  "version": 1,
+  "scope": "angular-media-containers",
+  "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/carousel",
+        "packages/ng/src/galleria",
+        "packages/ng/src/image",
+        "packages/ng/src/image-compare",
+        "packages/ng/src/card",
+        "packages/ng/src/panel",
+        "packages/ng/src/fieldset",
+        "packages/ng/src/splitter",
+        "packages/ng/src/divider",
+        "packages/ng/src/scroll-panel"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/carousel/index.ts"
+        },
+        {
+          "subpath": "./carousel",
+          "source": "packages/ng/src/carousel/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/galleria/index.ts"
+        },
+        {
+          "subpath": "./galleria",
+          "source": "packages/ng/src/galleria/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/image/index.ts"
+        },
+        {
+          "subpath": "./image",
+          "source": "packages/ng/src/image/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/image-compare/index.ts"
+        },
+        {
+          "subpath": "./image-compare",
+          "source": "packages/ng/src/image-compare/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/card/index.ts"
+        },
+        {
+          "subpath": "./card",
+          "source": "packages/ng/src/card/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/panel/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/fieldset/index.ts"
+        },
+        {
+          "subpath": "./fieldset",
+          "source": "packages/ng/src/fieldset/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/splitter/index.ts"
+        },
+        {
+          "subpath": "./splitter",
+          "source": "packages/ng/src/splitter/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/divider/index.ts"
+        },
+        {
+          "subpath": "./divider",
+          "source": "packages/ng/src/divider/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/scroll-panel/index.ts"
+        },
+        {
+          "subpath": "./scroll-panel",
+          "source": "packages/ng/src/scroll-panel/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/carousel/carousel.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/carousel/carousel.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/galleria/galleria.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/galleria/galleria.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/image/image.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/image/image.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/image-compare/image-compare.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/image-compare/image-compare.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/card/card.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/card/card.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/panel/panel.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/panel/panel.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/fieldset/fieldset.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/fieldset/fieldset.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/splitter/splitter.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/splitter/splitter.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/divider/divider.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/divider/divider.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/scroll-panel/scroll-panel.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/scroll-panel/scroll-panel.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.focus-trap",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.icons",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.overlay",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng.button",
+      "batch": "ticket-107",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-utils.escape",
+      "batch": "ticket-144",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-utils.uuid",
+      "batch": "ticket-144",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 137,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.carousel",
+      "record": "angular.carousel"
+    },
+    {
+      "id": "package.ultimate.ng.galleria",
+      "record": "angular.galleria"
+    },
+    {
+      "id": "package.ultimate.ng.image",
+      "record": "angular.image"
+    },
+    {
+      "id": "package.ultimate.ng.image-compare",
+      "record": "angular.image-compare"
+    },
+    {
+      "id": "package.ultimate.ng.card",
+      "record": "angular.card"
+    },
+    {
+      "id": "package.ultimate.ng.panel",
+      "record": "angular.panel"
+    },
+    {
+      "id": "package.ultimate.ng.fieldset",
+      "record": "angular.fieldset"
+    },
+    {
+      "id": "package.ultimate.ng.splitter",
+      "record": "angular.splitter"
+    },
+    {
+      "id": "package.ultimate.ng.divider",
+      "record": "angular.divider"
+    },
+    {
+      "id": "package.ultimate.ng.scroll-panel",
+      "record": "angular.scroll-panel"
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.carousel",
+      "name": "Angular UCarousel",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Paged horizontal or vertical template-driven collection carousel with navigation and timed advancement.",
+      "surface": "Generic UCarousel<T=unknown>; inputs value:T[]=[], numVisible=1, numScroll=1, circular=false, showIndicators=true, showNavigators=true, autoplayInterval=0, orientation:\"horizontal\"|\"vertical\"=\"horizontal\". Output onPage:UCarouselPageEvent with page:number. Exported UCarouselItemContext<T> has $implicit:T for the @ContentChild(\"item\", {descendants:false}) TemplateRef; each item uses ngTemplateOutlet with that context, with no default textual item renderer. Public navForward(), navBackward() and goToPage(index:number) update the internal page and emit onPage; previous/next wrap only when circular. totalPages is 0 for an empty collection and ceil((value.length-numVisible)/numScroll)+1 otherwise; the translate percentage is page*numScroll*100/numVisible, on X or Y according to orientation. Native navigator and indicator buttons have labels; the content wrapper has aria-live=polite when autoplayInterval>0 and off otherwise. Autoplay starts in ngOnInit when the interval is positive, always wraps at the last page, and is stopped by previous/next navigation and on destroy; indicator navigation does not stop it. Owned source-only carouselStyleModule exports css/classes, and source-only CarouselItemListParams has optional numVisible:number and vertical:boolean for class calculation. Selector u-carousel; standalone OnPush component with ViewEncapsulation.None, componentName \"carousel\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers carousel: carousel; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/carousel/index.ts",
+        "packages/ng/src/carousel/carousel-style.ts",
+        "packages/ng/src/carousel/carousel.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UCarousel",
+        "@ultimate/ng#UCarouselItemContext",
+        "@ultimate/ng#UCarouselPageEvent",
+        "@ultimate/ng/carousel#UCarousel",
+        "@ultimate/ng/carousel#UCarouselItemContext",
+        "@ultimate/ng/carousel#UCarouselPageEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/carousel/carousel.ts",
+          "contains": "export class UCarousel"
+        },
+        {
+          "path": "packages/ng/src/carousel/index.ts",
+          "contains": "export { UCarousel } from \"./carousel\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/carousel\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./carousel\":"
+        },
+        {
+          "path": "packages/ng/src/carousel/carousel-style.ts",
+          "contains": "export const carouselStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    carousel,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/carousel/carousel.ts",
+          "contains": "export interface UCarouselItemContext"
+        },
+        {
+          "path": "packages/ng/src/carousel/carousel.ts",
+          "contains": "export interface UCarouselPageEvent"
+        },
+        {
+          "path": "packages/ng/src/carousel/carousel.ts",
+          "contains": "return Math.ceil((length - this.numVisible()) / this.numScroll()) + 1;"
+        },
+        {
+          "path": "packages/ng/src/carousel/carousel.ts",
+          "contains": "[attr.aria-live]=\"autoplayInterval() > 0 ? 'polite' : 'off'\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; Carousel 9).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.galleria",
+      "name": "Angular UGalleria",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Template-driven image/item gallery with thumbnails, keyboard navigation and optional fullscreen overlay.",
+      "surface": "Generic UGalleria<T=unknown>; inputs value:T[]=[], activeIndexInput:number=0 exposed as activeIndex, showItemNavigators=true, showThumbnails=true, circular=false, autoplayInterval=0, fullScreen=false. Output activeIndexChange:number. Exported UGalleriaItemContext<T> has $implicit:T. @ContentChild item and thumbnail TemplateRefs use ngTemplateOutlet; thumbnails fall back to the item template. Public activeIndex signal begins at 0 and is seeded from activeIndexInput in the constructor, without a later input synchronization effect. Public fullScreenActive signal, openFullScreen() and closeFullScreen() control a UOverlay appendTo=\"body\" mask with UFocusTrap and UTimesIcon; fullScreen input gates openFullScreen(); no built-in item click opens it. Keyboard ArrowLeft/ArrowRight/Home/End navigates, Escape closes fullscreen, and editable targets are skipped; thumbnail Enter/Space selects. Previous/next wrap only with circular and stop autoplay; the timer starts on init, always wraps at the end and is cleared on destroy. Owned source-only galleriaStyleModule exports css/classes. Selector u-galleria; standalone OnPush component with ViewEncapsulation.None, componentName \"galleria\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers galleria: galleria; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/galleria/index.ts",
+        "packages/ng/src/galleria/galleria-style.ts",
+        "packages/ng/src/galleria/galleria.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UGalleria",
+        "@ultimate/ng#UGalleriaItemContext",
+        "@ultimate/ng/galleria#UGalleria",
+        "@ultimate/ng/galleria#UGalleriaItemContext"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/galleria/galleria.ts",
+          "contains": "export class UGalleria"
+        },
+        {
+          "path": "packages/ng/src/galleria/index.ts",
+          "contains": "export { UGalleria } from \"./galleria\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/galleria\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./galleria\":"
+        },
+        {
+          "path": "packages/ng/src/galleria/galleria-style.ts",
+          "contains": "export const galleriaStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    galleria,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/galleria/galleria.ts",
+          "contains": "export interface UGalleriaItemContext"
+        },
+        {
+          "path": "packages/ng/src/galleria/galleria.ts",
+          "contains": "this.activeIndex.set(this.activeIndexInput());"
+        },
+        {
+          "path": "packages/ng/src/galleria/galleria.ts",
+          "contains": "if (this.fullScreen()) this.fullScreenActive.set(true);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.ng-core.focus-trap",
+        "package.ultimate.ng-core.icons"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; Galleria 21).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.image",
+      "name": "Angular UImage",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Image with optional preview overlay, rotation and zoom controls.",
+      "surface": "UImage inputs src?:string, alt?:string, width?:string, height?:string, preview=false. Outputs onShow:void, onHide:void, onImageError:Event. No projected content or public template override. A plain img binds src/alt/width/height and error; preview adds a native Zoom image button, then an @if mask with UOverlay appendTo=\"body\", dialog aria-modal, UFocusTrap toolbar, rotate-right/left, zoom-out/in and UTimesIcon close controls. Preview img reuses src without an alt binding. Protected rotate methods adjust 90 degrees; scale starts at 1 with step 0.1, min 0.5 and max 1.5; disabled comparisons test the next value <=min or >=max, so boundary values are not reached through these buttons. Mask click, local Escape or the shared escapeRegistry/displayOrderRegistry at ESCAPE_PRIORITIES.IMAGE close the preview, reset rotate/scale and emit onHide; opening emits onShow and queues close-button focus. Source-only imageDisplayOrderUid allocates registry IDs and destroy unregisters them. Owned source-only imageStyleModule exports css/classes. Selector u-image; standalone OnPush component with ViewEncapsulation.None, componentName \"image\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers image: image; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/image/index.ts",
+        "packages/ng/src/image/image-style.ts",
+        "packages/ng/src/image/image.ts"
+      ],
+      "exports": ["@ultimate/ng#UImage", "@ultimate/ng/image#UImage"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/image/image.ts",
+          "contains": "export class UImage"
+        },
+        {
+          "path": "packages/ng/src/image/index.ts",
+          "contains": "export { UImage } from \"./image\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/image\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./image\":"
+        },
+        {
+          "path": "packages/ng/src/image/image-style.ts",
+          "contains": "export const imageStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    image,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/image/image.ts",
+          "contains": "() => this.scale() + this.zoomSettings.step >= this.zoomSettings.max"
+        },
+        {
+          "path": "packages/ng/src/image/image.ts",
+          "contains": "escapeRegistry.register(ESCAPE_PRIORITIES.IMAGE"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.ng-core.focus-trap",
+        "package.ultimate.ng-core.icons",
+        "package.ultimate.uix-utils.escape"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; Image 7).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.image-compare",
+      "name": "Angular UImageCompare",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Projected before/after content comparison controlled by a native range slider.",
+      "surface": "UImageCompare inputs tabindex?:number, ariaLabelledby?:string, ariaLabel?:string; no outputs. Two projected content regions select [left] and [right]. Native range input min=0, max=100, value=50 binds ariaLabel/ariaLabelledby; the host binds tabindex and both label attributes. Its input handler writes a polygon clipPath on the right-region span using the range value. No public composition class or template directive. The source-only imageCompareStyleModule exports css/classes; CSS supplies an initial 50% clip and :dir(rtl) variant, while the handler writes the same left-to-right inline polygon in both directions. Selector u-image-compare; standalone OnPush component with ViewEncapsulation.None, componentName \"imagecompare\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers imagecompare: imageCompare; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/image-compare/index.ts",
+        "packages/ng/src/image-compare/image-compare-style.ts",
+        "packages/ng/src/image-compare/image-compare.ts"
+      ],
+      "exports": ["@ultimate/ng#UImageCompare", "@ultimate/ng/image-compare#UImageCompare"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/image-compare/image-compare.ts",
+          "contains": "export class UImageCompare"
+        },
+        {
+          "path": "packages/ng/src/image-compare/index.ts",
+          "contains": "export { UImageCompare } from \"./image-compare\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/image-compare\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./image-compare\":"
+        },
+        {
+          "path": "packages/ng/src/image-compare/image-compare-style.ts",
+          "contains": "export const imageCompareStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "imagecompare: imageCompare,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/image-compare/image-compare.ts",
+          "contains": "this.rightRef.nativeElement.style.clipPath = `polygon(0 0, ${value}% 0, ${value}% 100%, 0 100%)`;"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; ImageCompare 4).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.card",
+      "name": "Angular UCard",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Content container with optional heading, subtitle, header and footer regions.",
+      "surface": "UCard inputs header?:string and subheader?:string; no outputs. Projection regions [card-header], default body and [card-footer]; title/subtitle markup is conditional on the string inputs. No public composition classes or template directives. Owned source-only cardStyleModule exports css/classes. Selector u-card; standalone OnPush component with ViewEncapsulation.None, componentName \"card\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers card: card; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/card/index.ts",
+        "packages/ng/src/card/card-style.ts",
+        "packages/ng/src/card/card.ts"
+      ],
+      "exports": ["@ultimate/ng#UCard", "@ultimate/ng/card#UCard"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/card/card.ts",
+          "contains": "export class UCard"
+        },
+        {
+          "path": "packages/ng/src/card/index.ts",
+          "contains": "export { UCard } from \"./card\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/card\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./card\":"
+        },
+        {
+          "path": "packages/ng/src/card/card-style.ts",
+          "contains": "export const cardStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    card,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; Card 5).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.panel",
+      "name": "Angular UPanel",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Header/body/footer container with optional collapse controls and toggle events.",
+      "surface": "UPanel inputs header?:string, toggleable=false, collapsed=false, showHeader=true. Outputs collapsedChange:boolean, onBeforeToggle:{originalEvent:Event;collapsed:boolean}, onAfterToggle:{originalEvent:Event;collapsed:boolean}. Projection selects [header], default content and [footer]. UButton with pi pi-plus/pi-minus toggles body presence through @if; onBeforeToggle reports the current collapsed state and onAfterToggle the resulting state. The private toggledCollapsed signal overrides the input after the first toggle. uuid generates header/content IDs for aria-controls and content role=region aria-labelledby. The aria-label/controls/expanded bindings are on the u-button custom host, not the inner native button. Owned source-only panelStyleModule exports css/classes. Consumer availability is @ultimate/ng#UPanel only: the local barrel is root-reexported and package.json has no ./panel secondary entry. Selector u-panel; standalone OnPush component with ViewEncapsulation.None, componentName \"panel\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers panel: panel; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/panel/index.ts",
+        "packages/ng/src/panel/panel-style.ts",
+        "packages/ng/src/panel/panel.ts"
+      ],
+      "exports": ["@ultimate/ng#UPanel"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/panel/panel.ts",
+          "contains": "export class UPanel"
+        },
+        {
+          "path": "packages/ng/src/panel/index.ts",
+          "contains": "export { UPanel } from \"./panel\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"./panel\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"name\": \"@ultimate/ng\""
+        },
+        {
+          "path": "packages/ng/src/panel/panel-style.ts",
+          "contains": "export const panelStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    panel,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/panel/panel.ts",
+          "contains": "[attr.aria-expanded]=\"!isCollapsed()\""
+        },
+        {
+          "path": "packages/ng/src/panel/panel.ts",
+          "contains": "this.onBeforeToggle.emit({ originalEvent: event, collapsed: wasCollapsed });"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-utils.uuid",
+        "package.ultimate.ng.button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; Panel 6).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.fieldset",
+      "name": "Angular UFieldset",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Native fieldset container with optional collapsible legend controls.",
+      "surface": "UFieldset inputs legend?:string, toggleable=false and collapsed=false; output collapsedChange:boolean. Native fieldset/legend markup, a toggleable native legend button and default ng-content; no public composition directive or named template. Click and Enter/Space toggle, plus/minus text marks state, and @if removes collapsed content. Private toggledCollapsed overrides the collapsed input after the first toggle. uuid supplies content ID used by aria-controls; the rendered content container always has role=region and aria-labelledby referencing the toggle-button ID. Owned source-only fieldsetStyleModule exports css/classes. Selector u-fieldset; standalone OnPush component with ViewEncapsulation.None, componentName \"fieldset\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers fieldset: fieldset; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/fieldset/index.ts",
+        "packages/ng/src/fieldset/fieldset-style.ts",
+        "packages/ng/src/fieldset/fieldset.ts"
+      ],
+      "exports": ["@ultimate/ng#UFieldset", "@ultimate/ng/fieldset#UFieldset"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/fieldset/fieldset.ts",
+          "contains": "export class UFieldset"
+        },
+        {
+          "path": "packages/ng/src/fieldset/index.ts",
+          "contains": "export { UFieldset } from \"./fieldset\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/fieldset\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./fieldset\":"
+        },
+        {
+          "path": "packages/ng/src/fieldset/fieldset-style.ts",
+          "contains": "export const fieldsetStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    fieldset,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/fieldset/fieldset.ts",
+          "contains": "protected readonly isCollapsed = computed(() => this.toggledCollapsed() ?? this.collapsed());"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-utils.uuid"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; Fieldset 7).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.splitter",
+      "name": "Angular USplitter",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Resizable template-based panels with per-panel minimums and pointer/keyboard gutters.",
+      "surface": "USplitter inputs layout:\"horizontal\"|\"vertical\"=\"horizontal\", gutterSize=4 and step=5. Outputs onResizeStart and onResizeEnd:USplitterResizeEvent, an exported interface {originalEvent:Event;sizes:number[]}. Exported standalone USplitterPanel directive selects ng-template[uSplitterPanel], exposes readonly templateRef:TemplateRef and minSize=0 aliased uSplitterPanelMinSize (numberAttribute). @ContentChildren(USplitterPanel) yields panel templates rendered with ngTemplateOutlet; ngAfterContentInit seeds equal percentage sizes. Each panel flex-basis is calc(size% - gutterCount*gutterSize px). Gutters use role=separator and focusable handles with aria-orientation/aria-valuenow. Mouse/touch start/move/end chains resize adjacent panels using pointer deltas and clamp against per-panel minimums. ArrowLeft/Right decrement/increment in horizontal layout; ArrowDown/Up decrement/increment in vertical layout. Keyboard resizing performs an immediate step then setInterval at 40 ms; keyup clears it and emits the end event. DestroyRef registers mouse-listener cleanup only; touch listeners and the repeat timer are cleared on their corresponding interaction-end paths rather than that destroy callback. Owned source-only splitterStyleModule exports css/classes. Selector u-splitter; standalone OnPush component with ViewEncapsulation.None, componentName \"splitter\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers splitter: splitter; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/splitter/index.ts",
+        "packages/ng/src/splitter/splitter-style.ts",
+        "packages/ng/src/splitter/splitter.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#USplitter",
+        "@ultimate/ng#USplitterPanel",
+        "@ultimate/ng#USplitterResizeEvent",
+        "@ultimate/ng/splitter#USplitter",
+        "@ultimate/ng/splitter#USplitterPanel",
+        "@ultimate/ng/splitter#USplitterResizeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/splitter/splitter.ts",
+          "contains": "export class USplitter"
+        },
+        {
+          "path": "packages/ng/src/splitter/index.ts",
+          "contains": "export { USplitter, USplitterPanel } from \"./splitter\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/splitter\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./splitter\":"
+        },
+        {
+          "path": "packages/ng/src/splitter/splitter-style.ts",
+          "contains": "export const splitterStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    splitter,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/splitter/splitter.ts",
+          "contains": "export class USplitterPanel"
+        },
+        {
+          "path": "packages/ng/src/splitter/splitter.ts",
+          "contains": "export interface USplitterResizeEvent"
+        },
+        {
+          "path": "packages/ng/src/splitter/splitter.ts",
+          "contains": "this.destroyRef.onDestroy(() => this.unbindMouseListeners());"
+        },
+        {
+          "path": "packages/ng/src/splitter/splitter.ts",
+          "contains": "this.repeatTimer = setInterval(repeat, 40);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; Splitter 8).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.divider",
+      "name": "Angular UDivider",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Horizontal or vertical semantic separator with projected content.",
+      "surface": "UDivider input layout:\"horizontal\"|\"vertical\"=\"horizontal\"; no outputs. Default ng-content inside a content div; host role=separator and aria-orientation track layout. No public composition class or template directive. Owned source-only dividerStyleModule exports css/classes. Selector u-divider; standalone OnPush component with ViewEncapsulation.None, componentName \"divider\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers divider: divider; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/divider/index.ts",
+        "packages/ng/src/divider/divider-style.ts",
+        "packages/ng/src/divider/divider.ts"
+      ],
+      "exports": ["@ultimate/ng#UDivider", "@ultimate/ng/divider#UDivider"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/divider/divider.ts",
+          "contains": "export class UDivider"
+        },
+        {
+          "path": "packages/ng/src/divider/index.ts",
+          "contains": "export { UDivider } from \"./divider\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/divider\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./divider\":"
+        },
+        {
+          "path": "packages/ng/src/divider/divider-style.ts",
+          "contains": "export const dividerStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    divider,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; Divider 3).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.scroll-panel",
+      "name": "Angular UScrollPanel",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Scrollable content container with custom draggable and keyboard-operated scrollbar thumbs.",
+      "surface": "UScrollPanel input step=5; no outputs. Default ng-content in a native scrolling div with hidden native scrollbars; horizontal and vertical focusable role=scrollbar thumbs mirror content position and visible/total ratios with requestAnimationFrame and a 10% minimum thumb size. Public scrollTop(scrollTop:number):void clamps the offset and refresh():void recalculates thumbs. Mouse document listeners drag the chosen axis; focus and last changed scroll axis select arrow-key orientation. setTimer uses one setTimeout at 40 ms per keydown, cleared on keyup, rather than a self-rescheduling repeat loop. Browser-only ngAfterViewInit measures and installs resize handling; DestroyRef removes resize/mouse listeners and cancels frame/timer; ngOnDestroy also removes listeners. uuid generates contentId bound by both thumbs' aria-controls, but the content div has no matching id binding. Owned source-only scrollPanelStyleModule exports css/classes; focus CSS requests scrollpanel.barfocus.ring.width/offset alongside scrollpanel.bar.focus.ring.* tokens. Selector u-scroll-panel; standalone OnPush component with ViewEncapsulation.None, componentName \"scrollpanel\", extends UBaseComponent (inherited dt and unstyled inputs; ngOnInit registers theme variables). Style adapter is imported locally, not barrel-exported, and does not import @ultimate/uix-styles. Aura preset components registers scrollpanel: scrollPanel; no scoped record is registered in packages/component-metadata/src/index.ts.",
+      "files": [
+        "packages/ng/src/scroll-panel/index.ts",
+        "packages/ng/src/scroll-panel/scroll-panel-style.ts",
+        "packages/ng/src/scroll-panel/scroll-panel.ts"
+      ],
+      "exports": ["@ultimate/ng#UScrollPanel", "@ultimate/ng/scroll-panel#UScrollPanel"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/scroll-panel/scroll-panel.ts",
+          "contains": "export class UScrollPanel"
+        },
+        {
+          "path": "packages/ng/src/scroll-panel/index.ts",
+          "contains": "export { UScrollPanel } from \"./scroll-panel\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/scroll-panel\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./scroll-panel\":"
+        },
+        {
+          "path": "packages/ng/src/scroll-panel/scroll-panel-style.ts",
+          "contains": "export const scrollPanelStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "scrollpanel: scrollPanel,"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/scroll-panel/scroll-panel.ts",
+          "contains": "this.timer = setTimeout(() => this.repeat(bar, step), 40);"
+        },
+        {
+          "path": "packages/ng/src/scroll-panel/scroll-panel.ts",
+          "contains": "[attr.aria-controls]=\"contentId\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-utils.uuid"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, composition templates, helpers and style adapter exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded ten-family Angular product specs passed once (79 tests; ScrollPanel 9).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{carousel,galleria,image,image-compare,card,panel,fieldset,splitter,divider,scroll-panel}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "output": "Exit 0. Vitest 4.0.8: 10 files, 79 tests passed (Carousel 9, Galleria 21, Image 7, ImageCompare 4, Card 5, Panel 6, Fieldset 7, Splitter 8, Divider 3, ScrollPanel 9). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19), and NG0912 component ID collision between SsrHostComponent and HostComponent during the splitter panel-wrapper spec.",
+          "run": "docs/inventory/angular-media-containers/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings and product observations were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    }
+  ]
+}
