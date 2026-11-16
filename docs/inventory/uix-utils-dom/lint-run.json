@@ -1,0 +1,6 @@
+{
+  "command": "pnpm lint",
+  "revision": "41e8047c4ed60eed2789c89c1bb67b27469cd039",
+  "outcome": "passed",
+  "output": "ESLint completed with --max-warnings=0; check-svg-text-whitespace: 1964 file(s) checked, no SVG text whitespace."
+}

@@ -185,9 +185,26 @@ test("malformed records produce schema diagnostics rather than accidental succes
   assert.ok(inventory({ root, input }).problems.some((p) => p.kind === "schema"));
 });
 
-test("claimed package entry must exist in the actual manifest", (t) => {
+test("claimed package entries resolve through exact and wildcard manifest keys", (t) => {
   const { root, input } = fixture(t);
+  const manifestPath = join(root, "pkg/package.json");
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  manifest.exports["./*"] = "./dist/*/index.js";
+  input.packages[0].entries[0].subpath = "./dom";
+  input.records[0].exports = ["@test/ui/dom#Button"];
+  writeFileSync(manifestPath, JSON.stringify(manifest));
+  const result = inventory({ root, input });
+  assert.deepEqual(result.problems, []);
+  assert.ok(result.facts.exports.includes("@test/ui/dom#Button"));
+});
+
+test("claimed package entry must match an exact key or a wildcard pattern", (t) => {
+  const { root, input } = fixture(t);
+  const manifestPath = join(root, "pkg/package.json");
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  manifest.exports = { "./dom/*": "./dist/dom/*/index.js" };
   input.packages[0].entries[0].subpath = "./missing";
+  writeFileSync(manifestPath, JSON.stringify(manifest));
   assert.ok(inventory({ root, input }).problems.some((p) => p.kind === "entry"));
 });
 

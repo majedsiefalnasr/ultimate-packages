@@ -1,0 +1,6 @@
+{
+  "command": "pnpm format:check",
+  "revision": "41e8047c4ed60eed2789c89c1bb67b27469cd039",
+  "outcome": "passed",
+  "output": "All matched files use Prettier code style!"
+}

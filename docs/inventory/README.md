@@ -45,13 +45,17 @@ Read the React feedback and interaction utilities [scoped index](react-feedback/
 
 Read the Vue feedback and interaction utilities [scoped index](vue-feedback/index.md), [validation](vue-feedback/validation.md) and [authored verification notes](vue-feedback/README.md) (#142); authored input: `scripts/inventory/vue-feedback.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-feedback.json --out docs/inventory/vue-feedback`.
 
+## UIX utilities
+
+Read the [DOM utilities inventory](uix-utils-dom/index.md), [generated record](uix-utils-dom/uixutils.dom.md), [authored signatures and interpretation](uix-utils-dom/README.md), and [scoped validation](uix-utils-dom/validation.md) for ticket #143. Its structured input is `scripts/inventory/uix-utils-dom.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-dom.json --out docs/inventory/uix-utils-dom`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
 
 ## Scope and limitations
 
-Discovery recursively enumerates every file under four declared button roots. It checks explicitly mapped package entries against actual manifests and extracts named exports and declarations with TypeScript's parser. Angular's root export traverses a selected local barrel; evidence anchors verify the root link. Other root exports and package subpaths are outside this pilot, not absent products. Star/namespace exports at a mapped entry fail closed; a full package resolver is intentionally deferred. Authored entry mappings and semantic interpretations require human review; anchor presence cannot prove their meaning.
+Discovery recursively enumerates every file under four declared button roots. It checks explicitly mapped package entries against actual manifests and extracts named exports and declarations with TypeScript's parser. Angular's root export traverses a selected local barrel; evidence anchors verify the root link. Other root exports and package subpaths are outside this pilot, not absent products. Mapped entry keys may use an exact manifest export key or a matching single-wildcard subpath key; the inventory still relies on an authored source mapping and does not verify built artifacts or implement full Node package resolution. Star/namespace exports at a mapped entry fail closed. Authored entry mappings and semantic interpretations require human review; anchor presence cannot prove their meaning.
 
 Record IDs are durable logical identities, independent of display names and paths. Pending relationships must name another batch and rationale; they do not establish that a target exists or that global coverage is complete. Scope reconciliation never asserts platform completeness.
 

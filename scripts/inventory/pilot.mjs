@@ -61,6 +61,19 @@ export function inventory({ root, input }) {
   const files = [];
   const exports = [];
   const read = (path) => readFileSync(resolve(root, path), "utf8");
+  function hasExport(exportsMap, subpath) {
+    if (Object.hasOwn(exportsMap, subpath)) return true;
+    return Object.keys(exportsMap).some((pattern) => {
+      const segments = pattern.split("*");
+      if (segments.length !== 2) return false;
+      const [prefix, suffix] = segments;
+      return (
+        subpath.startsWith(prefix) &&
+        subpath.endsWith(suffix) &&
+        subpath.length >= prefix.length + suffix.length
+      );
+    });
+  }
   function walk(path) {
     for (const entry of readdirSync(resolve(root, path), { withFileTypes: true })) {
       const next = `${path}/${entry.name}`;
@@ -72,7 +85,7 @@ export function inventory({ root, input }) {
     const manifest = JSON.parse(read(`${pkg.path}/package.json`));
     for (const path of pkg.roots) walk(path);
     for (const entry of pkg.entries) {
-      if (!Object.hasOwn(manifest.exports || {}, entry.subpath))
+      if (!hasExport(manifest.exports || {}, entry.subpath))
         problems.push({
           kind: "entry",
           subject: entry.subpath,
