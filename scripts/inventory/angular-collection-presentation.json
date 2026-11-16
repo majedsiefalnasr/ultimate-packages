@@ -1,0 +1,411 @@
+{
+  "version": 1,
+  "scope": "angular-collection-presentation",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/data-view",
+        "packages/ng/src/order-list",
+        "packages/ng/src/pick-list",
+        "packages/ng/src/timeline"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/data-view/data-view.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/order-list/order-list.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/pick-list/pick-list.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/timeline/index.ts"
+        },
+        {
+          "subpath": "./timeline",
+          "source": "packages/ng/src/timeline/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/data-view/data-view.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/data-view/data-view.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/order-list/order-list.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/order-list/order-list.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/pick-list/pick-list.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/pick-list/pick-list.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/timeline/timeline.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/timeline/timeline.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.icons",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng.listbox",
+      "batch": "ticket-116",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng.paginator",
+      "batch": "ticket-131",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 134,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.data-view",
+      "record": "angular.data-view"
+    },
+    {
+      "id": "package.ultimate.ng.order-list",
+      "record": "angular.order-list"
+    },
+    {
+      "id": "package.ultimate.ng.pick-list",
+      "record": "angular.pick-list"
+    },
+    {
+      "id": "package.ultimate.ng.timeline",
+      "record": "angular.timeline"
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.data-view",
+      "name": "Angular UDataView",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Collection presenter that renders each item as text in a list or grid with optional paging, filtering, sorting, lazy loading and loading/empty states.",
+      "surface": "Selector u-data-view; standalone generic UDataView<T=unknown>, OnPush, ViewEncapsulation.None, componentName \"dataview\". Inputs value: T[]=[], itemTemplate: required (item:T,layout:\"list\"|\"grid\")=>string, layout: \"list\"|\"grid\"=\"list\", paginator=false, first=0, rows=0, totalRecords?: number, pageLinkSize=5, rowsPerPageOptions: number[]=[], paginatorPosition: \"top\"|\"bottom\"|\"both\"=\"bottom\", alwaysShowPaginator=true, currentPageReportTemplate=\"{first} to {last} of {totalRecords}\", sortField=\"\", sortOrder: 1|-1=1, lazy=false, loading=false, loadingIcon=\"u-loading-icon\", emptyMessage=\"No results found\", dataKey=\"\", trackBy=(index,item)=>item, filterBy=\"\" (comma-separated field paths), filterLocale?: string. Outputs pageChange: PaginatorPageChangeEvent and onLazyLoad: {first:number;rows:number;sortField:string;sortOrder:1|-1}. Public filter(query:unknown, mode: MatchMode=\"contains\"):void stores the query, resets the page offset to 0 and, when lazy, emits onLazyLoad. ngOnChanges seeds the internal first/rows signals when those inputs change and emits onLazyLoad when lazy and first/rows/sortField/sortOrder/lazy change. The MatchMode union (contains/startsWith/endsWith/equals/notEquals/in/lt/lte/gt/gte), field(), matches() and compare() are non-exported module-level helpers; matching is case-insensitive via toLocaleLowerCase, with numeric comparison for lt/lte/gt/gte. Non-lazy pipeline is filter, then sort (nullish values first, numbers numerically, otherwise localeCompare, multiplied by sortOrder), then slice by first/rows when paginator is on and rows>0; recordCount is totalRecords (falling back to value length) when lazy. Items are rendered as interpolated text from itemTemplate, not as projected templates. Grid layout renders div role=list/listitem; list layout renders ul/li; an empty collection renders emptyMessage. The paginator composes UPaginator top, bottom or both and a rows-per-page select plus an aria-live page report with {first},{last},{totalRecords},{currentPage},{totalPages},{rows} placeholders; changeRows(rows) ignores rows<=0. While loading, the root sets aria-busy and a role=status span shows USpinnerIcon with visually hidden text \"Loading\" (a GAP-124 comment records the spinner as a scope exception). Identity for track-by is dataKey field or trackBy. dataViewStyleModule is a local source-only {css, classes} module (generated by g3e-port per its comment) whose classes root/list/listItem resolve u-data-view, u-data-view-grid|u-data-view-list and u-data-view-item; it does not wrap @ultimate/uix-styles. Consumer availability: @ultimate/ng#UDataView only; the root barrel re-exports ./data-view and no ./data-view manifest subpath exists. All components extend UBaseComponent with inherited dt?: Record<string,unknown> and unstyled?: boolean; base ngOnInit registers theme variables and structural CSS. Local style modules and their css/classes are source-only, owned by this family. Remaining private/protected state, lifecycle methods, render handlers and module-level helpers belong to the owning record. No additional directive, hook, factory or base class is declared in these roots. Aura registers this component's preset through the themes package; that relationship does not prove runtime completeness. No component-metadata record exists for this family in this revision. Manifest dist targets declare availability, not verified publication or installed artifact integrity. Prime comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/data-view/index.ts",
+        "packages/ng/src/data-view/data-view-style.ts",
+        "packages/ng/src/data-view/data-view.ts"
+      ],
+      "exports": ["@ultimate/ng#UDataView"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/data-view/data-view.ts",
+          "contains": "export class UDataView"
+        },
+        {
+          "path": "packages/ng/src/data-view/index.ts",
+          "contains": "export * from \"./data-view\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"./data-view\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"name\": \"@ultimate/ng\""
+        },
+        {
+          "path": "packages/ng/src/data-view/data-view-style.ts",
+          "contains": "export const dataViewStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "dataview: dataView,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng.paginator",
+        "package.ultimate.ng-core.icons"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, template composition, helpers and style adapters exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded four-family Angular product specs passed once (76 tests; DataView 21).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{data-view,order-list,pick-list,timeline}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 0. Vitest 4.0.8: 4 files, 76 tests passed (Timeline 5, DataView 21, OrderList 13, PickList 37). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19).",
+          "run": "docs/inventory/angular-collection-presentation/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.order-list",
+      "name": "Angular UOrderList",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Reorderable single-column list with move up/top/down/bottom controls, filtering, multi-selection and optional drag-and-drop.",
+      "surface": "Selector u-order-list; standalone UOrderList (non-generic), OnPush, ViewEncapsulation.None, componentName \"orderlist\", implements AfterViewChecked. Exported interface UOrderListButtonProps has optional class/id/title/name/value:string, tabindex:number and disabled:boolean. Inputs value: unknown[]=[], dataKey=\"\", filterBy=\"\", filterMatchMode: MatchMode=\"contains\", filterLocale?: string, dragdrop=false, metaKeySelection=false, breakpoint=\"960px\", scrollHeight=\"14rem\", stripedRows=false, disabled=false, tabindex=0, ariaLabel=\"Order list\", buttonProps, moveUpButtonProps, moveTopButtonProps, moveDownButtonProps, moveBottomButtonProps: UOrderListButtonProps={}. Output valueChange: unknown[]; the component never mutates its input value and always emits a new array. Four controls render \"Move up/top/down/bottom\" buttons disabled when disabled, nothing is selected or the per-direction props disable them; button props merge shared buttonProps with the direction-specific props and concatenate class values. up/down moves shift each selected item past an unselected neighbour (iterating in reverse for down); top/bottom gather the selection before or after the remainder. Identity and label come from dataKey field or the item itself. Optional filter renders a role=searchbox input and matches filterBy comma-separated paths with the non-exported MatchMode/field/matches helpers (case-insensitive, numeric lt/lte/gt/gte). With dragdrop false the list renders UListbox from @ultimate/ng/listbox (multiple, ngModel-bound via FormsModule) and ngAfterViewChecked sets the inner listbox tabindex through Renderer2; with dragdrop true it renders a CDK cdkDropList ul with role=listbox/option, click and Enter/Space selection, and drop() maps visible indices back to the full value before moveItemInArray and emitting valueChange. metaKeySelection collapses plain-click selection to a single item unless ctrl/meta is held. An effect writes a responsive @media (max-width: breakpoint) rule into a style element created via Renderer2 and appended to the host; a module-level nextOrderListId assigns the root id used by that rule. orderListStyleModule is a local source-only {css, classes} module (generated by g3e-port) with root/controls/list/listItem/itemSelected class resolvers; it does not wrap @ultimate/uix-styles. Consumer availability: @ultimate/ng#UOrderList and @ultimate/ng#UOrderListButtonProps; the root barrel re-exports ./order-list and no ./order-list manifest subpath exists. All components extend UBaseComponent with inherited dt?: Record<string,unknown> and unstyled?: boolean; base ngOnInit registers theme variables and structural CSS. Local style modules and their css/classes are source-only, owned by this family. Remaining private/protected state, lifecycle methods, render handlers and module-level helpers belong to the owning record. No additional directive, hook, factory or base class is declared in these roots. Aura registers this component's preset through the themes package; that relationship does not prove runtime completeness. No component-metadata record exists for this family in this revision. Manifest dist targets declare availability, not verified publication or installed artifact integrity. Prime comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/order-list/index.ts",
+        "packages/ng/src/order-list/order-list-style.ts",
+        "packages/ng/src/order-list/order-list.ts"
+      ],
+      "exports": ["@ultimate/ng#UOrderList", "@ultimate/ng#UOrderListButtonProps"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/order-list/order-list.ts",
+          "contains": "export class UOrderList"
+        },
+        {
+          "path": "packages/ng/src/order-list/order-list.ts",
+          "contains": "export interface UOrderListButtonProps"
+        },
+        {
+          "path": "packages/ng/src/order-list/index.ts",
+          "contains": "export * from \"./order-list\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"./order-list\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"name\": \"@ultimate/ng\""
+        },
+        {
+          "path": "packages/ng/src/order-list/order-list-style.ts",
+          "contains": "export const orderListStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "orderlist: orderList,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng.listbox"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, template composition, helpers and style adapters exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded four-family Angular product specs passed once (76 tests; OrderList 13).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{data-view,order-list,pick-list,timeline}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 0. Vitest 4.0.8: 4 files, 76 tests passed (Timeline 5, DataView 21, OrderList 13, PickList 37). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19).",
+          "run": "docs/inventory/angular-collection-presentation/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.pick-list",
+      "name": "Angular UPickList",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Dual-list transfer control that moves items between a source and a target list, with per-side filtering, reordering, disabled options and optional drag-and-drop.",
+      "surface": "Selector u-pick-list; standalone UPickList (non-generic), OnPush, ViewEncapsulation.None, componentName \"picklist\". Inputs source/target: unknown[]=[], dataKey=\"\", dragdrop=false, disabled=false, metaKeySelection=false, filterBy=\"\", filterMatchMode: MatchMode=\"contains\", filterLocale?: string, showSourceFilter/showTargetFilter/showSourceControls/showTargetControls=true, sourceHeader=\"Source\", targetHeader=\"Target\", sourceOptionDisabled/targetOptionDisabled?: string|((item:unknown)=>boolean), sourceStyle/targetStyle: Record<string,string|number>={} applied with NgStyle, sourceTrackBy/targetTrackBy=(index,item)=>identity(item)??item, breakpoint=\"960px\". Outputs sourceChange and targetChange: unknown[]; inputs are not mutated and each change emits fresh arrays. Four transfer buttons (To Target, All To Target, To Source, All To Source) call transfer(side, all), which moves only enabled items (selected ones unless all), emits both sides and clears the selection; per-side Move up/top/down/bottom controls reorder only enabled items so disabled ones keep their positions. An option is disabled by a string field path (truthy value) or a predicate. Identity/label come from dataKey or the item itself. Optional per-side filter inputs are gated by filterBy and showSourceFilter/showTargetFilter and use the non-exported MatchMode/field/matches helpers. With dragdrop false each side renders UListbox from @ultimate/ng/listbox (multiple, ngModel standalone) and fromListbox writes the normalized selection back via writeValue on the ViewChildren listbox; with dragdrop true each side is a CDK cdkDropList inside cdkDropListGroup and drop() uses moveItemInArray within a side or transferArrayItem across sides, skipping disabled items. metaKeySelection collapses plain-click selection to one item unless ctrl/meta is held. A Renderer2 effect writes a responsive @media (max-width: breakpoint) rule into an appended style element, keyed by the module-level nextPickListId root id. pickListStyleModule is a local source-only {css, classes} module (generated by g3e-port) with root/sourceList/targetList/controls/list/listItem/itemSelected resolvers; it does not wrap @ultimate/uix-styles. Consumer availability: @ultimate/ng#UPickList only; the root barrel re-exports ./pick-list and no ./pick-list manifest subpath exists. All components extend UBaseComponent with inherited dt?: Record<string,unknown> and unstyled?: boolean; base ngOnInit registers theme variables and structural CSS. Local style modules and their css/classes are source-only, owned by this family. Remaining private/protected state, lifecycle methods, render handlers and module-level helpers belong to the owning record. No additional directive, hook, factory or base class is declared in these roots. Aura registers this component's preset through the themes package; that relationship does not prove runtime completeness. No component-metadata record exists for this family in this revision. Manifest dist targets declare availability, not verified publication or installed artifact integrity. Prime comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/pick-list/index.ts",
+        "packages/ng/src/pick-list/pick-list-style.ts",
+        "packages/ng/src/pick-list/pick-list.ts"
+      ],
+      "exports": ["@ultimate/ng#UPickList"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/pick-list/pick-list.ts",
+          "contains": "export class UPickList"
+        },
+        {
+          "path": "packages/ng/src/pick-list/index.ts",
+          "contains": "export * from \"./pick-list\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"./pick-list\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"name\": \"@ultimate/ng\""
+        },
+        {
+          "path": "packages/ng/src/pick-list/pick-list-style.ts",
+          "contains": "export const pickListStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "picklist: pickList,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng.listbox"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, template composition, helpers and style adapters exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded four-family Angular product specs passed once (76 tests; PickList 37).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{data-view,order-list,pick-list,timeline}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 0. Vitest 4.0.8: 4 files, 76 tests passed (Timeline 5, DataView 21, OrderList 13, PickList 37). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19).",
+          "run": "docs/inventory/angular-collection-presentation/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.timeline",
+      "name": "Angular UTimeline",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Display-only chain of events with a marker, connector and optional opposite and content slots, in vertical or horizontal layout.",
+      "surface": "Selector u-timeline; standalone generic UTimeline<T=unknown>, OnPush, ViewEncapsulation.None, componentName \"timeline\", imports CommonModule. Inputs value: T[]=[], align: \"left\"|\"right\"|\"top\"|\"bottom\"=\"left\", layout: \"vertical\"|\"horizontal\"=\"vertical\". There are no outputs. Three @ContentChild template references #content, #opposite and #marker (TemplateRef<{$implicit:T}>) are rendered through ngTemplateOutlet with the event as implicit context; the marker falls back to a default div and a connector div is rendered for every event except the last. The host class binding is cx('root', {layout, align}), producing u-timeline u-component and u-timeline-vertical|horizontal; align is accepted but the style module does not branch on it. This is an Ultimate-owned adaptation: the source comments state it replaces PrimeTemplate scanning with named ng-template ContentChild refs. timelineStyleModule is a local source-only {css, classes} module (no @ultimate/uix-styles/timeline entry exists, per its comment) whose classes cover root, event, eventOpposite, eventSeparator, eventMarker, eventConnector and eventContent. Consumer availability: @ultimate/ng#UTimeline, @ultimate/ng/timeline#UTimeline; the root barrel re-exports @ultimate/ng/timeline and the manifest has a ./timeline subpath. All components extend UBaseComponent with inherited dt?: Record<string,unknown> and unstyled?: boolean; base ngOnInit registers theme variables and structural CSS. Local style modules and their css/classes are source-only, owned by this family. Remaining private/protected state, lifecycle methods, render handlers and module-level helpers belong to the owning record. No additional directive, hook, factory or base class is declared in these roots. Aura registers this component's preset through the themes package; that relationship does not prove runtime completeness. No component-metadata record exists for this family in this revision. Manifest dist targets declare availability, not verified publication or installed artifact integrity. Prime comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/timeline/index.ts",
+        "packages/ng/src/timeline/timeline-style.ts",
+        "packages/ng/src/timeline/timeline.ts"
+      ],
+      "exports": ["@ultimate/ng#UTimeline", "@ultimate/ng/timeline#UTimeline"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/timeline/timeline.ts",
+          "contains": "export class UTimeline"
+        },
+        {
+          "path": "packages/ng/src/timeline/index.ts",
+          "contains": "export { UTimeline } from \"./timeline\";"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/timeline\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./timeline\""
+        },
+        {
+          "path": "packages/ng/src/timeline/timeline-style.ts",
+          "contains": "export const timelineStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    timeline,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, template composition, helpers and style adapters exist; source presence is not execution."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded four-family Angular product specs passed once (76 tests; Timeline 5).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{data-view,order-list,pick-list,timeline}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 0. Vitest 4.0.8: 4 files, 76 tests passed (Timeline 5, DataView 21, OrderList 13, PickList 37). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19).",
+          "run": "docs/inventory/angular-collection-presentation/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    }
+  ]
+}
