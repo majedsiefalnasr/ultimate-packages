@@ -904,7 +904,7 @@
     {
       "id": "package.ultimate.vue-core.directive",
       "batch": "ticket-150",
-      "reason": "The createDirective factory is owned by the Vue core directive module and remains in detailed inventory scope for [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150)."
+      "reason": "The createDirective factory is owned by the Vue core directive module and remains in detailed inventory scope for [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
     },
     {
       "id": "package.ultimate.vue-core.escape",
