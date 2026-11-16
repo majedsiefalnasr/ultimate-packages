@@ -100,6 +100,175 @@ test("Vue feedback records Vue-specific directive and component contracts", () =
   assert.equal((animationSource.match(/new IntersectionObserver/g) ?? []).length, 2);
 });
 
+test("Vue feedback documents each component and directive interface from source", () => {
+  const input = load();
+  const interfaces = Object.fromEntries(input.records.map((record) => [record.id, record.surface]));
+  for (const id of families.slice(0, 8)) {
+    const text = interfaces[`vue.${id}`];
+    assert.match(text, /Props: .+\. Emits: .+\. Slots: .+\./, id);
+  }
+  const expected = {
+    "vue.progress-bar": ["value (number, default 0)", "showValue", "unit", "mode"],
+    "vue.progress-spinner": ["strokeWidth", "fill", "animationDuration", "ariaLabel"],
+    "vue.meter-group": [
+      "value (readonly unknown[] array",
+      "min",
+      "max",
+      "orientation",
+      "label, color, value",
+      "icon",
+    ],
+    "vue.skeleton": ["shape", "animation", "borderRadius", "size", "width", "height"],
+    "vue.terminal": ["welcomeMessage", "prompt", "command(string)", "response(string)", "clear"],
+    "vue.inplace": [
+      "active",
+      "disabled",
+      "preventClick",
+      "open(event)",
+      "close(event)",
+      "update:active(boolean)",
+      "closeCallback",
+    ],
+    "vue.scroll-top": ["target", "threshold", "behavior", "buttonAriaLabel", "show", "hide"],
+    "vue.deferred-content": ["Props: none", "Emits: load", "Slots: default"],
+    "vue.ripple": ["Directive value: void"],
+    "vue.key-filter": [
+      "RegExp | UKeyFilterPattern | UKeyFilterOptions | undefined",
+      "pattern",
+      "validateOnly",
+    ],
+    "vue.style-class": [
+      "UStyleClassOptions | undefined",
+      "selector",
+      "enterFromClass",
+      "hideOnOutsideClick",
+      "hideOnEscape",
+      "hideOnResize",
+    ],
+    "vue.animate-on-scroll": [
+      "AnimateOnScrollValue | undefined",
+      "enterClass",
+      "leaveClass",
+      "rootMargin",
+      "threshold",
+      "once",
+    ],
+  };
+  const sourceTokens = {
+    "vue.progress-bar": ["value", "showValue", "unit", "mode"],
+    "vue.progress-spinner": ["strokeWidth", "fill", "animationDuration", "ariaLabel"],
+    "vue.meter-group": ["value", "min", "max", "orientation", "label", "color", "icon"],
+    "vue.skeleton": ["shape", "animation", "borderRadius", "size", "width", "height"],
+    "vue.terminal": ["welcomeMessage", "prompt", "command", "response", "clear"],
+    "vue.inplace": [
+      "active",
+      "disabled",
+      "preventClick",
+      "open",
+      "close",
+      "update:active",
+      "closeCallback",
+    ],
+    "vue.scroll-top": ["target", "threshold", "behavior", "buttonAriaLabel", "show", "hide"],
+    "vue.deferred-content": ["load", "<slot"],
+    "vue.ripple": ["createDirective"],
+    "vue.key-filter": [
+      "RegExp",
+      "UKeyFilterPattern",
+      "UKeyFilterOptions",
+      "pattern",
+      "validateOnly",
+      "createDirective",
+    ],
+    "vue.style-class": [
+      "UStyleClassOptions",
+      "selector",
+      "enterFromClass",
+      "hideOnOutsideClick",
+      "hideOnEscape",
+      "hideOnResize",
+      "createDirective",
+    ],
+    "vue.animate-on-scroll": [
+      "AnimateOnScrollValue",
+      "enterClass",
+      "leaveClass",
+      "rootMargin",
+      "threshold",
+      "once",
+      "createDirective",
+    ],
+  };
+  for (const [id, tokens] of Object.entries(expected)) {
+    assert.ok(interfaces[id], `${id} must have authored interface details`);
+    for (const token of tokens) assert.ok(interfaces[id].includes(token), `${id}: ${token}`);
+    const record = input.records.find((entry) => entry.id === id);
+    const implementation = record.files
+      .filter((file) => !/\.(spec|stories)\.ts$/.test(file))
+      .map((file) => readFileSync(file, "utf8"))
+      .join("\\n");
+    for (const token of sourceTokens[id])
+      assert.ok(implementation.includes(token), `${id} source must define or use ${token}`);
+  }
+  for (const id of families.slice(8))
+    assert.match(
+      interfaces[`vue.${id}`],
+      /Component props\/emits\/slots: not applicable; this is a directive\./,
+      id
+    );
+});
+
+test("Vue directive relationships follow actual imports and package ownership", () => {
+  const input = load();
+  const coverage = JSON.parse(readFileSync(input.ownership.path, "utf8")).ownership;
+  const expected = {
+    "vue.deferred-content": ["package.ultimate.vue.deferred-content"],
+    "vue.ripple": [
+      "package.ultimate.vue.ripple",
+      "package.ultimate.vue-core.directive",
+      "package.ultimate.uix-utils.dom",
+    ],
+    "vue.key-filter": ["package.ultimate.vue.key-filter", "package.ultimate.vue-core.directive"],
+    "vue.style-class": ["package.ultimate.vue.style-class", "package.ultimate.vue-core.directive"],
+    "vue.animate-on-scroll": [
+      "package.ultimate.vue.animate-on-scroll",
+      "package.ultimate.vue-core.directive",
+    ],
+  };
+  for (const [id, relationships] of Object.entries(expected)) {
+    const record = input.records.find((entry) => entry.id === id);
+    assert.deepEqual(record.relationships, relationships, id);
+    for (const relationship of relationships) {
+      const owner = coverage.find((entry) => entry.id === relationship);
+      assert.ok(owner, `${id} relationship owner ${relationship}`);
+      if (relationship === `package.ultimate.vue.${id.slice("vue.".length)}`)
+        assert.ok(owner.tickets.includes(142), `${relationship} remains owned by #142`);
+      else
+        assert.ok(
+          owner.tickets.some((ticket) => ticket !== 142),
+          `${relationship} remains cross-ticket owned`
+        );
+    }
+    const family = id.slice("vue.".length);
+    const source = readFileSync(
+      `packages/vue/src/${family}/${family === "deferred-content" ? "DeferredContent.vue" : `${family}.ts`}`,
+      "utf8"
+    );
+    const usesDirectiveFactory =
+      source.includes('from "@ultimate/vue-core"') && source.includes("createDirective");
+    assert.equal(
+      relationships.includes("package.ultimate.vue-core.directive"),
+      usesDirectiveFactory,
+      id
+    );
+    assert.equal(
+      relationships.includes("package.ultimate.uix-utils.dom"),
+      source.includes('from "@ultimate/uix-utils/dom"'),
+      id
+    );
+  }
+});
+
 test("Vue feedback keeps product run provenance and unrelated ownership separate", () => {
   const input = load();
   assert.deepEqual(

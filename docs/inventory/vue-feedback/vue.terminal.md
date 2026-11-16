@@ -10,7 +10,7 @@ Displays terminal output and accepts command input.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/terminal/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Props: welcomeMessage (string, default undefined), prompt (string, default "$"). Emits: none on the component; the event bus emits command(string) and receives response(string) and clear. Slots: none.
 
 ## Public exports
 

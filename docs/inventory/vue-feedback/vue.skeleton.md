@@ -10,7 +10,7 @@ Displays a loading placeholder.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/skeleton/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Props: shape (string, default "rectangle"), animation (string, default "wave"), borderRadius (string, default undefined), size (string, default undefined), width (string, default "100%"), height (string, default "1rem"). Emits: none. Slots: none.
 
 ## Public exports
 

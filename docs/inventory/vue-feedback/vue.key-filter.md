@@ -10,7 +10,7 @@ Filters keyboard input through a Vue directive.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/key-filter/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Directive value: RegExp | UKeyFilterPattern | UKeyFilterOptions | undefined; UKeyFilterOptions has optional pattern (RegExp | UKeyFilterPattern) and validateOnly (boolean). Component props/emits/slots: not applicable; this is a directive.
 
 ## Public exports
 
@@ -33,11 +33,7 @@ packages/vue/src/key-filter/index.ts: export
 ## Relationships
 
 package.ultimate.vue.key-filter → [vue.key-filter](vue.key-filter.md) (reconciled family alias)
-package.ultimate.vue-core.base (pending cross-batch)
-package.ultimate.vue-core.styling (pending cross-batch)
-package.ultimate.vue-core.escape (pending cross-batch)
-package.ultimate.vue-core.motion (pending cross-batch)
-package.ultimate.uix-utils.dom (pending cross-batch)
+package.ultimate.vue-core.directive (pending cross-batch)
 
 ## Verification
 

@@ -10,7 +10,7 @@ Adds a ripple effect through a Vue directive.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/ripple/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Directive value: void (no binding value). Component props/emits/slots: not applicable; this is a directive.
 
 ## Public exports
 
@@ -28,10 +28,7 @@ packages/vue/src/ripple/index.ts: export
 ## Relationships
 
 package.ultimate.vue.ripple → [vue.ripple](vue.ripple.md) (reconciled family alias)
-package.ultimate.vue-core.base (pending cross-batch)
-package.ultimate.vue-core.styling (pending cross-batch)
-package.ultimate.vue-core.escape (pending cross-batch)
-package.ultimate.vue-core.motion (pending cross-batch)
+package.ultimate.vue-core.directive (pending cross-batch)
 package.ultimate.uix-utils.dom (pending cross-batch)
 
 ## Verification

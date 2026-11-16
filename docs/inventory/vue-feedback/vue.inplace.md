@@ -10,7 +10,7 @@ Switches between display and editable content.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/inplace/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Props: active (boolean, default false), disabled (boolean, default false), preventClick (boolean, default false). Emits: open(event), close(event), update:active(boolean). Slots: display (no slot props), content (closeCallback function).
 
 ## Public exports
 

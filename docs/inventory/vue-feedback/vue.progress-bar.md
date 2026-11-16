@@ -10,7 +10,7 @@ Displays determinate or indeterminate progress.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/progress-bar/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Props: value (number, default 0), showValue (boolean, default true), unit (string, default "%"), mode (string, default "determinate"). Emits: none. Slots: none.
 
 ## Public exports
 

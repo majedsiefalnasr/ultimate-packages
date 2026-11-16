@@ -10,7 +10,7 @@ Toggles animation classes based on viewport visibility.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/animate-on-scroll/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Directive value: AnimateOnScrollValue | undefined. Options: enterClass (string), leaveClass (string), root (HTMLElement | null), rootMargin (string), threshold (number), once (boolean); all optional. Component props/emits/slots: not applicable; this is a directive.
 
 ## Public exports
 
@@ -31,11 +31,7 @@ packages/vue/src/animate-on-scroll/index.ts: export
 ## Relationships
 
 package.ultimate.vue.animate-on-scroll → [vue.animate-on-scroll](vue.animate-on-scroll.md) (reconciled family alias)
-package.ultimate.vue-core.base (pending cross-batch)
-package.ultimate.vue-core.styling (pending cross-batch)
-package.ultimate.vue-core.escape (pending cross-batch)
-package.ultimate.vue-core.motion (pending cross-batch)
-package.ultimate.uix-utils.dom (pending cross-batch)
+package.ultimate.vue-core.directive (pending cross-batch)
 
 ## Verification
 

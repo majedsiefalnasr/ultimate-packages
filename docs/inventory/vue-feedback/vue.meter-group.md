@@ -10,7 +10,7 @@ Displays grouped meter values.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/meter-group/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Props: value (readonly unknown[] array, default []), min (number, default 0), max (number, default 100), orientation (string, default "horizontal"). Each rendered item reads label, color, value and optional icon. Emits: none. Slots: none.
 
 ## Public exports
 

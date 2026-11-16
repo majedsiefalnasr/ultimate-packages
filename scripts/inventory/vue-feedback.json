@@ -125,7 +125,7 @@
       "name": "Vue UProgressBar",
       "framework": "vue",
       "purpose": "Displays determinate or indeterminate progress.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/progress-bar/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Props: value (number, default 0), showValue (boolean, default true), unit (string, default \"%\"), mode (string, default \"determinate\"). Emits: none. Slots: none.",
       "files": [
         "packages/vue/src/progress-bar/BaseProgressBar.ts",
         "packages/vue/src/progress-bar/ProgressBar.vue",
@@ -182,7 +182,7 @@
       "name": "Vue UProgressSpinner",
       "framework": "vue",
       "purpose": "Displays circular progress indication.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/progress-spinner/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Props: strokeWidth (string, default \"2\"), fill (string, default \"none\"), animationDuration (string, default \"2s\"), ariaLabel (string, default null). Emits: none. Slots: none.",
       "files": [
         "packages/vue/src/progress-spinner/BaseProgressSpinner.ts",
         "packages/vue/src/progress-spinner/ProgressSpinner.vue",
@@ -239,7 +239,7 @@
       "name": "Vue UMeterGroup",
       "framework": "vue",
       "purpose": "Displays grouped meter values.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/meter-group/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Props: value (readonly unknown[] array, default []), min (number, default 0), max (number, default 100), orientation (string, default \"horizontal\"). Each rendered item reads label, color, value and optional icon. Emits: none. Slots: none.",
       "files": [
         "packages/vue/src/meter-group/BaseMeterGroup.ts",
         "packages/vue/src/meter-group/MeterGroup.vue",
@@ -296,7 +296,7 @@
       "name": "Vue USkeleton",
       "framework": "vue",
       "purpose": "Displays a loading placeholder.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/skeleton/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Props: shape (string, default \"rectangle\"), animation (string, default \"wave\"), borderRadius (string, default undefined), size (string, default undefined), width (string, default \"100%\"), height (string, default \"1rem\"). Emits: none. Slots: none.",
       "files": [
         "packages/vue/src/skeleton/BaseSkeleton.ts",
         "packages/vue/src/skeleton/Skeleton.vue",
@@ -348,7 +348,7 @@
       "name": "Vue UTerminal",
       "framework": "vue",
       "purpose": "Displays terminal output and accepts command input.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/terminal/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Props: welcomeMessage (string, default undefined), prompt (string, default \"$\"). Emits: none on the component; the event bus emits command(string) and receives response(string) and clear. Slots: none.",
       "files": [
         "packages/vue/src/terminal/BaseTerminal.ts",
         "packages/vue/src/terminal/Terminal.vue",
@@ -408,7 +408,7 @@
       "name": "Vue UInplace",
       "framework": "vue",
       "purpose": "Switches between display and editable content.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/inplace/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Props: active (boolean, default false), disabled (boolean, default false), preventClick (boolean, default false). Emits: open(event), close(event), update:active(boolean). Slots: display (no slot props), content (closeCallback function).",
       "files": [
         "packages/vue/src/inplace/BaseInplace.ts",
         "packages/vue/src/inplace/Inplace.vue",
@@ -465,7 +465,7 @@
       "name": "Vue UScrollTop",
       "framework": "vue",
       "purpose": "Provides a control to scroll the page to the top.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/scroll-top/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Props: target (string, default \"window\"), threshold (number, default 400), behavior (string, default \"smooth\"), buttonAriaLabel (string, default \"Scroll to top\"). Emits: show, hide. Slots: none.",
       "files": [
         "packages/vue/src/scroll-top/BaseScrollTop.ts",
         "packages/vue/src/scroll-top/ScrollTop.vue",
@@ -522,7 +522,7 @@
       "name": "Vue UDeferredContent",
       "framework": "vue",
       "purpose": "Defers content activation until it approaches the viewport.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/deferred-content/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Props: none. Emits: load. Slots: default (no slot props; rendered after the observed container intersects).",
       "files": [
         "packages/vue/src/deferred-content/DeferredContent.vue",
         "packages/vue/src/deferred-content/index.ts"
@@ -538,14 +538,7 @@
           "contains": "export"
         }
       ],
-      "relationships": [
-        "package.ultimate.vue.deferred-content",
-        "package.ultimate.vue-core.base",
-        "package.ultimate.vue-core.styling",
-        "package.ultimate.vue-core.escape",
-        "package.ultimate.vue-core.motion",
-        "package.ultimate.uix-utils.dom"
-      ],
+      "relationships": ["package.ultimate.vue.deferred-content"],
       "claims": [
         {
           "state": "implemented",
@@ -578,7 +571,7 @@
       "name": "Vue ripple",
       "framework": "vue",
       "purpose": "Adds a ripple effect through a Vue directive.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/ripple/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Directive value: void (no binding value). Component props/emits/slots: not applicable; this is a directive.",
       "files": ["packages/vue/src/ripple/index.ts", "packages/vue/src/ripple/ripple.ts"],
       "availability": "public",
       "exports": ["@ultimate/vue#rippleDirective"],
@@ -590,10 +583,7 @@
       ],
       "relationships": [
         "package.ultimate.vue.ripple",
-        "package.ultimate.vue-core.base",
-        "package.ultimate.vue-core.styling",
-        "package.ultimate.vue-core.escape",
-        "package.ultimate.vue-core.motion",
+        "package.ultimate.vue-core.directive",
         "package.ultimate.uix-utils.dom"
       ],
       "claims": [
@@ -628,7 +618,7 @@
       "name": "Vue key-filter",
       "framework": "vue",
       "purpose": "Filters keyboard input through a Vue directive.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/key-filter/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Directive value: RegExp | UKeyFilterPattern | UKeyFilterOptions | undefined; UKeyFilterOptions has optional pattern (RegExp | UKeyFilterPattern) and validateOnly (boolean). Component props/emits/slots: not applicable; this is a directive.",
       "files": [
         "packages/vue/src/key-filter/index.ts",
         "packages/vue/src/key-filter/key-filter.ts"
@@ -648,14 +638,7 @@
           "contains": "export"
         }
       ],
-      "relationships": [
-        "package.ultimate.vue.key-filter",
-        "package.ultimate.vue-core.base",
-        "package.ultimate.vue-core.styling",
-        "package.ultimate.vue-core.escape",
-        "package.ultimate.vue-core.motion",
-        "package.ultimate.uix-utils.dom"
-      ],
+      "relationships": ["package.ultimate.vue.key-filter", "package.ultimate.vue-core.directive"],
       "claims": [
         {
           "state": "implemented",
@@ -688,7 +671,7 @@
       "name": "Vue style-class",
       "framework": "vue",
       "purpose": "Applies and removes style classes through a Vue directive.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/style-class/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Directive value: UStyleClassOptions | undefined. Options: selector, enterFromClass, enterActiveClass, enterToClass, leaveFromClass, leaveActiveClass, leaveToClass, toggleClass, hideOnOutsideClick, hideOnEscape, hideOnResize (all optional; string for class/selector fields, boolean for hide flags). Component props/emits/slots: not applicable; this is a directive.",
       "files": [
         "packages/vue/src/style-class/index.ts",
         "packages/vue/src/style-class/style-class.ts"
@@ -706,14 +689,7 @@
           "contains": "export"
         }
       ],
-      "relationships": [
-        "package.ultimate.vue.style-class",
-        "package.ultimate.vue-core.base",
-        "package.ultimate.vue-core.styling",
-        "package.ultimate.vue-core.escape",
-        "package.ultimate.vue-core.motion",
-        "package.ultimate.uix-utils.dom"
-      ],
+      "relationships": ["package.ultimate.vue.style-class", "package.ultimate.vue-core.directive"],
       "claims": [
         {
           "state": "implemented",
@@ -746,7 +722,7 @@
       "name": "Vue animate-on-scroll",
       "framework": "vue",
       "purpose": "Toggles animation classes based on viewport visibility.",
-      "surface": "Public Vue entry exports are declared in packages/vue/src/animate-on-scroll/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.",
+      "surface": "Directive value: AnimateOnScrollValue | undefined. Options: enterClass (string), leaveClass (string), root (HTMLElement | null), rootMargin (string), threshold (number), once (boolean); all optional. Component props/emits/slots: not applicable; this is a directive.",
       "files": [
         "packages/vue/src/animate-on-scroll/animate-on-scroll.ts",
         "packages/vue/src/animate-on-scroll/index.ts"
@@ -766,11 +742,7 @@
       ],
       "relationships": [
         "package.ultimate.vue.animate-on-scroll",
-        "package.ultimate.vue-core.base",
-        "package.ultimate.vue-core.styling",
-        "package.ultimate.vue-core.escape",
-        "package.ultimate.vue-core.motion",
-        "package.ultimate.uix-utils.dom"
+        "package.ultimate.vue-core.directive"
       ],
       "claims": [
         {
@@ -928,6 +900,11 @@
       "id": "package.ultimate.vue-core.base",
       "batch": "ticket-150",
       "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.directive",
+      "batch": "ticket-150",
+      "reason": "The createDirective factory is owned by the Vue core directive module and remains in detailed inventory scope for [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150)."
     },
     {
       "id": "package.ultimate.vue-core.escape",

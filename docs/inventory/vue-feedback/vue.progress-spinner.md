@@ -10,7 +10,7 @@ Displays circular progress indication.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/progress-spinner/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Props: strokeWidth (string, default "2"), fill (string, default "none"), animationDuration (string, default "2s"), ariaLabel (string, default null). Emits: none. Slots: none.
 
 ## Public exports
 

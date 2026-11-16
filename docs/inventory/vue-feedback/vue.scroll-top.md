@@ -10,7 +10,7 @@ Provides a control to scroll the page to the top.
 
 ## Framework surface
 
-Public Vue entry exports are declared in packages/vue/src/scroll-top/index.ts; source and declared entrypoint evidence are recorded. See the scoped source files listed below.
+Props: target (string, default "window"), threshold (number, default 400), behavior (string, default "smooth"), buttonAriaLabel (string, default "Scroll to top"). Emits: show, hide. Slots: none.
 
 ## Public exports
 
