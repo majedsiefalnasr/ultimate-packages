@@ -37,6 +37,8 @@ Read the Angular media and containers [scoped index](angular-media-containers/in
 
 Read the React media and containers [scoped index](react-media-containers/index.md), [validation](react-media-containers/validation.md) and [authored verification notes](react-media-containers/README.md) (#138); authored input: `scripts/inventory/react-media-containers.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-media-containers.json --out docs/inventory/react-media-containers`.
 
+Read the Vue media and containers [scoped index](vue-media-containers/index.md), [validation](vue-media-containers/validation.md) and [authored verification notes](vue-media-containers/README.md) (#139); authored input: `scripts/inventory/vue-media-containers.json`; regenerate only this scope with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-media-containers.json --out docs/inventory/vue-media-containers`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
