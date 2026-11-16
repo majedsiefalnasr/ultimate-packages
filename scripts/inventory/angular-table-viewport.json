@@ -1,0 +1,404 @@
+{
+  "version": 1,
+  "scope": "angular-table-viewport",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": ["packages/ng/src/table", "packages/ng/src/paginator", "packages/ng/src/scroller"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/table/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/paginator/index.ts"
+        },
+        {
+          "subpath": "./paginator",
+          "source": "packages/ng/src/paginator/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/scroller/index.ts"
+        },
+        {
+          "subpath": "./scroller",
+          "source": "packages/ng/src/scroller/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/table/table.api.mdx",
+      "reason": "Generated metadata API documentation; supporting view, not runtime API."
+    },
+    {
+      "path": "packages/ng/src/table/table.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/table/table.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/paginator/paginator.api.mdx",
+      "reason": "Generated metadata API documentation; supporting view, not runtime API."
+    },
+    {
+      "path": "packages/ng/src/paginator/paginator.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/paginator/paginator.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/scroller/scroller.api.mdx",
+      "reason": "Generated metadata API documentation; supporting view, not runtime API."
+    },
+    {
+      "path": "packages/ng/src/scroller/scroller.spec.ts",
+      "reason": "Supporting behavioral tests; presence does not imply passing execution."
+    },
+    {
+      "path": "packages/ng/src/scroller/scroller.stories.ts",
+      "reason": "Supporting Storybook usage examples; not exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-data.identity",
+      "batch": "ticket-147",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-data.pagination",
+      "batch": "ticket-147",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-data.virtualization",
+      "batch": "ticket-147",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-styles.paginator",
+      "batch": "ticket-146",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-styles.table",
+      "batch": "ticket-146",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-styles.virtualscroller",
+      "batch": "ticket-146",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-utils.object",
+      "batch": "ticket-144",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 131,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.table",
+      "record": "angular.table"
+    },
+    {
+      "id": "package.ultimate.ng.paginator",
+      "record": "angular.paginator"
+    },
+    {
+      "id": "package.ultimate.ng.scroller",
+      "record": "angular.scroller"
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.table",
+      "name": "Angular UTable",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Data table with controlled sorting, filtering, selection, row editing, expansion, grouping and composed paging/windowing.",
+      "surface": "Selector u-table; standalone UTable<T>. Inputs value: T[]=[], dataKey=\"\", columns: UTableColumn<T>[]=[], sortMode: SortMode=\"single\", sortField?: string, sortOrder: 1|0|-1=0, multiSortMeta: SortMeta[]=[], filters: Record<string,FilterMetadata|FilterMetadata[]>={}, selectionMode?: SelectionMode, selection?: T|T[], compareSelectionBy: \"equals\"|\"deepEquals\"=\"equals\", selectionColumn=false, paginator=false, first=0, rows=0, totalRecords=0, rowsPerPageOptions?: number[], virtualScroll=false, virtualScrollItemSize=0, lazy=false, lazyLoadOnInit=false, editMode?: \"cell\"|\"row\", editingRowKeys: Record<string,boolean>={}, expandedRowKeys: Record<string,boolean>={}, rowGroupMode?: \"subheader\"|\"rowspan\", groupRowsBy?: string, loading=false. Outputs sortFieldChange: string|undefined, sortOrderChange: 1|0|-1, multiSortMetaChange: SortMeta[], selectionChange: T|T[], firstChange/rowsChange: number, onLazyLoad: {first:number;last:number}, editingRowKeysChange/expandedRowKeysChange: Record<string,boolean>, onRowExpand/onRowCollapse: {originalEvent:Event;data:T}. UTableColumn<T=unknown> defines field/header:string and body?: (row:T,options:{field:string;rowIndex:number})=>string; this exported source interface is not re-exported by the barrel. tableStyleModule wraps @ultimate/uix-styles/table and is also source-only. Public registerCustomFilter(fn: (value:unknown,filter:unknown,filterLocale?:string)=>boolean): void replaces an instance-local custom predicate; filterLocale is passed undefined. Public initRowEdit(row:T,event?:Event):void enters internal row editing. ngOnChanges reconciles first and editingRowKeys. Pipeline is filter-then-sort-then-paginate; grouping sorts the paged view with groupRowsBy leading. Filter arrays are OR alternatives per field, fields AND together; supported modes include contains/startsWith/notContains/endsWith/equals/notEquals/lt/lte/gt/gte/between/in/notIn/dateIs/dateIsNot/custom. Sorting emits ascending state rather than cycling or mutating controlled inputs. Selection emits controlled state, equals uses dataKey and deepEquals uses structural comparison; header select-all uses all value rows. Editing stores drafts and committed overrides without mutating value; save/cancel are protected handlers. Expansion emits controlled maps and renders an empty placeholder row. Non-virtual mode has headers with aria-sort, focusable rows with aria-selected, loading marker, fixed DEFAULT_EMPTY_MESSAGE=\"No results found\" (not an input), selection controls, expansion and row-edit actions. ArrowUp/Down/Home/End move among mounted sibling rows; Space/Enter select and Ctrl/Cmd+A select all in multiple mode, with child-control guards. Virtual mode composes UScroller with filteredValue, itemSize, lazy and a #content template, renders absolute-index cells without non-virtual headers/edit/expansion controls, and navigation is limited to mounted rows. UPaginator receives first/rows/totalRecords and updates internal cursor plus emits firstChange/rowsChange. rowsPerPageOptions is declared but not forwarded or otherwise read; lazyLoadOnInit is declared but not read. Only @ultimate/ng#UTable is public; no manifest ./table entry or barrel UTableColumn export. No Aura table registry entry exists; shared CSS and base token registration establish styling relationships without inventing a table preset. TABLE_METADATA links the Angular source; table.api.mdx is generated supporting documentation. All components extend UBaseComponent with inherited dt?: Record<string,unknown> and unstyled?: boolean; base ngOnInit registers theme variables and structural CSS. Local style modules and their css/classes constants and inline class-parameter types are source-only, owned by this family. Remaining private/protected state, lifecycle methods, render handlers and helpers belong to the owning record. No additional directive, hook, factory or base class is declared in these roots. Metadata source references establish relationships, not proof of runtime completeness. Manifest dist targets declare availability, not verified publication or installed artifact integrity. Prime comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/table/index.ts",
+        "packages/ng/src/table/table-style.ts",
+        "packages/ng/src/table/table.ts"
+      ],
+      "exports": ["@ultimate/ng#UTable"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/table/table.ts",
+          "contains": "export class UTable"
+        },
+        {
+          "path": "packages/ng/src/table/index.ts",
+          "contains": "export { UTable }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"./table\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"name\": \"@ultimate/ng\""
+        },
+        {
+          "path": "packages/ng/src/table/table-style.ts",
+          "contains": "export const tableStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/component-metadata/src/records/table.ts",
+          "contains": "export const TABLE_METADATA"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "angular.paginator",
+        "angular.scroller",
+        "package.ultimate.uix-data.identity",
+        "package.ultimate.uix-utils.object",
+        "package.ultimate.uix-styles.table",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, template composition, helpers and style adapters exist; source presence is not execution."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial scoped product attempt failed before assertions because workspace dependency artifacts were absent.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{table,paginator,scroller}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 1. Application bundle generation failed; TS2307 Cannot find module '@ultimate/ng-core', '@ultimate/uix-data', '@ultimate/uix-styles/table', '@ultimate/themes' and cascading Angular compiler errors.",
+          "limitations": "No product assertions ran. Dependency build was performed before retry; no product source repair."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded three-family Angular product specs passed once (135 tests).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{table,paginator,scroller}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 0. Vitest 4.0.8: 3 files, 135 tests passed (Table 95, Paginator 16, Scroller 24). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19).",
+          "run": "docs/inventory/angular-table-viewport/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.paginator",
+      "name": "Angular UPaginator",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Page navigation driven by record offset, page size and record count.",
+      "surface": "Selector u-paginator; standalone UPaginator. Inputs first=0, rows=0, totalRecords=0, pageLinkSize=5; output onPageChange: PaginatorPageChangeEvent. Public interface PaginatorPageChangeEvent has page/first/rows/pageCount:number. Public changePage(first:number):void calculates page=floor(first/rows) when rows>0, otherwise zero; accepts only 0<=page<pageCount, updates internal _first then emits. No firstChange output. ngOnChanges reconciles first; pageCount uses getPageCount from @ultimate/uix-data. First/Previous/Next/Last buttons and numbered pageLinks use a nav/content wrapper, native disabled boundary buttons, English aria-labels and aria-current=page for selected link; host exposes data-page-count/data-page/data-page-links. paginatorStyleModule wraps @ultimate/uix-styles/paginator with inline disabled?/selected? resolver parameter types. Aura registers paginator; PAGINATOR_METADATA points to the Angular source and paginator.api.mdx is generated supporting documentation. Consumer availability: @ultimate/ng#UPaginator, @ultimate/ng/paginator#UPaginator, @ultimate/ng#PaginatorPageChangeEvent, @ultimate/ng/paginator#PaginatorPageChangeEvent. All components extend UBaseComponent with inherited dt?: Record<string,unknown> and unstyled?: boolean; base ngOnInit registers theme variables and structural CSS. Local style modules and their css/classes constants and inline class-parameter types are source-only, owned by this family. Remaining private/protected state, lifecycle methods, render handlers and helpers belong to the owning record. No additional directive, hook, factory or base class is declared in these roots. Metadata source references establish relationships, not proof of runtime completeness. Manifest dist targets declare availability, not verified publication or installed artifact integrity. Prime comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/paginator/index.ts",
+        "packages/ng/src/paginator/paginator-style.ts",
+        "packages/ng/src/paginator/paginator.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UPaginator",
+        "@ultimate/ng/paginator#UPaginator",
+        "@ultimate/ng#PaginatorPageChangeEvent",
+        "@ultimate/ng/paginator#PaginatorPageChangeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/paginator/paginator.ts",
+          "contains": "export class UPaginator"
+        },
+        {
+          "path": "packages/ng/src/paginator/index.ts",
+          "contains": "export { UPaginator }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/paginator\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./paginator\""
+        },
+        {
+          "path": "packages/ng/src/paginator/paginator-style.ts",
+          "contains": "export const paginatorStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/component-metadata/src/records/paginator.ts",
+          "contains": "export const PAGINATOR_METADATA"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    paginator,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.uix-data.pagination",
+        "package.ultimate.uix-styles.paginator",
+        "package.ultimate.themes.presets",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, template composition, helpers and style adapters exist; source presence is not execution."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial scoped product attempt failed before assertions because workspace dependency artifacts were absent.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{table,paginator,scroller}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 1. Application bundle generation failed; TS2307 Cannot find module '@ultimate/ng-core', '@ultimate/uix-data', '@ultimate/uix-styles/table', '@ultimate/themes' and cascading Angular compiler errors.",
+          "limitations": "No product assertions ran. Dependency build was performed before retry; no product source repair."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded three-family Angular product specs passed once (135 tests).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{table,paginator,scroller}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 0. Vitest 4.0.8: 3 files, 135 tests passed (Table 95, Paginator 16, Scroller 24). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19).",
+          "run": "docs/inventory/angular-table-viewport/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.scroller",
+      "name": "Angular UScroller",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Vertical virtual viewport with optional consumer content template and lazy range notifications.",
+      "surface": "Selector u-scroller; standalone UScroller. Inputs items: unknown[]=[], itemSize=0, numToleratedItems?: number=undefined, loading?: boolean=undefined, disabled=false, lazy=false. Output onLazyLoad: {first:number;last:number}. Public scrollTo(options:ScrollToOptions):void calls root scrollTo; scrollToIndex(index:number,behavior:ScrollBehavior=\"auto\"):void maps index*itemSize to top. Public UScrollerContentContext contains $implicit: {index:number;value:unknown}[] and options with getItemOptions(index) returning index/count:number and first/last/even/odd:boolean, itemSize:number and loading:boolean. ContentChild(\"content\",{descendants:false}) accepts an optional TemplateRef<UScrollerContentContext>; otherwise built-in div items render values. Browser-only ngAfterViewInit measures offsetHeight, registers ResizeObserver and updates the reactive content-size signal; ngOnDestroy disconnects. Viewport and last use calculateNumItemsInViewport/calculateLast from @ultimate/uix-data; default tolerated items ceil(viewport/2), last clamps to item count, and visible items retain absolute indices. Scroll computes first=floor(scrollTop/(itemSize||1)); on changed first with lazy, emits captured range in Promise.resolve().then(); no initial lazy event is issued. disabled bypasses windowing to return all items. Vertical-only structural CSS sets overflow and absolute content/items, content height equals items.length*itemSize, loading adds loader and aria-busy. scrollerStyleModule wraps @ultimate/uix-styles/virtualscroller plus local structural CSS. No Aura scroller registry entry exists; base token registration and imported CSS are recorded without inventing a preset. SCROLLER_METADATA references Angular and scroller.api.mdx is generated supporting documentation. Consumer availability: @ultimate/ng#UScroller, @ultimate/ng/scroller#UScroller, @ultimate/ng#UScrollerContentContext, @ultimate/ng/scroller#UScrollerContentContext. All components extend UBaseComponent with inherited dt?: Record<string,unknown> and unstyled?: boolean; base ngOnInit registers theme variables and structural CSS. Local style modules and their css/classes constants and inline class-parameter types are source-only, owned by this family. Remaining private/protected state, lifecycle methods, render handlers and helpers belong to the owning record. No additional directive, hook, factory or base class is declared in these roots. Metadata source references establish relationships, not proof of runtime completeness. Manifest dist targets declare availability, not verified publication or installed artifact integrity. Prime comments are neutral provenance references only.",
+      "files": [
+        "packages/ng/src/scroller/index.ts",
+        "packages/ng/src/scroller/scroller-style.ts",
+        "packages/ng/src/scroller/scroller.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UScroller",
+        "@ultimate/ng/scroller#UScroller",
+        "@ultimate/ng#UScrollerContentContext",
+        "@ultimate/ng/scroller#UScrollerContentContext"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/scroller/scroller.ts",
+          "contains": "export class UScroller"
+        },
+        {
+          "path": "packages/ng/src/scroller/index.ts",
+          "contains": "export { UScroller }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/scroller\";"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./scroller\""
+        },
+        {
+          "path": "packages/ng/src/scroller/scroller-style.ts",
+          "contains": "export const scrollerStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/component-metadata/src/records/scroller.ts",
+          "contains": "export const SCROLLER_METADATA"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.uix-data.virtualization",
+        "package.ultimate.uix-styles.virtualscroller",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation, owned types, template composition, helpers and style adapters exist; source presence is not execution."
+        },
+        {
+          "state": "failed",
+          "behavior": "Initial scoped product attempt failed before assertions because workspace dependency artifacts were absent.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{table,paginator,scroller}/*.spec.ts'",
+          "outcome": "failed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 1. Application bundle generation failed; TS2307 Cannot find module '@ultimate/ng-core', '@ultimate/uix-data', '@ultimate/uix-styles/table', '@ultimate/themes' and cascading Angular compiler errors.",
+          "limitations": "No product assertions ran. Dependency build was performed before retry; no product source repair."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing bounded three-family Angular product specs passed once (135 tests).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{table,paginator,scroller}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "output": "Exit 0. Vitest 4.0.8: 3 files, 135 tests passed (Table 95, Paginator 16, Scroller 24). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19).",
+          "run": "docs/inventory/angular-table-viewport/product-run.json",
+          "limitations": "Local Angular unit tests only; not browser/accessibility/visual, Storybook, publication, full package build or remote CI. Coverage includes imported foundations and does not prove exhaustive coverage. Warnings were not repaired."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step runs root pnpm run test, recursively including Angular ng test --project=ng; inventory tests are outside provenance-only test:scripts. Configuration only, no remote run observed.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional !cancelled() and classification scope != docs; branch protection not observed."
+        }
+      ]
+    }
+  ]
+}
