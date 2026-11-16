@@ -1,0 +1,22 @@
+{
+  "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+  "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+  "outcome": "passed",
+  "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+  "node": "24.15.0",
+  "executedAt": "2026-11-16T12:15:42Z",
+  "executionDirectory": "isolated ticket worktree packages/ng",
+  "exitCode": 0,
+  "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive.",
+  "preparation": {
+    "command": "pnpm install --frozen-lockfile; pnpm --filter @ultimate/uix-utils run build; pnpm --filter @ultimate/uix-styled --filter @ultimate/uix-data --filter @ultimate/uix-motion --filter @ultimate/uix-styles run build; pnpm --filter @ultimate/ng-core --filter @ultimate/themes run build",
+    "outcome": "passed",
+    "notes": "All installed dependencies and ignored dist outputs stay inside this worktree. Install warned about cyclic react/themes workspace dependencies and DEP0169 url.parse."
+  },
+  "initialAttempt": {
+    "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+    "outcome": "unavailable",
+    "exitCode": 1,
+    "output": "Application bundle generation failed before test execution: TS2307 Cannot find module '@ultimate/ng-core' or its corresponding type declarations (also missing @ultimate/uix-utils/dom, @ultimate/uix-styles/table, @ultimate/themes and @ultimate/uix-data). Cascading cx/override diagnostics followed. No tests ran until workspace prerequisite builds succeeded."
+  }
+}
