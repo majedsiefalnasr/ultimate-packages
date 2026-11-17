@@ -1,0 +1,35 @@
+{
+  "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+  "runs": [
+    {
+      "command": "pnpm exec eslint scripts/inventory/pilot.mjs scripts/inventory/pilot.test.mjs --max-warnings=0",
+      "outcome": "passed",
+      "output": "ESLint passed with no warnings on the touched JavaScript files."
+    },
+    {
+      "command": "pnpm exec prettier --check docs/inventory scripts/inventory",
+      "outcome": "passed",
+      "output": "All matched files used Prettier code style."
+    },
+    {
+      "command": "node --test scripts/inventory/pilot.test.mjs",
+      "outcome": "passed",
+      "output": "19 of 19 inventory tool tests passed, including coverage that relative star re-exports are followed, default exports are not counted as named exports, and external, missing or namespace star re-exports fail closed."
+    },
+    {
+      "command": "node scripts/inventory/pilot.mjs --root . --input <each scripts/inventory/*.json with records> (before and after the tool change)",
+      "outcome": "passed",
+      "output": "All 39 previously committed scoped inputs report the same zero problems and identical export counts with the extended tool; only styled-runtime.json changes, from 27 discovery problems to none."
+    },
+    {
+      "command": "pnpm --filter @ultimate/uix-utils build && pnpm --filter @ultimate/uix-styled typecheck",
+      "outcome": "passed",
+      "output": "tsc --noEmit passed for @ultimate/uix-styled after building the ignored @ultimate/uix-utils dist declarations it resolves through package exports. Without that build the check fails with TS2307 for '@ultimate/uix-utils/object'."
+    },
+    {
+      "command": "pnpm test",
+      "outcome": "not-run",
+      "output": "Product behavior tests were intentionally not run for this source inventory; no product source was changed."
+    }
+  ]
+}

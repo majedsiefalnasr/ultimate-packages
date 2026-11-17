@@ -252,7 +252,24 @@ test("CLI rejects each invalid inventory and retains authored bytes", (t) => {
 
 test("unsupported star exports fail closed instead of disappearing", (t) => {
   const { root, input } = fixture(t);
+  writeFileSync(join(root, "pkg/src/index.ts"), 'export * from "external-package";');
+  assert.ok(inventory({ root, input }).problems.some((p) => p.kind === "discovery"));
+  writeFileSync(join(root, "pkg/src/index.ts"), 'export * as ns from "./button";');
+  assert.ok(inventory({ root, input }).problems.some((p) => p.kind === "discovery"));
+});
+
+test("relative star re-exports are followed to their named exports", (t) => {
+  const { root, input } = fixture(t);
   writeFileSync(join(root, "pkg/src/index.ts"), 'export * from "./button";');
+  const result = inventory({ root, input });
+  assert.deepEqual(result.problems, []);
+  assert.deepEqual(result.facts.exports, ["@test/ui/button#Button"]);
+  writeFileSync(
+    join(root, "pkg/src/button.ts"),
+    "export const Button = 1;\nexport default function Hidden() {}\n"
+  );
+  assert.deepEqual(inventory({ root, input }).facts.exports, ["@test/ui/button#Button"]);
+  writeFileSync(join(root, "pkg/src/index.ts"), 'export * from "./missing";');
   assert.ok(inventory({ root, input }).problems.some((p) => p.kind === "discovery"));
 });
 
