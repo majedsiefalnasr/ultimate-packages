@@ -86,3 +86,7 @@ The earlier single-line hashbang automation, fixtures and schema were removed be
 Verified claims must reference a repository-relative `run` JSON evidence file containing matching nonblank `command`, `revision`, `outcome` and `output`; the outcome must be `passed` and revision must match the scoped input. Missing evidence and contradictory command, revision, outcome or output are rejected. This consistency check is not cryptographic authentication, nor does the specification require that. Human review must still assess whether the captured run actually supports the behavior. No real pilot product claim is promoted to verified.
 
 Generated verification blocks use plain-text fences so formatting cannot reinterpret captured output. Run regeneration directly, then `git diff --exit-code -- docs/inventory/pilot` after committing; no separate formatting pass should be needed. Owner review remains required for overall inventory closeout.
+
+## CLI (#154)
+
+Read the [CLI inventory](cli/index.md), [authored signatures and interpretation](cli/README.md), and [scoped validation](cli/validation.md) for ticket #154. Its structured input is `scripts/inventory/cli.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli`.

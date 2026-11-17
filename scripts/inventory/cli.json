@@ -1,0 +1,682 @@
+{
+  "version": 1,
+  "scope": "cli-154",
+  "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+  "ownership": {
+    "ticket": 154,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.cli",
+      "record": "cli.root"
+    },
+    {
+      "id": "package.ultimate.cli.root",
+      "record": "cli.root"
+    },
+    {
+      "id": "package.ultimate.cli.commands",
+      "record": "cli.dispatch"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/cli",
+      "roots": ["packages/cli/src", "packages/cli/scripts"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/cli/src/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "cli.root",
+      "name": "CLI package entry",
+      "framework": "shared",
+      "purpose": "The package root module; an intentionally empty barrel that exports no runtime or type identity.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts contains only `export {};`. The package declares a single `\".\"` export pointing at dist/index.mjs, so the library entry exposes nothing. All command logic is reachable only through the `ultimate` binary or by deep source import; none of it is a root export. This record therefore has availability internal and no export identity.",
+      "files": ["packages/cli/src/index.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/index.ts",
+          "contains": "export {};"
+        }
+      ],
+      "relationships": ["cli.bin", "cli.dispatch"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for CLI package entry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.bin",
+      "name": "ultimate binary entry",
+      "framework": "shared",
+      "purpose": "The executable entry declared as the `ultimate` bin that forwards process arguments to the dispatcher and exits with its code.",
+      "surface": "See [authored signatures and interpretation](README.md). src/bin.ts awaits `runCli(process.argv.slice(2))` and calls `process.exit(code)`. It is the only module that calls process.exit. The tsup configuration builds it as a separate bundle with a node shebang banner.",
+      "files": ["packages/cli/src/bin.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/bin.ts",
+          "contains": "const code = await runCli(process.argv.slice(2));"
+        },
+        {
+          "path": "packages/cli/src/bin.ts",
+          "contains": "process.exit(code);"
+        }
+      ],
+      "relationships": ["cli.dispatch"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for ultimate binary entry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.dispatch",
+      "name": "Command dispatch",
+      "framework": "shared",
+      "purpose": "Top-level routing of the first argument to the six known commands, with global and per-command help handling and usage refusals.",
+      "surface": "See [authored signatures and interpretation](README.md). src/cli.ts exports `runCli(argv: string[], projectDir: string = process.cwd()): Promise<number>`. It routes init, add, theme, doctor, generate and ai; prints usage and returns 1 for no command or an unknown command; prints help and returns 0 for `--help` or `-h` globally or directly after a known command; add, theme and generate return 1 when their positional argument is missing. Only positional arguments are parsed; there is no flag library. Exported from source but not from the package root.",
+      "files": ["packages/cli/src/cli.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/cli.ts",
+          "contains": "export async function runCli(argv: string[], projectDir: string = process.cwd()): Promise<number> {"
+        },
+        {
+          "path": "packages/cli/src/cli.ts",
+          "contains": "case \"ai\": {"
+        }
+      ],
+      "relationships": [
+        "cli.help",
+        "cli.init",
+        "cli.add",
+        "cli.theme",
+        "cli.doctor",
+        "cli.generate",
+        "cli.ai"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Command dispatch is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.help",
+      "name": "Help and exit-code tables",
+      "framework": "shared",
+      "purpose": "Static command usage text, exit-code tables and the help renderer shared by the dispatcher and the README.",
+      "surface": "See [authored signatures and interpretation](README.md). src/help.ts exports KNOWN_COMMANDS (init, add, theme, doctor, generate, ai), KnownCommand, ExitCodeRow, CommandUsage, EXIT_CODES, COMMAND_USAGE and `renderHelp(command?: string): string`. It lists `create` (EX-1, not implemented) and `ai` (EX-2, stub) as documented exceptions. Exported from source but not from the package root.",
+      "files": ["packages/cli/src/help.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/help.ts",
+          "contains": "export const KNOWN_COMMANDS = [\"init\", \"add\", \"theme\", \"doctor\", \"generate\", \"ai\"] as const;"
+        },
+        {
+          "path": "packages/cli/src/help.ts",
+          "contains": "EX-1: not implemented"
+        }
+      ],
+      "relationships": ["cli.dispatch"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Help and exit-code tables is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.detection",
+      "name": "Framework and package-manager detection",
+      "framework": "shared",
+      "purpose": "Detection of the target project's framework from package.json and of its package manager from lockfiles.",
+      "surface": "See [authored signatures and interpretation](README.md). `detectFramework(projectDir): Framework | null` reads dependencies and devDependencies and returns the first match in the order @angular/core, react, vue, or null when package.json is missing or malformed. `detectPackageManager(projectDir): PackageManager` checks pnpm-lock.yaml, yarn.lock and package-lock.json in that order and defaults to npm. Types Framework and PackageManager are exported from source only.",
+      "files": [
+        "packages/cli/src/detect-framework.ts",
+        "packages/cli/src/detect-package-manager.ts"
+      ],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/detect-framework.ts",
+          "contains": "export function detectFramework(projectDir: string): Framework | null {"
+        },
+        {
+          "path": "packages/cli/src/detect-package-manager.ts",
+          "contains": "export function detectPackageManager(projectDir: string): PackageManager {"
+        }
+      ],
+      "relationships": ["cli.install", "cli.init"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Framework and package-manager detection is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.install",
+      "name": "Package installation",
+      "framework": "shared",
+      "purpose": "The single place where the CLI spawns the target project's package manager to install a package.",
+      "surface": "See [authored signatures and interpretation](README.md). `installPackage(projectDir: string, packageName: string): Promise<InstallResult>` spawns npm `install` or yarn/pnpm `add` with array arguments and inherited stdio in the target directory, resolves with the real exit code (null becomes 1) and rejects when the process cannot be started. The package name is passed through verbatim.",
+      "files": ["packages/cli/src/install-package.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/install-package.ts",
+          "contains": "export function installPackage(projectDir: string, packageName: string): Promise<InstallResult> {"
+        },
+        {
+          "path": "packages/cli/src/install-package.ts",
+          "contains": "stdio: \"inherit\""
+        }
+      ],
+      "relationships": ["cli.detection", "cli.init", "cli.add", "cli.theme"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Package installation is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.compatibility",
+      "name": "Compatibility manifest matching",
+      "framework": "shared",
+      "purpose": "The caret-range matcher over the compatibility manifest entries and the location of the manifest copy shipped in the package dist.",
+      "surface": "See [authored signatures and interpretation](README.md). `matchCompatibility(input: MatchCompatibilityInput, manifest: CompatibilityEntry[]): MatchCompatibilityResult` checks the frameworkVersionRange, ultimateFrameworkPackage.versionRange, uixVersionRange, themeVersionRange, exact metadataSchemaVersion and cliVersionRange axes, skips axes the caller omits, and fails closed on any range grammar other than caret ranges, `||` unions and exact versions. The reserved mcp and aiSkills ranges are never read. `COMPATIBILITY_MANIFEST_PATH` resolves to dist/compatibility-manifest.json under the nearest package.json directory; there is no fallback to docs/. All exports are source-only.",
+      "files": ["packages/cli/src/compatibility.ts", "packages/cli/src/manifest-path.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/compatibility.ts",
+          "contains": "export function matchCompatibility("
+        },
+        {
+          "path": "packages/cli/src/manifest-path.ts",
+          "contains": "export const COMPATIBILITY_MANIFEST_PATH = join("
+        }
+      ],
+      "relationships": ["cli.init", "cli.add", "cli.theme", "cli.doctor"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Compatibility manifest matching is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.init",
+      "name": "init command",
+      "framework": "shared",
+      "purpose": "Detects the framework, checks compatibility, installs the resolved Ultimate framework package and writes ultimate.config.json.",
+      "surface": "See [authored signatures and interpretation](README.md). `runInit(projectDir: string): Promise<InitResult>` with `InitResult { exitCode: number; message: string }`. Order: detect, read manifest, match, install, write {framework, ultimatePackage, themePreset: null}. Failure messages are returned, not printed. The no-framework message tells users to use `ultimate create`, which is not implemented. The helpers findUp, toPlainVersion, readCliVersion and readManifest are duplicated privately in each command file.",
+      "files": ["packages/cli/src/commands/init.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/commands/init.ts",
+          "contains": "export async function runInit(projectDir: string): Promise<InitResult> {"
+        },
+        {
+          "path": "packages/cli/src/commands/init.ts",
+          "contains": "use `ultimate create` instead"
+        }
+      ],
+      "relationships": ["cli.detection", "cli.compatibility", "cli.install", "cli.dispatch"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for init command is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.add",
+      "name": "add command",
+      "framework": "shared",
+      "purpose": "Runs the same framework and compatibility checks as init, then installs a caller-named package.",
+      "surface": "See [authored signatures and interpretation](README.md). `runAdd(projectDir: string, packageName: string): Promise<AddResult>`. The package name is installed verbatim; there is no check that it is an Ultimate package, and the compatibility check does not depend on it. The install exit code is passed through.",
+      "files": ["packages/cli/src/commands/add.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/commands/add.ts",
+          "contains": "export async function runAdd(projectDir: string, packageName: string): Promise<AddResult> {"
+        }
+      ],
+      "relationships": ["cli.detection", "cli.compatibility", "cli.install", "cli.dispatch"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for add command is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.theme",
+      "name": "theme command",
+      "framework": "shared",
+      "purpose": "Validates the single supported preset, installs @ultimate/themes when absent, records the preset and writes a theme entry file.",
+      "surface": "See [authored signatures and interpretation](README.md). `runTheme(projectDir: string, preset: string): Promise<ThemeResult>`. Only the preset `aura` is accepted. It installs @ultimate/themes if not a dependency, sets themePreset in ultimate.config.json (creating it when absent), and writes ultimate-theme.ts when tsconfig.json exists, else ultimate-theme.js, containing `import { applyUltimateTheme } from \"@ultimate/themes\";` and `applyUltimateTheme();`. Re-running does not duplicate the snippet.",
+      "files": ["packages/cli/src/commands/theme.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/commands/theme.ts",
+          "contains": "const VALID_PRESETS = [\"aura\"] as const;"
+        },
+        {
+          "path": "packages/cli/src/commands/theme.ts",
+          "contains": "export async function runTheme(projectDir: string, preset: string): Promise<ThemeResult> {"
+        }
+      ],
+      "relationships": [
+        "cli.detection",
+        "cli.compatibility",
+        "cli.install",
+        "cli.dispatch",
+        "package.ultimate.themes"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for theme command is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.doctor",
+      "name": "doctor command",
+      "framework": "shared",
+      "purpose": "Reports, for every record in the metadata registry, whether the framework package is installed plus one project-level compatibility verdict.",
+      "surface": "See [authored signatures and interpretation](README.md). `runDoctor(projectDir: string): DoctorResult` and `formatDoctorReport(result: DoctorResult): string`. It iterates ALL_COMPONENTS (currently eight records), maps angular to the metadata key ng, marks a component installed when its package name is a project dependency, and stamps the same single matchCompatibility verdict on every row. No framework yields exit 1; a detected framework yields exit 0 even when incompatible. The summary line states the count of known components reported.",
+      "files": ["packages/cli/src/commands/doctor.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/commands/doctor.ts",
+          "contains": "export function runDoctor(projectDir: string): DoctorResult {"
+        },
+        {
+          "path": "packages/cli/src/commands/doctor.ts",
+          "contains": "single, project-level verdict"
+        }
+      ],
+      "relationships": [
+        "cli.detection",
+        "cli.compatibility",
+        "cli.dispatch",
+        "package.ultimate.component-metadata.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for doctor command is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.generate",
+      "name": "generate command",
+      "framework": "shared",
+      "purpose": "Prints a usage snippet for a known component from registry metadata; metadata-limited and stdout-only.",
+      "surface": "See [authored signatures and interpretation](README.md). `runGenerate(projectDir: string, componentName: string): GenerateResult`. It requires a detected framework, looks the name up in ALL_COMPONENTS (eight proof-set components) and refuses others, then prints an import line and a tag with required props, using placeholders derived only from the documented prop type (\"\", false, 0, otherwise undefined). It writes no file.",
+      "files": ["packages/cli/src/commands/generate.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/commands/generate.ts",
+          "contains": "export function runGenerate(projectDir: string, componentName: string): GenerateResult {"
+        },
+        {
+          "path": "packages/cli/src/commands/generate.ts",
+          "contains": "is not yet in the metadata proof set"
+        }
+      ],
+      "relationships": [
+        "cli.detection",
+        "cli.dispatch",
+        "package.ultimate.component-metadata.root",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for generate command is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "cli.ai",
+      "name": "ai command stub",
+      "framework": "shared",
+      "purpose": "An unconditional stub for the ai command; not an implemented command.",
+      "surface": "See [authored signatures and interpretation](README.md). `AI_UNAVAILABLE_MESSAGE` and `runAi(): AiResult`. Every invocation prints `ai: not yet available — Phase 9 (AI Skills) is not started.` to stderr and returns exit code 1. It ignores arguments. The separate AI tooling package is inventoried under #156 and is not invoked by this command.",
+      "files": ["packages/cli/src/commands/ai.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/cli/src/commands/ai.ts",
+          "contains": "export function runAi(): AiResult {"
+        },
+        {
+          "path": "packages/cli/src/commands/ai.ts",
+          "contains": "Phase 9 (AI Skills) is not started."
+        }
+      ],
+      "relationships": ["cli.dispatch", "package.ultimate.ai"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for ai command stub is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/cli/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The CLI boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 0 root export identities (the root barrel is empty), cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, binary execution and product behavior are not asserted.",
+          "run": "docs/inventory/cli/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/cli/scripts/rename-dts.mjs",
+      "reason": "Build tooling that renames emitted declaration files; supporting context, not an independent CLI item."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.root",
+      "batch": "Metadata registry (#153)",
+      "reason": "The registry ALL_COMPONENTS consumed by doctor and generate is owned by the metadata registry inventory."
+    },
+    {
+      "id": "package.ultimate.component-schema.root",
+      "batch": "Component schema (#152)",
+      "reason": "The ComponentMetadata type consumed by generate is owned by the component-schema inventory."
+    },
+    {
+      "id": "package.ultimate.themes",
+      "batch": "Theme contract (#151)",
+      "reason": "The @ultimate/themes package installed and applied by theme is owned by the theme contract inventory."
+    },
+    {
+      "id": "package.ultimate.ai",
+      "batch": "AI tooling (#156)",
+      "reason": "The AI tooling package referred to by the ai stub message is owned by the AI tooling inventory."
+    }
+  ]
+}
