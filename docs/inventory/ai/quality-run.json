@@ -1,0 +1,30 @@
+{
+  "revision": "84805a04a25704f0d942148892b9935d41c89b7c",
+  "runs": [
+    {
+      "command": "pnpm exec eslint scripts/inventory --max-warnings=0",
+      "outcome": "passed",
+      "output": "Exit code 0, no warnings; scoped to inventory scripts."
+    },
+    {
+      "command": "pnpm exec prettier --check docs/inventory/ai docs/inventory/README.md scripts/inventory",
+      "outcome": "passed",
+      "output": "All matched files use Prettier code style; scoped to inventory files."
+    },
+    {
+      "command": "pnpm --filter @ultimate/ai typecheck",
+      "outcome": "passed",
+      "output": "Exit code 0; package TypeScript check only, not runtime behavior."
+    },
+    {
+      "command": "pnpm --filter @ultimate/ai test",
+      "outcome": "failed",
+      "output": "Exit code 1 before tests ran: host ancestor /Users/majedsiefalnasr/postcss.config.mjs could not load postcss-import. No product test result was obtained."
+    },
+    {
+      "command": "pnpm --filter @ultimate/ai validate",
+      "outcome": "not-run",
+      "output": "Requires built artifacts; build was not run because it rewrites committed skill and context outputs."
+    }
+  ]
+}
