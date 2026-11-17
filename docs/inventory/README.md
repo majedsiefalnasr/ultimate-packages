@@ -90,3 +90,7 @@ Generated verification blocks use plain-text fences so formatting cannot reinter
 ## CLI (#154)
 
 Read the [CLI inventory](cli/index.md), [authored signatures and interpretation](cli/README.md), and [scoped validation](cli/validation.md) for ticket #154. Its structured input is `scripts/inventory/cli.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/cli.json --out docs/inventory/cli`.
+
+## MCP (#155)
+
+Read the [MCP inventory](mcp/index.md), [authored signatures and interpretation](mcp/README.md), and [scoped validation](mcp/validation.md) for ticket #155. Its structured input is `scripts/inventory/mcp.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp`.
