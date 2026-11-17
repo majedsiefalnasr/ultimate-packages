@@ -976,17 +976,17 @@
   "pending": [
     {
       "id": "package.ultimate.ng.dialog",
-      "batch": "Angular components (#151+)",
+      "batch": "Angular overlays and notifications (#122)",
       "reason": "Dialog component consumer is owned by a component inventory."
     },
     {
       "id": "package.ultimate.ng.toast",
-      "batch": "Angular components (#151+)",
+      "batch": "Angular overlays and notifications (#122)",
       "reason": "Toast component consumer is owned by a component inventory."
     },
     {
       "id": "package.ultimate.themes.presets",
-      "batch": "Themes (#146)",
+      "batch": "Themes (#151)",
       "reason": "Theme presets are owned by the themes inventory."
     },
     {

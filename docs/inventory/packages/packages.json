@@ -9381,18 +9381,7 @@
       "coverage": {
         "id": "package.ultimate.ng.root",
         "tickets": [
-          107,
-          110,
-          113,
-          116,
-          119,
-          122,
-          125,
-          128,
-          131,
-          134,
-          137,
-          140
+          157
         ]
       }
     },
@@ -11581,18 +11570,7 @@
       "coverage": {
         "id": "package.ultimate.react.root",
         "tickets": [
-          108,
-          111,
-          114,
-          117,
-          120,
-          123,
-          126,
-          129,
-          132,
-          135,
-          138,
-          141
+          157
         ]
       }
     },
@@ -13400,8 +13378,7 @@
       "coverage": {
         "id": "package.ultimate.uix-utils.root",
         "tickets": [
-          143,
-          144
+          157
         ]
       }
     },
@@ -14173,18 +14150,7 @@
       "coverage": {
         "id": "package.ultimate.vue.root",
         "tickets": [
-          109,
-          112,
-          115,
-          118,
-          121,
-          124,
-          127,
-          130,
-          133,
-          136,
-          139,
-          142
+          157
         ]
       }
     },
@@ -18913,7 +18879,7 @@
     },
     {
       "id": "package.ultimate.ng.root",
-      "batch": "#107, #110, #113, #116, #119, #122, #125, #128, #131, #134, #137, #140",
+      "batch": "#157",
       "reason": "Detailed inventory coverage pending owning ticket"
     },
     {
@@ -19598,7 +19564,7 @@
     },
     {
       "id": "package.ultimate.react.root",
-      "batch": "#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141",
+      "batch": "#157",
       "reason": "Detailed inventory coverage pending owning ticket"
     },
     {
@@ -20123,7 +20089,7 @@
     },
     {
       "id": "package.ultimate.uix-utils.root",
-      "batch": "#143, #144",
+      "batch": "#157",
       "reason": "Detailed inventory coverage pending owning ticket"
     },
     {
@@ -20343,7 +20309,7 @@
     },
     {
       "id": "package.ultimate.vue.root",
-      "batch": "#109, #112, #115, #118, #121, #124, #127, #130, #133, #136, #139, #142",
+      "batch": "#157",
       "reason": "Detailed inventory coverage pending owning ticket"
     },
     {

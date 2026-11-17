@@ -13,5 +13,5 @@ package.ultimate.ng-core.config: ticket-148: External reconciled owner; source r
 package.ultimate.ng-core.terminal-service: ticket-148: External reconciled owner; source relationship is described here without completing that ticket.
 package.ultimate.ng.button: ticket-107: External reconciled owner; source relationship is described here without completing that ticket.
 package.ultimate.themes.presets: ticket-151: External reconciled owner; source relationship is described here without completing that ticket.
-package.ultimate.uix-utils.dom: ticket-144: External reconciled owner; source relationship is described here without completing that ticket.
+package.ultimate.uix-utils.dom: ticket-143: External reconciled owner; source relationship is described here without completing that ticket.
 package.ultimate.uix-utils.zindex: ticket-144: External reconciled owner; source relationship is described here without completing that ticket.

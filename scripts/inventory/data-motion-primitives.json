@@ -647,8 +647,8 @@
     },
     {
       "id": "package.ultimate.uix-utils.root",
-      "batch": "UIX utilities (#143, #144)",
-      "reason": "Both packages depend on @ultimate/uix-utils; the utilities are documented in #143 and #144 and kept pending as a cross-scope reference."
+      "batch": "Inventory closeout root files (#157)",
+      "reason": "Both packages depend on @ultimate/uix-utils; the root barrel is dispositioned in #157 and the utilities it re-exports are documented in #143 and #144. Kept pending as a cross-scope reference."
     },
     {
       "id": "package.ultimate.uix-utils.dom",
