@@ -126,7 +126,11 @@ export function inventory({ root, input }) {
     const manifest = JSON.parse(read(`${pkg.path}/package.json`));
     for (const path of pkg.roots) walk(path);
     for (const entry of pkg.entries) {
-      if (!hasExport(manifest.exports || {}, entry.subpath))
+      const legacyRoot =
+        manifest.exports === undefined &&
+        entry.subpath === "." &&
+        Boolean(manifest.module || manifest.main);
+      if (!legacyRoot && !hasExport(manifest.exports || {}, entry.subpath))
         problems.push({
           kind: "entry",
           subject: entry.subpath,
