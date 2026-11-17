@@ -23,7 +23,7 @@ This is the authored closeout note for spec #98. It records how the per-scope in
 
 Source revision: base `70b74575698fb77a72a18022b91181c66df41484` (`phase3-ultimate-inventory`) plus the #157 changes on `docs-157-closeout`.
 
-- `node --test scripts/inventory/*.test.mjs`: passed, 208 of 208.
+- `node --test scripts/inventory/*.test.mjs`: passed, 210 of 210 after the #157 review fixes; rerun at `39ce5192` for the final Phase 3 review.
 - `node scripts/inventory/global.mjs --root . --historical scripts/inventory/pilot-sample.json`: passed, 0 problems, regeneration byte-stable.
 - `pnpm run typecheck`: passed.
 - `npx eslint scripts/inventory --max-warnings=0` and `npx prettier --check docs/inventory scripts/inventory`: passed.
@@ -41,4 +41,4 @@ Standards and Spec reviews were run against commit `bcf7b25b`. Findings were fix
 
 ## Owner review
 
-Final closure requires owner review of the complete inventory (see [docs/inventory/README.md](../README.md)). This note and the generated report are not an approval.
+Automated reconciliation requires a separate owner review decision. The owner subsequently authorized a delegated final review and closure of #157 and #98. See the [final closeout review](closeout-review.md) for its approval, evidence and retained limitations; the generated reports do not grant approval themselves.
