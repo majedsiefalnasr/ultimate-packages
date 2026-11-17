@@ -1,0 +1,756 @@
+{
+  "version": 1,
+  "scope": "shared-component-styles-146",
+  "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+  "ownership": {
+    "ticket": 146,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.uix-styles",
+      "record": "uixstyles.root"
+    },
+    {
+      "id": "package.ultimate.uix-styles.root",
+      "record": "uixstyles.root"
+    },
+    {
+      "id": "package.ultimate.uix-styles.base",
+      "record": "uixstyles.base"
+    },
+    {
+      "id": "package.ultimate.uix-styles.badge",
+      "record": "uixstyles.badge"
+    },
+    {
+      "id": "package.ultimate.uix-styles.button",
+      "record": "uixstyles.button"
+    },
+    {
+      "id": "package.ultimate.uix-styles.checkbox",
+      "record": "uixstyles.checkbox"
+    },
+    {
+      "id": "package.ultimate.uix-styles.dialog",
+      "record": "uixstyles.dialog"
+    },
+    {
+      "id": "package.ultimate.uix-styles.inputnumber",
+      "record": "uixstyles.inputnumber"
+    },
+    {
+      "id": "package.ultimate.uix-styles.inputtext",
+      "record": "uixstyles.inputtext"
+    },
+    {
+      "id": "package.ultimate.uix-styles.menu",
+      "record": "uixstyles.menu"
+    },
+    {
+      "id": "package.ultimate.uix-styles.paginator",
+      "record": "uixstyles.paginator"
+    },
+    {
+      "id": "package.ultimate.uix-styles.table",
+      "record": "uixstyles.table"
+    },
+    {
+      "id": "package.ultimate.uix-styles.tooltip",
+      "record": "uixstyles.tooltip"
+    },
+    {
+      "id": "package.ultimate.uix-styles.virtualscroller",
+      "record": "uixstyles.virtualscroller"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/uix-styles",
+      "roots": ["packages/uix-styles/src"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/uix-styles/src/index.ts"
+        },
+        {
+          "subpath": "./base",
+          "source": "packages/uix-styles/src/base/index.ts"
+        },
+        {
+          "subpath": "./badge",
+          "source": "packages/uix-styles/src/badge/index.ts"
+        },
+        {
+          "subpath": "./button",
+          "source": "packages/uix-styles/src/button/index.ts"
+        },
+        {
+          "subpath": "./checkbox",
+          "source": "packages/uix-styles/src/checkbox/index.ts"
+        },
+        {
+          "subpath": "./dialog",
+          "source": "packages/uix-styles/src/dialog/index.ts"
+        },
+        {
+          "subpath": "./inputnumber",
+          "source": "packages/uix-styles/src/inputnumber/index.ts"
+        },
+        {
+          "subpath": "./inputtext",
+          "source": "packages/uix-styles/src/inputtext/index.ts"
+        },
+        {
+          "subpath": "./menu",
+          "source": "packages/uix-styles/src/menu/index.ts"
+        },
+        {
+          "subpath": "./paginator",
+          "source": "packages/uix-styles/src/paginator/index.ts"
+        },
+        {
+          "subpath": "./table",
+          "source": "packages/uix-styles/src/table/index.ts"
+        },
+        {
+          "subpath": "./tooltip",
+          "source": "packages/uix-styles/src/tooltip/index.ts"
+        },
+        {
+          "subpath": "./virtualscroller",
+          "source": "packages/uix-styles/src/virtualscroller/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "uixstyles.badge",
+      "name": "Badge styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the badge component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/badge only (it is not re-exported from the package root). Selectors: .u-badge plus size (sm, lg, xl), severity (secondary, info, success, warn, danger, contrast), dot and circle modifiers; tokens use the badge.* namespace.",
+      "files": ["packages/uix-styles/src/badge/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/badge#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/badge/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/badge/index.ts",
+          "contains": ".u-badge {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Badge styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.button",
+      "name": "Button styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the button component (the largest style module).",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/button only (it is not re-exported from the package root). Selectors: .u-button with severity, size, outlined, text, link, raised, rounded, fluid, vertical, icon-only and icon-position modifiers, plus .u-button-label; tokens use the button.* namespace. Shared UIX button CSS is also named by the earlier Angular, React and Vue action inventories; this record owns the style module itself.",
+      "files": ["packages/uix-styles/src/button/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/button#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/button/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/button/index.ts",
+          "contains": ".u-button {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Button styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.checkbox",
+      "name": "Checkbox styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the checkbox component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/checkbox only (it is not re-exported from the package root). Selectors: .u-checkbox, -box, -input, -icon, -checked and size modifiers; tokens use the checkbox.* namespace.",
+      "files": ["packages/uix-styles/src/checkbox/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/checkbox#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/checkbox/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/checkbox/index.ts",
+          "contains": ".u-checkbox {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Checkbox styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.dialog",
+      "name": "Dialog styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the dialog component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/dialog only (it is not re-exported from the package root). Selectors: .u-dialog with header, title, header-actions, content, footer, maximized, position (top, bottom, left, right and corner) and enter/leave transition classes; tokens use the dialog.* namespace.",
+      "files": ["packages/uix-styles/src/dialog/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/dialog#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/dialog/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/dialog/index.ts",
+          "contains": ".u-dialog {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Dialog styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.inputnumber",
+      "name": "Input number styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the number input component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/inputnumber only (it is not re-exported from the package root). Selectors: .u-inputnumber, -input, -button, -clear-icon and fluid, stacked, horizontal and vertical layout modifiers. The source also references the shared .p-floatlabel selector; tokens use the inputnumber.*, form.* and icon.* namespaces.",
+      "files": ["packages/uix-styles/src/inputnumber/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/inputnumber#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/inputnumber/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/inputnumber/index.ts",
+          "contains": ".u-inputnumber {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Input number styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.inputtext",
+      "name": "Input text styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the text input component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/inputtext only (it is not re-exported from the package root). Selectors: .u-inputtext with fluid, sm and lg modifiers; tokens use the inputtext.* namespace.",
+      "files": ["packages/uix-styles/src/inputtext/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/inputtext#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/inputtext/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/inputtext/index.ts",
+          "contains": ".u-inputtext {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Input text styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.menu",
+      "name": "Menu styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the menu component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/menu only (it is not re-exported from the package root). Selectors: .u-menu, -list, -overlay, -item, -item-content, -item-link, -item-icon, -item-label, -separator and -submenu-label; tokens use the menu.* namespace.",
+      "files": ["packages/uix-styles/src/menu/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/menu#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/menu/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/menu/index.ts",
+          "contains": ".u-menu {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Menu styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.paginator",
+      "name": "Paginator styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the paginator component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/paginator only (it is not re-exported from the package root). Selectors: .u-paginator with content, content-start, content-end, current, first, prev, page(s), next and last parts; tokens use the paginator.* namespace.",
+      "files": ["packages/uix-styles/src/paginator/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/paginator#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/paginator/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/paginator/index.ts",
+          "contains": ".u-paginator {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Paginator styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.table",
+      "name": "Table styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the data table component, including sorting, filtering, resizing, reordering, scrolling and virtual-scroller spacing parts.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/table only (it is not re-exported from the package root). Selectors: .u-table-* covering header, footer, sortable and sorted columns, inline and popover filter overlays and rules, resizers, reorder handles and indicators, striped, gridlines, hoverable, scrollable and flex-scrollable modes, row toggle, mask and loading icon. Tokens use the datatable.* namespace, not table.*; the module name and token namespace differ in source.",
+      "files": ["packages/uix-styles/src/table/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/table#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/table/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/table/index.ts",
+          "contains": ".u-table {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Table styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.tooltip",
+      "name": "Tooltip styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the tooltip component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/tooltip only (it is not re-exported from the package root). Selectors: .u-tooltip, -text, -arrow and directional -top, -bottom, -left, -right classes; tokens use the tooltip.* namespace.",
+      "files": ["packages/uix-styles/src/tooltip/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/tooltip#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/tooltip/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/tooltip/index.ts",
+          "contains": ".u-tooltip {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Tooltip styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.virtualscroller",
+      "name": "Virtual scroller styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the virtual scroller loader.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/virtualscroller only (it is not re-exported from the package root). Only two selectors exist: .u-scroller-loader and .u-scroller-loading-icon, using virtualscroller.loader.* tokens. Scrolling behavior and table spacing belong to the consuming components.",
+      "files": ["packages/uix-styles/src/virtualscroller/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/virtualscroller#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/virtualscroller/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/virtualscroller/index.ts",
+          "contains": ".u-scroller-loader {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Virtual scroller styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.base",
+      "name": "Base styles",
+      "framework": "shared",
+      "purpose": "Global base CSS: box-sizing reset and shared animation, overlay-mask, disabled and icon rules.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/base and as the named root export base. It sets border-box on *, ::before and ::after and defines shared transition and animation rules. Unlike the component modules it keeps upstream-style .p-* selectors (for example .p-component, .p-disabled, .p-icon, .p-overlay-mask and the *-enter-active and *-leave-active transitions); tokens include disabled.*, icon.* and mask.*.",
+      "files": ["packages/uix-styles/src/base/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/base#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/base/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/base/index.ts",
+          "contains": ".p-collapsible-enter-active {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Base styles is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.root",
+      "name": "Shared styles package entry and type",
+      "framework": "shared",
+      "purpose": "The package root barrel and the shared StyleType alias, plus reconciliation of subpath entries against package exports and build configuration.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts re-exports the base module's style as the named root export base and re-exports everything from src/types.ts with a relative star re-export. src/types.ts declares `export type StyleType = string;`, a type contract (no runtime value) redefined locally instead of importing from another package; no module in this package currently imports it. Subpath reconciliation: packages/uix-styles/package.json declares 13 exports (the root plus ./base, ./badge, ./button, ./checkbox, ./dialog, ./inputnumber, ./inputtext, ./menu, ./paginator, ./table, ./tooltip, ./virtualscroller). packages/uix-styles/tsup.config.ts builds src/index.ts plus one entry per directory found under src, which yields the same 12 subpath entries by directory discovery. The two sets agree at the inspected revision. The root does not re-export any component style.",
+      "files": ["packages/uix-styles/src/index.ts", "packages/uix-styles/src/types.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles#StyleType", "@ultimate/uix-styles#base"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/index.ts",
+          "contains": "export { style as base } from \"./base\";"
+        },
+        {
+          "path": "packages/uix-styles/src/types.ts",
+          "contains": "export type StyleType = string;"
+        },
+        {
+          "path": "packages/uix-styles/src/../package.json",
+          "contains": "\"./virtualscroller\": {"
+        },
+        {
+          "path": "packages/uix-styles/src/../tsup.config.ts",
+          "contains": "readdirSync"
+        }
+      ],
+      "relationships": [
+        "uixstyles.base",
+        "uixstyles.badge",
+        "uixstyles.button",
+        "uixstyles.checkbox",
+        "uixstyles.dialog",
+        "uixstyles.inputnumber",
+        "uixstyles.inputtext",
+        "uixstyles.menu",
+        "uixstyles.paginator",
+        "uixstyles.table",
+        "uixstyles.tooltip",
+        "uixstyles.virtualscroller"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Shared styles package entry and type is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and snapshot tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-styles/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
+          "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/shared-component-styles/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    }
+  ],
+  "dispositions": [],
+  "pending": [
+    {
+      "id": "package.ultimate.uix-styled.root",
+      "batch": "Styled runtime (#145)",
+      "reason": "The dt() placeholders embedded in every style string are resolved by the styled runtime (for example evaluateDtExpressions) documented in #145; kept pending as a cross-scope reference."
+    }
+  ]
+}
