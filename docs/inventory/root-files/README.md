@@ -24,8 +24,8 @@ All seven are supporting dispositions. None is a product item under #98 (compone
 
 - **ng barrel gap (fact):** `packages/ng/src/index.ts` does not re-export `./input-number`, although `packages/ng/src/input-number/index.ts` exists and `packages/ng/package.json` exports `./input-number`. Intent is not documented; reachable only via `@ultimate/ng/input-number`. Not changed here.
 - The ng barrel mixes `@ultimate/ng/<name>` self-package specifiers with relative `./<name>` ones (button, input-text, textarea, select-button, file-upload, dialog, menu, drawer, confirm-dialog, confirm-popup, dynamic-dialog, overlay-badge, split-button, table, panel, scroll-top, order-list, pick-list, data-view). Inconsistent, not a defect claim.
-- No aliases are declared: `package.ultimate.*.root` is a topology identity owned by 12 (ng/react/vue) or 2 (uix-utils) tickets, and `global.mjs` rejects a single alias for a multi-owner identity. Aliasing it to one record would be a false alias.
+- No aliases are declared: ticket #157 owns each `package.ultimate.<pkg>.root` identity in `scripts/inventory/package-coverage.json`, and this batch resolves it by accounting for every discovered root file through a reasoned disposition. The records for the re-exported symbols stay with the owning family batches, so a record or alias here would duplicate them.
 
 ## Limitations
 
-See [validation.md](validation.md): the current tooling cannot validate or reconcile this batch. Claims here are source-reading evidence only; nothing was executed against built artifacts.
+See [validation.md](validation.md): this batch passes scoped validation (file roots are supported by `scripts/inventory/pilot.mjs`) and reconciles globally in [global validation](../global/validation.md). Claims here are source-reading evidence; nothing was executed against built artifacts.

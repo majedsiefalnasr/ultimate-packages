@@ -392,3 +392,30 @@ test("CLI discovers inputs, separates historical input, and refuses to write int
   assert.equal(refused.status, 1);
   assert.match(refused.stderr, /Output must not be the authored input directory/);
 });
+
+test("an alias does not hide an unaccounted discovered family file", (t) => {
+  const { run, put } = fixture(t);
+  put("packages/a/src/y/extra.ts", "export const extra = 1;\n");
+  const result = run({ scoped: false });
+  assert.ok(
+    result.problems.some(
+      (p) => p.kind === "coverage" && /no record owner or reasoned disposition/.test(p.detail)
+    ),
+    kinds(result).join("\n")
+  );
+});
+
+test("an alias targeting a missing record is rejected even without scoped validation", (t) => {
+  const { run, two } = fixture(t);
+  const result = run({
+    batches: [
+      {
+        path: "inputs/two.json",
+        input: { ...two, aliases: [{ id: "package.test.a.y", record: "missing.record" }] },
+      },
+    ],
+    scoped: false,
+  });
+  assert.equal(result.complete, false);
+  assert.ok(result.problems.some((p) => p.kind === "alias"));
+});

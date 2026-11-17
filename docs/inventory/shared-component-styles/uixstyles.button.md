@@ -10,7 +10,7 @@ Shared CSS for the button component (the largest style module).
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/_css_/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/button only (it is not re-exported from the package root). Selectors: .u-button with severity, size, outlined, text, link, raised, rounded, fluid, vertical, icon-only and icon-position modifiers, plus .u-button-label; tokens use the button.* namespace. Shared UIX button CSS is also named by the earlier Angular, React and Vue action inventories; this record owns the style module itself.
+See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/button only (it is not re-exported from the package root). Selectors: .u-button with severity, size, outlined, text, link, raised, rounded, fluid, vertical, icon-only and icon-position modifiers, plus .u-button-label; tokens use the button.* namespace. Shared UIX button CSS is also named by the earlier Angular, React and Vue action inventories; this record owns the style module itself.
 
 ## Public exports
 

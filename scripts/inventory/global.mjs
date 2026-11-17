@@ -76,8 +76,11 @@ export function reconcileGlobal({ root, coverage, batches, historical = [], scop
     const ticket = ticketOf.get(path);
     for (const r of input.records ?? [])
       hits.push({ id: r.id, path, ticket, record: r.id, via: "record" });
-    for (const a of input.aliases ?? [])
+    for (const a of input.aliases ?? []) {
+      if (!(input.records ?? []).some((r) => r.id === a.record))
+        problem("alias", a.id, `${path}: alias target ${a.record} is not a record in this batch`);
       hits.push({ id: a.id, path, ticket, record: a.record, via: "alias" });
+    }
   }
   const index = groupBy(hits, (h) => h.id);
   for (const [id, found] of index)
@@ -88,12 +91,13 @@ export function reconcileGlobal({ root, coverage, batches, historical = [], scop
         `Identity defined in ${found.map((h) => `${h.path} (${h.via})`).join(", ")}`
       );
   const claims = (pick) =>
-    batches.flatMap(({ path, input }) =>
-      (input.records ?? []).flatMap((r) => pick(r).map((value) => ({ value, path })))
-    );
+    batches.flatMap(({ path, input }) => [
+      ...(input.records ?? []).flatMap((r) => pick(r).map((value) => ({ value, path }))),
+      ...(pick.disposition ? (input.dispositions ?? []).map((d) => ({ value: d.path, path })) : []),
+    ]);
   for (const [label, pick] of [
     ["Public export claimed", (r) => (r.availability === "public" ? r.exports : [])],
-    ["Source file owned", (r) => r.files],
+    ["Source file owned", Object.assign((r) => r.files, { disposition: true })],
   ])
     for (const [value, found] of groupBy(claims(pick), (c) => c.value)) {
       const paths = [...new Set(found.map((c) => c.path))];
@@ -192,6 +196,20 @@ export function reconcileGlobal({ root, coverage, batches, historical = [], scop
         .filter(([path]) => item.files.every((f) => accounted.get(path).has(f)));
       if (full.length === 1)
         hit = { id: item.id, path: full[0][0], ticket: full[0][1], record: "files", via: "files" };
+    }
+    if (hit && hit.via !== "files" && item.files?.length) {
+      const owning = [...ticketOf].filter(([, ticket]) => owner.tickets.includes(ticket));
+      const missing = item.files.filter(
+        (f) => !owning.some(([path]) => accounted.get(path).has(f))
+      );
+      if (missing.length) {
+        problem(
+          "coverage",
+          item.id,
+          `Resolved by ${where(hit)} but discovered file(s) have no record owner or reasoned disposition in ${tickets(owner.tickets)}: ${missing.join(", ")}`
+        );
+        hit = null;
+      }
     }
     if (hit) coverageHits.set(item.id, hit);
     if (!found.length && !hit) {

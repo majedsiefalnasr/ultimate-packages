@@ -79,7 +79,7 @@
   "packages": [
     {
       "path": "packages/ng-core",
-      "roots": ["packages/ng-core/src"],
+      "roots": ["packages/ng-core/src", "packages/ng-core/angular.json"],
       "entries": [
         {
           "subpath": ".",
@@ -971,6 +971,10 @@
     {
       "path": "packages/ng-core/src/toast-service/toast-service.spec.ts",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/angular.json",
+      "reason": "Angular CLI workspace configuration for the ng-core library project (ng-packagr build and unit-test builders); build and test tooling, not a product item."
     }
   ],
   "pending": [

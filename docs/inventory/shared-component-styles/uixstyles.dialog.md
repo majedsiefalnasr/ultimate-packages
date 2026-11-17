@@ -10,7 +10,7 @@ Shared CSS for the dialog component.
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/_css_/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/dialog only (it is not re-exported from the package root). Selectors: .u-dialog with header, title, header-actions, content, footer, maximized, position (top, bottom, left, right and corner) and enter/leave transition classes; tokens use the dialog.* namespace.
+See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/dialog only (it is not re-exported from the package root). Selectors: .u-dialog with header, title, header-actions, content, footer, maximized, position (top, bottom, left, right and corner) and enter/leave transition classes; tokens use the dialog.* namespace.
 
 ## Public exports
 

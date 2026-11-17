@@ -27,9 +27,13 @@ Source revision: base `70b74575698fb77a72a18022b91181c66df41484` (`phase3-ultima
 - `node scripts/inventory/global.mjs --root . --historical scripts/inventory/pilot-sample.json`: passed, 0 problems, regeneration byte-stable.
 - `pnpm run typecheck`: passed.
 - `npx eslint scripts/inventory --max-warnings=0` and `npx prettier --check docs/inventory scripts/inventory`: passed.
-- `pnpm run lint` (repository-wide): fails with 72,083 problems, all in locally generated and git-ignored `packages/*/storybook-static` output. Unavailable as a clean signal in this environment; not repaired.
+- `pnpm run lint` (repository-wide): fails with 72,083 problems (71,980 errors, 103 warnings), none in tracked inventory files: they come from locally generated, git-ignored Storybook output (`packages/*/storybook-static`, 226 files) and the extracted vendor cache (`.vendor-cache/extracted`, 1,692 files). Unavailable as a clean signal in this environment; not repaired.
 - `pnpm run format:check` (repository-wide): fails only on the untracked local file `ULTIMATE_COMPLETION_PHASES.md`; not modified.
 - Product test suites were not run for this closeout, per the census scope of spec #98. React and sibling product test runs recorded in earlier scopes aborted because the host ancestor PostCSS config requires the missing `postcss-import`; this is an external limitation, not repaired.
+
+## Reviews
+
+Standards and Spec reviews were run against commit `bcf7b25b`. Findings were fixed in follow-up commits: family file accounting is now enforced even when an alias resolves a family (the review found `packages/ng-core/angular.json` unaccounted, now dispositioned in `scripts/inventory/angular-core.json`); alias targets are validated even with `--no-scoped`; dispositions count toward cross-batch source ownership; stale generated views were regenerated; and generated shared-style views are excluded from Prettier so they regenerate byte-exactly.
 
 ## Product findings recorded, not fixed
 
