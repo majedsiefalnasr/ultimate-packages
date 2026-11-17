@@ -1,5 +1,5 @@
-import { readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
+import { dirname, relative, resolve } from "node:path";
 import { pathToFileURL, URL } from "node:url";
 import ts from "typescript";
 import { reconcilePackages } from "./packages.mjs";
@@ -74,6 +74,44 @@ export function inventory({ root, input }) {
       );
     });
   }
+  // Collect named exports of a source module; relative `export *` is followed within
+  // the repository, any other star or namespace re-export fails closed.
+  function collect(path, prefix, seen) {
+    if (seen.has(path)) return;
+    seen.add(path);
+    const source = ts.createSourceFile(path, read(path), ts.ScriptTarget.Latest, true);
+    for (const statement of source.statements) {
+      if (
+        ts.isExportDeclaration(statement) &&
+        statement.exportClause &&
+        ts.isNamedExports(statement.exportClause)
+      ) {
+        for (const symbol of statement.exportClause.elements)
+          exports.push(`${prefix}#${symbol.name.text}`);
+      } else if (ts.isExportDeclaration(statement)) {
+        const spec = statement.moduleSpecifier?.text;
+        const target =
+          !statement.exportClause && spec?.startsWith(".")
+            ? [`${spec}.ts`, `${spec}/index.ts`]
+                .map((c) => relative(root, resolve(root, dirname(path), c)))
+                .find((c) => existsSync(resolve(root, c)))
+            : undefined;
+        if (target) collect(target, prefix, seen);
+        else
+          problems.push({
+            kind: "discovery",
+            subject: path,
+            detail:
+              "Star and namespace re-exports require an explicit bounded entry mapping; not silently expanded",
+          });
+      } else if (statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)) {
+        if (ts.isVariableStatement(statement))
+          for (const d of statement.declarationList.declarations)
+            exports.push(`${prefix}#${d.name.getText(source)}`);
+        else if (statement.name) exports.push(`${prefix}#${statement.name.text}`);
+      }
+    }
+  }
   function walk(path) {
     for (const entry of readdirSync(resolve(root, path), { withFileTypes: true })) {
       const next = `${path}/${entry.name}`;
@@ -91,41 +129,8 @@ export function inventory({ root, input }) {
           subject: entry.subpath,
           detail: `Not exported by ${manifest.name}`,
         });
-      const source = ts.createSourceFile(
-        entry.source,
-        read(entry.source),
-        ts.ScriptTarget.Latest,
-        true
-      );
-      for (const statement of source.statements) {
-        if (
-          ts.isExportDeclaration(statement) &&
-          statement.exportClause &&
-          ts.isNamedExports(statement.exportClause)
-        ) {
-          for (const symbol of statement.exportClause.elements)
-            exports.push(
-              `${manifest.name}${entry.subpath === "." ? "" : entry.subpath.slice(1)}#${symbol.name.text}`
-            );
-        } else if (ts.isExportDeclaration(statement)) {
-          problems.push({
-            kind: "discovery",
-            subject: entry.source,
-            detail:
-              "Star and namespace re-exports require an explicit bounded entry mapping; not silently expanded",
-          });
-        } else if (statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)) {
-          if (ts.isVariableStatement(statement))
-            for (const d of statement.declarationList.declarations)
-              exports.push(
-                `${manifest.name}${entry.subpath === "." ? "" : entry.subpath.slice(1)}#${d.name.getText(source)}`
-              );
-          else if (statement.name)
-            exports.push(
-              `${manifest.name}${entry.subpath === "." ? "" : entry.subpath.slice(1)}#${statement.name.text}`
-            );
-        }
-      }
+      const prefix = `${manifest.name}${entry.subpath === "." ? "" : entry.subpath.slice(1)}`;
+      collect(entry.source, prefix, new Set());
     }
   }
   for (const symbol of exports) {

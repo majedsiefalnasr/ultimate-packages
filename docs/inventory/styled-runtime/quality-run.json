@@ -1,0 +1,30 @@
+{
+  "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+  "runs": [
+    {
+      "command": "pnpm exec eslint scripts/inventory/pilot.mjs scripts/inventory/pilot.test.mjs --max-warnings=0",
+      "outcome": "passed",
+      "output": "ESLint passed with no warnings on the touched JavaScript files."
+    },
+    {
+      "command": "pnpm exec prettier --check docs/inventory scripts/inventory",
+      "outcome": "passed",
+      "output": "All matched files used Prettier code style."
+    },
+    {
+      "command": "node --test scripts/inventory/pilot.test.mjs",
+      "outcome": "passed",
+      "output": "19 of 19 inventory tool tests passed, including new coverage for relative star re-exports and failing-closed external or namespace star re-exports."
+    },
+    {
+      "command": "pnpm exec tsc --noEmit -p packages/uix-styled",
+      "outcome": "failed",
+      "output": "Failed with TS2307 (cannot find module '@ultimate/uix-utils/object') and a dependent TS2345 in packages/uix-styled/src/utils/themeUtils.ts, because the uix-utils dist declarations were not built in this worktree. Not repaired: this documentation-only ticket changes no product source."
+    },
+    {
+      "command": "pnpm test",
+      "outcome": "not-run",
+      "output": "Product behavior tests were intentionally not run for this source inventory; no product source was changed."
+    }
+  ]
+}

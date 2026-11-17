@@ -1,0 +1,579 @@
+{
+  "version": 1,
+  "scope": "styled-runtime-145",
+  "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+  "ownership": {
+    "ticket": 145,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.uix-styled",
+      "record": "uixstyled.root"
+    },
+    {
+      "id": "package.ultimate.uix-styled.root",
+      "record": "uixstyled.root"
+    },
+    {
+      "id": "package.ultimate.uix-styled.actions",
+      "record": "uixstyled.actions"
+    },
+    {
+      "id": "package.ultimate.uix-styled.config",
+      "record": "uixstyled.config"
+    },
+    {
+      "id": "package.ultimate.uix-styled.helpers",
+      "record": "uixstyled.helpers"
+    },
+    {
+      "id": "package.ultimate.uix-styled.service",
+      "record": "uixstyled.service"
+    },
+    {
+      "id": "package.ultimate.uix-styled.stylesheet",
+      "record": "uixstyled.stylesheet"
+    },
+    {
+      "id": "package.ultimate.uix-styled.utils",
+      "record": "uixstyled.utils"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/uix-styled",
+      "roots": ["packages/uix-styled/src"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/uix-styled/src/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "uixstyled.actions",
+      "name": "Preset and theme actions",
+      "framework": "shared",
+      "purpose": "Public functions that define, merge and apply presets, palettes and themes onto the shared Theme configuration.",
+      "surface": "See [authored signatures and interpretation](README.md). definePreset<T extends Record<string, unknown>>(...presets: T[]): T deep-merges presets without applying them. usePreset(...presets) deep-merges then calls Theme.setPreset. updatePreset(...presets) merges the current preset with the arguments and applies it. updatePrimaryPalette(palette?) and updateSurfacePalette(palette?) update the semantic primary or surface palette through $t and return the resulting preset. useTheme<T>(theme: T): T replaces the theme without merging presets. All are re-exported from the package root only.",
+      "files": [
+        "packages/uix-styled/src/actions/definePreset.ts",
+        "packages/uix-styled/src/actions/updatePreset.ts",
+        "packages/uix-styled/src/actions/updatePrimaryPalette.ts",
+        "packages/uix-styled/src/actions/updateSurfacePalette.ts",
+        "packages/uix-styled/src/actions/usePreset.ts",
+        "packages/uix-styled/src/actions/useTheme.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-styled#definePreset",
+        "@ultimate/uix-styled#updatePreset",
+        "@ultimate/uix-styled#updatePrimaryPalette",
+        "@ultimate/uix-styled#updateSurfacePalette",
+        "@ultimate/uix-styled#usePreset",
+        "@ultimate/uix-styled#useTheme"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-styled/src/actions/usePreset.ts",
+          "contains": "Theme.setPreset(newPreset);"
+        },
+        {
+          "path": "packages/uix-styled/src/actions/definePreset.ts",
+          "contains": "return deepMerge(...presets) as T;"
+        },
+        {
+          "path": "packages/uix-styled/src/index.ts",
+          "contains": "export { default as useTheme } from \"./actions/useTheme\";"
+        },
+        {
+          "path": "packages/uix-styled/package.json",
+          "contains": "\"types\": \"./dist/index.d.mts\""
+        }
+      ],
+      "relationships": [
+        "uixstyled.config",
+        "uixstyled.helpers",
+        "package.ultimate.uix-utils.object"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Preset and theme actions is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed. Existing package tests under packages/uix-styled/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/styled-runtime.json --out docs/inventory/styled-runtime (run twice; authored README SHA-256 checked before and after)",
+          "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 55 named symbols, 55 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/styled-runtime/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyled.config",
+      "name": "Theme configuration",
+      "framework": "shared",
+      "purpose": "Singleton holding the active theme, preset, options, resolved tokens and loaded-style bookkeeping, with accessors that compute CSS for common, component and custom presets.",
+      "surface": "See [authored signatures and interpretation](README.md). Default export Theme (re-exported as the named root export Theme) is a plain object with defaults (variable prefix \"u\", selector \":root,:host\", options prefix \"u\", darkModeSelector \"system\", cssLayer false), getters theme/preset/options/tokens, getTheme/setTheme, getPreset/setPreset, getOptions/setOptions, layer-name and loaded-style-name tracking, getTokenValue, getCommon, getComponent, deprecated getDirective, getCustomPreset, getLayerOrderCSS, transformCSS, getCommonStyleSheet, getStyleSheet and onStyleMounted/onStyleUpdated/onStyleLoaded. Setters emit ThemeService events (theme:change, preset:change, options:change, theme:load). Most parameters are typed any.",
+      "files": ["packages/uix-styled/src/config/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styled#Theme"],
+      "evidence": [
+        {
+          "path": "packages/uix-styled/src/config/index.ts",
+          "contains": "setTheme(newValue: any) {"
+        },
+        {
+          "path": "packages/uix-styled/src/config/index.ts",
+          "contains": "ThemeService.emit(\"preset:change\", newValue);"
+        },
+        {
+          "path": "packages/uix-styled/src/index.ts",
+          "contains": "export { default as Theme } from \"./config/index\";"
+        }
+      ],
+      "relationships": ["uixstyled.service", "uixstyled.utils"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Theme configuration is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed. Existing package tests under packages/uix-styled/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/styled-runtime.json --out docs/inventory/styled-runtime (run twice; authored README SHA-256 checked before and after)",
+          "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 55 named symbols, 55 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/styled-runtime/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyled.service",
+      "name": "Theme service",
+      "framework": "shared",
+      "purpose": "Event bus instance used to broadcast theme, preset, options and style-load changes.",
+      "surface": "See [authored signatures and interpretation](README.md). Default export ThemeService (re-exported as the named root export ThemeService) is an EventBus() instance from @ultimate/uix-utils/eventbus; its on/off/emit surface is owned by the UIX event bus record.",
+      "files": ["packages/uix-styled/src/service/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styled#ThemeService"],
+      "evidence": [
+        {
+          "path": "packages/uix-styled/src/service/index.ts",
+          "contains": "const ThemeService = EventBus();"
+        },
+        {
+          "path": "packages/uix-styled/src/index.ts",
+          "contains": "export { default as ThemeService } from \"./service/index\";"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.eventbus"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Theme service is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed. Existing package tests under packages/uix-styled/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/styled-runtime.json --out docs/inventory/styled-runtime (run twice; authored README SHA-256 checked before and after)",
+          "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 55 named symbols, 55 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/styled-runtime/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyled.helpers",
+      "name": "Token, CSS and color helpers",
+      "framework": "shared",
+      "purpose": "Helpers that resolve design tokens, tag CSS templates, build CSS variables from a theme object and derive color scales.",
+      "surface": "See [authored signatures and interpretation](README.md). $dt(tokenPath) returns { name, variable, value }. dt(...args) and dtwt(theme, tokenPath, fallback?, type?) resolve a token to a var() reference or, in strict mode or type \"value\", to its value. css(strings, ...exprs) is a tag/function that resolves dt() expressions. $t(theme) is a chainable builder with preset, options, primaryPalette, surfacePalette, define, update and use. toVariables(theme, options) returns toVariableOutput (default export, re-exported by name) with the toVariableOptions and toVariableOutput interfaces. mix(color1, color2, weight), shade(color, percent), tint(color, percent) and palette(color) are color utilities; palette returns a ColorScale of shades 50-950 or token references.",
+      "files": [
+        "packages/uix-styled/src/helpers/index.ts",
+        "packages/uix-styled/src/helpers/css.ts",
+        "packages/uix-styled/src/helpers/dt.ts",
+        "packages/uix-styled/src/helpers/t.ts",
+        "packages/uix-styled/src/helpers/toVariables.ts",
+        "packages/uix-styled/src/helpers/color/mix.ts",
+        "packages/uix-styled/src/helpers/color/palette.ts",
+        "packages/uix-styled/src/helpers/color/shade.ts",
+        "packages/uix-styled/src/helpers/color/tint.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-styled#$dt",
+        "@ultimate/uix-styled#$t",
+        "@ultimate/uix-styled#css",
+        "@ultimate/uix-styled#dt",
+        "@ultimate/uix-styled#dtwt",
+        "@ultimate/uix-styled#mix",
+        "@ultimate/uix-styled#palette",
+        "@ultimate/uix-styled#shade",
+        "@ultimate/uix-styled#tint",
+        "@ultimate/uix-styled#toVariableOptions",
+        "@ultimate/uix-styled#toVariableOutput",
+        "@ultimate/uix-styled#toVariables"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-styled/src/helpers/dt.ts",
+          "contains": "export const dtwt = (theme: any = {}"
+        },
+        {
+          "path": "packages/uix-styled/src/helpers/t.ts",
+          "contains": "export const $t = (theme: any = {}) => {"
+        },
+        {
+          "path": "packages/uix-styled/src/helpers/color/shade.ts",
+          "contains": "mix(\"#000000\", color, percent)"
+        },
+        {
+          "path": "packages/uix-styled/src/helpers/index.ts",
+          "contains": "export * from \"./dt\";"
+        },
+        {
+          "path": "packages/uix-styled/src/index.ts",
+          "contains": "export { default as palette } from \"./helpers/color/palette\";"
+        }
+      ],
+      "relationships": [
+        "uixstyled.config",
+        "uixstyled.utils",
+        "uixstyled.root",
+        "package.ultimate.uix-utils.object"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Token, CSS and color helpers is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed. Existing package tests under packages/uix-styled/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/styled-runtime.json --out docs/inventory/styled-runtime (run twice; authored README SHA-256 checked before and after)",
+          "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 55 named symbols, 55 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/styled-runtime/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyled.stylesheet",
+      "name": "StyleSheet and shared style registrations",
+      "framework": "shared",
+      "purpose": "A style registry class plus helpers that register theme-variable, hidden-accessible, icon-spin and box-model CSS into a StyleSheet.",
+      "surface": "See [authored signatures and interpretation](README.md). Default export StyleSheet<E = HTMLStyleElement> (re-exported by name) has get, has, delete, clear, add(key, css?), a placeholder update(), getStyles, getAllCSS, getAllMarkup, getAllElements and an overridable createStyleElement that returns undefined by default; StyleSheetProps and StyleMeta describe its inputs and entries. registerThemeVariables(sheet, componentName) registers common and per-component variable CSS from Theme. HIDDEN_ACCESSIBLE_KEY, hiddenAccessibleCss and registerHiddenAccessible(sheet), and ICON_SPIN_KEY, iconSpinCss and registerIconSpin(sheet) register idempotent utility CSS. BOX_MODEL_KEY_PREFIX, boxModelCss(roots), scopeRootsOf(classes) and registerBoxModel(sheet, componentName, roots) register scoped border-box rules.",
+      "files": [
+        "packages/uix-styled/src/stylesheet/index.ts",
+        "packages/uix-styled/src/stylesheet/theme-variables.ts",
+        "packages/uix-styled/src/stylesheet/hidden-accessible.ts",
+        "packages/uix-styled/src/stylesheet/icon-spin.ts",
+        "packages/uix-styled/src/stylesheet/box-model.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-styled#BOX_MODEL_KEY_PREFIX",
+        "@ultimate/uix-styled#HIDDEN_ACCESSIBLE_KEY",
+        "@ultimate/uix-styled#ICON_SPIN_KEY",
+        "@ultimate/uix-styled#StyleMeta",
+        "@ultimate/uix-styled#StyleSheet",
+        "@ultimate/uix-styled#StyleSheetProps",
+        "@ultimate/uix-styled#boxModelCss",
+        "@ultimate/uix-styled#hiddenAccessibleCss",
+        "@ultimate/uix-styled#iconSpinCss",
+        "@ultimate/uix-styled#registerBoxModel",
+        "@ultimate/uix-styled#registerHiddenAccessible",
+        "@ultimate/uix-styled#registerIconSpin",
+        "@ultimate/uix-styled#registerThemeVariables",
+        "@ultimate/uix-styled#scopeRootsOf"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-styled/src/stylesheet/index.ts",
+          "contains": "class StyleSheet<E = HTMLStyleElement> {"
+        },
+        {
+          "path": "packages/uix-styled/src/stylesheet/box-model.ts",
+          "contains": "export function registerBoxModel("
+        },
+        {
+          "path": "packages/uix-styled/src/stylesheet/theme-variables.ts",
+          "contains": "export function registerThemeVariables(sheet: StyleSheet<any>, componentName: string): void {"
+        },
+        {
+          "path": "packages/uix-styled/src/index.ts",
+          "contains": "export { registerThemeVariables } from \"./stylesheet/theme-variables\";"
+        }
+      ],
+      "relationships": [
+        "uixstyled.config",
+        "package.ultimate.uix-utils.classnames",
+        "package.ultimate.uix-utils.dom"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for StyleSheet and shared style registrations is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed. Existing package tests under packages/uix-styled/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/styled-runtime.json --out docs/inventory/styled-runtime (run twice; authored README SHA-256 checked before and after)",
+          "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 55 named symbols, 55 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/styled-runtime/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyled.utils",
+      "name": "Token and CSS-variable utilities",
+      "framework": "shared",
+      "purpose": "Shared regular expressions and functions for normalizing token keys, variable names and units, plus ThemeUtils, the engine that builds token maps and theme CSS.",
+      "surface": "See [authored signatures and interpretation](README.md). EXPR_REGEX, CALC_REGEX and VAR_REGEX are exported global regular expressions. toTokenKey, merge, toValue, toUnit, toNormalizePrefix, toNormalizeVariable, getVariableName, hasOddBraces, getVariableValue, getComputedValue, setProperty, getRule and evaluateDtExpressions are named runtime functions (merge returns void and mutates). ThemeUtils (default export of themeUtils.ts, re-exported by name) is an object with getCommon, getPreset, getPresetC, deprecated-style getPresetD, applyDarkColorScheme, getColorSchemeOption, getLayerOrder, getCommonStyleSheet, getStyleSheet, createTokens, getTokenValue, getSelectorRule and transformCSS. Parameters are largely typed any.",
+      "files": [
+        "packages/uix-styled/src/utils/index.ts",
+        "packages/uix-styled/src/utils/sharedUtils.ts",
+        "packages/uix-styled/src/utils/themeUtils.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-styled#CALC_REGEX",
+        "@ultimate/uix-styled#EXPR_REGEX",
+        "@ultimate/uix-styled#ThemeUtils",
+        "@ultimate/uix-styled#VAR_REGEX",
+        "@ultimate/uix-styled#evaluateDtExpressions",
+        "@ultimate/uix-styled#getComputedValue",
+        "@ultimate/uix-styled#getRule",
+        "@ultimate/uix-styled#getVariableName",
+        "@ultimate/uix-styled#getVariableValue",
+        "@ultimate/uix-styled#hasOddBraces",
+        "@ultimate/uix-styled#merge",
+        "@ultimate/uix-styled#setProperty",
+        "@ultimate/uix-styled#toNormalizePrefix",
+        "@ultimate/uix-styled#toNormalizeVariable",
+        "@ultimate/uix-styled#toTokenKey",
+        "@ultimate/uix-styled#toUnit",
+        "@ultimate/uix-styled#toValue"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-styled/src/utils/sharedUtils.ts",
+          "contains": "export function evaluateDtExpressions("
+        },
+        {
+          "path": "packages/uix-styled/src/utils/themeUtils.ts",
+          "contains": "createTokens("
+        },
+        {
+          "path": "packages/uix-styled/src/utils/index.ts",
+          "contains": "export { default as ThemeUtils } from \"./themeUtils\";"
+        }
+      ],
+      "relationships": ["uixstyled.config", "package.ultimate.uix-utils.object"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Token and CSS-variable utilities is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed. Existing package tests under packages/uix-styled/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/styled-runtime.json --out docs/inventory/styled-runtime (run twice; authored README SHA-256 checked before and after)",
+          "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 55 named symbols, 55 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/styled-runtime/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyled.root",
+      "name": "Styled package entry and exported types",
+      "framework": "shared",
+      "purpose": "The package entry barrel, which re-exports every runtime part and declares the public configuration and style types.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts re-exports actions, Theme, color helpers, helper barrel, ThemeService, StyleSheet registrations and utils via named and relative star re-exports. It declares StyleOptions (a dt resolver carrier), StyleType<T = StyleOptions> (a string or function returning CSS), ThemeOptions (prefix, darkModeSelector, cssLayer) and ColorScale (shade keys 0 and 50-950 to hex strings). packages/uix-styled/package.json exports only the root \".\" subpath, built by tsup from one entry to dist/index.mjs and dist/index.d.mts; there are no subpath exports. The package is a dependency of the Angular, React and Vue core and component packages and of themes.",
+      "files": ["packages/uix-styled/src/index.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-styled#ColorScale",
+        "@ultimate/uix-styled#StyleOptions",
+        "@ultimate/uix-styled#StyleType",
+        "@ultimate/uix-styled#ThemeOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-styled/src/index.ts",
+          "contains": "export interface ThemeOptions {"
+        },
+        {
+          "path": "packages/uix-styled/src/index.ts",
+          "contains": "export type ColorScale = {"
+        },
+        {
+          "path": "packages/uix-styled/package.json",
+          "contains": "\"import\": \"./dist/index.mjs\""
+        },
+        {
+          "path": "packages/uix-styled/tsup.config.ts",
+          "contains": "entry: { index: \"src/index.ts\" }"
+        },
+        {
+          "path": "packages/themes/package.json",
+          "contains": "\"@ultimate/uix-styled\": \"workspace:*\""
+        }
+      ],
+      "relationships": [
+        "uixstyled.actions",
+        "uixstyled.config",
+        "uixstyled.service",
+        "uixstyled.helpers",
+        "uixstyled.stylesheet",
+        "uixstyled.utils",
+        "package.ultimate.themes.root",
+        "package.ultimate.ng-core.root",
+        "package.ultimate.react-core.root",
+        "package.ultimate.vue-core.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Styled package entry and exported types is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed. Existing package tests under packages/uix-styled/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/styled-runtime.json --out docs/inventory/styled-runtime (run twice; authored README SHA-256 checked before and after)",
+          "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 55 named symbols, 55 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/styled-runtime/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    }
+  ],
+  "dispositions": [],
+  "pending": [
+    {
+      "id": "package.ultimate.uix-utils.object",
+      "batch": "UIX value utilities (#144)",
+      "reason": "Object helpers (deepMerge, mergeKeys, isEmpty, matchRegex) are documented in #144; this pilot validates references within one input, so the cross-scope relationship stays in the pending ledger."
+    },
+    {
+      "id": "package.ultimate.uix-utils.eventbus",
+      "batch": "UIX value utilities (#144)",
+      "reason": "The EventBus factory used by ThemeService is documented in #144; kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.uix-utils.classnames",
+      "batch": "UIX value utilities (#144)",
+      "reason": "The cn utility used by box-model scope detection is documented in #144; kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "UIX DOM utilities (#143)",
+      "reason": "createStyleMarkup used by StyleSheet is documented in #143; kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.themes.root",
+      "batch": "Theme contract and Aura (#151)",
+      "reason": "The themes package depends on this package; its inventory belongs to #151 and is kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.ng-core.root",
+      "batch": "Angular core (#148)",
+      "reason": "The Angular core depends on this package; documented in #148, kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.react-core.root",
+      "batch": "React core (#149)",
+      "reason": "The React core depends on this package; documented in #149, kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.vue-core.root",
+      "batch": "Vue core (#150)",
+      "reason": "The Vue core depends on this package; documented in #150, kept pending as a cross-scope reference."
+    }
+  ]
+}
