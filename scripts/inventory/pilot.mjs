@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, mkdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { pathToFileURL, URL } from "node:url";
 import ts from "typescript";
@@ -124,7 +124,10 @@ export function inventory({ root, input }) {
   }
   for (const pkg of input.packages) {
     const manifest = JSON.parse(read(`${pkg.path}/package.json`));
-    for (const path of pkg.roots) walk(path);
+    // A root may name a single file (e.g. a package barrel) without claiming its directory.
+    for (const path of pkg.roots)
+      if (statSync(resolve(root, path)).isFile()) files.push(path);
+      else walk(path);
     for (const entry of pkg.entries) {
       const legacyRoot =
         manifest.exports === undefined &&
@@ -314,14 +317,15 @@ export function inventory({ root, input }) {
   const views = {
     "index.md":
       `# Ultimate inventory ${input.scope}\n\nScoped sample only; not platform completeness.\n\n` +
-      records.map((r) => `- [${r.name}](${r.id}.md)`).join("\n") +
+      (records.map((r) => `- [${r.name}](${r.id}.md)`).join("\n") ||
+        "No product records; see dispositions.") +
       "\n",
   };
   for (const record of records)
     views[`${record.id}.md`] =
       `# ${record.name}\n\nID: ${record.id}\n\nFramework: ${record.framework}; availability: ${record.availability}\n\n## Authored interpretation\n\n${record.purpose}\n\n## Framework surface\n\n${record.surface}\n\n## Public exports\n\n${record.exports.join("\n") || "None; owned internal source."}\n\n## Owned source and evidence\n\n${record.files.join("\n")}\n\n\`\`\`text\n${record.evidence.map((e) => `${e.path}: ${e.contains}`).join("\n")}\n\`\`\`\n\n## Relationships\n\n${record.relationships.map((id) => `${id}${aliases.has(id) ? ` → [${aliases.get(id)}](${aliases.get(id)}.md) (reconciled family alias)` : ids.has(id) ? "" : " (pending cross-batch)"}`).join("\n") || "None recorded."}\n\n## Verification\n\n\`\`\`text\n${JSON.stringify(record.claims, null, 2)}\n\`\`\`\n`;
   views["validation.md"] =
-    `# Scoped validation\n\nScope: ${input.scope}; source revision: ${input.revision}\n\nGlobal completeness: not asserted.\n\n${problems.length ? problems.map((p) => `${p.kind}: ${p.subject}: ${p.detail}`).join("\n") : "Scoped reconciliation passed."}\n\nPending references:\n${input.pending.map((p) => `${p.id}: ${p.batch}: ${p.reason}`).join("\n")}\n`;
+    `# Scoped validation\n\nScope: ${input.scope}; source revision: ${input.revision}\n\nGlobal completeness: not asserted.\n\n${problems.length ? problems.map((p) => `${p.kind}: ${p.subject}: ${p.detail}`).join("\n") : "Scoped reconciliation passed."}\n\nPending references:\n${input.pending.map((p) => `${p.id}: ${p.batch}: ${p.reason}`).join("\n") || "None."}\n`;
   return {
     problems,
     complete: false,

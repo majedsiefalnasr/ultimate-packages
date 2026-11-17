@@ -79,7 +79,7 @@
   "packages": [
     {
       "path": "packages/ng-core",
-      "roots": ["packages/ng-core/src"],
+      "roots": ["packages/ng-core/src", "packages/ng-core/angular.json"],
       "entries": [
         {
           "subpath": ".",
@@ -971,22 +971,26 @@
     {
       "path": "packages/ng-core/src/toast-service/toast-service.spec.ts",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/angular.json",
+      "reason": "Angular CLI workspace configuration for the ng-core library project (ng-packagr build and unit-test builders); build and test tooling, not a product item."
     }
   ],
   "pending": [
     {
       "id": "package.ultimate.ng.dialog",
-      "batch": "Angular components (#151+)",
+      "batch": "Angular overlays and notifications (#122)",
       "reason": "Dialog component consumer is owned by a component inventory."
     },
     {
       "id": "package.ultimate.ng.toast",
-      "batch": "Angular components (#151+)",
+      "batch": "Angular overlays and notifications (#122)",
       "reason": "Toast component consumer is owned by a component inventory."
     },
     {
       "id": "package.ultimate.themes.presets",
-      "batch": "Themes (#146)",
+      "batch": "Themes (#151)",
       "reason": "Theme presets are owned by the themes inventory."
     },
     {

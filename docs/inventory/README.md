@@ -1,4 +1,8 @@
-# Ultimate inventory pilot (#105)
+# Ultimate inventory
+
+## Historical pilot (#105)
+
+The pilot is retained as historical method evidence. Its Button records are superseded by the current Angular, React, Vue and shared-style scope records and are not a second editable source of current platform facts.
 
 This bounded pilot supersedes the earlier Phase 3 automation as an inventory method, not as a platform-wide inventory. Run under Node 24.15.0 after `pnpm install`:
 
@@ -98,3 +102,7 @@ Read the [MCP inventory](mcp/index.md), [authored signatures and interpretation]
 ## AI tooling (#156)
 
 Read the [AI inventory](ai/index.md), [authored interpretation](ai/README.md), and [scoped validation](ai/validation.md). Its structured input is `scripts/inventory/ai.json`; regenerate with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/ai.json --out docs/inventory/ai`.
+
+## Global closeout (#157)
+
+Read the [global closeout note](global/README.md), [global report](global/global.md) and [global validation](global/validation.md), plus the [root files inventory](root-files/README.md). Regenerate with `node scripts/inventory/global.mjs --root . --historical scripts/inventory/pilot-sample.json --out docs/inventory/global` and `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/root-files.json --out docs/inventory/root-files`. Owner review remains required for final closure.

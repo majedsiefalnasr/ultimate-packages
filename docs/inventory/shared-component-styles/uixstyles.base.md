@@ -10,7 +10,7 @@ Global base CSS: box-sizing reset and shared animation, overlay-mask, disabled a
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/_css_/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/base and as the named root export base. It sets border-box on _, ::before and ::after and defines shared transition and animation rules. Unlike the component modules it keeps upstream-style .p-_ selectors (for example .p-component, .p-disabled, .p-icon, .p-overlay-mask and the _-enter-active and *-leave-active transitions); tokens include disabled.*, icon._ and mask.*.
+See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/base and as the named root export base. It sets border-box on *, ::before and ::after and defines shared transition and animation rules. Unlike the component modules it keeps upstream-style .p-* selectors (for example .p-component, .p-disabled, .p-icon, .p-overlay-mask and the *-enter-active and *-leave-active transitions); tokens include disabled.*, icon.* and mask.*.
 
 ## Public exports
 

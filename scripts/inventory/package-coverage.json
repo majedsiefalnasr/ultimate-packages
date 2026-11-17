@@ -203,6 +203,10 @@
     {
       "number": 156,
       "title": "Ultimate inventory: AI tooling"
+    },
+    {
+      "number": 157,
+      "title": "Ultimate inventory: inventory reconciliation and closeout"
     }
   ],
   "ownership": [
@@ -312,7 +316,7 @@
     },
     {
       "id": "package.ultimate.ng.root",
-      "tickets": [107, 110, 113, 116, 119, 122, 125, 128, 131, 134, 137, 140]
+      "tickets": [157]
     },
     {
       "id": "package.ultimate.ng.accordion",
@@ -860,7 +864,7 @@
     },
     {
       "id": "package.ultimate.react.root",
-      "tickets": [108, 111, 114, 117, 120, 123, 126, 129, 132, 135, 138, 141]
+      "tickets": [157]
     },
     {
       "id": "package.ultimate.react.inplace",
@@ -1280,7 +1284,7 @@
     },
     {
       "id": "package.ultimate.uix-utils.root",
-      "tickets": [143, 144]
+      "tickets": [157]
     },
     {
       "id": "package.ultimate.uix-utils.mergeprops",
@@ -1456,7 +1460,7 @@
     },
     {
       "id": "package.ultimate.vue.root",
-      "tickets": [109, 112, 115, 118, 121, 124, 127, 130, 133, 136, 139, 142]
+      "tickets": [157]
     },
     {
       "id": "package.ultimate.vue.inline-message",

@@ -69,7 +69,7 @@ package.ultimate.ng; implemented; packages/ng
 
 Coverage: #107, #110, #113, #116, #119, #122, #125, #128, #131, #134, #137, #140
 
-- package.ultimate.ng.root: #107, #110, #113, #116, #119, #122, #125, #128, #131, #134, #137, #140 (pending)
+- package.ultimate.ng.root: #157 (pending)
 - package.ultimate.ng.accordion: #128 (pending)
 - package.ultimate.ng.animate-on-scroll: #140 (pending)
 - package.ultimate.ng.autocomplete: #116 (pending)
@@ -294,7 +294,7 @@ Coverage: #108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141
 - package.ultimate.react.galleria: #138 (pending)
 - package.ultimate.react.icon-field: #111 (pending)
 - package.ultimate.react.image: #138 (pending)
-- package.ultimate.react.root: #108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141 (pending)
+- package.ultimate.react.root: #157 (pending)
 - package.ultimate.react.inplace: #141 (pending)
 - package.ultimate.react.input-chips: #111 (pending)
 - package.ultimate.react.input-mask: #111 (pending)
@@ -570,7 +570,7 @@ Coverage: #143, #144
 - package.ultimate.uix-utils.dom: #143 (pending)
 - package.ultimate.uix-utils.escape: #144 (pending)
 - package.ultimate.uix-utils.eventbus: #144 (pending)
-- package.ultimate.uix-utils.root: #143, #144 (pending)
+- package.ultimate.uix-utils.root: #157 (pending)
 - package.ultimate.uix-utils.mergeprops: #144 (pending)
 - package.ultimate.uix-utils.object: #144 (pending)
 - package.ultimate.uix-utils.scroll-lock: #144 (pending)
@@ -632,7 +632,7 @@ Coverage: #109, #112, #115, #118, #121, #124, #127, #130, #133, #136, #139, #142
 - package.ultimate.vue.ifta-label: #112 (pending)
 - package.ultimate.vue.image: #139 (pending)
 - package.ultimate.vue.image-compare: #139 (pending)
-- package.ultimate.vue.root: #109, #112, #115, #118, #121, #124, #127, #130, #133, #136, #139, #142 (pending)
+- package.ultimate.vue.root: #157 (pending)
 - package.ultimate.vue.inline-message: #124 (pending)
 - package.ultimate.vue.inplace: #142 (pending)
 - package.ultimate.vue.input-chips: #112 (pending)

@@ -10,7 +10,7 @@ Shared CSS for the virtual scroller loader.
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/_css_/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/virtualscroller only (it is not re-exported from the package root). Only two selectors exist: .u-scroller-loader and .u-scroller-loading-icon, using virtualscroller.loader.* tokens. Scrolling behavior and table spacing belong to the consuming components.
+See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/virtualscroller only (it is not re-exported from the package root). Only two selectors exist: .u-scroller-loader and .u-scroller-loading-icon, using virtualscroller.loader.* tokens. Scrolling behavior and table spacing belong to the consuming components.
 
 ## Public exports
 

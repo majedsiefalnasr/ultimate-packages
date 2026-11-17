@@ -1,6 +1,10 @@
 # Byte-exact inventory generator outputs (validated by inventory tests)
 docs/inventory/packages/packages.json
 docs/inventory/packages/packages.md
+docs/inventory/root-files/index.md
+docs/inventory/root-files/validation.md
+docs/inventory/global/validation.md
+docs/inventory/shared-component-styles/uixstyles.*.md
 pnpm-lock.yaml
 dist/
 node_modules/

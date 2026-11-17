@@ -10,7 +10,7 @@ Shared CSS for the data table component, including sorting, filtering, resizing,
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/_css_/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/table only (it is not re-exported from the package root). Selectors: .u-table-* covering header, footer, sortable and sorted columns, inline and popover filter overlays and rules, resizers, reorder handles and indicators, striped, gridlines, hoverable, scrollable and flex-scrollable modes, row toggle, mask and loading icon. Tokens use the datatable.* namespace, not table.*; the module name and token namespace differ in source.
+See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/table only (it is not re-exported from the package root). Selectors: .u-table-* covering header, footer, sortable and sorted columns, inline and popover filter overlays and rules, resizers, reorder handles and indicators, striped, gridlines, hoverable, scrollable and flex-scrollable modes, row toggle, mask and loading icon. Tokens use the datatable.* namespace, not table.*; the module name and token namespace differ in source.
 
 ## Public exports
 
